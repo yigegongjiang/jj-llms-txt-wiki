@@ -13,41 +13,48 @@
 * **コンテキスト効率：** ツール定義はコンテキストウィンドウの大部分を消費する可能性があります（50 個のツールは 10～20K トークンを使用できます）。実際の作業用のスペースが減少します。
 * **ツール選択精度：** 30～50 個以上のツールが一度に読み込まれると、ツール選択精度が低下します。
 
-ツール検索はデフォルトで有効になっています。
-
 <h2 id="how-tool-search-works">
   ツール検索の仕組み
 </h2>
 
-ツール検索がアクティブな場合、ツール定義はコンテキストウィンドウから保留されます。エージェントは利用可能なツールの概要を受け取り、タスクが既に読み込まれていない機能を必要とする場合、関連するツールを検索します。最も関連性の高い 5 個までのツールがデフォルトでコンテキストに読み込まれ、その後のターンで利用可能なままになります。会話が十分に長く、SDK が以前のメッセージをコンパクト化してスペースを解放する場合、以前に検出されたツールが削除される可能性があり、エージェントは必要に応じて再度検索します。
+ツール検索はデフォルトでオンになっており、[ツール検索の設定](#configure-tool-search)に記載されている例外があります。
 
-ツール検索は、Claude が初めてツールを検出するときに 1 つの追加ラウンドトリップを追加します（検索ステップ）。ただし、大規模なツールセットの場合、これはすべてのターンでより小さいコンテキストによってオフセットされます。ツールが約 10 個未満の場合、すべてを事前に読み込む方が通常は高速です。
+ツール検索がアクティブな場合、ツール定義はコンテキストウィンドウから保留されます。エージェントは利用可能なツールの概要を受け取り、タスクが既に読み込まれていない機能を必要とする場合、関連するツールを検索します。最も関連性の高い 5 個までのツールがデフォルトでコンテキストに読み込まれ、その後のターンで利用可能なままになります。SDK がエージェントがツールを検出したメッセージをコンパクト化した後、エージェントは次にそれらのツールが必要になったときに再度検索します。
+
+ツール検索は Claude がツールを検索するたびに 1 つの追加ラウンドトリップを追加しますが、大規模なツールセットの場合、これはすべてのターンでより小さいコンテキストによってオフセットされます。定義がコンテキストウィンドウに快適に収まる約 10 個未満のツールの場合、すべてを事前に読み込む方が通常は高速です。
 
 基盤となる API メカニズムの詳細については、[API のツール検索](https://platform.claude.com/docs/ja/agents-and-tools/tool-use/tool-search-tool)を参照してください。
 
 <Note>
-  ツール検索は Claude Sonnet 4.5、Claude Haiku 4.5、Claude Opus 4.5、およびそれ以降のモデルでサポートされています。現在のリストについては、[API ドキュメントのモデル互換性](https://platform.claude.com/docs/ja/agents-and-tools/tool-use/tool-search-tool#model-compatibility)を参照してください。Google Cloud の Agent Platform では、サポートされている最小モデルは Claude Sonnet 4.5 と Claude Opus 4.5 です。
+  ツール検索は Microsoft Foundry [Azure でホストされているデプロイメント](https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry#hosting-options)ではサポートされていません。これらのデプロイメントはサーバー側でツール検索を拒否します。SDK はこの拒否を検出し、代わりにそのデプロイメント用にツール定義を事前に読み込みます。デプロイメント自体から拒否が来るため、[`ENABLE_TOOL_SEARCH`](#configure-tool-search)はこれをオーバーライドできません。
 </Note>
 
 <h2 id="configure-tool-search">
   ツール検索を設定する
 </h2>
 
-ツール検索はデフォルトでオンです。Google Cloud の Agent Platform ではデフォルトで無効になっており、Claude Sonnet 4.5 以降および Claude Opus 4.5 以降でサポートされています。また、`ANTHROPIC_BASE_URL` が非ファーストパーティホストを指す場合も無効になります。ほとんどのプロキシは `tool_reference` ブロックを転送しないためです。`ENABLE_TOOL_SEARCH` 環境変数でいずれかのデフォルトをオーバーライドできます。
+ツール検索はデフォルトでオンです。SDK のサポートされていないモデルリストに含まれるモデルの場合、SDK はツール定義を事前に読み込み、`ENABLE_TOOL_SEARCH` 値はそれをオーバーライドしません。Google Cloud の Agent Platform では、SDK はモデル世代によって決定します。
 
-| 値        | 動作                                                                                                                                                                                            |
-| :------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| （未設定）    | ツール検索はオンです。ツール定義は遅延され、オンデマンドで検出されます。Google Cloud の Agent Platform または非ファーストパーティ `ANTHROPIC_BASE_URL` では事前読み込みにフォールバックします。                                                                     |
-| `true`   | ツール検索は常にオンです。SDK は Google Cloud の Agent Platform およびプロキシ経由でもベータヘッダーを送信します。Sonnet 4.5 または Opus 4.5 より前の Google Cloud の Agent Platform モデル、または `tool_reference` ブロックをサポートしないプロキシでは、リクエストが失敗します。 |
-| `auto`   | すべてのツール定義の合計トークン数をモデルのコンテキストウィンドウと照合します。コンテキストウィンドウの 10% を超える場合、ツール検索がアクティブになります。10% 未満の場合、すべてのツールが通常どおりコンテキストに読み込まれます。                                                                       |
-| `auto:N` | カスタム割合を使用した `auto` と同じです。`auto:5` はツール定義がコンテキストウィンドウの 5% を超える場合にアクティブになります。値が低いほど、より早くアクティブになります。                                                                                             |
-| `false`  | ツール検索はオフです。すべてのツール定義がすべてのターンでコンテキストに読み込まれます。                                                                                                                                                  |
+* **Claude Opus 4.5、Sonnet 4.5、Haiku 4.5、およびそれ以降**: ツール検索はデフォルトでオンです。
+* **以前の Agent Platform モデル**: SDK はツール定義を事前に読み込みます。これは、それらのサービングスタックが必要なベータヘッダーを拒否するためです。`ENABLE_TOOL_SEARCH` はこれをオーバーライドできません。
 
-[`CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS`](/docs/ja/env-vars) を設定するとツール検索がオフになり、`ENABLE_TOOL_SEARCH` はそれをオーバーライドできません。この変数は、`defer_loading` ツール定義と `tool_reference` コンテンツブロックが必要とするベータヘッダーを削除します。
+Claude Code v2.1.221 より前は、`ENABLE_TOOL_SEARCH` を設定しない限り、SDK は Google Cloud の Agent Platform 上のすべてのモデルに対してツール検索を無効にしていました。
 
-ツール検索は、リモート MCP サーバーから来るか、[カスタム SDK MCP サーバー](/docs/ja/agent-sdk/custom-tools)から来るかに関わらず、すべての登録ツールに適用されます。`auto` を使用する場合、閾値はすべてのサーバー全体のすべてのツール定義の合計サイズに基づいています。
+SDK は、`ANTHROPIC_BASE_URL` が非ファーストパーティホストを指す場合もツール検索を無効にします。ほとんどのプロキシは `tool_reference` ブロックを転送しないためです。`ENABLE_TOOL_SEARCH` 環境変数でそのデフォルトをオーバーライドできます。
 
-`query()` の `env` オプションで値を設定します。TypeScript では、`env` はサブプロセス環境を置き換えるため、継承された変数を保持するために `...process.env` を展開します。Python では、`env` は継承された環境の上にマージされます。この例は、多くのツールを公開するリモート MCP サーバーに接続し、ワイルドカードですべてのツールを事前承認し、`auto:5` を使用して、ツール定義がコンテキストウィンドウの 5% を超える場合にツール検索をアクティブにします。
+| 値        | 動作                                                                                                                                                                                                                                          |
+| :------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| （未設定）    | ツール検索はオンです。ツール定義は遅延され、オンデマンドで検出されます。Google Cloud の Agent Platform の Claude 4.5 世代より前のモデル、非ファーストパーティ `ANTHROPIC_BASE_URL`、または Microsoft Foundry デプロイメント（Azure でホストされている場合）では、事前読み込みにフォールバックします。                                              |
+| `true`   | ツール検索は常にオンです。ただし、Microsoft Foundry デプロイメント（Azure でホストされている場合）ではサーバー側の拒否により事前読み込みが強制され、Google Cloud の Agent Platform の Claude 4.5 世代より前のモデルでは SDK がツール定義を事前に読み込み続けます。SDK はプロキシ経由でベータヘッダーを送信し、`tool_reference` ブロックをサポートしないプロキシではリクエストが失敗します。 |
+| `auto`   | ツール検索が遅延できるツール定義のトークン数をカウントし、合計をモデルのコンテキストウィンドウと比較します。合計がウィンドウの 10% に達すると、ツール検索がアクティブになります。それ以下の場合、SDK はすべてのツール定義をコンテキストに事前読み込みします。                                                                                                         |
+| `auto:N` | カスタム割合を使用した `auto` と同じです。`auto:5` はそれらの定義がコンテキストウィンドウの 5% に達するとアクティブになります。値が低いほど、より早くアクティブになります。                                                                                                                                            |
+| `false`  | ツール検索はオフです。すべてのツール定義がすべてのターンでコンテキストに読み込まれます。                                                                                                                                                                                                |
+
+[`CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS`](/docs/ja/env-vars) を設定するとツール検索がオフになります。`ENABLE_TOOL_SEARCH` を自分で設定してそれをオーバーライドすることはできません。組織は [管理設定](/docs/ja/managed-settings)を通じてツール検索をオンに保つことができます。Claude Code v2.1.227 以降で可能です。[プレリリース機能を無効にする](/docs/ja/llm-gateway-protocol#disable-pre-release-capabilities)は、オーバーライドが適用される場所と変数が削除する内容をカバーしています。
+
+ツール検索は、リモート MCP サーバーから来るか、[カスタム SDK MCP サーバー](/docs/ja/agent-sdk/custom-tools)から来るかに関わらず、すべての登録ツールに適用されます。`auto` を使用する場合、SDK はツール検索が遅延できるすべての定義をカウントして、1 つの結合された閾値に向かってカウントします。[`alwaysLoad`](/docs/ja/mcp#exempt-a-server-from-deferral)とマークされていない各 MCP ツール（任意のサーバーから）、およびオンデマンドで読み込まれる組み込みツール。SDK は常に Bash、Read、Edit などのコア組み込みツールを事前に読み込み、閾値に向かってカウントしません。
+
+`query()` の `env` オプションで値を設定します。TypeScript では、`env` はサブプロセス環境を置き換えるため、継承された変数を保持するために `...process.env` を展開します。Python では、`env` は継承された環境の上にマージされます。この例は、多くのツールを公開するリモート MCP サーバーに接続し、ワイルドカードですべてのツールを事前承認し、`auto:5` を使用して、ツール検索が遅延できる定義がコンテキストウィンドウの 5% に達するとツール検索をアクティブにします。
 
 <CodeGroup>
   ```typescript TypeScript theme={null}
@@ -67,7 +74,7 @@
         allowedTools: ["mcp__enterprise-tools__*"], // Wildcard pre-approves all tools from this server
         env: {
           ...process.env, // env replaces the subprocess environment, so keep inherited variables
-          ENABLE_TOOL_SEARCH: "auto:5" // Activate tool search when tools exceed 5% of context
+          ENABLE_TOOL_SEARCH: "auto:5" // Activate tool search when deferrable definitions reach 5% of context
         }
       }
     })) {
@@ -98,7 +105,7 @@
               "mcp__enterprise-tools__*"
           ],  # Wildcard pre-approves all tools from this server
           env={
-              "ENABLE_TOOL_SEARCH": "auto:5"  # Activate tool search when tools exceed 5% of context
+              "ENABLE_TOOL_SEARCH": "auto:5"  # Activate tool search when deferrable definitions reach 5% of context
           },
       )
 
@@ -121,8 +128,6 @@
 この例を実行するには、`https://tools.example.com/mcp` を独自の MCP サーバーの URL に置き換えてください。成功時に、結果テキストがコンソールに出力されます。
 
 これは単一ショットの `query()` 呼び出しであるため、SDK はエラー結果を生成した後に発生するため、この例はループを try ブロックでラップします。実行が失敗した理由を確認するには、ループ内の結果メッセージの `subtype`（`error_during_execution` など）を確認してください。結果メッセージの詳細については、[結果を処理する](/docs/ja/agent-sdk/agent-loop#handle-the-result)を参照してください。
-
-`ENABLE_TOOL_SEARCH` を `"false"` に設定すると、ツール検索が無効になり、すべてのツール定義がすべてのターンでコンテキストに読み込まれます。これにより検索ラウンドトリップが削除されます。ツールセットが小さい（約 10 個未満のツール）場合、定義がコンテキストウィンドウに快適に収まる場合は、より高速になる可能性があります。
 
 <h2 id="optimize-tool-discovery">
   ツール検出を最適化する
@@ -162,7 +167,7 @@
 
 * **最大ツール数：** カタログ内の 10,000 個のツール
 * **検索結果：** デフォルトでは検索ごとに最も関連性の高い 5 つのツールを返します
-* **モデルサポート：** Claude Sonnet 4.5、Claude Haiku 4.5、Claude Opus 4.5、およびそれ以降のモデル。現在のリストについては、[API ドキュメントのモデル互換性](https://platform.claude.com/docs/ja/agents-and-tools/tool-use/tool-search-tool#model-compatibility)を参照してください。Google Cloud の Agent Platform では、Claude Sonnet 4.5 以降および Claude Opus 4.5 以降。
+* **モデルサポート：** Claude Sonnet 4.5、Claude Haiku 4.5、Claude Opus 4.5、およびそれ以降のモデル。現在のリストについては、[API ドキュメントのモデル互換性](https://platform.claude.com/docs/ja/agents-and-tools/tool-use/tool-search-tool#model-compatibility)を参照してください。Google Cloud の Agent Platform でも同じ最小要件が適用されます。
 
 <h2 id="related-documentation">
   関連ドキュメント

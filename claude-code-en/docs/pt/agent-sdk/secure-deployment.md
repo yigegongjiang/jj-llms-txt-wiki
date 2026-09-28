@@ -6,11 +6,9 @@
 
 > Um guia para proteger implantações do Claude Code e Agent SDK com isolamento, gerenciamento de credenciais e controles de rede
 
-Claude Code e o Agent SDK são ferramentas poderosas que podem executar código, acessar arquivos e interagir com serviços externos em seu nome. Como qualquer ferramenta com essas capacidades, implantá-las com cuidado garante que você obtenha os benefícios mantendo controles apropriados.
+Claude Code e o Agent SDK podem executar código, acessar arquivos e interagir com serviços externos em seu nome.
 
 Ao contrário do software tradicional que segue caminhos de código predeterminados, essas ferramentas geram suas ações dinamicamente com base no contexto e nos objetivos. Essa flexibilidade é o que as torna úteis, mas também significa que seu comportamento pode ser influenciado pelo conteúdo que processam: arquivos, páginas da web ou entrada do usuário. Isso às vezes é chamado de injeção de prompt. Por exemplo, se o README de um repositório contiver instruções incomuns, Claude Code pode incorporar essas instruções em suas ações de maneiras que o operador não antecipou. Este guia aborda maneiras práticas de reduzir esse risco.
-
-A boa notícia é que proteger uma implantação de agente não requer infraestrutura exótica. Os mesmos princípios que se aplicam à execução de qualquer código semi-confiável se aplicam aqui: isolamento, privilégio mínimo e defesa em profundidade. Claude Code inclui vários recursos de segurança que ajudam com preocupações comuns, e este guia percorre esses recursos junto com opções de endurecimento adicionais para quem precisar delas.
 
 Nem toda implantação precisa de segurança máxima. Um desenvolvedor executando Claude Code em seu laptop tem requisitos diferentes de uma empresa processando dados de clientes em um ambiente multi-tenant. Este guia apresenta opções que variam desde os recursos de segurança integrados do Claude Code até arquiteturas de produção endurecidas, para que você possa escolher o que se adequa à sua situação.
 
@@ -29,7 +27,7 @@ A defesa em profundidade ainda é uma boa prática. Por exemplo, se um agente pr
 Claude Code inclui vários recursos de segurança que abordam preocupações comuns. Consulte a [documentação de segurança](/docs/pt/security) para detalhes completos.
 
 * **Sistema de permissões**: Cada ferramenta e comando bash pode ser configurado para permitir, bloquear ou solicitar aprovação do usuário. Use padrões glob para criar regras como "permitir todos os comandos npm" ou "bloquear qualquer comando com sudo". As organizações podem definir políticas que se aplicam a todos os usuários. Consulte [permissões](/docs/pt/permissions).
-* **Análise de comando para permissões**: Antes de executar comandos bash, Claude Code os analisa em uma AST e compara o resultado com suas regras de permissão. Comandos que não podem ser analisados corretamente ou que não correspondem a uma regra de permissão requerem aprovação explícita. Um pequeno conjunto de construções como `eval` sempre requer aprovação independentemente das regras de permissão. Esta é uma porta de permissão, não uma sandbox; ela não infere se um comando é perigoso a partir de seu caminho de destino ou efeitos.
+* **Análise de comando para permissões**: Antes de executar comandos bash, Claude Code os analisa em uma AST e compara o resultado com suas regras de permissão. Comandos que não podem ser analisados corretamente ou que não correspondem a uma regra de permissão requerem aprovação explícita. Um pequeno conjunto de construções como `eval` sempre requer aprovação independentemente das regras de permissão. Esta é uma porta de permissão, não uma sandbox; além das verificações de segurança integradas, como a [verificação de caminho crítico](/docs/pt/permission-modes#critical-paths) em `rm` e `rmdir` e a lista de [caminhos protegidos](/docs/pt/permission-modes#protected-paths), ela não infere se um comando é perigoso a partir de seu caminho de destino ou efeitos.
 * **Resumo de pesquisa na web**: Os resultados da pesquisa são resumidos em vez de passar o conteúdo bruto diretamente para o contexto, reduzindo o risco de injeção de prompt de conteúdo web malicioso.
 * **Modo sandbox**: Comandos Bash podem ser executados em um ambiente sandboxed que restringe acesso ao sistema de arquivos e rede. Consulte a [documentação de sandboxing](/docs/pt/sandboxing) para detalhes.
 
@@ -96,7 +94,7 @@ Diferentes tecnologias de isolamento oferecem diferentes compensações entre fo
 
 Para isolamento leve sem contêineres, [sandbox-runtime](https://github.com/anthropic-experimental/sandbox-runtime) impõe restrições de sistema de arquivos e rede no nível do SO.
 
-A principal vantagem é a simplicidade: nenhuma configuração Docker, imagens de contêiner ou configuração de rede necessária. O proxy e as restrições de sistema de arquivos são integrados. Você fornece um arquivo de configuração especificando domínios e caminhos permitidos.
+A principal vantagem é a simplicidade: nenhuma configuração Docker, imagens de contêiner ou configuração de rede necessária. O proxy e as restrições de sistema de arquivos são integrados.
 
 **Como funciona:**
 
@@ -185,8 +183,7 @@ Se um agente executa código malicioso (talvez devido a injeção de prompt), es
 
 Para usar gVisor com Docker, instale o runtime `runsc` e configure o daemon:
 
-```json theme={null}
-// /etc/docker/daemon.json
+```json /etc/docker/daemon.json theme={null}
 {
   "runtimes": {
     "runsc": {

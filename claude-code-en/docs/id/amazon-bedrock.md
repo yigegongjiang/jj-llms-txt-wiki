@@ -95,7 +95,7 @@ Untuk masuk dengan kredensial Amazon Bedrock Anda sendiri, ikuti [Masuk dengan A
   Masuk dengan Bedrock
 </h2>
 
-Jika Anda memiliki kredensial AWS dan ingin mulai menggunakan Claude Code melalui Amazon Bedrock, wizard login akan memandu Anda. Anda menyelesaikan prasyarat sisi AWS sekali per akun; wizard menangani sisi Claude Code.
+Jika Anda memiliki kredensial AWS dan ingin mulai menggunakan Claude Code melalui Amazon Bedrock, wizard login akan memandu Anda melaluinya. Anda menyelesaikan prasyarat sisi AWS sekali per akun; wizard menangani sisi Claude Code.
 
 <Steps>
   <Step title="Aktifkan model Anthropic di akun AWS Anda">
@@ -103,34 +103,34 @@ Jika Anda memiliki kredensial AWS dan ingin mulai menggunakan Claude Code melalu
   </Step>
 
   <Step title="Mulai Claude Code dan pilih Amazon Bedrock">
-    Jalankan `claude`. Pada prompt login, pilih **3rd-party platform**, kemudian **Amazon Bedrock**.
+    Jalankan `claude`. Pada prompt login, pilih **platform pihak ketiga**, kemudian **Amazon Bedrock**. Jika Anda sudah masuk dan melihat prompt chat sebagai gantinya, jalankan `/setup-bedrock` untuk membuka wizard. Sampai `CLAUDE_CODE_USE_BEDROCK=1` diatur, Claude Code [menyembunyikan perintah dari menu perintah](/docs/id/commands#how-the-command-menu-matches-what-you-type); ketikkan secara lengkap.
   </Step>
 
   <Step title="Ikuti prompt wizard">
-    Pilih cara Anda melakukan autentikasi ke AWS: profil AWS yang terdeteksi dari direktori `~/.aws` Anda, kunci API Amazon Bedrock, kunci akses dan rahasia, atau kredensial yang sudah ada di lingkungan Anda. Wizard mengambil wilayah Anda, memverifikasi model Claude mana yang dapat dijalankan akun Anda, dan memungkinkan Anda untuk meminnya. Ini menyimpan hasilnya ke blok `env` dari [file pengaturan pengguna Anda](/docs/id/settings), jadi Anda tidak perlu mengekspor variabel lingkungan sendiri.
+    Pilih cara Anda mengautentikasi ke AWS: profil AWS yang terdeteksi dari direktori `~/.aws` Anda, kunci API Amazon Bedrock, kunci akses dan rahasia, atau kredensial yang sudah ada di lingkungan Anda. Wizard menanyakan wilayah Anda, memverifikasi model Claude mana yang dapat dijalankan akun Anda, dan memungkinkan Anda menyematkannya. Ini menyimpan hasilnya ke blok `env` dari [file pengaturan pengguna Anda](/docs/id/settings), sehingga Anda tidak perlu mengekspor variabel lingkungan sendiri.
   </Step>
 </Steps>
 
-Setelah Anda masuk, jalankan `/setup-bedrock` kapan saja untuk membuka kembali wizard dan mengubah kredensial, wilayah, atau pin model Anda. Langkah pin model dimulai dari model yang saat ini Anda pin. Wizard menulis ke `~/.claude/settings.json`, atau ke `$CLAUDE_CONFIG_DIR/settings.json` ketika [`CLAUDE_CONFIG_DIR`](/docs/id/env-vars#variables) diatur.
+Setelah Anda masuk, jalankan `/setup-bedrock` kapan saja untuk membuka kembali wizard dan mengubah kredensial, wilayah, atau pin model Anda. Langkah pin model dimulai dari model yang saat ini disematkan. Wizard menulis ke `~/.claude/settings.json`, atau ke `$CLAUDE_CONFIG_DIR/settings.json` ketika [`CLAUDE_CONFIG_DIR`](/docs/id/env-vars#variables) diatur.
 
 <h2 id="set-up-manually">
-  Pengaturan manual
+  Atur secara manual
 </h2>
 
-Untuk mengonfigurasi Amazon Bedrock melalui variabel lingkungan alih-alih wizard, misalnya di CI atau peluncuran perusahaan yang ditulis skrip, ikuti langkah-langkah di bawah ini.
+Untuk mengonfigurasi Amazon Bedrock melalui variabel lingkungan alih-alih wizard, misalnya dalam CI atau peluncuran perusahaan yang disertakan skrip, ikuti langkah-langkah di bawah ini.
 
 <h3 id="1-submit-use-case-details">
   1. Kirimkan detail kasus penggunaan
 </h3>
 
-Pengguna pertama kali dari model Anthropic harus mengirimkan detail kasus penggunaan sebelum memanggil model. Ini dilakukan sekali per akun AWS.
+Sebelum Anda memanggil model Anthropic untuk pertama kalinya, kirimkan detail kasus penggunaan. Anda melakukan ini sekali per akun AWS.
 
-1. Pastikan Anda memiliki izin IAM yang tepat seperti yang dijelaskan di bawah
+1. Pastikan Anda memiliki izin IAM yang tepat seperti dijelaskan di bawah
 2. Navigasikan ke [konsol Amazon Bedrock](https://console.aws.amazon.com/bedrock/)
 3. Pilih model Anthropic dari **Model catalog**
-4. Lengkapi formulir kasus penggunaan. Akses diberikan segera setelah pengiriman.
+4. Lengkapi formulir kasus penggunaan. Akses diberikan segera setelah pengajuan.
 
-Jika Anda menggunakan AWS Organizations, Anda dapat mengirimkan formulir sekali dari akun manajemen menggunakan [`PutUseCaseForModelAccess` API](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_PutUseCaseForModelAccess.html). Panggilan ini memerlukan izin IAM `bedrock:PutUseCaseForModelAccess`. Persetujuan meluas ke akun anak secara otomatis.
+Jika Anda menggunakan AWS Organizations, Anda dapat mengirimkan formulir sekali dari akun manajemen menggunakan [`PutUseCaseForModelAccess` API](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_PutUseCaseForModelAccess.html). Panggilan ini memerlukan izin IAM `bedrock:PutUseCaseForModelAccess`. Persetujuan diperluas ke akun anak secara otomatis.
 
 <h3 id="2-configure-aws-credentials">
   2. Konfigurasi kredensial AWS
@@ -162,9 +162,9 @@ aws sso login --profile=your-profile-name
 export AWS_PROFILE=your-profile-name
 ```
 
-Claude Code meminta kredensial peran dari wilayah IAM Identity Center yang dinamai oleh `sso_region` profil, yang tidak perlu cocok dengan wilayah tempat Anda menjalankan Amazon Bedrock. Dalam v2.1.207, wilayah Amazon Bedrock mengganti `sso_region`, jadi profil yang instance IAM Identity Center-nya berada di wilayah berbeda gagal untuk mengautentikasi dengan kesalahan `Session token not found or invalid`.
+Claude Code meminta kredensial peran dari wilayah IAM Identity Center yang dinamai oleh `sso_region` profil, yang tidak perlu cocok dengan wilayah tempat Anda menjalankan Amazon Bedrock. Dalam v2.1.207, wilayah Amazon Bedrock menimpa `sso_region`, jadi profil yang instance IAM Identity Center-nya berada di wilayah berbeda gagal untuk mengautentikasi dengan kesalahan `Session token not found or invalid`.
 
-**Opsi D: Kredensial AWS Management Console**
+**Opsi D: Kredensial Konsol Manajemen AWS**
 
 ```bash theme={null}
 aws login
@@ -181,16 +181,16 @@ export AWS_BEARER_TOKEN_BEDROCK=your-bedrock-api-key
 Kunci API Amazon Bedrock menyediakan metode autentikasi yang lebih sederhana tanpa memerlukan kredensial AWS lengkap. [Pelajari lebih lanjut tentang kunci API Amazon Bedrock](https://aws.amazon.com/blogs/machine-learning/accelerate-ai-development-with-amazon-bedrock-api-keys/).
 
 <h4 id="credential-caching-and-resolution-timeout">
-  Caching kredensial dan timeout resolusi
+  Penyimpanan kredensial dan batas waktu resolusi
 </h4>
 
-Claude Code menyelesaikan rantai penyedia kredensial default AWS sekali dan menyimpan kredensial yang diselesaikan dalam memori. Kredensial tersebut digunakan kembali hingga lima menit sebelum kedaluwarsa, atau selama satu jam ketika tidak memiliki kedaluwarsa, jadi profil yang didukung SSO meminta kredensial dari IAM Identity Center sekitar sekali per masa hidup kredensial. Kesalahan kredensial dari API menghapus cache, dan retry menyelesaikan kredensial segar.
+Claude Code menyelesaikan rantai penyedia kredensial default AWS sekali dan menyimpan kredensial yang diselesaikan dalam memori. Kredensial tersebut digunakan kembali hingga lima menit sebelum kedaluwarsa, atau selama satu jam ketika tidak memiliki kedaluwarsa, jadi profil yang didukung SSO meminta kredensial dari IAM Identity Center sekitar sekali per masa hidup kredensial. Kesalahan kredensial dari API menghapus cache, dan percobaan ulang menyelesaikan kredensial segar. Memerlukan Claude Code v2.1.207 atau lebih baru.
 
-Sebelum v2.1.207, Claude Code menyelesaikan rantai pada setiap permintaan API, jadi profil yang didukung SSO meminta kredensial segar dari IAM Identity Center setiap kali dan dapat dibatasi dalam penerapan besar.
+Cache mencakup setiap opsi kredensial di atas kecuali kunci API Amazon Bedrock, yang tidak menggunakan rantai penyedia. Untuk menyelesaikan rantai pada setiap permintaan, atur [`CLAUDE_CODE_SKIP_AWS_CRED_CACHE=1`](/docs/id/env-vars).
 
-Cache mencakup setiap opsi kredensial di atas kecuali kunci API Amazon Bedrock, yang tidak menggunakan rantai penyedia. Untuk menyelesaikan rantai pada setiap permintaan alih-alih, atur [`CLAUDE_CODE_SKIP_AWS_CRED_CACHE=1`](/docs/id/env-vars).
+Setiap resolusi rantai habis waktu setelah 60 detik. Jika langkah dalam rantai terhenti, misalnya pembantu `credential_process` yang menunggu input yang tidak dapat diterima, permintaan gagal dengan [`AWS default-chain credential resolve timed out`](/docs/id/errors#aws-default-chain-credential-resolve-timed-out). Jika rantai Anda menjalankan masuk interaktif yang secara sah memerlukan waktu lebih lama, seperti SSO berbasis browser dengan MFA melalui pembungkus seperti `aws-vault`, naikkan batas dalam milidetik dengan [`CLAUDE_CODE_AWS_CHAIN_RESOLVE_TIMEOUT_MS`](/docs/id/env-vars). Sebelum v2.1.207, resolusi kredensial yang terhenti membiarkan permintaan menunggu tanpa batas.
 
-Setiap resolusi rantai habis waktu setelah 60 detik. Jika langkah dalam rantai macet, misalnya pembantu `credential_process` yang menunggu input yang tidak dapat diterima, permintaan gagal dengan [`AWS default-chain credential resolve timed out`](/docs/id/errors#aws-default-chain-credential-resolve-timed-out). Jika rantai Anda menjalankan sign-in interaktif yang secara sah memerlukan waktu lebih lama, seperti SSO berbasis browser dengan MFA melalui wrapper seperti `aws-vault`, naikkan batas dalam milidetik dengan [`CLAUDE_CODE_AWS_CHAIN_RESOLVE_TIMEOUT_MS`](/docs/id/env-vars). Sebelum v2.1.207, resolusi kredensial yang macet membiarkan permintaan menunggu tanpa batas.
+Kecuali ketika Anda mengautentikasi dengan kunci API Amazon Bedrock, [wizard pengaturan](#sign-in-with-bedrock) menerapkan batas yang sama untuk setiap panggilan AWS yang dilakukannya saat memverifikasi kredensial Anda, dan untuk pencarian kredensial sebelum setiap pemeriksaan model. Selama verifikasi kredensial, pemeriksaan yang melampaui batas gagal dengan [`Timed out after 60s waiting for AWS`](/docs/id/errors#bedrock-setup-verification-timed-out-waiting-for-aws).
 
 <h4 id="advanced-credential-configuration">
   Konfigurasi kredensial lanjutan
@@ -198,10 +198,12 @@ Setiap resolusi rantai habis waktu setelah 60 detik. Jika langkah dalam rantai m
 
 Claude Code mendukung penyegaran kredensial otomatis untuk AWS SSO dan penyedia identitas perusahaan. Tambahkan pengaturan ini ke file pengaturan Claude Code Anda (lihat [Settings](/docs/id/settings) untuk lokasi file).
 
-Kedua pengaturan ini memiliki kondisi pemicu yang berbeda:
+Dua pengaturan ini memiliki kondisi pemicu yang berbeda:
 
-* **`awsAuthRefresh`**: berjalan hanya ketika Claude Code mendeteksi bahwa kredensial AWS Anda telah kedaluwarsa, baik secara lokal berdasarkan stempel waktu mereka atau ketika API mengembalikan kesalahan kredensial, kemudian mencoba ulang permintaan dengan kredensial yang disegarkan.
-* **`awsCredentialExport`**: berjalan saat awal sesi dan pada setiap pemuatan ulang kredensial, bahkan ketika kredensial di rantai penyedia kredensial default AWS Anda masih valid. Gunakan ini ketika akun Amazon Bedrock Anda memerlukan kredensial lintas akun yang berbeda dari yang akan diselesaikan oleh rantai penyedia default.
+* **`awsAuthRefresh`**: berjalan hanya ketika Claude Code mendeteksi bahwa kredensial AWS Anda kedaluwarsa, baik secara lokal berdasarkan stempel waktu mereka atau ketika API mengembalikan kesalahan kredensial, kemudian mencoba ulang permintaan dengan kredensial yang disegarkan.
+* **`awsCredentialExport`**: berjalan pada awal sesi dan pada setiap pemuatan ulang kredensial, bahkan ketika kredensial dalam rantai penyedia kredensial default AWS Anda masih berlaku. Gunakan ini ketika akun Amazon Bedrock Anda memerlukan kredensial lintas akun yang berbeda dari yang akan diselesaikan oleh rantai penyedia default.
+
+Sebelum menjalankan perintah `awsAuthRefresh`, Claude Code membuat panggilan STS `GetCallerIdentity` untuk mengonfirmasi bahwa kredensial Anda benar-benar kedaluwarsa, dan melewati perintah ketika kredensial masih berfungsi. Claude Code mengirim pemeriksaan ini melalui [konfigurasi proxy](/docs/id/network-config#proxy-configuration) Anda, menghormati `HTTPS_PROXY` dan `NO_PROXY`. Sebelum v2.1.239, Claude Code mengirim pemeriksaan ini secara langsung dan tergantung pada startup di jaringan yang hanya memungkinkan keluar melalui proxy.
 
 <h5 id="example-configuration">
   Contoh konfigurasi
@@ -222,7 +224,7 @@ Kedua pengaturan ini memiliki kondisi pemicu yang berbeda:
 
 **`awsAuthRefresh`**: Gunakan ini untuk perintah yang memodifikasi direktori `.aws`, seperti memperbarui kredensial, cache SSO, atau file konfigurasi. Output perintah ditampilkan kepada pengguna, tetapi input interaktif tidak didukung. Ini bekerja dengan baik untuk alur SSO berbasis browser di mana CLI menampilkan URL atau kode dan Anda menyelesaikan autentikasi di browser.
 
-**`awsCredentialExport`**: Hanya gunakan ini jika Anda tidak dapat memodifikasi `.aws` dan harus secara langsung mengembalikan kredensial. Perintah ini berjalan setiap kali kredensial perlu disegarkan, bukan hanya ketika kredensial telah kedaluwarsa. Output ditangkap secara diam-diam dan tidak ditampilkan kepada pengguna. Perintah harus menampilkan JSON dalam format ini:
+**`awsCredentialExport`**: Hanya gunakan ini jika Anda tidak dapat memodifikasi `.aws` dan harus secara langsung mengembalikan kredensial. Output ditangkap secara diam-diam dan tidak ditampilkan kepada pengguna. Perintah harus menampilkan JSON dalam format ini:
 
 ```json theme={null}
 {
@@ -235,11 +237,11 @@ Kedua pengaturan ini memiliki kondisi pemicu yang berbeda:
 }
 ```
 
-Mulai dari Claude Code v2.1.181, output datar dari `aws configure export-credentials --format process` juga diterima, dengan kunci yang sama di tingkat atas alih-alih bersarang di bawah `Credentials`.
+Output datar dari `aws configure export-credentials --format process` juga diterima, dengan kunci yang sama di tingkat atas alih-alih bersarang di bawah `Credentials`.
 
-`Expiration` bersifat opsional. Mulai dari Claude Code v2.1.176, ketika perintah mengembalikan `Expiration` ISO 8601 yang valid, Claude Code menyimpan kredensial dalam cache hingga lima menit sebelum waktu tersebut. Tanpanya, atau pada versi sebelumnya, kredensial disimpan dalam cache selama satu jam.
+`Expiration` bersifat opsional. Ketika perintah mengembalikan `Expiration` ISO 8601 yang valid, Claude Code menyimpan kredensial dalam cache hingga lima menit sebelum waktu itu. Tanpanya, kredensial disimpan dalam cache selama satu jam.
 
-Ketika Anda mengonfigurasi `awsCredentialExport` tanpa `awsAuthRefresh`, Claude Code menggunakan kredensial yang diekspor secara langsung dan tidak menyelesaikan kembali rantai penyedia kredensial default AWS saat startup. Sebelum v2.1.206, startup juga menyelesaikan kembali rantai penyedia default, yang membuat panggilan SSO atau STS langsung di luar konfigurasi proxy Anda dan dapat memblokir prompt pertama selama beberapa menit di jaringan dengan egress terbatas.
+Ketika Anda mengonfigurasi `awsCredentialExport` tanpa `awsAuthRefresh`, Claude Code menggunakan kredensial yang diekspor secara langsung dan tidak menyelesaikan kembali rantai penyedia kredensial default AWS pada startup. Memerlukan Claude Code v2.1.206 atau lebih baru.
 
 <h3 id="3-configure-claude-code">
   3. Konfigurasi Claude Code
@@ -248,29 +250,33 @@ Ketika Anda mengonfigurasi `awsCredentialExport` tanpa `awsAuthRefresh`, Claude 
 Atur variabel lingkungan berikut untuk mengaktifkan Amazon Bedrock:
 
 ```bash theme={null}
-# Aktifkan integrasi Bedrock
+# Enable Bedrock integration
 export CLAUDE_CODE_USE_BEDROCK=1
-export AWS_REGION=us-east-1  # opsional jika profil AWS Anda sudah menetapkan wilayah
+export AWS_REGION=us-east-1  # optional if your AWS profile already sets a region
 
-# Opsional: Ganti wilayah AWS untuk model kecil/cepat (Bedrock dan Mantle).
-# Di Bedrock, tidak berpengaruh tanpa ANTHROPIC_DEFAULT_HAIKU_MODEL
-# atau ANTHROPIC_SMALL_FAST_MODEL yang sudah usang diatur.
+# Optional: Override the AWS region for the small/fast model (Bedrock and Mantle).
+# On Bedrock, has no effect without ANTHROPIC_DEFAULT_HAIKU_MODEL
+# or the deprecated ANTHROPIC_SMALL_FAST_MODEL set.
 export ANTHROPIC_SMALL_FAST_MODEL_AWS_REGION=us-west-2
 
-# Opsional: Ganti URL endpoint Bedrock untuk endpoint khusus atau gateway
+# Optional: Override the Bedrock endpoint URL for custom endpoints or gateways
 # export ANTHROPIC_BEDROCK_BASE_URL=https://bedrock-runtime.us-east-1.amazonaws.com
 ```
 
 Saat mengaktifkan Amazon Bedrock untuk Claude Code, perhatikan hal berikut:
 
-* Mulai dari v2.1.172, Anda hanya perlu menetapkan `AWS_REGION` untuk mengganti wilayah profil AWS Anda atau ketika profil Anda tidak memiliki wilayah. Claude Code menyelesaikan wilayah dalam urutan ini:
+* Anda hanya perlu mengatur `AWS_REGION` untuk menimpa wilayah profil AWS Anda atau ketika profil Anda tidak memiliki wilayah. Claude Code menyelesaikan wilayah dalam urutan ini:
 
   * `AWS_REGION`
   * `AWS_DEFAULT_REGION`
-  * `region` yang ditetapkan pada profil AWS aktif Anda, dibaca dari file kredensial bersama AWS terlebih dahulu dan kemudian file konfigurasi bersama, sesuai dengan prioritas SDK AWS
+  * `region` yang ditetapkan pada profil AWS aktif Anda, dibaca dari file kredensial bersama AWS terlebih dahulu dan kemudian file konfigurasi bersama, mencocokkan prioritas SDK AWS
   * `us-east-1`
 
-  Profil aktif adalah `AWS_PROFILE` jika diatur, jika tidak `default`. Atur `AWS_SHARED_CREDENTIALS_FILE` atau `AWS_CONFIG_FILE` untuk menunjuk ke jalur file non-default. Jalankan `/status` untuk melihat wilayah yang diselesaikan. Ketika wilayah berasal dari file konfigurasi AWS Anda atau fallback default, `/status` juga mencatat sumbernya. Pada v2.1.171 dan sebelumnya, Claude Code tidak membaca file konfigurasi AWS, jadi atur `AWS_REGION` secara eksplisit.
+  Jika nilai dari salah satu sumber ini tidak berbentuk seperti nama wilayah, Claude Code memperlakukannya sebagai tidak diatur dan melanjutkan ke bawah urutan. Misalnya, Claude Code memperlakukan nilai yang berisi garis miring, titik, atau spasi sebagai tidak diatur.
+
+  Profil aktif adalah `AWS_PROFILE` jika diatur, jika tidak `default`. Atur `AWS_SHARED_CREDENTIALS_FILE` atau `AWS_CONFIG_FILE` untuk menunjuk ke jalur file non-default.
+
+  Jalankan `/status` untuk melihat wilayah yang diselesaikan. Ketika wilayah berasal dari file konfigurasi AWS Anda atau fallback default, Claude Code juga mencatat sumber dalam output `/status`.
 * Saat menggunakan Amazon Bedrock, perintah `/logout` tidak tersedia karena autentikasi ditangani melalui kredensial AWS.
 * Alat WebSearch tidak tersedia di Amazon Bedrock. Lihat [perilaku alat WebSearch](/docs/id/tools-reference#websearch-tool-behavior).
 * Anda dapat menggunakan file pengaturan untuk variabel lingkungan seperti `AWS_PROFILE` yang tidak ingin Anda bocorkan ke proses lain. Lihat [Settings](/docs/id/settings) untuk informasi lebih lanjut.
@@ -280,12 +286,12 @@ Saat mengaktifkan Amazon Bedrock untuk Claude Code, perhatikan hal berikut:
 </h3>
 
 <Warning>
-  Pin versi model spesifik saat menerapkan ke beberapa pengguna. Tanpa pinning, alias model seperti `sonnet` dan `opus` diselesaikan ke default bawaan Claude Code untuk Amazon Bedrock, yang dapat tertinggal dari rilis terbaru dan mungkin belum tersedia di akun Anda. Claude Code [kembali](#startup-model-checks) ke model yang lebih awal atau tingkat lebih rendah saat startup ketika default tidak tersedia, tetapi pinning memungkinkan Anda mengontrol kapan pengguna Anda beralih ke model baru.
+  Pin versi model spesifik saat menerapkan ke beberapa pengguna. Tanpa pinning, alias model seperti `sonnet` dan `opus` diselesaikan ke default bawaan Claude Code untuk Amazon Bedrock, yang dapat tertinggal dari rilis terbaru dan mungkin belum tersedia di akun Anda. Claude Code [kembali](#startup-model-checks) ke model yang lebih awal atau tingkat lebih rendah pada startup ketika default tidak tersedia, tetapi pinning memungkinkan Anda mengontrol kapan pengguna Anda pindah ke model baru.
 </Warning>
 
 Atur variabel lingkungan ini ke ID model Amazon Bedrock spesifik.
 
-Tanpa `ANTHROPIC_DEFAULT_OPUS_MODEL`, alias `opus` di Amazon Bedrock diselesaikan ke Opus 4.8, dan tanpa `ANTHROPIC_DEFAULT_SONNET_MODEL`, alias `sonnet` diselesaikan ke Sonnet 4.5. Contoh ini pin setiap alias ke versi spesifik:
+Tanpa `ANTHROPIC_DEFAULT_OPUS_MODEL`, alias `opus` di Amazon Bedrock diselesaikan ke Opus 5.5, dan tanpa `ANTHROPIC_DEFAULT_SONNET_MODEL`, alias `sonnet` diselesaikan ke Sonnet 4.5. Contoh ini pin setiap alias ke versi spesifik:
 
 ```bash theme={null}
 export ANTHROPIC_DEFAULT_OPUS_MODEL='us.anthropic.claude-opus-4-8'
@@ -293,44 +299,53 @@ export ANTHROPIC_DEFAULT_SONNET_MODEL='us.anthropic.claude-sonnet-4-6'
 export ANTHROPIC_DEFAULT_HAIKU_MODEL='us.anthropic.claude-haiku-4-5-20251001-v1:0'
 ```
 
-Variabel ini menggunakan ID profil inferensi lintas wilayah (dengan awalan `us.`). Jika Anda menggunakan awalan wilayah berbeda atau profil inferensi aplikasi, sesuaikan sesuai kebutuhan. Di wilayah AWS GovCloud, gunakan awalan `us-gov.`. Untuk ID model saat ini dan warisan, lihat [Models overview](https://platform.claude.com/docs/en/about-claude/models/overview). Lihat [Model configuration](/docs/id/model-config#pin-models-for-third-party-deployments) untuk daftar lengkap variabel lingkungan.
+ID ini menggunakan awalan profil inferensi lintas wilayah `us.`. Jika Anda menggunakan awalan wilayah berbeda atau profil inferensi aplikasi, sesuaikan sesuai kebutuhan. Di wilayah AWS GovCloud, gunakan awalan `us-gov.`.
+
+Untuk menyimpan model default bawaan dan mengubah hanya awalan pilihan mereka, atur [`ANTHROPIC_BEDROCK_REGION_PREFIX`](#cross-region-inference-profile-prefixes) alih-alih pinning. Perbedaannya ditunjukkan dalam apa yang alias `opus` diselesaikan ke:
+
+| Anda atur                                                     | Alias `opus` diselesaikan ke                                              |
+| :------------------------------------------------------------ | :------------------------------------------------------------------------ |
+| `ANTHROPIC_DEFAULT_OPUS_MODEL='us.anthropic.claude-opus-4-8'` | `us.anthropic.claude-opus-4-8`, ID tepat yang Anda pin                    |
+| `ANTHROPIC_BEDROCK_REGION_PREFIX=eu`                          | `eu.anthropic.claude-opus-5-5`, default bawaan dengan awalan pilihan Anda |
+
+Untuk ID model saat ini dan warisan, lihat [Models overview](https://platform.claude.com/docs/en/about-claude/models/overview). Untuk daftar lengkap variabel lingkungan pinning, lihat [Model configuration](/docs/id/model-config#pin-models-for-third-party-deployments).
 
 Claude Code menggunakan model default ini ketika tidak ada variabel pinning yang diatur:
 
-| Jenis model       | Nilai default                                  |
-| :---------------- | :--------------------------------------------- |
-| Model utama       | `us.anthropic.claude-opus-4-8`                 |
-| Model kecil/cepat | `us.anthropic.claude-sonnet-4-5-20250929-v1:0` |
+| Jenis model       | Model default                                                                         |
+| :---------------- | :------------------------------------------------------------------------------------ |
+| Model utama       | Opus 5.5, misalnya `us.anthropic.claude-opus-5-5` di wilayah `us-*`                   |
+| Model kecil/cepat | Sonnet 4.5, misalnya `us.anthropic.claude-sonnet-4-5-20250929-v1:0` di wilayah `us-*` |
 
 Tugas latar belakang seperti pembuatan judul sesi menggunakan model kecil/cepat, biasanya model kelas Haiku. Di Amazon Bedrock, Claude Code menggunakan model Sonnet default untuk tugas latar belakang karena Haiku mungkin tidak diaktifkan di setiap akun atau wilayah. Dua pilihan mengubah model mana yang membawanya:
 
-* Ketika Anda memilih model utama dengan `--model`, `ANTHROPIC_MODEL`, atau pengaturan `model`, tugas latar belakang menggunakan model tersebut. Menetapkan `ANTHROPIC_DEFAULT_OPUS_MODEL` tanpa `ANTHROPIC_DEFAULT_SONNET_MODEL` juga dihitung sebagai pilihan, karena model Sonnet bawaan mungkin tidak diaktifkan di akun yang mengarahkan Opus-nya sendiri.
+* Ketika Anda memilih model utama dengan `--model`, `ANTHROPIC_MODEL`, atau pengaturan `model`, tugas latar belakang menggunakan model itu. Ketika Claude Code memulai sesi pada model yang Anda atur dengan [`ANTHROPIC_DEFAULT_MODEL`](/docs/id/model-config#set-a-default-model-for-new-sessions), tugas latar belakang juga menggunakan model itu. Pengaturan `ANTHROPIC_DEFAULT_OPUS_MODEL` tanpa `ANTHROPIC_DEFAULT_SONNET_MODEL` juga dihitung sebagai pilihan, karena model Sonnet bawaan mungkin tidak diaktifkan di akun yang mengarahkan Opus-nya sendiri.
 * Untuk menggunakan Haiku untuk tugas latar belakang, atur `ANTHROPIC_DEFAULT_HAIKU_MODEL` ke ID model yang tersedia di akun Anda.
 
 <Warning>
-  Model Opus memiliki harga per-token yang lebih tinggi daripada model Sonnet, jadi penerapan yang tidak pin model utama ditagih dengan tarif Opus setelah diperbarui ke v2.1.207 atau lebih baru. Untuk menjaga Sonnet 4.5 sebagai model utama, atur `ANTHROPIC_MODEL` ke ID model lengkapnya. Penerapan yang mengarahkan default dengan `ANTHROPIC_DEFAULT_SONNET_MODEL` dan tidak menetapkan `ANTHROPIC_DEFAULT_OPUS_MODEL` menjaga model Sonnet yang diarahkan sebagai default.
+  Model Opus memiliki harga per-token yang lebih tinggi daripada model Sonnet, jadi penerapan yang tidak pin model utama ditagih dengan tarif Opus setelah diperbarui ke v2.1.207 atau lebih baru. Untuk menyimpan Sonnet 4.5 sebagai model utama, atur `ANTHROPIC_MODEL` ke ID model lengkapnya. Penerapan yang mengarahkan default dengan `ANTHROPIC_DEFAULT_SONNET_MODEL` dan tidak mengatur `ANTHROPIC_DEFAULT_OPUS_MODEL` menyimpan model Sonnet yang diarahkan sebagai default.
 </Warning>
 
-Sebelum v2.1.207, model utama di Amazon Bedrock default ke Sonnet 4.5, alias `opus` diselesaikan ke Opus 4.6, dan tugas latar belakang selalu menggunakan model utama.
+Sebelum v2.1.280, model utama di Amazon Bedrock default ke Opus 5 dan alias `opus` diselesaikan ke Opus 5 dari v2.1.219. Pada v2.1.207 melalui v2.1.218, model utama di Amazon Bedrock default ke Opus 4.8 dan alias `opus` diselesaikan ke Opus 4.8. Sebelum v2.1.207, model utama default ke Sonnet 4.5, alias `opus` diselesaikan ke Opus 4.6, dan tugas latar belakang selalu menggunakan model utama.
 
-Untuk menyesuaikan model lebih lanjut, gunakan salah satu metode berikut:
+Untuk menyesuaikan model lebih lanjut, gunakan salah satu metode ini:
 
 ```bash theme={null}
-# Menggunakan ID profil inferensi
+# Using inference profile ID
 export ANTHROPIC_MODEL='us.anthropic.claude-sonnet-4-6'
 export ANTHROPIC_DEFAULT_HAIKU_MODEL='us.anthropic.claude-haiku-4-5-20251001-v1:0'
 
-# Menggunakan ARN profil inferensi aplikasi
+# Using application inference profile ARN
 export ANTHROPIC_MODEL='arn:aws:bedrock:us-east-2:your-account-id:application-inference-profile/your-model-id'
 
-# Opsional: Nonaktifkan prompt caching jika diperlukan
-export DISABLE_PROMPT_CACHING=1
+# Optional: Disable prompt caching if needed
+# export DISABLE_PROMPT_CACHING=1
 
-# Opsional: Minta TTL cache prompt 1 jam alih-alih default 5 menit
-export ENABLE_PROMPT_CACHING_1H=1
+# Optional: Request 1-hour prompt cache TTL instead of the 5-minute default
+# export ENABLE_PROMPT_CACHING_1H=1
 ```
 
-TTL cache 1 jam ditagih dengan tarif lebih tinggi daripada default 5 menit. Lihat [cache lifetime](/docs/id/prompt-caching#cache-lifetime).
+TTL cache 1 jam ditagih dengan tarif lebih tinggi daripada default 5 menit. Lihat [cache lifetime](/docs/id/prompt-caching#cache-lifetime). Untuk menetapkan TTL berbeda untuk percakapan utama Anda dan untuk permintaan yang Claude Code buat di luar itu, [pilih TTL sendiri](/docs/id/prompt-caching#choose-the-ttl-yourself).
 
 <Note>Prompt caching mungkin tidak tersedia di semua wilayah Amazon Bedrock. Jika hitungan token cache tetap di nol, periksa [model, wilayah, dan batas yang didukung](https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html#prompt-caching-models) dalam dokumentasi Amazon Bedrock.</Note>
 
@@ -338,7 +353,7 @@ TTL cache 1 jam ditagih dengan tarif lebih tinggi daripada default 5 menit. Liha
   Petakan setiap versi model ke profil inferensi
 </h4>
 
-Variabel lingkungan `ANTHROPIC_DEFAULT_*_MODEL` mengonfigurasi satu profil inferensi per keluarga model. Jika organisasi Anda perlu mengekspos beberapa versi dari keluarga yang sama di pemilih `/model`, masing-masing dirutekan ke ARN profil inferensi aplikasi sendiri, gunakan pengaturan `modelOverrides` di [file pengaturan](/docs/id/settings#settings-files) Anda sebagai gantinya.
+Variabel lingkungan `ANTHROPIC_DEFAULT_*_MODEL` mengonfigurasi satu profil inferensi per keluarga model. Jika organisasi Anda perlu mengekspos beberapa versi keluarga yang sama di pemilih `/model`, masing-masing dirutekan ke ARN profil inferensi aplikasi sendiri, gunakan pengaturan `modelOverrides` dalam [file pengaturan](/docs/id/settings#where-settings-live) Anda.
 
 Contoh ini memetakan empat versi Opus ke ARN yang berbeda sehingga pengguna dapat beralih di antara mereka tanpa melewati profil inferensi organisasi Anda:
 
@@ -353,17 +368,58 @@ Contoh ini memetakan empat versi Opus ke ARN yang berbeda sehingga pengguna dapa
 }
 ```
 
-Ketika pengguna memilih salah satu versi ini di `/model`, Claude Code memanggil Amazon Bedrock dengan ARN yang dipetakan. Pemetaan yang sama berlaku ketika Anda meneruskan ID model Anthropic secara langsung melalui `--model` atau `ANTHROPIC_MODEL`. Versi tanpa override kembali ke ID model Amazon Bedrock bawaan atau profil inferensi yang cocok yang ditemukan saat startup. Sebelum v2.1.200, nilai `--model` dan `ANTHROPIC_MODEL` mencapai Amazon Bedrock apa adanya tanpa melewati peta override. Lihat [Override model IDs per version](/docs/id/model-config#override-model-ids-per-version) untuk detail tentang bagaimana override berinteraksi dengan `availableModels` dan pengaturan model lainnya.
+Ketika pengguna memilih salah satu versi ini di `/model`, Claude Code memanggil Amazon Bedrock dengan ARN yang dipetakan. Pemetaan yang sama berlaku ketika Anda meneruskan ID model Anthropic secara langsung melalui `--model` atau `ANTHROPIC_MODEL`. Versi tanpa override kembali ke ID model Amazon Bedrock bawaan atau profil inferensi yang cocok yang ditemukan pada startup. Sebelum v2.1.200, nilai `--model` dan `ANTHROPIC_MODEL` mencapai Amazon Bedrock apa adanya tanpa melewati peta override. Lihat [Override model IDs per version](/docs/id/model-config#override-model-ids-per-version) untuk detail tentang bagaimana override berinteraksi dengan `availableModels` dan pengaturan model lainnya.
 
 <h2 id="startup-model-checks">
   Pemeriksaan model startup
 </h2>
 
-Ketika Claude Code dimulai dengan Amazon Bedrock dikonfigurasi, Claude Code memverifikasi bahwa model yang dimaksudkan untuk digunakan dapat diakses di akun Anda.
+Ketika Claude Code dimulai dengan Amazon Bedrock yang dikonfigurasi, Claude Code memverifikasi bahwa model yang dimaksudkan untuk digunakan dapat diakses di akun Anda.
 
-Jika Anda telah mempin versi model yang lebih lama dari default Claude Code saat ini, dan akun Anda dapat memanggil versi yang lebih baru, Claude Code meminta Anda untuk memperbarui pin. Menerima menulis ID model baru ke [file pengaturan pengguna Anda](/docs/id/settings) dan memulai ulang Claude Code. Menolak diingat sampai perubahan versi default berikutnya. Pin yang menunjuk ke [ARN profil inferensi aplikasi](#map-each-model-version-to-an-inference-profile) dilewati, karena dikelola oleh administrator Anda.
+Jika Anda telah menyematkan versi model yang lebih lama dari default Claude Code saat ini, dan akun Anda dapat memanggil versi yang lebih baru, Claude Code akan meminta Anda untuk memperbarui pin. Menerima akan menulis ID model baru ke [file pengaturan pengguna Anda](/docs/id/settings) dan memulai ulang Claude Code. Menolak akan diingat hingga perubahan versi default berikutnya. Pin yang menunjuk ke [profil inferensi aplikasi ARN](#map-each-model-version-to-an-inference-profile) dilewati, karena dikelola oleh administrator Anda.
 
-Jika Anda belum mempin model dan default saat ini tidak tersedia di akun Anda, Claude Code kembali untuk sesi saat ini dan menampilkan pemberitahuan. Claude Code mencoba versi sebelumnya dari model default terlebih dahulu dan, ketika default adalah model Opus dan tidak ada versi Opus yang tersedia, kembali ke model Sonnet default. Fallback tidak disimpan. Aktifkan model yang lebih baru di akun Amazon Bedrock Anda atau [pin versi](#4-pin-model-versions) untuk membuat pilihan permanen.
+Jika Anda belum menyematkan model dan default saat ini tidak tersedia di akun Anda, Claude Code akan kembali untuk sesi saat ini dan menampilkan pemberitahuan. Claude Code mencoba versi sebelumnya dari model default terlebih dahulu dan, ketika default adalah model Opus dan tidak ada versi Opus yang tersedia, kembali ke model Sonnet default. Fallback tidak disimpan. Aktifkan model yang lebih baru di akun Amazon Bedrock Anda atau [sematkan versi](#4-pin-model-versions) untuk membuat pilihan permanen.
+
+Ketika Anda memulai sesi pada versi Sonnet atau Opus tertentu, misalnya dengan `--model`, `ANTHROPIC_MODEL`, atau [pengaturan `model`](/docs/id/settings-reference#model), versi tersebut bertindak sebagai default yang disematkan sesi untuk alias `sonnet` atau `opus` yang cocok. Claude Code melewati pemeriksaan ketersediaan untuk default bawaan yang diganti model Anda dan dimulai pada model yang Anda konfigurasi, tanpa pemberitahuan fallback.
+
+Alias model seperti `opus` tidak bertindak sebagai pin, begitu juga ID model yang tidak dikenali Claude Code, seperti profil inferensi aplikasi ARN.
+
+<h2 id="cross-region-inference-profile-prefixes">
+  Prefiks profil inferensi lintas wilayah
+</h2>
+
+Pada Amazon Bedrock [Invoke API](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_InvokeModelWithResponseStream.html), Claude Code menyelesaikan model default bawaan ke ID [profil inferensi lintas wilayah](https://docs.aws.amazon.com/bedrock/latest/userguide/inference-profiles-support.html); untuk merutekan versi model melalui profil inferensi Anda sendiri, lihat [Petakan setiap versi model ke profil inferensi](#map-each-model-version-to-an-inference-profile). Tabel ini menunjukkan prefiks yang disukai Claude Code untuk setiap wilayah AWS yang diselesaikan:
+
+| Wilayah AWS               | Prefiks   |
+| :------------------------ | :-------- |
+| `us-gov-*` (AWS GovCloud) | `us-gov.` |
+| `us-*`                    | `us.`     |
+| `eu-*`                    | `eu.`     |
+| `ap-*`                    | `apac.`   |
+| Semua wilayah lainnya     | `global.` |
+
+Atur `ANTHROPIC_BEDROCK_REGION_PREFIX` untuk memilih prefiks yang dicoba Claude Code terlebih dahulu; ketika Claude Code dapat memeriksa ketersediaan profil dan menemukan tidak ada profil yang cocok untuk model, Claude Code kembali seperti yang dijelaskan dalam urutan resolusi di bawah. Nilai yang valid adalah `us`, `eu`, `apac`, `jp`, `au`, dan `global`. Misalnya, atur ke `global` ketika akun Anda memiliki profil `global.` diaktifkan tetapi Claude Code akan menurunkan satu yang spesifik geografis dari wilayah AWS Anda. Memerlukan Claude Code v2.1.224 atau lebih baru.
+
+Contoh ini merutekan model default melalui profil `global.`:
+
+```bash theme={null}
+export ANTHROPIC_BEDROCK_REGION_PREFIX=global
+# Di wilayah us-*, model utama sekarang diselesaikan ke
+# global.anthropic.claude-opus-5-5 bukan us.anthropic.claude-opus-5-5
+```
+
+Prefiks yang disukai adalah preferensi, bukan jaminan, baik itu berasal dari wilayah Anda atau dari variabel. Bagaimana Claude Code menerapkannya tergantung pada apakah Claude Code dapat memeriksa ketersediaan profil di akun Anda:
+
+* Ketika Claude Code dapat [mencantumkan profil inferensi](#iam-configuration) di akun Anda, Claude Code menyelesaikan setiap model dalam urutan ini:
+  1. Profil dengan prefiks pilihan Anda.
+  2. Profil yang cocok, untuk model yang tidak memiliki profil dengan prefiks tersebut.
+  3. ID model bawaan dengan prefiks pilihan Anda, untuk model yang tidak memiliki profil yang cocok sama sekali. Claude Code menerapkan ID ini tanpa memeriksa ketersediaan pada langkah ini; [pemeriksaan model startup](#startup-model-checks) masih mencakup model default sesi.
+* Ketika penemuan profil tidak tersedia, Claude Code menerapkan prefiks tanpa memeriksa ketersediaan. Jika akun Anda tidak memiliki profil inferensi dengan prefiks tersebut diaktifkan, permintaan gagal dengan kesalahan 400.
+
+Claude Code tidak menulis ulang ID profil inferensi Amazon Bedrock atau ARN yang Anda konfigurasi sendiri, atau nilai [`modelOverrides`](#map-each-model-version-to-an-inference-profile); ID model format Anthropic diselesaikan melalui [pemetaan yang sama seperti pemilih `/model`](#map-each-model-version-to-an-inference-profile). Claude Code juga mengabaikan variabel dalam dua kasus:
+
+* Di wilayah AWS GovCloud, Claude Code selalu menggunakan `us-gov.`, satu-satunya prefiks yang merutekan dalam partisi GovCloud.
+* Ketika Anda menetapkan nilai yang bukan salah satu dari nilai yang valid, Claude Code kembali ke prefiks pilihan yang diturunkan dari wilayah.
 
 <h2 id="iam-configuration">
   Konfigurasi IAM
@@ -424,7 +480,7 @@ Untuk detail, lihat [dokumentasi IAM Bedrock](https://docs.aws.amazon.com/bedroc
   Jendela konteks token 1M
 </h2>
 
-Claude Sonnet 5, Opus 4.6 dan yang lebih baru, serta Sonnet 4.6 mendukung [jendela konteks token 1M](https://platform.claude.com/docs/en/build-with-claude/context-windows#context-window-sizes-by-model) di Amazon Bedrock. Sonnet 5 disajikan melalui [endpoint Mantle](#use-the-mantle-endpoint) dan selalu berjalan dengan jendela 1M, tanpa varian `[1m]` untuk dipilih. Untuk model lainnya, Claude Code secara otomatis mengaktifkan jendela konteks yang diperluas ketika Anda memilih varian model 1M.
+Claude Sonnet 5, Opus 4.6 dan yang lebih baru, serta Sonnet 4.6 mendukung [jendela konteks token 1M](https://platform.claude.com/docs/en/build-with-claude/context-windows#context-window-sizes-by-model) di Amazon Bedrock. Sonnet 5 selalu berjalan dengan jendela 1M di kedua API Invoke dan [endpoint Mantle](#use-the-mantle-endpoint), tanpa varian `[1m]` untuk dipilih. Untuk model lainnya di API Invoke, Claude Code secara otomatis mengaktifkan jendela konteks yang diperluas ketika Anda memilih varian model 1M.
 
 [Wizard pengaturan](#sign-in-with-bedrock) menawarkan opsi konteks 1M ketika mempin model. Untuk mengaktifkannya untuk model yang dipinnya secara manual, tambahkan `[1m]` ke ID model. Lihat [Pin models for third-party deployments](/docs/id/model-config#pin-models-for-third-party-deployments) untuk detail.
 
@@ -456,11 +512,15 @@ Contoh konfigurasi:
 }
 ```
 
+Jika organisasi Anda mengirimkan header guardrail melalui kebijakan [gateway aplikasi Claude](/docs/id/claude-apps-gateway) sebagai gantinya, mereka dihitung sebagai [pengaturan yang memerlukan persetujuan](/docs/id/server-managed-settings#environment-variables-and-the-approval-dialog).
+
 <h2 id="use-the-mantle-endpoint">
   Gunakan endpoint Mantle
 </h2>
 
-Mantle adalah endpoint Amazon Bedrock yang melayani model Claude melalui bentuk API Anthropic asli daripada Amazon Bedrock Invoke API. Ini menggunakan kredensial AWS yang sama, izin IAM, dan konfigurasi `awsAuthRefresh` yang dijelaskan sebelumnya di halaman ini.
+Mantle adalah endpoint Amazon Bedrock yang melayani model Claude melalui bentuk API Anthropic asli daripada Amazon Bedrock Invoke API. Ini menggunakan kredensial AWS yang sama [](#2-configure-aws-credentials) dan [konfigurasi `awsAuthRefresh`](#advanced-credential-configuration).
+
+Mantle memiliki tindakan IAM-nya sendiri di bawah awalan `bedrock-mantle:`, jadi tindakan `bedrock:` dalam [konfigurasi IAM](#iam-configuration) tidak mencakupnya. Berikan identitas IAM Anda `bedrock-mantle:CreateInference` untuk inferensi dan `bedrock-mantle:CountTokens` untuk penghitungan token. Lihat [Making inference requests](https://docs.aws.amazon.com/bedrock/latest/userguide/inference.html) dan [Counting tokens](https://docs.aws.amazon.com/bedrock/latest/userguide/count-tokens.html) dalam dokumentasi AWS, dan [service authorization reference](https://docs.aws.amazon.com/service-authorization/latest/reference/list_amazonbedrockpoweredbyawsmantle.html) untuk setiap tindakan Mantle.
 
 <h3 id="enable-mantle">
   Aktifkan Mantle
@@ -473,7 +533,7 @@ export CLAUDE_CODE_USE_MANTLE=1
 export AWS_REGION=us-east-1
 ```
 
-Claude Code membuat URL endpoint dari wilayah AWS. Mulai dari v2.1.172, wilayah diselesaikan dengan prioritas yang sama seperti [Amazon Bedrock di atas](#3-configure-claude-code); versi sebelumnya hanya menggunakan `AWS_REGION`. Untuk mengganti URL untuk endpoint khusus atau gateway, atur `ANTHROPIC_BEDROCK_MANTLE_BASE_URL`.
+Claude Code membuat URL endpoint dari wilayah AWS, diselesaikan dengan prioritas yang sama seperti [Amazon Bedrock di atas](#3-configure-claude-code). Untuk mengganti URL untuk endpoint khusus atau gateway, atur `ANTHROPIC_BEDROCK_MANTLE_BASE_URL`.
 
 Jalankan `/status` di dalam Claude Code untuk mengonfirmasi. Baris penyedia menunjukkan `Amazon Bedrock (Mantle)` ketika Mantle aktif.
 
@@ -549,6 +609,23 @@ Jika tab browser muncul berulang kali saat menggunakan AWS SSO, hapus pengaturan
 
 Jika lingkungan jaringan Anda mengganggu alur SSO berbasis browser otomatis, gunakan `aws sso login` secara manual sebelum memulai Claude Code alih-alih mengandalkan `awsAuthRefresh`.
 
+<h3 id="certificate-errors-behind-a-tls-inspecting-proxy">
+  Kesalahan sertifikat di belakang proxy yang melakukan inspeksi TLS
+</h3>
+
+Claude Code menerapkan konfigurasi [penyimpanan sertifikat CA](/docs/id/network-config#ca-certificate-store) Anda ke permintaannya ke AWS, termasuk:
+
+* Penemuan model
+* Penghitungan token
+* Panggilan kredensial peran STS dan SSO yang menyelesaikan kredensial AWS Anda
+* Verifikasi kredensial dan pemeriksaan model [wizard penyiapan](#sign-in-with-bedrock)
+
+Untuk permintaan ini, sertifikat akar perusahaan di penyimpanan kepercayaan OS Anda atau bundel `NODE_EXTRA_CA_CERTS` tidak memerlukan penyiapan khusus Amazon Bedrock.
+
+Sebelum v2.1.260, Claude Code menerapkan konfigurasi CA Anda ke permintaan ini hanya ketika mereka melewati proxy yang dikonfigurasi, dan pada koneksi langsung mereka hanya mempercayai penyimpanan sertifikat default runtime.
+
+Sebelum v2.1.261, pencarian kredensial di belakang pemeriksaan model wizard penyiapan dengan opsi **Use credentials already in my environment** masih hanya mempercayai penyimpanan sertifikat default runtime. Di belakang proxy yang melakukan inspeksi TLS yang sertifikat akarnya hanya ada di penyimpanan OS, permintaan yang terpengaruh gagal dengan `unable to get local issuer certificate`, atau wizard menunjukkan model sebagai `unreachable`, sementara permintaan inferensi berhasil. Perbarui ke v2.1.261 atau lebih baru.
+
 <h3 id="region-issues">
   Masalah wilayah
 </h3>
@@ -569,11 +646,17 @@ Claude Code menggunakan Amazon Bedrock [Invoke API](https://docs.aws.amazon.com/
   Kesalahan streaming di belakang gateway atau proxy
 </h3>
 
-Jika permintaan streaming gagal dengan kesalahan yang dimulai dengan `Bedrock streaming response has content-type`, gateway atau proxy antara Claude Code dan Amazon Bedrock mengubah respons streaming. Amazon Bedrock melakukan streaming respons dalam format event-stream biner dengan content-type `application/vnd.amazon.eventstream`, dan Claude Code menolak respons streaming yang berhasil yang melaporkan content-type berbeda alih-alih mendekode badan yang tidak dapat dibacanya. Kesalahan menyebutkan content-type yang diterima, biasanya `text/event-stream` dari integrasi Amazon API Gateway dan Lambda yang memancarkan kembali aliran sebagai server-sent events.
+Amazon Bedrock melakukan streaming respons `InvokeModelWithResponseStream` dalam format event-stream biner dengan header `Content-Type: application/vnd.amazon.eventstream`. Gateway atau proxy antara Claude Code dan Amazon Bedrock harus meneruskan badan respons dan headernya, termasuk `Content-Type`, seperti yang dikirim Amazon Bedrock.
 
-Sebelum v2.1.208, konfigurasi yang salah yang sama muncul sebagai `API Error: Truncated event message received` setelah seluruh respons telah di-buffer.
+Jika gateway menulis ulang `Content-Type` ke nilai lain, Claude Code menolak respons dengan kesalahan yang dimulai dengan `Bedrock streaming response has content-type`, menyebutkan nilai yang diterima. Penulisan ulang umum adalah `text/event-stream`, dari integrasi yang memancarkan kembali aliran sebagai server-sent events.
 
-Untuk memperbaikinya, konfigurasikan gateway untuk melewatkan badan respons `InvokeModelWithResponseStream` dan header `Content-Type`-nya tanpa diubah. Jika gateway hanya menulis ulang header dan melewatkan badan biner dengan utuh, atur [`CLAUDE_CODE_DISABLE_BEDROCK_CONTENT_TYPE_GUARD=1`](/docs/id/env-vars) untuk melewati pemeriksaan sampai gateway diperbaiki. Dengan pemeriksaan dimatikan, badan respons yang diubah gagal dengan `Truncated event message received` lagi.
+Jika gateway menghapus atau mengosongkan header sebagai gantinya, Claude Code mengasumsikan badan adalah event stream Amazon Bedrock dan mendekodenya, jadi badan yang gateway teruskan tanpa diubah terus melakukan streaming.
+
+Jika gateway yang menghapus header juga memancarkan kembali aliran sebagai server-sent events, Claude Code tidak dapat mendekode badan dan kembali ke jalur non-streaming yang lebih lambat pada setiap giliran: setiap respons muncul hanya setelah selesai alih-alih melakukan streaming. Dalam hal itu, atur [`CLAUDE_CODE_DISABLE_BEDROCK_CONTENT_TYPE_DEFAULT=1`](/docs/id/env-vars) sehingga Claude Code membaca badan sebagai server-sent events sebagai gantinya.
+
+Untuk memperbaiki kesalahan atau fallback, konfigurasikan gateway untuk meneruskan badan respons `InvokeModelWithResponseStream` dan header `Content-Type`-nya tanpa diubah.
+
+Gateway yang mengonversi aliran ke server-sent events tidak lagi melayani Amazon Bedrock API. Jika juga menerima permintaan Anthropic Messages API, hubungkan sebagai [gateway LLM](/docs/id/llm-gateway-connect) dengan `ANTHROPIC_BASE_URL` alih-alih `CLAUDE_CODE_USE_BEDROCK`.
 
 <h3 id="zero-token-counts-in-/context">
   Penghitungan token nol dalam /context
@@ -589,7 +672,10 @@ Perbarui ke v2.1.196 atau lebih baru.
 
 Jika `/status` tidak menunjukkan `Amazon Bedrock (Mantle)` setelah Anda menetapkan `CLAUDE_CODE_USE_MANTLE`, variabel tidak mencapai proses. Konfirmasi bahwa variabel diekspor di shell tempat Anda meluncurkan `claude`, atau atur di blok `env` dari [file pengaturan](/docs/id/settings) Anda.
 
-A `403` dari endpoint Mantle dengan kredensial yang valid berarti akun AWS Anda belum diberikan akses ke model yang Anda minta. Hubungi tim akun AWS Anda untuk meminta akses.
+Apa yang berarti `403` dari endpoint Mantle tergantung pada apakah kesalahan menyebutkan tindakan IAM:
+
+* Jika kesalahan menyebutkan tindakan `bedrock-mantle:`, berikan identitas IAM Anda tindakan itu.
+* Jika kesalahan tidak menyebutkan tindakan dan kredensial Anda valid, akun AWS Anda belum diberikan akses ke model yang Anda minta. Hubungi tim akun AWS Anda untuk meminta akses.
 
 A `400` yang menyebutkan ID model berarti model itu tidak dilayani di Mantle. Mantle memiliki lineup model sendiri yang terpisah dari katalog Bedrock standar, jadi ID profil inferensi seperti `us.anthropic.claude-sonnet-4-6` tidak akan berfungsi. Gunakan ID format Mantle, atau aktifkan [kedua endpoint](#run-mantle-alongside-the-invoke-api) sehingga Claude Code merutekan setiap permintaan ke endpoint tempat model tersedia.
 
@@ -601,5 +687,5 @@ A `400` yang menyebutkan ID model berarti model itu tidak dilayani di Mantle. Ma
 * [Harga Amazon Bedrock](https://aws.amazon.com/bedrock/pricing/)
 * [Profil inferensi Amazon Bedrock](https://docs.aws.amazon.com/bedrock/latest/userguide/inference-profiles-support.html)
 * [Burndown token Amazon Bedrock dan kuota](https://docs.aws.amazon.com/bedrock/latest/userguide/quotas-token-burndown.html)
-* [Claude Code di Amazon Bedrock: Panduan Pengaturan Cepat](https://community.aws/content/2tXkZKrZzlrlu0KfH8gST5Dkppq/claude-code-on-amazon-bedrock-quick-setup-guide)
+* [Claude Code di Amazon Bedrock: Panduan Pengaturan Cepat](https://builder.aws.com/content/2tXkZKrZzlrlu0KfH8gST5Dkppq/claude-code-on-amazon-bedrock-quick-setup-guide)
 * [Implementasi Pemantauan Claude Code (Amazon Bedrock)](https://github.com/aws-solutions-library-samples/guidance-for-claude-code-with-amazon-bedrock/blob/main/assets/docs/MONITORING.md)

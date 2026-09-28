@@ -36,7 +36,9 @@ Sebuah channel adalah server [MCP](https://modelcontextprotocol.io) yang berjala
 * **Chat platforms** (Telegram, Discord): plugin Anda berjalan secara lokal dan polling API platform untuk pesan baru. Ketika seseorang DM bot Anda, plugin menerima pesan dan meneruskannya ke Claude. Tidak ada URL untuk diekspos.
 * **Webhooks** (CI, monitoring): server Anda mendengarkan pada port HTTP lokal. Sistem eksternal POST ke port tersebut, dan server Anda mendorong payload ke Claude.
 
-<img src="https://mintcdn.com/claude-code/9FG0ZKj9uKYiHmbi/images/channel-architecture.svg?fit=max&auto=format&n=9FG0ZKj9uKYiHmbi&q=85&s=9a037b7da80184ae49015c0256b21a1f" alt="Diagram arsitektur menunjukkan sistem eksternal terhubung ke server channel lokal Anda, yang berkomunikasi dengan Claude Code melalui stdio" width="600" height="220" data-path="images/channel-architecture.svg" />
+<img src="https://mintcdn.com/claude-code/9FG0ZKj9uKYiHmbi/images/channel-architecture.svg?fit=max&auto=format&n=9FG0ZKj9uKYiHmbi&q=85&s=9a037b7da80184ae49015c0256b21a1f" className="dark:hidden" alt="Diagram arsitektur menunjukkan sistem eksternal terhubung ke server channel lokal Anda, yang berkomunikasi dengan Claude Code melalui stdio" width="600" height="220" data-path="images/channel-architecture.svg" />
+
+<img src="https://mintcdn.com/claude-code/_xqph1dUOslCOwsj/images/channel-architecture-dark.svg?fit=max&auto=format&n=_xqph1dUOslCOwsj&q=85&s=ae1e494440806a6a5d74a1279e22e162" className="hidden dark:block" alt="Diagram arsitektur menunjukkan sistem eksternal terhubung ke server channel lokal Anda, yang berkomunikasi dengan Claude Code melalui stdio" width="600" height="220" data-path="images/channel-architecture-dark.svg" />
 
 <h2 id="what-you-need">
   Yang Anda butuhkan
@@ -48,32 +50,32 @@ Server Anda perlu:
 
 1. Mendeklarasikan kemampuan `claude/channel` sehingga Claude Code mendaftarkan pendengar notifikasi
 2. Memancarkan event `notifications/claude/channel` ketika sesuatu terjadi
-3. Terhubung melalui [stdio transport](https://modelcontextprotocol.io/docs/concepts/transports#standard-io) (Claude Code menjalankan server Anda sebagai subprocess)
+3. Terhubung melalui [stdio transport](https://modelcontextprotocol.io/docs/concepts/transports#standard-io)
 
 Bagian [Server options](#server-options) dan [Notification format](#notification-format) mencakup masing-masing secara detail. Lihat [Contoh: bangun penerima webhook](#example-build-a-webhook-receiver) untuk panduan lengkap.
 
 Selama research preview, custom channels tidak ada di [approved allowlist](/docs/id/channels#supported-channels). Gunakan `--dangerously-load-development-channels` untuk menguji secara lokal. Lihat [Test during the research preview](#test-during-the-research-preview) untuk detail.
 
 <h2 id="example-build-a-webhook-receiver">
-  Contoh: bangun penerima webhook
+  Contoh: membangun penerima webhook
 </h2>
 
-Panduan ini membangun server file tunggal yang mendengarkan permintaan HTTP dan meneruskannya ke sesi Claude Code Anda. Pada akhirnya, apa pun yang dapat mengirim HTTP POST, seperti pipeline CI, alert monitoring, atau perintah `curl`, dapat mendorong event ke Claude.
+Panduan ini membangun server file tunggal yang mendengarkan permintaan HTTP dan meneruskannya ke sesi Claude Code Anda. Pada akhirnya, apa pun yang dapat mengirim HTTP POST, seperti pipeline CI, peringatan pemantauan, atau perintah `curl`, dapat mendorong acara ke Claude.
 
-Contoh ini menggunakan [Bun](https://bun.sh) sebagai runtime untuk server HTTP bawaan dan dukungan TypeScript. Anda dapat menggunakan [Node](https://nodejs.org) atau [Deno](https://deno.com) sebagai gantinya; satu-satunya persyaratan adalah [MCP SDK](https://www.npmjs.com/package/@modelcontextprotocol/sdk).
+Contoh ini menggunakan [Bun](https://bun.sh) sebagai runtime untuk server HTTP bawaan dan dukungan TypeScript-nya. Anda dapat menggunakan [Node](https://nodejs.org) atau [Deno](https://deno.com) sebagai gantinya; satu-satunya persyaratan adalah [MCP SDK](https://www.npmjs.com/package/@modelcontextprotocol/sdk).
 
 <Steps>
   <Step title="Buat proyek">
-    Buat direktori baru dan instal MCP SDK:
+    Contoh [relay izin](#relay-permission-prompts) mengimpor `zod` secara langsung, jadi itu dipasang bersama MCP SDK. Buat direktori baru dan pasang keduanya:
 
     ```bash theme={null}
     mkdir webhook-channel && cd webhook-channel
-    bun add @modelcontextprotocol/sdk
+    bun add @modelcontextprotocol/sdk zod
     ```
   </Step>
 
   <Step title="Tulis server channel">
-    Buat file bernama `webhook.ts`. Ini adalah seluruh server channel Anda: terhubung ke Claude Code melalui stdio, dan mendengarkan POST HTTP pada port 8788. Ketika permintaan tiba, mendorong body ke Claude sebagai channel event.
+    Buat file bernama `webhook.ts`. Ini adalah seluruh server channel Anda: ia terhubung ke Claude Code melalui stdio, dan ia mendengarkan POST HTTP pada port 8788. Ketika permintaan tiba, ia mendorong badan ke Claude sebagai acara channel.
 
     ```ts title="webhook.ts" theme={null}
     #!/usr/bin/env bun
@@ -86,8 +88,8 @@ Contoh ini menggunakan [Bun](https://bun.sh) sebagai runtime untuk server HTTP b
       {
         // kunci ini adalah yang membuatnya menjadi channel — Claude Code mendaftarkan pendengar untuknya
         capabilities: { experimental: { 'claude/channel': {} } },
-        // ditambahkan ke system prompt Claude sehingga tahu cara menangani event ini
-        instructions: 'Events dari webhook channel tiba sebagai <channel source="webhook" ...>. Mereka satu arah: baca dan bertindak, tidak ada balasan yang diharapkan.',
+        // Claude Code mengirimkan ini ke Claude sebagai konteks ketika server terhubung, jadi ia tahu cara menangani acara ini
+        instructions: 'Events from the webhook channel arrive as <channel source="webhook" ...>. They are one-way: read them and act, no reply expected.',
       },
     )
 
@@ -97,14 +99,14 @@ Contoh ini menggunakan [Bun](https://bun.sh) sebagai runtime untuk server HTTP b
     // Mulai server HTTP yang meneruskan setiap POST ke Claude
     Bun.serve({
       port: 8788,  // port terbuka apa pun berfungsi
-      // localhost-only: tidak ada yang di luar mesin ini dapat POST
+      // localhost-only: tidak ada yang di luar mesin ini yang dapat POST
       hostname: '127.0.0.1',
       async fetch(req) {
         const body = await req.text()
         await mcp.notification({
           method: 'notifications/claude/channel',
           params: {
-            content: body,  // menjadi body dari tag <channel>
+            content: body,  // menjadi badan tag <channel>
             // setiap kunci menjadi atribut tag, misalnya <channel path="/" method="POST">
             meta: { path: new URL(req.url).pathname, method: req.method },
           },
@@ -116,9 +118,9 @@ Contoh ini menggunakan [Bun](https://bun.sh) sebagai runtime untuk server HTTP b
 
     File melakukan tiga hal secara berurutan:
 
-    * **Server configuration**: membuat server MCP dengan `claude/channel` dalam capabilities, yang memberi tahu Claude Code ini adalah channel. String [`instructions`](#server-options) masuk ke system prompt Claude: beri tahu Claude event apa yang diharapkan, apakah akan membalas, dan bagaimana cara merutekan balasan jika harus.
-    * **Stdio connection**: terhubung ke Claude Code melalui stdin/stdout. Ini standar untuk server [MCP](https://modelcontextprotocol.io/docs/concepts/transports#standard-io) apa pun: Claude Code menjalankannya sebagai subprocess.
-    * **HTTP listener**: memulai server web lokal pada port 8788. Setiap body POST diteruskan ke Claude sebagai channel event melalui `mcp.notification()`. `content` menjadi body event, dan setiap entry `meta` menjadi atribut pada tag `<channel>`. Pendengar memerlukan akses ke instance `mcp`, jadi berjalan dalam proses yang sama. Anda dapat membaginya menjadi modul terpisah untuk proyek yang lebih besar.
+    * **Konfigurasi server**: membuat server MCP dengan `claude/channel` dalam kemampuannya, yang merupakan apa yang memberi tahu Claude Code bahwa ini adalah channel. Claude Code mengirimkan string [`instructions`](#server-options) ke Claude sebagai konteks ketika server terhubung: beri tahu Claude acara apa yang diharapkan, apakah akan membalas, dan cara merutekan balasan jika seharusnya.
+    * **Koneksi stdio**: terhubung ke Claude Code melalui stdin/stdout. Ini adalah standar untuk [server MCP](https://modelcontextprotocol.io/docs/concepts/transports#standard-io) apa pun.
+    * **Pendengar HTTP**: memulai server web lokal pada port 8788. Setiap badan POST diteruskan ke Claude sebagai acara channel melalui `mcp.notification()`. `content` menjadi badan acara, dan setiap entri `meta` menjadi atribut pada tag `<channel>`. Pendengar memerlukan akses ke instans `mcp`, jadi ia berjalan dalam proses yang sama. Anda dapat membaginya menjadi modul terpisah untuk proyek yang lebih besar.
   </Step>
 
   <Step title="Daftarkan server Anda dengan Claude Code">
@@ -136,42 +138,44 @@ Contoh ini menggunakan [Bun](https://bun.sh) sebagai runtime untuk server HTTP b
   </Step>
 
   <Step title="Uji">
-    Selama research preview, custom channels tidak ada di allowlist, jadi mulai Claude Code dengan flag pengembangan:
+    Selama pratinjau penelitian, channel kustom tidak ada di daftar izin, jadi mulai Claude Code dengan bendera pengembangan:
 
     ```bash theme={null}
     claude --dangerously-load-development-channels server:webhook
     ```
 
-    Kali pertama Anda memulai sesi dalam proyek ini, Claude Code meminta persetujuan sebelum menggunakan server baru dari `.mcp.json`. Dialog melaporkan "New MCP server found in this project: webhook". Pilih **Use this MCP server** untuk melanjutkan.
+    Claude Code pertama kali menampilkan dialog peringatan layar penuh yang mencantumkan channel pengembangan yang Anda muat. Pilih **I am using this for local development** untuk melanjutkan, atau **Exit** untuk keluar.
 
-    Ketika Claude Code dimulai, membaca konfigurasi MCP Anda, menjalankan `webhook.ts` Anda sebagai subprocess, dan pendengar HTTP dimulai secara otomatis pada port yang Anda konfigurasi (8788 dalam contoh ini). Anda tidak perlu menjalankan server sendiri.
+    Pertama kali Anda memulai sesi di proyek ini, Claude Code juga meminta persetujuan sebelum menggunakan server baru dari `.mcp.json`. Dialog melaporkan "New MCP server found in this project: webhook". Pilih **Use this MCP server** untuk melanjutkan.
 
-    Pemberitahuan redup di bawah banner startup mengonfirmasi channel terdaftar: `Channels (experimental) messages from server:webhook inject directly in this session · restart without --dangerously-load-development-channels to stop`.
+    Setelah Anda menerima, Claude Code menjalankan `webhook.ts` Anda sebagai subprocess, dan pendengar HTTP dimulai secara otomatis pada port yang Anda konfigurasi, 8788 dalam contoh ini. Anda tidak perlu menjalankan server sendiri.
 
-    Jika Anda melihat "blocked by org policy," admin organisasi Anda perlu [mengaktifkan channels](/docs/id/channels#enterprise-controls) terlebih dahulu.
+    Pemberitahuan redup di bawah spanduk startup mengonfirmasi channel terdaftar: `Channels (experimental) messages from server:webhook inject directly in this session · restart without --dangerously-load-development-channels to stop`.
 
-    Di terminal terpisah, simulasikan webhook dengan mengirim HTTP POST dengan pesan ke server Anda. Contoh ini mengirim alert kegagalan CI ke port 8788 (atau port apa pun yang Anda konfigurasi):
+    Jika Anda melihat "blocked by org policy," admin organisasi Anda perlu [mengaktifkan channel](/docs/id/channels#enterprise-controls) terlebih dahulu.
+
+    Di terminal terpisah, simulasikan webhook dengan mengirim HTTP POST dengan pesan ke server Anda. Contoh ini mengirim peringatan kegagalan CI ke port 8788 (atau port apa pun yang Anda konfigurasi):
 
     ```bash theme={null}
     curl -X POST localhost:8788 -d "build failed on main: https://ci.example.com/run/1234"
     ```
 
-    Payload tiba di sesi Claude Code Anda sebagai tag `<channel>`:
+    Muatan tiba dalam konteks Claude sebagai tag `<channel>`:
 
     ```text theme={null}
     <channel source="webhook" path="/" method="POST">build failed on main: https://ci.example.com/run/1234</channel>
     ```
 
-    Di terminal Claude Code Anda, Anda akan melihat Claude menerima pesan dan mulai merespons: membaca file, menjalankan perintah, atau apa pun yang diminta pesan. Ini adalah channel satu arah, jadi Claude bertindak dalam sesi Anda tetapi tidak mengirim apa pun kembali melalui webhook. Untuk menambahkan balasan, lihat [Expose a reply tool](#expose-a-reply-tool).
+    Terminal Anda merender acara sebagai ringkasan satu baris, `← webhook: build failed on main: https://ci.example.com/run/1234`, daripada tag mentah. Anda kemudian akan melihat Claude mulai merespons: membaca file, menjalankan perintah, atau apa pun yang diminta pesan. Ini adalah channel satu arah, jadi Claude bertindak dalam sesi Anda tetapi tidak mengirim apa pun kembali melalui webhook. Untuk menambahkan balasan, lihat [Expose a reply tool](#expose-a-reply-tool).
 
-    Jika event tidak tiba, diagnosis tergantung pada apa yang dikembalikan `curl`:
+    Jika acara tidak tiba, diagnosis tergantung pada apa yang dikembalikan `curl`:
 
-    * **`curl` berhasil tetapi tidak ada yang mencapai Claude**: jalankan `/mcp` dalam sesi Anda untuk memeriksa status server. "Failed to connect" biasanya berarti kesalahan dependensi atau impor dalam file server Anda; periksa debug log di `~/.claude/debug/<session-id>.txt` untuk jejak stderr.
-    * **`curl` gagal dengan "connection refused"**: port tidak terikat lagi atau proses basi dari run sebelumnya memegangnya. `lsof -i :<port>` menunjukkan apa yang mendengarkan; `kill` proses basi sebelum memulai ulang sesi Anda.
+    * **`curl` berhasil tetapi tidak ada yang mencapai Claude**: jalankan `/mcp` dalam sesi Anda untuk memeriksa status server. Status `failed` biasanya berarti kesalahan ketergantungan atau impor dalam file server Anda. Untuk melihat jejak stderr, mulai ulang dengan `claude --debug --dangerously-load-development-channels server:webhook` dan periksa log debug di `~/.claude/debug/<session-id>.txt`.
+    * **`curl` gagal dengan "connection refused"**: port baik belum terikat atau proses basi dari run sebelumnya memegangnya. `lsof -i :<port>` menunjukkan apa yang mendengarkan; `kill` proses basi sebelum memulai ulang sesi Anda.
   </Step>
 </Steps>
 
-[Server fakechat](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/fakechat) memperluas pola ini dengan UI web, lampiran file, dan tool balasan untuk chat dua arah.
+Server [fakechat](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/fakechat) memperluas pola ini dengan UI web, lampiran file, dan alat balasan untuk chat dua arah.
 
 <h2 id="test-during-the-research-preview">
   Uji selama research preview
@@ -187,7 +191,7 @@ claude --dangerously-load-development-channels plugin:yourplugin@yourmarketplace
 claude --dangerously-load-development-channels server:webhook
 ```
 
-Bypass per-entri. Menggabungkan flag ini dengan `--channels` tidak memperluas bypass ke entri `--channels`. Selama research preview, approved allowlist dikurasi oleh Anthropic, jadi channel Anda tetap pada flag pengembangan saat Anda membangun dan menguji.
+Bypass adalah per-entri. Menggabungkan flag ini dengan `--channels` tidak memperluas bypass ke entri `--channels`. Selama research preview, channel Anda tidak ada di approved allowlist, jadi channel Anda tetap pada flag pengembangan saat Anda membangun dan menguji.
 
 <Note>
   Flag ini melewati allowlist saja. Kebijakan organisasi `channelsEnabled` masih berlaku. Jangan gunakan untuk menjalankan channels dari sumber yang tidak terpercaya.
@@ -197,14 +201,14 @@ Bypass per-entri. Menggabungkan flag ini dengan `--channels` tidak memperluas by
   Server options
 </h2>
 
-Sebuah channel menetapkan opsi ini dalam konstruktor [`Server`](https://modelcontextprotocol.io/docs/concepts/servers). Field `instructions` dan `capabilities.tools` adalah [MCP standar](https://modelcontextprotocol.io/docs/concepts/servers); `capabilities.experimental['claude/channel']` dan `capabilities.experimental['claude/channel/permission']` adalah penambahan spesifik channel:
+Sebuah channel menetapkan opsi ini dalam konstruktor [`Server`](https://modelcontextprotocol.io/docs/learn/server-concepts). Field `instructions` dan `capabilities.tools` adalah [MCP standar](https://modelcontextprotocol.io/docs/learn/server-concepts); `capabilities.experimental['claude/channel']` dan `capabilities.experimental['claude/channel/permission']` adalah penambahan spesifik channel:
 
-| Field                                                    | Type     | Description                                                                                                                                                                                                                                                                                                          |
-| :------------------------------------------------------- | :------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `capabilities.experimental['claude/channel']`            | `object` | Diperlukan. Selalu `{}`. Kehadiran mendaftarkan pendengar notifikasi.                                                                                                                                                                                                                                                |
-| `capabilities.experimental['claude/channel/permission']` | `object` | Opsional. Selalu `{}`. Mendeklarasikan bahwa channel ini dapat menerima permission relay requests. Ketika dideklarasikan, Claude Code meneruskan permission prompts ke channel Anda sehingga Anda dapat menyetujui atau menolak mereka dari jarak jauh. Lihat [Relay permission prompts](#relay-permission-prompts). |
-| `capabilities.tools`                                     | `object` | Dua arah saja. Selalu `{}`. Kemampuan tool MCP standar. Lihat [Expose a reply tool](#expose-a-reply-tool).                                                                                                                                                                                                           |
-| `instructions`                                           | `string` | Direkomendasikan. Ditambahkan ke system prompt Claude. Beri tahu Claude event apa yang diharapkan, apa arti atribut tag `<channel>`, apakah akan membalas, dan jika demikian tool mana yang digunakan dan atribut mana yang diteruskan kembali (seperti `chat_id`).                                                  |
+| Field                                                    | Type                  | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| :------------------------------------------------------- | :-------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `capabilities.experimental['claude/channel']`            | `object`              | Diperlukan. Selalu `{}`. Kehadiran mendaftarkan pendengar notifikasi.                                                                                                                                                                                                                                                                                                                                                                                               |
+| `capabilities.experimental['claude/channel/permission']` | `object` atau `false` | Opsional. Atur ke `{}` untuk mendeklarasikan bahwa channel ini dapat menerima permission relay requests. Ketika dideklarasikan, Claude Code meneruskan permission prompts ke channel Anda sehingga Anda dapat menyetujui atau menolak mereka dari jarak jauh. Untuk tidak mengikuti, hilangkan kunci atau atur ke `false`. Sebelum v2.1.234, Claude Code memperlakukan `false` sebagai dideklarasikan. Lihat [Relay permission prompts](#relay-permission-prompts). |
+| `capabilities.tools`                                     | `object`              | Dua arah saja. Selalu `{}`. Kemampuan tool MCP standar. Lihat [Expose a reply tool](#expose-a-reply-tool).                                                                                                                                                                                                                                                                                                                                                          |
+| `instructions`                                           | `string`              | Direkomendasikan. Claude Code menyampaikannya ke Claude sebagai konteks ketika server terhubung. Beri tahu Claude event apa yang diharapkan, apa arti atribut tag `<channel>`, apakah akan membalas, dan jika demikian tool mana yang digunakan dan atribut mana yang diteruskan kembali (seperti `chat_id`).                                                                                                                                                       |
 
 Untuk membuat channel satu arah, hilangkan `capabilities.tools`. Contoh ini menunjukkan setup dua arah dengan kemampuan channel, tools, dan instructions yang ditetapkan:
 
@@ -218,13 +222,11 @@ const mcp = new Server(
       experimental: { 'claude/channel': {} },  // mendaftarkan pendengar channel
       tools: {},  // hilangkan untuk channels satu arah
     },
-    // ditambahkan ke system prompt Claude sehingga tahu cara menangani event Anda
+    // Claude Code menyampaikan ini ke Claude sebagai konteks ketika server terhubung, sehingga tahu cara menangani event Anda
     instructions: 'Messages tiba sebagai <channel source="your-channel" ...>. Balas dengan tool balasan.',
   },
 )
 ```
-
-Untuk mendorong event, panggil `mcp.notification()` dengan method `notifications/claude/channel`. Params ada di bagian berikutnya.
 
 <h2 id="notification-format">
   Notification format
@@ -257,7 +259,7 @@ build failed on main: https://ci.example.com/run/1234
 </channel>
 ```
 
-Notifikasi tidak diakui. `await` pada `mcp.notification()` diselesaikan ketika pesan ditulis ke transport, bukan ketika Claude telah memprosesnya. Jika sesi belum memuat server Anda sebagai channel, atau kebijakan organisasi membloknya, event dijatuhkan diam-diam tanpa error dikembalikan ke server Anda.
+Claude Code tidak mengakui notifikasi. `await` pada `mcp.notification()` diselesaikan ketika pesan ditulis ke transport, bukan ketika Claude telah memprosesnya. Jika sesi belum memuat server Anda sebagai channel, atau kebijakan organisasi membloknya, event dijatuhkan secara diam-diam dan tidak ada error yang dikembalikan ke server Anda.
 
 Jika Anda memerlukan konfirmasi pengiriman, lacak state event dalam server Anda dan ekspos [reply tool](#expose-a-reply-tool) yang dapat dipanggil Claude untuk melaporkan status kembali.
 
@@ -447,7 +449,7 @@ await mcp.notification({ ... })
 
 Gate pada identitas pengirim, bukan identitas chat atau ruangan: `message.from.id` dalam contoh, bukan `message.chat.id`. Dalam chat grup, ini berbeda, dan gating pada ruangan akan membiarkan siapa pun dalam grup yang diizinkan menyuntikkan pesan ke dalam sesi.
 
-Channel [Telegram](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/telegram) dan [Discord](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/discord) gate pada allowlist pengirim dengan cara yang sama. Mereka bootstrap list dengan pairing: pengguna DM bot, bot membalas dengan kode pairing, pengguna menyetujuinya dalam sesi Claude Code mereka, dan ID platform mereka ditambahkan. Lihat implementasi mana pun untuk alur pairing lengkap. Channel [iMessage](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/imessage) mengambil pendekatan berbeda: mendeteksi alamat pengguna sendiri dari database Messages saat startup dan membiarkan mereka melewati secara otomatis, dengan pengirim lain ditambahkan oleh handle.
+Channel [Telegram](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/telegram) dan [Discord](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/discord) gate pada allowlist pengirim dengan cara yang sama. Mereka bootstrap list dengan [pairing](/docs/id/channels#security). Lihat implementasi mana pun untuk alur pairing lengkap. Channel [iMessage](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/imessage) mengambil pendekatan berbeda: mendeteksi alamat pengguna sendiri dari database Messages saat startup dan membiarkan mereka melewati secara otomatis, dengan pengirim lain ditambahkan oleh handle.
 
 <h2 id="relay-permission-prompts">
   Relay permission prompts
@@ -456,6 +458,8 @@ Channel [Telegram](https://github.com/anthropics/claude-plugins-official/tree/ma
 Ketika Claude memanggil tool yang memerlukan persetujuan, dialog terminal lokal terbuka dan sesi menunggu. Channel dua arah dapat memilih untuk menerima prompt yang sama secara paralel dan meneruskannya kepada Anda di perangkat lain. Keduanya tetap aktif: Anda dapat menjawab di terminal atau di ponsel, dan Claude Code menerapkan jawaban mana pun yang tiba terlebih dahulu dan menutup yang lain.
 
 Relay mencakup persetujuan penggunaan tool seperti `Bash`, `Write`, dan `Edit`. Dialog kepercayaan proyek dan persetujuan server MCP tidak relay; hanya muncul di terminal lokal.
+
+Claude Code v2.1.234 dan yang lebih baru mengirim permintaan permission hanya ke server yang didaftarkan sebagai channel untuk sesi, jadi relay berada di belakang [session opt-in dan organization controls](/docs/id/channels#security) yang sama seperti pengiriman pesan. Relay juga memerlukan Anda untuk opt in server dengan `--channels` atau development flag, dan memerlukan server untuk mendeklarasikan capability permission.
 
 <h3 id="how-relay-works">
   Bagaimana relay bekerja
@@ -470,7 +474,9 @@ Ketika permission prompt terbuka, loop relay memiliki empat langkah:
 
 Dialog terminal lokal tetap terbuka melalui semua ini. Jika seseorang di terminal menjawab sebelum verdict jarak jauh tiba, jawaban itu diterapkan sebagai gantinya dan permintaan jarak jauh yang tertunda dijatuhkan.
 
-<img src="https://mintcdn.com/claude-code/9FG0ZKj9uKYiHmbi/images/channel-permission-relay.svg?fit=max&auto=format&n=9FG0ZKj9uKYiHmbi&q=85&s=97d57f128f0da55f105ab1e3a7e10240" alt="Diagram urutan: Claude Code mengirim notifikasi permission_request ke server channel, server memformat dan mengirim prompt ke aplikasi chat, manusia membalas dengan verdict, dan server menguraikan balasan itu menjadi notifikasi permission kembali ke Claude Code" width="600" height="230" data-path="images/channel-permission-relay.svg" />
+<img src="https://mintcdn.com/claude-code/9FG0ZKj9uKYiHmbi/images/channel-permission-relay.svg?fit=max&auto=format&n=9FG0ZKj9uKYiHmbi&q=85&s=97d57f128f0da55f105ab1e3a7e10240" className="dark:hidden" alt="Diagram urutan: Claude Code mengirim notifikasi permission_request ke server channel, server memformat dan mengirim prompt ke aplikasi chat, manusia membalas dengan verdict, dan server menguraikan balasan itu menjadi notifikasi permission kembali ke Claude Code" width="600" height="230" data-path="images/channel-permission-relay.svg" />
+
+<img src="https://mintcdn.com/claude-code/_xqph1dUOslCOwsj/images/channel-permission-relay-dark.svg?fit=max&auto=format&n=_xqph1dUOslCOwsj&q=85&s=368c8d9119a9a9cff5d826d806724842" className="hidden dark:block" alt="Diagram urutan: Claude Code mengirim notifikasi permission_request ke server channel, server memformat dan mengirim prompt ke aplikasi chat, manusia membalas dengan verdict, dan server menguraikan balasan itu menjadi notifikasi permission kembali ke Claude Code" width="600" height="230" data-path="images/channel-permission-relay-dark.svg" />
 
 <h3 id="permission-request-fields">
   Permission request fields
@@ -482,10 +488,28 @@ Notifikasi outbound dari Claude Code adalah `notifications/claude/channel/permis
 | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `request_id`    | Lima huruf kecil diambil dari `a`-`z` tanpa `l`, jadi tidak pernah dibaca sebagai `1` atau `I` ketika diketik di ponsel. Sertakan dalam prompt outgoing Anda sehingga dapat diulang dalam balasan. Claude Code hanya menerima verdict yang membawa ID yang dikeluarkannya. Dialog terminal lokal tidak menampilkan ID ini, jadi handler outbound Anda adalah satu-satunya cara untuk mempelajarinya. |
 | `tool_name`     | Nama tool yang ingin dipanggil Claude, misalnya `Bash` atau `Write`.                                                                                                                                                                                                                                                                                                                                 |
-| `description`   | Ringkasan yang dapat dibaca manusia tentang apa yang dilakukan panggilan tool spesifik ini, teks yang sama yang ditampilkan dialog terminal lokal. Untuk panggilan Bash ini adalah deskripsi Claude tentang perintah, atau perintah itu sendiri jika tidak ada yang diberikan.                                                                                                                       |
-| `input_preview` | Argumen tool sebagai string JSON, dipotong menjadi 200 karakter. Untuk Bash ini adalah perintah; untuk Write ini adalah jalur file dan awalan konten. Hilangkan dari prompt Anda jika Anda hanya memiliki ruang untuk pesan satu baris. Server Anda memutuskan apa yang akan ditampilkan.                                                                                                            |
+| `description`   | Ringkasan yang dapat dibaca manusia tentang apa yang dilakukan panggilan tool spesifik ini, bukan perintah itu sendiri. Untuk panggilan Bash ini adalah deskripsi Claude tentang perintah; ketika model tidak memberikan deskripsi, field adalah konstanta `Run shell command` dan membawa nol detail perintah. Render `input_preview` ketika Anda memiliki ruang.                                   |
+| `input_preview` | Argumen tool sebagai teks JSON-shaped, dikunci per field tingkat atas. Untuk Bash ini adalah perintah; untuk Write, jalur file dan konten. Hilangkan dari prompt Anda jika Anda hanya memiliki ruang untuk pesan satu baris. Server Anda memutuskan apa yang akan ditampilkan.                                                                                                                       |
 
-Verdict yang dikirim server Anda kembali adalah `notifications/claude/channel/permission` dengan dua field: `request_id` mengulangi ID di atas, dan `behavior` diatur ke `'allow'` atau `'deny'`. Allow membiarkan panggilan tool melanjutkan; deny menolaknya, sama seperti menjawab No dalam dialog lokal. Tidak ada verdict yang mempengaruhi panggilan masa depan.
+Klien pada Claude Code v2.1.211 atau yang lebih baru membersihkan `description` dan `input_preview` sebelum meneruskannya. Harapkan tiga perubahan dalam teks yang Anda terima:
+
+* Claude Code menetralkan karakter override arah, karakter tak terlihat, dan lookalike tanda kutip dan kurung sudut.
+* Claude Code melipat setiap run whitespace menjadi satu spasi.
+* Claude Code meneruskan teks utuh hingga 3.500 code point. Untuk nilai yang lebih panjang, Anda menerima awal dan akhirnya di sekitar marker `⋯ N code points elided ⋯` yang dihitung. Akhir dari perintah panjang masih mencapai approver.
+
+Untuk `input_preview`, Claude Code menerapkan batas 3.500 ke setiap field tingkat atas dari argumen secara terpisah dan menjaga tanda kutip struktural JSON. Klien sebelum v2.1.211 meneruskan `description` mentah dan memotong `input_preview` menjadi 200 unit UTF-16 dengan ellipsis trailing.
+
+Klien pada Claude Code v2.1.234 atau yang lebih baru meneruskan marker `(value unserializable)` sebagai pengganti nilai field `input_preview` yang tidak dapat mereka serialisasi dengan aman, seperti struktur sirkular atau array yang sangat besar. Anda masih menerima kunci field, dan field preview lainnya tidak berubah.
+
+Klien pada Claude Code v2.1.234 atau yang lebih baru juga menyembunyikan kredensial dalam `description` dan `input_preview`. Anda menerima `[REDACTED]` sebagai pengganti token kredensial provider yang dapat dikenali, seperti API key atau personal access token. Harapkan tiga efek dari penyembunyian ketika Anda merender field:
+
+* Claude Code menyembunyikan nama kunci di dalam `input_preview` serta nilai mereka. Nama kunci yang Anda tampilkan mungkin tidak cocok dengan nama kunci dalam input.
+* Claude Code tidak pernah menyembunyikan span yang berisi sintaks shell, karakter path, atau karakter URL. Mask tidak dapat menyembunyikan perintah, jalur file, atau tujuan yang disetujui.
+* Claude Code tidak menyembunyikan secret yang kekurangan prefix yang dapat dikenali, atau secret yang merentang whitespace, seperti blok private-key. Keduanya mencapai server Anda tanpa mask.
+
+Penyembunyian tidak mengubah siapa yang menerima field. Apa pun yang tetap tanpa mask hanya masuk ke server yang Anda opt in dengan `--channels` atau development flag. Perlakukan kedua field sebagai untrusted kecuali Anda mengontrol client fleet.
+
+Verdict yang dikirim server Anda kembali adalah `notifications/claude/channel/permission` dengan dua field: `request_id` mengulangi ID di atas, dan `behavior` diatur ke `'allow'` atau `'deny'`. Allow membiarkan panggilan tool melanjutkan; deny menolaknya. Tidak ada verdict yang mempengaruhi panggilan masa depan.
 
 <h3 id="add-relay-to-a-chat-bridge">
   Tambahkan relay ke chat bridge
@@ -529,8 +553,8 @@ Untuk menambahkan ini ke chat bridge dua arah seperti yang dirakit dalam [Expose
       params: z.object({
         request_id: z.string(),     // lima huruf kecil, sertakan verbatim dalam prompt Anda
         tool_name: z.string(),      // misalnya "Bash", "Write"
-        description: z.string(),    // ringkasan yang dapat dibaca manusia tentang panggilan ini
-        input_preview: z.string(),  // argumen tool sebagai JSON, dipotong menjadi ~200 karakter
+        description: z.string(),    // ringkasan panggilan ini. Perlakukan sebagai untrusted.
+        input_preview: z.string(),  // argumen tool sebagai teks JSON-shaped. Perlakukan sebagai untrusted.
       }),
     })
 
@@ -538,7 +562,11 @@ Untuk menambahkan ini ke chat bridge dua arah seperti yang dirakit dalam [Expose
       // send() adalah outbound Anda: POST ke platform chat Anda, atau untuk pengujian lokal
       // broadcast SSE yang ditunjukkan dalam contoh lengkap di bawah.
       send(
-        `Claude ingin menjalankan ${params.tool_name}: ${params.description}\n\n` +
+        `Claude ingin menjalankan ${params.tool_name}: ${params.description}\n` +
+        // input_preview membawa argumen aktual; render ketika Anda
+        // memiliki ruang: untuk Bash deskripsi saja mungkin hanya
+        // "Run shell command" dengan nol detail perintah
+        `${params.input_preview}\n\n` +
         // ID dalam instruksi adalah apa yang diuraikan handler inbound Anda dalam Langkah 3
         `Balas "yes ${params.request_id}" atau "no ${params.request_id}"`,
       )
@@ -584,7 +612,7 @@ Untuk menambahkan ini ke chat bridge dua arah seperti yang dirakit dalam [Expose
   </Step>
 </Steps>
 
-Claude Code juga menjaga dialog terminal lokal tetap terbuka, jadi Anda dapat menjawab di tempat mana pun, dan jawaban pertama yang tiba diterapkan. Balasan jarak jauh yang tidak cocok dengan format yang diharapkan dengan tepat gagal dalam salah satu dari dua cara, dan dalam kedua kasus dialog tetap terbuka:
+Balasan jarak jauh yang tidak cocok dengan format yang diharapkan dengan tepat gagal dalam salah satu dari dua cara, dan dalam kedua kasus dialog terminal lokal tetap terbuka:
 
 * **Format berbeda**: regex handler inbound Anda gagal cocok, jadi teks seperti `approve it` atau `yes` tanpa ID jatuh melalui sebagai pesan normal ke Claude.
 * **Format benar, ID salah**: server Anda memancarkan verdict, tetapi Claude Code tidak menemukan permintaan terbuka dengan ID itu dan menjatuhkannya diam-diam.
@@ -600,7 +628,7 @@ Untuk membuat kedua arah dapat diuji dari curl, pendengar HTTP melayani dua jalu
 * **`GET /events`**: memegang aliran SSE terbuka dan mendorong setiap pesan outbound sebagai baris `data:`, jadi `curl -N` dapat menonton balasan Claude dan permission prompts tiba secara langsung.
 * **`POST /`**: sisi inbound, handler yang sama seperti sebelumnya, sekarang dengan pemeriksaan format verdict disisipkan sebelum cabang chat-forward.
 
-```ts title="Full webhook.ts with permission relay' expandable theme={null}
+```ts title="Full webhook.ts with permission relay" expandable theme={null}
 #!/usr/bin/env bun
 import { Server } from '@modelcontextprotocol/sdk/server/index.js'
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
@@ -630,7 +658,7 @@ const mcp = new Server(
       tools: {},
     },
     instructions:
-      'Messages tiba sebagai <channel source="webhook" chat_id="...">. ' +
+      'Pesan tiba sebagai <channel source="webhook" chat_id="...">. ' +
       'Balas dengan tool balasan, melewatkan chat_id dari tag.',
   },
 )
@@ -673,7 +701,8 @@ const PermissionRequestSchema = z.object({
 
 mcp.setNotificationHandler(PermissionRequestSchema, async ({ params }) => {
   send(
-    `Claude ingin menjalankan ${params.tool_name}: ${params.description}\n\n` +
+    `Claude ingin menjalankan ${params.tool_name}: ${params.description}\n` +
+    `${params.input_preview}\n\n` +
     `Balas "yes ${params.request_id}" atau "no ${params.request_id}"`,
   )
 })
@@ -741,6 +770,8 @@ Uji jalur verdict dalam tiga terminal. Yang pertama adalah sesi Claude Code Anda
 claude --dangerously-load-development-channels server:webhook
 ```
 
+Panduan ini menguji dialog permission itu sendiri, jadi setelah sesi terbuka, tekan `Shift+Tab` hingga status bar menunjukkan `⏸ manual mode on`. Dalam auto mode classifier akan memutuskan panggilan `reply` sebagai gantinya dari Anda, dan tidak ada dialog yang akan terbuka untuk sisi jarak jauh untuk menjawab.
+
 Di yang kedua, alirkan sisi outbound sehingga Anda dapat melihat balasan Claude dan permission prompts apa pun saat mereka menyala:
 
 ```bash theme={null}
@@ -771,9 +802,9 @@ Tiga bagian spesifik channel dalam file ini:
   Paket sebagai plugin
 </h2>
 
-Untuk membuat channel Anda dapat diinstal dan dibagikan, bungkus dalam [plugin](/docs/id/plugins) dan publikasikan ke [marketplace](/docs/id/plugin-marketplaces). Pengguna menginstalnya dengan `/plugin install`, kemudian mengaktifkannya per sesi dengan `--channels plugin:<name>@<marketplace>`.
+Untuk membuat channel Anda dapat diinstal dan dibagikan, bungkus dalam [plugin](/docs/id/plugins/overview) dan publikasikan ke [marketplace](/docs/id/plugins/overview). Pengguna menginstalnya dengan `/plugin install`, kemudian mengaktifkannya per sesi dengan `--channels plugin:<name>@<marketplace>`.
 
-Channel yang dipublikasikan ke marketplace Anda sendiri masih memerlukan `--dangerously-load-development-channels` untuk berjalan, karena tidak ada di [approved allowlist](/docs/id/channels#supported-channels). Allowlist default adalah plugin channel di `claude-plugins-official`, yang dikurasi Anthropic sesuai kebijaksanaannya. [Formulir pengajuan in-app](/docs/id/plugins#submit-your-plugin-to-the-community-marketplace) menambahkan plugin ke community marketplace, yang tidak ada di allowlist channel.
+Channel yang dipublikasikan ke marketplace Anda sendiri masih memerlukan `--dangerously-load-development-channels` untuk berjalan, karena tidak ada di [approved allowlist](/docs/id/channels#supported-channels). Allowlist default adalah plugin channel di `claude-plugins-official`. [Formulir pengajuan in-app](/docs/id/plugins/publish#submit-to-the-community-marketplace) menambahkan plugin ke community marketplace, yang tidak ada di allowlist channel.
 
 Jika Anda bekerja dengan kontak partner Anthropic, hubungi mereka untuk mengoordinasikan listing official-marketplace. Pada rencana Team dan Enterprise, admin dapat sebagai gantinya menyertakan plugin Anda dalam daftar [`allowedChannelPlugins`](/docs/id/channels#restrict-which-channel-plugins-can-run) organisasi, yang menggantikan allowlist Anthropic default.
 
@@ -784,4 +815,4 @@ Jika Anda bekerja dengan kontak partner Anthropic, hubungi mereka untuk mengoord
 * [Channels](/docs/id/channels) untuk menginstal dan menggunakan Telegram, Discord, iMessage, atau demo fakechat, dan untuk mengaktifkan channels untuk Team atau Enterprise org
 * [Working channel implementations](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins) untuk kode server lengkap dengan alur pairing, tools balasan, dan lampiran file
 * [MCP](/docs/id/mcp) untuk protokol dasar yang diimplementasikan server channel
-* [Plugins](/docs/id/plugins) untuk mengemas channel Anda sehingga pengguna dapat menginstalnya dengan `/plugin install`
+* [Plugins](/docs/id/plugins/overview) untuk mengemas channel Anda sehingga pengguna dapat menginstalnya dengan `/plugin install`

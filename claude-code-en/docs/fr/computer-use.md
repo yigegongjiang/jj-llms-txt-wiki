@@ -36,7 +36,7 @@ Claude a plusieurs façons d'interagir avec une application ou un service. L'uti
 * Si la tâche est du travail de navigateur et que vous avez [Claude dans Chrome](/docs/fr/chrome) configuré, Claude l'utilise.
 * Si aucun de ces éléments ne s'applique, Claude utilise l'utilisation de l'ordinateur.
 
-Le contrôle de l'écran est réservé aux choses que rien d'autre ne peut atteindre : les applications natives, les simulateurs et les outils sans API.
+Le contrôle de l'écran est réservé aux choses que rien d'autre ne peut atteindre : les applications natives, les simulateurs tels que l'iOS Simulator, et les outils sans API.
 
 <h2 id="enable-computer-use">
   Activer l'utilisation de l'ordinateur
@@ -99,6 +99,8 @@ Les applications avec une large portée affichent un avertissement supplémentai
 
 Ces applications ne sont pas bloquées. L'avertissement vous permet de décider si la tâche justifie ce niveau d'accès.
 
+Approuvez Finder pour permettre à Claude de cliquer sur le bureau, le Dock ou une fenêtre Finder.
+
 Le niveau de contrôle de Claude varie également selon la catégorie d'application : les navigateurs et les plateformes de trading sont en lecture seule, les terminaux et les IDE sont en clic uniquement, et tout le reste obtient un contrôle complet. Consultez [autorisations des applications dans Desktop](/docs/fr/desktop#app-permissions) pour la répartition complète des niveaux.
 
 <h2 id="how-claude-works-on-your-screen">
@@ -111,7 +113,7 @@ Comprendre le flux vous aide à anticiper ce que Claude fera et comment interven
   Une session à la fois
 </h3>
 
-L'utilisation de l'ordinateur maintient un verrou à l'échelle de la machine à partir de la première action d'utilisation de l'ordinateur jusqu'à ce que la session qui l'a acquis se termine. À partir de la v2.1.195, terminer la tâche ne libère pas le verrou ; seule la fermeture de la session le fait. Si une autre session Claude Code utilise déjà votre ordinateur, les nouvelles tentatives échouent avec un message vous indiquant quelle session détient le verrou. Quittez d'abord cette session.
+Une seule session à la fois peut utiliser votre ordinateur. Une session acquiert un verrou à l'échelle de la machine lors de sa première action d'utilisation de l'ordinateur et le libère lorsque la session se termine, pas lorsque la tâche se termine. Une deuxième session échoue avec une erreur nommant la session qui détient le verrou. Quittez d'abord cette session.
 
 <h3 id="apps-are-hidden-while-claude-works">
   Les applications sont masquées pendant que Claude travaille
@@ -133,7 +135,7 @@ Il n'y a pas de paramètre pour modifier la taille cible. Si le texte ou les con
   Arrêter à tout moment
 </h3>
 
-Lorsque Claude acquiert le verrou, une notification macOS apparaît : « Claude utilise votre ordinateur · appuyez sur Échap pour arrêter ». Appuyez sur `Échap` n'importe où pour abandonner l'action actuelle immédiatement, ou appuyez sur `Ctrl+C` dans le terminal. De toute façon, Claude s'arrête, affiche vos applications et vous rend le contrôle. La session conserve le [verrou d'utilisation de l'ordinateur](#one-session-at-a-time) jusqu'à ce qu'elle se termine.
+La première fois que Claude utilise votre ordinateur à chaque tour, une notification macOS apparaît : « Claude utilise votre ordinateur · appuyez sur Échap pour arrêter ». Appuyez sur `Échap` n'importe où pour abandonner l'action actuelle immédiatement, ou appuyez sur `Ctrl+C` dans le terminal. De toute façon, Claude s'arrête, affiche vos applications et vous rend le contrôle. La session conserve le [verrou d'utilisation de l'ordinateur](#one-session-at-a-time) jusqu'à ce qu'elle se termine.
 
 Une deuxième notification apparaît lorsque Claude a terminé.
 
@@ -199,7 +201,7 @@ Ouvrez le simulateur iOS, lancez l'application, appuyez sur les écrans
 d'intégration et dites-moi si un écran prend plus d'une seconde à charger.
 ```
 
-Claude contrôle le simulateur de la même manière que vous le feriez avec une souris.
+Claude contrôle le simulateur de la même manière que vous le feriez avec une souris. Ce flux s'applique à la CLI ; dans l'application Desktop, la même demande ouvre le [volet du simulateur iOS](/docs/fr/desktop-ios-simulator) à la place du contrôle d'écran.
 
 <h2 id="differences-from-the-desktop-app">
   Différences par rapport à l'application Desktop

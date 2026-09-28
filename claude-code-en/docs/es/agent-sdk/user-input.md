@@ -12,7 +12,7 @@ Claude solicita entrada del usuario en dos situaciones: cuando necesita **permis
 
 Para preguntas aclaratorias, Claude genera las preguntas y opciones. Su función es presentarlas a los usuarios y devolver sus selecciones. No puede agregar sus propias preguntas a este flujo; si necesita preguntarle algo a los usuarios usted mismo, hágalo por separado en la lógica de su aplicación.
 
-El callback puede permanecer pendiente indefinidamente. La ejecución permanece pausada hasta que su callback regrese, y el SDK solo cancela la espera cuando la consulta misma se cancela. Si un usuario podría tardar más en responder de lo que su proceso puede razonablemente mantenerse ejecutando, devuelva la [decisión del hook `defer`](/docs/es/hooks#defer-a-tool-call-for-later), que permite que el proceso salga y se reanude más tarde desde la sesión persistida.
+El callback puede permanecer pendiente indefinidamente. La ejecución permanece pausada hasta que su callback regrese. Si un usuario podría tardar más en responder de lo que su proceso puede razonablemente mantenerse ejecutando, registre un [hook `PreToolUse`](/docs/es/agent-sdk/hooks) que devuelva la [decisión `defer`](/docs/es/hooks#defer-a-tool-call-for-later) en lugar de esperar en el callback, para que el proceso pueda salir y reanudarse más tarde desde la sesión persistida.
 
 Esta guía le muestra cómo detectar cada tipo de solicitud y responder apropiadamente.
 
@@ -24,6 +24,9 @@ Pase un callback `canUseTool` en sus opciones de consulta. El callback se activa
 
 <CodeGroup>
   ```python Python theme={null}
+  from claude_agent_sdk import ClaudeAgentOptions
+
+
   async def handle_tool_request(tool_name, input_data, context):
       # Solicitar al usuario y devolver permitir o denegar
       ...
@@ -48,9 +51,9 @@ El callback se activa en dos casos:
 2. **Claude hace una pregunta**: Claude llama a la herramienta `AskUserQuestion`. Verifique si `tool_name == "AskUserQuestion"` para manejarlo de manera diferente. Si especifica un array `tools`, incluya `AskUserQuestion` para que esto funcione. Vea [Manejar preguntas aclaratorias](#handle-clarifying-questions) para más detalles.
 
 <Warning>
-  **El callback nunca se activa para herramientas aprobadas automáticamente.** Cualquier aprobación anterior en el [flujo de evaluación de permisos](/docs/es/agent-sdk/permissions#how-permissions-are-evaluated), una regla de permiso o un modo como `acceptEdits` o `bypassPermissions`, resuelve la llamada antes de que se consulte `canUseTool`. Si enumera una herramienta directamente en `allowed_tools`, una verificación `canUseTool` para esa herramienta nunca se ejecuta a menos que una regla de pregunta o modo `plan` redirija la llamada de vuelta a un prompt. Para lógica que debe aplicarse a cada llamada de herramienta, use un [hook `PreToolUse`](/docs/es/agent-sdk/hooks), que se ejecuta antes del resto del flujo y puede permitir, denegar o modificar solicitudes.
+  **El callback nunca se activa para herramientas aprobadas automáticamente.** Cualquier aprobación anterior en el [flujo de evaluación de permisos](/docs/es/agent-sdk/permissions#how-permissions-are-evaluated), una regla de permiso o un modo como `acceptEdits` o `bypassPermissions`, resuelve la llamada antes de que se consulte `canUseTool`. Si enumera una herramienta directamente en `allowed_tools`, una verificación `canUseTool` para esa herramienta se ejecuta solo cuando el [flujo de evaluación](/docs/es/agent-sdk/permissions#how-permissions-are-evaluated) redirija la llamada de vuelta a un prompt, como una regla de pregunta o modo `plan`. Para lógica que debe aplicarse a cada llamada de herramienta, use un [hook `PreToolUse`](/docs/es/agent-sdk/hooks), que se ejecuta antes del resto del flujo y puede permitir, denegar o modificar solicitudes.
 
-  `AskUserQuestion`, herramientas MCP marcadas como [`requiresUserInteraction`](/docs/es/mcp#require-approval-for-a-specific-tool), y herramientas de conector [que su organización configuró como `ask`](/docs/es/mcp#organization-controls-on-connector-tools) llegan al callback incluso cuando una regla de permiso coincide. En modo `dontAsk` estas llamadas se deniegan en su lugar, sin invocar el callback.
+  Una regla de permiso no aprueba previamente las [acciones que ningún modo aprueba automáticamente](/docs/es/permission-modes#actions-no-mode-auto-approves); vea [Cómo se evalúan los permisos](/docs/es/agent-sdk/permissions#how-permissions-are-evaluated) para saber cuáles de ellas llegan al callback y qué sucede en modo `dontAsk` y `auto`.
 </Warning>
 
 También puede usar el [hook `PermissionRequest`](/docs/es/agent-sdk/hooks#available-hooks) para enviar notificaciones externas (Slack, correo electrónico, push) cuando Claude está esperando aprobación.
@@ -59,13 +62,15 @@ También puede usar el [hook `PermissionRequest`](/docs/es/agent-sdk/hooks#avail
   Manejar solicitudes de aprobación de herramientas
 </h2>
 
-Una vez que haya pasado un callback `canUseTool` en sus opciones de consulta, se activa cuando Claude quiere usar una herramienta que nada anterior en el flujo de permisos ha aprobado. Su callback recibe tres argumentos:
+Una vez que haya pasado una devolución de llamada `canUseTool` en las opciones de su consulta, se activa cuando Claude quiere usar una herramienta que nada anterior en el flujo de permisos ha aprobado. En algunas configuraciones, como el modo `dontAsk`, Claude Code no la llama; el último paso de [Cómo se evalúan los permisos](/docs/es/agent-sdk/permissions#how-permissions-are-evaluated) los enumera y dice qué sucede con la llamada en su lugar.
 
-| Argumento                           | Descripción                                                                                                                                                                                                                                                                                                                                         |
-| ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `toolName`                          | El nombre de la herramienta que Claude quiere usar (por ejemplo, `"Bash"`, `"Write"`, `"Edit"`)                                                                                                                                                                                                                                                     |
-| `input`                             | Los parámetros que Claude está pasando a la herramienta. El contenido varía según la herramienta.                                                                                                                                                                                                                                                   |
-| `options` (TS) / `context` (Python) | Contexto adicional incluyendo `suggestions` opcional (entradas `PermissionUpdate` propuestas para evitar re-solicitar) y una señal de cancelación. En TypeScript, `signal` es un `AbortSignal`; en Python, el campo de señal está reservado para uso futuro. Vea [`ToolPermissionContext`](/docs/es/agent-sdk/python#toolpermissioncontext) para Python. |
+Su devolución de llamada recibe tres argumentos:
+
+| Argumento                           | Descripción                                                                                                                                                                                                                                                                                                                                                 |
+| ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `toolName`                          | El nombre de la herramienta que Claude quiere usar (por ejemplo, `"Bash"`, `"Write"`, `"Edit"`)                                                                                                                                                                                                                                                             |
+| `input`                             | Los parámetros que Claude está pasando a la herramienta. El contenido varía según la herramienta.                                                                                                                                                                                                                                                           |
+| `options` (TS) / `context` (Python) | Contexto adicional que incluye `suggestions` opcionales (entradas `PermissionUpdate` propuestas para evitar re-solicitar) y una señal de cancelación. En TypeScript, `signal` es un `AbortSignal`; en Python, el campo de señal está reservado para uso futuro. Consulte [`ToolPermissionContext`](/docs/es/agent-sdk/python#toolpermissioncontext) para Python. |
 
 El objeto `input` contiene parámetros específicos de la herramienta. Ejemplos comunes:
 
@@ -76,11 +81,11 @@ El objeto `input` contiene parámetros específicos de la herramienta. Ejemplos 
 | `Edit`      | `file_path`, `old_string`, `new_string` |
 | `Read`      | `file_path`, `offset`, `limit`          |
 
-Vea la referencia del SDK para esquemas de entrada completos: [Python](/docs/es/agent-sdk/python#tool-input%2Foutput-types) | [TypeScript](/docs/es/agent-sdk/typescript#tool-input-types).
+Consulte la referencia del SDK para esquemas de entrada completos: [Python](/docs/es/agent-sdk/python#tool-input%2Foutput-types) | [TypeScript](/docs/es/agent-sdk/typescript#tool-input-types).
 
-Puede mostrar esta información al usuario para que pueda decidir si permitir o rechazar la acción, luego devolver la respuesta apropiada.
+Puede mostrar esta información al usuario para que pueda decidir si permitir o rechazar la acción, y luego devolver la respuesta apropiada.
 
-El siguiente ejemplo le pide a Claude que cree y elimine un archivo de prueba. Cuando Claude intenta cada operación, el callback imprime la solicitud de herramienta en la terminal y solicita aprobación s/n.
+El siguiente ejemplo le pide a Claude que cree y elimine un archivo de prueba. Cuando Claude intenta cada operación, la devolución de llamada imprime la solicitud de herramienta en la terminal y solicita aprobación s/n.
 
 <CodeGroup>
   ```python Python theme={null}
@@ -98,7 +103,7 @@ El siguiente ejemplo le pide a Claude que cree y elimine un archivo de prueba. C
   async def can_use_tool(
       tool_name: str, input_data: dict, context: ToolPermissionContext
   ) -> PermissionResultAllow | PermissionResultDeny:
-      # Mostrar la solicitud de herramienta
+      # Display the tool request
       print(f"\nTool: {tool_name}")
       if tool_name == "Bash":
           print(f"Command: {input_data.get('command')}")
@@ -107,19 +112,19 @@ El siguiente ejemplo le pide a Claude que cree y elimine un archivo de prueba. C
       else:
           print(f"Input: {input_data}")
 
-      # Obtener aprobación del usuario
+      # Get user approval
       response = input("Allow this action? (y/n): ")
 
-      # Devolver permitir o denegar según la respuesta del usuario
+      # Return allow or deny based on user's response
       if response.lower() == "y":
-          # Permitir: la herramienta se ejecuta con la entrada original (o modificada)
+          # Allow: tool executes with the original (or modified) input
           return PermissionResultAllow(updated_input=input_data)
       else:
-          # Denegar: la herramienta no se ejecuta, Claude ve el mensaje
+          # Deny: tool doesn't execute, Claude sees the message
           return PermissionResultDeny(message="User denied this action")
 
 
-  # Solución requerida: hook ficticio mantiene el flujo abierto para can_use_tool
+  # Required workaround: dummy hook keeps the stream open for can_use_tool
   async def dummy_hook(input_data, tool_use_id, context):
       return {"continue_": True}
 
@@ -153,7 +158,7 @@ El siguiente ejemplo le pide a Claude que cree y elimine un archivo de prueba. C
   import { query } from "@anthropic-ai/claude-agent-sdk";
   import * as readline from "readline";
 
-  // Helper para solicitar entrada del usuario en la terminal
+  // Helper to prompt user for input in the terminal
   function prompt(question: string): Promise<string> {
     const rl = readline.createInterface({
       input: process.stdin,
@@ -171,7 +176,7 @@ El siguiente ejemplo le pide a Claude que cree y elimine un archivo de prueba. C
     prompt: "Create a test file in /tmp and then delete it",
     options: {
       canUseTool: async (toolName, input) => {
-        // Mostrar la solicitud de herramienta
+        // Display the tool request
         console.log(`\nTool: ${toolName}`);
         if (toolName === "Bash") {
           console.log(`Command: ${input.command}`);
@@ -180,15 +185,15 @@ El siguiente ejemplo le pide a Claude que cree y elimine un archivo de prueba. C
           console.log(`Input: ${JSON.stringify(input, null, 2)}`);
         }
 
-        // Obtener aprobación del usuario
+        // Get user approval
         const response = await prompt("Allow this action? (y/n): ");
 
-        // Devolver permitir o denegar según la respuesta del usuario
+        // Return allow or deny based on user's response
         if (response.toLowerCase() === "y") {
-          // Permitir: la herramienta se ejecuta con la entrada original (o modificada)
+          // Allow: tool executes with the original (or modified) input
           return { behavior: "allow", updatedInput: input };
         } else {
-          // Denegar: la herramienta no se ejecuta, Claude ve el mensaje
+          // Deny: tool doesn't execute, Claude sees the message
           return { behavior: "deny", message: "User denied this action" };
         }
       }
@@ -199,17 +204,13 @@ El siguiente ejemplo le pide a Claude que cree y elimine un archivo de prueba. C
   ```
 </CodeGroup>
 
-<Note>
-  En Python, `can_use_tool` requiere [modo de flujo](/docs/es/agent-sdk/streaming-vs-single-mode). Cuando pasa un flujo de mensajes finito a través de `query(prompt=generator)` o `ClaudeSDKClient.connect(prompt=async_iterable)`, el SDK cierra el flujo de entrada después del último mensaje, antes de que se pueda invocar el callback de permiso, a menos que un hook registrado o un servidor MCP en proceso lo mantenga abierto. El ejemplo anterior lo mantiene abierto con un hook `PreToolUse` que devuelve `{"continue_": True}`. Conectarse sin un aviso y enviar mensajes a través de `ClaudeSDKClient.query()` mantiene el flujo abierto por sí solo y no necesita ningún hook.
-</Note>
-
-Este ejemplo usa un flujo s/n donde cualquier entrada que no sea `y` se trata como una denegación. En la práctica, podría construir una interfaz de usuario más rica que permita a los usuarios modificar la solicitud, proporcionar retroalimentación o redirigir a Claude completamente. Vea [Responder a solicitudes de herramientas](#respond-to-tool-requests) para todas las formas en que puede responder.
+Este ejemplo utiliza un flujo s/n donde cualquier entrada que no sea `s` se trata como un rechazo. En la práctica, podría crear una interfaz de usuario más rica que permita a los usuarios modificar la solicitud, proporcionar comentarios o redirigir a Claude completamente. Consulte [Responder a solicitudes de herramientas](#respond-to-tool-requests) para ver todas las formas en que puede responder.
 
 <h3 id="respond-to-tool-requests">
   Responder a solicitudes de herramientas
 </h3>
 
-Su callback devuelve uno de dos tipos de respuesta:
+Su devolución de llamada devuelve uno de dos tipos de respuesta:
 
 | Respuesta    | Python                                     | TypeScript                            |
 | ------------ | ------------------------------------------ | ------------------------------------- |
@@ -220,38 +221,20 @@ Al permitir, la herramienta se ejecuta con la entrada que Claude solicitó a men
 
 Al denegar, proporcione un mensaje explicando por qué. Claude ve este mensaje y puede ajustar su enfoque.
 
-<CodeGroup>
-  ```python Python theme={null}
-  from claude_agent_sdk.types import PermissionResultAllow, PermissionResultDeny
-
-  # Permitir que la herramienta se ejecute
-  return PermissionResultAllow(updated_input=input_data)
-
-  # Bloquear la herramienta
-  return PermissionResultDeny(message="User rejected this action")
-  ```
-
-  ```typescript TypeScript theme={null}
-  // Permitir que la herramienta se ejecute
-  return { behavior: "allow", updatedInput: input };
-
-  // Bloquear la herramienta
-  return { behavior: "deny", message: "User rejected this action" };
-  ```
-</CodeGroup>
-
 Más allá de permitir o denegar, puede modificar la entrada de la herramienta o proporcionar contexto que ayude a Claude a ajustar su enfoque:
 
 * **Aprobar**: permitir que la herramienta se ejecute como Claude solicitó
-* **Aprobar con cambios**: modificar la entrada antes de la ejecución (por ejemplo, desinfectar rutas, agregar restricciones)
-* **Aprobar y recordar**: devolver una regla de permiso sugerida para que las llamadas coincidentes omitan el aviso la próxima vez
+* **Aprobar con cambios**: modificar la entrada antes de la ejecución (por ejemplo, sanitizar rutas, agregar restricciones)
+* **Aprobar y recordar**: devolver una regla de permiso sugerida para que las llamadas coincidentes omitan la solicitud la próxima vez
 * **Rechazar**: bloquear la herramienta y decirle a Claude por qué
 * **Sugerir alternativa**: bloquear pero guiar a Claude hacia lo que el usuario quiere en su lugar
-* **Redirigir completamente**: usar [entrada de flujo](/docs/es/agent-sdk/streaming-vs-single-mode) para enviar a Claude una instrucción completamente nueva
+* **Redirigir completamente**: usar [entrada de transmisión](/docs/es/agent-sdk/streaming-vs-single-mode) para enviar a Claude una instrucción completamente nueva
+
+Los ayudantes `ask_user` y `askUser` en los siguientes fragmentos representan la interfaz de usuario de solicitud de su propia aplicación.
 
 <Tabs>
   <Tab title="Aprobar">
-    El usuario aprueba la acción tal como está. Pase la `input` de su callback sin cambios y la herramienta se ejecuta exactamente como Claude solicitó.
+    El usuario aprueba la acción tal como está. Pase la `input` de su devolución de llamada sin cambios y la herramienta se ejecuta exactamente como Claude solicitó.
 
     <CodeGroup>
       ```python Python theme={null}
@@ -279,13 +262,13 @@ Más allá de permitir o denegar, puede modificar la entrada de la herramienta o
   </Tab>
 
   <Tab title="Aprobar con cambios">
-    El usuario aprueba pero quiere modificar la solicitud primero. Puede cambiar la entrada antes de que la herramienta se ejecute. Claude ve el resultado pero no se le dice que cambió nada. Útil para desinfectar parámetros, agregar restricciones o limitar el acceso.
+    El usuario aprueba pero quiere modificar la solicitud primero. Puede cambiar la entrada antes de que se ejecute la herramienta. Claude ve el resultado pero no se le dice que haya cambiado nada. Útil para sanitizar parámetros, agregar restricciones o limitar el acceso.
 
     <CodeGroup>
       ```python Python theme={null}
       async def can_use_tool(tool_name, input_data, context):
           if tool_name == "Bash":
-              # Usuario aprobó, pero limita todos los comandos a sandbox
+              # User approved, but scope all commands to sandbox
               sandboxed_input = {**input_data}
               sandboxed_input["command"] = input_data["command"].replace(
                   "/tmp", "/tmp/sandbox"
@@ -297,7 +280,7 @@ Más allá de permitir o denegar, puede modificar la entrada de la herramienta o
       ```typescript TypeScript theme={null}
       canUseTool: async (toolName, input) => {
         if (toolName === "Bash") {
-          // Usuario aprobó, pero limita todos los comandos a sandbox
+          // User approved, but scope all commands to sandbox
           const sandboxedInput = {
             ...input,
             command: input.command.replace("/tmp", "/tmp/sandbox")
@@ -311,7 +294,7 @@ Más allá de permitir o denegar, puede modificar la entrada de la herramienta o
   </Tab>
 
   <Tab title="Aprobar y recordar">
-    El usuario aprueba y no quiere ser preguntado de nuevo para este tipo de llamada. El tercer argumento de callback lleva `suggestions`, una matriz de entradas [`PermissionUpdate`](/docs/es/agent-sdk/typescript#permissionupdate) listas para usar. Devuelva una en `updatedPermissions` para aplicarla. Una sugerencia con el destino `localSettings` escribe la regla en `.claude/settings.local.json` para que futuras sesiones omitan el aviso para llamadas coincidentes.
+    El usuario aprueba y no quiere que se le pregunte de nuevo para este tipo de llamada. El tercer argumento de devolución de llamada lleva `suggestions`, una matriz de entradas [`PermissionUpdate`](/docs/es/agent-sdk/typescript#permissionupdate) ya preparadas. Devuelva una en `updatedPermissions` para aplicarla. Una sugerencia con el destino `localSettings` escribe la regla en `.claude/settings.local.json` para que futuras sesiones omitan la solicitud para llamadas coincidentes.
 
     El ejemplo de Python requiere `claude-agent-sdk` 0.1.80 o posterior.
 
@@ -385,13 +368,13 @@ Más allá de permitir o denegar, puede modificar la entrada de la herramienta o
   </Tab>
 
   <Tab title="Sugerir alternativa">
-    El usuario no quiere esta acción específica, pero tiene una idea diferente. Bloquee la herramienta e incluya orientación en su mensaje. Claude leerá esto y decidirá cómo proceder según su retroalimentación.
+    El usuario no quiere esta acción específica, pero tiene una idea diferente. Bloquee la herramienta e incluya orientación en su mensaje. Claude leerá esto y decidirá cómo proceder según sus comentarios.
 
     <CodeGroup>
       ```python Python theme={null}
       async def can_use_tool(tool_name, input_data, context):
           if tool_name == "Bash" and "rm" in input_data.get("command", ""):
-              # El usuario no quiere eliminar, sugiera archivar en su lugar
+              # User doesn't want to delete, suggest archiving instead
               return PermissionResultDeny(
                   message="User doesn't want to delete files. They asked if you could compress them into an archive instead."
               )
@@ -401,7 +384,7 @@ Más allá de permitir o denegar, puede modificar la entrada de la herramienta o
       ```typescript TypeScript theme={null}
       canUseTool: async (toolName, input) => {
         if (toolName === "Bash" && input.command.includes("rm")) {
-          // El usuario no quiere eliminar, sugiera archivar en su lugar
+          // User doesn't want to delete, suggest archiving instead
           return {
             behavior: "deny",
             message:
@@ -415,7 +398,7 @@ Más allá de permitir o denegar, puede modificar la entrada de la herramienta o
   </Tab>
 
   <Tab title="Redirigir completamente">
-    Para un cambio de dirección completo (no solo un empujón), use [entrada de flujo](/docs/es/agent-sdk/streaming-vs-single-mode) para enviar a Claude una nueva instrucción directamente. Esto evita la solicitud de herramienta actual y le da a Claude instrucciones completamente nuevas para seguir.
+    Para un cambio de dirección completo (no solo un empujón), use [entrada de transmisión](/docs/es/agent-sdk/streaming-vs-single-mode) para enviar a Claude una nueva instrucción directamente. Esto omite la solicitud de herramienta actual y le da a Claude instrucciones completamente nuevas para seguir.
   </Tab>
 </Tabs>
 
@@ -571,12 +554,12 @@ Los siguientes pasos muestran cómo manejar preguntas aclaratorias:
 
 La entrada contiene las preguntas generadas por Claude en un array `questions`. Cada pregunta tiene estos campos:
 
-| Campo         | Descripción                                                                                                                                 |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| `question`    | El texto completo de la pregunta a mostrar                                                                                                  |
-| `header`      | Etiqueta corta para la pregunta (máximo 12 caracteres)                                                                                      |
-| `options`     | Array de 2-4 opciones, cada una con `label` y `description`. TypeScript: opcionalmente `preview` (vea [abajo](#option-previews-typescript)) |
-| `multiSelect` | Si es `true`, los usuarios pueden seleccionar múltiples opciones                                                                            |
+| Campo         | Descripción                                                                                                                                                      |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `question`    | El texto completo de la pregunta a mostrar                                                                                                                       |
+| `header`      | Etiqueta corta para la pregunta (máximo 12 caracteres)                                                                                                           |
+| `options`     | Array de 2-4 opciones, cada una con `label` y `description`. TypeScript: opcionalmente `preview`. Vea [Vistas previas de opciones](#option-previews-typescript). |
+| `multiSelect` | Si es `true`, los usuarios pueden seleccionar múltiples opciones                                                                                                 |
 
 La estructura que su callback recibe:
 
@@ -653,7 +636,7 @@ Devuelva un objeto `answers` que asigne cada campo `question` de la pregunta a l
 
 Para preguntas de selección múltiple, pase un array de etiquetas o únalas con `", "`. Para entrada de texto libre por pregunta, como una opción "Otro", coloque el texto del usuario en `answers[question]` como se muestra en [Admitir entrada de texto libre](#support-free-text-input). Establezca `response` solo cuando su interfaz de usuario permita al usuario descartar la tarjeta de pregunta y escribir una respuesta general que no sea una respuesta a ninguna pregunta específica. Cuando `response` está establecido, Claude recibe "El usuario respondió: …" en lugar de la lista de respuestas por pregunta.
 
-```json theme={null}
+```jsonc theme={null}
 {
   "questions": [
     // ...

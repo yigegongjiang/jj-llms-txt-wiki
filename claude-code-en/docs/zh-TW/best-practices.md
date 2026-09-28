@@ -4,23 +4,23 @@
 
 # Claude Code 最佳實踐
 
-> 從配置環境到跨平行會話擴展，充分利用 Claude Code 的提示和模式。
+> 從設定環境到跨平行工作階段擴展，充分利用 Claude Code 的提示和模式。
 
-Claude Code 是一個代理式編碼環境。與等待回答問題的聊天機器人不同，Claude Code 可以讀取您的文件、運行命令、進行更改，並在您觀看、重定向或完全離開時自主解決問題。
+Claude Code 是一個代理式編碼環境。與等待回答問題的聊天機器人不同，Claude Code 可以讀取您的檔案、執行命令、進行變更，並在您觀看、重新導向或完全離開時自主地解決問題。
 
-這改變了您的工作方式。與其自己編寫代碼並要求 Claude 審查，不如描述您想要的內容，讓 Claude 找出如何構建它。Claude 會探索、規劃和實施。
+這改變了您的工作方式。您不再自己編寫程式碼並要求 Claude 審查，而是描述您想要的內容，Claude 會找出如何建立它。Claude 會探索、規劃和實施。
 
-但這種自主性仍然伴隨著學習曲線。Claude 在您需要理解的某些約束條件下工作。
+但這種自主性仍然伴隨著學習曲線。Claude 在您需要理解的某些限制條件內工作。
 
-本指南涵蓋了在 Anthropic 內部團隊和在各種代碼庫、語言和環境中使用 Claude Code 的工程師中已被證明有效的模式。有關代理循環如何在幕後工作的信息，請參閱 [Claude Code 如何工作](/docs/zh-TW/how-claude-code-works)。
+本指南涵蓋了在 Anthropic 內部團隊和在各種程式碼庫、語言和環境中使用 Claude Code 的工程師中已證明有效的模式。有關代理式迴圈在幕後如何運作的資訊，請參閱 [Claude Code 如何運作](/docs/zh-TW/how-claude-code-works)。
 
 ***
 
-大多數最佳實踐都基於一個約束：Claude 的 context window 填滿得很快，隨著填滿，性能會下降。
+大多數最佳實踐都基於一個限制條件：Claude 的內容視窗填滿得很快，隨著填滿，效能會下降。
 
-Claude 的 context window 保存您的整個對話，包括每條消息、Claude 讀取的每個文件和每個命令輸出。但是，這可能會很快填滿。單個調試會話或代碼庫探索可能會生成並消耗數萬個令牌。
+Claude 的內容視窗保存您的整個對話，包括每條訊息、Claude 讀取的每個檔案和每個命令輸出。但是，這可能會很快填滿。單一除錯工作階段或程式碼庫探索可能會產生並消耗數萬個 token。
 
-這很重要，因為隨著 context 填滿，LLM 性能會下降。當 context window 即將滿時，Claude 可能會開始「遺忘」早期的指令或犯更多錯誤。context window 是最重要的資源來管理。要查看會話在實踐中如何填滿，請 [觀看互動式演練](/docs/zh-TW/context-window)，了解啟動時加載的內容以及每次文件讀取的成本。使用 [自定義狀態行](/docs/zh-TW/statusline) 持續跟蹤 context 使用情況，並查看 [減少令牌使用](/docs/zh-TW/costs#reduce-token-usage) 以了解減少令牌使用的策略。
+這很重要，因為隨著內容填滿，LLM 效能會下降。當內容視窗即將滿時，Claude 可能會開始「忘記」早期的指示或犯更多錯誤。內容視窗是最重要的資源，需要管理。若要查看工作階段在實踐中如何填滿，請 [觀看互動式逐步解說](/docs/zh-TW/context-window)，了解啟動時載入的內容以及每個檔案讀取的成本。使用 [自訂狀態列](/docs/zh-TW/statusline) 持續追蹤內容使用情況，並查看 [減少 token 使用](/docs/zh-TW/costs#reduce-token-usage) 以了解減少 token 使用的策略。
 
 ***
 
@@ -34,7 +34,7 @@ Claude 的 context window 保存您的整個對話，包括每條消息、Claude
 
 Claude 在工作看起來完成時停止。沒有可以運行的檢查，「看起來完成」是唯一可用的信號，您成為驗證循環：每個錯誤都在等待您注意到它。給 Claude 一些能產生通過或失敗的東西，循環就會自動關閉。Claude 完成工作、運行檢查、讀取結果，並迭代直到檢查通過。
 
-檢查是任何在對話中返回 Claude 可以讀取的信號的東西：測試套件、構建退出代碼、linter、針對固定裝置比較輸出的腳本，或與設計進行比較的[瀏覽器截圖](/docs/zh-TW/chrome)。
+檢查是任何在對話中返回 Claude 可以讀取的信號的東西：測試套件、構建退出代碼、linter、針對固定裝置比較輸出的腳本，或與設計進行比較的[瀏覽器截圖](/docs/zh-TW/chrome)。執行 [`/verify`](/docs/zh-TW/skills#run-and-verify-your-app) 在 Claude 的檢查通過後自己確認針對執行中應用程式的變更。
 
 | 策略                | 之前                  | 之後                                                                                                                                  |
 | ----------------- | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
@@ -45,7 +45,7 @@ Claude 在工作看起來完成時停止。沒有可以運行的檢查，「看�
 檢查存在後，決定它對停止的限制有多嚴格：
 
 * **在一個提示中**：要求 Claude 運行檢查並在同一消息中迭代，如上表所示。
-* **在整個會話中**：將檢查設置為 [`/goal` 條件](/docs/zh-TW/goal)。單獨的評估器在每次轉換後重新檢查它，Claude 繼續工作直到它成立。
+* **在整個會話中**：將檢查設置為 [`/goal` 條件](/docs/zh-TW/goal)。單獨的評估器在每次轉換後重新檢查它，Claude 繼續工作直到目標解決。如果 Claude 停滯，Claude Code 最終會停止運行，目標仍然設置 — 請參閱 [/goal 評估如何運作](/docs/zh-TW/goal#how-evaluation-works)。
 * **作為確定性門**：[Stop hook](/docs/zh-TW/hooks#stop) 將您的檢查作為腳本運行，並阻止轉換結束直到它通過。Claude Code 覆蓋該 hook 並在 8 次連續阻止後結束轉換。
 * **由第二意見**：[驗證子代理](/docs/zh-TW/sub-agents)或[動態工作流](/docs/zh-TW/workflows)檢查自己的發現，有一個新鮮的模型嘗試反駁結果，所以做工作的代理不是給它評分的那個。
 
@@ -69,9 +69,9 @@ Claude 在工作看起來完成時停止。沒有可以運行的檢查，「看�
 
 <Steps>
   <Step title="探索">
-    進入 Plan Mode。Claude 讀取文件並回答問題，不進行任何更改。
+    按 `Shift+Tab` 進入 Plan Mode，直到狀態欄顯示 `⏸ plan mode on`，或使用 `claude --permission-mode plan` 啟動工作階段。Claude 讀取文件並回答問題，不進行任何更改。
 
-    ```txt claude (plan mode) theme={null}
+    ```txt title="claude (plan mode)" wrap theme={null}
     read /src/auth and understand how we handle sessions and login.
     also look at how we manage environment variables for secrets.
     ```
@@ -80,7 +80,7 @@ Claude 在工作看起來完成時停止。沒有可以運行的檢查，「看�
   <Step title="規劃">
     要求 Claude 創建詳細的實施計劃。
 
-    ```txt claude (plan mode) theme={null}
+    ```txt title="claude (plan mode)" wrap theme={null}
     I want to add Google OAuth. What files need to change?
     What's the session flow? Create a plan.
     ```
@@ -89,9 +89,9 @@ Claude 在工作看起來完成時停止。沒有可以運行的檢查，「看�
   </Step>
 
   <Step title="實施">
-    切換出 Plan Mode，讓 Claude 編碼，根據其計劃進行驗證。
+    通過批准計劃或按 `Shift+Tab` 切換出 Plan Mode，然後讓 Claude 編碼，根據其計劃進行驗證。
 
-    ```txt claude (default mode) theme={null}
+    ```txt title="claude" wrap theme={null}
     implement the OAuth flow from your plan. write tests for the
     callback handler, run the test suite and fix any failures.
     ```
@@ -100,7 +100,7 @@ Claude 在工作看起來完成時停止。沒有可以運行的檢查，「看�
   <Step title="提交">
     要求 Claude 使用描述性消息進行提交並創建 PR。
 
-    ```txt claude (default mode) theme={null}
+    ```txt title="claude" wrap theme={null}
     commit with a descriptive message and open a PR
     ```
   </Step>
@@ -117,183 +117,166 @@ Claude 在工作看起來完成時停止。沒有可以運行的檢查，「看�
 ***
 
 <h2 id="provide-specific-context-in-your-prompts">
-  在提示中提供具體的上下文
+  在提示中提供具體的背景資訊
 </h2>
 
 <Tip>
-  您的指令越精確，您需要的更正就越少。
+  您的指示越精確，需要的修正就越少。
 </Tip>
 
-Claude 可以推斷意圖，但無法讀心術。參考特定文件、提及約束條件並指出示例模式。
+Claude 可以推斷意圖，但無法讀心術。參考特定檔案、提及限制條件，並指出範例模式。
 
-| 策略                              | 之前                                   | 之後                                                                                                                  |
-| ------------------------------- | ------------------------------------ | ------------------------------------------------------------------------------------------------------------------- |
-| **限定任務範圍。** 指定哪個文件、什麼場景和測試偏好。   | *「為 foo.py 添加測試」*                    | *「為 foo.py 編寫測試，涵蓋用戶已登出的邊界情況。避免使用 mocks。」*                                                                          |
-| **指向來源。** 指導 Claude 到可以回答問題的來源。 | *「為什麼 ExecutionFactory 有這樣奇怪的 api？」* | *「查看 ExecutionFactory 的 git 歷史記錄並總結其 api 是如何形成的」*                                                                   |
-| **參考現有模式。** 指向代碼庫中的模式。          | *「添加日曆小部件」*                          | *「查看主頁上現有小部件的實施方式以了解模式。HotDogWidget.php 是一個很好的例子。按照模式實施一個新的日曆小部件，讓用戶選擇月份並向前/向後分頁以選擇年份。從頭開始構建，除了代碼庫中已使用的庫外，不使用其他庫。」* |
-| **描述症狀。** 提供症狀、可能的位置以及「修復」的樣子。  | *「修復登錄錯誤」*                           | *「用戶報告會話超時後登錄失敗。檢查 src/auth/ 中的身份驗證流程，特別是令牌刷新。編寫一個失敗的測試來重現問題，然後修復它」*                                                |
+| 策略                               | 之前                                   | 之後                                                                                                                      |
+| -------------------------------- | ------------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
+| **限定任務範圍。** 指定哪個檔案、什麼情境和測試偏好。    | *「為 foo.py 新增測試」*                    | *「為 foo.py 編寫測試，涵蓋使用者未登入的邊界情況。避免使用 mock。」*                                                                              |
+| **指向來源。** 引導 Claude 查看可以回答問題的來源。 | *「為什麼 ExecutionFactory 有這麼奇怪的 API？」* | *「查看 ExecutionFactory 的 git 歷史記錄，並總結其 API 是如何演變的」*                                                                      |
+| **參考現有模式。** 指向您程式碼庫中的模式。         | *「新增日曆小工具」*                          | *「查看首頁上現有小工具的實作方式以了解模式。HotDogWidget.php 是一個很好的例子。按照模式實作新的日曆小工具，讓使用者選擇月份並向前/向後分頁以選擇年份。從頭開始構建，除了程式碼庫中已使用的程式庫外，不使用其他程式庫。」* |
+| **描述症狀。** 提供症狀、可能的位置，以及「修復」的樣子。  | *「修復登入錯誤」*                           | *「使用者報告在工作階段逾時後登入失敗。檢查 src/auth/ 中的驗證流程，特別是權杖重新整理。編寫一個失敗的測試來重現問題，然後修復它」*                                                |
 
-當您在探索並可以承受改正時，模糊的提示可能很有用。像 `「您會改進此文件中的什麼？」` 這樣的提示可以表面您沒有想到要詢問的內容。
+模糊的提示在您進行探索且能夠進行過程修正時很有用。像 `「您會改進這個檔案的哪些地方？」` 這樣的提示可以發現您不會想到要詢問的事項。
 
 <h3 id="provide-rich-content">
   提供豐富的內容
 </h3>
 
 <Tip>
-  使用 `@` 參考文件、粘貼截圖/圖像或直接管道數據。
+  使用 `@` 參考檔案、貼上螢幕擷取畫面/影像，或直接傳送資料。
 </Tip>
 
-您可以通過多種方式向 Claude 提供豐富的數據：
+您可以透過多種方式向 Claude 提供豐富的資料：
 
-* **使用 `@` 參考文件**，而不是描述代碼的位置。Claude 在回應前讀取文件。
-* **直接粘貼圖像**。複製/粘貼或將圖像拖放到提示中。
-* **提供 URL** 用於文檔和 API 參考。使用 `/permissions` 將常用域名列入白名單。
-* **通過運行 `cat error.log | claude` 管道數據**，直接發送文件內容。
-* **讓 Claude 獲取它需要的內容**。告訴 Claude 使用 Bash 命令、MCP 工具或通過讀取文件自己拉取上下文。
+* **使用 `@` 參考檔案**，而不是描述程式碼的位置。Claude 會在回應前讀取檔案。
+* **直接貼上影像**。複製/貼上或拖放影像到提示中。
+* **提供文件和 API 參考的 URL**。使用 `/permissions` 將常用網域加入允許清單。
+* **透過執行 `cat error.log | claude` 來傳送檔案內容，直接傳送資料**。
+* **讓 Claude 自行取得所需內容**。告訴 Claude 使用 Bash 命令、MCP 工具或讀取檔案來自行提取背景資訊。
 
 ***
 
 <h2 id="configure-your-environment">
-  配置您的環境
+  設定你的環境
 </h2>
 
-一些設置步驟使 Claude Code 在所有會話中的效果顯著提高。有關擴展功能的完整概述和何時使用每個功能，請參閱 [擴展 Claude Code](/docs/zh-TW/features-overview)。
+幾個設定步驟可以讓 Claude Code 在所有工作階段中發揮更大的效能。如需完整概述擴充功能及何時使用各功能，請參閱[擴充 Claude Code](/docs/zh-TW/features-overview)。
 
 <h3 id="write-an-effective-claude-md">
-  編寫有效的 CLAUDE.md
+  撰寫有效的 CLAUDE.md
 </h3>
 
 <Tip>
-  運行 `/init` 根據您當前的項目結構生成一個啟動 CLAUDE.md 文件，然後隨著時間推移進行改進。
+  執行 `/init` 以根據你目前的專案結構產生入門 CLAUDE.md 檔案，然後隨著時間推移進行調整。
 </Tip>
 
-CLAUDE.md 是一個特殊文件，Claude 在每次對話開始時都會讀取。包括 Bash 命令、代碼風格和工作流規則。這給 Claude 提供了它無法從代碼中推斷出的持久上下文。
+CLAUDE.md 是一個特殊檔案，Claude 在每次對話開始時都會讀取。包含 Bash 命令、程式碼風格和工作流程規則。這讓 Claude 擁有它無法從程式碼單獨推斷的持久性背景資訊。
 
-`/init` 命令分析您的代碼庫以檢測構建系統、測試框架和代碼模式，為您提供堅實的基礎進行改進。
-
-CLAUDE.md 文件沒有必需的格式，但要保持簡短和易於閱讀。例如：
+CLAUDE.md 檔案沒有必需的格式，但要保持簡短且易於人類閱讀。例如：
 
 ```markdown CLAUDE.md theme={null}
-# Code style
-- Use ES modules (import/export) syntax, not CommonJS (require)
-- Destructure imports when possible (eg. import { foo } from 'bar')
+# 程式碼風格
+- 使用 ES modules (import/export) 語法，而不是 CommonJS (require)
+- 盡可能解構匯入 (例如 import { foo } from 'bar')
 
-# Workflow
-- Be sure to typecheck when you're done making a series of code changes
-- Prefer running single tests, and not the whole test suite, for performance
+# 工作流程
+- 完成一系列程式碼變更後，務必進行型別檢查
+- 優先執行單一測試，而不是整個測試套件，以提高效能
 ```
 
-CLAUDE.md 在每個會話中加載，因此只包括廣泛適用的內容。對於僅在某些時候相關的域知識或工作流，請改用 [skills](/docs/zh-TW/skills)。Claude 按需加載它們，不會使每次對話都變得臃腫。
+執行 `/context` 以確認 Claude 已載入該檔案。CLAUDE.md 在每個工作階段都會被載入，所以只包含廣泛適用的內容。對於只有在某些時候相關的領域知識或工作流程，請改用[技能](/docs/zh-TW/skills)。Claude 會按需載入它們，而不會讓每次對話都變得臃腫。
 
-保持簡潔。對於每一行，問自己：*「刪除這一行會導致 Claude 犯錯誤嗎？」* 如果不會，刪除它。臃腫的 CLAUDE.md 文件會導致 Claude 忽略您的實際指令！
+保持簡潔。對於每一行，問自己：*「移除這一行會導致 Claude 犯錯嗎？」* 如果不會，就刪除它。臃腫的 CLAUDE.md 檔案會導致 Claude 忽略你的實際指示！
 
-| ✅ 包括                 | ❌ 排除                   |
-| -------------------- | ---------------------- |
-| Claude 無法猜測的 Bash 命令 | Claude 可以通過讀取代碼找出的任何內容 |
-| 與默認值不同的代碼風格規則        | Claude 已經知道的標準語言約定     |
-| 測試指令和首選測試運行器         | 詳細的 API 文檔（改為鏈接到文檔）    |
-| 存儲庫禮儀（分支命名、PR 約定）    | 經常變化的信息                |
-| 特定於您項目的架構決策          | 長篇解釋或教程                |
-| 開發人員環境怪癖（必需的環境變量）    | 文件逐個描述代碼庫              |
-| 常見陷阱或非顯而易見的行為        | 自明的實踐，如「編寫乾淨代碼」        |
+| ✅ 包含                 | ❌ 排除                    |
+| -------------------- | ----------------------- |
+| Claude 無法猜測的 Bash 命令 | Claude 可以透過閱讀程式碼推斷的任何內容 |
+| 與預設值不同的程式碼風格規則       | Claude 已經知道的標準語言慣例      |
+| 測試指示和偏好的測試執行器        | 詳細的 API 文件（改為連結到文件）     |
+| 儲存庫禮儀（分支命名、PR 慣例）    | 經常變更的資訊                 |
+| 專案特定的架構決策            | 冗長的解釋或教學                |
+| 開發人員環境怪癖（必需的環境變數）    | 檔案逐一描述程式碼庫              |
+| 常見陷阱或非顯而易見的行為        | 自明的做法，如「編寫乾淨的程式碼」       |
 
-如果 Claude 儘管有反對規則仍然不斷做您不想要的事情，該文件可能太長，規則被遺漏了。如果 Claude 詢問您在 CLAUDE.md 中回答的問題，措辭可能不明確。像對待代碼一樣對待 CLAUDE.md：當事情出錯時進行審查，定期修剪，並通過觀察 Claude 的行為是否實際改變來測試更改。
+如果 Claude 儘管有規則反對仍持續做某件事，該檔案可能太長，規則被遺漏了。如果 Claude 詢問你在 CLAUDE.md 中已回答的問題，措辭可能不明確。將 CLAUDE.md 視為程式碼：當事情出錯時檢查它，定期修剪它，並透過觀察 Claude 的行為是否實際改變來測試變更。對於簽入的 CLAUDE.md，執行[`/doctor`](/docs/zh-TW/commands#all-commands)，Claude 會建議刪除它可以從程式碼庫衍生的內容。
 
-您可以通過添加強調（例如「IMPORTANT」或「YOU MUST」）來調整指令以改進遵守。將文件簽入 git，以便您的團隊可以貢獻。該文件的價值隨著時間的推移而複合。
+如果 Claude 持續跳過一項指示，請在該行單獨添加強調，例如「重要」。如果你強調許多行，沒有一行會突出。將 CLAUDE.md 簽入 git，以便你的團隊可以貢獻。該檔案的價值會隨著時間推移而複合增長。
 
-CLAUDE.md 文件可以使用 `@path/to/import` 語法導入其他文件：
-
-```markdown CLAUDE.md theme={null}
-See @README.md for project overview and @package.json for available npm commands.
-
-# Additional Instructions
-- Git workflow: @docs/git-instructions.md
-- Personal overrides: @~/.claude/my-project-instructions.md
-```
-
-您可以將 CLAUDE.md 文件放在多個位置：
-
-* **主文件夾（`~/.claude/CLAUDE.md`）**：適用於所有 Claude 會話
-* **項目根目錄（`./CLAUDE.md`）**：簽入 git 以與您的團隊共享
-* **項目根目錄（`./CLAUDE.local.md`）**：個人項目特定的筆記；將此文件添加到您的 `.gitignore`，以便不與您的團隊共享
-* **父目錄**：對於 monorepos 很有用，其中 `root/CLAUDE.md` 和 `root/foo/CLAUDE.md` 都會自動拉入
-* **子目錄**：當在這些目錄中的文件上工作時，Claude 按需拉入子 CLAUDE.md 文件
+CLAUDE.md 檔案可以使用 `@path/to/import` 語法匯入其他檔案。如需匯入規則和 CLAUDE.md 檔案可以存放的位置，請參閱 [CLAUDE.md 檔案](/docs/zh-TW/memory#claude-md-files)。
 
 <h3 id="configure-permissions">
-  配置權限
+  設定權限
 </h3>
 
 <Tip>
-  使用 [auto mode](/docs/zh-TW/permission-modes#eliminate-prompts-with-auto-mode) 讓分類器處理批准，使用 `/permissions` 將特定命令列入白名單，或使用 `/sandbox` 進行操作系統級隔離。每種方式都減少了中斷，同時讓您保持控制。
+  若要減少提示而不放棄控制，請使用 `/permissions` 預先核准你信任的工具，並使用 `/sandbox` 讓沙箱命令無需詢問即可執行。當你想自己核准編輯和命令時，切換到手動模式。
 </Tip>
 
-默認情況下，Claude Code 請求可能修改您的系統的操作的權限：文件寫入、Bash 命令、MCP 工具等。這是安全的但很繁瑣。在第十次批准後，您實際上不是在審查，而是在點擊。有三種方法可以減少這些中斷：
+在 Pro、Max 和 Team 方案上，自動模式是互動式終端和 VS Code 工作階段的[內建起始權限模式](/docs/zh-TW/permission-modes#eliminate-prompts-with-auto-mode)：一個單獨的分類器模型會檢查大多數操作，而不是你，並且只會阻止看起來有風險的操作，例如範圍提升、未知基礎設施或敵對內容驅動的操作。
 
-* **Auto mode**：一個單獨的分類器模型審查命令並僅阻止看起來有風險的內容：範圍升級、未知基礎設施或由敵對內容驅動的操作。最適合當您信任任務的總體方向但不想點擊每一步時
-* **權限白名單**：允許您知道安全的特定工具，如 `npm run lint` 或 `git commit`
-* **沙箱**：啟用操作系統級隔離，限制文件系統和網絡訪問，允許 Claude 在定義的邊界內更自由地工作
+在手動模式（其他方案上的內建起始權限模式）中，Claude Code 會在可能修改你的系統的操作前詢問：檔案寫入、Bash 命令、MCP 工具。這很安全但很繁瑣。在第十次核准後，你就是在點擊而不是檢查。兩個工具在手動模式中減少了這些中斷，也適用於自動模式：
 
-閱讀更多關於 [permission modes](/docs/zh-TW/permission-modes)、[permission rules](/docs/zh-TW/permissions) 和 [sandboxing](/docs/zh-TW/sandboxing)。
+* **權限允許清單**：允許你知道是安全的特定工具，如 `npm run lint` 或 `git commit`
+* **沙箱**：啟用作業系統級隔離，限制檔案系統和網路存取，讓 Claude 在定義的邊界內更自由地工作
+
+深入瞭解[權限模式](/docs/zh-TW/permission-modes)、[權限規則](/docs/zh-TW/permissions)和[沙箱](/docs/zh-TW/sandboxing)。
 
 <h3 id="use-cli-tools">
   使用 CLI 工具
 </h3>
 
 <Tip>
-  告訴 Claude Code 在與外部服務交互時使用 CLI 工具，如 `gh`、`aws`、`gcloud` 和 `sentry-cli`。
+  告訴 Claude Code 在與外部服務互動時使用 CLI 工具，如 `gh`、`aws`、`gcloud` 和 `sentry-cli`。
 </Tip>
 
-CLI 工具是與外部服務交互的最 context 高效的方式。如果您使用 GitHub，請安裝 `gh` CLI。Claude 知道如何使用它來創建問題、打開拉取請求和讀取評論。沒有 `gh`，Claude 仍然可以使用 GitHub API，但未經身份驗證的請求經常會達到速率限制。
+CLI 工具是與外部服務互動最具背景資訊效率的方式。如果你使用 GitHub，請安裝 `gh` CLI。Claude 知道如何使用它來建立議題、開啟提取請求和閱讀評論。沒有 `gh`，Claude 仍然可以使用 GitHub API，但未經驗證的請求經常會達到速率限制。
 
-Claude 也很擅長學習它不知道的 CLI 工具。嘗試像 `Use 'foo-cli-tool --help' to learn about foo tool, then use it to solve A, B, C.` 這樣的提示。
+Claude 也很擅長學習它還不知道的 CLI 工具。嘗試像 `Use 'foo-cli-tool --help' to learn about foo tool, then use it to solve A, B, C.` 這樣的提示。
 
 <h3 id="connect-mcp-servers">
-  連接 MCP servers
+  連接 MCP 伺服器
 </h3>
 
 <Tip>
-  運行 `claude mcp add` 以連接外部工具，如 Notion、Figma 或您的數據庫。
+  執行 `claude mcp add` 並提供伺服器名稱和 URL 或命令，以連接外部工具，如 Notion、Figma 或你的資料庫。例如：`claude mcp add --transport http notion https://mcp.notion.com/mcp`。
 </Tip>
 
-使用 [MCP servers](/docs/zh-TW/mcp)，您可以要求 Claude 從問題跟蹤器實施功能、查詢數據庫、分析監控數據、集成來自 Figma 的設計並自動化工作流。
+使用 [MCP 伺服器](/docs/zh-TW/mcp)，你可以要求 Claude 從議題追蹤器實現功能、查詢資料庫、分析監控資料、整合來自 Figma 的設計，以及自動化工作流程。
 
 <h3 id="set-up-hooks">
-  設置 hooks
+  設定 hooks
 </h3>
 
 <Tip>
-  使用 hooks 進行必須每次發生且沒有例外的操作。
+  對於必須每次都發生且沒有例外的操作，使用 hooks。
 </Tip>
 
-[Hooks](/docs/zh-TW/hooks-guide) 在 Claude 工作流中的特定點自動運行腳本。與建議性的 CLAUDE.md 指令不同，hooks 是確定性的，保證操作發生。
+[Hooks](/docs/zh-TW/hooks-guide) 在 Claude 工作流程中的特定點自動執行指令碼。與作為建議的 CLAUDE.md 指示不同，hooks 是確定性的，並保證操作會發生。
 
-Claude 可以為您編寫 hooks。嘗試像 *「編寫一個在每次文件編輯後運行 eslint 的 hook」* 或 *「編寫一個阻止寫入遷移文件夾的 hook。」* 這樣的提示。編輯 `.claude/settings.json` 直接配置 hooks，並運行 `/hooks` 瀏覽已配置的內容。
+Claude 可以為你編寫 hooks。嘗試像 *「編寫一個在每次檔案編輯後執行 eslint 的 hook」* 或 *「編寫一個阻止寫入遷移資料夾的 hook。」* 這樣的提示。直接編輯 `.claude/settings.json` 以手動設定 hooks，並執行 `/hooks` 以瀏覽已設定的內容。
 
 <h3 id="create-skills">
-  創建 skills
+  建立技能
 </h3>
 
 <Tip>
-  在 `.claude/skills/` 中創建 `SKILL.md` 文件，為 Claude 提供域知識和可重用工作流。
+  在 `.claude/skills/` 中建立 `SKILL.md` 檔案，以提供 Claude 領域知識和可重複使用的工作流程。
 </Tip>
 
-[Skills](/docs/zh-TW/skills) 使用特定於您的項目、團隊或域的信息擴展 Claude 的知識。Claude 在相關時自動應用它們，或者您可以使用 `/skill-name` 直接調用它們。
+[技能](/docs/zh-TW/skills)使用特定於你的專案、團隊或領域的資訊擴充 Claude 的知識。Claude 在相關時自動應用它們，或者你可以使用 `/skill-name` 直接呼叫它們。
 
-通過將目錄與 `SKILL.md` 添加到 `.claude/skills/` 來創建 skill：
+透過在 `.claude/skills/` 中添加包含 `SKILL.md` 的目錄來建立技能：
 
 ```markdown .claude/skills/api-conventions/SKILL.md theme={null}
 ---
 name: api-conventions
 description: REST API design conventions for our services
 ---
-# API Conventions
-- Use kebab-case for URL paths
-- Use camelCase for JSON properties
-- Always include pagination for list endpoints
-- Version APIs in the URL path (/v1/, /v2/)
+# API 慣例
+- 為 URL 路徑使用 kebab-case
+- 為 JSON 屬性使用 camelCase
+- 始終為清單端點包含分頁
+- 在 URL 路徑中版本化 API (/v1/, /v2/)
 ```
 
-Skills 也可以定義您直接調用的可重複工作流：
+技能也可以定義你直接呼叫的可重複工作流程：
 
 ```markdown .claude/skills/fix-issue/SKILL.md theme={null}
 ---
@@ -301,29 +284,29 @@ name: fix-issue
 description: Fix a GitHub issue
 disable-model-invocation: true
 ---
-Analyze and fix the GitHub issue: $ARGUMENTS.
+分析並修復 GitHub 議題：$ARGUMENTS。
 
-1. Use `gh issue view` to get the issue details
-2. Understand the problem described in the issue
-3. Search the codebase for relevant files
-4. Implement the necessary changes to fix the issue
-5. Write and run tests to verify the fix
-6. Ensure code passes linting and type checking
-7. Create a descriptive commit message
-8. Push and create a PR
+1. 使用 `gh issue view` 取得議題詳細資訊
+2. 理解議題中描述的問題
+3. 搜尋程式碼庫以尋找相關檔案
+4. 實現必要的變更以修復議題
+5. 編寫並執行測試以驗證修復
+6. 確保程式碼通過 linting 和型別檢查
+7. 建立描述性提交訊息
+8. 推送並建立 PR
 ```
 
-運行 `/fix-issue 1234` 來調用它。對於具有您想手動觸發的副作用的工作流，使用 `disable-model-invocation: true`。
+執行 `/fix-issue 1234` 以呼叫它。對於具有副作用且你想手動觸發的工作流程，使用 `disable-model-invocation: true`。
 
 <h3 id="create-custom-subagents">
-  創建自定義 subagents
+  建立自訂子代理
 </h3>
 
 <Tip>
-  在 `.claude/agents/` 中定義專門的助手，Claude 可以委派給它們進行隔離的任務。
+  在 `.claude/agents/` 中定義專門的助手，Claude 可以委派給它們以執行隔離的任務。
 </Tip>
 
-[Subagents](/docs/zh-TW/sub-agents) 在自己的 context 中運行，具有自己的一組允許的工具。它們對於讀取許多文件或需要專門關注而不會使主對話變得混亂的任務很有用。
+[子代理](/docs/zh-TW/sub-agents)在自己的背景資訊中執行，具有自己的一組允許工具。它們對於讀取許多檔案或需要專門關注而不會讓主要對話變得混亂的任務很有用。
 
 ```markdown .claude/agents/security-reviewer.md theme={null}
 ---
@@ -332,28 +315,28 @@ description: Reviews code for security vulnerabilities
 tools: Read, Grep, Glob, Bash
 model: opus
 ---
-You are a senior security engineer. Review code for:
-- Injection vulnerabilities (SQL, XSS, command injection)
-- Authentication and authorization flaws
-- Secrets or credentials in code
-- Insecure data handling
+你是一名資深安全工程師。檢查程式碼以查找：
+- 注入漏洞 (SQL、XSS、命令注入)
+- 驗證和授權缺陷
+- 程式碼中的祕密或認證
+- 不安全的資料處理
 
-Provide specific line references and suggested fixes.
+提供特定的行參考和建議的修復。
 ```
 
-明確告訴 Claude 使用 subagents：*「使用 subagent 審查此代碼以查找安全問題。」*
+明確告訴 Claude 使用子代理：*「使用子代理檢查此程式碼是否存在安全問題。」*
 
 <h3 id="install-plugins">
-  安裝 plugins
+  安裝外掛程式
 </h3>
 
 <Tip>
-  運行 `/plugin` 瀏覽市場。Plugins 無需配置即可添加 skills、工具和集成。
+  執行 `/plugin` 以瀏覽市場。外掛程式無需設定即可添加技能、工具和整合。
 </Tip>
 
-[Plugins](/docs/zh-TW/plugins) 將 skills、hooks、subagents 和 MCP servers 捆綁到來自社區和 Anthropic 的單個可安裝單元中。如果您使用類型化語言，請安裝 [代碼智能 plugin](/docs/zh-TW/discover-plugins#code-intelligence) 以為 Claude 提供精確的符號導航和編輯後的自動錯誤檢測。
+[外掛程式](/docs/zh-TW/plugins/overview)將技能、hooks、子代理和 MCP 伺服器從社群和 Anthropic 捆綁到單個可安裝單位中。如果你使用型別語言，請安裝[程式碼智慧外掛程式](/docs/zh-TW/plugins/code-intelligence)，以提供 Claude 精確的符號導航和編輯後的自動錯誤偵測。
 
-有關在 skills、subagents、hooks 和 MCP 之間選擇的指導，請參閱 [擴展 Claude Code](/docs/zh-TW/features-overview#match-features-to-your-goal)。
+如需有關在技能、子代理、hooks 和 MCP 之間選擇的指導，請參閱[擴充 Claude Code](/docs/zh-TW/features-overview#match-features-to-your-goal)。
 
 ***
 
@@ -361,7 +344,7 @@ Provide specific line references and suggested fixes.
   有效溝通
 </h2>
 
-您與 Claude Code 溝通的方式會顯著影響結果的質量。
+詢問 Claude 您會詢問另一位工程師的問題，對於較大的功能，讓 Claude 採訪您並在開始實施前撰寫規格。
 
 <h3 id="ask-codebase-questions">
   詢問代碼庫問題
@@ -374,10 +357,10 @@ Provide specific line references and suggested fixes.
 當加入新代碼庫時，使用 Claude Code 進行學習和探索。您可以詢問 Claude 與詢問另一位工程師相同類型的問題：
 
 * 日誌記錄如何工作？
-* 我如何創建新的 API 端點？
+* 我如何建立新的 API 端點？
 * `foo.rs` 第 134 行的 `async move { ... }` 做什麼？
 * `CustomerOnboardingFlowImpl` 處理哪些邊界情況？
-* 為什麼此代碼在第 333 行調用 `foo()` 而不是 `bar()`？
+* 為什麼此代碼在第 333 行呼叫 `foo()` 而不是 `bar()`？
 
 以這種方式使用 Claude Code 是一個有效的入職工作流程，改進了入職時間並減少了對其他工程師的負擔。無需特殊提示：直接提出問題。
 
@@ -389,9 +372,9 @@ Provide specific line references and suggested fixes.
   對於較大的功能，讓 Claude 先採訪您。從最小的提示開始，並要求 Claude 使用 `AskUserQuestion` 工具採訪您。
 </Tip>
 
-Claude 會詢問您可能還沒有考慮的事情，包括技術實施、UI/UX、邊界情況和權衡。
+Claude 會詢問您可能還沒有考慮的事情，包括技術實施、UI/UX、邊界情況和權衡。將 `[brief description]` 替換為您的功能，然後再傳送提示。
 
-```text theme={null}
+```text wrap theme={null}
 I want to build [brief description]. Interview me in detail using the AskUserQuestion tool.
 
 Ask about technical implementation, UI/UX, edge cases, concerns, and tradeoffs. Don't ask obvious questions, dig into the hard parts I might not have considered.
@@ -401,100 +384,94 @@ Keep interviewing until we've covered everything, then write a complete spec to 
 
 規格完成後，開始新會話以執行它。新會話具有完全專注於實施的乾淨 context，您有一個書面規格可供參考。
 
-最有用的規格是自包含的：它們命名涉及的文件和介面、說明什麼超出範圍，並以端到端驗證步驟結束，證明該功能有效。花費時間使規格精確的回報遠大於花費時間觀看實施的回報。
+最有用的規格是自包含的：它們命名涉及的檔案和介面、說明什麼超出範圍，並以端到端驗證步驟結束，證明該功能有效。花費時間使規格精確的回報遠大於花費時間觀看實施的回報。
 
 ***
 
 <h2 id="manage-your-session">
-  管理您的會話
+  管理您的工作階段
 </h2>
 
-對話是持久的和可逆的。利用這一點！
+對話是持久且可逆的。善加利用這一點！
 
 <h3 id="course-correct-early-and-often">
-  及早且經常改正方向
+  及早且頻繁地修正方向
 </h3>
 
 <Tip>
-  一旦您注意到 Claude 偏離軌道，立即改正。
+  一旦發現 Claude 偏離軌道，請立即修正。
 </Tip>
 
-最好的結果來自緊密的反饋循環。儘管 Claude 有時會在第一次嘗試時完美地解決問題，但快速改正通常會更快地產生更好的解決方案。
+最佳結果來自於緊密的回饋迴圈。雖然 Claude 有時能在第一次嘗試時完美解決問題，但快速修正通常能更快產生更好的解決方案。
 
-* **`Esc`**：使用 `Esc` 鍵在中途停止 Claude。Context 被保留，所以您可以重定向。
-* **`Esc + Esc` 或 `/rewind`**：按 `Esc` 兩次或運行 `/rewind` 打開倒帶菜單並恢復之前的對話和代碼狀態，或從選定的消息進行總結。
-* **`「撤銷那個」`**：讓 Claude 恢復其更改。
-* **`/clear`**：在不相關的任務之間重置 context。具有不相關 context 的長會話可能會降低性能。
+* **`Esc`**：使用 `Esc` 鍵在 Claude 執行中途停止。內容會被保留，因此您可以重新導向。
+* **`Esc + Esc` 或 `/rewind`**：按兩次 `Esc` 或執行 `/rewind` 以開啟倒帶選單，並復原先前的對話和程式碼狀態，或從選定的訊息進行摘要。
+* **`"Undo that"`**：讓 Claude 復原其變更。
+* **`/clear`**：在不相關的任務之間重設內容。包含無關內容的長工作階段可能會降低效能。
 
-如果您在一個會話中對同一問題改正了 Claude 超過兩次，context 就會被失敗的方法所污染。運行 `/clear` 並使用更具體的提示重新開始，該提示包含您學到的內容。具有更好提示的乾淨會話幾乎總是優於具有累積改正的長會話。
+如果您在一個工作階段中針對同一問題修正 Claude 超過兩次，內容會因失敗的方法而變得混亂。執行 `/clear` 並使用更具體的提示重新開始，該提示應納入您所學到的內容。具有更好提示的乾淨工作階段幾乎總是優於包含累積修正的長工作階段。
 
 <h3 id="manage-context-aggressively">
-  積極管理 context
+  積極管理內容
 </h3>
 
 <Tip>
-  在不相關的任務之間運行 `/clear` 以重置 context。
+  在不相關的任務之間執行 `/clear` 以重設內容。
 </Tip>
 
-當您接近 context 限制時，Claude Code 會自動壓縮對話歷史記錄，這保留了重要的代碼和決策，同時釋放空間。
+Claude Code 會在您接近內容限制時自動壓縮對話歷史，這會保留重要的程式碼和決策，同時釋放空間。
 
-在長會話期間，Claude 的 context window 可能會充滿不相關的對話、文件內容和命令。這可能會降低性能，有時會分散 Claude 的注意力。
+在長工作階段期間，Claude 的內容視窗可能會填滿無關的對話、檔案內容和命令。這可能會降低效能，有時甚至會分散 Claude 的注意力。
 
-* 在任務之間頻繁使用 `/clear` 以完全重置 context window
-* 當自動壓縮觸發時，Claude 總結最重要的內容，包括代碼模式、文件狀態和關鍵決策
-* 為了更好地控制，運行 `/compact <instructions>`，如 `/compact Focus on the API changes`
-* 要僅壓縮對話的一部分，使用 `Esc + Esc` 或 `/rewind`，選擇消息檢查點，然後選擇 **從此處進行總結** 或 **總結到此處**。第一個會壓縮該點之後的消息，同時保持早期 context 完整；第二個會壓縮早期消息，同時保持最近的消息完整。請參閱 [恢復與總結](/docs/zh-TW/checkpointing#restore-vs-summarize)。
-* 在 CLAUDE.md 中使用像 `「壓縮時，始終保留完整的修改文件列表和任何測試命令」` 這樣的指令自定義壓縮行為，以確保關鍵 context 在總結中存活
-* 對於不需要留在 context 中的快速問題，使用 [`/btw`](/docs/zh-TW/interactive-mode#side-questions-with-%2Fbtw)。答案出現在可關閉的覆蓋層中，永遠不會進入對話歷史記錄，所以您可以檢查詳細信息而不會增加 context。
+* 在任務之間頻繁使用 `/clear` 以完全重設內容視窗
+* 當自動壓縮觸發時，Claude 會摘要最重要的內容，包括程式碼模式、檔案狀態和關鍵決策
+* 為了獲得更多控制，執行 `/compact <instructions>`，例如 `/compact Focus on the API changes`
+* 若要只壓縮對話的一部分，使用 `Esc + Esc` 或 `/rewind`，選擇訊息檢查點，然後選擇**從此處摘要**或**摘要至此處**。第一個選項會壓縮該點之後的訊息，同時保留較早的內容；第二個選項會壓縮較早的訊息，同時保留最近的訊息完整。請參閱[倒帶選單的摘要選項](/docs/zh-TW/checkpointing#rewind-and-summarize)。
+* 在 CLAUDE.md 中使用 `"When compacting, always preserve the full list of modified files and any test commands"` 之類的指示來自訂壓縮行為，以確保關鍵內容在摘要後倖存
+* 對於不需要保留在內容中的問題，使用 [`/btw`](/docs/zh-TW/interactive-mode#side-questions-with-%2Fbtw)。答案永遠不會進入對話歷史，因此您可以檢查詳細資訊而不會增加內容。
 
 <h3 id="use-subagents-for-investigation">
-  使用 subagents 進行調查
+  使用子代理進行調查
 </h3>
 
 <Tip>
-  使用 `「使用 subagents 調查 X」` 委派研究。他們在單獨的 context 中探索，為實施保持您的主對話乾淨。
+  使用 `"use subagents to investigate X"` 委派研究。它們在單獨的內容中進行探索，保持您的主要對話乾淨以供實施。
 </Tip>
 
-由於 context 是您的基本約束，subagents 是可用的最強大的工具之一。當 Claude 研究代碼庫時，它讀取許多文件，所有這些都會消耗您的 context。Subagents 在單獨的 context windows 中運行並報告回摘要：
+由於內容是您的基本限制，請使用子代理將研究保持在內容之外。當 Claude 研究程式碼庫時，它會讀取許多檔案，所有這些都會消耗您的內容。子代理在單獨的內容視窗中執行並報告摘要：
 
-```text theme={null}
+```text wrap theme={null}
 Use subagents to investigate how our authentication system handles token
 refresh, and whether we have any existing OAuth utilities I should reuse.
 ```
 
-subagent 探索代碼庫、讀取相關文件並報告發現，所有這些都不會使您的主對話變得混亂。
-
-您也可以在 Claude 實施某些內容後使用 subagents 進行驗證：
-
-```text theme={null}
-use a subagent to review this code for edge cases
-```
+您也可以在 Claude 實施某些內容後使用子代理進行驗證。請參閱[新增對抗性審查步驟](#add-an-adversarial-review-step)。
 
 <h3 id="rewind-with-checkpoints">
   使用檢查點倒帶
 </h3>
 
 <Tip>
-  您發送的每個提示都會創建一個檢查點。您可以將對話、代碼或兩者恢復到任何之前的檢查點。
+  您發送的每個提示都會建立一個檢查點。您可以將對話、程式碼或兩者復原到任何先前的檢查點。
 </Tip>
 
-Claude 在每次更改前自動快照文件，所以檢查點可以將它們恢復。雙擊 `Escape` 或運行 `/rewind` 打開倒帶菜單。您可以僅恢復對話、僅恢復代碼、恢復兩者或從選定的消息進行總結。有關詳細信息，請參閱 [Checkpointing](/docs/zh-TW/checkpointing)。
+Claude 會在每次變更前自動快照檔案，因此檢查點可以復原它們。按兩次 `Escape` 或執行 `/rewind` 以開啟倒帶選單。您可以只復原對話、只復原程式碼、復原兩者，或從選定的訊息進行摘要。詳細資訊請參閱[檢查點](/docs/zh-TW/checkpointing)。
 
-與其仔細規劃每一步，不如告訴 Claude 嘗試一些冒險的事情。如果不起作用，倒帶並嘗試不同的方法。檢查點在會話之間持續，所以您可以關閉終端並稍後仍然倒帶。
+與其仔細規劃每一步，您可以告訴 Claude 嘗試一些冒險的事情。如果不起作用，倒帶並嘗試不同的方法。檢查點會與對話一起保存，因此您可以關閉終端機、稍後復原工作階段，並仍然可以倒帶。
 
 <Warning>
-  檢查點僅跟蹤 Claude 進行的更改，不跟蹤外部進程。這不是 git 的替代品。
+  檢查點只追蹤透過 Claude 的檔案編輯工具所做的變更。透過 Bash 命令或外部程序所做的變更不會被捕獲。這不是 git 的替代品。
 </Warning>
 
 <h3 id="resume-conversations">
-  恢復對話
+  復原對話
 </h3>
 
 <Tip>
-  使用 `/rename` 給會話命名，並像對待分支一樣對待它們：每個工作流都有自己的持久 context。
+  使用 `/rename` 命名工作階段，並將它們視為分支：每個工作流都有自己的持久內容。
 </Tip>
 
-Claude Code 在本地保存對話，所以當任務跨越多個會話時，您不必重新解釋 context。運行 `claude --continue` 以選擇最近的會話，或 `claude --resume` 以從列表中選擇。給會話起描述性名稱，如 `oauth-migration`，以便您稍後可以找到它們。有關完整的恢復、分支和命名控制集，請參閱 [管理會話](/docs/zh-TW/sessions)。
+Claude Code 在本地保存對話，因此當任務跨越多個工作階段時，您不必重新解釋內容。執行 [`claude --continue`](/docs/zh-TW/sessions#resume-a-session) 以從中斷的地方繼續，或執行 `claude --resume` 以從清單中選擇。給工作階段起描述性名稱，例如 `oauth-migration`，以便稍後找到它們。完整的復原、分支和命名控制集合請參閱[管理工作階段](/docs/zh-TW/sessions)。
 
 ***
 
@@ -504,8 +481,6 @@ Claude Code 在本地保存對話，所以當任務跨越多個會話時，您�
 
 一旦您對一個 Claude 有效，通過平行會話、非交互模式和扇出模式將您的輸出乘以倍數。
 
-到目前為止，一切都假設一個人、一個 Claude 和一個對話。但 Claude Code 水平擴展。本節中的技術展示了您如何完成更多工作。
-
 <h3 id="run-non-interactive-mode">
   運行非交互模式
 </h3>
@@ -514,7 +489,7 @@ Claude Code 在本地保存對話，所以當任務跨越多個會話時，您�
   在 CI、pre-commit hooks 或腳本中使用 `claude -p "prompt"`。添加 `--output-format stream-json --verbose` 以獲得流式 JSON 輸出。
 </Tip>
 
-使用 `claude -p "your prompt"`，您可以非交互地運行 Claude，不需要會話。[非交互模式](/docs/zh-TW/headless)是您將 Claude 集成到 CI 管道、pre-commit hooks 或任何自動化工作流中的方式。輸出格式讓您以編程方式解析結果：純文本、JSON 或流式 JSON。
+使用 `claude -p "your prompt"`，您可以非交互地運行 Claude，不需要互動式提示。除非您傳遞 `--no-session-persistence`，否則執行仍會建立可恢復的會話。[非交互模式](/docs/zh-TW/headless)是您將 Claude 整合到 CI 管道、pre-commit hooks 或任何自動化工作流中的方式。輸出格式讓您以編程方式解析結果：純文本、JSON 或流式 JSON。
 
 ```bash theme={null}
 # One-off queries
@@ -527,6 +502,8 @@ claude -p "List all API endpoints" --output-format json
 claude -p "Analyze this log file" --output-format stream-json --verbose
 ```
 
+第一個命令列印純文本。`json` 格式傳回一個具有 `result` 欄位的單一 JSON 物件。`stream-json` 格式每行列印一個 JSON 物件，從初始化事件開始。
+
 <h3 id="run-multiple-claude-sessions">
   運行多個 Claude 會話
 </h3>
@@ -535,12 +512,14 @@ claude -p "Analyze this log file" --output-format stream-json --verbose
   並行運行多個 Claude 會話以加快開發、運行隔離的實驗或啟動複雜的工作流。
 </Tip>
 
-選擇適合您想要自己進行多少協調的平行方法：
+選擇適合您想要自己進行多少協調的平行方法，並在會話需要相互傳遞發現時添加訊息：
 
 * [Worktrees](/docs/zh-TW/worktrees)：在隔離的 git 檢出中運行單獨的 CLI 會話，以便編輯不會衝突
+* [跨會話訊息](/docs/zh-TW/cross-session-messaging)：讓您自己運行的會話相互傳遞發現
 * [桌面應用](/docs/zh-TW/desktop#work-in-parallel-with-sessions)：以視覺方式管理多個本地會話，每個會話都在自己的 worktree 中
-* [Claude Code 在網絡上](/docs/zh-TW/claude-code-on-the-web)：在 Anthropic 管理的雲基礎設施中在隔離的 VM 中運行會話
-* [Agent teams](/docs/zh-TW/agent-teams)：多個會話的自動協調，具有共享任務、消息和團隊領導
+* [Claude Code 在網路上](/docs/zh-TW/claude-code-on-the-web)：在雲端運行會話，預設情況下在 Anthropic 管理的基礎設施上
+* [Agent view](/docs/zh-TW/agent-view)：研究預覽。執行 `claude agents` 以分派在背景中持續運行的會話，並從一個螢幕監視它們
+* [Agent teams](/docs/zh-TW/agent-teams)：實驗性且預設停用。多個會話的自動協調，具有共享任務、訊息和團隊領導
 
 除了並行化工作外，多個會話還支持質量聚焦的工作流。新鮮的 context 改進代碼審查，因為 Claude 不會偏向於它剛剛編寫的代碼。
 
@@ -562,34 +541,32 @@ claude -p "Analyze this log file" --output-format stream-json --verbose
   循環遍歷任務，為每個任務調用 `claude -p`。使用 `--allowedTools` 為批量操作限定權限。
 </Tip>
 
-對於大型遷移或分析，您可以在許多平行 Claude 調用中分配工作：
+對於大型遷移或分析，您可以在許多平行 Claude 調用中分配工作。執行 [`/batch <instruction>`](/docs/zh-TW/commands#all-commands) 讓 Claude 將變更分割到 5 到 30 個子代理。每個子代理在自己的 worktree 中工作。要改為從您自己的腳本驅動扇出，請循環遍歷 `claude -p`：
 
 <Steps>
   <Step title="生成任務列表">
-    讓 Claude 列出所有需要遷移的文件（例如，`列出所有 2,000 個需要遷移的 Python 文件`）
+    讓 Claude 將需要遷移的文件列表寫入文件，以便下一步中的循環可以讀取它，使用類似 `list all 2,000 Python files that need migrating and save the list to files.txt` 的提示
   </Step>
 
   <Step title="編寫腳本以循環遍歷列表">
     ```bash theme={null}
     for file in $(cat files.txt); do
-      claude -p "Migrate $file from React to Vue. Return OK or FAIL." \
+      claude -p "Migrate $file from Python 2 to Python 3. Return OK or FAIL." \
         --allowedTools "Edit,Bash(git commit *)"
     done
     ```
   </Step>
 
   <Step title="在幾個文件上測試，然後大規模運行">
-    根據前 2-3 個文件出現的問題改進您的提示，然後在完整集合上運行。`--allowedTools` 標誌限制 Claude 可以做什麼，這在您無人值守運行時很重要。
+    根據前 2-3 個文件出現的問題改進您的提示，然後在完整集合上運行。`--allowedTools` 旗標限制 Claude 可以做什麼，這在您無人值守運行時很重要。
   </Step>
 </Steps>
 
-您也可以將 Claude 集成到現有的數據/處理管道中：
+您也可以將 Claude 整合到現有的資料/處理管道中：
 
 ```bash theme={null}
 claude -p "<your prompt>" --output-format json | your_command
 ```
-
-在開發期間使用 `--verbose` 進行調試，在生產中關閉它。
 
 <h3 id="run-autonomously-with-auto-mode">
   使用 auto mode 自主運行
@@ -601,7 +578,7 @@ claude -p "<your prompt>" --output-format json | your_command
 claude --permission-mode auto -p "fix all lint errors"
 ```
 
-對於使用 `-p` 標誌的非交互運行，如果分類器重複阻止操作，auto mode 會中止，因為沒有用戶可以回退到。請參閱 [auto mode 何時回退](/docs/zh-TW/permission-modes#when-auto-mode-falls-back) 以了解閾值。
+當分類器在使用 `-p` 旗標的非交互運行中重複阻止操作時，Claude Code 不會停止執行。請參閱 [auto mode 何時回退](/docs/zh-TW/permission-modes#when-auto-mode-falls-back) 以了解發生的情況以及閾值。
 
 <h3 id="add-an-adversarial-review-step">
   添加對抗性審查步驟
@@ -611,17 +588,17 @@ claude --permission-mode auto -p "fix all lint errors"
   在將任務視為完成之前，讓一個子代理在新鮮的 context 中審查差異並報告缺陷。
 </Tip>
 
-Claude 無人值守工作的時間越長，在您將工作視為完成之前進行獨立檢查就越重要。在新鮮的 [subagent](/docs/zh-TW/sub-agents) context 中運行的審查者只看到差異和您給它的標準，而不是產生更改的推理，因此它按自己的條款評估結果。
+Claude 無人值守工作的時間越長，在您將工作視為完成之前進行獨立檢查就越重要。在新鮮的 [subagent](/docs/zh-TW/sub-agents) context 中運行的審查者只看到差異和您給它的標準，而不是產生變更的推理，因此它按自己的條款評估結果。
 
-對於正確性檢查，運行捆綁的 [`/code-review` skill](/docs/zh-TW/commands)，它在新鮮的子代理中審查當前差異以查找錯誤，並將發現返回到會話。要檢查差異是否符合您的計劃，請自己編寫審查提示。命名要檢查的工作、要檢查的計劃以及什麼算作發現：
+對於正確性檢查，執行捆綁的 [`/code-review` skill](/docs/zh-TW/commands)，它在新鮮的子代理中審查當前差異以查找錯誤，並將發現返回到會話。要檢查差異是否符合您的計劃，請自己編寫審查提示。命名要檢查的工作、要檢查的計劃以及什麼算作發現：
 
-```text theme={null}
+```text wrap theme={null}
 使用子代理根據 PLAN.md 審查速率限制器差異。檢查
 每個要求都已實施、列出的邊界情況都有測試，以及
 任務範圍之外沒有任何內容更改。報告缺陷，而不是風格偏好。
 ```
 
-因為審查者作為子代理運行，實施會話直接接收缺陷，可以修復它們並重新審查，而無需您在窗口之間複製發現。對於較長的自主運行，[agent team](/docs/zh-TW/agent-teams) 可以在許多任務中保持此循環進行，同時您對記錄的發現進行抽查。
+因為審查者作為子代理運行，實施會話直接接收缺陷，可以修復它們並重新審查，而無需您在窗口之間複製發現。
 
 <Callout>
   被提示尋找缺陷的審查者通常會報告一些，即使工作是健全的，因為那是它被要求做的。追逐每個發現會導致過度工程：額外的抽象層、防禦性代碼和無法發生的情況的測試。告訴審查者只標記影響正確性或陳述要求的缺陷，並將其餘的視為可選。
@@ -635,16 +612,16 @@ Claude 無人值守工作的時間越長，在您將工作視為完成之前進�
 
 這些是常見的錯誤。及早識別它們可以節省時間：
 
-* **廚房水槽會話。** 您從一個任務開始，然後詢問 Claude 不相關的事情，然後回到第一個任務。Context 充滿了不相關的信息。
-  > **修復**：在不相關的任務之間使用 `/clear`。
-* **一次又一次地改正。** Claude 做錯了什麼，您改正它，它仍然是錯的，您再次改正。Context 被失敗的方法所污染。
-  > **修復**：在兩次失敗的改正後，`/clear` 並編寫一個更好的初始提示，包含您學到的內容。
-* **過度指定的 CLAUDE.md。** 如果您的 CLAUDE.md 太長，Claude 會忽略其中的一半，因為重要的規則在噪音中丟失了。
-  > **修復**：無情地修剪。如果 Claude 已經在沒有指令的情況下正確地做某事，刪除它或將其轉換為 hook。
-* **信任然後驗證的差距。** Claude 產生看起來合理的實施，但不處理邊界情況。
-  > **修復**：始終提供驗證（測試、腳本、截圖）。如果您無法驗證它，不要發布它。
-* **無限探索。** 您要求 Claude「調查」某些內容而不限定範圍。Claude 讀取數百個文件，填滿 context。
-  > **修復**：狹隘地限定調查範圍或使用 subagents，以便探索不會消耗您的主 context。
+* **廚房水槽會話。** 你從一項任務開始，然後問 Claude 一些無關的事情，然後回到第一項任務。上下文充滿了無關的資訊。
+  > **修正**：在無關的任務之間使用 `/clear`。
+* **一次又一次地更正。** Claude 做錯了什麼，你更正它，它仍然是錯的，你再次更正。上下文被失敗的方法污染了。
+  > **修正**：在兩次失敗的更正後，使用 `/clear` 並寫一個更好的初始提示，納入你所學到的內容。
+* **過度指定的 CLAUDE.md。** 如果你的 CLAUDE.md 太長，Claude 會忽略其中一半，因為重要的規則在雜訊中丟失了。
+  > **修正**：無情地修剪。如果 Claude 已經在沒有指令的情況下正確地做了某事，請刪除它或將其轉換為 hook。
+* **信任然後驗證的差距。** Claude 產生了一個看起來合理的實現，但沒有處理邊界情況。
+  > **修正**：始終提供驗證（測試、指令碼、螢幕截圖）。如果你無法驗證它，就不要發佈它。
+* **無限探索。** 你要求 Claude「調查」某些東西而沒有限定範圍。Claude 讀取數百個檔案，填滿了上下文。
+  > **修正**：將調查範圍縮小或使用子代理，以便探索不會消耗你的主要上下文。
 
 ***
 

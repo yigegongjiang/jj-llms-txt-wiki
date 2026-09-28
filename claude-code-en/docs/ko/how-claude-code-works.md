@@ -16,13 +16,15 @@ Claude Code는 터미널에서 실행되는 에이전트 어시스턴트입니�
 
 Claude에게 작업을 주면 세 가지 단계를 거칩니다: **컨텍스트 수집**, **작업 수행**, **결과 검증**. 이 단계들은 함께 진행됩니다. Claude는 파일을 검색하여 코드를 이해하든, 변경을 위해 편집하든, 작업을 확인하기 위해 테스트를 실행하든 전체적으로 도구를 사용합니다.
 
-<img src="https://mintcdn.com/claude-code/ikqp3_70mqIahteV/images/agentic-loop.svg?fit=max&auto=format&n=ikqp3_70mqIahteV&q=85&s=4a30fb7ce2815012a9f27c955e2c6bb0" alt="에이전트 루프 다이어그램: 프롬프트가 Claude가 컨텍스트를 수집하고, 작업을 수행하고, 결과를 검증하고, 작업이 완료될 때까지 반복하도록 합니다. 언제든지 중단할 수 있습니다." width="720" height="280" data-path="images/agentic-loop.svg" />
+<img src="https://mintcdn.com/claude-code/ikqp3_70mqIahteV/images/agentic-loop.svg?fit=max&auto=format&n=ikqp3_70mqIahteV&q=85&s=4a30fb7ce2815012a9f27c955e2c6bb0" className="dark:hidden" alt="에이전트 루프 다이어그램: 프롬프트가 Claude가 컨텍스트를 수집하고, 작업을 수행하고, 결과를 검증하고, 작업이 완료될 때까지 반복하도록 합니다. 언제든지 중단할 수 있습니다." width="720" height="280" data-path="images/agentic-loop.svg" />
+
+<img src="https://mintcdn.com/claude-code/_xqph1dUOslCOwsj/images/agentic-loop-dark.svg?fit=max&auto=format&n=_xqph1dUOslCOwsj&q=85&s=75e1d55ed76857a952f9a2dffbab02df" className="hidden dark:block" alt="에이전트 루프 다이어그램: 프롬프트가 Claude가 컨텍스트를 수집하고, 작업을 수행하고, 결과를 검증하고, 작업이 완료될 때까지 반복하도록 합니다. 언제든지 중단할 수 있습니다." width="720" height="280" data-path="images/agentic-loop-dark.svg" />
 
 루프는 사용자가 요청한 내용에 맞게 조정됩니다. 코드베이스에 대한 질문은 컨텍스트 수집만 필요할 수 있습니다. 버그 수정은 세 단계를 반복적으로 거칩니다. 리팩토링은 광범위한 검증을 포함할 수 있습니다. Claude는 이전 단계에서 배운 내용을 바탕으로 각 단계에서 필요한 것을 결정하고, 수십 개의 작업을 연결하며 그 과정에서 방향을 수정합니다.
 
 사용자도 이 루프의 일부입니다. 언제든지 중단하여 Claude를 다른 방향으로 유도하거나, 추가 컨텍스트를 제공하거나, 다른 접근 방식을 시도하도록 요청할 수 있습니다. Claude는 자율적으로 작동하지만 사용자의 입력에 반응합니다.
 
-에이전트 루프는 두 가지 구성 요소로 구동됩니다: 추론하는 [모델](#models)과 작용하는 [도구](#tools). Claude Code는 Claude 주변의 **에이전트 하네스** 역할을 합니다: 언어 모델을 능력 있는 코딩 에이전트로 변환하는 도구, 컨텍스트 관리, 실행 환경을 제공합니다.
+에이전트 루프는 두 가지 구성 요소로 구동됩니다: 추론하는 [모델](#models)과 작용하는 [도구](#tools). Claude Code는 모델 주변의 계층으로, 도구를 제공하고 모델이 보는 컨텍스트를 관리합니다. 이 주변 계층을 에이전트 하네스라는 용어가 나타냅니다.
 
 <h3 id="models">
   모델
@@ -42,13 +44,13 @@ Claude Code는 Claude 모델을 사용하여 코드를 이해하고 작업에 �
 
 내장 도구는 일반적으로 다섯 가지 범주로 나뉘며, 각각은 다른 종류의 에이전시를 나타냅니다.
 
-| 범주           | Claude가 할 수 있는 것                                                                               |
-| ------------ | ---------------------------------------------------------------------------------------------- |
-| **파일 작업**    | 파일 읽기, 코드 편집, 새 파일 생성, 이름 변경 및 재구성                                                             |
-| **검색**       | 패턴으로 파일 찾기, 정규식으로 콘텐츠 검색, 코드베이스 탐색                                                             |
-| **실행**       | 셸 명령 실행, 서버 시작, 테스트 실행, git 사용                                                                 |
-| **웹**        | 웹 검색, 문서 가져오기, 오류 메시지 조회                                                                       |
-| **코드 인텔리전스** | 편집 후 타입 오류 및 경고 확인, 정의로 이동, 참조 찾기 ([코드 인텔리전스 플러그인](/docs/ko/discover-plugins#code-intelligence) 필요) |
+| 범주           | Claude가 할 수 있는 것                                                                      |
+| ------------ | ------------------------------------------------------------------------------------- |
+| **파일 작업**    | 파일 읽기, 코드 편집, 새 파일 생성, 이름 변경 및 재구성                                                    |
+| **검색**       | 패턴으로 파일 찾기, 정규식으로 콘텐츠 검색, 코드베이스 탐색                                                    |
+| **실행**       | 셸 명령 실행, 서버 시작, 테스트 실행, git 사용                                                        |
+| **웹**        | 웹 검색, 문서 가져오기, 오류 메시지 조회                                                              |
+| **코드 인텔리전스** | 편집 후 타입 오류 및 경고 확인, 정의로 이동, 참조 찾기 ([코드 인텔리전스 플러그인](/docs/ko/plugins/code-intelligence) 필요) |
 
 이것이 주요 기능입니다. Claude는 또한 subagents를 생성하고, 질문을 하고, 다른 오케스트레이션 작업을 위한 도구를 가지고 있습니다. 전체 목록은 [Claude가 사용할 수 있는 도구](/docs/ko/tools-reference)를 참조하세요.
 
@@ -69,14 +71,12 @@ Claude는 프롬프트와 그 과정에서 배운 내용을 바탕으로 사용�
   Claude가 접근할 수 있는 것
 </h2>
 
-이 가이드는 터미널에 중점을 둡니다. Claude Code는 또한 [VS Code](/docs/ko/vs-code), [JetBrains IDE](/docs/ko/jetbrains), 및 기타 환경에서 실행됩니다.
-
 디렉토리에서 `claude`를 실행하면 Claude Code는 다음에 접근할 수 있습니다:
 
 * **프로젝트.** 디렉토리 및 하위 디렉토리의 파일, 그리고 허가를 받은 다른 곳의 파일.
 * **터미널.** 실행할 수 있는 모든 명령: 빌드 도구, git, 패키지 관리자, 시스템 유틸리티, 스크립트. 명령줄에서 할 수 있는 것이면 Claude도 할 수 있습니다.
 * **git 상태.** 현재 브랜치, 커밋되지 않은 변경 사항, 최근 커밋 기록.
-* **[CLAUDE.md](/docs/ko/memory).** 프로젝트별 지침, 규칙, Claude가 매 세션마다 알아야 할 컨텍스트를 저장하는 마크다운 파일.
+* **[CLAUDE.md](/docs/ko/memory).** 프로젝트별 지침, 규칙, Claude가 매 세션마다 알아야 할 컨텍스트를 저장하는 마크다운 파일. 저장소에 다른 코딩 에이전트를 위한 AGENTS.md가 있으면 Claude는 [자체적으로 또는 CLAUDE.md와 함께](/docs/ko/memory#agents-md) 읽을 수 있습니다.
 * **[자동 메모리](/docs/ko/memory#auto-memory).** Claude가 작업하면서 자동으로 저장하는 학습 내용(프로젝트 패턴 및 사용자 선호도 등). MEMORY.md의 처음 200줄 또는 25KB 중 먼저 도달하는 것이 각 세션 시작 시 로드됩니다.
 * **구성한 확장.** 외부 서비스를 위한 [MCP servers](/docs/ko/mcp), 워크플로우를 위한 [skills](/docs/ko/skills), 위임된 작업을 위한 [subagents](/docs/ko/sub-agents), 브라우저 상호작용을 위한 [Claude in Chrome](/docs/ko/chrome).
 
@@ -86,7 +86,7 @@ Claude가 전체 프로젝트를 보기 때문에 전체 프로젝트에서 작�
   환경 및 인터페이스
 </h2>
 
-위에서 설명한 에이전트 루프, 도구, 기능은 Claude Code를 사용하는 모든 곳에서 동일합니다. 변하는 것은 코드가 실행되는 위치와 상호작용하는 방식입니다.
+[에이전트 루프](#the-agentic-loop), [도구](#tools), 및 기능은 Claude Code를 사용하는 모든 곳에서 동일합니다. 변하는 것은 코드가 실행되는 위치와 상호작용하는 방식입니다.
 
 <h3 id="execution-environments">
   실행 환경
@@ -94,11 +94,11 @@ Claude가 전체 프로젝트를 보기 때문에 전체 프로젝트에서 작�
 
 Claude Code는 세 가지 환경에서 실행되며, 각각은 코드가 실행되는 위치에 대해 다른 장단점이 있습니다.
 
-| 환경        | 코드 실행 위치          | 사용 사례                      |
-| --------- | ----------------- | -------------------------- |
-| **로컬**    | 사용자 머신            | 기본값. 파일, 도구, 환경에 대한 전체 접근  |
-| **클라우드**  | Anthropic 관리 VM   | 작업 오프로드, 로컬에 없는 리포지토리에서 작업 |
-| **원격 제어** | 사용자 머신, 브라우저에서 제어 | 웹 UI를 사용하면서 모든 것을 로컬로 유지   |
+| 환경        | 코드 실행 위치                                                              | 사용 사례                       |
+| --------- | --------------------------------------------------------------------- | --------------------------- |
+| **로컬**    | 사용자 머신                                                                | 기본값. 파일, 도구, 환경에 대한 전체 접근   |
+| **클라우드**  | Anthropic 관리 VM 또는 [조직이 운영하는 자체 호스팅 환경](/docs/ko/self-hosted-environments) | 작업 오프로드, 로컬에 없는 리포지토리에서 작업  |
+| **원격 제어** | 사용자 머신, 브라우저에서 제어                                                     | 웹 UI를 사용하면서 실행 및 파일을 로컬로 유지 |
 
 <h3 id="interfaces">
   인터페이스
@@ -130,7 +130,9 @@ Claude는 현재 브랜치의 파일을 봅니다. 브랜치를 전환하면 Cla
 
 `claude --continue` 또는 `claude --resume`으로 세션을 재개하면 동일한 세션 ID를 사용하여 중단한 지점부터 시작합니다. 새 메시지는 기존 대화에 추가됩니다. `--fork-session` 또는 `/branch`로 포크하면 기록을 새 세션 ID로 복사하여 원본은 변경되지 않은 상태로 유지합니다.
 
-<img src="https://mintcdn.com/claude-code/ikqp3_70mqIahteV/images/session-continuity.svg?fit=max&auto=format&n=ikqp3_70mqIahteV&q=85&s=04ed0984a58e4127e05b3640265241a3" alt="세션 연속성: 재개는 동일한 세션을 계속하고, 포크는 새 ID로 새 브랜치를 생성합니다." width="560" height="280" data-path="images/session-continuity.svg" />
+<img src="https://mintcdn.com/claude-code/ikqp3_70mqIahteV/images/session-continuity.svg?fit=max&auto=format&n=ikqp3_70mqIahteV&q=85&s=04ed0984a58e4127e05b3640265241a3" className="dark:hidden" alt="세션 연속성 다이어그램: 재개는 동일한 세션을 계속하고, 포크는 새 ID로 새 브랜치를 생성합니다." width="560" height="280" data-path="images/session-continuity.svg" />
+
+<img src="https://mintcdn.com/claude-code/_xqph1dUOslCOwsj/images/session-continuity-dark.svg?fit=max&auto=format&n=_xqph1dUOslCOwsj&q=85&s=886a384bce8298594e43f124617ea665" className="hidden dark:block" alt="세션 연속성 다이어그램: 재개는 동일한 세션을 계속하고, 포크는 새 ID로 새 브랜치를 생성합니다." width="560" height="280" data-path="images/session-continuity-dark.svg" />
 
 재개 플래그, `/resume` 선택기, 이름 지정, 동일한 세션이 두 터미널에서 열려 있을 때 발생하는 상황은 [세션 관리](/docs/ko/sessions)를 참조하세요.
 
@@ -152,7 +154,7 @@ Claude Code는 한계에 접근할 때 컨텍스트를 자동으로 관리합니
 
 단일 파일 또는 도구 출력이 너무 커서 각 요약 후 컨텍스트가 즉시 다시 채워지면 Claude Code는 몇 번의 시도 후 자동 압축을 중지하고 루핑 대신 오류를 표시합니다. 복구 단계는 [자동 압축이 thrashing 오류로 중지됨](/docs/ko/troubleshooting#auto-compaction-stops-with-a-thrashing-error)을 참조하세요.
 
-`/context`를 실행하여 공간을 사용하는 것을 확인하세요. MCP 도구 정의는 기본적으로 지연되며 [도구 검색](/docs/ko/mcp#scale-with-mcp-tool-search)을 통해 요청 시 로드되므로 Claude가 특정 도구를 사용할 때까지 도구 이름만 컨텍스트를 소비합니다. `/mcp`를 실행하여 서버별 비용을 확인하세요.
+`/context`를 실행하여 공간을 사용하는 것을 확인하세요. MCP 도구 정의는 기본적으로 지연되며 [도구 검색](/docs/ko/mcp#scale-with-mcp-tool-search)을 통해 요청 시 로드되므로 Claude가 특정 도구를 사용할 때까지 도구 이름과 서버 지침만 컨텍스트를 소비합니다.
 
 <h4 id="manage-context-with-skills-and-subagents">
   skills 및 subagents로 컨텍스트 관리
@@ -162,7 +164,7 @@ Claude Code는 한계에 접근할 때 컨텍스트를 자동으로 관리합니
 
 [Skills](/docs/ko/skills)는 요청 시 로드됩니다. Claude는 세션 시작 시 skill 설명을 보지만 전체 콘텐츠는 skill이 사용될 때만 로드됩니다. 수동으로 호출하는 skills의 경우 `disable-model-invocation: true`를 설정하여 필요할 때까지 설명을 컨텍스트 밖으로 유지하세요. 작성하지 않은 skills의 경우 [`skillOverrides`](/docs/ko/skills#override-skill-visibility-from-settings)를 사용하여 설정에서 동일하게 수행하세요.
 
-[Subagents](/docs/ko/sub-agents)는 주 대화와 완전히 분리된 자신의 새로운 컨텍스트를 얻습니다. 그들의 작업은 컨텍스트를 부풀리지 않습니다. 완료되면 요약을 반환합니다. 이 격리가 긴 세션에서 subagents가 도움이 되는 이유입니다.
+[Subagents](/docs/ko/sub-agents)는 자신의 컨텍스트 윈도우에서 작동합니다. subagent는 [포크](/docs/ko/sub-agents#fork-the-current-conversation)가 아닌 한 새로 시작하며, 포크는 지금까지의 대화 복사본으로 시작합니다. 어느 쪽이든 subagent의 도구 호출은 컨텍스트 밖에 머물러 있으며, Claude는 subagent가 완료되면 요약을 받습니다.
 
 각 기능의 비용은 [컨텍스트 비용](/docs/ko/features-overview#understand-context-costs)을 참조하고, 컨텍스트 관리 팁은 [토큰 사용 감소](/docs/ko/costs#reduce-token-usage)를 참조하세요.
 
@@ -178,7 +180,7 @@ Claude는 두 가지 안전 메커니즘을 가지고 있습니다: 체크포인
 
 **모든 파일 편집은 되돌릴 수 있습니다.** Claude가 파일을 편집하기 전에 현재 콘텐츠를 스냅샷합니다. 문제가 발생하면 `Esc`를 두 번 눌러 이전 상태로 되돌리거나 Claude에게 취소하도록 요청하세요.
 
-체크포인트는 git과 분리되어 있으며 대화를 재개할 때 계속 사용할 수 있습니다. 파일 변경만 다룹니다. 원격 시스템(데이터베이스, API, 배포)에 영향을 주는 작업은 체크포인트할 수 없으므로 Claude는 외부 부작용이 있는 명령을 실행하기 전에 요청합니다.
+체크포인트는 git과 분리되어 있으며 대화를 재개할 때 계속 사용할 수 있습니다. 파일 변경만 다루며, 복원 시 [심볼릭 링크 및 하드 링크 파일을 건너뜁니다](/docs/ko/checkpointing#symlinked-and-hard-linked-paths-not-restored). 원격 시스템(데이터베이스, API, 배포)에 영향을 주는 작업은 체크포인트할 수 없습니다. 이러한 작업은 권한 모드 및 권한 규칙으로 제어합니다.
 
 <h3 id="control-what-claude-can-do">
   Claude가 할 수 있는 것 제어
@@ -186,10 +188,10 @@ Claude는 두 가지 안전 메커니즘을 가지고 있습니다: 체크포인
 
 `Shift+Tab`을 눌러 권한 모드를 순환하세요:
 
-* **기본값**: Claude는 파일 편집 및 셸 명령 전에 요청합니다
-* **자동 수락 편집**: Claude는 파일을 편집하고 `mkdir` 및 `mv`와 같은 일반적인 파일시스템 명령을 요청 없이 실행하지만 다른 명령은 여전히 요청합니다
+* **Auto**: 분류기가 백그라운드에서 대부분의 작업을 검토하고 요청하는 대신 위험한 작업을 차단합니다. Pro, Max, Team 플랜에서는 대화형 터미널 및 VS Code 세션의 [기본 시작 권한 모드](/docs/ko/permission-modes#which-mode-a-session-starts-in)입니다
+* **Manual**: Claude가 파일 편집 및 셸 명령 전에 요청합니다
+* **Accept edits**: Claude는 파일을 편집하고 `mkdir` 및 `mv`와 같은 일반적인 파일시스템 명령을 요청 없이 실행하지만 다른 명령은 여전히 요청합니다
 * **Plan**: Claude는 소스 파일을 편집하지 않고 계획을 탐색하고 제안합니다
-* **Auto**: Claude는 백그라운드 안전 검사로 모든 작업을 평가합니다
 
 `.claude/settings.json`에서 특정 명령을 허용하여 Claude가 매번 요청하지 않도록 할 수 있습니다. 이는 `npm test` 또는 `git status`와 같은 신뢰할 수 있는 명령에 유용합니다. 설정은 조직 전체 정책에서 개인 선호도까지 범위를 지정할 수 있습니다. 자세한 내용은 [권한](/docs/ko/permissions)을 참조하세요.
 
@@ -199,7 +201,7 @@ Claude는 두 가지 안전 메커니즘을 가지고 있습니다: 체크포인
   Claude Code를 효과적으로 사용하기
 </h2>
 
-이 팁들은 Claude Code에서 더 나은 결과를 얻는 데 도움이 됩니다.
+이 팁들은 Claude Code에서 더 나은 결과를 얻는 데 도움이 됩니다. 특정 프롬프트, 검증 및 계획에 대한 자세한 내용은 [모범 사례](/docs/ko/best-practices)를 참조하세요.
 
 <h3 id="ask-claude-code-for-help">
   Claude Code에 도움을 요청하기
@@ -209,7 +211,7 @@ Claude Code는 사용 방법을 가르칠 수 있습니다. "hooks를 설정하�
 
 내장 명령도 설정을 안내합니다:
 
-* `/init`은 프로젝트를 위한 CLAUDE.md 생성을 안내합니다
+* `/init`은 프로젝트를 위한 시작 CLAUDE.md를 생성합니다
 * `/doctor`는 설치 및 구성 문제를 진단하고 수정할 수 있습니다
 
 <h3 id="it’s-a-conversation">
@@ -236,50 +238,10 @@ Claude Code는 대화형입니다. 완벽한 프롬프트가 필요하지 않습
   중단 및 조종
 </h4>
 
-언제든지 Claude를 리다이렉트할 수 있습니다. 턴이 완료될 때까지 기다리거나 다시 시작할 필요 없이:
+언제든지 Claude를 리다이렉트할 수 있습니다. 다음 중 하나를 수행하세요:
 
-* **`Esc` 키를 누르세요** Claude를 즉시 중지합니다. 실행 중인 도구 호출이 취소되고 Claude는 다음 지시를 기다립니다.
-* **수정 사항을 입력하고 `Enter`를 누르세요** 실행 중인 도구를 중지하지 않고 전송합니다. Claude는 현재 작업이 완료되는 즉시 이를 읽고 다음 단계를 결정하기 전에 조정합니다.
-
-<h3 id="be-specific-upfront">
-  처음부터 구체적으로
-</h3>
-
-초기 프롬프트가 정확할수록 필요한 수정이 적습니다. 특정 파일을 참조하고, 제약 조건을 언급하고, 예제 패턴을 지적하세요.
-
-```text theme={null}
-체크아웃 흐름이 만료된 카드를 가진 사용자에게 손상되었습니다.
-문제를 찾기 위해 src/payments/를 확인하세요. 특히 토큰 새로고침.
-먼저 실패하는 테스트를 작성한 다음 수정하세요.
-```
-
-모호한 프롬프트는 작동하지만 더 많은 시간을 조종하는 데 소비합니다. 위와 같은 구체적인 프롬프트는 종종 첫 번째 시도에서 성공합니다.
-
-<h3 id="give-claude-something-to-verify-against">
-  Claude가 검증할 수 있는 것을 제공하기
-</h3>
-
-Claude는 자신의 작업을 확인할 수 있을 때 더 잘 수행합니다. 테스트 케이스를 포함하고, 예상 UI의 스크린샷을 붙여넣거나, 원하는 출력을 정의하세요.
-
-```text theme={null}
-validateEmail을 구현하세요. 테스트 케이스: 'user@example.com' → true,
-'invalid' → false, 'user@.com' → false. 후에 테스트를 실행하세요.
-```
-
-시각적 작업의 경우 디자인의 스크린샷을 붙여넣고 Claude에게 구현을 비교하도록 요청하세요.
-
-<h3 id="explore-before-implementing">
-  구현 전에 탐색하기
-</h3>
-
-복잡한 문제의 경우 연구와 코딩을 분리하세요. 계획 모드(`Shift+Tab` 두 번)를 사용하여 먼저 코드베이스를 분석하세요:
-
-```text theme={null}
-src/auth/를 읽고 세션을 처리하는 방법을 이해하세요.
-그런 다음 OAuth 지원 추가를 위한 계획을 생성하세요.
-```
-
-계획을 검토하고 대화를 통해 개선한 다음 Claude가 구현하도록 하세요. 이 2단계 접근 방식은 코드로 바로 뛰어드는 것보다 더 나은 결과를 생성합니다.
+* **`Esc` 키를 누르세요** Claude를 즉시 중지합니다. 실행 중인 도구 호출이 취소되고 Claude는 다음 지시를 기다립니다. 대기 중인 메시지가 있으면 Claude Code [다음으로 전송합니다](/docs/ko/interactive-mode#queue-messages-while-claude-works).
+* **수정 사항을 입력하고 `Enter`를 누르세요** Claude를 중지하지 않고 메시지를 전송합니다. 메시지는 입력 상자 위에 대기 중으로 표시됩니다. Claude가 도구 호출을 실행 중이면 해당 호출이 완료되는 즉시 메시지를 읽고 같은 턴 내에서 조정한 후 다음 단계를 진행합니다. [Claude가 작업하는 동안 메시지 대기](/docs/ko/interactive-mode#queue-messages-while-claude-works)에서 다른 대기 중인 항목이 언제 전송되는지 다룹니다.
 
 <h3 id="delegate-don’t-dictate">
   지시하지 말고 위임하기
@@ -300,7 +262,7 @@ src/auth/를 읽고 세션을 처리하는 방법을 이해하세요.
 
 <CardGroup cols={2}>
   <Card title="기능으로 확장" icon="puzzle-piece" href="/docs/ko/features-overview">
-    Skills, MCP 연결, 사용자 정의 명령 추가
+    Skills 및 MCP 연결 추가
   </Card>
 
   <Card title="일반적인 워크플로우" icon="graduation-cap" href="/docs/ko/common-workflows">

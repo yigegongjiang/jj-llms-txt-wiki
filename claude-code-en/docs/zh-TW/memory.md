@@ -4,19 +4,20 @@
 
 # Claude 如何記住您的專案
 
-> 使用 CLAUDE.md 檔案為 Claude 提供持久指令，並讓 Claude 透過自動記憶自動累積學習。
+> 使用 CLAUDE.md 或 AGENTS.md 檔案為 Claude 提供持久指示，並讓 Claude 透過自動記憶自動累積學習。
 
-每個 Claude Code 工作階段都以全新的 context window 開始。兩個機制可以跨工作階段傳遞知識：
+每個 Claude Code 工作階段都以全新的內容視窗開始。兩個機制可以跨工作階段傳遞知識：
 
-* **CLAUDE.md 檔案**：您編寫的指令，為 Claude 提供持久的上下文
-* **自動記憶**：Claude 根據您的更正和偏好自己編寫的筆記
+* **CLAUDE.md 檔案**：您撰寫的指示，為 Claude 提供持久內容。Claude 也可以讀取儲存庫的 [`AGENTS.md` 檔案](#agents-md)，單獨使用或與 CLAUDE.md 一起使用
+* **自動記憶**：Claude 根據您的更正和偏好自己撰寫的筆記
 
 本頁涵蓋如何：
 
-* [編寫和組織 CLAUDE.md 檔案](#claude-md-files)
-* [使用 `.claude/rules/` 將規則範圍限定於特定檔案類型](#organize-rules-with-claude%2Frules%2F)
-* [配置自動記憶](#auto-memory)，使 Claude 自動記筆記
-* [疑難排解](#troubleshoot-memory-issues)指令未被遵循的情況
+* [撰寫和組織 CLAUDE.md 檔案](#claude-md-files)
+* [使用現有的 AGENTS.md](#agents-md) 作為您的專案指示，單獨使用或與 CLAUDE.md 一起使用
+* [使用 `.claude/rules/` 將規則範圍限定於特定檔案類型](#organize-rules-with-claude/rules/)
+* [設定自動記憶](#auto-memory)，讓 Claude 自動記筆記
+* [疑難排解](#troubleshoot-memory-issues)當指示未被遵循時
 
 <h2 id="claude-md-vs-auto-memory">
   CLAUDE.md 與自動記憶
@@ -24,13 +25,13 @@
 
 Claude Code 有兩個互補的記憶系統。兩者都在每次對話開始時載入。Claude 將它們視為上下文，而不是強制配置。若要阻止某個動作（無論 Claude 決定什麼），請改用 [PreToolUse hook](/docs/zh-TW/hooks-guide)。您的指令越具體和簡潔，Claude 遵循它們的一致性就越高。
 
-|          | CLAUDE.md 檔案   | 自動記憶                   |
-| :------- | :------------- | :--------------------- |
-| **誰編寫**  | 您              | Claude                 |
-| **包含內容** | 指令和規則          | 學習和模式                  |
-| **範圍**   | 專案、使用者或組織      | 每個工作樹，跨 worktrees 共享   |
-| **載入到**  | 每個工作階段         | 每個工作階段（前 200 行或 25KB）  |
-| **用於**   | 編碼標準、工作流程、專案架構 | 建置命令、除錯見解、Claude 發現的偏好 |
+|          | CLAUDE.md 檔案   | 自動記憶                                      |
+| :------- | :------------- | :---------------------------------------- |
+| **誰編寫**  | 您              | Claude                                    |
+| **包含內容** | 指令和規則          | 學習和模式                                     |
+| **範圍**   | 專案、使用者或組織      | 每個儲存庫，跨 worktrees 共享                      |
+| **載入到**  | 每個工作階段         | 每個工作階段（前 200 行或 25KB）                     |
+| **用於**   | 編碼標準、工作流程、專案架構 | 您的偏好、您給予 Claude 的更正、Claude 無法從程式碼衍生的專案上下文 |
 
 當您想引導 Claude 的行為時，使用 CLAUDE.md 檔案。自動記憶讓 Claude 從您的更正中學習，無需手動操作。
 
@@ -40,151 +41,131 @@ Subagents 也可以維護自己的自動記憶。有關詳細資訊，請參閱 
   CLAUDE.md 檔案
 </h2>
 
-CLAUDE.md 檔案是 markdown 檔案，為專案、您的個人工作流程或整個組織為 Claude 提供持久指令。您以純文字編寫這些檔案；Claude 在每個工作階段開始時讀取它們。
+CLAUDE.md 檔案是 markdown 檔案，為 Claude 提供專案、個人工作流程或整個組織的持久指令。您以純文字編寫這些檔案；Claude 在每個工作階段開始時讀取它們。如果您的儲存庫改用 `AGENTS.md`，請參閱 [AGENTS.md](#agents-md)。
 
 <h3 id="when-to-add-to-claude-md">
-  何時新增到 CLAUDE.md
+  何時新增至 CLAUDE.md
 </h3>
 
-將 CLAUDE.md 視為您寫下您本來會重新解釋的內容的地方。在以下情況下新增到它：
+將 CLAUDE.md 視為您寫下原本需要重複解釋的內容的地方。在以下情況下新增至它：
 
 * Claude 第二次犯同樣的錯誤
-* 程式碼審查發現 Claude 應該知道的關於此程式碼庫的內容
-* 您在聊天中輸入的相同更正或澄清是您上個工作階段輸入的
-* 新的團隊成員需要相同的上下文才能提高生產力
+* 程式碼審查發現 Claude 應該知道的關於此程式碼庫的事項
+* 您在聊天中輸入的相同更正或澄清是您上一個工作階段輸入的
+* 新的團隊成員需要相同的背景資訊才能提高生產力
 
-將其保持為 Claude 應該在每個工作階段中保留的事實：建置命令、慣例、專案佈局、「始終執行 X」規則。如果一個條目是多步驟程序或僅對程式碼庫的一部分重要，請將其移到 [skill](/docs/zh-TW/skills) 或 [路徑範圍規則](#organize-rules-with-claude/rules/) 代替。[擴展概述](/docs/zh-TW/features-overview#build-your-setup-over-time)涵蓋何時使用每個機制。
+將其保持為 Claude 應該在每個工作階段中保留的事實：建置命令、慣例、專案配置、「始終執行 X」規則。如果一個條目是多步驟程序或僅對程式碼庫的一部分重要，請改為將其移至 [skill](/docs/zh-TW/skills) 或 [path-scoped rule](#organize-rules-with-claude/rules/)。[擴充功能概述](/docs/zh-TW/features-overview#build-your-setup-over-time) 涵蓋何時使用每個機制。
 
 <h3 id="choose-where-to-put-claude-md-files">
-  選擇 CLAUDE.md 檔案的位置
+  選擇 CLAUDE.md 檔案的放置位置
 </h3>
 
-CLAUDE.md 檔案可以位於多個位置，每個位置都有不同的範圍。下表按載入順序列出它們，從最廣泛的範圍到最具體的範圍，因此專案指令在使用者指令之後出現在上下文中。
+CLAUDE.md 檔案可以位於多個位置，每個位置具有不同的範圍。下表按載入順序列出它們，從最廣泛的範圍到最具體的範圍，因此專案指令在使用者指令之後出現在背景中。
 
-| 範圍         | 位置                                                                                                                                                                 | 目的                        | 使用案例示例           | 共享對象         |
-| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------- | ---------------- | ------------ |
-| **受管理的原則** | • macOS：`/Library/Application Support/ClaudeCode/CLAUDE.md`<br />• Linux 和 WSL：`/etc/claude-code/CLAUDE.md`<br />• Windows：`C:\Program Files\ClaudeCode\CLAUDE.md` | 由 IT/DevOps 管理的組織範圍指令     | 公司編碼標準、安全原則、合規要求 | 組織中的所有使用者    |
-| **使用者指令**  | `~/.claude/CLAUDE.md`                                                                                                                                              | 所有專案的個人偏好                 | 程式碼樣式偏好、個人工具快捷方式 | 僅您（所有專案）     |
-| **專案指令**   | `./CLAUDE.md` 或 `./.claude/CLAUDE.md`                                                                                                                              | 專案的團隊共享指令                 | 專案架構、編碼標準、常見工作流程 | 透過原始碼控制的團隊成員 |
-| **本地指令**   | `./CLAUDE.local.md`                                                                                                                                                | 個人專案特定偏好；新增到 `.gitignore` | 您的沙箱 URL、偏好的測試資料 | 僅您（目前專案）     |
+| 範圍         | 位置                                                                                                                                                                 | 目的                          | 使用案例範例             | 共享對象         |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------- | ------------------ | ------------ |
+| **受管理的原則** | • macOS：`/Library/Application Support/ClaudeCode/CLAUDE.md`<br />• Linux 和 WSL：`/etc/claude-code/CLAUDE.md`<br />• Windows：`C:\Program Files\ClaudeCode\CLAUDE.md` | 由 IT/DevOps 管理的組織範圍指令       | 公司編碼標準、安全原則、合規要求   | 組織中的所有使用者    |
+| **使用者指令**  | `~/.claude/CLAUDE.md`                                                                                                                                              | 所有專案的個人偏好設定                 | 程式碼樣式偏好設定、個人工具快捷方式 | 僅您（所有專案）     |
+| **專案指令**   | `./CLAUDE.md` 或 `./.claude/CLAUDE.md`。請參閱 [AGENTS.md](#agents-md) 以了解何時 `./AGENTS.md` 載入而不是或與它們一起載入                                                                | 專案的團隊共享指令                   | 專案架構、編碼標準、常見工作流程   | 透過原始碼控制的團隊成員 |
+| **本機指令**   | `./CLAUDE.local.md`                                                                                                                                                | 個人專案特定偏好設定；新增至 `.gitignore` | 您的沙箱 URL、偏好的測試資料   | 僅您（目前專案）     |
 
-工作目錄上方目錄層級中的 CLAUDE.md 和 CLAUDE.local.md 檔案在啟動時完整載入。子目錄中的檔案在 Claude 讀取這些目錄中的檔案時按需載入。有關完整的解析順序，請參閱 [CLAUDE.md 檔案如何載入](#how-claude-md-files-load)。
+工作目錄上方目錄階層中的 CLAUDE.md 和 CLAUDE.local.md 檔案在啟動時載入。子目錄中的檔案在 Claude 讀取這些目錄中的檔案時按需載入。請參閱 [CLAUDE.md 檔案如何載入](#how-claude-md-files-load) 以了解完整的解析順序。
 
-對於大型專案，您可以使用 [專案規則](#organize-rules-with-claude/rules/) 將指令分解為主題特定的檔案。規則讓您將指令範圍限定於特定檔案類型或子目錄。
+對於大型專案，您可以使用 [project rules](#organize-rules-with-claude/rules/) 將指令分解為主題特定的檔案。規則可讓您將指令範圍限制為特定檔案類型或子目錄。
 
 <h3 id="set-up-a-project-claude-md">
   設定專案 CLAUDE.md
 </h3>
 
-專案 CLAUDE.md 可以儲存在 `./CLAUDE.md` 或 `./.claude/CLAUDE.md` 中。建立此檔案並新增適用於在專案上工作的任何人的指令：建置和測試命令、編碼標準、架構決策、命名慣例和常見工作流程。這些指令透過版本控制與您的團隊共享，因此請專注於專案級別的標準，而不是個人偏好。
+專案 CLAUDE.md 可以儲存在 `./CLAUDE.md` 或 `./.claude/CLAUDE.md` 中。建立此檔案並新增適用於在專案上工作的任何人的指令：建置和測試命令、編碼標準、架構決策、命名慣例和常見工作流程。這些指令透過版本控制與您的團隊共享，因此請專注於專案級標準而不是個人偏好設定。若要確認檔案已載入，請在工作階段中執行 `/context` 並檢查 **Memory files** 下的清單。
 
 <Tip>
-  執行 `/init` 以自動產生起始 CLAUDE.md。Claude 分析您的程式碼庫並建立一個檔案，其中包含它發現的建置命令、測試指令和專案慣例。如果 CLAUDE.md 已存在，`/init` 會建議改進，而不是覆蓋它。從那裡進行細化，新增 Claude 不會自己發現的指令。
+  執行 `/init` 以自動產生起始 CLAUDE.md。Claude 分析您的程式碼庫並建立包含建置命令、測試指令和它發現的專案慣例的檔案。如果 CLAUDE.md 已存在，`/init` 會建議改進而不是覆寫它。從那裡使用 Claude 不會自行發現的指令進行精煉。
 
-  設定 `CLAUDE_CODE_NEW_INIT=1` 以啟用互動式多階段流程。`/init` 詢問要設定哪些成品：CLAUDE.md 檔案、skills 和 hooks。然後它使用 subagent 探索您的程式碼庫，透過後續問題填補空白，並在寫入任何檔案之前呈現可審查的提案。
+  設定 `CLAUDE_CODE_NEW_INIT` 環境變數為 `1` 以啟用互動式多階段流程。在執行 `/init` 之前在您的 shell 中或在設定檔的 `env` 區塊中設定它，如 [設定環境變數](/docs/zh-TW/env-vars#set-environment-variables) 中所示。設定後，`/init` 會詢問要設定哪些成品：CLAUDE.md 檔案、skills 和 hooks。然後它使用子代理探索您的程式碼庫，透過後續問題填補空白，並在寫入任何檔案之前呈現可審查的提案。該變數僅改變 `/init` 的執行方式，因此您可以保持它設定。
 </Tip>
 
 <h3 id="write-effective-instructions">
-  編寫有效的指令
+  撰寫有效的指令
 </h3>
 
-CLAUDE.md 檔案在每個工作階段開始時載入到 context window 中，與您的對話一起消耗令牌。[context window 視覺化](/docs/zh-TW/context-window)顯示 CLAUDE.md 相對於其餘啟動上下文的載入位置。因為它們是上下文而不是強制配置，您編寫指令的方式會影響 Claude 遵循它們的可靠性。具體、簡潔、結構良好的指令效果最好。
+CLAUDE.md 檔案在每個工作階段開始時載入到背景視窗中，與您的對話一起消耗權杖。[背景視窗視覺化](/docs/zh-TW/context-window) 顯示 CLAUDE.md 相對於其餘啟動背景的載入位置。因為它們是背景而不是強制執行的設定，您撰寫指令的方式會影響 Claude 遵循它們的可靠性。具體、簡潔、結構良好的指令效果最佳。
 
-**大小**：目標是每個 CLAUDE.md 檔案少於 200 行。較長的檔案消耗更多上下文並降低遵守度。如果您的指令變得很大，請使用 [路徑範圍規則](#path-specific-rules) 以便指令只在 Claude 處理匹配檔案時載入。您也可以將內容分割成 [匯入](#import-additional-files) 以進行組織，儘管匯入的檔案仍然會載入並在啟動時進入 context window。
+**大小**：每個 CLAUDE.md 檔案的目標為 200 行以下。較長的檔案消耗更多背景並降低遵守度。如果您的指令變得很大，請使用 [path-scoped rules](#path-specific-rules)，以便指令僅在 Claude 使用匹配檔案時載入。您也可以將內容分割為 [imports](#import-additional-files) 以進行組織，儘管匯入的檔案仍會在啟動時載入並進入背景視窗。
 
-**結構**：使用 markdown 標題和項目符號來分組相關指令。Claude 掃描結構的方式與讀者相同：組織良好的部分比密集的段落更容易遵循。
+**結構**：使用 markdown 標題和項目符號來分組相關指令。Claude 掃描結構的方式與讀者相同：組織的部分比密集的段落更容易遵循。
 
-**具體性**：編寫具體到足以驗證的指令。例如：
+**具體性**：撰寫具體到足以驗證的指令。例如：
 
 * 「使用 2 空格縮排」而不是「正確格式化程式碼」
 * 「在提交前執行 `npm test`」而不是「測試您的變更」
 * 「API 處理程式位於 `src/api/handlers/`」而不是「保持檔案組織」
 
-**一致性**：如果兩個規則相互矛盾，Claude 可能會任意選擇一個。定期檢查您的 CLAUDE.md 檔案、子目錄中的巢狀 CLAUDE.md 檔案和 [`.claude/rules/`](#organize-rules-with-claude/rules/)，以移除過時或衝突的指令。在 monorepos 中，使用 [`claudeMdExcludes`](#exclude-specific-claude-md-files) 跳過與您的工作無關的其他團隊的 CLAUDE.md 檔案。
+**一致性**：如果兩個規則相互矛盾，Claude 可能會任意選擇一個。定期審查您的 CLAUDE.md 檔案、子目錄中的巢狀 CLAUDE.md 檔案和 [`.claude/rules/`](#organize-rules-with-claude/rules/) 以移除過時或衝突的指令。在 monorepos 中，使用 [`claudeMdExcludes`](#exclude-specific-claude-md-files) 跳過來自與您的工作無關的其他團隊的 CLAUDE.md 檔案。
 
 <h3 id="import-additional-files">
   匯入其他檔案
 </h3>
 
-CLAUDE.md 檔案可以使用 `@path/to/import` 語法匯入其他檔案。匯入的檔案會展開並在啟動時與參考它們的 CLAUDE.md 一起載入到上下文中。
+CLAUDE.md 檔案可以使用 `@path/to/import` 語法匯入其他檔案。匯入的檔案會展開並在啟動時載入到背景中，與參考它們的 CLAUDE.md 一起。
 
-允許相對和絕對路徑。相對路徑相對於包含匯入的檔案解析，而不是工作目錄。匯入的檔案可以遞迴匯入其他檔案，最大深度為四跳。
+允許相對和絕對路徑。相對路徑相對於包含匯入的檔案解析，而不是工作目錄。匯入的檔案可以遞迴匯入其他檔案，最大深度為四個躍點。
 
-匯入解析會跳過 Markdown 程式碼跨度和圍欄程式碼區塊。要在您的 CLAUDE.md 中提及路徑而不匯入它，請將其包裝在反引號中：寫入 `` `@README` `` 會保持文字字面，而 `@README` 在反引號外會匯入檔案。
+匯入解析會跳過 Markdown 程式碼跨度和圍欄程式碼區塊。若要在您的 CLAUDE.md 中提及路徑而不匯入它，請將其包裝在反引號中：寫入 `` `@README` `` 會保持文字為字面，而反引號外的 `@README` 會匯入檔案。
 
-要引入 README、package.json 和工作流程指南，請在 CLAUDE.md 中的任何位置使用 `@` 語法參考它們：
+若要引入 README、package.json 和工作流程指南，請在 CLAUDE.md 中的任何位置使用 `@` 語法參考它們：
 
 ```text theme={null}
-有關專案概述，請參閱 @README，有關此專案的可用 npm 命令，請參閱 @package.json。
+See @README for project overview and @package.json for available npm commands for this project.
 
-# 其他指令
-- git 工作流程 @docs/git-instructions.md
+# Additional Instructions
+- git workflow @docs/git-instructions.md
 ```
 
-對於您不想簽入版本控制的個人偏好，請在專案根目錄建立 `CLAUDE.local.md`。它與 `CLAUDE.md` 一起載入並以相同方式處理。將 `CLAUDE.local.md` 新增到您的 `.gitignore`，以便不提交它；執行 `/init` 並選擇個人選項會為您執行此操作。
+對於不應簽入版本控制的私人每個專案偏好設定，請在專案根目錄建立 `CLAUDE.local.md`。它與 `CLAUDE.md` 一起載入並以相同方式處理。將 `CLAUDE.local.md` 新增至您的 `.gitignore`，以便不提交它。設定 `CLAUDE_CODE_NEW_INIT=1` 後，執行 `/init` 並選擇個人選項會為您執行此操作。
 
-如果您在同一儲存庫的多個 git worktrees 中工作，gitignored 的 `CLAUDE.local.md` 只存在於您建立它的 worktree 中。要在 worktrees 之間共享個人指令，請改為從您的主目錄匯入檔案：
+如果您在同一儲存庫的多個 git worktrees 中工作，gitignored `CLAUDE.local.md` 僅存在於您建立它的 worktree 中。若要在 worktrees 中共享個人指令，請改為從您的主目錄匯入檔案：
 
 ```text theme={null}
-# 個人偏好
+# Individual Preferences
 - @~/.claude/my-project-instructions.md
 ```
 
 <Warning>
-  Claude Code 第一次在專案中遇到外部匯入時，它會顯示一個核准對話，列出檔案。如果您拒絕，匯入將保持禁用狀態，對話不會再次出現。
+  專案級記憶檔案中的匯入是外部的，當其路徑解析到工作目錄外時，例如上面的主目錄匯入。Claude Code 首次在專案中遇到外部匯入時，會顯示核准對話框，列出檔案。如果您拒絕，匯入將保持停用狀態，對話框不會再出現。
+
+  Claude Code 顯示對話框以保護您免受其他人提交到共享專案的檔案。使用者範圍記憶檔案（例如 `~/.claude/CLAUDE.md` 和 `~/.claude/rules/`）是您自己編寫的檔案。除了在您的桌面上的 [Cowork](https://claude.com/product/cowork) 工作階段中，Claude Code 會載入它們的匯入而不顯示對話框，並像信任您的其餘個人設定一樣信任它們。
+
+  在您的桌面上的 Cowork 工作階段中，Claude Code 會跳過使用者範圍檔案中解析到工作階段工作目錄外路徑的任何匯入，並載入檔案的其餘部分。在這些工作階段中，它也會跳過本身是符號連結或硬連結的 `~/.claude/CLAUDE.md`，以及指向工作目錄外的符號連結 `~/.claude/rules/` 目錄或規則檔案。
 </Warning>
-
-有關組織指令的更結構化方法，請參閱 [`.claude/rules/`](#organize-rules-with-claude/rules/)。
-
-<h3 id="agents-md">
-  AGENTS.md
-</h3>
-
-Claude Code 讀取 `CLAUDE.md`，而不是 `AGENTS.md`。如果您的儲存庫已經為其他編碼代理使用 `AGENTS.md`，請建立一個 `CLAUDE.md` 來匯入它，以便兩個工具讀取相同的指令而不重複。您也可以在匯入下方新增 Claude 特定的指令。Claude 在工作階段開始時載入匯入的檔案，然後附加其餘部分：
-
-```markdown CLAUDE.md theme={null}
-@AGENTS.md
-
-## Claude Code
-
-對 `src/billing/` 下的變更使用 plan mode。
-```
-
-符號連結也可以運作，如果您不需要新增 Claude 特定的內容：
-
-```bash theme={null}
-ln -s AGENTS.md CLAUDE.md
-```
-
-在 Windows 上，建立符號連結需要系統管理員權限或開發人員模式，因此請改用 `@AGENTS.md` 匯入。
-
-在已經有 `AGENTS.md` 的儲存庫中執行 [`/init`](/docs/zh-TW/commands) 會讀取它並將相關部分合併到產生的 `CLAUDE.md` 中。它也會讀取其他工具配置，如 `.cursorrules`、`.devin/rules/` 和 `.windsurfrules`。
 
 <h3 id="how-claude-md-files-load">
   CLAUDE.md 檔案如何載入
 </h3>
 
-Claude Code 透過從您目前的工作目錄向上走目錄樹來讀取 CLAUDE.md 檔案，檢查沿途的每個目錄中是否有 `CLAUDE.md` 和 `CLAUDE.local.md` 檔案。這意味著如果您在 `foo/bar/` 中執行 Claude Code，它會從 `foo/bar/CLAUDE.md`、`foo/CLAUDE.md` 和沿途的任何 `CLAUDE.local.md` 檔案載入指令。
+Claude Code 從您目前的工作目錄和其上方的每個目錄載入 `CLAUDE.md` 和 `CLAUDE.local.md`。在 `foo/bar/` 中執行 Claude Code，它會從 `foo/bar/CLAUDE.md`、`foo/CLAUDE.md` 和任何 `CLAUDE.local.md` 檔案載入指令。
 
-所有發現的檔案都被連接到上下文中，而不是相互覆蓋。在目錄樹中，內容按照從檔案系統根目錄到您的工作目錄的順序排列。對於 `foo/bar/` 示例，`foo/CLAUDE.md` 在上下文中出現在 `foo/bar/CLAUDE.md` 之前，因此更接近您啟動 Claude 的位置的指令最後被讀取。在每個目錄中，`CLAUDE.local.md` 附加在 `CLAUDE.md` 之後，因此您的個人筆記是 Claude 在該級別讀取的最後一件事。
+所有發現的檔案都會串聯到背景中，而不是相互覆寫。在目錄樹中，內容從檔案系統根目錄向下排序到您的工作目錄。對於 `foo/bar/` 範例，`foo/CLAUDE.md` 在背景中出現在 `foo/bar/CLAUDE.md` 之前，因此更接近您啟動 Claude 的位置的指令最後讀取。在每個目錄中，`CLAUDE.local.md` 附加在 `CLAUDE.md` 之後，因此您的個人筆記是 Claude 在該級別讀取的最後一件事。
 
-Claude 也會在您目前工作目錄下的子目錄中發現 `CLAUDE.md` 和 `CLAUDE.local.md` 檔案。它們不是在啟動時載入，而是在 Claude 讀取這些子目錄中的檔案時包含。
+Claude 也會發現您目前工作目錄下子目錄中的 `CLAUDE.md` 和 `CLAUDE.local.md` 檔案。它們不是在啟動時載入，而是在 Claude 讀取這些子目錄中的檔案時包含。
 
-如果您在大型 monorepo 中工作，其中其他團隊的 CLAUDE.md 檔案被拾取，請使用 [`claudeMdExcludes`](#exclude-specific-claude-md-files) 跳過它們。對於根目錄和每個目錄 CLAUDE.md 檔案和規則的完整佈局，請參閱 [Monorepos 和大型儲存庫](/docs/zh-TW/large-codebases)。
+如果您在大型 monorepo 中工作，其中其他團隊的 CLAUDE.md 檔案被拾取，請使用 [`claudeMdExcludes`](#exclude-specific-claude-md-files) 跳過它們。有關根目錄和每個目錄 CLAUDE.md 檔案和規則的完整配置，請參閱 [Monorepos 和大型儲存庫](/docs/zh-TW/large-codebases)。
 
-CLAUDE.md 檔案中的區塊級 HTML 註解（`<!-- maintainer notes -->`）在內容被注入到 Claude 的上下文之前會被移除。使用它們為人類維護者留下筆記，而不會在令牌上花費上下文。程式碼區塊內的註解會被保留。當您直接使用 Read 工具開啟 CLAUDE.md 檔案時，註解保持可見。
+CLAUDE.md 檔案中的區塊級 HTML 註解（`<!-- maintainer notes -->`）在內容注入到 Claude 的背景之前被移除。使用它們為人類維護者留下筆記，而不在它們上花費背景權杖。程式碼區塊內的註解會保留。當您直接使用 Read 工具開啟 CLAUDE.md 檔案時，註解保持可見。
 
 <h4 id="load-from-additional-directories">
   從其他目錄載入
 </h4>
 
-`--add-dir` 旗標讓 Claude 可以存取主工作目錄外的其他目錄。預設情況下，不會載入這些目錄中的 CLAUDE.md 檔案。
+`--add-dir` 旗標讓 Claude 可以存取主工作目錄外的其他目錄。根據預設，這些目錄中的 CLAUDE.md 檔案不會載入。
 
-要也從其他目錄載入記憶檔案，請設定 `CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD` 環境變數：
+若要也從其他目錄載入記憶檔案，請設定 `CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD` 環境變數：
 
 ```bash theme={null}
 CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1 claude --add-dir ../shared-config
 ```
+
+內聯形式在 Bash 或 Zsh 中為該次啟動設定變數。若要在每個工作階段中保持它開啟，請將它新增至 `~/.claude/settings.json` 中的 `env` 區塊，如 [設定環境變數](/docs/zh-TW/env-vars#set-environment-variables) 中所示。
 
 這會從其他目錄載入 `CLAUDE.md`、`.claude/CLAUDE.md`、`.claude/rules/*.md` 和 `CLAUDE.local.md`。如果您從 [`--setting-sources`](/docs/zh-TW/cli-reference) 排除 `local`，則會跳過 `CLAUDE.local.md`。
 
@@ -192,35 +173,37 @@ CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1 claude --add-dir ../shared-config
   使用 `.claude/rules/` 組織規則
 </h3>
 
-對於較大的專案，您可以使用 `.claude/rules/` 目錄將指令組織成多個檔案。這使指令保持模組化，更容易讓團隊維護。規則也可以 [範圍限定於特定檔案路徑](#path-specific-rules)，因此它們只在 Claude 處理匹配檔案時載入到上下文中，減少雜訊並節省上下文空間。
+對於較大的專案，您可以使用 `.claude/rules/` 目錄將指令組織成多個檔案。這使指令保持模組化並更容易讓團隊維護。規則也可以 [scoped to specific file paths](#path-specific-rules)，因此它們僅在 Claude 使用匹配檔案時載入到背景中，減少雜訊並節省背景空間。
 
 <Note>
-  規則在每個工作階段或開啟匹配檔案時載入到上下文中。對於不需要始終在上下文中的任務特定指令，請改用 [skills](/docs/zh-TW/skills)，它們只在您呼叫它們或 Claude 確定它們與您的提示相關時載入。
+  規則在每個工作階段或開啟匹配檔案時載入到背景中。對於不需要始終在背景中的任務特定指令，請改用 [skills](/docs/zh-TW/skills)，它們僅在您叫用它們或 Claude 確定它們與您的提示相關時載入。
 </Note>
 
 <h4 id="set-up-rules">
   設定規則
 </h4>
 
-在您的專案的 `.claude/rules/` 目錄中放置 markdown 檔案。每個檔案應涵蓋一個主題，具有描述性檔案名稱，如 `testing.md` 或 `api-design.md`。所有 `.md` 檔案都被遞迴發現，因此您可以將規則組織到子目錄中，如 `frontend/` 或 `backend/`：
+在您的專案的 `.claude/rules/` 目錄中放置 markdown 檔案。每個檔案應涵蓋一個主題，具有描述性檔案名稱，例如 `testing.md` 或 `api-design.md`。所有 `.md` 檔案都會遞迴發現，因此您可以將規則組織到子目錄中，例如 `frontend/` 或 `backend/`：
 
 ```text theme={null}
 your-project/
 ├── .claude/
-│   ├── CLAUDE.md           # 主要專案指令
+│   ├── CLAUDE.md           # Main project instructions
 │   └── rules/
-│       ├── code-style.md   # 程式碼樣式指南
-│       ├── testing.md      # 測試慣例
-│       └── security.md     # 安全要求
+│       ├── code-style.md   # Code style guidelines
+│       ├── testing.md      # Testing conventions
+│       └── security.md     # Security requirements
 ```
 
-沒有 [`paths` frontmatter](#path-specific-rules) 的規則在啟動時載入，優先級與 `.claude/CLAUDE.md` 相同。
+沒有 [`paths` frontmatter](#path-specific-rules) 的規則在啟動時載入，優先順序與 `.claude/CLAUDE.md` 相同。
+
+如果您從 [`--setting-sources`](/docs/zh-TW/cli-reference) 排除 `project`，則會跳過專案規則。在 v2.1.211 之前，按需載入的規則（包括路徑範圍規則和巢狀 `.claude/rules/` 目錄中的規則）即使排除了 `project` 也會載入。
 
 <h4 id="path-specific-rules">
   路徑特定規則
 </h4>
 
-規則可以使用帶有 `paths` 欄位的 YAML frontmatter 範圍限定於特定檔案。這些條件規則僅在 Claude 處理與指定模式匹配的檔案時適用。
+規則可以使用 YAML frontmatter 與 `paths` 欄位範圍限制為特定檔案。這些條件規則僅在 Claude 使用與指定模式匹配的檔案時適用。
 
 ```markdown theme={null}
 ---
@@ -228,16 +211,16 @@ paths:
   - "src/api/**/*.ts"
 ---
 
-# API 開發規則
+# API Development Rules
 
-- 所有 API 端點必須包括輸入驗證
-- 使用標準錯誤回應格式
-- 包括 OpenAPI 文件註解
+- All API endpoints must include input validation
+- Use the standard error response format
+- Include OpenAPI documentation comments
 ```
 
-沒有 `paths` 欄位的規則無條件載入並適用於所有檔案。路徑範圍規則在 Claude 讀取與模式匹配的檔案時觸發，而不是在每次工具使用時觸發。截至 v2.1.198，匹配也適用於 Claude 透過專案目錄的符號連結路徑到達檔案時，例如在符號連結簽出中。
+沒有 `paths` 欄位的規則無條件載入並適用於所有檔案。路徑範圍規則在 Claude 讀取與模式匹配的檔案時觸發，而不是在每個工具使用時觸發。從 v2.1.198 開始，當 Claude 透過到專案目錄的符號連結路徑到達檔案時，匹配也有效，例如在符號連結簽出中。
 
-在 `paths` 欄位中使用 glob 模式，按副檔名、目錄或任何組合匹配檔案：
+在 `paths` 欄位中使用 glob 模式以按副檔名、目錄或任何組合匹配檔案：
 
 | 模式                     | 匹配                     |
 | ---------------------- | ---------------------- |
@@ -257,15 +240,33 @@ paths:
 ---
 ```
 
-Glob 語法將 `[` 視為括號表達式的開始，例如 `[abc]`。無法讀取為括號表達式的帶有 `[` 的模式，例如 `photos [2024/**`，是無效的：它不匹配任何內容，規則的其他模式繼續工作。要匹配檔案名稱中的字面 `[`，請將其轉義為 `photos \[2024/**`。在 v2.1.207 之前，一個無效的模式會導致 Read 工具對規則被評估的每個檔案失敗，而不是不匹配任何內容。
+每個大括號群組會乘以展開模式的數量：`src/*.{ts,tsx}` 展開為兩個模式，`{a,b}/{c,d}/*.{ts,tsx}` 展開為八個。若要保持展開有界，規則的整個 `paths` 清單共享一個 1,000 個展開模式和 4 MiB 的預算，沒有大括號的模式不計入其中。
 
-<h4 id="share-rules-across-projects-with-symlinks">
-  使用符號連結跨專案共享規則
+Claude Code 使用任何會超過預算的未展開模式，其字面大括號不匹配任何檔案。在 v2.1.217 之前，具有許多大括號群組的 `paths` 值會在啟動時停止或當機 CLI。
+
+Glob 語法將 `[` 視為括號表達式的開始，例如 `[abc]`。具有無法讀取為括號表達式的 `[` 的模式（例如 `photos [2024/**`）無效：它不匹配任何檔案，規則的其他模式保持工作。若要匹配檔案名稱中的字面 `[`，請將其逸出為 `photos \[2024/**`。在 v2.1.207 之前，一個無效模式會導致 Read 工具對規則評估的每個檔案失敗，而不是不匹配任何檔案。
+
+<h4 id="rules-frontmatter-reference">
+  規則 frontmatter 參考
 </h4>
 
-`.claude/rules/` 目錄支援符號連結，因此您可以維護一組共享規則並將它們連結到多個專案中。符號連結被解析並正常載入，並且循環符號連結被檢測並妥善處理。
+使用 YAML [frontmatter](/docs/zh-TW/glossary#frontmatter) 在檔案頂部的 `---` 標記之間設定規則。`paths` 是 Claude Code 從規則讀取的唯一欄位；任何其他欄位都會被忽略而不出現錯誤。Claude Code 在將規則載入到背景之前移除 frontmatter。
 
-此示例連結共享目錄和單個檔案：
+| 欄位      | 必需 | 描述                                                                |
+| :------ | :- | :---------------------------------------------------------------- |
+| `paths` | 否  | [將規則範圍限制為匹配檔案](#path-specific-rules) 的 Glob 模式。接受 YAML 清單或逗號分隔的字串 |
+
+如果標記之間的 YAML 無法解析，Claude Code 會忽略 frontmatter 並載入規則，就像它沒有 `paths` 一樣。執行 `claude --debug` 以查看解析錯誤。
+
+<h4 id="share-rules-across-projects-with-symlinks">
+  使用符號連結在專案間共享規則
+</h4>
+
+`.claude/rules/` 目錄支援符號連結，因此您可以維護一組共享規則並將它們連結到多個專案。循環符號連結會被偵測並妥善處理。
+
+Claude Code 將其目標在工作目錄外的符號連結視為 [external import](#import-additional-files)。連結的規則在您核准專案的外部匯入之前不會載入，之後僅載入沒有 [`paths` 欄位](#path-specific-rules) 的規則。Claude Code 僅在專案記憶檔案使用 `@path` 匯入工作目錄外的檔案時要求該核准，而不是僅針對符號連結。若要載入共享規則而不需要該核准，請將它們保留在 [`~/.claude/rules/`](#user-level-rules) 中，其中它們適用於您機器上的每個專案。
+
+此範例連結共享目錄和個別檔案：
 
 ```bash theme={null}
 ln -s ~/shared-claude-rules .claude/rules/shared
@@ -273,18 +274,18 @@ ln -s ~/company-standards/security.md .claude/rules/security.md
 ```
 
 <h4 id="user-level-rules">
-  使用者級別規則
+  使用者級規則
 </h4>
 
-`~/.claude/rules/` 中的個人規則適用於您機器上的每個專案。使用它們來處理不是專案特定的偏好：
+`~/.claude/rules/` 中的個人規則適用於您機器上的每個專案。使用它們來設定不是專案特定的偏好設定：
 
 ```text theme={null}
 ~/.claude/rules/
-├── preferences.md    # 您的個人編碼偏好
-└── workflows.md      # 您偏好的工作流程
+├── preferences.md    # Your personal coding preferences
+└── workflows.md      # Your preferred workflows
 ```
 
-使用者級別規則在專案規則之前載入，給予專案規則更高的優先級。
+Claude Code 在專案規則之前載入使用者級規則，因此專案規則在 Claude 的背景中出現得更晚。兩個集合都不會覆寫另一個：如果使用者規則和專案規則衝突，Claude 可能會遵循任一個，因此請保持兩者一致。
 
 <h3 id="manage-claude-md-for-large-teams">
   為大型團隊管理 CLAUDE.md
@@ -293,32 +294,32 @@ ln -s ~/company-standards/security.md .claude/rules/security.md
 對於在團隊中部署 Claude Code 的組織，您可以集中指令並控制載入哪些 CLAUDE.md 檔案。
 
 <h4 id="deploy-organization-wide-claude-md">
-  部署組織範圍的 CLAUDE.md
+  部署組織範圍 CLAUDE.md
 </h4>
 
-組織可以部署一個集中管理的 CLAUDE.md，適用於機器上的所有使用者。此檔案無法被個人設定排除。
+組織可以部署適用於機器上所有使用者的集中管理 CLAUDE.md。此檔案無法由個別設定排除。
 
 <Steps>
-  <Step title="在受管理的原則位置建立檔案">
+  <Step title="Create the file at the managed policy location">
     * macOS：`/Library/Application Support/ClaudeCode/CLAUDE.md`
     * Linux 和 WSL：`/etc/claude-code/CLAUDE.md`
     * Windows：`C:\Program Files\ClaudeCode\CLAUDE.md`
   </Step>
 
-  <Step title="使用您的配置管理系統進行部署">
-    使用 MDM、群組原則、Ansible 或類似工具在開發人員機器上分發檔案。有關其他組織範圍配置選項，請參閱 [受管理的設定](/docs/zh-TW/permissions#managed-settings)。
+  <Step title="Deploy with your configuration management system">
+    使用 MDM、Group Policy、Ansible 或類似工具在開發人員機器上分發檔案。請參閱 [managed settings](/docs/zh-TW/managed-settings) 以了解其他組織範圍設定選項。
   </Step>
 </Steps>
 
-`claudeMd` 金鑰讓您將受管理的 CLAUDE.md 內容直接放入 `managed-settings.json` 中，而不是部署單獨的檔案。
+`claudeMd` 金鑰可讓您將受管理的 CLAUDE.md 內容直接放入 `managed-settings.json` 中，而不是部署單獨的檔案。
 
 **範圍**：機器上的每個 Claude Code 工作階段，在每個儲存庫中。對於儲存庫特定的指導，請改為提交專案 CLAUDE.md。
 
-**優先級**：與受管理的 CLAUDE.md 檔案相同。在使用者和專案 CLAUDE.md 之前載入。
+**優先順序**：與受管理的 CLAUDE.md 檔案相同。在使用者和專案 CLAUDE.md 之前載入。
 
-**在何處被遵守**：僅受管理和原則設定。在使用者、專案或本地設定中設定 `claudeMd` 無效。
+**其中受尊重**：僅受管理和原則設定。在使用者、專案或本機設定中設定 `claudeMd` 無效。
 
-下面的示例直接在受管理的設定檔案中新增行為指令：
+下面的範例直接在受管理的設定檔案中新增行為指令：
 
 ```json theme={null}
 {
@@ -326,14 +327,14 @@ ln -s ~/company-standards/security.md .claude/rules/security.md
 }
 ```
 
-受管理的 CLAUDE.md 和 [受管理的設定](/docs/zh-TW/settings#settings-files) 有不同的用途。使用設定進行技術強制執行，使用 CLAUDE.md 進行行為指導：
+受管理的 CLAUDE.md 和 [managed settings](/docs/zh-TW/managed-settings) 服務於不同的目的。使用設定進行技術強制執行，使用 CLAUDE.md 進行行為指導：
 
-| 關注              | 配置在                                           |
+| 關注              | 設定於                                           |
 | :-------------- | :-------------------------------------------- |
 | 阻止特定工具、命令或檔案路徑  | 受管理的設定：`permissions.deny`                     |
 | 強制執行沙箱隔離        | 受管理的設定：`sandbox.enabled`                      |
 | 環境變數和 API 提供者路由 | 受管理的設定：`env`                                  |
-| 驗證方法和組織鎖定       | 受管理的設定：`forceLoginMethod`、`forceLoginOrgUUID` |
+| 登入方法和組織限制       | 受管理的設定：`forceLoginMethod`、`forceLoginOrgUUID` |
 | 程式碼樣式和品質指南      | 受管理的 CLAUDE.md                                |
 | 資料處理和合規提醒       | 受管理的 CLAUDE.md                                |
 | Claude 的行為指令    | 受管理的 CLAUDE.md                                |
@@ -341,12 +342,12 @@ ln -s ~/company-standards/security.md .claude/rules/security.md
 設定規則由用戶端強制執行，無論 Claude 決定做什麼。CLAUDE.md 指令塑造 Claude 的行為，但不是硬強制執行層。
 
 <h4 id="exclude-specific-claude-md-files">
-  排除特定的 CLAUDE.md 檔案
+  排除特定 CLAUDE.md 檔案
 </h4>
 
-在大型 monorepos 中，祖先 CLAUDE.md 檔案可能包含與您的工作無關的指令。`claudeMdExcludes` 設定讓您按路徑或 glob 模式跳過特定檔案。
+在大型 monorepos 中，祖先 CLAUDE.md 檔案可能包含與您的工作無關的指令。`claudeMdExcludes` 設定可讓您按路徑或 glob 模式跳過特定檔案。
 
-此示例排除頂級 CLAUDE.md 和父資料夾中的規則目錄。將其新增到 `.claude/settings.local.json`，以便排除保留在您的機器本地：
+此範例排除頂級 CLAUDE.md 和來自父資料夾的規則目錄。將其新增至 `.claude/settings.local.json`，以便排除保持本機於您的機器：
 
 ```json theme={null}
 {
@@ -357,21 +358,171 @@ ln -s ~/company-standards/security.md .claude/rules/security.md
 }
 ```
 
-模式使用 glob 語法與絕對檔案路徑匹配。您可以在任何 [設定層](/docs/zh-TW/settings#settings-files)：使用者、專案、本地或受管理的原則配置 `claudeMdExcludes`。陣列跨層合併。
+模式使用 glob 語法與絕對檔案路徑匹配。您可以在任何 [settings layer](/docs/zh-TW/settings#where-settings-live)：使用者、專案、本機或受管理原則中設定 `claudeMdExcludes`。陣列在各層中合併。
 
-受管理的原則 CLAUDE.md 檔案無法被排除。這確保組織範圍的指令始終適用，無論個人設定如何。
+若要排除您透過 [symlink](#share-rules-across-projects-with-symlinks) 到達的規則檔案（無論檔案或其目錄是連結），請針對任一路徑編寫模式：檔案在 `.claude/rules/` 下的路徑或其連結目標。匹配任一路徑的模式會排除檔案。在 v2.1.239 之前，僅匹配連結目標的模式會排除檔案。
+
+受管理原則 CLAUDE.md 檔案無法排除。這確保組織範圍指令始終適用，無論個別設定如何。
+
+<h2 id="agents-md">
+  AGENTS.md
+</h2>
+
+Claude Code 可以將 [`AGENTS.md`](/docs/zh-TW/glossary#agents-md) 讀取為您的專案指示，因此已為其他編碼代理設定的儲存庫無需新增 `CLAUDE.md`、匯入或設定即可運作。此表格顯示 Claude 在您的儲存庫中指示檔案的每種組合下預設讀取的內容：
+
+| 您的儲存庫有                                                                      | Claude 讀取                         |
+| :-------------------------------------------------------------------------- | :-------------------------------- |
+| 一個 `AGENTS.md`，且在您的工作目錄或其上方沒有 `CLAUDE.md` 或 `CLAUDE.local.md`               | 您的 `AGENTS.md`                    |
+| 一個 `AGENTS.md` 和一個 `CLAUDE.md` 或 `CLAUDE.local.md` 在您的工作目錄或其上方              | 僅您的 `CLAUDE.md` 檔案                |
+| 一個已經[匯入 `AGENTS.md`](#share-one-file-with-other-coding-tools) 的 `CLAUDE.md` | 您的 `CLAUDE.md`，透過匯入包含 `AGENTS.md` |
+
+若要變更預設值，例如讓 Claude 始終讀取兩個檔案、僅讀取 `CLAUDE.md` 或僅讀取您組織的受管指示，請[變更**專案指示**設定](#choose-which-instruction-files-load)。
+
+<Note>
+  直接讀取 `AGENTS.md` 需要 Claude Code v2.1.277 或更新版本。在某些工作階段中，Claude [無法讀取 `AGENTS.md`](#when-agents-md-support-is-unavailable)，因此請改為[從 `CLAUDE.md` 匯入](#share-one-file-with-other-coding-tools)。
+</Note>
+
+<h3 id="when-claude-code-reads-agents-md">
+  Claude Code 何時讀取 AGENTS.md
+</h3>
+
+預設情況下，Claude 只有在您的工作目錄或其上方沒有 `CLAUDE.md` 時才會讀取 `AGENTS.md`。以下是您的哪些檔案計入該檢查：
+
+* **計入，因此 Claude 改為讀取它們而不是 `AGENTS.md`**：您的工作目錄或其上方任何目錄中的 `CLAUDE.md`、`.claude/CLAUDE.md` 或 `CLAUDE.local.md`
+* **不計入，並繼續與 `AGENTS.md` 一起載入**：您的 `~/.claude/CLAUDE.md`、您組織的受管 `CLAUDE.md` 和 `.claude/rules/` 檔案
+
+當沒有計入時，以下是 Claude 讀取的內容以及您如何判斷：
+
+* **在工作階段開始時**：您的工作目錄及其上方目錄中的每個 `AGENTS.md` 和 `.claude/AGENTS.md`。在互動式工作階段中，您會在對話中看到類似 `no CLAUDE.md found; AGENTS.md loaded: /home/you/repo/AGENTS.md` 的行
+* **當 Claude 在子目錄中工作時**：當 Claude 使用 Read 工具在該處開啟檔案且該子目錄沒有三個 `CLAUDE.md` 檔案之一時，子目錄的 `AGENTS.md`
+* **在每個 `AGENTS.md` 內**：[`@path` 匯入](#import-additional-files)會展開，[`claudeMdExcludes`](#exclude-specific-claude-md-files) 模式適用，[跳過專案指示](/docs/zh-TW/sub-agents#what-loads-at-startup)的子代理也會跳過這些檔案
+* **不讀取**：`AGENTS.local.md`、`AGENTS.override.md` 或 `.agents/` 目錄下的任何內容
+
+<Note>
+  因為 `CLAUDE.local.md` 計入，在依賴 `AGENTS.md` 的專案中新增一個以保留您自己的未提交指示會停止 Claude 為您讀取 `AGENTS.md`。若要保留您的 `CLAUDE.local.md` 並仍讓 Claude 讀取 `AGENTS.md`，請將**專案指示**設定為 [`claude-md-and-agents-md`](#choose-which-instruction-files-load)。
+</Note>
+
+<h3 id="choose-which-instruction-files-load">
+  選擇要載入的指示檔案
+</h3>
+
+若要變更 Claude 讀取的檔案，請在 Claude Code 工作階段中輸入 `/config` 以開啟設定面板，然後將**專案指示**設定為以下其中一個值：
+
+| 值                         | Claude 讀取的內容                                                                                                                                                                                                          |
+| :------------------------ | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `claude-md-or-agents-md`  | 您的 `CLAUDE.md` 檔案，或當您在工作目錄或其上方沒有 `CLAUDE.md` 或 `CLAUDE.local.md` 時的 `AGENTS.md` 檔案。這是預設值                                                                                                                              |
+| `claude-md-and-agents-md` | 您的 `CLAUDE.md` 和 `AGENTS.md` 檔案一起，每個目錄的 `CLAUDE.md` 檔案優先，其 `AGENTS.md` 在之後。Claude Code 會跳過已經載入的 `AGENTS.md`，因此您的 `CLAUDE.md` 匯入或符號連結到的 `AGENTS.md` 不會讀取兩次                                                             |
+| `claude-md`               | 僅您的 `CLAUDE.md` 檔案                                                                                                                                                                                                    |
+| `managed-only`            | 僅您組織的受管 `CLAUDE.md` 和啟動時的[自動記憶](#auto-memory)。您的專案、本機和使用者 `CLAUDE.md` 檔案、您的 `.claude/rules/` 檔案和每個 `AGENTS.md` 都被排除在外。當 Claude 讀取該處的檔案時，子目錄的 `CLAUDE.md` 和 `.claude/rules/` 檔案仍會載入，[路徑範圍規則](#path-specific-rules)仍會套用 |
+
+您也可以在設定檔中設定值，而不是 `/config`。在 [`pluginConfigs`](/docs/zh-TW/settings-reference#pluginconfigs) 中的內建 `agents-md` 外掛程式的 ID 下新增它，在 `~/.claude/settings.json`、`--settings` 檔案或[受管設定](/docs/zh-TW/managed-settings)中。Claude Code 在專案和本機設定檔中忽略它。此範例讓 Claude 讀取兩個檔案：
+
+```json settings.json theme={null}
+{
+  "pluginConfigs": {
+    "agents-md@builtin": {
+      "options": { "instructionFiles": "claude-md-and-agents-md" }
+    }
+  }
+}
+```
+
+您的變更從您傳送的下一則訊息和每個新工作階段開始套用。
+
+<h3 id="when-agents-md-support-is-unavailable">
+  當 AGENTS.md 支援不可用時
+</h3>
+
+在這些工作階段中，Claude 僅讀取 `CLAUDE.md` 檔案，**專案指示**不會出現在 `/config` 設定面板中：
+
+* 您使用的是 v2.1.277 之前的 Claude Code 版本
+* 您停用了內建 `agents-md` 外掛程式在 `/plugin` 中
+* 在某些情況下，這是您[從 v2.1.276 或更早版本升級](/docs/zh-TW/env-vars#first-session-after-an-install-or-upgrade)後的第一個工作階段。Claude 會從您的下一個工作階段開始讀取 `AGENTS.md`
+
+在 v2.1.281 之前，某些工作階段（例如在 Amazon Bedrock 上或停用遙測的工作階段）僅讀取 `CLAUDE.md` 檔案。在這些版本上，請更新 Claude Code。若要在這些工作階段中將您的 `AGENTS.md` 提供給 Claude，請[從 `CLAUDE.md` 匯入](#share-one-file-with-other-coding-tools)。
+
+<h3 id="where-agents-md-differs-from-claude-md">
+  AGENTS.md 與 CLAUDE.md 的差異
+</h3>
+
+通過**專案指示**設定讀取的 `AGENTS.md` 與 `CLAUDE.md` 在以下方面有所不同：
+
+|                                                                                                                 | `CLAUDE.md`                                       | 通過設定讀取的 `AGENTS.md`                              |
+| :-------------------------------------------------------------------------------------------------------------- | :------------------------------------------------ | :----------------------------------------------- |
+| [`InstructionsLoaded` hooks](/docs/zh-TW/hooks#instructionsloaded)                                                   | 觸發                                                | 不觸發。當 `CLAUDE.md` 匯入或符號連結到 `AGENTS.md` 時，它們會照常觸發 |
+| 當 [`CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD`](#load-from-additional-directories) 設定時，您使用 `--add-dir` 新增的目錄 | 它們的 `CLAUDE.md` 載入                                | 它們的 `AGENTS.md` 不載入                              |
+| 工作目錄外檔案的 `@path` 匯入                                                                                             | Claude Code 要求您核准[外部匯入](#import-additional-files) | 僅在您已經為此專案核准外部匯入時載入，無提示                           |
+
+<h3 id="remove-an-earlier-agents-md-workaround">
+  移除較早的 AGENTS.md 因應措施
+</h3>
+
+如果您在 Claude Code 自行讀取 `AGENTS.md` 之前設定它來讀取，以下是對每個常見設定的處理方式：
+
+* **包含 `@AGENTS.md` 的 `CLAUDE.md`**：您可以保留它。保留匯入永遠不會讓 Claude 讀取 `AGENTS.md` 兩次，無論您使用哪個**專案指示**值。如果檔案不包含其他內容，請移除 `CLAUDE.md`，或如果您的某些工作階段[無法直接載入 `AGENTS.md`](#when-agents-md-support-is-unavailable)，請保留它。
+* **告訴 Claude 用文字讀取 `AGENTS.md` 的 `CLAUDE.md`**：Claude 只有在決定開啟檔案時才會看到 `AGENTS.md`。刪除 `CLAUDE.md` 以便 Claude 直接讀取 `AGENTS.md`，或用 `@AGENTS.md` 匯入取代該句子。
+* **符號連結到 `AGENTS.md` 的 `CLAUDE.md`**：無，或刪除符號連結。無論哪種方式，Claude 都會讀取內容一次。
+* **列印 `AGENTS.md` 的 `SessionStart` hook**：移除它。一旦 Claude 直接讀取 `AGENTS.md`，hook 會將第二份副本新增到內容中。
+
+<h3 id="share-one-file-with-other-coding-tools">
+  與其他編碼工具共享一個檔案
+</h3>
+
+當 Claude 不直接讀取您的 `AGENTS.md` 時，您仍然可以通過在其旁邊的 `CLAUDE.md` 中放置 `@AGENTS.md` 匯入來將其保留為每個工具共享的一個檔案。當您的專案也有 `CLAUDE.md` 時、當您已將**專案指示**設定為 `claude-md` 時，或在[無法載入 `AGENTS.md`](#when-agents-md-support-is-unavailable) 的工作階段中執行此操作。在匯入下方新增任何 Claude 特定的指示，Claude 會先讀取匯入的檔案，然後讀取其餘部分：
+
+```markdown CLAUDE.md theme={null}
+@AGENTS.md
+
+## Claude Code
+
+Use plan mode for changes under `src/billing/`.
+```
+
+如果您不需要 Claude 特定的內容，符號連結也可以運作：
+
+```bash theme={null}
+ln -s AGENTS.md CLAUDE.md
+```
+
+該命令在成功時不列印任何輸出。在選擇符號連結而不是匯入之前，請檢查這些限制：
+
+* **編輯**：Claude 通過連結讀取 `CLAUDE.md`，但 Edit 和 Write 工具[拒絕通過符號連結寫入](/docs/zh-TW/errors#refusing-after-a-symlink-changed)，拒絕會指示 Claude 改為編輯連結的目標 `AGENTS.md`
+* **Windows**：如果您或任何複製儲存庫的人在 Windows 上工作，請改用 `@AGENTS.md` 匯入。在那裡建立符號連結需要系統管理員權限或開發人員模式，Git 會將已提交的符號連結簽出為純文字檔案，除非啟用 `core.symlinks`，這會使該複製具有一行 `CLAUDE.md` 代替您的指示
+
+使用任一方法，在您的下一個工作階段中執行 `/context`，並確認 `CLAUDE.md` 出現在**記憶檔案**下。
+
+<h3 id="migrate-instructions-from-other-tools">
+  從其他工具遷移指示
+</h3>
+
+執行 [`/init`](/docs/zh-TW/commands) 會讀取其他工具的指示檔案並將相關部分合併到產生的 `CLAUDE.md` 中：
+
+* `.cursor/rules/` 或 `.cursorrules` 中的 Cursor 規則
+* `.github/copilot-instructions.md` 中的 Copilot 規則
+* 設定 `CLAUDE_CODE_NEW_INIT=1` 時：`AGENTS.md`、`.devin/rules/`、`.windsurf/rules/` 或 `.windsurfrules`，以及 `.clinerules`
+
+您也可以執行 [`/import`](/docs/zh-TW/commands) 將支援的編碼代理的設定帶入 Claude Code，這會將指示檔案（例如 `AGENTS.md`）的一次性副本附加到相符的 `CLAUDE.md`，並帶入 MCP 伺服器、命令、子代理和 skills。需要 Claude Code v2.1.213 或更新版本。
 
 <h2 id="auto-memory">
   自動記憶
 </h2>
 
-自動記憶讓 Claude 在您不編寫任何內容的情況下跨工作階段累積知識。Claude 在工作時為自己保存筆記：建置命令、除錯見解、架構筆記、程式碼樣式偏好和工作流程習慣。Claude 不會每個工作階段都保存內容。它根據資訊在未來對話中是否有用來決定值得記住的內容。
+自動記憶讓 Claude 在您不編寫任何內容的情況下跨工作階段累積知識。Claude 在工作時為自己保存四種筆記。Claude 在記憶檔案的 frontmatter 中將類型記錄為 `type` 欄位：
+
+* `user`：您的角色、專業知識和工作偏好
+* `feedback`：您給 Claude 的更正和您確認的方法
+* `project`：進行中的工作、截止日期和 Claude 無法從程式碼或 git 歷史記錄推導的決策
+* `reference`：在專案外尋找資訊的位置，例如問題追蹤器或儀表板
+
+Claude 會跳過任何可以從程式碼庫推導的內容，例如架構、檔案路徑或除錯修復。它也會跳過您的 CLAUDE.md 檔案已經說過的任何內容。
+
+Claude 不會每個工作階段都保存內容。它根據資訊在未來對話中是否有用來決定值得記住的內容。
 
 <h3 id="enable-or-disable-auto-memory">
   啟用或停用自動記憶
 </h3>
 
-自動記憶預設為開啟。要切換它，請在工作階段中開啟 `/memory` 並使用自動記憶切換，或在您的專案設定中設定 `autoMemoryEnabled`：
+自動記憶預設為開啟。要切換它，請在工作階段中開啟 `/memory` 並使用自動記憶切換，這會將 `autoMemoryEnabled` 保存到您的使用者設定 `~/.claude/settings.json`。要為單一專案關閉它，請在該專案的設定中設定 `autoMemoryEnabled`：
 
 ```json theme={null}
 {
@@ -387,6 +538,8 @@ ln -s ~/company-standards/security.md .claude/rules/security.md
 
 每個專案在 `~/.claude/projects/<project>/memory/` 獲得自己的記憶目錄。`<project>` 路徑源自 git 儲存庫，因此同一儲存庫內的所有 worktrees 和子目錄共享一個自動記憶目錄。在 git 儲存庫外，改用專案根目錄。
 
+如果您在 `CLAUDE_CONFIG_DIR` 旁邊設定 [`CLAUDE_CODE_PROJECT_DIR_NAME`](/docs/zh-TW/sessions#name-the-project-directory-yourself)，Claude Code 會使用該名稱作為 `<config dir>/projects/` 下的 `<project>` 目錄，無論您在哪個儲存庫中啟動它，因此使用該設定目錄啟動的專案共享一個自動記憶目錄。需要 Claude Code v2.1.234 或更新版本。
+
 要將自動記憶儲存在不同位置，請在您的 `settings.json` 中設定 `autoMemoryDirectory`。它從任何[設定範圍](/docs/zh-TW/settings#settings-precedence)讀取：使用者、專案、本地、原則或 `--settings`。
 
 ```json theme={null}
@@ -395,21 +548,25 @@ ln -s ~/company-standards/security.md .claude/rules/security.md
 }
 ```
 
-此值必須是絕對路徑或以 `~/` 開頭。當在專案的 `.claude/settings.json` 或 `.claude/settings.local.json` 中設定時，此值僅在您接受該資料夾的工作區信任對話後才會被接受，這與管理 hooks 的閘道相同。
+此值必須是絕對路徑或以 `~/` 開頭。
 
-目錄包含 `MEMORY.md` 進入點和可選的主題檔案：
+當在專案的 `.claude/settings.json` 或 `.claude/settings.local.json` 中設定時，Claude Code 會根據與[設定檔案中的 hooks 相同的工作區信任規則](/docs/zh-TW/permissions#what-runs-before-you-trust-a-folder)來接受它。當 [`permissions.blockReadsOutsideWorkingDirectories`](/docs/zh-TW/settings-reference#permissions-blockreadsoutsideworkingdirectories) 開啟時，Claude Code 不會從[儲存庫提供的設定檔案](/docs/zh-TW/permissions#when-your-local-settings-file-needs-trust)選擇的目錄載入自動記憶，也不會將其保存到該目錄，無論該目錄位於何處。
+
+目錄包含 `MEMORY.md` 索引和每個記憶一個主題檔案：
 
 ```text theme={null}
 ~/.claude/projects/<project>/memory/
-├── MEMORY.md          # 簡潔索引，載入到每個工作階段
-├── debugging.md       # 除錯模式的詳細筆記
-├── api-conventions.md # API 設計決策
-└── ...                # Claude 建立的任何其他主題檔案
+├── MEMORY.md           # 索引，每個記憶一行，載入到每個工作階段
+├── user_role.md        # 一個記憶
+├── feedback_testing.md # 一個記憶
+└── ...                 # Claude 建立的任何其他主題檔案
 ```
 
 `MEMORY.md` 充當記憶目錄的索引。Claude 在您的工作階段中讀取和寫入此目錄中的檔案，使用 `MEMORY.md` 追蹤儲存的內容。
 
 自動記憶是機器本地的。同一 git 儲存庫內的所有 worktrees 和子目錄共享一個自動記憶目錄。檔案不在機器或雲端環境之間共享。
+
+Claude Code 在 [`cleanupPeriodDays`](/docs/zh-TW/settings-reference#cleanupperioddays) 保留期後刪除舊的工作階段記錄，但會從該[保留掃描](/docs/zh-TW/claude-directory#cleaned-up-automatically)中排除記憶目錄中的記憶檔案。`MEMORY.md` 和主題檔案會保留到您或 Claude 編輯或刪除它們。
 
 <h3 id="how-it-works">
   它如何運作
@@ -417,11 +574,17 @@ ln -s ~/company-standards/security.md .claude/rules/security.md
 
 `MEMORY.md` 的前 200 行或前 25KB（以先到者為準）在每次對話開始時載入。超過該閾值的內容在工作階段開始時不載入。Claude 透過將詳細筆記移到單獨的主題檔案中來保持 `MEMORY.md` 簡潔。
 
-此限制僅適用於 `MEMORY.md`。CLAUDE.md 檔案無論長度如何都完整載入，儘管較短的檔案會產生更好的遵守度。
+Claude 寫入 `MEMORY.md` 後，Claude Code 會根據 200 行和 25KB 讀取限制測量檔案。如果檔案接近限制，Claude Code 會提醒 Claude 縮短它：每個條目保留一行，將詳細資訊移到主題檔案，並合併或刪除過時的條目。如果檔案超過限制，寫入仍然成功，但 Claude Code 會返回[錯誤，告訴 Claude 重寫索引](/docs/zh-TW/errors#memory-index-is-over-its-read-limit)，因為超過限制的所有內容在下次載入時都會被丟棄。
 
-主題檔案如 `debugging.md` 或 `patterns.md` 在啟動時不載入。Claude 在需要資訊時使用其標準檔案工具按需讀取它們。
+此限制僅適用於 `MEMORY.md`。Claude Code 完整載入最多 4 MiB 的 CLAUDE.md 檔案，並跳過較大的檔案。較短的檔案會產生更好的遵守度。
 
-Claude 在您的工作階段中讀取和寫入記憶檔案。當您在 Claude Code 介面中看到「寫入記憶」或「回憶記憶」時，Claude 正在主動更新或讀取 `~/.claude/projects/<project>/memory/`。
+Claude Code 在啟動時不載入主題檔案，例如 `user_role.md` 或 `feedback_testing.md`。Claude 在需要資訊時使用其標準檔案工具按需讀取它們。
+
+主對話的自動記憶不會載入到[子代理](/docs/zh-TW/sub-agents#what-loads-at-startup)中；例外是[分支](/docs/zh-TW/sub-agents#fork-the-current-conversation)，它繼承父對話和系統提示。子代理自己的自動記憶（透過子代理 `memory` 欄位啟用）是一個單獨的目錄。
+
+Claude 在您的工作階段中讀取和寫入記憶檔案。當您在 Claude Code 介面中看到「已保存 2 個記憶」或「已回憶 2 個記憶」之類的訊息時，Claude 正在主動更新或讀取 `~/.claude/projects/<project>/memory/`。
+
+當 Claude 寫入以 YAML frontmatter 開頭的記憶檔案時，Claude Code 會在 `modified` frontmatter 欄位中記錄寫入時間作為 ISO 8601 時間戳。時間戳顯示事實對您和 Claude 讀取記憶時的當前程度。任何具有 frontmatter 的檔案在 Claude 下次寫入時都會獲得該欄位，包括在較早版本上建立的檔案；Claude Code 永遠不會向沒有 frontmatter 的檔案添加 frontmatter。`modified` 欄位需要 Claude Code v2.1.214 或更新版本。
 
 <h3 id="audit-and-edit-your-memory">
   審計和編輯您的記憶
@@ -433,7 +596,9 @@ Claude 在您的工作階段中讀取和寫入記憶檔案。當您在 Claude Co
   使用 `/memory` 檢視和編輯
 </h2>
 
-`/memory` 命令列出在您目前工作階段中載入的所有 CLAUDE.md、CLAUDE.local.md 和規則檔案，讓您切換自動記憶開啟或關閉，並提供開啟自動記憶資料夾的連結。選擇任何檔案以在您的編輯器中開啟它。
+`/memory` 命令列出您的 CLAUDE.md、CLAUDE.local.md 和其他記憶檔案在使用者和專案範圍內的位置，包括尚不存在的檔案的使用者和專案 CLAUDE.md 項目。它也讓您切換自動記憶開啟或關閉，並提供開啟自動記憶資料夾的選項。選擇任何檔案以在您的編輯器中開啟它；選擇尚不存在的檔案會先建立它。若要檢查哪些 `CLAUDE.md` 和規則檔案實際載入到目前工作階段中，請執行 `/context`。
+
+VS Code 等 GUI 編輯器會在單獨的視窗中開啟檔案，您可以在檔案開啟時繼續使用工作階段。在 v2.1.216 之前，`/memory` 會等待您關閉檔案後才回應。Vim 等終端編輯器會接管終端，直到您退出。
 
 當您要求 Claude 記住某些內容時，例如「始終使用 pnpm，而不是 npm」或「記住 API 測試需要本地 Redis 實例」，Claude 會將其保存到自動記憶。要改為將指令新增到 CLAUDE.md，請直接要求 Claude，例如「將此新增到 CLAUDE.md」，或透過 `/memory` 自己編輯檔案。
 
@@ -451,18 +616,34 @@ CLAUDE.md 內容作為系統提示後的使用者訊息傳遞，而不是系統�
 
 要除錯：
 
-* 執行 `/memory` 以驗證您的 CLAUDE.md 和 CLAUDE.local.md 檔案是否被載入。如果檔案未列出，Claude 看不到它。
+* 執行 `/context` 並檢查 **Memory files** 下的清單，以驗證您的 CLAUDE.md 和 CLAUDE.local.md 檔案是否已載入。如果 `CLAUDE.md` 檔案未列出，Claude 看不到它。使用 `/memory` 開啟和編輯檔案。
 * 檢查相關的 CLAUDE.md 是否位於為您的工作階段載入的位置（請參閱 [選擇 CLAUDE.md 檔案的位置](#choose-where-to-put-claude-md-files)）。
 * 使指令更具體。「使用 2 空格縮排」比「正確格式化程式碼」效果更好。
 * 查找跨 CLAUDE.md 檔案的衝突指令。如果兩個檔案為相同行為提供不同的指導，Claude 可能會任意選擇一個。
 
 如果指令是必須在特定時間點執行的內容，例如在每次提交前或每次檔案編輯後，請改為將其寫成 [hook](/docs/zh-TW/hooks-guide)。Hooks 在固定的生命週期事件中作為 shell 命令執行，並且無論 Claude 決定做什麼都適用。
 
-對於您想要在系統提示級別的指令，請使用 [`--append-system-prompt`](/docs/zh-TW/cli-reference#system-prompt-flags)。這必須在每次呼叫時傳遞，因此它更適合指令碼和自動化，而不是互動式使用。
+對於您想要在系統提示級別的指令，請使用 [`--append-system-prompt`](/docs/zh-TW/cli-reference#system-prompt-flags)。您在啟動時傳遞它，因此它更適合指令碼和自動化，而不是互動式使用。如需了解它在恢復對話時的行為方式，請參閱 [已恢復對話中的系統提示旗標](/docs/zh-TW/cli-reference#system-prompt-flags-in-resumed-conversations)。
 
 <Tip>
   使用 [`InstructionsLoaded` hook](/docs/zh-TW/hooks#instructionsloaded) 記錄確切載入的指令檔案、何時載入以及為什麼。這對於除錯路徑特定規則或子目錄中的延遲載入檔案很有用。
 </Tip>
+
+<h3 id="my-agents-md-isn’t-loading">
+  我的 AGENTS.md 未載入
+</h3>
+
+如果您的儲存庫有 `AGENTS.md` 且 Claude 似乎不知道它說什麼，通常原因是專案路徑上某處有 `CLAUDE.md`。根據預設，Claude 只有在您的工作目錄或其上方沒有 `CLAUDE.md` 或 `CLAUDE.local.md` 時才讀取 `AGENTS.md`。按順序檢查這些：
+
+1. 在您的工作目錄或其上方的任何目錄中查找 `CLAUDE.md`、`.claude/CLAUDE.md` 或 `CLAUDE.local.md`，除了您的 `~/.claude/CLAUDE.md`。如果您找到一個，Claude 會讀取它而不是 `AGENTS.md`，除非您將 **Project instructions** 設定為 `claude-md-and-agents-md`。
+2. 執行 `claude --version` 並確認 v2.1.277 或更新版本。在 v2.1.281 之前，某些工作階段（例如 Amazon Bedrock 上的工作階段或停用遙測的工作階段）[無法載入 `AGENTS.md`](#when-agents-md-support-is-unavailable)，因此在這些版本上更新至 v2.1.281 或更新版本。
+3. 在您的工作階段中輸入 `/config` 以開啟設定面板，並確認 **Project instructions** 未設定為 `claude-md` 或 `managed-only`。如果您根本看不到該設定，您的工作階段是 [無法載入 `AGENTS.md`](#when-agents-md-support-is-unavailable) 的工作階段。
+
+要檢查 Claude 是否讀取了您的 `AGENTS.md`，請執行 `/memory` 並在清單中查找其路徑。
+
+在 v2.1.280 之前，`/memory` 和 `/context` 未列出 Claude 直接讀取的 `AGENTS.md`。在這些版本上，改為詢問 Claude 其專案指令說什麼。
+
+如果您想保留找到的 `CLAUDE.md`，或您的工作階段無法載入 `AGENTS.md`，[在您的 `AGENTS.md` 旁邊新增匯入它的 `CLAUDE.md`](#share-one-file-with-other-coding-tools)。
 
 <h3 id="i-don’t-know-what-auto-memory-saved">
   我不知道自動記憶保存了什麼
@@ -474,7 +655,7 @@ CLAUDE.md 內容作為系統提示後的使用者訊息傳遞，而不是系統�
   我的 CLAUDE.md 太大了
 </h3>
 
-超過 200 行的檔案消耗更多上下文，可能會降低遵守度。使用 [路徑範圍規則](#path-specific-rules) 僅在 Claude 處理符合的檔案時載入指令，或修剪不是每個工作階段都需要的內容。分割成 [`@path` 匯入](#import-additional-files) 有助於組織，但不會減少上下文，因為匯入的檔案在啟動時載入。
+超過 200 行的檔案消耗更多上下文，可能會降低遵守度。Claude Code 會跳過超過 4 MiB 的檔案。使用 [路徑範圍規則](#path-specific-rules) 僅在 Claude 處理符合的檔案時載入指令，或修剪不是每個工作階段都需要的內容。分割成 [`@path` 匯入](#import-additional-files) 有助於組織，但不會減少上下文，因為匯入的檔案在啟動時載入。
 
 [`/doctor`](/docs/zh-TW/commands#all-commands) 檢查會為已簽入的 CLAUDE.md 提出修剪建議：它會刪除 Claude 可以從程式碼庫衍生的內容，例如目錄配置、相依性清單和架構概述，並保留與工具預設值不同的陷阱、基本原理和慣例。修剪檢查需要 Claude Code v2.1.206 或更新版本。
 
@@ -482,9 +663,9 @@ CLAUDE.md 內容作為系統提示後的使用者訊息傳遞，而不是系統�
   指令在 `/compact` 後似乎丟失了
 </h3>
 
-專案根目錄 CLAUDE.md 在壓縮中倖存：在 `/compact` 之後，Claude 從磁碟重新讀取它並將其重新注入到工作階段中。子目錄中的巢狀 CLAUDE.md 檔案不會自動重新注入；它們在 Claude 下次讀取該子目錄中的檔案時重新載入。
+專案根目錄 CLAUDE.md 在壓縮中倖存：在 `/compact` 之後，Claude 從磁碟重新讀取它並將其重新注入到工作階段中。子目錄中的巢狀 CLAUDE.md 檔案和具有 [`paths:` frontmatter](#path-specific-rules) 的規則會在 Claude 讀取它們適用的檔案時重新載入。
 
-如果指令在壓縮後消失，它要麼只在對話中給出，要麼位於尚未重新載入的巢狀 CLAUDE.md 中。將對話專用指令新增到 CLAUDE.md 以使其持久化。有關完整的細目，請參閱 [壓縮後倖存的內容](/docs/zh-TW/context-window#what-survives-compaction)。
+如果指令在壓縮後消失，它要麼只在對話中給出，要麼位於尚未重新載入的巢狀 CLAUDE.md 中，或者是尚未符合檔案的路徑範圍規則。將對話專用指令新增到 CLAUDE.md 以使其持久化。有關完整的細目，請參閱 [壓縮後倖存的內容](/docs/zh-TW/context-window#what-survives-compaction)。
 
 請參閱 [編寫有效的指令](#write-effective-instructions) 以取得有關大小、結構和具體性的指導。
 

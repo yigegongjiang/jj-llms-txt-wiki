@@ -8,28 +8,28 @@
 
 Las tareas programadas permiten que Claude vuelva a ejecutar un prompt automáticamente en un intervalo. Úselas para sondear una implementación, supervisar un PR, verificar una compilación de larga duración o recordarse a sí mismo que debe hacer algo más adelante en la sesión. Para reaccionar a eventos a medida que ocurren en lugar de sondear, consulte [Channels](/docs/es/channels): su CI puede insertar el error directamente en la sesión. Para mantener la sesión funcionando turno tras turno hasta que se cumpla una condición en lugar de en un intervalo, consulte [`/goal`](/docs/es/goal).
 
-Las tareas tienen alcance de sesión: viven en la conversación actual y se detienen cuando inicia una nueva. Reanudar con `--resume` o `--continue` trae de vuelta cualquier tarea que no haya [expirado](#seven-day-expiry): una tarea recurrente creada en los últimos 7 días, o una única cuyo tiempo programado aún no ha pasado. Para la programación que sobrevive independientemente de cualquier sesión, utilice [Routines](/docs/es/routines) para crear una rutina en la infraestructura administrada por Anthropic, configure una [tarea programada de Desktop](/docs/es/desktop-scheduled-tasks) o utilice [GitHub Actions](/docs/es/github-actions).
+Las tareas tienen alcance de sesión: viven en la conversación actual y se detienen cuando inicia una nueva. Cuando reanuda con `--resume` o `--continue`, Claude Code restaura las tareas que no han [expirado](#seven-day-expiry), excepto las enumeradas en [Limitaciones](#limitations). Para la programación que sobrevive independientemente de cualquier sesión, utilice [Routines](/docs/es/routines) para crear una rutina en la nube, configure una [tarea programada de Desktop](/docs/es/desktop-scheduled-tasks) o utilice [GitHub Actions](/docs/es/github-actions).
 
 <h2 id="compare-scheduling-options">
   Comparar opciones de programación
 </h2>
 
-Claude Code offers three ways to schedule recurring or one-off work:
+Claude Code ofrece tres formas de programar trabajo recurrente o puntual:
 
-|                            | [Cloud](/docs/en/routines)               | [Desktop](/docs/en/desktop-scheduled-tasks) | [`/loop`](/docs/en/scheduled-tasks)      |
-| :------------------------- | :---------------------------------- | :------------------------------------- | :---------------------------------- |
-| Runs on                    | Cloud, Anthropic-managed by default | Your machine                           | Your machine                        |
-| Requires machine on        | No                                  | Yes                                    | Yes                                 |
-| Requires open session      | No                                  | No                                     | Yes                                 |
-| Persistent across restarts | Yes                                 | Yes                                    | Restored on `--resume` if unexpired |
-| Access to local files      | No (fresh clone)                    | Yes                                    | Yes                                 |
-| MCP servers                | Connectors configured per task      | [Config files](/docs/en/mcp) and connectors | Inherits from session               |
-| Permission prompts         | No (runs autonomously)              | Configurable per task                  | Inherits from session               |
-| Customizable schedule      | Via `/schedule` in the CLI          | Yes                                    | Yes                                 |
-| Minimum interval           | 1 hour                              | 1 minute                               | 1 minute                            |
+|                             | [Cloud](/docs/es/routines)                                     | [Desktop](/docs/es/desktop-scheduled-tasks)            | [`/loop`](/docs/es/scheduled-tasks)                                               |
+| :-------------------------- | :-------------------------------------------------------- | :------------------------------------------------ | :--------------------------------------------------------------------------- |
+| Se ejecuta en               | Cloud, administrado por Anthropic de forma predeterminada | Su máquina                                        | Su máquina                                                                   |
+| Requiere máquina encendida  | No                                                        | Sí                                                | Sí                                                                           |
+| Requiere sesión abierta     | No                                                        | No                                                | Sí                                                                           |
+| Persistente entre reinicios | Sí                                                        | Sí                                                | Restaurado en `--resume`, con [excepciones](/docs/es/scheduled-tasks#limitations) |
+| Acceso a archivos locales   | No (clon nuevo)                                           | Sí                                                | Sí                                                                           |
+| Servidores MCP              | Conectores configurados por tarea                         | [Archivos de configuración](/docs/es/mcp) y conectores | Heredado de la sesión                                                        |
+| Solicitudes de permiso      | No (se ejecuta de forma autónoma)                         | Configurable por tarea                            | Heredado de la sesión                                                        |
+| Programación personalizable | A través de `/schedule` en la CLI                         | Sí                                                | Sí                                                                           |
+| Intervalo mínimo            | 1 hora                                                    | 1 minuto                                          | 1 minuto                                                                     |
 
 <Tip>
-  Use **cloud tasks** for work that should run reliably without your machine. Use **Desktop tasks** when you need access to local files and tools. Use **`/loop`** for quick polling during a session.
+  Utilice **tareas en la nube** para trabajo que debe ejecutarse de forma confiable sin su máquina. Utilice **tareas de Desktop** cuando necesite acceso a archivos y herramientas locales. Utilice **`/loop`** para sondeo rápido durante una sesión.
 </Tip>
 
 <h2 id="run-a-prompt-repeatedly-with-/loop">
@@ -44,12 +44,12 @@ El `/loop` [bundled skill](/docs/es/commands) es la forma más rápida de ejecut
 | Solo prompt            | `/loop check the deploy`    | Su prompt se ejecuta en un [intervalo que Claude elige](#let-claude-choose-the-interval) en cada iteración            |
 | Solo intervalo, o nada | `/loop`                     | El [prompt de mantenimiento integrado](#run-the-built-in-maintenance-prompt) se ejecuta, o su `loop.md` si existe uno |
 
-También puede pasar un skill como el prompt, por ejemplo `/loop 20m /review-pr 1234`, para volver a ejecutar ese skill en cada iteración. A partir de v2.1.196, un disparo programado solo ejecuta skills que Claude [está autorizado a invocar por su cuenta](/docs/es/skills#control-who-invokes-a-skill). Lo siguiente llega a Claude como texto sin formato en lugar de ejecutarse:
+También puede pasar un skill como el prompt, por ejemplo `/loop 20m /review-pr 1234`, para volver a ejecutar ese skill en cada iteración. Un disparo programado solo ejecuta skills que Claude [está autorizado a invocar por su cuenta](/docs/es/skills#control-who-invokes-a-skill). Lo siguiente llega a Claude como texto sin formato en lugar de ejecutarse:
 
-* comandos integrados como `/permissions`, `/model`, o `/clear`
-* skills marcados [`disable-model-invocation: true`](/docs/es/skills#frontmatter-reference)
-* skills retenidos de Claude por una configuración [`skillOverrides`](/docs/es/skills#override-skill-visibility-from-settings) o una regla de [denegación](/docs/es/skills#restrict-claude’s-skill-access) de `Skill`
-* [prompts MCP](/docs/es/mcp#use-mcp-prompts-as-commands) como `/mcp__github__list_prs`; los skills que expone un servidor MCP aún se ejecutan
+* Comandos integrados como `/permissions`, `/model`, o `/clear`
+* Skills marcados [`disable-model-invocation: true`](/docs/es/skills#frontmatter-reference), incluido el bundled skill `/verify`
+* Skills retenidos de Claude por una configuración [`skillOverrides`](/docs/es/skills#override-skill-visibility-from-settings) o una regla de [denegación](/docs/es/skills#restrict-claude%E2%80%99s-skill-access) de `Skill`
+* [Prompts MCP](/docs/es/mcp#use-mcp-prompts-as-commands) como `/mcp__github__list_prs`
 
 <h3 id="run-on-a-fixed-interval">
   Ejecutar en un intervalo fijo
@@ -77,12 +77,14 @@ El ejemplo a continuación verifica CI y comentarios de revisión, con Claude es
 /loop check whether CI passed and address any review comments
 ```
 
-Cuando solicita un horario `/loop` dinámico, Claude puede usar la [herramienta Monitor](/docs/es/tools-reference#monitor-tool) directamente. Monitor ejecuta un script de fondo y transmite cada línea de salida, lo que evita el sondeo por completo y a menudo es más eficiente en tokens y más receptivo que volver a ejecutar un prompt en un intervalo.
+En una sesión donde la [herramienta Monitor está disponible](/docs/es/tools-reference#monitor-tool), Claude puede usarla directamente cuando solicita un horario `/loop` dinámico. Monitor ejecuta un script de fondo y transmite cada línea de salida, lo que evita el sondeo por completo y a menudo es más eficiente en tokens y más receptivo que volver a ejecutar un prompt en un intervalo.
 
-Un bucle programado dinámicamente aparece en su [lista de tareas programadas](#manage-scheduled-tasks) como cualquier otra tarea, por lo que puede enumerarla o cancelarla de la misma manera. Las [reglas de jitter](#jitter) no se aplican a ella, pero el [vencimiento de siete días](#seven-day-expiry) sí: el bucle termina automáticamente siete días después de iniciarlo.
+Un bucle programado dinámicamente aparece en su [lista de tareas programadas](#manage-scheduled-tasks) como cualquier otra tarea, por lo que puede enumerarla o cancelarla de la misma manera. Las [reglas de jitter](#jitter) no se aplican a ella, pero el [vencimiento de siete días](#seven-day-expiry) sí.
+
+<span id="loop-provider-differences" />
 
 <Note>
-  En Amazon Bedrock, Claude Platform en AWS, Google Cloud's Agent Platform y Microsoft Foundry, un prompt sin intervalo se ejecuta en un horario fijo de 10 minutos en su lugar.
+  Los intervalos elegidos dinámicamente y el [prompt de mantenimiento integrado](#run-the-built-in-maintenance-prompt) funcionan en todos los proveedores, y con [obtención de banderas de características](/docs/es/env-vars#features-that-need-feature-flag-fetching) desactivada. En Amazon Bedrock, Claude Platform en AWS, Google Cloud's Agent Platform y Microsoft Foundry, o con obtención desactivada, ambos requieren Claude Code v2.1.248 o posterior. En esos casos, en versiones anteriores, un prompt sin intervalo se ejecuta en un horario fijo de 10 minutos, y un `/loop` sin prompt imprime el mensaje de uso.
 </Note>
 
 <h3 id="run-the-built-in-maintenance-prompt">
@@ -103,15 +105,11 @@ Claude no inicia nuevas iniciativas fuera de ese alcance, y las acciones irrever
 
 Un `/loop` simple ejecuta este prompt en un [intervalo elegido dinámicamente](#let-claude-choose-the-interval). Agregue un intervalo, por ejemplo `/loop 15m`, para ejecutarlo en un horario fijo en su lugar. Para reemplazar el prompt integrado con el suyo propio, consulte [Personalizar el prompt predeterminado con loop.md](#customize-the-default-prompt-with-loop-md).
 
-<Note>
-  En Amazon Bedrock, Claude Platform en AWS, Google Cloud's Agent Platform y Microsoft Foundry, `/loop` sin prompt imprime el mensaje de uso en su lugar en lugar de ejecutar el prompt de mantenimiento.
-</Note>
-
 <h3 id="customize-the-default-prompt-with-loop-md">
   Personalizar el prompt predeterminado con loop.md
 </h3>
 
-Un archivo `loop.md` reemplaza el prompt de mantenimiento integrado con sus propias instrucciones. Define un único prompt predeterminado para `/loop` simple, no una lista de tareas programadas separadas, e se ignora siempre que proporcione un prompt en la línea de comandos. Para programar prompts adicionales junto a él, use `/loop <prompt>` o [pida a Claude directamente](#manage-scheduled-tasks).
+Cree un archivo `loop.md` para reemplazar el [prompt de mantenimiento integrado](#run-the-built-in-maintenance-prompt) con sus propias instrucciones. Define un único prompt predeterminado para `/loop` simple, no una lista de tareas programadas separadas, y Claude Code lo ignora siempre que proporcione un prompt en la línea de comandos. Para programar prompts adicionales junto a él, use `/loop <prompt>` o [pida a Claude directamente](#manage-scheduled-tasks).
 
 Claude busca el archivo en dos ubicaciones y usa el primero que encuentra.
 
@@ -131,19 +129,15 @@ quiet, say so in one line.
 
 Las ediciones a `loop.md` tienen efecto en la siguiente iteración, por lo que puede refinar las instrucciones mientras un bucle se está ejecutando. Cuando no existe `loop.md` en ninguna ubicación, el bucle vuelve al prompt de mantenimiento integrado. Mantenga el archivo conciso: el contenido más allá de 25,000 bytes se trunca.
 
-<Note>
-  En Amazon Bedrock, Claude Platform en AWS, Google Cloud's Agent Platform y Microsoft Foundry, `loop.md` no se lee y `/loop` sin prompt imprime el mensaje de uso en su lugar.
-</Note>
-
 <h3 id="stop-a-loop">
   Detener un bucle
 </h3>
 
-Para detener un `/loop` mientras espera la siguiente iteración, presione `Esc`. Esto borra el despertar pendiente para que el bucle no se ejecute nuevamente. Las tareas que programó [pidiendo a Claude directamente](#manage-scheduled-tasks) no se ven afectadas por `Esc` y permanecen en su lugar hasta que las elimine.
+Para detener un [bucle `/loop` de ritmo propio](#let-claude-choose-the-interval) mientras espera la siguiente iteración, presione `Esc`. Esto borra el despertar pendiente para que el bucle no se ejecute nuevamente. Las tareas que programó [pidiendo a Claude directamente](#manage-scheduled-tasks) no se ven afectadas por `Esc` y permanecen en su lugar hasta que las elimine.
 
-En [modo de ritmo propio](#let-claude-choose-the-interval), Claude también puede terminar el bucle por su cuenta una vez que la tarea se complete. Claude llama a la herramienta [`ScheduleWakeup`](/docs/es/tools-reference) con `stop: true`, que cancela el despertar pendiente inmediatamente. Si una iteración termina sin reprogramar ni detener, Claude Code programa un despertar de respaldo aproximadamente 20 minutos después y termina el bucle cuando esa iteración tampoco se reprograma. Antes de v2.1.202, no reprogramar era la única forma en que Claude podía terminar un bucle por su cuenta.
+En [modo de ritmo propio](#let-claude-choose-the-interval), Claude también puede terminar el bucle por su cuenta una vez que la tarea se complete. Claude llama a la herramienta [`ScheduleWakeup`](/docs/es/tools-reference) con `stop: true`, que cancela el despertar pendiente inmediatamente. Si una iteración termina sin reprogramar ni detener, Claude Code programa un despertar de respaldo aproximadamente 20 minutos después y termina el bucle cuando esa iteración tampoco se reprograma.
 
-Los bucles en un intervalo fijo siguen ejecutándose hasta que los detenga o [transcurran siete días](#seven-day-expiry).
+Los bucles en un intervalo fijo siguen ejecutándose hasta que los detenga [como cualquier otra tarea programada](#manage-scheduled-tasks) o [transcurran siete días](#seven-day-expiry).
 
 <h2 id="set-a-one-time-reminder">
   Establecer un recordatorio único
@@ -175,7 +169,7 @@ what scheduled tasks do I have?
 cancel the deploy check job
 ```
 
-Bajo el capó, Claude utiliza estas herramientas:
+Estas son las herramientas subyacentes que Claude utiliza:
 
 | Herramienta  | Propósito                                                                                                                        |
 | :----------- | :------------------------------------------------------------------------------------------------------------------------------- |
@@ -243,10 +237,11 @@ La programación con alcance de sesión tiene limitaciones inherentes:
 
 * Las tareas solo se ejecutan mientras Claude Code está ejecutándose e inactivo. Cerrar la terminal o dejar que la sesión salga detiene su ejecución. [Poner la sesión en segundo plano](/docs/es/agent-view#from-inside-a-session) traslada las tareas `/loop` a una sesión en segundo plano, que sigue ejecutándose sin una terminal.
 * Sin recuperación de disparos perdidos. Si el tiempo programado de una tarea pasa mientras Claude está ocupado en una solicitud de larga duración, se ejecuta una vez cuando Claude queda inactivo, no una vez por intervalo perdido.
-* Iniciar una conversación nueva borra todas las tareas con alcance de sesión. Reanudar con `claude --resume` o `claude --continue` restaura tareas que no han expirado: tareas recurrentes dentro de siete días de creación, y tareas únicas cuyo tiempo programado aún no ha pasado. Las tareas de Bash de fondo y monitor nunca se restauran al reanudar.
+* Iniciar una conversación nueva borra todas las tareas con alcance de sesión. Cuando reanuda una sesión con `claude --resume` o `claude --continue`, Claude Code restaura las tareas programadas con `CronCreate`, excepto las tareas recurrentes que han [expirado](#seven-day-expiry) y las tareas únicas cuyo tiempo programado ha pasado. Un [`/loop` autorrítmico](#let-claude-choose-the-interval) no se restaura, así que ejecute `/loop` nuevamente para reiniciarlo. Las tareas de Bash de fondo y monitor nunca se restauran al reanudar.
+* Con [obtención de banderas de características desactivada](/docs/es/env-vars#features-that-need-feature-flag-fetching), Claude Code almacena una tarea que solicitó mantener entre sesiones en el archivo `.claude/scheduled_tasks.json` del proyecto. Cuando el directorio `.claude` o ese archivo es un enlace simbólico, Claude Code devuelve un error en lugar de programar la tarea. Una tarea guardada se ejecuta solo en la carpeta del proyecto donde la creó. Si copia el archivo en otra carpeta, como un nuevo worktree, las sesiones allí enumeran las tareas copiadas pero no las ejecutan, así que cree la tarea nuevamente en esa carpeta.
 
 Para la automatización impulsada por cron que necesita ejecutarse sin supervisión:
 
-* [Routines](/docs/es/routines): se ejecutan en infraestructura administrada por Anthropic en un horario, mediante llamada a API o en eventos de GitHub
+* [Routines](/docs/es/routines): se ejecutan en la nube en un horario, mediante llamada a API o en eventos de GitHub
 * [GitHub Actions](/docs/es/github-actions): utilice un disparador `schedule` en CI
 * [tareas programadas de Desktop](/docs/es/desktop-scheduled-tasks): se ejecutan localmente en su máquina

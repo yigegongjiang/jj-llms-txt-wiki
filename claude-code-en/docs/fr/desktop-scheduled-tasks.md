@@ -8,28 +8,28 @@
 
 Les tâches planifiées démarrent une nouvelle session automatiquement à une heure et une fréquence que vous choisissez. Utilisez-les pour les travaux récurrents comme les révisions de code quotidiennes, les vérifications de mises à jour de dépendances ou les briefings matinaux qui extraient des données de votre calendrier et de votre boîte de réception.
 
-La page **Routines** de l'application Desktop vous permet de créer à la fois des tâches planifiées locales et des [routines](/docs/fr/routines) distantes. Une tâche locale s'exécute sur votre machine avec un accès direct à vos fichiers et outils, mais ne s'active que lorsque l'application est ouverte et que votre ordinateur est actif. Une routine distante s'exécute sur l'infrastructure cloud gérée par Anthropic même lorsque votre ordinateur est éteint, et peut également s'activer lors d'appels API ou d'événements GitHub. Cette page couvre les tâches planifiées locales ; pour les routines distantes et leurs options de déclenchement, consultez [Routines](/docs/fr/routines).
+La page **Routines** de l'application Desktop vous permet de créer à la fois des tâches planifiées locales et des [routines](/docs/fr/routines) distantes. Une tâche locale s'exécute sur votre machine avec un accès direct à vos fichiers et outils, mais ne s'active que lorsque l'application est ouverte et que votre ordinateur est actif. Une routine distante s'exécute dans le cloud même lorsque votre ordinateur est éteint, et peut également s'activer lors d'appels API ou d'événements GitHub. Cette page couvre les tâches planifiées locales ; pour les routines distantes et leurs options de déclenchement, consultez [Routines](/docs/fr/routines).
 
 <h2 id="compare-scheduling-options">
   Comparer les options de planification
 </h2>
 
-Claude Code offers three ways to schedule recurring or one-off work:
+Claude Code offre trois façons de planifier des tâches récurrentes ou ponctuelles :
 
-|                            | [Cloud](/docs/en/routines)               | [Desktop](/docs/en/desktop-scheduled-tasks) | [`/loop`](/docs/en/scheduled-tasks)      |
-| :------------------------- | :---------------------------------- | :------------------------------------- | :---------------------------------- |
-| Runs on                    | Cloud, Anthropic-managed by default | Your machine                           | Your machine                        |
-| Requires machine on        | No                                  | Yes                                    | Yes                                 |
-| Requires open session      | No                                  | No                                     | Yes                                 |
-| Persistent across restarts | Yes                                 | Yes                                    | Restored on `--resume` if unexpired |
-| Access to local files      | No (fresh clone)                    | Yes                                    | Yes                                 |
-| MCP servers                | Connectors configured per task      | [Config files](/docs/en/mcp) and connectors | Inherits from session               |
-| Permission prompts         | No (runs autonomously)              | Configurable per task                  | Inherits from session               |
-| Customizable schedule      | Via `/schedule` in the CLI          | Yes                                    | Yes                                 |
-| Minimum interval           | 1 hour                              | 1 minute                               | 1 minute                            |
+|                                       | [Cloud](/docs/fr/routines)                | [Desktop](/docs/fr/desktop-scheduled-tasks)              | [`/loop`](/docs/fr/scheduled-tasks)                                              |
+| :------------------------------------ | :----------------------------------- | :-------------------------------------------------- | :-------------------------------------------------------------------------- |
+| S'exécute sur                         | Cloud, géré par Anthropic par défaut | Votre machine                                       | Votre machine                                                               |
+| Nécessite que la machine soit allumée | Non                                  | Oui                                                 | Oui                                                                         |
+| Nécessite une session ouverte         | Non                                  | Non                                                 | Oui                                                                         |
+| Persistant après redémarrage          | Oui                                  | Oui                                                 | Restauré sur `--resume`, avec [exceptions](/docs/fr/scheduled-tasks#limitations) |
+| Accès aux fichiers locaux             | Non (clone frais)                    | Oui                                                 | Oui                                                                         |
+| Serveurs MCP                          | Connecteurs configurés par tâche     | [Fichiers de configuration](/docs/fr/mcp) et connecteurs | Hérité de la session                                                        |
+| Invites de permission                 | Non (s'exécute de manière autonome)  | Configurable par tâche                              | Hérité de la session                                                        |
+| Planification personnalisable         | Via `/schedule` dans la CLI          | Oui                                                 | Oui                                                                         |
+| Intervalle minimum                    | 1 heure                              | 1 minute                                            | 1 minute                                                                    |
 
 <Tip>
-  Use **cloud tasks** for work that should run reliably without your machine. Use **Desktop tasks** when you need access to local files and tools. Use **`/loop`** for quick polling during a session.
+  Utilisez les **tâches cloud** pour les travaux qui doivent s'exécuter de manière fiable sans votre machine. Utilisez les **tâches Desktop** lorsque vous avez besoin d'accès aux fichiers et outils locaux. Utilisez **`/loop`** pour un sondage rapide pendant une session.
 </Tip>
 
 <Note>
@@ -40,7 +40,7 @@ Claude Code offers three ways to schedule recurring or one-off work:
   Créer une tâche planifiée
 </h2>
 
-Cliquez sur **Routines** dans la barre latérale, puis cliquez sur **New routine** et choisissez **Local**. Configurez ces champs :
+Sur Claude Desktop antérieur à 1.1.5368, les tâches planifiées locales ne sont pas disponibles. Dans l'[onglet **Code**](/docs/fr/desktop), cliquez sur **Routines** dans la barre latérale ou dans le menu **Plus** de la barre latérale, puis cliquez sur **New routine** et choisissez **Local**. Configurez ces champs :
 
 | Champ        | Description                                                                                                                                                                                                                                                                                                                                                   |
 | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -73,7 +73,7 @@ Pour les intervalles que le sélecteur n'offre pas, comme toutes les 15 minutes,
 
 Les tâches planifiées s'exécutent sur votre machine. Desktop vérifie la planification chaque minute lorsque l'application est ouverte et démarre une nouvelle session lorsqu'une tâche est due, indépendamment de toute session manuelle que vous avez ouverte. Chaque tâche reçoit un petit délai de quelques minutes après l'heure planifiée pour échelonner le trafic API. Le délai est déterministe : la même tâche démarre toujours au même décalage.
 
-Lorsqu'une tâche s'active, vous recevez une notification de bureau et une nouvelle session apparaît sous une section **Scheduled** dans la barre latérale. Ouvrez-la pour voir ce que Claude a fait, examiner les modifications ou répondre aux invites de permission. La session fonctionne comme n'importe quelle autre : Claude peut modifier des fichiers, exécuter des commandes, créer des commits et ouvrir des pull requests.
+Lorsqu'une tâche s'active, vous recevez une notification de bureau et une nouvelle session apparaît sous une section **Scheduled** dans la barre latérale. Ouvrez-la pour voir ce que Claude a fait, examiner les modifications ou répondre aux invites de permission. Claude peut modifier des fichiers, exécuter des commandes, créer des commits et ouvrir des pull requests, comme dans une session que vous démarrez vous-même, mais ne peut pas envoyer ou recevoir des [messages entre vos sessions de bureau](/docs/fr/desktop#work-across-sessions) via la surface de session de l'application de bureau.
 
 Les tâches ne s'exécutent que lorsque l'application de bureau est en cours d'exécution et que votre ordinateur est actif. Si votre ordinateur se met en veille à une heure planifiée, l'exécution est ignorée. Pour empêcher la mise en veille inactive, activez **Keep computer awake** dans Paramètres sous **Desktop app → General**. Fermer le couvercle de l'ordinateur portable le met toujours en veille. Pour les tâches qui doivent s'exécuter même lorsque votre ordinateur est éteint, ou qui doivent être déclenchées par un appel API ou un événement GitHub, créez plutôt une [routine](/docs/fr/routines) distante.
 
@@ -89,17 +89,17 @@ Gardez cela à l'esprit lors de la rédaction de prompts. Une tâche planifiée 
   Permissions pour les tâches planifiées
 </h2>
 
-Chaque tâche a son propre mode de permission, que vous définissez lors de la création ou de la modification de la tâche. Les règles d'autorisation de `~/.claude/settings.json` s'appliquent également aux sessions de tâches planifiées. Si une tâche s'exécute en mode Ask et doit exécuter un outil pour lequel elle n'a pas de permission, l'exécution s'arrête jusqu'à ce que vous l'approuviez. La session reste ouverte dans la barre latérale pour que vous puissiez répondre plus tard.
+Chaque tâche a son propre mode de permission, que vous définissez lors de la création ou de la modification de la tâche. Les règles d'autorisation de `~/.claude/settings.json` s'appliquent également aux sessions de tâches planifiées. Si une tâche s'exécute en [mode Manuel](/docs/fr/desktop#choose-a-permission-mode) et doit exécuter un outil pour lequel elle n'a pas de permission, l'exécution s'arrête jusqu'à ce que vous l'approuviez. La session reste ouverte dans la barre latérale pour que vous puissiez répondre plus tard.
 
 Pour éviter les arrêts, cliquez sur **Run now** après avoir créé une tâche, surveillez les invites de permission et sélectionnez « always allow » pour chacune. Les exécutions futures de cette tâche approuvent automatiquement les mêmes outils sans demander. Vous pouvez examiner et révoquer ces approbations à partir de la page de détail de la tâche.
 
-Les outils connecteur [que votre organisation a défini sur `ask`](/docs/fr/mcp#organization-controls-on-connector-tools) et les outils MCP marqués [`requiresUserInteraction`](/docs/fr/mcp#require-approval-for-a-specific-tool) demandent une approbation à chaque appel et n'offrent pas d'option « always allow ». Les exécutions qui appellent ces outils s'arrêtent à chaque fois.
+Les outils MCP marqués [`requiresUserInteraction`](/docs/fr/mcp#require-approval-for-a-specific-tool) demandent une approbation à chaque appel et n'offrent pas d'option « always allow ». Les exécutions qui appellent ces outils s'arrêtent à chaque fois.
 
 <h2 id="manage-scheduled-tasks">
   Gérer les tâches planifiées
 </h2>
 
-Cliquez sur une tâche dans la liste **Routines** pour ouvrir sa page de détail. À partir de là, vous pouvez :
+Dans l'onglet **Code**, cliquez sur une tâche dans la liste **Routines** pour ouvrir sa page de détail. À partir de là, vous pouvez :
 
 * **Run now** : démarrer la tâche immédiatement sans attendre l'heure planifiée suivante
 * **Status** : basculer entre Active et Paused pour mettre en pause ou reprendre les exécutions planifiées sans supprimer la tâche

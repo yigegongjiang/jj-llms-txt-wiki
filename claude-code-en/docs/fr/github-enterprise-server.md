@@ -4,15 +4,15 @@
 
 # Claude Code avec GitHub Enterprise Server
 
-> Connectez Claude Code à votre instance GitHub Enterprise Server auto-hébergée pour les sessions web, la révision de code et les marketplaces de plugins.
+> Connectez Claude Code à votre instance GitHub Enterprise Server auto-hébergée pour les sessions cloud, la révision de code et les marketplaces de plugins.
 
 <Note>
   Le support de GitHub Enterprise Server est disponible pour les plans Team et Enterprise.
 </Note>
 
-Le support de GitHub Enterprise Server (GHES) permet à votre organisation d'utiliser Claude Code avec des dépôts hébergés sur votre instance GitHub auto-gérée au lieu de github.com. Une fois qu'un propriétaire connecte votre instance GHES, les développeurs peuvent exécuter des sessions web et obtenir des révisions de code automatisées sans aucune configuration par dépôt. Les marketplaces de plugins hébergées sur votre instance sont également pris en charge ; les exigences en matière d'identifiants varient selon la surface, comme décrit dans [Plugin marketplaces on GHES](#plugin-marketplaces-on-ghes).
+Le support de GitHub Enterprise Server (GHES) permet à votre organisation d'utiliser Claude Code avec des dépôts hébergés sur votre instance GitHub auto-gérée au lieu de github.com. Une fois qu'un propriétaire connecte votre instance GHES, les développeurs peuvent exécuter des sessions cloud et obtenir des révisions de code automatisées sans aucune configuration par dépôt. Les marketplaces de plugins hébergées sur votre instance sont également pris en charge ; les exigences en matière d'identifiants varient selon la surface, comme décrit dans [Plugin marketplaces on GHES](#plugin-marketplaces-on-ghes).
 
-Pour les dépôts sur github.com, consultez [Claude Code sur le web](/docs/fr/claude-code-on-the-web) et [Révision de code](/docs/fr/code-review). Pour exécuter Claude dans votre propre infrastructure CI, consultez [GitHub Actions](/docs/fr/github-actions).
+Pour les dépôts sur github.com, consultez [Claude Code dans le cloud](/docs/fr/claude-code-on-the-web) et [Révision de code](/docs/fr/code-review). Pour exécuter Claude dans votre propre infrastructure CI, consultez [GitHub Actions](/docs/fr/github-actions).
 
 <h2 id="what-works-with-github-enterprise-server">
   Ce qui fonctionne avec GitHub Enterprise Server
@@ -22,10 +22,10 @@ Le tableau ci-dessous montre quelles fonctionnalités de Claude Code supportent 
 
 | Fonctionnalité            | Support GHES   | Notes                                                                                                                                                        |
 | :------------------------ | :------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Claude Code sur le web    | ✅ Supporté     | Un propriétaire connecte l'instance GHES une fois ; les développeurs utilisent `claude --cloud` ou [claude.ai/code](https://claude.ai/code) comme d'habitude |
+| Sessions cloud            | ✅ Supporté     | Un propriétaire connecte l'instance GHES une fois ; les développeurs utilisent `claude --cloud` ou [claude.ai/code](https://claude.ai/code) comme d'habitude |
 | Révision de code          | ✅ Supporté     | Mêmes révisions de PR automatisées que github.com                                                                                                            |
 | Claude Security           | ✅ Supporté     | Disponible en bêta publique pour les plans Enterprise à [claude.ai/security](https://claude.ai/security)                                                     |
-| Sessions Teleport         | ✅ Supporté     | Déplacez les sessions entre le web et le terminal avec `--teleport`                                                                                          |
+| Sessions Teleport         | ✅ Supporté     | Déplacez les sessions entre le cloud et le terminal avec `--teleport`                                                                                        |
 | Marketplaces de plugins   | ✅ Supporté     | Les exigences en matière d'identifiants varient selon la surface. Voir [Marketplaces de plugins sur GHES](#plugin-marketplaces-on-ghes)                      |
 | Métriques de contribution | ✅ Supporté     | Livrées via webhooks au [tableau de bord d'analyse](/docs/fr/analytics)                                                                                           |
 | GitHub Actions            | ✅ Supporté     | Nécessite une configuration manuelle du workflow ; `/install-github-app` est github.com uniquement                                                           |
@@ -45,7 +45,7 @@ La configuration guidée génère un manifeste GitHub App et vous redirige vers 
   </Step>
 
   <Step title="Démarrer la configuration guidée">
-    Cliquez sur **Connecter**. Entrez un nom d'affichage pour la connexion et le nom d'hôte de votre GHES, par exemple `github.example.com`. Si votre instance GHES utilise un certificat auto-signé ou une autorité de certification privée, collez le certificat CA dans le champ optionnel.
+    Cliquez sur **Connecter**. Entrez un nom d'affichage de jusqu'à 20 caractères pour la connexion et le nom d'hôte de votre GHES, par exemple `github.example.com`. Si votre instance GHES utilise un certificat auto-signé ou une autorité de certification privée, collez le certificat CA dans le champ optionnel.
   </Step>
 
   <Step title="Créer la GitHub App">
@@ -65,31 +65,37 @@ La configuration guidée génère un manifeste GitHub App et vous redirige vers 
   Permissions de la GitHub App
 </h3>
 
-Le manifeste configure la GitHub App avec les permissions et les événements webhook dont Claude a besoin pour les sessions web, la révision de code, Claude Security et les métriques de contribution :
+Le manifeste configure la GitHub App avec les permissions et les événements webhook ci-dessous, qui couvrent ensemble les sessions web, la révision de code, Claude Security, les places de marché de plugins et les métriques de contribution :
 
-| Permission       | Accès               | Utilisé pour                                                   |
-| :--------------- | :------------------ | :------------------------------------------------------------- |
-| Contents         | Lecture et écriture | Clonage de dépôts et envoi de branches                         |
-| Pull requests    | Lecture et écriture | Création de PR et publication de commentaires de révision      |
-| Issues           | Lecture et écriture | Réponse aux mentions de problèmes                              |
-| Checks           | Lecture et écriture | Publication des exécutions de vérification de révision de code |
-| Actions          | Lecture             | Lecture du statut CI pour la correction automatique            |
-| Repository hooks | Lecture et écriture | Réception des webhooks pour les métriques de contribution      |
-| Metadata         | Lecture             | Requis par GitHub pour toutes les applications                 |
+| Permission           | Accès               | Utilisé pour                                                                                                                                                                                                                                                             |
+| :------------------- | :------------------ | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Contents             | Lecture et écriture | Clonage de dépôts et envoi de branches                                                                                                                                                                                                                                   |
+| Pull requests        | Lecture et écriture | Création de PR et publication de commentaires de révision                                                                                                                                                                                                                |
+| Issues               | Lecture et écriture | Réponse aux mentions de problèmes                                                                                                                                                                                                                                        |
+| Checks               | Lecture et écriture | Publication des exécutions de vérification de révision de code                                                                                                                                                                                                           |
+| Actions              | Lecture             | Lecture du statut CI pour la correction automatique                                                                                                                                                                                                                      |
+| Commit statuses      | Lecture             | Lecture du statut CI des fournisseurs qui signalent les statuts de commit au lieu des exécutions de vérification                                                                                                                                                         |
+| Repository hooks     | Lecture et écriture | Création d'un webhook sur un dépôt de place de marché de plugins lorsque **Synchroniser automatiquement** est activé pour une place de marché dans [**Paramètres de l'organisation > Plugins et compétences**](https://claude.ai/admin-settings/skills?tab=marketplaces) |
+| Metadata             | Lecture             | Requis par GitHub pour toutes les applications                                                                                                                                                                                                                           |
+| Organization members | Lecture             | Correspondance avec la GitHub App Claude sur github.com, qui l'utilise pour vérifier le rôle d'organisation d'un utilisateur qui se connecte lors de la liaison d'une installation                                                                                       |
 
-L'application s'abonne aux événements `pull_request`, `issue_comment`, `pull_request_review_comment`, `pull_request_review` et `check_run`.
+L'application s'abonne aux événements `pull_request`, `issue_comment`, `pull_request_review_comment`, `pull_request_review`, `check_run` et `status`.
+
+GitHub applique un manifeste uniquement lors de la création de l'application, donc une application créée à partir d'une version antérieure du manifeste conserve les permissions et les événements avec lesquels elle a été créée. Si votre application manque l'une des permissions ou des événements ci-dessus, ajoutez-les dans les paramètres de l'application sur votre instance GHES. GitHub demande alors à un propriétaire de chaque installation d'approuver les nouvelles permissions, et l'installation conserve ses anciennes permissions jusqu'à ce qu'il le fasse.
 
 <h3 id="manual-setup">
   Configuration manuelle
 </h3>
 
-Si le flux de redirection guidé est bloqué par votre configuration réseau, cliquez sur **Ajouter manuellement** au lieu de Connecter. Créez une GitHub App sur votre instance GHES avec les [permissions et événements ci-dessus](#github-app-permissions), puis entrez les identifiants de l'application dans le formulaire : nom d'hôte, ID client OAuth et secret, ID de GitHub App, ID client, secret client, secret webhook et clé privée.
+Si le flux de redirection guidé est bloqué par votre configuration réseau, cliquez sur **Ajouter manuellement** au lieu de Connecter. Créez une GitHub App sur votre instance GHES avec les [permissions et événements ci-dessus](#github-app-permissions), puis entrez les détails de la connexion dans le formulaire : un nom d'affichage, le nom d'hôte de votre GHES et le port optionnel, ainsi que l'ID de l'application, l'ID client, le secret client, le secret webhook et la clé privée de l'application. Le formulaire accepte également un certificat CA personnalisé optionnel et les noms d'hôte des répliques de lecture.
+
+Claude génère l'URL du webhook de l'application lorsque vous enregistrez la connexion. Après avoir cliqué sur **Ajouter la configuration**, ouvrez le menu **Plus d'options** de la connexion, sélectionnez **Copier l'URL du webhook** et collez l'URL dans les paramètres du webhook de l'application sur votre instance GHES. Utilisez le même secret webhook que celui que vous avez entré dans le formulaire.
 
 <h3 id="network-requirements">
   Exigences réseau
 </h3>
 
-Votre instance GHES doit être accessible à partir de l'infrastructure Anthropic pour que Claude puisse cloner les dépôts et publier des commentaires de révision. Si votre instance GHES est derrière un pare-feu, mettez en liste blanche les [adresses IP de l'API Anthropic](https://platform.claude.com/docs/en/api/ip-addresses).
+Pour les sessions hébergées par Anthropic, votre instance GHES doit être accessible à partir de l'infrastructure Anthropic pour que Claude puisse cloner les dépôts et publier des commentaires de révision. Si votre instance GHES est derrière un pare-feu, mettez en liste blanche les [adresses IP sortantes](https://platform.claude.com/docs/en/api/ip-addresses#outbound-ip-addresses) d'Anthropic. Les sessions dans un [environnement auto-hébergé](/docs/fr/self-hosted-environments-deploy#configure-git) clonent depuis l'intérieur de votre réseau à la place, sauf si le runner opte pour le [proxy git Anthropic](/docs/fr/self-hosted-environments-deploy#use-the-anthropic-git-proxy), qui récupère du côté d'Anthropic et nécessite la même accessibilité ; le [connecteur SCM](/docs/fr/self-hosted-environments-reference#scm-connector-flags) couvre les flux de pré-session hébergés, tels que le sélecteur de dépôt, pour un hôte GHES qui n'est routable qu'en interne.
 
 <h2 id="developer-workflow">
   Flux de travail des développeurs
@@ -97,26 +103,26 @@ Votre instance GHES doit être accessible à partir de l'infrastructure Anthropi
 
 Une fois que votre administrateur a connecté l'instance GHES, aucune configuration côté développeur n'est nécessaire. Claude Code détecte automatiquement le nom d'hôte de votre GHES à partir de la télécommande git dans votre répertoire de travail.
 
-Clonez un dépôt à partir de votre instance GHES comme vous le feriez normalement :
+Clonez un dépôt à partir de votre instance GHES comme vous le feriez normalement, en remplaçant `github.example.com` et le chemin du dépôt par le nom d'hôte de votre GHES et le dépôt :
 
 ```bash theme={null}
 git clone git@github.example.com:platform/api-service.git
 cd api-service
 ```
 
-Ensuite, démarrez une session web. Claude détecte l'hôte GHES à partir de votre télécommande git et achemine la session via votre instance configurée de l'organisation :
+Ensuite, démarrez une session cloud. Claude détecte l'hôte GHES à partir de votre télécommande git et achemine la session via votre instance configurée de l'organisation :
 
 ```bash theme={null}
 claude --cloud "Add retry logic to the payment webhook handler"
 ```
 
-La session s'exécute sur l'infrastructure Anthropic, clone votre dépôt à partir de GHES et repousse les modifications vers une branche. Surveillez la progression avec `/tasks` ou à [claude.ai/code](https://claude.ai/code). Consultez [Claude Code sur le web](/docs/fr/claude-code-on-the-web) pour le flux de travail complet de la session distante, y compris la révision des différences, la correction automatique et les routines.
+La session clone votre dépôt à partir de GHES et repousse les modifications vers une branche. Surveillez la progression à [claude.ai/code](https://claude.ai/code). Consultez [Claude Code dans le cloud](/docs/fr/claude-code-on-the-web) pour le flux de travail complet de la session cloud, y compris la révision des différences, la correction automatique et les routines.
 
 <h3 id="teleport-sessions-to-your-terminal">
   Téléporter les sessions vers votre terminal
 </h3>
 
-Tirez une session web dans votre terminal local avec `claude --teleport`. Teleport vérifie que vous êtes dans une extraction du même dépôt GHES avant de récupérer la branche et de charger l'historique de la session. Consultez [les exigences de téléportation](/docs/fr/claude-code-on-the-web#teleport-requirements) pour plus de détails.
+Tirez une session cloud dans votre terminal local avec `claude --teleport`. Teleport vérifie que vous êtes dans une extraction du même dépôt GHES avant de récupérer la branche et de charger l'historique de la session. Consultez [les exigences de téléportation](/docs/fr/claude-code-on-the-web#teleport-requirements) pour plus de détails.
 
 <h2 id="plugin-marketplaces-on-ghes">
   Marketplaces de plugins sur GHES
@@ -130,7 +136,7 @@ Hébergez des marketplaces de plugins sur votre instance GHES pour distribuer le
 | Paramètres gérés (`extraKnownMarketplaces`)      | Claude Code enregistre l'entrée et clone le dépôt en utilisant les identifiants git existants de la machine                                                                                                                                                              | Accès Git à votre hôte GHES depuis leur machine                                                                                                                                                                                                |
 | Paramètres de plugin de l'organisation claude.ai | Un propriétaire sélectionne l'instance GHES comme source ; le backend d'Anthropic récupère et synchronise le dépôt en utilisant l'application GitHub de la [configuration d'administration](#admin-setup)                                                                | Rien par utilisateur une fois ajouté. Le propriétaire qui l'ajoute doit avoir son propre compte GitHub Enterprise connecté comme vérification d'accès, et l'application GitHub doit être installée sur le dépôt de la marketplace              |
 | Paramètres utilisateur claude.ai                 | Le backend d'Anthropic récupère le dépôt en utilisant la connexion GitHub Enterprise de l'utilisateur qui le soumet                                                                                                                                                      | Son propre compte GitHub Enterprise connecté à Claude                                                                                                                                                                                          |
-| Claude Code sur le web                           | Les sessions cloud clonent les marketplaces à l'intérieur du sandbox de la session. Le sandbox ne peut atteindre votre instance GHES que lorsque le dépôt de la session se trouve sur cette même instance, et ses identifiants git sont limités aux dépôts de la session | Non fiable pour les marketplaces hébergées sur GHES : un hôte différent du dépôt de la session n'est pas accessible, et même les installations sur la même instance peuvent échouer. Utilisez plutôt la CLI, les paramètres gérés ou claude.ai |
+| Cloud sessions                                   | Les sessions cloud clonent les marketplaces à l'intérieur du sandbox de la session. Le sandbox ne peut atteindre votre instance GHES que lorsque le dépôt de la session se trouve sur cette même instance, et ses identifiants git sont limités aux dépôts de la session | Non fiable pour les marketplaces hébergées sur GHES : un hôte différent du dépôt de la session n'est pas accessible, et même les installations sur la même instance peuvent échouer. Utilisez plutôt la CLI, les paramètres gérés ou claude.ai |
 
 <Warning>
   Les connexions GitHub Enterprise sur claude.ai sont par utilisateur lorsqu'une marketplace est ajoutée à partir des paramètres utilisateur. La [configuration d'administration](#admin-setup) connecte votre instance GHES à votre organisation, mais elle ne connecte pas les comptes utilisateur individuels : chaque utilisateur qui ajoute une marketplace GHES à partir de ses propres paramètres doit d'abord connecter son propre compte GitHub Enterprise, et la connexion d'un utilisateur, y compris celle du propriétaire, ne couvre personne d'autre. Les marketplaces ajoutées par un propriétaire dans les paramètres de plugin de l'organisation ne mettent pas cette exigence sur les utilisateurs, car les récupérations continues utilisent l'application GitHub de l'organisation. Le propriétaire qui ajoute la marketplace doit toujours avoir son propre compte GitHub Enterprise connecté au moment de l'ajout.
@@ -140,7 +146,7 @@ Hébergez des marketplaces de plugins sur votre instance GHES pour distribuer le
   Ajouter une marketplace GHES
 </h3>
 
-Le raccourci `owner/repo` se résout toujours en github.com. Pour les marketplaces hébergées sur GHES, utilisez l'URL git complète. Les URL HTTPS sont recommandées :
+Le raccourci `owner/repo` se résout toujours en github.com. Pour les marketplaces hébergées sur GHES, utilisez l'URL git complète, en remplaçant `github.example.com` et le chemin du dépôt par les vôtres. Les URL HTTPS sont recommandées :
 
 ```bash theme={null}
 /plugin marketplace add https://github.example.com/platform/claude-plugins.git
@@ -154,13 +160,13 @@ Les URL SSH fonctionnent si la machine fait déjà confiance à votre hôte GHES
 
 Claude Code exécute git de manière non-interactive et rejette les connexions SSH aux hôtes qui ne figurent pas dans le fichier `known_hosts` de la machine. Une URL HTTPS avec un assistant d'identifiants git évite l'exigence `known_hosts`.
 
-Consultez [Créer et distribuer une marketplace de plugins](/docs/fr/plugin-marketplaces) pour le guide complet de la création de marketplaces.
+Consultez [Créer et distribuer une marketplace de plugins](/docs/fr/plugins/create-marketplace) pour le guide complet de la création de marketplaces.
 
 <h3 id="pre-register-ghes-marketplaces-with-managed-settings">
   Pré-enregistrer les marketplaces GHES avec les paramètres gérés
 </h3>
 
-Le paramètre `extraKnownMarketplaces` pré-enregistre une marketplace afin que les développeurs l'obtiennent sans configuration manuelle. Il fonctionne à partir de [n'importe quel fichier de paramètres](/docs/fr/settings#extraknownmarketplaces), y compris le `.claude/settings.json` d'un dépôt ; les paramètres gérés le livrent à l'échelle de l'organisation :
+Le paramètre `extraKnownMarketplaces` pré-enregistre une marketplace afin que les développeurs l'obtiennent sans configuration manuelle. Il fonctionne à partir de [n'importe quel fichier de paramètres](/docs/fr/settings-reference#extraknownmarketplaces), y compris le `.claude/settings.json` d'un dépôt ; les paramètres gérés le livrent à l'échelle de l'organisation :
 
 ```json theme={null}
 {
@@ -180,13 +186,13 @@ Claude Code installe ces marketplaces localement : il enregistre chaque entrée 
 * **Utilisez une URL git complète.** Le raccourci `owner/repo` se résout toujours en github.com et ne peut pas référencer un hôte GHES.
 * **Préférez les URL HTTPS.** Les clones SSH échouent sur les machines qui ne font pas déjà confiance à votre clé d'hôte GHES. Une URL HTTPS avec l'assistant d'identifiants git standard de votre organisation fonctionne sur n'importe quelle machine avec des identifiants configurés.
 * **Confirmez que chaque machine peut cloner à partir de votre hôte GHES.** Si une machine manque d'identifiants, la marketplace est enregistrée mais jamais installée, et ses plugins signalent qu'ils ne sont pas trouvés au lieu de demander des identifiants.
-* **Confirmez que le paramètre atteint chaque machine.** Un fichier de paramètres gérés ne prend effet que sur les machines sur lesquelles il est déployé, par exemple via votre système de gestion des appareils. Consultez [paramètres gérés](/docs/fr/settings#settings-files) pour les emplacements des fichiers.
+* **Confirmez que le paramètre atteint chaque machine.** Un fichier de paramètres gérés ne prend effet que sur les machines sur lesquelles il est déployé, par exemple via votre système de gestion des appareils. Consultez [Déployer les paramètres gérés](/docs/fr/managed-settings#delivery-mechanisms) pour les emplacements des fichiers.
 
 <h3 id="allowlist-ghes-marketplaces-in-managed-settings">
   Mettre en liste blanche les marketplaces GHES dans les paramètres gérés
 </h3>
 
-Si votre organisation utilise les [paramètres gérés](/docs/fr/settings) pour restreindre les marketplaces que les développeurs peuvent ajouter, utilisez le type de source `hostPattern` pour autoriser toutes les marketplaces de votre instance GHES sans énumérer chaque dépôt :
+Si votre organisation utilise les [paramètres gérés](/docs/fr/settings) pour restreindre les marketplaces que les développeurs peuvent ajouter, utilisez le type de source `hostPattern` pour autoriser toutes les marketplaces de votre instance GHES sans énumérer chaque dépôt. Consultez [Mécanismes de livraison](/docs/fr/managed-settings#delivery-mechanisms) pour les emplacements des fichiers sur chaque plateforme. Ajoutez le JSON à votre fichier `managed-settings.json` ou à la politique MDM équivalente :
 
 ```json theme={null}
 {
@@ -199,7 +205,7 @@ Si votre organisation utilise les [paramètres gérés](/docs/fr/settings) pour 
 }
 ```
 
-Consultez la référence des paramètres [strictKnownMarketplaces](/docs/fr/settings#strictknownmarketplaces) et [extraKnownMarketplaces](/docs/fr/settings#extraknownmarketplaces) pour le schéma complet.
+Consultez la référence des paramètres [strictKnownMarketplaces](/docs/fr/settings-reference#strictknownmarketplaces) et [extraKnownMarketplaces](/docs/fr/settings-reference#extraknownmarketplaces) pour le schéma complet.
 
 <h2 id="limitations">
   Limitations
@@ -214,7 +220,7 @@ Quelques fonctionnalités se comportent différemment sur GHES que sur github.co
   Dépannage
 </h2>
 
-<h3 id="web-session-fails-to-clone-repository">
+<h3 id="cloud-session-fails-to-clone-repository">
   La session web échoue à cloner le dépôt
 </h3>
 
@@ -240,7 +246,13 @@ Sur d'autres surfaces claude.ai, une erreur « Dépôt non trouvé. S'il est pri
   Instance GHES non accessible
 </h3>
 
-Si les révisions ou les sessions web expirent, votre instance GHES peut ne pas être accessible à partir de l'infrastructure Anthropic. Confirmez que votre pare-feu autorise les connexions entrantes à partir des [adresses IP de l'API Anthropic](https://platform.claude.com/docs/fr/api/ip-addresses).
+Si les révisions ou les sessions web expirent, votre instance GHES peut ne pas être accessible à partir de l'infrastructure Anthropic. Confirmez que votre pare-feu autorise les connexions entrantes à partir des [adresses IP sortantes](https://platform.claude.com/docs/fr/api/ip-addresses#outbound-ip-addresses) d'Anthropic. Les sessions dans un [environnement auto-hébergé](/docs/fr/self-hosted-environments) accèdent à GHES depuis l'intérieur de votre réseau, donc pour celles-ci, vérifiez le chemin réseau propre du runner et le [connecteur SCM](/docs/fr/self-hosted-environments-reference#scm-connector-flags) à la place.
+
+<h3 id="session-start-fails-with-unable-to-get-organization-uuid">
+  Le démarrage de la session échoue avec `Unable to get organization UUID`
+</h3>
+
+Les sessions web nécessitent une organisation Team ou Enterprise. Connectez-vous avec `/login` en utilisant votre compte d'organisation. Si vous vous authentifiez avec une clé API à la place, les sessions web échouent plus tôt avec un message vous demandant d'exécuter `/login`.
 
 <h2 id="related-resources">
   Ressources connexes
@@ -250,7 +262,7 @@ Ces pages couvrent les fonctionnalités référencées dans ce guide en plus de 
 
 * [Claude Code sur le web](/docs/fr/claude-code-on-the-web) : exécutez les sessions Claude Code sur l'infrastructure cloud
 * [Révision de code](/docs/fr/code-review) : révisions de PR automatisées
-* [Marketplaces de plugins](/docs/fr/plugin-marketplaces) : créer et distribuer des catalogues de plugins
+* [Marketplaces de plugins](/docs/fr/plugins/host-marketplace) : créer et distribuer des catalogues de plugins
 * [Analyse](/docs/fr/analytics) : suivre l'utilisation et les métriques de contribution
 * [Paramètres gérés](/docs/fr/settings) : configuration de politique à l'échelle de l'organisation
 * [Configuration réseau](/docs/fr/network-config) : exigences de pare-feu et de liste blanche IP

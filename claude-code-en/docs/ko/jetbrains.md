@@ -26,10 +26,10 @@ Claude Code 플러그인은 다음을 포함한 대부분의 JetBrains IDE와 �
 </h2>
 
 * **빠른 실행**: `Cmd+Esc` (Mac) 또는 `Ctrl+Esc` (Windows/Linux)를 사용하여 편집기에서 직접 Claude Code를 열거나, UI의 Claude Code 버튼을 클릭합니다
-* **Diff 보기**: 코드 변경 사항을 터미널 대신 IDE diff 뷰어에 직접 표시할 수 있습니다
+* **Diff 보기**: Claude Code는 코드 변경 사항을 터미널 대신 IDE diff 뷰어에 표시합니다. `/config`의 **Diff tool** 설정으로 이를 변경할 수 있습니다
 * **선택 영역 컨텍스트**: IDE의 현재 선택 영역 또는 탭이 Claude Code와 자동으로 공유됩니다. [`Read` 거부 규칙](/docs/ko/permissions#read-and-edit)은 일치하는 파일에 대해 이 공유를 차단합니다
 * **파일 참조 바로가기**: `Cmd+Option+K` (Mac) 또는 `Alt+Ctrl+K` (Linux/Windows)를 사용하여 `@src/auth.ts#L1-99`와 같은 파일 참조를 삽입합니다
-* **진단 공유**: IDE의 진단 오류 (lint 및 구문 오류 등)가 작업할 때 Claude와 자동으로 공유됩니다
+* **진단 공유**: Claude는 [`getDiagnostics` 도구](#the-built-in-ide-mcp-server)를 호출하여 lint 및 구문 오류와 같은 IDE의 검사 진단을 읽습니다. Claude Code는 편집 후 플러그인에서 진단을 자체적으로 요청하지 않습니다
 
 <h2 id="installation">
   설치
@@ -50,10 +50,6 @@ Claude Code 플러그인은 다음을 포함한 대부분의 JetBrains IDE와 �
 `claude`가 IDE가 찾을 수 없는 위치에 설치된 경우 플러그인의 [Claude 명령 설정](#general-settings)에서 전체 경로를 설정합니다.
 
 Claude Code는 모든 유료 Claude 구독(Pro, Max, Team 또는 Enterprise) 또는 Claude Console 계정과 함께 작동하며, API 키가 필요하지 않습니다. `claude`를 처음 실행할 때 [로그인](/docs/ko/authentication#log-in-to-claude-code)하라는 메시지가 표시됩니다.
-
-<Note>
-  플러그인을 설치한 후 IDE를 완전히 다시 시작해야 적용될 수 있습니다.
-</Note>
 
 <h2 id="usage">
   사용법
@@ -79,6 +75,8 @@ claude
 /ide
 ```
 
+연결이 성공하면 Claude Code는 `Connected to IntelliJ IDEA.`와 같은 메시지로 확인합니다. Claude Code가 플러그인이 없는 실행 중인 IDE를 감지하면 `/ide`가 자동으로 플러그인을 설치하고 IDE를 다시 시작하도록 요청합니다.
+
 Claude가 IDE와 동일한 파일에 액세스하도록 하려면, IDE 프로젝트 루트와 동일한 디렉터리에서 Claude Code를 시작합니다.
 
 <h2 id="configuration">
@@ -93,7 +91,9 @@ Claude Code의 설정을 통해 IDE 통합을 구성합니다:
 
 1. `claude` 실행
 2. `/config` 명령 입력
-3. diff 도구를 `auto`로 설정하여 IDE에서 diff를 표시하거나, `terminal`로 설정하여 터미널에 유지합니다
+3. **Diff tool**을 `auto`로 설정하여 IDE에서 diff를 표시하거나, `terminal`로 설정하여 터미널에 유지합니다
+
+**Diff tool** 항목은 Claude Code가 IDE에 연결되었을 때만 `/config`에 나타나므로, JetBrains 터미널에서 `claude`를 실행하거나 외부 터미널에서 먼저 [`/ide`](/docs/ko/commands)를 실행합니다. 기본 설정은 [`diffTool`](/docs/ko/settings-reference#difftool)을 참조합니다.
 
 <h3 id="plugin-settings">
   플러그인 설정
@@ -137,10 +137,8 @@ ESC 키가 JetBrains 터미널에서 Claude Code 작업을 중단하지 않는 �
 </h3>
 
 <Warning>
-  JetBrains 원격 개발을 사용할 때는 \*\*설정 → 플러그인 (호스트)\*\*를 통해 원격 호스트에 플러그인을 설치해야 합니다.
+  JetBrains 원격 개발을 사용할 때는 로컬 클라이언트 머신이 아닌 \*\*설정 → 플러그인 (호스트)\*\*를 통해 원격 호스트에 플러그인을 설치해야 합니다.
 </Warning>
-
-플러그인은 로컬 클라이언트 머신이 아닌 원격 호스트에 설치해야 합니다.
 
 <h3 id="wsl-configuration">
   WSL 구성
@@ -162,7 +160,7 @@ Claude Code를 WSL2의 JetBrains IDE와 함께 사용하고 "사용 가능한 ID
     hostname -I
     ```
 
-    서브넷을 기록합니다. 예를 들어 `172.21.123.45`는 `172.21.0.0/16`에 있습니다.
+    서브넷을 기록합니다. 주소의 처음 두 세그먼트를 가져와서 `.0.0/16`을 따릅니다. 예를 들어 주소가 `172.21.123.45`인 경우 서브넷은 `172.21.0.0/16`입니다.
   </Step>
 
   <Step title="방화벽 규칙 만들기">
@@ -212,11 +210,11 @@ networkingMode=mirrored
   IDE가 감지되지 않음
 </h3>
 
-`claude` 실행 시 "사용 가능한 IDE가 감지되지 않음"이 표시되는 경우:
+`/ide` 명령이 "사용 가능한 IDE가 감지되지 않음"을 표시하는 경우:
 
 * 플러그인이 설치되고 활성화되어 있는지 확인합니다
 * IDE를 완전히 다시 시작합니다
-* 통합 터미널에서 Claude Code를 실행 중인지 확인합니다
+* `/ide`를 실행하지 않고 자동 연결을 예상했다면 IDE의 통합 터미널에서 `claude`를 실행했는지 확인합니다
 * WSL 사용자의 경우 위의 [WSL 구성](#wsl-configuration)을 참조하세요
 
 <h3 id="command-not-found">
@@ -233,11 +231,11 @@ Claude 아이콘을 클릭하면 "명령을 찾을 수 없음"이 표시되는 �
   보안 고려 사항
 </h2>
 
-Claude Code가 [`acceptEdits` 권한 모드](/docs/ko/permission-modes#auto-approve-file-edits-with-acceptedits-mode)에서 JetBrains IDE에서 실행될 때, IDE에서 자동으로 실행될 수 있는 IDE 구성 파일을 수정할 수 있습니다. 이는 `acceptEdits` 모드에서 Claude Code를 실행하는 위험을 증가시킬 수 있으며 bash 실행에 대한 Claude Code의 권한 프롬프트를 우회할 수 있습니다.
+Claude Code가 [`acceptEdits` 권한 모드](/docs/ko/permission-modes#auto-approve-file-edits-with-acceptedits-mode)에서 JetBrains IDE에서 실행될 때, IDE에서 자동으로 실행될 수 있는 IDE 구성 파일을 수정할 수 있습니다. 이는 `acceptEdits` 모드에서 Claude Code를 실행하는 위험을 증가시킬 수 있으며 Bash 실행에 대한 Claude Code의 권한 프롬프트를 우회할 수 있습니다.
 
 JetBrains IDE에서 실행할 때 다음을 고려합니다:
 
-* 편집에 대한 수동 승인 모드 사용
+* 편집에 대한 수동 모드 사용. `acceptEdits`와 자동 모드 모두 [보호된 경로](/docs/ko/permission-modes#protected-paths)를 제외하고 작업 디렉터리 내의 편집을 승인 없이 승인하기 때문입니다.
 * Claude가 신뢰할 수 있는 프롬프트로만 사용되도록 각별히 주의
 * Claude Code가 수정할 수 있는 파일이 무엇인지 인식
 
@@ -247,7 +245,7 @@ Claude Code 설치 또는 로그인 문제가 IDE 외부에서 발생하는 경�
   기본 제공 IDE MCP 서버
 </h3>
 
-플러그인이 활성화되면 CLI가 자동으로 연결하는 로컬 MCP 서버를 실행합니다. 이것이 CLI가 IDE의 기본 diff 뷰어에서 diff를 열고, `@`-멘션에 대한 현재 선택 항목을 읽고, 검사 진단을 대화에 가져오는 방식입니다.
+플러그인이 활성화되면 CLI가 자동으로 연결하는 로컬 MCP 서버를 실행합니다. 이것이 CLI가 IDE의 기본 diff 뷰어에서 diff를 열고, `@`-멘션에 대한 현재 선택 항목을 읽고, Claude가 검사 진단을 읽을 수 있게 하는 방식입니다.
 
 서버의 이름은 `ide`이며 구성할 항목이 없으므로 `/mcp`에서 숨겨집니다. 그러나 조직에서 [`PreToolUse` 훅](/docs/ko/hooks#pretooluse)을 사용하여 MCP 도구를 허용 목록에 추가하는 경우 이 서버가 존재한다는 것을 알아야 합니다.
 
@@ -257,9 +255,9 @@ Claude Code 설치 또는 로그인 문제가 IDE 외부에서 발생하는 경�
 
 **모델에 노출된 도구.** 서버는 여러 도구를 호스팅하지만 모델에는 하나만 표시됩니다. 나머지는 CLI가 diff 열기 및 선택 항목 읽기와 같은 자체 UI에 사용하는 내부 RPC이며 도구 목록이 Claude에 도달하기 전에 필터링됩니다.
 
-| 도구 이름 (훅에서 보이는 대로)         | 수행 작업                                                          | 읽기 전용 |
-| -------------------------- | -------------------------------------------------------------- | ----- |
-| `mcp__ide__getDiagnostics` | IDE의 검사 진단, 편집기에 표시되는 오류 및 경고를 반환합니다. 선택적으로 하나의 파일로 범위가 지정됩니다. | 예     |
+| 도구 이름 (훅에서 보이는 대로)         | 수행 작업                                                                                                          | 읽기 전용 |
+| -------------------------- | -------------------------------------------------------------------------------------------------------------- | ----- |
+| `mcp__ide__getDiagnostics` | IDE의 검사 진단, 편집기에 표시되는 오류 및 경고를 반환합니다. 각 호출은 하나의 파일을 포함합니다: Claude가 지정한 파일 또는 Claude가 지정하지 않은 경우 활성 편집기의 파일입니다. | 예     |
 
 JetBrains 플러그인은 모델에 코드 실행 도구를 노출하지 않습니다.
 

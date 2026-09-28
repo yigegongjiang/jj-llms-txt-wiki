@@ -13,7 +13,7 @@
 * 使用されたトークン数
 * 障害が発生した場所
 
-Agent SDK は、このデータを OpenTelemetry トレース、メトリクス、ログイベントとして、OpenTelemetry Protocol（OTLP）を受け入れるバックエンド（Honeycomb、Datadog、Grafana、Langfuse、自己ホスト型コレクターなど）にエクスポートできます。
+Agent SDK は、このデータを OpenTelemetry トレース、メトリクス、ログイベントとして、OpenTelemetry Protocol（OTLP）を受け入れるバックエンド（ホストされた可観測性プラットフォームまたは自己ホスト型コレクター）にエクスポートできます。
 
 このガイドでは、SDK がテレメトリをどのように発行するか、エクスポートを設定する方法、およびデータがバックエンドに到達した後にタグ付けしてフィルタリングする方法について説明します。バックエンドにエクスポートする代わりに SDK レスポンスストリームからトークン使用量とコストを直接読み取るには、[コストと使用量の追跡](/docs/ja/agent-sdk/cost-tracking)を参照してください。
 
@@ -107,8 +107,10 @@ CLI は 3 つの独立した OpenTelemetry シグナルをエクスポートし�
 
 子プロセスはデフォルトでアプリケーションの環境を継承するため、これらの変数を Dockerfile、Kubernetes マニフェスト、またはシェルプロファイルでエクスポートし、`options.env` を完全に省略することで同じ結果を達成できます。
 
+エクスポートが機能していることを確認するには、タスク完了後、コレクターのログで受信したスパン、メトリクス、ログイベントを確認してください。CLI はデフォルトではエクスポートエラーで静かに失敗します。エンドポイントに到達できない場合またはデータが拒否された場合、エージェントは通常どおり実行され、CLI はテレメトリをドロップしてアプリケーションでエラーを表示しません。エクスポーターエラーを表示するには、エクスポーター変数と共に [`CLAUDE_CODE_OTEL_DIAG_STDERR=1`](/docs/ja/env-vars) を設定し、SDK の `stderr` コールバック（Python）または `stderr` オプション（TypeScript）を通じて診断を読み取ります。Claude Code v2.1.179 以降が必要です。
+
 <Note>
-  `console` エクスポーターはテレメトリを標準出力に書き込みます。これは SDK がメッセージチャネルとして使用するものです。SDK を通じて実行する場合、エクスポーター値として `console` を設定しないでください。テレメトリをローカルで検査するには、`OTEL_EXPORTER_OTLP_ENDPOINT` をローカルコレクターまたはオールインワン Jaeger コンテナに指定してください。
+  `console` エクスポーターはテレメトリを標準出力に書き込みます。これは SDK がメッセージチャネルとして使用するものです。SDK を通じて実行する場合、エクスポーター値として `console` を設定しないでください。テレメトリをローカルで検査するには、`OTEL_EXPORTER_OTLP_ENDPOINT` をローカル OpenTelemetry Collector に指定してください。
 </Note>
 
 <h3 id="flush-telemetry-from-short-lived-calls">
@@ -148,11 +150,11 @@ CLI はテレメトリをバッチ処理し、間隔でエクスポートしま�
 * **`claude_code.interaction`：** エージェントループの単一ターンをラップします。プロンプトの受信からレスポンスの生成まで。
 * **`claude_code.llm_request`：** Claude API への各呼び出しをラップします。モデル名、レイテンシ、トークンカウントが属性として含まれます。
 * **`claude_code.tool`：** 各ツール呼び出しをラップします。権限待機（`claude_code.tool.blocked_on_user`）と実行自体（`claude_code.tool.execution`）の子スパンがあります。
-* **`claude_code.hook`：** 各 [フック](/docs/ja/agent-sdk/hooks)実行をラップします。上記の変数に加えて、詳細なベータトレース（`ENABLE_BETA_TRACING_DETAILED=1` と `BETA_TRACING_ENDPOINT`）が必要です。
+* **`claude_code.hook`：** 各 [フック](/docs/ja/agent-sdk/hooks)実行をラップします。詳細なベータトレース（`ENABLE_BETA_TRACING_DETAILED=1` と `BETA_TRACING_ENDPOINT`）が必要です。このペアは [ログとトレースの送信先も変更します](/docs/ja/env-vars#variables)。
 
-`llm_request`、`tool`、`hook` スパンは、囲む `claude_code.interaction` スパンの子です。エージェントが Task ツールを通じてサブエージェントを生成する場合、サブエージェントの `llm_request` と `tool` スパンは親エージェントの `claude_code.tool` スパンの下にネストするため、完全な委譲チェーンが 1 つのトレースとして表示されます。
+`llm_request`、`tool`、`hook` スパンは、囲む `claude_code.interaction` スパンの子です。エージェントが Agent ツールを通じてサブエージェントを生成する場合、サブエージェントの `llm_request` と `tool` スパンは親エージェントの `claude_code.tool` スパンの下にネストするため、完全な委譲チェーンが 1 つのトレースとして表示されます。
 
-スパンはデフォルトで `session.id` 属性を持ちます。同じ [セッション](/docs/ja/agent-sdk/sessions)に対して複数の `query()` 呼び出しを行う場合、バックエンドで `session.id` をフィルタリングして、それらを 1 つのタイムラインとして表示します。`OTEL_METRICS_INCLUDE_SESSION_ID` が偽の値に設定されている場合、属性は省略されます。
+スパンはデフォルトで `session.id` 属性を持ちます。同じ [セッション](/docs/ja/agent-sdk/sessions)に対して複数の `query()` 呼び出しを行う場合、バックエンドで `session.id` をフィルタリングして、それらを 1 つのタイムラインとして表示します。`OTEL_METRICS_INCLUDE_SESSION_ID` が偽の値に設定されている場合、Claude Code は属性を省略します。
 
 <Note>
   トレースはベータ版です。スパン名と属性はリリース間で変更される可能性があります。Monitoring リファレンスの [トレース（ベータ版）](/docs/ja/monitoring-usage#traces-beta)を参照して、トレースエクスポーター設定変数を確認してください。
@@ -163,6 +165,8 @@ CLI はテレメトリをバッチ処理し、間隔でエクスポートしま�
 </h2>
 
 SDK は W3C トレースコンテキストを CLI サブプロセスに自動的に伝播します。アプリケーションで OpenTelemetry スパンがアクティブな状態で `query()` を呼び出すと、SDK は `TRACEPARENT` と `TRACESTATE` を子プロセス環境に注入し、CLI はそれらを読み取るため、その `claude_code.interaction` スパンはスパンの子になります。エージェント実行は、切断されたルートではなく、アプリケーションのトレース内に表示されます。
+
+実行中に発行される OTLP イベントログレコードは同じトレースコンテキストを保持します。`TRACEPARENT` が設定されている場合、各レコードの `trace_id` と `span_id` はアプリケーションのトレースと一致するため、[イベント](/docs/ja/monitoring-usage#events)をバックエンドのスパンに結合できます。v2.1.212 より前では、アクティブなスパンの外で発行されたイベントレコードは `trace_id` または `span_id` を保持していませんでした。
 
 トレースコンテキスト伝播が有効な場合、CLI は `TRACEPARENT` を実行するすべての Bash および PowerShell コマンドに転送します。Bash ツールを通じて起動されたコマンドが独自の OpenTelemetry スパンを発行する場合、それらのスパンはコマンドをラップする `claude_code.tool.execution` スパンの下にネストします。
 
@@ -180,7 +184,7 @@ SDK は W3C トレースコンテキストを CLI サブプロセスに自動的
   ```python Python theme={null}
   options = ClaudeAgentOptions(
       env={
-          # ... エクスポーター設定 ...
+          # ... Enable telemetry export の例からのエクスポーター設定 ...
           "OTEL_SERVICE_NAME": "support-triage-agent",
           "OTEL_RESOURCE_ATTRIBUTES": "service.version=1.4.0,deployment.environment=production",
       },
@@ -191,9 +195,9 @@ SDK は W3C トレースコンテキストを CLI サブプロセスに自動的
   const options = {
     env: {
       ...process.env,
-      // ... エクスポーター設定 ...
+      // ... Enable telemetry export の例からのエクスポーター設定 ...
       OTEL_SERVICE_NAME: "support-triage-agent",
-      OTEL_RESOURCE_ATTRIBUTES":
+      OTEL_RESOURCE_ATTRIBUTES:
         "service.version=1.4.0,deployment.environment=production",
     },
   };
@@ -239,12 +243,12 @@ CLI は、Anthropic を呼び出すために使用する認証情報に基づい
 
 テレメトリはデフォルトで構造化されています。期間、モデル名、ツール名はすべてのスパンに記録されます。トークンカウントは基になる API リクエストが使用データを返すときに記録されるため、失敗または中止されたリクエストのスパンはそれらを省略する可能性があります。エージェントが読み取り、書き込むコンテンツはデフォルトでは記録されません。これらのオプトイン変数は、エクスポートされたデータにコンテンツを追加します。
 
-| 変数                        | 追加内容                                                                                                                                                                                                                                                                                                             |
-| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `OTEL_LOG_USER_PROMPTS=1` | `claude_code.user_prompt` イベントと `claude_code.interaction` スパンのプロンプトテキスト                                                                                                                                                                                                                                          |
-| `OTEL_LOG_TOOL_DETAILS=1` | `claude_code.tool_result` イベントのツール入力引数（ファイルパス、シェルコマンド、検索パターン）                                                                                                                                                                                                                                                    |
-| `OTEL_LOG_TOOL_CONTENT=1` | `claude_code.tool` のスパンイベントとしての完全なツール入力および出力本体。60 KB で切り詰められます。[トレース](#read-agent-traces)が有効になっている必要があります                                                                                                                                                                                                        |
-| `OTEL_LOG_RAW_API_BODIES` | Anthropic Messages API リクエストおよびレスポンス JSON 全体を `claude_code.api_request_body` および `claude_code.api_response_body` ログイベントとして。`1` に設定して 60 KB で切り詰められたインラインボディを取得するか、`file:<dir>` に設定してディスク上の切り詰められていないボディをイベント内の `body_ref` パスで取得します。ボディには会話履歴全体が含まれ、拡張思考コンテンツが編集されます。これを有効にすると、上記の 3 つの変数が明かすすべてのコンテンツへの同意が暗示されます |
+| 変数                        | 追加内容                                                                                                                                                                                                                                                                                                                                                                                                       |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `OTEL_LOG_USER_PROMPTS=1` | `claude_code.user_prompt` イベントと `claude_code.interaction` スパンのプロンプトテキスト                                                                                                                                                                                                                                                                                                                                    |
+| `OTEL_LOG_TOOL_DETAILS=1` | `claude_code.tool_result` イベントのツール入力引数（ファイルパス、シェルコマンド、検索パターン）                                                                                                                                                                                                                                                                                                                                              |
+| `OTEL_LOG_TOOL_CONTENT=1` | `claude_code.tool` の [`tool.output` スパンイベント](/docs/ja/monitoring-usage#tool-output-span-event)とファイルコンテンツと Bash 出力を含み、デフォルトで 60 KB で切り詰められ、`CLAUDE_CODE_OTEL_CONTENT_MAX_LENGTH` で設定可能です。Claude Code v2.1.214 以降が必要です。[トレース](#read-agent-traces)が有効になっている必要があります。スパン属性は [独自のゲート](/docs/ja/monitoring-usage#new-context-gates)の下でツールコンテンツを保持します                                                                        |
+| `OTEL_LOG_RAW_API_BODIES` | Anthropic Messages API リクエストおよびレスポンス JSON 全体を `claude_code.api_request_body` および `claude_code.api_response_body` ログイベントとして。`1` に設定してデフォルトで 60 KB で切り詰められたインラインボディを取得するか、`file:<dir>` に設定してディスク上の切り詰められていないボディをイベント内の `body_ref` パスで取得します。`CLAUDE_CODE_OTEL_CONTENT_MAX_LENGTH` はインライン切り詰め制限を設定し、Claude Code v2.1.214 以降が必要です。ボディには会話履歴全体が含まれ、拡張思考コンテンツが編集されます。これを有効にすると、上記の 3 つの変数が明かすすべてのコンテンツへの同意が暗示されます |
 
 エージェントが処理するデータを保存することが可観測性パイプラインで承認されていない限り、これらを設定しないままにしてください。Monitoring リファレンスの [セキュリティとプライバシー](/docs/ja/monitoring-usage#security-and-privacy)を参照して、すべての属性と編集動作の完全なリストを確認してください。
 

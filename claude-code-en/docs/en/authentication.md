@@ -6,7 +6,7 @@
 
 > Log in to Claude Code and configure authentication for individuals, teams, and organizations.
 
-Claude Code supports multiple authentication methods depending on your setup. Individual users can log in with a Claude.ai account, while teams can use Claude for Teams or Enterprise, the Claude Console, or a cloud provider like Amazon Bedrock, Google Cloud's Agent Platform, or Microsoft Foundry.
+Claude Code supports multiple authentication methods depending on your setup. Individual users can log in with a claude.ai account, while teams can use Claude for Teams or Enterprise, the Claude Console, or a cloud provider like Amazon Bedrock, Google Cloud's Agent Platform, or Microsoft Foundry.
 
 ## Log in to Claude Code
 
@@ -20,8 +20,8 @@ When login completes, the terminal shows `Login successful` and prompts you to p
 
 You can authenticate with any of these account types:
 
-* **Claude Pro or Max subscription**: log in with your Claude.ai account. Subscribe at [claude.com/pricing](https://claude.com/pricing?utm_source=claude_code\&utm_medium=docs\&utm_content=authentication_pro_max).
-* **Claude for Teams or Enterprise**: log in with the Claude.ai account your team admin invited you to.
+* **Claude Pro or Max subscription**: log in with your claude.ai account. Subscribe at [claude.com/pricing](https://claude.com/pricing?utm_source=claude_code\&utm_medium=docs\&utm_content=authentication_pro_max).
+* **Claude for Teams or Enterprise**: log in with the claude.ai account your team admin invited you to.
 * **Claude Console**: log in with your Console credentials. Your admin must have [invited you](#claude-console-authentication) first. You can sign in with or without [creating an API key](#sign-in-without-an-api-key).
 * **Cloud providers**: if your organization uses [Amazon Bedrock](/docs/en/amazon-bedrock), [Google Cloud's Agent Platform](/docs/en/google-vertex-ai), or [Microsoft Foundry](/docs/en/microsoft-foundry), set the required environment variables before running `claude`, or select **3rd-party platform** at the login prompt, which launches an interactive setup wizard for Bedrock and Vertex AI. No browser login is needed.
 * **Cloud gateway**: if your organization runs a self-hosted [Claude apps gateway](/docs/en/claude-apps-gateway), sign in with corporate SSO through `/login`. The gateway-issued token is the session's only credential.
@@ -47,8 +47,8 @@ For teams and organizations, you can configure Claude Code access in one of thes
 
 [Claude for Teams](https://claude.com/pricing?utm_source=claude_code\&utm_medium=docs\&utm_content=authentication_teams#team-&-enterprise) and [Claude for Enterprise](https://anthropic.com/contact-sales?utm_source=claude_code\&utm_medium=docs\&utm_content=authentication_enterprise) provide the best experience for organizations using Claude Code. Team members get access to both Claude Code and Claude on the web with centralized billing and team management.
 
-* **Claude for Teams**: self-service plan with collaboration features, admin tools, and billing management. Best for smaller teams.
-* **Claude for Enterprise**: adds SSO, domain capture, role-based permissions, compliance API, and managed policy settings for organization-wide Claude Code configurations. Best for larger organizations with security and compliance requirements.
+* **Claude for Teams**: self-service plan with collaboration features, admin tools, SSO, billing management, and [server-managed settings](/docs/en/server-managed-settings) for organization-wide Claude Code configuration. Best for smaller teams.
+* **Claude for Enterprise**: adds domain capture, role-based permissions, and the compliance API. Best for larger organizations with security and compliance requirements.
 
 <Steps>
   <Step title="Subscribe">
@@ -60,7 +60,7 @@ For teams and organizations, you can configure Claude Code access in one of thes
   </Step>
 
   <Step title="Install and log in">
-    Team members install Claude Code and log in with their Claude.ai accounts.
+    Team members install Claude Code and log in with their claude.ai accounts.
   </Step>
 </Steps>
 
@@ -120,6 +120,8 @@ After you sign in without a key, you have a profile instead of a stored API key:
 * **What it signs you out of**: Claude Code signs you out of any claude.ai login stored on the machine
 * **How to undo it**: run `/logout`, which removes and revokes the credential this sign-in wrote
 
+If your organization uses [server-managed settings](/docs/en/server-managed-settings), they apply to this sign-in on Claude Code v2.1.257 or later.
+
 Everything else about profiles applies to this sign-in, including where it ranks against your other credentials, the `Profile` row you get in `/status`, and the features that need a claude.ai login. See [Anthropic profiles and federation credentials](#anthropic-profiles-and-federation-credentials).
 
 ### Cloud provider authentication
@@ -144,7 +146,7 @@ For teams using Amazon Bedrock, Google Cloud's Agent Platform, or Microsoft Foun
 
 To require that developers' claude.ai logins belong to a specific Anthropic organization, set [`forceLoginMethod`](/docs/en/settings-reference#forceloginmethod) and [`forceLoginOrgUUID`](/docs/en/settings-reference#forceloginorguuid) in [managed settings](/docs/en/managed-settings). Set `forceLoginOrgUUID` to your organization ID, shown in [claude.ai admin settings](https://claude.ai/admin-settings/organization) for Claude for Teams or Enterprise organizations. Claude Code reports an error for a claude.ai login to any other organization and exits at startup if the claude.ai credential in use belongs to an organization that isn't listed.
 
-For Claude Console logins, Claude Code uses `forceLoginOrgUUID` to pre-select the organization on the Console sign-in page when you set it to a single Console organization ID, shown at [platform.claude.com/settings/organization](https://platform.claude.com/settings/organization). It doesn't check which organization the resulting Console credential belongs to, at login or at startup, and a developer who logged in with a Console account before you deployed the keys stays logged in.
+For Claude Console logins, Claude Code uses `forceLoginOrgUUID` to pre-select the organization on the Console sign-in page when you set it to a single Console organization ID, shown at [platform.claude.com/settings/organization](https://platform.claude.com/settings/organization). It doesn't check which organization the resulting Console credential belongs to, at login or at startup. A developer who logged in with a Console account before you deployed the keys stays logged in, and that saved key is blocked on a machine that also requires the [gateway](/docs/en/claude-apps-gateway) sign-in or in a session that selects a cloud provider.
 
 If you set `forceLoginOrgUUID` in any settings file, Claude Code stops offering the [keyless Console sign-in](#sign-in-without-an-api-key) in the sessions that file applies to and creates an API key instead. To direct developers to claude.ai sign-in instead, set `forceLoginMethod` to `"claudeai"`.
 
@@ -154,18 +156,15 @@ Developers can log in from several paths: the terminal `/login` flow, the [VS Co
 * **`claude setup-token` and `/install-github-app`**: enforce only `forceLoginMethod`, so they can mint a token in a different organization
 * **[Gateway](/docs/en/claude-apps-gateway) sign-in**: selected by `forceLoginMethod: "gateway"` rather than restricted by it, and doesn't authenticate against an Anthropic organization, so `forceLoginOrgUUID` doesn't apply; use your gateway identity provider to restrict access
 
-Deploy the keys through your device management tooling. [Server-managed settings](/docs/en/server-managed-settings) reach only accounts that are already authenticated into your organization, so they can't redirect a developer's first login. If your organization distributes server-managed settings as well, set the keys in both places: managed-settings sources [don't merge](/docs/en/server-managed-settings#settings-precedence), and cached server-managed settings replace the device-managed file, apart from two kinds of keys that still fill in from a losing source:
+Deploy the keys through your device management tooling. [Server-managed settings](/docs/en/server-managed-settings) reach only accounts that are already authenticated into your organization, so they can't redirect a developer's first login. If your organization distributes server-managed settings as well, set the keys in both places: managed-settings sources [don't merge](/docs/en/server-managed-settings#settings-precedence), and cached server-managed settings replace the device-managed file apart from a few [per-key exceptions](/docs/en/server-managed-settings#per-key-exceptions-across-managed-sources). `forceLoginOrgUUID` and the `"claudeai"` and `"console"` values of `forceLoginMethod` aren't among those exceptions, so keep them in both places.
 
-* **The `env` block**: [merges per key](/docs/en/server-managed-settings#per-key-exceptions-across-managed-sources) in Claude Code v2.1.223 or later
-* **The [cross-source lock keys](/docs/en/server-managed-settings#per-key-exceptions-across-managed-sources)**: honored from any admin source
-
-`forceLoginMethod` and `forceLoginOrgUUID` are neither, so keep them in both places.
+In a [gateway](/docs/en/claude-apps-gateway) deployment, also keep `forceLoginMethod` and `forceLoginOrgUUID` out of the [settings the gateway serves](/docs/en/claude-apps-gateway-config#managed).
 
 The keys also decide whether a session that doesn't use a login credential can start. See [`forceLoginOrgUUID`](/docs/en/settings-reference#forceloginorguuid) in the settings reference for the full behavior.
 
-* **`ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN`, or `apiKeyHelper`**: blocked at startup, since organization membership can't be verified for an environment credential
-* **Cloud provider sessions such as Amazon Bedrock**: not blocked, because they authenticate against your cloud provider. Restrict those through your cloud IAM policies
-* **[Anthropic profile or federation credentials](#anthropic-profiles-and-federation-credentials)**: not blocked, and the keys don't check which organization the profile belongs to
+* **`ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN`, or `apiKeyHelper`**: blocked at startup. Under `forceLoginOrgUUID`, organization membership can't be verified for an environment credential, and under `forceLoginMethod` the credential would stand in for the required sign-in. When the managed settings also require the [gateway](/docs/en/claude-apps-gateway) sign-in, Claude Code blocks an API key saved by an earlier Claude Console login the same way. See [Administrator policy requires a Cloud gateway sign-in](/docs/en/errors#administrator-policy-requires-a-cloud-gateway-sign-in)
+* **Cloud provider sessions such as Amazon Bedrock**: blocked only while an `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN`, or `apiKeyHelper` credential, or an API key saved by an earlier Claude Console login, is still present on the machine. Remove it and the session starts. These sessions authenticate against your cloud provider, whose access policies govern them
+* **[Anthropic profile or federation credentials](#anthropic-profiles-and-federation-credentials)**: not blocked unless an `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN`, or `apiKeyHelper` credential, or an API key saved by an earlier Claude Console login, is also present on the machine. The keys don't check which organization the profile belongs to
 
 ## Credential management
 
@@ -177,7 +176,7 @@ Claude Code securely manages your authentication credentials:
   * On Windows, credentials are stored in `%USERPROFILE%\.claude\.credentials.json` and inherit the access controls of your user profile directory, which restricts the file to your user account by default.
   * If you've set the `CLAUDE_CONFIG_DIR` environment variable, Claude Code keeps the `.credentials.json` file under that directory instead, including the file the macOS fallback writes, and keys the macOS Keychain entry to that directory too, so a session with a different `CLAUDE_CONFIG_DIR` reads a different entry.
   * Claude Code manages `.credentials.json` through `/login` and `/logout`. To route requests through a custom API endpoint, set the [`ANTHROPIC_BASE_URL`](/docs/en/env-vars) environment variable instead.
-* **Supported authentication types**: Claude.ai credentials, Claude API credentials, Microsoft Foundry Auth, Bedrock Auth, Vertex Auth, Anthropic profile and [Workload Identity Federation](https://platform.claude.com/docs/en/manage-claude/workload-identity-federation) credentials, and [Claude apps gateway](/docs/en/claude-apps-gateway) session tokens.
+* **Supported authentication types**: claude.ai credentials, Claude API credentials, Microsoft Foundry Auth, Bedrock Auth, Vertex Auth, Anthropic profile and [Workload Identity Federation](https://platform.claude.com/docs/en/manage-claude/workload-identity-federation) credentials, and [Claude apps gateway](/docs/en/claude-apps-gateway) session tokens.
 * **Custom credential scripts**: configure the [`apiKeyHelper`](/docs/en/settings-reference#apikeyhelper) setting to run a shell script that returns an API key.
 * **Refresh intervals**: Claude Code re-runs `apiKeyHelper` after five minutes by default. Set the `CLAUDE_CODE_API_KEY_HELPER_TTL_MS` environment variable for custom refresh intervals. See [`apiKeyHelper`](/docs/en/settings-reference#apikeyhelper) for the other cases in which Claude Code re-runs the helper.
 * **Slow helper notice**: if `apiKeyHelper` takes longer than 10 seconds to return a key, Claude Code displays a warning notice in the prompt bar showing the elapsed time. If you see this notice regularly, check whether your credential script can be optimized.
@@ -191,7 +190,7 @@ When the login you created with `/login` is within three days of expiring, Claud
 
 Run `/login` to renew. The warning is informational and never blocks a request: authentication keeps working until the login actually expires. The login lifetime itself is unchanged; the advance warning is what v2.1.203 adds.
 
-Once the stored login expires and can't be refreshed, each request fails with [`Login expired · Please run /login`](/docs/en/errors#login-expired) until you sign in again. Before v2.1.206, an expired login surfaced as a model error instead.
+Once the stored login expires and can't be refreshed, each model request fails with [`Login expired · Please run /login`](/docs/en/errors#login-expired) until you sign in again. Before v2.1.206, Claude Code reported an expired login on model requests as a model error instead.
 
 You can check for this state before a request fails: [`/status`](/docs/en/commands) shows a `Login` row reading `Expired — log in again`, plus the organization and email it has saved for the expired login. The row appears only when the saved claude.ai or Claude Console login is the active credential. The row requires Claude Code v2.1.210 or later.
 
@@ -213,9 +212,13 @@ When multiple credentials are present, Claude Code chooses one in this order:
 
 A signed-in [Claude apps gateway](/docs/en/claude-apps-gateway) session sits outside this list: it is a provider selection like Amazon Bedrock or Google Cloud's Agent Platform, and it outranks them. When a gateway session exists, the CLI authenticates with the gateway token even if `CLAUDE_CODE_USE_BEDROCK`, `CLAUDE_CODE_USE_VERTEX`, or `CLAUDE_CODE_USE_FOUNDRY` is set, and credential sources above such as the bearer token, API key, `apiKeyHelper`, and profiles are not used.
 
-If you have an active Claude subscription but also have `ANTHROPIC_API_KEY` set in your environment, the API key takes precedence once approved. This can cause authentication failures if the key belongs to a disabled or expired organization. Run `unset ANTHROPIC_API_KEY` to fall back to your subscription, and check `/status` to confirm which method is active. The `Login method` row shows your subscription account, and an `API key` row appears when an API key is in use.
+If your machine's [managed settings](/docs/en/managed-settings) set [`forceLoginMethod`](/docs/en/settings-reference#forceloginmethod) to `"gateway"` or set [`forceLoginGatewayUrl`](/docs/en/settings-reference#forcelogingatewayurl), and you don't select a cloud provider through a variable such as `CLAUDE_CODE_USE_BEDROCK` or `CLAUDE_CODE_USE_VERTEX`, your session uses only the gateway sign-in. Claude Code skips the other credential sources and asks you to sign in with `/login`. See [Administrator policy requires a Cloud gateway sign-in](/docs/en/errors#administrator-policy-requires-a-cloud-gateway-sign-in) for what you see with each leftover credential. Before v2.1.261, or before v2.1.265 on a machine that sets only `forceLoginGatewayUrl`, Claude Code used a leftover saved login on these machines until you signed in to the gateway.
 
-[Claude Code on the Web](/docs/en/claude-code-on-the-web) always uses your subscription credentials. If you set `ANTHROPIC_API_KEY` or `ANTHROPIC_AUTH_TOKEN` in the sandbox environment, it doesn't override your subscription credentials.
+If you have an active Claude subscription but also have `ANTHROPIC_API_KEY` set in your environment, Claude Code uses the API key once you approve it. This can cause authentication failures if the key belongs to a disabled or expired organization.
+
+Run `unset ANTHROPIC_API_KEY` to fall back to your subscription, and check `/status` to confirm which method is active. When a login and an API key are both configured, `/status` marks the credential that isn't in use.
+
+[Cloud sessions](/docs/en/claude-code-on-the-web) always use your subscription credentials. If you set `ANTHROPIC_API_KEY` or `ANTHROPIC_AUTH_TOKEN` in the cloud environment, it doesn't override your subscription credentials.
 
 #### Anthropic profiles and federation credentials
 
@@ -233,7 +236,11 @@ Claude Code checks three sources in this order and stops at the first one that i
 
 The `user_oauth` rule keeps a leftover `ant auth login` profile from moving your requests off the account you signed in to with `/login`. For the federation variables, Claude Code also reads the other variables in the [WIF reference](https://platform.claude.com/docs/en/manage-claude/wif-reference#environment-variables), such as `ANTHROPIC_IDENTITY_TOKEN_FILE`, when it exchanges your identity token. For the profile file format, see the [WIF reference](https://platform.claude.com/docs/en/manage-claude/wif-reference#profile-configuration-file).
 
-To confirm which source Claude Code chose, run `/status`: a `Profile` row names the source in place of the `Login method` row. If you start Claude Code with `--debug`, it also writes a `Using Anthropic profile auth` line with the source name to the debug log at `~/.claude/debug/<session-id>.txt`. When Claude Code passes over a `user_oauth` active profile because you have a working `/login` credential, it writes a warning to the debug log saying it's using the claude.ai login instead. When a `user_oauth` profile's login has expired and Claude Code can't renew it, requests fail with [Anthropic profile login expired](/docs/en/errors#anthropic-profile-login-expired).
+To confirm which source Claude Code chose, run `/status`. A `Profile` row names the source in place of the `Login method` row. When the profile is the credential in use, `Organization` and `Email` rows show its account.
+
+If you start Claude Code with `--debug`, it also writes a `Using Anthropic profile auth` line with the source name to the debug log at `~/.claude/debug/<session-id>.txt`. When Claude Code skips a `user_oauth` active profile because you have a working `/login` credential, it writes a warning to the debug log saying it's using the claude.ai login instead.
+
+When a `user_oauth` profile's login has expired and Claude Code can't renew it, requests fail with [Anthropic profile login expired](/docs/en/errors#anthropic-profile-login-expired).
 
 Features that need your claude.ai login, such as [claude.ai connectors](/docs/en/mcp#use-mcp-servers-from-claude-ai) and [`/schedule`](/docs/en/routines), aren't available while one of these sources is selected. To stop Claude Code from selecting a source:
 
@@ -250,9 +257,25 @@ claude setup-token
 
 The command opens the same browser authorization flow as `/login`, and the token prints to the terminal after you approve access in the browser. It does not save the token anywhere; copy it and set it as the `CLAUDE_CODE_OAUTH_TOKEN` environment variable wherever you want to authenticate:
 
-```bash theme={null}
-export CLAUDE_CODE_OAUTH_TOKEN=your-token
-```
+<Tabs>
+  <Tab title="macOS, Linux, WSL">
+    ```bash theme={null}
+    export CLAUDE_CODE_OAUTH_TOKEN=your-token
+    ```
+  </Tab>
+
+  <Tab title="Windows PowerShell">
+    ```powershell theme={null}
+    $env:CLAUDE_CODE_OAUTH_TOKEN = "your-token"
+    ```
+  </Tab>
+
+  <Tab title="Windows CMD">
+    ```batch theme={null}
+    set CLAUDE_CODE_OAUTH_TOKEN=your-token
+    ```
+  </Tab>
+</Tabs>
 
 This token authenticates with your Claude subscription and requires a Pro, Max, Team, or Enterprise plan. It can only make model requests, so it can't establish [Remote Control](/docs/en/remote-control) sessions or fetch [claude.ai connectors](/docs/en/mcp#use-mcp-servers-from-claude-ai). MCP servers you configure locally still work.
 

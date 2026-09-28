@@ -21,7 +21,7 @@ Claude Code には自社ホスト型ゲートウェイである [Claude apps ゲ
   ゲートウェイの仕組み
 </h2>
 
-各開発者の Claude Code はゲートウェイのアドレスを指すように設定され、ゲートウェイが発行した認証情報で認証します。
+各開発者の Claude Code はゲートウェイのアドレスにリクエストを送信し、ゲートウェイが発行した認証情報で認証します。
 
 ゲートウェイは開発者を認証し、設定したアクセスおよび予算ルールを適用し、組織の認証情報を使用してリクエストをプロバイダーに転送します。プロバイダーは Anthropic の API または Amazon Bedrock、Google Cloud の Agent Platform、Microsoft Foundry などの [クラウドプロバイダー](/docs/ja/third-party-integrations) である可能性があります。ゲートウェイの設定によって決定されます。Claude apps ゲートウェイ、または単一の Anthropic 形式エンドポイントを公開する別のゲートウェイを使用する場合、プロバイダーを変更しても開発者マシンに触れる必要はありません。
 
@@ -44,7 +44,7 @@ Claude Code は Anthropic 独自のゲートウェイ、または組織が既に
   Claude apps ゲートウェイ
 </h3>
 
-Claude apps ゲートウェイは Anthropic の自社ホスト型ゲートウェイで、`claude` バイナリに含まれています。Amazon Bedrock、Claude Platform on AWS、Google Cloud、Microsoft Foundry、または Anthropic API にアップストリームとしてルーティングします。開発者は `/login` を通じて企業の ID プロバイダーでサインインし、ゲートウェイは IdP グループによってモデルアクセスと [管理設定](/docs/ja/permissions#managed-settings) を強制し、[OpenTelemetry Protocol（OTLP）](/docs/ja/monitoring-usage) 使用状況メトリクスを独自の可観測性スタックに出力します。
+Claude apps ゲートウェイは Anthropic の自社ホスト型ゲートウェイで、`claude` バイナリに含まれています。Amazon Bedrock、Claude Platform on AWS、Google Cloud、Microsoft Foundry、または Anthropic API にアップストリームとしてルーティングします。開発者は `/login` を通じて企業の ID プロバイダーでサインインし、ゲートウェイは IdP グループによってモデルアクセスと [管理設定](/docs/ja/managed-settings) を強制し、[OpenTelemetry Protocol（OTLP）](/docs/ja/monitoring-usage) 使用状況メトリクスを独自の可観測性スタックに出力します。
 
 これは各 Claude Code リリースと共にビルドおよびテストされるため、Claude Code が送信するヘッダーとリクエストフィールドを転送します。別途保守されるゲートウェイは、各リリースでそれらのヘッダーとフィールドが変更されるため、[転送ルールを更新](/docs/ja/llm-gateway-protocol#forward-as-open-lists) する必要があります。Claude apps ゲートウェイは CLI と共にリリースされるため、最新の状態を保つリストはありません。[可用性と制限事項](/docs/ja/claude-apps-gateway#availability-and-limitations) を参照して、ゲートウェイセッションで異なる動作をする機能の小さなセットを確認してください。
 
@@ -73,8 +73,11 @@ Claude apps ゲートウェイは Anthropic の自社ホスト型ゲートウェ
 ゲートウェイはモデル API リクエストをルーティングします。ゲートウェイが処理することを期待するかもしれないいくつかのことは、別の場所で設定されます。
 
 * **どのモデルが応答するか**: `/model` コマンドまたは [モデル環境変数](/docs/ja/model-config#setting-your-model) でモデルを選択します。ゲートウェイはリクエストがどこに行くかを決定し、開発者が選択するモデルではありません。Claude apps ゲートウェイはグループごとの `availableModels` 許可リストで選択を制限できますが、開発者はそれ以内で選択します。
-* **その他のネットワークトラフィック**: Claude Code 自体はバージョンチェックをダウンロードし、ゲートウェイパスとは別に Anthropic に直接ダウンロードします。オプションのクライアントテレメトリストリームも含まれるかどうかはプロバイダーによって異なります。[テレメトリデフォルトテーブル](/docs/ja/data-usage#telemetry-services) は各ケースについて説明しています。サインインした Claude apps ゲートウェイセッションでは、ゲートウェイ認証情報は Anthropic バウンド分析を無効にし、[テレメトリ転送](/docs/ja/claude-apps-gateway-config#telemetry) が設定されている場合、OTLP エクスポートをゲートウェイにピン留めします。ネットワークはまだ [必要なドメイン](/docs/ja/network-config) へのエグレスが必要です。または [`CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`](/docs/ja/env-vars) を設定してオプションストリームをオフにします。
-* **企業 HTTP プロキシ**: `HTTPS_PROXY` は Claude Code とそれが通信するすべてのサーバー（ゲートウェイを含む）の間に位置します。ネットワークが必要な場合、ゲートウェイに加えて [プロキシを設定](/docs/ja/network-config) してください。Claude apps ゲートウェイの場合、[サインインはプロキシホストもプライベートネットワーク上にあることを確認します](/docs/ja/claude-apps-gateway#prerequisites)。そうでない場合、ゲートウェイホストを `NO_PROXY` に追加して、CLI がそれに直接接続するようにします。
+* **その他のネットワークトラフィック**: Claude Code 自体はバージョンチェックをダウンロードし、ゲートウェイパスとは別に Anthropic に直接ダウンロードします。ネットワークはまだ [必要なドメイン](/docs/ja/network-config) へのエグレスが必要です。または [`CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`](/docs/ja/env-vars) を設定してオプションストリームをオフにします。
+* **クライアントテレメトリ**: Claude Code はセッションが Claude apps ゲートウェイにサインインするとき、Anthropic バウンドクライアント分析を無効にします。サインイン前のスタートアップ分析もオフに保つには、各デバイスの [クライアント側マネージドセッティング](/docs/ja/claude-apps-gateway-config#client-side-managed-settings) で [`DISABLE_TELEMETRY`](/docs/ja/managed-settings#turn-telemetry-off-for-your-organization) を配信します。
+* **他のゲートウェイ上のクライアントテレメトリ**: Claude Code がオプションのクライアントテレメトリストリームを送信するかどうかはプロバイダーに依存し、[テレメトリデフォルトテーブル](/docs/ja/data-usage#default-behaviors-by-api-provider) は各ケースについて説明しています。
+* **テレメトリの宛先**: Claude Code がゲートウェイセッションのテレメトリを送信する場所は、セッションがどのようにサインインしたかに依存し、[開発者に対して何が強制されるか](/docs/ja/claude-apps-gateway#whats-enforced-on-developers) は各種類のセッションのエクスポート先を示しています。
+* **企業 HTTP プロキシ**: `HTTPS_PROXY` は Claude Code とそれが通信するすべてのサーバー（ゲートウェイを含む）の間に位置します。ネットワークが必要な場合、ゲートウェイに加えて [プロキシを設定](/docs/ja/network-config) してください。Claude apps ゲートウェイをホストする場合、[サインインはプロキシホストもプライベートネットワーク上にあることを確認します](/docs/ja/claude-apps-gateway#prerequisites)。そうでない場合、ゲートウェイホストを `NO_PROXY` に追加して、CLI がそれに直接接続するようにします。
 
 <h2 id="next-steps">
   次のステップ

@@ -2,24 +2,24 @@
 > Fetch the complete documentation index at: https://code.claude.com/docs/llms.txt
 > Use this file to discover all available pages before exploring further.
 
-# 零數據保留
+# 零資料保留
 
-> 了解 Claude for Enterprise 上 Claude Code 的零數據保留 (ZDR)，包括範圍、禁用功能以及如何請求啟用。
+> 了解 Claude for Enterprise 合格帳戶可用的 Claude Code 零資料保留 (ZDR)，包括範圍、停用的功能，以及如何要求啟用。
 
-零數據保留 (ZDR) 在通過 Claude for Enterprise 使用 Claude Code 時可用。啟用 ZDR 後，Claude Code 會話期間生成的提示和模型回應會實時處理，並在返回回應後不會由 Anthropic 存儲，除非需要遵守法律或防止濫用。
+Claude Code 的零資料保留 (ZDR) 適用於 Claude for Enterprise 上的合格帳戶。啟用 ZDR 後，Claude Code 工作階段期間產生的提示和模型回應會即時處理，在回應返回後不會由 Anthropic 儲存，除非需要遵守法律或防止濫用。
 
 <Note>
-  ZDR 不包含在標準 Claude for Enterprise 方案中，也無法從您的管理員設定中啟用。它僅適用於符合條件的帳戶，需要由 Anthropic 進行單獨啟用。如果您的組織需要 ZDR，請[聯絡銷售](https://www.anthropic.com/contact-sales?utm_source=claude_code\&utm_medium=docs\&utm_content=zero_data_retention_request)或您的 Anthropic 帳戶團隊以確認符合條件。
+  ZDR 不包含在標準 Claude for Enterprise 方案中，也無法從您的管理員設定中啟用。它適用於合格帳戶，需要由 Anthropic 進行單獨啟用。如果您的組織需要 ZDR，請[聯絡銷售](https://www.anthropic.com/contact-sales?utm_source=claude_code\&utm_medium=docs\&utm_content=zero_data_retention_request)或您的 Anthropic 帳戶團隊以確認資格。
 </Note>
 
-Claude for Enterprise 上的 ZDR 使企業客戶能夠使用 Claude Code 並實現零數據保留，同時獲得管理功能：
+Claude for Enterprise 上的 ZDR 為企業客戶提供了使用 Claude Code 並實現零資料保留的能力，以及存取管理功能：
 
-* 每個用戶的成本控制
+* 每位使用者的成本控制
 * [分析](/docs/zh-TW/analytics)儀表板
-* [服務器管理的設置](/docs/zh-TW/server-managed-settings)
-* 審計日誌
+* [伺服器管理的設定](/docs/zh-TW/server-managed-settings)
+* 稽核日誌
 
-Claude for Enterprise 上 Claude Code 的 ZDR 僅適用於 Anthropic 的直接平台。對於在 Amazon Bedrock、Google Cloud 的 Agent Platform 或 Microsoft Foundry 上的 Claude 部署，請參考這些平台的數據保留政策。
+Claude for Enterprise 上的 Claude Code ZDR 僅適用於 Anthropic 的直接平台。對於在 Amazon Bedrock、Google Cloud 的 Agent Platform 或 Microsoft Foundry 上的 Claude 部署，請參考這些平台的資料保留政策。
 
 <h2 id="zdr-scope">
   ZDR 範圍
@@ -31,11 +31,17 @@ ZDR 涵蓋 Claude for Enterprise 上的 Claude Code 推理。
   ZDR 在每個組織的基礎上啟用。每個新組織都需要由您的 Anthropic 帳戶團隊單獨啟用 ZDR。ZDR 不會自動應用於在同一帳戶下創建的新組織。請聯繫您的帳戶團隊為任何新組織啟用 ZDR。
 </Warning>
 
+<h3 id="route-claude-code-traffic-to-your-zdr-organization">
+  將 Claude Code 流量路由到您的 ZDR 組織
+</h3>
+
+ZDR 適用於向啟用 ZDR 的組織進行身份驗證的請求。如果開發人員使用個人帳戶或來自不同組織的 API 金鑰登入 Claude Code，這些會話不受保護。若要要求開發人員的 claude.ai 登入屬於您的 ZDR 組織，請部署 `forceLoginMethod` 和 `forceLoginOrgUUID` 受管設定；請參閱[限制登入到您的組織](/docs/zh-TW/authentication#restrict-login-to-your-organization)，其中也說明了這些金鑰如何處理 Claude Console 登入。
+
 <h3 id="what-zdr-covers">
   ZDR 涵蓋的內容
 </h3>
 
-ZDR 涵蓋通過 Claude for Enterprise 上的 Claude Code 進行的模型推理調用。當您在終端中使用 Claude Code 時，您發送的提示和 Claude 生成的回應不會由 Anthropic 保留。這適用於 ZDR 組織可用的每個模型。某些模型需要資料保留，在 ZDR 下不可用；請參閱 [ZDR 下的模型可用性](#model-availability-under-zdr)。
+ZDR 涵蓋通過 Claude for Enterprise 上的 Claude Code 進行的模型推理呼叫。當您在終端中使用 Claude Code 時，您發送的提示和 Claude 生成的回應不會由 Anthropic 保留。這適用於 ZDR 組織可用的每個模型。某些模型預設需要資料保留；請參閱 [ZDR 下的模型可用性](#model-availability-under-zdr)。
 
 <h3 id="what-zdr-does-not-cover">
   ZDR 不涵蓋的內容
@@ -52,36 +58,36 @@ ZDR 涵蓋通過 Claude for Enterprise 上的 Claude Code 進行的模型推理�
 | 第三方整合          | 由第三方工具、MCP servers 或其他外部整合處理的資料不受 ZDR 保護。請獨立審查這些服務的資料處理實踐。                                |
 
 <h2 id="features-disabled-under-zdr">
-  ZDR 下禁用的功能
+  ZDR 下停用的功能
 </h2>
 
-當為 Claude for Enterprise 上的 Claude Code 組織啟用 ZDR 時，某些需要存儲提示或完成的功能會在後端級別自動禁用：
+當 Claude for Enterprise 上的 Claude Code 組織啟用 ZDR 時，某些需要儲存提示或完成內容的功能會在後端層級自動停用：
 
-| 功能                                                  | 原因                                |
-| --------------------------------------------------- | --------------------------------- |
-| [Web 上的 Claude Code](/docs/zh-TW/claude-code-on-the-web) | 需要服務器端存儲對話歷史記錄。                   |
-| Desktop 應用程式的[雲端會話](/docs/zh-TW/desktop#cloud-sessions)  | 需要包含提示和完成的持久會話資料。                 |
-| [Artifacts](/docs/zh-TW/artifacts)                       | 需要在 Anthropic 營運的基礎設施上存儲已發佈的頁面內容。 |
-| 反饋提交 (`/feedback`)                                  | 提交反饋會將對話資料發送給 Anthropic。          |
-| [遠端控制](/docs/zh-TW/remote-control)                       | 在 Anthropic 伺服器上存儲會話記錄，以跨裝置同步對話。  |
+| 功能                                                                                                       | 原因                                   |
+| -------------------------------------------------------------------------------------------------------- | ------------------------------------ |
+| [Cloud sessions](/docs/zh-TW/claude-code-on-the-web)，包括從 [Desktop app](/docs/zh-TW/desktop#cloud-sessions) 啟動的工作階段 | 需要伺服器端儲存工作階段資料，包括包含提示和完成內容的對話歷史記錄。   |
+| [Claude Tag](https://claude.com/docs/claude-tag)                                                         | 保留頻道記憶和工作階段文字記錄。                     |
+| [Artifacts](/docs/zh-TW/artifacts)                                                                            | 需要在 Anthropic 營運的基礎設施上儲存已發佈的頁面內容。    |
+| 意見反饋提交（`/feedback`、`/bug`、`/share`）                                                                      | 提交意見反饋會將對話資料傳送至 Anthropic。           |
+| [Remote Control](/docs/zh-TW/remote-control)                                                                  | 在 Anthropic 伺服器上儲存工作階段文字記錄，以跨裝置同步對話。 |
 
-這些功能在後端被阻止，無論客戶端顯示如何。如果您在啟動期間在 Claude Code 終端中看到禁用的功能，嘗試使用它會返回一個錯誤，指示組織的政策不允許該操作。
+無論用戶端顯示如何，這些功能都會在後端被封鎖。如果您在啟動期間在 Claude Code 終端中看到停用的功能，嘗試使用它會傳回一個錯誤，指示組織的政策不允許該操作。
 
-未來的功能如果需要存儲提示或完成，也可能被禁用。
+未來的功能如果需要儲存提示或完成內容，也可能被停用。
 
 <h3 id="model-availability-under-zdr">
   ZDR 下的模型可用性
 </h3>
 
-Claude Fable 5 不適用於啟用零資料保留的組織。此模型類別[需要資料保留](https://platform.claude.com/docs/en/manage-claude/api-and-data-retention#model-specific-data-retention-requirements)，因此來自 ZDR 組織的請求無法由其提供服務。該模型在 ZDR 組織的 `/model` 選擇器中不存在，或顯示為禁用並附帶需要禁用 ZDR 的通知，且無論客戶端配置如何，伺服器都會拒絕對其的請求。
+Claude Fable 5.1 和 Fable 5 是[涵蓋的模型](https://support.claude.com/en/articles/15425695-covered-models)，[預設需要資料保留](https://platform.claude.com/docs/en/manage-claude/api-and-data-retention#model-specific-data-retention-requirements)，ZDR 組織或工作區是否可以使用它們由涵蓋的模型政策而非 Claude Code 管理。如果您的組織無法使用它們，這些模型要麼在 `/model` 選擇器中不存在，要麼顯示為停用，伺服器會拒絕針對它們的請求，無論用戶端設定如何。
 
-其他模型在 ZDR 下仍然可用。Fable 5 不是預設模型，`best` 別名在可用的地方解析為 Fable 5，在不可用的地方（包括 ZDR 組織）解析為 Opus。
+其他模型在 ZDR 下仍然可用。Fable 模型不是預設值，`best` 別名（在可用的地方解析為最新的 Fable 模型）在無法使用的組織中解析為 Opus。
 
 <h2 id="data-retention-for-policy-violations">
-  政策違規的數據保留
+  政策違規的資料保留
 </h2>
 
-即使啟用了 ZDR，Anthropic 也可能在法律要求或解決使用政策違規時保留數據。如果會話因政策違規而被標記，Anthropic 可能會保留相關的輸入和輸出長達 2 年，與 Anthropic 的標準 ZDR 政策一致。
+即使啟用 ZDR，Anthropic 仍可能在法律要求或為了解決使用政策違規時保留資料。如果工作階段因政策違規而被標記，Anthropic 可能會保留相關的輸入和輸出長達 2 年，與 Anthropic 的標準 ZDR 政策一致。
 
 <h2 id="request-zdr">
   請求 ZDR

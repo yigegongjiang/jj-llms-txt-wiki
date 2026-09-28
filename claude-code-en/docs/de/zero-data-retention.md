@@ -31,11 +31,17 @@ ZDR deckt Claude Code-Inferenz auf Claude for Enterprise ab.
   ZDR wird auf Organisationsbasis aktiviert. Jede neue Organisation erfordert, dass ZDR separat von Ihrem Anthropic-Kontoteam aktiviert wird. ZDR wird nicht automatisch auf neue Organisationen angewendet, die unter demselben Konto erstellt werden. Wenden Sie sich an Ihr Kontoteam, um ZDR für neue Organisationen zu aktivieren.
 </Warning>
 
+<h3 id="route-claude-code-traffic-to-your-zdr-organization">
+  Claude Code-Datenverkehr zu Ihrer ZDR-Organisation leiten
+</h3>
+
+ZDR gilt für Anfragen, die sich bei einer ZDR-aktivierten Organisation authentifizieren. Wenn sich ein Entwickler bei Claude Code mit einem persönlichen Konto oder mit einem API-Schlüssel aus einer anderen Organisation anmeldet, werden diese Sitzungen nicht abgedeckt. Um sicherzustellen, dass die claude.ai-Anmeldungen der Entwickler zu Ihrer ZDR-Organisation gehören, stellen Sie die verwalteten Einstellungen `forceLoginMethod` und `forceLoginOrgUUID` bereit; siehe [Anmeldung auf Ihre Organisation beschränken](/docs/de/authentication#restrict-login-to-your-organization), was auch erklärt, wie diese Schlüssel Claude Console-Anmeldungen behandeln.
+
 <h3 id="what-zdr-covers">
   Was ZDR abdeckt
 </h3>
 
-ZDR deckt Modellrückschluss-Aufrufe ab, die über Claude Code auf Claude for Enterprise durchgeführt werden. Wenn Sie Claude Code in Ihrem Terminal verwenden, werden die Eingabeaufforderungen, die Sie senden, und die Antworten, die Claude generiert, nicht von Anthropic gespeichert. Dies gilt für jedes Modell, das ZDR-Organisationen zur Verfügung steht. Einige Modelle erfordern Datenspeicherung und sind unter ZDR nicht verfügbar; siehe [Modellverfügbarkeit unter ZDR](#model-availability-under-zdr).
+ZDR deckt Modellrückschluss-Aufrufe ab, die über Claude Code auf Claude for Enterprise durchgeführt werden. Wenn Sie Claude Code in Ihrem Terminal verwenden, werden die Eingabeaufforderungen, die Sie senden, und die Antworten, die Claude generiert, nicht von Anthropic gespeichert. Dies gilt für jedes Modell, das Ihrer ZDR-Organisation zur Verfügung steht. Einige Modelle erfordern Datenspeicherung standardmäßig; siehe [Modellverfügbarkeit unter ZDR](#model-availability-under-zdr).
 
 <h3 id="what-zdr-does-not-cover">
   Was ZDR nicht abdeckt
@@ -57,13 +63,13 @@ ZDR erstreckt sich nicht auf die folgenden Funktionen, auch nicht für Organisat
 
 Wenn ZDR für eine Claude Code-Organisation auf Claude for Enterprise aktiviert ist, werden bestimmte Funktionen, die das Speichern von Eingabeaufforderungen oder Vervollständigungen erfordern, automatisch auf Backend-Ebene deaktiviert:
 
-| Funktion                                                          | Grund                                                                                                          |
-| ----------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| [Claude Code im Web](/docs/de/claude-code-on-the-web)                  | Erfordert serverseitige Speicherung des Gesprächsverlaufs.                                                     |
-| [Cloud-Sitzungen](/docs/de/desktop#cloud-sessions) aus der Desktop-App | Erfordert persistente Sitzungsdaten, die Eingabeaufforderungen und Vervollständigungen enthalten.              |
-| [Artifacts](/docs/de/artifacts)                                        | Erfordert das Speichern von veröffentlichtem Seiteninhalt auf von Anthropic betriebener Infrastruktur.         |
-| Feedback-Übermittlung (`/feedback`)                               | Das Übermitteln von Feedback sendet Gesprächsdaten an Anthropic.                                               |
-| [Remote Control](/docs/de/remote-control)                              | Speichert das Sitzungstranskript auf Anthropic-Servern, um das Gespräch über Geräte hinweg zu synchronisieren. |
+| Funktion                                                                                                                                         | Grund                                                                                                                                     |
+| ------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| [Cloud-Sitzungen](/docs/de/claude-code-on-the-web), einschließlich derjenigen, die aus der [Desktop-App](/docs/de/desktop#cloud-sessions) gestartet wurden | Erfordert serverseitige Speicherung von Sitzungsdaten, einschließlich Gesprächsverlauf mit Eingabeaufforderungen und Vervollständigungen. |
+| [Claude Tag](https://claude.com/docs/claude-tag)                                                                                                 | Behält Kanalspeicher und Sitzungstranskripte bei.                                                                                         |
+| [Artifacts](/docs/de/artifacts)                                                                                                                       | Erfordert das Speichern von veröffentlichtem Seiteninhalt auf von Anthropic betriebener Infrastruktur.                                    |
+| Feedback-Übermittlung (`/feedback`, `/bug`, `/share`)                                                                                            | Das Übermitteln von Feedback sendet Gesprächsdaten an Anthropic.                                                                          |
+| [Remote Control](/docs/de/remote-control)                                                                                                             | Speichert das Sitzungstranskript auf Anthropic-Servern, um das Gespräch über Geräte hinweg zu synchronisieren.                            |
 
 Diese Funktionen werden im Backend blockiert, unabhängig von der clientseitigen Anzeige. Wenn Sie während des Starts eine deaktivierte Funktion im Claude Code-Terminal sehen, führt der Versuch, sie zu verwenden, zu einem Fehler, der angibt, dass die Richtlinien der Organisation diese Aktion nicht zulassen.
 
@@ -73,9 +79,9 @@ Zukünftige Funktionen können auch deaktiviert werden, wenn sie das Speichern v
   Modellverfügbarkeit unter ZDR
 </h3>
 
-Claude Fable 5 ist nicht für Organisationen mit aktivierter Null-Datenspeicherung verfügbar. Diese Modellklasse [erfordert Datenspeicherung](https://platform.claude.com/docs/en/manage-claude/api-and-data-retention#model-specific-data-retention-requirements), daher können Anfragen von ZDR-Organisationen nicht von ihr bedient werden. Das Modell fehlt entweder in der `/model`-Auswahl für ZDR-Organisationen oder wird als deaktiviert mit einem Hinweis angezeigt, dass das Deaktivieren von ZDR erforderlich ist, und der Server lehnt Anfragen dafür unabhängig von der Client-Konfiguration ab.
+Claude Fable 5.1 und Fable 5 sind [Covered Models](https://support.claude.com/en/articles/15425695-covered-models), die [Datenspeicherung erfordern](https://platform.claude.com/docs/en/manage-claude/api-and-data-retention#model-specific-data-retention-requirements), und ob eine ZDR-Organisation oder ein Workspace diese verwenden kann, wird durch die Covered Models-Richtlinien und nicht durch Claude Code geregelt. Wenn Ihre Organisation diese nicht verwenden kann, fehlen die Modelle entweder in der `/model`-Auswahl oder werden als deaktiviert angezeigt, und der Server lehnt Anfragen dafür unabhängig von der Client-Konfiguration ab.
 
-Andere Modelle bleiben unter ZDR verfügbar. Fable 5 ist nicht das Standardmodell, und der `best`-Alias, der sich zu Fable 5 auflöst, wo er verfügbar ist, wird zu Opus für Organisationen, wo er nicht verfügbar ist, einschließlich ZDR-Organisationen.
+Andere Modelle bleiben unter ZDR verfügbar. Fable-Modelle sind nicht das Standard-Modell, und der `best`-Alias, der sich zu dem neuesten Fable-Modell auflöst, wo er verfügbar ist, wird zu Opus für Organisationen, wo er nicht verfügbar ist.
 
 <h2 id="data-retention-for-policy-violations">
   Datenspeicherung bei Richtlinienverletzungen

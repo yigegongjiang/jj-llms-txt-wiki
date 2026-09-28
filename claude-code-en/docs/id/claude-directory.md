@@ -34,7 +34,7 @@ export const ClaudeExplorer = () => {
         oneLiner: 'Project instructions Claude reads every session',
         when: 'Loaded into context at the start of every session',
         description: 'Project-specific instructions that shape how Claude works in this repository. Put your conventions, common commands, and architectural context here so Claude operates with the same assumptions your team does.',
-        tips: ['Target under 200 lines. Longer files still load in full but may reduce adherence', <>CLAUDE.md loads into every session. If something only matters for specific tasks, move it to a <A href="/docs/en/skills">skill</A> or a path-scoped <A href="/docs/en/memory#organize-rules-with-claude/rules/">rule</A> so it loads only when needed</>, 'List the commands you run most, like build, test, and format, so Claude knows them without you spelling them out each time', <>Run <C>/memory</C> to open and edit CLAUDE.md from within a session</>, <>Also works at <C>.claude/CLAUDE.md</C> if you prefer to keep the project root clean</>],
+        tips: ['Target under 200 lines. Longer files still load in full but may reduce adherence', <>CLAUDE.md loads into every session. If something only matters for specific tasks, move it to a <A href="/docs/en/skills">skill</A> or a path-scoped <A href="/docs/en/memory#organize-rules-with-claude/rules/">rule</A> so it loads only when needed</>, 'List the commands you run most, like build, test, and format, so Claude knows them without you spelling them out each time', <>Run <C>/memory</C> to open and edit CLAUDE.md from within a session</>, <>Also works at <C>.claude/CLAUDE.md</C> if you prefer to keep the project root clean</>, <>If your repo already has an <C>AGENTS.md</C> for other coding agents, Claude Code <A href="/docs/en/memory#agents-md">can read that</A> on its own or alongside CLAUDE.md</>],
         exampleIntro: 'This example is for a TypeScript and React project. It lists the build and test commands, the framework conventions Claude should follow, and project-specific rules like export style and file layout.',
         example: `# Project conventions
 
@@ -113,7 +113,7 @@ config/secrets.json`,
           oneLiner: 'Permissions, hooks, and configuration',
           when: <>Overrides global <C>~/.claude/settings.json</C>. Local settings, CLI flags, and managed settings override this</>,
           description: 'Settings that Claude Code applies directly. Permissions control which commands and tools Claude can use; hooks run your scripts at specific points in a session. Unlike CLAUDE.md, which Claude reads as guidance, these are enforced whether Claude follows them or not.',
-          contains: [<><A href="/docs/en/permissions">permissions</A>: allow, deny, or prompt before Claude uses specific tools or commands</>, <><A href="/docs/en/hooks">hooks</A>: run your own scripts on events like before a tool call or after a file edit</>, <><A href="/docs/en/statusline">statusLine</A>: customize the line shown at the bottom while Claude works</>, <><A href="/docs/en/settings-reference#available-settings">model</A>: pick a default model for this project</>, <><A href="/docs/en/settings-reference#environment-variables">env</A>: environment variables set in every session</>, <><A href="/docs/en/output-styles">outputStyle</A>: select a custom system-prompt style from output-styles/</>],
+          contains: [<><A href="/docs/en/permissions">permissions</A>: allow, deny, or prompt before Claude uses specific tools or commands</>, <><A href="/docs/en/hooks">hooks</A>: run your own scripts on events like before a tool call or after a file edit</>, <><A href="/docs/en/statusline">statusLine</A>: customize the line shown at the bottom while Claude works</>, <><A href="/docs/en/settings-reference#available-settings">model</A>: pick a default model for this project</>, <><A href="/docs/en/settings-reference#environment-variables">env</A>: environment variables set in every session</>, <><A href="/docs/en/output-styles">outputStyle</A>: select a custom output style from output-styles/</>],
           tips: [<>Bash permission patterns support wildcards: <C>Bash(npm test *)</C> matches any command starting with <C>npm test</C></>, <>Array settings like <C>permissions.allow</C> combine across all scopes; scalar settings like <C>model</C> use the most specific value</>],
           exampleIntro: <>This example allows <C>npm test</C> and <C>npm run</C> commands without prompting, blocks <C>rm -rf</C>, and runs Prettier on files after Claude edits or writes them.</>,
           example: `{
@@ -322,7 +322,7 @@ Investigate and fix the issue above.
           icon: 'folder',
           color: '#5AA7A7',
           oneLiner: 'Project-scoped output styles, if your team shares any',
-          when: 'Applied at session start when selected via the outputStyle setting',
+          when: 'Files read at startup; the style you select with outputStyle applies to every response',
           description: <>Output styles are usually personal, so most live in <C>~/.claude/output-styles/</C>. Put one here if your team shares a style, like a review mode everyone uses. See <A href="#ce-global-output-styles">the Global tab</A> for the full explanation and example.</>,
           docsLink: '/en/output-styles',
           children: []
@@ -638,10 +638,10 @@ type: reference
           type: 'folder',
           icon: 'folder',
           color: '#5AA7A7',
-          oneLiner: 'Custom system-prompt sections that adjust how Claude works',
-          when: 'Applied at session start when selected via the outputStyle setting',
-          description: [<>Each markdown file defines an output style: a section appended to the system prompt that, by default, also drops the built-in software-engineering task instructions. Use this to adapt Claude Code for uses beyond coding, or to add teaching or review modes.</>, <>Select a built-in or custom style with <C>/config</C> or the <C>outputStyle</C> key in settings. Styles here are available in every project; project-level styles with the same name take precedence.</>],
-          tips: ['Built-in styles Default, Proactive, Concise, Explanatory, and Learning are included with Claude Code; custom styles go here', <>Set <C>keep-coding-instructions: true</C> in frontmatter to keep the default task instructions alongside your additions</>, 'Changes take effect on the next session since the system prompt is fixed at startup for caching'],
+          oneLiner: 'Custom instruction sets that adjust how Claude works',
+          when: 'Files read at startup; the style you select with outputStyle applies to every response',
+          description: [<>Each markdown file defines an output style: a set of instructions for Claude that, by default, also replaces the built-in software-engineering task instructions. Use this to adapt Claude Code for uses beyond coding, or to add teaching or review modes.</>, <>Select a built-in or custom style with <C>/output-style</C>, <C>/config</C>, or the <C>outputStyle</C> key in settings. Styles here are available in every project; project-level styles with the same name take precedence.</>],
+          tips: ['Built-in styles Default, Proactive, Concise, Explanatory, and Learning are included with Claude Code; custom styles go here', <>Set <C>keep-coding-instructions: true</C> in frontmatter to keep the default task instructions alongside your additions</>, 'Switching styles mid-session applies from your next message; in the terminal, a style file you create or edit mid-session is picked up after a restart'],
           docsLink: '/en/output-styles',
           children: [{
             id: 'output-style-example',
@@ -652,7 +652,7 @@ type: reference
             badge: 'local',
             oneLiner: 'Example style that adds explanations and leaves small changes for you',
             when: <>Active when <C>outputStyle</C> in settings is set to <C>teaching</C></>,
-            description: <>This style appends instructions to the system prompt: Claude adds a "Why this approach" note after each task and leaves TODO(human) markers for changes under 10 lines instead of writing them itself. Select it by setting <C>outputStyle</C> to the filename without .md, or to the <C>name</C> field if you set one in frontmatter.</>,
+            description: <>With this style, Claude adds a "Why this approach" note after each task and leaves TODO(human) markers for changes under 10 lines instead of writing them itself. Select it by setting <C>outputStyle</C> to the filename without .md, or to the <C>name</C> field if you set one in frontmatter.</>,
             example: `---
 description: Explains reasoning and asks you to implement small pieces
 keep-coding-instructions: true
@@ -1434,7 +1434,7 @@ Claude Code membaca instruksi, pengaturan, skills, subagents, dan memory dari di
 
 Di Windows, `~/.claude` diselesaikan menjadi `%USERPROFILE%\.claude`. Jika Anda menetapkan [`CLAUDE_CONFIG_DIR`](/docs/id/env-vars), setiap jalur `~/.claude` di halaman ini berada di bawah direktori itu sebagai gantinya.
 
-Sebagian besar pengguna hanya mengedit `CLAUDE.md` dan `settings.json`. Sisa direktori bersifat opsional: tambahkan skills, rules, atau subagents sesuai kebutuhan Anda.
+Sebagian besar pengguna hanya mengedit `CLAUDE.md` dan `settings.json`. Jika repositori Anda sudah memiliki `AGENTS.md` untuk agen coding lainnya, Claude Code [dapat membacanya](/docs/id/memory#agents-md) sendiri atau bersama `CLAUDE.md`. Sisa direktori bersifat opsional: tambahkan skills, rules, atau subagents sesuai kebutuhan Anda.
 
 <h2 id="explore-the-directory">
   Jelajahi direktori
@@ -1445,18 +1445,19 @@ Klik file di pohon untuk melihat apa yang dilakukan masing-masing, kapan dimuat,
 <ClaudeExplorer />
 
 <h2 id="what’s-not-shown">
-  Apa yang tidak ditampilkan
+  Yang tidak ditampilkan
 </h2>
 
-Penjelajah mencakup file yang Anda buat dan edit. Beberapa file terkait berada di tempat lain:
+Explorer mencakup file yang Anda buat dan edit. Beberapa file terkait berada di tempat lain:
 
-| File                    | Lokasi                                | Tujuan                                                                                                                                                                                                                                                                             |
-| ----------------------- | ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `managed-settings.json` | Tingkat sistem, bervariasi menurut OS | Pengaturan yang diberlakukan perusahaan yang tidak dapat Anda ganti. Lihat [pengaturan yang dikelola server](/docs/id/server-managed-settings).                                                                                                                                         |
-| `CLAUDE.local.md`       | Akar proyek                           | Preferensi pribadi Anda untuk proyek ini, dimuat bersama CLAUDE.md. Buat secara manual dan tambahkan ke `.gitignore`.                                                                                                                                                              |
-| Plugin yang diinstal    | `~/.claude/plugins`                   | Marketplace yang dikloning, versi plugin yang diinstal, dan data per-plugin, dikelola oleh perintah `claude plugin`. Versi yatim piatu dihapus 7 hari setelah pembaruan atau penghapusan plugin. Lihat [plugin caching](/docs/id/plugins-reference#plugin-caching-and-file-resolution). |
+| File                    | Lokasi                                          | Tujuan                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| ----------------------- | ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `managed-settings.json` | Tingkat sistem, bervariasi menurut OS           | Pengaturan yang diberlakukan perusahaan yang tidak dapat Anda ganti, kecuali [pengecualian sempit](/docs/id/settings#security-keys-where-the-stricter-value-applies). Lihat [tempat menyimpan file](/docs/id/managed-settings#deploy-a-managed-settings-file) dan [sumber managed mana yang digunakan Claude Code](/docs/id/managed-settings#precedence-within-the-managed-tier).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `CLAUDE.local.md`       | Akar proyek                                     | Preferensi pribadi Anda untuk proyek ini, dimuat bersama CLAUDE.md. Buatnya secara manual dan tambahkan ke `.gitignore`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| `AGENTS.md`             | Akar proyek, `.claude/`, atau direktori apa pun | Instruksi proyek yang Anda tulis untuk agen coding AI. Claude Code dapat [memuatnya](/docs/id/memory#agents-md) sendiri atau bersama `CLAUDE.md`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| Plugin yang diinstal    | `~/.claude/plugins`                             | Marketplace yang dikloning, versi plugin yang diinstal, catatan instalasi `installed_plugins.json`, dan data per-plugin, dikelola oleh perintah `claude plugin`. Plugin yang [disinkronkan dari akun claude.ai Anda](/docs/id/plugins/loading#synced-plugins) diunduh ke `~/.claude/plugins/synced/`. Untuk plugin yang diinstal dari marketplace dengan [`command` source](/docs/id/plugins/marketplace-reference#command-plugin-source) dalam link mode, Claude Code menyimpan link di sini alih-alih salinan, dan file plugin tetap berada di direktori yang dicetak perintah. Sumber `command` memerlukan Claude Code v2.1.229 atau lebih baru. Plugin yang tercantum menurut jalur relatif dalam marketplace direktori lokal juga [dimuat di tempat](/docs/id/plugins/loading#find-plugins-on-disk) dari direktori sumbernya daripada dari salinan cache. Lihat [plugin caching](/docs/id/plugins/loading#find-plugins-on-disk) untuk cara versi yatim piatu dibersihkan. |
 
-`~/.claude` juga menyimpan data yang ditulis Claude Code saat Anda bekerja: transkrip, riwayat prompt, snapshot file, cache, dan log. Lihat [data aplikasi](#application-data) di bawah.
+`~/.claude` juga menyimpan data yang ditulis Claude Code saat Anda bekerja: transkrip, riwayat prompt, snapshot file, cache, dan log. Lihat [application data](#application-data) di bawah.
 
 <h2 id="choose-the-right-file">
   Pilih file yang tepat
@@ -1464,18 +1465,18 @@ Penjelajah mencakup file yang Anda buat dan edit. Beberapa file terkait berada d
 
 Berbagai jenis kustomisasi berada di file yang berbeda. Gunakan tabel ini untuk menemukan di mana perubahan harus dilakukan.
 
-| Anda ingin                                                       | Edit                                       | Cakupan            | Referensi                                          |
-| :--------------------------------------------------------------- | :----------------------------------------- | :----------------- | :------------------------------------------------- |
-| Berikan Claude konteks proyek dan konvensi                       | `CLAUDE.md`                                | proyek atau global | [Memory](/docs/id/memory)                               |
-| Izinkan atau blokir tool call tertentu                           | `settings.json` `permissions` atau `hooks` | proyek atau global | [Permissions](/docs/id/permissions), [Hooks](/docs/id/hooks) |
-| Jalankan skrip sebelum atau sesudah tool call                    | `settings.json` `hooks`                    | proyek atau global | [Hooks](/docs/id/hooks)                                 |
-| Atur variabel lingkungan untuk sesi                              | `settings.json` `env`                      | proyek atau global | [Settings](/docs/id/settings#available-settings)        |
-| Simpan penggantian pribadi di luar git                           | `settings.local.json`                      | proyek saja        | [Settings scopes](/docs/id/settings#settings-files)     |
-| Tambahkan prompt atau kemampuan yang Anda panggil dengan `/name` | `skills/<name>/SKILL.md`                   | proyek atau global | [Skills](/docs/id/skills)                               |
-| Tentukan subagent khusus dengan tools-nya sendiri                | `agents/*.md`                              | proyek atau global | [Subagents](/docs/id/sub-agents)                        |
-| Orkestrasi banyak subagent dari skrip                            | `workflows/*.js`                           | proyek atau global | [Dynamic workflows](/docs/id/workflows)                 |
-| Hubungkan tools eksternal melalui MCP                            | `.mcp.json`                                | proyek saja        | [MCP](/docs/id/mcp)                                     |
-| Ubah cara Claude memformat respons                               | `output-styles/*.md`                       | proyek atau global | [Output styles](/docs/id/output-styles)                 |
+| Anda ingin                                                       | Edit                                       | Cakupan            | Referensi                                           |
+| :--------------------------------------------------------------- | :----------------------------------------- | :----------------- | :-------------------------------------------------- |
+| Berikan Claude konteks proyek dan konvensi                       | `CLAUDE.md`                                | proyek atau global | [Memory](/docs/id/memory)                                |
+| Izinkan atau blokir tool call tertentu                           | `settings.json` `permissions` atau `hooks` | proyek atau global | [Permissions](/docs/id/permissions), [Hooks](/docs/id/hooks)  |
+| Jalankan skrip sebelum atau sesudah tool call                    | `settings.json` `hooks`                    | proyek atau global | [Hooks](/docs/id/hooks)                                  |
+| Atur variabel lingkungan untuk sesi                              | `settings.json` `env`                      | proyek atau global | [Settings](/docs/id/settings-reference#all-settings)     |
+| Simpan penggantian pribadi di luar git                           | `settings.local.json`                      | proyek saja        | [Settings scopes](/docs/id/settings#where-settings-live) |
+| Tambahkan prompt atau kemampuan yang Anda panggil dengan `/name` | `skills/<name>/SKILL.md`                   | proyek atau global | [Skills](/docs/id/skills)                                |
+| Tentukan subagent khusus dengan tools-nya sendiri                | `agents/*.md`                              | proyek atau global | [Subagents](/docs/id/sub-agents)                         |
+| Orkestrasi banyak subagent dari skrip                            | `workflows/*.js`                           | proyek atau global | [Dynamic workflows](/docs/id/workflows)                  |
+| Hubungkan tools eksternal melalui MCP                            | `.mcp.json`                                | proyek saja        | [MCP](/docs/id/mcp)                                      |
+| Ubah cara Claude memformat respons                               | `output-styles/*.md`                       | proyek atau global | [Output styles](/docs/id/output-styles)                  |
 
 <h2 id="file-reference">
   Referensi file
@@ -1486,7 +1487,7 @@ Tabel ini mencantumkan setiap file yang dicakup penjelajah. File dengan cakupan 
 <Note>
   Beberapa hal dapat mengganti apa yang Anda masukkan dalam file ini:
 
-  * [Pengaturan yang dikelola](/docs/id/server-managed-settings) yang digunakan oleh organisasi Anda memiliki prioritas di atas segalanya
+  * [Pengaturan yang dikelola](/docs/id/server-managed-settings) yang digunakan oleh organisasi Anda memiliki prioritas di atas segalanya, terlepas dari [pengecualian di bawah Prioritas pengaturan](/docs/id/settings#exceptions-to-managed-settings-precedence)
   * Bendera CLI seperti `--permission-mode` atau `--settings` mengganti `settings.json` untuk sesi itu
   * Beberapa variabel lingkungan memiliki prioritas di atas pengaturan yang setara, tetapi ini bervariasi: periksa [referensi variabel lingkungan](/docs/id/env-vars) untuk masing-masing
 
@@ -1500,7 +1501,7 @@ Klik nama file untuk membuka node itu di penjelajah di atas.
 | [`CLAUDE.md`](#ce-claude-md)                        | Proyek dan global | ✓      | Instruksi dimuat setiap sesi                                                                                           | [Memory](/docs/id/memory)                                            |
 | [`rules/*.md`](#ce-rules)                           | Proyek dan global | ✓      | Instruksi dengan cakupan topik, opsional gated path                                                                    | [Rules](/docs/id/memory#organize-rules-with-claude/rules/)           |
 | [`settings.json`](#ce-settings-json)                | Proyek dan global | ✓      | Izin, hooks, variabel env, default model                                                                               | [Settings](/docs/id/settings)                                        |
-| [`settings.local.json`](#ce-settings-local-json)    | Proyek saja       |        | Penggantian pribadi Anda, auto-gitignored                                                                              | [Settings scopes](/docs/id/settings#settings-files)                  |
+| [`settings.local.json`](#ce-settings-local-json)    | Proyek saja       |        | Penggantian pribadi Anda, diabaikan git saat Claude Code menyimpan pengaturan ke dalamnya                              | [Settings scopes](/docs/id/settings#where-settings-live)             |
 | [`.mcp.json`](#ce-mcp-json)                         | Proyek saja       | ✓      | Server MCP yang dibagikan tim                                                                                          | [MCP scopes](/docs/id/mcp#mcp-installation-scopes)                   |
 | [`.worktreeinclude`](#ce-worktreeinclude)           | Proyek saja       | ✓      | File yang diabaikan untuk disalin ke worktrees baru                                                                    | [Worktrees](/docs/id/worktrees#copy-gitignored-files-into-worktrees) |
 | [`skills/<name>/SKILL.md`](#ce-skills)              | Proyek dan global | ✓      | Prompt yang dapat digunakan kembali dipanggil dengan `/name` atau auto-invoked                                         | [Skills](/docs/id/skills)                                            |
@@ -1509,10 +1510,26 @@ Klik nama file untuk membuka node itu di penjelajah di atas.
 | [`agents/*.md`](#ce-agents)                         | Proyek dan global | ✓      | Definisi subagent dengan prompt dan tools mereka sendiri                                                               | [Subagents](/docs/id/sub-agents)                                     |
 | [`workflows/*.js`](#ce-workflows)                   | Proyek dan global | ✓      | Skrip workflow dinamis yang ditulis oleh Claude dan disimpan dari `/workflows`; setiap file menjadi perintah `/<name>` | [Dynamic workflows](/docs/id/workflows)                              |
 | [`agent-memory/<name>/`](#ce-agent-memory)          | Proyek dan global | ✓      | Memory persisten untuk subagents                                                                                       | [Persistent memory](/docs/id/sub-agents#enable-persistent-memory)    |
-| [`~/.claude.json`](#ce-claude-json)                 | Global saja       |        | Status aplikasi, OAuth, toggle UI, server MCP pribadi                                                                  | [Global config](/docs/id/settings#global-config-settings)            |
+| [`~/.claude.json`](#ce-claude-json)                 | Global saja       |        | Status aplikasi, OAuth, toggle UI, server MCP pribadi                                                                  | [Global config](/docs/id/settings-reference#global-config-settings)  |
 | [`projects/<project>/memory/`](#ce-global-projects) | Global saja       |        | Auto memory: catatan Claude untuk dirinya sendiri di seluruh sesi                                                      | [Auto memory](/docs/id/memory#auto-memory)                           |
 | [`keybindings.json`](#ce-keybindings)               | Global saja       |        | Pintasan keyboard khusus                                                                                               | [Keybindings](/docs/id/keybindings)                                  |
 | [`themes/*.json`](#ce-themes)                       | Global saja       |        | Tema warna khusus                                                                                                      | [Custom themes](/docs/id/terminal-config#create-a-custom-theme)      |
+
+<h2 id="frontmatter-fields-by-file">
+  Bidang frontmatter menurut file
+</h2>
+
+Skills, command files, subagents, output styles, dan rules membaca konfigurasi mereka dari YAML [frontmatter](/docs/id/glossary#frontmatter) di bagian atas file, dan masing-masing menerima set bidang tersendiri. Tabel ini mencantumkan nama bidang untuk setiap file dan menautkan ke referensi yang menjelaskannya.
+
+| File                     | Bidang frontmatter                                                                                                                                                                                                                                                            | Referensi                                                           |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| `skills/<name>/SKILL.md` | `name`, `description`, `when_to_use`, `argument-hint`, `arguments`, `disable-model-invocation`, `user-invocable`, `allowed-tools`, `disallowed-tools`, `model`, `effort`, `context`, `agent`, `background`, `hooks`, `paths`, `shell`, `metadata`, `license`, `compatibility` | [Skill frontmatter](/docs/id/skills#frontmatter-reference)               |
+| `commands/*.md`          | Bidang skill kecuali `name` dan `paths`                                                                                                                                                                                                                                       | [Skill frontmatter](/docs/id/skills#frontmatter-reference)               |
+| `agents/*.md`            | `name`, `description`, `tools`, `disallowedTools`, `model`, `permissionMode`, `maxTurns`, `skills`, `mcpServers`, `hooks`, `memory`, `background`, `effort`, `isolation`, `color`, `initialPrompt`, `omitClaudeMd`, `experimental`                                            | [Subagent frontmatter](/docs/id/sub-agents#supported-frontmatter-fields) |
+| `output-styles/*.md`     | `name`, `description`, `keep-coding-instructions`, `force-for-plugin`                                                                                                                                                                                                         | [Output style frontmatter](/docs/id/output-styles#frontmatter)           |
+| `rules/*.md`             | `paths`                                                                                                                                                                                                                                                                       | [Rule frontmatter](/docs/id/memory#rules-frontmatter-reference)          |
+
+Agents yang dikirimkan dalam [plugin](/docs/id/plugins/components#agents) menghormati subset dari bidang subagent.
 
 <h2 id="troubleshoot-configuration">
   Troubleshoot konfigurasi
@@ -1524,66 +1541,96 @@ Jika pengaturan, hook, atau file tidak berlaku, lihat [Debug konfigurasi Anda](/
   Data aplikasi
 </h2>
 
-Selain konfigurasi yang Anda buat, `~/.claude` menyimpan data yang ditulis Claude Code selama sesi. File-file ini adalah plaintext. Apa pun yang melewati tool mendarat di transkrip di disk: konten file, output perintah, teks yang ditempel.
+Selain konfigurasi yang Anda buat, `~/.claude` menyimpan data yang Claude Code tulis selama sesi. File-file ini adalah plaintext. Apa pun yang melewati alat ditulis ke transkrip di disk: konten file, output perintah, teks yang ditempel.
 
 <h3 id="cleaned-up-automatically">
   Dibersihkan secara otomatis
 </h3>
 
-File di jalur di bawah dihapus saat startup setelah berusia lebih dari [`cleanupPeriodDays`](/docs/id/settings#available-settings). Default adalah 30 hari.
+Claude Code menghapus file di jalur di bawah ini setelah mereka lebih tua dari [`cleanupPeriodDays`](/docs/id/settings-reference#cleanupperioddays), selama dapat dengan aman menentukan periode retensi. Default adalah 30 hari dan minimum adalah 1; mengatur `0` gagal dengan kesalahan validasi. Cutoff usia yang sama berlaku untuk penghapusan otomatis [worktrees yatim piatu](/docs/id/worktrees#clean-up-subagent-and-background-session-worktrees).
 
-| Jalur di bawah `~/.claude/`                  | Konten                                                                                                                                                                                                                                                                        |
-| -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `projects/<project>/<session>.jsonl`         | Transkrip percakapan lengkap: setiap pesan, tool call, dan tool result                                                                                                                                                                                                        |
-| `projects/<project>/<session>/subagents/`    | Transkrip percakapan [Subagent](/docs/id/sub-agents), dihapus bersama transkrip sesi induk saat berusia                                                                                                                                                                            |
-| `projects/<project>/<session>/tool-results/` | Output tool besar yang tumpah ke file terpisah                                                                                                                                                                                                                                |
-| `file-history/<session>/`                    | Snapshot pra-edit file yang diubah Claude, digunakan untuk [checkpoint restore](/docs/id/checkpointing). Menyimpan snapshot untuk 100 checkpoint terbaru; file snapshot yang tidak direferensikan oleh checkpoint yang dipertahankan dihapus, kecuali snapshot pertama setiap file |
-| `plans/`                                     | File rencana yang ditulis selama [plan mode](/docs/id/permission-modes#analyze-before-you-edit-with-plan-mode)                                                                                                                                                                     |
-| `debug/`                                     | Log debug per-sesi, ditulis hanya saat Anda memulai dengan `--debug` atau menjalankan `/debug`                                                                                                                                                                                |
-| `paste-cache/`, `image-cache/`               | Konten paste besar dan gambar yang dilampirkan                                                                                                                                                                                                                                |
-| `session-env/`                               | Metadata lingkungan per-sesi                                                                                                                                                                                                                                                  |
-| `tasks/`                                     | Daftar tugas per-sesi yang ditulis oleh task tools                                                                                                                                                                                                                            |
-| `shell-snapshots/`                           | Alias, fungsi, dan opsi shell yang ditangkap saat startup dan diterapkan oleh [Bash tool](/docs/id/tools-reference#bash-tool-behavior) ke setiap perintah. Dihapus saat keluar dengan bersih. Sweep membersihkan yang tertinggal setelah crash.                                    |
-| `backups/`                                   | Salinan `~/.claude.json` dengan stempel waktu yang diambil sebelum migrasi konfigurasi                                                                                                                                                                                        |
-| `feedback-bundles/`                          | Arsip transkrip yang disunting ditulis oleh `/feedback` pada penyedia pihak ketiga atau saat tidak ada kredensial Anthropic yang dikonfigurasi, untuk dikirim ke tim akun Anthropic Anda                                                                                      |
-| `todos/`, `statsig/`, `logs/`                | Direktori warisan dari versi yang lebih lama. Tidak lagi ditulis. Sweep menghapus kontennya dan kemudian direktori kosong.                                                                                                                                                    |
+| Jalur di bawah `~/.claude/`                                                                                                     | Konten                                                                                                                                                                                                                                                                                                                                                       |
+| ------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `projects/<project>/<session>.jsonl`                                                                                            | Transkrip percakapan lengkap: setiap pesan, panggilan alat, dan hasil alat                                                                                                                                                                                                                                                                                   |
+| `projects/<project>/<session>.orphaned-<timestamp>-<suffix>.jsonl`, `projects/<project>/<session>.jsonl.superseded-<timestamp>` | Transkrip sebelumnya untuk sesi yang Claude Code sisihkan alih-alih menimpanya atau menghapusnya. Tidak muncul di pemilih sesi                                                                                                                                                                                                                               |
+| `projects/<project>/<session>/subagents/`                                                                                       | Transkrip percakapan [Subagent](/docs/id/sub-agents), dihapus dengan transkrip sesi induk saat usia habis                                                                                                                                                                                                                                                         |
+| `projects/<project>/<session>/tool-results/`                                                                                    | Output alat besar yang tumpah ke file terpisah                                                                                                                                                                                                                                                                                                               |
+| `file-history/<session>/`                                                                                                       | Snapshot pra-edit file yang Claude ubah, digunakan untuk [pemulihan checkpoint](/docs/id/checkpointing). Menyimpan snapshot untuk 100 checkpoint terbaru; file snapshot yang tidak direferensikan oleh checkpoint yang dipertahankan dihapus, kecuali snapshot pertama setiap file                                                                                |
+| `plans/`                                                                                                                        | File rencana yang ditulis selama [plan mode](/docs/id/permission-modes#analyze-before-you-edit-with-plan-mode)                                                                                                                                                                                                                                                    |
+| `debug/`                                                                                                                        | Log debug per-sesi, ditulis saat pencatatan debug aktif, seperti saat Anda memulai dengan [`--debug`](/docs/id/cli-reference#cli-flags) atau menjalankan `/debug`                                                                                                                                                                                                 |
+| `paste-cache/`                                                                                                                  | Konten tempel besar                                                                                                                                                                                                                                                                                                                                          |
+| `image-cache/<session>/`                                                                                                        | Gambar terlampir yang disimpan oleh Claude Code v2.1.274 dan lebih awal. Versi yang lebih baru menyimpan gambar yang ditempel dan terlampir di luar `~/.claude`, dalam direktori `images/` untuk setiap sesi di bawah direktori temp yang dikontrol [`CLAUDE_CODE_TMPDIR`](/docs/id/env-vars). Sweep menghapus direktori sisa sesi lain di sini, apa pun usianya. |
+| `uploads/<session>/`                                                                                                            | File yang Anda lampirkan dari web atau aplikasi mobile, dan foto yang Anda lampirkan dari aplikasi mobile, saat mengirim pesan ke sesi [Remote Control](/docs/id/remote-control). Lampiran ke [sesi cloud](/docs/id/claude-code-on-the-web) disimpan di lingkungan cloud sesi itu sendiri, bukan di mesin Anda.                                                        |
+| `session-env/`                                                                                                                  | Metadata lingkungan per-sesi                                                                                                                                                                                                                                                                                                                                 |
+| `tasks/`                                                                                                                        | Daftar tugas yang ditulis oleh alat tugas, satu direktori per daftar                                                                                                                                                                                                                                                                                         |
+| `shell-snapshots/`                                                                                                              | Alias, fungsi, dan opsi shell yang ditangkap saat startup dan diterapkan oleh [alat Bash](/docs/id/tools-reference#bash-tool-behavior) ke setiap perintah. Dihapus saat keluar dengan bersih. Sweep menghapus yang tertinggal setelah crash.                                                                                                                      |
+| `backups/`                                                                                                                      | Versi sebelumnya dari `~/.claude.json`, disalin saat Claude Code menulis ulang file. Claude Code menyimpan lima terbaru, ditambah salinan versi apa pun yang tidak dapat diuraikan.                                                                                                                                                                          |
+| `feedback-bundles/`                                                                                                             | Arsip transkrip yang disunting ditulis oleh `/feedback` pada penyedia pihak ketiga atau saat tidak ada kredensial Anthropic yang dikonfigurasi, untuk dikirim ke tim akun Anthropic Anda                                                                                                                                                                     |
+| `feedback/drafts/`                                                                                                              | Antrian [umpan balik yang dirancang Claude](/docs/id/tools-reference#sendfeedback-tool-behavior) menunggu ulasan Anda di `/feedback`. Disapu setelah `cleanupPeriodDays` atau 30 hari, mana yang lebih pendek. Saat antrian mencapai batas 10 draft, Claude Code menghapus draft tertua untuk membuat ruang.                                                      |
+| `usage-data/`                                                                                                                   | `report.html` dan salinan laporan bertanda waktu yang ditulis oleh [`/insights`](/docs/id/costs#analyze-your-usage-patterns), ditambah data analisis per-sesi yang disimpan dalam cache yang digunakan untuk membangunnya                                                                                                                                         |
+| `skills/.trash/`, `plugins/.trash/`                                                                                             | [Skills](/docs/id/skills#how-synced-skills-behave) dan [plugins](/docs/id/plugins/loading#synced-plugins) yang sinkronisasi claude.ai hapus, seperti setelah Anda mematikannya di claude.ai atau berhenti menyinkronkan. File tetap di sini sehingga Anda dapat memulihkannya sampai sweep menghapusnya                                                                |
+| `todos/`, `statsig/`, `logs/`                                                                                                   | Direktori warisan dari versi yang lebih lama. Tidak lagi ditulis. Sweep menghapus konten mereka dan kemudian direktori kosong.                                                                                                                                                                                                                               |
+
+File sesi di `sessions/`, memori otomatis, dan transkrip Claude Desktop dan Cowork masing-masing mengikuti aturan retensi mereka sendiri:
+
+* **`sessions/`**: menyimpan satu file kecil per sesi yang berjalan, digunakan untuk mendeteksi sesi bersamaan dan crash. Ini bukan bagian dari sweep berbasis usia: Claude Code menghapus setiap file saat sesinya keluar dan menghapus sisa crash saat peluncuran berikutnya.
+* **Memori otomatis**: sweep tidak menghapus file memori di direktori [memori otomatis](/docs/id/memory#auto-memory) proyek, `projects/<project>/memory/`. Claude Code menghapus direktori itu hanya jika telah kosong selama seluruh periode retensi. Sebelum v2.1.228, sweep memperlakukan folder di dalam direktori memori sebagai data sesi dan dapat menghapus file lama di bawahnya.
+* **Transkrip Claude Desktop dan Cowork**: Claude Code menyimpan transkrip sesi yang Anda mulai atau lanjutkan terakhir di Claude Desktop atau Cowork pada usia apa pun. Untuk memberikan transkrip ini batas usia, atur [`desktopSessionCleanupPeriodDays`](/docs/id/settings-reference#desktopsessioncleanupperioddays). Saat [pengaturan terkelola](/docs/id/managed-settings) menetapkan `cleanupPeriodDays`, Claude Code menghapus transkrip ini setelah periode itu sebagai gantinya. Memerlukan Claude Code v2.1.248 atau lebih baru; versi sebelumnya menghapusnya setelah `cleanupPeriodDays`.
+
+Claude Code melewati sweep berbasis usia dalam kasus-kasus ini:
+
+* **Mode bare**: saat Anda menjalankan `claude -p` dengan [`--bare`](/docs/id/headless#start-faster-with-bare-mode), Claude Code tidak menjalankan sweep dalam sesi itu.
+* **Sweep dijeda**: jika Claude Code tidak dapat dengan aman menentukan periode retensi, itu menjeda sweep pembersihan retensi; acara [`retention_sweep`](/docs/id/monitoring-usage#retention-sweep-event) mencantumkan setiap konfigurasi yang menjeda itu. Saat penyebabnya adalah file pengaturan yang tidak dapat dibaca atau diuraikan, atau kesalahan pengaturan dengan `cleanupPeriodDays` atau `desktopSessionCleanupPeriodDays` yang secara eksplisit ditetapkan, Claude Code juga menampilkan peringatan di `/status` sampai Anda memperbaiki kesalahan pengaturan. Saat [pengaturan terkelola](/docs/id/server-managed-settings) menyediakan `cleanupPeriodDays`, Claude Code menjalankan sweep pada nilai terkelola dalam kedua kasus.
 
 <h3 id="kept-until-you-delete-them">
   Disimpan sampai Anda menghapusnya
 </h3>
 
-Jalur berikut tidak tercakup oleh pembersihan otomatis dan bertahan selamanya.
+Sweep pembersihan retensi tidak menghapus jalur di bawah ini. Claude Code menyimpannya sampai Anda menghapusnya, terlepas dari dua cache yang dihapusnya saat Anda keluar.
 
-| Jalur di bawah `~/.claude/` | Konten                                                                                                                                                                                              |
-| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `history.jsonl`             | Setiap prompt yang Anda ketik, dengan timestamp dan jalur proyek. Digunakan untuk recall panah atas.                                                                                                |
-| `stats-cache.json`          | Hitungan token dan biaya agregat yang ditampilkan oleh `/usage`                                                                                                                                     |
-| `remote-settings.json`      | Salinan cache dari [pengaturan yang dikelola server](/docs/id/server-managed-settings) untuk organisasi Anda. Hanya ada saat organisasi Anda telah mengonfigurasinya. Disegarkan pada setiap peluncuran. |
+| Jalur di bawah `~/.claude/` | Konten                                                                                                                                                                                                                                                                                                                                                                       |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `history.jsonl`             | Setiap prompt yang Anda ketik, dengan stempel waktu dan jalur proyek. Digunakan untuk penarikan panah atas, pencarian riwayat `Ctrl+R`, dan penyelesaian perintah shell `!`.                                                                                                                                                                                                 |
+| `stats-cache.json`          | Hitungan token dan biaya agregat yang ditampilkan oleh `/usage`                                                                                                                                                                                                                                                                                                              |
+| `remote-settings.json`      | Salinan cache dari [pengaturan terkelola server](/docs/id/server-managed-settings) untuk organisasi Anda, atau `{}` saat organisasi Anda belum mengonfigurasi apa pun. Hanya ada saat sesi [mengambilnya](/docs/id/server-managed-settings#platform-availability). Claude Code memeriksa pembaruan saat startup dan setiap jam selama sesi. Claude Code menghapusnya saat Anda keluar. |
+| `cache/changelog.md`        | Salinan cache dari changelog Claude Code, ditampilkan oleh `/release-notes`. Disegarkan di latar belakang.                                                                                                                                                                                                                                                                   |
+| `policy-limits.json`        | Pengaturan kebijakan fitur cache untuk organisasi Anda. Hanya ada untuk beberapa jenis akun. Disegarkan secara otomatis. Sidecar `policy-limits.json.stamp.json` mencatat akun atau kunci API mana yang dimiliki cache. Claude Code menghapus kedua file saat Anda keluar.                                                                                                   |
 
-File cache dan lock kecil lainnya muncul tergantung fitur mana yang Anda gunakan dan aman untuk dihapus.
+<span id="state-files-to-keep" />
+
+File lain muncul tergantung pada fitur mana yang Anda gunakan. Cache dan file kunci aman untuk dihapus. Simpan file status ini:
+
+* `.credentials.json`: [kredensial login](/docs/id/authentication#credential-management) Anda
+* `agent-memory/`: [memori subagent](/docs/id/sub-agents#enable-persistent-memory)
+* `jobs/` dan `daemon/`: status [sesi latar belakang](/docs/id/agent-view#where-state-is-stored)
 
 <h3 id="plaintext-storage">
   Penyimpanan plaintext
 </h3>
 
-Transkrip dan riwayat tidak dienkripsi saat istirahat. Izin file OS adalah satu-satunya perlindungan. Jika tool membaca file `.env` atau perintah mencetak kredensial, nilai itu ditulis ke `projects/<project>/<session>.jsonl`. Untuk mengurangi paparan:
+Transkrip dan riwayat tidak dienkripsi saat istirahat. Izin file OS adalah satu-satunya perlindungan. Jika alat membaca file `.env` atau perintah mencetak kredensial, nilai itu ditulis ke `projects/<project>/<session>.jsonl`. Untuk mengurangi paparan:
 
-* Turunkan `cleanupPeriodDays` untuk mempersingkat berapa lama transkrip disimpan
-* Atur variabel lingkungan [`CLAUDE_CODE_SKIP_PROMPT_HISTORY`](/docs/id/env-vars) untuk melewati penulisan transkrip dan riwayat prompt dalam mode apa pun. Dalam mode non-interaktif, Anda dapat meneruskan `--no-session-persistence` bersama `-p`, atau atur `persistSession: false` di Agent SDK.
+* Turunkan `cleanupPeriodDays` untuk mempersingkat berapa lama Claude Code menyimpan transkrip
+* Atur [`desktopSessionCleanupPeriodDays`](/docs/id/settings-reference#desktopsessioncleanupperioddays) untuk memberikan transkrip Claude Desktop dan Cowork batas usia juga
+* Atur variabel lingkungan [`CLAUDE_CODE_SKIP_PROMPT_HISTORY`](/docs/id/env-vars) untuk melewati penulisan transkrip dan riwayat prompt dalam mode apa pun. Dalam mode non-interaktif, Anda dapat sebagai gantinya meneruskan `--no-session-persistence` bersama `-p`, atau atur `persistSession: false` dalam Agent SDK TypeScript; SDK Python tidak memiliki opsi setara.
 * Gunakan [aturan izin](/docs/id/permissions) untuk menolak pembacaan file kredensial
 
 <h3 id="clear-local-data">
   Hapus data lokal
 </h3>
 
-Jalankan `claude project purge` untuk menghapus status yang Claude Code simpan untuk satu proyek. Perintah memerlukan Claude Code v2.1.124 atau lebih baru. Ini menghapus:
+Jalankan `claude project purge` untuk menghapus status yang Claude Code simpan untuk satu proyek. Ini menghapus:
 
 * Transkrip dan memori otomatis di bawah `projects/`
 * Entri `tasks/`, `debug/`, dan `file-history/` per-sesi
 * Baris prompt yang cocok di `history.jsonl`
 * Entri proyek di `~/.claude.json`
 
+Gambar yang Anda tempel atau lampirkan dalam sesi proyek disimpan di bawah direktori temp Claude Code daripada `~/.claude`, jadi purge tidak menghapusnya. [Sweep retensi](#cleaned-up-automatically) menghapusnya setelah mereka lebih tua dari `cleanupPeriodDays`.
+
 Perintah mencetak rencana penghapusan lengkap dan meminta konfirmasi sebelum menghapus apa pun.
+
+Contoh di bawah menggunakan `~/work/my-repo` sebagai placeholder. Gantilah dengan jalur ke proyek Anda. Jika tidak ada status yang cocok dengan jalur, perintah mencetak kesalahan dan keluar dengan status 1.
 
 Pratinjau rencana tanpa menghapus apa pun:
 
@@ -1591,11 +1638,30 @@ Pratinjau rencana tanpa menghapus apa pun:
 claude project purge ~/work/my-repo --dry-run
 ```
 
-Hapus dengan prompt konfirmasi tunggal:
+Rencana mencantumkan setiap item yang cocok dan alasan dimasukkannya:
+
+```text theme={null}
+Purge plan for /home/user/work/my-repo:
+
+  dir:    /home/user/.claude/projects/-home-user-work-my-repo
+           project transcripts (.jsonl) and memory/
+  config: projects["/home/user/work/my-repo"]
+           project entry in ~/.claude.json (trust, history, MCP servers)
+  filter: /home/user/.claude/history.jsonl
+           12 prompt(s) typed in this project
+
+shell-snapshots/ are not project-scoped and will not be touched
+backups/ may still contain this project entry in old .claude.json snapshots (/home/user/.claude/backups); at most 5 are kept and they rotate out automatically
+Dry run: 3 item(s) would be deleted.
+```
+
+Hapus dengan satu prompt konfirmasi:
 
 ```bash theme={null}
 claude project purge ~/work/my-repo
 ```
+
+Perintah mencetak rencana yang sama, kemudian menanyakan `Delete 3 item(s) for /home/user/work/my-repo? This cannot be undone. [y/N]` dan menghapus hanya jika Anda menjawab `y`.
 
 Abaikan jalur untuk memilih proyek dari daftar interaktif.
 
@@ -1607,21 +1673,30 @@ claude project purge ~/work/my-repo --yes
 
 Teruskan `--all` alih-alih jalur untuk membersihkan status untuk setiap proyek sekaligus, yang menghapus `history.jsonl` sepenuhnya daripada memfilternya. Teruskan `-i` untuk melangkah melalui rencana penghapusan satu item pada satu waktu.
 
-Perintah membiarkan `shell-snapshots/` dan `backups/` sendirian karena tidak termasuk dalam cakupan proyek, dan memperingatkan tentang mereka dalam output rencana. Keluar dengan status 1 jika tidak ada status yang cocok dengan jalur yang diberikan.
+Perintah membiarkan `shell-snapshots/` dan `backups/` sendirian karena tidak termasuk dalam cakupan proyek, dan memperingatkan tentang mereka dalam output rencana.
 
-Anda juga dapat menghapus salah satu jalur data aplikasi di atas dengan tangan. Sesi baru tidak terpengaruh. Tabel di bawah menunjukkan apa yang Anda hilangkan untuk sesi masa lalu.
+Anda juga dapat menghapus salah satu jalur data aplikasi di atas dengan tangan, terlepas dari [file status untuk disimpan](#state-files-to-keep). Sesi baru tidak terpengaruh. Tabel di bawah menunjukkan apa yang Anda hilangkan untuk sesi masa lalu.
 
-| Hapus                                                                                                                                                                                        | Anda kehilangan                                                 |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
-| `~/.claude/projects/`                                                                                                                                                                        | Resume, continue, dan rewind untuk sesi masa lalu               |
-| `~/.claude/history.jsonl`                                                                                                                                                                    | Recall prompt panah atas                                        |
-| `~/.claude/file-history/`                                                                                                                                                                    | Checkpoint restore untuk sesi masa lalu                         |
-| `~/.claude/stats-cache.json`                                                                                                                                                                 | Total historis yang ditampilkan oleh `/usage`                   |
-| `~/.claude/remote-settings.json`                                                                                                                                                             | Tidak ada. Diambil kembali pada peluncuran berikutnya.          |
-| `~/.claude/debug/`, `~/.claude/plans/`, `~/.claude/paste-cache/`, `~/.claude/image-cache/`, `~/.claude/session-env/`, `~/.claude/tasks/`, `~/.claude/shell-snapshots/`, `~/.claude/backups/` | Tidak ada yang menghadap pengguna                               |
-| `~/.claude/todos/`, `~/.claude/statsig/`, `~/.claude/logs/`                                                                                                                                  | Tidak ada. Direktori warisan tidak ditulis oleh versi saat ini. |
+| Hapus                                                                                                                | Anda kehilangan                                                                                                                                                                        |
+| -------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `~/.claude/projects/`                                                                                                | Lanjutkan, lanjutkan, dan putar ulang untuk sesi masa lalu, dan memori otomatis untuk setiap proyek                                                                                    |
+| `~/.claude/history.jsonl`                                                                                            | Penarikan prompt panah atas, pencarian riwayat `Ctrl+R`, dan penyelesaian perintah shell `!`                                                                                           |
+| `~/.claude/paste-cache/`                                                                                             | Teks yang ditempel dalam prompt yang diingat kembali; lihat [tempel konten besar](/docs/id/terminal-config#paste-large-content)                                                             |
+| `~/.claude/uploads/`                                                                                                 | Lampiran yang sesi [Remote Control](/docs/id/remote-control) masa lalu rujuk menurut jalur                                                                                                  |
+| `~/.claude/file-history/`                                                                                            | Pemulihan checkpoint untuk sesi masa lalu                                                                                                                                              |
+| `~/.claude/stats-cache.json`                                                                                         | Total historis yang ditampilkan oleh `/usage`                                                                                                                                          |
+| `~/.claude/usage-data/`                                                                                              | Laporan [`/insights`](/docs/id/costs#analyze-your-usage-patterns) masa lalu dan data analisis cache yang digunakan untuk membangunnya                                                       |
+| `~/.claude/feedback-bundles/`                                                                                        | Umpan balik dan arsip laporan bug yang belum Anda kirim ke tim akun Anthropic Anda                                                                                                     |
+| `~/.claude/feedback/drafts/`                                                                                         | [Umpan balik yang dirancang Claude](/docs/id/tools-reference#sendfeedback-tool-behavior) yang belum Anda kirim                                                                              |
+| `~/.claude/remote-settings.json`                                                                                     | Tidak ada. Diambil kembali saat peluncuran berikutnya.                                                                                                                                 |
+| `~/.claude/cache/changelog.md`                                                                                       | Tidak ada. Disegarkan di latar belakang.                                                                                                                                               |
+| `~/.claude/policy-limits.json`                                                                                       | Tidak ada. Disegarkan secara otomatis.                                                                                                                                                 |
+| `~/.claude/tasks/`                                                                                                   | Daftar tugas yang akan diambil sesi yang dilanjutkan                                                                                                                                   |
+| `~/.claude/skills/.trash/`, `~/.claude/plugins/.trash/`                                                              | Kesempatan untuk memulihkan [skills yang disinkronkan](/docs/id/skills#how-synced-skills-behave) dan [plugins yang disinkronkan](/docs/id/plugins/loading#synced-plugins) yang Claude Code hapus |
+| `~/.claude/debug/`, `~/.claude/plans/`, `~/.claude/session-env/`, `~/.claude/shell-snapshots/`, `~/.claude/backups/` | Tidak ada yang menghadap pengguna                                                                                                                                                      |
+| `~/.claude/todos/`, `~/.claude/statsig/`, `~/.claude/logs/`, `~/.claude/image-cache/`                                | Tidak ada. Direktori warisan tidak ditulis oleh versi saat ini.                                                                                                                        |
 
-Jangan hapus `~/.claude.json`, `~/.claude/settings.json`, atau `~/.claude/plugins/`: file-file itu menyimpan auth, preferensi, dan plugin yang diinstal Anda.
+Jangan hapus `~/.claude.json`, `~/.claude/settings.json`, atau `~/.claude/plugins/`: file-file itu menyimpan auth, preferensi, dan plugin terinstal Anda.
 
 <h2 id="related-resources">
   Sumber daya terkait

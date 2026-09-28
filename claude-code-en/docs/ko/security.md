@@ -20,9 +20,13 @@
   권한 기반 아키텍처
 </h3>
 
-Claude Code는 기본적으로 엄격한 읽기 전용 권한을 사용합니다. 추가 작업이 필요한 경우(파일 편집, 테스트 실행, 명령 실행), Claude Code는 명시적 권한을 요청합니다. 사용자는 작업을 한 번만 승인할지 또는 자동으로 허용할지 제어할 수 있습니다.
+Manual 모드에서 Claude Code는 읽기 전용 권한으로 시작합니다. Claude Code가 파일을 편집하거나, 테스트를 실행하거나, 명령을 실행해야 할 때, 먼저 사용자에게 요청하고, 사용자는 작업을 한 번만 승인할지 또는 그 이후로 계속 허용할지 선택합니다.
 
-Claude Code는 시스템을 수정할 수 있는 Bash 명령을 실행하기 전에 승인을 요구합니다. `ls`, `cat`, `git status`와 같은 기본 제공 [읽기 전용 명령](/docs/ko/permissions#read-only-commands) 집합은 프롬프트 없이 실행됩니다. 이 접근 방식을 통해 사용자와 조직은 권한을 직접 구성할 수 있습니다.
+Manual 모드에서 Claude Code는 시스템을 수정할 수 있는 Bash 명령을 실행하기 전에도 요청합니다. `ls`, `cat`, `git status`와 같은 기본 제공 [읽기 전용 명령](/docs/ko/permissions#read-only-commands)은 요청 없이 실행합니다. 사용자와 조직은 이러한 권한을 직접 구성합니다.
+
+[자동 모드](/docs/ko/permission-modes#eliminate-prompts-with-auto-mode)에서는 별도의 분류기 모델이 사용자 대신 작업을 검토하고 안전하지 않다고 판단하는 작업을 차단합니다. [분류기가 작업을 평가하는 방식](/docs/ko/permission-modes#how-the-classifier-evaluates-actions)에서는 Claude Code가 직접 승인하는 작업, 분류기로 보내는 작업, 그리고 여전히 사용자에게 요청하는 작업을 나열합니다. 명시적 요청 및 거부 규칙은 여전히 적용되며, 조직은 [자동 모드를 끌 수 있습니다](/docs/ko/permission-modes#eliminate-prompts-with-auto-mode).
+
+세션이 시작되는 권한 모드는 사용자의 플랜, 시작하는 표면, 사용자의 설정 및 조직의 설정에 따라 달라집니다. [권한 모드](/docs/ko/permission-modes#which-mode-a-session-starts-in)를 참조하십시오.
 
 자세한 권한 구성은 [Permissions](/docs/ko/permissions)를 참조하십시오.
 
@@ -32,8 +36,8 @@ Claude Code는 시스템을 수정할 수 있는 Bash 명령을 실행하기 전
 
 에이전트 시스템의 위험을 완화하기 위해:
 
-* **샌드박스 bash 도구**: [Sandbox](/docs/ko/sandboxing) bash 명령을 파일 시스템 및 네트워크 격리로 실행하여 권한 프롬프트를 줄이면서 보안을 유지합니다. `/sandbox`를 사용하여 Claude Code가 자율적으로 작업할 수 있는 경계를 정의하도록 활성화합니다.
-* **작업 디렉토리 경계**: Claude Code는 시작된 폴더와 그 하위 폴더에만 쓸 수 있으며, 명시적 권한 없이 상위 디렉토리의 파일을 수정할 수 없습니다. Read, Grep, Glob 도구를 사용하여 이 경계 외부의 경로를 읽는 것은 승인 프롬프트 후에 가능합니다. [추가 디렉토리](/docs/ko/permissions#working-directories)로 경계를 확장하여 프롬프트를 건너뛰거나, 샌드박싱이 활성화되었을 때만 적용되는 [sandbox `denyRead` 규칙](/docs/ko/sandboxing#filesystem-isolation)으로 읽기 전용 Bash 명령에 사용 가능한 더 광범위한 읽기 액세스를 제한할 수 있습니다.
+* **샌드박스 bash 도구**: [Sandbox](/docs/ko/sandboxing) bash 명령을 파일 시스템 및 네트워크 격리로 실행하여 권한 프롬프트를 줄이면서 보안을 유지합니다. `/sandbox`를 사용하여 Claude Code가 자율적으로 작업할 수 있는 경계를 정의하도록 구성합니다.
+* **작업 디렉토리 경계**: Manual 모드에서 Claude Code는 시작된 폴더와 그 하위 폴더에만 쓸 수 있으며, 명시적 권한 없이 상위 디렉토리의 파일을 수정할 수 없습니다. Manual 모드에서 Claude Code는 또한 Read, Grep, Glob 도구를 사용하여 이 경계 외부의 경로를 읽기 전에 사용자에게 요청합니다. [추가 디렉토리](/docs/ko/permissions#working-directories)로 경계를 확장하여 프롬프트를 건너뛰거나, 샌드박싱이 활성화되었을 때만 적용되는 [sandbox `denyRead` 규칙](/docs/ko/sandboxing#filesystem-isolation)으로 읽기 전용 Bash 명령에 사용 가능한 더 광범위한 읽기 액세스를 제한할 수 있습니다.
 * **프롬프트 피로 완화**: 사용자별, 코드베이스별 또는 조직별로 자주 사용되는 안전한 명령을 허용 목록에 추가하는 지원
 * **Accept Edits 모드**: 파일 편집을 자동으로 승인하고 작업 디렉토리의 경로에 대해 `mkdir`, `touch`, `rm`, `mv`, `cp`, `sed`와 같은 고정된 파일 시스템 Bash 명령 집합을 자동으로 승인합니다. 다른 Bash 명령과 범위를 벗어난 경로는 여전히 프롬프트를 표시합니다.
 
@@ -53,10 +57,10 @@ Claude Code는 사용자가 부여한 권한만 가집니다. 승인 전에 제�
   핵심 보호
 </h3>
 
-* **권한 시스템**: 민감한 작업에는 명시적 승인이 필요합니다.
+* **권한 시스템**: Manual 모드에서는 민감한 작업에 명시적 승인이 필요합니다.
 * **컨텍스트 인식 분석**: 전체 요청을 분석하여 잠재적으로 해로운 지시사항을 감지합니다.
 * **입력 살균**: 사용자 입력을 처리하여 명령 주입을 방지합니다.
-* **네트워크 명령 승인**: `curl` 및 `wget`과 같이 웹에서 콘텐츠를 가져오는 명령은 기본적으로 자동 승인되지 않습니다. 다른 읽기 전용이 아닌 Bash 명령처럼 프롬프트가 표시되므로 한 번 승인하거나 `Bash(curl *)`와 같은 명시적 허용 규칙을 추가할 수 있습니다. 완전히 차단하려면 [`permissions.deny`](/docs/ko/permissions#tool-specific-permission-rules)에 추가하십시오.
+* **네트워크 명령 승인**: `curl` 및 `wget`과 같이 웹에서 콘텐츠를 가져오는 명령은 기본적으로 자동 승인되지 않습니다. Manual 모드에서는 다른 읽기 전용이 아닌 Bash 명령처럼 프롬프트가 표시되므로 한 번 승인하거나 `Bash(curl *)`와 같은 명시적 허용 규칙을 추가할 수 있습니다. Claude가 이를 실행하지 못하도록 하려면 [`permissions.deny`](/docs/ko/permissions#tool-specific-permission-rules)에 추가하십시오. deny 규칙은 [작성된 대로](/docs/ko/permissions#bash-rule-limits) 명령과 일치합니다. 명령 텍스트에 의존하지 않는 네트워크 적용의 경우 [샌드박스 네트워크 격리](/docs/ko/sandboxing#network-isolation)를 참조하십시오.
 
 <h3 id="privacy-safeguards">
   개인정보 보호 장치
@@ -74,13 +78,13 @@ Claude Code는 사용자가 부여한 권한만 가집니다. 승인 전에 제�
   추가 보호 기능
 </h3>
 
-* **네트워크 요청 승인**: 네트워크 요청을 하는 도구는 기본적으로 사용자 승인이 필요합니다.
+* **네트워크 요청 승인**: Manual 모드에서는 네트워크 요청을 하는 대부분의 도구가 기본적으로 사용자 승인이 필요합니다.
 * **격리된 컨텍스트 윈도우**: 웹 가져오기는 별도의 컨텍스트 윈도우를 사용하여 잠재적으로 악의적인 프롬프트 주입을 방지합니다.
 * **신뢰 확인**: 첫 번째 코드베이스 실행 및 새 MCP 서버는 신뢰 확인이 필요합니다.
   * 참고: `-p` 플래그를 사용하여 비대화형으로 실행할 때 신뢰 확인이 비활성화됩니다.
   * 참고: Claude Code를 홈 디렉토리에서 직접 시작할 때 신뢰 수락은 현재 세션에만 유지되며 디스크에 기록되지 않으므로 각 시작 시 프롬프트가 다시 나타납니다. 이를 유지하는 설정은 없습니다. 신뢰 수락이 디렉토리별로 저장되는 프로젝트 하위 디렉토리에서 Claude Code를 시작하십시오.
-* **명령 주입 감지**: 의심스러운 bash 명령은 이전에 허용 목록에 있었더라도 수동 승인이 필요합니다.
-* **폐쇄형 매칭 실패**: 일치하지 않는 명령은 기본적으로 수동 승인이 필요합니다.
+* **명령 주입 감지**: Manual 모드에서는 의심스러운 bash 명령은 이전에 허용 목록에 있었더라도 수동 승인이 필요합니다.
+* **폐쇄형 매칭 실패**: Manual 모드에서는 일치하지 않는 명령은 기본적으로 수동 승인이 필요합니다.
 * **자연어 설명**: 복잡한 bash 명령에는 사용자 이해를 위한 설명이 포함됩니다.
 * **보안 자격증명 저장소**: API 키 및 토큰은 사용 가능한 경우 macOS Keychain에 저장되며, Windows 및 Linux에서는 파일 권한으로 보호됩니다. [Credential Management](/docs/ko/authentication#credential-management)를 참조하십시오.
 
@@ -118,16 +122,16 @@ IDE에서 Claude Code를 실행하는 방법에 대한 자세한 내용은 [VS C
   클라우드 실행 보안
 </h2>
 
-[웹에서 Claude Code](/docs/ko/claude-code-on-the-web)를 사용할 때 추가 보안 제어가 적용됩니다:
+[웹에서 Claude Code](/docs/ko/claude-code-on-the-web)를 사용할 때 추가 보안 제어가 적용됩니다. 조직이 [자체 호스팅 환경](/docs/ko/self-hosted-environments)으로 라우팅하는 세션은 사용자의 자체 인프라에서 실행되며, 격리, 네트워크 송신 및 git 자격증명은 배포의 책임입니다. Anthropic 호스팅 환경에서는:
 
 * **격리된 가상 머신**: 각 클라우드 세션은 격리된 Anthropic 관리 VM에서 실행됩니다
 * **네트워크 액세스 제어**: 네트워크 액세스는 기본적으로 제한되며 비활성화되거나 특정 도메인만 허용하도록 구성할 수 있습니다
 * **자격증명 보호**: 인증은 샌드박스 내에서 범위가 지정된 자격증명을 사용하는 보안 프록시를 통해 처리되며, 이는 실제 GitHub 인증 토큰으로 변환됩니다
 * **분기 제한**: Git 푸시 작업은 현재 작업 분기로 제한됩니다
-* **감사 로깅**: 클라우드 환경의 모든 작업은 규정 준수 및 감사 목적으로 기록됩니다
-* **자동 정리**: 클라우드 환경은 세션 완료 후 자동으로 종료됩니다
+* **감사 로깅**: 클라우드 세션의 모든 작업은 규정 준수 및 감사 목적으로 기록됩니다
+* **자동 정리**: 세션 VM은 일정 기간의 비활성 후 회수됩니다
 
-클라우드 실행에 대한 자세한 내용은 [Claude Code on the web](/docs/ko/claude-code-on-the-web)을 참조하십시오.
+클라우드 실행에 대한 자세한 내용은 [클라우드에서 Claude Code 사용](/docs/ko/claude-code-on-the-web)을 참조하십시오. 클라우드 세션의 네트워크 액세스를 구성하려면 [클라우드 환경 구성](/docs/ko/cloud-environments#network-access)을 참조하십시오.
 
 [Remote Control](/docs/ko/remote-control) 세션은 다르게 작동합니다: 웹 인터페이스는 로컬 머신에서 실행 중인 Claude Code 프로세스에 연결됩니다. 모든 코드 실행 및 파일 액세스는 로컬에 유지되며, 세션 트래픽은 TLS를 통해 Anthropic API를 통해 이동합니다. 연결되어 있는 동안 세션 트랜스크립트는 [연결 및 보안](/docs/ko/remote-control#connection-and-security)에 설명된 대로 디바이스 간 대화를 동기화하기 위해 Anthropic 서버에 저장됩니다. 클라우드 VM 또는 샌드박싱이 관련되지 않습니다. 연결은 각각 특정 목적으로 제한되고 독립적으로 만료되는 여러 단기 범위 자격증명을 사용하여 손상된 단일 자격증명의 영향 범위를 제한합니다.
 
@@ -148,7 +152,7 @@ IDE에서 Claude Code를 실행하는 방법에 대한 자세한 내용은 [VS C
   팀 보안
 </h3>
 
-* [managed settings](/docs/ko/settings#settings-files)를 사용하여 조직 표준 적용
+* [managed settings](/docs/ko/settings#where-settings-live)를 사용하여 조직 표준 적용
 * 버전 제어를 통해 승인된 권한 구성 공유
 * 팀 구성원에게 보안 모범 사례 교육
 * [OpenTelemetry metrics](/docs/ko/monitoring-usage)를 통해 Claude Code 사용 모니터링
@@ -170,9 +174,11 @@ Claude Code에서 보안 취약점을 발견한 경우:
 </h2>
 
 * [Security guidance plugin](/docs/ko/security-guidance): Claude가 세션 중에 자신의 코드 변경 사항에서 취약점을 검토하고 수정하도록 합니다
+* [`/security-review`](/docs/ko/commands#all-commands): 현재 브랜치의 변경 사항에 대해 온디맨드 보안 검사를 실행합니다
 * [Sandbox 환경](/docs/ko/sandbox-environments): 격리 접근 방식을 비교하고 위협 모델에 맞는 방식을 선택합니다
 * [Sandboxing](/docs/ko/sandboxing): Bash 명령에 대한 파일 시스템 및 네트워크 격리
 * [Permissions](/docs/ko/permissions): 권한 및 액세스 제어를 구성합니다
 * [Monitoring usage](/docs/ko/monitoring-usage): Claude Code 활동을 추적하고 감사합니다
 * [Development containers](/docs/ko/devcontainer): 보안, 격리된 환경
 * [Anthropic Trust Center](https://trust.anthropic.com): 보안 인증 및 규정 준수
+* [CISO's guide to agentic AI](https://claude.com/blog/ciso-guide-to-agentic-ai): 에이전트 AI 배포를 평가하기 위한 보안 리더의 프레임워크

@@ -11,7 +11,7 @@ I subagent sono assistenti AI specializzati che gestiscono tipi specifici di att
 Ogni subagent viene eseguito nella propria finestra di contesto con un prompt di sistema personalizzato, accesso a strumenti specifici e autorizzazioni indipendenti. Quando Claude incontra un'attività che corrisponde alla descrizione di un subagent, la delega a quel subagent, che lavora in modo indipendente e restituisce i risultati. Per vedere il risparmio di contesto in pratica, la [visualizzazione della finestra di contesto](/docs/it/context-window) illustra una sessione in cui un subagent gestisce la ricerca nella sua finestra separata.
 
 <Note>
-  I subagent funzionano all'interno di una singola sessione. Per eseguire molte sessioni indipendenti in parallelo e monitorarle da un unico posto, consulti [background agents](/docs/it/agent-view). Per sessioni che comunicano tra loro, consulti [agent teams](/docs/it/agent-teams).
+  I subagent funzionano all'interno di una singola sessione. Per eseguire molte sessioni indipendenti in parallelo e monitorarle da un unico posto, consulti [background agents](/docs/it/agent-view). Per sessioni separate che si scambiano messaggi, consulti [cross-session messaging](/docs/it/cross-session-messaging). Per un team coordinato di sessioni che Claude genera e supervisiona, consulti [agent teams](/docs/it/agent-teams).
 </Note>
 
 I subagent la aiutano a:
@@ -24,21 +24,21 @@ I subagent la aiutano a:
 
 Claude utilizza la descrizione di ogni subagent per decidere quando delegare le attività. Quando crea un subagent, scriva una descrizione chiara in modo che Claude sappia quando utilizzarlo.
 
-Claude Code include diversi subagent integrati come Explore, Plan e general-purpose. Può anche creare subagent personalizzati per gestire attività specifiche.
+Quelle descrizioni occupano contesto, quindi le mantenga brevi. Quando le descrizioni combinate dei suoi subagent, ad eccezione di quelli integrati, superano i 15.000 token, Claude Code mostra un [avviso all'avvio con il conteggio totale dei token](/docs/it/errors#agent-descriptions-are-over-the-15000-token-limit). Riduca i campi `description` dei suoi subagent e sposti i dettagli nel prompt di sistema di ogni subagent, che si carica solo quando quel subagent viene eseguito.
 
 <h2 id="built-in-subagents">
   Subagent integrati
 </h2>
 
-Claude Code include subagent integrati che Claude utilizza automaticamente quando appropriato. Ognuno eredita le autorizzazioni della conversazione principale con restrizioni di strumenti aggiuntive.
+Claude Code include subagent integrati che Claude utilizza automaticamente quando appropriato. Ognuno eredita le autorizzazioni della conversazione principale; la maggior parte viene eseguita con un set di strumenti limitato.
 
-Explore e Plan saltano i vostri file CLAUDE.md e lo stato git della sessione principale per mantenere la ricerca veloce ed economica. Ogni altro subagent integrato e [subagent personalizzato](#configure-subagents) carica entrambi. Per la suddivisione completa di ciò che raggiunge un subagent, consultate [cosa si carica all'avvio](#what-loads-at-startup).
+Explore e Plan saltano i vostri file CLAUDE.md e lo snapshot dello stato git per mantenere la ricerca veloce ed economica. Ogni altro subagent integrato e [subagent personalizzato](#configure-subagents) carica entrambi, a meno che la sua definizione non imposti il campo [`omitClaudeMd`](#supported-frontmatter-fields) per saltare i file CLAUDE.md dell'utente, del progetto e locali. Per la suddivisione completa di ciò che raggiunge un subagent, consultate [cosa si carica all'avvio](#what-loads-at-startup).
 
 <Tabs>
   <Tab title="Explore">
     Un agente veloce e di sola lettura ottimizzato per la ricerca e l'analisi delle basi di codice.
 
-    * **Model**: eredita dalla conversazione principale, limitato a Opus sull'API Claude, quindi Explore non viene mai eseguito su un modello più costoso di quello che avete già scelto per la sessione
+    * **Model**: eredita dalla conversazione principale, limitato a Opus sull'API Claude, quindi Explore non viene mai eseguito su un modello più costoso di quello che avete già scelto per la sessione, a meno che non impostiate `CLAUDE_CODE_SUBAGENT_MODEL` e [lo forziate su ogni subagent](#run-every-subagent-on-one-model)
     * **Tools**: strumenti di sola lettura; Write e Edit sono negati
     * **Purpose**: scoperta di file, ricerca di codice, esplorazione della base di codice
 
@@ -46,7 +46,7 @@ Explore e Plan saltano i vostri file CLAUDE.md e lo stato git della sessione pri
 
     Un [subagent utente o progetto](#choose-the-subagent-scope) denominato `Explore` sostituisce quello integrato e mantiene il proprio campo `model`, quindi definite uno con `model: haiku` per mantenere l'esplorazione su un modello a costo inferiore.
 
-    Claude delega a Explore quando ha bisogno di cercare o comprendere una base di codice senza apportare modifiche. Questo mantiene i risultati dell'esplorazione fuori dal contesto della sua conversazione principale.
+    Claude delega a Explore quando ha bisogno di cercare o comprendere una base di codice senza apportare modifiche. Questo mantiene i risultati dell'esplorazione fuori dal contesto della conversazione principale.
 
     Quando invoca Explore, Claude specifica un livello di accuratezza: **quick** per ricerche mirate, **medium** per esplorazione equilibrata, o **very thorough** per analisi completa.
   </Tab>
@@ -54,30 +54,31 @@ Explore e Plan saltano i vostri file CLAUDE.md e lo stato git della sessione pri
   <Tab title="Plan">
     Un agente di ricerca utilizzato durante la [Plan Mode](/docs/it/permission-modes#analyze-before-you-edit-with-plan-mode) per raccogliere contesto prima di presentare un piano.
 
-    * **Model**: eredita dalla conversazione principale
+    * **Model**: eredita dalla conversazione principale, a meno che non impostiate `CLAUDE_CODE_SUBAGENT_MODEL` e [lo forziate su ogni subagent](#run-every-subagent-on-one-model)
     * **Tools**: strumenti di sola lettura; Write e Edit sono negati
     * **Purpose**: ricerca della base di codice per la pianificazione
 
-    Quando è in Plan Mode e Claude ha bisogno di comprendere la sua base di codice, delega la ricerca al subagent Plan in modo che l'output dell'esplorazione rimanga in una finestra di contesto separata mentre la conversazione principale rimane di sola lettura.
+    Quando è in Plan Mode e Claude ha bisogno di comprendere la vostra base di codice, delega la ricerca al subagent Plan in modo che l'output dell'esplorazione rimanga in una finestra di contesto separata mentre la conversazione principale rimane di sola lettura.
   </Tab>
 
   <Tab title="General-purpose">
     Un agente capace per attività complesse e multi-step che richiedono sia esplorazione che azione.
 
-    * **Model**: eredita dalla conversazione principale
-    * **Tools**: tutti gli strumenti
+    * **Model**: il modello [`CLAUDE_CODE_SUBAGENT_MODEL`](#choose-a-model) se lo impostate e niente assegna un modello in un altro modo, altrimenti il modello della conversazione principale; [Scegliere un modello](#choose-a-model) indica l'ordine completo, e [Eseguire ogni subagent su un modello](#run-every-subagent-on-one-model) mostra come fare in modo che la variabile sostituisca quelle fonti
+    * **Tools**: ogni strumento [disponibile per i subagent](#available-tools)
     * **Purpose**: ricerca complessa, operazioni multi-step, modifiche del codice
 
     Claude delega a general-purpose quando l'attività richiede sia esplorazione che modifica, ragionamento complesso per interpretare i risultati, o più step dipendenti.
   </Tab>
 
   <Tab title="Other">
-    Claude Code include agenti helper aggiuntivi per attività specifiche. Questi vengono generalmente invocati automaticamente, quindi non ha bisogno di utilizzarli direttamente.
+    Claude Code include agenti helper aggiuntivi per attività specifiche. Questi vengono generalmente invocati automaticamente, quindi non avete bisogno di utilizzarli direttamente.
 
-    | Agent             | Model  | Quando Claude lo utilizza                                         |
-    | :---------------- | :----- | :---------------------------------------------------------------- |
-    | statusline-setup  | Sonnet | Quando esegue `/statusline` per configurare la sua linea di stato |
-    | claude-code-guide | Haiku  | Quando fa domande sulle funzionalità di Claude Code               |
+    | Agent             | Model                                                                                                | Quando Claude lo utilizza                                                                                                                                                                                                                                                                                                                                                   |
+    | :---------------- | :--------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | claude            | Nessuno proprio; segue l'[ordine dei modelli](#choose-a-model) quando Claude lo genera come subagent | Quando un'attività non si adatta a un agente più specializzato. Un catch-all con ogni strumento [disponibile per i subagent](#available-tools). Anche l'agente predefinito per una [sessione in background](/docs/it/agent-view) inviata; [quale modalità di autorizzazione inizia](/docs/it/agent-view#permission-mode-model-and-effort) dipende da come è stata avviata la sessione |
+    | statusline-setup  | Sonnet                                                                                               | Quando eseguite `/statusline` per configurare la vostra linea di stato                                                                                                                                                                                                                                                                                                      |
+    | claude-code-guide | Haiku                                                                                                | Quando fate domande sulle funzionalità di Claude Code                                                                                                                                                                                                                                                                                                                       |
   </Tab>
 </Tabs>
 
@@ -87,6 +88,8 @@ I subagent integrati sono registrati per impostazione predefinita nelle sessioni
 * Per impedire a Claude di delegare a qualsiasi subagent, negate lo strumento `Agent` stesso con [`permissions.deny`](/docs/it/permissions#tool-specific-permission-rules).
 * Per rimuovere solo i subagent integrati `Explore` e `Plan`, impostate [`CLAUDE_CODE_DISABLE_EXPLORE_PLAN_AGENTS=1`](/docs/it/env-vars). Claude legge ed esplora i file direttamente invece di delegare a loro. Richiede Claude Code v2.1.198 o successivo.
 * In [modalità non interattiva](/docs/it/headless) e in [Agent SDK](/docs/it/agent-sdk/overview), impostate [`CLAUDE_AGENT_SDK_DISABLE_BUILTIN_AGENTS=1`](/docs/it/env-vars) per rimuovere tutti i tipi integrati e fornire solo i vostri.
+
+Una chiamata dello strumento Agent che omette `subagent_type` non riesce con [`subagent_type is required`](/docs/it/errors#subagent-type-is-required) quando la sessione non ha alcun subagent `general-purpose` su cui ripiegare.
 
 Oltre a questi subagent integrati, potete creare i vostri con prompt personalizzati, restrizioni di strumenti, modalità di autorizzazione, hooks e skills. Le sezioni seguenti mostrano come iniziare e personalizzare i subagent.
 
@@ -139,7 +142,7 @@ Questa procedura crea un subagent a livello utente che esamina il codice e sugge
     Use the code-improver agent to suggest improvements in this project
     ```
 
-    Claude delega al suo nuovo subagent, che scansiona la base di codice e restituisce suggerimenti di miglioramento.
+    Claude delega al suo nuovo subagent, che scansiona la base di codice e restituisce suggerimenti di miglioramento. Nella trascrizione, la delega appare come una riga di chiamata dello strumento che mostra il nome del subagent seguito da una breve descrizione dell'attività, ad esempio `code-improver(Suggest code improvements)`.
 
     Se Claude non riesce a trovare il nuovo subagent, riavvii Claude Code e riprovi. Questo accade solo quando `~/.claude/agents/` non esisteva prima dell'inizio della sessione, perché una sessione in esecuzione non rileva una directory `agents` appena creata.
   </Step>
@@ -171,19 +174,19 @@ Archivi i file dei subagent in posizioni diverse a seconda dell'ambito. Quando p
 | Flag CLI `--agents`            | Sessione corrente          | 2           | Passa JSON quando avvia Claude Code                  |
 | `.claude/agents/`              | Progetto corrente          | 3           | Chieda a Claude, o crei il file manualmente          |
 | `~/.claude/agents/`            | Tutti i suoi progetti      | 4           | Chieda a Claude, o crei il file manualmente          |
-| Directory `agents/` del plugin | Dove il plugin è abilitato | 5 (minima)  | Installato con [plugins](/docs/it/plugins)                |
+| Directory `agents/` del plugin | Dove il plugin è abilitato | 5 (minima)  | Installato con [plugins](/docs/it/plugins/overview)       |
 
 I **subagent di progetto** (`.claude/agents/`) sono ideali per subagent specifici di una base di codice. Li archivi nel controllo della versione in modo che il suo team possa utilizzarli e migliorarli in modo collaborativo.
 
-I subagent di progetto vengono scoperti camminando verso l'alto dalla directory di lavoro corrente, quindi ogni `.claude/agents/` tra lì e la radice del repository viene scansionato. A partire da v2.1.178, quando più di una di queste directory annidate definisce lo stesso `name`, Claude Code utilizza la definizione più vicina alla directory di lavoro.
+I subagent di progetto vengono scoperti camminando verso l'alto dalla directory di lavoro corrente, quindi ogni `.claude/agents/` tra lì e la radice del repository viene scansionato. Quando più di una di queste directory annidate definisce lo stesso `name`, Claude Code utilizza la definizione più vicina alla directory di lavoro.
 
-Le directory aggiunte con `--add-dir` vengono anche scansionate: una cartella `.claude/agents/` all'interno di una directory aggiunta si carica insieme ai subagent di progetto. Consulti [Directory aggiuntive](/docs/it/permissions#additional-directories-grant-file-access-not-configuration) per quali altri tipi di configurazione si caricano da `--add-dir`. Per condividere i subagent tra progetti senza `--add-dir`, usi `~/.claude/agents/` o un [plugin](/docs/it/plugins).
+Quando aggiunge una directory con `--add-dir` o `/add-dir`, Claude Code carica anche la sua cartella `.claude/agents/`, insieme ai subagent di progetto. Consulti [Directory aggiuntive](/docs/it/permissions#additional-directories-grant-file-access-not-configuration) per quali altri tipi di configurazione si caricano da `--add-dir`. Per condividere i subagent tra progetti senza `--add-dir`, usi `~/.claude/agents/` o un [plugin](/docs/it/plugins/overview).
 
 I **subagent utente** (`~/.claude/agents/`) sono subagent personali disponibili in tutti i suoi progetti.
 
 Claude Code scansiona `.claude/agents/` e `~/.claude/agents/` ricorsivamente, quindi può organizzare le definizioni in sottocartelle come `agents/review/` o `agents/research/`. Il percorso della sottodirectory non influisce su come un subagent viene identificato o invocato, perché l'identità proviene solo dal campo frontmatter `name`.
 
-Mantenga i valori `name` univoci in tutto l'albero: se due file all'interno dello stesso ambito `.claude/agents/`, incluse le sue sottocartelle, dichiarano lo stesso nome, Claude Code carica solo uno di essi, scelto dall'ordine di lettura del filesystem piuttosto che da una precedenza documentata. Tra le directory di progetto annidate, la definizione più vicina alla directory di lavoro vince, come descritto sopra. Il controllo di configurazione [`/doctor`](/docs/it/commands#all-commands) segnala i file nello stesso ambito che condividono un nome e propone di rinominare o rimuovere tutti tranne uno. Prima di v2.1.205, `/doctor` apriva una schermata di diagnostica che elencava i duplicati e mostrava quale definizione era attiva.
+Mantenga i valori `name` univoci in tutto l'albero: se due file all'interno dello stesso `.claude/agents/`, incluse le sue sottocartelle, dichiarano lo stesso nome, Claude Code carica solo uno di essi, scelto dall'ordine di lettura del filesystem piuttosto che da una precedenza documentata. Tra le directory di progetto annidate, la definizione più vicina alla directory di lavoro vince, come descritto sopra. Il controllo di configurazione [`/doctor`](/docs/it/commands#all-commands) segnala i file nello stesso ambito che condividono un nome e propone di rinominare o rimuovere tutti tranne uno. Prima di v2.1.205, `/doctor` apriva una schermata di diagnostica che elencava i duplicati e mostrava quale definizione era attiva.
 
 Le directory `agents/` del plugin vengono scansionate anche ricorsivamente. A differenza degli ambiti di progetto e utente, una sottocartella all'interno della directory `agents/` di un plugin diventa parte dell'[identificatore con ambito](#invoke-subagents-explicitly): un file in `agents/review/security.md` nel plugin `my-plugin` si registra come `my-plugin:review:security`.
 
@@ -227,17 +230,21 @@ I **subagent definiti da CLI** vengono passati come JSON quando avvia Claude Cod
   </Tab>
 </Tabs>
 
-Il flag `--agents` accetta JSON con gli stessi campi [frontmatter](#supported-frontmatter-fields) dei subagent basati su file: `description`, `prompt`, `tools`, `disallowedTools`, `model`, `permissionMode`, `mcpServers`, `hooks`, `maxTurns`, `skills`, `initialPrompt`, `memory`, `effort`, `background`, `isolation` e `color`. Usi `prompt` per il prompt di sistema, equivalente al corpo markdown nei subagent basati su file.
+Il flag `--agents` accetta JSON con un campo `prompt` più questi campi [frontmatter](#supported-frontmatter-fields): `description`, `tools`, `disallowedTools`, `model`, `permissionMode`, `mcpServers`, `hooks`, `maxTurns`, `skills`, `initialPrompt`, `memory`, `effort`, `background`, `omitClaudeMd`, e `isolation`. Usi `prompt` per il prompt di sistema, equivalente al corpo markdown nei subagent basati su file. `color` e `experimental` non sono accettati qui e vengono ignorati piuttosto che rifiutati.
 
-I **subagent gestiti** vengono distribuiti dagli amministratori dell'organizzazione. Posizioni file markdown in `.claude/agents/` all'interno della [directory managed settings](/docs/it/settings#settings-files), utilizzando lo stesso formato frontmatter dei subagent di progetto e utente. Le definizioni gestite hanno la precedenza sui subagent di progetto e utente con lo stesso nome.
+Ogni chiave di primo livello nel JSON è il nome dell'agente. Non inizi un nome con `-`.
 
-I **subagent plugin** provengono da [plugins](/docs/it/plugins) che ha installato. Si caricano insieme ai suoi subagent personalizzati e appaiono nella typeahead @-mention con il loro nome con ambito. Consulti il [riferimento dei componenti plugin](/docs/it/plugins-reference#agents) per i dettagli sulla creazione di subagent plugin.
+Per quello che Claude Code fa con un valore che non può caricare, e i flag e la variabile di ambiente che saltano quel controllo, consulti [`Invalid --agents configuration`](/docs/it/errors#invalid-agents-configuration).
+
+I **subagent gestiti** vengono distribuiti dagli amministratori dell'organizzazione. Posizioni file markdown in `.claude/agents/` all'interno della [directory managed settings](/docs/it/managed-settings#delivery-mechanisms), utilizzando lo stesso formato frontmatter dei subagent di progetto e utente. Le definizioni gestite hanno la precedenza sui subagent di progetto e utente con lo stesso nome.
+
+I **subagent plugin** provengono da [plugins](/docs/it/plugins/overview) che ha installato. Si caricano automaticamente insieme ai suoi subagent personalizzati e appaiono nella typeahead @-mention con il loro nome con ambito. Consulti il [riferimento dei componenti plugin](/docs/it/plugins/components#agents) per i dettagli sulla creazione di subagent plugin.
 
 <Note>
-  Per motivi di sicurezza, i subagent plugin non supportano i campi frontmatter `hooks`, `mcpServers` o `permissionMode`. Questi campi vengono ignorati durante il caricamento degli agenti da un plugin. Se ne ha bisogno, copi il file dell'agente in `.claude/agents/` o `~/.claude/agents/`. Può anche aggiungere regole a [`permissions.allow`](/docs/it/settings#permission-settings) in `settings.json` o `settings.local.json`, ma queste regole si applicano all'intera sessione, non solo al subagent plugin.
+  Per motivi di sicurezza, i subagent plugin non supportano i campi frontmatter `hooks`, `mcpServers` o `permissionMode`. Questi campi vengono ignorati durante il caricamento degli agenti da un plugin. Se ne ha bisogno, copi il file dell'agente in `.claude/agents/` o `~/.claude/agents/`. Può anche aggiungere regole a [`permissions.allow`](/docs/it/settings-reference#permissions-allow) in `settings.json` o `settings.local.json`, ma queste regole si applicano all'intera sessione, non solo al subagent plugin.
 </Note>
 
-Le definizioni di subagent da uno qualsiasi di questi ambiti sono anche disponibili per [agent teams](/docs/it/agent-teams#use-subagent-definitions-for-teammates): quando genera un compagno di squadra, può fare riferimento a un tipo di subagent e il compagno di squadra utilizza i suoi `tools` e `model`, con il corpo della definizione aggiunto al prompt di sistema del compagno di squadra come istruzioni aggiuntive. Consulti [agent teams](/docs/it/agent-teams#use-subagent-definitions-for-teammates) per quali campi frontmatter si applicano su quel percorso.
+Le definizioni di subagent da uno qualsiasi di questi ambiti sono anche disponibili per [agent teams](/docs/it/agent-teams#use-subagent-definitions-for-teammates): quando genera un compagno di squadra, può fare riferimento a un tipo di subagent e Claude Code applica parti di quella definizione al compagno di squadra. Consulti [agent teams](/docs/it/agent-teams#use-subagent-definitions-for-teammates) per quali parti si applicano in ogni modalità di visualizzazione.
 
 <h3 id="write-subagent-files">
   Scriva file subagent
@@ -248,13 +255,14 @@ I file subagent utilizzano frontmatter YAML per la configurazione, seguito dal p
 <Note>
   Claude Code osserva `~/.claude/agents/` e `.claude/agents/`. Quando aggiunge o modifica un file subagent su disco, o chiede a Claude di scriverne uno per lei, Claude Code rileva il cambiamento entro pochi secondi e la prossima delega utilizza la definizione aggiornata, senza necessità di riavvio.
 
-  Due casi richiedono ancora un riavvio:
+  Tre casi richiedono ancora un riavvio:
 
   * L'osservatore copre solo le directory che esistevano quando la sessione è iniziata, quindi dopo aver creato il primo file agente di un ambito in una nuova directory `agents`, riavvii per caricarlo.
+  * Claude Code non osserva `.claude/agents/` all'interno di directory aggiunte con `--add-dir` o `/add-dir`, quindi dopo aver aggiunto o modificato un subagent lì, riavvii per caricare il cambiamento.
   * Le sessioni avviate con `--disable-slash-commands` non osservano affatto queste directory.
 </Note>
 
-```markdown theme={null}
+```markdown .claude/agents/code-reviewer.md theme={null}
 ---
 name: code-reviewer
 description: Reviews code for quality and best practices
@@ -266,62 +274,160 @@ You are a code reviewer. When invoked, analyze the code and provide
 specific, actionable feedback on quality, security, and best practices.
 ```
 
-Il frontmatter definisce i metadati e la configurazione del subagent. Il corpo diventa il prompt di sistema che guida il comportamento del subagent. I subagent ricevono solo questo prompt di sistema più dettagli di base sull'ambiente come la directory di lavoro, non il prompt di sistema completo di Claude Code.
+Il frontmatter definisce i metadati e la configurazione del subagent. Il corpo diventa il prompt di sistema che guida il comportamento del subagent. I subagent ricevono solo questo prompt di sistema più dettagli di base sull'ambiente come la directory di lavoro, non il prompt di sistema di Claude Code.
 
-In [modalità non interattiva](/docs/it/headless), il flag [`--append-subagent-system-prompt`](/docs/it/cli-reference#cli-flags) aggiunge il testo che fornisce alla fine del prompt di sistema di ogni subagent, inclusi i subagent annidati. Richiede Claude Code v2.1.205 o successivo.
+In [modalità non interattiva](/docs/it/headless), passa [`--append-subagent-system-prompt`](/docs/it/cli-reference#cli-flags) per aggiungere il suo testo alla fine del prompt di sistema di ogni subagent, inclusi i subagent annidati, a parte un [subagent con fork](#fork-the-current-conversation), che riutilizza il prompt della conversazione. Richiede Claude Code v2.1.205 o successivo. Se il suo testo è troppo lungo per passare sulla riga di comando, lo salvi in un file e passi il percorso con `--append-subagent-system-prompt-file` invece. Il flag del file richiede Claude Code v2.1.261 o successivo.
 
 Un subagent inizia nella directory di lavoro corrente della conversazione principale. All'interno di un subagent, i comandi `cd` non persistono tra le chiamate dello strumento Bash o PowerShell e non influenzano la directory di lavoro della conversazione principale. Per dare al subagent una copia isolata del repository, imposti [`isolation: worktree`](#supported-frontmatter-fields).
 
 Un subagent con `isolation: worktree` esegue i suoi comandi Bash e PowerShell all'interno del suo worktree. Un comando la cui directory di lavoro si risolve nel suo checkout principale, ad esempio perché la directory del worktree è stata rimossa mentre il subagent era in esecuzione, fallisce con un errore. Prima di v2.1.203, tale comando potrebbe essere eseguito nel checkout principale.
 
-<h4 id="supported-frontmatter-fields">
-  Campi frontmatter supportati
+Questo controllo della directory di lavoro copre l'intero repository contenente la directory da cui ha avviato Claude Code. Quando la sua sessione viene eseguita in un [worktree](/docs/it/worktrees) collegato di sua proprietà, il controllo copre anche il checkout principale da cui quel worktree è collegato. Prima di v2.1.210, il controllo copriva solo la directory di avvio stessa. Un comando la cui directory di lavoro si risolveva altrove nello stesso repository, come la radice del repository quando ha avviato Claude Code da una sottodirectory di monorepo, veniva eseguito lì invece di fallire.
+
+Per i comandi Bash, Claude Code controlla anche il comando stesso in due modi:
+
+* Blocca un comando che reindirizza git nel checkout principale.
+* Rifiuta un comando quando non può verificare dal testo del comando che qualsiasi git che il comando esegue rimane all'interno del worktree, ad esempio quando il nome del comando viene calcolato al runtime.
+
+I vettori di reindirizzamento e le regole di forma sono elencati in [Come Claude Code applica l'isolamento](/docs/it/worktrees#how-claude-code-enforces-isolation). I comandi PowerShell ottengono solo il controllo della directory di lavoro.
+
+I comandi [Monitor](/docs/it/tools-reference#monitor-tool) passano attraverso gli stessi controlli della directory di lavoro e del contenuto del comando dei comandi Bash.
+
+Quando la conversazione principale stessa viene eseguita isolata in un worktree, Claude Code applica gli stessi controlli alla sessione e a ogni subagent che genera, inclusi i subagent senza `isolation: worktree`; consulti [Come Claude Code applica l'isolamento](/docs/it/worktrees#how-claude-code-enforces-isolation).
+
+<h3 id="supported-frontmatter-fields">
+  Riferimento frontmatter
+</h3>
+
+Configuri un subagent con YAML [frontmatter](/docs/it/glossary#frontmatter) tra marcatori `---` all'inizio del suo file, e scriva il suo prompt di sistema come Markdown dopo la chiusura `---`. Solo `name` e `description` sono obbligatori.
+
+I nomi di campo con più parole utilizzano camelCase, come `maxTurns` e `disallowedTools`, e devono corrispondere esattamente alla tabella: Claude Code ignora un campo che non riconosce senza segnalare un errore. Per scoprire perché un file subagent non si è caricato, consulti [File subagent che Claude Code salta](#subagent-files-claude-code-skips).
+
+| Field             | Required | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| :---------------- | :------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `name`            | Yes      | Identificatore univoco, come `code-reviewer` o `reviewer-v2`. [Hooks](/docs/it/hooks#subagentstart) ricevono questo valore come `agent_type`. Il nome del file non deve corrispondere. I nomi non possono contenere `:`, che è riservato per [identificatori con ambito plugin](/docs/it/plugins/overview) come `my-plugin:reviewer`. Claude Code non carica un file il cui nome contiene uno e registra un errore nel log di debug. Prima di v2.1.218, tali nomi erano accettati                                                                             |
+| `description`     | Yes      | Quando Claude dovrebbe delegare a questo subagent                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| `tools`           | No       | [Strumenti](#available-tools) che il subagent può utilizzare, come una stringa separata da virgole come `Read, Grep, Bash` o un elenco YAML. Eredita ogni strumento disponibile per i subagent se omesso. Se nessuna voce nell'elenco si risolve in uno strumento, il subagent di solito [non si avvia](/docs/it/errors#agent-would-be-spawned-with-zero-tools) con un errore che nomina le voci. Per precaricare Skills nel contesto, usi il campo `skills` piuttosto che elencare `Skill` qui                                                          |
+| `disallowedTools` | No       | Strumenti da negare, rimossi dall'elenco ereditato o specificato. Stesso formato di `tools`. Una voce con uno specificatore, come `Bash(git push *)`, comunque [rimuove lo strumento intero](#available-tools)                                                                                                                                                                                                                                                                                                                                      |
+| `model`           | No       | [Modello](#choose-a-model) da utilizzare: `sonnet`, `opus`, `haiku`, `fable`, un ID modello completo come `claude-opus-5-5`, o `inherit`. Quando lo omette, Claude Code sceglie il modello nell'[ordine del modello subagent](#choose-a-model)                                                                                                                                                                                                                                                                                                      |
+| `permissionMode`  | No       | [Modalità di autorizzazione](#permission-modes): `default`, `acceptEdits`, `auto`, `dontAsk`, `bypassPermissions`, `plan`, o `manual` come alias per `default`. L'alias `manual` richiede Claude Code v2.1.200 o successivo. Ignorato per [subagent plugin](#choose-the-subagent-scope)                                                                                                                                                                                                                                                             |
+| `maxTurns`        | No       | Numero massimo di turni agentici prima che il subagent si fermi. Quando il subagent raggiunge il limite, Claude Code restituisce il suo output contrassegnato come parziale, e Claude può [riprenderlo](#resume-subagents) per continuare. Il contrassegno parziale richiede Claude Code v2.1.246 o successivo                                                                                                                                                                                                                                      |
+| `skills`          | No       | [Skills](/docs/it/skills) da precaricare nel contesto del subagent all'avvio. Il contenuto completo della skill viene iniettato, non solo la descrizione. I subagent possono ancora invocare skills di progetto, utente e plugin non elencate tramite lo strumento Skill                                                                                                                                                                                                                                                                                 |
+| `mcpServers`      | No       | [MCP servers](/docs/it/mcp) disponibili per questo subagent. Ogni voce è un nome di server che fa riferimento a un server già configurato (ad esempio, `"slack"`) o una definizione inline con il nome del server come chiave e una [configurazione MCP server](/docs/it/mcp#installing-mcp-servers) completa come valore. Ignorato per [subagent plugin](#choose-the-subagent-scope)                                                                                                                                                                         |
+| `hooks`           | No       | [Lifecycle hooks](#define-hooks-for-subagents) limitati a questo subagent. Ignorato per [subagent plugin](#choose-the-subagent-scope)                                                                                                                                                                                                                                                                                                                                                                                                               |
+| `memory`          | No       | [Ambito di memoria persistente](#enable-persistent-memory): `user`, `project`, o `local`. Abilita l'apprendimento tra sessioni                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `background`      | No       | Imposta su `true` per mantenere questo subagent in background anche quando Claude chiede di eseguirlo in foreground. Dove [fork mode](#turn-fork-mode-on-or-off) è attivo, Claude Code già esegue i subagent che Claude genera [in background](#run-subagents-in-foreground-or-background)                                                                                                                                                                                                                                                          |
+| `omitClaudeMd`    | No       | Imposta su `true` per avviare questo subagent senza i file CLAUDE.md utente, progetto e locale; i [file di politica gestita](/docs/it/memory#how-claude-md-files-load) si caricano comunque, tranne per i [subagent gestiti](#choose-the-subagent-scope). Lo usi per i subagent che prendono tutto ciò di cui hanno bisogno dal [prompt di delega](#what-loads-at-startup). Ignorato quando l'agente viene eseguito come agente della sessione principale tramite `--agent` o l'impostazione `agent`. Richiede Claude Code v2.1.271 o successivo         |
+| `effort`          | No       | Livello di sforzo quando questo subagent è attivo. Sostituisce il livello di sforzo della sessione. Predefinito: eredita dalla sessione. Opzioni: `low`, `medium`, `high`, `xhigh`, `max`; i livelli disponibili dipendono dal modello                                                                                                                                                                                                                                                                                                              |
+| `isolation`       | No       | Imposta su `worktree` per eseguire il subagent in un [git worktree](/docs/it/worktrees) temporaneo, dandogli una copia isolata del repository diramata per impostazione predefinita dal suo [ramo predefinito](/docs/it/worktrees#choose-the-base-branch) piuttosto che dall'`HEAD` della sessione principale. Il worktree viene automaticamente pulito se il subagent non apporta modifiche                                                                                                                                                                  |
+| `color`           | No       | Colore di visualizzazione per il subagent nell'elenco attività e nella trascrizione. Accetta `red`, `blue`, `green`, `yellow`, `purple`, `orange`, `pink`, o `cyan`                                                                                                                                                                                                                                                                                                                                                                                 |
+| `initialPrompt`   | No       | Auto-inviato come primo turno utente quando questo agente viene eseguito come agente della sessione principale (tramite `--agent` o l'impostazione `agent`). [Commands](/docs/it/commands) e [skills](/docs/it/skills) vengono elaborati. Anteposto a qualsiasi prompt fornito dall'utente. Ignorato per [subagent plugin](#choose-the-subagent-scope)                                                                                                                                                                                                        |
+| `experimental`    | No       | Mappa di opzioni sperimentali. Imposti la sua chiave `cacheTtl` su `5m` o `1h` per scegliere la [durata della cache del prompt](/docs/it/prompt-caching#choose-the-ttl-yourself) per le richieste di questo subagent, al posto del frontmatter nella [precedenza della durata della cache](/docs/it/prompt-caching#choose-the-ttl-yourself). Claude Code ignora qualsiasi altro valore, ignora `1h` mentre il suo abbonamento Claude sta utilizzando crediti di utilizzo, e legge il campo solo dai file subagent. Richiede Claude Code v2.1.248 o successivo |
+
+Scriva `cacheTtl` all'interno della mappa `experimental`, non al livello superiore del frontmatter.
+
+```yaml theme={null}
+---
+name: repo-auditor
+description: Audits a large repository and reports what it finds
+experimental:
+  cacheTtl: 1h
+---
+```
+
+<h4 id="subagent-files-claude-code-skips">
+  File subagent che Claude Code salta
 </h4>
 
-I seguenti campi possono essere utilizzati nel frontmatter YAML. Solo `name` e `description` sono obbligatori.
+Claude Code salta un file in una directory `agents` di progetto, utente o gestita, o in una sotto una directory che aggiunge con `--add-dir`, senza segnalarlo nella sessione, quando il frontmatter ha uno di questi problemi:
 
-| Field             | Required | Description                                                                                                                                                                                                                                                                                                                                                                        |
-| :---------------- | :------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `name`            | Yes      | Identificatore univoco utilizzando lettere minuscole e trattini. [Hooks](/docs/it/hooks#subagentstart) ricevono questo valore come `agent_type`. Il nome del file non deve corrispondere                                                                                                                                                                                                |
-| `description`     | Yes      | Quando Claude dovrebbe delegare a questo subagent                                                                                                                                                                                                                                                                                                                                  |
-| `tools`           | No       | [Strumenti](#available-tools) che il subagent può utilizzare. Eredita tutti gli strumenti se omesso. Se nessuna voce nell'elenco si risolve in uno strumento, il subagent non si avvia con un errore che nomina le voci. Per precaricare Skills nel contesto, usi il campo `skills` piuttosto che elencare `Skill` qui                                                             |
-| `disallowedTools` | No       | Strumenti da negare, rimossi dall'elenco ereditato o specificato                                                                                                                                                                                                                                                                                                                   |
-| `model`           | No       | [Modello](#choose-a-model) da utilizzare: `sonnet`, `opus`, `haiku`, `fable`, un ID modello completo (ad esempio, `claude-opus-4-8`), o `inherit`. Predefinito: `inherit`                                                                                                                                                                                                          |
-| `permissionMode`  | No       | [Modalità di autorizzazione](#permission-modes): `default`, `acceptEdits`, `auto`, `dontAsk`, `bypassPermissions`, `plan`, o `manual` come alias per `default`. L'alias `manual` richiede Claude Code v2.1.200 o successivo. Ignorato per [subagent plugin](#choose-the-subagent-scope)                                                                                            |
-| `maxTurns`        | No       | Numero massimo di turni agentici prima che il subagent si fermi                                                                                                                                                                                                                                                                                                                    |
-| `skills`          | No       | [Skills](/docs/it/skills) da precaricare nel contesto del subagent all'avvio. Il contenuto completo della skill viene iniettato, non solo la descrizione. I subagent possono ancora invocare skills di progetto, utente e plugin non elencate tramite lo strumento Skill                                                                                                                |
-| `mcpServers`      | No       | [MCP servers](/docs/it/mcp) disponibili per questo subagent. Ogni voce è un nome di server che fa riferimento a un server già configurato (ad esempio, `"slack"`) o una definizione inline con il nome del server come chiave e una [configurazione MCP server](/docs/it/mcp#installing-mcp-servers) completa come valore. Ignorato per [subagent plugin](#choose-the-subagent-scope)        |
-| `hooks`           | No       | [Lifecycle hooks](#define-hooks-for-subagents) limitati a questo subagent. Ignorato per [subagent plugin](#choose-the-subagent-scope)                                                                                                                                                                                                                                              |
-| `memory`          | No       | [Ambito di memoria persistente](#enable-persistent-memory): `user`, `project`, o `local`. Abilita l'apprendimento tra sessioni                                                                                                                                                                                                                                                     |
-| `background`      | No       | Imposta su `true` per eseguire sempre questo subagent come [background task](#run-subagents-in-foreground-or-background), anche quando Claude ha bisogno del suo risultato subito. Quando non impostato, Claude sceglie, e a partire da v2.1.198 esegue i subagent in background per impostazione predefinita                                                                      |
-| `effort`          | No       | Livello di sforzo quando questo subagent è attivo. Sostituisce il livello di sforzo della sessione. Predefinito: eredita dalla sessione. Opzioni: `low`, `medium`, `high`, `xhigh`, `max`; i livelli disponibili dipendono dal modello                                                                                                                                             |
-| `isolation`       | No       | Imposta su `worktree` per eseguire il subagent in un [git worktree](/docs/it/worktrees) temporaneo, dandogli una copia isolata del repository diramata per impostazione predefinita dal suo [ramo predefinito](/docs/it/worktrees#choose-the-base-branch) piuttosto che dall'`HEAD` della sessione principale. Il worktree viene automaticamente pulito se il subagent non apporta modifiche |
-| `color`           | No       | Colore di visualizzazione per il subagent nell'elenco attività e nella trascrizione. Accetta `red`, `blue`, `green`, `yellow`, `purple`, `orange`, `pink`, o `cyan`                                                                                                                                                                                                                |
-| `initialPrompt`   | No       | Auto-inviato come primo turno utente quando questo agente viene eseguito come agente della sessione principale (tramite `--agent` o l'impostazione `agent`). [Commands](/docs/it/commands) e [skills](/docs/it/skills) vengono elaborati. Anteposto a qualsiasi prompt fornito dall'utente                                                                                                   |
+* **No `name`**: Claude Code tratta il file come documentazione mantenuta accanto ai suoi agenti.
+* **Un `---` di apertura che non è la prima riga del file**: Claude Code legge il file come non avente frontmatter e lo tratta come documentazione.
+* **Un `name` che inizia con `-` o contiene `:`**: Claude Code salta il file e scrive un errore nel log di debug. Consulti la riga `name` nella tabella sopra.
+* **Un `name` ma nessuna `description`**: Claude Code salta il file e scrive il motivo nel log di debug.
+* **YAML che non analizza**: Claude Code non legge alcun campo dal file, lo salta e scrive l'errore di analisi nel log di debug.
+
+Per vedere il log di debug, esegua Claude Code con `--debug`.
+
+Un [subagent plugin](/docs/it/plugins/components#agents) il cui frontmatter non ha `name` o non analizza comunque si carica, con il suo nome file.
+
+<h5 id="check-an-agents-directory-before-a-session">
+  Controlli una directory `agents` prima di una sessione
+</h5>
+
+Per trovare file in una directory `agents` il cui frontmatter non analizza, esegua `claude plugin validate` contro la directory, ad esempio `.claude/agents` o `~/.claude/agents`. Claude Code controlla solo [la directory che nomina](/docs/it/plugins/cli-reference#validate-a-directory), e non segnala un file il cui frontmatter analizza ma non ha `name`. Richiede Claude Code v2.1.233 o successivo.
 
 <h3 id="choose-a-model">
   Scelga un modello
 </h3>
 
-Il campo `model` controlla quale [modello AI](/docs/it/model-config) utilizza il subagent:
+Il campo `model` controlla quale modello utilizza il subagent:
 
-* **Alias modello**: Usi uno degli alias disponibili: `sonnet`, `opus`, `haiku`, o `fable`
-* **ID modello completo**: Usi un ID modello completo come `claude-opus-4-8` o `claude-sonnet-5`. Accetta gli stessi valori del flag `--model`
-* **inherit**: Usi lo stesso modello della conversazione principale
-* **Omesso**: Se non specificato, predefinito a `inherit` (usa lo stesso modello della conversazione principale)
+* **Alias modello**: usi uno degli alias disponibili: `sonnet`, `opus`, `haiku`, o `fable`
+* **ID modello completo**: usi un ID modello completo come `claude-opus-5-5` o `claude-sonnet-5`. Accetta gli stessi valori del flag `--model`
+* **inherit**: usi lo stesso modello della conversazione principale
 
 Quando Claude invoca un subagent, può anche passare un parametro `model` per quella specifica invocazione. Claude Code risolve il modello del subagent in questo ordine:
 
-1. La variabile di ambiente [`CLAUDE_CODE_SUBAGENT_MODEL`](/docs/it/model-config#environment-variables), quando impostata a un alias modello o ID modello
-2. Il parametro `model` per invocazione
-3. Il frontmatter `model` della definizione del subagent
+1. Il parametro `model` per invocazione
+2. Il frontmatter `model` della definizione del subagent, dove `inherit` seleziona il modello della conversazione principale
+3. La variabile di ambiente [`CLAUDE_CODE_SUBAGENT_MODEL`](/docs/it/model-config#environment-variables), quando la imposta su un alias modello o ID modello
 4. Il modello della conversazione principale
 
-A partire da v2.1.196, impostare `CLAUDE_CODE_SUBAGENT_MODEL` su `inherit` è lo stesso che lasciarla non impostata: la risoluzione continua con il parametro `model` per invocazione, quindi il frontmatter. Nelle versioni precedenti, `inherit` forzava i subagent sul modello della conversazione principale e ignorava entrambe quelle fonti.
+In due casi, un alias di famiglia come `opus` nel parametro per invocazione o nel frontmatter si risolve al modello della conversazione principale invece della [versione a cui l'alias punta](/docs/it/model-config#model-aliases):
 
-Claude Code controlla la variabile di ambiente, il parametro per invocazione e i valori frontmatter rispetto alla lista di consentimento [`availableModels`](/docs/it/model-config#restrict-model-selection) della sua organizzazione. Un valore che si risolve in un modello escluso non viene utilizzato e il subagent viene eseguito sul modello ereditato.
+* **Il modello della conversazione principale appartiene a quella famiglia**: il subagent viene eseguito sul modello esatto della conversazione principale, incluso qualsiasi suffisso `[1m]`, quindi ottiene la stessa finestra di [contesto esteso](/docs/it/model-config#extended-context) della conversazione principale.
+* **Claude Code non può dire la famiglia del modello della conversazione principale, su [un provider diverso dall'API Anthropic](/docs/it/third-party-integrations)**: questo può accadere con un [ARN del profilo di inferenza dell'applicazione](/docs/it/amazon-bedrock#iam-configuration) su Amazon Bedrock che Claude Code non ha risolto a un modello di supporto. Questo caso copre solo l'alias `opus`, e non si applica quando imposta [`ANTHROPIC_DEFAULT_OPUS_MODEL`](/docs/it/model-config#environment-variables), poiché `opus` allora si risolve al modello che imposta.
+
+Un alias in `CLAUDE_CODE_SUBAGENT_MODEL` si risolve sempre alla versione a cui l'alias punta, anche quando nomina la famiglia della conversazione principale.
+
+L'impostazione di `CLAUDE_CODE_SUBAGENT_MODEL` da sola non cambia il modello su cui vengono eseguiti i subagent Explore e Plan integrati. Per cambiarlo, consulti [Esegui ogni subagent su un modello](#run-every-subagent-on-one-model).
+
+Prima di v2.1.251, `CLAUDE_CODE_SUBAGENT_MODEL` veniva per primo in questo ordine e sostituiva sia il parametro per invocazione che il frontmatter, incluso `model: inherit`.
+
+L'impostazione della variabile su `inherit` è la stessa che lasciarla non impostata. Prima di v2.1.196, quel valore forzava i subagent sul modello della conversazione principale e ignorava le altre fonti.
+
+Claude Code controlla il parametro per invocazione, il frontmatter e i valori della variabile di ambiente rispetto alla lista di consentimento [`availableModels`](/docs/it/model-config#restrict-model-selection) della sua organizzazione. Per un valore bloccato, sostituisce un altro modello:
+
+* Quando il valore bloccato è un alias di famiglia come `opus`, Claude Code esegue il subagent sulla versione più recente di quella famiglia che la lista di consentimento consente, seguendo le stesse [regole di sostituzione e ambito del provider](/docs/it/model-config#restrict-model-selection) di `/model`. Prima di v2.1.222, Claude Code eseguiva il subagent sul modello ereditato anche per un alias di famiglia bloccato.
+* Per qualsiasi altro valore bloccato, su provider dove quella sostituzione non opera, o quando la lista di consentimento non consente alcuna versione della famiglia, Claude Code esegue il subagent sul modello ereditato. Se imposta `CLAUDE_CODE_SUBAGENT_MODEL`, Claude Code prova prima quel modello, secondo le stesse regole.
+
+Nelle sessioni interattive, Claude Code mostra un avviso che nomina il modello richiesto e il modello su cui viene eseguito il subagent, per entrambe le sostituzioni.
+
+Per controllare quale modello sta eseguendo un subagent, esegua [`/tasks`](/docs/it/commands). Claude Code nomina il modello sulla riga del subagent, e aggiunge il [livello di sforzo](/docs/it/model-config#adjust-effort-level) quando la definizione del subagent, o la skill da cui ha fatto il fork, imposta [`effort`](#supported-frontmatter-fields). Richiede Claude Code v2.1.242 o successivo.
+
+Un parametro `model` per invocazione si applica anche quando il subagent viene [ripreso o inviato un messaggio di follow-up](#resume-subagents), quindi il subagent rimane su quel modello. Prima di v2.1.211, la ripresa eliminava il valore per invocazione e il subagent tornava al campo `model` della sua definizione o, senza uno, al modello della conversazione principale.
 
 A partire da v2.1.198, i subagent ereditano anche la configurazione [extended thinking](/docs/it/model-config#extended-thinking) della conversazione principale: se il thinking è attivo nella sua sessione, è attivo per il subagent, e se è spento, rimane spento. Non c'è un'impostazione di thinking per subagent. Prima di v2.1.198, i subagent venivano eseguiti con extended thinking disabilitato indipendentemente dall'impostazione della conversazione principale.
+
+<h4 id="run-every-subagent-on-one-model">
+  Esegui ogni subagent su un modello
+</h4>
+
+`CLAUDE_CODE_SUBAGENT_MODEL` è un predefinito, quindi la definizione di un subagent o un modello che Claude passa ha comunque la precedenza su di esso. Per applicare un modello a ogni subagent, [compagno di squadra](/docs/it/agent-teams#specify-teammates-and-models), e [agente workflow](/docs/it/workflows), imposti anche `CLAUDE_CODE_SUBAGENT_MODEL_FORCE` su `1`. Richiede Claude Code v2.1.257 o successivo.
+
+* Se imposta entrambe le variabili, i subagent vengono eseguiti sul modello in `CLAUDE_CODE_SUBAGENT_MODEL`.
+* Se imposta solo `CLAUDE_CODE_SUBAGENT_MODEL_FORCE`, i subagent vengono eseguiti sul modello della conversazione principale.
+
+Ad esempio, per eseguire ogni subagent su Haiku, imposti entrambe le variabili nel blocco `env` di un [file di impostazioni](/docs/it/settings):
+
+```json theme={null}
+{
+  "env": {
+    "CLAUDE_CODE_SUBAGENT_MODEL": "haiku",
+    "CLAUDE_CODE_SUBAGENT_MODEL_FORCE": "1"
+  }
+}
+```
+
+Per controllare che l'impostazione abbia avuto effetto, esegua [`/tasks`](/docs/it/commands) mentre un subagent è in esecuzione. La riga del subagent mostra il modello su cui viene eseguito.
+
+Mentre `CLAUDE_CODE_SUBAGENT_MODEL_FORCE` è [attivo](/docs/it/env-vars), Claude Code ignora il campo `model` di ogni definizione di subagent, inclusi i subagent Explore e Plan integrati, e Claude non può passare un modello quando avvia un subagent. Due tipi di subagent vengono comunque eseguiti sul modello della conversazione principale:
+
+* Un [fork](#fork-the-current-conversation)
+* Una [skill che viene eseguita in un subagent](/docs/it/skills#run-skills-in-a-subagent) con `model: inherit`
+
+Quando imposta solo `CLAUDE_CODE_SUBAGENT_MODEL_FORCE`, il subagent Explore integrato mantiene il suo [limite di modello](#built-in-subagents).
 
 <h3 id="control-subagent-capabilities">
   Controlli le capacità del subagent
@@ -333,15 +439,28 @@ Può controllare cosa possono fare i subagent attraverso l'accesso agli strument
   Strumenti disponibili
 </h4>
 
-I subagent ereditano gli [strumenti interni](/docs/it/tools-reference) e gli strumenti MCP disponibili nella conversazione principale per impostazione predefinita. I seguenti strumenti dipendono dall'interfaccia utente della conversazione principale o dallo stato della sessione e non sono disponibili per i subagent, anche se elencati nel campo `tools`:
+I subagent ereditano gli [strumenti integrati](/docs/it/tools-reference) e gli strumenti MCP disponibili nella conversazione principale, ristretti da due filtri: il primo rimuove un breve elenco di strumenti da ogni subagent, e il secondo riduce il set di strumenti integrati per i subagent che vengono eseguiti in [background](#run-subagents-in-foreground-or-background), che è il predefinito. Su macOS, Linux e WSL, un subagent può anche ricevere gli strumenti Glob e Grep quando la conversazione principale non li ha, come descritto in [Comportamento dello strumento Glob](/docs/it/tools-reference#glob-tool-behavior). [Forks](#fork-the-current-conversation) saltano entrambi i filtri e ricevono il pool di strumenti esatto della conversazione principale. Il primo filtro rimuove questi strumenti, anche quando elencati nel campo `tools`:
 
+* `Agent`, quando il subagent è al [limite di profondità](#let-subagents-spawn-their-own-subagents); in un [fork](#fork-the-current-conversation) lo strumento rimane elencato ma restituisce un errore invece di generare
 * `AskUserQuestion`
+* `EndConversation`, che può terminare solo la conversazione principale; consulti [Comportamento dello strumento EndConversation](/docs/it/tools-reference#endconversation-tool-behavior)
 * `EnterPlanMode`
 * `ExitPlanMode`, a meno che la [`permissionMode`](#permission-modes) del subagent non sia `plan`
 * `ScheduleWakeup`
 * `WaitForMcpServers`
+* `Workflow`
 
-Per limitare gli strumenti, usi il campo `tools` come allowlist o il campo `disallowedTools` come denylist. Questo esempio usa `tools` per consentire esclusivamente Read, Grep, Glob e Bash. Il subagent non può modificare file, scrivere file o utilizzare alcuno strumento MCP:
+Il secondo filtro si applica ai subagent in esecuzione in background. A parte `Agent` e `ExitPlanMode`, che seguono le condizioni del primo filtro ovunque il subagent venga eseguito, un subagent in background mantiene ogni strumento MCP ma solo questi strumenti integrati: `Read`, `Grep`, `Glob`, `LSP`, `Bash`, `PowerShell`, `Edit`, `Write`, `NotebookEdit`, `WebFetch`, `WebSearch`, `TodoWrite`, `Skill`, `ToolSearch`, `EnterWorktree`, `ExitWorktree`, `Monitor`, `TaskStop`, `SendMessage`, e `Artifact`, più [`SubagentHandback`](/docs/it/tools-reference) per un subagent che segnala attraverso di esso. Claude Code rimuove ogni altro strumento integrato da un subagent in background, sia ereditato che elencato nel campo `tools`, quindi la stessa definizione può risolvere in strumenti diversi in foreground e background. La rimozione non segnala alcun errore a meno che non lasci l'elenco `tools` [risolvere a nulla](/docs/it/errors#agent-would-be-spawned-with-zero-tools).
+
+Prima di v2.1.280, i subagent in background non potevano utilizzare `LSP`.
+
+[`ListAgents`](/docs/it/cross-session-messaging) segue questi filtri come qualsiasi strumento integrato: un subagent in foreground lo eredita nelle sessioni dove la messaggistica tra sessioni è abilitata, e un subagent in background non lo mantiene.
+
+I compagni di squadra in [agent teams](/docs/it/agent-teams) inoltre mantengono gli strumenti di attività e gli strumenti cron: `TaskCreate`, `TaskGet`, `TaskList`, `TaskUpdate`, `CronCreate`, `CronDelete`, e `CronList`.
+
+In una [sessione senza gli strumenti Task](/docs/it/tools-reference#task-tool-availability), Claude Code non fornisce gli strumenti di attività ai subagent nemmeno quando il subagent esegue un modello diverso. Un compagno di squadra in-process segue la sua sessione allo stesso modo, mentre un compagno di squadra nel suo [riquadro diviso](/docs/it/agent-teams#choose-a-display-mode) viene eseguito come un processo Claude Code separato, quindi il suo modello decide.
+
+Per limitare gli strumenti, usi il campo `tools` come allowlist o il campo `disallowedTools` come denylist. Questo esempio usa `tools` per consentire solo Read, Grep, Glob e Bash. Il subagent non può modificare file, scrivere file o utilizzare alcuno strumento MCP:
 
 ```yaml theme={null}
 ---
@@ -351,21 +470,21 @@ tools: Read, Grep, Glob, Bash
 ---
 ```
 
-Questo esempio usa `disallowedTools` per ereditare ogni strumento dalla conversazione principale tranne Write e Edit. Il subagent mantiene Bash, strumenti MCP e tutto il resto:
+Questo esempio usa `disallowedTools` per ereditare il pool di strumenti del subagent tranne Write e Edit. Il subagent mantiene Bash, strumenti MCP e il resto del suo pool:
 
 ```yaml theme={null}
 ---
 name: no-writes
-description: Inherits every tool except file writes
+description: Inherits the available tools except file writes
 disallowedTools: Write, Edit
 ---
 ```
 
 Se entrambi sono impostati, `disallowedTools` viene applicato per primo, quindi `tools` viene risolto rispetto al pool rimanente. Uno strumento elencato in entrambi viene rimosso.
 
-Quando nulla nell'elenco `tools` si risolve in uno strumento, ad esempio perché ogni voce è errata o nomina uno strumento che non è disponibile per i subagent, Claude Code rifiuta di avviare il subagent e lo strumento Agent restituisce un errore che nomina le voci non risolte. Prima di v2.1.208, quel subagent si avviava senza strumenti e potrebbe restituire un risultato vuoto o confuso.
+Quando nulla nell'elenco `tools` si risolve in uno strumento, ad esempio perché ogni voce è errata o nomina uno strumento che non è disponibile per i subagent, Claude Code di solito rifiuta di avviare il subagent e lo strumento Agent restituisce un errore che nomina le voci non risolte; consulti [Agent would be spawned with zero tools](/docs/it/errors#agent-would-be-spawned-with-zero-tools) per il messaggio e come correggere ogni voce. Prima di v2.1.208, quel subagent si avviava senza strumenti e potrebbe restituire un risultato vuoto o confuso.
 
-Entrambi i campi accettano modelli a livello di server MCP oltre ai nomi esatti degli strumenti: `mcp__<server>` o `mcp__<server>__*` concede o rimuove ogni strumento dal server denominato. In `disallowedTools`, `mcp__*` rimuove anche ogni strumento MCP da qualsiasi server. Questo esempio rimuove ogni strumento dal server MCP `github` mentre mantiene gli strumenti da altri server e ogni strumento integrato:
+Entrambi i campi accettano modelli a livello di server MCP oltre ai nomi esatti degli strumenti: `mcp__<server>` o `mcp__<server>__*` concede o rimuove ogni strumento dal server denominato. In `disallowedTools`, `mcp__*` rimuove anche ogni strumento MCP da qualsiasi server. Questo esempio rimuove ogni strumento dal server MCP `github` mentre mantiene gli strumenti da altri server e gli strumenti integrati nel suo pool:
 
 ```yaml theme={null}
 ---
@@ -374,6 +493,8 @@ description: Inherits every tool except those from the github MCP server
 disallowedTools: mcp__github
 ---
 ```
+
+Una voce `disallowedTools` con uno specificatore, come `Bash(git push *)`, comunque rimuove lo strumento intero dal subagent, non solo i comandi corrispondenti. Per mantenere Bash e bloccare comandi specifici, aggiunga una [regola di negazione Bash](/docs/it/permissions#bash) come `Bash(git push *)` a `permissions.deny` nelle sue impostazioni. La regola si applica alla conversazione principale e ai subagent.
 
 <h4 id="restrict-which-subagents-can-be-spawned">
   Limiti quali subagent possono essere generati
@@ -399,15 +520,15 @@ Per consentire la generazione di qualsiasi subagent senza restrizioni, usi `Agen
 tools: Agent, Read, Bash
 ```
 
-Se `Agent` è completamente omesso dall'elenco `tools`, l'agente non può generare alcun subagent.
+Se `Agent` è completamente omesso dall'elenco `tools`, l'agente non può generare alcun subagent con lo strumento Agent.
 
-La sintassi allowlist `Agent(agent_type)` si applica solo a un agente eseguito come thread principale con `claude --agent`. In una definizione di subagent, elencare `Agent` in `tools` consente a quel subagent di [generare subagent annidati](#spawn-nested-subagents), ma qualsiasi elenco di tipi all'interno delle parentesi viene ignorato.
+La sintassi allowlist `Agent(agent_type)` si applica solo a un agente eseguito come thread principale con `claude --agent`. In una definizione di subagent, elencare `Agent` in `tools` consente a quel subagent di generare subagent di sua proprietà mentre il [limite di profondità](#let-subagents-spawn-their-own-subagents) lo consente, ma qualsiasi elenco di tipi all'interno delle parentesi viene ignorato.
 
 <h4 id="scope-mcp-servers-to-a-subagent">
   Limiti i server MCP a un subagent
 </h4>
 
-Usi il campo `mcpServers` per dare a un subagent accesso ai server [MCP](/docs/it/mcp) che non sono disponibili nella conversazione principale. I server inline definiti qui vengono connessi quando il subagent inizia e disconnessi quando finisce. I riferimenti stringa condividono la connessione della sessione principale.
+Usi il campo `mcpServers` per dare a un subagent accesso ai server [MCP](/docs/it/mcp) che non sono disponibili nella conversazione principale. I server inline definiti qui vengono connessi quando il subagent inizia, soggetti alla [regola di fiducia per la cartella del file dell'agente](#inline-server-trust), e disconnessi quando finisce. I riferimenti stringa condividono la connessione della sessione principale.
 
 <Note>
   Il campo `mcpServers` si applica in entrambi i contesti in cui un file agente può essere eseguito:
@@ -415,7 +536,7 @@ Usi il campo `mcpServers` per dare a un subagent accesso ai server [MCP](/docs/i
   * Come subagent, generato tramite lo strumento Agent o un @-mention
   * Come sessione principale, avviato con [`--agent`](#invoke-subagents-explicitly) o l'impostazione `agent`
 
-  Quando l'agente è la sessione principale, le definizioni di server inline si connettono all'avvio insieme ai server da [`.mcp.json`](/docs/it/mcp) e ai file di impostazioni.
+  Quando l'agente è la sessione principale, le definizioni di server inline si connettono all'avvio insieme ai server da [`.mcp.json`](/docs/it/mcp) e ai file di impostazioni, secondo la stessa [regola di fiducia per la cartella del file dell'agente](#inline-server-trust). In `/mcp`, un server remoto (HTTP o SSE) che ha utilizzato prima può mostrare lo stato [`cached`](/docs/it/mcp#managing-your-servers) invece; Claude Code lo connette quando Claude chiama per la prima volta uno dei suoi strumenti.
 </Note>
 
 Ogni voce nell'elenco è una definizione di server inline o una stringa che fa riferimento a un server MCP già configurato nella sua sessione:
@@ -441,7 +562,18 @@ Le definizioni inline utilizzano lo stesso schema delle voci del server `.mcp.js
 
 Per mantenere un server MCP fuori dalla conversazione principale e evitare che le descrizioni dei suoi strumenti consumino contesto lì, lo definisca inline qui piuttosto che in `.mcp.json`. Il subagent ottiene gli strumenti; la conversazione principale no.
 
-A partire da v2.1.153, le restrizioni MCP che si applicano alla sessione principale coprono anche i server dichiarati nel frontmatter del subagent:
+<span id="inline-server-trust" />Claude Code carica un server inline da un file agente nella directory `.claude/agents/` del suo progetto, o in una directory `.claude/agents/` di una directory `--add-dir`, solo dopo che [ha fiducia della cartella da cui il file agente proviene](/docs/it/permissions#what-runs-before-you-trust-a-folder). Prima di v2.1.238, Claude Code caricava questi server senza controllare la fiducia.
+
+* **Fiducia che non conta**: la fiducia di una cartella principale, e la fiducia automatica che una sessione `-p` o SDK ottiene per [hook nei file di impostazioni](/docs/it/permissions#what-runs-before-you-trust-a-folder)
+* **Fino ad allora**: Claude Code salta ogni server inline in quel file agente e scrive la chiave esatta `projects["<path>"].hasTrustDialogAccepted` per `~/.claude.json` nel log di debug
+* **Directory `--add-dir`**: una directory al di fuori del repository dell'area di lavoro fidata ha bisogno della sua voce di fiducia, poiché i suoi file `.claude/agents/` non ereditano la fiducia dell'area di lavoro
+
+Claude Code carica due tipi di server senza controllare la fiducia per la cartella da cui il file agente proviene:
+
+* Un nome che fa riferimento a un server che ha già configurato
+* Un server inline in un file agente da `~/.claude/agents/`, in uno che passa con `--agents` o l'opzione SDK `agents`, o in uno che le impostazioni gestite forniscono
+
+Le restrizioni MCP che si applicano alla sessione principale coprono anche i server dichiarati nel frontmatter del subagent:
 
 * [`--strict-mcp-config`](/docs/it/cli-reference) e [`--bare`](/docs/it/cli-reference)
 * [Configurazione MCP gestita aziendale](/docs/it/managed-mcp)
@@ -455,24 +587,23 @@ Le restrizioni delle impostazioni gestite si applicano a ogni subagent indipende
   Modalità di autorizzazione
 </h4>
 
-Il campo `permissionMode` controlla come il subagent gestisce i prompt di autorizzazione. I subagent ereditano il contesto di autorizzazione dalla conversazione principale e possono sovrascrivere la modalità, tranne quando la modalità principale ha la precedenza come descritto di seguito.
+Imposti `permissionMode` per scegliere la modalità di autorizzazione in cui viene eseguito un subagent. Usi i valori di configurazione delle modalità, quindi la modalità Manual è `default`. Se la lascia non impostata, il subagent eredita la modalità della conversazione principale, che inizia come [auto mode](/docs/it/permission-modes#eliminate-prompts-with-auto-mode) su piani Pro, Max e Team a meno che le sue impostazioni o la sua organizzazione non la cambino.
 
-| Mode                | Behavior                                                                                                                                                                                                                                                                                                                                                                                            |
-| :------------------ | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `default`           | Controllo di autorizzazione standard con prompt                                                                                                                                                                                                                                                                                                                                                     |
-| `acceptEdits`       | Auto-accetta modifiche ai file e comandi comuni del filesystem per i percorsi nella directory di lavoro o `additionalDirectories`                                                                                                                                                                                                                                                                   |
-| `auto`              | [Auto mode](/docs/it/permission-modes#eliminate-prompts-with-auto-mode): un classificatore AI valuta ogni chiamata di strumento                                                                                                                                                                                                                                                                          |
-| `dontAsk`           | Auto-nega prompt di autorizzazione. Gli strumenti esplicitamente consentiti continuano a funzionare; `AskUserQuestion`, strumenti connettore [che la sua organizzazione ha impostato su `ask`](/docs/it/mcp#organization-controls-on-connector-tools), e strumenti MCP contrassegnati [`requiresUserInteraction`](/docs/it/mcp#require-approval-for-a-specific-tool) vengono negati anche se li ha consentiti |
-| `bypassPermissions` | Salta i prompt di autorizzazione                                                                                                                                                                                                                                                                                                                                                                    |
-| `plan`              | Plan mode (esplorazione di sola lettura)                                                                                                                                                                                                                                                                                                                                                            |
+La modalità di autorizzazione della conversazione principale decide se Claude Code utilizza il valore che imposta:
 
-<Warning>
-  Usi `bypassPermissions` con cautela. Salta i prompt di autorizzazione, consentendo al subagent di eseguire operazioni senza approvazione, incluse le scritture in `.git`, `.config/git`, `.claude`, `.vscode`, `.idea`, `.husky`, `.cargo`, `.devcontainer`, `.yarn` e `.mvn`.
+* Quando la conversazione principale è in `bypassPermissions`, `acceptEdits`, o [auto mode](/docs/it/permission-modes#eliminate-prompts-with-auto-mode), il subagent viene eseguito in quella stessa modalità e Claude Code ignora il `permissionMode` che imposta. Sotto auto mode, il classificatore valuta le chiamate di strumenti del subagent con le regole di blocco e consentimento della conversazione principale. Quando il subagent finisce, il classificatore esamina anche il suo lavoro e il suo rapporto finale prima che il rapporto venga consegnato, come [Come auto mode gestisce i subagent](/docs/it/permission-modes#eliminate-prompts-with-auto-mode) descrive.
+* Quando la conversazione principale è in modalità `default`, `dontAsk`, o `plan`, il subagent viene eseguito nella modalità di autorizzazione che imposta, tranne `bypassPermissions`. Un subagent che dichiara `bypassPermissions` mantiene la modalità della conversazione principale. L'eccezione `bypassPermissions` richiede Claude Code v2.1.267 o successivo.
 
-  Le regole [`ask`](/docs/it/permissions#manage-permissions) esplicite, gli strumenti connettore [che la sua organizzazione ha impostato su `ask`](/docs/it/mcp#organization-controls-on-connector-tools), gli strumenti MCP contrassegnati [`requiresUserInteraction`](/docs/it/mcp#require-approval-for-a-specific-tool), e le rimozioni della directory root e home come `rm -rf /` continuano a richiedere. Consulti [permission modes](/docs/it/permission-modes#skip-all-checks-with-bypasspermissions-mode) per i dettagli.
-</Warning>
+`permissionMode` accetta questi valori, e `manual` come alias per `default`:
 
-Se il principale utilizza `bypassPermissions` o `acceptEdits`, questo ha la precedenza e non può essere sovrascritto. Se il principale utilizza [auto mode](/docs/it/permission-modes#eliminate-prompts-with-auto-mode), il subagent eredita auto mode e qualsiasi `permissionMode` nel suo frontmatter viene ignorato: il classificatore valuta le chiamate di strumenti del subagent con le stesse regole di blocco e consentimento della sessione principale.
+| Mode                | Behavior                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| :------------------ | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `default`           | Modalità Manual: chiede il permesso                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| `acceptEdits`       | Auto-accetta modifiche ai file e comandi comuni del filesystem per i percorsi nella directory di lavoro o `additionalDirectories`                                                                                                                                                                                                                                                                                                                                 |
+| `auto`              | [Auto mode](/docs/it/permission-modes#eliminate-prompts-with-auto-mode): un classificatore in background esamina i comandi e le scritture di directory protette                                                                                                                                                                                                                                                                                                        |
+| `dontAsk`           | Auto-nega prompt di autorizzazione. Gli strumenti esplicitamente consentiti continuano a funzionare; `AskUserQuestion`, strumenti MCP contrassegnati [`requiresUserInteraction`](/docs/it/mcp#require-approval-for-a-specific-tool), e strumenti connettore [che la sua organizzazione ha impostato su `ask`](/docs/it/mcp#organization-controls-on-connector-tools) nelle sessioni dove quella impostazione raggiunge Claude Code vengono negati anche se li ha consentiti |
+| `bypassPermissions` | [Salta i prompt di autorizzazione](/docs/it/permission-modes#skip-all-checks-with-bypasspermissions-mode). Un subagent viene eseguito in questa modalità solo quando la conversazione principale lo fa                                                                                                                                                                                                                                                                 |
+| `plan`              | Plan mode (esplorazione di sola lettura)                                                                                                                                                                                                                                                                                                                                                                                                                          |
 
 <h4 id="preload-skills-into-subagents">
   Precarichi skills nei subagent
@@ -494,10 +625,12 @@ Implement API endpoints. Follow the conventions and patterns from the preloaded 
 
 Il contenuto completo di ogni skill elencata viene iniettato nel contesto del subagent all'avvio. Questo campo controlla quali skills vengono precaricate, non quali skills il subagent può accedere: senza di esso, il subagent può comunque scoprire e invocare skills di progetto, utente e plugin tramite lo strumento Skill durante l'esecuzione. Per impedire a un subagent di invocare skills interamente, ometta `Skill` dall'elenco [`tools`](#available-tools) o aggiunga a `disallowedTools`.
 
-Non può precaricare skills che impostano [`disable-model-invocation: true`](/docs/it/skills#control-who-invokes-a-skill), poiché il precaricamento attinge dallo stesso insieme di skills che Claude può invocare. Se una skill elencata è mancante o disabilitata, Claude Code la salta e registra un avviso nel log di debug.
+Non può precaricare skills che impostano [`disable-model-invocation: true`](/docs/it/skills#control-who-invokes-a-skill), poiché il precaricamento attinge dallo stesso insieme di skills che Claude può invocare. Questo include la skill `/verify` in bundle: solo lei può eseguirla, quindi non può essere precaricata nemmeno.
+
+Se una skill elencata è mancante o disabilitata, ad esempio dalla politica della sua organizzazione, Claude Code la salta e registra un avviso nel log di debug.
 
 <Note>
-  Questo è l'inverso di [eseguire una skill in un subagent](/docs/it/skills#run-skills-in-a-subagent). Con `skills` in un subagent, il subagent controlla il prompt di sistema e carica il contenuto della skill. Con `context: fork` in una skill, il contenuto della skill viene iniettato nell'agente che specifica. Entrambi utilizzano lo stesso sistema sottostante.
+  Questo è l'inverso di [eseguire una skill in un subagent](/docs/it/skills#run-skills-in-a-subagent). Con `skills` in un subagent, il subagent controlla il prompt di sistema e carica il contenuto della skill. Con `context: fork` in una skill, il contenuto della skill viene iniettato nell'agente che specifica. In entrambi i casi il subagent inizia senza la sua cronologia di conversazione.
 </Note>
 
 <h4 id="enable-persistent-memory">
@@ -524,6 +657,8 @@ Scelga un ambito in base a quanto ampiamente la memoria dovrebbe applicarsi:
 | `user`    | `~/.claude/agent-memory/<name-of-agent>/`     | il subagent dovrebbe ricordare gli insegnamenti tra tutti i progetti                                               |
 | `project` | `.claude/agent-memory/<name-of-agent>/`       | la conoscenza del subagent è specifica del progetto e condivisibile tramite controllo della versione               |
 | `local`   | `.claude/agent-memory-local/<name-of-agent>/` | la conoscenza del subagent è specifica del progetto ma non dovrebbe essere archiviata nel controllo della versione |
+
+La memoria del subagent fa parte della [memoria automatica](/docs/it/memory#auto-memory): se disattiva la memoria automatica, con l'impostazione `autoMemoryEnabled` o `CLAUDE_CODE_DISABLE_AUTO_MEMORY`, il campo `memory` non ha effetto e il subagent si avvia senza le istruzioni di memoria o l'accesso allo strumento di memoria descritto di seguito.
 
 Quando la memoria è abilitata:
 
@@ -587,13 +722,21 @@ fi
 exit 0
 ```
 
+Su macOS e Linux, renda lo script eseguibile, o l'hook fallisce invece di bloccare qualsiasi cosa:
+
+```bash theme={null}
+chmod +x ./scripts/validate-readonly-query.sh
+```
+
+Per testare la regola, chieda al subagent di eseguire un'istruzione `UPDATE`: lo script esce con codice 2, Claude Code blocca il comando, e il subagent vede il messaggio `Blocked: Only SELECT queries are allowed`.
+
 Consulti [Hook input](/docs/it/hooks#pretooluse-input) per lo schema di input completo e [exit codes](/docs/it/hooks#exit-code-output) per come i codici di uscita influenzano il comportamento. Su Windows, scriva gli script dell'hook in PowerShell e aggiunga `shell: powershell` alla voce dell'hook come mostrato in [running hooks in PowerShell](/docs/it/hooks#windows-powershell-tool).
 
 <h4 id="disable-specific-subagents">
   Disabiliti subagent specifici
 </h4>
 
-Può impedire a Claude di utilizzare subagent specifici aggiungendoli all'array `deny` nelle sue [impostazioni](/docs/it/settings#permission-settings). Usi il formato `Agent(subagent-name)` dove `subagent-name` corrisponde al campo name del subagent.
+Può impedire a Claude di utilizzare subagent specifici aggiungendoli all'array `deny` nelle sue [impostazioni](/docs/it/settings-reference#permission-settings). Usi il formato `Agent(subagent-name)` dove `subagent-name` corrisponde al campo name del subagent.
 
 ```json theme={null}
 {
@@ -617,8 +760,10 @@ Consulti la [documentazione Permissions](/docs/it/permissions#tool-specific-perm
 
 I subagent possono definire [hook](/docs/it/hooks) che vengono eseguiti durante il ciclo di vita del subagent. Ci sono due modi per configurare gli hook:
 
-* **Nel frontmatter del subagent**: Definisca hook che vengono eseguiti solo mentre quel subagent è attivo
-* **In `settings.json`**: Definisca hook che vengono eseguiti nella sessione principale quando i subagent iniziano o si fermano
+* **Nel frontmatter del subagent**: definisca hook che vengono eseguiti solo mentre quel subagent è attivo
+* **In `settings.json`**: definisca hook a livello di sessione che si attivano anche all'interno dei subagent. Gli eventi degli strumenti come `PreToolUse` e `PostToolUse` si attivano per le chiamate di strumenti del subagent allo stesso modo che nella conversazione principale, e `SubagentStart` e `SubagentStop` si attivano quando un subagent inizia o finisce
+
+Gli hook da [file di impostazioni, impostazioni di politica gestita e plugin](/docs/it/hooks#hook-locations) si applicano tutti all'interno dei subagent, quindi un hook `PreToolUse` in `settings.json` si attiva anche prima di ogni strumento che un subagent utilizza.
 
 <h4 id="hooks-in-subagent-frontmatter">
   Hook nel frontmatter del subagent
@@ -629,6 +774,10 @@ Definisca gli hook direttamente nel file markdown del subagent. Questi hook veng
 <Note>
   Gli hook nel frontmatter si attivano quando l'agente viene generato come subagent tramite lo strumento Agent o un @-mention, e quando l'agente viene eseguito come principale della sessione tramite [`--agent`](#invoke-subagents-explicitly) o l'impostazione `agent`. Nel caso della sessione principale, vengono eseguiti insieme a qualsiasi hook definito in [`settings.json`](/docs/it/hooks).
 </Note>
+
+Per consentire agli hook del frontmatter di un subagent a livello di progetto di essere eseguiti, accetti la [finestra di dialogo di fiducia dell'area di lavoro](/docs/it/permissions#project-allow-rules-and-workspace-trust) per la cartella che contiene il file dell'agente. Gli hook dai subagent a livello di utente in `~/.claude/agents/` e dalle definizioni che passa con `--agents` vengono eseguiti senza questo passaggio. Se ha aggiunto una cartella con `--add-dir` da fuori del repository dell'area di lavoro fidata, ha fiducia di quella cartella separatamente: i suoi hook `.claude/agents/` non ereditano la concessione dell'area di lavoro.
+
+Fino a quando non ha fiducia della cartella, il subagent viene comunque eseguito, ma Claude Code salta i suoi hook del frontmatter e registra un errore nel log di debug spiegando come avere fiducia della cartella. Questa è una regola più ristretta di quella per gli hook nei file di impostazioni: avere fiducia di una cartella principale non è sufficiente, e una sessione `-p` non conta come fidata. [Cosa viene eseguito prima di avere fiducia di una cartella](/docs/it/permissions#what-runs-before-you-trust-a-folder) confronta i due. Prima di v2.1.218, gli hook del frontmatter potevano essere eseguiti da cartelle che non aveva fiducia, incluso nelle sessioni non interattive.
 
 Tutti gli [hook events](/docs/it/hooks#hook-events) sono supportati. Gli eventi più comuni per i subagent sono:
 
@@ -671,7 +820,7 @@ Configuri gli hook in `settings.json` che rispondono agli eventi del ciclo di vi
 | `SubagentStart` | Nome del tipo di agente | Quando un subagent inizia l'esecuzione |
 | `SubagentStop`  | Nome del tipo di agente | Quando un subagent completa            |
 
-Entrambi gli eventi supportano matcher per indirizzare tipi di agenti specifici per nome. Il valore del matcher è il `name` del frontmatter dell'agente per i subagent a livello di progetto e utente, o l'identificatore con ambito del plugin come `my-plugin:db-agent` per [subagent plugin](/docs/it/plugins). Un nome con ambito contiene un due punti, quindi viene valutato come un'[espressione regolare non ancorata](/docs/it/hooks#matcher-patterns); ancoratelo con `^` e `$`, come in `^my-plugin:db-agent$`, per corrispondere solo a quell'agente.
+Entrambi gli eventi supportano matcher per indirizzare tipi di agenti specifici per nome. Il valore del matcher è il `name` del frontmatter dell'agente per i subagent a livello di progetto e utente, o l'identificatore con ambito del plugin come `my-plugin:db-agent` per [subagent plugin](/docs/it/plugins/components#agents). Un nome con ambito contiene un due punti, quindi viene valutato come un'[espressione regolare non ancorata](/docs/it/hooks#matcher-patterns); ancoratelo con `^` e `$`, come in `^my-plugin:db-agent$`, per corrispondere solo a quell'agente.
 
 Questo esempio esegue uno script di configurazione solo quando il subagent `db-agent` inizia e uno script di pulizia quando qualsiasi subagent si ferma:
 
@@ -711,6 +860,10 @@ Consulti [Hooks](/docs/it/hooks) per il formato di configurazione dell'hook comp
 
 Claude delega automaticamente le attività in base alla descrizione dell'attività nella sua richiesta, al campo `description` nelle configurazioni dei subagent e al contesto attuale. Per incoraggiare la delegazione proattiva, includa frasi come "use proactively" nel campo description del suo subagent.
 
+Mantenga le descrizioni brevi: Claude Code mostra un avviso di avvio quando le descrizioni combinate dei suoi subagent superano il [limite di 15.000 token](/docs/it/errors#agent-descriptions-are-over-the-15000-token-limit), e continua a caricare ogni subagent.
+
+Se il subagent viene fornito in un [plugin](/docs/it/plugins/overview), può misurare quanto affidabilmente Claude delega ad esso su prompt realistici invece di controllare uno alla volta: [`claude plugin eval`](/docs/it/plugin-evals) esegue ogni prompt con e senza il plugin e valuta i risultati.
+
 <h3 id="invoke-subagents-explicitly">
   Invochi i subagent esplicitamente
 </h3>
@@ -736,9 +889,9 @@ Have the code-reviewer subagent look at my recent changes
 
 Il suo messaggio completo va ancora a Claude, che scrive il prompt dell'attività del subagent in base a quello che ha chiesto. L'@-mention controlla quale subagent Claude invoca, non quale prompt riceve.
 
-I subagent forniti da un [plugin](/docs/it/plugins) abilitato appaiono nel typeahead con il loro nome con ambito, come `my-plugin:code-reviewer` o `my-plugin:review:security` quando il plugin [organizza gli agenti in sottocartelle](#choose-the-subagent-scope). I subagent in background denominati attualmente in esecuzione nella sessione appaiono anche nel typeahead, mostrando il loro stato accanto al nome.
+I subagent forniti da un [plugin](/docs/it/plugins/overview) abilitato appaiono nel typeahead con il loro nome con ambito, come `my-plugin:code-reviewer` o `my-plugin:review:security` quando il plugin [organizza gli agenti in sottocartelle](#choose-the-subagent-scope). I subagent in background denominati attualmente in esecuzione nella sessione appaiono anche nel typeahead, mostrando il loro stato accanto al nome.
 
-Può anche digitare la mention manualmente senza usare il picker: `@agent-<name>` per i subagent locali, o `@agent-` seguito dal nome con ambito per i subagent plugin, ad esempio `@agent-my-plugin:code-reviewer`.
+Può anche digitare la mention manualmente senza usare il picker: `@agent-<name>` per i subagent locali, o `@agent-` seguito dal nome con ambito per i subagent plugin, ad esempio `@agent-my-plugin:code-reviewer`. Mentre digita questo modulo il typeahead mostra corrispondenze di file piuttosto che agenti. La mention dell'agente si risolve comunque quando invia.
 
 **Esegua l'intera sessione come un subagent.** Passi [`--agent <name>`](/docs/it/cli-reference) per avviare una sessione in cui il thread principale stesso assume il prompt di sistema, le restrizioni di strumenti e il modello di quel subagent:
 
@@ -746,9 +899,11 @@ Può anche digitare la mention manualmente senza usare il picker: `@agent-<name>
 claude --agent code-reviewer
 ```
 
-Il prompt di sistema del subagent sostituisce completamente il prompt di sistema predefinito di Claude Code, nello stesso modo in cui [`--system-prompt`](/docs/it/cli-reference) fa. I file `CLAUDE.md` e la memoria del progetto continuano a caricarsi attraverso il flusso di messaggi normale. Il nome dell'agente appare come `@<name>` nell'intestazione di avvio in modo che possa confermare che è attivo.
+Il prompt di sistema del subagent sostituisce completamente il prompt di sistema predefinito di Claude Code, nello stesso modo in cui [`--system-prompt`](/docs/it/cli-reference) fa. I file `CLAUDE.md` e la memoria del progetto continuano a caricarsi attraverso il flusso di messaggi normale, anche quando la definizione dell'agente imposta [`omitClaudeMd`](#supported-frontmatter-fields).
 
-Questo funziona con i subagent integrati e personalizzati, e la scelta persiste quando riprende la sessione.
+Il nome dell'agente appare come `@<name>` nell'intestazione di avvio in modo che possa confermare che è attivo.
+
+Questo funziona con i subagent integrati e personalizzati, e la scelta persiste quando riprende la sessione: Claude Code ripristina le restrizioni di strumenti e il modello dell'agente insieme alla conversazione. Se l'agente non esiste più quando riprende, la sessione continua con gli strumenti predefiniti e mostra un [avviso che nomina l'agente](/docs/it/errors#session-agent-no-longer-available). Per il prompt di sistema in entrambi i casi, vedi [Flag del prompt di sistema nelle conversazioni riprese](/docs/it/cli-reference#system-prompt-flags-in-resumed-conversations).
 
 Per un subagent fornito da un plugin, può passare solo il nome dell'agente e Claude Code lo troverà:
 
@@ -781,31 +936,78 @@ Il flag CLI sostituisce l'impostazione se entrambi sono presenti.
 I subagent possono essere eseguiti in primo piano o in background:
 
 * **Subagent in primo piano** bloccano la conversazione principale fino al completamento. I prompt di autorizzazione vengono passati a lei mentre si presentano.
-* **Subagent in background** vengono eseguiti contemporaneamente mentre continua a lavorare. A partire da v2.1.186, quando un subagent in background raggiunge una chiamata di strumento che necessita di autorizzazione, il prompt emerge nella sua sessione principale e nomina il subagent che sta chiedendo. Approvi per consentire al subagent di continuare, o premi Esc per negare quella singola chiamata di strumento senza fermare il subagent. Prima di v2.1.186, i subagent in background auto-negavano qualsiasi chiamata di strumento che avrebbe richiesto un prompt.
+* **Subagent in background** vengono eseguiti contemporaneamente mentre continua a lavorare. Quando un subagent in background raggiunge una chiamata di strumento che necessita di autorizzazione, Claude Code fa emergere il prompt nella sua sessione principale e nomina il subagent che sta chiedendo. Approvi per consentire al subagent di continuare, o premi Esc per negare quella singola chiamata di strumento senza fermare il subagent.
 
-A partire da v2.1.198, i subagent vengono eseguiti in background per impostazione predefinita. Claude esegue un subagent in primo piano quando ha bisogno del risultato prima di continuare. L'impostazione predefinita cambia dove viene eseguito un subagent, non cosa gli è consentito fare: i subagent in background continuano a far emergere ogni prompt di autorizzazione nella sua sessione principale. Prima di v2.1.198, Claude sceglieva tra primo piano e background in base all'attività.
+Per ogni subagent che Claude genera con lo strumento Agent, Claude Code sceglie primo piano o background dal primo di questi casi che si applica:
+
+* Se un collega [agent team](/docs/it/agent-teams#limitations) in-process ha generato il subagent, Claude Code lo esegue in primo piano. Claude Code rifiuta con un errore di generare un subagent di un collega la cui definizione imposta [`background: true`](#supported-frontmatter-fields). Dove la [modalità fork](#turn-fork-mode-on-or-off) è disattivata e lei non ha [disattivato i compiti in background](/docs/it/env-vars), Claude Code rifiuta anche con un errore quando un collega imposta `run_in_background: true`.
+* Se lei imposta [`CLAUDE_CODE_DISABLE_BACKGROUND_TASKS`](/docs/it/env-vars) su `1`, Claude Code esegue il subagent in primo piano, in ogni tipo di sessione e indipendentemente dal fatto che la modalità fork sia attiva.
+* Dove la [modalità fork](#turn-fork-mode-on-or-off) è attiva, come lo è per impostazione predefinita in una sessione interattiva, Claude Code esegue il subagent in background, sia subagent fork che non-fork, e Claude non può chiedere il primo piano.
+* Dove la modalità fork è disattivata, Claude esegue il subagent in background per impostazione predefinita e in primo piano quando ha bisogno del risultato prima di continuare. La modalità fork è disattivata in [modalità non interattiva](/docs/it/headless) con `-p` e nell'Agent SDK a meno che lei non la attivi. Per mantenere un subagent particolare in background anche quando Claude vuole il risultato, imposti il suo campo frontmatter [`background`](#supported-frontmatter-fields) su `true`.
+
+Per una skill con `context: fork`, Claude Code segue le regole in [Esegua skills in un subagent](/docs/it/skills#run-skills-in-a-subagent) invece, indipendentemente dal fatto che la modalità fork sia attiva.
+
+I subagent in background vengono eseguiti con un [set di strumenti integrati più piccolo](#available-tools) rispetto ai subagent in primo piano, ad eccezione dei fork di conversazione e [subagent ripresi](#resume-subagents) in primo piano.
+
+I subagent in background fanno emergere ogni prompt di autorizzazione nella sua sessione principale. Quando risponde a uno di questi prompt con una scelta che dura oltre quella singola chiamata di strumento, come una concessione che dura per il resto della sessione, Claude Code applica la sua risposta all'intera sessione, inclusa la sua conversazione principale.
+
+Un subagent in background può lasciare un comando [Bash o PowerShell](/docs/it/tools-reference#background-commands) in background [in esecuzione oltre la fine del suo turno](/docs/it/interactive-mode#how-backgrounding-works). Quando quel comando termina, Claude Code invia al subagent una notifica.
+
+I risultati di un subagent in background raggiungono Claude come una notifica di completamento in un turno successivo. Claude attende quella notifica prima di segnalare i risultati del subagent, e se chiede informazioni sul progresso per primo, segnala che il subagent è ancora in esecuzione. Prima di v2.1.211, Claude a volte segnalava risultati per un subagent in background che non aveva finito.
 
 Può anche guidare questo lei stesso:
 
-* Chieda a Claude di eseguire un'attività in background o in primo piano
+* Dove la modalità fork è disattivata, chieda a Claude di eseguire un'attività in background o in primo piano
 * Premi **Ctrl+B** per mettere in background un'attività in esecuzione
 
-Un subagent in background che si completa rimane elencato in [`/tasks`](/docs/it/commands), contrassegnato come completato e ordinato sotto il lavoro in esecuzione, fino a quando la sessione non pulisce il suo elenco di attività. La sua vista dettagliata rimane aperta quando il subagent termina. I subagent che falliscono o che lei ferma lasciano l'elenco. Prima di v2.1.208, un subagent completato lasciava l'elenco nel momento in cui terminava e la sua vista dettagliata si chiudeva.
+Claude Code cancella la riga di un subagent in background dal pannello subagent sotto l'input del prompt in uno di due modi, a seconda di come il subagent è terminato:
 
-Per disabilitare tutta la funzionalità di background task, imposti la variabile di ambiente `CLAUDE_CODE_DISABLE_BACKGROUND_TASKS` su `1`. Consulti [Environment variables](/docs/it/env-vars).
+* Quando un subagent termina con successo, Claude Code rimuove la sua riga immediatamente e, ad eccezione della [modalità screen reader](/docs/it/accessibility), mostra `/tasks to see subagents` nel footer per 30 secondi. Durante questi 30 secondi, esegua [`/tasks`](/docs/it/commands) e premi `Enter` sul subagent per aprire la sua trascrizione. Prima di v2.1.232, Claude Code manteneva la riga per 30 secondi dopo che il subagent terminava, lo stesso di uno fallito, e non mostrava alcun suggerimento nel footer.
+* Quando un subagent fallisce o lei lo ferma, Claude Code mantiene la sua riga per 30 secondi. Per cancellare la riga più velocemente, la selezioni e premi `x`.
 
-Quando [`CLAUDE_CODE_FORK_SUBAGENT`](#fork-the-current-conversation) è impostato su `1`, ogni spawn di subagent viene eseguito in background e il campo frontmatter `background` non ha effetto, perché la modalità fork rimuove il parametro `run_in_background` dallo strumento Agent. `CLAUDE_CODE_DISABLE_BACKGROUND_TASKS` ha la precedenza sulla modalità fork e mantiene gli spawn di subagent in primo piano.
+Un subagent in background che si completa rimane elencato in [`/tasks`](/docs/it/commands), contrassegnato come completato e ordinato sotto il lavoro in esecuzione, per gli stessi 30 secondi del suggerimento nel footer. La sua vista dettagliata rimane aperta quando il subagent termina. I subagent che falliscono o che lei ferma lasciano l'elenco. Prima di v2.1.208, un subagent completato lasciava l'elenco nel momento in cui terminava e la sua vista dettagliata si chiudeva.
+
+<h3 id="subagent-names">
+  Nomi dei subagent
+</h3>
+
+Claude può dare a un subagent un nome passando un parametro `name` sulla chiamata dello strumento Agent, e può farlo da solo, senza chiedere prima a lei. Il nome rende il subagent indirizzabile: Claude può [messaggiare o riprendere per nome](#resume-subagents) dopo che termina.
+
+In una sessione interattiva con [agent teams](/docs/it/agent-teams) abilitati, un subagent che Claude genera dalla conversazione principale con un `name` si avvia come collega invece, a meno che la chiamata non sia un [fork](#fork-the-current-conversation) o passi `isolation` sulla chiamata stessa. Un valore `isolation` nel frontmatter del subagent non lo impedisce, e il collega viene quindi eseguito nella directory di lavoro della sessione principale. Vedi [Come Claude avvia agent teams](/docs/it/agent-teams#how-claude-starts-agent-teams).
 
 <h3 id="api-errors-in-subagents">
   Errori API nei subagent
 </h3>
+
+Quando qualcosa [interrompe la risposta di un subagent a metà flusso](/docs/it/errors#the-response-above-may-be-incomplete), e la risposta parziale contiene testo ma nessuna chiamata di strumento, Claude Code richiede al subagent di continuare piuttosto che terminare l'esecuzione. Questo accade anche nelle sessioni interattive. L'esecuzione termina sull'errore solo una volta che quelle continuazioni sono esaurite.
 
 A partire da v2.1.199, un subagent la cui esecuzione termina con un errore API, come un limite di utilizzo o un errore server ripetuto, segnala quel fallimento a Claude invece di restituire il testo di errore come se fossero i risultati del subagent. Quello che Claude riceve dipende da dove è stato eseguito il subagent:
 
 * **Primo piano**: se un limite di velocità, un sovraccarico o un errore server interrompe un subagent che ha già prodotto output di testo, lo strumento Agent restituisce quell'output parziale con una nota che il subagent è stato interrotto e non ha completato la sua attività. Un subagent che non ha prodotto nulla, o il cui unico output erano chiamate di strumenti, fallisce con [`Agent terminated early due to an API error`](/docs/it/errors#agent-terminated-early-due-to-an-api-error), seguito dal dettaglio dell'errore. In v2.1.199, un limite di velocità, un sovraccarico o un errore server che ha interrotto la forma solo-tool-calls ha restituito un risultato parziale vuoto contenente solo la nota di interruzione.
 * **Background**: il subagent è contrassegnato come fallito, e il messaggio che Claude riceve quando termina nomina l'errore API e include l'ultimo output del subagent, quindi il lavoro parziale non viene perso.
 
+Quando lei configura una [catena di modelli di fallback](/docs/it/model-config#fallback-model-chains) e un subagent incontra un fallimento che la catena copre, come il suo modello non disponibile, Claude Code passa il subagent al primo modello nella catena che accetta la richiesta. Il subagent continua a lavorare invece di terminare sull'errore.
+
 Una volta che l'errore API sottostante si risolve, chieda a Claude di riprovare l'attività o [riprendere il subagent](#resume-subagents).
+
+<h3 id="subagent-output-scanning">
+  Scansione dell'output del subagent
+</h3>
+
+Claude Code scansiona il rapporto finale di ogni subagent prima che Claude lo legga. Un subagent potrebbe aver letto file, pagine web o output di comando che lei non ha mai revisionato, e il testo da quelle fonti può contenere istruzioni rivolte alla conversazione principale. La scansione non rimuove o riformula mai nulla; apporta due tipi di cambiamento che potrebbe notare in un rapporto:
+
+* **Inserimento di backslash**: la scansione inserisce un backslash nel testo che imita l'output di Claude Code stesso, come un tag `<system-reminder>` o una riga che inizia con `Human:` o `Assistant:`, in modo che l'imitazione si legga come testo ordinario invece di essere scambiata per parte della conversazione.
+* **Riga marcatore**: la scansione antepone una riga che inizia con `[harness: subagent output matched instruction-shaped pattern(s):` quando il rapporto imita un tag come `<system-reminder>` o menziona impostazioni di autorizzazione come `bypassPermissions` o `--dangerously-skip-permissions`. Le menzioni di impostazioni di autorizzazione ottengono la riga marcatore, ma il testo stesso rimane come scritto.
+
+La scansione non giudica se il contenuto è dannoso, e non cambia cosa un'istruzione in un rapporto può fare: una chiamata di strumento che il rapporto porta Claude a fare passa comunque attraverso i [controlli di autorizzazione](/docs/it/permissions) della sessione e il [sandboxing](/docs/it/sandboxing). Non è un sostituto per [limitare cosa un subagent può raggiungere](#control-subagent-capabilities).
+
+Un rapporto che ritorna a Claude come risultato del subagent arriva anche sotto un'intestazione che lo contrassegna come output del subagent. L'intestazione afferma che le istruzioni o le affermazioni di approvazione all'interno del rapporto sono le parole del subagent e non portano alcuna autorità da lei.
+
+Un [rapporto di un subagent in background](#run-subagents-in-foreground-or-background) arriva all'interno di una notifica di completamento, che è contrassegnata come un evento automatizzato piuttosto che un messaggio da lei.
+
+<Note>
+  La scansione dell'output del subagent richiede Claude Code v2.1.210 o successivo.
+</Note>
 
 <h3 id="common-patterns">
   Modelli comuni
@@ -837,7 +1039,7 @@ Ogni subagent esplora la sua area in modo indipendente, quindi Claude sintetizza
   Quando i subagent completano, i loro risultati ritornano alla sua conversazione principale. L'esecuzione di molti subagent che ognuno restituisce risultati dettagliati può consumare contesto significativo.
 </Warning>
 
-Per attività che necessitano di parallelismo sostenuto o superano la sua finestra di contesto, [agent teams](/docs/it/agent-teams) danno a ogni worker il suo contesto indipendente.
+Per il lavoro che deve continuare a funzionare in parallelo o non si adatta a una finestra di contesto, eseguilo in [sessioni separate](/docs/it/agents) e lascia che Claude [passi i risultati tra di loro](/docs/it/cross-session-messaging).
 
 <h4 id="chain-subagents">
   Concateni i subagent
@@ -858,7 +1060,7 @@ Usi la **conversazione principale** quando:
 * L'attività necessita di frequenti scambi o raffinamento iterativo
 * Più fasi condividono contesto significativo, come pianificazione, implementazione e test
 * Sta facendo un cambio rapido e mirato
-* La latenza è importante. I subagent iniziano da zero e potrebbero aver bisogno di tempo per raccogliere contesto
+* La latenza è importante. Un subagent che non è un [fork](#fork-the-current-conversation) inizia da zero e potrebbe aver bisogno di tempo per raccogliere contesto
 
 Usi **subagent** quando:
 
@@ -868,23 +1070,53 @@ Usi **subagent** quando:
 
 Consideri [Skills](/docs/it/skills) invece quando vuole prompt o flussi di lavoro riutilizzabili che vengono eseguiti nel contesto della conversazione principale piuttosto che nel contesto isolato del subagent.
 
-Per una domanda rapida su qualcosa già nella sua conversazione, usi [`/btw`](/docs/it/interactive-mode#side-questions-with-%2Fbtw) invece di un subagent. Vede il suo contesto completo ma non ha accesso agli strumenti e la risposta viene scartata piuttosto che aggiunta alla cronologia.
+Per una domanda su qualcosa già nella sua conversazione, usi [`/btw`](/docs/it/interactive-mode#side-questions-with-%2Fbtw) invece di un subagent. Vede il suo contesto completo ma non ha accesso agli strumenti, e la risposta non viene aggiunta alla cronologia.
 
-<h3 id="spawn-nested-subagents">
-  Generi subagent annidati
+<h3 id="let-subagents-spawn-their-own-subagents">
+  Lasci che i subagent generino i loro propri subagent
 </h3>
 
-A partire da Claude Code v2.1.172, un subagent può generare i suoi propri subagent. Usi questo quando un'attività delegata si divide in sottoattività parallele, come un subagent revisore che invia un verificatore per ogni risultato, in modo che l'output intermedio non raggiunga mai la sua conversazione principale. Solo il riassunto del subagent di livello superiore ritorna a lei.
+Per impostazione predefinita, un subagent può generare subagent propri, fino a tre livelli sotto la conversazione principale. Al limite di profondità, Claude Code trattiene lo strumento `Agent` da ogni subagent ad eccezione di un [fork](#fork-the-current-conversation), quindi un subagent al limite fa il suo lavoro delegato stesso e restituisce un riassunto. Un fork al limite mantiene `Agent` nel suo elenco di strumenti ereditato, ma lo strumento restituisce un errore invece di generare.
 
-Un subagent annidato è configurato nello stesso modo di uno di livello superiore e si risolve dagli stessi [ambiti](#choose-the-subagent-scope).
+I subagent annidati si adattano a un'attività delegata che stessa si divide in sottoattività parallele, come un subagent revisore che invia un verificatore per ogni risultato. In una sessione interattiva, solo il riassunto del subagent di livello superiore ritorna a lei e l'output intermedio rimane fuori dalla sua conversazione principale: un subagent che avvia subagent in background attende i loro risultati prima di terminare. In [modalità non interattiva](/docs/it/headless) e nell'Agent SDK, il subagent di lancio non attende, quindi un subagent in background annidato che termina dopo che il suo lanciatore è terminato segnala alla sua conversazione principale invece.
 
-La profondità viene conteggiata come il numero di livelli di subagent sotto la conversazione principale, indipendentemente dal fatto che ogni livello venga eseguito in [primo piano o in background](#run-subagents-in-foreground-or-background). Un subagent a profondità cinque non riceve lo strumento Agent e non può generare ulteriormente. Il limite è fisso e non configurabile.
+Per cambiare il limite, imposti [`CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH`](/docs/it/env-vars) al numero di livelli di subagent che vuole sotto la sua conversazione principale. Ad esempio, questa voce in [`settings.json`](/docs/it/settings) limita l'annidamento a due livelli:
 
-A partire da Claude Code v2.1.187, la profondità di un subagent in background è fissata quando viene generato per la prima volta, e [riprendere](#resume-subagents) successivamente non cambia quella profondità. Ad esempio, se la sua conversazione principale genera il subagent A, e A genera un subagent in background B a profondità due, B è ancora a profondità due quando lo riprende direttamente dalla conversazione principale. Riprendere un subagent da un contesto più superficiale non gli consente di generare livelli aggiuntivi che il limite di profondità ha già impedito.
+```json theme={null}
+{
+  "env": {
+    "CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH": "2"
+  }
+}
+```
 
-Per impedire a un subagent specifico di generare altri, ometta `Agent` dal suo elenco [`tools`](#available-tools) o aggiunga a `disallowedTools`.
+Con questo valore, i suoi subagent possono delegare a un secondo livello dei loro, e quel secondo livello non può delegare ulteriormente. Imposti `1` per disattivare l'annidamento.
 
-Una [fork](#fork-the-current-conversation) ancora non può generare un'altra fork. Può generare altri tipi di subagent, e questi contano verso il limite di profondità.
+Un subagent annidato è configurato nello stesso modo di uno di livello superiore e si risolve dagli stessi [ambiti](#choose-the-subagent-scope). Per impedire a un subagent di generare mentre l'annidamento è attivo, come un revisore che dovrebbe rimanere di sola lettura, ometta `Agent` dal suo elenco [`tools`](#available-tools) o aggiunga a `disallowedTools`.
+
+Nel terminale, Claude Code mostra i subagent annidati come un albero nel pannello subagent sotto l'input del prompt e contrassegna ogni riga che ha ancora discendenti nel pannello con un conteggio `(+N)` di loro. Apra una riga per vedere i fratelli e i figli diretti di quel subagent con un percorso di ritorno a `main`.
+
+<Note>
+  Le versioni precedenti usavano predefiniti diversi:
+
+  * **v2.1.172 attraverso v2.1.216**: i subagent potevano annidare per impostazione predefinita, fino a cinque livelli di profondità, e il limite non poteva essere modificato.
+  * **v2.1.217 attraverso v2.1.218**: il limite era predefinito a uno, quindi un subagent non poteva generare il suo a meno che lei non lo aumentasse; v2.1.219 ha aumentato il predefinito a tre.
+</Note>
+
+<h3 id="concurrent-subagent-limit">
+  Limite di subagent concorrenti
+</h3>
+
+Due limiti controllano l'uso dei subagent, ognuno con la sua propria variabile: questo impedisce a Claude di generare più subagent mentre troppi sono in esecuzione, e il [limite di profondità](#let-subagents-spawn-their-own-subagents) limita quanto profondamente i subagent si annidano. Non c'è limite al numero totale di subagent che Claude può generare durante una sessione.
+
+Per impostazione predefinita, quando 20 subagent sono in esecuzione in una sessione, la generazione di un altro con lo strumento Agent fallisce con `Concurrent subagent limit reached`, e l'errore dice a Claude di non riprovare. La generazione ha successo di nuovo quando il conteggio in esecuzione scende sotto il limite. Per cambiare il limite, imposti [`CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`](/docs/it/env-vars) a qualsiasi numero intero positivo. Le sessioni con [ultracode](/docs/it/model-config#adjust-effort-level) attivo sono esenti: il limite non viene applicato lì. Richiede Claude Code v2.1.217 o successivo.
+
+Il limite blocca solo i subagent che Claude genera con lo strumento Agent, ma altre esecuzioni occupano gli stessi slot:
+
+* Un fork in-sessione che lei avvia con [`/subtask`](#fork-the-current-conversation) occupa uno slot mentre è in esecuzione e non è mai bloccato dal limite.
+* [Riprendere un subagent](#resume-subagents) che ha già finito occupa uno slot fresco senza controllare il limite, quindi i ripresi possono spingere il conteggio in esecuzione oltre.
+
+Gli agenti che altre funzionalità eseguono, come gli agenti [workflow](/docs/it/workflows) e i colleghi [agent team](/docs/it/agent-teams), seguono i loro propri limiti invece.
 
 <h3 id="manage-subagent-context">
   Gestisca il contesto del subagent
@@ -894,32 +1126,42 @@ Una [fork](#fork-the-current-conversation) ancora non può generare un'altra for
   Cosa si carica all'avvio
 </h4>
 
-Ogni subagent inizia con una finestra di contesto fresca e isolata. Non vede la cronologia della sua conversazione, le skills che ha già invocato, o i file che Claude ha già letto. Claude compone un messaggio di delegazione che riassume l'attività, e il subagent lavora da lì. L'eccezione è una [fork](#fork-the-current-conversation), che eredita la conversazione genitore invece di iniziare da zero.
+Ogni subagent inizia con una finestra di contesto fresca e isolata. Non vede la cronologia della sua conversazione, le skills che ha già invocato, o i file che Claude ha già letto. Claude compone un messaggio di delegazione che riassume l'attività, e il subagent lavora da lì. L'eccezione è un [fork](#fork-the-current-conversation), che eredita la conversazione genitore invece di iniziare da zero.
 
 Il contesto iniziale di un subagent non-fork contiene:
 
-* **System prompt**: il prompt dell'agente stesso più i dettagli dell'ambiente che Claude Code aggiunge, non il prompt di sistema completo di Claude Code. I subagent personalizzati definiscono il loro nel [corpo markdown](#write-subagent-files) o nel campo `prompt`. Gli agenti integrati hanno prompt predefiniti.
+* **System prompt**: il prompt dell'agente stesso più i dettagli dell'ambiente che Claude Code aggiunge, non il prompt di sistema di Claude Code. I subagent personalizzati definiscono il loro nel [corpo markdown](#write-subagent-files) o nel campo `prompt`. Gli agenti integrati hanno prompt predefiniti.
 * **Task message**: il prompt di delegazione che Claude scrive quando consegna il lavoro.
-* **CLAUDE.md e memory**: ogni livello della [gerarchia di memoria](/docs/it/memory#how-claude-md-files-load) che la conversazione principale carica, inclusi `~/.claude/CLAUDE.md`, regole del progetto, `CLAUDE.local.md` e file di policy gestiti. Gli agenti Explore e Plan integrati saltano questo.
-* **Git status**: uno snapshot preso all'inizio della sessione genitore. Assente quando la directory di lavoro non è un repository Git o quando [`includeGitInstructions`](/docs/it/settings#available-settings) è `false`. Explore e Plan lo saltano comunque.
+* **File CLAUDE.md**: ogni livello della [gerarchia CLAUDE.md](/docs/it/memory#how-claude-md-files-load) che la conversazione principale carica, inclusi `~/.claude/CLAUDE.md`, regole del progetto, `CLAUDE.local.md`, file di policy gestiti e qualsiasi file [`AGENTS.md`](/docs/it/memory#agents-md) caricato come istruzioni del progetto. Gli agenti Explore e Plan integrati saltano questo. Un subagent la cui definizione imposta [`omitClaudeMd`](#supported-frontmatter-fields) carica solo i file di policy gestiti, o nessuno affatto quando la definizione proviene da [impostazioni gestite](#choose-the-subagent-scope).
+* **Git status**: uno snapshot che Claude Code legge dal suo repository quando il subagent inizia. Assente al di fuori di un repository Git o ogni volta che lo snapshot è disattivato; vedi [`includeGitInstructions`](/docs/it/settings-reference#includegitinstructions). Explore e Plan lo saltano comunque.
 * **Preloaded skills**: contenuto completo di qualsiasi skill denominata nel campo [`skills`](#preload-skills-into-subagents) dell'agente. Gli agenti integrati non precaricano skills.
 * **Sibling roster**: un promemoria di sistema che elenca `main` e ogni altro agente denominato nella sessione, ognuno un valore `to` valido per [`SendMessage`](#resume-subagents). Richiede Claude Code v2.1.206 o successivo. L'elenco appare solo quando gli strumenti del subagent includono `SendMessage` e almeno un altro agente ha un nome, sia che Claude lo abbia denominato quando lo ha generato o che venga eseguito come un collega [agent teams](/docs/it/agent-teams). È uno snapshot preso quando il subagent inizia, quindi gli agenti denominati successivamente non appaiono.
 
-Explore e Plan sono gli unici subagent che omettono CLAUDE.md e git status. Non c'è un campo frontmatter o un'impostazione per-agente per cambiare quali agenti li saltano.
+Per avviare uno dei suoi subagent senza i file CLAUDE.md dell'utente, del progetto e locali, imposti [`omitClaudeMd: true`](#supported-frontmatter-fields) nel suo frontmatter o `--agents` JSON.
 
-La conversazione principale legge i risultati di Explore e Plan con il contesto completo di CLAUDE.md, quindi la maggior parte delle regole non ha bisogno di raggiungere il subagent stesso. Se una regola deve, come "ignora la directory `vendor/`", la rienunci nel prompt che dà a Claude quando delega.
+La conversazione principale continua ad avere il suo CLAUDE.md completo quando legge i risultati di questi subagent, quindi la maggior parte delle regole non ha bisogno di raggiungere il subagent stesso. Se una regola deve, come "ignora la directory `vendor/`," la rienunci nel prompt che dà a Claude quando delega.
+
+Lei non può cambiare quali subagent ricevono lo stato git. Solo Explore e Plan lo saltano.
+
+Alcuni stati della conversazione principale non raggiungono mai un subagent non-fork:
+
+* **Output style**: un subagent esegue il suo prompt di sistema, quindi il suo [output style](/docs/it/output-styles) non modella le sue risposte, ad eccezione di un [fork](#fork-the-current-conversation).
+* **Auto memory**: la [auto memory](/docs/it/memory#auto-memory) della conversazione principale non viene caricata. Per dare a un subagent memoria persistente propria, usi il campo [`memory`](#enable-persistent-memory).
+* **Context window size**: la finestra di contesto di un subagent è dimensionata dal suo modello, non da quella del genitore. Delegare a un modello con una finestra più piccola dà a quel subagent la finestra più piccola.
 
 <h4 id="resume-subagents">
   Riprenda i subagent
 </h4>
 
-Ogni invocazione di subagent crea una nuova istanza con contesto fresco. Per continuare il lavoro di un subagent esistente invece di ricominciare, chieda a Claude di riprendere.
+Ogni invocazione di subagent crea una nuova istanza piuttosto che continuare una precedente. Per continuare il lavoro di un subagent esistente invece di ricominciare, chieda a Claude di riprendere.
 
-I subagent ripresi mantengono la loro cronologia di conversazione completa, incluse tutte le precedenti chiamate di strumenti, risultati e ragionamento. Il subagent riprende esattamente da dove si era fermato piuttosto che ricominciare da zero.
+I subagent ripresi mantengono la loro cronologia di conversazione completa, incluse tutte le precedenti chiamate di strumenti, risultati e ragionamento. Se il subagent ha generato [subagent in background propri](#let-subagents-spawn-their-own-subagents), quella cronologia include i risultati che hanno consegnato mentre era in esecuzione. Il subagent riprende esattamente da dove si era fermato piuttosto che ricominciare da zero.
 
-Quando un subagent completa, Claude riceve il suo ID agente. Gli agenti integrati Explore e Plan sono una tantum e non restituiscono alcun ID agente, quindi non possono essere ripresi; usi `general-purpose` o un subagent personalizzato quando ha bisogno di continuare il lavoro.
+* Quando un subagent completa, Claude riceve il suo ID agente.
+* Gli agenti integrati Explore e Plan sono una tantum e non restituiscono alcun ID agente, quindi Claude non può riprendere. Usi `general-purpose` o un subagent personalizzato quando ha bisogno di continuare il lavoro.
+* Quando un subagent si ferma al suo limite [`maxTurns`](#supported-frontmatter-fields), Claude Code contrassegna l'output restituito come parziale. Per i subagent che restituiscono un ID agente, Claude Code nota anche nel risultato che Claude può messaggiare il subagent per continuare da dove si era fermato.
 
-Claude utilizza lo strumento `SendMessage` con l'ID dell'agente o il nome come campo `to` per riprendere. `SendMessage` non richiede che [agent teams](/docs/it/agent-teams) siano abilitati; solo i messaggi strutturati del protocollo di team come `shutdown_request` e `plan_approval_response` lo fanno.
+Claude utilizza lo strumento `SendMessage` con l'ID dell'agente o il nome come campo `to` per riprendere. `SendMessage` non richiede che [agent teams](/docs/it/agent-teams) siano abilitati; solo i messaggi strutturati del protocollo di team come `shutdown_request` e `plan_approval_response` lo fanno. Oltre ai subagent e ai colleghi, nelle sessioni dove la messaggistica tra sessioni è abilitata, Claude può usare lo stesso strumento per messaggiare [le sue altre sessioni Claude Code](/docs/it/cross-session-messaging), su questa macchina o [oltre](/docs/it/cross-session-messaging#message-sessions-on-other-machines).
 
 Per riprendere un subagent, chieda a Claude di continuare il lavoro precedente:
 
@@ -931,13 +1173,17 @@ Continue that code review and now analyze the authorization logic
 [Claude resumes the subagent with full context from previous conversation]
 ```
 
-Un subagent completato che riceve un `SendMessage` si auto-riprende in background senza una nuova invocazione `Agent`. Lo stesso vale per un subagent che Claude ha fermato con lo strumento `TaskStop`.
+Quando Claude invia a un subagent completato un messaggio con lo strumento `SendMessage`, il subagent riprende in background senza una nuova invocazione `Agent`. Lo stesso vale per un subagent che Claude ha fermato con lo strumento `TaskStop`, una volta che la sua esecuzione fermata è uscita. La ripresa mantiene il [set di strumenti da dove il subagent è stato eseguito per la prima volta](#run-subagents-in-foreground-or-background) e può continuare a leggere la [cache del prompt che l'esecuzione originale ha riscaldato](/docs/it/prompt-caching#subagents-and-the-cache).
 
-A partire da v2.1.191, un subagent che lei ha fermato lei stesso, con `x` in `/tasks` o una richiesta SDK `stop_task`, non si auto-riprende. La chiamata `SendMessage` restituisce un rifiuto dicendo a Claude che l'agente è stato annullato. Digiti nel trascritto di quel subagent nel pannello subagent per riprendere lei stesso, il che cancella lo stop in modo che le successive chiamate `SendMessage` possono auto-riprendere di nuovo.
+Un subagent che ha lo strumento `SendMessage` può inviare anche quel messaggio. In una sessione interattiva, l'agente ripreso segnala quindi al subagent che lo ha ripreso, non alla sua conversazione principale. Quel subagent attende il risultato prima di terminare il suo lavoro. Quando un subagent messaggia un agente a cui segnala, come il suo lanciatore, Claude Code riprende quell'agente senza reindirizzare i suoi risultati.
+
+Un subagent che lei ha fermato lei stesso, con `x` in `/tasks` o una richiesta SDK `stop_task`, non si auto-riprende. Se Claude gli invia un messaggio, il messaggio viene rifiutato e Claude viene detto che l'agente è stato annullato.
+
+Mentre [la riga di quel subagent è ancora nel pannello subagent](#run-subagents-in-foreground-or-background), digiti nella sua trascrizione per riprendere lei stesso. Dopo, un messaggio da Claude può auto-riprendere di nuovo.
 
 Riprendere avvia una nuova esecuzione dell'agente con lo stesso ID, quindi un subagent che aveva già fallito o completato si mostra come in esecuzione di nuovo nell'elenco delle attività e negli eventi delle attività dell'Agent SDK. Prima di v2.1.205, continuava a mostrare il suo stato precedente fallito o completato mentre l'esecuzione ripresa stava funzionando.
 
-A partire da v2.1.199, `SendMessage` verifica che un nome si riferisca ancora allo stesso agente che ha raggiunto in precedenza nella conversazione. Se un agente più recente ha preso il nome, come un agente in background ri-generato che lo ha riutilizzato, Claude Code rifiuta l'invio piuttosto che consegnarlo all'agente sbagliato, e l'errore segnala quale agente il nome raggiunge ora in modo che Claude possa reindirizzare. Per raggiungere l'agente precedente mentre è ancora in esecuzione, Claude lo indirizza per l'ID agente dal risultato di spawn. Il controllo è limitato alla conversazione attuale e si ripristina su `/clear`.
+A partire da v2.1.199, `SendMessage` verifica che un nome si riferisca ancora allo stesso agente che ha raggiunto in precedenza nella conversazione. Se un agente più recente ha preso il nome, come un agente in background ri-generato che lo ha riutilizzato, Claude Code rifiuta l'invio piuttosto che consegnarlo all'agente sbagliato, e l'errore segnala quale agente il nome raggiunge ora in modo che Claude possa reindirizzare. Per raggiungere l'agente precedente mentre è ancora in esecuzione, Claude lo indirizza per l'ID agente che ha ricevuto quando ha generato quell'agente. Il controllo è limitato alla conversazione attuale e si ripristina su `/clear`.
 
 A partire da v2.1.198, un subagent tratta i messaggi dall'agente che lo ha lanciato come direzione di attività normale, incluse le correzioni di corso a metà attività, e agisce su di essi all'interno delle sue impostazioni di autorizzazione. Due limiti continuano a valere indipendentemente da chi ha inviato il messaggio: nessun messaggio da alcun agente conta come la sua approvazione per un prompt di autorizzazione in sospeso, e nessun messaggio di agente può cambiare le impostazioni di autorizzazione, `CLAUDE.md` o configurazione di un subagent. Solo il sistema di autorizzazione o i suoi stessi messaggi possono concedere l'approvazione.
 
@@ -947,7 +1193,7 @@ Le trascrizioni dei subagent persistono indipendentemente dalla conversazione pr
 
 * **Compattazione della conversazione principale**: quando la conversazione principale si compatta, le trascrizioni dei subagent non sono interessate. Sono archiviate in file separati.
 * **Persistenza della sessione**: le trascrizioni dei subagent persistono all'interno della loro sessione. Può [riprendere un subagent](#resume-subagents) dopo aver riavviato Claude Code riprendendo la stessa sessione.
-* **Pulizia automatica**: le trascrizioni vengono pulite in base all'impostazione `cleanupPeriodDays`, che per impostazione predefinita è 30 giorni.
+* **Pulizia automatica**: Claude Code elimina le trascrizioni dei subagent dopo il periodo di conservazione `cleanupPeriodDays`, 30 giorni per impostazione predefinita, seguendo le [regole di pulizia della conservazione](/docs/it/claude-directory#cleaned-up-automatically).
 
 <h4 id="auto-compaction">
   Auto-compattazione
@@ -975,22 +1221,17 @@ Il valore `preTokens` mostra quanti token sono stati utilizzati prima che si ver
 </h2>
 
 <Note>
-  I subagent di fork richiedono Claude Code v2.1.117 o successivo. Da v2.1.161 il comando `/fork` è abilitato per impostazione predefinita; nelle versioni precedenti richiede l'impostazione della variabile di ambiente [`CLAUDE_CODE_FORK_SUBAGENT`](/docs/it/env-vars) su `1`. Consentire a Claude stesso di generare fork è sperimentale e potrebbe cambiare nelle versioni future. Questa capacità può anche essere abilitata nelle sessioni interattive come parte di un rollout graduale.
+  Esegua un subagent di fork con `/subtask`, che richiede Claude Code v2.1.212 o successivo. Quando [la visualizzazione dell'agente è disattivata](/docs/it/agent-view#turn-off-agent-view), `/subtask` non è disponibile e `/fork` avvia il subagent di fork; altrimenti `/fork` copia l'intera sessione in una nuova [sessione in background](/docs/it/agent-view#from-inside-a-session).
 </Note>
 
 Un fork è un subagent che eredita l'intera conversazione fino ad ora invece di iniziare da zero. Questo elimina l'isolamento dell'input che i subagent altrimenti forniscono: un fork vede lo stesso prompt di sistema, strumenti, modello e cronologia dei messaggi della sessione principale, in modo che possa assegnargli un'attività secondaria senza re-spiegare la situazione. Le proprie chiamate di strumenti del fork rimangono comunque fuori dalla sua conversazione e solo il suo risultato finale ritorna, in modo che la sua finestra di contesto principale rimanga pulita. Usi un fork quando un subagent denominato avrebbe bisogno di troppo background per essere utile, o quando vuole provare diversi approcci in parallelo dallo stesso punto di partenza.
 
-Per controllare la modalità fork indipendentemente dal rollout graduale, imposti [`CLAUDE_CODE_FORK_SUBAGENT`](/docs/it/env-vars) su `1` per abilitarla esplicitamente o su `0` per disabilitarla. La variabile è rispettata in modalità interattiva e tramite SDK o `claude -p`.
+Claude avvia un fork richiedendo il tipo di subagent `fork` tramite lo strumento Agent. Lei controlla se può farlo con [la modalità fork](#turn-fork-mode-on-or-off), che è attivata per impostazione predefinita nelle sessioni interattive.
 
-L'abilitazione della modalità fork cambia Claude Code in due modi:
-
-* Claude può generare un fork richiedendo esplicitamente il tipo di subagent `fork`. Gli spawn senza un tipo di subagent continuano a utilizzare il subagent [general-purpose](#built-in-subagents), e i subagent denominati come Explore continuano a generarsi come prima.
-* Ogni spawn di subagent viene eseguito in [background](#run-subagents-in-foreground-or-background), sia che sia un fork che un subagent denominato. Imposti `CLAUDE_CODE_DISABLE_BACKGROUND_TASKS` su `1` per mantenere gli spawn sincroni.
-
-Può avviare un fork lei stesso con `/fork` seguito da una direttiva, con o senza la variabile impostata. Claude Code nomina il fork dalle prime parole della direttiva. L'esempio seguente esegue il fork della conversazione per redigere casi di test mentre continua con l'implementazione nella sessione principale:
+Può avviare un fork lei stesso con `/subtask` seguito da un'attività, indipendentemente dal fatto che la modalità fork sia attivata o meno. Nella versione da v2.1.161 a v2.1.211 il comando è `/fork`. Claude Code nomina il fork dalle prime parole dell'attività. L'esempio seguente esegue il fork della conversazione per redigere casi di test mentre continua con l'implementazione nella sessione principale:
 
 ```text wrap theme={null}
-/fork draft unit tests for the parser changes so far
+/subtask draft unit tests for the parser changes so far
 ```
 
 Il fork appare in un pannello sotto il suo prompt e viene eseguito in background mentre continua a lavorare. Quando finisce, il suo risultato arriva come messaggio nella sua conversazione principale. La sezione successiva copre i controlli del pannello per osservare e dirigere i fork mentre vengono eseguiti.
@@ -999,40 +1240,56 @@ Il fork appare in un pannello sotto il suo prompt e viene eseguito in background
   Osservi e dirija i fork in esecuzione
 </h3>
 
-I fork in esecuzione appaiono in un pannello sotto l'input del prompt, con una riga per la sessione principale e una per ogni fork. Usi questi tasti per interagire con il pannello:
+I fork in esecuzione appaiono in un pannello sotto l'input del prompt, con una riga per la sessione principale e una per ogni fork.
 
-| Key       | Action                                                                  |
-| :-------- | :---------------------------------------------------------------------- |
-| `↑` / `↓` | Sposta tra le righe                                                     |
-| `Enter`   | Apra la trascrizione del fork selezionato e invii messaggi di follow-up |
-| `x`       | Chiuda un fork finito o fermi uno in esecuzione                         |
-| `Esc`     | Restituisca il focus all'input del prompt                               |
+Quando un fork finisce con successo, Claude Code rimuove la sua riga. Claude Code mantiene la riga di un fork che non è riuscito o che Lei ha interrotto per 30 secondi, [lo stesso che per qualsiasi altro subagent in background](#run-subagents-in-foreground-or-background). Prima della versione v2.1.232, Claude Code manteneva la riga di un fork finito per 30 secondi anche.
+
+Usi questi tasti per interagire con il pannello:
+
+| Key       | Action                                                                                                                                                                                                                          |
+| :-------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `↑` / `↓` | Sposta tra le righe                                                                                                                                                                                                             |
+| `Enter`   | Apra la trascrizione del fork selezionato e invii messaggi di follow-up                                                                                                                                                         |
+| `x`       | Fermi il fork selezionato se è in esecuzione, o chiuda la sua riga se non è più in esecuzione. Sulla riga della sessione principale, o sulla riga del fork la cui trascrizione Lei ha aperto con `Enter`, `x` digita nel prompt |
+| `Esc`     | Restituisca il focus all'input del prompt                                                                                                                                                                                       |
 
 Con la trascrizione di un fork o di un subagent aperta, i messaggi di follow-up e le [skills](/docs/it/skills) vanno a quell'agente, ma i comandi incorporati continuano a essere eseguiti nella sua conversazione principale. A partire da v2.1.199, digitando `/model` o `/fast` in quella visualizzazione viene visualizzato un avviso che cambia il modello della conversazione principale o la modalità veloce, non quello dell'agente visualizzato, invece di eseguirlo silenziosamente.
 
-<h3 id="how-forks-differ-from-named-subagents">
-  Come i fork differiscono dai subagent denominati
+<h3 id="how-forks-differ-from-other-subagents">
+  Come i fork differiscono dai subagent non-fork
 </h3>
 
-Un fork eredita tutto ciò che la sessione principale ha nel momento in cui viene generato. Un subagent denominato inizia dalla sua propria definizione.
+Un fork eredita tutto ciò che la sessione principale ha nel momento in cui viene generato. Un subagent non-fork inizia da zero dalla sua definizione.
 
-|                       | Fork                                 | Subagent denominato                                                                                                               |
+|                       | Fork                                 | Subagent non-fork                                                                                                                 |
 | :-------------------- | :----------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------- |
 | Context               | Cronologia di conversazione completa | Contesto fresco con il prompt che passa                                                                                           |
-| System prompt e tools | Uguale alla sessione principale      | Dalla [definition file](#write-subagent-files) del subagent                                                                       |
+| System prompt e tools | Uguale alla sessione principale      | Dalla [definition file](#write-subagent-files) del subagent, [filtrato per esecuzioni in background](#available-tools)            |
 | Model                 | Uguale alla sessione principale      | Dal campo `model` del subagent                                                                                                    |
 | Permissions           | I prompt emergono nel suo terminale  | [I prompt emergono nella sua sessione principale](#run-subagents-in-foreground-or-background) quando viene eseguito in background |
 | Prompt cache          | Condiviso con la sessione principale | Cache separata                                                                                                                    |
 
-Poiché il prompt di sistema di un fork e le definizioni di strumenti sono identici al principale, la sua prima richiesta riutilizza la cache del prompt del principale. Questo rende il fork più economico rispetto alla generazione di un subagent fresco per attività che necessitano dello stesso contesto.
+Poiché il prompt di sistema di un fork e le definizioni di strumenti sono identici al principale, la sua prima richiesta riutilizza la [prompt cache](/docs/it/prompt-caching#subagents-and-the-cache) del principale. Questo rende il fork più economico rispetto alla generazione di un subagent fresco per attività che necessitano dello stesso contesto.
 
-Quando Claude genera un fork tramite lo strumento Agent, può passare `isolation: "worktree"` in modo che le modifiche ai file del fork vengano scritte in un git worktree separato invece del suo checkout.
+Quando Claude genera un fork tramite lo strumento Agent, può passare `isolation: "worktree"` in modo che le modifiche ai file del fork vengano scritte in un git worktree separato invece del suo checkout. Un fork non può generare ulteriori fork.
 
-<h3 id="limitations">
-  Limitazioni
+<h3 id="turn-fork-mode-on-or-off">
+  Attivi o disattivi la modalità fork
 </h3>
 
-L'impostazione di `CLAUDE_CODE_FORK_SUBAGENT=1` abilita la modalità fork in sessioni interattive, [modalità non interattiva](/docs/it/headless) e SDK Agent; l'impostazione su `0` disabilita la modalità fork ovunque, incluso qualsiasi rollout lato server. Un fork non può generare ulteriori fork.
+Claude Code attiva la modalità fork per impostazione predefinita nelle sessioni interattive e la lascia disattivata per impostazione predefinita in [modalità non interattiva](/docs/it/headless) con `-p` e nell'Agent SDK. L'impostazione predefinita interattiva richiede Claude Code v2.1.232 o successivo. Nelle versioni precedenti, imposti `CLAUDE_CODE_FORK_SUBAGENT` su `1` per attivare la modalità fork.
+
+Può dire che la modalità fork è attivata da come Claude Code gestisce lo strumento Agent:
+
+* Claude può generare un fork richiedendo il tipo di subagent `fork`. Quando Claude non richiede un tipo, ottiene il subagent [general-purpose](#built-in-subagents), se la sessione ha ancora quel tipo. I subagent generati da una definizione, come Explore, funzionano come al solito.
+* Claude Code esegue i subagent che Claude genera in background, sia i fork che i subagent non-fork, a parte i [casi che rimangono in primo piano](#run-subagents-in-foreground-or-background). Claude Code rimuove anche il parametro `run_in_background` dello strumento Agent, in modo che Claude non possa chiedere il primo piano.
+
+Imposti la variabile di ambiente [`CLAUDE_CODE_FORK_SUBAGENT`](/docs/it/env-vars) per ignorare le impostazioni predefinite:
+
+* `1` attiva la modalità fork in modalità non interattiva e nell'Agent SDK
+* `0` disattiva la modalità fork in ogni tipo di sessione
+
+Per mantenere la modalità fork attivata ma impedire a Claude di generare fork, [neghi il tipo di subagent `fork`](#disable-specific-subagents) con una regola `Agent(fork)`. Claude Code continua a eseguire i subagent che Claude genera in background, a parte gli stessi [casi che rimangono in primo piano](#run-subagents-in-foreground-or-background).
 
 <h2 id="example-subagents">
   Subagent di esempio
@@ -1044,13 +1301,13 @@ Questi esempi dimostrano modelli efficaci per la costruzione di subagent. Li usi
   **Best practices:**
 
   * **Progetti subagent focalizzati:** ogni subagent dovrebbe eccellere in un'attività specifica
-  * **Scriva descrizioni dettagliate:** Claude utilizza la descrizione per decidere quando delegare
+  * **Scriva descrizioni che individuino un subagent:** Claude utilizza la descrizione per decidere quando delegare. Renda ogni descrizione abbastanza specifica da instradare al subagent giusto, e mantenga l'insieme combinato entro il [budget di descrizione di 15.000 token](#understand-automatic-delegation)
   * **Limiti l'accesso agli strumenti:** conceda solo le autorizzazioni necessarie per la sicurezza e la focalizzazione
   * **Archivi nel controllo della versione:** condivida i subagent di progetto con il suo team
 </Tip>
 
 <h3 id="code-reviewer">
-  Revisore di codice
+  Code reviewer
 </h3>
 
 Un subagent di sola lettura che esamina il codice senza modificarlo. Questo esempio mostra come progettare un subagent focalizzato con accesso limitato agli strumenti che esclude Edit e Write, e un prompt dettagliato che specifica esattamente cosa cercare e come formattare l'output.
@@ -1167,7 +1424,7 @@ Always ensure queries are efficient and cost-effective.
 ```
 
 <h3 id="database-query-validator">
-  Validatore di query di database
+  Database query validator
 </h3>
 
 Un subagent che consente l'accesso a Bash ma convalida i comandi per consentire solo query SQL di sola lettura. Questo esempio mostra come usare gli hook `PreToolUse` per la convalida condizionale quando ha bisogno di un controllo più fine di quello che il campo `tools` fornisce.
@@ -1232,12 +1489,14 @@ Su Windows, scriva lo script di convalida in PowerShell e aggiunga `shell: power
 
 L'hook riceve JSON tramite stdin con il comando Bash in `tool_input.command`. Il codice di uscita 2 blocca l'operazione e alimenta il messaggio di errore a Claude. Consulti [Hooks](/docs/it/hooks#exit-code-output) per i dettagli sui codici di uscita e [Hook input](/docs/it/hooks#pretooluse-input) per lo schema di input completo.
 
+Il prompt di sistema dice al subagent di rifiutare le richieste di scrittura, quindi l'hook è una protezione: se il subagent tenta comunque una scrittura, Claude Code blocca il comando e il subagent vede il messaggio `Blocked: Write operations not allowed. Use SELECT queries only.`.
+
 <h2 id="next-steps">
   Passaggi successivi
 </h2>
 
 Ora che comprende i subagent, esplori queste funzionalità correlate:
 
-* [Distribuisca subagent con i plugin](/docs/it/plugins) per condividere i subagent tra team o progetti
+* [Distribuisca subagent con i plugin](/docs/it/plugins/components#agents) per condividere i subagent tra team o progetti
 * [Esegua Claude Code a livello di programmazione](/docs/it/headless) con l'Agent SDK per CI/CD e automazione
 * [Usi i server MCP](/docs/it/mcp) per dare ai subagent accesso a strumenti e dati esterni

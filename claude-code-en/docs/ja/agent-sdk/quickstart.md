@@ -19,7 +19,7 @@ Agent SDK を使用して、コードを読み、バグを見つけ、すべて�
 </h2>
 
 * **Node.js 18+** または **Python 3.10+**
-* **Anthropic アカウント**（[こちらでサインアップ](https://platform.claude.com/)）
+* **Anthropic アカウント**。アカウントをお持ちでない場合は、[こちらでサインアップ](https://platform.claude.com/)してください。
 
 <h2 id="setup">
   セットアップ
@@ -49,7 +49,7 @@ Agent SDK を使用して、コードを読み、バグを見つけ、すべて�
         npm install --save-dev tsx
         ```
 
-        `package.json` で `"type": "module"` を設定すると、エージェントスクリプトでトップレベルの `await` を使用でき、[tsx](https://tsx.is) は TypeScript ファイルを直接実行します。
+        `package.json` で `"type": "module"` を設定すると、エージェントスクリプトでトップレベルの `await` を使用でき、[tsx](https://tsx.hirok.io) は TypeScript ファイルを直接実行します。npm はインストールが成功すると `added N packages` と出力します。
       </Tab>
 
       <Tab title="TypeScript（既存プロジェクト）">
@@ -58,11 +58,11 @@ Agent SDK を使用して、コードを読み、バグを見つけ、すべて�
         npm install --save-dev tsx
         ```
 
-        [tsx](https://tsx.is) は TypeScript ファイルを直接実行します。プロジェクトが CommonJS を使用している場合は、エージェントスクリプトを `agent.ts` の代わりに `agent.mts` という名前にしてください。`.mts` 拡張子により、tsx はファイルを ES モジュールとして扱うため、プロジェクト全体を ES モジュールに変換することなく、トップレベルの `await` が機能します。このクイックスタートの後の作成と実行のステップで、`agent.ts` の代わりに `agent.mts` を使用してください。
+        [tsx](https://tsx.hirok.io) は TypeScript ファイルを直接実行します。プロジェクトが CommonJS を使用している場合は、エージェントスクリプトを `agent.ts` の代わりに `agent.mts` という名前にしてください。`.mts` 拡張子により、tsx はファイルを ES モジュールとして扱うため、プロジェクト全体を ES モジュールに変換することなく、トップレベルの `await` が機能します。このクイックスタートの後の作成と実行のステップで、`agent.ts` の代わりに `agent.mts` を使用してください。
       </Tab>
 
       <Tab title="Python（uv）">
-        [uv](https://docs.astral.sh/uv/) は、仮想環境を自動的に処理する高速な Python パッケージマネージャーです：
+        [uv](https://docs.astral.sh/uv/) をインストールしてください。これは仮想環境を自動的に処理する高速な Python パッケージマネージャーです。その後、プロジェクトを初期化して SDK を追加します：
 
         ```bash theme={null}
         uv init
@@ -94,7 +94,10 @@ Agent SDK を使用して、コードを読み、バグを見つけ、すべて�
     </Tabs>
 
     <Note>
-      TypeScript SDK は、プラットフォーム用のネイティブ Claude Code バイナリをオプションの依存関係としてバンドルしているため、Claude Code を別途インストールする必要はありません。
+      TypeScript SDK と Python SDK の両方は、ネイティブ Claude Code バイナリをバンドルしているため、ほとんどのインストールでは Claude Code を別途インストールする必要がありません。一部のインストールではバンドルされたバイナリがありません：
+
+      * pip が Python SDK のソース配布をプラットフォームホイールの代わりにインストールする場合（たとえば ARM64 Windows）、バイナリはバンドルされません。[Claude Code をネイティブにインストール](/docs/ja/setup#install-claude-code)してください。Python SDK は `PATH` 上でそれを見つけます。
+      * TypeScript SDK は npm オプション依存関係を通じてバイナリをインストールするため、それらをスキップするインストール（たとえば `npm ci --omit=optional`）は、サポートされているプラットフォームでもバイナリを取得しません。オプション依存関係をスキップせずに再インストールするか、[Claude Code をネイティブにインストール](/docs/ja/setup#install-claude-code)して `pathToClaudeCodeExecutable` をそのパスに設定してください。
     </Note>
   </Step>
 
@@ -122,7 +125,7 @@ Agent SDK を使用して、コードを読み、バグを見つけ、すべて�
     * **Amazon Bedrock**：`CLAUDE_CODE_USE_BEDROCK=1` 環境変数を設定し、AWS 認証情報を構成します
     * **Claude Platform on AWS**：`CLAUDE_CODE_USE_ANTHROPIC_AWS=1` と `ANTHROPIC_AWS_WORKSPACE_ID` を設定し、AWS 認証情報を構成します
     * **Google Cloud の Agent Platform**：`CLAUDE_CODE_USE_VERTEX=1` 環境変数を設定し、Google Cloud 認証情報を構成します
-    * **Microsoft Azure**：`CLAUDE_CODE_USE_FOUNDRY=1` 環境変数を設定し、Azure 認証情報を構成します
+    * **Microsoft Foundry**：`CLAUDE_CODE_USE_FOUNDRY=1` 環境変数を設定し、Azure 認証情報を構成します
 
     詳細については、[Amazon Bedrock](/docs/ja/amazon-bedrock)、[Claude Platform on AWS](/docs/ja/claude-platform-on-aws)、[Google Cloud の Agent Platform](/docs/ja/google-vertex-ai)、または [Microsoft Foundry](/docs/ja/microsoft-foundry) のセットアップガイドを参照してください。
 
@@ -272,7 +275,9 @@ Python SDK を使用している場合は `agent.py` を作成し、TypeScript �
 これが Agent SDK を異なるものにする理由です：Claude は、実装するよう求める代わりに、ツールを直接実行します。
 
 <Note>
-  'API key not found'が表示される場合は、エージェントを実行するシェルで `ANTHROPIC_API_KEY` 環境変数を設定していることを確認してください。SDK は `.env` ファイルを自動的に読み込みません。詳細については、[完全なトラブルシューティングガイド](/docs/ja/troubleshooting) を参照してください。
+  `Not logged in` や `Invalid API key` などの認証エラーが表示される場合は、エージェントを実行するシェルで `ANTHROPIC_API_KEY` 環境変数を設定していることを確認してください。SDK は `.env` ファイルを自動的に読み込みません。
+
+  これらおよび他の認証エラーの原因と修正については、エラーリファレンスの [認証エラー](/docs/ja/errors#authentication-errors) を参照してください。
 </Note>
 
 <h3 id="try-other-prompts">
@@ -353,6 +358,8 @@ Python SDK を使用している場合は `agent.py` を作成し、TypeScript �
 
 `Bash` を有効にして、次を試してください：`"Write unit tests for utils.py, run them, and fix any failures"`
 
+各スニペットは同じオプションオブジェクトのフィールドを設定します。詳細については、[エージェントを構成する](/docs/ja/agent-sdk/configuration) を参照してください。
+
 <h2 id="key-concepts">
   主要な概念
 </h2>
@@ -365,18 +372,7 @@ Python SDK を使用している場合は `agent.py` を作成し、TypeScript �
 | `Read`、`Edit`、`Glob`               | コードの分析と変更      |
 | `Read`、`Edit`、`Bash`、`Glob`、`Grep` | 完全な自動化         |
 
-**権限モード** は、必要な人間の監視の量を制御します：
-
-| モード                 | 動作                                                                                                                                                                                                               | ユースケース                    |
-| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- |
-| `acceptEdits`       | ファイル編集と一般的なファイルシステムコマンドを自動承認し、他のアクションについては確認します                                                                                                                                                                  | 信頼できる開発ワークフロー             |
-| `plan`              | 読み取り専用ツールを実行します。ファイル編集は自動承認されず、`canUseTool` コールバックに到達します                                                                                                                                                         | 実行を承認する前にタスクをスコープする       |
-| `dontAsk`           | `allowedTools` にないものを拒否します。コネクタツール [組織が `ask` に設定](/docs/ja/mcp#organization-controls-on-connector-tools) およびユーザーインタラクションが必要なツールは、リストに含めた場合でも拒否されます                                                                   | ロックダウンされたヘッドレスエージェント      |
-| `auto`              | モデル分類器が各ツール呼び出しを承認または拒否します                                                                                                                                                                                       | 安全ガードレール付きの自律エージェント       |
-| `bypassPermissions` | 明示的な [`ask` ルール](/docs/ja/agent-sdk/permissions#how-permissions-are-evaluated) に一致しない限り、プロンプトなしですべてのツールを実行します。コネクタツール [組織が `ask` に設定](/docs/ja/mcp#organization-controls-on-connector-tools) およびユーザーインタラクションが必要なツールは拒否されます | サンドボックス化された CI、完全に信頼できる環境 |
-| `default`           | 承認を処理するために `canUseTool` コールバックが必要です                                                                                                                                                                              | カスタム承認フロー                 |
-
-上記の例は `acceptEdits` モードを使用しており、ファイル操作を自動承認するため、エージェントはインタラクティブなプロンプトなしで実行できます。ユーザーに承認を促す場合は、`default` モードを使用し、ユーザー入力を収集する [`canUseTool` コールバック](/docs/ja/agent-sdk/user-input) を提供します。より詳細な制御については、[権限](/docs/ja/agent-sdk/permissions) を参照してください。
+**権限モード** は、必要な人間の監視の量を制御します。SDK は、アクティブなモードをあなたの許可ルールと拒否ルールと共に、[権限がどのように評価されるか](/docs/ja/agent-sdk/permissions#how-permissions-are-evaluated) で説明されている固定の順序で評価します。モードの完全なリスト、その動作、および各モードをいつ使用するかについては、[エージェントループの仕組みの権限モード](/docs/ja/agent-sdk/agent-loop#permission-mode) を参照してください。
 
 <h2 id="next-steps">
   次のステップ
@@ -384,9 +380,11 @@ Python SDK を使用している場合は `agent.py` を作成し、TypeScript �
 
 最初のエージェントを作成したので、その機能を拡張し、ユースケースに合わせてカスタマイズする方法を学びます：
 
+* **[エージェントを設定する](/docs/ja/agent-sdk/configuration)**：オプションオブジェクトを構成し、各設定をカバーするページを見つける
 * **[権限](/docs/ja/agent-sdk/permissions)**：エージェントが何ができるか、いつ承認が必要かを制御する
 * **[Hooks](/docs/ja/agent-sdk/hooks)**：ツール呼び出しの前後にカスタムコードを実行する
 * **[セッション](/docs/ja/agent-sdk/sessions)**：コンテキストを維持するマルチターンエージェントを構築する
 * **[MCP サーバー](/docs/ja/agent-sdk/mcp)**：データベース、ブラウザー、API、その他の外部システムに接続する
 * **[ホスティング](/docs/ja/agent-sdk/hosting)**：Docker、クラウド、CI/CD にエージェントをデプロイする
 * **[サンプルエージェント](https://github.com/anthropics/claude-agent-sdk-demos)**：完全な例を参照：メールアシスタント、リサーチエージェント、その他
+* **[トラブルシューティング](/docs/ja/agent-sdk/troubleshooting)**：CLI の起動に失敗したり終了したりするエラーを修正するか、構造化された出力なしで結果が到着する場合

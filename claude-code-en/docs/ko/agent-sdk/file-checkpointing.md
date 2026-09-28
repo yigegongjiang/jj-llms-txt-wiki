@@ -15,7 +15,7 @@
 * **오류 복구** - 에이전트가 잘못된 수정을 수행했을 때
 
 <Warning>
-  Write, Edit, NotebookEdit 도구를 통해 수행된 변경 사항만 추적됩니다. Bash 명령어(예: `echo > file.txt` 또는 `sed -i`)를 통해 수행된 변경 사항은 체크포인트 시스템에서 캡처되지 않습니다.
+  Write, Edit, NotebookEdit 도구를 통해 수행된 변경 사항만 추적됩니다. Bash 명령어(예: `echo > file.txt` 또는 `sed -i`)를 통해 수행된 변경 사항은 체크포인트 시스템에서 캡처되지 않으며, [서브에이전트](/docs/ko/agent-sdk/subagents)가 적용하는 편집도 캡처되지 않습니다. 단, [포그라운드에서 실행되는 `context: fork`가 있는 스킬](/docs/ko/skills#run-skills-in-a-subagent)은 예외입니다.
 </Warning>
 
 <h2 id="how-checkpointing-works">
@@ -24,25 +24,11 @@
 
 파일 체크포인팅을 활성화하면 SDK는 Write, Edit 또는 NotebookEdit 도구를 통해 파일을 수정하기 전에 파일의 백업을 생성합니다. 응답 스트림의 사용자 메시지에는 복원 지점으로 사용할 수 있는 체크포인트 UUID가 포함됩니다.
 
-체크포인트는 에이전트가 파일을 수정하는 데 사용하는 다음의 기본 제공 도구와 함께 작동합니다:
-
-| 도구           | 설명                                 |
-| ------------ | ---------------------------------- |
-| Write        | 새 파일을 생성하거나 기존 파일을 새 콘텐츠로 덮어씁니다    |
-| Edit         | 기존 파일의 특정 부분에 대한 대상 편집을 수행합니다      |
-| NotebookEdit | Jupyter 노트북(`.ipynb` 파일)의 셀을 수정합니다 |
-
 <Note>
   파일 되돌리기는 디스크의 파일을 이전 상태로 복원합니다. 대화 자체를 되돌리지는 않습니다. `rewindFiles()`(TypeScript) 또는 `rewind_files()`(Python)를 호출한 후에도 대화 기록과 컨텍스트는 그대로 유지됩니다.
 </Note>
 
-체크포인트 시스템은 다음을 추적합니다:
-
-* 세션 중에 생성된 파일
-* 세션 중에 수정된 파일
-* 수정된 파일의 원본 콘텐츠
-
-체크포인트로 되돌리면 생성된 파일은 삭제되고 수정된 파일은 해당 시점의 콘텐츠로 복원됩니다.
+체크포인트로 되돌리면 Claude Code는 생성한 파일을 삭제하고 수정한 파일을 해당 시점의 콘텐츠로 복원합니다. Claude Code는 심볼릭 링크, 하드 링크 또는 기타 일반 파일이 아닌 추적된 경로를 건너뜁니다. 또한 부모 디렉토리가 더 이상 체크포인트 시간 위치로 확인되지 않거나 백업을 안전하게 읽을 수 없는 추적된 파일도 건너뜁니다. [`RewindFilesResult`](/docs/ko/agent-sdk/typescript#rewindfilesresult)는 `skippedLinks` 필드에서 건너뛴 모든 경로를 계산합니다. 건너뛰기는 Claude Code v2.1.216 이상이 필요합니다. v2.1.216 이전에는 되돌리기가 추적된 경로의 링크를 통해 쓰고 삭제했습니다.
 
 <h2 id="implement-checkpointing">
   체크포인팅 구현
@@ -122,13 +108,21 @@
     let sessionId: string | undefined;
 
     // Step 2: Capture checkpoint UUID from the first user message
-    for await (const message of response) {
-      if (message.type === "user" && message.uuid && !checkpointId) {
-        checkpointId = message.uuid;
+    try {
+      for await (const message of response) {
+        if (message.type === "user" && message.uuid && !checkpointId) {
+          checkpointId = message.uuid;
+        }
+        if ("session_id" in message && !sessionId) {
+          sessionId = message.session_id;
+        }
       }
-      if ("session_id" in message && !sessionId) {
-        sessionId = message.session_id;
-      }
+    } catch (error) {
+      // A single-shot query() throws after yielding an error result. If the
+      // failure was an error result, sessionId and checkpointId were already
+      // captured by the loop above; connection or process failures yield no
+      // result message.
+      console.error(`Session ended with an error: ${error}`);
     }
 
     // Step 3: Later, rewind by resuming the session with an empty prompt
@@ -185,7 +179,7 @@
   </Step>
 
   <Step title="체크포인트 UUID 및 세션 ID 캡처">
-    `replay-user-messages` 옵션이 설정되면(위에 표시됨), 응답 스트림의 각 사용자 메시지에는 체크포인트로 사용되는 UUID가 있습니다.
+    `replay-user-messages` 옵션이 설정되면, 응답 스트림의 각 사용자 메시지에는 체크포인트로 사용되는 UUID가 있습니다.
 
     대부분의 사용 사례에서 첫 번째 사용자 메시지 UUID(`message.uuid`)를 캡처합니다. 이로 되돌리면 모든 파일이 원본 상태로 복원됩니다. 여러 체크포인트를 저장하고 중간 상태로 되돌리려면 [여러 복원 지점](#multiple-restore-points)을 참조하세요.
 
@@ -233,7 +227,8 @@
       ) as client:
           await client.query("")  # Empty prompt to open the connection
           async for message in client.receive_response():
-              await client.rewind_files(checkpoint_id)
+              if checkpoint_id:
+                  await client.rewind_files(checkpoint_id)
               break
       ```
 
@@ -244,7 +239,9 @@
       });
 
       for await (const msg of rewindQuery) {
-        await rewindQuery.rewindFiles(checkpointId);
+        if (checkpointId) {
+          await rewindQuery.rewindFiles(checkpointId);
+        }
         break;
       }
       ```
@@ -256,7 +253,7 @@
     CLAUDE_CODE_ENABLE_SDK_FILE_CHECKPOINTING=true claude -p --resume <session-id> --rewind-files <checkpoint-uuid>
     ```
 
-    `--rewind-files` 플래그는 `claude --help` 출력에 나타나지 않지만 CLI는 표시된 대로 이를 허용합니다.
+    `--rewind-files` 플래그는 `claude --help` 출력에 나타나지 않지만 CLI는 표시된 대로 이를 허용합니다. 되돌리기가 성공하면 명령은 `Files rewound to state at message <checkpoint-uuid>`를 출력하고 프롬프트를 보내지 않고 종료합니다.
   </Step>
 </Steps>
 
@@ -440,17 +437,25 @@ Claude가 여러 턴에 걸쳐 변경을 수행하는 경우, 모든 방식으�
     const checkpoints: Checkpoint[] = [];
     let sessionId: string | undefined;
 
-    for await (const message of response) {
-      if (message.type === "user" && message.uuid) {
-        checkpoints.push({
-          id: message.uuid,
-          description: `After turn ${checkpoints.length + 1}`,
-          timestamp: new Date()
-        });
+    try {
+      for await (const message of response) {
+        if (message.type === "user" && message.uuid) {
+          checkpoints.push({
+            id: message.uuid,
+            description: `After turn ${checkpoints.length + 1}`,
+            timestamp: new Date()
+          });
+        }
+        if ("session_id" in message && !sessionId) {
+          sessionId = message.session_id;
+        }
       }
-      if ("session_id" in message && !sessionId) {
-        sessionId = message.session_id;
-      }
+    } catch (error) {
+      // A single-shot query() throws after yielding an error result. If the
+      // failure was an error result, sessionId and the checkpoints array were
+      // already populated by the loop above; connection or process failures
+      // yield no result message.
+      console.error(`Session ended with an error: ${error}`);
     }
 
     // Later: rewind to any checkpoint by resuming the session
@@ -624,15 +629,23 @@ Claude가 여러 턴에 걸쳐 변경을 수행하는 경우, 모든 방식으�
           options: opts
         });
 
-        for await (const message of response) {
-          // Capture the first user message UUID - this is our restore point
-          if (message.type === "user" && message.uuid && !checkpointId) {
-            checkpointId = message.uuid;
+        try {
+          for await (const message of response) {
+            // Capture the first user message UUID - this is our restore point
+            if (message.type === "user" && message.uuid && !checkpointId) {
+              checkpointId = message.uuid;
+            }
+            // Capture the session ID so we can resume later
+            if ("session_id" in message) {
+              sessionId = message.session_id;
+            }
           }
-          // Capture the session ID so we can resume later
-          if ("session_id" in message) {
-            sessionId = message.session_id;
-          }
+        } catch (error) {
+          // A single-shot query() throws after yielding an error result. If the
+          // failure was an error result, checkpointId and sessionId were already
+          // captured by the loop above; connection or process failures yield no
+          // result message.
+          console.error(`Session ended with an error: ${error}`);
         }
 
         console.log("Done! Open utils.ts to see the added doc comments.\n");
@@ -671,13 +684,6 @@ Claude가 여러 턴에 걸쳐 변경을 수행하는 경우, 모든 방식으�
       main();
       ```
     </CodeGroup>
-
-    이 예제는 완전한 체크포인팅 워크플로우를 보여줍니다:
-
-    1. **체크포인팅 활성화**: `enable_file_checkpointing=True` 및 `permission_mode="acceptEdits"`로 SDK를 구성하여 파일 편집을 자동으로 승인합니다
-    2. **체크포인트 데이터 캡처**: 에이전트가 실행되는 동안 첫 번째 사용자 메시지 UUID(복원 지점) 및 세션 ID를 저장합니다
-    3. **되돌리기 프롬프트**: 에이전트가 완료된 후 유틸리티 파일을 확인하여 문서 주석을 보고 변경 사항을 실행 취소할지 결정합니다
-    4. **재개 및 되돌리기**: 예인 경우 빈 프롬프트로 세션을 재개하고 `rewind_files()`를 호출하여 원본 파일을 복원합니다
   </Step>
 
   <Step title="예제 실행">
@@ -711,12 +717,13 @@ Claude가 여러 턴에 걸쳐 변경을 수행하는 경우, 모든 방식으�
 
 파일 체크포인팅에는 다음과 같은 제한 사항이 있습니다:
 
-| 제한 사항                       | 설명                                    |
-| --------------------------- | ------------------------------------- |
-| Write/Edit/NotebookEdit 도구만 | Bash 명령어를 통해 수행된 변경 사항은 추적되지 않습니다     |
-| 동일한 세션                      | 체크포인트는 이를 생성한 세션에 연결됩니다               |
-| 파일 콘텐츠만                     | 디렉토리 생성, 이동 또는 삭제는 되돌리기로 실행 취소되지 않습니다 |
-| 로컬 파일                       | 원격 또는 네트워크 파일은 추적되지 않습니다              |
+| 제한 사항                       | 설명                                                                                                                                               |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Write/Edit/NotebookEdit 도구만 | Bash 명령어를 통해 수행된 변경 사항은 추적되지 않습니다                                                                                                                |
+| 서브에이전트 편집                   | [서브에이전트](/docs/ko/agent-sdk/subagents)가 적용하는 편집 사항은 추적되거나 복원되지 않습니다. 단, `context: fork`를 사용하여 포그라운드에서 실행되는 스킬은 제외됩니다. 추적되지 않은 편집 사항을 되돌리려면 git을 사용하세요 |
+| 동일한 세션                      | 체크포인트는 이를 생성한 세션에 연결됩니다                                                                                                                          |
+| 파일 콘텐츠만                     | 디렉토리 생성, 이동 또는 삭제는 되돌리기로 실행 취소되지 않습니다                                                                                                            |
+| 로컬 파일                       | 원격 또는 네트워크 파일은 추적되지 않습니다                                                                                                                         |
 
 <h2 id="troubleshooting">
   문제 해결
@@ -743,8 +750,8 @@ Claude가 여러 턴에 걸쳐 변경을 수행하는 경우, 모든 방식으�
 
 **해결책**: 옵션에 `extra_args={"replay-user-messages": None}`(Python) 또는 `extraArgs: { 'replay-user-messages': null }`(TypeScript)을 추가합니다.
 
-<h3 id="no-file-checkpoint-found-for-message-error">
-  "No file checkpoint found for message" 오류
+<h3 id="no-file-checkpoint-found-for-this-message-error">
+  "No file checkpoint found for this message" 오류
 </h3>
 
 이 오류는 지정된 사용자 메시지 UUID에 대한 체크포인트 데이터가 없을 때 발생합니다.
@@ -786,7 +793,8 @@ SDK의 경우, 이 페이지의 예제에서 수행하는 것처럼 재개된 �
   ) as client:
       await client.query("")
       async for message in client.receive_response():
-          await client.rewind_files(checkpoint_id)
+          if checkpoint_id:
+              await client.rewind_files(checkpoint_id)
           break
   ```
 
@@ -797,9 +805,17 @@ SDK의 경우, 이 페이지의 예제에서 수행하는 것처럼 재개된 �
     options: { ...opts, resume: sessionId }
   });
 
-  for await (const msg of rewindQuery) {
-    await rewindQuery.rewindFiles(checkpointId);
-    break;
+  try {
+    for await (const msg of rewindQuery) {
+      if (checkpointId) {
+        await rewindQuery.rewindFiles(checkpointId);
+      }
+      break;
+    }
+  } catch (error) {
+    // An error here means the rewind didn't complete, for example the checkpoint
+    // wasn't found or the session couldn't be resumed.
+    console.error(`Rewind session ended with an error: ${error}`);
   }
   ```
 </CodeGroup>

@@ -10,41 +10,47 @@ Das Security-Guidance-Plugin veranlasst Claude, seine eigenen Code-Änderungen a
 
 Nach der Installation wird das Plugin automatisch ausgeführt. Es gibt nichts zu aufzurufen und keinen separaten Befehl zu merken.
 
-Das Plugin ist der In-Session-Begleiter zu [Code Review](/docs/de/code-review), das auf Pull Requests ausgeführt wird. Dieses Plugin reduziert, was den PR erreicht. Code Review erfasst, was es tut. Wie das Plugin mit On-Demand-Review und CI-Scanning zusammenarbeitet, finden Sie unter [Wie dies mit anderen Sicherheitstools zusammenpasst](#how-this-fits-with-other-security-tools).
+Das Plugin ist der In-Session-Begleiter zu [Code Review](/docs/de/code-review), das auf Pull Requests ausgeführt wird. Dieses Plugin reduziert, was den PR erreicht. Code Review erfasst, was es tut. Wie das Plugin mit On-Demand-Review und CI-Scanning zusammenarbeitet, oder um Code zu scannen, den Sie bereits haben, anstatt Änderungen, die Claude schreibt, finden Sie unter [Wie dies mit anderen Sicherheitstools zusammenpasst](#how-this-fits-with-other-security-tools).
 
 <h2 id="prerequisites">
   Voraussetzungen
 </h2>
 
-* Claude Code CLI Version 2.1.144 oder später
-* Python 3.8 oder später auf Ihrem `PATH`. Das Plugin versucht `python3`, `python` und `py -3` in dieser Reihenfolge
+* Python 3.7 oder später auf Ihrem `PATH`. Die agentengestützte Commit-Überprüfung benötigt Python 3.10 oder später, ebenso wie alle modellgestützten Überprüfungen, wenn Claude Code einen Drittanbieter wie Amazon Bedrock oder Google Cloud's Agent Platform nutzt. Das Plugin bevorzugt die versionierten Interpreter `python3.13` bis `python3.10`, fällt dann auf `python3`, `python` und `py -3` zurück
 * Ein Git-Repository für das Verzeichnis, in dem Sie arbeiten. Die End-of-Turn- und Commit-Überprüfungen führen einen Diff gegen den Git-Status durch und werden außerhalb eines Repositories stillschweigend übersprungen. Die Per-Edit-Pattern-Überprüfung funktioniert überall
 
-Beim ersten Ausführen erstellt das Plugin eine virtuelle Umgebung unter `~/.claude/security/` und installiert das Claude Agent SDK darin, was `pip` und Netzwerkzugriff erfordert. Wenn diese Installation fehlschlägt, wird die Commit-Überprüfung auf eine einmalige Überprüfung statt auf die agentengestützte zurückgestuft. Unter Windows wird der Schritt der virtuellen Umgebung übersprungen, sodass die agentengestützte Commit-Überprüfung nur ausgeführt wird, wenn `claude-agent-sdk` bereits importierbar ist, und wird andernfalls auf die gleiche Weise zurückgestuft.
+Beim ersten Ausführen erstellt das Plugin eine virtuelle Umgebung unter `~/.claude/security/` und installiert das Claude Agent SDK darin, was `pip` und Netzwerkzugriff erfordert. Wenn diese Installation fehlschlägt oder das verfügbare Python älter als 3.10 ist, wird die Commit-Überprüfung bei Authentifizierung durch Erstanbieter auf eine einmalige Überprüfung statt auf die agentengestützte zurückgestuft; bei einem Drittanbieter wie Amazon Bedrock oder Google Cloud's Agent Platform benötigen die modellgestützten Überprüfungen das SDK selbst, daher werden sie übersprungen. Das Plugin zeigt eine einmalige Benachrichtigung an, wenn eine ältere Python-Version die Ursache ist.
 
 <h2 id="install-the-plugin">
   Plugin installieren
 </h2>
 
-Installieren Sie in einer Claude Code-Sitzung aus dem [offiziellen Anthropic-Marketplace](/docs/de/discover-plugins#official-anthropic-marketplace):
+Installieren Sie in einer Claude Code-Sitzung aus dem [offiziellen Anthropic-Marketplace](/docs/de/plugins/anthropic-marketplaces):
 
 ```text theme={null}
 /plugin install security-guidance@claude-plugins-official
 ```
 
-Die Installation fordert Sie auf, einen Bereich auszuwählen. Wählen Sie Benutzerbereich, um das Plugin in Ihre Benutzereinstellungen zu schreiben, sodass es in jeder neuen lokalen Sitzung geladen wird, die Sie auf diesem Computer starten. Wenn Claude Code meldet, dass der Marketplace nicht gefunden wird, führen Sie zuerst `/plugin marketplace add anthropics/claude-plugins-official` aus und versuchen Sie dann erneut, das Plugin zu installieren.
+`/plugin` öffnet ein interaktives Panel in der Terminal-CLI. Wenn Claude meldet, dass `/plugin` in dieser Umgebung nicht verfügbar ist, installieren Sie auf andere Weise:
 
-Aktivieren Sie es dann in der aktuellen Sitzung mit `/reload-plugins`, das ausstehende Plugin-Änderungen ohne einen Neustart anwendet:
+* **Claude-Desktop-App, lokale oder SSH-Sitzung**: öffnen Sie den [Plugin-Browser](/docs/de/desktop#install-plugins), indem Sie auf die Schaltfläche **+** neben der Eingabeaufforderung klicken, dann auf **Plugins** und dann auf **Plugin hinzufügen**
+* **VS Code-Erweiterung**: installieren Sie aus dem [Dialog **Plugins verwalten**](/docs/de/vs-code#manage-plugins)
+* **Cloud-Sitzungen**: eine Cloud-Sitzung lädt keine Plugins aus Ihren Benutzereinstellungen oder aus der Datei `.claude/settings.json` des Repositorys, wie unter [Was wird aus Ihrem Setup übernommen](/docs/de/cloud-environments#what-carries-over-from-your-setup) erläutert. Für Plugins, die Ihre Organisation über verwaltete Einstellungen verteilt, siehe [Plugins für Ihre Organisation verwalten](/docs/de/plugins/org)
 
-```text theme={null}
-/reload-plugins
-```
+Die Terminal-Installation fordert Sie auf, einen Bereich auszuwählen. Wählen Sie Benutzerbereich, um das Plugin in Ihre Benutzereinstellungen zu schreiben, sodass es in jeder neuen lokalen Sitzung geladen wird, die Sie auf diesem Computer starten.
 
-<h3 id="enable-in-cloud-sessions-and-shared-repositories">
-  In Cloud-Sitzungen und gemeinsamen Repositories aktivieren
+Wenn die Installation fehlschlägt, stimmen Sie die Meldung ab, die Claude Code meldet:
+
+* `Marketplace "claude-plugins-official" not found`: fügen Sie den Marketplace mit `/plugin marketplace add anthropics/claude-plugins-official` hinzu und versuchen Sie dann erneut, das Plugin zu installieren.
+* Das Plugin wird [nicht im Marketplace gefunden](/docs/de/plugins/install#install-a-plugin): überprüfen Sie den Plugin-Namen.
+
+Überprüfen Sie die Installationszusammenfassung. Wenn sie `Run /reload-plugins to activate.` meldet, siehe [Plugin-Änderungen ohne Neustart anwenden](/docs/de/plugins/cli-reference#reload-plugins), um das Plugin in Ihrer aktuellen Sitzung zu aktivieren.
+
+<h3 id="enable-for-your-team-in-local-sessions">
+  Plugin für Ihr Team in lokalen Sitzungen aktivieren
 </h3>
 
-Benutzergebundene Plugins werden nicht in [Claude Code im Web](/docs/de/claude-code-on-the-web) übernommen, da diese Sitzungen auf Anthropic-Infrastruktur statt auf Ihrem Computer ausgeführt werden. Um das Plugin dort zu aktivieren oder es für alle einzuschalten, die ein Repository klonen, deklarieren Sie es in den eingecheckten Einstellungen des Projekts:
+Um das Plugin in den lokalen Sitzungen einzuschalten, die Ihre Teamkollegen im Repository starten, deklarieren Sie es in den eingecheckten Einstellungen des Projekts:
 
 ```json .claude/settings.json theme={null}
 {
@@ -54,7 +60,7 @@ Benutzergebundene Plugins werden nicht in [Claude Code im Web](/docs/de/claude-c
 }
 ```
 
-Administratoren können das Plugin organisationsweit aktivieren, indem sie [`enabledPlugins`](/docs/de/settings#plugin-settings) in [verwalteten Einstellungen](/docs/de/admin-setup) festlegen.
+Administratoren können das Plugin organisationsweit aktivieren, indem sie [`enabledPlugins`](/docs/de/settings-reference#enabledplugins) in [verwalteten Einstellungen](/docs/de/admin-setup) festlegen.
 
 <h2 id="what-the-plugin-checks">
   Was das Plugin überprüft
@@ -175,11 +181,11 @@ Das Plugin liest auch `.claude/security-patterns.yml` und `.claude/security-patt
 
 Das Plugin sucht nach `claude-security-guidance.md` und `security-patterns.yaml` an den gleichen Speicherorten, unabhängig davon, wie das Plugin aktiviert wurde:
 
-| Bereich       | Pfad                                        | Notizen                                   |
-| :------------ | :------------------------------------------ | :---------------------------------------- |
-| Benutzer      | `~/.claude/claude-security-guidance.md`     | Gilt für jedes Projekt auf Ihrem Computer |
-| Projekt       | `.claude/claude-security-guidance.md`       | Mit dem Repository eingecheckt            |
-| Projekt lokal | `.claude/claude-security-guidance.local.md` | Gitignored, für persönliche Overrides     |
+| Bereich       | Pfad                                        | Notizen                                                             |
+| :------------ | :------------------------------------------ | :------------------------------------------------------------------ |
+| Benutzer      | `~/.claude/claude-security-guidance.md`     | Gilt für jedes Projekt auf Ihrem Computer                           |
+| Projekt       | `.claude/claude-security-guidance.md`       | Mit dem Repository eingecheckt                                      |
+| Projekt lokal | `.claude/claude-security-guidance.local.md` | Für persönliche Overrides; fügen Sie es zu Ihrer `.gitignore` hinzu |
 
 Das Plugin lädt alle Speicherorte, die vorhanden sind, und verkettet sie mit einer kombinierten Obergrenze von 8 KB für die Guidance-Datei. Administratoren können organisationsweit Regeln verteilen, indem sie die Benutzerbereichsdatei über Geräteverwaltung zu `~/.claude/` pushen. Die gleichen Pfade gelten für `security-patterns.yaml`.
 
@@ -187,7 +193,7 @@ Das Plugin lädt alle Speicherorte, die vorhanden sind, und verkettet sie mit ei
   Nutzungskosten
 </h2>
 
-Die [Per-Edit-Pattern-Überprüfung](#on-each-file-edit) macht keinen Modellaufruf und fügt keine Kosten hinzu. Die [End-of-Turn](#at-the-end-of-each-turn)- und [Commit](#on-each-commit-or-push-claude-makes)-Überprüfungen verbrauchen jeweils zusätzliche Modellnutzung, die wie jede andere Claude-Anfrage zu Ihrer [Nutzung](/docs/de/costs) zählt. Die Commit-Überprüfung ist agentengestützt und kann mehrere Modellrunden pro Commit dauern, begrenzt auf 20 Überprüfungen pro rollende Stunde. Erwarten Sie ungefähr einen Review-Aufruf pro Runde, die Dateien ändert, und einen tieferen Review pro Commit, beide unterliegen den oben genannten Limits.
+Die [Per-Edit-Pattern-Überprüfung](#on-each-file-edit) macht keinen Modellaufruf und fügt keine Kosten hinzu. Die [End-of-Turn](#at-the-end-of-each-turn)- und [Commit](#on-each-commit-or-push-claude-makes)-Überprüfungen verbrauchen jeweils zusätzliche Modellnutzung, die wie jede andere Claude-Anfrage zu Ihrer [Nutzung](/docs/de/costs) zählt. Die Commit-Überprüfung ist agentengestützt und kann mehrere Modellrunden pro Commit dauern. Erwarten Sie ungefähr einen Review-Aufruf pro Runde, die Dateien ändert, und einen tieferen Review pro Commit, beide unterliegen den oben genannten Limits.
 
 Beide modellgestützten Überprüfungen verwenden standardmäßig Claude Opus 4.7. Setzen Sie `SECURITY_REVIEW_MODEL`, um ein anderes Modell für die End-of-Turn-Überprüfung zu wählen, und `SG_AGENTIC_MODEL` für die Commit-Überprüfung.
 
@@ -219,7 +225,7 @@ Um es aus Ihrem Benutzerbereich zu entfernen:
 /plugin uninstall security-guidance@claude-plugins-official
 ```
 
-Wenn das Plugin durch die `.claude/settings.json` eines Projekts aktiviert wurde, schreibt das Deaktivieren von `/plugin` einen Override in Ihre `.claude/settings.local.json`, anstatt die eingecheckte Datei zu bearbeiten, sodass das Plugin für Sie ausgeschaltet bleibt, während Ihre Teamkollegen nicht betroffen sind. Derselbe Dialog bietet auch an, das Plugin für alle zu deinstallieren, indem es aus der gemeinsamen `.claude/settings.json` entfernt wird; diese Option erfordert Claude Code v2.1.203 oder später. Wenn es durch [verwaltete Einstellungen](/docs/de/admin-setup) aktiviert wurde, kann nur ein Administrator es deaktivieren.
+Wenn das Plugin durch die `.claude/settings.json` eines Projekts aktiviert wurde, schreibt das Deaktivieren von `/plugin` einen Override in Ihre `.claude/settings.local.json`, anstatt die eingecheckte Datei zu bearbeiten, sodass das Plugin für Sie ausgeschaltet bleibt, während Ihre Teamkollegen nicht betroffen sind. Derselbe Dialog bietet auch an, das Plugin für alle zu deinstallieren, indem es aus der gemeinsamen `.claude/settings.json` entfernt wird. Wenn es durch [verwaltete Einstellungen](/docs/de/admin-setup) aktiviert wurde, kann nur ein Administrator es deaktivieren.
 
 <h2 id="how-the-plugin-integrates-with-claude-code">
   Wie das Plugin mit Claude Code integriert wird
@@ -243,14 +249,15 @@ Wenn Sie Ihre eigenen Hooks erstellen, ist der [Quellcode des Plugins](https://g
 
 Das Plugin ist eine Ebene in einem Verteidigungstiefe-Ansatz. Es erfasst Probleme am frühesten, während der Code noch im Editor ist, aber es ist keine Garantie und ersetzt keine späteren Überprüfungen. Ein typischer Stack:
 
-| Phase            | Tool                                                          | Was es abdeckt                                                                                                  |
-| :--------------- | :------------------------------------------------------------ | :-------------------------------------------------------------------------------------------------------------- |
-| In Sitzung       | Security-Guidance-Plugin                                      | Häufige Sicherheitslücken in Code, den Claude schreibt, behoben in derselben Sitzung                            |
-| On Demand        | [`/security-review`](/docs/de/commands#all-commands)               | Einmalige Sicherheitsüberprüfung auf dem aktuellen Branch, ausgeführt, wenn Sie es anfordern                    |
-| Bei Pull Request | [Code Review](/docs/de/code-review), Team- und Enterprise-Pläne    | Multi-Agent-Korrektheit und Sicherheitsüberprüfung mit vollständigem Codebase-Kontext                           |
-| In CI            | Ihre vorhandenen statischen Analysen und Abhängigkeitsscanner | Sprachspezifische Regeln, Supply-Chain-Überprüfungen und Richtliniendurchsetzung, die das Plugin nicht versucht |
+| Phase                          | Tool                                                          | Was es abdeckt                                                                                                   |
+| :----------------------------- | :------------------------------------------------------------ | :--------------------------------------------------------------------------------------------------------------- |
+| In Sitzung                     | Security-Guidance-Plugin                                      | Häufige Sicherheitslücken in Code, den Claude schreibt, behoben in derselben Sitzung                             |
+| On Demand, einzelner Durchlauf | [`/security-review`](/docs/de/commands#all-commands)               | Einmalige Sicherheitsüberprüfung auf dem aktuellen Branch, ausgeführt, wenn Sie es anfordern                     |
+| On Demand, tiefe Überprüfung   | [Claude Security Plugin](/docs/de/claude-security)                 | Multi-Agent-Schwachstellenscan eines Repositorys oder Diffs mit unabhängig überprüften Erkenntnissen und Patches |
+| Bei Pull Request               | [Code Review](/docs/de/code-review), Team- und Enterprise-Pläne    | Multi-Agent-Korrektheit und Sicherheitsüberprüfung mit vollständigem Codebase-Kontext                            |
+| In CI                          | Ihre vorhandenen statischen Analysen und Abhängigkeitsscanner | Sprachspezifische Regeln, Supply-Chain-Überprüfungen und Richtliniendurchsetzung, die das Plugin nicht versucht  |
 
-Jede spätere Phase erfasst, was frühere übersehen. Der Wert des Plugins liegt darin, das Volumen zu reduzieren, das sie erreicht, nicht darin, die Notwendigkeit für sie zu beseitigen.
+Um Sicherheitsprobleme in Code zu finden, den Sie bereits haben, anstatt in Änderungen, die Claude schreibt, bitten Sie Claude in einer Sitzung, eine bestimmte Datei oder ein Verzeichnis auf Sicherheitslücken zu überprüfen, oder verwenden Sie das [Claude Security Plugin](/docs/de/claude-security) für einen tieferen Multi-Agent-Scan des gesamten Repositorys; [`/security-review`](/docs/de/commands#all-commands) deckt nur die Änderungen auf Ihrem aktuellen Branch ab. In jedem Fall liest die Überprüfung den Quellcode in Ihrem Checkout, nicht eine laufende Website oder einen bereitgestellten Service.
 
 <h2 id="troubleshooting">
   Troubleshooting
@@ -261,7 +268,7 @@ Das Plugin schreibt Laufzeit-Diagnosen in `~/.claude/security/log.txt`. Überpr�
 Häufige Gründe, warum eine Überprüfungsebene ohne Nachricht im Gespräch übersprungen wird:
 
 * Das Verzeichnis ist kein Git-Repository: Die End-of-Turn- und Commit-Überprüfungen erfordern Git-Status und werden außerhalb eines Repositories übersprungen
-* Die Sitzung hat keine Anthropic-Authentifizierung: Die modellgestützten Überprüfungen werden übersprungen und nur die Per-Edit-Pattern-Überprüfung wird ausgeführt
+* Die Sitzung hat keine Anthropic-Authentifizierung und keinen konfigurierten Drittanbieter: Die modellgestützten Überprüfungen werden übersprungen und nur die Per-Edit-Pattern-Überprüfung wird ausgeführt
 * Eine `security-patterns.yaml`-Datei ist vorhanden, aber PyYAML ist nicht importierbar: Die Datei wird ignoriert. Verwenden Sie stattdessen `security-patterns.json`
 
 <h2 id="related-resources">
@@ -272,4 +279,4 @@ Um tiefer in die Themen einzusteigen, die diese Seite berührt:
 
 * [Code Review](/docs/de/code-review): Richten Sie die Multi-Agent-Überprüfung zur PR-Zeit ein
 * [Automatisieren Sie Workflows mit Hooks](/docs/de/hooks-guide): Erstellen Sie Ihre eigenen Überprüfungen an den gleichen Lebenszykluspunkten
-* [Entdecken und installieren Sie Plugins](/docs/de/discover-plugins#official-anthropic-marketplace): Durchsuchen Sie andere offizielle Plugins
+* [Finden Sie Plugins im offiziellen Marketplace](/docs/de/plugins/anthropic-marketplaces#find-plugins-in-the-official-marketplace): Durchsuchen Sie andere offizielle Plugins

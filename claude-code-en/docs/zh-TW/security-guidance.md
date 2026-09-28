@@ -10,41 +10,47 @@ security-guidance 外掛程式讓 Claude 在工作時檢查自己的程式碼變
 
 安裝後，外掛程式會自動執行。無需調用任何內容，也無需記住任何單獨的命令。
 
-該外掛程式是 [Code Review](/docs/zh-TW/code-review) 的工作階段內伴侶，Code Review 在拉取請求上執行。此外掛程式減少了進入 PR 的內容。Code Review 捕捉遺漏的內容。有關外掛程式如何與按需審查和 CI 掃描分層的信息，請參閱 [此功能如何與其他安全工具配合](#how-this-fits-with-other-security-tools)。
+該外掛程式是 [Code Review](/docs/zh-TW/code-review) 的工作階段內伴侶，Code Review 在拉取請求上執行。此外掛程式減少了進入 PR 的內容。Code Review 捕捉遺漏的內容。有關外掛程式如何與按需審查和 CI 掃描分層的資訊，或掃描您已有的程式碼而非 Claude 正在編寫的變更，請參閱 [此功能如何與其他安全工具配合](#how-this-fits-with-other-security-tools)。
 
 <h2 id="prerequisites">
   先決條件
 </h2>
 
-* Claude Code CLI 版本 2.1.144 或更高版本
-* Python 3.8 或更高版本在您的 `PATH` 上。該外掛程式會依次嘗試 `python3`、`python` 和 `py -3`
+* Python 3.7 或更高版本在您的 `PATH` 上。代理提交審查需要 Python 3.10 或更高版本，當 Claude Code 使用第三方提供者（例如 Amazon Bedrock 或 Google Cloud 的 Agent Platform）時，所有模型支援的審查也需要 Python 3.10 或更高版本。該外掛程式偏好版本化的直譯器 `python3.13` 到 `python3.10`，然後回退到 `python3`、`python` 和 `py -3`
 * 您工作目錄的 git 儲存庫。端回合和提交審查會針對 git 狀態進行 diff，並在儲存庫外無聲跳過。每個編輯的模式檢查在任何地方都有效
 
-首次執行時，外掛程式會在 `~/.claude/security/` 下建立虛擬環境，並將 Claude Agent SDK 安裝到其中，這需要 `pip` 和網路存取。如果該安裝失敗，提交審查會回退到單次審查而不是代理審查。在 Windows 上，虛擬環境步驟會被跳過，因此代理提交審查僅在 `claude-agent-sdk` 已經可導入時執行，否則以相同方式回退。
+首次執行時，外掛程式會在 `~/.claude/security/` 下建立虛擬環境，並將 Claude Agent SDK 安裝到其中，這需要 `pip` 和網路存取。如果該安裝失敗，或可用的 Python 版本早於 3.10，第一方驗證的提交審查會回退到單次審查而不是代理審查；在第三方提供者（例如 Amazon Bedrock 或 Google Cloud 的 Agent Platform）上，模型支援的審查需要 SDK 本身，因此會被跳過。當較舊的 Python 是原因時，外掛程式會顯示一次性通知。
 
 <h2 id="install-the-plugin">
   安裝外掛程式
 </h2>
 
-在 Claude Code 工作階段中，從 [官方 Anthropic 市場](/docs/zh-TW/discover-plugins#official-anthropic-marketplace) 安裝：
+在終端機 Claude Code 工作階段中，從 [官方 Anthropic 市場](/docs/zh-TW/plugins/anthropic-marketplaces) 安裝：
 
 ```text theme={null}
 /plugin install security-guidance@claude-plugins-official
 ```
 
-安裝會提示您選擇範圍。選擇使用者範圍以將外掛程式寫入您的使用者設定，這樣它會在您在此機器上啟動的每個新本地工作階段中載入。如果 Claude Code 報告找不到市場，請先執行 `/plugin marketplace add anthropics/claude-plugins-official`，然後重試安裝。
+`/plugin` 會開啟終端機 CLI 中的互動式面板。如果 Claude 回覆 `/plugin` 在此環境中不可用，請以其他方式安裝：
 
-然後在當前工作階段中啟用它，使用 `/reload-plugins`，它會應用待處理的外掛程式變更而無需重新啟動：
+* **Claude 桌面應用程式、本地或 SSH 工作階段**：點擊提示旁的 **+** 按鈕開啟 [外掛程式瀏覽器](/docs/zh-TW/desktop#install-plugins)，然後點擊 **Plugins**，再點擊 **Add plugin**
+* **VS Code 擴充功能**：從 [**Manage plugins** 對話框](/docs/zh-TW/vs-code#manage-plugins) 安裝
+* **雲端工作階段**：雲端工作階段不會從您的使用者設定或儲存庫的 `.claude/settings.json` 載入外掛程式，如 [您的設定中有哪些內容會保留](/docs/zh-TW/cloud-environments#what-carries-over-from-your-setup) 所說明。如需您的組織透過受管設定發佈的外掛程式，請參閱 [為您的組織管理外掛程式](/docs/zh-TW/plugins/org)
 
-```text theme={null}
-/reload-plugins
-```
+終端機安裝會提示輸入範圍。選擇使用者範圍以將外掛程式寫入您的使用者設定，這樣它會在您在此機器上啟動的每個新本地工作階段中載入。
 
-<h3 id="enable-in-cloud-sessions-and-shared-repositories">
-  在雲端工作階段和共享儲存庫中啟用
+如果安裝失敗，請比對 Claude Code 報告的訊息：
+
+* `Marketplace "claude-plugins-official" not found`：使用 `/plugin marketplace add anthropics/claude-plugins-official` 新增市場，然後重試安裝。
+* 外掛程式 [在市場中找不到](/docs/zh-TW/plugins/install#install-a-plugin)：檢查外掛程式名稱。
+
+檢查安裝摘要。如果它報告 `Run /reload-plugins to activate.`，請參閱 [在不重新啟動的情況下套用外掛程式變更](/docs/zh-TW/plugins/cli-reference#reload-plugins) 以在您目前的工作階段中啟用外掛程式。
+
+<h3 id="enable-for-your-team-in-local-sessions">
+  在本地工作階段中為您的團隊啟用
 </h3>
 
-使用者範圍的外掛程式不會進入 [網路上的 Claude Code](/docs/zh-TW/claude-code-on-the-web)，因為這些工作階段在 Anthropic 基礎設施上執行，而不是在您的機器上。要在那裡啟用外掛程式，或為克隆儲存庫的所有人開啟它，請在專案的簽入設定中聲明它：
+要在您的團隊成員在儲存庫中啟動的本地工作階段中開啟外掛程式，請在專案的簽入設定中聲明它：
 
 ```json .claude/settings.json theme={null}
 {
@@ -54,7 +60,7 @@ security-guidance 外掛程式讓 Claude 在工作時檢查自己的程式碼變
 }
 ```
 
-管理員可以通過在 [受管設定](/docs/zh-TW/admin-setup) 中設定 [`enabledPlugins`](/docs/zh-TW/settings#plugin-settings) 來組織範圍內啟用外掛程式。
+管理員可以通過在 [受管設定](/docs/zh-TW/admin-setup) 中設定 [`enabledPlugins`](/docs/zh-TW/settings-reference#enabledplugins) 來組織範圍內啟用外掛程式。
 
 <h2 id="what-the-plugin-checks">
   外掛程式檢查的內容
@@ -175,11 +181,11 @@ patterns:
 
 外掛程式在相同位置查找 `claude-security-guidance.md` 和 `security-patterns.yaml`，與外掛程式的啟用方式無關：
 
-| 範圍   | 路徑                                          | 備註                |
-| :--- | :------------------------------------------ | :---------------- |
-| 使用者  | `~/.claude/claude-security-guidance.md`     | 適用於您機器上的每個專案      |
-| 專案   | `.claude/claude-security-guidance.md`       | 與儲存庫一起簽入          |
-| 專案本地 | `.claude/claude-security-guidance.local.md` | Gitignored，用於個人覆蓋 |
+| 範圍   | 路徑                                          | 備註                          |
+| :--- | :------------------------------------------ | :-------------------------- |
+| 使用者  | `~/.claude/claude-security-guidance.md`     | 適用於您機器上的每個專案                |
+| 專案   | `.claude/claude-security-guidance.md`       | 與儲存庫一起簽入                    |
+| 專案本地 | `.claude/claude-security-guidance.local.md` | 用於個人覆蓋；將其添加到您的 `.gitignore` |
 
 外掛程式載入所有存在的位置並連接它們，指導檔案的組合上限為 8 KB。管理員可以通過設備管理將使用者範圍檔案推送到 `~/.claude/` 來分發組織範圍的規則。相同的路徑適用於 `security-patterns.yaml`。
 
@@ -187,7 +193,7 @@ patterns:
   使用成本
 </h2>
 
-[每個檔案編輯時的模式檢查](#on-each-file-edit) 不進行模型呼叫，不增加成本。[每個回合結束時](#at-the-end-of-each-turn) 和 [每次提交或推送時](#on-each-commit-or-push-claude-makes) 的審查各自花費額外的模型使用，計入您的 [使用](/docs/zh-TW/costs)，就像任何其他 Claude 請求一樣。提交審查是代理性的，每次提交可能需要多個模型回合，限制為每滾動小時 20 次審查。預期大約每個更改檔案的回合進行一次審查呼叫，每次提交進行一次更深層的審查，兩者都受上述上限的限制。
+[每個檔案編輯時的模式檢查](#on-each-file-edit) 不進行模型呼叫，不增加成本。[每個回合結束時](#at-the-end-of-each-turn) 和 [每次提交或推送時](#on-each-commit-or-push-claude-makes) 的審查各自花費額外的模型使用，計入您的 [使用](/docs/zh-TW/costs)，就像任何其他 Claude 請求一樣。提交審查是代理性的，每次提交可能需要多個模型回合。預期大約每個更改檔案的回合進行一次審查呼叫，每次提交進行一次更深層的審查，兩者都受上述上限的限制。
 
 兩個模型支持的審查預設使用 Claude Opus 4.7。設定 `SECURITY_REVIEW_MODEL` 為端回合審查選擇不同的模型，設定 `SG_AGENTIC_MODEL` 為提交審查選擇不同的模型。
 
@@ -219,7 +225,7 @@ patterns:
 /plugin uninstall security-guidance@claude-plugins-official
 ```
 
-如果外掛程式通過專案的 `.claude/settings.json` 啟用，從 `/plugin` 禁用它會將覆蓋寫入您的 `.claude/settings.local.json`，而不是編輯簽入的檔案，因此外掛程式對您保持關閉，而不影響隊友。同一對話框也提供選項以移除外掛程式供所有人使用，方法是從共享的 `.claude/settings.json` 中移除它；該選項需要 Claude Code v2.1.203 或更新版本。如果它通過 [受管設定](/docs/zh-TW/admin-setup) 啟用，只有管理員可以禁用它。
+如果外掛程式通過專案的 `.claude/settings.json` 啟用，從 `/plugin` 禁用它會將覆蓋寫入您的 `.claude/settings.local.json`，而不是編輯簽入的檔案，因此外掛程式對您保持關閉，而不影響隊友。同一對話框也提供選項以移除外掛程式供所有人使用，方法是從共享的 `.claude/settings.json` 中移除它。如果它通過 [受管設定](/docs/zh-TW/admin-setup) 啟用，只有管理員可以禁用它。
 
 <h2 id="how-the-plugin-integrates-with-claude-code">
   外掛程式如何與 Claude Code 整合
@@ -243,14 +249,15 @@ patterns:
 
 外掛程式是深度防禦方法中的一層。它最早捕捉問題，當程式碼仍在編輯器中時，但它不是保證，也不能替代後來的檢查。典型的堆棧：
 
-| 階段     | 工具                                                     | 涵蓋的內容                          |
-| :----- | :----------------------------------------------------- | :----------------------------- |
-| 在工作階段中 | Security guidance 外掛程式                                 | Claude 編寫的程式碼中的常見漏洞，在同一工作階段中修復 |
-| 按需     | [`/security-review`](/docs/zh-TW/commands#all-commands)     | 對當前分支的一次性安全檢查，在您要求時執行          |
-| 在拉取請求上 | [Code Review](/docs/zh-TW/code-review)，Team 和 Enterprise 計畫 | 具有完整程式碼庫上下文的多代理正確性和安全審查        |
-| 在 CI 中 | 您現有的靜態分析和依賴掃描器                                         | 語言特定的規則、供應鏈檢查和外掛程式不嘗試的政策執行     |
+| 階段      | 工具                                                     | 涵蓋的內容                          |
+| :------ | :----------------------------------------------------- | :----------------------------- |
+| 在工作階段中  | Security guidance 外掛程式                                 | Claude 編寫的程式碼中的常見漏洞，在同一工作階段中修復 |
+| 按需、單次掃描 | [`/security-review`](/docs/zh-TW/commands#all-commands)     | 對當前分支的一次性安全檢查，在您要求時執行          |
+| 按需、深度掃描 | [Claude Security 外掛程式](/docs/zh-TW/claude-security)         | 對儲存庫或差異的多代理漏洞掃描，具有獨立審查的發現和修補程式 |
+| 在拉取請求上  | [Code Review](/docs/zh-TW/code-review)，Team 和 Enterprise 計畫 | 具有完整程式碼庫上下文的多代理正確性和安全審查        |
+| 在 CI 中  | 您現有的靜態分析和依賴掃描器                                         | 語言特定的規則、供應鏈檢查和外掛程式不嘗試的政策執行     |
 
-每個後期階段捕捉早期階段遺漏的內容。外掛程式的價值是減少到達它們的數量，而不是消除對它們的需求。
+若要在您已有的程式碼中尋找安全問題，而不是在 Claude 正在編寫的變更中，請在工作階段中要求 Claude 審查特定檔案或目錄是否存在漏洞，或使用 [Claude Security 外掛程式](/docs/zh-TW/claude-security) 對整個儲存庫進行更深入的多代理掃描；[`/security-review`](/docs/zh-TW/commands#all-commands) 僅涵蓋您當前分支上的變更。無論哪種方式，審查都會讀取您簽出中的原始程式碼，而不是執行中的網站或已部署的服務。
 
 <h2 id="troubleshooting">
   故障排除
@@ -261,7 +268,7 @@ patterns:
 審查層在對話中無聲跳過的常見原因：
 
 * 目錄不是 git 儲存庫：端回合和提交審查需要 git 狀態，並在儲存庫外跳過
-* 工作階段沒有 Anthropic 身份驗證：模型支持的審查會跳過，只有每個編輯模式檢查執行
+* 工作階段沒有 Anthropic 身份驗證且沒有設定第三方提供者：模型支持的審查會跳過，只有每個編輯模式檢查執行
 * `security-patterns.yaml` 檔案存在但 PyYAML 不可導入：檔案被忽略。改用 `security-patterns.json`
 
 <h2 id="related-resources">
@@ -272,4 +279,4 @@ patterns:
 
 * [Code Review](/docs/zh-TW/code-review)：設定 PR 時間多代理審查
 * [使用 hooks 自動化工作流](/docs/zh-TW/hooks-guide)：在相同的生命週期點構建您自己的檢查
-* [發現和安裝外掛程式](/docs/zh-TW/discover-plugins#official-anthropic-marketplace)：瀏覽其他官方外掛程式
+* [在官方 marketplace 中尋找 plugins](/docs/zh-TW/plugins/anthropic-marketplaces#find-plugins-in-the-official-marketplace)：瀏覽其他官方 plugins 的位置

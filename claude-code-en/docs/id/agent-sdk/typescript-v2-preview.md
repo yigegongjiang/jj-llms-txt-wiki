@@ -12,7 +12,7 @@
   Untuk bermigrasi, gunakan [API `query()`](/docs/id/agent-sdk/typescript) dan [opsi sesi](/docs/id/agent-sdk/sessions) yang diterimanya. Lewatkan `AsyncIterable<SDKUserMessage>` untuk percakapan multi-turn, atau `options.resume` untuk melanjutkan sesi yang disimpan. Halaman ini disimpan untuk referensi jika Anda mempertahankan kode pada Agent SDK 0.2.x atau lebih awal.
 </Warning>
 
-V2 adalah API sesi eksperimental yang menghilangkan kebutuhan untuk async generators dan koordinasi yield. Alih-alih mengelola status generator di seluruh turn, setiap turn adalah siklus `send()`/`stream()` terpisah. Permukaan API berkurang menjadi tiga konsep:
+V2 adalah API sesi eksperimental yang menghilangkan kebutuhan untuk async generators dan koordinasi yield. Alih-alih mengelola status generator di seluruh turn, setiap turn adalah siklus `send()`/`stream()` terpisah. Permukaan API berkurang menjadi membuat sesi, mengirim pesan, dan streaming respons:
 
 * `createSession()` / `resumeSession()`: Mulai atau lanjutkan percakapan
 * `session.send()`: Kirim pesan
@@ -29,7 +29,7 @@ npm install @anthropic-ai/claude-agent-sdk@0.2
 ```
 
 <Note>
-  SDK menggabungkan binary Claude Code asli untuk platform Anda sebagai dependensi opsional, jadi Anda tidak perlu menginstal Claude Code secara terpisah.
+  SDK menggabungkan binary Claude Code asli untuk platform Anda sebagai dependensi opsional, jadi sebagian besar instalasi tidak memerlukan instalasi Claude Code terpisah. Lihat [catatan instalasi quickstart](/docs/id/agent-sdk/quickstart) untuk instalasi yang memerlukan satu.
 </Note>
 
 <h2 id="quick-start">
@@ -318,6 +318,8 @@ for await (const msg of resumedSession.stream()) {
 </h3>
 
 Sesi dapat ditutup secara manual atau otomatis menggunakan [`await using`](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-2.html#using-declarations-and-explicit-resource-management), fitur TypeScript 5.2+ untuk pembersihan sumber daya otomatis. Jika Anda menggunakan versi TypeScript yang lebih lama atau mengalami masalah kompatibilitas, gunakan pembersihan manual sebagai gantinya.
+
+Contoh di bawah menunjukkan hanya pola pembersihan dan tidak mengirim pesan apa pun, jadi menjalankannya tidak menghasilkan output.
 
 **Pembersihan otomatis (TypeScript 5.2+):**
 

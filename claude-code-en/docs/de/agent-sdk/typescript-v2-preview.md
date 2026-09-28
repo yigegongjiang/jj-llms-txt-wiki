@@ -29,7 +29,7 @@ npm install @anthropic-ai/claude-agent-sdk@0.2
 ```
 
 <Note>
-  Das SDK bündelt eine native Claude Code-Binärdatei für Ihre Plattform als optionale Abhängigkeit, sodass Sie Claude Code nicht separat installieren müssen.
+  Das SDK bündelt eine native Claude Code-Binärdatei für Ihre Plattform als optionale Abhängigkeit, sodass die meisten Installationen keine separate Claude Code-Installation benötigen. Weitere Informationen finden Sie in der [Installationsnotiz des Schnellstarts](/docs/de/agent-sdk/quickstart).
 </Note>
 
 <h2 id="quick-start">
@@ -318,6 +318,8 @@ for await (const msg of resumedSession.stream()) {
 </h3>
 
 Sitzungen können manuell oder automatisch mit [`await using`](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-2.html#using-declarations-and-explicit-resource-management) geschlossen werden, einer TypeScript 5.2+-Funktion für automatische Ressourcenbereinigung. Wenn Sie eine ältere TypeScript-Version verwenden oder auf Kompatibilitätsprobleme stoßen, verwenden Sie stattdessen manuelle Bereinigung.
+
+Die folgenden Beispiele zeigen nur das Bereinigungsmuster und senden keine Nachrichten, daher führt das Ausführen zu keiner Ausgabe.
 
 **Automatische Bereinigung (TypeScript 5.2+):**
 

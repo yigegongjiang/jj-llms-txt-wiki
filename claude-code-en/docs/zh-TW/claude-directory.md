@@ -34,7 +34,7 @@ export const ClaudeExplorer = () => {
         oneLiner: 'Project instructions Claude reads every session',
         when: 'Loaded into context at the start of every session',
         description: 'Project-specific instructions that shape how Claude works in this repository. Put your conventions, common commands, and architectural context here so Claude operates with the same assumptions your team does.',
-        tips: ['Target under 200 lines. Longer files still load in full but may reduce adherence', <>CLAUDE.md loads into every session. If something only matters for specific tasks, move it to a <A href="/docs/en/skills">skill</A> or a path-scoped <A href="/docs/en/memory#organize-rules-with-claude/rules/">rule</A> so it loads only when needed</>, 'List the commands you run most, like build, test, and format, so Claude knows them without you spelling them out each time', <>Run <C>/memory</C> to open and edit CLAUDE.md from within a session</>, <>Also works at <C>.claude/CLAUDE.md</C> if you prefer to keep the project root clean</>],
+        tips: ['Target under 200 lines. Longer files still load in full but may reduce adherence', <>CLAUDE.md loads into every session. If something only matters for specific tasks, move it to a <A href="/docs/en/skills">skill</A> or a path-scoped <A href="/docs/en/memory#organize-rules-with-claude/rules/">rule</A> so it loads only when needed</>, 'List the commands you run most, like build, test, and format, so Claude knows them without you spelling them out each time', <>Run <C>/memory</C> to open and edit CLAUDE.md from within a session</>, <>Also works at <C>.claude/CLAUDE.md</C> if you prefer to keep the project root clean</>, <>If your repo already has an <C>AGENTS.md</C> for other coding agents, Claude Code <A href="/docs/en/memory#agents-md">can read that</A> on its own or alongside CLAUDE.md</>],
         exampleIntro: 'This example is for a TypeScript and React project. It lists the build and test commands, the framework conventions Claude should follow, and project-specific rules like export style and file layout.',
         example: `# Project conventions
 
@@ -113,7 +113,7 @@ config/secrets.json`,
           oneLiner: 'Permissions, hooks, and configuration',
           when: <>Overrides global <C>~/.claude/settings.json</C>. Local settings, CLI flags, and managed settings override this</>,
           description: 'Settings that Claude Code applies directly. Permissions control which commands and tools Claude can use; hooks run your scripts at specific points in a session. Unlike CLAUDE.md, which Claude reads as guidance, these are enforced whether Claude follows them or not.',
-          contains: [<><A href="/docs/en/permissions">permissions</A>: allow, deny, or prompt before Claude uses specific tools or commands</>, <><A href="/docs/en/hooks">hooks</A>: run your own scripts on events like before a tool call or after a file edit</>, <><A href="/docs/en/statusline">statusLine</A>: customize the line shown at the bottom while Claude works</>, <><A href="/docs/en/settings-reference#available-settings">model</A>: pick a default model for this project</>, <><A href="/docs/en/settings-reference#environment-variables">env</A>: environment variables set in every session</>, <><A href="/docs/en/output-styles">outputStyle</A>: select a custom system-prompt style from output-styles/</>],
+          contains: [<><A href="/docs/en/permissions">permissions</A>: allow, deny, or prompt before Claude uses specific tools or commands</>, <><A href="/docs/en/hooks">hooks</A>: run your own scripts on events like before a tool call or after a file edit</>, <><A href="/docs/en/statusline">statusLine</A>: customize the line shown at the bottom while Claude works</>, <><A href="/docs/en/settings-reference#available-settings">model</A>: pick a default model for this project</>, <><A href="/docs/en/settings-reference#environment-variables">env</A>: environment variables set in every session</>, <><A href="/docs/en/output-styles">outputStyle</A>: select a custom output style from output-styles/</>],
           tips: [<>Bash permission patterns support wildcards: <C>Bash(npm test *)</C> matches any command starting with <C>npm test</C></>, <>Array settings like <C>permissions.allow</C> combine across all scopes; scalar settings like <C>model</C> use the most specific value</>],
           exampleIntro: <>This example allows <C>npm test</C> and <C>npm run</C> commands without prompting, blocks <C>rm -rf</C>, and runs Prettier on files after Claude edits or writes them.</>,
           example: `{
@@ -322,7 +322,7 @@ Investigate and fix the issue above.
           icon: 'folder',
           color: '#5AA7A7',
           oneLiner: 'Project-scoped output styles, if your team shares any',
-          when: 'Applied at session start when selected via the outputStyle setting',
+          when: 'Files read at startup; the style you select with outputStyle applies to every response',
           description: <>Output styles are usually personal, so most live in <C>~/.claude/output-styles/</C>. Put one here if your team shares a style, like a review mode everyone uses. See <A href="#ce-global-output-styles">the Global tab</A> for the full explanation and example.</>,
           docsLink: '/en/output-styles',
           children: []
@@ -638,10 +638,10 @@ type: reference
           type: 'folder',
           icon: 'folder',
           color: '#5AA7A7',
-          oneLiner: 'Custom system-prompt sections that adjust how Claude works',
-          when: 'Applied at session start when selected via the outputStyle setting',
-          description: [<>Each markdown file defines an output style: a section appended to the system prompt that, by default, also drops the built-in software-engineering task instructions. Use this to adapt Claude Code for uses beyond coding, or to add teaching or review modes.</>, <>Select a built-in or custom style with <C>/config</C> or the <C>outputStyle</C> key in settings. Styles here are available in every project; project-level styles with the same name take precedence.</>],
-          tips: ['Built-in styles Default, Proactive, Concise, Explanatory, and Learning are included with Claude Code; custom styles go here', <>Set <C>keep-coding-instructions: true</C> in frontmatter to keep the default task instructions alongside your additions</>, 'Changes take effect on the next session since the system prompt is fixed at startup for caching'],
+          oneLiner: 'Custom instruction sets that adjust how Claude works',
+          when: 'Files read at startup; the style you select with outputStyle applies to every response',
+          description: [<>Each markdown file defines an output style: a set of instructions for Claude that, by default, also replaces the built-in software-engineering task instructions. Use this to adapt Claude Code for uses beyond coding, or to add teaching or review modes.</>, <>Select a built-in or custom style with <C>/output-style</C>, <C>/config</C>, or the <C>outputStyle</C> key in settings. Styles here are available in every project; project-level styles with the same name take precedence.</>],
+          tips: ['Built-in styles Default, Proactive, Concise, Explanatory, and Learning are included with Claude Code; custom styles go here', <>Set <C>keep-coding-instructions: true</C> in frontmatter to keep the default task instructions alongside your additions</>, 'Switching styles mid-session applies from your next message; in the terminal, a style file you create or edit mid-session is picked up after a restart'],
           docsLink: '/en/output-styles',
           children: [{
             id: 'output-style-example',
@@ -652,7 +652,7 @@ type: reference
             badge: 'local',
             oneLiner: 'Example style that adds explanations and leaves small changes for you',
             when: <>Active when <C>outputStyle</C> in settings is set to <C>teaching</C></>,
-            description: <>This style appends instructions to the system prompt: Claude adds a "Why this approach" note after each task and leaves TODO(human) markers for changes under 10 lines instead of writing them itself. Select it by setting <C>outputStyle</C> to the filename without .md, or to the <C>name</C> field if you set one in frontmatter.</>,
+            description: <>With this style, Claude adds a "Why this approach" note after each task and leaves TODO(human) markers for changes under 10 lines instead of writing them itself. Select it by setting <C>outputStyle</C> to the filename without .md, or to the <C>name</C> field if you set one in frontmatter.</>,
             example: `---
 description: Explains reasoning and asks you to implement small pieces
 keep-coding-instructions: true
@@ -1434,7 +1434,7 @@ Claude Code 從您的專案目錄和主目錄中的 `~/.claude` 讀取指令、�
 
 在 Windows 上，`~/.claude` 解析為 `%USERPROFILE%\.claude`。如果您設定了 [`CLAUDE_CONFIG_DIR`](/docs/zh-TW/env-vars)，此頁面上的每個 `~/.claude` 路徑都會改為位於該目錄下。
 
-大多數使用者只編輯 `CLAUDE.md` 和 `settings.json`。目錄的其餘部分是可選的：根據需要新增 skills、rules 或 subagents。
+大多數使用者只編輯 `CLAUDE.md` 和 `settings.json`。如果您的儲存庫已經有一個 `AGENTS.md` 供其他編碼代理使用，Claude Code [可以自行讀取](/docs/zh-TW/memory#agents-md)或與 `CLAUDE.md` 一起讀取。目錄的其餘部分是可選的：根據需要新增 skills、rules 或 subagents。
 
 <h2 id="explore-the-directory">
   探索目錄
@@ -1450,13 +1450,14 @@ Claude Code 從您的專案目錄和主目錄中的 `~/.claude` 讀取指令、�
 
 探索器涵蓋您編寫和編輯的檔案。一些相關檔案位於其他位置：
 
-| 檔案                      | 位置                  | 用途                                                                                                                                                                    |
-| ----------------------- | ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `managed-settings.json` | 系統級別，因作業系統而異        | 企業強制執行的設定，您無法覆蓋。請參閱[伺服器管理的設定](/docs/zh-TW/server-managed-settings)。                                                                                                        |
-| `CLAUDE.local.md`       | 專案根目錄               | 您對此專案的私人偏好設定，與 CLAUDE.md 一起載入。手動建立並將其新增到 `.gitignore`。                                                                                                                |
-| 已安裝的 plugins            | `~/.claude/plugins` | 複製的市場、已安裝的 plugin 版本和每個 plugin 的資料，由 `claude plugin` 命令管理。孤立版本在 plugin 更新或解除安裝後 7 天內被刪除。請參閱 [plugin 快取](/docs/zh-TW/plugins-reference#plugin-caching-and-file-resolution)。 |
+| 檔案                      | 位置                     | 用途                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| ----------------------- | ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `managed-settings.json` | 系統層級，因作業系統而異           | 企業強制執行的設定，您無法覆寫，除了[狹隘的例外](/docs/zh-TW/settings#security-keys-where-the-stricter-value-applies)。請參閱[檔案儲存位置](/docs/zh-TW/managed-settings#deploy-a-managed-settings-file)和 [Claude Code 使用的受管來源](/docs/zh-TW/managed-settings#precedence-within-the-managed-tier)。                                                                                                                                                                                                                                                                                                           |
+| `CLAUDE.local.md`       | 專案根目錄                  | 您對此專案的私人偏好設定，與 CLAUDE.md 一起載入。手動建立它並將其新增至 `.gitignore`。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `AGENTS.md`             | 專案根目錄、`.claude/` 或任何目錄 | 您為 AI 編碼代理撰寫的專案指示。Claude Code 可以[自行載入它](/docs/zh-TW/memory#agents-md)或與 `CLAUDE.md` 一起載入。                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| 已安裝的 plugins            | `~/.claude/plugins`    | 複製的市集、已安裝的 plugin 版本、`installed_plugins.json` 安裝記錄，以及各 plugin 資料，由 `claude plugin` 命令管理。從您的 claude.ai 帳戶[同步的 plugins](/docs/zh-TW/plugins/loading#synced-plugins) 會下載到 `~/.claude/plugins/synced/`。對於從市集[`command` 來源](/docs/zh-TW/plugins/marketplace-reference#command-plugin-source)以連結模式安裝的 plugin，Claude Code 會在此儲存連結而不是副本，plugin 的檔案保留在命令列印的目錄中。`command` 來源需要 Claude Code v2.1.229 或更新版本。本機目錄市集中以相對路徑列出的 plugin 也會[就地載入](/docs/zh-TW/plugins/loading#find-plugins-on-disk)其來源目錄，而不是從快取副本載入。請參閱[plugin 快取](/docs/zh-TW/plugins/loading#find-plugins-on-disk)以了解孤立版本如何被清理。 |
 
-`~/.claude` 還保存 Claude Code 在您工作時寫入的資料：文字記錄、提示歷史記錄、檔案快照、快取和日誌。請參閱下方的[應用程式資料](#application-data)。
+`~/.claude` 也保存 Claude Code 在您工作時寫入的資料：文字記錄、提示歷史記錄、檔案快照、快取和日誌。請參閱下方的[應用程式資料](#application-data)。
 
 <h2 id="choose-the-right-file">
   選擇正確的檔案
@@ -1469,8 +1470,8 @@ Claude Code 從您的專案目錄和主目錄中的 `~/.claude` 讀取指令、�
 | 為 Claude 提供專案上下文和慣例    | `CLAUDE.md`                             | 專案或全域 | [Memory](/docs/zh-TW/memory)                                 |
 | 允許或阻止特定工具呼叫            | `settings.json` `permissions` 或 `hooks` | 專案或全域 | [Permissions](/docs/zh-TW/permissions)、[Hooks](/docs/zh-TW/hooks) |
 | 在工具呼叫之前或之後執行指令碼        | `settings.json` `hooks`                 | 專案或全域 | [Hooks](/docs/zh-TW/hooks)                                   |
-| 為工作階段設定環境變數            | `settings.json` `env`                   | 專案或全域 | [Settings](/docs/zh-TW/settings#available-settings)          |
-| 將個人覆蓋保留在 git 之外        | `settings.local.json`                   | 僅專案   | [Settings scopes](/docs/zh-TW/settings#settings-files)       |
+| 為工作階段設定環境變數            | `settings.json` `env`                   | 專案或全域 | [Settings](/docs/zh-TW/settings-reference#all-settings)      |
+| 將個人覆蓋保留在 git 之外        | `settings.local.json`                   | 僅專案   | [Settings scopes](/docs/zh-TW/settings#where-settings-live)  |
 | 新增您使用 `/name` 叫用的提示或功能 | `skills/<name>/SKILL.md`                | 專案或全域 | [Skills](/docs/zh-TW/skills)                                 |
 | 定義具有自己工具的專門 subagent   | `agents/*.md`                           | 專案或全域 | [Subagents](/docs/zh-TW/sub-agents)                          |
 | 透過指令碼協調許多 subagent     | `workflows/*.js`                        | 專案或全域 | [Dynamic workflows](/docs/zh-TW/workflows)                   |
@@ -1486,7 +1487,7 @@ Claude Code 從您的專案目錄和主目錄中的 `~/.claude` 讀取指令、�
 <Note>
   有幾件事可以覆蓋您在這些檔案中放入的內容：
 
-  * 您的組織部署的[受管設定](/docs/zh-TW/server-managed-settings)優先於所有內容
+  * 您的組織部署的[受管設定](/docs/zh-TW/server-managed-settings)優先於所有內容，除了[設定優先順序下的例外](/docs/zh-TW/settings#exceptions-to-managed-settings-precedence)
   * CLI 旗標（如 `--permission-mode` 或 `--settings`）會覆蓋該工作階段的 `settings.json`
   * 某些環境變數優先於其等效設定，但這會有所不同：檢查[環境變數參考](/docs/zh-TW/env-vars)以了解每個變數
 
@@ -1500,19 +1501,35 @@ Claude Code 從您的專案目錄和主目錄中的 `~/.claude` 讀取指令、�
 | [`CLAUDE.md`](#ce-claude-md)                        | 專案和全域 | ✓  | 每個工作階段載入的指令                                                 | [Memory](/docs/zh-TW/memory)                                            |
 | [`rules/*.md`](#ce-rules)                           | 專案和全域 | ✓  | 主題範圍的指令，可選擇路徑限制                                             | [Rules](/docs/zh-TW/memory#organize-rules-with-claude/rules/)           |
 | [`settings.json`](#ce-settings-json)                | 專案和全域 | ✓  | 權限、hooks、環境變數、模型預設值                                         | [Settings](/docs/zh-TW/settings)                                        |
-| [`settings.local.json`](#ce-settings-local-json)    | 僅專案   |    | 您的個人覆蓋，自動 gitignored                                        | [Settings scopes](/docs/zh-TW/settings#settings-files)                  |
+| [`settings.local.json`](#ce-settings-local-json)    | 僅專案   |    | 您的個人覆蓋，當 Claude Code 將設定儲存到其中時會自動 gitignored                | [Settings scopes](/docs/zh-TW/settings#where-settings-live)             |
 | [`.mcp.json`](#ce-mcp-json)                         | 僅專案   | ✓  | 團隊共享的 MCP 伺服器                                               | [MCP scopes](/docs/zh-TW/mcp#mcp-installation-scopes)                   |
 | [`.worktreeinclude`](#ce-worktreeinclude)           | 僅專案   | ✓  | Gitignored 檔案以複製到新的 worktrees                               | [Worktrees](/docs/zh-TW/worktrees#copy-gitignored-files-into-worktrees) |
 | [`skills/<name>/SKILL.md`](#ce-skills)              | 專案和全域 | ✓  | 可重複使用的提示，使用 `/name` 叫用或自動叫用                                 | [Skills](/docs/zh-TW/skills)                                            |
 | [`commands/*.md`](#ce-commands)                     | 專案和全域 | ✓  | 單檔案提示；與 skills 相同的機制                                        | [Skills](/docs/zh-TW/skills)                                            |
-| [`output-styles/*.md`](#ce-output-styles)           | 專案和全域 | ✓  | 自訂系統提示部分                                                    | [Output styles](/docs/zh-TW/output-styles)                              |
+| [`output-styles/*.md`](#ce-output-styles)           | 專案和全域 | ✓  | 自訂指令集，調整 Claude 的工作方式                                       | [Output styles](/docs/zh-TW/output-styles)                              |
 | [`agents/*.md`](#ce-agents)                         | 專案和全域 | ✓  | Subagent 定義及其自己的提示和工具                                       | [Subagents](/docs/zh-TW/sub-agents)                                     |
 | [`workflows/*.js`](#ce-workflows)                   | 專案和全域 | ✓  | Claude 撰寫並從 `/workflows` 儲存的動態工作流程指令碼；每個檔案都會變成 `/<name>` 命令 | [Dynamic workflows](/docs/zh-TW/workflows)                              |
 | [`agent-memory/<name>/`](#ce-agent-memory)          | 專案和全域 | ✓  | Subagents 的持久記憶                                             | [Persistent memory](/docs/zh-TW/sub-agents#enable-persistent-memory)    |
-| [`~/.claude.json`](#ce-claude-json)                 | 僅全域   |    | 應用程式狀態、OAuth、UI 切換、個人 MCP 伺服器                               | [Global config](/docs/zh-TW/settings#global-config-settings)            |
+| [`~/.claude.json`](#ce-claude-json)                 | 僅全域   |    | 應用程式狀態、OAuth、UI 切換、個人 MCP 伺服器                               | [Global config](/docs/zh-TW/settings-reference#global-config-settings)  |
 | [`projects/<project>/memory/`](#ce-global-projects) | 僅全域   |    | 自動記憶：Claude 在工作階段間對自己的筆記                                    | [Auto memory](/docs/zh-TW/memory#auto-memory)                           |
 | [`keybindings.json`](#ce-keybindings)               | 僅全域   |    | 自訂快捷鍵                                                       | [Keybindings](/docs/zh-TW/keybindings)                                  |
 | [`themes/*.json`](#ce-themes)                       | 僅全域   |    | 自訂色彩主題                                                      | [Custom themes](/docs/zh-TW/terminal-config#create-a-custom-theme)      |
+
+<h2 id="frontmatter-fields-by-file">
+  按檔案分類的 Frontmatter 欄位
+</h2>
+
+Skills、命令檔案、子代理、輸出樣式和規則從檔案頂部的 YAML [frontmatter](/docs/zh-TW/glossary#frontmatter) 讀取其設定，每個都接受自己的一組欄位。此表列出每個檔案的欄位名稱，並連結到描述它們的參考資料。
+
+| 檔案                       | Frontmatter 欄位                                                                                                                                                                                                                                                                | 參考資料                                                                   |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| `skills/<name>/SKILL.md` | `name`, `description`, `when_to_use`, `argument-hint`, `arguments`, `disable-model-invocation`, `user-invocable`, `allowed-tools`, `disallowed-tools`, `model`, `effort`, `context`, `agent`, `background`, `hooks`, `paths`, `shell`, `metadata`, `license`, `compatibility` | [Skill frontmatter](/docs/zh-TW/skills#frontmatter-reference)               |
+| `commands/*.md`          | 除了 `name` 和 `paths` 之外的 skill 欄位                                                                                                                                                                                                                                              | [Skill frontmatter](/docs/zh-TW/skills#frontmatter-reference)               |
+| `agents/*.md`            | `name`, `description`, `tools`, `disallowedTools`, `model`, `permissionMode`, `maxTurns`, `skills`, `mcpServers`, `hooks`, `memory`, `background`, `effort`, `isolation`, `color`, `initialPrompt`, `omitClaudeMd`, `experimental`                                            | [Subagent frontmatter](/docs/zh-TW/sub-agents#supported-frontmatter-fields) |
+| `output-styles/*.md`     | `name`, `description`, `keep-coding-instructions`, `force-for-plugin`                                                                                                                                                                                                         | [Output style frontmatter](/docs/zh-TW/output-styles#frontmatter)           |
+| `rules/*.md`             | `paths`                                                                                                                                                                                                                                                                       | [Rule frontmatter](/docs/zh-TW/memory#rules-frontmatter-reference)          |
+
+在 [plugin](/docs/zh-TW/plugins/components#agents) 中提供的代理遵守子代理欄位的子集。
 
 <h2 id="troubleshoot-configuration">
   疑難排解設定
@@ -1524,66 +1541,96 @@ Claude Code 從您的專案目錄和主目錄中的 `~/.claude` 讀取指令、�
   應用程式資料
 </h2>
 
-除了您編寫的設定外，`~/.claude` 還保存 Claude Code 在工作階段期間寫入的資料。這些檔案是純文字。任何通過工具的內容都會在磁碟上的文字記錄中結束：檔案內容、命令輸出、貼上的文字。
+除了您編寫的設定外，`~/.claude` 還保存 Claude Code 在工作階段期間寫入的資料。這些檔案是純文字。任何通過工具的內容都會寫入磁碟上的文字記錄：檔案內容、命令輸出、貼上的文字。
 
 <h3 id="cleaned-up-automatically">
   自動清理
 </h3>
 
-下列路徑中的檔案在啟動時被刪除，一旦它們的年齡超過 [`cleanupPeriodDays`](/docs/zh-TW/settings#available-settings)。預設值為 30 天。
+Claude Code 會刪除以下路徑中的檔案，一旦它們的年齡超過 [`cleanupPeriodDays`](/docs/zh-TW/settings-reference#cleanupperioddays)，只要它能安全地確定保留期間。預設值為 30 天，最小值為 1；設定 `0` 會因驗證錯誤而失敗。相同的年齡截止值也適用於 [孤立 worktrees](/docs/zh-TW/worktrees#clean-up-subagent-and-background-session-worktrees) 的自動移除。
 
-| `~/.claude/` 下的路徑                            | 內容                                                                                                                 |
-| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| `projects/<project>/<session>.jsonl`         | 完整對話文字記錄：每條訊息、工具呼叫和工具結果                                                                                            |
-| `projects/<project>/<session>/subagents/`    | [Subagent](/docs/zh-TW/sub-agents) 對話文字記錄，當父工作階段文字記錄過期時一起移除                                                             |
-| `projects/<project>/<session>/tool-results/` | 溢出到單獨檔案的大型工具輸出                                                                                                     |
-| `file-history/<session>/`                    | Claude 變更的檔案的編輯前快照，用於[檢查點還原](/docs/zh-TW/checkpointing)。保存 100 個最近檢查點的快照；沒有保留檢查點參考的快照檔案會被刪除，除了每個檔案的第一個快照                |
-| `plans/`                                     | 在 [Plan Mode](/docs/zh-TW/permission-modes#analyze-before-you-edit-with-plan-mode) 期間寫入的計畫檔案                            |
-| `debug/`                                     | 每個工作階段的偵錯日誌，僅在您使用 `--debug` 啟動或執行 `/debug` 時寫入                                                                     |
-| `paste-cache/`、`image-cache/`                | 大型貼上和附加影像的內容                                                                                                       |
-| `session-env/`                               | 每個工作階段的環境中繼資料                                                                                                      |
-| `tasks/`                                     | 由 task tools 寫入的每個工作階段任務清單                                                                                         |
-| `shell-snapshots/`                           | 在啟動時擷取的別名、函式和 shell 選項，由 [Bash tool](/docs/zh-TW/tools-reference#bash-tool-behavior) 應用於每個命令。在正常退出時移除。掃描會清除任何在當機後遺留的檔案。 |
-| `backups/`                                   | 在設定遷移前取得的 `~/.claude.json` 的時間戳記副本                                                                                 |
-| `feedback-bundles/`                          | 由 `/feedback` 在第三方提供者上寫入的已編輯文字記錄存檔，或在未設定 Anthropic 認證時寫入，用於傳送到您的 Anthropic 帳戶團隊                                    |
-| `todos/`、`statsig/`、`logs/`                  | 舊版本的舊版目錄。不再寫入。掃描會移除其內容，然後移除空目錄。                                                                                    |
+| `~/.claude/` 下的路徑                                                                                                              | 內容                                                                                                                                                                            |
+| ------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `projects/<project>/<session>.jsonl`                                                                                           | 完整對話文字記錄：每條訊息、工具呼叫和工具結果                                                                                                                                                       |
+| `projects/<project>/<session>.orphaned-<timestamp>-<suffix>.jsonl`、`projects/<project>/<session>.jsonl.superseded-<timestamp>` | Claude Code 為工作階段設置的先前文字記錄，而不是覆蓋或刪除它。它不會出現在工作階段選擇器中                                                                                                                           |
+| `projects/<project>/<session>/subagents/`                                                                                      | [Subagent](/docs/zh-TW/sub-agents) 對話文字記錄，當父工作階段文字記錄過期時會被移除                                                                                                                        |
+| `projects/<project>/<session>/tool-results/`                                                                                   | 溢出到單獨檔案的大型工具輸出                                                                                                                                                                |
+| `file-history/<session>/`                                                                                                      | Claude 更改的檔案的編輯前快照，用於 [checkpoint 復原](/docs/zh-TW/checkpointing)。保存 100 個最近 checkpoint 的快照；沒有保留 checkpoint 參考的快照檔案會被刪除，除了每個檔案的第一個快照                                                |
+| `plans/`                                                                                                                       | 在 [plan mode](/docs/zh-TW/permission-modes#analyze-before-you-edit-with-plan-mode) 期間寫入的 Plan 檔案                                                                                   |
+| `debug/`                                                                                                                       | 每個工作階段的偵錯日誌，在偵錯日誌開啟時寫入，例如當您使用 [`--debug`](/docs/zh-TW/cli-reference#cli-flags) 啟動或執行 `/debug` 時                                                                                    |
+| `paste-cache/`                                                                                                                 | 大型貼上內容的內容                                                                                                                                                                     |
+| `image-cache/<session>/`                                                                                                       | Claude Code v2.1.274 及更早版本保存的附加影片。更新版本將貼上和附加的影片保存在 `~/.claude` 外，在 [`CLAUDE_CODE_TMPDIR`](/docs/zh-TW/env-vars) 控制的暫存目錄下每個工作階段的 `images/` 目錄中。掃描會移除其他工作階段在此處留下的目錄，無論其年齡如何。         |
+| `uploads/<session>/`                                                                                                           | 您從網路或行動應用程式附加的檔案，以及從行動應用程式附加的照片，當訊息傳送到 [Remote Control](/docs/zh-TW/remote-control) 工作階段時。附加到 [cloud session](/docs/zh-TW/claude-code-on-the-web) 的內容會改為保存在該工作階段自己的雲端環境中，而不是在您的機器上。     |
+| `session-env/`                                                                                                                 | 每個工作階段的環境中繼資料                                                                                                                                                                 |
+| `tasks/`                                                                                                                       | 由任務工具寫入的任務清單，每個清單一個目錄                                                                                                                                                         |
+| `shell-snapshots/`                                                                                                             | 在啟動時捕獲的別名、函數和 shell 選項，由 [Bash tool](/docs/zh-TW/tools-reference#bash-tool-behavior) 應用於每個命令。在正常退出時移除。掃描會清除任何在當機後留下的內容。                                                            |
+| `backups/`                                                                                                                     | `~/.claude.json` 的早期版本，在 Claude Code 重寫檔案時複製。Claude Code 保留五個最新的版本，加上它無法解析的任何版本的副本。                                                                                           |
+| `feedback-bundles/`                                                                                                            | 由 `/feedback` 在第三方提供者上或當未設定 Anthropic 認證時寫入的編輯文字記錄存檔，用於發送到您的 Anthropic 帳戶團隊                                                                                                   |
+| `feedback/drafts/`                                                                                                             | 排隊的 [Claude 起草的回饋](/docs/zh-TW/tools-reference#sendfeedback-tool-behavior) 等待您在 `/feedback` 中審查。在 `cleanupPeriodDays` 或 30 天後掃描，以較短者為準。當佇列達到其 10 份草稿限制時，Claude Code 會刪除最舊的草稿以騰出空間。 |
+| `usage-data/`                                                                                                                  | 由 [`/insights`](/docs/zh-TW/costs#analyze-your-usage-patterns) 寫入的 `report.html` 和時間戳記報告副本，加上用於建立它們的快取每個工作階段分析資料                                                                   |
+| `skills/.trash/`、`plugins/.trash/`                                                                                             | claude.ai 同步移除的 [Skills](/docs/zh-TW/skills#how-synced-skills-behave) 和 [plugins](/docs/zh-TW/plugins/loading#synced-plugins)，例如在您在 claude.ai 上關閉一個或停止同步後。檔案保留在此處，以便您可以復原它們，直到掃描刪除它們    |
+| `todos/`、`statsig/`、`logs/`                                                                                                    | 來自舊版本的舊版目錄。不再寫入。掃描會移除其內容，然後移除空目錄。                                                                                                                                             |
+
+`sessions/` 中的工作階段檔案、自動記憶和 Claude Desktop 和 Cowork 文字記錄各自遵循自己的保留規則：
+
+* **`sessions/`**：為每個執行中的工作階段保存一個小檔案，用於偵測並行工作階段和當機。它不是基於年齡的掃描的一部分：Claude Code 在其工作階段退出時移除每個檔案，並在下次啟動時清除當機遺留物。
+* **自動記憶**：掃描不會刪除專案 [auto memory](/docs/zh-TW/memory#auto-memory) 目錄 `projects/<project>/memory/` 中的記憶檔案。Claude Code 只有在該目錄在整個保留期間都為空時才會移除它。在 v2.1.228 之前，掃描會將記憶目錄內的資料夾視為工作階段資料，並可能刪除其下的舊檔案。
+* **Claude Desktop 和 Cowork 文字記錄**：Claude Code 保留您在 Claude Desktop 或 Cowork 中啟動或最近繼續的工作階段的文字記錄，無論年齡如何。若要為這些文字記錄設定年齡限制，請設定 [`desktopSessionCleanupPeriodDays`](/docs/zh-TW/settings-reference#desktopsessioncleanupperioddays)。當 [managed settings](/docs/zh-TW/managed-settings) 設定 `cleanupPeriodDays` 時，Claude Code 會改為在該期間後刪除這些文字記錄。需要 Claude Code v2.1.248 或更新版本；較早版本在 `cleanupPeriodDays` 後刪除它們。
+
+Claude Code 在這些情況下會跳過基於年齡的掃描：
+
+* **Bare mode**：當您使用 [`--bare`](/docs/zh-TW/headless#start-faster-with-bare-mode) 執行 `claude -p` 時，Claude Code 不會在該工作階段中執行掃描。
+* **暫停掃描**：如果 Claude Code 無法安全地確定保留期間，它會暫停保留清理掃描；[`retention_sweep` 事件](/docs/zh-TW/monitoring-usage#retention-sweep-event) 列出每個暫停它的設定。當原因是無法讀取或解析的設定檔案，或 `cleanupPeriodDays` 或 `desktopSessionCleanupPeriodDays` 明確設定的設定錯誤時，Claude Code 也會在 `/status` 中顯示警告，直到您修復設定錯誤。當 [managed settings](/docs/zh-TW/server-managed-settings) 提供 `cleanupPeriodDays` 時，Claude Code 在任一情況下都會以受管值執行掃描。
 
 <h3 id="kept-until-you-delete-them">
   保留直到您刪除它們
 </h3>
 
-以下路徑不受自動清理覆蓋，並無限期保留。
+保留清理掃描不會移除以下路徑。Claude Code 會保留它們直到您刪除它們，除了兩個在您登出時刪除的快取。
 
-| `~/.claude/` 下的路徑      | 內容                                                                          |
-| ---------------------- | --------------------------------------------------------------------------- |
-| `history.jsonl`        | 您輸入的每個提示，帶有時間戳記和專案路徑。用於向上箭頭回憶。                                              |
-| `stats-cache.json`     | 由 `/usage` 顯示的彙總權杖和成本計數                                                     |
-| `remote-settings.json` | 您組織的[伺服器管理設定](/docs/zh-TW/server-managed-settings)的快取副本。僅在您的組織已設定時出現。在每次啟動時重新整理。 |
+| `~/.claude/` 下的路徑      | 內容                                                                                                                                                                                                                                  |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `history.jsonl`        | 您輸入的每個提示，帶有時間戳記和專案路徑。用於向上箭頭回憶、`Ctrl+R` 歷史搜尋和 `!` shell 命令完成。                                                                                                                                                                        |
+| `stats-cache.json`     | 由 `/usage` 顯示的彙總令牌和成本計數                                                                                                                                                                                                             |
+| `remote-settings.json` | [server-managed settings](/docs/zh-TW/server-managed-settings) 的快取副本，適用於您的組織，或當您的組織未設定任何內容時為 `{}`。僅在工作階段 [fetches them](/docs/zh-TW/server-managed-settings#platform-availability) 時出現。Claude Code 在啟動時和工作階段期間每小時檢查更新。當您登出時，Claude Code 會刪除它。 |
+| `cache/changelog.md`   | Claude Code 變更日誌的快取副本，由 `/release-notes` 顯示。在背景中重新整理。                                                                                                                                                                               |
+| `policy-limits.json`   | 組織的快取功能原則設定。僅對某些帳戶類型出現。自動重新整理。`policy-limits.json.stamp.json` 側車記錄快取所屬的帳戶或 API 金鑰。當您登出時，Claude Code 會刪除兩個檔案。                                                                                                                        |
 
-其他小型快取和鎖定檔案會根據您使用的功能而出現，可安全刪除。
+<span id="state-files-to-keep" />
+
+其他檔案會根據您使用的功能而出現。快取和鎖定檔案可以安全刪除。保留這些狀態檔案：
+
+* `.credentials.json`：您的 [login credentials](/docs/zh-TW/authentication#credential-management)
+* `agent-memory/`：[subagent memory](/docs/zh-TW/sub-agents#enable-persistent-memory)
+* `jobs/` 和 `daemon/`：[background session](/docs/zh-TW/agent-view#where-state-is-stored) 狀態
 
 <h3 id="plaintext-storage">
   純文字儲存
 </h3>
 
-文字記錄和歷史記錄在靜止時未加密。作業系統檔案權限是唯一的保護。如果工具讀取 `.env` 檔案或命令列印認證，該值會寫入 `projects/<project>/<session>.jsonl`。若要減少暴露：
+文字記錄和歷史在靜止時未加密。OS 檔案權限是唯一的保護。如果工具讀取 `.env` 檔案或命令列印認證，該值會寫入 `projects/<project>/<session>.jsonl`。若要減少暴露：
 
-* 降低 `cleanupPeriodDays` 以縮短文字記錄的保留時間
-* 設定 [`CLAUDE_CODE_SKIP_PROMPT_HISTORY`](/docs/zh-TW/env-vars) 環境變數以跳過在任何模式中寫入文字記錄和提示歷史記錄。在非互動模式中，您可以改為在 `-p` 旁邊傳遞 `--no-session-persistence`，或在 Agent SDK 中設定 `persistSession: false`。
-* 使用[權限規則](/docs/zh-TW/permissions)拒絕讀取認證檔案
+* 降低 `cleanupPeriodDays` 以縮短 Claude Code 保留文字記錄的時間
+* 設定 [`desktopSessionCleanupPeriodDays`](/docs/zh-TW/settings-reference#desktopsessioncleanupperioddays) 以給予 Claude Desktop 和 Cowork 文字記錄年齡限制
+* 設定 [`CLAUDE_CODE_SKIP_PROMPT_HISTORY`](/docs/zh-TW/env-vars) 環境變數以在任何模式下跳過寫入文字記錄和提示歷史。在非互動模式中，您可以改為在 `-p` 旁邊傳遞 `--no-session-persistence`，或在 TypeScript Agent SDK 中設定 `persistSession: false`；Python SDK 沒有等效選項。
+* 使用 [permission rules](/docs/zh-TW/permissions) 拒絕讀取認證檔案
 
 <h3 id="clear-local-data">
   清除本機資料
 </h3>
 
-執行 `claude project purge` 以刪除 Claude Code 為一個專案保存的狀態。該命令需要 Claude Code v2.1.124 或更新版本。它會刪除：
+執行 `claude project purge` 以刪除 Claude Code 為一個專案保存的狀態。它會刪除：
 
 * `projects/` 下的文字記錄和自動記憶
 * 每個工作階段的 `tasks/`、`debug/` 和 `file-history/` 項目
 * `history.jsonl` 中的匹配提示行
 * 專案在 `~/.claude.json` 中的項目
 
-該命令會列印完整的刪除計畫，並在移除任何內容之前要求確認。
+您在專案工作階段中貼上或附加的影片儲存在 Claude Code 的暫存目錄下，而不是 `~/.claude`，因此清除不會移除它們。[保留掃描](#cleaned-up-automatically) 會在它們的年齡超過 `cleanupPeriodDays` 時刪除它們。
+
+該命令會列印完整的刪除計畫並要求確認，然後才會移除任何內容。
+
+下面的範例使用 `~/work/my-repo` 作為佔位符。將其替換為您的專案路徑。如果沒有狀態符合該路徑，該命令會列印錯誤並以狀態 1 退出。
 
 預覽計畫而不刪除任何內容：
 
@@ -1591,13 +1638,32 @@ Claude Code 從您的專案目錄和主目錄中的 `~/.claude` 讀取指令、�
 claude project purge ~/work/my-repo --dry-run
 ```
 
-透過單一確認提示刪除：
+該計畫列出每個匹配項目及其包含的原因：
+
+```text theme={null}
+Purge plan for /home/user/work/my-repo:
+
+  dir:    /home/user/.claude/projects/-home-user-work-my-repo
+           project transcripts (.jsonl) and memory/
+  config: projects["/home/user/work/my-repo"]
+           project entry in ~/.claude.json (trust, history, MCP servers)
+  filter: /home/user/.claude/history.jsonl
+           12 prompt(s) typed in this project
+
+shell-snapshots/ are not project-scoped and will not be touched
+backups/ may still contain this project entry in old .claude.json snapshots (/home/user/.claude/backups); at most 5 are kept and they rotate out automatically
+Dry run: 3 item(s) would be deleted.
+```
+
+使用單一確認提示刪除：
 
 ```bash theme={null}
 claude project purge ~/work/my-repo
 ```
 
-省略路徑以從互動式清單中選擇專案。
+該命令會列印相同的計畫，然後詢問 `Delete 3 item(s) for /home/user/work/my-repo? This cannot be undone. [y/N]` 並且只有在您回答 `y` 時才會刪除。
+
+省略路徑以從互動清單中選擇專案。
 
 跳過確認提示以在指令碼中使用：
 
@@ -1605,21 +1671,30 @@ claude project purge ~/work/my-repo
 claude project purge ~/work/my-repo --yes
 ```
 
-傳遞 `--all` 而不是路徑以一次清除所有專案的狀態，這會直接刪除 `history.jsonl` 而不是篩選它。傳遞 `-i` 以逐項逐步執行刪除計畫。
+傳遞 `--all` 而不是路徑以一次清除每個專案的狀態，這會直接刪除 `history.jsonl` 而不是篩選它。傳遞 `-i` 以逐項逐步執行刪除計畫。
 
-該命令會單獨保留 `shell-snapshots/` 和 `backups/`，因為這些不是專案範圍的，並在計畫輸出中警告它們。如果沒有狀態與給定路徑相符，它會以狀態 1 退出。
+該命令會單獨保留 `shell-snapshots/` 和 `backups/`，因為這些不是專案範圍的，並在計畫輸出中警告它們。
 
-您也可以手動刪除上述任何應用程式資料路徑。新工作階段不受影響。下表顯示您對過去工作階段失去的內容。
+您也可以手動刪除上述任何應用程式資料路徑，除了 [state files to keep](#state-files-to-keep)。新工作階段不受影響。下表顯示您對過去工作階段失去的內容。
 
-| 刪除                                                                                                                                                                                    | 您失去                |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
-| `~/.claude/projects/`                                                                                                                                                                 | 過去工作階段的繼續、繼續和倒帶    |
-| `~/.claude/history.jsonl`                                                                                                                                                             | 向上箭頭提示回憶           |
-| `~/.claude/file-history/`                                                                                                                                                             | 過去工作階段的檢查點還原       |
-| `~/.claude/stats-cache.json`                                                                                                                                                          | 由 `/usage` 顯示的歷史總計 |
-| `~/.claude/remote-settings.json`                                                                                                                                                      | 無。在下次啟動時重新擷取。      |
-| `~/.claude/debug/`、`~/.claude/plans/`、`~/.claude/paste-cache/`、`~/.claude/image-cache/`、`~/.claude/session-env/`、`~/.claude/tasks/`、`~/.claude/shell-snapshots/`、`~/.claude/backups/` | 沒有面向使用者的內容         |
-| `~/.claude/todos/`、`~/.claude/statsig/`、`~/.claude/logs/`                                                                                                                             | 無。舊版目錄不由目前版本寫入。    |
+| 刪除                                                                                                               | 您失去                                                                                                                                      |
+| ---------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `~/.claude/projects/`                                                                                            | 過去工作階段的繼續、繼續和倒帶，以及每個專案的自動記憶                                                                                                              |
+| `~/.claude/history.jsonl`                                                                                        | 向上箭頭提示回憶、`Ctrl+R` 歷史搜尋和 `!` shell 命令完成                                                                                                   |
+| `~/.claude/paste-cache/`                                                                                         | 回憶提示中的貼上文字；請參閱 [paste large content](/docs/zh-TW/terminal-config#paste-large-content)                                                         |
+| `~/.claude/uploads/`                                                                                             | 過去 [Remote Control](/docs/zh-TW/remote-control) 工作階段按路徑參考的附件                                                                                  |
+| `~/.claude/file-history/`                                                                                        | 過去工作階段的 checkpoint 復原                                                                                                                    |
+| `~/.claude/stats-cache.json`                                                                                     | `/usage` 顯示的歷史總計                                                                                                                         |
+| `~/.claude/usage-data/`                                                                                          | 過去的 [`/insights`](/docs/zh-TW/costs#analyze-your-usage-patterns) 報告和用於建立它們的快取分析資料                                                             |
+| `~/.claude/feedback-bundles/`                                                                                    | 您尚未發送到 Anthropic 帳戶團隊的回饋和錯誤報告存檔                                                                                                          |
+| `~/.claude/feedback/drafts/`                                                                                     | 您尚未發送的 [Claude 起草的回饋](/docs/zh-TW/tools-reference#sendfeedback-tool-behavior)                                                                 |
+| `~/.claude/remote-settings.json`                                                                                 | 無。在下次啟動時重新擷取。                                                                                                                            |
+| `~/.claude/cache/changelog.md`                                                                                   | 無。在背景中重新整理。                                                                                                                              |
+| `~/.claude/policy-limits.json`                                                                                   | 無。自動重新整理。                                                                                                                                |
+| `~/.claude/tasks/`                                                                                               | 繼續的工作階段會拾取的任務清單                                                                                                                          |
+| `~/.claude/skills/.trash/`、`~/.claude/plugins/.trash/`                                                           | 復原 Claude Code 移除的 [synced skills](/docs/zh-TW/skills#how-synced-skills-behave) 和 [synced plugins](/docs/zh-TW/plugins/loading#synced-plugins) 的機會 |
+| `~/.claude/debug/`、`~/.claude/plans/`、`~/.claude/session-env/`、`~/.claude/shell-snapshots/`、`~/.claude/backups/` | 無使用者面向的內容                                                                                                                                |
+| `~/.claude/todos/`、`~/.claude/statsig/`、`~/.claude/logs/`、`~/.claude/image-cache/`                               | 無。舊版本的舊版目錄，不由目前版本寫入。                                                                                                                     |
 
 不要刪除 `~/.claude.json`、`~/.claude/settings.json` 或 `~/.claude/plugins/`：這些保存您的驗證、偏好設定和已安裝的 plugins。
 

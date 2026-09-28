@@ -17,7 +17,7 @@ Assicurati di avere:
 * Un terminale o un prompt dei comandi aperto
   * Se non hai mai utilizzato il terminale prima, consulta la [guida del terminale](/docs/it/terminal-guide)
 * Un progetto di codice con cui lavorare
-* Un [abbonamento Claude](https://claude.com/pricing?utm_source=claude_code\&utm_medium=docs\&utm_content=quickstart_prereq) (Pro, Max, Team o Enterprise), un account [Claude Console](https://console.anthropic.com/) o accesso tramite un [provider cloud supportato](/docs/it/third-party-integrations)
+* Un [abbonamento Claude](https://claude.com/pricing?utm_source=claude_code\&utm_medium=docs\&utm_content=quickstart_prereq) (Pro, Max, Team o Enterprise), un account [Claude Console](https://platform.claude.com/) o accesso tramite un [provider cloud supportato](/docs/it/third-party-integrations)
 
 <Note>
   Questa guida copre il CLI del terminale. Claude Code è disponibile anche sul [web](https://claude.ai/code), come [app desktop](/docs/it/desktop), in [VS Code](/docs/it/vs-code) e [IDE JetBrains](/docs/it/jetbrains), in [Slack](/docs/it/slack) e in CI/CD con [GitHub Actions](/docs/it/github-actions) e [GitLab](/docs/it/gitlab-ci-cd). Vedi [tutte le interfacce](/docs/it/overview#use-claude-code-everywhere).
@@ -27,10 +27,10 @@ Assicurati di avere:
   Passaggio 1: Installa Claude Code
 </h2>
 
-To install Claude Code, use one of the following methods:
+Per installare Claude Code, utilizza uno dei seguenti metodi:
 
 <Tabs>
-  <Tab title="Native Install (Recommended)">
+  <Tab title="Installazione nativa (consigliata)">
     **macOS, Linux, WSL:**
 
     ```bash theme={null}
@@ -49,14 +49,14 @@ To install Claude Code, use one of the following methods:
     curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del install.cmd
     ```
 
-    If you see `The token '&&' is not a valid statement separator`, you're in PowerShell, not CMD. If you see `'irm' is not recognized as an internal or external command`, you're in CMD, not PowerShell. Your prompt shows `PS C:\` when you're in PowerShell and `C:\` without the `PS` when you're in CMD.
+    Se vedi `The token '&&' is not a valid statement separator`, sei in PowerShell, non in CMD. Se vedi `'irm' is not recognized as an internal or external command`, sei in CMD, non in PowerShell. Il tuo prompt mostra `PS C:\` quando sei in PowerShell e `C:\` senza il `PS` quando sei in CMD.
 
-    If the install command fails with `syntax error near unexpected token '<'`, a `403`, or another curl error, see [Troubleshoot installation](/docs/en/troubleshoot-install#find-your-error) to match the error to a fix and for alternative install methods.
+    Se il comando di installazione non riesce con `syntax error near unexpected token '<'`, un `403`, o un altro errore curl, consulta [Troubleshoot installation](/docs/it/troubleshoot-install#find-your-error) per abbinare l'errore a una soluzione e per metodi di installazione alternativi.
 
-    [Git for Windows](https://git-scm.com/downloads/win) is recommended on native Windows so Claude Code can use the Bash tool. If Git for Windows is not installed, Claude Code uses PowerShell as the shell tool instead. WSL setups do not need Git for Windows.
+    [Git for Windows](https://git-scm.com/downloads/win) è consigliato su Windows nativo in modo che Claude Code possa utilizzare lo strumento Bash. Se Git for Windows non è installato, Claude Code utilizza PowerShell come strumento shell. Le configurazioni WSL non necessitano di Git for Windows.
 
     <Info>
-      Native installations automatically update in the background to keep you on the latest version.
+      Le installazioni native si aggiornano automaticamente in background per mantenerti sulla versione più recente.
     </Info>
   </Tab>
 
@@ -65,10 +65,10 @@ To install Claude Code, use one of the following methods:
     brew install --cask claude-code
     ```
 
-    Homebrew offers two casks. `claude-code` tracks the stable release channel, which is typically about a week behind and skips releases with major regressions. `claude-code@latest` tracks the latest channel and receives new versions as soon as they ship.
+    Homebrew offre due cask. `claude-code` traccia il canale di rilascio stabile, che in genere è circa una settimana indietro e salta i rilasci con regressioni importanti. `claude-code@latest` traccia il canale più recente e riceve nuove versioni non appena vengono rilasciate.
 
     <Info>
-      Homebrew installations do not auto-update. Run `brew upgrade claude-code` or `brew upgrade claude-code@latest`, depending on which cask you installed, to get the latest features and security fixes.
+      Le installazioni Homebrew non si aggiornano automaticamente. Esegui `brew upgrade claude-code` o `brew upgrade claude-code@latest`, a seconda di quale cask hai installato, per ottenere le funzionalità più recenti e le correzioni di sicurezza.
     </Info>
   </Tab>
 
@@ -78,12 +78,20 @@ To install Claude Code, use one of the following methods:
     ```
 
     <Info>
-      WinGet installations do not auto-update. Run `winget upgrade Anthropic.ClaudeCode` periodically to get the latest features and security fixes.
+      Le installazioni WinGet non si aggiornano automaticamente. Esegui `winget upgrade Anthropic.ClaudeCode` periodicamente per ottenere le funzionalità più recenti e le correzioni di sicurezza.
     </Info>
   </Tab>
 </Tabs>
 
-You can also install with [apt, dnf, or apk](/docs/en/setup#install-with-linux-package-managers) on Debian, Fedora, RHEL, and Alpine.
+Puoi anche installare con [apt, dnf, o apk](/docs/it/setup#install-with-linux-package-managers) su Debian, Fedora, RHEL e Alpine.
+
+Per confermare che l'installazione ha funzionato, esegui:
+
+```bash theme={null}
+claude --version
+```
+
+Il comando stampa un numero di versione seguito da `(Claude Code)`.
 
 <h2 id="step-2-log-in-to-your-account">
   Passaggio 2: Accedi al tuo account
@@ -95,20 +103,20 @@ Claude Code richiede un account per essere utilizzato. Avvia una sessione intera
 claude
 ```
 
-Per gli account Claude subscription o Console, segui i prompt per completare l'autenticazione nel tuo browser. Per cambiare account in seguito o effettuare nuovamente l'autenticazione, digita `/login` all'interno della sessione in esecuzione:
+Per gli account Claude subscription o Console, segui i prompt per completare l'autenticazione nel tuo browser. Se hai impostato la variabile di ambiente `ANTHROPIC_API_KEY`, Claude Code salta il prompt di accesso e ti chiede invece di approvare la chiave. Per cambiare account in seguito o effettuare nuovamente l'autenticazione, digita `/login` all'interno della sessione in esecuzione:
 
-```text theme={null}
+```text wrap theme={null}
 /login
 ```
 
 Puoi accedere utilizzando uno di questi tipi di account:
 
 * [Claude Pro, Max, Team o Enterprise](https://claude.com/pricing?utm_source=claude_code\&utm_medium=docs\&utm_content=quickstart_login) (consigliato)
-* [Claude Console](https://console.anthropic.com/) (accesso API con crediti prepagati). Al primo accesso, uno spazio di lavoro "Claude Code" viene creato automaticamente nella Console per il tracciamento centralizzato dei costi.
+* [Claude Console](https://platform.claude.com/) (accesso API con crediti prepagati). Al primo accesso, uno spazio di lavoro "Claude Code" viene creato automaticamente nella Console per il tracciamento centralizzato dei costi.
 * [Amazon Bedrock, Google Cloud's Agent Platform o Microsoft Foundry](/docs/it/third-party-integrations) (provider cloud aziendali)
 * Un [gateway di app Claude](/docs/it/claude-apps-gateway) auto-ospitato, se la tua organizzazione ne esegue uno: il tuo amministratore pre-configura l'URL del gateway, e `/login` si apre direttamente sulla schermata **Cloud gateway** per consentire l'accesso con SSO aziendale
 
-Una volta effettuato l'accesso, le tue credenziali vengono archiviate e non dovrai accedere di nuovo.
+Una volta effettuato l'accesso, le tue credenziali vengono archiviate e non dovrai accedere di nuovo. Scopri di più in [Gestione delle credenziali](/docs/it/authentication#credential-management).
 
 <h2 id="step-3-start-your-first-session">
   Passaggio 3: Avvia la tua prima sessione
@@ -121,11 +129,9 @@ cd /path/to/your/project
 claude
 ```
 
-Vedrai il prompt di Claude Code con la versione, il modello attuale e la directory di lavoro mostrati sopra. Digita `/help` per i comandi disponibili o `/resume` per continuare una conversazione precedente.
+Sostituisci `/path/to/your/project` con il percorso del progetto su cui desideri lavorare.
 
-<Tip>
-  Dopo aver effettuato l'accesso (Passaggio 2), le tue credenziali vengono archiviate sul tuo sistema. Scopri di più in [Gestione delle credenziali](/docs/it/authentication#credential-management).
-</Tip>
+Vedrai il prompt di Claude Code con la versione, il modello attuale e la directory di lavoro mostrati sopra. Digita `/help` per i comandi disponibili o `/resume` per continuare una conversazione precedente.
 
 <h2 id="step-4-ask-your-first-question">
   Passaggio 4: Fai la tua prima domanda
@@ -133,35 +139,35 @@ Vedrai il prompt di Claude Code con la versione, il modello attuale e la directo
 
 Iniziamo con la comprensione della tua base di codice. Prova uno di questi comandi:
 
-```text theme={null}
+```text wrap theme={null}
 cosa fa questo progetto?
 ```
 
 Claude analizzerà i tuoi file e fornirà un riepilogo. Puoi anche fare domande più specifiche:
 
-```text theme={null}
+```text wrap theme={null}
 quali tecnologie utilizza questo progetto?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 dov'è il punto di ingresso principale?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 spiega la struttura delle cartelle
 ```
 
 Puoi anche chiedere a Claude informazioni sulle sue stesse capacità:
 
-```text theme={null}
+```text wrap theme={null}
 cosa può fare Claude Code?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 come creo skill personalizzate in Claude Code?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 Claude Code può funzionare con Docker?
 ```
 
@@ -175,19 +181,16 @@ Claude Code può funzionare con Docker?
 
 Ora facciamo in modo che Claude Code faccia un po' di codifica vera. Prova un'attività semplice:
 
-```text theme={null}
+```text wrap theme={null}
 aggiungi una funzione hello world al file principale
 ```
 
-Claude Code farà:
+Claude Code trova il file appropriato e ti mostra la modifica. Se chiede prima di apportare la modifica, seleziona **Sì** per approvare.
 
-1. Trovare il file appropriato
-2. Mostrarti le modifiche proposte
-3. Chiedere la tua approvazione
-4. Effettuare la modifica
+La modalità Auto è la [modalità di autorizzazione iniziale integrata](/docs/it/permission-modes#eliminate-prompts-with-auto-mode) per le sessioni di terminale interattive sui piani Pro, Max e Team: un classificatore esamina le azioni invece di voi, e Claude modifica la maggior parte dei file ed esegue la maggior parte dei comandi senza chiedere. Su altri piani, la modalità Manual è la modalità di autorizzazione iniziale integrata. Per la sessione che avviate subito dopo l'installazione, vedere [Prima sessione dopo un'installazione o un aggiornamento](/docs/it/env-vars#first-session-after-an-install-or-upgrade).
 
 <Note>
-  Claude Code chiede sempre il permesso prima di modificare i file. Puoi approvare i singoli cambiamenti o abilitare la modalità "Accetta tutto" per una sessione.
+  Le vostre impostazioni o la vostra organizzazione possono impostare una modalità di autorizzazione iniziale diversa. [Quale modalità di autorizzazione una sessione inizia](/docs/it/permission-modes#which-mode-a-session-starts-in) elenca cosa lo fa. Premete `Shift+Tab` in qualsiasi momento per cambiare la modalità di autorizzazione della sessione in cui vi trovate.
 </Note>
 
 <h2 id="step-6-use-git-with-claude-code">
@@ -196,25 +199,25 @@ Claude Code farà:
 
 Claude Code rende le operazioni Git conversazionali:
 
-```text theme={null}
+```text wrap theme={null}
 quali file ho modificato?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 esegui il commit delle mie modifiche con un messaggio descrittivo
 ```
 
 Puoi anche richiedere operazioni Git più complesse:
 
-```text theme={null}
+```text wrap theme={null}
 crea un nuovo branch chiamato feature/quickstart
 ```
 
-```text theme={null}
+```text wrap theme={null}
 mostrami gli ultimi 5 commit
 ```
 
-```text theme={null}
+```text wrap theme={null}
 aiutami a risolvere i conflitti di merge
 ```
 
@@ -226,13 +229,13 @@ Claude è abile nel debug e nell'implementazione di funzionalità.
 
 Descrivi quello che vuoi in linguaggio naturale:
 
-```text theme={null}
+```text wrap theme={null}
 aggiungi la convalida dell'input al modulo di registrazione dell'utente
 ```
 
 O correggi i problemi esistenti:
 
-```text theme={null}
+```text wrap theme={null}
 c'è un bug in cui gli utenti possono inviare moduli vuoti - correggilo
 ```
 
@@ -251,25 +254,25 @@ Ci sono diversi modi per lavorare con Claude:
 
 **Refactoring del codice**
 
-```text theme={null}
+```text wrap theme={null}
 refactorizza il modulo di autenticazione per utilizzare async/await invece di callback
 ```
 
 **Scrivi test**
 
-```text theme={null}
+```text wrap theme={null}
 scrivi unit test per le funzioni della calcolatrice
 ```
 
 **Aggiorna la documentazione**
 
-```text theme={null}
+```text wrap theme={null}
 aggiorna il README con le istruzioni di installazione
 ```
 
 **Revisione del codice**
 
-```text theme={null}
+```text wrap theme={null}
 rivedi le mie modifiche e suggerisci miglioramenti
 ```
 
@@ -288,18 +291,18 @@ Ecco i comandi più importanti per l'uso quotidiano. I comandi shell vengono ese
 | Comando             | Cosa fa                                                        | Esempio                             |
 | ------------------- | -------------------------------------------------------------- | ----------------------------------- |
 | `claude`            | Avvia la modalità interattiva                                  | `claude`                            |
-| `claude "task"`     | Esegui un'attività una tantum                                  | `claude "fix the build error"`      |
+| `claude "task"`     | Avvia la modalità interattiva con un prompt iniziale           | `claude "fix the build error"`      |
 | `claude -p "query"` | Esegui una query una tantum, quindi esci                       | `claude -p "explain this function"` |
 | `claude -c`         | Continua la conversazione più recente nella directory corrente | `claude -c`                         |
 | `claude -r`         | Riprendi una conversazione precedente                          | `claude -r`                         |
 
 **Comandi di sessione**
 
-| Comando          | Cosa fa                                    | Esempio  |
-| ---------------- | ------------------------------------------ | -------- |
-| `/clear`         | Cancella la cronologia della conversazione | `/clear` |
-| `/help`          | Mostra i comandi disponibili               | `/help`  |
-| `/exit` o Ctrl+D | Esci da Claude Code                        | `/exit`  |
+| Comando                    | Cosa fa                                    | Esempio  |
+| -------------------------- | ------------------------------------------ | -------- |
+| `/clear`                   | Cancella la cronologia della conversazione | `/clear` |
+| `/help`                    | Mostra i comandi disponibili               | `/help`  |
+| `/exit` o Ctrl+D due volte | Esci da Claude Code                        | `/exit`  |
 
 Vedi il [riferimento CLI](/docs/it/cli-reference) per l'elenco completo dei comandi shell e il [riferimento comandi](/docs/it/commands) per l'elenco completo dei comandi di sessione.
 
@@ -319,7 +322,7 @@ Per ulteriori informazioni, vedi [best practices](/docs/it/best-practices) e [fl
   <Accordion title="Usa istruzioni passo dopo passo">
     Suddividi i compiti complessi in passaggi:
 
-    ```text theme={null}
+    ```text wrap theme={null}
     1. crea una nuova tabella di database per i profili utente
     2. crea un endpoint API per ottenere e aggiornare i profili utente
     3. costruisci una pagina web che consenta agli utenti di visualizzare e modificare le loro informazioni
@@ -329,17 +332,17 @@ Per ulteriori informazioni, vedi [best practices](/docs/it/best-practices) e [fl
   <Accordion title="Lascia che Claude esplori prima">
     Prima di apportare modifiche, lascia che Claude comprenda il tuo codice:
 
-    ```text theme={null}
+    ```text wrap theme={null}
     analizza lo schema del database
     ```
 
-    ```text theme={null}
+    ```text wrap theme={null}
     costruisci una dashboard che mostra i prodotti che vengono restituiti più frequentemente dai nostri clienti nel Regno Unito
     ```
   </Accordion>
 
   <Accordion title="Risparmia tempo con le scorciatoie">
-    * Digita `/` per vedere tutti i comandi e le skills
+    * Digita `/` per vedere tutti i comandi e le skills disponibili
     * Usa Tab per il completamento dei comandi
     * Premi ↑ per la cronologia dei comandi
     * Premi `Shift+Tab` per ciclo tra le modalità di autorizzazione
@@ -376,4 +379,5 @@ Ora che hai imparato le nozioni di base, esplora funzionalità più avanzate:
 
 * **In Claude Code**: Digita `/help` o chiedi "come faccio a..."
 * **Documentazione**: Sei qui! Sfoglia altre guide
+* **Corsi**: Segui [Claude Code 101](https://academy.claude.com/courses/claude-code-101) e altri corsi gratuiti a tuo ritmo su [Claude Academy](https://academy.claude.com/)
 * **Community**: Unisciti al nostro [Discord](https://www.anthropic.com/discord) per suggerimenti e supporto

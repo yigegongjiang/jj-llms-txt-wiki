@@ -8,10 +8,6 @@
 
 Sprechen Sie Ihre Eingabeaufforderungen, anstatt sie in der Claude Code CLI einzutippen. Ihre Sprache wird live in die Eingabeaufforderung transkribiert, sodass Sie Sprache und Tippen in derselben Nachricht mischen können. Aktivieren Sie die Erfassung mit `/voice`, halten Sie dann entweder eine Taste gedrückt, während Sie sprechen, oder tippen Sie einmal zum Starten und erneut zum Senden.
 
-<Note>
-  Tap-Modus erfordert Claude Code v2.1.116 oder später. Überprüfen Sie Ihre Version mit `claude --version`.
-</Note>
-
 Die Erfassung funktioniert auch in der [Agent-Ansicht](/docs/de/agent-view#peek-and-reply). Halten Sie Ihre Push-to-Talk-Taste gedrückt oder tippen Sie darauf, während die Dispatch-Eingabe oder eine Peek-Panel-Antwort fokussiert ist, um zu einer Hintergrund-Sitzung zu diktieren.
 
 <h2 id="requirements">
@@ -21,8 +17,7 @@ Die Erfassung funktioniert auch in der [Agent-Ansicht](/docs/de/agent-view#peek-
 Die Spracherfassung streamt Ihre aufgenommene Audiodatei an Anthropic-Server zur Transkription. Audio wird nicht lokal verarbeitet. Dies erfordert alle folgenden Voraussetzungen:
 
 * **Ein Claude.ai-Konto**: Der Sprache-zu-Text-Dienst ist nur verfügbar, wenn Sie sich mit einem authentifizieren, und ist nicht verfügbar, wenn Claude Code für die Verwendung eines Anthropic API-Schlüssels direkt, Amazon Bedrock, Google Cloud's Agent Platform oder Microsoft Foundry konfiguriert ist.
-* **Eine Organisation ohne aktivierte HIPAA-Compliance**: `/voice` zeigt `Voice mode is disabled by your organization's policy` an, wenn diese Einschränkung gilt.
-* **Ein lokales Mikrofon**: Die Spracherfassung funktioniert nicht in Remote-Umgebungen wie [Claude Code im Web](/docs/de/claude-code-on-the-web) oder SSH-Sitzungen.
+* **Ein lokales Mikrofon**: Die Spracherfassung funktioniert nicht in [Cloud-Sitzungen](/docs/de/claude-code-on-the-web) oder SSH-Sitzungen.
 * **WSLg, wenn Sie Claude Code in WSL ausführen**: WSLg ist in WSL2 enthalten, wenn es unter Windows 10 oder 11 aus dem Microsoft Store installiert wird. Wenn WSLg nicht verfügbar ist, beispielsweise unter WSL1, führen Sie Claude Code stattdessen nativ unter Windows aus.
 
 Die Transkription verbraucht keine Claude-Nachrichten oder Token und wird nicht auf die in `/usage` angezeigten Limits angerechnet. Siehe [Datennutzung](/docs/de/data-usage) für Informationen darüber, wie Anthropic Ihre Daten verarbeitet.
@@ -72,19 +67,21 @@ Die Transkription ist in beiden Modi auf Codierungsvokabular abgestimmt. Häufig
 
 Der Halten-Modus ist Push-to-Talk: Die Aufnahme läuft, während Sie die Taste halten, und stoppt, wenn Sie sie loslassen. Dies ist der Standardmodus.
 
-Halten Sie `Space` gedrückt, um die Aufnahme zu starten. Claude Code erkennt eine gehaltene Taste, indem es schnelle Tastenwiederholungsereignisse von Ihrem Terminal überwacht, daher gibt es eine kurze Aufwärmphase, bevor die Aufnahme beginnt. Die Fußzeile zeigt `keep holding…` während der Aufwärmphase an und wechselt dann zu einer Live-Wellenform, sobald die Aufnahme aktiv ist.
+Halten Sie `Space` gedrückt, um die Aufnahme zu starten. Claude Code erkennt eine gehaltene Taste, indem es schnelle Tastenwiederholungsereignisse von Ihrem Terminal überwacht, daher gibt es eine kurze Aufwärmphase, bevor die Aufnahme beginnt. Die Fußzeile zeigt `keep holding…` während der Aufwärmphase an und wechselt dann zu `listening…`, sobald die Aufnahme aktiv ist. Während der Aufnahme wird der Eingabeaufforderungscursor zu einem Balken, der mit Ihrem Mikrofon-Pegel auf und ab geht, es sei denn, Sie haben [`prefersReducedMotion`](/docs/de/settings-reference#prefersreducedmotion) aktiviert.
 
 Die ersten paar Tastenwiederholungszeichen werden während der Aufwärmphase in die Eingabe eingegeben und werden automatisch entfernt, wenn die Aufnahme aktiviert wird. Ein einzelnes `Space`-Tippen gibt immer noch ein Leerzeichen ein, da die Halten-Erkennung nur bei schneller Wiederholung ausgelöst wird.
+
+Das Halten oder Tippen von `Space` startet die Diktation nur dort, wo der Tastendruck ansonsten in die Eingabeaufforderung eingegeben würde. Im [Transkript-Viewer](/docs/de/interactive-mode#transcript-viewer) blättert `Space` durch die Konversation, und im [vim-Modus](/docs/de/interactive-mode#vim-editor-mode) außerhalb von INSERT ist es ein Befehl. Eine [neu zugeordnete Modifikatorkombination](#rebind-the-dictation-key) wie `meta+k` gibt niemals Text ein, daher startet sie auch von diesen Stellen aus die Diktation.
 
 <Tip>
   Um die Aufwärmphase zu überspringen, wechseln Sie mit `/voice tap` zum [Tippen-Modus](#tap-to-record-and-send), oder [binden Sie eine Modifikatorkombination](#rebind-the-dictation-key) wie `meta+k` neu. Modifikatorkombinationen starten die Aufnahme beim ersten Tastendruck.
 </Tip>
 
-Ihre Sprache erscheint in der Eingabeaufforderung, während Sie sprechen, abgeblendet, bis das Transkript finalisiert ist. Lassen Sie `Space` los, um die Aufnahme zu stoppen und den Text zu finalisieren. Das Transkript wird an Ihrer Cursorposition eingefügt und der Cursor bleibt am Ende des eingefügten Textes, sodass Sie Tippen und Erfassung in beliebiger Reihenfolge mischen können. Halten Sie `Space` erneut gedrückt, um eine weitere Aufnahme anzufügen, oder verschieben Sie den Cursor zuerst, um Sprache an anderer Stelle in der Eingabeaufforderung einzufügen:
+Ihre Sprache erscheint in der Eingabeaufforderung, während Sie sprechen, abgeblendet, bis das Transkript finalisiert ist. Lassen Sie `Space` los, um die Aufnahme zu stoppen und den Text zu finalisieren. Das Transkript wird an Ihrer Cursorposition eingefügt und der Cursor bleibt am Ende des eingefügten Textes, sodass Sie Tippen und Diktation in beliebiger Reihenfolge mischen können. Halten Sie `Space` erneut gedrückt, um eine weitere Aufnahme anzufügen, oder verschieben Sie den Cursor zuerst, um Sprache an anderer Stelle in der Eingabeaufforderung einzufügen:
 
 ```
 > refactor the auth middleware to ▮
-  # hold Space, speak "use the new token validation helper"
+  # hold space, speak "use the new token validation helper"
 > refactor the auth middleware to use the new token validation helper▮
 ```
 
@@ -96,19 +93,29 @@ Standardmäßig fügt das Loslassen der Taste das Transkript ein und wartet dara
 
 Der Tippen-Modus schaltet die Aufnahme mit einem einzelnen Tastendruck um: Tippen Sie einmal zum Starten, sprechen Sie, dann tippen Sie erneut zum Senden der Eingabeaufforderung. Es gibt keine Aufwärmphase und Sie müssen die Taste nicht gedrückt halten.
 
-Aktivieren Sie den Tippen-Modus mit `/voice tap`. Wenn die Eingabeaufforderung leer ist, tippen Sie auf `Space`, um die Aufnahme zu starten. Die Fußzeile zeigt eine Live-Wellenform während der Aufnahme. Tippen Sie erneut auf `Space`, um zu stoppen.
+Aktivieren Sie den Tippen-Modus mit `/voice tap`. Wenn die Eingabeaufforderung leer ist, tippen Sie auf `Space`, um die Aufnahme zu starten. Die Fußzeile zeigt `● REC · tap to send` während der Aufnahme. Tippen Sie erneut auf `Space`, um zu stoppen.
 
 Claude Code fügt das Transkript ein und sendet die Eingabeaufforderung automatisch, wenn das Transkript mindestens drei Wörter lang ist. Kürzere Transkripte werden eingefügt, aber nicht gesendet, daher sendet ein versehentliches Tippen kein einzelnes Wort.
 
-Die Schwelle von drei Wörtern zählt Wörter für Sprachen, die ohne Leerzeichen geschrieben werden. Ab v2.1.195 zählen japanische, chinesische und thailändische Transkripte einzelne Wörter, sodass sie im Tippen-Modus und im Halte-Modus mit `autoSubmit` automatisch gesendet werden. Frühere Versionen zählten ein Transkript ohne Leerzeichen als ein Wort und sendeten es nie automatisch.
+Die Schwelle von drei Wörtern zählt Wörter für Sprachen, die ohne Leerzeichen geschrieben werden. Japanische, chinesische und thailändische Transkripte zählen einzelne Wörter, sodass sie im Tippen-Modus und im Halte-Modus mit `autoSubmit` automatisch gesendet werden.
 
 Das erste Tippen startet die Aufnahme nur, wenn die Eingabeaufforderung leer ist, sodass Sie immer noch normal Leerzeichen eingeben können, während Sie eine Nachricht verfassen. Das zweite Tippen stoppt die Aufnahme unabhängig vom Eingabeinhalt. Die Aufnahme stoppt auch automatisch nach 15 Sekunden Stille oder zwei Minuten insgesamt.
+
+<h2 id="cancel-a-recording">
+  Aufzeichnung abbrechen
+</h2>
+
+Drücken Sie `Esc` oder `Strg+C`, um eine Diktataufzeichnung abzubrechen, anstatt sie abzuschließen. Claude Code stoppt das Mikrofon, verwirft das Transkript und stellt die Eingabeaufforderung auf den Stand vor Beginn der Aufzeichnung zurück.
+
+Beide Tasten brechen auch ab, während das Transkript einer abgeschlossenen Aufzeichnung noch verarbeitet wird. Eine Eingabeaufforderung, die Sie während der Verarbeitung bearbeitet oder eingereicht haben, bleibt so, wie Sie sie hinterlassen haben.
+
+Keine der beiden Tasten bewirkt etwas anderes bei dem Tastendruck, der abbricht: `Esc` unterbricht nicht Claudes Antwort, und `Strg+C` löscht nicht die Eingabeaufforderung und zählt nicht als der erste der [zwei Tastendrücke, die Claude Code beenden](/docs/de/interactive-mode#general-controls).
 
 <h2 id="change-the-dictation-language">
   Ändern Sie die Erfassungssprache
 </h2>
 
-Die Spracherfassung verwendet die gleiche [`language`-Einstellung](/docs/de/settings), die die Antwortsprache von Claude steuert. Wenn diese Einstellung leer ist, wird die Erfassung standardmäßig auf Englisch eingestellt. In der VS Code-Erweiterung wird die Erfassung, wenn `language` leer ist, die `accessibility.voice.speechLanguage`-Einstellung von VS Code verwenden, bevor sie auf Englisch zurückfällt.
+Die Spracherfassung verwendet die gleiche [`language`-Einstellung](/docs/de/settings-reference#language), die die Antwortsprache von Claude steuert. Wenn diese Einstellung leer ist, wird die Erfassung standardmäßig auf Englisch eingestellt. In der VS Code-Erweiterung wird die Erfassung, wenn `language` leer ist, die `accessibility.voice.speechLanguage`-Einstellung von VS Code verwenden, bevor sie auf Englisch zurückfällt.
 
 <Accordion title="Unterstützte Erfassungssprachen">
   | Sprache        | Code |
@@ -178,16 +185,17 @@ Einige Tasten werden nicht an Terminalanwendungen übermittelt und können über
 Häufige Probleme, wenn die Spracherfassung nicht aktiviert wird oder nicht aufnimmt:
 
 * **`Voice mode requires a Claude.ai account`**: Sie sind mit einem API-Schlüssel oder einem Drittanbieter authentifiziert. Führen Sie `/login` aus, um sich mit einem Claude.ai-Konto anzumelden.
-* **`Voice mode is disabled by your organization's policy`**: Die Spracherfassungsfunktion ist durch die Compliance-Konfiguration Ihrer Organisation deaktiviert, wie in [Anforderungen](#requirements) beschrieben. Kontaktieren Sie Ihren Organisationsadministrator, um zu bestätigen, ob die Spracherfassung für Ihre Organisation verfügbar ist.
+* **`Voice mode is disabled by your organization's policy`**: Eine Administratorrichtlinie Ihrer Organisation deaktiviert die Spracherfassung. Kontaktieren Sie Ihren Organisationsadministrator, um zu bestätigen, ob die Spracherfassung für Ihre Organisation verfügbar ist.
 * **`Microphone access is denied`**: Gewähren Sie Ihrem Terminal in den Systemeinstellungen Mikrofonberechtigung. Unter macOS gehen Sie zu Systemeinstellungen → Datenschutz & Sicherheit → Mikrofon und aktivieren Sie Ihre Terminal-App, führen Sie dann `/voice` erneut aus. Unter Windows gehen Sie zu Einstellungen → Datenschutz & Sicherheit → Mikrofon und aktivieren Sie den Mikrofonzugriff für Desktop-Apps, führen Sie dann `/voice` erneut aus. Wenn Ihr Terminal nicht in den macOS-Einstellungen aufgeführt ist, siehe [Terminal nicht in macOS-Mikrofoneinstellungen aufgeführt](#terminal-not-listed-in-macos-microphone-settings).
-* **`No audio recording tool found` unter Linux**: Das native Audiomodul konnte nicht geladen werden und kein Fallback ist installiert. Installieren Sie SoX mit dem im Fehlermeldung angezeigten Befehl, z. B. `sudo apt-get install sox`.
+* **`Voice mode requires SoX for audio recording` unter Linux**: Das native Audiomodul konnte nicht geladen werden und kein Fallback ist installiert. Installieren Sie SoX mit dem im Fehlermeldung angezeigten Befehl, z. B. `sudo apt-get install sox`.
 * **`Voice mode requires a microphone, but SoX could not open an audio capture device`**: SoX ist installiert, aber der Host hat kein Audioaufnahmegerät, z. B. einen Server ohne Kopfhörer oder einen Container. Führen Sie Claude Code auf einem Computer mit einem Mikrofon aus. Ab v2.1.195 meldet Claude Code unter Linux diese Meldung in dieser Situation; frühere Versionen forderten Sie auf, SoX zu installieren, auch wenn es bereits installiert war.
 * **`Voice mode could not find a working audio recorder in WSL`**: WSLg leitet Audio über PulseAudio statt über ein ALSA-Gerät weiter, daher muss das PulseAudio-Backend von SoX explizit installiert werden. Führen Sie `sudo apt install sox libsox-fmt-pulse` aus. Die Installation von `sox` allein zieht das ALSA-Backend mit sich, das unter WSL nicht aufnehmen kann, da es kein `/dev/snd`-Gerät gibt.
-* **`Voice input is failing repeatedly and has been paused`**: Die Spracherfassung ist mehrmals hintereinander fehlgeschlagen und hat versucht, neue Sitzungen zu stoppen, bis eine erfolgreich ist. Ein Fehler zählt, ob das Mikrofon nicht startet oder der Rekorder startet und dann stoppt, ohne Audio zu produzieren. Dies bedeutet normalerweise, dass das Mikrofon oder der Audiostapel auf diesem Host keinen Audio erfassen kann, z. B. ein Server ohne Kopfhörer, eine Remote-Shell ohne Audio-Durchleitung oder eine verweigerte Mikrofonberechtigung. Bestätigen Sie ein funktionierendes Eingabegerät, beheben Sie die zugrunde liegende Ursache aus den obigen Einträgen und lösen Sie dann die Spracherfassung erneut aus. Vor v2.1.202 zählten nur Start-Fehler zur Pause.
+* **`Voice input is failing repeatedly and has been paused`**: Die Spracherfassung hat drei Aufnahmefehler innerhalb von 10 Sekunden erreicht. Claude Code pausiert die Erfassung, bis 10 Sekunden seit dem ersten dieser Fehler vergangen sind. Ein Fehler zählt, ob das Mikrofon nicht startet oder der Rekorder startet und dann stoppt, ohne Audio zu produzieren. Dies bedeutet normalerweise, dass das Mikrofon oder der Audiostapel auf diesem Host keinen Audio erfassen kann, z. B. ein Server ohne Kopfhörer, eine Remote-Shell ohne Audio-Durchleitung oder eine verweigerte Mikrofonberechtigung. Bestätigen Sie ein funktionierendes Eingabegerät, beheben Sie die zugrunde liegende Ursache aus den obigen Einträgen und lösen Sie dann die Spracherfassung erneut aus. Vor v2.1.202 zählten nur Start-Fehler zur Pause.
 * **Nichts passiert, wenn Sie `Space` im Halten-Modus halten**: Beobachten Sie die Eingabeaufforderung, während Sie halten. Wenn sich Leerzeichen weiter ansammeln, ist die Spracherfassung wahrscheinlich aus; führen Sie `/voice hold` aus, um sie zu aktivieren. Wenn nur ein oder zwei Leerzeichen erscheinen und dann nichts, ist die Spracherfassung an, aber die Halten-Erkennung wird nicht ausgelöst. Die Halten-Erkennung erfordert, dass Ihr Terminal Tastenwiederholungsereignisse sendet, daher kann es eine gehaltene Taste nicht erkennen, wenn die Tastenwiederholung auf Betriebssystemebene deaktiviert ist. Wechseln Sie mit `/voice tap` zum Tippen-Modus, um die Tastenwiederholungsanforderung zu vermeiden.
 * **Das Tippen auf `Space` gibt ein Leerzeichen ein, anstatt im Tippen-Modus aufzunehmen**: Das erste Tippen startet die Aufnahme nur, wenn die Eingabeaufforderung leer ist. Löschen Sie zuerst die Eingabe, oder überprüfen Sie, dass Sie im Tippen-Modus sind, indem Sie `/voice tap` ausführen.
 * **`No audio detected from microphone`**: Die Aufnahme wurde gestartet, aber es wurde Stille erfasst. Bestätigen Sie, dass das richtige Eingabegerät als Systemstandard eingestellt ist und dass sein Eingabepegel nicht stummgeschaltet oder nahe Null ist. Unter Windows öffnen Sie Einstellungen → System → Sound → Eingabe und wählen Sie Ihr Mikrofon aus. Unter macOS öffnen Sie Systemeinstellungen → Sound → Eingabe.
 * **`Voice connection failed`**: Ihre Aufnahme erreichte den Transkriptionsdienst nicht, da die Verbindung fehlgeschlagen ist. Überprüfen Sie Ihr Netzwerk und versuchen Sie es erneut. Eine Aufnahme, die keinen Audio erfasst, meldet stattdessen `No audio detected from microphone`. Vor v2.1.200 konnte ein stilles Mikrofon einen Verbindungsfehler melden, was auf ein Netzwerkproblem hindeutete, wenn das eigentliche Problem das Eingabegerät war.
+* **`Voice stream error: WebSocket upgrade rejected with HTTP <status>`**: Ein Server lehnte Ihre Verbindung mit dem angezeigten HTTP-Status ab, daher ist dies kein Netzwerkausfall. Ein Status im 400er-Bereich bedeutet normalerweise eine veraltete Anmeldung oder einen Proxy- oder Bot-Schutzdienst, der an Stelle des Transkriptionsdienstes antwortet. Führen Sie `/login` aus, um Ihre Anmeldung zu aktualisieren, und überprüfen Sie auf ein VPN oder einen Proxy auf Ihrem Netzwerkpfad, wenn der Status bestehen bleibt. Wenn Sie noch aufnehmen, wenn die Ablehnung ankommt, versucht Claude Code einen Status außerhalb des 400er-Bereichs einmal erneut, bevor diese Meldung angezeigt wird; es versucht einen Status im 400er-Bereich nicht erneut. In v2.1.229 bis v2.1.231 zeigten native Builds diese Meldung nicht an: Claude Code nahm weiter auf, die Halten-Modus-Fußzeile zeigte immer noch `listening…` an, und es meldete `Voice connection failed`, nachdem Sie die Aufnahme gestoppt hatten.
 * **`No speech detected`**: Audio erreichte den Transkriptionsdienst, aber es wurden keine Wörter erkannt. Sprechen Sie näher zum Mikrofon, reduzieren Sie Hintergrundgeräusche und bestätigen Sie, dass Ihre [Erfassungssprache](#change-the-dictation-language) der Sprache entspricht, die Sie sprechen.
 * **Transkription ist verzerrt oder in der falschen Sprache**: Die Erfassung wird standardmäßig auf Englisch eingestellt. Wenn Sie in einer anderen Sprache erfassen, legen Sie sie zuerst in `/config` fest. Siehe [Ändern Sie die Erfassungssprache](#change-the-dictation-language).
 
@@ -220,6 +228,6 @@ Wenn Ihre Terminal-App nicht unter Systemeinstellungen → Datenschutz & Sicherh
 </h2>
 
 * [Tastaturkürzel anpassen](/docs/de/keybindings): Binden Sie `voice:pushToTalk` und andere CLI-Tastaturaktionen neu
-* [Einstellungen konfigurieren](/docs/de/settings): Vollständige Referenz für `voice`, `language` und andere Einstellungsschlüssel
+* [Alle Einstellungen](/docs/de/settings-reference#voice): die Schlüssel `voice`, `language` und andere Einstellungen
 * [Interaktiver Modus](/docs/de/interactive-mode): Tastaturkürzel, Eingabemodi und Sitzungssteuerungen
 * [Befehle](/docs/de/commands): Referenz für `/voice`, `/config` und alle anderen Befehle

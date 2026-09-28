@@ -42,9 +42,12 @@ Channel 是一個 MCP 伺服器，可將事件推送到您執行中的 Claude Co
         /plugin install telegram@claude-plugins-official
         ```
 
-        如果 Claude Code 報告在任何市場中找不到該外掛程式，您的市場可能遺失或已過期。執行 `/plugin marketplace update claude-plugins-official` 以重新整理它，或如果您之前未新增過，執行 `/plugin marketplace add anthropics/claude-plugins-official`。然後重試安裝。
+        如果安裝失敗，請符合 Claude Code 報告的訊息：
 
-        安裝後，執行 `/reload-plugins` 以啟用外掛程式的設定命令。
+        * `Marketplace "claude-plugins-official" not found`：使用 `/plugin marketplace add anthropics/claude-plugins-official` 新增市場，然後重試安裝。
+        * 外掛程式[在市場中找不到](/docs/zh-TW/plugins/install#install-a-plugin)：檢查外掛程式名稱。
+
+        當安裝要求安裝範圍時，選擇使用者範圍選項，以便外掛程式在所有專案中可用。檢查安裝摘要：如果報告 `Run /reload-plugins to activate.`，請參閱[在不重新啟動的情況下套用外掛程式變更](/docs/zh-TW/plugins/cli-reference#reload-plugins)以使外掛程式的設定命令可用。
       </Step>
 
       <Step title="設定您的權杖">
@@ -117,9 +120,12 @@ Channel 是一個 MCP 伺服器，可將事件推送到您執行中的 Claude Co
         /plugin install discord@claude-plugins-official
         ```
 
-        如果 Claude Code 報告在任何市場中找不到該外掛程式，您的市場可能遺失或已過期。執行 `/plugin marketplace update claude-plugins-official` 以重新整理它，或如果您之前未新增過，執行 `/plugin marketplace add anthropics/claude-plugins-official`。然後重試安裝。
+        如果安裝失敗，請符合 Claude Code 報告的訊息：
 
-        安裝後，執行 `/reload-plugins` 以啟用外掛程式的設定命令。
+        * `Marketplace "claude-plugins-official" not found`：使用 `/plugin marketplace add anthropics/claude-plugins-official` 新增市場，然後重試安裝。
+        * 外掛程式[在市場中找不到](/docs/zh-TW/plugins/install#install-a-plugin)：檢查外掛程式名稱。
+
+        當安裝要求安裝範圍時，選擇使用者範圍選項，以便外掛程式在所有專案中可用。檢查安裝摘要：如果報告 `Run /reload-plugins to activate.`，請參閱[在不重新啟動的情況下套用外掛程式變更](/docs/zh-TW/plugins/cli-reference#reload-plugins)以使外掛程式的設定命令可用。
       </Step>
 
       <Step title="設定您的權杖">
@@ -179,7 +185,12 @@ Channel 是一個 MCP 伺服器，可將事件推送到您執行中的 Claude Co
         /plugin install imessage@claude-plugins-official
         ```
 
-        如果 Claude Code 報告在任何市場中找不到該外掛程式，您的市場可能遺失或已過期。執行 `/plugin marketplace update claude-plugins-official` 以重新整理它，或如果您之前未新增過，執行 `/plugin marketplace add anthropics/claude-plugins-official`。然後重試安裝。
+        如果安裝失敗，請符合 Claude Code 報告的訊息：
+
+        * `Marketplace "claude-plugins-official" not found`：使用 `/plugin marketplace add anthropics/claude-plugins-official` 新增市場，然後重試安裝。
+        * 外掛程式[在市場中找不到](/docs/zh-TW/plugins/install#install-a-plugin)：檢查外掛程式名稱。
+
+        當安裝要求安裝範圍時，選擇使用者範圍選項，以便外掛程式在所有專案中可用。如果安裝摘要報告 `Run /reload-plugins to activate.`，您可以在此跳過，因為下一步中的重新啟動會選取外掛程式。
       </Step>
 
       <Step title="在啟用 channels 的情況下重新啟動">
@@ -209,8 +220,6 @@ Channel 是一個 MCP 伺服器，可將事件推送到您執行中的 Claude Co
   </Tab>
 </Tabs>
 
-您也可以[建立您自己的 channel](/docs/zh-TW/channels-reference)，用於尚未有外掛程式的系統。
-
 <h2 id="quickstart">
   快速入門
 </h2>
@@ -233,7 +242,12 @@ Fakechat 是一個官方支援的演示 channel，在 localhost 上執行聊天 
     /plugin install fakechat@claude-plugins-official
     ```
 
-    如果 Claude Code 報告在任何市場中找不到該外掛程式，您的市場可能遺失或已過期。執行 `/plugin marketplace update claude-plugins-official` 以重新整理它，或如果您之前未新增過，執行 `/plugin marketplace add anthropics/claude-plugins-official`。然後重試安裝。
+    如果安裝失敗，請符合 Claude Code 報告的訊息：
+
+    * `Marketplace "claude-plugins-official" not found`：使用 `/plugin marketplace add anthropics/claude-plugins-official` 新增市場，然後重試安裝。
+    * 外掛程式[在市場中找不到](/docs/zh-TW/plugins/install#install-a-plugin)：檢查外掛程式名稱。
+
+    當安裝要求安裝範圍時，選擇使用者範圍選項，以便外掛程式在所有專案中可用。如果安裝摘要報告 `Run /reload-plugins to activate.`，您可以在此跳過，因為下一步中的重新啟動會選取外掛程式。
   </Step>
 
   <Step title="在啟用 channel 的情況下重新啟動">
@@ -243,7 +257,7 @@ Fakechat 是一個官方支援的演示 channel，在 localhost 上執行聊天 
     claude --channels plugin:fakechat@claude-plugins-official
     ```
 
-    fakechat 伺服器會自動啟動。
+    fakechat 伺服器會自動啟動。啟動畫面顯示 channels 通知，指出來自 `plugin:fakechat@claude-plugins-official` 的訊息直接注入此工作階段。如果外掛程式未安裝或不在核准的允許清單上，警告行會在該通知下方顯示問題名稱。
 
     <Tip>
       您可以將多個外掛程式傳遞到 `--channels`，以空格分隔。
@@ -254,14 +268,14 @@ Fakechat 是一個官方支援的演示 channel，在 localhost 上執行聊天 
     在 [http://localhost:8787](http://localhost:8787) 開啟 fakechat UI 並輸入訊息：
 
     ```text theme={null}
-    hey, what's in my working directory?
+    what's in my working directory?
     ```
 
-    訊息作為 `<channel source="fakechat">` 事件到達您的 Claude Code 工作階段。Claude 讀取它，完成工作，並呼叫 fakechat 的 `reply` 工具。答案會顯示在聊天 UI 中。
+    訊息到達您的 Claude Code 工作階段。終端將其顯示為入站 channel 行，例如 `← fakechat · web: what's in my working directory?`，而模型將其接收為 `<channel source="plugin:fakechat:fakechat">` 事件，使用外掛程式的範圍伺服器名稱。Claude 讀取它，完成工作，並呼叫 fakechat 的 `reply` 工具。如果 Claude Code 要求第一次回覆的權限，請批准它。答案會顯示在聊天 UI 中。
   </Step>
 </Steps>
 
-如果 Claude 在您不在終端時遇到權限提示，工作階段會暫停，直到您回應。宣告[權限中繼功能](/docs/zh-TW/channels-reference#relay-permission-prompts)的 channel 伺服器可以將這些提示轉發給您，以便您可以遠端批准或拒絕。對於無人值守使用，[`--dangerously-skip-permissions`](/docs/zh-TW/permission-modes#skip-all-checks-with-bypasspermissions-mode) 完全繞過提示，但僅在您信任的環境中使用。明確的詢問規則、connector 工具[您的組織設定為 `ask`](/docs/zh-TW/mcp#organization-controls-on-connector-tools) 和標記為 [`requiresUserInteraction`](/docs/zh-TW/mcp#require-approval-for-a-specific-tool) 的 MCP 工具仍會提示。
+如果 Claude 在您不在終端時遇到權限提示，工作階段會暫停，直到您回應。宣告[權限中繼功能](/docs/zh-TW/channels-reference#relay-permission-prompts)的 channel 伺服器可以將這些提示轉發給您，以便您可以遠端批准或拒絕。對於無人值守使用，[`--dangerously-skip-permissions`](/docs/zh-TW/permission-modes#skip-all-checks-with-bypasspermissions-mode) 會略過大多數提示，但僅在您信任的環境中使用。即使如此，[任何模式都不會自動批准的操作](/docs/zh-TW/permission-modes#actions-no-mode-auto-approves)仍然適用。
 
 當您以非互動模式使用 `-p` 執行 channels 時，需要終端輸入的工具（例如多選題和計畫模式批准）會被停用，因此工作階段永遠不會因等待輸入而停滯。
 
@@ -292,15 +306,15 @@ iMessage 的工作方式不同：向自己傳送訊息會自動繞過閘道，�
 
 管理員通過兩個[受管設定](/docs/zh-TW/settings)控制可用性，使用者無法覆蓋。預設值取決於您如何驗證：
 
-* **claude.ai Team 和 Enterprise**：channels 被阻止，直到管理員啟用它們。
+* **claude.ai Team 和 Enterprise**：channels 被阻止，直到擁有者[啟用它們](#enable-channels-for-your-organization)。
 * **Anthropic Console 與 API 金鑰驗證**：channels 預設被允許。只有在您的組織部署受管設定時才需要此設定。
 
 在所有情況下，在使用者使用 `--channels` 為工作階段選擇加入之前，沒有 channel 會執行。
 
-| 設定                      | 目的                                                                                                                                           | 未設定時                                                                                                   |
-| :---------------------- | :------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------- |
-| `channelsEnabled`       | 主開關。必須為 `true` 才能讓任何 channel 傳遞訊息。通過 [claude.ai 管理員主控台](https://claude.ai/admin-settings/claude-code)切換或直接在受管設定中設定。關閉時會阻止所有 channels，包括開發旗標。 | claude.ai Team 和 Enterprise：channels 被阻止。Console：channels 被允許，除非您的組織部署受管設定，在這種情況下 channels 被阻止，直到設定此金鑰 |
-| `allowedChannelPlugins` | 啟用 channels 後可以註冊哪些外掛程式。設定時替換 Anthropic 維護的清單。僅在 `channelsEnabled` 為 `true` 時適用。                                                             | 應用 Anthropic 預設清單                                                                                      |
+| 設定                      | 目的                                                                                                                        | 未設定時                                                                                                   |
+| :---------------------- | :------------------------------------------------------------------------------------------------------------------------ | :----------------------------------------------------------------------------------------------------- |
+| `channelsEnabled`       | 主開關。必須為 `true` 才能讓任何 channel 傳遞訊息。關閉時會阻止所有 channels，包括開發旗標。請參閱[為您的組織啟用 channels](#enable-channels-for-your-organization)。 | claude.ai Team 和 Enterprise：channels 被阻止。Console：channels 被允許，除非您的組織部署受管設定，在這種情況下 channels 被阻止，直到設定此金鑰 |
+| `allowedChannelPlugins` | 啟用 channels 後可以註冊哪些外掛程式。設定時替換 Anthropic 維護的清單。                                                                            | 應用 Anthropic 預設清單                                                                                      |
 
 沒有組織的 Pro 和 Max 使用者完全跳過這些檢查：channels 可用，使用者按工作階段選擇加入 `--channels`。
 
@@ -308,7 +322,7 @@ iMessage 的工作方式不同：向自己傳送訊息會自動繞過閘道，�
   為您的組織啟用 channels
 </h3>
 
-管理員可以從 [**claude.ai → 管理員設定 → Claude Code → Channels**](https://claude.ai/admin-settings/claude-code) 啟用 channels，或通過在受管設定中將 `channelsEnabled` 設定為 `true`。
+可以從 [**claude.ai → 管理員設定 → Claude Code → Channels**](https://claude.ai/admin-settings/claude-code) 為您的組織啟用 channels（需要擁有者角色），或通過在受管設定中將 `channelsEnabled` 設定為 `true`。
 
 啟用後，您組織中的使用者可以使用 `--channels` 將 channel 伺服器選擇加入個別工作階段。如果設定已停用或未設定，MCP 伺服器仍會連接，其工具可以工作，但 channel 訊息不會到達。啟動警告會告訴使用者讓管理員啟用該設定。
 
@@ -329,15 +343,17 @@ iMessage 的工作方式不同：向自己傳送訊息會自動繞過閘道，�
 }
 ```
 
-設定 `allowedChannelPlugins` 時，它完全替換 Anthropic 允許清單：只有列出的外掛程式可以註冊。保持未設定以回退到預設 Anthropic 允許清單。空陣列會阻止允許清單中的所有 channel 外掛程式，但 `--dangerously-load-development-channels` 仍可以為本地測試繞過它。若要完全阻止 channels，包括開發旗標，請改為保持 `channelsEnabled` 未設定。
+如果您設定空陣列，您會阻止允許清單中的所有 channel 外掛程式，但 `--dangerously-load-development-channels` 仍可以為本地測試繞過該阻止。若要完全阻止 channels，包括開發旗標，請改為保持 `channelsEnabled` 未設定。
 
-此設定需要 `channelsEnabled: true`。如果使用者傳遞一個不在您清單上的外掛程式到 `--channels`，Claude Code 會正常啟動，但 channel 不會註冊，啟動通知會解釋該外掛程式不在組織的已批准清單上。
+此設定需要 `channelsEnabled: true`。如果使用者傳遞一個不在您清單上的外掛程式到 `--channels`，Claude Code 會正常啟動，但 channel 不會註冊，啟動通知會解釋該外掛程式不在組織的已批准清單上。如果您將 `MCP_PROTOCOL_NEGOTIATION` 設定為 `auto` 在 v2 MCP 用戶端執行時，channel 也可能無法註冊，因為 Claude Code [不會註冊協商協議修訂版本 2026-07-28 的 channel 伺服器](/docs/zh-TW/mcp#push-messages-with-channels)。
 
 <h2 id="research-preview">
   研究預覽
 </h2>
 
 Channels 是研究預覽功能。可用性正在逐步推出，`--channels` 旗標語法和協議合約可能會根據回饋而改變。
+
+在預覽期間，`--channels` 和 `--dangerously-load-development-channels` 都不會出現在 `claude --help` 中。這些旗標即使未列出也能運作。
 
 在預覽期間，`--channels` 只接受來自 Anthropic 維護的允許清單的外掛程式，或來自您組織的允許清單（如果管理員已設定 [`allowedChannelPlugins`](#restrict-which-channel-plugins-can-run)）。[claude-plugins-official](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins) 中的 channel 外掛程式是預設已批准的集合。如果您傳遞不在有效允許清單上的東西，Claude Code 會正常啟動，但 channel 不會註冊，啟動通知會告訴您原因。
 
@@ -354,7 +370,7 @@ Claude Code 的多個功能連接到終端外的系統，每個都適合不同�
 | 功能                                                | 它的作用                                   | 適合                   |
 | ------------------------------------------------- | -------------------------------------- | -------------------- |
 | [網路上的 Claude Code](/docs/zh-TW/claude-code-on-the-web) | 在新鮮雲端沙箱中執行任務，從 GitHub 複製               | 委派您稍後檢查的自包含非同步工作     |
-| [Slack 中的 Claude](/docs/zh-TW/slack)                   | 從頻道或執行緒中的 `@Claude` 提及產生網路工作階段         | 直接從團隊對話內容啟動任務        |
+| [Slack 中的 Claude](/docs/zh-TW/slack)                   | 從頻道或執行緒中的 `@Claude` 提及產生雲端工作階段         | 直接從團隊對話內容啟動任務        |
 | 標準 [MCP 伺服器](/docs/zh-TW/mcp)                          | Claude 在任務期間查詢它；沒有任何東西被推送到工作階段         | 讓 Claude 按需存取讀取或查詢系統 |
 | [遠端控制](/docs/zh-TW/remote-control)                     | 您從 claude.ai 或 Claude 行動應用程式驅動您的本地工作階段 | 在遠離您的桌子時引導進行中的工作階段   |
 

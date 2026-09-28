@@ -82,7 +82,7 @@ Anda dapat mengonfigurasi server MCP dalam kode saat memanggil `query()`, atau d
   Dalam kode
 </h3>
 
-Teruskan server MCP langsung dalam opsi `mcpServers`:
+Teruskan server MCP secara langsung dalam opsi `mcpServers`. Contoh ini memulai server MCP filesystem lokal untuk `/Users/me/projects`. Ganti jalur tersebut dengan direktori di mesin Anda:
 
 <CodeGroup>
   ```typescript TypeScript theme={null}
@@ -139,7 +139,7 @@ Teruskan server MCP langsung dalam opsi `mcpServers`:
   Dari file konfigurasi
 </h3>
 
-Buat file `.mcp.json` di root proyek Anda. File ini diambil ketika sumber pengaturan `project` diaktifkan, yang merupakan default untuk opsi `query()`. Jika Anda menetapkan `settingSources` secara eksplisit, sertakan `"project"` agar file ini dimuat:
+Buat file `.mcp.json` di root proyek Anda. File ini diambil ketika sumber pengaturan `project` diaktifkan, yang merupakan default untuk opsi `query()`. Jika Anda menetapkan `settingSources` secara eksplisit, sertakan `"project"` agar file ini dimuat. Ganti `/Users/me/projects` dengan direktori di mesin Anda:
 
 ```json theme={null}
 {
@@ -151,6 +151,36 @@ Buat file `.mcp.json` di root proyek Anda. File ini diambil ketika sumber pengat
   }
 }
 ```
+
+<h2 id="connection-timing">
+  Waktu koneksi
+</h2>
+
+Claude Code mendaftarkan server yang Anda berikan dalam `options.mcpServers` saat startup dan mengirimkan [pesan init](#error-handling) setelah penundaan putaran pertama, jika ada, terselesaikan. Apakah setiap server `options.mcpServers` menunda putaran pertama, dan kapan server tersebut terhubung, tergantung pada jenisnya:
+
+| Jenis server                                                                                          | Menunda putaran pertama?                                | Batas waktu tunggu putaran pertama                                                                              |
+| :---------------------------------------------------------------------------------------------------- | :------------------------------------------------------ | :-------------------------------------------------------------------------------------------------------------- |
+| Server stdio, atau server HTTP/SSE tanpa daftar alat yang di-cache                                    | Ya, sampai terhubung                                    | [`MCP_TIMEOUT`](/docs/id/env-vars), 30 detik secara default; koneksi gagal pada batas waktu tersebut                 |
+| Server jarak jauh dengan daftar alat yang di-cache, disimpan oleh Claude Code dari koneksi sebelumnya | Tidak; alat yang di-cache tersedia dari putaran pertama | Tidak ada; terhubung pada panggilan alat pertamanya, dan koneksi tertunda tersebut memiliki batas waktu sendiri |
+| Server [SDK](#sdk-mcp-servers) dalam proses                                                           | Ya, sampai terhubung dan mencantumkan alatnya           | Tidak ada; permintaan koneksi dan pencantuman alat masing-masing memiliki batas waktu sendiri                   |
+
+Server yang dimuat dari [file pengaturan](#from-a-config-file) seperti `.mcp.json` atau dari plugin biasanya menunjukkan `pending` dalam pesan init. Ketika `options.mcpServers` menyimpan server stdio, HTTP, atau SSE, putaran pertama menunggu server yang tertunda ini juga, hingga `MCP_TIMEOUT`. Ketika `options.mcpServers` kosong atau hanya menyimpan server SDK, putaran pertama menunggu hingga 2 detik sebagai gantinya:
+
+* **Dengan [pencarian alat](/docs/id/agent-sdk/tool-search), default**: penundaan mencakup server yang masih tertunda yang dikonfigurasi dengan [`alwaysLoad: true`](/docs/id/mcp#exempt-a-server-from-deferral) dan bukan sisanya. Sisanya terus terhubung di latar belakang. [Ketersediaan alat](/docs/id/mcp#tool-availability) menjelaskan bagaimana Claude mencapai alat mereka setelah terhubung.
+* **Tanpa pencarian alat**: penundaan mencakup setiap server yang tertunda. [Konfigurasi pencarian alat](/docs/id/agent-sdk/tool-search#configure-tool-search) mencakup apa yang mematikan pencarian alat. Jika Anda mengecualikan alat `ToolSearch` dari sesi, misalnya melalui `disallowedTools`, sesi juga berjalan tanpa pencarian alat.
+
+Jika Anda menetapkan `permissionPromptToolName`, putaran pertama juga menunggu server alat tersebut dalam setiap kasus, hingga `MCP_TIMEOUT`.
+
+Untuk menetapkan penundaan putaran pertama sendiri, tambahkan `CLAUDE_CODE_MCP_STARTUP_WAIT_MS` ke [opsi `env`](/docs/id/agent-sdk/configuration#set-environment-variables), misalnya `CLAUDE_CODE_MCP_STARTUP_WAIT_MS: "5000"`. Putaran pertama kemudian menunggu hingga banyak milidetik untuk setiap server yang tertunda, terlepas dari apakah pencarian alat tersedia. Batas waktu ini juga menggantikan penundaan putaran pertama `MCP_TIMEOUT` untuk server stdio, HTTP, dan SSE dalam `options.mcpServers`. `CLAUDE_CODE_MCP_STARTUP_WAIT_MS` memerlukan Claude Code v2.1.274 atau lebih baru.
+
+Server yang masih tertunda ketika penundaan berakhir terus terhubung di latar belakang. Atur variabel ke `0` untuk melewati penundaan. Server `permissionPromptToolName` mempertahankan penundaan `MCP_TIMEOUT` sendiri terlepas dari nilainya.
+
+Untuk memblokir startup itu sendiri pada fase terpisah yang lebih awal daripada penundaan putaran pertama, sebelum pesan init dikirim:
+
+* Atur [`MCP_CONNECTION_NONBLOCKING`](/docs/id/env-vars) ke `0` untuk memblokir seluruh batch koneksi. Claude Code membatasi penundaan tersebut pada 5 detik secara default. Sesuaikan batas dengan variabel lingkungan [`MCP_CONNECT_TIMEOUT_MS`](/docs/id/env-vars), dalam milidetik. Server yang masih tertunda pada batas waktu tersebut terus terhubung di latar belakang.
+* Atur `alwaysLoad: true` pada konfigurasi server untuk membuat alatnya tersedia pada skema lengkap mereka pada putaran pertama, [dikecualikan dari penundaan pencarian alat](/docs/id/mcp#exempt-a-server-from-deferral). Claude Code menunggu saat startup untuk alat server tersebut, dibatasi pada batas waktu yang sama, sementara server lain terus terhubung di latar belakang; server jarak jauh dengan daftar alat yang di-cache menyediakannya tanpa terhubung, sesuai tabel di atas.
+
+Pesan `system` dengan subtipe `init` melaporkan status setiap server pada saat pesan tersebut dikirim; lihat [Penanganan kesalahan](#error-handling) untuk membaca status tersebut.
 
 <h2 id="allow-mcp-tools">
   Izinkan alat MCP
@@ -165,61 +195,97 @@ Alat MCP memerlukan izin eksplisit sebelum Claude dapat menggunakannya. Tanpa iz
 Alat MCP mengikuti pola penamaan `mcp__<server-name>__<tool-name>`. Misalnya, server GitHub bernama `"github"` dengan alat `list_issues` menjadi `mcp__github__list_issues`.
 
 <h3 id="auto-approve-with-allowedtools">
-  Persetujuan otomatis dengan allowedTools
+  Auto-approve dengan allowedTools
 </h3>
 
-Gunakan `allowedTools` untuk secara otomatis menyetujui alat MCP tertentu sehingga Claude dapat menggunakannya tanpa permintaan izin:
+Gunakan `allowedTools` untuk auto-approve alat MCP tertentu sehingga Claude dapat menggunakannya tanpa prompt izin:
 
-```typescript hidelines={1,-1} theme={null}
-const _ = {
-  options: {
-    mcpServers: {
-      // your servers
-    },
-    allowedTools: [
-      "mcp__github__*", // All tools from the github server
-      "mcp__db__query", // Only the query tool from db server
-      "mcp__slack__send_message" // Only send_message from slack server
-    ]
-  }
-};
-```
+<CodeGroup>
+  ```typescript TypeScript hidelines={1,-1} theme={null}
+  const _ = {
+    options: {
+      mcpServers: {
+        // your servers
+      },
+      allowedTools: [
+        "mcp__github__*", // All tools from the github server
+        "mcp__db__query", // Only the query tool from db server
+        "mcp__slack__send_message" // Only send_message from slack server
+      ]
+    }
+  };
+  ```
 
-Wildcard (`*`) memungkinkan Anda mengizinkan semua alat dari server tanpa mencantumkan masing-masing secara individual.
+  ```python Python theme={null}
+  options = ClaudeAgentOptions(
+      mcp_servers={
+          # your servers
+      },
+      allowed_tools=[
+          "mcp__github__*",  # All tools from the github server
+          "mcp__db__query",  # Only the query tool from db server
+          "mcp__slack__send_message",  # Only send_message from slack server
+      ],
+  )
+  ```
+</CodeGroup>
+
+Wildcard (`*`) memungkinkan Anda untuk mengizinkan semua alat dari server tanpa mencantumkan masing-masing secara individual.
 
 <Note>
-  **Lebih suka `allowedTools` daripada mode izin untuk akses MCP.** `permissionMode: "acceptEdits"` tidak secara otomatis menyetujui alat MCP (hanya edit file dan perintah Bash filesystem). `permissionMode: "bypassPermissions"` secara otomatis menyetujui alat MCP tetapi juga menonaktifkan sebagian besar prompt keamanan lainnya, yang lebih luas dari yang diperlukan; lihat [Bagaimana izin dievaluasi](/docs/id/agent-sdk/permissions#how-permissions-are-evaluated) untuk prompt yang tetap ada. Wildcard dalam `allowedTools` memberikan akses ke server MCP yang Anda inginkan dan tidak lebih. Lihat [Mode izin](/docs/id/agent-sdk/permissions#permission-modes) untuk perbandingan lengkap.
+  **Lebih suka `allowedTools` daripada mode izin untuk akses MCP.** `permissionMode: "acceptEdits"` tidak auto-approve alat MCP (hanya edit file dan perintah Bash filesystem). `permissionMode: "bypassPermissions"` melakukan auto-approve alat MCP tetapi juga menonaktifkan sebagian besar prompt keamanan lainnya, yang lebih luas dari yang diperlukan; lihat [Bagaimana izin dievaluasi](/docs/id/agent-sdk/permissions#how-permissions-are-evaluated) untuk prompt yang tetap ada. Wildcard dalam `allowedTools` memberikan akses ke server MCP yang Anda inginkan dan tidak lebih. Lihat [Mode izin](/docs/id/agent-sdk/permissions#permission-modes) untuk perbandingan lengkap.
 </Note>
 
 <h3 id="discover-available-tools">
   Temukan alat yang tersedia
 </h3>
 
-Untuk melihat alat apa yang disediakan server MCP, periksa dokumentasi server atau terhubung ke server dan periksa pesan init `system`:
+Untuk melihat alat apa yang disediakan server MCP, periksa dokumentasi server atau inspeksi array `tools` dalam pesan init `system`. Nama alat MCP dimulai dengan `mcp__`.
+
+Claude Code memancarkan pesan init setelah [penundaan koneksi giliran pertama](#connection-timing) untuk server yang dilewatkan dalam `options.mcpServers`, jadi array `tools` mencantumkan alat `mcp__` dari setiap server yang telah terhubung pada saat itu, ditambah alat dari server dengan [daftar alat yang di-cache](#connection-timing), yang terhubung pada penggunaan pertama. Alat dari server lain yang belum terhubung tidak ada; lihat [Penanganan kesalahan](#error-handling) untuk membaca status setiap server.
+
+Filter ini mencetak nama alat MCP:
 
 <CodeGroup>
   ```typescript TypeScript theme={null}
+  import { query } from "@anthropic-ai/claude-agent-sdk";
+
+  const options = {
+    mcpServers: {
+      // your servers
+    },
+  };
+
   for await (const message of query({ prompt: "...", options })) {
     if (message.type === "system" && message.subtype === "init") {
-      console.log("Available MCP tools:", message.mcp_servers);
+      const mcpTools = message.tools.filter((name) => name.startsWith("mcp__"));
+      console.log("Available MCP tools:", mcpTools);
     }
   }
   ```
 
   ```python Python theme={null}
   import asyncio
-  from claude_agent_sdk import query, SystemMessage
+  from claude_agent_sdk import query, ClaudeAgentOptions, SystemMessage
 
 
   async def main():
+      options = ClaudeAgentOptions(
+          mcp_servers={
+              # your servers
+          },
+      )
       async for message in query(prompt="...", options=options):
           if isinstance(message, SystemMessage) and message.subtype == "init":
-              print("Available MCP tools:", message.data["mcp_servers"])
+              mcp_tools = [t for t in message.data.get("tools", []) if t.startswith("mcp__")]
+              print("Available MCP tools:", mcp_tools)
 
 
   asyncio.run(main())
   ```
 </CodeGroup>
+
+Anda juga dapat meminta Claude untuk mencantumkan alat yang tersedia dari server.
 
 <h2 id="transport-types">
   Jenis transport
@@ -227,7 +293,7 @@ Untuk melihat alat apa yang disediakan server MCP, periksa dokumentasi server at
 
 Server MCP berkomunikasi dengan agen Anda menggunakan protokol transport yang berbeda. Periksa dokumentasi server untuk melihat transport mana yang didukungnya:
 
-* Jika dokumen memberi Anda **perintah untuk dijalankan** (seperti `npx @modelcontextprotocol/server-github`), gunakan stdio
+* Jika dokumen memberi Anda **perintah untuk dijalankan** (seperti `npx @modelcontextprotocol/server-filesystem`), gunakan stdio
 * Jika dokumen memberi Anda **URL**, gunakan HTTP atau SSE
 * Jika Anda membangun alat Anda sendiri dalam kode, gunakan server MCP SDK
 
@@ -235,135 +301,95 @@ Server MCP berkomunikasi dengan agen Anda menggunakan protokol transport yang be
   Server stdio
 </h3>
 
-Proses lokal yang berkomunikasi melalui stdin/stdout. Gunakan ini untuk server MCP yang Anda jalankan di mesin yang sama:
+Proses lokal yang berkomunikasi melalui stdin/stdout. Gunakan ini untuk server MCP yang Anda jalankan di mesin yang sama. Untuk bentuk `.mcp.json`, gunakan bidang yang sama seperti yang ditunjukkan di [Dari file konfigurasi](#from-a-config-file). Dalam kode, teruskan perintah dan argumennya. Ganti `/Users/me/projects` dengan direktori di mesin Anda:
 
-<Tabs>
-  <Tab title="Dalam kode">
-    <CodeGroup>
-      ```typescript TypeScript hidelines={1,-1} theme={null}
-      const _ = {
-        options: {
-          mcpServers: {
-            github: {
-              command: "npx",
-              args: ["-y", "@modelcontextprotocol/server-github"],
-              env: {
-                GITHUB_TOKEN: process.env.GITHUB_TOKEN
-              }
-            }
-          },
-          allowedTools: ["mcp__github__list_issues", "mcp__github__search_issues"]
+<CodeGroup>
+  ```typescript TypeScript hidelines={1,-1} theme={null}
+  const _ = {
+    options: {
+      mcpServers: {
+        filesystem: {
+          command: "npx",
+          args: ["-y", "@modelcontextprotocol/server-filesystem", "/Users/me/projects"]
         }
-      };
-      ```
-
-      ```python Python theme={null}
-      options = ClaudeAgentOptions(
-          mcp_servers={
-              "github": {
-                  "command": "npx",
-                  "args": ["-y", "@modelcontextprotocol/server-github"],
-                  "env": {"GITHUB_TOKEN": os.environ["GITHUB_TOKEN"]},
-              }
-          },
-          allowed_tools=["mcp__github__list_issues", "mcp__github__search_issues"],
-      )
-      ```
-    </CodeGroup>
-  </Tab>
-
-  <Tab title=".mcp.json">
-    ```json theme={null}
-    {
-      "mcpServers": {
-        "github": {
-          "command": "npx",
-          "args": ["-y", "@modelcontextprotocol/server-github"],
-          "env": {
-            "GITHUB_TOKEN": "${GITHUB_TOKEN}"
-          }
-        }
-      }
+      },
+      allowedTools: ["mcp__filesystem__read_file", "mcp__filesystem__list_directory"]
     }
-    ```
-  </Tab>
-</Tabs>
+  };
+  ```
+
+  ```python Python theme={null}
+  options = ClaudeAgentOptions(
+      mcp_servers={
+          "filesystem": {
+              "command": "npx",
+              "args": [
+                  "-y",
+                  "@modelcontextprotocol/server-filesystem",
+                  "/Users/me/projects",
+              ],
+          }
+      },
+      allowed_tools=["mcp__filesystem__read_file", "mcp__filesystem__list_directory"],
+  )
+  ```
+</CodeGroup>
 
 <h3 id="http/sse-servers">
   Server HTTP/SSE
 </h3>
 
-Gunakan HTTP atau SSE untuk server MCP yang dihosting cloud dan API jarak jauh:
+Gunakan HTTP atau SSE untuk server MCP yang dihosting di cloud dan API jarak jauh. Untuk bentuk `.mcp.json`, gunakan bidang yang sama seperti contoh di [Header HTTP untuk server jarak jauh](#http-headers-for-remote-servers), dengan `"type": "sse"` untuk server SSE. Dalam kode, teruskan URL server:
 
-<Tabs>
-  <Tab title="Dalam kode">
-    <CodeGroup>
-      ```typescript TypeScript hidelines={1,-1} theme={null}
-      const _ = {
-        options: {
-          mcpServers: {
-            "remote-api": {
-              type: "sse",
-              url: "https://api.example.com/mcp/sse",
-              headers: {
-                Authorization: `Bearer ${process.env.API_TOKEN}`
-              }
-            }
-          },
-          allowedTools: ["mcp__remote-api__*"]
-        }
-      };
-      ```
-
-      ```python Python theme={null}
-      options = ClaudeAgentOptions(
-          mcp_servers={
-              "remote-api": {
-                  "type": "sse",
-                  "url": "https://api.example.com/mcp/sse",
-                  "headers": {"Authorization": f"Bearer {os.environ['API_TOKEN']}"},
-              }
-          },
-          allowed_tools=["mcp__remote-api__*"],
-      )
-      ```
-    </CodeGroup>
-  </Tab>
-
-  <Tab title=".mcp.json">
-    ```json theme={null}
-    {
-      "mcpServers": {
+<CodeGroup>
+  ```typescript TypeScript hidelines={1,-1} theme={null}
+  const _ = {
+    options: {
+      mcpServers: {
         "remote-api": {
-          "type": "sse",
-          "url": "https://api.example.com/mcp/sse",
-          "headers": {
-            "Authorization": "Bearer ${API_TOKEN}"
+          type: "sse",
+          url: "https://api.example.com/mcp/sse",
+          headers: {
+            Authorization: `Bearer ${process.env.API_TOKEN}`
           }
         }
-      }
+      },
+      allowedTools: ["mcp__remote-api__*"]
     }
-    ```
-  </Tab>
-</Tabs>
+  };
+  ```
 
-Untuk transport HTTP yang dapat dialirkan, gunakan `"type": "http"` sebagai gantinya. Dalam file konfigurasi `.mcp.json` dan JSON lainnya, `"streamable-http"` diterima sebagai alias untuk `"http"`. Opsi `mcpServers` pemrograman hanya menerima `"http"`.
+  ```python Python theme={null}
+  options = ClaudeAgentOptions(
+      mcp_servers={
+          "remote-api": {
+              "type": "sse",
+              "url": "https://api.example.com/mcp/sse",
+              "headers": {"Authorization": f"Bearer {os.environ['API_TOKEN']}"},
+          }
+      },
+      allowed_tools=["mcp__remote-api__*"],
+  )
+  ```
+</CodeGroup>
+
+Untuk transport HTTP yang dapat dialirkan, gunakan `"type": "http"` sebagai gantinya. Dalam file konfigurasi `.mcp.json` dan JSON lainnya, `"streamable-http"` diterima sebagai alias untuk `"http"`. Tipe `McpHttpServerConfig` SDK hanya mendeklarasikan `"http"`, jadi gunakan `"http"` untuk server yang Anda teruskan dalam kode.
 
 <h3 id="sdk-mcp-servers">
   Server MCP SDK
 </h3>
 
-Tentukan alat khusus langsung dalam kode aplikasi Anda daripada menjalankan proses server terpisah. Lihat [panduan alat khusus](/docs/id/agent-sdk/custom-tools) untuk detail implementasi.
+Tentukan alat khusus langsung dalam kode aplikasi Anda alih-alih menjalankan proses server terpisah. Lihat [panduan alat khusus](/docs/id/agent-sdk/custom-tools) untuk detail implementasi.
+
+Server MCP SDK yang didaftarkan oleh [permintaan kontrol `initialize`](/docs/id/agent-sdk/typescript#sdkcontrolinitializeresponse) mulai terhubung segera setelah Claude Code memproses permintaan.
 
 <h2 id="mcp-tool-search">
-  Pencarian alat MCP
+  Pencarian tool MCP
 </h2>
 
-Ketika Anda memiliki banyak alat MCP yang dikonfigurasi, definisi alat dapat mengonsumsi bagian signifikan dari jendela konteks Anda. Pencarian alat mengatasi ini dengan menahan definisi alat dari konteks dan memuat hanya yang Claude butuhkan untuk setiap giliran.
+Ketika Anda memiliki banyak tool MCP yang dikonfigurasi, definisi tool dapat mengonsumsi sebagian signifikan dari jendela konteks Anda. Pencarian tool mengatasi ini dengan menahan definisi tool dari konteks dan memuat hanya yang Claude butuhkan untuk setiap giliran.
 
-Pencarian alat diaktifkan secara default. Lihat [Pencarian alat](/docs/id/agent-sdk/tool-search) untuk opsi konfigurasi dan detail.
-
-Untuk detail lebih lanjut, termasuk praktik terbaik dan menggunakan pencarian alat dengan alat SDK khusus, lihat [panduan pencarian alat](/docs/id/agent-sdk/tool-search).
+Pencarian tool diaktifkan secara default. Lihat [Pencarian tool](/docs/id/agent-sdk/tool-search) untuk opsi konfigurasi, praktik terbaik, dan menggunakan pencarian tool dengan tool SDK kustom.
 
 <h2 id="authentication">
   Autentikasi
@@ -375,7 +401,7 @@ Sebagian besar server MCP memerlukan autentikasi untuk mengakses layanan ekstern
   Teruskan kredensial melalui variabel lingkungan
 </h3>
 
-Gunakan bidang `env` untuk meneruskan kunci API, token, dan kredensial lainnya ke server MCP:
+Gunakan field `env` untuk meneruskan kunci API, token, dan kredensial lainnya ke server MCP:
 
 <Tabs>
   <Tab title="Dalam kode">
@@ -384,15 +410,15 @@ Gunakan bidang `env` untuk meneruskan kunci API, token, dan kredensial lainnya k
       const _ = {
         options: {
           mcpServers: {
-            github: {
+            "api-server": {
               command: "npx",
-              args: ["-y", "@modelcontextprotocol/server-github"],
+              args: ["-y", "@your-org/api-mcp-server"],
               env: {
-                GITHUB_TOKEN: process.env.GITHUB_TOKEN
+                API_KEY: process.env.API_KEY
               }
             }
           },
-          allowedTools: ["mcp__github__list_issues"]
+          allowedTools: ["mcp__api-server__*"]
         }
       };
       ```
@@ -400,13 +426,13 @@ Gunakan bidang `env` untuk meneruskan kunci API, token, dan kredensial lainnya k
       ```python Python theme={null}
       options = ClaudeAgentOptions(
           mcp_servers={
-              "github": {
+              "api-server": {
                   "command": "npx",
-                  "args": ["-y", "@modelcontextprotocol/server-github"],
-                  "env": {"GITHUB_TOKEN": os.environ["GITHUB_TOKEN"]},
+                  "args": ["-y", "@your-org/api-mcp-server"],
+                  "env": {"API_KEY": os.environ["API_KEY"]},
               }
           },
-          allowed_tools=["mcp__github__list_issues"],
+          allowed_tools=["mcp__api-server__*"],
       )
       ```
     </CodeGroup>
@@ -416,22 +442,20 @@ Gunakan bidang `env` untuk meneruskan kunci API, token, dan kredensial lainnya k
     ```json theme={null}
     {
       "mcpServers": {
-        "github": {
+        "api-server": {
           "command": "npx",
-          "args": ["-y", "@modelcontextprotocol/server-github"],
+          "args": ["-y", "@your-org/api-mcp-server"],
           "env": {
-            "GITHUB_TOKEN": "${GITHUB_TOKEN}"
+            "API_KEY": "${API_KEY}"
           }
         }
       }
     }
     ```
 
-    Sintaks `${GITHUB_TOKEN}` memperluas variabel lingkungan saat runtime.
+    Sintaks `${API_KEY}` memperluas variabel lingkungan saat runtime.
   </Tab>
 </Tabs>
-
-Lihat [Daftar masalah dari repositori](#list-issues-from-a-repository) untuk contoh kerja lengkap dengan logging debug.
 
 <h3 id="http-headers-for-remote-servers">
   Header HTTP untuk server jarak jauh
@@ -493,17 +517,20 @@ Untuk server HTTP dan SSE, teruskan header autentikasi langsung dalam konfiguras
   </Tab>
 </Tabs>
 
+Untuk contoh kerja lengkap dari server jarak jauh yang diautentikasi dengan header, lihat [Daftar masalah dari repositori](#list-issues-from-a-repository).
+
 <h3 id="oauth2-authentication">
   Autentikasi OAuth2
 </h3>
 
-[Spesifikasi MCP mendukung OAuth 2.1](https://modelcontextprotocol.io/specification/2025-03-26/basic/authorization) untuk otorisasi. SDK tidak membuka browser atau menjalankan alur OAuth interaktif. Ketika server yang dikonfigurasi mengembalikan tantangan otorisasi dan tidak ada token yang disimpan tersedia, jalankan agen berlanjut tanpa alat server tersebut, dan server dilaporkan dengan status `needs-auth` dalam array `mcp_servers` dari [pesan inisialisasi sistem](/docs/id/agent-sdk/typescript#sdksystemmessage). Periksa array tersebut saat startup jika agen Anda bergantung pada server tertentu yang terhubung.
+[Spesifikasi MCP mendukung OAuth 2.1](https://modelcontextprotocol.io/specification/2025-03-26/basic/authorization) untuk otorisasi. SDK tidak membuka browser atau menjalankan alur OAuth interaktif. Ketika server yang dikonfigurasi mengembalikan tantangan otorisasi dan tidak ada token yang disimpan tersedia, jalankan agen berlanjut tanpa alat server tersebut, dan server melaporkan status `needs-auth`. Array `mcp_servers` dari [pesan inisialisasi sistem](/docs/id/agent-sdk/typescript#sdksystemmessage) mungkin masih menunjukkan `pending` untuk server tersebut saat dipancarkan. Untuk mengonfirmasi apakah server memerlukan kredensial, polling `mcpServerStatus()` dalam SDK TypeScript atau [`get_mcp_status()`](/docs/id/agent-sdk/python#methods) dalam Python.
 
 Untuk menyediakan kredensial, selesaikan alur OAuth dalam aplikasi Anda sendiri dan teruskan token akses yang dihasilkan dalam `headers` server:
 
 <CodeGroup>
   ```typescript TypeScript theme={null}
-  // After completing OAuth flow in your app
+  // Setelah menyelesaikan alur OAuth dalam aplikasi Anda.
+  // Implementasikan getAccessTokenFromOAuthFlow untuk penyedia OAuth Anda.
   const accessToken = await getAccessTokenFromOAuthFlow();
 
   const options = {
@@ -521,7 +548,8 @@ Untuk menyediakan kredensial, selesaikan alur OAuth dalam aplikasi Anda sendiri 
   ```
 
   ```python Python theme={null}
-  # After completing OAuth flow in your app
+  # Setelah menyelesaikan alur OAuth dalam aplikasi Anda.
+  # Implementasikan get_access_token_from_oauth_flow untuk penyedia OAuth Anda.
   access_token = await get_access_token_from_oauth_flow()
 
   options = ClaudeAgentOptions(
@@ -545,12 +573,12 @@ Untuk menyediakan kredensial, selesaikan alur OAuth dalam aplikasi Anda sendiri 
   Daftar masalah dari repositori
 </h3>
 
-Contoh ini terhubung ke [server MCP GitHub](https://github.com/modelcontextprotocol/servers/tree/main/src/github) untuk mencantumkan masalah terbaru. Contoh ini mencakup logging debug untuk memverifikasi koneksi MCP dan panggilan alat.
+Contoh ini terhubung ke [server MCP GitHub](https://github.com/github/github-mcp-server) jarak jauh untuk mencantumkan masalah terbaru. Contoh ini mencakup logging debug untuk memverifikasi koneksi MCP dan panggilan alat.
 
-Sebelum menjalankan, buat [token akses pribadi GitHub](https://github.com/settings/tokens) dengan cakupan `repo` dan atur sebagai variabel lingkungan:
+Sebelum menjalankan, buat [token akses pribadi GitHub](https://github.com/settings/personal-access-tokens) dengan akses baca ke repositori yang ingin Anda kueri dan atur sebagai variabel lingkungan:
 
 ```bash theme={null}
-export GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxx
+export GITHUB_TOKEN=YOUR_GITHUB_PAT
 ```
 
 <CodeGroup>
@@ -562,10 +590,10 @@ export GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxx
     options: {
       mcpServers: {
         github: {
-          command: "npx",
-          args: ["-y", "@modelcontextprotocol/server-github"],
-          env: {
-            GITHUB_TOKEN: process.env.GITHUB_TOKEN
+          type: "http",
+          url: "https://api.githubcopilot.com/mcp/",
+          headers: {
+            Authorization: `Bearer ${process.env.GITHUB_TOKEN}`
           }
         }
       },
@@ -609,9 +637,9 @@ export GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxx
       options = ClaudeAgentOptions(
           mcp_servers={
               "github": {
-                  "command": "npx",
-                  "args": ["-y", "@modelcontextprotocol/server-github"],
-                  "env": {"GITHUB_TOKEN": os.environ["GITHUB_TOKEN"]},
+                  "type": "http",
+                  "url": "https://api.githubcopilot.com/mcp/",
+                  "headers": {"Authorization": f"Bearer {os.environ['GITHUB_TOKEN']}"},
               }
           },
           allowed_tools=["mcp__github__list_issues"],
@@ -640,18 +668,36 @@ export GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxx
   ```
 </CodeGroup>
 
+Pada baris `MCP servers:`, `status` sebesar `connected` untuk `github` mengkonfirmasi token berfungsi. Jika Claude Code memiliki [daftar alat yang di-cache](#connection-timing) untuk server, status dapat membaca `pending` sebagai gantinya dan server terhubung pada panggilan alat pertamanya. Jika statusnya adalah `failed` atau `needs-auth`, lihat [Penanganan kesalahan](#error-handling) sebelum mempercayai hasilnya, karena Claude dapat kembali ke alat bawaan ketika server tidak tersedia.
+
 <h3 id="query-a-database">
-  Tanyakan database
+  Kueri basis data
 </h3>
 
-Contoh ini menggunakan [server MCP Postgres](https://github.com/modelcontextprotocol/servers/tree/main/src/postgres) untuk menanyakan database. String koneksi diteruskan sebagai argumen ke server. Agen secara otomatis menemukan skema database, menulis kueri SQL, dan mengembalikan hasilnya:
+Contoh ini menggunakan [DBHub](https://github.com/bytebase/dbhub) untuk mengueri basis data Postgres. Agen secara otomatis menemukan skema basis data, menulis kueri SQL, dan mengembalikan hasilnya.
+
+Alat `execute_sql` DBHub menjalankan SQL apa pun yang dikeluarkan agen, termasuk penulisan, kecuali Anda membatasinya. Mengatur `readonly = true` dalam [file konfigurasi DBHub](https://dbhub.ai/config/toml) membuat DBHub menolak pernyataan `INSERT`, `UPDATE`, `DELETE`, dan DDL, sehingga contoh tidak dapat memodifikasi data Anda bahkan jika agen mengeluarkan penulisan. DBHub menyelesaikan `${DATABASE_URL}` dari lingkungan proses ketika memuat konfigurasi, sehingga string koneksi tetap keluar dari file. Buat `dbhub.toml` ini di sebelah skrip Anda:
+
+```toml dbhub.toml theme={null}
+[[sources]]
+id = "production"
+dsn = "${DATABASE_URL}"
+
+[[tools]]
+name = "execute_sql"
+source = "production"
+readonly = true
+```
+
+Skrip kemudian menunjukkan DBHub ke file konfigurasi alih-alih melewatkan string koneksi secara langsung. Sebelum menjalankan, atur variabel lingkungan `DATABASE_URL` ke string koneksi Anda. Ganti nilai placeholder dengan detail basis data Anda sendiri:
+
+```bash theme={null}
+export DATABASE_URL=postgresql://user:password@localhost:5432/mydb
+```
 
 <CodeGroup>
   ```typescript TypeScript theme={null}
   import { query } from "@anthropic-ai/claude-agent-sdk";
-
-  // Connection string from environment variable
-  const connectionString = process.env.DATABASE_URL;
 
   for await (const message of query({
     // Natural language query - Claude writes the SQL
@@ -660,12 +706,11 @@ Contoh ini menggunakan [server MCP Postgres](https://github.com/modelcontextprot
       mcpServers: {
         postgres: {
           command: "npx",
-          // Pass connection string as argument to the server
-          args: ["-y", "@modelcontextprotocol/server-postgres", connectionString]
+          // dbhub.toml sets readonly = true, so execute_sql rejects writes
+          args: ["-y", "@bytebase/dbhub", "--config", "dbhub.toml"]
         }
       },
-      // Allow only read queries, not writes
-      allowedTools: ["mcp__postgres__query"]
+      allowedTools: ["mcp__postgres__execute_sql"]
     }
   })) {
     if (message.type === "result" && message.subtype === "success") {
@@ -676,28 +721,24 @@ Contoh ini menggunakan [server MCP Postgres](https://github.com/modelcontextprot
 
   ```python Python theme={null}
   import asyncio
-  import os
   from claude_agent_sdk import query, ClaudeAgentOptions, ResultMessage
 
 
   async def main():
-      # Connection string from environment variable
-      connection_string = os.environ["DATABASE_URL"]
-
       options = ClaudeAgentOptions(
           mcp_servers={
               "postgres": {
                   "command": "npx",
-                  # Pass connection string as argument to the server
+                  # dbhub.toml sets readonly = true, so execute_sql rejects writes
                   "args": [
                       "-y",
-                      "@modelcontextprotocol/server-postgres",
-                      connection_string,
+                      "@bytebase/dbhub",
+                      "--config",
+                      "dbhub.toml",
                   ],
               }
           },
-          # Allow only read queries, not writes
-          allowed_tools=["mcp__postgres__query"],
+          allowed_tools=["mcp__postgres__execute_sql"],
       )
 
       # Natural language query - Claude writes the SQL
@@ -719,31 +760,52 @@ Contoh ini menggunakan [server MCP Postgres](https://github.com/modelcontextprot
 
 Server MCP dapat gagal terhubung karena berbagai alasan: proses server mungkin tidak terinstal, kredensial mungkin tidak valid, atau server jarak jauh mungkin tidak dapat dijangkau.
 
-SDK mengirimkan pesan `system` dengan subtype `init` di awal setiap kueri. Pesan ini mencakup status koneksi untuk setiap server MCP. Periksa bidang `status` untuk mendeteksi kegagalan koneksi sebelum agen mulai bekerja:
+Claude Code mengirimkan pesan `system` dengan subtype `init` di awal setiap kueri. Pesan ini mencakup status koneksi untuk setiap server MCP. Bidang `status` dapat berupa `"pending"`, `"connected"`, `"failed"`, `"needs-auth"`, atau `"disabled"`. Claude Code mengirimkan pesan init setelah [waktu tunggu koneksi putaran pertama](#connection-timing) untuk server yang dilewatkan dalam `options.mcpServers`, jadi server seperti itu yang terhubung dalam waktu tunggu menunjukkan `"connected"`.
+
+Dalam pesan init, jangan perlakukan `"pending"` sebagai kegagalan dengan sendirinya. Ini dapat berarti salah satu dari ini:
+
+* Server belum terhubung. Lihat [berapa lama Claude Code menunggu sebelum putaran pertama](#connection-timing)
+* Daftar alat server [disajikan dari cache](#connection-timing), dengan koneksi yang dibuat pada penggunaan pertama
+* Batas waktu koneksi telah kedaluwarsa. Server seperti itu melaporkan `"pending"` atau `"failed"` tergantung pada waktu
+
+Periksa `"failed"` atau `"needs-auth"` untuk mendeteksi server yang tidak akan dapat digunakan:
 
 <CodeGroup>
   ```typescript TypeScript theme={null}
   import { query } from "@anthropic-ai/claude-agent-sdk";
 
-  for await (const message of query({
-    prompt: "Process data",
-    options: {
-      mcpServers: {
-        "data-processor": dataServer
+  try {
+    for await (const message of query({
+      prompt: "Process data",
+      options: {
+        mcpServers: {
+          // Replace dataServer with your server configuration
+          "data-processor": dataServer
+        }
+      }
+    })) {
+      if (message.type === "system" && message.subtype === "init") {
+        const unavailableServers = message.mcp_servers.filter(
+          (s) => s.status === "failed" || s.status === "needs-auth"
+        );
+
+        if (unavailableServers.length > 0) {
+          console.warn("Unavailable MCP servers:", unavailableServers);
+        }
+      }
+
+      if (message.type === "result" && message.subtype === "error_during_execution") {
+        console.error("Execution failed");
       }
     }
-  })) {
-    if (message.type === "system" && message.subtype === "init") {
-      const failedServers = message.mcp_servers.filter((s) => s.status !== "connected");
-
-      if (failedServers.length > 0) {
-        console.warn("Failed to connect:", failedServers);
-      }
-    }
-
-    if (message.type === "result" && message.subtype === "error_during_execution") {
-      console.error("Execution failed");
-    }
+  } catch (error) {
+    // A single-shot query() throws after yielding an error result. If the
+    // failure was an error result, the error subtype branch above has
+    // already run; a failure to start or reach the Claude Code process
+    // yields no result message. MCP servers that fail to connect don't
+    // throw: use the status check above, and note that servers still
+    // "pending" at init need a later status check.
+    console.log(`Session ended with an error: ${error}`);
   }
   ```
 
@@ -753,29 +815,43 @@ SDK mengirimkan pesan `system` dengan subtype `init` di awal setiap kueri. Pesan
 
 
   async def main():
+      # Replace data_server with your server configuration
       options = ClaudeAgentOptions(mcp_servers={"data-processor": data_server})
 
-      async for message in query(prompt="Process data", options=options):
-          if isinstance(message, SystemMessage) and message.subtype == "init":
-              failed_servers = [
-                  s
-                  for s in message.data.get("mcp_servers", [])
-                  if s.get("status") != "connected"
-              ]
+      try:
+          async for message in query(prompt="Process data", options=options):
+              if isinstance(message, SystemMessage) and message.subtype == "init":
+                  unavailable_servers = [
+                      s
+                      for s in message.data.get("mcp_servers", [])
+                      if s.get("status") in ("failed", "needs-auth")
+                  ]
 
-              if failed_servers:
-                  print(f"Failed to connect: {failed_servers}")
+                  if unavailable_servers:
+                      print(f"Unavailable MCP servers: {unavailable_servers}")
 
-          if (
-              isinstance(message, ResultMessage)
-              and message.subtype == "error_during_execution"
-          ):
-              print("Execution failed")
+              if (
+                  isinstance(message, ResultMessage)
+                  and message.subtype == "error_during_execution"
+              ):
+                  print("Execution failed")
+      except Exception as error:
+          # A single-shot query() raises after yielding an error result. If the
+          # failure was an error result, the error subtype branch above has
+          # already run; a failure to start or reach the Claude Code process
+          # yields no result message. MCP servers that fail to connect don't
+          # raise: use the status check above, and note that servers still
+          # "pending" at init need a later status check.
+          print(f"Session ended with an error: {error}")
 
 
   asyncio.run(main())
   ```
 </CodeGroup>
+
+Status server jarak jauh juga dapat berubah setelah melaporkan `"connected"`. Ketika koneksi ke server itu terputus di tengah sesi, Claude Code memindahkan server kembali ke `"pending"` sambil [menghubungkan kembali](/docs/id/mcp#automatic-reconnection). Panggilan `mcpServerStatus()` yang lebih baru dalam TypeScript, atau [`ClaudeSDKClient.get_mcp_status()`](/docs/id/agent-sdk/python#methods) dalam Python, kemudian dapat melaporkan `"pending"` untuk server yang Anda lihat terhubung sebelumnya, tanpa perubahan konfigurasi di pihak Anda.
+
+Setelah lima upaya penghubungan kembali gagal, server melaporkan `"failed"`, atau `"needs-auth"` ketika perlu diotorisasi lagi. Untuk mencoba lagi secara manual, panggil [`reconnectMcpServer()`](/docs/id/agent-sdk/typescript#methods) dalam TypeScript atau [`ClaudeSDKClient.reconnect_mcp_server()`](/docs/id/agent-sdk/python#methods) dalam Python.
 
 <h2 id="troubleshooting">
   Troubleshooting
@@ -787,63 +863,88 @@ SDK mengirimkan pesan `system` dengan subtype `init` di awal setiap kueri. Pesan
 
 Periksa pesan `init` untuk melihat server mana yang gagal terhubung:
 
-```typescript theme={null}
-if (message.type === "system" && message.subtype === "init") {
-  for (const server of message.mcp_servers) {
-    if (server.status === "failed") {
-      console.error(`Server ${server.name} failed to connect`);
+<CodeGroup>
+  ```typescript TypeScript theme={null}
+  if (message.type === "system" && message.subtype === "init") {
+    for (const server of message.mcp_servers) {
+      if (server.status === "failed") {
+        console.error(`Server ${server.name} failed to connect`);
+      }
     }
   }
-}
-```
+  ```
+
+  ```python Python theme={null}
+  if isinstance(message, SystemMessage) and message.subtype == "init":
+      for server in message.data.get("mcp_servers", []):
+          if server.get("status") == "failed":
+              print(f"Server {server['name']} failed to connect")
+  ```
+</CodeGroup>
+
+Status `"pending"` tidak berarti server gagal. Lihat [Error handling](#error-handling) untuk kasus-kasus yang dicakupnya saat init. Untuk mendapatkan status yang diperbarui nanti dalam sesi, panggil metode `mcpServerStatus()` query di TypeScript SDK, atau [`ClaudeSDKClient.get_mcp_status()`](/docs/id/agent-sdk/python#methods) di Python.
 
 Penyebab umum:
 
-* **Variabel lingkungan yang hilang**: Pastikan token dan kredensial yang diperlukan diatur. Untuk server stdio, periksa bidang `env` cocok dengan apa yang diharapkan server.
-* **Server tidak terinstal**: Untuk perintah `npx`, verifikasi paket ada dan Node.js ada di PATH Anda.
+* **Variabel lingkungan yang hilang**: Pastikan token dan kredensial yang diperlukan telah diatur. Untuk server stdio, periksa bahwa field `env` cocok dengan apa yang diharapkan server.
+* **Server tidak terinstal**: Untuk perintah `npx`, verifikasi bahwa paket ada dan Node.js berada di PATH Anda.
 * **String koneksi tidak valid**: Untuk server database, verifikasi format string koneksi dan bahwa database dapat diakses.
-* **Masalah jaringan**: Untuk server HTTP/SSE jarak jauh, periksa URL dapat dijangkau dan firewall apa pun memungkinkan koneksi.
+* **Masalah jaringan**: Untuk server HTTP/SSE jarak jauh, periksa bahwa URL dapat dijangkau dan firewall apa pun memungkinkan koneksi.
 
 <h3 id="tools-not-being-called">
-  Alat tidak dipanggil
+  Tools tidak dipanggil
 </h3>
 
-Jika Claude melihat alat tetapi tidak menggunakannya, periksa bahwa Anda telah memberikan izin dengan `allowedTools`:
+Jika Claude melihat tools tetapi tidak menggunakannya, periksa bahwa Anda telah memberikan izin dengan `allowedTools`:
 
-```typescript hidelines={1,-1} theme={null}
-const _ = {
-  options: {
-    mcpServers: {
-      // your servers
-    },
-    allowedTools: ["mcp__servername__*"] // Auto-approve calls from this server
-  }
-};
-```
+<CodeGroup>
+  ```typescript TypeScript hidelines={1,-1} theme={null}
+  const _ = {
+    options: {
+      mcpServers: {
+        // your servers
+      },
+      allowedTools: ["mcp__servername__*"] // Auto-approve calls from this server
+    }
+  };
+  ```
+
+  ```python Python theme={null}
+  options = ClaudeAgentOptions(
+      mcp_servers={
+          # your servers
+      },
+      allowed_tools=["mcp__servername__*"],  # Auto-approve calls from this server
+  )
+  ```
+</CodeGroup>
 
 <h3 id="connection-timeouts">
-  Timeout koneksi
+  Connection timeouts
 </h3>
 
-Koneksi server MCP mengalami timeout setelah 30 detik secara default. Jika server Anda membutuhkan waktu lebih lama untuk memulai, koneksi akan gagal. Naikkan batasnya dengan variabel lingkungan [`MCP_TIMEOUT`](/docs/id/env-vars), dalam milidetik. Untuk server yang memerlukan waktu startup lebih lama, pertimbangkan juga:
+Koneksi server MCP habis waktu setelah 30 detik secara default. Untuk mengubah berapa lama panggilan tool yang sedang berjalan dapat memakan waktu, atur [`MCP_TOOL_TIMEOUT`](/docs/id/env-vars). Jika server Anda membutuhkan waktu lebih lama untuk memulai, koneksi gagal. Naikkan batas koneksi dengan variabel lingkungan [`MCP_TIMEOUT`](/docs/id/env-vars), dalam milidetik. Untuk server yang membutuhkan lebih banyak waktu startup, pertimbangkan juga:
 
 * Menggunakan server yang lebih ringan jika tersedia
-* Pre-warming server sebelum memulai agen Anda
-* Memeriksa log server untuk penyebab inisialisasi lambat
+* Pre-warming server sebelum memulai agent Anda
+* Memeriksa log server untuk penyebab inisialisasi yang lambat
+
+Di TypeScript, Anda dapat mengatur batas panggilan tool untuk [SDK MCP server](#sdk-mcp-servers) tunggal dengan melewatkan [`timeout` ke `createSdkMcpServer()`](/docs/id/agent-sdk/typescript#createsdkmcpserver).
 
 <h3 id="tool-output-exceeds-maximum-allowed-tokens">
-  Output alat melebihi token maksimal yang diizinkan
+  Tool output melebihi token maksimal yang diizinkan
 </h3>
 
-SDK menerapkan batas output MCP yang sama dengan Claude Code. Ketika hasil alat lebih besar dari 25.000 token, output lengkap disimpan ke file dan hasil alat diganti dengan pesan kesalahan yang menyebutkan jalur file, sehingga agen dapat membaca output kembali dalam porsi. Naikkan batasnya dengan variabel lingkungan [`MAX_MCP_OUTPUT_TOKENS`](/docs/id/env-vars). Lihat [MCP output limits and warnings](/docs/id/mcp#mcp-output-limits-and-warnings) untuk perilaku lengkap, termasuk bagaimana server dapat mendeklarasikan batas per-alat yang lebih tinggi.
+SDK menerapkan batas output MCP yang sama dengan Claude Code. Ketika hasil tool tanpa konten gambar lebih besar dari 25.000 token, Claude Code menyimpan output ke file dan mengganti hasil tool dengan pesan kesalahan yang menyebutkan jalur file, sehingga agent dapat membaca output kembali dalam porsi.
+
+Naikkan batas dengan variabel lingkungan [`MAX_MCP_OUTPUT_TOKENS`](/docs/id/env-vars). Lihat [MCP output limits and warnings](/docs/id/mcp#mcp-output-limits-and-warnings) untuk perilaku lengkap, termasuk bagaimana server dapat mendeklarasikan batas per-tool yang lebih tinggi dengan anotasi `anthropic/maxResultSizeChars`.
 
 <h2 id="related-resources">
   Sumber daya terkait
 </h2>
 
-* **[Panduan alat khusus](/docs/id/agent-sdk/custom-tools)**: Bangun server MCP Anda sendiri yang berjalan in-process dengan aplikasi SDK Anda
+* **[Panduan alat kustom](/docs/id/agent-sdk/custom-tools)**: Bangun server MCP Anda sendiri yang berjalan dalam proses dengan aplikasi SDK Anda
 * **[Izin](/docs/id/agent-sdk/permissions)**: Kontrol alat MCP mana yang dapat digunakan agen Anda dengan `allowedTools` dan `disallowedTools`
-* **[Batas output MCP dan peringatan](/docs/id/mcp#mcp-output-limits-and-warnings)**: Bagaimana SDK menangani hasil alat yang melebihi `MAX_MCP_OUTPUT_TOKENS`, termasuk fallback persist-to-disk dan anotasi per-alat `anthropic/maxResultSizeChars`
-* **[Referensi SDK TypeScript](/docs/id/agent-sdk/typescript)**: Referensi API lengkap termasuk opsi konfigurasi MCP
-* **[Referensi SDK Python](/docs/id/agent-sdk/python)**: Referensi API lengkap termasuk opsi konfigurasi MCP
+* **[Referensi TypeScript SDK](/docs/id/agent-sdk/typescript)**: Referensi API lengkap termasuk opsi konfigurasi MCP
+* **[Referensi Python SDK](/docs/id/agent-sdk/python)**: Referensi API lengkap termasuk opsi konfigurasi MCP
 * **[Direktori server MCP](https://github.com/modelcontextprotocol/servers)**: Jelajahi server MCP yang tersedia untuk database, API, dan lainnya

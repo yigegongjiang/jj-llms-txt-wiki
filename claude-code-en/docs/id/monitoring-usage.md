@@ -6,7 +6,7 @@
 
 > Pelajari cara mengaktifkan dan mengonfigurasi OpenTelemetry untuk Claude Code.
 
-Lacak penggunaan Claude Code, biaya, dan aktivitas alat di seluruh organisasi Anda dengan mengekspor data telemetri melalui OpenTelemetry (OTel). Claude Code mengekspor metrik sebagai data deret waktu melalui protokol metrik standar, acara melalui protokol log/acara, dan secara opsional distributed traces melalui [protokol traces](#traces-beta). Konfigurasikan backend metrik, log, dan traces Anda agar sesuai dengan persyaratan pemantauan Anda.
+Lacak penggunaan Claude Code, biaya, dan aktivitas alat di seluruh organisasi Anda dengan mengekspor data telemetri melalui OpenTelemetry (OTel). Claude Code mengekspor metrik sebagai data deret waktu melalui protokol metrik standar, acara melalui protokol log/acara, dan secara opsional distributed traces melalui [protokol traces](#traces-beta).
 
 <h2 id="quick-start">
   Mulai cepat
@@ -29,7 +29,7 @@ export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317
 # 4. Atur autentikasi (jika diperlukan)
 export OTEL_EXPORTER_OTLP_HEADERS="Authorization=Bearer your-token"
 
-# 5. Untuk debugging: kurangi interval ekspor
+# 5. Untuk debugging: kurangi interval ekspor, dan atur ulang untuk penggunaan produksi
 export OTEL_METRIC_EXPORT_INTERVAL=10000  # 10 detik (default: 60000ms)
 export OTEL_LOGS_EXPORT_INTERVAL=5000     # 5 detik (default: 5000ms)
 
@@ -37,9 +37,9 @@ export OTEL_LOGS_EXPORT_INTERVAL=5000     # 5 detik (default: 5000ms)
 claude
 ```
 
-<Note>
-  Interval ekspor default adalah 60 detik untuk metrik dan 5 detik untuk log. Selama pengaturan, Anda mungkin ingin menggunakan interval yang lebih pendek untuk tujuan debugging. Ingat untuk mengatur ulang ini untuk penggunaan produksi.
-</Note>
+Untuk memverifikasi pengaturan yang mengekspor metrik, periksa backend Anda untuk metrik `claude_code.session.count`, yang Claude Code keluarkan saat sesi dimulai. Untuk memverifikasi pengaturan hanya log, kirimkan prompt dan periksa acara `claude_code.user_prompt`.
+
+Jika tidak ada yang tiba, jalankan `claude --debug` dan periksa log debug. Claude Code melaporkan kegagalan dari pengekspor yang Anda konfigurasikan sebagai kesalahan `[3P telemetry]`, di mana 3P berarti pihak ketiga. Baris yang diawali dengan `[Anthropic telemetry]` menjelaskan [telemetri operasional terpisah Anthropic](/docs/id/data-usage#telemetry-services) dan tidak menunjukkan masalah dengan pengaturan Anda.
 
 Untuk opsi konfigurasi lengkap, lihat [spesifikasi OpenTelemetry](https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/protocol/exporter.md#configuration-options).
 
@@ -47,7 +47,7 @@ Untuk opsi konfigurasi lengkap, lihat [spesifikasi OpenTelemetry](https://github
   Konfigurasi administrator
 </h2>
 
-Administrator dapat mengonfigurasi pengaturan OpenTelemetry untuk semua pengguna melalui [file pengaturan terkelola](/docs/id/settings#settings-files). Ini memungkinkan kontrol terpusat pengaturan telemetri di seluruh organisasi. Lihat [prioritas pengaturan](/docs/id/settings#settings-precedence) untuk informasi lebih lanjut tentang bagaimana pengaturan diterapkan.
+Administrator dapat mengonfigurasi pengaturan OpenTelemetry untuk semua pengguna melalui [file pengaturan terkelola](/docs/id/managed-settings#delivery-mechanisms). Lihat [prioritas pengaturan](/docs/id/settings#settings-precedence) untuk informasi lebih lanjut tentang bagaimana pengaturan diterapkan.
 
 Contoh konfigurasi pengaturan terkelola:
 
@@ -64,11 +64,36 @@ Contoh konfigurasi pengaturan terkelola:
 }
 ```
 
-<Note>
-  Pengaturan terkelola dapat didistribusikan melalui MDM (Mobile Device Management) atau solusi manajemen perangkat lainnya. Variabel lingkungan yang ditentukan dalam file pengaturan terkelola memiliki prioritas tinggi dan tidak dapat ditimpa oleh pengguna.
-</Note>
+Claude Code mengabaikan [variabel pengekspor OpenTelemetry](/docs/id/settings-reference#variables-claude-code-ignores-in-env) dalam `.claude/settings.json` dan `.claude/settings.local.json` repositori, jadi repositori tidak dapat menggunakannya untuk menghidupkan telemetri, memilih ke mana telemetri pergi, atau menangkap konten. Atur variabel tersebut dalam pengaturan terkelola, atau biarkan setiap pengembang mengaturnya dalam shell atau `~/.claude/settings.json` mereka. Repositori masih dapat mematikan sinyal dengan menetapkan pemilih pengekspor, seperti `OTEL_LOGS_EXPORTER`, ke `none`, kecuali pengaturan terkelola, file `--settings`, atau lingkungan tempat Anda memulai Claude Code menetapkan variabel tersebut.
 
 Claude Code tidak meneruskan variabel lingkungan `OTEL_*` ke subproses yang dihasilkannya, termasuk alat Bash, hooks, server MCP, dan language servers. Aplikasi yang diinstrumentasi OpenTelemetry yang Anda jalankan melalui alat Bash tidak mewarisi titik akhir pengekspor atau header Claude Code, jadi atur variabel tersebut langsung dalam perintah jika aplikasi itu perlu mengekspor telemetrinya sendiri.
+
+<h3 id="how-managed-settings-lock-the-otlp-destination">
+  Bagaimana pengaturan terkelola mengunci tujuan OTLP
+</h3>
+
+Ketika Anda menetapkan variabel `OTEL_EXPORTER_OTLP_*` dalam pengaturan terkelola, Claude Code menghapus variabel yang ditetapkan pengembang yang bertentangan saat startup dan mencatat peringatan yang dapat Anda lihat dengan `claude --debug`. Apa yang dihapusnya tergantung pada variabel mana yang Anda tetapkan:
+
+* **Endpoints**: ketika Anda menetapkan `OTEL_EXPORTER_OTLP_ENDPOINT`, Claude Code menghapus setiap titik akhir per-sinyal yang ditetapkan pengembang. Pengembang tidak dapat mengarahkan satu sinyal ke kolektor yang berbeda, jadi Anda tidak perlu juga menetapkan variabel titik akhir per-sinyal dalam pengaturan terkelola.
+* **Protokol**: ketika Anda menetapkan `OTEL_EXPORTER_OTLP_PROTOCOL`, Claude Code menghapus setiap protokol per-sinyal yang ditetapkan pengembang.
+* **Kredensial**: ketika Anda menetapkan `OTEL_EXPORTER_OTLP_HEADERS`, `OTEL_EXPORTER_OTLP_CLIENT_KEY`, atau `OTEL_EXPORTER_OTLP_CLIENT_CERTIFICATE`, Claude Code menghapus versi per-sinyal dari variabel tersebut yang ditetapkan pengembang, ditambah setiap variabel titik akhir yang ditetapkan pengembang, generik atau per-sinyal, karena kredensial tersebut akan mencapai kolektor yang tidak dipilih pengaturan terkelola.
+* **Pemilih pengekspor**: `OTEL_METRICS_EXPORTER`, `OTEL_LOGS_EXPORTER`, dan `OTEL_TRACES_EXPORTER` beta mengikuti prioritas per-kunci normal. Pengaturan pengembang masih dapat menonaktifkan sinyal atau mengalihkannya ke pengekspor konsol, jadi tetapkan pemilih dalam pengaturan terkelola juga jika Anda perlu menguncinya. Di seluruh [sumber admin](/docs/id/managed-settings#precedence-within-the-managed-tier), `OTEL_LOGS_EXPORTER` mengikuti [unit telemetri](/docs/id/server-managed-settings#per-key-exceptions-across-managed-sources) sementara dua pemilih lainnya digabungkan per kunci. Memerlukan Claude Code v2.1.223 atau lebih baru.
+* **Titik akhir pelacakan beta**: dengan [pelacakan beta terperinci](#traces-beta) aktif, Claude Code mengekspor log dan jejak ke `BETA_TRACING_ENDPOINT` alih-alih melalui pengekspor log dan jejak. Claude Code oleh karena itu menghapus `BETA_TRACING_ENDPOINT` yang ditetapkan pengembang kapan pun salah satu pengaturan terkelola ini memutuskan tujuan sinyal:
+
+  * Titik akhir atau kredensial generik atau log/jejak
+  * Sebuah [`otelHeadersHelper`](/docs/id/settings-reference#otelheadershelper)
+  * Pemilih pengekspor log atau jejak yang ditetapkan ke `none`, `console`, atau kosong, nilai yang membuat sinyal tetap di luar kolektor
+  * `CLAUDE_CODE_ENABLE_TELEMETRY` dimatikan
+
+  Titik akhir atau kredensial khusus metrik tidak menghapusnya. Sebelum v2.1.251, `BETA_TRACING_ENDPOINT` yang ditetapkan pengembang mengarahkan ulang log dan jejak yang diekspor pelacakan beta terperinci bahkan ketika pengaturan terkelola menyematkan kolektor.
+
+Claude Code tidak menghapus variabel per-sinyal yang Anda tetapkan dalam pengaturan terkelola itu sendiri, jadi Anda dapat merutekan satu sinyal ke kolektor yang berbeda dengan menetapkan variabelnya di sana, seperti yang dilakukan [contoh SIEM](#send-events-to-a-siem). Jika Anda menetapkan kredensial per-sinyal di sana, Claude Code menghapus titik akhir yang ditetapkan pengembang untuk sinyal itu.
+
+Perilaku penghapusan ini mengubah di mana telemetri dikirimkan, bukan apa yang dikumpulkan Claude Code.
+
+Sebelum v2.1.217, setiap variabel mengikuti prioritas pengaturan per-kunci secara independen, jadi titik akhir khusus sinyal yang ditetapkan dalam pengaturan pengguna atau shell mengarahkan ulang sinyal itu dari kolektor terkelola.
+
+Ketika aplikasi desktop atau pelari [lingkungan yang di-host sendiri](/docs/id/self-hosted-environments) meluncurkan Claude Code dan menamai titik akhir OTLP dalam lingkungan yang disediakannya, Claude Code menyematkan tujuan dengan cara yang sama: variabel telemetri peluncur menghapus variabel yang ditetapkan pengembang persis seperti pengaturan terkelola. Claude Code tidak menghapus variabel yang ditetapkan peluncur itu sendiri. Memerlukan Claude Code v2.1.251 atau lebih baru.
 
 <h2 id="configuration-details">
   Detail konfigurasi
@@ -78,27 +103,39 @@ Claude Code tidak meneruskan variabel lingkungan `OTEL_*` ke subproses yang diha
   Variabel konfigurasi umum
 </h3>
 
-| Variabel Lingkungan                                 | Deskripsi                                                                                                                                                                                                                                                                                                                                                           | Nilai Contoh                                                                                                                           |
-| --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| `CLAUDE_CODE_ENABLE_TELEMETRY`                      | Mengaktifkan pengumpulan telemetri (diperlukan)                                                                                                                                                                                                                                                                                                                     | `1`                                                                                                                                    |
-| `OTEL_METRICS_EXPORTER`                             | Jenis pengekspor metrik, dipisahkan koma. Gunakan `none` untuk menonaktifkan                                                                                                                                                                                                                                                                                        | `console`, `otlp`, `prometheus`, `none`                                                                                                |
-| `OTEL_LOGS_EXPORTER`                                | Jenis pengekspor log/acara, dipisahkan koma. Gunakan `none` untuk menonaktifkan                                                                                                                                                                                                                                                                                     | `console`, `otlp`, `none`                                                                                                              |
-| `OTEL_EXPORTER_OTLP_PROTOCOL`                       | Protokol untuk pengekspor OTLP, berlaku untuk semua sinyal                                                                                                                                                                                                                                                                                                          | `grpc`, `http/json`, `http/protobuf`                                                                                                   |
-| `OTEL_EXPORTER_OTLP_ENDPOINT`                       | Titik akhir pengumpul OTLP untuk semua sinyal                                                                                                                                                                                                                                                                                                                       | `http://localhost:4317`                                                                                                                |
-| `OTEL_EXPORTER_OTLP_METRICS_PROTOCOL`               | Protokol untuk metrik, menimpa pengaturan umum                                                                                                                                                                                                                                                                                                                      | `grpc`, `http/json`, `http/protobuf`                                                                                                   |
-| `OTEL_EXPORTER_OTLP_METRICS_ENDPOINT`               | Titik akhir metrik OTLP, menimpa pengaturan umum                                                                                                                                                                                                                                                                                                                    | `http://localhost:4318/v1/metrics`                                                                                                     |
-| `OTEL_EXPORTER_OTLP_LOGS_PROTOCOL`                  | Protokol untuk log, menimpa pengaturan umum                                                                                                                                                                                                                                                                                                                         | `grpc`, `http/json`, `http/protobuf`                                                                                                   |
-| `OTEL_EXPORTER_OTLP_LOGS_ENDPOINT`                  | Titik akhir log OTLP, menimpa pengaturan umum                                                                                                                                                                                                                                                                                                                       | `http://localhost:4318/v1/logs`                                                                                                        |
-| `OTEL_EXPORTER_OTLP_HEADERS`                        | Header autentikasi untuk OTLP                                                                                                                                                                                                                                                                                                                                       | `Authorization=Bearer token`                                                                                                           |
-| `OTEL_METRIC_EXPORT_INTERVAL`                       | Interval ekspor dalam milidetik (default: 60000)                                                                                                                                                                                                                                                                                                                    | `5000`, `60000`                                                                                                                        |
-| `OTEL_LOGS_EXPORT_INTERVAL`                         | Interval ekspor log dalam milidetik (default: 5000)                                                                                                                                                                                                                                                                                                                 | `1000`, `10000`                                                                                                                        |
-| `OTEL_LOG_USER_PROMPTS`                             | Aktifkan pencatatan konten prompt pengguna (default: dinonaktifkan)                                                                                                                                                                                                                                                                                                 | `1` untuk mengaktifkan                                                                                                                 |
-| `OTEL_LOG_ASSISTANT_RESPONSES`                      | Aktifkan pencatatan teks respons asisten pada acara `assistant_response` (default: dinonaktifkan). Saat tidak diatur, kembali ke nilai `OTEL_LOG_USER_PROMPTS`. Memerlukan Claude Code v2.1.193 atau lebih baru                                                                                                                                                     | `1` untuk mengaktifkan, `0` untuk tetap disunting                                                                                      |
-| `OTEL_LOG_TOOL_DETAILS`                             | Aktifkan pencatatan parameter alat dan argumen input dalam acara alat dan atribut span trace: perintah Bash, nama server MCP dan alat, nama skill, nama workflow yang ditulis pengguna, dan input alat. Juga mengaktifkan nama perintah custom, plugin, dan MCP pada acara `user_prompt` (default: dinonaktifkan)                                                   | `1` untuk mengaktifkan                                                                                                                 |
-| `OTEL_LOG_TOOL_CONTENT`                             | Aktifkan pencatatan konten input dan output alat dalam acara span (default: dinonaktifkan). Memerlukan [tracing](#traces-beta). Konten dipotong pada 60 KB                                                                                                                                                                                                          | `1` untuk mengaktifkan                                                                                                                 |
-| `OTEL_LOG_RAW_API_BODIES`                           | Emit badan permintaan dan respons JSON API Anthropic Messages lengkap sebagai acara log `api_request_body` / `api_response_body` (default: dinonaktifkan). Badan mencakup seluruh riwayat percakapan. Mengaktifkan ini menyiratkan persetujuan untuk semua yang akan diungkapkan oleh `OTEL_LOG_USER_PROMPTS`, `OTEL_LOG_TOOL_DETAILS`, dan `OTEL_LOG_TOOL_CONTENT` | `1` untuk badan inline dipotong pada 60 KB, atau `file:<dir>` untuk badan tidak dipotong di disk dengan pointer `body_ref` dalam acara |
-| `OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE` | Preferensi temporalitas metrik (default: `delta`). Atur ke `cumulative` jika backend Anda mengharapkan temporalitas kumulatif                                                                                                                                                                                                                                       | `delta`, `cumulative`                                                                                                                  |
-| `CLAUDE_CODE_OTEL_HEADERS_HELPER_DEBOUNCE_MS`       | Interval untuk menyegarkan header dinamis (default: 1740000ms / 29 menit)                                                                                                                                                                                                                                                                                           | `900000`                                                                                                                               |
+Variabel-variabel ini mengonfigurasi pengekspor, titik akhir, dan perilaku ekspor untuk semua penerapan.
+
+Jika Anda menetapkan variabel titik akhir atau protokol per-sinyal, seperti `OTEL_EXPORTER_OTLP_METRICS_ENDPOINT`, Claude Code menggunakannya sebagai gantinya dari variabel generik untuk sinyal tersebut. Jika Anda menetapkan variabel header per-sinyal, seperti `OTEL_EXPORTER_OTLP_METRICS_HEADERS`, Claude Code menggabungkannya dengan `OTEL_EXPORTER_OTLP_HEADERS` generik untuk sinyal tersebut.
+
+Pada mesin dengan pengaturan terkelola, lihat [Bagaimana pengaturan terkelola mengunci tujuan OTLP](#how-managed-settings-lock-the-otlp-destination) untuk mengetahui apa yang Claude Code hapus.
+
+| Variabel Lingkungan                                 | Deskripsi                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Nilai Contoh                                                                                                                                                         |
+| --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `CLAUDE_CODE_ENABLE_TELEMETRY`                      | Mengaktifkan pengumpulan telemetri (diperlukan)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | `1`                                                                                                                                                                  |
+| `OTEL_METRICS_EXPORTER`                             | Jenis pengekspor metrik, dipisahkan koma. Gunakan `none` untuk menonaktifkan                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | `console`, `otlp`, `prometheus`, `none`                                                                                                                              |
+| `OTEL_LOGS_EXPORTER`                                | Jenis pengekspor log/acara, dipisahkan koma. Gunakan `none` untuk menonaktifkan                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | `console`, `otlp`, `none`                                                                                                                                            |
+| `OTEL_EXPORTER_OTLP_PROTOCOL`                       | Protokol untuk pengekspor OTLP, berlaku untuk semua sinyal. Claude Code tidak memiliki protokol default, jadi atur ini atau variabel protokol per-sinyal untuk setiap pengekspor `otlp` yang Anda aktifkan                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | `grpc`, `http/json`, `http/protobuf`                                                                                                                                 |
+| `OTEL_EXPORTER_OTLP_ENDPOINT`                       | Titik akhir pengumpul OTLP untuk semua sinyal                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | `http://localhost:4317`                                                                                                                                              |
+| `OTEL_EXPORTER_OTLP_METRICS_PROTOCOL`               | Protokol untuk metrik, menimpa pengaturan umum                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | `grpc`, `http/json`, `http/protobuf`                                                                                                                                 |
+| `OTEL_EXPORTER_OTLP_METRICS_ENDPOINT`               | Titik akhir metrik OTLP, menimpa pengaturan umum                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | `http://localhost:4318/v1/metrics`                                                                                                                                   |
+| `OTEL_EXPORTER_OTLP_LOGS_PROTOCOL`                  | Protokol untuk log, menimpa pengaturan umum                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | `grpc`, `http/json`, `http/protobuf`                                                                                                                                 |
+| `OTEL_EXPORTER_OTLP_LOGS_ENDPOINT`                  | Titik akhir log OTLP, menimpa pengaturan umum                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | `http://localhost:4318/v1/logs`                                                                                                                                      |
+| `OTEL_EXPORTER_OTLP_HEADERS`                        | Header autentikasi untuk OTLP                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | `Authorization=Bearer token`                                                                                                                                         |
+| `OTEL_EXPORTER_OTLP_METRICS_HEADERS`                | Header autentikasi untuk metrik, digabungkan dengan header umum                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | `Authorization=Bearer token`                                                                                                                                         |
+| `OTEL_EXPORTER_OTLP_LOGS_HEADERS`                   | Header autentikasi untuk log, digabungkan dengan header umum                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | `Authorization=Bearer token`                                                                                                                                         |
+| `OTEL_METRIC_EXPORT_INTERVAL`                       | Interval ekspor dalam milidetik (default: 60000)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | `5000`, `60000`                                                                                                                                                      |
+| `OTEL_LOGS_EXPORT_INTERVAL`                         | Interval ekspor log dalam milidetik (default: 5000)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | `1000`, `10000`                                                                                                                                                      |
+| `OTEL_LOG_USER_PROMPTS`                             | Aktifkan pencatatan konten prompt pengguna (default: dinonaktifkan)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | `1` untuk mengaktifkan                                                                                                                                               |
+| `OTEL_LOG_ASSISTANT_RESPONSES`                      | Aktifkan pencatatan teks respons asisten pada acara `assistant_response` (default: dinonaktifkan). Saat tidak diatur, kembali ke nilai `OTEL_LOG_USER_PROMPTS`. Memerlukan Claude Code v2.1.193 atau lebih baru                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | `1` untuk mengaktifkan, `0` untuk tetap disunting                                                                                                                    |
+| `OTEL_LOG_TOOL_DETAILS`                             | Aktifkan pencatatan parameter alat dan argumen input dalam acara alat dan atribut span trace: perintah Bash, nama server MCP dan alat, nama skill, nama workflow yang ditulis pengguna, dan input alat. Juga mengaktifkan nama perintah custom, plugin, dan MCP pada acara `user_prompt` (default: dinonaktifkan). Untuk server bawaan Claude Desktop, dalam sesi yang dimiliki Claude Desktop, `mcp_server_name`/`mcp_tool_name` dipancarkan pada `tool_decision`/`tool_result` bahkan dengan flag mati. Pengecualian memerlukan Claude Code v2.1.214 atau lebih baru                                                                                                                                                         | `1` untuk mengaktifkan                                                                                                                                               |
+| `OTEL_LOG_TOOL_CONTENT`                             | Aktifkan pencatatan konten alat dalam acara span [`tool.output`](#tool-output-span-event) (default: dinonaktifkan). Atribut span membawa konten alat di bawah [gerbang mereka sendiri](#new-context-gates). Memerlukan [tracing](#traces-beta). Konten dipotong pada batas konten (60 KB secara default)                                                                                                                                                                                                                                                                                                                                                                                                                       | `1` untuk mengaktifkan                                                                                                                                               |
+| `OTEL_LOG_MANAGED_SETTINGS`                         | Tambahkan pengaturan terkelola yang disunting, dan digest SHA-256 dari pengaturan sebelum penyuntingan, ke acara [managed settings resolved](#managed-settings-resolved-event) (default: dinonaktifkan). Nilai dalam pengaturan proyek atau lokal tidak mengaktifkannya. Memerlukan Claude Code v2.1.274 atau lebih baru                                                                                                                                                                                                                                                                                                                                                                                                       | `1` untuk mengaktifkan                                                                                                                                               |
+| `OTEL_LOG_RAW_API_BODIES`                           | Emit badan permintaan dan respons JSON API Anthropic Messages lengkap sebagai acara log `api_request_body` / `api_response_body` (default: dinonaktifkan). Badan mencakup seluruh riwayat percakapan. Mengaktifkan ini menyiratkan persetujuan untuk semua yang akan diungkapkan oleh `OTEL_LOG_USER_PROMPTS`, `OTEL_LOG_TOOL_DETAILS`, dan `OTEL_LOG_TOOL_CONTENT`                                                                                                                                                                                                                                                                                                                                                            | `1` untuk badan inline dipotong pada batas konten (60 KB secara default), atau `file:<dir>` untuk badan tidak dipotong di disk dengan pointer `body_ref` dalam acara |
+| `CLAUDE_CODE_OTEL_CONTENT_MAX_LENGTH`               | Batas konten: panjang maksimum atribut yang mengandung konten seperti respons model, konten alat, prompt sistem, dan badan API mentah, termasuk penanda pemotongan, dalam unit kode UTF-16 (default: 61440, yaitu 60 KB). Default diukur untuk backend yang membatasi nilai atribut pada 64 KB; naikkan hanya jika backend Anda menerima nilai yang lebih besar, atau turunkan untuk mengurangi volume telemetri. Saat batas atribut SDK OpenTelemetry, `OTEL_ATTRIBUTE_VALUE_LENGTH_LIMIT` atau salah satu varian logrecord dan span-nya, diatur lebih rendah, Claude Code memotong pada nilai yang lebih kecil itu sehingga penanda `[TRUNCATED ...]` tetap dalam batas SDK. Memerlukan Claude Code v2.1.214 atau lebih baru | `262144`                                                                                                                                                             |
+| `OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE` | Preferensi temporalitas metrik (default: `delta`). Atur ke `cumulative` jika backend Anda mengharapkan temporalitas kumulatif                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | `delta`, `cumulative`                                                                                                                                                |
+| `CLAUDE_CODE_OTEL_HEADERS_HELPER_DEBOUNCE_MS`       | Interval untuk menyegarkan header dinamis (default: 1740000ms / 29 menit)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | `900000`                                                                                                                                                             |
+
+Untuk protokol `http/protobuf` dan `http/json`, Claude Code mengirim setiap permintaan ekspor dengan header `Content-Length`. Sebelum v2.1.212, versi Claude Code dari v2.1.191 ke depan mengirim permintaan ini dengan chunked transfer encoding; Azure Monitor dan titik akhir lain yang memerlukan panjang yang dideklarasikan menolaknya dengan kesalahan `411 Length Required` atau `400`.
 
 <h3 id="mtls-authentication">
   Autentikasi mTLS
@@ -111,7 +148,7 @@ Cara Anda mengonfigurasi sertifikat klien untuk pengekspor OTLP tergantung pada 
 | `http/protobuf`, `http/json` | `CLAUDE_CODE_CLIENT_CERT`, `CLAUDE_CODE_CLIENT_KEY`, dan secara opsional `CLAUDE_CODE_CLIENT_KEY_PASSPHRASE`. Lihat [Konfigurasi jaringan](/docs/id/network-config#mtls-authentication)                  | `NODE_EXTRA_CA_CERTS`            |
 | `grpc`                       | `OTEL_EXPORTER_OTLP_CLIENT_KEY` dan `OTEL_EXPORTER_OTLP_CLIENT_CERTIFICATE`, atau varian per-sinyal seperti `OTEL_EXPORTER_OTLP_METRICS_CLIENT_KEY` untuk menggunakan sertifikat berbeda per sinyal | `OTEL_EXPORTER_OTLP_CERTIFICATE` |
 
-Untuk `grpc`, SDK OpenTelemetry membaca variabel OTLP standar secara langsung, jadi konfigurasi yang ada yang menetapkan variabel metrik per-sinyal terus berfungsi.
+Untuk `grpc`, SDK OpenTelemetry membaca variabel OTLP standar secara langsung, jadi konfigurasi yang ada yang menetapkan variabel metrik per-sinyal terus berfungsi. Pada mesin dengan pengaturan terkelola, Claude Code [mungkin menghapus kredensial dan titik akhir per-sinyal yang ditetapkan pengembang](#how-managed-settings-lock-the-otlp-destination) saat startup.
 
 <h3 id="metrics-cardinality-control">
   Kontrol kardinalitas metrik
@@ -119,15 +156,16 @@ Untuk `grpc`, SDK OpenTelemetry membaca variabel OTLP standar secara langsung, j
 
 Variabel lingkungan berikut mengontrol atribut mana yang disertakan dalam metrik untuk mengelola kardinalitas:
 
-| Variabel Lingkungan                        | Deskripsi                                                                             | Nilai Default | Contoh untuk Menonaktifkan |
-| ------------------------------------------ | ------------------------------------------------------------------------------------- | ------------- | -------------------------- |
-| `OTEL_METRICS_INCLUDE_SESSION_ID`          | Sertakan atribut session.id dalam metrik                                              | `true`        | `false`                    |
-| `OTEL_METRICS_INCLUDE_VERSION`             | Sertakan atribut app.version dalam metrik                                             | `false`       | `true`                     |
-| `OTEL_METRICS_INCLUDE_ACCOUNT_UUID`        | Sertakan atribut user.account\_uuid dan user.account\_id dalam metrik                 | `true`        | `false`                    |
-| `OTEL_METRICS_INCLUDE_ENTRYPOINT`          | Sertakan atribut app.entrypoint dalam metrik                                          | `false`       | `true`                     |
-| `OTEL_METRICS_INCLUDE_RESOURCE_ATTRIBUTES` | Sertakan kunci dari `OTEL_RESOURCE_ATTRIBUTES` sebagai atribut pada titik data metrik | `true`        | `false`                    |
+| Variabel Lingkungan                        | Deskripsi                                                                                                                                                            | Nilai Default | Contoh untuk Menonaktifkan |
+| ------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- | -------------------------- |
+| `OTEL_METRICS_INCLUDE_SESSION_ID`          | Sertakan atribut session.id dalam metrik                                                                                                                             | `true`        | `false`                    |
+| `OTEL_METRICS_INCLUDE_VERSION`             | Sertakan atribut app.version dalam metrik                                                                                                                            | `false`       | `true`                     |
+| `OTEL_METRICS_INCLUDE_ACCOUNT_UUID`        | Sertakan atribut user.account\_uuid dan user.account\_id dalam metrik                                                                                                | `true`        | `false`                    |
+| `OTEL_METRICS_INCLUDE_ENTRYPOINT`          | Sertakan atribut app.entrypoint dalam metrik                                                                                                                         | `false`       | `true`                     |
+| `OTEL_METRICS_INCLUDE_RESOURCE_ATTRIBUTES` | Sertakan kunci dari `OTEL_RESOURCE_ATTRIBUTES` sebagai atribut pada titik data metrik                                                                                | `true`        | `false`                    |
+| `OTEL_METRICS_INCLUDE_REPOSITORY`          | Sertakan atribut identitas repositori `vcs.*` [repository attributes](#repository-attributes) pada metrik dan acara. Memerlukan Claude Code v2.1.269 atau lebih baru | `false`       | `true`                     |
 
-Variabel-variabel ini membantu mengontrol kardinalitas metrik, yang mempengaruhi persyaratan penyimpanan dan kinerja kueri di backend metrik Anda. Kardinalitas yang lebih rendah umumnya berarti kinerja yang lebih baik dan biaya penyimpanan yang lebih rendah tetapi data yang kurang granular untuk analisis.
+Kardinalitas yang lebih rendah umumnya berarti kinerja yang lebih baik dan biaya penyimpanan yang lebih rendah tetapi data yang kurang granular untuk analisis.
 
 <h3 id="traces-beta">
   Traces (beta)
@@ -135,7 +173,7 @@ Variabel-variabel ini membantu mengontrol kardinalitas metrik, yang mempengaruhi
 
 Distributed tracing mengekspor spans yang menghubungkan setiap prompt pengguna ke permintaan API dan eksekusi alat yang dipicunya, sehingga Anda dapat melihat permintaan lengkap sebagai satu trace di backend tracing Anda.
 
-Tracing dimatikan secara default. Untuk mengaktifkannya, atur `CLAUDE_CODE_ENABLE_TELEMETRY=1` dan `CLAUDE_CODE_ENHANCED_TELEMETRY_BETA=1`, kemudian atur `OTEL_TRACES_EXPORTER` untuk memilih tempat spans dikirim. Traces menggunakan kembali [konfigurasi OTLP umum](#common-configuration-variables) untuk titik akhir, protokol, header, dan [mTLS](#mtls-authentication).
+Tracing dimatikan secara default. Untuk mengaktifkannya, atur `CLAUDE_CODE_ENABLE_TELEMETRY=1` dan `CLAUDE_CODE_ENHANCED_TELEMETRY_BETA=1`, kemudian atur `OTEL_TRACES_EXPORTER` untuk memilih tempat spans dikirim. Traces menggunakan kembali [konfigurasi OTLP umum](#common-configuration-variables) untuk titik akhir, protokol, header, dan [mTLS](#mtls-authentication). Pada mesin dengan pengaturan terkelola, Claude Code [mungkin menghapus kredensial dan titik akhir per-sinyal yang ditetapkan pengembang](#how-managed-settings-lock-the-otlp-destination) saat startup.
 
 | Variabel Lingkungan                   | Deskripsi                                                                          | Nilai Contoh                         |
 | ------------------------------------- | ---------------------------------------------------------------------------------- | ------------------------------------ |
@@ -143,6 +181,7 @@ Tracing dimatikan secara default. Untuk mengaktifkannya, atur `CLAUDE_CODE_ENABL
 | `OTEL_TRACES_EXPORTER`                | Jenis pengekspor traces, dipisahkan koma. Gunakan `none` untuk menonaktifkan       | `console`, `otlp`, `none`            |
 | `OTEL_EXPORTER_OTLP_TRACES_PROTOCOL`  | Protokol untuk traces, menimpa `OTEL_EXPORTER_OTLP_PROTOCOL`                       | `grpc`, `http/json`, `http/protobuf` |
 | `OTEL_EXPORTER_OTLP_TRACES_ENDPOINT`  | Titik akhir traces OTLP, menimpa `OTEL_EXPORTER_OTLP_ENDPOINT`                     | `http://localhost:4318/v1/traces`    |
+| `OTEL_EXPORTER_OTLP_TRACES_HEADERS`   | Header autentikasi untuk traces, digabungkan dengan `OTEL_EXPORTER_OTLP_HEADERS`   | `Authorization=Bearer token`         |
 | `OTEL_TRACES_EXPORT_INTERVAL`         | Interval ekspor batch span dalam milidetik (default: 5000)                         | `1000`, `10000`                      |
 
 Spans menyunting teks prompt pengguna, detail input alat, dan konten alat secara default. Atur `OTEL_LOG_USER_PROMPTS=1`, `OTEL_LOG_TOOL_DETAILS=1`, dan `OTEL_LOG_TOOL_CONTENT=1` untuk menyertakannya.
@@ -154,6 +193,10 @@ Saat tracing aktif dan Claude Code terhubung langsung ke API Anthropic, setiap p
 Secara default, header `traceparent` pada permintaan model dan HTTP MCP dikirim hanya saat `ANTHROPIC_BASE_URL` tidak diatur atau menunjuk ke API Anthropic, karena beberapa proxy menolak header yang tidak dikenali. Variabel `TRACEPARENT` subproses dikendalikan oleh switch yang sama untuk konsistensi. Jika Anda menjalankan Claude Code melalui proxy `ANTHROPIC_BASE_URL` kustom dan ingin konteks trace dipropagasi, atur `CLAUDE_CODE_PROPAGATE_TRACEPARENT=1`.
 
 Dalam sesi Agent SDK dan non-interaktif yang dimulai dengan `-p`, Claude Code juga membaca `TRACEPARENT` dan `TRACESTATE` dari lingkungannya sendiri saat memulai setiap span interaksi. Ini memungkinkan proses embedding untuk melewatkan konteks trace W3C aktifnya ke dalam subproses sehingga spans Claude Code muncul sebagai anak dari distributed trace pemanggil. Sesi interaktif mengabaikan `TRACEPARENT` inbound untuk menghindari secara tidak sengaja mewarisi nilai ambient dari lingkungan CI atau container.
+
+Konteks trace inbound juga berlaku untuk [events](#events). Dalam sesi Agent SDK dan `-p` dengan `TRACEPARENT` diatur, setiap catatan log acara OTLP membawa nilai `trace_id` dan `span_id` yang menghubungkannya ke trace aplikasi Anda, bahkan saat pengekspor traces tidak dikonfigurasi, sehingga backend logging Anda dapat mengorelasikan acara dengan sisa trace.
+
+Catatan yang dipancarkan saat interaksi aktif membawa ID span interaksi, bahkan saat Claude Code memancarkannya di luar konteks async span, seperti dalam callback prompt izin atau untuk catatan yang di-buffer selama startup dan diekspor nanti. Catatan yang dipancarkan tanpa span interaksi aktif membawa ID `TRACEPARENT` inbound secara langsung. Sebelum v2.1.214, catatan yang dipancarkan di luar konteks async span membawa ID `TRACEPARENT` inbound sebagai gantinya dari ID span. Sebelum v2.1.212, catatan acara yang dipancarkan di luar span aktif tidak membawa `trace_id` atau `span_id`.
 
 <h4 id="span-hierarchy">
   Hierarki span
@@ -173,6 +216,8 @@ claude_code.interaction
 
 Dalam sesi Agent SDK dan `claude -p`, `claude_code.interaction` itu sendiri menjadi anak dari span pemanggil saat `TRACEPARENT` diatur dalam lingkungan.
 
+Saat hook `PreToolUse` [menunda panggilan alat](/docs/id/hooks#defer-a-tool-call-for-later), Claude Code menyimpan konteks trace dari giliran yang menundanya. Saat Anda melanjutkan sesi dan alat dijalankan kembali, spans alat bergabung dengan trace giliran sebelumnya sebagai anak dari span `claude_code.interaction` giliran.
+
 <h4 id="span-attributes">
   Atribut span
 </h4>
@@ -181,65 +226,93 @@ Setiap span membawa [atribut standar](#standard-attributes) ditambah atribut `sp
 
 **`claude_code.interaction`**
 
-| Atribut                   | Deskripsi                                                  | Gated by                |
-| ------------------------- | ---------------------------------------------------------- | ----------------------- |
-| `user_prompt`             | Teks prompt. Nilai adalah `<REDACTED>` kecuali gate diatur | `OTEL_LOG_USER_PROMPTS` |
-| `user_prompt_length`      | Panjang prompt dalam karakter                              |                         |
-| `interaction.sequence`    | Penghitung berbasis 1 dari interaksi dalam sesi ini        |                         |
-| `interaction.duration_ms` | Durasi wall-clock dari giliran                             |                         |
+| Atribut                   | Deskripsi                                                                                                                                                                                     | Gated by                |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- |
+| `user_prompt`             | Teks prompt. Nilai adalah `<REDACTED>` kecuali gate diatur                                                                                                                                    | `OTEL_LOG_USER_PROMPTS` |
+| `user_prompt_length`      | Panjang prompt dalam karakter                                                                                                                                                                 |                         |
+| `interaction.sequence`    | Penghitung berbasis 1 dari interaksi, dihitung per proses Claude Code daripada per sesi, seperti yang dijelaskan untuk [`event.sequence`](#event-correlation-attributes)                      |                         |
+| `parent.source`           | Bagaimana span mendapatkan parent trace-nya: `env` saat itu parent di bawah `TRACEPARENT` inbound, `none` saat itu memulai trace-nya sendiri. Memerlukan Claude Code v2.1.268 atau lebih baru |                         |
+| `interaction.duration_ms` | Durasi wall-clock dari giliran                                                                                                                                                                |                         |
 
 **`claude_code.llm_request`**
 
-| Atribut                          | Deskripsi                                                                                                                                                              | Gated by                |
-| -------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- |
-| `model`                          | Pengidentifikasi model                                                                                                                                                 |                         |
-| `gen_ai.system`                  | Selalu `anthropic`. Konvensi semantik GenAI OpenTelemetry                                                                                                              |                         |
-| `gen_ai.request.model`           | Nilai yang sama dengan `model`. Konvensi semantik GenAI OpenTelemetry                                                                                                  |                         |
-| `query_source`                   | Subsistem yang mengeluarkan permintaan, seperti `repl_main_thread` atau nama subagent                                                                                  |                         |
-| `agent_id`                       | Pengidentifikasi subagent atau rekan kerja yang mengeluarkan permintaan. Tidak ada pada sesi utama                                                                     |                         |
-| `parent_agent_id`                | Pengidentifikasi agen yang menghasilkan yang ini. Tidak ada untuk sesi utama dan untuk agen yang dihasilkan langsung darinya                                           |                         |
-| `workflow.run_id`                | Pengidentifikasi run dari run alat [Workflow](/docs/id/workflows) yang menghasilkan agen ini, dengan awalan `wf_`. Tidak ada untuk agen yang tidak dihasilkan oleh workflow |                         |
-| `workflow.name`                  | Nama workflow yang menghasilkan agen ini. Nama yang ditulis pengguna diganti dengan `custom` kecuali gate diatur                                                       | `OTEL_LOG_TOOL_DETAILS` |
-| `speed`                          | `fast` atau `normal`                                                                                                                                                   |                         |
-| `llm_request.context`            | `interaction`, `tool`, atau `standalone` tergantung pada span induk                                                                                                    |                         |
-| `duration_ms`                    | Durasi wall-clock termasuk retry                                                                                                                                       |                         |
-| `ttft_ms`                        | Waktu ke token pertama dalam milidetik                                                                                                                                 |                         |
-| `input_tokens`                   | Jumlah token input dari blok penggunaan API                                                                                                                            |                         |
-| `output_tokens`                  | Jumlah token output                                                                                                                                                    |                         |
-| `cache_read_tokens`              | Token yang dibaca dari prompt cache                                                                                                                                    |                         |
-| `cache_creation_tokens`          | Token yang ditulis ke prompt cache                                                                                                                                     |                         |
-| `request_id`                     | ID permintaan API Anthropic dari header respons `request-id`                                                                                                           |                         |
-| `gen_ai.response.id`             | Nilai yang sama dengan `request_id`. Konvensi semantik GenAI OpenTelemetry                                                                                             |                         |
-| `client_request_id`              | `x-client-request-id` yang dihasilkan klien dari upaya terakhir                                                                                                        |                         |
-| `attempt`                        | Total upaya yang dilakukan untuk permintaan ini                                                                                                                        |                         |
-| `success`                        | `true` atau `false`                                                                                                                                                    |                         |
-| `status_code`                    | Kode status HTTP saat permintaan gagal                                                                                                                                 |                         |
-| `error`                          | Pesan kesalahan saat permintaan gagal                                                                                                                                  |                         |
-| `response.has_tool_call`         | `true` saat respons berisi blok tool-use                                                                                                                               |                         |
-| `stop_reason`                    | API response `stop_reason`, seperti `end_turn`, `tool_use`, `max_tokens`, `stop_sequence`, `pause_turn`, atau `refusal`                                                |                         |
-| `gen_ai.response.finish_reasons` | Nilai yang sama dengan `stop_reason`, dibungkus dalam array string. Konvensi semantik GenAI OpenTelemetry                                                              |                         |
+| Atribut                          | Deskripsi                                                                                                                                                                                                                                                                                                   | Gated by                       |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------ |
+| `model`                          | Pengidentifikasi model                                                                                                                                                                                                                                                                                      |                                |
+| `gen_ai.system`                  | Selalu `anthropic`. Konvensi semantik GenAI OpenTelemetry                                                                                                                                                                                                                                                   |                                |
+| `gen_ai.request.model`           | Nilai yang sama dengan `model`. Konvensi semantik GenAI OpenTelemetry                                                                                                                                                                                                                                       |                                |
+| `query_source`                   | Subsistem yang mengeluarkan permintaan, seperti `repl_main_thread` atau nama subagent                                                                                                                                                                                                                       | `ENABLE_BETA_TRACING_DETAILED` |
+| `query_source_safe`              | Bentuk terbatas dari `query_source`, dipancarkan apakah atau tidak detailed beta tracing aktif, dengan nilai seperti `repl_main_thread` atau `agent.builtin.general-purpose`. `:` menjadi `.` dan agen yang dinamai pengguna muncul sebagai `agent.custom`. Memerlukan Claude Code v2.1.268 atau lebih baru |                                |
+| `agent_id`                       | Pengidentifikasi subagent atau rekan kerja yang mengeluarkan permintaan. Tidak ada pada sesi utama                                                                                                                                                                                                          |                                |
+| `parent_agent_id`                | Pengidentifikasi agen yang menghasilkan yang ini. Tidak ada untuk sesi utama dan untuk agen yang dihasilkan langsung darinya                                                                                                                                                                                |                                |
+| `workflow.run_id`                | Pengidentifikasi run dari run alat [Workflow](/docs/id/workflows) yang menghasilkan agen ini, dengan awalan `wf_`. Tidak ada untuk agen yang tidak dihasilkan oleh workflow                                                                                                                                      |                                |
+| `workflow.name`                  | Nama workflow yang menghasilkan agen ini. Nama yang ditulis pengguna diganti dengan `custom` kecuali gate diatur                                                                                                                                                                                            | `OTEL_LOG_TOOL_DETAILS`        |
+| `speed`                          | `fast` atau `normal`                                                                                                                                                                                                                                                                                        |                                |
+| `effort`                         | [Effort level](/docs/id/model-config#adjust-effort-level) yang diterapkan pada permintaan: `low`, `medium`, `high`, `xhigh`, atau `max`. Tidak ada saat Claude Code tidak mengirim effort level, misalnya pada model yang tidak mendukung effort. Memerlukan Claude Code v2.1.274 atau lebih baru                |                                |
+| `llm_request.context`            | `interaction`, `tool`, atau `standalone` tergantung pada span induk                                                                                                                                                                                                                                         |                                |
+| `duration_ms`                    | Durasi wall-clock termasuk retry                                                                                                                                                                                                                                                                            |                                |
+| `ttft_ms`                        | Waktu ke token pertama dalam milidetik                                                                                                                                                                                                                                                                      |                                |
+| `first_content_ms`               | Waktu dari awal permintaan ke blok konten pertama dari upaya yang berhasil, dalam milidetik. Tidak ada pada permintaan yang kembali ke jalur non-streaming. Memerlukan Claude Code v2.1.268 atau lebih baru                                                                                                 |                                |
+| `input_tokens`                   | Jumlah token input dari blok penggunaan API                                                                                                                                                                                                                                                                 |                                |
+| `output_tokens`                  | Jumlah token output                                                                                                                                                                                                                                                                                         |                                |
+| `cache_read_tokens`              | Token yang dibaca dari prompt cache                                                                                                                                                                                                                                                                         |                                |
+| `cache_creation_tokens`          | Token yang ditulis ke prompt cache                                                                                                                                                                                                                                                                          |                                |
+| `request_id`                     | ID permintaan API Anthropic dari header respons `request-id`                                                                                                                                                                                                                                                |                                |
+| `gen_ai.response.id`             | Nilai yang sama dengan `request_id`. Konvensi semantik GenAI OpenTelemetry                                                                                                                                                                                                                                  |                                |
+| `client_request_id`              | `x-client-request-id` yang dihasilkan klien dari upaya terakhir                                                                                                                                                                                                                                             |                                |
+| `attempt`                        | Total upaya yang dilakukan untuk permintaan ini                                                                                                                                                                                                                                                             |                                |
+| `success`                        | `true` atau `false`                                                                                                                                                                                                                                                                                         |                                |
+| `status_code`                    | Kode status HTTP saat permintaan gagal                                                                                                                                                                                                                                                                      |                                |
+| `error`                          | Pesan kesalahan saat permintaan gagal                                                                                                                                                                                                                                                                       |                                |
+| `error_class`                    | Token kelas kesalahan pendek saat permintaan gagal, seperti `api_timeout` atau `server_overload`. Memerlukan Claude Code v2.1.268 atau lebih baru                                                                                                                                                           |                                |
+| `response.has_tool_call`         | `true` saat respons berisi blok tool-use                                                                                                                                                                                                                                                                    |                                |
+| `stop_reason`                    | API response `stop_reason`, seperti `end_turn`, `tool_use`, `max_tokens`, `stop_sequence`, `pause_turn`, atau `refusal`                                                                                                                                                                                     |                                |
+| `gen_ai.response.finish_reasons` | Nilai yang sama dengan `stop_reason`, dibungkus dalam array string. Konvensi semantik GenAI OpenTelemetry                                                                                                                                                                                                   |                                |
 
 Setiap upaya retry juga dicatat sebagai acara span `gen_ai.request.attempt` dengan atribut `attempt` dan `client_request_id`.
 
 **`claude_code.tool`**
 
-| Atribut               | Deskripsi                                                                                                                                                                                                                                              | Gated by                |
-| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------- |
-| `tool_name`           | Nama alat                                                                                                                                                                                                                                              |                         |
-| `duration_ms`         | Durasi wall-clock termasuk tunggu izin dan eksekusi                                                                                                                                                                                                    |                         |
-| `result_tokens`       | Ukuran token perkiraan dari hasil alat                                                                                                                                                                                                                 |                         |
-| `agent_id`            | Pengidentifikasi subagent atau rekan kerja yang menjalankan alat. Tidak ada pada sesi utama                                                                                                                                                            |                         |
-| `parent_agent_id`     | Pengidentifikasi agen yang menghasilkan yang ini. Tidak ada untuk sesi utama dan untuk agen yang dihasilkan langsung darinya                                                                                                                           |                         |
-| `workflow.run_id`     | Pengidentifikasi run dari run alat Workflow yang menghasilkan agen ini, dengan awalan `wf_`. Tidak ada untuk agen yang tidak dihasilkan oleh workflow                                                                                                  |                         |
-| `workflow.name`       | Nama workflow yang menghasilkan agen ini. Nama yang ditulis pengguna diganti dengan `custom` kecuali gate diatur                                                                                                                                       | `OTEL_LOG_TOOL_DETAILS` |
-| `tool_use_id`         | ID blok `tool_use` model untuk panggilan ini. Cocok dengan `tool_use_id` pada acara [tool\_result](#tool-result-event) dan [tool\_decision](#tool-decision-event) serta dalam payload hook, sehingga Anda dapat menggabungkan span ke catatan tersebut |                         |
-| `gen_ai.tool.call.id` | Nilai yang sama dengan `tool_use_id`. Konvensi semantik GenAI OpenTelemetry                                                                                                                                                                            |                         |
-| `file_path`           | Jalur file target untuk alat Read, Edit, dan Write                                                                                                                                                                                                     | `OTEL_LOG_TOOL_DETAILS` |
-| `full_command`        | String perintah untuk alat Bash                                                                                                                                                                                                                        | `OTEL_LOG_TOOL_DETAILS` |
-| `skill_name`          | Nama skill untuk alat Skill                                                                                                                                                                                                                            | `OTEL_LOG_TOOL_DETAILS` |
-| `subagent_type`       | Jenis subagent untuk alat Agent atau alat Task legacy                                                                                                                                                                                                  | `OTEL_LOG_TOOL_DETAILS` |
+| Atribut               | Deskripsi                                                                                                                                                                                                                                                                                                                        | Gated by                |
+| --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- |
+| `tool_name`           | Nama alat                                                                                                                                                                                                                                                                                                                        |                         |
+| `tool_name_safe`      | Bentuk `tool_name` yang tidak membawa nama yang dipilih pengguna. Nama alat bawaan lulus verbatim. Nama alat MCP muncul sebagai `mcp_other`, kecuali nama alat yang cocok dengan beberapa bentuk tetap, seperti alat `playwright` yang dinamai `browser_*`, yang lulus verbatim. Memerlukan Claude Code v2.1.268 atau lebih baru |                         |
+| `bash_command_class`  | Untuk alat Bash: kategori program pertama perintah dari daftar tetap, seperti `vcs` atau `package_manager`. `other` untuk program di luar daftar, `unparsed` saat baris tidak dapat diuraikan. Memerlukan Claude Code v2.1.268 atau lebih baru                                                                                   |                         |
+| `bash_argv0`          | Untuk alat Bash: program pertama perintah saat itu berada di daftar tetap yang sama, seperti `git` atau `npm`. `other` untuk program apa pun di luar daftar. Memerlukan Claude Code v2.1.268 atau lebih baru                                                                                                                     |                         |
+| `duration_ms`         | Durasi wall-clock termasuk tunggu izin dan eksekusi                                                                                                                                                                                                                                                                              |                         |
+| `result_tokens`       | Ukuran token perkiraan dari hasil alat                                                                                                                                                                                                                                                                                           |                         |
+| `agent_id`            | Pengidentifikasi subagent atau rekan kerja yang menjalankan alat. Tidak ada pada sesi utama                                                                                                                                                                                                                                      |                         |
+| `parent_agent_id`     | Pengidentifikasi agen yang menghasilkan yang ini. Tidak ada untuk sesi utama dan untuk agen yang dihasilkan langsung darinya                                                                                                                                                                                                     |                         |
+| `workflow.run_id`     | Pengidentifikasi run dari run alat Workflow yang menghasilkan agen ini, dengan awalan `wf_`. Tidak ada untuk agen yang tidak dihasilkan oleh workflow                                                                                                                                                                            |                         |
+| `workflow.name`       | Nama workflow yang menghasilkan agen ini. Nama yang ditulis pengguna diganti dengan `custom` kecuali gate diatur                                                                                                                                                                                                                 | `OTEL_LOG_TOOL_DETAILS` |
+| `tool_use_id`         | ID blok `tool_use` model untuk panggilan ini. Cocok dengan `tool_use_id` pada acara [tool\_result](#tool-result-event) dan [tool\_decision](#tool-decision-event) serta dalam payload hook, sehingga Anda dapat menggabungkan span ke catatan tersebut                                                                           |                         |
+| `gen_ai.tool.call.id` | Nilai yang sama dengan `tool_use_id`. Konvensi semantik GenAI OpenTelemetry                                                                                                                                                                                                                                                      |                         |
+| `file_path`           | Jalur file target untuk alat Read, Edit, dan Write                                                                                                                                                                                                                                                                               | `OTEL_LOG_TOOL_DETAILS` |
+| `full_command`        | String perintah untuk alat Bash                                                                                                                                                                                                                                                                                                  | `OTEL_LOG_TOOL_DETAILS` |
+| `skill_name`          | Nama skill untuk alat Skill                                                                                                                                                                                                                                                                                                      | `OTEL_LOG_TOOL_DETAILS` |
+| `subagent_type`       | Jenis subagent untuk alat Agent atau alat Task legacy                                                                                                                                                                                                                                                                            | `OTEL_LOG_TOOL_DETAILS` |
 
-Saat `OTEL_LOG_TOOL_CONTENT=1`, span ini juga mencatat acara span `tool.output` yang atributnya berisi badan input dan output alat, dipotong pada 60 KB per atribut.
+<span id="tool-output-span-event" />**`tool.output` span event on `claude_code.tool`**
+
+Jika Anda menetapkan `OTEL_LOG_TOOL_CONTENT=1`, panggilan Read dan Bash dapat mencatat acara span `tool.output` pada span `claude_code.tool`. Panggilan Edit dan Write mencatat satu hanya saat Anda juga menetapkan `OTEL_LOG_TOOL_DETAILS=1`. Variabel itu tidak dibatasi pada kedua alat tersebut, jadi periksa [barisnya dalam tabel konfigurasi](#common-configuration-variables) untuk argumen yang ditambahkannya di tempat lain.
+
+Claude Code menulis acara ini dari pengembalian yang berhasil dari panggilan alat, jadi panggilan yang menimbulkan kesalahan tidak mencatat apa pun, apa pun alatnya. Di antara panggilan yang memang kembali, itu tidak mencatat acara `tool.output` untuk:
+
+* Panggilan ke alat apa pun selain Read, Edit, Write, dan Bash, termasuk alat MCP dan WebFetch
+* Read yang mengembalikan apa pun selain teks file, seperti gambar, PDF, atau pembacaan ulang file yang isinya belum berubah
+* Panggilan Edit atau Write, kecuali Anda juga menetapkan `OTEL_LOG_TOOL_DETAILS=1`
+
+Acara membawa atribut-atribut ini, masing-masing dipotong pada batas konten (60 KB secara default). `Gated by` menamai variabel yang dibutuhkan atribut di atas `OTEL_LOG_TOOL_CONTENT=1`, dan untuk Edit dan Write variabel itu mengatur acara itu sendiri daripada atribut.
+
+| Atribut        | Deskripsi                                                                                         | Gated by                                 |
+| -------------- | ------------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| `content`      | Teks yang dikembalikan alat Read, atau teks yang diminta panggilan Write untuk ditulis            | `OTEL_LOG_TOOL_DETAILS` untuk alat Write |
+| `output`       | Output gabungan dari perintah Bash, dengan stderr yang diselipkan ke stdout                       |                                          |
+| `diff`         | Patch terstruktur yang diterapkan alat Edit                                                       | `OTEL_LOG_TOOL_DETAILS`                  |
+| `file_path`    | Jalur file target untuk alat Read, Edit, dan Write, mengulangi atribut span dengan nama yang sama | `OTEL_LOG_TOOL_DETAILS`                  |
+| `bash_command` | String perintah untuk alat Bash                                                                   | `OTEL_LOG_TOOL_DETAILS`                  |
+
+Atribut `tool_name` span induk memberi tahu Anda alat mana yang berasal dari acara. Atribut yang dipotong pada batas konten disertai dengan `<attribute>_truncated` dan `<attribute>_original_length`.
 
 **`claude_code.tool.blocked_on_user`**
 
@@ -251,17 +324,20 @@ Saat `OTEL_LOG_TOOL_CONTENT=1`, span ini juga mencatat acara span `tool.output` 
 
 **`claude_code.tool.execution`**
 
-| Atribut               | Deskripsi                                                                                                                                                 | Gated by                |
-| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- |
-| `duration_ms`         | Waktu yang dihabiskan menjalankan badan alat                                                                                                              |                         |
-| `tool_use_id`         | Nilai yang sama dengan span `claude_code.tool` induk                                                                                                      |                         |
-| `gen_ai.tool.call.id` | Nilai yang sama dengan `tool_use_id`. Konvensi semantik GenAI OpenTelemetry                                                                               |                         |
-| `success`             | `true` atau `false`                                                                                                                                       |                         |
-| `error`               | String kategori kesalahan saat eksekusi gagal, seperti `Error:ENOENT` atau `ShellError`. Berisi pesan kesalahan lengkap sebagai gantinya saat gate diatur | `OTEL_LOG_TOOL_DETAILS` |
+| Atribut               | Deskripsi                                                                                                                                                                                                                                                                         | Gated by                |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- |
+| `duration_ms`         | Waktu yang dihabiskan menjalankan badan alat                                                                                                                                                                                                                                      |                         |
+| `tool_use_id`         | Nilai yang sama dengan span `claude_code.tool` induk                                                                                                                                                                                                                              |                         |
+| `gen_ai.tool.call.id` | Nilai yang sama dengan `tool_use_id`. Konvensi semantik GenAI OpenTelemetry                                                                                                                                                                                                       |                         |
+| `success`             | `true` atau `false`                                                                                                                                                                                                                                                               |                         |
+| `error`               | String kategori kesalahan saat eksekusi gagal, seperti `Error:ENOENT` atau `ShellError`. Berisi pesan kesalahan lengkap sebagai gantinya saat gate diatur                                                                                                                         | `OTEL_LOG_TOOL_DETAILS` |
+| `error_class`         | Kategori kesalahan dalam bentuk pengidentifikasi, dengan karakter di luar huruf, digit, dan garis bawah diganti dengan `_`, seperti `Error_ENOENT` atau `ShellError`. Membawa kategori bahkan saat `error` membawa pesan lengkap. Memerlukan Claude Code v2.1.268 atau lebih baru |                         |
 
 **`claude_code.hook`**
 
-Span ini dipancarkan hanya saat detailed beta tracing aktif, yang memerlukan `ENABLE_BETA_TRACING_DETAILED=1` dan `BETA_TRACING_ENDPOINT` selain konfigurasi pengekspor trace di atas. Dalam sesi CLI interaktif, ini juga memerlukan organisasi Anda untuk berada dalam daftar putih untuk fitur ini. Sesi Agent SDK dan non-interaktif `-p` tidak gated. Ini tidak dipancarkan saat hanya `CLAUDE_CODE_ENHANCED_TELEMETRY_BETA` yang diatur.
+Span ini muncul hanya saat detailed beta tracing aktif, yang memerlukan `ENABLE_BETA_TRACING_DETAILED=1` dan `BETA_TRACING_ENDPOINT`, sepasang yang juga [mengubah tempat log dan traces Anda pergi](/docs/id/env-vars#variables). Atur pasangan dalam shell, pengaturan pengguna, atau pengaturan terkelola; kedua variabel diabaikan dalam [pengaturan proyek dan lokal](/docs/id/settings-reference#variables-claude-code-ignores-in-env). `CLAUDE_CODE_ENHANCED_TELEMETRY_BETA` saja tidak menghasilkannya.
+
+Dalam sesi CLI interaktif, detailed beta tracing juga memerlukan organisasi Anda untuk berada dalam daftar putih untuk fitur ini. Sesi Agent SDK dan non-interaktif `-p` tidak memerlukan daftar putih.
 
 | Atribut                  | Deskripsi                                         | Gated by                |
 | ------------------------ | ------------------------------------------------- | ----------------------- |
@@ -275,25 +351,31 @@ Span ini dipancarkan hanya saat detailed beta tracing aktif, yang memerlukan `EN
 | `num_non_blocking_error` | Jumlah hook yang gagal tanpa blocking             |                         |
 | `num_cancelled`          | Jumlah hook yang dibatalkan sebelum selesai       |                         |
 
+<span id="new-context-gates" />
+
 <Note>
-  Atribut tambahan yang mengandung konten seperti `new_context`, `system_prompt_preview`, `user_system_prompt`, `tool_input`, dan `response.model_output` dipancarkan hanya saat detailed beta tracing aktif. Mereka bukan bagian dari skema span yang stabil. `user_system_prompt` juga memerlukan `OTEL_LOG_USER_PROMPTS=1`. Ini membawa hanya teks prompt sistem yang Anda berikan melalui opsi SDK `systemPrompt` atau flag `--system-prompt` dan `--append-system-prompt`, dipotong pada 60 KB, dan dipancarkan sekali per sesi daripada per permintaan.
+  Atribut tambahan yang mengandung konten seperti `new_context`, `system_prompt_preview`, `user_system_prompt`, `tool_input`, dan `response.model_output` dipancarkan hanya saat detailed beta tracing aktif. Mereka bukan bagian dari skema span yang stabil.
+
+  Gate pada `new_context` tergantung pada span mana yang membawanya, dan setiap salinan dipotong pada batas konten (60 KB secara default). Pada span `claude_code.tool` itu membawa hasil panggilan alat itu, apa pun alatnya, dan memerlukan `OTEL_LOG_TOOL_CONTENT=1`. Pada span `claude_code.interaction` itu membawa prompt pengguna, dan pada span `claude_code.llm_request` pesan pengguna baru dan hasil alat dari permintaan itu. Keduanya memerlukan `OTEL_LOG_USER_PROMPTS=1`.
+
+  `user_system_prompt` juga memerlukan `OTEL_LOG_USER_PROMPTS=1`. Ini membawa hanya teks prompt sistem yang Anda berikan melalui opsi SDK `systemPrompt` atau flag `--system-prompt` dan `--append-system-prompt`, dipotong pada batas konten (60 KB secara default), dan dipancarkan sekali per sesi daripada per permintaan.
 </Note>
 
 <h3 id="dynamic-headers">
   Header dinamis
 </h3>
 
-Untuk lingkungan perusahaan yang memerlukan autentikasi dinamis, Anda dapat mengonfigurasi skrip untuk menghasilkan header secara dinamis. Header dinamis hanya berlaku untuk protokol `http/protobuf` dan `http/json`. Pengekspor `grpc` hanya menggunakan nilai statis `OTEL_EXPORTER_OTLP_HEADERS`.
+Untuk lingkungan perusahaan yang memerlukan autentikasi dinamis, Anda dapat mengonfigurasi skrip untuk menghasilkan header secara dinamis. Header dinamis hanya berlaku untuk protokol `http/protobuf` dan `http/json`. Dengan protokol `grpc`, Claude Code hanya menggunakan variabel header statis, `OTEL_EXPORTER_OTLP_HEADERS` dan varian per-sinyalnya.
 
 <h4 id="settings-configuration">
   Konfigurasi pengaturan
 </h4>
 
-Tambahkan ke `.claude/settings.json` Anda:
+Tambahkan ke `.claude/settings.json` Anda, mengganti jalur dengan skrip Anda sendiri:
 
 ```json theme={null}
 {
-  "otelHeadersHelper": "/bin/generate_opentelemetry_headers.sh"
+  "otelHeadersHelper": "/path/to/generate-otel-headers.sh"
 }
 ```
 
@@ -311,8 +393,9 @@ Skrip harus menampilkan JSON yang valid dengan pasangan kunci-nilai string yang 
 echo "{\"Authorization\": \"Bearer $(get-token.sh)\", \"X-API-Key\": \"$(get-api-key.sh)\"}"
 ```
 
-Jika pembantu gagal atau mencetak output yang tidak memenuhi persyaratan ini, Claude Code melaporkan kesalahan dalam:
+Jika pembantu gagal atau mencetak output yang tidak memenuhi persyaratan ini, ekspor gagal dan backend telemetri Anda tidak menerima apa pun dari sesi sampai pembantu berfungsi lagi. Claude Code melaporkan kegagalan dalam:
 
+* Notifikasi peringatan dalam sesi interaktif, [`otelHeadersHelper failed; telemetry is not being exported`](/docs/id/errors#otelheadershelper-failed), ditampilkan sekali per sesi saat pembantu pertama kali gagal
 * Output `/status`
 * Log debug, saat berjalan dengan [`--debug`](/docs/id/cli-reference#cli-flags) atau setelah menjalankan `/debug` dalam sesi
 * stderr, dalam sesi non-interaktif yang dimulai dengan `-p`
@@ -341,7 +424,7 @@ Atribut khusus ini akan disertakan dalam semua metrik dan acara, memungkinkan An
 * Buat dasbor khusus tim
 * Atur peringatan untuk tim tertentu
 
-Claude Code melampirkan nilai-nilai ini sebagai atribut pada setiap titik data metrik dan catatan acara, selain mengirimkannya dalam blok sumber daya OTLP. Karena sebagian besar backend metrik mengekspos atribut titik data sebagai label yang dapat dikueri, Anda dapat mengelompokkan dan memfilter metrik berdasarkan kunci khusus Anda secara langsung. Kunci khusus tidak pernah menimpa [atribut standar](#standard-attributes) seperti `user.id` atau `session.id`: saat kunci bertabrakan, Claude Code mempertahankan nilai built-in.
+Claude Code melampirkan nilai-nilai ini sebagai atribut pada setiap titik data metrik dan catatan acara, selain mengirimkannya dalam blok sumber daya OTLP. Karena sebagian besar backend metrik mengekspos atribut titik data sebagai label yang dapat dikueri, Anda dapat mengelompokkan dan memfilter metrik berdasarkan kunci khusus Anda secara langsung. Kecuali untuk atribut repositori `vcs.*` [repository attributes](#repository-attributes), kunci khusus tidak pernah menimpa [atribut standar](#standard-attributes) seperti `user.id` atau `session.id`: saat kunci bertabrakan, Claude Code mempertahankan nilai built-in.
 
 Setiap kunci khusus menjadi label pada setiap deret metrik, jadi nilai kardinalitas tinggi meningkatkan biaya penyimpanan di backend metrik Anda. Untuk mengirim atribut khusus dalam blok sumber daya saja dan menghilangkannya dari label titik data, atur `OTEL_METRICS_INCLUDE_RESOURCE_ATTRIBUTES=false`. Lihat [Kontrol kardinalitas metrik](#metrics-cardinality-control).
 
@@ -373,30 +456,45 @@ Setiap kunci khusus menjadi label pada setiap deret metrik, jadi nilai kardinali
   Konfigurasi contoh
 </h3>
 
-Atur variabel lingkungan ini sebelum menjalankan `claude`. Setiap blok menunjukkan konfigurasi lengkap untuk pengekspor atau skenario penerapan yang berbeda:
+Atur variabel lingkungan ini sebelum menjalankan `claude`. Setiap skenario di bawah menunjukkan konfigurasi lengkap, dan setiap variabel dijelaskan di bawah [Variabel konfigurasi umum](#common-configuration-variables). Untuk mengonfirmasi konfigurasi berlaku, periksa backend Anda untuk metrik `claude_code.session.count` setelah memulai sesi; [Quick start](#quick-start) mencakup verifikasi hanya-log dan apa yang harus diperiksa saat tidak ada yang tiba.
+
+Untuk debugging konsol dengan interval ekspor 1 detik:
 
 ```bash theme={null}
-# Debugging konsol (interval 1 detik)
 export CLAUDE_CODE_ENABLE_TELEMETRY=1
 export OTEL_METRICS_EXPORTER=console
 export OTEL_METRIC_EXPORT_INTERVAL=1000
+```
 
-# OTLP/gRPC
+Untuk OTLP over gRPC:
+
+```bash theme={null}
 export CLAUDE_CODE_ENABLE_TELEMETRY=1
 export OTEL_METRICS_EXPORTER=otlp
 export OTEL_EXPORTER_OTLP_PROTOCOL=grpc
 export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317
+```
 
-# Prometheus
+Untuk Prometheus, di-scrape dari `http://localhost:9464/metrics`:
+
+```bash theme={null}
 export CLAUDE_CODE_ENABLE_TELEMETRY=1
 export OTEL_METRICS_EXPORTER=prometheus
+```
 
-# Pengekspor ganda
+Pada [lingkungan self-hosted](/docs/id/self-hosted-environments-reference#pass-through-session-child-metrics), sesi mengikat port 9464 hanya pada kapasitas default runner satu. Pada kapasitas yang lebih tinggi, runner kembali mengekspos penghitung sesi dan gauge pada titik akhir `/metrics` miliknya sendiri.
+
+Untuk mengirim metrik ke beberapa pengekspor:
+
+```bash theme={null}
 export CLAUDE_CODE_ENABLE_TELEMETRY=1
 export OTEL_METRICS_EXPORTER=console,otlp
 export OTEL_EXPORTER_OTLP_PROTOCOL=http/json
+```
 
-# Titik akhir/backend berbeda untuk metrik dan log
+Untuk mengirim metrik dan log ke titik akhir atau backend yang berbeda:
+
+```bash theme={null}
 export CLAUDE_CODE_ENABLE_TELEMETRY=1
 export OTEL_METRICS_EXPORTER=otlp
 export OTEL_LOGS_EXPORTER=otlp
@@ -404,14 +502,20 @@ export OTEL_EXPORTER_OTLP_METRICS_PROTOCOL=http/protobuf
 export OTEL_EXPORTER_OTLP_METRICS_ENDPOINT=http://metrics.example.com:4318
 export OTEL_EXPORTER_OTLP_LOGS_PROTOCOL=grpc
 export OTEL_EXPORTER_OTLP_LOGS_ENDPOINT=http://logs.example.com:4317
+```
 
-# Hanya metrik (tanpa acara/log)
+Untuk mengekspor hanya metrik, tanpa acara atau log:
+
+```bash theme={null}
 export CLAUDE_CODE_ENABLE_TELEMETRY=1
 export OTEL_METRICS_EXPORTER=otlp
 export OTEL_EXPORTER_OTLP_PROTOCOL=grpc
 export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317
+```
 
-# Hanya acara/log (tanpa metrik)
+Untuk mengekspor hanya acara dan log, tanpa metrik:
+
+```bash theme={null}
 export CLAUDE_CODE_ENABLE_TELEMETRY=1
 export OTEL_LOGS_EXPORTER=otlp
 export OTEL_EXPORTER_OTLP_PROTOCOL=grpc
@@ -428,18 +532,19 @@ export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317
 
 Semua metrik dan acara berbagi atribut standar ini:
 
-| Atribut                               | Deskripsi                                                                                                                                                                                                                                             | Dikendalikan Oleh                                          |
-| ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
-| `session.id`                          | Pengidentifikasi sesi unik                                                                                                                                                                                                                            | `OTEL_METRICS_INCLUDE_SESSION_ID` (default: true)          |
-| `app.version`                         | Versi Claude Code saat ini                                                                                                                                                                                                                            | `OTEL_METRICS_INCLUDE_VERSION` (default: false)            |
-| `app.entrypoint`                      | Bagaimana sesi diluncurkan, seperti `cli`, `sdk-cli`, `sdk-ts`, `sdk-py`, atau `claude-vscode`                                                                                                                                                        | `OTEL_METRICS_INCLUDE_ENTRYPOINT` (default: false)         |
-| `organization.id`                     | UUID organisasi (saat diautentikasi)                                                                                                                                                                                                                  | Selalu disertakan saat tersedia                            |
-| `user.account_uuid`                   | UUID akun (saat diautentikasi)                                                                                                                                                                                                                        | `OTEL_METRICS_INCLUDE_ACCOUNT_UUID` (default: true)        |
-| `user.account_id`                     | ID akun dalam format yang ditandai sesuai dengan API admin Anthropic (saat diautentikasi), seperti `user_01BWBeN28...`                                                                                                                                | `OTEL_METRICS_INCLUDE_ACCOUNT_UUID` (default: true)        |
-| `user.id`                             | Pengidentifikasi anonim acak yang dihasilkan pada run pertama dan disimpan di `~/.claude.json`. Tidak mengandung informasi pribadi dan tidak berasal dari akun Claude Anda. Menghapus file menghasilkan nilai yang tidak terkait pada run berikutnya. | Selalu disertakan                                          |
-| `user.email`                          | Alamat email pengguna (saat diautentikasi melalui OAuth)                                                                                                                                                                                              | Selalu disertakan saat tersedia                            |
-| `terminal.type`                       | Jenis terminal, seperti `iTerm.app`, `vscode`, `cursor`, atau `tmux`                                                                                                                                                                                  | Selalu disertakan saat terdeteksi                          |
-| Kunci dari `OTEL_RESOURCE_ATTRIBUTES` | Atribut khusus yang Anda atur, seperti `department` atau `team.id`. Lihat [Dukungan organisasi multi-tim](#multi-team-organization-support)                                                                                                           | `OTEL_METRICS_INCLUDE_RESOURCE_ATTRIBUTES` (default: true) |
+| Atribut                                                                                 | Deskripsi                                                                                                                                                                                                                                             | Dikendalikan Oleh                                                                                   |
+| --------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `session.id`                                                                            | Pengidentifikasi sesi unik                                                                                                                                                                                                                            | `OTEL_METRICS_INCLUDE_SESSION_ID` (default: true)                                                   |
+| `app.version`                                                                           | Versi Claude Code saat ini                                                                                                                                                                                                                            | `OTEL_METRICS_INCLUDE_VERSION` (default: false)                                                     |
+| `app.entrypoint`                                                                        | Bagaimana sesi diluncurkan, seperti `cli`, `sdk-cli`, `sdk-ts`, `sdk-py`, atau `claude-vscode`                                                                                                                                                        | `OTEL_METRICS_INCLUDE_ENTRYPOINT` (default: false)                                                  |
+| `organization.id`                                                                       | UUID organisasi (saat diautentikasi)                                                                                                                                                                                                                  | Selalu disertakan saat tersedia                                                                     |
+| `user.account_uuid`                                                                     | UUID akun (saat diautentikasi)                                                                                                                                                                                                                        | `OTEL_METRICS_INCLUDE_ACCOUNT_UUID` (default: true)                                                 |
+| `user.account_id`                                                                       | ID akun dalam format yang ditandai sesuai dengan API admin Anthropic (saat diautentikasi), seperti `user_01BWBeN28...`                                                                                                                                | `OTEL_METRICS_INCLUDE_ACCOUNT_UUID` (default: true)                                                 |
+| `user.id`                                                                               | Pengidentifikasi anonim acak yang dihasilkan pada run pertama dan disimpan di `~/.claude.json`. Tidak mengandung informasi pribadi dan tidak berasal dari akun Claude Anda. Menghapus file menghasilkan nilai yang tidak terkait pada run berikutnya. | Selalu disertakan                                                                                   |
+| `user.email`                                                                            | Alamat email pengguna, dari sign-in Anda atau, dalam [sesi cloud](/docs/id/claude-code-on-the-web), dari kredensial sesi itu sendiri                                                                                                                       | Selalu disertakan saat tersedia                                                                     |
+| `terminal.type`                                                                         | Jenis terminal, seperti `iTerm.app`, `vscode`, `cursor`, atau `tmux`                                                                                                                                                                                  | Selalu disertakan saat terdeteksi                                                                   |
+| Kunci dari `OTEL_RESOURCE_ATTRIBUTES`                                                   | Atribut khusus yang Anda atur, seperti `department` atau `team.id`. Lihat [Dukungan organisasi multi-tim](#multi-team-organization-support)                                                                                                           | `OTEL_METRICS_INCLUDE_RESOURCE_ATTRIBUTES` (default: true)                                          |
+| `vcs.repository.url.full`, `vcs.owner.name`, `vcs.repository.name`, `vcs.provider.name` | Identitas repositori sesi, diturunkan dari remote `origin`-nya. Lihat [Atribut repositori](#repository-attributes)                                                                                                                                    | `OTEL_METRICS_INCLUDE_REPOSITORY` (default: false). Memerlukan Claude Code v2.1.269 atau lebih baru |
 
 Saat Claude Code masuk ke [gateway aplikasi Claude](/docs/id/claude-apps-gateway), CLI memberi stempel ekspor dengan identitas yang diautentikasi dari sesi gateway: `user.id` adalah subjek IdP daripada pengidentifikasi instalasi anonim, `user.email` adalah email yang masuk, dan `user.groups` membawa keanggotaan grup IdP sebagai string yang dipisahkan koma. Setiap ekspor juga membawa `identity.source: gateway-oidc`. Identitas gateway diterapkan terakhir, jadi kunci `user.*` dan `identity.*` yang diatur melalui `OTEL_RESOURCE_ATTRIBUTES` diabaikan pada sesi gateway.
 
@@ -450,22 +555,45 @@ Acara juga menyertakan atribut berikut. Ini tidak pernah dilampirkan pada metrik
 * `workflow.run_id`: pengidentifikasi run, dengan awalan `wf_`, pada acara API dan alat yang dipancarkan oleh agen yang termasuk dalam run alat [Workflow](/docs/id/workflows). Memfilter acara berdasarkan satu `workflow.run_id` merekonstruksi permintaan API dan hasil alat run tersebut. Pengidentifikasi mencakup agen yang dihasilkan skrip workflow dan agen apa pun yang dihasilkan agen tersebut pada gilirannya, seperti invokasi skill. Ini cocok dengan pengidentifikasi run yang dilaporkan dalam hasil alat Workflow. Tidak ada pada semua acara lainnya. Memerlukan Claude Code v2.1.202 atau lebih baru
 * `workflow.name`: nama workflow, `meta.name` skrip-nya, dipancarkan bersama `workflow.run_id`. Nama workflow built-in muncul verbatim saat run mengeksekusi skrip built-in yang tidak dimodifikasi. Nama yang ditulis pengguna, termasuk salinan yang diedit dari skrip built-in, diganti dengan `custom` kecuali `OTEL_LOG_TOOL_DETAILS=1` diatur. Memerlukan Claude Code v2.1.202 atau lebih baru
 
+<h4 id="repository-attributes">
+  Atribut repositori
+</h4>
+
+Atur `OTEL_METRICS_INCLUDE_REPOSITORY=true` untuk menandai metrik dan acara dengan identitas repositori sesi, sehingga kolektor bersama dapat mengaitkan penggunaan per repositori. Memerlukan Claude Code v2.1.269 atau lebih baru.
+
+Claude Code menurunkan atribut ini sekali per sesi dari remote `origin` repositori. Remote HTTPS dan SSH dari satu repositori menghasilkan nilai yang identik:
+
+| Atribut                   | Nilai                                                                                                                                                             |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `vcs.repository.url.full` | URL browser repositori tanpa `.git`, seperti `https://github.com/example-org/example-repo`                                                                        |
+| `vcs.owner.name`          | Jalur pemilik atau grup, seperti `example-org`; dihilangkan saat jalur remote memiliki satu segmen                                                                |
+| `vcs.repository.name`     | Nama repositori bare, seperti `example-repo`                                                                                                                      |
+| `vcs.provider.name`       | `github`, `gitlab`, `bitbucket`, atau `gitea` saat Claude Code mengenali host remote atau bentuk URL sebagai salah satu penyedia tersebut; dihilangkan sebaliknya |
+
+Nilai diubah menjadi huruf kecil, dan kredensial, string kueri, dan fragmen dari URL remote tidak pernah muncul di dalamnya. Atribut dihilangkan saat sesi tidak memiliki remote `origin`, saat remote tidak berbentuk URL, atau saat satu-satunya repositori yang menutup adalah direktori home Anda.
+
+Kunci `vcs.*` yang Anda deklarasikan dalam [`OTEL_RESOURCE_ATTRIBUTES`](#multi-team-organization-support) menggantikan nilai yang diturunkan untuk kunci itu. Jika Anda mendeklarasikan `vcs.repository.url.full`, Claude Code tidak pernah membaca remote dan hanya melaporkan kunci yang Anda deklarasikan.
+
+Atribut mengalir hanya ke pengekspor Anda sendiri; telemetri Anthropic menghilangkan setiap kunci `vcs.*`.
+
 <h3 id="metrics">
   Metrik
 </h3>
 
-Claude Code mengekspor metrik berikut:
+Claude Code mengekspor metrik berikut. Kolom Unit menunjukkan string unit OpenTelemetry yang dilampirkan pada setiap metrik; metrik count tidak membawa satuan apa pun.
 
 | Nama Metrik                           | Deskripsi                                  | Unit   |
 | ------------------------------------- | ------------------------------------------ | ------ |
-| `claude_code.session.count`           | Jumlah sesi CLI yang dimulai               | count  |
-| `claude_code.lines_of_code.count`     | Jumlah baris kode yang dimodifikasi        | count  |
-| `claude_code.pull_request.count`      | Jumlah permintaan tarik yang dibuat        | count  |
-| `claude_code.commit.count`            | Jumlah komit git yang dibuat               | count  |
+| `claude_code.session.count`           | Jumlah sesi CLI yang dimulai               | none   |
+| `claude_code.lines_of_code.count`     | Jumlah baris kode yang dimodifikasi        | none   |
+| `claude_code.pull_request.count`      | Jumlah permintaan tarik yang dibuat        | none   |
+| `claude_code.commit.count`            | Jumlah komit git yang dibuat               | none   |
 | `claude_code.cost.usage`              | Biaya sesi Claude Code                     | USD    |
 | `claude_code.token.usage`             | Jumlah token yang digunakan                | tokens |
-| `claude_code.code_edit_tool.decision` | Jumlah keputusan izin alat pengeditan kode | count  |
-| `claude_code.active_time.total`       | Total waktu aktif dalam detik              | s      |
+| `claude_code.code_edit_tool.decision` | Jumlah keputusan izin alat pengeditan kode | none   |
+| `claude_code.active_time.total`       | Total waktu aktif                          | s      |
+
+Saat `prometheus` adalah satu-satunya pengekspor yang tercantum dalam `OTEL_METRICS_EXPORTER`, Claude Code menghilangkan unit `USD`, `tokens`, dan `s` dari metrik yang diekspor sehingga scrape tetap dalam format teks Prometheus yang valid. Nama metrik tidak berubah, dan konfigurasi yang menggabungkan pengekspor, seperti `otlp,prometheus`, menyimpan unit. Sebelum v2.1.216, scrape Prometheus menyertakan baris `# UNIT` khusus OpenMetrics yang beberapa scraper menolak.
 
 <h3 id="metric-details">
   Detail metrik
@@ -529,12 +657,12 @@ Ditingkatkan setelah setiap permintaan API.
 * `query_source`: Kategori subsistem yang mengeluarkan permintaan. Salah satu dari `"main"`, `"subagent"`, atau `"auxiliary"`
 * `speed`: `"fast"` saat permintaan menggunakan mode cepat. Tidak ada sebaliknya
 * `effort`: [Tingkat effort](/docs/id/model-config#adjust-effort-level) yang diterapkan pada permintaan: `"low"`, `"medium"`, `"high"`, `"xhigh"`, atau `"max"`. Tidak ada saat model tidak mendukung effort.
-* `agent.name`: Jenis subagent yang mengeluarkan permintaan. Nama agen built-in dan agen dari plugin marketplace resmi muncul verbatim. Nama agen yang ditentukan pengguna lainnya diganti dengan `"custom"`. Tidak ada saat permintaan tidak dikeluarkan oleh jenis subagent bernama.
-* `skill.name`: Skill aktif untuk permintaan, diatur oleh alat Skill, perintah `/`, atau diwarisi oleh subagent yang dihasilkan. Nama skill built-in, bundled, yang ditentukan pengguna, dan plugin marketplace resmi muncul verbatim. Nama skill plugin pihak ketiga diganti dengan `"third-party"`. Tidak ada saat tidak ada skill yang aktif.
-* `plugin.name`: Plugin pemilik saat skill atau subagent aktif disediakan oleh plugin. Nama plugin marketplace resmi muncul verbatim. Nama plugin pihak ketiga diganti dengan `"third-party"`. Tidak ada saat skill atau subagent tidak memiliki plugin pemilik.
+* `agent.name`: Jenis subagent yang mengeluarkan permintaan. Nama agen built-in dan agen dari plugin marketplace resmi muncul verbatim. Nama agen yang ditentukan pengguna lainnya diganti dengan `"custom"` kecuali `OTEL_LOG_TOOL_DETAILS=1` diatur. Tidak ada saat permintaan tidak dikeluarkan oleh jenis subagent bernama.
+* `skill.name`: Skill aktif untuk permintaan, diatur oleh alat Skill, perintah `/`, atau diwarisi oleh subagent yang dihasilkan. Nama skill built-in, bundled, yang ditentukan pengguna, dan plugin marketplace resmi muncul verbatim. Nama skill plugin pihak ketiga diganti dengan `"third-party"` kecuali `OTEL_LOG_TOOL_DETAILS=1` diatur. Tidak ada saat tidak ada skill yang aktif.
+* `plugin.name`: Plugin pemilik saat skill atau subagent aktif disediakan oleh plugin. Nama plugin marketplace resmi muncul verbatim. Nama plugin pihak ketiga diganti dengan `"third-party"` kecuali `OTEL_LOG_TOOL_DETAILS=1` diatur. Tidak ada saat skill atau subagent tidak memiliki plugin pemilik.
 * `marketplace.name`: Marketplace tempat plugin pemilik diinstal. Hanya dipancarkan untuk plugin marketplace resmi. Tidak ada sebaliknya.
-* `mcp_server.name`: Server MCP yang alatnya berjalan dalam giliran yang menghasilkan permintaan ini. Nama server built-in, claude.ai-proxied, dan official-registry muncul verbatim. Nama server yang dikonfigurasi pengguna diganti dengan `"custom"`. Tidak ada saat tidak ada alat MCP yang berjalan.
-* `mcp_tool.name`: Alat MCP yang berjalan dalam giliran yang menghasilkan permintaan ini, dengan redaksi yang sama dengan `mcp_server.name`. Tidak ada saat tidak ada alat MCP yang berjalan.
+* `mcp_server.name`: Server MCP yang alatnya berjalan dalam giliran yang menghasilkan permintaan ini. Nama server built-in, claude.ai-proxied, dan official-registry muncul verbatim. Nama server yang dikonfigurasi pengguna diganti dengan `"custom"` kecuali `OTEL_LOG_TOOL_DETAILS=1` diatur. Tidak ada saat tidak ada alat MCP yang berjalan. Sebelum v2.1.222, Claude Code menetapkan atribut ini pada setiap permintaan setelah panggilan alat MCP, bukan hanya pada permintaan yang menggunakan hasil alat, jadi dasbor yang mengagregasinya menunjukkan penurunan setelah Anda upgrade.
+* `mcp_tool.name`: Alat MCP yang berjalan dalam giliran yang menghasilkan permintaan ini, dengan redaksi yang sama dan perilaku versi sebagai `mcp_server.name`. Tidak ada saat tidak ada alat MCP yang berjalan.
 
 <h4 id="token-counter">
   Penghitung token
@@ -589,15 +717,22 @@ Claude Code mengekspor acara berikut melalui log/acara OpenTelemetry (saat `OTEL
 
 Saat pengguna mengirimkan prompt, Claude Code dapat membuat beberapa panggilan API dan menjalankan beberapa alat. Atribut `prompt.id` memungkinkan Anda menghubungkan semua acara tersebut kembali ke prompt tunggal yang memicunya.
 
-| Atribut     | Deskripsi                                                                                                      |
-| ----------- | -------------------------------------------------------------------------------------------------------------- |
-| `prompt.id` | Pengidentifikasi UUID v4 yang menghubungkan semua acara yang dihasilkan saat memproses prompt pengguna tunggal |
+| Atribut             | Deskripsi                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `prompt.id`         | Pengidentifikasi UUID v4 yang menghubungkan semua acara yang dihasilkan saat memproses prompt pengguna tunggal                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `event.sequence`    | Penghitung berbasis 0 untuk mengurutkan acara, dihitung per proses Claude Code daripada per sesi                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `message.uuid`      | UUID pesan seperti yang disimpan dalam transkrip sesi, file `~/.claude/projects/*/*.jsonl`. Hadir pada `assistant_response`, pada `api_response_body`, dan pada `user_prompt` kecuali untuk command dispatches, yang dapat menghasilkan nol atau banyak pesan. Pada `assistant_response` dan `api_response_body`, ini adalah entri transkrip akhir respons, yang `parentUuid` giliran berikutnya berantai dari. Memerlukan Claude Code v2.1.214 atau lebih baru, atau v2.1.274 atau lebih baru pada `api_response_body`             |
+| `client_request_id` | UUID yang dihasilkan klien dikirim sebagai header permintaan `x-client-request-id`. Hadir pada `api_request` dan `api_error` pada koneksi API pihak pertama; tidak ada pada backend penyedia pihak ketiga dan saat permintaan diulang melalui fallback non-streaming. Memasangkan permintaan dengan responsnya dan tetap tersedia untuk kegagalan seperti timeout yang tidak pernah menghasilkan `request_id` server. Cocok dengan atribut yang sama pada span trace `llm_request`. Memerlukan Claude Code v2.1.214 atau lebih baru |
 
 Untuk melacak semua aktivitas yang dipicu oleh prompt tunggal, filter acara Anda berdasarkan nilai `prompt.id` tertentu. Ini mengembalikan acara user\_prompt, acara api\_request apa pun, dan acara tool\_result apa pun yang terjadi saat memproses prompt tersebut.
 
-<Note>
-  `prompt.id` sengaja dikecualikan dari metrik karena setiap prompt menghasilkan ID unik, yang akan membuat jumlah deret waktu terus bertambah. Gunakan untuk analisis tingkat acara dan jejak audit saja.
-</Note>
+`event.sequence` dimulai pada 0 setiap kali proses Claude Code dimulai dan menghitung naik untuk kehidupan proses itu. Terus menghitung di seluruh `/clear`, yang menetapkan `session.id` baru. Jika Anda [melanjutkan sesi tanpa forking](/docs/id/how-claude-code-works#resume-or-fork-sessions), sesi menyimpan `session.id`-nya tetapi mengambil nilai `event.sequence`-nya dari proses yang melanjutkannya, jadi dalam satu sesi acara yang lebih baru dapat membawa nilai yang lebih rendah daripada acara yang lebih awal, atau mengulangi satu. Untuk mengurutkan acara sesi, urutkan berdasarkan `event.timestamp` dan gunakan `event.sequence` untuk mengurutkan acara yang berbagi stempel waktu.
+
+Untuk rekonstruksi tingkat pesan, setiap kelas acara membawa kunci yang cocok dengan bidang dalam transkrip sesi. Format entri transkrip adalah [internal untuk Claude Code](/docs/id/sessions#where-transcripts-are-stored) dan berubah antar versi, jadi pipeline yang bergabung pada bidang ini dapat rusak pada rilis apa pun; perlakukan penggabungan sebagai spesifik versi daripada kontrak stabil:
+
+* `message.uuid` pada `user_prompt`, `assistant_response`, dan `api_response_body`
+* `request_id` pada acara API, disimpan sebagai `requestId` pada entri asisten transkrip
+* `tool_use_id` pada acara `tool_result` dan `tool_decision`
 
 <h4 id="user-prompt-event">
   Acara prompt pengguna
@@ -612,9 +747,10 @@ Dicatat saat pengguna mengirimkan prompt.
 * Semua [atribut standar](#standard-attributes)
 * `event.name`: `"user_prompt"`
 * `event.timestamp`: Stempel waktu ISO 8601
-* `event.sequence`: penghitung yang meningkat secara monoton untuk mengurutkan acara dalam sesi
+* `event.sequence`: penghitung per-proses untuk mengurutkan acara, dijelaskan di bawah [Atribut korelasi acara](#event-correlation-attributes)
 * `prompt_length`: Panjang prompt
 * `prompt`: Konten prompt. Diredaksi secara default. Atur `OTEL_LOG_USER_PROMPTS=1` untuk menyertakannya
+* `message.uuid`: UUID pesan pengguna yang dihasilkan, cocok dengan entri transkrip yang disimpan. Tidak ada pada command dispatches, yang dapat menghasilkan nol atau banyak pesan. Memerlukan Claude Code v2.1.214 atau lebih baru
 * `command_name`: Nama perintah saat prompt memanggil satu. Nama perintah built-in dan bundled seperti `compact` atau `debug` dipancarkan apa adanya; alias seperti `reset` dipancarkan sebagai yang diketik daripada nama kanonik. Nama perintah custom, plugin, dan MCP runtuh menjadi `custom` atau `mcp` kecuali `OTEL_LOG_TOOL_DETAILS=1` diatur
 * `command_source`: Asal perintah saat ada: `builtin`, `custom`, atau `mcp`. Perintah yang disediakan plugin melaporkan sebagai `custom`
 
@@ -631,11 +767,12 @@ Dicatat setelah setiap permintaan API yang mengembalikan konten teks dari model.
 * Semua [atribut standar](#standard-attributes)
 * `event.name`: `"assistant_response"`
 * `event.timestamp`: Stempel waktu ISO 8601
-* `event.sequence`: penghitung yang meningkat secara monoton untuk mengurutkan acara dalam sesi
+* `event.sequence`: penghitung per-proses untuk mengurutkan acara, dijelaskan di bawah [Atribut korelasi acara](#event-correlation-attributes)
 * `response_length`: Panjang teks respons dalam karakter
-* `response`: Teks respons, dipotong pada 60 KB. Diredaksi menjadi `<REDACTED>` secara default. Atur `OTEL_LOG_ASSISTANT_RESPONSES=1` untuk menyertakannya. Saat `OTEL_LOG_ASSISTANT_RESPONSES` tidak diatur, `OTEL_LOG_USER_PROMPTS` mengontrolnya sebagai gantinya, jadi atur `OTEL_LOG_ASSISTANT_RESPONSES=0` untuk menjaga respons diredaksi saat logging prompt aktif
+* `response`: Teks respons, dipotong pada batas konten (60 KB secara default). Diredaksi menjadi `<REDACTED>` secara default. Atur `OTEL_LOG_ASSISTANT_RESPONSES=1` untuk menyertakannya. Saat `OTEL_LOG_ASSISTANT_RESPONSES` tidak diatur, `OTEL_LOG_USER_PROMPTS` mengontrolnya sebagai gantinya, jadi atur `OTEL_LOG_ASSISTANT_RESPONSES=0` untuk menjaga respons diredaksi saat logging prompt aktif
 * `model`: Pengidentifikasi model (misalnya, "claude-sonnet-5")
 * `request_id`: ID permintaan API Anthropic dari header `request-id` respons. Hadir hanya saat API mengembalikan satu
+* `message.uuid`: UUID entri transkrip akhir respons. Respons API disimpan sebagai satu entri transkrip per blok konten; ini adalah yang terakhir, yang `parentUuid` giliran berikutnya berantai dari. Memerlukan Claude Code v2.1.214 atau lebih baru
 * `query_source`: Subsistem yang mengeluarkan permintaan, seperti `"repl_main_thread"`, `"compact"`, atau nama subagent
 
 <h4 id="tool-result-event">
@@ -651,7 +788,7 @@ Dicatat saat alat menyelesaikan eksekusi. Tidak dipancarkan jika panggilan alat 
 * Semua [atribut standar](#standard-attributes)
 * `event.name`: `"tool_result"`
 * `event.timestamp`: Stempel waktu ISO 8601
-* `event.sequence`: penghitung yang meningkat secara monoton untuk mengurutkan acara dalam sesi
+* `event.sequence`: penghitung per-proses untuk mengurutkan acara, dijelaskan di bawah [Atribut korelasi acara](#event-correlation-attributes)
 * `tool_name`: Nama alat
 * `tool_use_id`: Pengidentifikasi unik untuk invokasi alat ini. Cocok dengan `tool_use_id` yang diteruskan ke hooks, memungkinkan korelasi antara acara OTel dan data yang ditangkap hook.
 * `success`: `"true"` atau `"false"`
@@ -663,9 +800,10 @@ Dicatat saat alat menyelesaikan eksekusi. Tidak dipancarkan jika panggilan alat 
 * `tool_input_size_bytes`: Ukuran input alat yang diserialisasi JSON dalam byte
 * `tool_result_size_bytes`: Ukuran hasil alat dalam byte
 * `mcp_server_scope`: Pengidentifikasi cakupan server MCP (untuk alat MCP)
-* `tool_parameters` (saat `OTEL_LOG_TOOL_DETAILS=1`): String JSON yang berisi parameter khusus alat:
-  * Untuk alat Bash: mencakup `bash_command`, `full_command`, `timeout`, `description`, `dangerouslyDisableSandbox`, dan `git_commit_id` (SHA komit, saat perintah `git commit` berhasil)
-  * Untuk alat WorkspaceBash: mencakup `bash_command`, `full_command`, `timeout`
+* `vcs.ref.head.revision`, `vcs.ref.head.name`, `vcs.ref.head.type` (saat `OTEL_LOG_TOOL_DETAILS=1`): identitas komit dari run `git commit` yang berhasil oleh alat Bash atau PowerShell. `vcs.ref.head.revision` adalah SHA komit, `vcs.ref.head.name` adalah cabang tempat itu dikomit, dan `vcs.ref.head.type` adalah `branch`. Nama dan tipe dihilangkan saat komit dibuat pada HEAD terlepas. Memerlukan Claude Code v2.1.269 atau lebih baru
+* `tool_parameters` (saat `OTEL_LOG_TOOL_DETAILS=1`): String JSON yang berisi parameter khusus alat. Untuk server built-in Claude Desktop, dalam sesi yang dimiliki Claude Desktop, pasangan `mcp_server_name`/`mcp_tool_name` disertakan bahkan dengan flag off, pengecualian yang sama yang ditulis host seperti [Acara keputusan alat](#tool-decision-event), memerlukan Claude Code v2.1.214 atau lebih baru. Parameter bervariasi menurut alat:
+  * Untuk alat Bash: mencakup `bash_command`, `full_command`, `timeout`, `description`, `dangerouslyDisableSandbox`, dan `git_commit_id` serta `git_branch` saat perintah `git commit` berhasil. `git_commit_id` adalah SHA komit penuh saat komit adalah HEAD dari direktori kerja sesi, dan SHA singkat git sebaliknya. `git_branch` adalah cabang tempat itu dikomit, dihilangkan pada HEAD terlepas
+  * Untuk alat Bash ruang kerja aplikasi desktop, yang juga melaporkan `tool_name` sebagai `Bash`: mencakup hanya `bash_command`, `full_command`, dan `timeout`
   * Untuk alat MCP: mencakup `mcp_server_name`, `mcp_tool_name`
   * Untuk alat Skill: mencakup `skill_name`
   * Untuk alat Agent atau alat Task legacy: mencakup `subagent_type`
@@ -684,15 +822,17 @@ Dicatat untuk setiap permintaan API ke Claude.
 * Semua [atribut standar](#standard-attributes)
 * `event.name`: `"api_request"`
 * `event.timestamp`: Stempel waktu ISO 8601
-* `event.sequence`: penghitung yang meningkat secara monoton untuk mengurutkan acara dalam sesi
+* `event.sequence`: penghitung per-proses untuk mengurutkan acara, dijelaskan di bawah [Atribut korelasi acara](#event-correlation-attributes)
 * `model`: Model yang digunakan (misalnya, "claude-sonnet-5")
 * `cost_usd`: Biaya perkiraan dalam USD
+* `cost_usd_micros`: Biaya perkiraan dalam jutaan dolar AS, dipancarkan sebagai integer
 * `duration_ms`: Durasi permintaan dalam milidetik
 * `input_tokens`: Jumlah token input
 * `output_tokens`: Jumlah token output
 * `cache_read_tokens`: Jumlah token yang dibaca dari cache
 * `cache_creation_tokens`: Jumlah token yang digunakan untuk pembuatan cache
 * `request_id`: ID permintaan API Anthropic dari header `request-id` respons, seperti `"req_011..."`. Hadir hanya saat API mengembalikan satu.
+* `client_request_id`: UUID yang dihasilkan klien dikirim sebagai header permintaan `x-client-request-id`; lihat tabel [atribut korelasi acara](#event-correlation-attributes) untuk kapan itu ada. Memerlukan Claude Code v2.1.214 atau lebih baru
 * `speed`: `"fast"` atau `"normal"`, menunjukkan apakah mode cepat aktif
 * `query_source`: Subsistem yang mengeluarkan permintaan, seperti `"repl_main_thread"`, `"compact"`, atau nama subagent
 * `effort`: [Tingkat effort](/docs/id/model-config#adjust-effort-level) yang diterapkan pada permintaan: `"low"`, `"medium"`, `"high"`, `"xhigh"`, atau `"max"`. Tidak ada saat model tidak mendukung effort.
@@ -711,13 +851,14 @@ Dicatat saat permintaan API ke Claude gagal.
 * Semua [atribut standar](#standard-attributes)
 * `event.name`: `"api_error"`
 * `event.timestamp`: Stempel waktu ISO 8601
-* `event.sequence`: penghitung yang meningkat secara monoton untuk mengurutkan acara dalam sesi
+* `event.sequence`: penghitung per-proses untuk mengurutkan acara, dijelaskan di bawah [Atribut korelasi acara](#event-correlation-attributes)
 * `model`: Model yang digunakan (misalnya, "claude-sonnet-5")
 * `error`: Pesan kesalahan
 * `status_code`: Kode status HTTP sebagai angka. Tidak ada untuk kesalahan non-HTTP seperti kegagalan koneksi.
 * `duration_ms`: Durasi permintaan dalam milidetik
 * `attempt`: Jumlah total upaya yang dilakukan, termasuk permintaan awal (`1` berarti tidak ada retry yang terjadi)
 * `request_id`: ID permintaan API Anthropic dari header `request-id` respons, seperti `"req_011..."`. Hadir hanya saat API mengembalikan satu.
+* `client_request_id`: UUID yang dihasilkan klien dikirim sebagai header permintaan `x-client-request-id`. Tersedia bahkan saat kegagalan seperti timeout atau kesalahan koneksi tidak pernah menghasilkan `request_id` server; lihat tabel [atribut korelasi acara](#event-correlation-attributes) untuk kapan itu ada. Memerlukan Claude Code v2.1.214 atau lebih baru
 * `speed`: `"fast"` atau `"normal"`, menunjukkan apakah mode cepat aktif
 * `query_source`: Subsistem yang mengeluarkan permintaan, seperti `"repl_main_thread"`, `"compact"`, atau nama subagent
 * `effort`: [Tingkat effort](/docs/id/model-config#adjust-effort-level) yang diterapkan pada permintaan. Tidak ada saat model tidak mendukung effort.
@@ -736,7 +877,7 @@ Dicatat saat permintaan API mengembalikan `stop_reason: "refusal"`. Penolakan ti
 * Semua [atribut standar](#standard-attributes)
 * `event.name`: `"api_refusal"`
 * `event.timestamp`: Stempel waktu ISO 8601
-* `event.sequence`: penghitung yang meningkat secara monoton untuk mengurutkan acara dalam sesi
+* `event.sequence`: penghitung per-proses untuk mengurutkan acara, dijelaskan di bawah [Atribut korelasi acara](#event-correlation-attributes)
 * `model`: Pengidentifikasi model dari permintaan
 * `request_id`: ID permintaan API Anthropic dari header `request-id` respons, seperti `"req_011..."`. Hadir hanya saat API mengembalikan satu.
 * `query_source`: Subsistem yang mengeluarkan permintaan, seperti `"repl_main_thread"`, `"compact"`, atau nama subagent. Lihat [`api_request`](#api-request-event) untuk definisi.
@@ -762,19 +903,22 @@ Dicatat untuk setiap upaya permintaan API saat `OTEL_LOG_RAW_API_BODIES` diatur.
 * Semua [atribut standar](#standard-attributes)
 * `event.name`: `"api_request_body"`
 * `event.timestamp`: Stempel waktu ISO 8601
-* `event.sequence`: penghitung yang meningkat secara monoton untuk mengurutkan acara dalam sesi
-* `body`: Parameter permintaan Messages API yang diserialisasi JSON (system prompt, messages, tools, dll.), dipotong pada 60 KB. Konten extended-thinking dalam giliran asisten sebelumnya diredaksi. Dipancarkan hanya dalam mode inline (`OTEL_LOG_RAW_API_BODIES=1`).
+* `event.sequence`: penghitung per-proses untuk mengurutkan acara, dijelaskan di bawah [Atribut korelasi acara](#event-correlation-attributes)
+* `body`: Parameter permintaan Messages API yang diserialisasi JSON, seperti system prompt, messages, dan tools, dipotong pada batas konten (60 KB secara default). Konten extended-thinking dalam giliran asisten sebelumnya diredaksi. Dipancarkan hanya dalam mode inline (`OTEL_LOG_RAW_API_BODIES=1`).
 * `body_ref`: Jalur absolut ke file `<dir>/<uuid>.request.json` yang berisi badan yang tidak dipotong. Dipancarkan hanya dalam mode file (`OTEL_LOG_RAW_API_BODIES=file:<dir>`).
 * `body_length`: Panjang badan yang tidak dipotong. Byte UTF-8 saat `OTEL_LOG_RAW_API_BODIES=file:<dir>`, atau unit kode UTF-16 saat `=1`
 * `body_truncated`: `"true"` saat pemotongan inline terjadi. Tidak ada dalam mode file dan saat tidak ada pemotongan yang terjadi.
 * `model`: Pengidentifikasi model dari parameter permintaan
 * `query_source`: Subsistem yang mengeluarkan permintaan (misalnya, `"compact"`)
+* `request_body_id`: UUID yang mengidentifikasi badan permintaan upaya ini. Acara [`api_response_body`](#api-response-body-event) untuk upaya yang berhasil membawa nilai yang sama, sehingga Anda dapat memasangkan respons dengan permintaan yang tepat yang menghasilkannya. Memerlukan Claude Code v2.1.274 atau lebih baru
 
 <h4 id="api-response-body-event">
   Acara badan respons API
 </h4>
 
 Dicatat untuk setiap respons API yang berhasil saat `OTEL_LOG_RAW_API_BODIES` diatur.
+
+Dalam mode file (`OTEL_LOG_RAW_API_BODIES=file:<dir>`), Claude Code juga menambahkan satu baris JSON ke `<dir>/index.jsonl` untuk setiap respons yang berhasil, dengan bidang `timestamp`, `session_id`, `query_source`, `model`, `request_id`, `message_id`, `message_uuid`, `request_file`, dan `response_file`. Bacanya untuk menemukan file permintaan dan respons di balik pesan transkrip tertentu tanpa menanyakan backend telemetri Anda. File indeks memerlukan Claude Code v2.1.274 atau lebih baru.
 
 **Nama Acara**: `claude_code.api_response_body`
 
@@ -783,14 +927,17 @@ Dicatat untuk setiap respons API yang berhasil saat `OTEL_LOG_RAW_API_BODIES` di
 * Semua [atribut standar](#standard-attributes)
 * `event.name`: `"api_response_body"`
 * `event.timestamp`: Stempel waktu ISO 8601
-* `event.sequence`: penghitung yang meningkat secara monoton untuk mengurutkan acara dalam sesi
-* `body`: Respons Messages API yang diserialisasi JSON (id, content blocks, usage, stop reason), dipotong pada 60 KB. Konten extended-thinking diredaksi. Dipancarkan hanya dalam mode inline (`OTEL_LOG_RAW_API_BODIES=1`).
+* `event.sequence`: penghitung per-proses untuk mengurutkan acara, dijelaskan di bawah [Atribut korelasi acara](#event-correlation-attributes)
+* `body`: Respons Messages API yang diserialisasi JSON, termasuk id, content blocks, usage, dan stop reason, dipotong pada batas konten (60 KB secara default). Konten extended-thinking diredaksi. Dipancarkan hanya dalam mode inline (`OTEL_LOG_RAW_API_BODIES=1`).
 * `body_ref`: Jalur absolut ke file `<dir>/<request_id>.response.json` yang berisi badan yang tidak dipotong. Dipancarkan hanya dalam mode file (`OTEL_LOG_RAW_API_BODIES=file:<dir>`).
 * `body_length`: Panjang badan yang tidak dipotong. Byte UTF-8 saat `OTEL_LOG_RAW_API_BODIES=file:<dir>`, atau unit kode UTF-16 saat `=1`
 * `body_truncated`: `"true"` saat pemotongan inline terjadi. Tidak ada dalam mode file dan saat tidak ada pemotongan yang terjadi.
 * `model`: Pengidentifikasi model
 * `query_source`: Subsistem yang mengeluarkan permintaan
 * `request_id`: ID permintaan API Anthropic dari header `request-id` respons, seperti `"req_011..."`. Hadir hanya saat API mengembalikan satu.
+* `request_body_id`: `request_body_id` dari acara [`api_request_body`](#api-request-body-event) yang dijawab respons ini. Memerlukan Claude Code v2.1.274 atau lebih baru
+* `message.id`: ID pesan yang ditetapkan API ke respons, bidang `id` dari badan respons. Memerlukan Claude Code v2.1.274 atau lebih baru
+* `message.uuid`: UUID entri transkrip akhir respons. Bersama dengan `request_body_id`, itu menghubungkan pesan transkrip ke badan permintaan dan respons di baliknya. Memerlukan Claude Code v2.1.274 atau lebih baru
 
 <h4 id="tool-decision-event">
   Acara keputusan alat
@@ -805,20 +952,24 @@ Dicatat saat keputusan izin alat dibuat (terima/tolak).
 * Semua [atribut standar](#standard-attributes)
 * `event.name`: `"tool_decision"`
 * `event.timestamp`: Stempel waktu ISO 8601
-* `event.sequence`: penghitung yang meningkat secara monoton untuk mengurutkan acara dalam sesi
+* `event.sequence`: penghitung per-proses untuk mengurutkan acara, dijelaskan di bawah [Atribut korelasi acara](#event-correlation-attributes)
 * `tool_name`: Nama alat (misalnya, "Read", "Edit", "Write", "NotebookEdit")
 * `tool_use_id`: Pengidentifikasi unik untuk invokasi alat ini. Cocok dengan `tool_use_id` yang diteruskan ke hooks, memungkinkan korelasi antara acara OTel dan data yang ditangkap hook.
 * `decision`: Baik `"accept"` atau `"reject"`
+* `tool_source`: Selalu ada. Provenance alat, sebagai set nilai yang ditulis CLI tertutup. Memerlukan Claude Code v2.1.214 atau lebih baru
+  * `"builtin"`: alat CLI sendiri
+  * `"mcp"`: server MCP secara umum
+  * `"sdk_host_builtin_mcp"`: server in-process built-in ke Claude Desktop itu sendiri, dalam sesi yang dimiliki Claude Desktop. Claude Desktop memiliki sesi yang dimulai dari salah satu entrypoint-nya sendiri, `claude-desktop`, `claude-desktop-3p`, atau `local-agent`, saat sesi itu bukan anak bersarang; sesi bersarang, termasuk sesi yang Claude Code sendiri hasilkan, melaporkan server ini sebagai `"mcp"`
 * `source`: Sumber keputusan:
-  * `"config"`: Diputuskan secara otomatis tanpa diminta, berdasarkan pengaturan proyek, aturan izin dalam pengaturan pribadi pengguna, kebijakan terkelola perusahaan, flag `--allowedTools` atau `--disallowedTools`, mode izin aktif, hibah berskop sesi dari prompt sebelumnya dalam sesi CLI interaktif yang sama, atau karena alat itu aman secara inheren. Acara tidak menunjukkan sumber mana yang cocok.
+  * `"config"`: Diputuskan secara otomatis tanpa diminta, berdasarkan pengaturan proyek, aturan izin atau tolak dalam pengaturan pribadi pengguna, kebijakan terkelola perusahaan, flag `--allowedTools` atau `--disallowedTools`, mode izin aktif, hibah berskop sesi dari prompt sebelumnya dalam sesi CLI interaktif yang sama, atau karena alat itu aman secara inheren. Acara tidak menunjukkan sumber mana yang cocok. Claude Code juga melaporkan `"config"` saat permintaan prompt izin itu sendiri gagal, misalnya saat callback [`canUseTool`](/docs/id/agent-sdk/typescript#canusetool) Agent SDK atau alat [`--permission-prompt-tool`](/docs/id/cli-reference#cli-flags) mengembalikan hasil yang tidak valid, atau saat aliran input ditutup saat permintaan tertunda. Sebelum v2.1.216, Claude Code melaporkan kegagalan ini sebagai `"user_reject"`.
   * `"hook"`: Hook `PreToolUse` atau `PermissionRequest` mengembalikan keputusan.
   * `"user_permanent"`: Dipancarkan saat pengguna memilih "Ya, dan jangan tanya lagi untuk ..." saat diminta, yang menyimpan aturan izin ke pengaturan pribadi mereka. Dalam CLI interaktif ini dipancarkan hanya untuk pilihan itu sendiri; panggilan nanti yang cocok dengan aturan tersimpan memancarkan `"config"` sebagai gantinya. Dalam sesi Agent SDK atau non-interaktif `-p`, baik pilihan awal maupun kecocokan aturan nanti memancarkan `"user_permanent"`. Diperlakukan sebagai penerimaan.
-  * `"user_temporary"`: Dipancarkan saat pengguna memilih "Ya" saat diminta untuk persetujuan satu kali, atau memilih salah satu opsi "... selama sesi ini" pada prompt pengeditan atau pembacaan file. Dalam CLI interaktif ini dipancarkan hanya untuk pilihan itu sendiri; panggilan nanti yang diizinkan oleh hibah berskop sesi itu memancarkan `"config"` sebagai gantinya. Dalam sesi Agent SDK atau non-interaktif `-p`, baik pilihan maupun kecocokan nanti memancarkan `"user_temporary"`. Diperlakukan sebagai penerimaan.
-  * `"user_abort"`: Dipancarkan saat pengguna menutup prompt izin tanpa menjawab. Diperlakukan sebagai penolakan.
+  * `"user_temporary"`: Dipancarkan saat pengguna memilih "Ya" saat diminta untuk persetujuan satu kali, atau memilih opsi yang memberikan akses untuk sisa sesi pada prompt pengeditan atau pembacaan file. Dalam CLI interaktif ini dipancarkan hanya untuk pilihan itu sendiri; panggilan nanti yang diizinkan oleh hibah berskop sesi itu memancarkan `"config"` sebagai gantinya. Dalam sesi Agent SDK atau non-interaktif `-p`, baik pilihan maupun kecocokan nanti memancarkan `"user_temporary"`. Diperlakukan sebagai penerimaan.
+  * `"user_abort"`: Dipancarkan saat pengguna menutup prompt izin tanpa menjawab. Dalam sesi Agent SDK dan non-interaktif `-p`, ini termasuk mengganggu giliran saat permintaan izin `canUseTool` atau `--permission-prompt-tool` tertunda; sebelum v2.1.216, Claude Code melaporkan gangguan itu sebagai `"user_reject"`. Diperlakukan sebagai penolakan.
   * `"user_reject"`: Dipancarkan saat pengguna memilih "Tidak" saat diminta. Dalam CLI interaktif ini dipancarkan hanya untuk pilihan itu sendiri; panggilan yang cocok dengan aturan penolakan dalam pengaturan pribadi mereka memancarkan `"config"` sebagai gantinya. Dalam sesi Agent SDK atau non-interaktif `-p`, panggilan yang cocok dengan aturan penolakan dalam pengaturan pribadi memancarkan `"user_reject"`. Diperlakukan sebagai penolakan.
 * `tool_parameters` (saat `OTEL_LOG_TOOL_DETAILS=1`): String JSON yang berisi parameter khusus alat. Bentuk yang sama dengan [Acara hasil alat](#tool-result-event), minus bidang pasca-eksekusi seperti `git_commit_id`. Nilai mungkin berbeda dari `tool_result` untuk panggilan yang diterima jika keputusan izin menulis ulang input alat melalui `updatedInput`. Gunakan atribut ini untuk melihat perintah mana yang ditolak saat `decision` adalah `"reject"`.
-  * Untuk alat Bash: mencakup `bash_command`, `full_command`, `timeout`, `description`, `dangerouslyDisableSandbox`
-  * Untuk alat WorkspaceBash: mencakup `bash_command`, `full_command`, `timeout`
+  * Untuk alat `"sdk_host_builtin_mcp"`: `mcp_server_name` dan `mcp_tool_name` disertakan bahkan saat `OTEL_LOG_TOOL_DETAILS` off, karena aplikasi host mendefinisikan nama ini; tanpanya, panggilan yang ditolak ke salah satu server built-in ini tidak dapat dikaitkan pada aliran default. Untuk server MCP yang dikonfigurasi pengguna, `tool_name` acara selalu literal `"mcp_tool"`, dan nama server dan alat muncul hanya dalam `tool_parameters` dengan flag on; konten argumen memerlukan flag di mana-mana. Memerlukan Claude Code v2.1.214 atau lebih baru
+  * Untuk alat Bash: mencakup `bash_command`, `full_command`, `timeout`, `description`, `dangerouslyDisableSandbox`. Alat bash ruang kerja aplikasi desktop juga melaporkan `tool_name` sebagai `Bash`, tetapi hanya mencakup `bash_command`, `full_command`, dan `timeout`
   * Untuk alat MCP: mencakup `mcp_server_name`, `mcp_tool_name`
   * Untuk alat Skill: mencakup `skill_name`
   * Untuk alat Agent atau alat Task legacy: mencakup `subagent_type`
@@ -836,7 +987,7 @@ Dicatat saat mode izin berubah, misalnya dari siklus Shift+Tab, keluar dari plan
 * Semua [atribut standar](#standard-attributes)
 * `event.name`: `"permission_mode_changed"`
 * `event.timestamp`: Stempel waktu ISO 8601
-* `event.sequence`: penghitung yang meningkat secara monoton untuk mengurutkan acara dalam sesi
+* `event.sequence`: penghitung per-proses untuk mengurutkan acara, dijelaskan di bawah [Atribut korelasi acara](#event-correlation-attributes)
 * `from_mode`: Mode izin sebelumnya, misalnya `"default"`, `"plan"`, `"acceptEdits"`, `"auto"`, atau `"bypassPermissions"`
 * `to_mode`: Mode izin baru
 * `trigger`: Apa yang menyebabkan perubahan. Salah satu dari `"shift_tab"`, `"exit_plan_mode"`, `"auto_gate_denied"`, atau `"auto_opt_in"`. Tidak ada saat transisi berasal dari SDK atau bridge
@@ -854,7 +1005,7 @@ Dicatat saat `/login` atau `/logout` selesai.
 * Semua [atribut standar](#standard-attributes)
 * `event.name`: `"auth"`
 * `event.timestamp`: Stempel waktu ISO 8601
-* `event.sequence`: penghitung yang meningkat secara monoton untuk mengurutkan acara dalam sesi
+* `event.sequence`: penghitung per-proses untuk mengurutkan acara, dijelaskan di bawah [Atribut korelasi acara](#event-correlation-attributes)
 * `action`: `"login"` atau `"logout"`
 * `success`: `"true"` atau `"false"`
 * `auth_method`: Metode autentikasi, seperti `"oauth"`
@@ -874,14 +1025,14 @@ Dicatat saat server MCP terhubung, terputus, atau gagal terhubung.
 * Semua [atribut standar](#standard-attributes)
 * `event.name`: `"mcp_server_connection"`
 * `event.timestamp`: Stempel waktu ISO 8601
-* `event.sequence`: penghitung yang meningkat secara monoton untuk mengurutkan acara dalam sesi
+* `event.sequence`: penghitung per-proses untuk mengurutkan acara, dijelaskan di bawah [Atribut korelasi acara](#event-correlation-attributes)
 * `status`: `"connected"`, `"failed"`, atau `"disconnected"`
 * `transport_type`: Transport server, seperti `"stdio"`, `"sse"`, atau `"http"`
 * `server_scope`: Cakupan server dikonfigurasi di, seperti `"user"`, `"project"`, atau `"local"`
 * `duration_ms`: Durasi upaya koneksi dalam milidetik
 * `error_code`: Kode kesalahan saat koneksi gagal
 * `is_plugin`: `true` saat server disediakan oleh plugin, `false` sebaliknya
-* `plugin_id_hash` (saat `is_plugin` adalah `true`): Hash stabil dari nama plugin dan marketplace, untuk mengelompokkan acara berdasarkan plugin tanpa mengekspos nama
+* `plugin_id_hash` (saat `is_plugin` adalah `true`): Hash stabil dari nama plugin dan marketplace, untuk mengelompokkan acara berdasarkan plugin tanpa mengekspos nama. Claude Code menghitungnya seperti yang dijelaskan di bawah [acara plugin dimuat](#plugin-loaded-event)
 * `plugin.name` (saat `is_plugin` adalah `true`): Nama plugin yang menyediakan server. Untuk plugin pihak ketiga ini adalah string literal `"third-party"` kecuali `OTEL_LOG_TOOL_DETAILS=1`; ini melindungi nama plugin pihak ketiga dari muncul dalam log secara default. Plugin dari sumber Anthropic resmi selalu diidentifikasi berdasarkan nama. Atribut `plugin_id_hash` dan `plugin.name` mengalir ke backend monitoring Anda sendiri dan tidak dikirim ke Anthropic
 * `server_name` (saat `OTEL_LOG_TOOL_DETAILS=1`): Nama server yang dikonfigurasi
 * `error` (saat `OTEL_LOG_TOOL_DETAILS=1`): Pesan kesalahan lengkap saat koneksi gagal
@@ -899,7 +1050,7 @@ Dicatat saat Claude Code menangkap kesalahan internal yang tidak terduga. Hanya 
 * Semua [atribut standar](#standard-attributes)
 * `event.name`: `"internal_error"`
 * `event.timestamp`: Stempel waktu ISO 8601
-* `event.sequence`: penghitung yang meningkat secara monoton untuk mengurutkan acara dalam sesi
+* `event.sequence`: penghitung per-proses untuk mengurutkan acara, dijelaskan di bawah [Atribut korelasi acara](#event-correlation-attributes)
 * `error_name`: Nama kelas kesalahan, seperti `"TypeError"` atau `"SyntaxError"`
 * `error_code`: Kode errno Node.js seperti `"ENOENT"` saat ada pada kesalahan
 
@@ -916,7 +1067,7 @@ Dicatat saat plugin selesai menginstal, dari perintah CLI `claude plugin install
 * Semua [atribut standar](#standard-attributes)
 * `event.name`: `"plugin_installed"`
 * `event.timestamp`: Stempel waktu ISO 8601
-* `event.sequence`: penghitung yang meningkat secara monoton untuk mengurutkan acara dalam sesi
+* `event.sequence`: penghitung per-proses untuk mengurutkan acara, dijelaskan di bawah [Atribut korelasi acara](#event-correlation-attributes)
 * `marketplace.is_official`: `"true"` jika marketplace adalah marketplace Anthropic resmi, `"false"` sebaliknya
 * `install.trigger`: `"cli"` atau `"ui"`
 * `plugin.name`: Nama plugin yang diinstal. Untuk marketplace pihak ketiga ini disertakan hanya saat `OTEL_LOG_TOOL_DETAILS=1`
@@ -936,13 +1087,13 @@ Dicatat sekali per plugin yang diaktifkan saat startup sesi. Gunakan acara ini u
 * Semua [atribut standar](#standard-attributes)
 * `event.name`: `"plugin_loaded"`
 * `event.timestamp`: Stempel waktu ISO 8601
-* `event.sequence`: penghitung yang meningkat secara monoton untuk mengurutkan acara dalam sesi
+* `event.sequence`: penghitung per-proses untuk mengurutkan acara, dijelaskan di bawah [Atribut korelasi acara](#event-correlation-attributes)
 * `plugin.name`: nama plugin. Untuk plugin di luar marketplace resmi dan bundel built-in nilainya adalah `"third-party"` kecuali `OTEL_LOG_TOOL_DETAILS=1`
 * `marketplace.name`: marketplace tempat plugin diinstal, saat diketahui. Diredaksi menjadi `"third-party"` di bawah kondisi yang sama dengan `plugin.name`
 * `plugin.version`: versi dari manifest plugin. Disertakan hanya saat nama tidak diredaksi dan manifest mendeklarasikan versi
-* `plugin.scope`: kategori provenance untuk plugin: `"official"`, `"org"`, `"user-local"`, atau `"default-bundle"`
-* `enabled_via`: bagaimana plugin menjadi diaktifkan: `"default-enable"`, `"org-policy"`, `"seed-mount"`, atau `"user-install"`
-* `plugin_id_hash`: hash deterministik dari nama plugin dan marketplace, dikirim hanya ke pengekspor yang dikonfigurasi. Memungkinkan Anda menghitung berapa banyak plugin pihak ketiga yang berbeda dimuat di seluruh armada Anda tanpa merekam nama mereka
+* `plugin.scope`: kategori provenance untuk plugin: `"official"`, `"community"`, `"org"`, `"user-local"`, atau `"default-bundle"`
+* `enabled_via`: bagaimana plugin menjadi diaktifkan: `"default-enable"`, `"org-policy"`, `"admin-install"`, `"seed-mount"`, atau `"user-install"`. Nilai `"admin-install"` berarti plugin diatur sebagai required atau auto-install untuk organisasi Anda di [**Pengaturan Organisasi > Plugins & skills**](https://claude.ai/admin-settings/skills?tab=inventory). Sebelum v2.1.246, Claude Code melaporkan plugin ini sebagai `"user-install"` atau `"seed-mount"`
+* `plugin_id_hash`: hash deterministik dari nama plugin dan marketplace, dikirim hanya ke pengekspor yang dikonfigurasi. Memungkinkan Anda menghitung berapa banyak plugin pihak ketiga yang berbeda dimuat di seluruh armada Anda tanpa merekam nama mereka. Untuk [plugin yang disinkronkan dari claude.ai](/docs/id/plugins/loading#synced-plugins), Claude Code menghash nama plugin dengan nama marketplace yang dilaporkan claude.ai untuk plugin, atau dengan `synced` sebaliknya. Sebelum v2.1.246, Claude Code tidak menggunakan nama marketplace yang dilaporkan claude.ai dalam hash
 * `has_hooks`: apakah plugin berkontribusi hooks
 * `has_mcp`: apakah plugin berkontribusi server MCP
 * `host_owned_mcp`: `true` saat host SDK mengelola koneksi MCP plugin ini dan Claude Code melewati pembacaan konfigurasi server MCP plugin, `false` sebaliknya. Memerlukan Claude Code v2.1.172 atau lebih baru
@@ -964,7 +1115,7 @@ Dicatat saat skill dipanggil, baik Claude memanggilnya melalui alat Skill atau A
 * Semua [atribut standar](#standard-attributes)
 * `event.name`: `"skill_activated"`
 * `event.timestamp`: Stempel waktu ISO 8601
-* `event.sequence`: penghitung yang meningkat secara monoton untuk mengurutkan acara dalam sesi
+* `event.sequence`: penghitung per-proses untuk mengurutkan acara, dijelaskan di bawah [Atribut korelasi acara](#event-correlation-attributes)
 * `skill.name`: Nama skill. Untuk skill yang ditentukan pengguna dan plugin pihak ketiga nilainya adalah placeholder `"custom_skill"` kecuali `OTEL_LOG_TOOL_DETAILS=1`
 * `invocation_trigger`: Bagaimana skill dipicu (`"user-slash"`, `"claude-proactive"`, atau `"nested-skill"`)
 * `skill.source`: Tempat skill dimuat dari (misalnya, `"bundled"`, `"userSettings"`, `"projectSettings"`, `"plugin"`)
@@ -985,8 +1136,8 @@ Dicatat saat Claude Code menyelesaikan mention `@` dalam prompt. Tidak setiap me
 * Semua [atribut standar](#standard-attributes)
 * `event.name`: `"at_mention"`
 * `event.timestamp`: Stempel waktu ISO 8601
-* `event.sequence`: penghitung yang meningkat secara monoton untuk mengurutkan acara dalam sesi
-* `mention_type`: Jenis mention (`"file"`, `"directory"`, `"agent"`, `"mcp_resource"`)
+* `event.sequence`: penghitung per-proses untuk mengurutkan acara, dijelaskan di bawah [Atribut korelasi acara](#event-correlation-attributes)
+* `mention_type`: Jenis mention (`"file"`, `"directory"`, `"agent"`, `"mcp_resource"`, `"peer"`). Nilai `"peer"` berarti Anda menyebutkan [salah satu sesi Claude Code lain Anda](/docs/id/cross-session-messaging). Memerlukan Claude Code v2.1.232 atau lebih baru
 * `success`: Apakah mention berhasil diselesaikan (`"true"` atau `"false"`)
 
 <h4 id="api-retries-exhausted-event">
@@ -1002,7 +1153,7 @@ Dicatat sekali saat permintaan API gagal setelah lebih dari satu upaya. Dipancar
 * Semua [atribut standar](#standard-attributes)
 * `event.name`: `"api_retries_exhausted"`
 * `event.timestamp`: Stempel waktu ISO 8601
-* `event.sequence`: penghitung yang meningkat secara monoton untuk mengurutkan acara dalam sesi
+* `event.sequence`: penghitung per-proses untuk mengurutkan acara, dijelaskan di bawah [Atribut korelasi acara](#event-correlation-attributes)
 * `model`: Model yang digunakan
 * `error`: Pesan kesalahan terakhir
 * `status_code`: Kode status HTTP sebagai angka. Tidak ada untuk kesalahan non-HTTP.
@@ -1023,14 +1174,14 @@ Dicatat sekali per hook yang dikonfigurasi saat startup sesi. Gunakan acara ini 
 * Semua [atribut standar](#standard-attributes)
 * `event.name`: `"hook_registered"`
 * `event.timestamp`: Stempel waktu ISO 8601
-* `event.sequence`: penghitung yang meningkat secara monoton untuk mengurutkan acara dalam sesi
+* `event.sequence`: penghitung per-proses untuk mengurutkan acara, dijelaskan di bawah [Atribut korelasi acara](#event-correlation-attributes)
 * `hook_event`: jenis acara hook, seperti `"PreToolUse"` atau `"PostToolUse"`
 * `hook_type`: jenis implementasi hook: `"command"`, `"prompt"`, `"mcp_tool"`, `"http"`, atau `"agent"`
 * `hook_source`: tempat hook didefinisikan: `"userSettings"`, `"projectSettings"`, `"localSettings"`, `"flagSettings"`, `"policySettings"`, atau `"pluginHook"`
 * `safe_mode`: `"true"` saat sesi dimulai dengan [`--safe-mode`](/docs/id/cli-reference), `"false"` sebaliknya. Memerlukan Claude Code v2.1.169 atau lebih baru
 * `hook_matcher` (saat `OTEL_LOG_TOOL_DETAILS=1`): string matcher dari konfigurasi hook, saat satu diatur
 * `plugin.name` (saat `hook_source` adalah `"pluginHook"`): nama plugin yang berkontribusi. Untuk plugin di luar marketplace resmi dan bundel built-in nilainya adalah `"third-party"` kecuali `OTEL_LOG_TOOL_DETAILS=1`
-* `plugin_id_hash` (saat `hook_source` adalah `"pluginHook"`): hash deterministik dari nama plugin dan marketplace, dikirim hanya ke pengekspor yang dikonfigurasi. Memungkinkan Anda menghitung plugin yang berkontribusi berbeda tanpa merekam nama mereka
+* `plugin_id_hash` (saat `hook_source` adalah `"pluginHook"`): hash deterministik dari nama plugin dan marketplace, dikirim hanya ke pengekspor yang dikonfigurasi. Memungkinkan Anda menghitung plugin yang berkontribusi berbeda tanpa merekam nama mereka. Claude Code menghitungnya seperti yang dijelaskan di bawah [acara plugin dimuat](#plugin-loaded-event)
 
 <h4 id="hook-execution-start-event">
   Acara mulai eksekusi hook
@@ -1045,7 +1196,7 @@ Dicatat saat satu atau lebih hooks mulai dieksekusi untuk acara hook.
 * Semua [atribut standar](#standard-attributes)
 * `event.name`: `"hook_execution_start"`
 * `event.timestamp`: Stempel waktu ISO 8601
-* `event.sequence`: penghitung yang meningkat secara monoton untuk mengurutkan acara dalam sesi
+* `event.sequence`: penghitung per-proses untuk mengurutkan acara, dijelaskan di bawah [Atribut korelasi acara](#event-correlation-attributes)
 * `hook_event`: Jenis acara hook, seperti `"PreToolUse"` atau `"PostToolUse"`
 * `hook_name`: Nama hook lengkap termasuk matcher, seperti `"PreToolUse:Write"`
 * `num_hooks`: Jumlah perintah hook yang cocok
@@ -1067,7 +1218,7 @@ Dicatat saat semua hooks untuk acara hook selesai.
 * Semua [atribut standar](#standard-attributes)
 * `event.name`: `"hook_execution_complete"`
 * `event.timestamp`: Stempel waktu ISO 8601
-* `event.sequence`: penghitung yang meningkat secara monoton untuk mengurutkan acara dalam sesi
+* `event.sequence`: penghitung per-proses untuk mengurutkan acara, dijelaskan di bawah [Atribut korelasi acara](#event-correlation-attributes)
 * `hook_event`: Jenis acara hook
 * `hook_name`: Nama hook lengkap termasuk matcher
 * `num_hooks`: Jumlah perintah hook yang cocok
@@ -1076,6 +1227,11 @@ Dicatat saat semua hooks untuk acara hook selesai.
 * `num_non_blocking_error`: Jumlah yang gagal tanpa blocking
 * `num_cancelled`: Jumlah dibatalkan sebelum selesai
 * `total_duration_ms`: Durasi wall-clock dari semua hooks yang cocok
+* `stdout_chars`: Total karakter stdout di seluruh hooks yang cocok yang berhasil. Memerlukan Claude Code v2.1.280 atau lebih baru
+* `additional_context_chars`: Total karakter `additionalContext` yang dikembalikan oleh hooks yang cocok. Memerlukan Claude Code v2.1.280 atau lebih baru
+* `system_message_chars`: Total karakter `systemMessage` yang dikembalikan oleh hooks yang cocok. Memerlukan Claude Code v2.1.280 atau lebih baru
+* `initial_user_message_chars`: Total karakter `initialUserMessage` yang dikembalikan oleh hooks yang cocok. Memerlukan Claude Code v2.1.280 atau lebih baru
+* `num_outputs_persisted`: Jumlah output hook di atas [batas 10.000 karakter](/docs/id/hooks#json-output) yang disimpan Claude Code ke file. Memerlukan Claude Code v2.1.280 atau lebih baru
 * `managed_only`: `"true"` saat hanya hooks kebijakan terkelola yang diizinkan
 * `hook_source`: `"policySettings"` atau `"merged"`
 * `safe_mode`: `"true"` saat sesi dimulai dengan [`--safe-mode`](/docs/id/cli-reference), `"false"` sebaliknya. Memerlukan Claude Code v2.1.169 atau lebih baru
@@ -1094,7 +1250,7 @@ Dicatat saat hook plugin marketplace resmi memancarkan metrik per-invokasi. Hany
 * Semua [atribut standar](#standard-attributes)
 * `event.name`: `"hook_plugin_metrics"`
 * `event.timestamp`: Stempel waktu ISO 8601
-* `event.sequence`: penghitung yang meningkat secara monoton untuk mengurutkan acara dalam sesi
+* `event.sequence`: penghitung per-proses untuk mengurutkan acara, dijelaskan di bawah [Atribut korelasi acara](#event-correlation-attributes)
 * `plugin_id`: pengidentifikasi plugin dalam bentuk `<name>@<marketplace>`
 * `hook_event`: jenis acara hook yang memancarkan metrik
 * Hingga 20 kunci metrik yang dipancarkan plugin. Nama cocok dengan `^[a-z][a-z0-9_]{0,39}$`. Nilai adalah boolean atau angka.
@@ -1112,7 +1268,7 @@ Dicatat saat pemadatan percakapan selesai.
 * Semua [atribut standar](#standard-attributes)
 * `event.name`: `"compaction"`
 * `event.timestamp`: Stempel waktu ISO 8601
-* `event.sequence`: penghitung yang meningkat secara monoton untuk mengurutkan acara dalam sesi
+* `event.sequence`: penghitung per-proses untuk mengurutkan acara, dijelaskan di bawah [Atribut korelasi acara](#event-correlation-attributes)
 * `trigger`: `"auto"` atau `"manual"`
 * `success`: `"true"` atau `"false"`
 * `duration_ms`: Durasi pemadatan
@@ -1120,6 +1276,32 @@ Dicatat saat pemadatan percakapan selesai.
 * `post_tokens`: Jumlah token perkiraan setelah pemadatan
 * `error`: Pesan kesalahan saat pemadatan gagal
 * `precompute_reuse`: Hanya diatur saat `trigger` adalah `"manual"`. Auto-compaction dapat menyiapkan ringkasan di latar belakang sebelum jendela konteks penuh, dan atribut ini mencatat apakah `/compact` menggunakan kembali ringkasan yang disiapkan itu. `"hit"` berarti itu digunakan kembali; `"miss_custom_instructions"`, `"miss_hook"`, dan `"miss_not_ready"` memberikan alasan ringkasan segar dihitung sebagai gantinya. Memerlukan Claude Code v2.1.153 atau lebih baru
+
+<h4 id="subagent-completed-event">
+  Acara subagent selesai
+</h4>
+
+Dicatat saat [subagent](/docs/id/sub-agents) selesai dan mengembalikan hasilnya ke percakapan yang memulainya. Gunakan untuk menggabungkan penggunaan alat dan waktu run berdasarkan jenis subagent; untuk rollup token atau biaya, gunakan [penghitung token](#token-counter) dan [penghitung biaya](#cost-counter) yang disaring ke `query_source` `"subagent"`, karena `total_tokens` acara ini hanya mencakup permintaan akhir. Kategori `"subagent"` juga menghitung permintaan dari hooks berbasis agen, yang tidak memancarkan acara subagent.
+
+**Nama Acara**: `claude_code.subagent_completed`
+
+**Atribut**:
+
+* Semua [atribut standar](#standard-attributes)
+* `event.name`: `"subagent_completed"`
+* `event.timestamp`: Stempel waktu ISO 8601
+* `event.sequence`: penghitung per-proses untuk mengurutkan acara, dijelaskan di bawah [Atribut korelasi acara](#event-correlation-attributes)
+* `agent_type`: Jenis subagent. Nama agen built-in dan agen dari plugin marketplace resmi muncul verbatim; nama agen lainnya diganti dengan `"custom"` kecuali `OTEL_LOG_TOOL_DETAILS=1` diatur
+* `agent.source`: Tempat definisi agen berasal: `built-in`, `plugin`, atau sumber pengaturan yang mendefinisikan agen khusus, seperti `userSettings` atau `projectSettings`
+* `is_built_in`: Apakah subagent adalah jenis agen built-in
+* `is_async`: Apakah subagent berjalan di [latar belakang](/docs/id/sub-agents#run-subagents-in-foreground-or-background)
+* `total_tokens`: Jejak token permintaan API akhir subagent: token input, pembuatan cache, pembacaan cache, dan output permintaan itu, kira-kira ukuran konteks subagent saat selesai. Bukan jumlah di seluruh run
+* `total_tool_uses`: Jumlah panggilan alat yang dibuat subagent di seluruh run
+* `duration_ms`: Waktu run dalam milidetik
+* `model`: Model yang diselesaikan subagent untuk dijalankan
+* `final_model`: Model yang menghasilkan respons akhir subagent, yang berbeda dari `model` setelah switch mid-run seperti fallback. Memerlukan Claude Code v2.1.212 atau lebih baru
+* `model_swapped`: Apakah lebih dari satu model melayani permintaan subagent. Memerlukan Claude Code v2.1.212 atau lebih baru
+* `plugin_id_hash`, `plugin.name`: Ada untuk agen yang disediakan plugin. Nama plugin marketplace resmi muncul verbatim; nama plugin lainnya diganti dengan `"third-party"` kecuali `OTEL_LOG_TOOL_DETAILS=1` diatur
 
 <h4 id="feedback-survey-event">
   Acara survei umpan balik
@@ -1134,12 +1316,102 @@ Dicatat saat survei kualitas sesi ditampilkan atau dijawab. Lihat [Survei kualit
 * Semua [atribut standar](#standard-attributes)
 * `event.name`: `"feedback_survey"`
 * `event.timestamp`: Stempel waktu ISO 8601
-* `event.sequence`: penghitung yang meningkat secara monoton untuk mengurutkan acara dalam sesi
+* `event.sequence`: penghitung per-proses untuk mengurutkan acara, dijelaskan di bawah [Atribut korelasi acara](#event-correlation-attributes)
 * `event_type`: Acara siklus hidup survei, misalnya `"appeared"`, `"responded"`, atau `"transcript_prompt_appeared"`
 * `appearance_id`: ID unik yang menghubungkan acara yang dipancarkan untuk satu instance survei
 * `survey_type`: Survei mana yang menghasilkan acara. `"session"` adalah prompt rating "Bagaimana Claude melakukannya?"
 * `response`: Pilihan pengguna pada acara `responded`
 * `enabled_via_override`: `true` saat [`CLAUDE_CODE_ENABLE_FEEDBACK_SURVEY_FOR_OTEL`](/docs/id/env-vars) diatur. Dipancarkan sebagai boolean, bukan string. Hadir pada acara survei `session`. Filter pada atribut ini untuk mengkonfirmasi override diterapkan di seluruh armada
+
+<h4 id="retention-sweep-event">
+  Acara penyapuan retensi
+</h4>
+
+Dicatat sekali per run penyapuan pembersihan retensi, yang menghapus [transkrip sesi dan data aplikasi lainnya](/docs/id/claude-directory#cleaned-up-automatically) yang lebih lama dari pengaturan [`cleanupPeriodDays`](/docs/id/settings-reference#cleanupperioddays). Claude Code menjalankan penyapuan di latar belakang paling banyak sekali per sesi, dan run yang tidak menghapus apa pun masih memancarkan acara. Jika Claude Code menjalankan penyapuan dalam sesi apa pun di mesin yang sama dalam 24 jam terakhir, itu menunda penyapuan sesi ini setidaknya 10 menit, jadi sesi yang keluar lebih cepat tidak memancarkan apa pun. Saat Anda menjalankan `claude -p` dengan `--bare`, Claude Code tidak menjalankan penyapuan dan tidak memancarkan apa pun.
+
+Seperti setiap acara OTel di halaman ini, itu hanya pergi ke backend telemetri yang Anda konfigurasi. Memerlukan Claude Code v2.1.227 atau lebih baru.
+
+Saat Claude Code tidak dapat dengan aman menentukan periode retensi, itu menghentikan penyapuan dan memancarkan acara dengan `result` diatur ke `"skipped"` dan `skip_reason`. Saat [pengaturan terkelola](/docs/id/server-managed-settings) menetapkan `cleanupPeriodDays`, nilai terkelola menjepit periode retensi dan penyapuan berjalan bahkan saat file pengaturan dalam cakupan prioritas lebih rendah rusak atau tidak valid. Saat `managed-settings.json` itu sendiri tidak dapat dibaca, Claude Code masih menghentikan penyapuan kecuali [tingkat terkelola](/docs/id/managed-settings#how-claude-code-combines-managed-sources) memasok `cleanupPeriodDays` dari tempat lain, seperti pengaturan terkelola server atau drop-in `managed-settings.d/` di samping file yang rusak. Atribut penghitung penghapusan ada hanya saat `result` adalah `"complete"`.
+
+**Nama Acara**: `claude_code.retention_sweep`
+
+**Atribut**:
+
+* Semua [atribut standar](#standard-attributes)
+* `event.name`: `"retention_sweep"`
+* `event.timestamp`: Stempel waktu ISO 8601
+* `event.sequence`: penghitung per-proses untuk mengurutkan acara, dijelaskan di bawah [Atribut korelasi acara](#event-correlation-attributes)
+* `result`: `"complete"` saat penyapuan berjalan, `"skipped"` saat Claude Code menghentikannya
+* `period_days`: Nilai `cleanupPeriodDays` dari pengaturan yang digabungkan, dalam hari, atau `30` saat tidak ada sumber yang menetapkannya. Pada acara yang dilewati, nilai yang akan digunakan penyapuan, dihitung dari sumber pengaturan yang dapat dibaca Claude Code
+* `used_default`: `"true"` saat tidak ada sumber pengaturan yang dapat dibaca yang menetapkan `cleanupPeriodDays`, `"false"` sebaliknya. Pada acara lengkap, `"true"` berarti default 30 hari diterapkan
+* `skip_reason`: Mengapa Claude Code menghentikan penyapuan. Ada hanya saat `result` adalah `"skipped"`:
+  * `"user_source_disabled"`: Pengaturan pengguna dikecualikan, misalnya oleh flag [`--setting-sources`](/docs/id/cli-reference#cli-flags) atau opsi [`settingSources`](/docs/id/agent-sdk/typescript#options) SDK, dan tidak ada sumber yang diaktifkan yang menyediakan `cleanupPeriodDays`
+  * `"settings_unknowable"`: File pengaturan tidak dapat dibaca atau diuraikan, jadi `cleanupPeriodDays` atau `desktopSessionCleanupPeriodDays` mungkin diatur ke nilai yang tidak dapat dilihat Claude Code
+  * `"settings_invalid_key_set"`: Pengaturan memiliki kesalahan validasi dan `cleanupPeriodDays` atau `desktopSessionCleanupPeriodDays` secara eksplisit diatur, jadi fallback ke default dapat menghapus atau menyimpan file terhadap pengaturan itu
+* `transcripts_deleted`: Jumlah transkrip sesi, file `~/.claude/projects/*/*.jsonl` tingkat atas, yang dihapus penyapuan
+* `transcripts_exempted_desktop`: Jumlah transkrip melewati periode retensi yang disimpan penyapuan di bawah [aturan Claude Desktop dan Cowork](/docs/id/claude-directory#cleaned-up-automatically). Ini tidak dihitung menuju `files_past_cutoff`. Memerlukan Claude Code v2.1.248 atau lebih baru
+* `session_files_deleted`: Jumlah artefak yang dihapus penyapuan file sesi: transkrip plus file pendamping per sesi seperti sidecars, recordings, dan hasil alat
+* `artifacts_deleted`: Total item yang dihapus penyapuan di seluruh direktori data yang dicakupnya, termasuk file sesi. Beberapa penyapuan menghitung pohon direktori yang dihapus seluruhnya sebagai satu item dan beberapa pass pembersihan tidak berkontribusi pada penghitung, jadi perlakukan nilai sebagai lantai daripada hitungan file yang tepat
+* `files_retained_fresh`: File yang diperiksa dan ditinggalkan di tempat karena masih dalam periode retensi. Hanya penyapuan per-file yang menghitung ini, jadi nilainya adalah lantai; nilai bukan nol adalah keadaan tunak normal
+* `files_past_cutoff`: File yang lebih lama dari periode retensi yang gagal dihapus penyapuan, misalnya karena kesalahan izin atau file yang dipegang terbuka. Nilai di atas nol berarti file melampaui periode retensi yang dikonfigurasi; nol bukan bukti bahwa tidak ada, karena penghapusan yang gagal dari seluruh direktori dihitung menuju `error_count` sebagai gantinya
+* `error_count`: Jumlah kesalahan yang dihadapi penyapuan saat membuat daftar atau menghapus file
+
+<h4 id="managed-settings-resolved-event">
+  Acara pengaturan terkelola diselesaikan
+</h4>
+
+Dicatat dengan [pengaturan terkelola](/docs/id/server-managed-settings) yang diselesaikan sesi: sekali saat startup sesi, lagi saat pengaturan terkelola atau [helper kebijakan](/docs/id/settings-reference#policyhelper) berubah selama sesi, dan saat Claude Code menolak untuk memulai atau mengakhiri sesi untuk salah satu alasan yang tercantum atribut `error.type`.
+Gunakan acara ini untuk menemukan mesin yang berjalan pada sumber terkelola yang tidak terduga, mesin yang policy helper-nya gagal, dan alasan mesin menolak untuk memulai.
+Memerlukan Claude Code v2.1.274 atau lebih baru.
+
+Secara default, acara membawa sumber terkelola dan status helper kebijakan tetapi bukan pengaturan itu sendiri. Untuk menambahkan atribut `managed_settings.settings` yang diredaksi dan digest `managed_settings.resolved_sha256`, atur `OTEL_LOG_MANAGED_SETTINGS=1`:
+
+* Atur dalam blok `env` pengaturan terkelola, pengaturan pengguna, atau `--settings`, atau dalam lingkungan tempat Anda meluncurkan Claude Code. Nilai dalam pengaturan proyek atau lokal tidak mengaktifkannya, karena repositori yang dikloning dapat menulisnya.
+* Pengaturan terkelola server dapat mengaturnya tanpa menampilkan [dialog persetujuan keamanan](/docs/id/server-managed-settings#security-approval-dialogs), karena variabel hanya menambahkan kebijakan terkelola organisasi Anda sendiri ke acara yang organisasi Anda sudah terima.
+
+Dalam sesi interaktif dalam folder yang belum Anda [percayai](/docs/id/permissions#what-runs-before-you-trust-a-folder), Claude Code tidak mengekspor acara penolakan.
+
+**Nama Acara**: `claude_code.managed_settings_resolved`
+
+**Atribut**:
+
+* Semua [atribut standar](#standard-attributes)
+* `event.name`: `"managed_settings_resolved"`
+* `event.timestamp`: Stempel waktu ISO 8601
+* `event.sequence`: penghitung per-proses untuk mengurutkan acara, dijelaskan di bawah [Atribut korelasi acara](#event-correlation-attributes)
+* `managed_settings.trigger`: `"startup"` untuk acara startup sesi, `"change"` saat pengaturan terkelola atau status helper kebijakan berubah nanti dalam sesi, atau `"refused"` saat kebijakan pengaturan terkelola menghentikan sesi. Claude Code mengirim acara `change` hanya saat atribut berbeda dari acara terakhir yang dikirimnya, dan nilai pengaturan yang berubah dihitung bahkan saat `OTEL_LOG_MANAGED_SETTINGS` off
+* `error.type`: mengapa Claude Code menghentikan sesi. Ada hanya pada acara `refused`:
+  * `"helper_failed"`: [run helper kebijakan gagal](/docs/id/settings-reference#helper-failures)
+  * `"policy_invalid"`: pengaturan terkelola berisi kesalahan yang menghentikan Claude Code dari memulai, atau sumber admin gagal dimuat, jadi Claude Code tidak dapat memeriksa penegakan login organisasi
+  * `"consent_rejected"`: pengguna menolak [dialog persetujuan keamanan](/docs/id/server-managed-settings#security-approval-dialogs) untuk pengaturan terkelola server
+  * `"force_refresh_failed"`: pengambilan pengaturan yang [`forceRemoteSettingsRefresh`](/docs/id/settings-reference#forceremotesettingsrefresh) perlukan gagal
+  * `"gateway_rejected"`: [gateway aplikasi Claude](/docs/id/claude-apps-gateway) menjawab beban pengaturan terkelola dengan HTTP 403
+  * `"version_below_minimum"`: versi Claude Code ini di bawah [`requiredMinimumVersion`](/docs/id/settings-reference#requiredminimumversion) atau di atas [`requiredMaximumVersion`](/docs/id/settings-reference#requiredmaximumversion)
+  * `"_OTHER"`: beban pengaturan terkelola gateway aplikasi Claude gagal karena alasan lain
+* `managed_settings.sources`: setiap sumber terkelola yang memberikan setidaknya satu [kunci kebijakan](/docs/id/managed-settings#how-claude-code-combines-managed-sources), prioritas tertinggi terlebih dahulu, termasuk sumber yang kuncinya tidak berlaku di bawah `first-wins`. Nilai adalah `"remote"`, `"plist"` atau `"hklm"` untuk kebijakan MDM atau tingkat OS, `"file"` untuk file pengaturan terkelola dan drop-in, `"parent"` saat [host embedding](/docs/id/managed-settings#let-an-embedding-host-add-policy) memasok pengaturan, dan `"hkcu"` untuk [nilai registri Windows HKCU](/docs/id/managed-settings#where-each-mechanism-stores-the-policy) saat Claude Code [membacanya](/docs/id/managed-settings#how-claude-code-combines-managed-sources). Sumber yang hanya membawa kunci kontrol, atau yang Claude Code tidak dapat dibaca, tidak tercantum. Dipancarkan sebagai array string, kosong saat tidak ada sumber terkelola yang memberikan kunci kebijakan
+* `managed_settings.source_behavior`: nilai [`managedSourcesBehavior`](/docs/id/settings-reference#managedsourcesbehavior) yang dibaca Claude Code, `"first-wins"` atau `"merge"`. `"first-wins"` saat tidak ada sumber yang menetapkan kunci
+* `managed_settings.helper.state`: status helper kebijakan yang dikonfigurasi sumber MDM atau file yang dipilih:
+  * `"ok"`: output helper melayani sebagai pengaturan terkelola
+  * `"bad_path"`, `"not_a_file"`, `"exit_nonzero"`, `"timed_out"`, `"oversize"`, `"parse_failed"`, `"envelope_invalid"`, atau `"schema_rejected"`: run terakhir helper gagal. [Helper failures](/docs/id/settings-reference#helper-failures) menjelaskan kasus-kasusnya
+  * `"none"`: tidak ada helper yang dikonfigurasi, atau sumber yang mengonfigurasinya bukan kebijakan MDM atau file pengaturan terkelola
+* `managed_settings.helper.applied`: `"output"` saat output helper sendiri melayani sebagai pengaturan terkelola, `"none"` saat tidak
+* `managed_settings.helper.entry`: `"policyHelper"` saat Claude Code memilih [`policyHelper`](/docs/id/settings-reference#policyhelper). Tidak ada saat memilih tidak ada helper
+* `managed_settings.helper.path`: [`path`](/docs/id/settings-reference#policyhelper-path) yang dikonfigurasi helper. Ada kapan pun Claude Code memilih helper, apakah atau tidak `OTEL_LOG_MANAGED_SETTINGS` diatur
+* `managed_settings.resolved_sha256` (saat `OTEL_LOG_MANAGED_SETTINGS=1`): SHA-256 dari pengaturan terkelola yang diselesaikan sebelum redaksi, diserialisasi sebagai JSON dengan kunci diurutkan secara rekursif dan tanpa whitespace. Mesin dengan digest yang sama menjalankan kebijakan yang sama. Claude Code mengirim digest hanya dengan opt-in karena kebijakan pendek dapat dipulihkan dengan menghash tebakan. Tidak ada saat tidak ada pengaturan terkelola yang diselesaikan, dan pada acara `refused`
+* `managed_settings.settings` (saat `OTEL_LOG_MANAGED_SETTINGS=1`): nama dan bentuk pengaturan terkelola yang diselesaikan sebagai string JSON, dengan nilai diredaksi. Tidak ada pada acara `refused`. Claude Code membangunnya dari skema pengaturannya:
+
+  * Nama pengaturan yang skema deklarasikan diekspor, dan kunci yang tidak dideklarasikan ditinggalkan
+  * Boolean, angka, dan nilai string yang skema batasi ke set opsi tetap, seperti `permissions.defaultMode`, diekspor apa adanya. `sandbox.network.httpProxyPort` dan `sandbox.network.socksProxyPort` diekspor sebagai `"[REDACTED]"`
+  * Setiap string lainnya, seperti `model`, `apiKeyHelper`, setiap nilai `env`, setiap URL, dan setiap perintah, diekspor sebagai `"[REDACTED]"`
+  * Nama entri peta, seperti nama variabel `env` dan ID plugin, diekspor apa adanya. Pengaturan yang entri-nya skema tidak ketik, seperti `vimInsertModeRemaps`, diekspor sebagai `"[REDACTED]"` tunggal, dan `sandbox.ignoreViolations` diekspor sebagai daftar daftar jalurnya tanpa pola perintah
+  * Daftar menyimpan panjangnya, dengan setiap entri diredaksi oleh aturan yang sama
+  * Aturan `permissions.allow`, `permissions.deny`, atau `permissions.ask` diekspor sebagai nama alatnya dengan konten diredaksi, seperti `Read([REDACTED])`, saat alat built-in ke versi Claude Code ini atau referensi `mcp__` seperti `mcp__jira__create_issue`. Aturan lainnya diekspor sebagai `"[REDACTED]"`
+  * Hooks mengikuti aturan yang sama, jadi bidang opsi tetap dan numerik seperti `type` dan `timeout` menunjukkan, sementara setiap perintah, URL, `matcher`, dan kondisi `if` diekspor sebagai `"[REDACTED]"`
+
+  Misalnya, pengaturan terkelola dengan `apiKeyHelper`, dua variabel `env`, dan aturan tolak diekspor sebagai `{"apiKeyHelper":"[REDACTED]","env":{"HTTPS_PROXY":"[REDACTED]","CLAUDE_CODE_ENABLE_TELEMETRY":"[REDACTED]"},"permissions":{"deny":["Read([REDACTED])"]}}`.
+
+  Claude Code memotong nilai pada 8 KB UTF-8, dan nilai yang dipotong bukan JSON yang valid
+* `managed_settings.settings_truncated` (saat `managed_settings.settings` ada): `true` saat Claude Code memotong `managed_settings.settings` pada 8 KB, `false` sebaliknya. Dipancarkan sebagai boolean, bukan string
 
 <h2 id="interpret-metrics-and-events-data">
   Menafsirkan data metrik dan acara
@@ -1172,6 +1444,8 @@ Metrik `claude_code.cost.usage` membantu dengan:
   Metrik biaya adalah perkiraan. Untuk data penagihan resmi, lihat penyedia API Anda (Claude Console, Amazon Bedrock, atau Google Cloud's Agent Platform).
 </Note>
 
+Claude Code menghitung setiap respons streaming terhadap metrik biaya dan token tepat sekali, termasuk ketika gateway atau proxy di belakang `ANTHROPIC_BASE_URL` melakukan streaming penggunaan secara progresif di beberapa frame. Sebelum v2.1.214, stream yang membawa penggunaan di lebih dari satu frame menginflasi `claude_code.cost.usage` dan `claude_code.token.usage` dengan kira-kira satu permintaan penuh tambahan per frame tambahan.
+
 <h3 id="alerting-and-segmentation">
   Peringatan dan segmentasi
 </h3>
@@ -1192,7 +1466,9 @@ Rincian per-model dari commit hanya dapat didekati dengan menggabungkan terhadap
 
 Claude Code mencoba ulang permintaan API yang gagal secara internal dan hanya memancarkan acara `claude_code.api_error` tunggal setelah menyerah, jadi acara itu sendiri adalah sinyal terminal untuk permintaan tersebut. Upaya retry perantara tidak dicatat sebagai acara terpisah.
 
-Atribut `attempt` pada acara mencatat berapa banyak upaya yang dilakukan secara total. `CLAUDE_CODE_MAX_RETRIES` default ke 10 dan dibatasi pada 15; sejak v2.1.199, `CLAUDE_CODE_RETRY_WATCHDOG` menaikkan default dan menghapus batas. Ketika permintaan menghabiskan semua retry pada kesalahan transien, `attempt` sama dengan satu lebih dari batas efektif tersebut: 11 secara default, dan tidak pernah lebih dari 16 kecuali watchdog diatur. Nilai yang lebih rendah menunjukkan kesalahan yang tidak dapat dicoba ulang seperti respons `400`.
+Atribut `attempt` pada acara mencatat berapa banyak upaya yang dilakukan secara total. `CLAUDE_CODE_MAX_RETRIES` default ke 10 dan dibatasi pada 15. Pada v2.1.199 atau lebih baru, Anda dapat mengatur `CLAUDE_CODE_RETRY_WATCHDOG` untuk menaikkan default dan menghapus batas.
+
+Ketika permintaan menghabiskan semua retry pada kesalahan transien, `attempt` sama dengan satu lebih dari batas efektif tersebut: 11 secara default, dan tidak pernah lebih dari 16 kecuali watchdog diatur. Nilai yang lebih rendah menunjukkan kesalahan yang tidak dapat dicoba ulang seperti respons `400`, atau penyebab dengan anggaran retry yang lebih kecil. Misalnya, Claude Code mencoba ulang kegagalan untuk memuat kredensial AWS atau Google Cloud paling banyak dua kali.
 
 Untuk membedakan sesi yang pulih dari sesi yang terhenti, kelompokkan acara berdasarkan `session.id` dan periksa apakah acara `api_request` yang lebih baru ada setelah kesalahan.
 
@@ -1221,7 +1497,7 @@ Acara OpenTelemetry adalah sumber data audit untuk aktivitas Claude Code. Setiap
   Atribut tindakan untuk pengguna
 </h3>
 
-[Atribut standar](#standard-attributes) pada setiap acara mencakup identitas pengguna yang diautentikasi: `user.email`, `user.account_uuid`, `user.account_id`, dan `organization.id` saat masuk dengan akun Claude, ditambah `user.id` dan `session.id` per-sesi. `user.id` adalah pengidentifikasi berskop instalasi, kecuali pada sesi [Claude apps gateway](/docs/id/claude-apps-gateway), di mana ini adalah subjek IdP dari token yang dikeluarkan gateway.
+[Atribut standar](#standard-attributes) pada setiap acara mencakup identitas pengguna yang diautentikasi: `user.email`, `user.account_uuid`, `user.account_id`, dan `organization.id` saat masuk dengan akun Claude atau, dalam [sesi cloud](/docs/id/claude-code-on-the-web), ketika kredensial sesi itu sendiri membawanya, ditambah `user.id` dan `session.id` per-sesi. `user.id` adalah pengidentifikasi berskop instalasi, kecuali pada sesi [Claude apps gateway](/docs/id/claude-apps-gateway), di mana ini adalah subjek IdP dari token yang dikeluarkan gateway.
 
 Panggilan alat MCP, perintah Bash, dan pengeditan file oleh karena itu dikaitkan dengan pengembang yang memulai sesi. Claude Code tidak bertindak di bawah akun layanan terpisah; identitas yang dicatat pada setiap acara adalah akun Claude pengembang itu sendiri, atau identitas IdP pengembang pada sesi [Claude apps gateway](/docs/id/claude-apps-gateway).
 
@@ -1245,8 +1521,8 @@ Untuk menangkap aktivitas server MCP dengan detail panggilan lengkap, aktifkan p
 
 Tanpa `OTEL_LOG_TOOL_DETAILS`, acara ini menghilangkan detail pengidentifikasi:
 
-* `tool_result`: menyimpan `tool_name` dan `mcp_server_scope`, menghilangkan `mcp_server_name`, `mcp_tool_name`, dan argumen
-* `tool_decision`: menyimpan `tool_name`, menghilangkan `tool_parameters`
+* `tool_result`: menyimpan `mcp_server_scope` dan `tool_name` diredaksi ke literal `"mcp_tool"` untuk server yang dikonfigurasi pengguna, menghilangkan konten argumen. Untuk server bawaan Claude Desktop, dalam sesi yang dimiliki Claude Desktop, ini juga menyimpan pasangan `mcp_server_name`/`mcp_tool_name` di dalam `tool_parameters`, pengecualian yang sama yang dipengaruhi host seperti `tool_decision`, memerlukan Claude Code v2.1.214 atau lebih baru
+* `tool_decision`: menyimpan `tool_source` dan `tool_name` diredaksi ke literal `"mcp_tool"` untuk server yang dikonfigurasi pengguna, menghilangkan konten argumen. Untuk server bawaan Claude Desktop, dalam sesi yang dimiliki Claude Desktop, ini juga menyimpan pasangan `mcp_server_name`/`mcp_tool_name` di dalam `tool_parameters`; `tool_source` dan pasangan nama keduanya memerlukan Claude Code v2.1.214 atau lebih baru
 * `mcp_server_connection`: menghilangkan `server_name` dan pesan kesalahan, tetapi menyimpan `is_plugin`, `plugin_id_hash`, dan `plugin.name`, dengan nama plugin non-Anthropic diredaksi ke literal `"third-party"`, sehingga server yang disediakan plugin tetap dapat dibedakan tanpa pencatatan terperinci
 
 <h3 id="map-security-questions-to-events">
@@ -1255,15 +1531,16 @@ Tanpa `OTEL_LOG_TOOL_DETAILS`, acara ini menghilangkan detail pengidentifikasi:
 
 Saat membangun aturan deteksi, cari sinyal yang ingin Anda pantau dan kueri backend Anda untuk acara dan atribut yang sesuai:
 
-| Sinyal                                              | Acara                                                                                      | Atribut Kunci                                                |
-| --------------------------------------------------- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------ |
-| Panggilan alat diizinkan atau ditolak, dan oleh apa | `tool_decision`                                                                            | `decision`, `source`, `tool_name`, `tool_parameters`         |
-| Eskalasi mode izin                                  | `permission_mode_changed`                                                                  | `from_mode`, `to_mode`, `trigger`                            |
-| Hook kebijakan memblokir tindakan                   | `hook_execution_complete`                                                                  | `hook_event`, `num_blocking`                                 |
-| Login, logout, dan kegagalan autentikasi            | `auth`                                                                                     | `action`, `success`, `error_category`                        |
-| Server MCP terhubung atau gagal                     | `mcp_server_connection`                                                                    | `status`, `server_name`, `is_plugin`, `error_code`           |
-| Plugin diinstal dan sumbernya                       | `plugin_installed`                                                                         | `plugin.name`, `marketplace.name`, `marketplace.is_official` |
-| Perintah yang dijalankan dan file yang disentuh     | `tool_result` (dieksekusi) atau `tool_decision` (ditolak) dengan `OTEL_LOG_TOOL_DETAILS=1` | `tool_parameters`; `tool_input` (`tool_result` saja)         |
+| Sinyal                                                                                                                           | Acara                                                                                      | Atribut Kunci                                                                                                                                                                                                                                      |
+| -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Panggilan alat diizinkan atau ditolak, dan oleh apa                                                                              | `tool_decision`                                                                            | `decision`, `source`, `tool_name`, `tool_parameters`                                                                                                                                                                                               |
+| Eskalasi mode izin                                                                                                               | `permission_mode_changed`                                                                  | `from_mode`, `to_mode`, `trigger`                                                                                                                                                                                                                  |
+| Hook kebijakan memblokir tindakan                                                                                                | `hook_execution_complete`                                                                  | `hook_event`, `num_blocking`                                                                                                                                                                                                                       |
+| Login, logout, dan kegagalan autentikasi                                                                                         | `auth`                                                                                     | `action`, `success`, `error_category`                                                                                                                                                                                                              |
+| Server MCP terhubung atau gagal                                                                                                  | `mcp_server_connection`                                                                    | `status`, `server_name`, `is_plugin`, `error_code`                                                                                                                                                                                                 |
+| Plugin diinstal dan sumbernya                                                                                                    | `plugin_installed`                                                                         | `plugin.name`, `marketplace.name`, `marketplace.is_official`                                                                                                                                                                                       |
+| Perintah yang dijalankan dan file yang disentuh                                                                                  | `tool_result` (dieksekusi) atau `tool_decision` (ditolak) dengan `OTEL_LOG_TOOL_DETAILS=1` | `tool_parameters`; `tool_input` (`tool_result` saja)                                                                                                                                                                                               |
+| Sumber pengaturan terkelola mana yang dijalankan mesin, apakah pembantu kebijakan sehat, dan mengapa mesin menolak untuk memulai | `managed_settings_resolved`                                                                | `managed_settings.trigger`, `managed_settings.sources`, `managed_settings.source_behavior`, `managed_settings.helper.state`, `error.type`; `managed_settings.settings` dan `managed_settings.resolved_sha256` dengan `OTEL_LOG_MANAGED_SETTINGS=1` |
 
 Claude Code memancarkan aliran acara mentah saja. Deteksi anomali, baselining, korelasi lintas sesi, dan peringatan adalah tanggung jawab backend SIEM atau observabilitas Anda.
 
@@ -1286,6 +1563,8 @@ Arahkan `OTEL_EXPORTER_OTLP_LOGS_ENDPOINT` ke penerima OTLP SIEM Anda, atau ke O
 }
 ```
 
+Untuk mengonfirmasi acara tiba, kirimkan prompt dalam sesi yang berjalan di bawah konfigurasi ini dan periksa SIEM Anda untuk acara `claude_code.user_prompt`. Jika tidak ada yang tiba, jalankan `claude --debug` dan periksa log debug untuk kesalahan ekspor `[3P telemetry]`.
+
 <h2 id="backend-considerations">
   Pertimbangan backend
 </h2>
@@ -1296,17 +1575,17 @@ Pilihan backend metrik, log, dan traces Anda menentukan jenis analisis yang dapa
   Untuk metrik
 </h3>
 
-* **Database deret waktu (misalnya, Prometheus)**: Perhitungan laju, metrik agregat
-* **Toko kolumnar (misalnya, ClickHouse)**: Kueri kompleks, analisis pengguna unik
-* **Platform observabilitas lengkap (misalnya, Honeycomb, Datadog, Grafana Cloud)**: Kueri lanjutan, visualisasi, peringatan
+* **Database deret waktu**: Perhitungan laju, metrik agregat
+* **Toko kolumnar**: Kueri kompleks, analisis pengguna unik
+* **Platform observabilitas lengkap**: Kueri lanjutan, visualisasi, peringatan
 
 <h3 id="for-events/logs">
   Untuk acara/log
 </h3>
 
-* **Sistem agregasi log (misalnya, Elasticsearch, Loki)**: Pencarian teks lengkap, analisis log
-* **Toko kolumnar (misalnya, ClickHouse)**: Analisis acara terstruktur
-* **Platform observabilitas lengkap (misalnya, Honeycomb, Datadog, Grafana Cloud)**: Korelasi antara metrik dan acara
+* **Sistem agregasi log**: Pencarian teks lengkap, analisis log
+* **Toko kolumnar**: Analisis acara terstruktur
+* **Platform observabilitas lengkap**: Korelasi antara metrik dan acara
 
 <h3 id="for-traces">
   Untuk traces
@@ -1314,8 +1593,8 @@ Pilihan backend metrik, log, dan traces Anda menentukan jenis analisis yang dapa
 
 Pilih backend yang mendukung penyimpanan distributed trace dan korelasi span:
 
-* **Sistem distributed tracing (misalnya, Jaeger, Zipkin, Grafana Tempo)**: Visualisasi span, request waterfalls, analisis latensi
-* **Platform observabilitas lengkap (misalnya, Honeycomb, Datadog, Grafana Cloud)**: Pencarian trace dan korelasi dengan metrik dan log
+* **Sistem distributed tracing**: Visualisasi span, request waterfalls, analisis latensi
+* **Platform observabilitas lengkap**: Pencarian trace dan korelasi dengan metrik dan log
 
 Untuk organisasi yang memerlukan metrik Pengguna Aktif Harian/Mingguan/Bulanan (DAU/WAU/MAU), pertimbangkan backend yang mendukung kueri nilai unik yang efisien.
 
@@ -1325,13 +1604,15 @@ Untuk organisasi yang memerlukan metrik Pengguna Aktif Harian/Mingguan/Bulanan (
 
 Semua metrik dan acara diekspor dengan atribut sumber daya berikut:
 
-* `service.name`: `claude-code`
-* `service.version`: Versi Claude Code saat ini
+* `service.name`: `claude-code` untuk sesi terminal, `claude-code-desktop` untuk sesi yang dimulai dari tab Code di [aplikasi Claude Desktop](/docs/id/desktop)
+* `service.version`: Versi Claude Code saat ini, atau versi aplikasi Desktop untuk sesi tab Code
 * `os.type`: Jenis sistem operasi (misalnya, `linux`, `darwin`, `windows`)
 * `os.version`: String versi sistem operasi
 * `host.arch`: Arsitektur host (misalnya, `amd64`, `arm64`)
 * `wsl.version`: Nomor versi WSL (hanya ada saat berjalan di Windows Subsystem for Linux)
 * Nama Meter: `com.anthropic.claude_code`
+
+Jika pipeline pengumpul atau dasbor Anda memfilter pada `service.name = claude-code`, tambahkan `claude-code-desktop` ke filter untuk juga menangkap telemetri dari sesi tab Code.
 
 <h2 id="roi-measurement-resources">
   Sumber daya pengukuran ROI
@@ -1345,16 +1626,20 @@ Untuk panduan komprehensif tentang mengukur pengembalian investasi untuk Claude 
 
 * Ekspor OpenTelemetry ke backend Anda adalah opt-in dan memerlukan konfigurasi eksplisit. Untuk telemetri operasional terpisah Anthropic dan cara menonaktifkannya, lihat [Penggunaan data](/docs/id/data-usage#telemetry-services)
 * Konten file mentah dan cuplikan kode tidak disertakan dalam metrik atau acara. Trace spans adalah jalur data terpisah: lihat poin `OTEL_LOG_TOOL_CONTENT` di bawah
-* Saat diautentikasi melalui OAuth, `user.email` disertakan dalam atribut telemetri. Jika ini menjadi perhatian bagi organisasi Anda, bekerja dengan backend telemetri Anda untuk memfilter atau menyunting bidang ini
-* Konten prompt pengguna tidak dikumpulkan secara default. Hanya panjang prompt yang dicatat. Untuk menyertakan konten prompt, atur `OTEL_LOG_USER_PROMPTS=1`
+* Saat diautentikasi melalui OAuth, `user.email` disertakan dalam atribut telemetri, dikirim hanya ke titik akhir OTel yang Anda konfigurasikan, tidak pernah ke Anthropic. Jika ini menjadi perhatian bagi organisasi Anda, bekerja dengan backend telemetri Anda untuk memfilter atau menyunting bidang ini
+* Konten prompt pengguna tidak dikumpulkan secara default. Hanya panjang prompt yang dicatat. Untuk menyertakan konten prompt, atur `OTEL_LOG_USER_PROMPTS=1`. Di bawah detailed beta tracing, variabel ini menjangkau lebih jauh daripada teks prompt: variabel ini juga mengontrol atribut span [`new_context`](#new-context-gates), yang membawa hasil alat pada span `claude_code.llm_request`
 * Teks respons asisten tidak dikumpulkan secara default. Hanya panjang respons yang dicatat. Untuk menyertakan teks respons, atur `OTEL_LOG_ASSISTANT_RESPONSES=1`. Seperti semua data OpenTelemetry dari Claude Code, teks respons dikirim hanya ke titik akhir OTel yang Anda konfigurasikan, tidak pernah ke Anthropic. Ketika variabel ini tidak diatur, `OTEL_LOG_USER_PROMPTS` digunakan sebagai fallback, jadi atur `OTEL_LOG_ASSISTANT_RESPONSES=0` jika Anda menginginkan konten prompt tanpa konten respons
-* Argumen input alat dan parameter tidak dicatat secara default. Untuk menyertakannya, atur `OTEL_LOG_TOOL_DETAILS=1`. Data ini dikirim hanya ke titik akhir OTEL yang Anda konfigurasikan, tidak pernah ke Anthropic. Argumen mungkin masih berisi nilai sensitif, jadi konfigurasikan backend telemetri Anda untuk memfilter atau menyunting atribut ini sesuai kebutuhan. Saat diaktifkan:
+* Argumen input alat dan parameter tidak dicatat secara default. Untuk menyertakannya, atur `OTEL_LOG_TOOL_DETAILS=1`. Untuk server bawaan Claude Desktop, dalam sesi yang dimiliki Claude Desktop, `tool_decision` dan `tool_result` membawa pasangan `mcp_server_name`/`mcp_tool_name`, nama yang ditulis host daripada konten argumen, bahkan dengan flag mati. Pengecualian memerlukan Claude Code v2.1.214 atau lebih baru. Data ini dikirim hanya ke titik akhir OTEL yang Anda konfigurasikan, tidak pernah ke Anthropic. Argumen mungkin masih berisi nilai sensitif, jadi konfigurasikan backend telemetri Anda untuk memfilter atau menyunting atribut ini sesuai kebutuhan. Saat diaktifkan:
   * Acara `tool_result` dan `tool_decision` menyertakan atribut `tool_parameters` dengan perintah Bash, nama server MCP dan alat, dan nama skill. Bidang seperti `full_command` dipancarkan tanpa pemotongan
   * Acara `tool_result` juga menyertakan atribut `tool_input` dengan jalur file, URL, pola pencarian, dan argumen lainnya. Nilai individual di atas 512 karakter dipotong dan total dibatasi hingga \~4 K karakter
   * Acara `user_prompt` menyertakan `command_name` verbatim untuk perintah custom, plugin, dan MCP
   * Trace spans menyertakan atribut `tool_input` yang sama dan atribut yang diturunkan dari input seperti `file_path`, dengan pemotongan yang sama dengan `tool_input`
-* Konten input dan output alat tidak dicatat dalam trace spans secara default. Untuk menyertakannya, atur `OTEL_LOG_TOOL_CONTENT=1`. Saat diaktifkan, acara span menyertakan konten input dan output alat lengkap dipotong pada 60 KB per span. Ini dapat mencakup konten file mentah dari hasil alat Read dan output perintah Bash. Konfigurasikan backend telemetri Anda untuk memfilter atau menyunting atribut ini sesuai kebutuhan
-* Badan permintaan dan respons API Anthropic Messages mentah tidak dicatat secara default. Untuk menyertakannya, atur `OTEL_LOG_RAW_API_BODIES`. Dengan `=1`, setiap panggilan API memancarkan acara log `api_request_body` dan `api_response_body` yang atribut `body`-nya adalah muatan yang diserialisasi JSON, dipotong pada 60 KB. Dengan `=file:<dir>`, badan yang tidak dipotong ditulis ke file `.request.json` dan `.response.json` di bawah direktori tersebut dan acara membawa jalur `body_ref` sebagai gantinya dari badan inline. Kirim direktori dengan pengumpul log atau sidecar daripada melalui aliran telemetri. Dalam kedua mode, badan berisi riwayat percakapan lengkap (system prompt, setiap giliran pengguna dan asisten sebelumnya, hasil alat), jadi mengaktifkan ini menyiratkan persetujuan untuk semua yang akan diungkapkan oleh flag konten `OTEL_LOG_*` lainnya. Konten extended-thinking Claude selalu diredaksi dari badan ini terlepas dari pengaturan lain
+* Konten alat tidak dicatat dalam trace spans secara default. Untuk menyertakannya, atur `OTEL_LOG_TOOL_CONTENT=1`. Span `claude_code.tool` kemudian membawa acara span [`tool.output`](#tool-output-span-event) dengan konten file mentah dan output perintah Bash, dipotong pada batas konten (60 KB secara default) per atribut. Konten alat juga menjangkau spans melalui [`new_context`, yang gatenya berbeda per span](#new-context-gates). Konfigurasikan backend telemetri Anda untuk memfilter atau menyunting atribut ini sesuai kebutuhan
+* Badan permintaan dan respons API Anthropic Messages mentah tidak dicatat secara default. Untuk menyertakannya, atur `OTEL_LOG_RAW_API_BODIES` di shell, pengaturan pengguna, atau pengaturan terkelola Anda. Ini diabaikan dalam [pengaturan proyek dan lokal](/docs/id/settings-reference#variables-claude-code-ignores-in-env). Badan berisi riwayat percakapan lengkap, termasuk system prompt, setiap giliran pengguna dan asisten sebelumnya, dan hasil alat, jadi mengaktifkan ini menyiratkan persetujuan untuk semua yang akan diungkapkan oleh flag konten `OTEL_LOG_*` lainnya. Claude Code selalu menyunting konten extended-thinking Claude dari badan ini, terlepas dari pengaturan lain. Nilai yang Anda atur menentukan bagaimana Claude Code mengirimkan badan:
+  * Dengan `=1`, Claude Code memancarkan acara log `api_request_body` dan `api_response_body` untuk setiap panggilan API. Atribut `body` acara membawa muatan yang diserialisasi JSON, dipotong pada batas konten (60 KB secara default)
+  * Dengan `=file:<dir>`, Claude Code menulis badan yang tidak dipotong ke file `.request.json` dan `.response.json` di bawah direktori tersebut, dan acara membawa jalur `body_ref` sebagai gantinya dari badan inline. Kirim direktori dengan pengumpul log atau sidecar daripada melalui aliran telemetri.
+
+    Untuk setiap respons yang berhasil, Claude Code juga menambahkan satu baris ke `index.jsonl` di direktori tersebut, menghubungkan file respons ke file permintaan yang menghasilkannya dan ke pesan transkrip yang menjadi. Setiap baris tidak menyimpan konten pesan, dan bagian [acara badan respons API](#api-response-body-event) mencantumkan bidangnya. File indeks memerlukan Claude Code v2.1.274 atau lebih baru
 
 <h2 id="monitor-claude-code-on-amazon-bedrock">
   Memantau Claude Code di Amazon Bedrock

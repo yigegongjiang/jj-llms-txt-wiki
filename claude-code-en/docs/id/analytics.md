@@ -139,12 +139,6 @@ Klik **Export all users** untuk mengunduh data kontribusi lengkap untuk semua pe
 
 Ketika metrik kontribusi diaktifkan, Claude Code menganalisis permintaan tarik yang digabungkan untuk menentukan kode mana yang ditulis dengan bantuan Claude Code. Ini dilakukan dengan mencocokkan aktivitas sesi Claude Code terhadap kode di setiap PR.
 
-<h4 id="tagging-criteria">
-  Kriteria penandaan
-</h4>
-
-PR ditandai sebagai "with Claude Code" jika berisi setidaknya satu baris kode yang ditulis selama sesi Claude Code. Sistem menggunakan pencocokan konservatif: hanya kode di mana ada kepercayaan tinggi pada keterlibatan Claude Code yang dihitung sebagai dibantu.
-
 <h4 id="attribution-process">
   Proses atribusi
 </h4>

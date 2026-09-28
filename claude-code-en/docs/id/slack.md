@@ -4,15 +4,18 @@
 
 # Claude Code di Slack
 
-> Delegasikan tugas coding langsung dari workspace Slack Anda
+> Delegasikan tugas coding langsung dari workspace Slack Anda. Anthropic sedang menghentikan versi awal ini untuk workspace Team dan Enterprise demi Claude Tag; versi ini tetap menjadi jalur setup pada paket Pro dan Max.
 
-<Note>
-  Claude Code di Slack sedang diganti oleh [Claude Tag](https://claude.com/product/tag) untuk workspace Team dan Enterprise. Claude Tag menjalankan @Claude sebagai identitas bersama organisasi Anda dengan akses yang dikonfigurasi admin, di bawah aplikasi Slack yang sama, sehingga tidak ada yang perlu dipasang ulang dan pengaturan yang ada terus berfungsi selama transisi. Untuk beralih ke workspace, lihat [Migrasi dari Claude di Slack yang lebih awal](https://claude.com/docs/claude-tag/admins/migrate-from-earlier).
-</Note>
+<Warning>
+  Halaman ini mendokumentasikan Claude Code di Slack versi awal, yang menjalankan setiap sesi di bawah akun pengguna individual.
 
-Claude Code di Slack membawa kekuatan Claude Code langsung ke workspace Slack Anda. Ketika Anda menyebutkan `@Claude` dengan tugas coding, Claude secara otomatis mendeteksi niat dan membuat sesi Claude Code di web, memungkinkan Anda untuk mendelegasikan pekerjaan pengembangan tanpa meninggalkan percakapan tim Anda.
+  * **Paket Team dan Enterprise:** Anthropic sedang menghentikan versi ini demi [Claude Tag](https://claude.com/product/tag), yang menjalankan @Claude sebagai identitas bersama organisasi Anda dengan akses yang dikonfigurasi admin. Aplikasi Slack dan handle @Claude yang sudah ada tetap ada, dan tim akun Anthropic Anda dapat memberitahu Anda tanggal cutover-nya. [Atur Claude Tag](https://claude.com/docs/claude-tag/overview) untuk workspace baru; untuk memindahkan workspace yang sudah menggunakan versi ini, lihat [Migrasi dari Claude di Slack yang lebih awal](https://claude.com/docs/claude-tag/admins/migrate-from-earlier).
+  * **Paket Pro dan Max:** Claude Tag tidak tersedia pada paket individual, jadi halaman ini tetap menjadi jalur setup.
+</Warning>
 
-Integrasi ini dibangun di atas aplikasi Claude untuk Slack yang sudah ada tetapi menambahkan perutean cerdas ke Claude Code di web untuk permintaan yang terkait dengan coding. Setiap sesi berjalan di bawah akun Claude Anda sendiri, menggunakan repositori yang terhubung dan batas rencana Anda.
+Claude Code di Slack membawa kekuatan Claude Code langsung ke workspace Slack Anda. Ketika Anda menyebutkan `@Claude` dengan tugas coding, Claude secara otomatis mendeteksi niat dan membuat sesi Claude Code cloud, memungkinkan Anda untuk mendelegasikan pekerjaan pengembangan tanpa meninggalkan percakapan tim Anda.
+
+Integrasi ini dibangun di atas aplikasi Claude untuk Slack yang sudah ada tetapi menambahkan perutean cerdas ke sesi Claude Code cloud untuk permintaan yang terkait dengan coding. Setiap sesi berjalan di bawah akun Claude Anda sendiri, menggunakan repositori yang terhubung dan batas rencana Anda.
 
 <h2 id="use-cases">
   Kasus penggunaan
@@ -29,12 +32,12 @@ Integrasi ini dibangun di atas aplikasi Claude untuk Slack yang sudah ada tetapi
 
 Sebelum menggunakan Claude Code di Slack, pastikan Anda memiliki hal berikut:
 
-| Persyaratan        | Detail                                                                                                 |
-| :----------------- | :----------------------------------------------------------------------------------------------------- |
-| Claude Plan        | Pro, Max, Team, atau Enterprise dengan akses Claude Code (kursi premium atau Chat + Claude Code seats) |
-| Claude Code di web | Akses ke [Claude Code di web](/docs/id/claude-code-on-the-web) harus diaktifkan                             |
-| Akun GitHub        | Terhubung ke Claude Code di web dengan setidaknya satu repositori yang terauthentikasi                 |
-| Autentikasi Slack  | Akun Slack Anda tertaut ke akun Claude Anda melalui aplikasi Claude                                    |
+| Persyaratan       | Detail                                                                                                       |
+| :---------------- | :----------------------------------------------------------------------------------------------------------- |
+| Claude Plan       | Pro, Max, Team, atau Enterprise dengan akses Claude Code (kursi premium atau Chat + Claude Code seats)       |
+| Cloud sessions    | [Cloud sessions](/docs/id/claude-code-on-the-web) diaktifkan untuk akun Anda                                      |
+| Akun GitHub       | Terhubung di [claude.ai/code](https://claude.ai/code) dengan setidaknya satu repositori yang terauthentikasi |
+| Autentikasi Slack | Akun Slack Anda tertaut ke akun Claude Anda melalui aplikasi Claude                                          |
 
 <h2 id="setting-up-claude-code-in-slack">
   Menyiapkan Claude Code di Slack
@@ -49,13 +52,13 @@ Sebelum menggunakan Claude Code di Slack, pastikan Anda memiliki hal berikut:
     Setelah aplikasi diinstal, autentikasi akun Claude individual Anda:
 
     1. Buka aplikasi Claude di Slack dengan mengklik "Claude" di bagian Apps Anda
-    2. Navigasi ke tab App Home
+    2. Buka tab App Home
     3. Klik "Connect" untuk menghubungkan akun Slack Anda dengan akun Claude Anda
     4. Selesaikan alur autentikasi di browser Anda
   </Step>
 
-  <Step title="Konfigurasi Claude Code di web">
-    Pastikan Claude Code di web Anda dikonfigurasi dengan benar:
+  <Step title="Konfigurasi cloud sessions">
+    Pastikan cloud sessions dikonfigurasi dengan benar untuk akun Anda:
 
     * Kunjungi [claude.ai/code](https://claude.ai/code) dan masuk dengan akun yang sama yang Anda hubungkan ke Slack
     * Hubungkan akun GitHub Anda jika belum terhubung
@@ -63,7 +66,7 @@ Sebelum menggunakan Claude Code di Slack, pastikan Anda memiliki hal berikut:
   </Step>
 
   <Step title="Pilih mode perutean Anda">
-    Setelah menghubungkan akun Anda, konfigurasi bagaimana Claude menangani pesan Anda di Slack. Navigasi ke Claude App Home di Slack untuk menemukan pengaturan **Routing Mode**.
+    Setelah menghubungkan akun Anda, konfigurasi bagaimana Claude menangani pesan Anda di Slack. Buka Claude App Home di Slack untuk menemukan pengaturan **Routing Mode**.
 
     | Mode            | Perilaku                                                                                                                                                                                                                                                        |
     | :-------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -88,7 +91,7 @@ Sebelum menggunakan Claude Code di Slack, pastikan Anda memiliki hal berikut:
   Deteksi otomatis
 </h3>
 
-Ketika Anda menyebutkan @Claude di saluran atau thread Slack, Claude secara otomatis menganalisis pesan Anda untuk menentukan apakah itu tugas coding. Jika Claude mendeteksi niat coding, itu akan merutkan permintaan Anda ke Claude Code di web alih-alih merespons sebagai asisten chat biasa.
+Dalam mode routing Code + Chat, ketika Anda menyebutkan @Claude di saluran atau thread Slack, Claude secara otomatis mendeteksi apakah pesan Anda adalah tugas coding. Tugas coding dikirim ke sesi cloud Claude Code. Apa pun yang lain mendapatkan balasan chat biasa. Dalam mode Code only, setiap @mention dikirim ke Claude Code.
 
 Anda juga dapat secara eksplisit memberi tahu Claude untuk menangani permintaan sebagai tugas coding, bahkan jika itu tidak secara otomatis mendeteksinya.
 
@@ -124,12 +127,6 @@ Konteks ini membantu Claude memahami masalah, memilih repositori yang sesuai, da
 <h2 id="user-interface-elements">
   Elemen antarmuka pengguna
 </h2>
-
-<h3 id="app-home">
-  App Home
-</h3>
-
-Tab App Home menampilkan status koneksi Anda dan memungkinkan Anda untuk menghubungkan atau memutuskan akun Claude Anda dari Slack.
 
 <h3 id="message-actions">
   Tindakan pesan
@@ -177,14 +174,7 @@ Administrator workspace Slack mengontrol apakah aplikasi Claude tersedia di work
   Kontrol akses berbasis saluran
 </h3>
 
-Claude tidak secara otomatis ditambahkan ke saluran apa pun setelah instalasi. Pengguna harus secara eksplisit mengundang Claude ke saluran tempat mereka ingin menggunakannya:
-
-* **Undangan diperlukan**: Ketik `/invite @Claude` di saluran apa pun untuk menambahkan Claude ke saluran tersebut
-* **Keanggotaan saluran mengontrol akses**: Claude hanya dapat merespons @mentions di saluran tempat itu telah ditambahkan
-* **Gating akses melalui saluran**: Admin dapat mengontrol siapa yang menggunakan Claude Code dengan mengelola saluran mana Claude diundang dan siapa yang memiliki akses ke saluran tersebut
-* **Dukungan saluran pribadi**: Claude bekerja di saluran publik dan pribadi, memberikan tim fleksibilitas dalam mengontrol visibilitas
-
-Model berbasis saluran ini memungkinkan tim untuk membatasi penggunaan Claude Code ke saluran tertentu, memberikan lapisan kontrol akses tambahan di luar izin tingkat workspace.
+Menginstal aplikasi tidak menambahkan Claude ke saluran apa pun. Claude merespons @mentions hanya di saluran tempat itu telah ditambahkan; undang dengan `/invite @Claude`. Ini bekerja di saluran publik dan pribadi. Admin dapat mengontrol siapa yang menggunakan Claude Code dengan mengelola saluran mana Claude diundang dan siapa yang memiliki akses ke saluran tersebut. Ini menambahkan lapisan kontrol akses di luar izin tingkat workspace.
 
 <h2 id="what’s-accessible-where">
   Apa yang dapat diakses di mana
@@ -192,9 +182,9 @@ Model berbasis saluran ini memungkinkan tim untuk membatasi penggunaan Claude Co
 
 **Di Slack**: Anda akan melihat pembaruan status, ringkasan penyelesaian, dan tombol tindakan. Transkrip lengkap disimpan dan selalu dapat diakses.
 
-**Di web**: Sesi Claude Code lengkap dengan riwayat percakapan lengkap, semua perubahan kode, operasi file, dan kemampuan untuk melanjutkan sesi atau membuat pull request.
+**Di claude.ai/code**: Sesi Claude Code lengkap dengan riwayat percakapan lengkap, semua perubahan kode, dan operasi file. Sesi tetap berada di riwayat Claude Code Anda di [claude.ai/code](https://claude.ai/code), di mana Anda dapat melanjutkan sesi sebelumnya, mereferensikannya, atau membuat pull request.
 
-Untuk akun Enterprise dan Team, sesi yang dibuat dari Claude di Slack secara otomatis terlihat oleh organisasi. Lihat [Claude Code on the Web sharing](/docs/id/claude-code-on-the-web#share-sessions) untuk detail lebih lanjut.
+Untuk akun Enterprise dan Team, sesi yang dibuat dari Claude di Slack secara otomatis terlihat oleh organisasi. Lihat [cloud session sharing](/docs/id/claude-code-on-the-web#share-sessions) untuk detail lebih lanjut.
 
 <h2 id="best-practices">
   Praktik terbaik
@@ -225,21 +215,36 @@ Untuk akun Enterprise dan Team, sesi yang dibuat dari Claude di Slack secara oto
   "Claude Code tidak diaktifkan untuk akun Anda"
 </h3>
 
-Kesalahan ini berarti akun Claude Anda belum memiliki lingkungan cloud, bukan berarti admin perlu mengaktifkan apa pun. Masuk ke [claude.ai/code](https://claude.ai/code) sekali dengan akun yang sama yang Anda hubungkan ke Slack. Kunjungan pertama membuat lingkungan cloud default Anda, dan kesalahan hilang pada penyebutan Anda berikutnya. Setiap pengguna harus melakukan ini secara individual.
+Kesalahan ini berarti akun Claude Anda belum memiliki lingkungan cloud. Masuk ke [claude.ai/code](https://claude.ai/code) sekali dengan akun yang sama yang Anda hubungkan ke Slack dan selesaikan [onboarding web](/docs/id/web-quickstart#connect-github), yang membuat lingkungan cloud default Anda atau meminta Anda untuk membuatnya. Kesalahan hilang pada penyebutan Anda berikutnya. Setiap pengguna harus melakukan ini secara individual.
 
 <h3 id="sessions-not-starting">
   Sesi tidak dimulai
 </h3>
 
 1. Verifikasi akun Claude Anda terhubung di Claude App Home
-2. Periksa bahwa Anda memiliki akses Claude Code di web yang diaktifkan
+2. Periksa bahwa sesi cloud diaktifkan untuk akun Anda
 3. Pastikan Anda memiliki setidaknya satu repositori GitHub yang terhubung ke Claude Code
+
+<h3 id="sessions-from-a-claude-tag-channel-fail-to-start">
+  Sesi dari saluran Claude Tag gagal dimulai
+</h3>
+
+Entri ini berlaku untuk ruang kerja yang menggunakan [Claude Tag](https://claude.com/docs/claude-tag/overview), di mana Claude bekerja di saluran sebagai identitas bersama organisasi Anda, bukan sebagai akun anggota mana pun. Jika Anda membuat lingkungan cloud saluran di [claude.ai/code](https://claude.ai/code), itu milik akun pribadi Anda, dan Claude tidak dapat memulai sesi saluran di lingkungan pribadi. Claude Code gagal sesi segera, dan mencoba lagi tidak membantu.
+
+Jika Anda adalah Pemilik dan lingkungannya adalah milik Anda sendiri, [bagikan dengan organisasi](/docs/id/cloud-environments#organization-shared-environments) dari pemilih lingkungan. Jika tidak, Pemilik membuat ulang sebagai lingkungan bersama organisasi dari halaman **Cloud environments** di [pengaturan admin](https://claude.ai/admin-settings).
+
+Anda dapat menerapkannya dengan dua cara:
+
+* Tetapkan sebagai default organisasi di [claude.ai/admin-settings/claude-code](https://claude.ai/admin-settings/claude-code).
+* [Tetapkan di saluran](https://claude.com/docs/claude-tag/admins/troubleshooting#channel-sessions-use-the-wrong-environment-or-can%E2%80%99t-find-one) di pengaturan admin Claude Tag.
+
+Jika Anda bukan Pemilik, kirimkan entri ini ke salah satu.
 
 <h3 id="repository-not-showing">
   Repositori tidak ditampilkan
 </h3>
 
-1. Hubungkan repositori di Claude Code di web di [claude.ai/code](https://claude.ai/code)
+1. Hubungkan repositori di [claude.ai/code](https://claude.ai/code)
 2. Verifikasi izin GitHub Anda untuk repositori tersebut
 3. Coba putuskan dan hubungkan kembali akun GitHub Anda
 
@@ -258,29 +263,21 @@ Kesalahan ini berarti akun Claude Anda belum memiliki lingkungan cloud, bukan be
 2. Pastikan Anda masuk ke akun Claude yang benar di browser Anda
 3. Periksa bahwa rencana Claude Anda mencakup akses Claude Code
 
-<h3 id="session-expiration">
-  Kedaluwarsa sesi
-</h3>
-
-1. Sesi tetap dapat diakses di riwayat Claude Code Anda di web
-2. Anda dapat melanjutkan atau mereferensikan sesi masa lalu dari [claude.ai/code](https://claude.ai/code)
-
 <h2 id="current-limitations">
   Keterbatasan saat ini
 </h2>
 
-* **GitHub saja**: Saat ini mendukung repositori di GitHub.
-* **Satu PR sekaligus**: Setiap sesi dapat membuat satu pull request.
-* **Batas laju berlaku**: Sesi menggunakan batas laju rencana Claude individual Anda.
-* **Akses web diperlukan**: Pengguna harus memiliki akses Claude Code di web; mereka yang tidak memilikinya hanya akan mendapatkan respons chat Claude standar.
+* **GitHub saja**: repositori harus berada di GitHub.
+* **Satu PR sekaligus**: setiap sesi dapat membuat satu pull request.
+* **Akses sesi cloud diperlukan**: pengguna memerlukan akses ke [sesi cloud](/docs/id/claude-code-on-the-web); tanpa itu, Claude merespons dengan respons chat standar.
 
 <h2 id="related-resources">
   Sumber daya terkait
 </h2>
 
 <CardGroup>
-  <Card title="Claude Code di web" icon="globe" href="/docs/id/claude-code-on-the-web">
-    Pelajari lebih lanjut tentang Claude Code di web
+  <Card title="Claude Code di cloud" icon="cloud" href="/docs/id/claude-code-on-the-web">
+    Pelajari lebih lanjut tentang sesi cloud
   </Card>
 
   <Card title="Claude untuk Slack" icon="slack" href="https://claude.com/claude-and-slack">

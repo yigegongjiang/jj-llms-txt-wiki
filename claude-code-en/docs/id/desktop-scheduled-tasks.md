@@ -8,28 +8,28 @@
 
 Tugas terjadwal memulai sesi baru secara otomatis pada waktu dan frekuensi yang Anda pilih. Gunakan untuk pekerjaan berulang seperti tinjauan kode harian, pemeriksaan pembaruan dependensi, atau briefing pagi yang menarik dari kalender dan kotak masuk Anda.
 
-Halaman **Routines** aplikasi Desktop memungkinkan Anda membuat tugas terjadwal lokal dan [routines](/docs/id/routines) jarak jauh. Tugas lokal berjalan di mesin Anda dengan akses langsung ke file dan alat Anda, tetapi hanya berfungsi saat aplikasi terbuka dan komputer Anda terjaga. Routine jarak jauh berjalan pada infrastruktur cloud yang dikelola Anthropic bahkan ketika komputer Anda mati, dan juga dapat dipicu oleh panggilan API atau acara GitHub. Halaman ini mencakup tugas terjadwal lokal; untuk routine jarak jauh dan opsi pemicu mereka, lihat [Routines](/docs/id/routines).
+Halaman **Routines** aplikasi Desktop memungkinkan Anda membuat tugas terjadwal lokal dan [routines](/docs/id/routines) jarak jauh. Tugas lokal berjalan di mesin Anda dengan akses langsung ke file dan alat Anda, tetapi hanya berfungsi saat aplikasi terbuka dan komputer Anda terjaga. Routine jarak jauh berjalan di cloud bahkan ketika komputer Anda mati, dan juga dapat dipicu oleh panggilan API atau acara GitHub. Halaman ini mencakup tugas terjadwal lokal; untuk routine jarak jauh dan opsi pemicu mereka, lihat [Routines](/docs/id/routines).
 
 <h2 id="compare-scheduling-options">
   Bandingkan opsi penjadwalan
 </h2>
 
-Claude Code offers three ways to schedule recurring or one-off work:
+Claude Code menawarkan tiga cara untuk menjadwalkan pekerjaan berulang atau sekali jalan:
 
-|                            | [Cloud](/docs/en/routines)               | [Desktop](/docs/en/desktop-scheduled-tasks) | [`/loop`](/docs/en/scheduled-tasks)      |
-| :------------------------- | :---------------------------------- | :------------------------------------- | :---------------------------------- |
-| Runs on                    | Cloud, Anthropic-managed by default | Your machine                           | Your machine                        |
-| Requires machine on        | No                                  | Yes                                    | Yes                                 |
-| Requires open session      | No                                  | No                                     | Yes                                 |
-| Persistent across restarts | Yes                                 | Yes                                    | Restored on `--resume` if unexpired |
-| Access to local files      | No (fresh clone)                    | Yes                                    | Yes                                 |
-| MCP servers                | Connectors configured per task      | [Config files](/docs/en/mcp) and connectors | Inherits from session               |
-| Permission prompts         | No (runs autonomously)              | Configurable per task                  | Inherits from session               |
-| Customizable schedule      | Via `/schedule` in the CLI          | Yes                                    | Yes                                 |
-| Minimum interval           | 1 hour                              | 1 minute                               | 1 minute                            |
+|                               | [Cloud](/docs/id/routines)                    | [Desktop](/docs/id/desktop-scheduled-tasks)   | [`/loop`](/docs/id/scheduled-tasks)                                                     |
+| :---------------------------- | :--------------------------------------- | :--------------------------------------- | :--------------------------------------------------------------------------------- |
+| Berjalan di                   | Cloud, dikelola Anthropic secara default | Mesin Anda                               | Mesin Anda                                                                         |
+| Memerlukan mesin aktif        | Tidak                                    | Ya                                       | Ya                                                                                 |
+| Memerlukan sesi terbuka       | Tidak                                    | Tidak                                    | Ya                                                                                 |
+| Persisten di seluruh restart  | Ya                                       | Ya                                       | Dipulihkan pada `--resume`, dengan [pengecualian](/docs/id/scheduled-tasks#limitations) |
+| Akses ke file lokal           | Tidak (klon segar)                       | Ya                                       | Ya                                                                                 |
+| Server MCP                    | Konektor dikonfigurasi per tugas         | [File konfigurasi](/docs/id/mcp) dan konektor | Mewarisi dari sesi                                                                 |
+| Prompt izin                   | Tidak (berjalan secara otonom)           | Dapat dikonfigurasi per tugas            | Mewarisi dari sesi                                                                 |
+| Jadwal yang dapat disesuaikan | Via `/schedule` di CLI                   | Ya                                       | Ya                                                                                 |
+| Interval minimum              | 1 jam                                    | 1 menit                                  | 1 menit                                                                            |
 
 <Tip>
-  Use **cloud tasks** for work that should run reliably without your machine. Use **Desktop tasks** when you need access to local files and tools. Use **`/loop`** for quick polling during a session.
+  Gunakan **tugas cloud** untuk pekerjaan yang harus berjalan dengan andal tanpa mesin Anda. Gunakan **tugas Desktop** ketika Anda memerlukan akses ke file dan alat lokal. Gunakan **`/loop`** untuk polling cepat selama sesi.
 </Tip>
 
 <Note>
@@ -40,7 +40,7 @@ Claude Code offers three ways to schedule recurring or one-off work:
   Buat tugas terjadwal
 </h2>
 
-Klik **Routines** di sidebar, kemudian klik **New routine** dan pilih **Local**. Konfigurasikan bidang-bidang ini:
+Pada Claude Desktop sebelum 1.1.5368, tugas terjadwal lokal tidak tersedia. Di [**tab Code**](/docs/id/desktop), klik **Routines** di sidebar atau di menu **More** sidebar, kemudian klik **New routine** dan pilih **Local**. Konfigurasikan bidang-bidang ini:
 
 | Bidang       | Deskripsi                                                                                                                                                                                                                                                                                       |
 | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -73,7 +73,7 @@ Untuk interval yang tidak ditawarkan pemilih, seperti setiap 15 menit, hari pert
 
 Tugas terjadwal berjalan di mesin Anda. Desktop memeriksa jadwal setiap menit saat aplikasi terbuka dan memulai sesi segar saat tugas jatuh tempo, independen dari sesi manual apa pun yang Anda buka. Setiap tugas mendapat penundaan kecil beberapa menit setelah waktu terjadwal untuk membagi lalu lintas API. Penundaan bersifat deterministik: tugas yang sama selalu dimulai pada offset yang sama.
 
-Saat tugas berfungsi, Anda mendapatkan notifikasi desktop dan sesi baru muncul di bawah bagian **Scheduled** di sidebar. Buka untuk melihat apa yang dilakukan Claude, tinjau perubahan, atau respons ke prompt izin. Sesi bekerja seperti yang lain: Claude dapat mengedit file, menjalankan perintah, membuat commit, dan membuka pull request.
+Saat tugas berfungsi, Anda mendapatkan notifikasi desktop dan sesi baru muncul di bawah bagian **Scheduled** di sidebar. Buka untuk melihat apa yang dilakukan Claude, tinjau perubahan, atau respons ke prompt izin. Claude dapat mengedit file, menjalankan perintah, membuat commit, dan membuka pull request, sama seperti dalam sesi yang Anda mulai sendiri, tetapi tidak dapat mengirim atau menerima [pesan antar sesi desktop Anda](/docs/id/desktop#work-across-sessions) melalui permukaan sesi aplikasi desktop.
 
 Tugas hanya berjalan saat aplikasi desktop berjalan dan komputer Anda terjaga. Jika komputer Anda tidur melalui waktu terjadwal, run dilewati. Untuk mencegah idle-sleep, aktifkan **Keep computer awake** di Settings di bawah **Desktop app → General**. Menutup laptop lid masih membuatnya tidur. Untuk tugas yang perlu berjalan bahkan ketika komputer Anda mati, atau yang harus dipicu oleh panggilan API atau acara GitHub, buat [routine](/docs/id/routines) jarak jauh sebagai gantinya.
 
@@ -89,17 +89,17 @@ Ingat ini saat menulis prompt. Tugas yang dijadwalkan untuk 9am mungkin berjalan
   Izin untuk tugas terjadwal
 </h2>
 
-Setiap tugas memiliki mode izin sendiri, yang Anda atur saat membuat atau mengedit tugas. Aturan izin dari `~/.claude/settings.json` juga berlaku untuk sesi tugas terjadwal. Jika tugas berjalan dalam mode Ask dan perlu menjalankan alat yang tidak memiliki izin, run terhenti sampai Anda menyetujuinya. Sesi tetap terbuka di sidebar sehingga Anda dapat menjawab nanti.
+Setiap tugas memiliki mode izin sendiri, yang Anda atur saat membuat atau mengedit tugas. Aturan izin dari `~/.claude/settings.json` juga berlaku untuk sesi tugas terjadwal. Jika tugas berjalan dalam [Mode Manual](/docs/id/desktop#choose-a-permission-mode) dan perlu menjalankan alat yang tidak memiliki izin, run terhenti sampai Anda menyetujuinya. Sesi tetap terbuka di sidebar sehingga Anda dapat menjawab nanti.
 
 Untuk menghindari stall, klik **Run now** setelah membuat tugas, perhatikan prompt izin, dan pilih "always allow" untuk masing-masing. Run masa depan dari tugas itu auto-approve alat yang sama tanpa meminta. Anda dapat meninjau dan mencabut persetujuan ini dari halaman detail tugas.
 
-Alat connector [organisasi Anda atur ke `ask`](/docs/id/mcp#organization-controls-on-connector-tools) dan alat MCP yang ditandai [`requiresUserInteraction`](/docs/id/mcp#require-approval-for-a-specific-tool) meminta pada setiap panggilan dan tidak menawarkan opsi always-allow. Run yang memanggil alat ini terhenti setiap kali.
+Alat MCP yang ditandai [`requiresUserInteraction`](/docs/id/mcp#require-approval-for-a-specific-tool) meminta pada setiap panggilan dan tidak menawarkan opsi always-allow. Run yang memanggil alat ini terhenti setiap kali.
 
 <h2 id="manage-scheduled-tasks">
   Kelola tugas terjadwal
 </h2>
 
-Klik tugas dalam daftar **Routines** untuk membuka halaman detailnya. Dari sini Anda dapat:
+Di tab **Code**, klik tugas dalam daftar **Routines** untuk membuka halaman detailnya. Dari sini Anda dapat:
 
 * **Run now**: mulai tugas segera tanpa menunggu waktu terjadwal berikutnya
 * **Status**: toggle antara Active dan Paused untuk menjeda atau melanjutkan run terjadwal tanpa menghapus tugas
@@ -118,7 +118,7 @@ Untuk mengedit prompt tugas di disk, buka `~/.claude/scheduled-tasks/<task-name>
   Sumber daya terkait
 </h2>
 
-* [Routines](/docs/id/routines): jalankan tugas pada infrastruktur yang dikelola Anthropic pada jadwal, melalui panggilan API, atau sebagai respons terhadap acara GitHub, bahkan ketika komputer Anda mati
+* [Routines](/docs/id/routines): jalankan tugas di cloud pada jadwal, melalui panggilan API, atau sebagai respons terhadap acara GitHub, bahkan ketika komputer Anda mati
 * [Run prompts on a schedule](/docs/id/scheduled-tasks): penjadwalan scoped sesi dengan `/loop` di CLI
 * [Claude Code GitHub Actions](/docs/id/github-actions): jalankan Claude pada jadwal di CI alih-alih di mesin Anda
 * [Use Claude Code Desktop](/docs/id/desktop): panduan aplikasi Desktop lengkap

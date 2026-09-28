@@ -36,7 +36,7 @@
   </Accordion>
 
   <Accordion title="構造化された出力あり">
-    ```json theme={null}
+    ```jsonc theme={null}
     {
       "name": "Chocolate Chip Cookies",
       "prep_time_minutes": 15,
@@ -77,20 +77,25 @@
     required: ["company_name"]
   };
 
-  for await (const message of query({
-    prompt: "Research Anthropic and provide key company information",
-    options: {
-      outputFormat: {
-        type: "json_schema",
-        schema: schema
+  try {
+    for await (const message of query({
+      prompt: "Research Anthropic and provide key company information",
+      options: {
+        outputFormat: {
+          type: "json_schema",
+          schema: schema
+        }
+      }
+    })) {
+      // 結果メッセージには検証済みデータを含む structured_output が含まれます
+      if (message.type === "result" && message.subtype === "success" && message.structured_output) {
+        console.log(message.structured_output);
+        // { company_name: "Anthropic", founded_year: 2021, headquarters: "San Francisco, CA" }
       }
     }
-  })) {
-    // 結果メッセージには検証済みデータを含む structured_output が含まれます
-    if (message.type === "result" && message.subtype === "success" && message.structured_output) {
-      console.log(message.structured_output);
-      // { company_name: "Anthropic", founded_year: 2021, headquarters: "San Francisco, CA" }
-    }
+  } catch (error) {
+    // 単一ショットの query() はエラー結果（error_max_structured_output_retries など）を生成した後にスローされます。エラーハンドリングセクションを参照してください。
+    console.error(`Session ended with an error: ${error}`);
   }
   ```
 
@@ -98,7 +103,7 @@
   import asyncio
   from claude_agent_sdk import query, ClaudeAgentOptions, ResultMessage
 
-  // 返してほしいデータの形状を定義
+  # 返してほしいデータの形状を定義
   schema = {
       "type": "object",
       "properties": {
@@ -111,16 +116,20 @@
 
 
   async def main():
-      async for message in query(
-          prompt="Research Anthropic and provide key company information",
-          options=ClaudeAgentOptions(
-              output_format={"type": "json_schema", "schema": schema}
-          ),
-      ):
-          // 結果メッセージには検証済みデータを含む structured_output が含まれます
-          if isinstance(message, ResultMessage) and message.structured_output:
-              print(message.structured_output)
-              # {'company_name': 'Anthropic', 'founded_year': 2021, 'headquarters': 'San Francisco, CA'}
+      try:
+          async for message in query(
+              prompt="Research Anthropic and provide key company information",
+              options=ClaudeAgentOptions(
+                  output_format={"type": "json_schema", "schema": schema}
+              ),
+          ):
+              # 結果メッセージには検証済みデータを含む structured_output が含まれます
+              if isinstance(message, ResultMessage) and message.structured_output:
+                  print(message.structured_output)
+                  # {'company_name': 'Anthropic', 'founded_year': 2021, 'headquarters': 'San Francisco, CA'}
+      except Exception as error:
+          # 単一ショットの query() はエラー結果（error_max_structured_output_retries など）を生成した後にレイズされます。エラーハンドリングセクションを参照してください。
+          print(f"Session ended with an error: {error}")
 
 
   asyncio.run(main())
@@ -135,12 +144,14 @@ JSON Schema を手書きする代わりに、[Zod](https://zod.dev/)（TypeScrip
 
 以下の例は、概要、ステップのリスト（各ステップに複雑さレベルを含む）、および潜在的なリスクを含む機能実装計画のスキーマを定義しています。エージェントは機能を計画し、型付けされた `FeaturePlan` オブジェクトを返します。その後、`plan.summary` などのプロパティにアクセスし、完全な型安全性を備えて `plan.steps` を反復処理できます。
 
+SDK は JSON Schema draft-07 でスキーマを検証するため、より新しいバージョンを宣言するスキーマは拒否されます。Zod はデフォルトで draft 2020-12 をターゲットとするため、スキーマを変換する際に `target: "draft-7"` を渡してください。
+
 <CodeGroup>
   ```typescript TypeScript theme={null}
   import { z } from "zod";
   import { query } from "@anthropic-ai/claude-agent-sdk";
 
-  // Zod でスキーマを定義
+  // Define schema with Zod
   const FeaturePlan = z.object({
     feature_name: z.string(),
     summary: z.string(),
@@ -156,32 +167,38 @@ JSON Schema を手書きする代わりに、[Zod](https://zod.dev/)（TypeScrip
 
   type FeaturePlan = z.infer<typeof FeaturePlan>;
 
-  // JSON Schema に変換
-  const schema = z.toJSONSchema(FeaturePlan);
+  // Convert to JSON Schema using the draft-07 target the SDK expects
+  const schema = z.toJSONSchema(FeaturePlan, { target: "draft-7" });
 
-  // クエリで使用
-  for await (const message of query({
-    prompt:
-      "Plan how to add dark mode support to a React app. Break it into implementation steps.",
-    options: {
-      outputFormat: {
-        type: "json_schema",
-        schema: schema
+  // Use in query
+  try {
+    for await (const message of query({
+      prompt:
+        "Plan how to add dark mode support to a React app. Break it into implementation steps.",
+      options: {
+        outputFormat: {
+          type: "json_schema",
+          schema: schema
+        }
+      }
+    })) {
+      if (message.type === "result" && message.subtype === "success" && message.structured_output) {
+        // Validate and get fully typed result
+        const parsed = FeaturePlan.safeParse(message.structured_output);
+        if (parsed.success) {
+          const plan: FeaturePlan = parsed.data;
+          console.log(`Feature: ${plan.feature_name}`);
+          console.log(`Summary: ${plan.summary}`);
+          plan.steps.forEach((step) => {
+            console.log(`${step.step_number}. [${step.estimated_complexity}] ${step.description}`);
+          });
+        }
       }
     }
-  })) {
-    if (message.type === "result" && message.subtype === "success" && message.structured_output) {
-      // 検証して完全に型付けされた結果を取得
-      const parsed = FeaturePlan.safeParse(message.structured_output);
-      if (parsed.success) {
-        const plan: FeaturePlan = parsed.data;
-        console.log(`Feature: ${plan.feature_name}`);
-        console.log(`Summary: ${plan.summary}`);
-        plan.steps.forEach((step) => {
-          console.log(`${step.step_number}. [${step.estimated_complexity}] ${step.description}`);
-        });
-      }
-    }
+  } catch (error) {
+    // A single-shot query() throws after yielding an error result, such as
+    // error_max_structured_output_retries; see the Error handling section.
+    console.error(`Session ended with an error: ${error}`);
   }
   ```
 
@@ -205,36 +222,34 @@ JSON Schema を手書きする代わりに、[Zod](https://zod.dev/)（TypeScrip
 
 
   async def main():
-      async for message in query(
-          prompt="Plan how to add dark mode support to a React app. Break it into implementation steps.",
-          options=ClaudeAgentOptions(
-              output_format={
-                  "type": "json_schema",
-                  "schema": FeaturePlan.model_json_schema(),
-              }
-          ),
-      ):
-          if isinstance(message, ResultMessage) and message.structured_output:
-              # 検証して完全に型付けされた結果を取得
-              plan = FeaturePlan.model_validate(message.structured_output)
-              print(f"Feature: {plan.feature_name}")
-              print(f"Summary: {plan.summary}")
-              for step in plan.steps:
-                  print(
-                      f"{step.step_number}. [{step.estimated_complexity}] {step.description}"
-                  )
+      try:
+          async for message in query(
+              prompt="Plan how to add dark mode support to a React app. Break it into implementation steps.",
+              options=ClaudeAgentOptions(
+                  output_format={
+                      "type": "json_schema",
+                      "schema": FeaturePlan.model_json_schema(),
+                  }
+              ),
+          ):
+              if isinstance(message, ResultMessage) and message.structured_output:
+                  # Validate and get fully typed result
+                  plan = FeaturePlan.model_validate(message.structured_output)
+                  print(f"Feature: {plan.feature_name}")
+                  print(f"Summary: {plan.summary}")
+                  for step in plan.steps:
+                      print(
+                          f"{step.step_number}. [{step.estimated_complexity}] {step.description}"
+                      )
+      except Exception as error:
+          # A single-shot query() raises after yielding an error result, such as
+          # error_max_structured_output_retries; see the Error handling section.
+          print(f"Session ended with an error: {error}")
 
 
   asyncio.run(main())
   ```
 </CodeGroup>
-
-**メリット：**
-
-* 完全な型推論（TypeScript）と型ヒント（Python）
-* `safeParse()` または `model_validate()` を使用したランタイム検証
-* より良いエラーメッセージ
-* 構成可能で再利用可能なスキーマ
 
 <h2 id="output-format-configuration">
   出力形式の設定
@@ -243,7 +258,7 @@ JSON Schema を手書きする代わりに、[Zod](https://zod.dev/)（TypeScrip
 `outputFormat`（TypeScript）または `output_format`（Python）オプションは、以下を含むオブジェクトを受け入れます：
 
 * `type`：構造化された出力の場合は `"json_schema"` に設定
-* `schema`：出力構造を定義する [JSON Schema](https://json-schema.org/understanding-json-schema/about) オブジェクト。Zod スキーマから `z.toJSONSchema()` で、または Pydantic モデルから `.model_json_schema()` で生成できます。
+* `schema`：出力構造を定義する [JSON Schema](https://json-schema.org/understanding-json-schema/about) オブジェクト。Zod スキーマから `z.toJSONSchema(schema, { target: "draft-7" })` で、または Pydantic モデルから `.model_json_schema()` で生成できます。
 
 SDK は、すべての基本型（object、array、string、number、boolean、null）、`enum`、`const`、`required`、ネストされたオブジェクト、および `$ref` 定義を含む標準 JSON Schema 機能をサポートしています。サポートされている機能と制限の完全なリストについては、[JSON Schema の制限](https://platform.claude.com/docs/ja/build-with-claude/structured-outputs#json-schema-limitations) を参照してください。
 
@@ -287,25 +302,31 @@ SDK は、すべての基本型（object、array、string、number、boolean、n
   };
 
   // エージェントは Grep を使用して TODO を見つけ、Bash を使用して git blame 情報を取得
-  for await (const message of query({
-    prompt: "Find all TODO comments in this codebase and identify who added them",
-    options: {
-      outputFormat: {
-        type: "json_schema",
-        schema: todoSchema
+  try {
+    for await (const message of query({
+      prompt: "Find all TODO comments in this codebase and identify who added them",
+      options: {
+        outputFormat: {
+          type: "json_schema",
+          schema: todoSchema
+        }
+      }
+    })) {
+      if (message.type === "result" && message.subtype === "success" && message.structured_output) {
+        const data = message.structured_output as { total_count: number; todos: Array<{ file: string; line: number; text: string; author?: string; date?: string }> };
+        console.log(`Found ${data.total_count} TODOs`);
+        data.todos.forEach((todo) => {
+          console.log(`${todo.file}:${todo.line} - ${todo.text}`);
+          if (todo.author) {
+            console.log(`  Added by ${todo.author} on ${todo.date}`);
+          }
+        });
       }
     }
-  })) {
-    if (message.type === "result" && message.subtype === "success" && message.structured_output) {
-      const data = message.structured_output as { total_count: number; todos: Array<{ file: string; line: number; text: string; author?: string; date?: string }> };
-      console.log(`Found ${data.total_count} TODOs`);
-      data.todos.forEach((todo) => {
-        console.log(`${todo.file}:${todo.line} - ${todo.text}`);
-        if (todo.author) {
-          console.log(`  Added by ${todo.author} on ${todo.date}`);
-        }
-      });
-    }
+  } catch (error) {
+    // 単一ショットの query() は、error_max_structured_output_retries などのエラー結果を生成した後にスロー
+    // エラーハンドリングセクションを参照してください。
+    console.error(`Session ended with an error: ${error}`);
   }
   ```
 
@@ -339,19 +360,24 @@ SDK は、すべての基本型（object、array、string、number、boolean、n
 
   async def main():
       # エージェントは Grep を使用して TODO を見つけ、Bash を使用して git blame 情報を取得
-      async for message in query(
-          prompt="Find all TODO comments in this codebase and identify who added them",
-          options=ClaudeAgentOptions(
-              output_format={"type": "json_schema", "schema": todo_schema}
-          ),
-      ):
-          if isinstance(message, ResultMessage) and message.structured_output:
-              data = message.structured_output
-              print(f"Found {data['total_count']} TODOs")
-              for todo in data["todos"]:
-                  print(f"{todo['file']}:{todo['line']} - {todo['text']}")
-                  if "author" in todo:
-                      print(f"  Added by {todo['author']} on {todo['date']}")
+      try:
+          async for message in query(
+              prompt="Find all TODO comments in this codebase and identify who added them",
+              options=ClaudeAgentOptions(
+                  output_format={"type": "json_schema", "schema": todo_schema}
+              ),
+          ):
+              if isinstance(message, ResultMessage) and message.structured_output:
+                  data = message.structured_output
+                  print(f"Found {data['total_count']} TODOs")
+                  for todo in data["todos"]:
+                      print(f"{todo['file']}:{todo['line']} - {todo['text']}")
+                      if "author" in todo:
+                          print(f"  Added by {todo['author']} on {todo['date']}")
+      except Exception as error:
+          # 単一ショットの query() は、error_max_structured_output_retries などのエラー結果を生成した後にレイズ
+          # エラーハンドリングセクションを参照してください。
+          print(f"Session ended with an error: {error}")
 
 
   asyncio.run(main())
@@ -362,7 +388,7 @@ SDK は、すべての基本型（object、array、string、number、boolean、n
   エラーハンドリング
 </h2>
 
-構造化された出力の生成は、エージェントがスキーマに一致する有効な JSON を生成できない場合に失敗する可能性があります。これは通常、スキーマがタスクに対して複雑すぎる場合、タスク自体が曖昧な場合、またはエージェントが検証エラーを修正しようとして再試行制限に達した場合に発生します。また、検証の失敗がなくても発生する可能性があります。[モデルフォールバック](/docs/ja/model-config#automatic-model-fallback)は既に完了した出力をストリーム中に取り消すことができ、再試行がそれを置き換えない場合、実行は同じエラーで終了します。デバッグの前に、結果メッセージの `errors` フィールドをチェックして、2 つの原因を区別してください。
+構造化された出力の生成は、エージェントがスキーマに一致する有効な JSON を生成できない場合に失敗する可能性があります。これは通常、スキーマがタスクに対して複雑すぎる場合、タスク自体が曖昧な場合、またはエージェントが検証エラーを修正しようとして再試行制限に達した場合に発生します。また、検証の失敗がなくても発生する可能性があります。[モデルフォールバック](/docs/ja/model-config#automatic-model-fallback)は既に完了した出力をストリーム中に取り消すことができ、再試行がそれを置き換えない場合、実行は同じエラーで終了します。デバッグの前に、結果メッセージの `errors` リストをチェックして、2 つの原因を区別してください。
 
 エラーが発生すると、結果メッセージには何が問題かを示す `subtype` があります：
 
@@ -371,45 +397,88 @@ SDK は、すべての基本型（object、array、string、number、boolean、n
 | `success`                             | 出力が正常に生成および検証されました                                         |
 | `error_max_structured_output_retries` | 複数の試行後に有効な出力が生き残りませんでした（検証の失敗、またはモデルフォールバックの取り消しで再試行がない場合） |
 
-以下の例は、`subtype` フィールドをチェックして、出力が正常に生成されたか、失敗を処理する必要があるかを判断します：
+結果は `subtype` が `success` でも `structured_output` 値がない場合に終了することもあります。例えば、実行がエージェントによる構造化出力の生成なしに完了した場合です。その場合も失敗として扱ってください。トラブルシューティングエントリ [structured\_output is None but the result says success](/docs/ja/agent-sdk/troubleshooting#structured_output-is-none-but-the-result-says-success) がこのケースをカバーしています。以下の例は、`subtype` が `success` で `structured_output` が存在する場合にのみ結果を成功として扱い、他のすべての結果を失敗として処理します：
 
 <CodeGroup>
   ```typescript TypeScript theme={null}
-  for await (const msg of query({
-    prompt: "Extract contact info from the document",
-    options: {
-      outputFormat: {
-        type: "json_schema",
-        schema: contactSchema
+  import { query } from "@anthropic-ai/claude-agent-sdk";
+
+  const contactSchema = {
+    type: "object",
+    properties: {
+      name: { type: "string" },
+      email: { type: "string" }
+    },
+    required: ["name"]
+  };
+
+  try {
+    for await (const msg of query({
+      prompt: "Extract contact info from the document",
+      options: {
+        outputFormat: {
+          type: "json_schema",
+          schema: contactSchema
+        }
+      }
+    })) {
+      if (msg.type === "result") {
+        if (msg.subtype === "success" && msg.structured_output) {
+          // 検証済み出力を使用
+          console.log(msg.structured_output);
+        } else if (msg.subtype === "error_max_structured_output_retries") {
+          console.error("Could not produce valid output");
+        } else {
+          console.error("Run ended without a structured output");
+        }
       }
     }
-  })) {
-    if (msg.type === "result") {
-      if (msg.subtype === "success" && msg.structured_output) {
-        // 検証済み出力を使用
-        console.log(msg.structured_output);
-      } else if (msg.subtype === "error_max_structured_output_retries") {
-        // 失敗を処理 - より単純なプロンプトで再試行、非構造化にフォールバック、など
-        console.error("Could not produce valid output");
-      }
-    }
+  } catch (error) {
+    // A single-shot query() throws after yielding an error result. If the
+    // failure was an error result, the error subtype branches above have
+    // already run; connection or process failures yield no result message.
+    console.log(`Session ended with an error: ${error}`);
   }
   ```
 
   ```python Python theme={null}
-  async for message in query(
-      prompt="Extract contact info from the document",
-      options=ClaudeAgentOptions(
-          output_format={"type": "json_schema", "schema": contact_schema}
-      ),
-  ):
-      if isinstance(message, ResultMessage):
-          if message.subtype == "success" and message.structured_output:
-              # 検証済み出力を使用
-              print(message.structured_output)
-          elif message.subtype == "error_max_structured_output_retries":
-              # 失敗を処理
-              print("Could not produce valid output")
+  import asyncio
+  from claude_agent_sdk import query, ClaudeAgentOptions, ResultMessage
+
+  contact_schema = {
+      "type": "object",
+      "properties": {
+          "name": {"type": "string"},
+          "email": {"type": "string"},
+      },
+      "required": ["name"],
+  }
+
+
+  async def main():
+      try:
+          async for message in query(
+              prompt="Extract contact info from the document",
+              options=ClaudeAgentOptions(
+                  output_format={"type": "json_schema", "schema": contact_schema}
+              ),
+          ):
+              if isinstance(message, ResultMessage):
+                  if message.subtype == "success" and message.structured_output:
+                      # 検証済み出力を使用
+                      print(message.structured_output)
+                  elif message.subtype == "error_max_structured_output_retries":
+                      print("Could not produce valid output")
+                  else:
+                      print("Run ended without a structured output")
+      except Exception as error:
+          # A single-shot query() raises after yielding an error result. If the
+          # failure was an error result, the error subtype branches above have
+          # already run; connection or process failures yield no result message.
+          print(f"Session ended with an error: {error}")
+
+
+  asyncio.run(main())
   ```
 </CodeGroup>
 

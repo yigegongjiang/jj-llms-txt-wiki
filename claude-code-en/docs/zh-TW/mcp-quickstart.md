@@ -48,7 +48,7 @@
     * `claude-code-docs`：您自己建立的名稱。將同一伺服器稱為 `docs` 會完全相同。Claude Code 使用您選擇的任何名稱在 Claude 的輸出中標記伺服器的工具，並在 `claude mcp remove` 等命令中引用伺服器。
     * `https://code.claude.com/docs/mcp`：伺服器託管的 URL。
 
-    該命令列印確認訊息，如 `Added HTTP MCP server claude-code-docs with URL: https://code.claude.com/docs/mcp to local config`。`local config` 部分表示伺服器已向您註冊，在此專案中：如果您在不同的專案中啟動 Claude Code，此伺服器在那裡不活躍。若要為所有專案註冊一次伺服器，請在使用者範圍新增它，詳見[變更伺服器範圍](#change-server-scope)。
+    該命令列印確認訊息，如 `Added HTTP MCP server claude-code-docs with URL: https://code.claude.com/docs/mcp to local config`，後面跟著 `File modified:` 行，顯示它寫入的設定檔。`local config` 部分表示伺服器已向您註冊，在此專案中：如果您在不同的專案中啟動 Claude Code，此伺服器在那裡不活躍。若要為所有專案註冊一次伺服器，請在使用者範圍新增它，詳見[變更伺服器範圍](#change-server-scope)。
   </Step>
 
   <Step title="檢查連接狀態">
@@ -60,14 +60,17 @@
 
     伺服器出現時帶有狀態指示器：
 
-    | 狀態                                 | 含義                                                                                           |
-    | :--------------------------------- | :------------------------------------------------------------------------------------------- |
-    | `✓ Connected`                      | 準備就緒。這是您應該為 `claude-code-docs` 看到的                                                           |
-    | `! Connected · tools fetch failed` | 伺服器已連接但無法列出其工具。執行 `claude mcp get <name>` 以取得錯誤詳細資訊                                          |
-    | `! Needs authentication`           | 伺服器可到達但需要瀏覽器登入，或使用 `--header` 傳遞的令牌。請參閱[連接需要登入的伺服器](#connect-a-server-that-requires-sign-in) |
-    | `✗ Failed to connect`              | 伺服器未回應。請參閱[疑難排解](#troubleshooting)                                                           |
-    | `✗ Connection error`               | 連接嘗試拋出錯誤。請參閱[疑難排解](#troubleshooting)                                                         |
-    | `⏸ Pending approval`               | 您尚未批准的專案範圍伺服器。請參閱[直接編輯 .mcp.json](#edit-mcp-json-directly)                                   |
+    | 狀態                                                 | 含義                                                                                                      |
+    | :------------------------------------------------- | :------------------------------------------------------------------------------------------------------ |
+    | `✔ Connected`                                      | 準備就緒。這是您應該為 `claude-code-docs` 看到的                                                                      |
+    | `! Connected · tools fetch failed`                 | 伺服器已連接但無法列出其工具。執行 `claude mcp get <name>` 以取得錯誤詳細資訊                                                     |
+    | `! Needs authentication`                           | 伺服器可到達但需要瀏覽器登入，或使用 `--header` 傳遞的令牌。請參閱[連接需要登入的伺服器](#connect-a-server-that-requires-sign-in)            |
+    | `✘ Failed to connect`                              | 伺服器未回應。請參閱[疑難排解](#troubleshooting)                                                                      |
+    | `✘ Connection error`                               | 連接嘗試拋出錯誤。請參閱[疑難排解](#troubleshooting)                                                                    |
+    | ``⏸ Pending approval (run `claude` to approve)``   | 您尚未批准的專案範圍伺服器。請參閱[直接編輯 .mcp.json](#edit-mcp-json-directly)                                              |
+    | `⊘ Disabled for this project (re-enable via /mcp)` | 由專案的 `disabledMcpServers` 清單為此專案關閉的伺服器。請參閱[停用伺服器而不移除它](/docs/zh-TW/mcp#disable-a-server-without-removing-it) |
+
+    某些舊版 Windows 主控台，例如 Windows 10 上的預設主控台，不支援這些 Unicode 字形，並顯示 `√` 和 `×` 代替 `✔` 和 `✘`。
   </Step>
 
   <Step title="使用伺服器">
@@ -77,7 +80,7 @@
     claude
     ```
 
-    ```text theme={null}
+    ```text wrap theme={null}
     Use the claude-code-docs server to look up what MCP_TIMEOUT does
     ```
 
@@ -85,7 +88,7 @@
       您通常不需要在提示中命名伺服器，因為 Claude 會自動選擇相關工具。在此命名它可保證演示透過新伺服器而不是另一個工具（例如網頁擷取）進行，該工具可能回答相同問題。
     </Info>
 
-    Claude 第一次呼叫伺服器時，它會要求使用新工具的許可。批准它以繼續。Claude 輸出中的工具呼叫會標記伺服器名稱，這是您確認答案來自 MCP 伺服器而不是 Claude 內建知識的方式。
+    如果 Claude Code 在 Claude 第一次呼叫伺服器時要求許可，請批准它。Claude 輸出中的工具呼叫會標記伺服器名稱，這是您確認答案來自 MCP 伺服器而不是 Claude 內建知識的方式。
   </Step>
 
   <Step title="移除伺服器">
@@ -94,6 +97,8 @@
     ```bash theme={null}
     claude mcp remove claude-code-docs
     ```
+
+    該命令確認為 `Removed MCP server "claude-code-docs" from local config`，並顯示 `File modified:` 行，顯示它更新的檔案。
 
     <Note>
       每個已連接的伺服器在 [Claude 的內容視窗](/docs/zh-TW/how-claude-code-works#the-context-window)中佔用一些空間，因為其工具名稱和伺服器指令會載入到每個工作階段中。移除您不再使用的伺服器可保持該空間空閒。
@@ -193,6 +198,8 @@ claude mcp add --scope project --transport http claude-code-docs https://code.cl
     * `--` 分隔符之後的所有內容都是 Claude Code 執行以啟動伺服器的命令。
     * `-y` 告訴 `npx` 安裝套件而不提示。
 
+    該命令會列印確認訊息，例如 `Added stdio MCP server playwright with command: npx -y @playwright/mcp@latest to local config`，後面跟著 `File modified:` 行，顯示它寫入的設定檔。
+
     Playwright 驅動您機器上已安裝的任何 Chrome。若要使用不同的瀏覽器，請在 `@playwright/mcp@latest` 之後附加 `--browser` 和瀏覽器名稱，例如 `--browser firefox`。
   </Step>
 
@@ -203,13 +210,13 @@ claude mcp add --scope project --transport http claude-code-docs https://code.cl
     claude mcp list
     ```
 
-    第一次檢查可能在 `npx` 下載套件時顯示 `✗ Failed to connect`，因此請稍候片刻並再次執行。
+    第一次檢查可能在 `npx` 下載套件時顯示 `✘ Failed to connect`，因此請稍候片刻並再次執行。下載完成後，狀態變為 `✔ Connected`。如果在重試幾次後仍顯示 `✘ Failed to connect`，請參閱[疑難排解](#troubleshooting)。
   </Step>
 
   <Step title="使用瀏覽器">
     給 Claude 一個需要瀏覽器的任務：
 
-    ```text theme={null}
+    ```text wrap theme={null}
     Use playwright to open https://example.com and tell me the page title
     ```
 
@@ -241,7 +248,7 @@ Sentry、Linear 和 Notion 等託管服務在 OAuth 後面執行其 MCP 伺服�
   <Step title="在瀏覽器中驗證">
     啟動 Claude Code 工作階段並開啟 MCP 面板：
 
-    ```text theme={null}
+    ```text wrap theme={null}
     /mcp
     ```
 
@@ -301,7 +308,7 @@ Claude Code 第一次看到專案範圍伺服器時，它會要求您批准它�
 * **Claude Code 桌面應用程式**：透過[連接器 UI](/docs/zh-TW/desktop#connect-external-tools) 新增伺服器。
 * **Claude Desktop 聊天應用程式**：與 Claude Code 不同的應用程式。若要將其 `claude_desktop_config.json` 中的伺服器複製到 CLI，請在 macOS 或 WSL 上執行 `claude mcp add-from-claude-desktop`。
 * **VS Code**：請參閱[使用 MCP 連接到外部工具](/docs/zh-TW/vs-code#connect-to-external-tools-with-mcp)。
-* **網頁上的 Claude Code**：從您的儲存庫讀取 `.mcp.json`。請參閱[直接編輯 .mcp.json](#edit-mcp-json-directly)。
+* **雲端工作階段**：將 `.mcp.json` 提交到您的儲存庫；載入一個儲存庫的工作階段會載入它。請參閱[直接編輯 .mcp.json](#edit-mcp-json-directly) 和[您的設定中有哪些會保留](/docs/zh-TW/cloud-environments#what-carries-over-from-your-setup)。
 * **Claude.ai**：您在 [claude.ai/customize/connectors](https://claude.ai/customize/connectors) 新增的連接器在您使用該帳戶登入時自動載入 CLI。請參閱[從 Claude.ai 使用 MCP 伺服器](/docs/zh-TW/mcp#use-mcp-servers-from-claude-ai)。
 
 <h2 id="troubleshooting">
@@ -316,12 +323,20 @@ Claude Code 第一次看到專案範圍伺服器時，它會要求您批准它�
 
     * 您從不同的專案執行了 `claude mcp add`。本機範圍伺服器與您新增它們的專案相關聯：儲存庫根目錄，或如果您不在 git 儲存庫中，則為確切目錄。從您現在所在的專案重新新增伺服器，或使用 `--scope user` 新增它，使其不與專案相關聯。
     * 您在錯誤的路徑編輯了設定檔。正確的檔案是 `~/.claude.json` 和 `<project>/.mcp.json`。Claude Code 不讀取 `~/.claude/.mcp.json`、`~/.claude/config/mcp.json`、`~/.claude/mcp.json` 或 `%APPDATA%\Claude\mcp.json` 等路徑。對於使用者範圍伺服器，執行 `claude mcp add --scope user`，它會寫入 `~/.claude.json` 中的 `mcpServers` 金鑰；對於專案範圍伺服器，編輯專案根目錄的 `.mcp.json`。
+    * 您在 `.mcp.json` 中寫入了格式不正確的項目。Claude Code 會跳過該項目並仍然載入其他項目。從您的 shell 執行 `claude mcp list` 並尋找解析警告，它會命名有問題的欄位。
   </Accordion>
 
   <Accordion title="狀態顯示 Failed to connect 或 Connection error">
-    兩種狀態都表示伺服器未啟動或 URL 未回應。它們也可能出現在期望令牌而不是[連接需要登入的伺服器](#connect-a-server-that-requires-sign-in)中涵蓋的瀏覽器登入的 HTTP 伺服器。
+    兩種狀態都表示伺服器未啟動或 URL 未回應。它們也可能出現在您在 `headers.Authorization` 中配置的令牌被 HTTP 伺服器拒絕的情況下；需要您未配置的令牌的伺服器會改為顯示 `! Needs authentication`，在[連接需要登入的伺服器](#connect-a-server-that-requires-sign-in)中涵蓋。
 
-    自 v2.1.191 起，返回 `404 Not Found` 的 HTTP 伺服器在您在 `/mcp` 中選擇伺服器時會顯示 `MCP endpoint not found at <url>. Check the URL in your MCP config.`，並顯示 Claude Code 嘗試的 URL。較早的版本顯示通用的 `Error POSTing to endpoint` 訊息，不含 URL。將 URL 與伺服器的文件化 MCP 端點路徑進行比較，然後執行 `claude mcp remove <name>` 並使用正確的 URL 重新新增。
+    您的第一步取決於您看到的狀態：
+
+    * `Failed to connect`：從狀態本身的失敗詳細資訊開始。`claude mcp list` 和 `claude mcp get <name>` 顯示 HTTP 狀態或錯誤代碼以及伺服器返回的任何錯誤文字，通常直接命名問題，例如缺少標頭或被拒絕的令牌。在 v2.1.219 之前，`Failed to connect` 只顯示裸露狀態，您需要本節稍後的 curl 和命令檢查來找到原因。
+    * `Connection error`：Claude Code 在任何版本上都不會將詳細資訊附加到此狀態，因此請直接進行本節稍後的 curl 和命令檢查。
+
+    如果詳細資訊指向認證或 URL，也請檢查 `claude mcp list` 輸出中的警告。Claude Code 會標記具有隱藏的前導或尾隨空白的配置值，這是貼上令牌後驗證失敗的常見原因。
+
+    如果 HTTP 伺服器返回 `404 Not Found`，當您在 `/mcp` 中選擇伺服器時，Claude Code 會顯示 `MCP endpoint not found at <origin>. Check the URL in your MCP config.`。該訊息命名 URL 的來源，例如 `https://mcp.example.com`，不含其路徑，因此執行 `claude mcp get <name>` 以查看您配置的完整 URL。將其路徑與伺服器的文件化 MCP 端點路徑進行比較，然後執行 `claude mcp remove <name>` 並使用正確的 URL 重新新增。在 v2.1.219 之前，該訊息也包含 URL 的路徑，在 v2.1.191 之前，`404` 顯示通用的 `Error POSTing to endpoint` 訊息，不含 URL。
 
     對於 HTTP 伺服器，確認 URL 可從您的機器到達：
 
@@ -382,7 +397,7 @@ Claude Code 第一次看到專案範圍伺服器時，它會要求您批准它�
   <Accordion title=".mcp.json 的變更不生效">
     Claude Code 在工作階段啟動時讀取 `.mcp.json`。編輯檔案後退出並重新啟動工作階段。
 
-    如果您的伺服器仍未出現，執行 `/mcp` 並尋找解析警告。Claude Code 跳過格式不正確的項目並在那裡顯示有問題的欄位。
+    如果您的伺服器仍未出現，執行 `claude mcp list` 並尋找解析警告。Claude Code 跳過格式不正確的項目並在那裡顯示有問題的欄位。
 
     如果您之前在提示時拒絕了伺服器，重設專案批准：
 

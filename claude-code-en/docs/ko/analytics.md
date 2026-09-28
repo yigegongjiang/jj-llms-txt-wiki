@@ -139,12 +139,6 @@ Team 및 Enterprise 대시보드에는 다음이 포함됩니다:
 
 기여도 지표가 활성화되면 Claude Code는 병합된 풀 요청을 분석하여 Claude Code 지원으로 작성된 코드를 결정합니다. 이는 Claude Code 세션 활동을 각 PR의 코드와 일치시켜 수행됩니다.
 
-<h4 id="tagging-criteria">
-  태깅 기준
-</h4>
-
-PR은 Claude Code 세션 중에 작성된 코드 라인이 하나 이상 포함되어 있으면 "Claude Code 포함"으로 태깅됩니다. 시스템은 보수적인 일치를 사용합니다: Claude Code의 관여도가 높은 코드만 지원되는 것으로 계산됩니다.
-
 <h4 id="attribution-process">
   속성 프로세스
 </h4>

@@ -12,7 +12,7 @@ Claude Code 會自動追蹤 Claude 在您工作時所做的檔案編輯，讓您
   Checkpointing 的運作方式
 </h2>
 
-當您與 Claude 合作時，checkpointing 會自動捕捉每次使用者提示前的程式碼狀態。這個安全網讓您可以進行雄心勃勃的大規模任務，同時知道您可以隨時回到先前的程式碼狀態。
+當您與 Claude 合作時，checkpointing 會自動捕捉每次使用者提示開始一個回合前的程式碼狀態。
 
 <h3 id="automatic-tracking">
   自動追蹤
@@ -20,10 +20,10 @@ Claude Code 會自動追蹤 Claude 在您工作時所做的檔案編輯，讓您
 
 Claude Code 追蹤由其檔案編輯工具所做的所有變更：
 
-* 每個使用者提示都會建立一個新的 checkpoint
-* Claude Code 在一個會話中保留最近 100 個 checkpoint 的檔案快照。捨棄較舊的 checkpoint 會刪除沒有其他 checkpoint 參考的快照檔案，除了每個檔案的第一個快照，VS Code 擴充功能將其用作會話差異的基準。在 v2.1.208 之前，這些被取代的快照檔案會保留在磁碟上，直到會話被清理。
-* Checkpoints 與對話一起儲存，因此恢復的會話仍然可以 `/rewind` 回到它們
-* 自動清理，與會話一起在 30 天後刪除（可配置）
+* 每個使用者提示開始一個回合都會建立一個新的 checkpoint
+* Claude Code 在一個會話中保留最近 100 個 checkpoint 的檔案快照。捨棄較舊的 checkpoint 會刪除沒有其他 checkpoint 參考的快照檔案，除了每個檔案的第一個快照，VS Code 擴充功能將其用作會話差異的基準。
+* Claude Code 將 checkpoints 與對話一起儲存，因此您可以在恢復會話後仍然執行 `/rewind`
+* Claude Code 在[保留掃描](/docs/zh-TW/claude-directory#cleaned-up-automatically)中刪除會話的檔案快照，預設情況下約在會話最後一次儲存後 30 天。回溯到快照已消失的 checkpoint 可能會失敗，並出現 [`No files were restored`](/docs/zh-TW/errors#no-files-were-restored) 錯誤。若要保留快照更久，請設定 [`cleanupPeriodDays`](/docs/zh-TW/settings-reference#cleanupperioddays)。
 
 <h3 id="rewind-and-summarize">
   回溯和總結
@@ -35,7 +35,7 @@ Claude Code 追蹤由其檔案編輯工具所做的所有變更：
   如果提示輸入包含文字，雙 `Esc` 會清除它而不是開啟選單。清除的文字會儲存到您的輸入歷史記錄中，因此在您完成回溯選單後，按 `Up` 可以召回它。
 </Note>
 
-回溯選單列出您在會話期間傳送的每個提示。選擇您想要操作的點，然後選擇一個動作：
+回溯選單列出您在會話期間傳送的每個提示，除了[在回合中途傳送的訊息](#messages-sent-mid-turn-not-checkpointed)。選擇您想要操作的點，然後選擇一個動作：
 
 * **恢復程式碼和對話**：將程式碼和對話都回復到該點
 * **恢復對話**：回溯到該訊息，同時保持目前程式碼
@@ -44,29 +44,26 @@ Claude Code 追蹤由其檔案編輯工具所做的所有變更：
 * **從此處之前總結**：將此點之前的對話壓縮為摘要，保持後續訊息完整
 * **算了**：返回訊息清單而不進行任何變更
 
+兩個程式碼還原選項只在所選 checkpoint 有追蹤的檔案變更可以回復時出現。如果該點之後沒有捕捉到檔案編輯，選單只會提供**恢復對話**、總結選項和**算了**。
+
 恢復對話或選擇「從此處總結」後，所選訊息的原始提示會恢復到輸入欄位中，以便您可以重新傳送或編輯它。
 
-選擇「從此處之前總結」會讓您留在對話末尾，輸入為空。
+選擇「從此處之前總結」會讓您留在對話末尾，輸入為空。使用任一總結選項，**已總結對話**標記會出現在對話中被壓縮訊息的位置。
 
 <h4 id="rewind-past-a-cleared-conversation">
   回溯過去已清除的對話
 </h4>
 
-如果您在同一個 Claude Code 程序中較早執行了 `/clear`，回溯選單會在清單頂部顯示一個額外的項目，標記為 `/resume <session-id> (previous session)`。選擇它以恢復在 `/clear` 執行前活躍的對話。該項目在您退出 Claude Code 或恢復不同會話之前可用，並且需要 Claude Code v2.1.191 或更新版本。在較早的版本上，執行 `/resume` 並從清單中選擇前一個會話。
+如果您在同一個 Claude Code 程序中較早執行了 `/clear`，回溯選單會在清單頂部顯示一個額外的項目，標記為 `/resume <session-id> (previous session)`。選擇它以恢復在 `/clear` 執行前活躍的對話。該項目在您退出 Claude Code 或恢復不同會話之前可用。
 
-<h4 id="restore-vs-summarize">
-  恢復與總結
+<h4 id="guide-a-summary">
+  引導摘要
 </h4>
 
-恢復選項會回復狀態：它們撤銷程式碼變更、對話歷史或兩者。總結選項會將對話的一部分壓縮為 AI 生成的摘要，而不改變磁碟上的檔案：
-
-* **從此處總結**：所選訊息之前的訊息保持完整。所選訊息及其後的所有訊息都被替換為摘要。使用此選項可以捨棄旁支討論，同時保持早期上下文的完整詳細資訊。
-* **從此處之前總結**：所選訊息之前的訊息被替換為摘要。所選訊息及其後的所有訊息保持完整，您保持在對話末尾。使用此選項可以壓縮早期設定討論，同時保持最近工作的完整詳細資訊。
-
-在這兩種情況下，原始訊息都保存在會話記錄中，因此 Claude 可以在需要時參考詳細資訊。您可以輸入可選指示來引導摘要的重點。這類似於 `/compact`，但更有針對性：您不是總結整個對話，而是選擇所選訊息的哪一側要壓縮。
+總結不會改變磁碟上的檔案，原始訊息保留在會話記錄中，因此 Claude 仍然可以參考詳細資訊。若要引導摘要的重點，請用方向鍵反白**總結**選項，並在該列顯示\*\*新增上下文（選用）\*\*的位置輸入指示，然後按 `Enter`。使用其數字鍵選擇選項會立即總結，不需要指示。
 
 <Note>
-  總結讓您保持在同一會話中並壓縮上下文。如果您想嘗試不同的方法，同時保持原始會話完整，請改用 [fork](/docs/zh-TW/sessions#branch-a-session)（`claude --continue --fork-session`）。
+  總結讓您保持在同一會話中並壓縮上下文，就像有針對性的 `/compact`。若要分支並嘗試不同的方法，同時保持原始會話完整，請改用 [`/branch`](/docs/zh-TW/sessions#branch-a-session) 或 `claude --continue --fork-session`。
 </Note>
 
 <h2 id="common-use-cases">
@@ -88,7 +85,7 @@ Checkpoints 在以下情況下特別有用：
   Bash 命令變更未追蹤
 </h3>
 
-Checkpointing 不追蹤由 bash 命令修改的檔案。例如，如果 Claude Code 執行：
+Checkpointing 不追蹤由 Bash 命令修改的檔案。例如，如果 Claude Code 執行：
 
 ```bash theme={null}
 rm file.txt
@@ -98,21 +95,42 @@ cp source.txt dest.txt
 
 這些檔案修改無法透過回溯撤銷。只有透過 Claude 的檔案編輯工具進行的直接檔案編輯才會被追蹤。
 
+<h3 id="subagent-edits-not-restored">
+  子代理編輯未復原
+</h3>
+
+[子代理](/docs/zh-TW/sub-agents)使用 Claude 的檔案編輯工具進行編輯，但 Claude Code 通常不會在您的會話檢查點中捕捉這些編輯。回溯是否復原這些編輯取決於子代理的執行方式：
+
+* **前景分叉技能**：[具有 `context: fork` 的技能](/docs/zh-TW/skills#run-skills-in-a-subagent)在前景執行，在您自己的回合期間編輯您的工作樹，因此回溯會照常復原其編輯。設定 `background: false` 以在前景執行分叉；有幾種情況（[列在技能頁面上](/docs/zh-TW/skills#run-skills-in-a-subagent)）無論設定如何都會在那裡執行。
+* **任何其他子代理**：回溯不會復原編輯。使用 git 來還原它們。這包括在背景執行的分叉技能（預設值）和背景 [`/code-review --fix`](/docs/zh-TW/code-review) 執行。
+
 <h3 id="external-changes-not-tracked">
   外部變更未追蹤
 </h3>
 
 Checkpointing 只追蹤在目前會話中已編輯的檔案。您在 Claude Code 外部對檔案所做的手動變更以及來自其他並行會話的編輯通常不會被捕捉，除非它們碰巧修改與目前會話相同的檔案。
 
+<h3 id="messages-sent-mid-turn-not-checkpointed">
+  訊息在回合中途傳送未進行檢查點
+</h3>
+
+當您[在 Claude 工作時排隊的訊息](/docs/zh-TW/interactive-mode#queue-messages-while-claude-works)在執行中的回合內到達 Claude 時，它會加入該回合而不是開始新的回合。訊息會出現在對話中，但 Claude Code 不會為其建立檢查點，回溯功能表也不會列出它。Claude Code 作為其自己的回合傳送的排隊訊息會照常獲得檢查點。
+
+若要移除此類訊息，或撤銷 Claude 在其後所做的編輯，請回溯到開始該回合的提示。這會回溯整個回合，包括 Claude 在您的訊息到達之前所做的工作。
+
+<h3 id="symlinked-and-hard-linked-paths-not-restored">
+  符號連結和硬連結路徑未復原
+</h3>
+
+Checkpointing 不會回溯符號連結或硬連結檔案。當您從 `/rewind` 功能表中選擇**復原程式碼**或**復原程式碼和對話**時，Claude Code 會跳過任何是符號連結或硬連結的追蹤路徑，並顯示 `已復原程式碼，但跳過 N 個檔案`警告。跳過的檔案保持其目前內容。若要撤銷會話對其中一個檔案的變更，請要求 Claude 反轉編輯或自己編輯檔案。dotfile 管理器符號連結到您的專案中的設定檔以及 pnpm 硬連結到位置的檔案都屬於此類別。
+
+若要查看復原跳過的路徑，請在復原前使用 `/debug` 開啟偵錯記錄：`~/.claude/debug/<session-id>.txt` 中的偵錯記錄會列出每個跳過的路徑。如需每個跳過原因和復原步驟，請參閱[錯誤參考中的 skipped-files 項目](/docs/zh-TW/errors#restored-the-code-but-skipped-files)。
+
 <h3 id="not-a-replacement-for-version-control">
   不是版本控制的替代品
 </h3>
 
-Checkpoints 設計用於快速的會話級恢復。對於永久版本歷史和協作：
-
-* 繼續使用版本控制（例如 Git）進行提交、分支和長期歷史
-* Checkpoints 補充但不替代適當的版本控制
-* 將 checkpoints 視為「本地撤銷」，Git 視為「永久歷史」
+Checkpoints 設計用於快速的會話級恢復。對於永久版本歷史和協作，請繼續使用版本控制（例如 Git）進行提交、分支和長期歷史。
 
 <h2 id="see-also">
   另請參閱

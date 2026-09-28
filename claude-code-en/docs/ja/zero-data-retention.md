@@ -31,11 +31,17 @@ ZDR は Claude for Enterprise 上の Claude Code 推論をカバーします。
   ZDR は組織ごとに有効化されます。新しい各組織では、Anthropic アカウントチームによって ZDR を個別に有効化する必要があります。ZDR は同じアカウントの下に作成された新しい組織に自動的に適用されません。新しい組織に対して ZDR を有効化するには、アカウントチームに連絡してください。
 </Warning>
 
+<h3 id="route-claude-code-traffic-to-your-zdr-organization">
+  Claude Code トラフィックを ZDR 組織にルーティングする
+</h3>
+
+ZDR は ZDR が有効化された組織に認証するリクエストに適用されます。開発者が個人アカウントまたは別の組織の API キーで Claude Code にサインインした場合、これらのセッションはカバーされません。開発者の claude.ai ログインが ZDR 組織に属することを要求するには、`forceLoginMethod` および `forceLoginOrgUUID` マネージド設定をデプロイしてください。[組織へのログインを制限する](/docs/ja/authentication#restrict-login-to-your-organization)を参照してください。このセクションでは、これらのキーが Claude Console ログインをどのように扱うかについても説明しています。
+
 <h3 id="what-zdr-covers">
   ZDR がカバーする内容
 </h3>
 
-ZDR は Claude for Enterprise 上の Claude Code を通じて行われたモデル推論呼び出しをカバーします。ターミナルで Claude Code を使用する場合、送信するプロンプトと Claude が生成する応答は Anthropic によって保持されません。これは、ZDR 組織で利用可能なすべてのモデルに適用されます。一部のモデルはデータ保持を必要とし、ZDR では利用できません。[ZDR でのモデル利用可能性](#model-availability-under-zdr)を参照してください。
+ZDR は Claude for Enterprise 上の Claude Code を通じて行われたモデル推論呼び出しをカバーします。ターミナルで Claude Code を使用する場合、送信するプロンプトと Claude が生成する応答は Anthropic によって保持されません。これは、ZDR 組織で利用可能なすべてのモデルに適用されます。一部のモデルはデータ保持をデフォルトで必要とします。[ZDR でのモデル利用可能性](#model-availability-under-zdr)を参照してください。
 
 <h3 id="what-zdr-does-not-cover">
   ZDR がカバーしない内容
@@ -57,13 +63,13 @@ ZDR は、ZDR が有効化されている組織であっても、以下には適
 
 Claude for Enterprise 上の Claude Code 組織に対して ZDR が有効化されると、プロンプトまたは完了を保存する必要がある特定の機能はバックエンドレベルで自動的に無効化されます：
 
-| 機能                                                    | 理由                                                   |
-| ----------------------------------------------------- | ---------------------------------------------------- |
-| [Web 上の Claude Code](/docs/ja/claude-code-on-the-web)      | 会話履歴のサーバー側ストレージが必要です。                                |
-| Desktop アプリからの[クラウドセッション](/docs/ja/desktop#cloud-sessions) | プロンプトと完了を含む永続的なセッションデータが必要です。                        |
-| [Artifacts](/docs/ja/artifacts)                            | Anthropic が運用するインフラストラクチャに公開されたページコンテンツを保存する必要があります。 |
-| フィードバック送信（`/feedback`）                                | フィードバックを送信すると、会話データが Anthropic に送信されます。              |
-| [Remote Control](/docs/ja/remote-control)                  | Anthropic サーバーにセッショントランスクリプトを保存して、デバイス間で会話を同期します。    |
+| 機能                                                                                                      | 理由                                                   |
+| ------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| [Web 上の Claude Code](/docs/ja/claude-code-on-the-web)（[Desktop アプリ](/docs/ja/desktop#cloud-sessions)から開始されたものを含む） | セッションデータのサーバー側ストレージが必要です。これには、プロンプトと完了を含む会話履歴が含まれます。 |
+| [Claude Tag](https://claude.com/docs/claude-tag)                                                        | チャネルメモリとセッショントランスクリプトを保持します。                         |
+| [Artifacts](/docs/ja/artifacts)                                                                              | Anthropic が運用するインフラストラクチャに公開されたページコンテンツを保存する必要があります。 |
+| フィードバック送信（`/feedback`、`/bug`、`/share`）                                                                  | フィードバックを送信すると、会話データが Anthropic に送信されます。              |
+| [Remote Control](/docs/ja/remote-control)                                                                    | Anthropic サーバーにセッショントランスクリプトを保存して、デバイス間で会話を同期します。    |
 
 これらの機能はクライアント側の表示に関係なく、バックエンドでブロックされます。Claude Code ターミナルの起動中に無効化された機能が表示される場合、それを使用しようとするとエラーが返され、組織のポリシーがそのアクションを許可していないことが示されます。
 
@@ -73,9 +79,9 @@ Claude for Enterprise 上の Claude Code 組織に対して ZDR が有効化さ�
   ZDR の下でのモデルの利用可能性
 </h3>
 
-Claude Fable 5 は、ゼロデータ保持が有効化されている組織では利用できません。このモデルクラスは[データ保持が必要](https://platform.claude.com/docs/en/manage-claude/api-and-data-retention#model-specific-data-retention-requirements)であるため、ZDR 組織からのリクエストはそれによって処理することができません。モデルは ZDR 組織の `/model` ピッカーに表示されないか、ZDR を無効化する必要があることを示す通知付きで無効化として表示され、クライアント設定に関係なくサーバーはそれに対するリクエストを拒否します。
+Claude Fable 5.1 と Fable 5 は、[対象モデル](https://support.claude.com/en/articles/15425695-covered-models)であり、デフォルトで[データ保持が必要](https://platform.claude.com/docs/en/manage-claude/api-and-data-retention#model-specific-data-retention-requirements)です。ZDR 組織またはワークスペースがそれらを使用できるかどうかは、Claude Code ではなく対象モデルポリシーによって管理されます。組織がそれらを使用できない場合、モデルは `/model` ピッカーに表示されないか、無効化として表示され、クライアント設定に関係なくサーバーはそれに対するリクエストを拒否します。
 
-その他のモデルは ZDR の下で利用可能なままです。Fable 5 はデフォルトモデルではなく、利用可能な場所では Fable 5 に解決される `best` エイリアスは、ZDR 組織を含む利用できない場所では Opus に解決されます。
+その他のモデルは ZDR の下で利用可能なままです。Fable モデルはデフォルトではなく、利用可能な場所では最新の Fable モデルに解決される `best` エイリアスは、利用できない組織では Opus に解決されます。
 
 <h2 id="data-retention-for-policy-violations">
   ポリシー違反のためのデータ保持

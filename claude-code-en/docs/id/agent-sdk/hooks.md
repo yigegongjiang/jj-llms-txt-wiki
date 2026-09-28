@@ -14,8 +14,6 @@ Hooks adalah fungsi callback yang menjalankan kode Anda sebagai respons terhadap
 * **Memerlukan persetujuan manusia** untuk tindakan sensitif seperti penulisan database atau panggilan API
 * **Track lifecycle sesi** untuk mengelola state, membersihkan resources, atau mengirim notifikasi
 
-Panduan ini mencakup cara kerja hooks, cara mengonfigurasinya, dan menyediakan contoh untuk pola umum seperti memblokir tools, memodifikasi input, dan meneruskan notifikasi.
-
 <h2 id="how-hooks-work">
   Cara kerja hooks
 </h2>
@@ -86,7 +84,7 @@ Contoh berikut menyatukan langkah-langkah ini. Ini mendaftarkan hook `PreToolUse
       )
 
       async with ClaudeSDKClient(options=options) as client:
-          await client.query("Update the database configuration")
+          await client.query("Create a .env file with the standard local development database configuration")
           async for message in client.receive_response():
               # Filter for assistant and result messages
               if isinstance(message, (AssistantMessage, ResultMessage)):
@@ -125,7 +123,7 @@ Contoh berikut menyatukan langkah-langkah ini. Ini mendaftarkan hook `PreToolUse
   };
 
   for await (const message of query({
-    prompt: "Update the database configuration",
+    prompt: "Create a .env file with the standard local development database configuration",
     options: {
       hooks: {
         // Register the hook for PreToolUse events
@@ -142,41 +140,55 @@ Contoh berikut menyatukan langkah-langkah ini. Ini mendaftarkan hook `PreToolUse
   ```
 </CodeGroup>
 
+Ketika Anda menjalankan salah satu skrip, Claude mencoba membuat file `.env`, hook menolak pemanggilan tool, dan respons akhir Claude menjelaskan bahwa ia tidak dapat membuat file `.env`.
+
 <h2 id="available-hooks">
   Available hooks
 </h2>
 
 SDK menyediakan hooks untuk tahap berbeda dari eksekusi agent. Beberapa hooks tersedia di kedua SDK, sementara yang lain hanya TypeScript.
 
-| Hook Event                                             | Python SDK | TypeScript SDK | Apa yang memicunya                                                                                | Contoh use case                                                                  |
-| ------------------------------------------------------ | ---------- | -------------- | ------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| `PreToolUse`                                           | Ya         | Ya             | Permintaan pemanggilan tool (dapat memblokir atau memodifikasi)                                   | Blokir perintah shell berbahaya                                                  |
-| `PostToolUse`                                          | Ya         | Ya             | Hasil eksekusi tool                                                                               | Log semua perubahan file ke audit trail                                          |
-| `PostToolUseFailure`                                   | Ya         | Ya             | Kegagalan eksekusi tool                                                                           | Tangani atau log kesalahan tool                                                  |
-| `PostToolBatch`                                        | Tidak      | Ya             | Batch lengkap pemanggilan tool terselesaikan, sekali per batch sebelum panggilan model berikutnya | Suntikkan konvensi sekali untuk seluruh batch                                    |
-| `UserPromptSubmit`                                     | Ya         | Ya             | Pengajuan prompt pengguna                                                                         | Suntikkan konteks tambahan ke dalam prompts                                      |
-| [`UserPromptExpansion`](/docs/id/hooks#userpromptexpansion) | Tidak      | Ya             | Perintah yang diketik pengguna berkembang menjadi prompt sebelum mencapai Claude                  | Blokir perintah dari invokasi langsung atau tambahkan konteks saat skill diketik |
-| `MessageDisplay`                                       | Tidak      | Ya             | Pesan asisten dengan teks selesai, sekali per pesan dengan teks pesan lengkap                     | Redaksi atau format ulang teks yang ditampilkan tanpa mengubah transcript        |
-| `Stop`                                                 | Ya         | Ya             | Penghentian eksekusi agent                                                                        | Simpan state sesi sebelum keluar                                                 |
-| `SubagentStart`                                        | Ya         | Ya             | Inisialisasi subagent                                                                             | Track spawning tugas paralel                                                     |
-| `SubagentStop`                                         | Ya         | Ya             | Penyelesaian subagent                                                                             | Agregasi hasil dari tugas paralel                                                |
-| `PreCompact`                                           | Ya         | Ya             | Permintaan compaction percakapan                                                                  | Arsipkan transcript lengkap sebelum merangkum                                    |
-| `PermissionRequest`                                    | Ya         | Ya             | Dialog permission akan ditampilkan                                                                | Custom permission handling                                                       |
-| `SessionStart`                                         | Tidak      | Ya             | Inisialisasi sesi                                                                                 | Inisialisasi logging dan telemetry                                               |
-| `SessionEnd`                                           | Tidak      | Ya             | Penghentian sesi                                                                                  | Bersihkan resources sementara                                                    |
-| `Notification`                                         | Ya         | Ya             | Pesan status agent                                                                                | Kirim update status agent ke Slack atau PagerDuty                                |
-| `Setup`                                                | Tidak      | Ya             | Setup/maintenance sesi                                                                            | Jalankan tugas inisialisasi                                                      |
-| `TeammateIdle`                                         | Tidak      | Ya             | Teammate menjadi idle                                                                             | Reassign pekerjaan atau notifikasi                                               |
-| `TaskCompleted`                                        | Tidak      | Ya             | Background task selesai                                                                           | Agregasi hasil dari tugas paralel                                                |
-| `ConfigChange`                                         | Tidak      | Ya             | File konfigurasi berubah                                                                          | Reload pengaturan secara dinamis                                                 |
-| `WorktreeCreate`                                       | Tidak      | Ya             | Git worktree dibuat                                                                               | Track isolated workspaces                                                        |
-| `WorktreeRemove`                                       | Tidak      | Ya             | Git worktree dihapus                                                                              | Bersihkan workspace resources                                                    |
+| Hook Event                                             | Python SDK | TypeScript SDK | Apa yang memicunya                                                                                                                                        | Contoh use case                                                                                                                                                                                 |
+| ------------------------------------------------------ | ---------- | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `PreToolUse`                                           | Ya         | Ya             | Permintaan pemanggilan tool (dapat memblokir atau memodifikasi)                                                                                           | Blokir perintah shell berbahaya                                                                                                                                                                 |
+| `PostToolUse`                                          | Ya         | Ya             | Hasil eksekusi tool                                                                                                                                       | Log semua perubahan file ke audit trail                                                                                                                                                         |
+| `PostToolUseFailure`                                   | Ya         | Ya             | Kegagalan eksekusi tool                                                                                                                                   | Tangani atau log kesalahan tool                                                                                                                                                                 |
+| `PostToolBatch`                                        | Tidak      | Ya             | Batch lengkap pemanggilan tool terselesaikan, sekali per batch sebelum panggilan model berikutnya                                                         | Suntikkan konvensi sekali untuk seluruh batch                                                                                                                                                   |
+| `UserPromptSubmit`                                     | Ya         | Ya             | Pengajuan prompt pengguna                                                                                                                                 | Suntikkan konteks tambahan ke dalam prompts                                                                                                                                                     |
+| [`UserPromptExpansion`](/docs/id/hooks#userpromptexpansion) | Tidak      | Ya             | Perintah yang diketik pengguna, atau prompt MCP, berkembang menjadi prompt sebelum mencapai Claude. Tidak aktif saat Claude menjalankan skill itu sendiri | Blokir perintah dari invokasi langsung atau tambahkan konteks saat skill diketik                                                                                                                |
+| `MessageDisplay`                                       | Tidak      | Ya             | Pesan asisten dengan teks selesai, sekali per pesan dengan teks pesan lengkap                                                                             | Redaksi atau format ulang teks yang ditampilkan tanpa mengubah transcript                                                                                                                       |
+| `Stop`                                                 | Ya         | Ya             | Penghentian eksekusi agent                                                                                                                                | Simpan state sesi sebelum keluar                                                                                                                                                                |
+| `StopFailure`                                          | Tidak      | Ya             | Giliran berakhir dengan kesalahan API alih-alih penghentian normal                                                                                        | Log kegagalan atau kirim alert                                                                                                                                                                  |
+| `SubagentStart`                                        | Ya         | Ya             | Inisialisasi subagent                                                                                                                                     | Track spawning tugas paralel                                                                                                                                                                    |
+| `SubagentStop`                                         | Ya         | Ya             | Penyelesaian subagent                                                                                                                                     | Agregasi hasil dari tugas paralel                                                                                                                                                               |
+| `PreCompact`                                           | Ya         | Ya             | Permintaan compaction percakapan                                                                                                                          | Arsipkan transcript lengkap sebelum merangkum                                                                                                                                                   |
+| `PostCompact`                                          | Tidak      | Ya             | Compaction percakapan selesai                                                                                                                             | Log ringkasan yang dihasilkan                                                                                                                                                                   |
+| [`PreModelSwitch`](/docs/id/hooks#premodelswitch)           | Tidak      | Ya             | Permintaan perubahan model, sebelum terjadi (dapat memblokir)                                                                                             | Blokir perubahan ke model tertentu                                                                                                                                                              |
+| [`PostModelSwitch`](/docs/id/hooks#postmodelswitch)         | Tidak      | Ya             | Model sesi berubah, termasuk fallback otomatis                                                                                                            | Berikan panduan spesifik model Claude untuk model baru                                                                                                                                          |
+| `PermissionRequest`                                    | Ya         | Ya             | Pemanggilan tool memerlukan keputusan permission                                                                                                          | Custom permission handling                                                                                                                                                                      |
+| `PermissionDenied`                                     | Tidak      | Ya             | Mode otomatis menolak pemanggilan tool, termasuk penolakan tanpa verdict classifier                                                                       | Log penolakan, atau beri tahu model bahwa mungkin dapat mencoba lagi; Claude Code mengabaikan `retry: true` untuk penolakan tanpa verdict. Lihat [PermissionDenied](/docs/id/hooks#permissiondenied) |
+| `SessionStart`                                         | Tidak      | Ya             | Inisialisasi sesi                                                                                                                                         | Inisialisasi logging dan telemetry                                                                                                                                                              |
+| `SessionEnd`                                           | Tidak      | Ya             | Penghentian sesi                                                                                                                                          | Bersihkan resources sementara                                                                                                                                                                   |
+| `Notification`                                         | Ya         | Ya             | Pesan status agent                                                                                                                                        | Kirim update status agent ke Slack atau PagerDuty                                                                                                                                               |
+| `Setup`                                                | Tidak      | Ya             | Setup/maintenance sesi                                                                                                                                    | Jalankan tugas inisialisasi                                                                                                                                                                     |
+| `TeammateIdle`                                         | Tidak      | Ya             | Teammate menjadi idle                                                                                                                                     | Reassign pekerjaan atau notifikasi                                                                                                                                                              |
+| `TaskCreated`                                          | Tidak      | Ya             | Task dibuat melalui tool `TaskCreate`                                                                                                                     | Terapkan konvensi penamaan task                                                                                                                                                                 |
+| [`TaskCompleted`](/docs/id/hooks#taskcompleted)             | Tidak      | Ya             | Task ditandai selesai                                                                                                                                     | Perlukan passing tests sebelum task ditutup                                                                                                                                                     |
+| `Elicitation`                                          | Tidak      | Ya             | Server MCP meminta input pengguna di tengah-task                                                                                                          | Respons permintaan input MCP secara programatis                                                                                                                                                 |
+| `ElicitationResult`                                    | Tidak      | Ya             | Pengguna merespons elicitation MCP                                                                                                                        | Modifikasi atau blokir respons sebelum kembali ke server                                                                                                                                        |
+| `ConfigChange`                                         | Tidak      | Ya             | File konfigurasi berubah                                                                                                                                  | Reload pengaturan secara dinamis                                                                                                                                                                |
+| `InstructionsLoaded`                                   | Tidak      | Ya             | File `CLAUDE.md` atau rules dimuat ke dalam konteks                                                                                                       | Audit file instruksi mana yang dimuat                                                                                                                                                           |
+| `WorktreeCreate`                                       | Tidak      | Ya             | Git worktree dibuat                                                                                                                                       | Track isolated workspaces                                                                                                                                                                       |
+| `WorktreeRemove`                                       | Tidak      | Ya             | Git worktree dihapus                                                                                                                                      | Bersihkan workspace resources                                                                                                                                                                   |
+| `CwdChanged`                                           | Tidak      | Ya             | Working directory berubah selama sesi                                                                                                                     | Reload environment variables per direktori                                                                                                                                                      |
+| `FileChanged`                                          | Tidak      | Ya             | File yang diawasi dimodifikasi, dibuat, atau dihapus                                                                                                      | Reload konfigurasi saat file proyek berubah                                                                                                                                                     |
+| `DirectoryAdded`                                       | Tidak      | Ya             | Working directory ditambahkan selama sesi                                                                                                                 | Instal dependencies untuk repository yang ditambahkan di tengah-sesi                                                                                                                            |
 
 <h2 id="configure-hooks">
   Konfigurasi hooks
 </h2>
 
-Untuk mengonfigurasi hook, berikan di field `hooks` dari opsi agent Anda (`ClaudeAgentOptions` di Python, object `options` di TypeScript):
+Untuk mengonfigurasi hook, berikan di field `hooks` dari opsi agent Anda (`ClaudeAgentOptions` di Python, object `options` di TypeScript). Snippet ini mengasumsikan Anda telah mendefinisikan callback hook, seperti `protect_env_files` di Python atau `protectEnvFiles` di TypeScript dari contoh di atas:
 
 <CodeGroup>
   ```python Python theme={null}
@@ -213,31 +225,17 @@ Opsi `hooks` adalah dictionary di Python atau object di TypeScript, di mana:
   Matchers
 </h3>
 
-Gunakan matchers untuk memfilter kapan callbacks Anda terjadi. Field `matcher` cocok dengan nilai berbeda tergantung pada tipe hook event. Misalnya, tool-based hooks cocok dengan nama tool, sementara hooks `Notification` cocok dengan tipe notifikasi. Lihat [referensi hooks Claude Code](/docs/id/hooks#matcher-patterns) untuk daftar lengkap nilai matcher untuk setiap tipe event.
+Gunakan matchers untuk memfilter kapan callbacks Anda terjadi. Field `matcher` cocok dengan nilai berbeda tergantung pada tipe hook event. Misalnya, tool-based hooks cocok dengan nama tool, sementara hooks `Notification` cocok dengan tipe notifikasi.
 
-SDK matchers mengikuti aturan yang sama dengan [matchers dalam file settings](/docs/id/hooks#matcher-patterns). Matcher yang hanya berisi huruf, digit, `_`, `-`, spasi, `,`, dan `|` dibandingkan sebagai string yang tepat, dengan alternatif dipisahkan oleh `|` atau `,` dan spasi putih opsional di sekitarnya, jadi `Write|Edit` dan `Write, Edit` masing-masing cocok dengan tepat kedua tools tersebut dan `code-reviewer` cocok hanya dengan tipe agent tersebut. Matcher `*`, string kosong, atau menghilangkan matcher sepenuhnya cocok dengan setiap kemunculan event.
+SDK matchers mengikuti aturan yang sama dengan [matchers dalam file settings](/docs/id/hooks#matcher-patterns). Bagian tersebut mendokumentasikan jalur evaluasi string yang tepat dan regular expression, persyaratan versi mereka, dan nilai matcher untuk setiap tipe event.
 
-Matcher yang berisi karakter lain apa pun dievaluasi sebagai regular expression yang tidak berlabuh, jadi `^mcp__` cocok dengan setiap MCP tool dan `Edit.*` cocok dengan baik `Edit` maupun `NotebookEdit`. Bungkus regular expression dalam `^` dan `$` ketika Anda memerlukan pencocokan seluruh string.
+| Option    | Type             | Default     | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| --------- | ---------------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `matcher` | `string`         | `undefined` | Pola yang cocok dengan field filter event, mengikuti [aturan untuk matchers dalam file settings](/docs/id/hooks#matcher-patterns). Untuk tool hooks, ini adalah nama tool. Built-in tools termasuk `Bash`, `Read`, `Write`, `Edit`, `Glob`, `Grep`, `WebFetch`, `Agent`, dan lainnya (lihat [Tool Input Types](/docs/id/agent-sdk/typescript#tool-input-types) untuk daftar lengkap). MCP tools menggunakan pola `mcp__<server>__<action>`, di mana `<server>` adalah key yang Anda gunakan dalam konfigurasi `mcpServers`. |
+| `hooks`   | `HookCallback[]` | -           | Diperlukan. Array dari fungsi callback untuk dieksekusi ketika pola cocok                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `timeout` | `number`         | `undefined` | Timeout dalam detik. Ketika dihilangkan, Claude Code menerapkan [timeout default event](#hook-timeout). SDK callbacks Anda mengikuti default hook `command`                                                                                                                                                                                                                                                                                                                                                       |
 
-Matcher seperti `mcp__memory` atau `mcp__brave-search` hanya berisi karakter pencocokan yang tepat, jadi dibandingkan sebagai string yang tepat dan tidak cocok dengan tool apa pun; gunakan `mcp__memory__.*` untuk cocok dengan setiap tool dari server tersebut.
-
-Tanda hubung dalam set pencocokan yang tepat memerlukan runtime Claude Code v2.1.195 atau lebih baru. Pada versi sebelumnya, nama dengan tanda hubung seperti `code-reviewer` dievaluasi sebagai regular expression yang tidak berlabuh dan harus berlabuh sebagai `^code-reviewer$` untuk cocok dengan tepat.
-
-| Option    | Type             | Default     | Description                                                                                                                                                                                                                                                                                                                                                                           |
-| --------- | ---------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `matcher` | `string`         | `undefined` | Pola yang cocok dengan field filter event, mengikuti aturan perbandingan di atas. Untuk tool hooks, ini adalah nama tool. Built-in tools termasuk `Bash`, `Read`, `Write`, `Edit`, `Glob`, `Grep`, `WebFetch`, `Agent`, dan lainnya (lihat [Tool Input Types](/docs/id/agent-sdk/typescript#tool-input-types) untuk daftar lengkap). MCP tools menggunakan pola `mcp__<server>__<action>`. |
-| `hooks`   | `HookCallback[]` | -           | Diperlukan. Array dari fungsi callback untuk dieksekusi ketika pola cocok                                                                                                                                                                                                                                                                                                             |
-| `timeout` | `number`         | `60`        | Timeout dalam detik                                                                                                                                                                                                                                                                                                                                                                   |
-
-Gunakan pola `matcher` untuk menargetkan tools spesifik kapan pun memungkinkan. Matcher dengan `'Bash'` hanya berjalan untuk perintah Bash, sementara menghilangkan pola menjalankan callbacks Anda untuk setiap kemunculan event.
-
-Untuk tool-based hooks, matchers hanya memfilter berdasarkan nama tool, bukan jalur file atau argumen lainnya. Untuk memfilter berdasarkan jalur file, periksa `tool_input.file_path` di dalam callback Anda.
-
-<Tip>
-  **Menemukan nama tool:** Lihat [Tool Input Types](/docs/id/agent-sdk/typescript#tool-input-types) untuk daftar lengkap nama tool built-in, atau tambahkan hook tanpa matcher untuk log semua pemanggilan tool yang dibuat sesi Anda.
-
-  **Penamaan MCP tool:** MCP tools selalu dimulai dengan `mcp__` diikuti oleh nama server dan action: `mcp__<server>__<action>`. Misalnya, jika Anda mengonfigurasi server bernama `playwright`, tools-nya akan dinamai `mcp__playwright__browser_screenshot`, `mcp__playwright__browser_click`, dan seterusnya. Nama server berasal dari key yang Anda gunakan dalam konfigurasi `mcpServers`.
-</Tip>
+Gunakan pola `matcher` untuk menargetkan tools spesifik kapan pun memungkinkan. Matcher dengan `'Bash'` hanya berjalan untuk perintah Bash, sementara menghilangkan pola menjalankan callbacks Anda untuk setiap kemunculan event. Hilangkan dengan sengaja untuk log setiap pemanggilan tool yang dibuat sesi Anda.
 
 <h3 id="callback-functions">
   Callback functions
@@ -261,8 +259,11 @@ Setiap hook callback menerima tiga argumen:
 
 Callback Anda mengembalikan object dengan dua kategori fields:
 
-* **Top-level fields** bekerja sama pada setiap event: `systemMessage` menampilkan pesan kepada pengguna, dan `continue` (`continue_` di Python) menentukan apakah agent terus berjalan setelah hook ini.
-* **`hookSpecificOutput`** mengontrol operasi saat ini. Fields di dalamnya tergantung pada tipe hook event. Untuk hooks `PreToolUse`, di sinilah Anda menetapkan `permissionDecision` (`"allow"`, `"deny"`, `"ask"`, atau `"defer"`), `permissionDecisionReason`, dan `updatedInput`. Mengembalikan `"defer"` mengakhiri query sehingga Anda dapat [melanjutkannya nanti](/docs/id/hooks#defer-a-tool-call-for-later). Untuk hooks `PostToolUse`, Anda dapat menetapkan `additionalContext` untuk menambahkan informasi ke hasil tool. Untuk mengganti output tool sebelum Claude melihatnya, tetapkan `updatedToolOutput`, yang bekerja untuk tool apa pun di kedua SDK. Field `updatedMCPToolOutput` yang lebih lama mengganti output MCP tool saja dan sudah usang.
+* **Top-level fields** diterima pada setiap event: `systemMessage` menampilkan pesan kepada pengguna, dan `continue` (`continue_` di Python) menentukan apakah agent terus berjalan setelah hook ini. Beberapa events membuangnya atau mengirimnya ke tempat lain. Setiap [bagian event](/docs/id/hooks#hook-events) di halaman hooks mengatakan di mana mereka mendarat.
+* **`hookSpecificOutput`** mengontrol operasi saat ini. Fields yang Anda tetapkan di dalamnya tergantung pada tipe hook event:
+  * Untuk hooks `PreToolUse`, di sinilah Anda menetapkan `permissionDecision` (`"allow"`, `"deny"`, `"ask"`, atau `"defer"`), `permissionDecisionReason`, dan `updatedInput`. Jika Anda mengembalikan `"defer"`, query berakhir sehingga Anda dapat [melanjutkannya nanti](/docs/id/hooks#defer-a-tool-call-for-later).
+  * Untuk hooks `PostToolUse`, Anda dapat menetapkan `additionalContext` untuk menambahkan informasi ke hasil tool. Untuk mengganti output tool sebelum Claude melihatnya, tetapkan `updatedToolOutput`, yang bekerja untuk tool apa pun di kedua SDK. Field `updatedMCPToolOutput` yang lebih lama mengganti output MCP tool saja dan sudah usang.
+  * Di TypeScript SDK, callback `PostToolUse` juga dapat mengembalikan `classifierContext`, catatan singkat tentang hasil pemanggilan tool untuk [auto mode](/docs/id/permission-modes#eliminate-prompts-with-auto-mode) permission classifier. Karena callback Anda berjalan dalam proses aplikasi Anda sendiri, classifier dapat menimbang pernyataan pengguna yang Anda sampaikan dalam catatan sebagai intent pengguna. Field memerlukan TypeScript Agent SDK v0.3.236 atau lebih baru. [Annotate a result for the auto mode classifier](/docs/id/hooks#annotate-a-result-for-the-auto-mode-classifier) mencakup batas panjang, aturan synchronous-only, dan apa yang tidak boleh dimasukkan dalam catatan.
 
 Kembalikan `{}` untuk mengizinkan operasi tanpa perubahan. SDK callback hooks menggunakan format output JSON yang sama dengan [Claude Code shell command hooks](/docs/id/hooks#json-output), yang mendokumentasikan setiap field dan opsi spesifik event. Untuk definisi tipe SDK, lihat referensi SDK [TypeScript](/docs/id/agent-sdk/typescript#synchookjsonoutput) dan [Python](/docs/id/agent-sdk/python#synchookjsonoutput).
 
@@ -274,7 +275,7 @@ Kembalikan `{}` untuk mengizinkan operasi tanpa perubahan. SDK callback hooks me
   Asynchronous output
 </h4>
 
-Secara default, agent menunggu hook Anda kembali sebelum melanjutkan. Jika hook Anda melakukan side effect, seperti logging atau mengirim webhook, dan tidak perlu mempengaruhi perilaku agent, Anda dapat mengembalikan async output sebagai gantinya. Ini memberi tahu agent untuk melanjutkan segera tanpa menunggu hook selesai:
+Secara default, agent menunggu hook Anda kembali sebelum melanjutkan. Jika hook Anda melakukan side effect, seperti logging atau mengirim webhook, dan tidak perlu mempengaruhi perilaku agent, Anda dapat mengembalikan async output sebagai gantinya. Ini memberi tahu agent untuk melanjutkan segera tanpa menunggu hook selesai. Dalam snippet ini, `send_to_logging_service` di Python dan `sendToLoggingService` di TypeScript berdiri untuk fungsi logging apa pun yang Anda definisikan:
 
 <CodeGroup>
   ```python Python theme={null}
@@ -305,6 +306,8 @@ Secara default, agent menunggu hook Anda kembali sebelum melanjutkan. Jika hook 
 <h2 id="examples">
   Contoh
 </h2>
+
+Beberapa contoh di bagian ini menunjukkan hanya fungsi callback. Untuk menjalankan satu, daftarkan callback di bawah event yang cocok di field `hooks` dari opsi Anda, seperti yang ditunjukkan di [Konfigurasi hooks](#configure-hooks).
 
 <h3 id="modify-tool-input">
   Modifikasi input tool
@@ -358,8 +361,10 @@ Contoh ini mengintersepsi pemanggilan tool Write dan menulis ulang argumen `file
 </CodeGroup>
 
 <Note>
-  Ketika menggunakan `updatedInput`, Anda juga harus menyertakan `permissionDecision: 'allow'` untuk auto-approve input yang dimodifikasi atau `permissionDecision: 'ask'` untuk menampilkannya kepada pengguna. Dengan `'defer'`, `updatedInput` diabaikan. Selalu kembalikan object baru daripada mutating `tool_input` asli.
+  Pasangkan `updatedInput` dengan `permissionDecision: 'allow'` untuk auto-approve input yang dimodifikasi, atau `permissionDecision: 'ask'` untuk menampilkannya kepada pengguna. Jika Anda menghilangkan `permissionDecision`, input yang dimodifikasi masih berlaku dan mengalir melalui evaluasi permission normal. Dengan `'defer'`, `updatedInput` diabaikan. Selalu kembalikan object baru daripada mutating `tool_input` asli.
 </Note>
+
+Untuk mengonfirmasi pengalihan, atur prefix ke path yang dapat Anda tulis, seperti `./sandbox` atau `/tmp/sandbox` (macOS tidak memungkinkan pembuatan direktori root-level `/sandbox`), kemudian minta agent untuk menulis file: hasil tool Write di message stream menamai path dengan prefix sandbox Anda daripada yang diminta Claude.
 
 <h3 id="add-context-and-block-a-tool">
   Tambahkan konteks dan blokir tool
@@ -497,7 +502,7 @@ Contoh di bawah ini mendaftarkan tiga pemeriksaan independen untuk setiap pemang
 
 Gunakan multi-tool matchers untuk berbagi satu callback di seluruh tools terkait. Contoh ini mendaftarkan tiga matchers dengan scope berbeda:
 
-* Daftar exact yang dipisahkan pipe (`Write|Edit|Delete`) memicu `file_security_hook` hanya untuk file modification tools.
+* Daftar exact yang dipisahkan pipe (`Write|Edit|NotebookEdit`) memicu `file_security_hook` hanya untuk file modification tools.
 * Regex (`^mcp__`) memicu `mcp_audit_hook` untuk tool MCP apa pun yang namanya dimulai dengan `mcp__`.
 * Matcher yang dihilangkan memicu `global_logger` untuk setiap pemanggilan tool terlepas dari nama.
 
@@ -507,7 +512,7 @@ Gunakan multi-tool matchers untuk berbagi satu callback di seluruh tools terkait
       hooks={
           "PreToolUse": [
               # Match file modification tools
-              HookMatcher(matcher="Write|Edit|Delete", hooks=[file_security_hook]),
+              HookMatcher(matcher="Write|Edit|NotebookEdit", hooks=[file_security_hook]),
               # Match all MCP tools
               HookMatcher(matcher="^mcp__", hooks=[mcp_audit_hook]),
               # Match everything (no matcher)
@@ -522,7 +527,7 @@ Gunakan multi-tool matchers untuk berbagi satu callback di seluruh tools terkait
     hooks: {
       PreToolUse: [
         // Match file modification tools
-        { matcher: "Write|Edit|Delete", hooks: [fileSecurityHook] },
+        { matcher: "Write|Edit|NotebookEdit", hooks: [fileSecurityHook] },
 
         // Match all MCP tools
         { matcher: "^mcp__", hooks: [mcpAuditHook] },
@@ -584,9 +589,9 @@ Gunakan hooks `SubagentStop` untuk memantau ketika subagents menyelesaikan peker
   Buat HTTP requests dari hooks
 </h3>
 
-Hooks dapat melakukan operasi asynchronous seperti HTTP requests. Tangkap errors di dalam hook Anda daripada membiarkan mereka menyebar, karena exception yang tidak ditangani dapat mengganggu agent.
+Hooks dapat melakukan operasi asynchronous seperti HTTP requests. Tangkap errors di dalam hook Anda daripada membiarkan mereka menyebar.
 
-Contoh ini mengirim webhook setelah setiap tool selesai, mencatat tool mana yang berjalan dan kapan. Hook menangkap errors sehingga webhook yang gagal tidak mengganggu agent:
+Contoh ini mengirim webhook setelah setiap tool selesai, mencatat tool mana yang berjalan dan kapan. Hook menangkap errors dari webhook yang gagal:
 
 <CodeGroup>
   ```python Python theme={null}
@@ -622,7 +627,7 @@ Contoh ini mengirim webhook setelah setiap tool selesai, mencatat tool mana yang
           # Run the blocking HTTP call in a thread to avoid blocking the event loop
           await asyncio.to_thread(_send_webhook, input_data["tool_name"])
       except Exception as e:
-          # Log the error but don't raise. A failed webhook shouldn't stop the agent
+          # Log the error but don't raise
           print(f"Webhook request failed: {e}")
 
       return {}
@@ -651,7 +656,7 @@ Contoh ini mengirim webhook setelah setiap tool selesai, mencatat tool mana yang
       if (error instanceof Error && error.name === "AbortError") {
         console.log("Webhook request cancelled");
       }
-      // Don't re-throw. A failed webhook shouldn't stop the agent
+      // Don't re-throw
     }
 
     return {};
@@ -671,20 +676,22 @@ Contoh ini mengirim webhook setelah setiap tool selesai, mencatat tool mana yang
   ```
 </CodeGroup>
 
+Untuk mengonfirmasi hook terjadi, arahkan URL webhook ke endpoint yang dapat Anda pantau dan kirim prompt yang menggunakan tool: hook mengirim POST dengan nama tool dan timestamp setelah setiap tool selesai.
+
 <h3 id="forward-notifications-to-slack">
   Teruskan notifikasi ke Slack
 </h3>
 
-Gunakan hooks `Notification` untuk menerima notifikasi sistem dari agent dan meneruskannya ke layanan eksternal. Notifikasi terjadi untuk tipe event seperti:
+Gunakan hooks `Notification` untuk menerima notifikasi sistem dari agent dan meneruskannya ke layanan eksternal. Dalam sesi SDK, Claude Code menjalankan hook ini untuk tipe notifikasi berikut:
 
-* `permission_prompt` ketika Claude memerlukan permission
-* `idle_prompt` ketika Claude menunggu input
-* `auth_success` ketika authentication selesai
-* `elicitation_dialog`, `elicitation_complete`, dan `elicitation_response` untuk alur elicitation user-prompt
+* [`permission_prompt`](/docs/id/hooks#notification) sekali permintaan permission telah menunggu sekitar enam detik di callback [`canUseTool`](/docs/id/agent-sdk/user-input) Anda. Memerlukan TypeScript Agent SDK v0.3.233 atau lebih baru, atau Python Agent SDK v0.2.139 atau lebih baru
+* `elicitation_complete` dan `elicitation_response` untuk alur elicitation user-prompt
+
+Claude Code memancarkan tipe lainnya, seperti `idle_prompt`, `auth_success`, dan `elicitation_dialog`, dari UI interaktif yang sesi SDK tidak jalankan.
 
 Setiap notifikasi mencakup field `message` dengan deskripsi yang dapat dibaca manusia dan secara opsional `title`.
 
-Contoh ini meneruskan setiap notifikasi ke channel Slack. Ini memerlukan [Slack incoming webhook URL](https://api.slack.com/messaging/webhooks), yang Anda buat dengan menambahkan app ke workspace Slack Anda dan mengaktifkan incoming webhooks:
+Contoh ini meneruskan setiap notifikasi ke channel Slack. Ini memerlukan [Slack incoming webhook URL](https://docs.slack.dev/messaging/sending-messages-using-incoming-webhooks/), yang Anda buat dengan menambahkan app ke workspace Slack Anda dan mengaktifkan incoming webhooks:
 
 <CodeGroup>
   ```python Python theme={null}
@@ -780,6 +787,8 @@ Contoh ini meneruskan setiap notifikasi ke channel Slack. Ini memerlukan [Slack 
   ```
 </CodeGroup>
 
+Ketika event `Notification` terjadi, hook memposting `message` notifikasi, dengan awalan `Agent status:`, ke channel yang ditargetkan webhook Anda.
+
 <h2 id="fix-common-issues">
   Perbaiki masalah umum
 </h2>
@@ -815,10 +824,23 @@ const myHook: HookCallback = async (input, toolUseID, { signal }) => {
   Hook timeout
 </h3>
 
-* Tingkatkan nilai `timeout` dalam konfigurasi `HookMatcher`
-* Gunakan `AbortSignal` dari argumen callback ketiga untuk menangani pembatalan dengan baik di TypeScript
+Claude Code menjalankan setiap callback dengan timeout, yang Anda atur dalam hitungan detik dengan field `timeout` pada `HookMatcher`-nya. Ketika Anda tidak mengaturnya, Claude Code menggunakan default event: 600 detik untuk sebagian besar events, 30 detik untuk `UserPromptSubmit`, `PreModelSwitch`, dan `PostModelSwitch`, dan 10 detik untuk `MessageDisplay`. Claude Code menjalankan callbacks `SessionEnd` selama shutdown di bawah [SessionEnd timeout budget](/docs/id/hooks#sessionend-input) yang lebih pendek, 1,5 detik secara default.
 
-Callback `UserPromptSubmit` atau [`UserPromptExpansion`](/docs/id/hooks#userpromptexpansion) yang melampaui timeout-nya memblokir prompt tersebut dengan pesan timeout dan sesi berlanjut. Mengganggu query saat callback tertunda membatalkan pending tool call. Sebelum v2.1.208, timeout callback pada event tersebut mengakhiri query dengan `error_during_execution`, dan interrupt selama pending callback `PreToolUse` dapat membiarkan tool call melanjutkan.
+Ketika callback melampaui timeout-nya, Claude Code membatalkannya dan membuang output-nya, dan sesi berlanjut daripada hang. Apa yang terjadi selanjutnya tergantung pada event:
+
+* `PreToolUse`: Claude Code tidak menjalankan tool call, Claude menerima hasil tool yang menyatakan hook tidak merespons sebelum timeout-nya, dan turn berlanjut. Jika hook `PreToolUse` lain mengembalikan explicit deny, Claude menerima denial itu sebagai gantinya dari error timeout. Sebelum v2.1.210, Claude Code melaporkan timeout ke Claude sebagai user rejection, yang membuat unattended sessions berhenti dan menunggu input.
+* `PostToolUse` dan `PostToolUseFailure`: Claude Code menyimpan hasil tool dan turn berlanjut.
+* `UserPromptSubmit` dan [`UserPromptExpansion`](/docs/id/hooks#userpromptexpansion): Claude Code memblokir prompt dengan pesan yang menyebutkan hook dan timeout, dan sesi berlanjut. Karena callback pada events ini dapat bertindak sebagai policy gate, Claude Code tidak pernah membiarkan prompt yang timed-out melewati tanpa screening. Sebelum v2.1.208, Claude Code mengakhiri query dengan `error_during_execution` ketika callback pada events ini timed out.
+* `Stop` dan `SubagentStop`: callback yang timed-out dihitung sebagai tidak mengembalikan keputusan. Agent atau subagent berhenti seolah-olah callback itu telah mengizinkannya, dan keputusan dari hooks lain Anda pada event masih berlaku. Sebelum Claude Code v2.1.273, callback `Stop` atau `SubagentStop` yang timed-out dihitung sebagai failed hook run, dan Claude Code membuang keputusan hooks lain Anda pada event.
+* `SessionStart`: callback yang timed-out dihitung sebagai tidak mengembalikan output, dan sesi berlanjut dengan output dari hooks `SessionStart` lain Anda.
+* `PreModelSwitch`: Claude Code memblokir model switch. Hook yang tidak menjawab belum menyetujui switch.
+* Events lainnya, seperti `Notification`, `PreCompact`, dan `PostModelSwitch`: Claude Code mencatat kegagalan dan berlanjut.
+
+Pertama kali callback `Stop` atau `SessionStart` timed out di sesi utama, Claude Code juga menambahkan [`SDKInformationalMessage`](/docs/id/agent-sdk/typescript#sdkinformationalmessage) ke message stream mengatakan app yang menjalankan sesi tidak merespons. Timeouts kemudian tidak mengulangi pesan itu saat app Anda tetap tidak responsif.
+
+Jika Anda mengganggu query saat callback tertunda, Claude Code membatalkan pending tool call. Sebelum v2.1.208, tool call masih bisa melanjutkan jika Anda mengganggu selama pending `PreToolUse` callback.
+
+Jika callback Anda membutuhkan lebih banyak waktu, atur `timeout` yang lebih tinggi pada `HookMatcher`-nya. Di TypeScript, gunakan `AbortSignal` dari argumen callback ketiga untuk menangani pembatalan dengan baik ketika timeout terjadi.
 
 <h3 id="tool-blocked-unexpectedly">
   Tool blocked unexpectedly
@@ -844,7 +866,7 @@ Callback `UserPromptSubmit` atau [`UserPromptExpansion`](/docs/id/hooks#userprom
   };
   ```
 
-* Kembalikan `permissionDecision: 'allow'` untuk auto-approve input yang dimodifikasi, atau `'ask'` untuk menampilkannya kepada pengguna untuk persetujuan
+* Jangan pasangkan `updatedInput` dengan `permissionDecision: 'defer'`, yang menghilangkan input yang dimodifikasi. Menghilangkan `permissionDecision` tidak masalah: input yang dimodifikasi masih berlaku melalui evaluasi permission normal. Anda juga dapat mengembalikan `'allow'` untuk auto-approve input yang dimodifikasi atau `'ask'` untuk menampilkannya kepada pengguna untuk persetujuan
 
 * Sertakan `hookEventName` di `hookSpecificOutput` untuk mengidentifikasi tipe hook mana output-nya
 
@@ -874,7 +896,7 @@ Untuk menjalankan logika inisialisasi sebagai callback Python SDK sebagai gantin
   Subagent permission prompts multiplying
 </h3>
 
-Ketika spawning multiple subagents, masing-masing mungkin meminta permissions secara terpisah. Subagents tidak secara otomatis mewarisi parent agent permissions. Untuk menghindari prompts berulang, gunakan hooks `PreToolUse` untuk auto-approve tools spesifik, atau konfigurasi permission rules yang berlaku untuk sesi subagent.
+Ketika spawning multiple subagents, masing-masing mungkin meminta permissions secara terpisah untuk tool calls-nya sendiri. Untuk menghindari prompts berulang, gunakan hooks `PreToolUse` untuk auto-approve tools spesifik, atau konfigurasi permission rules, yang subagents [warisi dari parent conversation](/docs/id/sub-agents#permission-modes).
 
 <h3 id="recursive-hook-loops-with-subagents">
   Recursive hook loops with subagents
@@ -882,7 +904,6 @@ Ketika spawning multiple subagents, masing-masing mungkin meminta permissions se
 
 Hook `UserPromptSubmit` yang spawns subagents dapat membuat infinite loops jika subagents tersebut memicu hook yang sama. Untuk mencegah ini:
 
-* Periksa indikator subagent di hook input sebelum spawning
 * Gunakan shared variable atau session state untuk track apakah Anda sudah berada di dalam subagent
 * Scope hooks untuk hanya berjalan untuk sesi top-level agent
 
@@ -890,7 +911,9 @@ Hook `UserPromptSubmit` yang spawns subagents dapat membuat infinite loops jika 
   systemMessage not appearing in output
 </h3>
 
-Field `systemMessage` menampilkan pesan kepada pengguna, bukan model. Secara default SDK menampilkan hook output di message stream hanya untuk hooks `SessionStart` dan `Setup`, jadi pesan dari event hook lainnya tidak muncul kecuali Anda mengatur `includeHookEvents` (`include_hook_events` di Python). Untuk meneruskan konteks ke model sebagai gantinya, kembalikan [`additionalContext`](/docs/id/hooks#add-context-for-claude).
+Field `systemMessage` menampilkan pesan kepada pengguna, bukan model. Pada Claude Code v2.1.227 atau lebih baru, `systemMessage` hook dapat muncul di message stream sebagai [`SDKInformationalMessage`](/docs/id/agent-sdk/typescript#sdkinformationalmessage). Apakah itu terjadi tergantung pada event. Setiap [section event](/docs/id/hooks#hook-events) di halaman hooks mengatakan bagaimana output muncul. Untuk meneruskan konteks ke model sebagai gantinya, kembalikan [`additionalContext`](/docs/id/hooks#add-context-for-claude).
+
+Sebelum v2.1.227, SDK menampilkan hook output di message stream hanya untuk hooks `SessionStart` dan `Setup`. Untuk event lainnya, output muncul hanya di lifecycle events yang [`includeHookEvents`](/docs/id/agent-sdk/typescript#options) (`include_hook_events` di Python) tambahkan. Entry opsi itu mencakup lifecycle events mana yang setiap hook event hasilkan.
 
 Jika Anda perlu menampilkan hook decisions ke aplikasi Anda dengan andal, log mereka secara terpisah atau gunakan dedicated output channel.
 

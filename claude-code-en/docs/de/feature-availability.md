@@ -17,11 +17,11 @@ In den Tabellen unten bedeutet ✓ verfügbar, ✗ nicht verfügbar, und „Sieh
 Wie Sie sich authentifizieren, bestimmt, welche Funktionen Claude Code erreichen kann. Eine einzelne Liste dessen, was auf Ihrem Anbieter fehlt, finden Sie in den Registerkarten [Zusammenfassung nach Anbieter](#summary-by-provider). Um Ihre Spalte in den Tabellen zu finden:
 
 * **Claude-Abonnement**: Sie melden sich mit einem claude.ai-Konto im Pro-, Max-, Team- oder Enterprise-Plan an
-* **Anthropic Console**: Sie authentifizieren sich mit einem Anthropic API-Schlüssel
+* **Anthropic Console**: Sie authentifizieren sich mit einem Anthropic API-Schlüssel oder durch [Anmeldung bei einem Console-Konto ohne einen](/docs/de/authentication#sign-in-without-an-api-key)
 * **Amazon Bedrock**: Sie verwenden Claude-Modelle aus dem Amazon Bedrock-Modellkatalog und setzen `CLAUDE_CODE_USE_BEDROCK`. Der [Mantle-Endpunkt](/docs/de/amazon-bedrock#use-the-mantle-endpoint) (`CLAUDE_CODE_USE_MANTLE`) wird von dieser Spalte abgedeckt
 * **Claude Platform on AWS**: Sie haben Claude über AWS Marketplace gekauft, rufen aber die Anthropic API auf und setzen `CLAUDE_CODE_USE_ANTHROPIC_AWS`
 * **Google Cloud's Agent Platform**: Von Google betrieben; Sie setzen `CLAUDE_CODE_USE_VERTEX`
-* **Microsoft Foundry**: Von Anthropic auf Azure betrieben; Sie setzen `CLAUDE_CODE_USE_FOUNDRY`
+* **Microsoft Foundry**: Von Anthropic betrieben; Sie setzen `CLAUDE_CODE_USE_FOUNDRY`
 
 <h3 id="features-available-on-every-provider">
   Funktionen, die auf jedem Anbieter verfügbar sind
@@ -32,15 +32,18 @@ Diese funktionieren auf jedem Anbieter:
 * [CLI](/docs/de/quickstart) und [Agent SDK](/docs/de/agent-sdk/overview)
 * [VS Code](/docs/de/vs-code) und [JetBrains](/docs/de/jetbrains) Erweiterungen
 * [Subagents](/docs/de/sub-agents), [hooks](/docs/de/hooks-guide), [commands](/docs/de/commands) und [skills](/docs/de/skills)
-* [CLAUDE.md memory](/docs/de/memory), [plugins](/docs/de/plugins) und [MCP servers](/docs/de/mcp)
+* [CLAUDE.md memory](/docs/de/memory), [plugins](/docs/de/plugins/overview) und [MCP servers](/docs/de/mcp)
 * [Checkpoints](/docs/de/checkpointing), [sandboxing](/docs/de/sandboxing) und [Workflows](/docs/de/workflows)
-* [OpenTelemetry metrics](/docs/de/monitoring-usage) und die [verwaltete Einstellungsdatei](/docs/de/settings#settings-files)
+* [OpenTelemetry metrics](/docs/de/monitoring-usage) und die [verwaltete Einstellungsdatei](/docs/de/managed-settings#delivery-mechanisms)
 
-Drei davon haben anbieter-spezifische Unterschiede:
+Diese haben anbieter-spezifische Unterschiede:
 
-* **MCP servers**: [Konnektoren von claude.ai](/docs/de/mcp#use-mcp-servers-from-claude-ai) werden nur geladen, wenn Ihr claude.ai-Abonnement die aktive Authentifizierungsmethode ist, und [Tool-Suche](/docs/de/mcp#configure-tool-search) ist standardmäßig auf Google Cloud's Agent Platform und deaktiviert, wenn `ANTHROPIC_BASE_URL` auf einen Nicht-First-Party-Host verweist
+* **MCP servers**: [Konnektoren von claude.ai](/docs/de/mcp#use-mcp-servers-from-claude-ai) werden nur geladen, wenn Ihr claude.ai-Abonnement die aktive Authentifizierungsmethode ist. [Tool-Suche](/docs/de/mcp#configure-tool-search) ist standardmäßig deaktiviert, wenn `ANTHROPIC_BASE_URL` auf einen Nicht-First-Party-Host verweist, und wird auf Google Cloud's Agent Platform-Modellen vor der Claude 4.5-Generation oder auf Microsoft Foundry [Bereitstellungen, die auf Azure gehostet werden](https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry#hosting-options) nicht unterstützt
 * **Subagents**: der integrierte [Explore Subagent](/docs/de/sub-agents#built-in-subagents) begrenzt sein vererbtes Modell auf Opus auf der Claude API und erbt das Modell der Hauptkonversation direkt auf jedem anderen Anbieter, einschließlich Claude Platform on AWS
-* **[Commands](/docs/de/commands#all-commands)**: `/design-sync` und `/radio` sind auf Amazon Bedrock, Google Cloud's Agent Platform, Microsoft Foundry und Claude Platform on AWS nicht verfügbar, und `/voice` erfordert ein claude.ai-Konto
+* **[Commands](/docs/de/commands#all-commands)**:
+  * `/design-sync` und `/import` mit seiner `claude import` Subbefehlsform sind auf Amazon Bedrock, Google Cloud's Agent Platform, Microsoft Foundry und Claude Platform on AWS nicht verfügbar, und über ein [Claude apps gateway](/docs/de/claude-apps-gateway#availability-and-limitations)
+  * `/voice` erfordert ein claude.ai-Konto
+  * `/list-agents` und sein Alias `/peers` sind nur in Sitzungen verfügbar, in denen [sitzungsübergreifendes Messaging aktiviert ist](/docs/de/cross-session-messaging#availability)
 
 <h3 id="features-that-require-a-claude-subscription">
   Funktionen, die ein Claude-Abonnement erfordern
@@ -48,10 +51,10 @@ Drei davon haben anbieter-spezifische Unterschiede:
 
 Diese erfordern die Anmeldung mit einem claude.ai-Konto und sind nicht mit einem Anthropic Console API-Schlüssel oder von einem Drittanbieter erreichbar:
 
-* [Claude Code im Web](/docs/de/claude-code-on-the-web), Claude Code auf Mobilgeräten und [Claude Code in Slack](/docs/de/slack)
+* [Cloud-Sitzungen](/docs/de/claude-code-on-the-web), Claude Code auf Mobilgeräten und [Claude Code in Slack](/docs/de/slack)
 * [Claude Code Desktop](/docs/de/desktop)
 * [Routines](/docs/de/routines) (`/schedule`)
-* [Ultraplan](/docs/de/ultraplan) und [Ultrareview](/docs/de/ultrareview)
+* [Ultrareview](/docs/de/ultrareview)
 * [Code Review](/docs/de/code-review): Team- und Enterprise-Pläne
 * [Remote Control](/docs/de/remote-control)
 * [Chrome-Erweiterung](/docs/de/chrome)
@@ -88,13 +91,13 @@ Diese Funktionen funktionieren in der lokalen CLI, hängen aber von einer server
       <td>✗</td>
       <td>✓</td>
       <td>Siehe Hinweis <sup><a href="#fn1">1</a></sup></td>
-      <td>✓</td>
+      <td>✓ ([Bereitstellungen, die auf Anthropic gehostet werden](https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry#hosting-options))</td>
     </tr>
 
     <tr>
       <td>[Fast mode](/docs/de/fast-mode)</td>
-      <td>✓</td>
-      <td>✓</td>
+      <td>✓ ([Von Eigentümer aktiviert](/docs/de/fast-mode#enable-fast-mode-for-your-organization) auf Team und Enterprise)</td>
+      <td>✓ (bereitgestellte Organisationen)</td>
       <td>✗</td>
       <td>✗</td>
       <td>✗</td>
@@ -122,6 +125,16 @@ Diese Funktionen funktionieren in der lokalen CLI, hängen aber von einer server
     </tr>
 
     <tr>
+      <td>[Sitzungsübergreifendes Messaging](/docs/de/cross-session-messaging)</td>
+      <td>✓ <sup><a href="#fn5">5</a></sup></td>
+      <td>✓ (gleicher Computer) <sup><a href="#fn5">5</a></sup></td>
+      <td>✓ (gleicher Computer) <sup><a href="#fn5">5</a></sup></td>
+      <td>✓ (gleicher Computer) <sup><a href="#fn5">5</a></sup></td>
+      <td>✓ (gleicher Computer) <sup><a href="#fn5">5</a></sup></td>
+      <td>✓ (gleicher Computer) <sup><a href="#fn5">5</a></sup></td>
+    </tr>
+
+    <tr>
       <td>[Channels](/docs/de/channels)</td>
       <td>✓</td>
       <td>✓</td>
@@ -132,17 +145,17 @@ Diese Funktionen funktionieren in der lokalen CLI, hängen aber von einer server
     </tr>
 
     <tr>
-      <td>[`/loop` scheduled tasks](/docs/de/scheduled-tasks)</td>
+      <td>[GitHub Actions](/docs/de/github-actions)</td>
       <td>✓</td>
       <td>✓</td>
-      <td>Siehe Hinweis <sup><a href="#fn3">3</a></sup></td>
-      <td>Siehe Hinweis <sup><a href="#fn3">3</a></sup></td>
-      <td>Siehe Hinweis <sup><a href="#fn3">3</a></sup></td>
-      <td>Siehe Hinweis <sup><a href="#fn3">3</a></sup></td>
+      <td>✓</td>
+      <td>✗</td>
+      <td>✓</td>
+      <td>✓</td>
     </tr>
 
     <tr>
-      <td>[GitHub Actions](/docs/de/github-actions) und [GitLab CI/CD](/docs/de/gitlab-ci-cd)</td>
+      <td>[GitLab CI/CD](/docs/de/gitlab-ci-cd)</td>
       <td>✓</td>
       <td>✓</td>
       <td>✓</td>
@@ -176,7 +189,7 @@ Kontrollen auf Organisationsebene und Sichtbarkeit der Nutzung.
     <tr>
       <td>[Analytics dashboard and API](/docs/de/analytics)</td>
       <td>✓ (Dashboard: Team und Enterprise; API: Enterprise)</td>
-      <td>✓ <sup><a href="#fn5">5</a></sup></td>
+      <td>✓ <sup><a href="#fn4">4</a></sup></td>
       <td>✗</td>
       <td>✗</td>
       <td>✗</td>
@@ -195,24 +208,26 @@ Kontrollen auf Organisationsebene und Sichtbarkeit der Nutzung.
 
     <tr>
       <td>[Zero Data Retention](/docs/de/zero-data-retention)</td>
-      <td>✓ (qualified Enterprise accounts)</td>
-      <td>✓ (qualified accounts)</td>
-      <td>Siehe Hinweis <sup><a href="#fn4">4</a></sup></td>
-      <td>✓ (qualified accounts)</td>
-      <td>Siehe Hinweis <sup><a href="#fn4">4</a></sup></td>
-      <td>Siehe Hinweis <sup><a href="#fn4">4</a></sup></td>
+      <td>✓ (qualifizierte Enterprise-Konten)</td>
+      <td>✓ (qualifizierte Konten)</td>
+      <td>Siehe Hinweis <sup><a href="#fn3">3</a></sup></td>
+      <td>✓ (qualifizierte Konten)</td>
+      <td>Siehe Hinweis <sup><a href="#fn3">3</a></sup></td>
+      <td>Siehe Hinweis <sup><a href="#fn3">3</a></sup></td>
     </tr>
   </tbody>
 </table>
 
 <span id="fn1" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>1</sup> Auf Google Cloud's Agent Platform ist Web search für Claude 4-Modelle und später verfügbar.<br />
-<span id="fn2" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>2</sup> Auf diesen Anbietern unterstützt Auto mode nur Claude Sonnet 5, Opus 4.7 und Opus 4.8. Siehe [Auto mode configuration](/docs/de/auto-mode-config). In v2.1.158 bis v2.1.206 erforderte Auto mode auf diesen Anbietern auch das Setzen von `CLAUDE_CODE_ENABLE_AUTO_MODE=1`; v2.1.207 entfernte die Anforderung.<br />
-<span id="fn3" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>3</sup> Explizite Intervalle wie `/loop every 2 hours` funktionieren auf jedem Anbieter. Auf Amazon Bedrock, Claude Platform on AWS, Google Cloud's Agent Platform und Microsoft Foundry kann `/loop` sein eigenes Intervall nicht auswählen oder die Standard-Wartungsaufforderung bereitstellen, daher wird eine Aufforderung ohne Intervall alle 10 Minuten ausgeführt, und `/loop` ohne Argumente zeigt die Nutzungsmeldung. Siehe [Scheduled tasks](/docs/de/scheduled-tasks).<br />
-<span id="fn4" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>4</sup> Unterliegt Ihrer Vereinbarung mit dem Cloud-Anbieter.<br />
-<span id="fn5" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>5</sup> Dashboard und API nur. [Contribution metrics](/docs/de/analytics#enable-contribution-metrics) erfordert eine claude.ai Team- oder Enterprise-Organisation.
+<span id="fn2" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>2</sup> Auf diesen Anbietern unterstützt Auto mode nur Claude Sonnet 5, Opus 4.7 oder später und die Fable-Modelle. Siehe [Auto mode configuration](/docs/de/auto-mode-config). Der integrierte Standard-Berechtigungsmodus auf diesen Anbietern ist Manual. Siehe [in welchem Modus eine Sitzung startet](/docs/de/permission-modes#which-mode-a-session-starts-in). In v2.1.158 bis v2.1.206 erforderte Auto mode auf diesen Anbietern auch das Setzen von `CLAUDE_CODE_ENABLE_AUTO_MODE=1`; v2.1.207 entfernte die Anforderung.<br />
+<span id="fn3" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>3</sup> Unterliegt Ihrer Vereinbarung mit dem Cloud-Anbieter.<br />
+<span id="fn4" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>4</sup> Dashboard und API nur. [Contribution metrics](/docs/de/analytics#enable-contribution-metrics) erfordert eine claude.ai Team- oder Enterprise-Organisation.<br />
+<span id="fn5" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>5</sup> Erfordert Claude Code v2.1.224 oder später auf macOS und Linux, einschließlich Linux in WSL 2. Auf nativem Windows erfordert Claude Code v2.1.234 oder später. Mit API-Schlüssel-Authentifizierung ist Messaging nur auf dem gleichen Computer möglich. Auf Amazon Bedrock, Claude Platform on AWS, Google Cloud's Agent Platform und Microsoft Foundry ist Messaging nur auf dem gleichen Computer möglich und erfordert Claude Code v2.1.248 oder später. Claude kann Ihre [Cloud-Sitzungen](/docs/de/claude-code-on-the-web) und Ihre Sitzungen auf anderen Computern nur von einer Sitzung aus finden, die mit [Remote Control](/docs/de/remote-control) verbunden ist. Um eine Verbindung herzustellen, benötigen Sie eine claude.ai-Anmeldung und die anderen [Remote Control-Anforderungen](/docs/de/remote-control#requirements). Siehe [Sitzungen auf anderen Computern anschreiben](/docs/de/cross-session-messaging#message-sessions-on-other-machines).
 
 <Note>
-  Wenn Sie sich über ein [LLM gateway](/docs/de/llm-gateway) authentifizieren, entspricht die Verfügbarkeit von Funktionen dem zugrunde liegenden Anbieter, an den das Gateway weiterleitet. Einige Anthropic-exklusive Funktionen wie der [Advisor](/docs/de/advisor) funktionieren nur, wenn das Gateway Anfragen intakt an die Anthropic API weiterleitet.
+  Wenn Sie sich über ein [LLM gateway](/docs/de/llm-gateway) authentifizieren, entspricht die Verfügbarkeit von Funktionen dem zugrunde liegenden Anbieter, an den das Gateway weiterleitet, mit Ausnahme der Funktionen, die Claude Code selbst deaktiviert. Wenn `ANTHROPIC_BASE_URL` auf einen anderen Host als `api.anthropic.com` verweist, deaktiviert Claude Code Funktionen wie [Remote Control](/docs/de/remote-control#requirements) und [server-managed settings](/docs/de/server-managed-settings#platform-availability), unabhängig davon, was das Gateway weiterleitet. Einige Anthropic-exklusive Funktionen wie der [Advisor](/docs/de/advisor) funktionieren nur, wenn das Gateway Anfragen intakt an die Anthropic API weiterleitet.
+
+  Für die Unterschiede zwischen den Anfragen, die Claude Code sendet, zwischen einem Amazon Bedrock- oder Agent Platform-Format-Gateway, einem `ANTHROPIC_BASE_URL`-Gateway und einer Claude apps gateway-Anmeldung, siehe [Client-Verhalten nach Verbindungsmethode](/docs/de/llm-gateway-protocol#how-the-connection-method-changes-client-behavior).
 </Note>
 
 <h3 id="summary-by-provider">
@@ -223,61 +238,62 @@ Jede Registerkarte listet auf, was auf diesem Anbieter nicht verfügbar oder tei
 
 <Tabs>
   <Tab title="Amazon Bedrock">
-    **Nicht verfügbar:** alle [Funktionen, die ein Claude-Abonnement erfordern](#features-that-require-a-claude-subscription), plus [Web search](/docs/de/tools-reference#websearch-tool-behavior), [fast mode](/docs/de/fast-mode), [Advisor](/docs/de/advisor), [Channels](/docs/de/channels), das [analytics dashboard](/docs/de/analytics), [server-managed settings](/docs/de/server-managed-settings) und die [`/design-sync` und `/radio` commands](/docs/de/commands#all-commands).
+    **Nicht verfügbar:** alle [Funktionen, die ein Claude-Abonnement erfordern](#features-that-require-a-claude-subscription), plus [Web search](/docs/de/tools-reference#websearch-tool-behavior), [fast mode](/docs/de/fast-mode), [Advisor](/docs/de/advisor), [Channels](/docs/de/channels), das [analytics dashboard](/docs/de/analytics), [server-managed settings](/docs/de/server-managed-settings) und die [`/design-sync` und `/import` commands](/docs/de/commands#all-commands).
 
     **Teilweise Unterstützung:**
 
     * [Desktop](/docs/de/desktop): nur über [Claude Desktop on 3P](https://claude.com/docs/third-party/claude-desktop/overview)
-    * [Auto mode](/docs/de/auto-mode-config): Sonnet 5, Opus 4.7 und Opus 4.8 nur
-    * [`/loop`](/docs/de/scheduled-tasks): nur explizite Intervalle
+    * [Auto mode](/docs/de/auto-mode-config): Sonnet 5, Opus 4.7 oder später und Fable-Modelle nur
+    * [Sitzungsübergreifendes Messaging](/docs/de/cross-session-messaging): zwischen Ihren Sitzungen auf diesem Computer nur <sup><a href="#fn5">5</a></sup>
     * [Zero Data Retention](/docs/de/zero-data-retention): unterliegt Ihrer AWS-Vereinbarung
 
-    **Alternativen:** Verwenden Sie für die Planung [`/loop`](/docs/de/scheduled-tasks) mit einem expliziten Intervall statt `/schedule`. Für Cloud-Sitzungen verwenden Sie [GitHub Actions](/docs/de/github-actions) oder [GitLab CI/CD](/docs/de/gitlab-ci-cd). Für Web-Lookups verwenden Sie das [WebFetch tool](/docs/de/tools-reference#webfetch-tool-behavior) mit einer bestimmten URL.
+    **Alternativen:** Verwenden Sie für die Planung [`/loop`](/docs/de/scheduled-tasks) statt `/schedule`. Für Cloud-Sitzungen verwenden Sie [GitHub Actions](/docs/de/github-actions) oder [GitLab CI/CD](/docs/de/gitlab-ci-cd). Für Web-Lookups verwenden Sie das [WebFetch tool](/docs/de/tools-reference#webfetch-tool-behavior) mit einer bestimmten URL.
   </Tab>
 
   <Tab title="Claude Platform on AWS">
-    **Nicht verfügbar:** alle [Funktionen, die ein Claude-Abonnement erfordern](#features-that-require-a-claude-subscription), plus [fast mode](/docs/de/fast-mode), [Advisor](/docs/de/advisor), [Channels](/docs/de/channels), das [analytics dashboard](/docs/de/analytics), [server-managed settings](/docs/de/server-managed-settings) und die [`/design-sync` und `/radio` commands](/docs/de/commands#all-commands).
+    **Nicht verfügbar:** alle [Funktionen, die ein Claude-Abonnement erfordern](#features-that-require-a-claude-subscription), plus [fast mode](/docs/de/fast-mode), [Advisor](/docs/de/advisor), [Channels](/docs/de/channels), [GitHub Actions](/docs/de/github-actions), das [analytics dashboard](/docs/de/analytics), [server-managed settings](/docs/de/server-managed-settings) und die [`/design-sync` und `/import` commands](/docs/de/commands#all-commands).
 
     **Verfügbar wo Amazon Bedrock nicht ist:** [Web search](/docs/de/tools-reference#websearch-tool-behavior).
 
     **Teilweise Unterstützung:**
 
-    * [`/loop`](/docs/de/scheduled-tasks): nur explizite Intervalle
+    * [Sitzungsübergreifendes Messaging](/docs/de/cross-session-messaging): zwischen Ihren Sitzungen auf diesem Computer nur <sup><a href="#fn5">5</a></sup>
 
-    **Alternativen:** Verwenden Sie für die Planung [`/loop`](/docs/de/scheduled-tasks) mit einem expliziten Intervall statt `/schedule`. Für Cloud-Sitzungen verwenden Sie [GitHub Actions](/docs/de/github-actions) oder [GitLab CI/CD](/docs/de/gitlab-ci-cd).
+    **Alternativen:** Verwenden Sie für die Planung [`/loop`](/docs/de/scheduled-tasks) statt `/schedule`. Für Cloud-Sitzungen verwenden Sie [GitLab CI/CD](/docs/de/gitlab-ci-cd).
   </Tab>
 
   <Tab title="Google Cloud's Agent Platform">
-    **Nicht verfügbar:** alle [Funktionen, die ein Claude-Abonnement erfordern](#features-that-require-a-claude-subscription), plus [fast mode](/docs/de/fast-mode), [Advisor](/docs/de/advisor), [Channels](/docs/de/channels), das [analytics dashboard](/docs/de/analytics), [server-managed settings](/docs/de/server-managed-settings) und die [`/design-sync` und `/radio` commands](/docs/de/commands#all-commands).
+    **Nicht verfügbar:** alle [Funktionen, die ein Claude-Abonnement erfordern](#features-that-require-a-claude-subscription), plus [fast mode](/docs/de/fast-mode), [Advisor](/docs/de/advisor), [Channels](/docs/de/channels), das [analytics dashboard](/docs/de/analytics), [server-managed settings](/docs/de/server-managed-settings) und die [`/design-sync` und `/import` commands](/docs/de/commands#all-commands).
 
     **Teilweise Unterstützung:**
 
     * [Desktop](/docs/de/desktop): über [verwaltete Einstellungen](https://claude.com/docs/third-party/claude-desktop/configuration) oder [Claude Desktop on 3P](https://claude.com/docs/third-party/claude-desktop/overview)
     * [Web search](/docs/de/tools-reference#websearch-tool-behavior): Claude 4-Modelle und später
-    * [Auto mode](/docs/de/auto-mode-config): Sonnet 5, Opus 4.7 und Opus 4.8 nur
-    * [`/loop`](/docs/de/scheduled-tasks): nur explizite Intervalle
+    * [Auto mode](/docs/de/auto-mode-config): Sonnet 5, Opus 4.7 oder später und Fable-Modelle nur
+    * [Sitzungsübergreifendes Messaging](/docs/de/cross-session-messaging): zwischen Ihren Sitzungen auf diesem Computer nur <sup><a href="#fn5">5</a></sup>
     * [Zero Data Retention](/docs/de/zero-data-retention): unterliegt Ihrer Google Cloud-Vereinbarung
 
-    **Alternativen:** Verwenden Sie für die Planung [`/loop`](/docs/de/scheduled-tasks) mit einem expliziten Intervall statt `/schedule`. Für Cloud-Sitzungen verwenden Sie [GitHub Actions](/docs/de/github-actions) oder [GitLab CI/CD](/docs/de/gitlab-ci-cd).
+    **Alternativen:** Verwenden Sie für die Planung [`/loop`](/docs/de/scheduled-tasks) statt `/schedule`. Für Cloud-Sitzungen verwenden Sie [GitHub Actions](/docs/de/github-actions) oder [GitLab CI/CD](/docs/de/gitlab-ci-cd).
   </Tab>
 
   <Tab title="Microsoft Foundry">
-    **Nicht verfügbar:** alle [Funktionen, die ein Claude-Abonnement erfordern](#features-that-require-a-claude-subscription), plus [fast mode](/docs/de/fast-mode), [Advisor](/docs/de/advisor), [Channels](/docs/de/channels), [GitHub Actions](/docs/de/github-actions) und [GitLab CI/CD](/docs/de/gitlab-ci-cd), das [analytics dashboard](/docs/de/analytics), [server-managed settings](/docs/de/server-managed-settings) und die [`/design-sync` und `/radio` commands](/docs/de/commands#all-commands).
+    **Nicht verfügbar:** alle [Funktionen, die ein Claude-Abonnement erfordern](#features-that-require-a-claude-subscription), plus [fast mode](/docs/de/fast-mode), [Advisor](/docs/de/advisor), [Channels](/docs/de/channels), [GitLab CI/CD](/docs/de/gitlab-ci-cd), das [analytics dashboard](/docs/de/analytics), [server-managed settings](/docs/de/server-managed-settings) und die [`/design-sync` und `/import` commands](/docs/de/commands#all-commands).
 
     **Teilweise Unterstützung:**
 
     * [Desktop](/docs/de/desktop): nur über [Claude Desktop on 3P](https://claude.com/docs/third-party/claude-desktop/overview)
-    * [Auto mode](/docs/de/auto-mode-config): Sonnet 5, Opus 4.7 und Opus 4.8 nur
-    * [`/loop`](/docs/de/scheduled-tasks): nur explizite Intervalle
+    * [Web search](/docs/de/tools-reference#websearch-tool-behavior): [Bereitstellungen, die auf Anthropic gehostet werden](https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry#hosting-options) nur
+    * [Auto mode](/docs/de/auto-mode-config): Sonnet 5, Opus 4.7 oder später und Fable-Modelle nur
+    * [Sitzungsübergreifendes Messaging](/docs/de/cross-session-messaging): zwischen Ihren Sitzungen auf diesem Computer nur <sup><a href="#fn5">5</a></sup>
     * [Zero Data Retention](/docs/de/zero-data-retention): unterliegt Ihrer Azure-Vereinbarung
 
-    **Alternativen:** Verwenden Sie für die Planung [`/loop`](/docs/de/scheduled-tasks) mit einem expliziten Intervall statt `/schedule`.
+    **Alternativen:** Verwenden Sie für die Planung [`/loop`](/docs/de/scheduled-tasks) statt `/schedule`. Für Cloud-Sitzungen verwenden Sie [GitHub Actions](/docs/de/github-actions).
   </Tab>
 
   <Tab title="Anthropic Console">
     **Nicht verfügbar:** alle [Funktionen, die ein Claude-Abonnement erfordern](#features-that-require-a-claude-subscription).
 
-    Alles in [CLI capabilities that vary by provider](#cli-capabilities-that-vary-by-provider) ist verfügbar, ebenso wie [server-managed settings](/docs/de/server-managed-settings), wenn der API-Schlüssel einer Team- oder Enterprise-Organisation gehört.
+    Alles in [CLI capabilities that vary by provider](#cli-capabilities-that-vary-by-provider) ist verfügbar, außer dass [fast mode](/docs/de/fast-mode) [bereitgestellten Zugriff](/docs/de/fast-mode#enable-fast-mode-for-your-organization) erfordert. [Server-managed settings](/docs/de/server-managed-settings) sind auch verfügbar, wenn Ihr API-Schlüssel einer Team- oder Enterprise-Organisation gehört.
   </Tab>
 </Tabs>
 
@@ -289,7 +305,7 @@ Wenn Sie sich über Amazon Bedrock, Google Cloud's Agent Platform, Microsoft Fou
 
 | Funktion                                                                    | Pro | Max | Team            | Enterprise                        |
 | :-------------------------------------------------------------------------- | :-- | :-- | :-------------- | :-------------------------------- |
-| [Claude Code on the web](/docs/de/claude-code-on-the-web)                        | ✓   | ✓   | ✓               | ✓ <sup><a href="#fn6">6</a></sup> |
+| [Cloud-Sitzungen](/docs/de/claude-code-on-the-web)                               | ✓   | ✓   | ✓               | ✓ <sup><a href="#fn6">6</a></sup> |
 | [Routines](/docs/de/routines)                                                    | ✓   | ✓   | ✓               | ✓                                 |
 | [Remote Control](/docs/de/remote-control)                                        | ✓   | ✓   | Admin-aktiviert | Admin-aktiviert                   |
 | [Channels](/docs/de/channels)                                                    | ✓   | ✓   | Admin-aktiviert | Admin-aktiviert                   |
@@ -305,7 +321,7 @@ Wenn Sie sich über Amazon Bedrock, Google Cloud's Agent Platform, Microsoft Fou
 | [Compliance API](https://platform.claude.com/docs/en/api/compliance)        | ✗   | ✗   | ✗               | ✓                                 |
 | [Zero Data Retention](/docs/de/zero-data-retention)                              | ✗   | ✗   | ✗               | ✓ <sup><a href="#fn7">7</a></sup> |
 
-<span id="fn6" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>6</sup> Auf Enterprise erfordert einen Premium-Sitz oder einen Chat + Claude Code-Sitz. Siehe [Claude Code on the web](/docs/de/claude-code-on-the-web).<br />
+<span id="fn6" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>6</sup> Auf Enterprise erfordert einen Premium-Sitz oder einen Chat + Claude Code-Sitz. Siehe [Cloud-Sitzungen](/docs/de/claude-code-on-the-web).<br />
 <span id="fn7" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>7</sup> Nicht im Standard-Enterprise-Plan enthalten. Erfordert separate Aktivierung durch Anthropic für qualifizierte Konten. Siehe [Zero Data Retention](/docs/de/zero-data-retention).
 
 Für Preise und den vollständigen Planvergleich siehe [Team plans](https://support.claude.com/en/articles/9266767-what-is-the-team-plan) und [Enterprise plans](https://support.claude.com/en/articles/9797531-what-is-the-enterprise-plan).

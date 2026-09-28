@@ -13,7 +13,7 @@
 * 花費了多少個 token
 * 失敗發生在哪裡
 
-Agent SDK 可以將此資料作為 OpenTelemetry 追蹤、指標和日誌事件匯出到任何接受 OpenTelemetry Protocol (OTLP) 的後端，例如 Honeycomb、Datadog、Grafana、Langfuse 或自託管收集器。
+Agent SDK 可以將此資料作為 OpenTelemetry 追蹤、指標和日誌事件匯出到任何接受 OpenTelemetry Protocol (OTLP) 的後端，無論是託管的可觀測性平台或自託管收集器。
 
 本指南說明 SDK 如何發出遙測資料、如何配置匯出，以及如何在資料到達您的後端後標記和篩選資料。若要直接從 SDK 回應流讀取 token 使用量和成本，而不是匯出到後端，請參閱[追蹤成本和使用量](/docs/zh-TW/agent-sdk/cost-tracking)。
 
@@ -107,8 +107,10 @@ CLI 匯出三個獨立的 OpenTelemetry 訊號。每個都有自己的啟用開�
 
 因為子程序預設繼承您應用程式的環境，您可以通過在 Dockerfile、Kubernetes 清單或 shell 設定檔中匯出這些變數並完全省略 `options.env` 來達到相同的結果。
 
+若要確認匯出正常運作，請在任務完成後檢查收集器的日誌，查看傳入的 span、指標和日誌事件。CLI 預設在匯出錯誤時無聲失敗：如果端點無法連線或拒絕資料，代理仍會正常執行，CLI 會捨棄遙測資料而不會在您的應用程式中顯示錯誤。若要顯示匯出器錯誤，請在匯出器變數旁邊設定 [`CLAUDE_CODE_OTEL_DIAG_STDERR=1`](/docs/zh-TW/env-vars)，並通過 SDK 的 `stderr` 回呼 (Python) 或 `stderr` 選項 (TypeScript) 讀取診斷資訊。 需要 Claude Code v2.1.179 或更新版本。
+
 <Note>
-  `console` 匯出器將遙測資料寫入標準輸出，SDK 將其用作其訊息通道。在通過 SDK 執行時，不要將 `console` 設定為匯出器值。若要在本地檢查遙測資料，請將 `OTEL_EXPORTER_OTLP_ENDPOINT` 指向本地收集器或一體化 Jaeger 容器。
+  `console` 匯出器將遙測資料寫入標準輸出，SDK 將其用作其訊息通道。在通過 SDK 執行時，不要將 `console` 設定為匯出器值。若要在本地檢查遙測資料，請將 `OTEL_EXPORTER_OTLP_ENDPOINT` 指向本地 OpenTelemetry 收集器。
 </Note>
 
 <h3 id="flush-telemetry-from-short-lived-calls">
@@ -148,11 +150,11 @@ CLI 批次處理遙測資料並按間隔匯出。在乾淨的程序退出時，�
 * **`claude_code.interaction`：** 包裝代理迴圈的單個轉折，從接收提示到產生回應。
 * **`claude_code.llm_request`：** 包裝每個 Claude API 呼叫，將模型名稱、延遲和 token 計數作為屬性。
 * **`claude_code.tool`：** 包裝每個工具呼叫，具有權限等待的子 span（`claude_code.tool.blocked_on_user`）和執行本身（`claude_code.tool.execution`）。
-* **`claude_code.hook`：** 包裝每個 [hook](/docs/zh-TW/agent-sdk/hooks) 執行。除了上述變數外，還需要詳細的測試版追蹤（`ENABLE_BETA_TRACING_DETAILED=1` 和 `BETA_TRACING_ENDPOINT`）。
+* **`claude_code.hook`：** 包裝每個 [hook](/docs/zh-TW/agent-sdk/hooks) 執行。需要詳細的測試版追蹤（`ENABLE_BETA_TRACING_DETAILED=1` 和 `BETA_TRACING_ENDPOINT`），這一對也會[改變您的日誌和追蹤的去向](/docs/zh-TW/env-vars#variables)。
 
-`llm_request`、`tool` 和 `hook` span 是封閉 `claude_code.interaction` span 的子項。當代理通過 Task 工具生成子代理時，子代理的 `llm_request` 和 `tool` span 嵌套在父代理的 `claude_code.tool` span 下，因此完整的委派鏈顯示為一個追蹤。
+`llm_request`、`tool` 和 `hook` span 是封閉 `claude_code.interaction` span 的子項。當代理通過 Agent 工具生成子代理時，子代理的 `llm_request` 和 `tool` span 嵌套在父代理的 `claude_code.tool` span 下，因此完整的委派鏈顯示為一個追蹤。
 
-Span 預設帶有 `session.id` 屬性。當您對同一[工作階段](/docs/zh-TW/agent-sdk/sessions)進行多個 `query()` 呼叫時，在您的後端篩選 `session.id` 以將它們視為一個時間線。如果 `OTEL_METRICS_INCLUDE_SESSION_ID` 設定為假值，則省略該屬性。
+Span 預設帶有 `session.id` 屬性。當您對同一[工作階段](/docs/zh-TW/agent-sdk/sessions)進行多個 `query()` 呼叫時，在您的後端篩選 `session.id` 以將它們視為一個時間線。如果您將 `OTEL_METRICS_INCLUDE_SESSION_ID` 設定為假值，Claude Code 會省略該屬性。
 
 <Note>
   追蹤處於測試版。Span 名稱和屬性可能在版本之間變更。請參閱監控參考中的[追蹤（測試版）](/docs/zh-TW/monitoring-usage#traces-beta)以了解追蹤匯出器配置變數。
@@ -163,6 +165,8 @@ Span 預設帶有 `session.id` 屬性。當您對同一[工作階段](/docs/zh-T
 </h2>
 
 SDK 自動將 W3C 追蹤上下文傳播到 CLI 子程序。當您在應用程式中有活躍的 OpenTelemetry span 時呼叫 `query()`，SDK 會將 `TRACEPARENT` 和 `TRACESTATE` 注入子程序環境，CLI 讀取它們，使其 `claude_code.interaction` span 成為您的 span 的子項。代理執行隨後出現在您的應用程式追蹤中，而不是作為斷開連接的根。
+
+OTLP 事件日誌記錄在執行期間發出，並攜帶相同的追蹤上下文：設定 `TRACEPARENT` 後，每筆記錄的 `trace_id` 和 `span_id` 與您的應用程式追蹤相符，因此您可以在後端將[事件](/docs/zh-TW/monitoring-usage#events)連結到 span。在 v2.1.212 之前，在活躍 span 外發出的事件記錄不攜帶 `trace_id` 或 `span_id`。
 
 啟用追蹤上下文傳播時，CLI 還會將 `TRACEPARENT` 轉發到它執行的每個 Bash 和 PowerShell 命令。如果通過 Bash 工具啟動的命令發出自己的 OpenTelemetry span，這些 span 會嵌套在包裝該命令的 `claude_code.tool.execution` span 下。
 
@@ -193,7 +197,7 @@ SDK 自動將 W3C 追蹤上下文傳播到 CLI 子程序。當您在應用程式
       ...process.env,
       // ... 匯出器配置 ...
       OTEL_SERVICE_NAME: "support-triage-agent",
-      OTEL_RESOURCE_ATTRIBUTES":
+      OTEL_RESOURCE_ATTRIBUTES:
         "service.version=1.4.0,deployment.environment=production",
     },
   };
@@ -239,12 +243,12 @@ CLI 根據它用來呼叫 Anthropic 的認證將[身份屬性](/docs/zh-TW/monit
 
 遙測資料預設是結構化的。持續時間、模型名稱和工具名稱記錄在每個 span 上；token 計數在基礎 API 請求返回使用資料時記錄，因此失敗或中止請求的 span 可能會省略它們。您的代理讀取和寫入的內容預設不被記錄。這些選擇加入變數將內容新增到匯出的資料：
 
-| 變數                        | 新增內容                                                                                                                                                                                                                                        |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `OTEL_LOG_USER_PROMPTS=1` | `claude_code.user_prompt` 事件和 `claude_code.interaction` span 上的提示文字                                                                                                                                                                         |
-| `OTEL_LOG_TOOL_DETAILS=1` | `claude_code.tool_result` 事件上的工具輸入引數（檔案路徑、shell 命令、搜尋模式）                                                                                                                                                                                    |
-| `OTEL_LOG_TOOL_CONTENT=1` | `claude_code.tool` 上的完整工具輸入和輸出主體作為 span 事件，截斷為 60 KB。需要啟用[追蹤](#read-agent-traces)                                                                                                                                                           |
-| `OTEL_LOG_RAW_API_BODIES` | 完整的 Anthropic Messages API 請求和回應 JSON 作為 `claude_code.api_request_body` 和 `claude_code.api_response_body` 日誌事件。設定為 `1` 以獲得截斷為 60 KB 的內聯主體，或 `file:<dir>` 以在磁碟上獲得未截斷的主體，事件中有 `body_ref` 路徑。主體包括整個對話歷史記錄，並且已編輯了擴展思考內容。啟用此項意味著同意上述三個變數將揭示的所有內容 |
+| 變數                        | 新增內容                                                                                                                                                                                                                                                                                                                          |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `OTEL_LOG_USER_PROMPTS=1` | `claude_code.user_prompt` 事件和 `claude_code.interaction` span 上的提示文字                                                                                                                                                                                                                                                           |
+| `OTEL_LOG_TOOL_DETAILS=1` | `claude_code.tool_result` 事件上的工具輸入引數（檔案路徑、shell 命令、搜尋模式）                                                                                                                                                                                                                                                                      |
+| `OTEL_LOG_TOOL_CONTENT=1` | `claude_code.tool` 上的 [`tool.output` span 事件](/docs/zh-TW/monitoring-usage#tool-output-span-event)，包含檔案內容和 Bash 輸出，預設截斷為 60 KB，可透過 `CLAUDE_CODE_OTEL_CONTENT_MAX_LENGTH` 設定，需要 Claude Code v2.1.214 或更新版本。需要啟用[追蹤](#read-agent-traces)。Span 屬性在[其自身的閘道](/docs/zh-TW/monitoring-usage#new-context-gates)下攜帶工具內容                          |
+| `OTEL_LOG_RAW_API_BODIES` | 完整的 Anthropic Messages API 請求和回應 JSON 作為 `claude_code.api_request_body` 和 `claude_code.api_response_body` 日誌事件。設定為 `1` 以獲得截斷為 60 KB 的內聯主體（預設），或 `file:<dir>` 以在磁碟上獲得未截斷的主體，事件中有 `body_ref` 路徑。`CLAUDE_CODE_OTEL_CONTENT_MAX_LENGTH` 設定內聯截斷限制，並需要 Claude Code v2.1.214 或更新版本。主體包括整個對話歷史記錄，並且已編輯了擴展思考內容。啟用此項意味著同意上述三個變數將揭示的所有內容 |
 
 除非您的可觀測性管道已獲准儲存您的代理處理的資料，否則請保持這些未設定。請參閱監控參考中的[安全和隱私](/docs/zh-TW/monitoring-usage#security-and-privacy)以了解完整的屬性清單和編輯行為。
 

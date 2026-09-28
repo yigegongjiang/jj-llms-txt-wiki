@@ -2,1236 +2,825 @@
 > Fetch the complete documentation index at: https://code.claude.com/docs/llms.txt
 > Use this file to discover all available pages before exploring further.
 
-# Параметры Claude Code
+# Файлы параметров и приоритет
 
-> Настройте Claude Code с помощью глобальных и проектных параметров, а также переменных окружения.
+> Измените параметры Claude Code, выберите область, к которой принадлежит ключ, проверьте изменение и узнайте, какое значение Claude Code использует, когда ключ установлен в нескольких местах.
 
-Claude Code предлагает множество параметров для настройки его поведения в соответствии с вашими потребностями. Вы можете настроить Claude Code, выполнив команду `/config`, которая открывает интерфейс параметров с вкладками, где вы можете просмотреть информацию о состоянии и изменить параметры конфигурации. Начиная с версии 2.1.181, вы можете изменить один параметр без открытия интерфейса, передав `key=value` в `/config`, например `/config verbose=true`.
+export const SettingsPrecedence = () => {
+  const LEVELS = [{
+    n: 1,
+    name: 'Managed settings',
+    file: 'managed-settings.json, MDM, or the claude.ai console',
+    who: 'Your organization',
+    w: 390
+  }, {
+    n: 2,
+    name: 'Command line',
+    file: 'claude --settings',
+    who: 'You, this session',
+    w: 420
+  }, {
+    n: 3,
+    name: 'Project local',
+    file: '.claude/settings.local.json',
+    who: 'You, this project',
+    w: 480
+  }, {
+    n: 4,
+    name: 'Shared project',
+    file: '.claude/settings.json',
+    who: 'Everyone in the project',
+    w: 540
+  }, {
+    n: 5,
+    name: 'User',
+    file: '~/.claude/settings.json',
+    who: 'You, every project',
+    w: 600
+  }];
+  const W = 760;
+  const ROW = 58;
+  const GAP = 8;
+  const TOP = 34;
+  const H = TOP + LEVELS.length * (ROW + GAP) + 30;
+  const cx = W / 2;
+  const mono = 'var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace)';
+  const sans = 'var(--font-sans, system-ui, -apple-system, sans-serif)';
+  return <div className="sp-root not-prose" role="img" aria-label="Settings precedence, highest first: managed settings, command line, project local, shared project, user. A key set at a higher level overrides the same key set lower down.">
+      <style>{`
+        .sp-root { --sp-text: #1A1918; --sp-sub: #5E5D59; --sp-faint: #8A8880; --sp-fill: #F5F4EF; --sp-stroke: rgba(0,0,0,0.12); --sp-top: #D97757; --sp-top-fill: rgba(217,119,87,0.14); --sp-arrow: #8A8880; margin: 1.25rem 0; }
+        .dark .sp-root { --sp-text: #F1EFE9; --sp-sub: #B8B5AD; --sp-faint: #8A8880; --sp-fill: #24231F; --sp-stroke: rgba(255,255,255,0.12); --sp-top-fill: rgba(217,119,87,0.22); --sp-arrow: #8A8880; }
+        .sp-root svg { width: 100%; height: auto; display: block; max-width: ${W}px; margin: 0 auto; }
+      `}</style>
+      <svg viewBox={`0 0 ${W} ${H}`} xmlns="http://www.w3.org/2000/svg">
+        <text x={cx} y={18} textAnchor="middle" fontFamily={sans} fontSize="12.5" fontWeight="600" fill="var(--sp-sub)">Highest precedence</text>
+        {LEVELS.map((l, i) => {
+    const y = TOP + i * (ROW + GAP);
+    const x = cx - l.w / 2;
+    const top = i === 0;
+    return <g key={l.n}>
+              <rect x={x} y={y} width={l.w} height={ROW} rx={10} fill={top ? 'var(--sp-top-fill)' : 'var(--sp-fill)'} stroke={top ? 'var(--sp-top)' : 'var(--sp-stroke)'} strokeWidth={top ? 1.5 : 1} />
+              <text x={x + 14} y={y + 24} fontFamily={sans} fontSize="14" fontWeight="600" fill="var(--sp-text)">{l.n}. {l.name}</text>
+              <text x={x + 14} y={y + 43} fontFamily={mono} fontSize="11.5" fill="var(--sp-sub)">{l.file}</text>
+              <text x={x + l.w - 14} y={y + 24} textAnchor="end" fontFamily={sans} fontSize="12" fill="var(--sp-faint)">{l.who}</text>
+            </g>;
+  })}
+        <text x={cx} y={H - 10} textAnchor="middle" fontFamily={sans} fontSize="12.5" fontWeight="600" fill="var(--sp-sub)">Lowest precedence</text>
+        <g stroke="var(--sp-arrow)" strokeWidth="1.5" fill="none">
+          <line x1={W - 40} y1={TOP + 10} x2={W - 40} y2={H - 38} />
+          <path d={`M ${W - 46} ${TOP + 18} L ${W - 40} ${TOP + 10} L ${W - 34} ${TOP + 18}`} />
+        </g>
+        <text x={W - 40} y={H - 22} textAnchor="middle" fontFamily={sans} fontSize="10.5" fill="var(--sp-faint)">overrides</text>
+      </svg>
+    </div>;
+};
 
-<h2 id="configuration-scopes">
-  Области конфигурации
-</h2>
+export const SettingsScope = ({defaultSelected = 'project'}) => {
+  const FILES = [{
+    id: 'user',
+    path: '~/.claude/settings.json'
+  }, {
+    id: 'project',
+    path: 'acme-app/.claude/settings.json'
+  }, {
+    id: 'local',
+    path: 'acme-app/.claude/settings.local.json'
+  }, {
+    id: 'managed',
+    path: 'Managed settings',
+    ring: 'managed-settings.json, MDM, or the claude.ai console'
+  }];
+  const SHORT = {
+    user: '~/.claude/settings.json',
+    project: 'acme-app/.claude/settings.json',
+    local: 'acme-app/.claude/settings.local.json',
+    managed: 'managed-settings.json, MDM, or the claude.ai console'
+  };
+  const TILE_MARK = {
+    project: 'settings.json',
+    local: 'settings.local.json'
+  };
+  const initial = FILES.some(f => f.id === defaultSelected) ? defaultSelected : 'project';
+  const [sel, setSel] = useState(initial);
+  const [scale, setScale] = useState(1);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const rootRef = useRef(null);
+  const frameRef = useRef(null);
+  const CANVAS_W = 862;
+  const CANVAS_H = 240;
+  useEffect(() => {
+    const el = frameRef.current;
+    if (!el) return;
+    const measure = () => setScale(Math.min(1, el.clientWidth / CANVAS_W));
+    measure();
+    if (typeof ResizeObserver === 'undefined') {
+      window.addEventListener('resize', measure);
+      return () => window.removeEventListener('resize', measure);
+    }
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+  useEffect(() => {
+    const onFsChange = () => setIsFullscreen(!!document.fullscreenElement);
+    document.addEventListener('fullscreenchange', onFsChange);
+    return () => document.removeEventListener('fullscreenchange', onFsChange);
+  }, []);
+  const toggleFullscreen = () => {
+    if (!rootRef.current) return;
+    if (document.fullscreenElement) document.exitFullscreen(); else rootRef.current.requestFullscreen().catch(() => {});
+  };
+  const COVERAGE = {
+    user: ['website', 'api', 'yacme'],
+    project: ['yacme', 'tacme', 'cacme'],
+    local: ['yacme'],
+    managed: ['website', 'api', 'yacme', 'tacme', 'cacme']
+  };
+  const RINGS = {
+    local: {
+      l: 282,
+      t: 50,
+      w: 142,
+      h: 124
+    },
+    project: {
+      l: 282,
+      t: 50,
+      w: 560,
+      h: 124
+    },
+    user: {
+      l: 2,
+      t: 34,
+      w: 446,
+      h: 198
+    },
+    managed: {
+      l: 0,
+      t: 32,
+      w: 862,
+      h: 204
+    }
+  };
+  const TILES = [{
+    id: 'website',
+    name: 'website/',
+    left: 30,
+    caption: ''
+  }, {
+    id: 'api',
+    name: 'api/',
+    left: 160,
+    caption: ''
+  }, {
+    id: 'yacme',
+    name: 'acme-app/',
+    left: 290,
+    caption: ''
+  }, {
+    id: 'tacme',
+    name: 'acme-app/',
+    left: 497,
+    caption: sel === 'project' ? 'their clone, once you commit the file' : 'their clone'
+  }, {
+    id: 'cacme',
+    name: 'acme-app/',
+    left: 704,
+    caption: sel === 'project' ? 'fresh clone, once you commit the file' : sel === 'managed' ? 'server-managed only' : 'fresh clone'
+  }];
+  const FILE_AT = {
+    user: {
+      machine: 'you',
+      tiles: []
+    },
+    project: {
+      machine: null,
+      tiles: ['yacme', 'tacme', 'cacme']
+    },
+    local: {
+      machine: null,
+      tiles: ['yacme']
+    },
+    managed: {
+      machine: null,
+      tiles: []
+    }
+  };
+  const fileAt = FILE_AT[sel];
+  const coverage = COVERAGE[sel];
+  const ring = RINGS[sel];
+  const selFile = FILES.find(f => f.id === sel);
+  const FolderIcon = ({open}) => <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" aria-hidden="true">
+      <path d="M1.5 4.5a1 1 0 0 1 1-1h3.2l1.3 1.5h6a1 1 0 0 1 1 1V12a1 1 0 0 1-1 1h-10.5a1 1 0 0 1-1-1z" />
+      {open && <path d="M1.5 7.5h13" />}
+    </svg>;
+  const FileIcon = () => <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" aria-hidden="true">
+      <path d="M4 1.5h5.5L13 5v9.5H4z" />
+      <path d="M9.5 1.5V5H13" />
+    </svg>;
+  const CloudIcon = () => <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" aria-hidden="true">
+      <path d="M4.5 12.5h7a2.5 2.5 0 0 0 .4-4.97A3.5 3.5 0 0 0 5.2 6.6 3 3 0 0 0 4.5 12.5z" />
+    </svg>;
+  const LaptopIcon = () => <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" aria-hidden="true">
+      <rect x="2.5" y="3" width="11" height="7.5" rx="1" />
+      <path d="M1 12.5h14" />
+    </svg>;
+  return <div ref={rootRef} className={'ssc-root not-prose' + (isFullscreen ? ' ssc-fs' : '')}>
+      <style>{`
+        .ssc-root {
+          --ssc-bg: #FFFFFF;
+          --ssc-text: #1A1918;
+          --ssc-sub: #5E5D59;
+          --ssc-faint: #8A8880;
+          --ssc-border: rgba(0,0,0,0.12);
+          --ssc-panel: #F5F4EF;
+          --ssc-tile: #FAFAF8;
+          --ssc-clay: #D97757;
+          --ssc-clay-bg: rgba(217,119,87,0.14);
+          --ssc-label: #B0562F;
+          --ssc-hover: rgba(115,114,108,0.10);
+          font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
+          background: var(--ssc-bg);
+          color: var(--ssc-text);
+          border: 1px solid var(--ssc-border);
+          border-radius: 16px;
+          padding: 20px 24px 24px;
+          margin: 1.5rem 0;
+          box-sizing: border-box;
+        }
+        .dark .ssc-root {
+          --ssc-bg: #1B1A18;
+          --ssc-text: #F1EFE9;
+          --ssc-sub: #B8B5AD;
+          --ssc-faint: #8A8880;
+          --ssc-border: rgba(255,255,255,0.12);
+          --ssc-panel: #24231F;
+          --ssc-tile: #2A2925;
+          --ssc-clay-bg: rgba(217,119,87,0.20);
+          --ssc-label: #EBC9B7;
+        }
+        .ssc-fs { display: flex; flex-direction: column; justify-content: center; align-items: center; margin: 0; border-radius: 0; height: 100vh; }
+        .ssc-fs .ssc-head { width: 100%; max-width: ${CANVAS_W}px; }
+        .ssc-fs .ssc-frame { width: 100%; }
+        .ssc-mono { font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace); }
+        .ssc-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 20px; }
+        .ssc-files { display: flex; gap: 8px; flex-wrap: wrap; }
+        .ssc-file {
+          font-size: 12.5px; font-weight: 430; padding: 8px 13px; border-radius: 10px; cursor: pointer;
+          border: 0.5px solid var(--ssc-border); background: var(--ssc-tile); color: var(--ssc-text);
+          white-space: nowrap; transition: background 0.2s, border-color 0.2s;
+        }
+        .ssc-file:hover { filter: brightness(0.97); }
+        .ssc-file[aria-pressed="true"] { font-weight: 600; border: 1.5px solid var(--ssc-clay); background: var(--ssc-clay-bg); }
+        .ssc-fsbtn {
+          display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; flex-shrink: 0;
+          border: none; background: none; border-radius: 6px; cursor: pointer; color: var(--ssc-faint); font-size: 15px;
+        }
+        .ssc-fsbtn:hover { background: var(--ssc-hover); }
+        .ssc-frame { width: 100%; max-width: ${CANVAS_W}px; margin: 0 auto; }
+        .ssc-canvas { position: relative; width: ${CANVAS_W}px; height: ${CANVAS_H}px; transform-origin: top left; }
+        .ssc-machine { position: absolute; top: 42px; height: 182px; background: var(--ssc-panel); border-radius: 16px; }
+        .ssc-machine-label { position: absolute; top: 192px; display: flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; }
+        .ssc-tile {
+          position: absolute; top: 58px; width: 126px; height: 108px; border-radius: 12px; padding: 11px 12px; box-sizing: border-box;
+          background: var(--ssc-tile); border: 0.5px solid var(--ssc-border); opacity: 0.6;
+          transition: background 0.25s, border-color 0.25s, opacity 0.25s;
+        }
+        .ssc-tile.ssc-on { background: var(--ssc-clay-bg); border: 1px solid var(--ssc-clay); opacity: 1; }
+        .ssc-tile-name { display: flex; align-items: center; gap: 6px; color: var(--ssc-faint); }
+        .ssc-tile.ssc-on .ssc-tile-name { color: var(--ssc-clay); }
+        .ssc-tile-name span { font-size: 12px; font-weight: 430; white-space: nowrap; color: var(--ssc-text); }
+        .ssc-tile.ssc-on .ssc-tile-name span { font-weight: 600; }
+        .ssc-tile-caption { font-size: 10.5px; color: var(--ssc-sub); margin-top: 5px; line-height: 1.35; }
+        .ssc-filemark {
+          position: absolute; left: 5px; right: 5px; bottom: 8px; display: inline-flex; align-items: center; justify-content: center; gap: 2px;
+          font-size: 8.5px; color: var(--ssc-label); background: var(--ssc-bg); border: 1px solid var(--ssc-clay);
+          border-radius: 6px; padding: 2px 3px; white-space: nowrap; overflow: hidden;
+        }
+        .ssc-filemark svg { flex-shrink: 0; }
+        .ssc-machine-filemark { display: inline-flex; align-items: center; gap: 4px; margin-left: 10px; font-size: 10.5px; font-weight: 500; color: var(--ssc-label); }
+        .ssc-ring {
+          position: absolute; border: 2px solid var(--ssc-clay); border-radius: 18px; pointer-events: none;
+          transition: left 0.35s ease, top 0.35s ease, width 0.35s ease, height 0.35s ease;
+        }
+        .ssc-ring-label {
+          position: absolute; font-size: 12px; font-weight: 600; color: var(--ssc-label); white-space: nowrap; pointer-events: none;
+          transition: left 0.35s ease, top 0.35s ease;
+        }
+      `}</style>
 
-Claude Code использует систему областей для определения того, где применяются конфигурации и с кем они совместно используются. Понимание областей помогает вам решить, как настроить Claude Code для личного использования, командного сотрудничества или развертывания на уровне предприятия.
+      <div className="ssc-head">
+        <div className="ssc-files" role="group" aria-label="Settings file">
+          {FILES.map(f => <button key={f.id} type="button" className="ssc-file ssc-mono" aria-pressed={f.id === sel} onClick={() => setSel(f.id)}>{f.path}</button>)}
+        </div>
+        <button type="button" className="ssc-fsbtn" onClick={toggleFullscreen} aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'} title={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}>{isFullscreen ? '⤡' : '⛶'}</button>
+      </div>
 
-<h3 id="available-scopes">
-  Доступные области
-</h3>
+      <div ref={frameRef} className="ssc-frame" style={{
+    height: CANVAS_H * scale + 'px'
+  }}>
+        <div className="ssc-canvas" style={{
+    transform: 'scale(' + scale + ')'
+  }}>
+          <div className="ssc-machine" style={{
+    left: '10px',
+    width: '430px'
+  }} />
+          <span className="ssc-machine-label" style={{
+    left: '30px'
+  }}><LaptopIcon />Your machine{fileAt.machine === 'you' && <span className="ssc-machine-filemark ssc-mono"><FileIcon />{selFile.path}</span>}</span>
+          <div className="ssc-machine" style={{
+    left: '460px',
+    width: '200px'
+  }} />
+          <span className="ssc-machine-label" style={{
+    left: '470px'
+  }}><LaptopIcon />A teammate’s machine</span>
+          <div className="ssc-machine" style={{
+    left: '682px',
+    width: '170px'
+  }} />
+          <span className="ssc-machine-label" style={{
+    left: '692px'
+  }}><CloudIcon />A cloud session</span>
 
-| Область     | Местоположение                                                                                | На кого это влияет                                                                                                                                                             | Совместно используется с командой?                          |
-| :---------- | :-------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------- |
-| **Managed** | Параметры, управляемые сервером, plist / реестр или системный уровень `managed-settings.json` | Все члены организации для доставки, управляемой сервером; все пользователи на машине для plist, реестра HKLM и доставки файлов; текущий пользователь для доставки реестра HKCU | Да (развернуто IT)                                          |
-| **User**    | Каталог `~/.claude/`                                                                          | Вы, во всех проектах                                                                                                                                                           | Нет                                                         |
-| **Project** | `.claude/` в репозитории                                                                      | Все сотрудники этого репозитория                                                                                                                                               | Да (зафиксировано в git)                                    |
-| **Local**   | `.claude/settings.local.json`                                                                 | Вы, только в этом репозитории                                                                                                                                                  | Нет (игнорируется gitignore, когда Claude Code его создает) |
+          {TILES.map(t => {
+    const on = coverage.includes(t.id);
+    return <div key={t.id} className={'ssc-tile' + (on ? ' ssc-on' : '')} style={{
+      left: t.left + 'px'
+    }}>
+                <div className="ssc-tile-name"><FolderIcon open={on} /><span className="ssc-mono">{t.name}</span></div>
+                {t.caption && <div className="ssc-tile-caption">{t.caption}</div>}
+                {fileAt.tiles.includes(t.id) && <span className="ssc-filemark ssc-mono" title={SHORT[sel]}><FileIcon />{TILE_MARK[sel]}</span>}
+              </div>;
+  })}
 
-<h3 id="when-to-use-each-scope">
-  Когда использовать каждую область
-</h3>
+          <div className="ssc-ring" style={{
+    left: ring.l + 'px',
+    top: ring.t + 'px',
+    width: ring.w + 'px',
+    height: ring.h + 'px'
+  }} />
+          <span className="ssc-ring-label ssc-mono" style={{
+    left: ring.l + 14 + 'px',
+    top: ring.t - 26 + 'px'
+  }}>{selFile.ring || selFile.path}</span>
+        </div>
+      </div>
+    </div>;
+};
 
-**Область Managed** предназначена для:
+Параметры — это ключи JSON, которые изменяют поведение Claude Code: какую модель он запускает, что он может запустить без запроса, какие файлы он не может читать, как он выглядит в вашем терминале и что ваша организация требует.
 
-* Политик безопасности, которые должны быть применены на уровне организации
-* Требований соответствия, которые нельзя переопределить
-* Стандартизированных конфигураций, развернутых IT/DevOps
+<Tip>
+  Чтобы найти конкретный ключ, перейдите на [Все параметры](/docs/ru/settings-reference), где перечислены все ключи с файлом, в котором вы их устанавливаете, значением по умолчанию и примером.
+</Tip>
 
-**Область User** лучше всего подходит для:
-
-* Личных предпочтений, которые вы хотите везде (темы, параметры редактора)
-* Инструментов и plugins, которые вы используете во всех проектах
-* Ключей API и аутентификации (хранятся безопасно)
-
-**Область Project** лучше всего подходит для:
-
-* Параметров, совместно используемых командой (разрешения, hooks, MCP servers)
-* Plugins, которые должна иметь вся команда
-* Стандартизации инструментов между сотрудниками
-
-**Область Local** лучше всего подходит для:
-
-* Личных переопределений для конкретного проекта
-* Тестирования конфигураций перед совместным использованием с командой
-* Параметров, специфичных для машины, которые не будут работать для других
-
-<h3 id="how-scopes-interact">
-  Как области взаимодействуют
-</h3>
-
-Когда один и тот же параметр появляется в нескольких областях, Claude Code применяет их в порядке приоритета:
-
-1. **Managed** (наивысший): не может быть переопределена ничем
-2. **Аргументы командной строки**: временные переопределения сеанса
-3. **Local**: переопределяет параметры проекта и пользователя
-4. **Project**: переопределяет параметры пользователя
-5. **User** (наименьший): применяется, когда ничто другое не указывает параметр
-
-Например, если параметры пользователя устанавливают `spinnerTipsEnabled` в `true`, а параметры проекта устанавливают его в `false`, применяется значение проекта. Правила разрешений ведут себя иначе, потому что они объединяются в областях, а не переопределяют друг друга. См. [Приоритет параметров](#settings-precedence).
-
-<h3 id="what-uses-scopes">
-  Что использует области
-</h3>
-
-Области применяются ко многим функциям Claude Code:
-
-| Функция         | Местоположение пользователя | Местоположение проекта              | Местоположение Local                   |
-| :-------------- | :-------------------------- | :---------------------------------- | :------------------------------------- |
-| **Settings**    | `~/.claude/settings.json`   | `.claude/settings.json`             | `.claude/settings.local.json`          |
-| **Subagents**   | `~/.claude/agents/`         | `.claude/agents/`                   | Нет                                    |
-| **MCP servers** | `~/.claude.json`            | `.mcp.json`                         | `~/.claude.json` (для каждого проекта) |
-| **Plugins**     | `~/.claude/settings.json`   | `.claude/settings.json`             | `.claude/settings.local.json`          |
-| **CLAUDE.md**   | `~/.claude/CLAUDE.md`       | `CLAUDE.md` или `.claude/CLAUDE.md` | `CLAUDE.local.md`                      |
-
-На Windows пути, отображаемые как `~/.claude`, разрешаются в `%USERPROFILE%\.claude`.
-
-***
-
-<h2 id="settings-files">
-  Файлы параметров
-</h2>
-
-Файл `settings.json` является официальным механизмом для настройки Claude Code через иерархические параметры:
-
-* **Параметры пользователя** определяются в `~/.claude/settings.json` и применяются ко всем проектам.
-* **Параметры проекта** сохраняются в каталоге вашего проекта:
-  * `.claude/settings.json` для параметров, которые проверяются в системе управления версиями и совместно используются с вашей командой
-  * `.claude/settings.local.json` для параметров, которые не проверяются, полезны для личных предпочтений и экспериментов. Когда Claude Code создает `.claude/settings.local.json`, он настраивает git на игнорирование файла. Если вы создаете файл самостоятельно, добавьте его в gitignore вручную.
-
-    Поскольку этот файл принадлежит вам, а не репозиторию, его правила разрешения `allow` вступают в силу без этапа [доверия рабочей области](/docs/ru/permissions#project-allow-rules-and-workspace-trust), который требуют правила разрешения `.claude/settings.json`. Если репозиторий предоставляет файл, например путем его фиксации, доверие рабочей области по-прежнему применяется.
-* **Управляемые параметры**: Для организаций, которым требуется централизованное управление, Claude Code поддерживает несколько механизмов доставки управляемых параметров. Все используют один и тот же формат JSON и не могут быть переопределены параметрами пользователя или проекта:
-
-  * **Параметры, управляемые сервером**: доставляются удаленно при входе либо с серверов Anthropic через консоль администратора claude.ai, либо с самостоятельно размещенного [Claude apps gateway](/docs/ru/claude-apps-gateway). См. [параметры, управляемые сервером](/docs/ru/server-managed-settings).
-  * **Политики MDM/OS-уровня**: доставляются через встроенное управление устройствами на macOS и Windows:
-    * macOS: домен управляемых предпочтений `com.anthropic.claudecode`. Ключи верхнего уровня plist отражают `managed-settings.json`, с вложенными параметрами как словари и массивы как plist массивы. Развертывание через профили конфигурации в Jamf, Iru (Kandji) или аналогичных инструментах MDM.
-    * Windows: ключ реестра `HKLM\SOFTWARE\Policies\ClaudeCode` со значением `Settings` (REG\_SZ или REG\_EXPAND\_SZ), содержащим JSON (развернуто через групповую политику или Intune)
-    * Windows (уровень пользователя): `HKCU\SOFTWARE\Policies\ClaudeCode` (наименьший приоритет политики, используется только при отсутствии источника на уровне администратора)
-  * **На основе файлов**: `managed-settings.json` и `managed-mcp.json`, развернутые в системные каталоги:
-
-    * macOS: `/Library/Application Support/ClaudeCode/`
-    * Linux и WSL: `/etc/claude-code/`
-    * Windows: `C:\Program Files\ClaudeCode\`
-
-    <Warning>
-      Устаревший путь Windows `C:\ProgramData\ClaudeCode\managed-settings.json` больше не поддерживается с версии v2.1.75. Администраторы, которые развернули параметры в этом местоположении, должны перенести файлы в `C:\Program Files\ClaudeCode\managed-settings.json`.
-    </Warning>
-
-    Управляемые параметры на основе файлов также поддерживают каталог drop-in в `managed-settings.d/` в том же системном каталоге рядом с `managed-settings.json`. Это позволяет отдельным командам развертывать независимые фрагменты политики без координации редактирования одного файла.
-
-    Следуя соглашению systemd, `managed-settings.json` объединяется первым как база, затем все файлы `*.json` в каталоге drop-in сортируются в алфавитном порядке и объединяются сверху. Более поздние файлы переопределяют более ранние для скалярных значений; массивы объединяются и дедублицируются; объекты глубоко объединяются. Скрытые файлы, начинающиеся с `.`, игнорируются.
-
-    Используйте числовые префиксы для управления порядком объединения, например `10-telemetry.json` и `20-security.json`.
-
-  См. [управляемые параметры](/docs/ru/permissions#managed-only-settings) и [Управляемая конфигурация MCP](/docs/ru/managed-mcp) для получения подробной информации.
-
-  Этот [репозиторий](https://github.com/anthropics/claude-code/tree/main/examples/mdm) включает начальные шаблоны развертывания для Jamf, Iru (Kandji), Intune и Group Policy. Используйте их как отправные точки и адаптируйте их в соответствии с вашими потребностями.
-
-  <Note>
-    Управляемые развертывания также могут ограничивать **добавления на marketplace plugins** с помощью `strictKnownMarketplaces`. Для получения дополнительной информации см. [Управляемые ограничения marketplace](/docs/ru/plugin-marketplaces#managed-marketplace-restrictions).
-  </Note>
-* **Другая конфигурация** хранится в `~/.claude.json`. Этот файл содержит ваш сеанс OAuth, конфигурации [MCP server](/docs/ru/mcp) для областей пользователя и локальной области, состояние для каждого проекта (разрешенные инструменты, параметры доверия) и различные кэши. MCP servers с областью проекта хранятся отдельно в `.mcp.json`.
+Claude Code читает параметры из файлов параметров JSON, таких как `~/.claude/settings.json`. Он ищет их в нескольких местах, и [файл, из которого он читает параметр, определяет, к кому применяется параметр](#settings-files-and-who-they-affect). На этой странице рассматриваются эти файлы: в какой из них поместить параметр, как изменить параметр и подтвердить его применение, и какое значение Claude Code использует, когда один и тот же ключ установлен в более чем одном файле. [Настройка разрешений](/docs/ru/permissions) охватывает то, что Claude Code может запустить без запроса, и как писать правила `allow`, `ask` и `deny`.
 
 <Note>
-  Claude Code автоматически создает резервные копии файлов конфигурации с временными метками и сохраняет пять самых последних резервных копий для предотвращения потери данных.
+  На этой странице рассматривается Claude Code, работающий на вашей машине: терминал, расширения [VS Code](/docs/ru/vs-code) и [JetBrains](/docs/ru/jetbrains), а также [приложение desktop](/docs/ru/desktop), которые все читают одни и те же файлы параметров. Облачный сеанс на [Claude Code в веб-версии](/docs/ru/claude-code-on-the-web) работает на другой машине и читает только некоторые из них; см. [Параметры в облачных сеансах](#settings-in-cloud-sessions).
 </Note>
 
-```JSON Пример settings.json theme={null}
+<span id="settings-files" />
+
+<span id="configuration-scopes" />
+
+<span id="available-scopes" />
+
+<span id="when-to-use-each-scope" />
+
+<span id="what-uses-scopes" />
+
+<span id="subagent-configuration" />
+
+<span id="where-settings-live" />
+
+<h2 id="settings-files-and-who-they-affect">
+  Файлы параметров и кого они затрагивают
+</h2>
+
+Claude Code читает параметры из четырёх файлов, и организация также может доставлять управляемые параметры из консоли claude.ai. Каждый источник имеет область действия: набор людей и проектов, к которым применяется параметр, сохранённый в нём, будь то только вы, все в проекте или все в вашей организации.
+
+| Область действия | Файл                                                                                               | Кого это затрагивает                                                                                                                                                                                            | Используйте для                                                                                      |
+| :--------------- | :------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------- |
+| Пользователь     | `~/.claude/settings.json`                                                                          | Вас, в каждом проекте на этой машине                                                                                                                                                                            | Личные предпочтения: тема, режим редактора, модель по умолчанию, ваши собственные правила разрешений |
+| Общий проект     | `.claude/settings.json`                                                                            | Всех, кто работает в папке, которая его содержит. В репозитории git зафиксируйте его, чтобы товарищи по команде его получили                                                                                    | Разрешения команды, hooks, plugins и переменные окружения, которые нужны проекту                     |
+| Локальный проект | `.claude/settings.local.json`                                                                      | Вас, только в этом одном проекте. Claude Code исключает его из git при создании файла; если вы создадите его вручную, добавьте его в `.gitignore` сами                                                          | Личные переопределения для одного проекта и тестирование перед тем, как вы поделитесь                |
+| Управляемый      | `managed-settings.json` и другие [управляемые источники](/docs/ru/managed-settings#delivery-mechanisms) | Всех, кому ваша организация его развёртывает; ничто из того, что вы установили, его не переопределяет, кроме нескольких [исключений, чувствительных к безопасности](#exceptions-to-managed-settings-precedence) | Требования политики безопасности и соответствия                                                      |
+
+В столбце File `~/.claude` — это папка `.claude` в вашем домашнем каталоге, а простой `.claude` — это папка `.claude` внутри вашего проекта.
+
+<span id="where-each-file-applies" />
+
+<span id="compare-what-each-file-reaches" />
+
+<h3 id="compare-the-scope-of-each-settings-file">
+  Сравните область действия каждого файла параметров
+</h3>
+
+Предположим, у вас есть три проекта на вашей машине: `website/`, `api/` и `acme-app/`, товарищ по команде имеет свой собственный клон `acme-app/`, и вы запускаете [облачный сеанс](#settings-in-cloud-sessions) на `acme-app/`.
+
+На графике ниже показано, в каких из этих папок применяется параметр при запуске Claude Code из них. Нажмите на файл параметров, чтобы увидеть папки, которые он охватывает.
+
+<SettingsScope />
+
+* **`~/.claude/settings.json`**: каждый проект на вашей машине, и ничего на машине вашего товарища или в облачном сеансе
+* **`acme-app/.claude/settings.json`**: ваш `acme-app/`. Он охватывает клон вашего товарища и облачный сеанс только если вы зафиксируете файл в системе контроля версий; до этого это файл на вашем диске, как и любой другой, и никто другой его не имеет
+* **`acme-app/.claude/settings.local.json`**: только ваш `acme-app/`. Claude Code добавляет его в ваши глобальные исключения git при первом написании файла, поэтому он остаётся вне ваших коммитов; если вы создадите файл вручную, [добавьте его в `.gitignore` сами](#keep-personal-settings-out-of-a-repository)
+* **Управляемые параметры**, будь то файл `managed-settings.json`, политика MDM или [управляемые сервером параметры](/docs/ru/server-managed-settings) из консоли claude.ai: каждый проект на каждой машине, на которую ваша организация его развёртывает, или на которую вы входите с учётной записью вашей организации. Только управляемые сервером параметры охватывают облачный сеанс
+
+<span id="which-files-you-have" />
+
+<h3 id="find-or-create-your-settings-files">
+  Найдите или создайте ваши файлы параметров
+</h3>
+
+Установка Claude Code не создаёт никакой файл параметров. Если на вашей машине или в проекте уже есть один, он пришёл из одного из этих источников:
+
+* **Управляемый**: ваша организация его развёртывает. Вы его не создаёте и не редактируете.
+* **Общий проект**: проект, который уже использует Claude Code, может иметь один зафиксированный. Если нет, создайте его в `.claude/settings.json` в папке проекта.
+* **Пользователь** и **Локальный проект**: создайте их сами или позвольте Claude Code их создать. Он записывает `~/.claude/settings.json` при первом изменении опции в меню `/config`, которую он сохраняет в пользовательские параметры, такой как тема, и `.claude/settings.local.json` при первом предоставлении постоянного одобрения на запрос разрешения, такой как "Да, и больше не спрашивайте" для команды Bash. Несколько опций `/config`, включая **Show tips**, сохраняются в `.claude/settings.local.json` вместо файла пользователя.
+
+<Info>
+  На Windows `~/.claude` означает `%USERPROFILE%\.claude`. Чтобы хранить файлы домашнего каталога в другом месте, установите [`CLAUDE_CONFIG_DIR`](/docs/ru/env-vars); Claude Code затем сохраняет ваши параметры, историю сеансов и plugins там вместо этого.
+</Info>
+
+Claude Code также хранит пятый файл, [`~/.claude.json`](/docs/ru/claude-directory#ce-claude-json), который он записывает для себя; вам не нужно его редактировать. Он содержит вашу сессию входа, конфигурации [MCP server](/docs/ru/mcp), состояние для каждого проекта, такое как решения о доверии, и [глобальные ключи конфигурации](/docs/ru/settings-reference#global-config-settings), которые `/config` записывает для вас.
+
+<h3 id="share-settings-with-your-team">
+  Поделитесь параметрами с вашей командой
+</h3>
+
+Зафиксируйте `.claude/settings.json`, чтобы все, кто клонирует репозиторий, получили одинаковые разрешения, hooks и plugins. Каждый товарищ по команде всё ещё может переопределить его для себя в своём собственном `.claude/settings.local.json`, поэтому личные исключения не нуждаются в коммите. Для полного файла команды см. [общие параметры команды](/docs/ru/settings-example#a-teams-shared-settings).
+
+Некоторые из того, что вы зафиксируете, ждут, пока каждый товарищ по команде [доверит папку](/docs/ru/permissions#project-allow-rules-and-workspace-trust), и несколько ключей никогда не вступают в силу из файла репозитория; [Troubleshoot a setting that doesn't apply](#common-cases) охватывает оба случая.
+
+<span id="local-settings-file" />
+
+<span id="where-claude-code-saves-the-project-local-file" />
+
+<span id="the-project-local-file" />
+
+<span id="keep-personal-settings-out-of-the-repository" />
+
+<h3 id="keep-personal-settings-out-of-a-repository">
+  Держите личные параметры вне репозитория
+</h3>
+
+Чтобы изменить параметр для себя в одном проекте без изменения его для товарищей по команде, сохраните его в `.claude/settings.local.json` внутри проекта. Claude Code применяет этот файл поверх зафиксированного `.claude/settings.json`, поэтому если файл вашей команды устанавливает `"model": "claude-sonnet-5"` и вы хотите Opus, поместите `"model": "claude-opus-5-5"` в ваш локальный файл и только ваши сеансы изменятся.
+
+Claude Code также записывает в этот файл, держит его вне ваших коммитов и применяет его правила разрешений без шага доверия:
+
+* **Claude Code также его записывает.** Когда Claude просит разрешение запустить команду Bash и вы выбираете "Да, и больше не спрашивайте", Claude Code сохраняет это [одобрение разрешения](/docs/ru/permissions#permission-system) здесь как правило `allow`.
+* **Вам не нужно его gitignore самостоятельно, если только вы не создали его вручную.** При первом написании файла Claude Code в репозитории git, который его ещё не игнорирует, он добавляет `**/.claude/settings.local.json` в ваш глобальный файл исключений git, поэтому файл остаётся вне ваших коммитов в каждом репозитории. Этот файл — это `core.excludesFile`, когда ваша глобальная конфигурация git устанавливает его на абсолютный путь или путь с префиксом `~`; в противном случае это `$XDG_CONFIG_HOME/git/ignore`, или `~/.config/git/ignore`, когда `XDG_CONFIG_HOME` не установлен. Если вы создали файл вручную и Claude Code ещё не писал в него, добавьте его в `.gitignore` сами.
+* **Его правила allow не ждут доверия, пока файл остаётся неотслеживаемым.** Поскольку файл принадлежит вам, а не репозиторию, Claude Code применяет его правила `allow` без шага [workspace trust](/docs/ru/permissions#project-allow-rules-and-workspace-trust), который он требует для зафиксированного файла. Если файл отслеживается git, шаг доверия применяется к нему также; см. [When your local settings file needs trust](/docs/ru/permissions#when-your-local-settings-file-needs-trust).
+
+<span id="where-claude-code-looks-for-each-file" />
+
+<span id="how-claude-code-keeps-the-local-file-out-of-git" />
+
+<span id="local-allow-rules-dont-wait-for-workspace-trust" />
+
+<h4 id="where-claude-code-keeps-the-local-file-in-a-git-repository">
+  Где Claude Code хранит локальный файл в репозитории git
+</h4>
+
+Когда Claude просит разрешение запустить команду Bash и вы выбираете "Да, и больше не спрашивайте", Claude Code сохраняет это одобрение как правило `allow` в `.claude/settings.local.json`. Если вы запускаете Claude Code в подкаталоге репозитория git, он читает и записывает этот файл в корень репозитория и применяет одобрение по всему репозиторию. В [worktree](/docs/ru/worktrees) он использует файл в корне основного checkout.
+
+Два правила уточняют расположение корня:
+
+* **Когда файл остаётся с `.claude/settings.json` вместо этого**: вне репозитория git, когда корень репозитория — это ваш домашний каталог, на Windows или когда корень репозитория или его запись `.git` или `.claude` не принадлежит вашему пользователю.
+* **Пути в файле не привязаны к корню репозитория**: правило разрешения, которое начинается с `/` или относительный путь sandbox [привязывается к основному рабочему каталогу сеанса](/docs/ru/permissions#read-and-edit) вместо этого.
+
+До v2.1.211 Claude Code хранил файл в начальном каталоге. Он всё ещё читает файл, который более ранняя версия оставила там рядом с файлом корня; где оба устанавливают один и тот же ключ, применяется значение корня, и правила разрешений из обоих файлов применяются. Помощник Agent SDK [`resolveSettings()`](/docs/ru/agent-sdk/typescript#resolvesettings) всегда читает файл из начального каталога.
+
+Claude Code читает общий `.claude/settings.json` из [основного рабочего каталога](/docs/ru/permissions#working-directories) сеанса, поэтому для использования файла, зафиксированного в корне репозитория, запустите Claude Code там. После того как вы [переместите сеанс с `/cd`](/docs/ru/permissions#move-the-session-to-another-directory), Claude Code читает оба файла проекта из нового каталога вместо этого, размещая локальный файл по тем же правилам. Чтение их из каталога, в который вы переместились, требует Claude Code v2.1.246 или позже.
+
+<span id="managed-settings-delivery" />
+
+<span id="precedence-within-the-managed-tier" />
+
+<span id="parent-settings-from-embedding-hosts" />
+
+<span id="enforce-settings-for-an-organization" />
+
+<span id="settings-your-organization-manages" />
+
+<h3 id="check-what-your-organization-enforces">
+  Проверьте, что ваша организация требует
+</h3>
+
+Если ваша организация управляет Claude Code, некоторые параметры решены за вас и ничто из того, что вы поместили в ваши собственные файлы, их не изменяет. Чтобы увидеть, какие, запустите `/status`: строка `Setting sources` называет управляемый источник, который применяется к вам. Управляемые параметры применяются везде, где Claude Code работает на этой машине; [What a developer can change](/docs/ru/managed-settings#what-a-developer-can-change) охватывает права локального администратора и инструменты, отличные от Claude Code.
+
+Управляемые параметры достигают вас через [механизмы доставки](/docs/ru/managed-settings#delivery-mechanisms) на странице управляемых параметров, чаще всего:
+
+* [Server-managed settings](/docs/ru/server-managed-settings), которые Claude Code получает из консоли администратора claude.ai или самостоятельно размещённого [Claude apps gateway](/docs/ru/claude-apps-gateway)
+* Политики MDM или уровня ОС и файлы `managed-settings.json` в системном каталоге
+* Хост встраивания, такой как Claude Desktop, через опцию SDK `managedSettings`; см. [Control policy from an embedding host](/docs/ru/managed-settings#parent-settings-from-embedding-hosts)
+
+В сеансе [Cowork](https://claude.com/docs/cowork/overview), который работает на вашей машине в приложении Claude Desktop, Claude Code не получает управляемые сервером параметры из консоли администратора claude.ai и читает политику, развёрнутую на вашем устройстве, если конфигурация Claude Desktop вашей организации не устанавливает `requireCoworkFullVmSandbox`. [Where and when a policy applies](/docs/ru/managed-settings#where-and-when-a-policy-applies) охватывает Cowork и облачные сеансы.
+
+Если вы администратор, [Set up Claude Code for your organization](/docs/ru/admin-setup) проходит через выбор того, что требуется применить, и [Deploy managed settings](/docs/ru/managed-settings) охватывает доставку и как подтвердить, что политика действует.
+
+<h2 id="change-a-setting">
+  Измените параметр
+</h2>
+
+Вы можете изменить параметр из меню `/config`, редактируя файл параметров или для одного сеанса из командной строки.
+
+<span id="system-prompt" />
+
+Системный запрос Claude Code не опубликован. Чтобы дать Claude постоянные инструкции, используйте файлы [`CLAUDE.md`](/docs/ru/memory) или флаг `--append-system-prompt`.
+
+<h3 id="use-the-/config-menu">
+  Используйте меню /config
+</h3>
+
+Запустите `/config` внутри Claude Code и откройте вкладку **Config**. Она перечисляет короткий набор личных опций, таких как тема, режим редактора и подробный вывод, не каждый ключ параметров. Выберите опцию для ее изменения; Claude Code сохраняет ее для вас:
+
+* **Большинство опций**: `~/.claude/settings.json`
+* **Несколько опций, таких как Show tips**: `.claude/settings.local.json`
+* **[Глобальные опции конфигурации](/docs/ru/settings-reference#global-config-settings)**: `~/.claude.json`
+
+Чтобы установить одну опцию без меню, передайте `key=value`, такой как `/config verbose=true`.
+
+<Note>
+  `/config` является частью интерфейса терминала. Панель чата [VS Code](/docs/ru/vs-code) и [приложение desktop](/docs/ru/desktop) его не открывают; измените параметры там, отредактировав файл параметров или через собственные параметры этих приложений.
+</Note>
+
+<h3 id="edit-a-settings-file">
+  Отредактируйте файл параметров
+</h3>
+
+Откройте файл параметров для области, которую вы хотите, в вашем редакторе и добавьте или измените ключ. Файлы параметров — это строгий JSON: комментарий `//` или запятая в конце — это синтаксическая ошибка, и Claude Code сообщает файл как [Settings Error](#fix-a-broken-settings-file) при следующем запуске. Например, чтобы позволить Claude Code запускать ваши команды lint и test без запроса и остановить его чтение файлов `.env`, добавьте это в `~/.claude/settings.json`:
+
+```json ~/.claude/settings.json theme={null}
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "permissions": {
     "allow": [
       "Bash(npm run lint)",
-      "Bash(npm run test *)",
-      "Read(~/.zshrc)"
+      "Bash(npm run test *)"
     ],
     "deny": [
-      "Bash(curl *)",
       "Read(./.env)",
-      "Read(./.env.*)",
-      "Read(./secrets/**)"
+      "Read(./.env.*)"
     ]
-  },
-  "env": {
-    "CLAUDE_CODE_ENABLE_TELEMETRY": "1",
-    "OTEL_METRICS_EXPORTER": "otlp"
-  },
-  "companyAnnouncements": [
-    "Welcome to Acme Corp! Review our code guidelines at docs.acme.com",
-    "Reminder: Code reviews required for all PRs",
-    "New security policy in effect"
-  ]
+  }
 }
 ```
 
-Строка `$schema` в примере выше указывает на [официальную JSON-схему](https://json.schemastore.org/claude-code-settings.json) для параметров Claude Code. Добавление ее в ваш `settings.json` включает автодополнение и встроенную валидацию в VS Code, Cursor и любом другом редакторе, поддерживающем валидацию JSON-схемы.
+Каждая запись под `permissions` — это правило, которое называет инструмент и что он может делать; [Настройка разрешений](/docs/ru/permissions) объясняет синтаксис. Строка `$schema` указывает на [опубликованную JSON схему](https://json.schemastore.org/claude-code-settings.json) для параметров Claude Code, которая дает вам автодополнение и встроенную валидацию в VS Code, Cursor и любом другом редакторе, поддерживающем JSON схему. Схема может отставать от самых новых выпусков CLI, поэтому предупреждение валидации на недавно задокументированном ключе не означает, что ваша конфигурация недействительна.
 
-Опубликованная схема обновляется периодически и может не включать параметры, добавленные в самых последних выпусках CLI, поэтому предупреждение валидации о недавно задокументированном поле не обязательно означает, что ваша конфигурация недействительна.
+После сохранения запустите `/status` внутри Claude Code, чтобы подтвердить, что файл загружен; [Подтвердите, что загружено](#check-what-loaded) говорит, что показывает строка `Setting sources` и как сообщается о сломанном файле.
+
+Для полного личного файла, файла команды и файла организации, каждый показан с комментарием на каждом ключе, который он устанавливает, см. [примеры файлов параметров](/docs/ru/settings-example).
+
+<span id="pass-settings-for-one-session" />
+
+<h3 id="change-a-setting-for-one-session">
+  Измените параметр для одного сеанса
+</h3>
+
+Чтобы попробовать значение без сохранения, установите его при запуске Claude Code. Значение применяется к этому сеансу, и ваши файлы параметров остаются такими, какими они были. У вас есть три способа это сделать:
+
+* **`--settings`**: передайте ключ как JSON, встроенный или как путь к файлу. Claude Code применяет его выше ваших файлов пользователя, проекта и локальных и ниже управляемых параметров. Он может установить любой ключ, который может установить ваш файл параметров пользователя; он не может установить ключи `Managed` или `Global config`.
+* **Флаг для этого ключа**: некоторые ключи имеют свой собственный флаг, такой как `--model` для `model` и `--effort` для `effortLevel` и `modelSettings`.
+* **Переменная окружения**: экспортируйте переменную ключа перед запуском `claude`, такую как `ANTHROPIC_MODEL` для `model`.
+
+Каждая запись ключа на [справочнике параметров](/docs/ru/settings-reference) перечисляет его переопределения для каждого сеанса и какой имеет приоритет, поэтому проверьте запись для ключа, который вы хотите изменить.
+
+Команды, которые вы запускаете внутри сеанса, в основном сохраняют ваш выбор: когда вы изменяете параметр в `/config`, Claude Code записывает его в ваши файлы параметров, и `/model` сохраняет значение как ваше значение по умолчанию для новых сеансов.
+
+Если вы нажмете `s` в средстве выбора `/model`, Claude Code переключает модель без сохранения ее как вашего пользовательского значения по умолчанию. [Отрегулируйте уровень усилий](/docs/ru/model-config#adjust-effort-level) говорит, какие выборы `/effort` Claude Code сохраняет как ваше значение по умолчанию для модели, которую вы используете, и какие применяются только к текущему сеансу.
+
+Например, чтобы запустить один сеанс на Opus без изменения вашего значения по умолчанию:
+
+```bash theme={null}
+claude --settings '{"model": "claude-opus-5-5"}'
+```
 
 <h3 id="when-edits-take-effect">
   Когда изменения вступают в силу
 </h3>
 
-Claude Code отслеживает ваши файлы параметров и перезагружает их при изменении, поэтому изменения большинства ключей применяются к текущему сеансу без перезагрузки. Это включает `permissions`, `hooks` и помощники учетных данных, такие как `apiKeyHelper`. Перезагрузка охватывает параметры пользователя, проекта, локальные и управляемые параметры, и [hook `ConfigChange`](/docs/ru/hooks#configchange) срабатывает для каждого обнаруженного изменения.
+Claude Code отслеживает ваши файлы параметров и перезагружает их при изменении, поэтому он применяет большинство изменений к работающему сеансу без перезагрузки, включая изменения `permissions`, `hooks` и помощников учетных данных, таких как `apiKeyHelper`. Claude Code также загружает файл параметров, который вы создаете в середине сеанса, если его папка существовала при запуске сеанса. Для папки `.claude/` проекта он загружает файл даже когда вы создаете папку в том же сеансе.
 
-Несколько ключей читаются один раз при запуске сеанса и применяются при следующей перезагрузке:
+Перезагрузка охватывает параметры пользователя, проекта, локальные и управляемые параметры, и Claude Code запускает hook [`ConfigChange`](/docs/ru/hooks#configchange) для каждого изменения файла параметров, которое он обнаруживает, не для управляемых параметров, которые поступают из MDM или консоли claude.ai. Управляемые параметры, которые поступают через MDM или из консоли claude.ai, достигают работающего сеанса по расписанию, а не при сохранении; [таблица доставки](/docs/ru/managed-settings#choose-a-delivery-mechanism) дает это для каждого источника.
 
-* `model`: используйте [`/model`](/docs/ru/model-config#setting-your-model) для переключения в середине сеанса
-* [`outputStyle`](/docs/ru/output-styles): часть системного запроса, который перестраивается на `/clear` или перезагрузке
+Claude Code читает некоторые ключи только один раз при запуске сеанса, поэтому изменение одного из них не достигает работающего сеанса. Ключи на стороне администратора, которые также ждут перезагрузки, такие как `requiredMinimumVersion`, перечислены в [где и когда применяется политика](/docs/ru/managed-settings#where-and-when-a-policy-applies). Те, которые вы, скорее всего, будете редактировать в середине сеанса:
 
-<h3 id="invalid-entries-in-managed-settings">
-  Недействительные записи в управляемых параметрах
+* [`model`](/docs/ru/settings-reference#model): используйте [`/model`](/docs/ru/model-config#setting-your-model) для переключения в середине сеанса. Каждая модель имеет свой собственный кэш подсказок, поэтому первый запрос после переключения повторно читает весь разговор без кэша; см. [Переключение моделей](/docs/ru/prompt-caching#switching-models)
+* [`effortLevel`](/docs/ru/settings-reference#effortlevel) и [`modelSettings`](/docs/ru/settings-reference#modelsettings): используйте [`/effort`](/docs/ru/model-config#adjust-effort-level) для изменения усилий в середине сеанса
+
+<span id="verify-active-settings" />
+
+<span id="check-what-loaded" />
+
+<h3 id="confirm-what-loaded">
+  Подтвердите, что загружено
 </h3>
 
-Управляемые параметры анализируются с допуском. Когда управляемая конфигурация содержит запись, которая не проходит валидацию схемы, Claude Code удаляет эту запись, записывает предупреждение и применяет каждую оставшуюся действительную политику. Одна опечатка не может отключить остальную политику вашей организации. Запустите [`/doctor`](/docs/ru/debug-your-config#check-resolved-settings), чтобы увидеть список удаленных записей с их исходным файлом и полем.
+Запустите `/status` внутри Claude Code, чтобы увидеть, какие источники параметров активны. Вкладка **Status** включает строку `Setting sources`, которая перечисляет каждый файл параметров, который Claude Code загрузил для текущего сеанса, такой как `User settings` или `Project local settings`. Когда [управляемые параметры](/docs/ru/admin-setup#decide-how-settings-reach-devices) действуют, запись управляемых параметров показывает в скобках, как они достигли вашей машины.
 
-Это поведение согласуется во всех трех механизмах доставки: [параметры, управляемые сервером](/docs/ru/server-managed-settings), политики plist и реестра, развернутые через MDM, и файлы `managed-settings.json`. Требует Claude Code v2.1.169 или позже.
+Строка подтверждает, какие файлы Claude Code прочитал; она не показывает, какой файл предоставил каждый ключ. Чтобы перечислить записи, которые Claude Code отклонил, запустите [`claude doctor`](/docs/ru/debug-your-config); для модели, которую установили параметры проекта или управляемые параметры, заголовок запуска называет файл, который ее установил. `/status` и `/config` открывают один и тот же диалог на разных вкладках, и вкладка **Config** не является представлением содержимого вашего `settings.json`.
 
-Поля применения безопасности обрабатываются для каждого поля вместо полного удаления при наличии, но недействительности:
-
-| Поле                         | Поведение при наличии, но недействительности                                                                                                                                                                                                                                                                |
-| :--------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `allowedMcpServers`          | Применяется как пустой список разрешений, поэтому MCP servers не допускаются до исправления значения. Отдельная недействительная запись удаляется и применяется действительное подмножество.                                                                                                                |
-| `allowManagedMcpServersOnly` | Обрабатывается как `true`.                                                                                                                                                                                                                                                                                  |
-| `availableModels`            | Применяется как пустой список разрешений, поэтому доступна только модель Default до исправления значения. Отдельная запись, не являющаяся строкой, удаляется и применяется действительное подмножество. Применяется в v2.1.175 и позже.                                                                     |
-| `enforceAvailableModels`     | Обрабатывается как `true`. Применяется в v2.1.175 и позже.                                                                                                                                                                                                                                                  |
-| `forceLoginOrgUUID`          | Ни одна организация не может войти до исправления значения.                                                                                                                                                                                                                                                 |
-| `deniedMcpServers`           | Отдельная недействительная запись удаляется и применяется действительное подмножество. Полностью недействительное значение отбрасывается с предупреждением, так как отрицание каждого server заблокировало бы servers, которые политика никогда не называла.                                                |
-| `sandbox.credentials`        | Отдельная недействительная запись в `files` или `envVars` удаляется с предупреждением и применяется действительное подмножество. Полностью недействительное значение `credentials` отбрасывается с предупреждением, пока остальная часть `sandbox` по-прежнему применяется. Применяется в v2.1.191 и позже. |
-
-`requiredMinimumVersion` и `requiredMaximumVersion` открываются по дизайну: недействительное значение удаляется, а не применяется, поэтому плохая политика не может предотвратить запуск Claude Code.
-
-Ошибки валидации появляются в трех местах:
-
-* Интерактивные сеансы показывают диалог при запуске, перечисляющий недействительные записи.
-* Headless запуски с `-p` выводят сводку в stderr.
-* [`claude doctor`](/docs/ru/debug-your-config) перечисляет каждую недействительную запись с ее источником и полем.
-
-Проверьте изменения политики, запустив `claude doctor` на тестовой машине перед развертыванием их по всему парку.
-
-Этот допуск применяется только к управляемым параметрам. Файлы параметров пользователя, проекта и локальные остаются строгими: файл, который не проходит валидацию, отклоняется целиком и сообщается.
-
-<h3 id="available-settings">
-  Доступные параметры
+<h3 id="fix-a-broken-settings-file">
+  Исправьте сломанный файл параметров
 </h3>
 
-`settings.json` поддерживает ряд опций:
+Если вы неправильно напечатаете JSON или установите ключ на значение, которое Claude Code не принимает, Claude Code сообщит вам при запуске интерактивного сеанса. То, что он показывает, зависит от того, сколько файла затронуто:
 
-| Ключ                               | Описание                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | Пример                                                                                                                          |
-| :--------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------ |
-| `advisorModel`                     | Модель для серверного [инструмента advisor](/docs/ru/advisor). Принимает псевдоним модели, такой как `"opus"`, `"sonnet"` или `"fable"` (v2.1.170+), или полный ID модели. Записывается автоматически при запуске `/advisor`. Отключите, чтобы отключить advisor                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | `"opus"`                                                                                                                        |
-| `agent`                            | Запустить основной поток как именованный subagent и установить агента по умолчанию для сеансов, отправленных из `claude agents`. Применяет системный запрос, ограничения инструментов и модель этого subagent. См. [Явно вызывать subagents](/docs/ru/sub-agents#invoke-subagents-explicitly)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | `"code-reviewer"`                                                                                                               |
-| `agentPushNotifEnabled`            | **По умолчанию**: `false`. Когда [Remote Control](/docs/ru/remote-control) подключен, разрешить Claude отправлять проактивные push-уведомления на ваш телефон, например когда длительная задача завершается. Появляется в `/config` как **Push when Claude decides**. См. [Mobile push notifications](/docs/ru/remote-control#mobile-push-notifications). Требует Claude Code v2.1.119 или позже                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | `true`                                                                                                                          |
-| `allowAllClaudeAiMcps`             | (Только управляемые параметры) Загружать разъемы claude.ai наряду с развернутым `managed-mcp.json`, который в противном случае берет исключительный контроль и подавляет их. См. [Управляемая конфигурация MCP](/docs/ru/managed-mcp)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | `true`                                                                                                                          |
-| `allowedChannelPlugins`            | (Только управляемые параметры) Список разрешений channel plugins, которые могут отправлять сообщения. Заменяет список разрешений Anthropic по умолчанию при установке. Не определено = вернуться к значению по умолчанию, пустой массив = блокировать все channel plugins. Требует `channelsEnabled: true`. См. [Ограничить, какие channel plugins могут запускаться](/docs/ru/channels#restrict-which-channel-plugins-can-run)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | `[{ "marketplace": "claude-plugins-official", "plugin": "telegram" }]`                                                          |
-| `allowedHttpHookUrls`              | Список разрешенных URL-шаблонов, на которые могут быть направлены HTTP hooks. Поддерживает `*` как подстановочный знак. При установке hooks с несовпадающими URL-адресами блокируются. Не определено = без ограничений, пустой массив = блокировать все HTTP hooks. Массивы объединяются в разных источниках параметров. См. [Конфигурация Hook](#hook-configuration)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | `["https://hooks.example.com/*"]`                                                                                               |
-| `allowedMcpServers`                | При установке в managed-settings.json, список разрешений MCP servers, которые пользователи могут настроить. Не определено = без ограничений, пустой массив = блокировка. Применяется ко всем областям. Список запретов имеет приоритет. См. [Управляемая конфигурация MCP](/docs/ru/managed-mcp)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | `[{ "serverName": "github" }]`                                                                                                  |
-| `allowManagedHooksOnly`            | (Только управляемые параметры) Загружаются только управляемые hooks, SDK hooks и hooks из plugins, принудительно включенных в управляемых параметрах `enabledPlugins`. Пользовательские, проектные и все остальные plugin hooks блокируются. См. [Конфигурация Hook](#hook-configuration)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | `true`                                                                                                                          |
-| `allowManagedMcpServersOnly`       | (Только управляемые параметры) Только `allowedMcpServers` из управляемых параметров учитываются. `deniedMcpServers` по-прежнему объединяется из всех источников. Пользователи по-прежнему могут добавлять MCP servers, но применяется только определенный администратором список разрешений. См. [Управляемая конфигурация MCP](/docs/ru/managed-mcp)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | `true`                                                                                                                          |
-| `allowManagedPermissionRulesOnly`  | (Только управляемые параметры) Предотвратить определение правил разрешений `allow`, `ask` или `deny` в параметрах пользователя и проекта. Применяются только правила в управляемых параметрах. См. [Параметры только для управляемых](/docs/ru/permissions#managed-only-settings)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | `true`                                                                                                                          |
-| `alwaysThinkingEnabled`            | Включить [расширенное мышление](/docs/ru/model-config#extended-thinking) по умолчанию для всех сеансов. Обычно настраивается через команду `/config` вместо прямого редактирования. Чтобы принудительно отключить мышление независимо от этого параметра, установите [`MAX_THINKING_TOKENS=0`](/docs/ru/env-vars) в `env`, что отключает мышление на Anthropic API, кроме Fable 5, которая не может отключить мышление. На [поставщиках третьих сторон](/docs/ru/third-party-integrations) это опускает параметр `thinking` вместо этого, и модели адаптивного рассуждения все еще могут думать                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | `true`                                                                                                                          |
-| `apiKeyHelper`                     | Пользовательский скрипт, который будет выполнен в системной оболочке (`/bin/sh` на macOS и Linux, `cmd` на Windows), для создания значения аутентификации. Это значение будет отправлено как заголовки `X-Api-Key` и `Authorization: Bearer` для запросов модели. Установите интервал обновления с помощью [`CLAUDE_CODE_API_KEY_HELPER_TTL_MS`](/docs/ru/env-vars)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | `/bin/generate_temp_api_key.sh`                                                                                                 |
-| `askUserQuestionTimeout`           | **По умолчанию**: `"never"`. Время простоя перед тем, как неотвеченный диалог [`AskUserQuestion`](/docs/ru/tools-reference) автоматически продолжится с любыми уже выбранными вами опциями. Принимает `"60s"`, `"5m"`, `"10m"` или `"never"`. По умолчанию вопросы ждут, пока вы на них ответите. Появляется в `/config` как **Question auto-continue timeout**, который записывает этот ключ в параметры пользователя. Не читается из параметров проекта или локальных параметров. Требует Claude Code v2.1.200 или позже                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | `"5m"`                                                                                                                          |
-| `attribution`                      | Настройте атрибуцию для коммитов git и pull requests. См. [Параметры атрибуции](#attribution-settings)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | `{"commit": "🤖 Generated with Claude Code", "pr": ""}`                                                                         |
-| `autoCompactEnabled`               | **По умолчанию**: `true`. Автоматически компактировать разговор, когда контекст приближается к лимиту. Появляется в `/config` как **Auto-compact**. Чтобы отключить через переменную окружения, установите [`DISABLE_AUTO_COMPACT`](/docs/ru/env-vars) в `env`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | `false`                                                                                                                         |
-| `autoMemoryDirectory`              | Пользовательский каталог для хранения [автоматической памяти](/docs/ru/memory#storage-location). Принимает абсолютный путь или путь с префиксом `~/`. Из параметров проекта или локальных параметров это учитывается только после того, как вы примете диалог доверия рабочей области, так как клонированный репозиторий может предоставить этот файл                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | `"~/my-memory-dir"`                                                                                                             |
-| `autoMemoryEnabled`                | **По умолчанию**: `true`. Включить [автоматическую память](/docs/ru/memory#enable-or-disable-auto-memory). Когда `false`, Claude не читает и не записывает в каталог автоматической памяти. Вы также можете переключить это с помощью `/memory` во время сеанса. Чтобы отключить через переменную окружения, установите [`CLAUDE_CODE_DISABLE_AUTO_MEMORY`](/docs/ru/env-vars) в `env`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | `false`                                                                                                                         |
-| `autoMode`                         | Настройте, что классификатор [автоматического режима](/docs/ru/permission-modes#eliminate-prompts-with-auto-mode) блокирует и разрешает. Содержит массивы `environment`, `allow`, `soft_deny` и `hard_deny` правил в виде текста. Включите буквальную строку `"$defaults"` в массив для наследования встроенных правил в этой позиции. См. [Настройте автоматический режим](/docs/ru/auto-mode-config). Читается из параметров пользователя, флага `--settings` и управляемых параметров только. Игнорируется в проекте `.claude/settings.json` и локальном `.claude/settings.local.json`. До v2.1.207, `.claude/settings.local.json` также читался                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | `{"soft_deny": ["$defaults", "Never run terraform apply"]}`                                                                     |
-| `autoMode.classifyAllShell`        | **По умолчанию**: `false`. Когда `true`, приостанавливает каждое правило разрешения Bash и PowerShell, пока активен автоматический режим, поэтому все команды shell маршрутизируются через классификатор, а не только правила, которые соответствуют шаблонам произвольного выполнения кода. См. [Маршрутизировать все команды shell через классификатор](/docs/ru/auto-mode-config#route-all-shell-commands-through-the-classifier). Требует Claude Code v2.1.193 или позже                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | `true`                                                                                                                          |
-| `autoScrollEnabled`                | **По умолчанию**: `true`. В [fullscreen rendering](/docs/ru/fullscreen), следить за новым выводом в конец разговора. Появляется в `/config` как **Auto-scroll**. Запросы разрешений по-прежнему прокручиваются в поле зрения, когда это отключено                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | `false`                                                                                                                         |
-| `autoUpdatesChannel`               | **По умолчанию**: `"latest"`. Канал выпуска для отслеживания обновлений. Используйте `"stable"` для версии, которая обычно примерно на неделю старше и пропускает версии с серьезными регрессиями, или `"latest"` для самого последнего выпуска. Чтобы полностью отключить автоматические обновления, установите [`DISABLE_AUTOUPDATER`](/docs/ru/setup#disable-auto-updates) в `env`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | `"stable"`                                                                                                                      |
-| `availableModels`                  | Ограничить, какие модели пользователи могут выбрать для основного сеанса, [subagents](/docs/ru/sub-agents), [skills](/docs/ru/skills) и [advisor](/docs/ru/advisor). Не влияет на опцию Default, если также не установлен `enforceAvailableModels`. См. [Ограничить выбор модели](/docs/ru/model-config#restrict-model-selection)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | `["sonnet", "haiku"]`                                                                                                           |
-| `awaySummaryEnabled`               | Показать одностроковое резюме сеанса при возврате в терминал после нескольких минут отсутствия. Установите на `false` или отключите Session recap в `/config` для отключения. То же самое, что [`CLAUDE_CODE_ENABLE_AWAY_SUMMARY`](/docs/ru/env-vars)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | `true`                                                                                                                          |
-| `awsAuthRefresh`                   | Пользовательский скрипт, который изменяет каталог `.aws` (см. [расширенная конфигурация учетных данных](/docs/ru/amazon-bedrock#advanced-credential-configuration))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | `aws sso login --profile myprofile`                                                                                             |
-| `awsCredentialExport`              | Пользовательский скрипт, который выводит JSON с учетными данными AWS (см. [расширенная конфигурация учетных данных](/docs/ru/amazon-bedrock#advanced-credential-configuration))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | `/bin/generate_aws_grant.sh`                                                                                                    |
-| `axScreenReader`                   | Отображать вывод, удобный для программ чтения с экрана: плоский текст без декоративных границ или анимаций. Режим программы чтения с экрана всегда использует классический рендерер, поэтому параметр `tui` не имеет эффекта, пока он активен; прикрепленные [фоновые сеансы](/docs/ru/agent-view) по-прежнему отображаются в полноэкранном режиме. Переменная окружения [`CLAUDE_AX_SCREEN_READER`](/docs/ru/env-vars) и флаг [`--ax-screen-reader`](/docs/ru/cli-reference#cli-flags) имеют приоритет. Требует Claude Code v2.1.181 или позже                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | `true`                                                                                                                          |
-| `blockedMarketplaces`              | (Только управляемые параметры) Список запретов источников marketplace. Применяется при добавлении marketplace и при установке, обновлении, обновлении и автоматическом обновлении plugin, поэтому marketplace, добавленный до установки политики, не может быть использован для получения plugins. Заблокированные источники проверяются перед загрузкой, поэтому они никогда не касаются файловой системы. См. [Управляемые ограничения marketplace](/docs/ru/plugin-marketplaces#managed-marketplace-restrictions)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | `[{ "source": "github", "repo": "untrusted/plugins" }]`                                                                         |
-| `browserExternalPageTools`         | (Только управляемые параметры) Установите на `"disabled"`, чтобы предотвратить использование Claude инструментов для чтения или действия на внешних страницах в [Browser pane](/docs/ru/desktop#browse-external-sites) приложения desktop. Пользователи по-прежнему могут самостоятельно переходить на внешние сайты, и локальные предпросмотры dev server не затронуты                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | `"disabled"`                                                                                                                    |
-| `channelsEnabled`                  | (Только управляемые параметры) Разрешить [channels](/docs/ru/channels) для организации. На планах Claude.ai Team и Enterprise, channels блокируются, когда это не установлено или `false`. Для учетных записей [Anthropic Console](/docs/ru/authentication#claude-console-authentication), использующих аутентификацию по ключу API, channels разрешены по умолчанию, если только ваша организация не развернула управляемые параметры, в этом случае этот ключ должен быть установлен на `true`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | `true`                                                                                                                          |
-| `claudeMd`                         | (Только управляемые параметры) Инструкции в стиле CLAUDE.md, внедренные как организационная управляемая память. Учитываются только при установке в управляемых или политических параметрах и игнорируются в параметрах пользователя, проекта и локальных параметрах. См. [организационная CLAUDE.md](/docs/ru/memory#deploy-organization-wide-claude-md)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | `"Always run make lint before committing."`                                                                                     |
-| `claudeMdExcludes`                 | Glob шаблоны или абсолютные пути файлов `CLAUDE.md` для пропуска при загрузке [памяти](/docs/ru/memory). Шаблоны соответствуют абсолютным путям файлов. Применяется только к памяти пользователя, проекта и локальной памяти; файлы управляемой политики не могут быть исключены                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | `["**/vendor/**/CLAUDE.md"]`                                                                                                    |
-| `cleanupPeriodDays`                | **По умолчанию**: `30` дней, минимум `1`. Claude Code удаляет [файлы сеансов и другие данные приложения](/docs/ru/claude-directory#cleaned-up-automatically) старше этого периода при запуске. Установка `0` отклоняется с ошибкой валидации. Один и тот же возрастной порог применяется к автоматическому удалению [orphaned worktrees](/docs/ru/worktrees#clean-up-worktrees) при запуске. Если Claude Code не может прочитать или разобрать файл параметров, он приостанавливает очистку удержания и показывает предупреждение в `/status` до тех пор, пока вы не исправите файл, если только [управляемые параметры](/docs/ru/server-managed-settings) не предоставляют `cleanupPeriodDays`, в этом случае очистка выполняется при управляемом значении. До v2.1.203 очистка выполнялась при значении по умолчанию 30 дней в этом состоянии и могла удалить стенограммы, которые более длительный `cleanupPeriodDays` был предназначен для сохранения; файлы новее 30 дней никогда не удалялись. Чтобы полностью отключить запись стенограмм, установите переменную окружения [`CLAUDE_CODE_SKIP_PROMPT_HISTORY`](/docs/ru/env-vars). В неинтерактивном режиме передайте `--no-session-persistence` вместе с `-p` или установите `persistSession: false` в Agent SDK. | `20`                                                                                                                            |
-| `companyAnnouncements`             | Объявление для отображения пользователям при запуске. Если предоставлено несколько объявлений, они будут циклически отображаться случайным образом.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | `["Welcome to Acme Corp! Review our code guidelines at docs.acme.com"]`                                                         |
-| `defaultShell`                     | **По умолчанию**: `"bash"`, или `"powershell"` на Windows, когда Bash недоступен. Оболочка по умолчанию для команд `!` в поле ввода. Принимает `"bash"` или `"powershell"`. Установка `"powershell"` направляет интерактивные команды `!` через PowerShell на Windows. Требует `CLAUDE_CODE_USE_POWERSHELL_TOOL=1`. См. [Инструмент PowerShell](/docs/ru/tools-reference#powershell-tool)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | `"powershell"`                                                                                                                  |
-| `deniedMcpServers`                 | При установке в managed-settings.json, список запретов MCP servers, которые явно заблокированы. Применяется ко всем областям, включая управляемые servers. Список запретов имеет приоритет над списком разрешений. См. [Управляемая конфигурация MCP](/docs/ru/managed-mcp)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | `[{ "serverName": "filesystem" }]`                                                                                              |
-| `disableAgentView`                 | Установите на `true`, чтобы отключить [фоновые агенты и представление агента](/docs/ru/agent-view): `claude agents`, `--bg`, `/background` и супервизор по требованию. Обычно устанавливается в [управляемых параметрах](/docs/ru/permissions#managed-settings). Эквивалентно установке `CLAUDE_CODE_DISABLE_AGENT_VIEW` на `1`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | `true`                                                                                                                          |
-| `disableAllHooks`                  | Отключить все [hooks](/docs/ru/hooks) и любую пользовательскую [строку состояния](/docs/ru/statusline)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | `true`                                                                                                                          |
-| `disableArtifact`                  | Установите на `true`, чтобы отключить инструмент [Artifact](/docs/ru/artifacts), который публикует вывод сеанса как приватную веб-страницу на claude.ai. Эквивалентно установке `CLAUDE_CODE_DISABLE_ARTIFACT` на `1`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | `true`                                                                                                                          |
-| `disableAutoMode`                  | Установите на `"disable"`, чтобы предотвратить активацию [автоматического режима](/docs/ru/permission-modes#eliminate-prompts-with-auto-mode). Удаляет `auto` из цикла `Shift+Tab` и отклоняет `--permission-mode auto` при запуске. Наиболее полезно в [управляемых параметрах](/docs/ru/permissions#managed-settings), где пользователи не могут его переопределить                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | `"disable"`                                                                                                                     |
-| `disableBrowserExternalNavigation` | (Только управляемые параметры) Установите на `true`, чтобы отключить внешний просмотр в [Browser pane](/docs/ru/desktop#browse-external-sites) приложения desktop. Ни пользователи, ни Claude не могут переходить на внешние сайты, и локальные предпросмотры dev server не затронуты. Значение должно быть JSON логическое значение `true`; строка `"true"` игнорируется                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | `true`                                                                                                                          |
-| `disableBundledSkills`             | Установите на `true`, чтобы отключить [skills](/docs/ru/skills) и workflows, которые поставляются с Claude Code: встроенные skills и workflows полностью удаляются, в то время как встроенные slash commands, такие как `/init`, остаются доступными для ввода, но скрыты от модели. `/doctor` остается доступным для ввода, как встроенные slash commands; скройте его с помощью [`DISABLE_DOCTOR_COMMAND`](/docs/ru/env-vars) вместо этого. Skills из plugins, `.claude/skills/` и `.claude/commands/` не затронуты. Эквивалентно установке `CLAUDE_CODE_DISABLE_BUNDLED_SKILLS` на `1`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | `true`                                                                                                                          |
-| `disableClaudeAiConnectors`        | Отключить [claude.ai MCP connectors](/docs/ru/mcp#use-mcp-servers-from-claude-ai), чтобы они не загружались автоматически и не подключались. Установите в любой области параметров. `true` в любом источнике имеет приоритет, поэтому проверенный в проекте `.claude/settings.json` может отключить репозиторий от облачных разъемов, но уровень проекта `false` не может переопределить уровень пользователя или политики `true`. Servers, переданные явно через `--mcp-config`, не затронуты. Чтобы запретить отдельные разъемы вместо всех, используйте [`deniedMcpServers`](/docs/ru/managed-mcp). Требует Claude Code v2.1.182 или позже                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | `true`                                                                                                                          |
-| `disableDeepLinkRegistration`      | Установите на `"disable"`, чтобы предотвратить регистрацию Claude Code обработчика протокола `claude-cli://` с операционной системой при запуске. Deep links позволяют внешним инструментам открыть сеанс Claude Code с предварительно заполненным запросом. Полезно в окружениях, где регистрация обработчика протокола ограничена или управляется отдельно                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | `"disable"`                                                                                                                     |
-| `disabledMcpjsonServers`           | Список конкретных MCP servers из файлов `.mcp.json` для отклонения                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | `["filesystem"]`                                                                                                                |
-| `disableRemoteControl`             | Отключить [Remote Control](/docs/ru/remote-control): блокирует `claude remote-control`, флаг `--remote-control`, автозапуск и переключение в сеансе. Обычно размещается в [управляемых параметрах](/docs/ru/permissions#managed-settings) для применения MDM на каждом устройстве, но работает из любой области. Требует Claude Code v2.1.128 или позже                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | `true`                                                                                                                          |
-| `disableSideloadFlags`             | (Только управляемые параметры) Отклонить флаги CLI `--plugin-dir`, `--plugin-url`, `--agents` и `--mcp-config` при запуске, которые пользователи могли бы в противном случае передать для обхода [`strictKnownMarketplaces`](#strictknownmarketplaces) для одного запуска. Также отклоняет эти флаги из любой поверхности, которая порождает CLI с ними внутри, в настоящее время [Cowork](/docs/ru/desktop) локальные сеансы в приложении desktop. `--mcp-config`, чьи servers все являются in-process записями `type: "sdk"`, по-прежнему принимается, поэтому Agent SDK и расширение VS Code продолжают работать. Не блокирует `claude mcp add`, `.mcp.json` или SDK `setMcpServers()`; объедините с [`allowedMcpServers`](/docs/ru/managed-mcp) для управления MCP для каждого server. Требует Claude Code v2.1.193 или позже                                                                                                                                                                                                                                                                                                                                                                                                                               | `true`                                                                                                                          |
-| `disableSkillShellExecution`       | Отключить встроенное выполнение shell для `` !`...` `` и ` ```! ` блоков в [skills](/ru/skills) и пользовательских команд из источников пользователя, проекта, plugin или дополнительного каталога. Команды заменяются на `[shell command execution disabled by policy]` вместо выполнения. Встроенные и управляемые skills не затронуты. Наиболее полезно в [управляемых параметрах](/ru/permissions#managed-settings), где пользователи не могут его переопределить                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | `true`                                                                                                                          |
-| `disableWorkflows`                 | **По умолчанию**: `false`. Отключить [динамические workflows](/docs/ru/workflows#turn-workflows-off) и встроенные команды workflow. Эквивалентно установке `CLAUDE_CODE_DISABLE_WORKFLOWS` на `1`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | `true`                                                                                                                          |
-| `editorMode`                       | **По умолчанию**: `"normal"`. Режим сочетания клавиш для входного приглашения: `"normal"` или `"vim"`. Появляется в `/config` как **Editor mode**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | `"vim"`                                                                                                                         |
-| `effortLevel`                      | Сохранить [уровень усилий](/docs/ru/model-config#adjust-effort-level) между сеансами. Принимает `"low"`, `"medium"`, `"high"` или `"xhigh"`. Записывается автоматически при запуске `/effort` с одним из этих значений. `--effort` и [`CLAUDE_CODE_EFFORT_LEVEL`](/docs/ru/env-vars) переопределяют это на один сеанс. См. [Отрегулировать уровень усилий](/docs/ru/model-config#adjust-effort-level) для поддерживаемых моделей                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | `"xhigh"`                                                                                                                       |
-| `enableAllProjectMcpServers`       | Автоматически одобрить все MCP servers, определенные в файлах проекта `.mcp.json`. Начиная с v2.1.196, `claude mcp list` и `claude mcp get` учитывают этот ключ в ненадежной папке только из [файлов параметров, которые не проверяются в репозитории](/docs/ru/mcp#managing-your-servers)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | `true`                                                                                                                          |
-| `enableArtifact`                   | Включить или отключить инструмент [Artifact](/docs/ru/artifacts) для этого пользователя. Когда не установлено, значение по умолчанию следует [доступности](/docs/ru/artifacts#availability) функции для вашей учетной записи. Строка **Artifacts** в `/config` записывает этот ключ. Управляемый `disableArtifact` и [параметр администратора](/docs/ru/artifacts#manage-artifacts-for-your-organization) вашей организации имеют приоритет, и ключ игнорируется в параметрах проекта и локальных параметрах (`.claude/settings.json`, `.claude/settings.local.json`), которые репозиторий мог бы в противном случае зафиксировать. Требует Claude Code v2.1.196 или позже                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | `true`                                                                                                                          |
-| `enabledMcpjsonServers`            | Список конкретных MCP servers из файлов `.mcp.json` для одобрения. Начиная с v2.1.196, `claude mcp list` и `claude mcp get` учитывают этот ключ в ненадежной папке только из [файлов параметров, которые не проверяются в репозитории](/docs/ru/mcp#managing-your-servers)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | `["memory", "github"]`                                                                                                          |
-| `enforceAvailableModels`           | Расширить список разрешений `availableModels` на модель Default. Когда `true` в управляемых параметрах и `availableModels` - это непустой массив, опция Default возвращается к первой разрешенной записи, которая доступна, но только когда модель Default, которая будет разрешена (организационное значение по умолчанию, когда оно применяется, иначе значение по умолчанию для типа учетной записи), не находится в списке разрешений; разрешенное значение по умолчанию сохраняется как есть. Не имеет эффекта, когда `availableModels` не установлен или пуст. См. [Ограничить выбор модели](/docs/ru/model-config#restrict-model-selection) для поддерживаемых моделей                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | `true`                                                                                                                          |
-| `env`                              | Переменные окружения, применяемые к каждому сеансу и к подпроцессам, которые Claude Code порождает из него. Установите переменную на `""`, чтобы переопределить экспорт оболочки пустой строкой, которую Claude Code обрабатывает как неустановленную для выбора поставщика. Подпроцессы по-прежнему наследуют пустое значение. `NO_COLOR` и `FORCE_COLOR`, установленные здесь, достигают только подпроцессов; чтобы изменить цвета собственного интерфейса Claude Code, установите их в вашей оболочке перед запуском `claude`. Начиная с v2.1.195, переменные идентификации, которые устанавливают окружения хостинга Claude Code, например `CLAUDE_CODE_REMOTE` и `CLAUDE_CODE_ACCOUNT_UUID`, игнорируются при установке здесь                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | `{"FOO": "bar"}`                                                                                                                |
-| `fallbackModel`                    | Резервная модель(и) для попытки по порядку, когда основная модель перегружена или недоступна. Claude Code переключается на следующую доступную модель в цепи для остальной части хода и показывает уведомление. `"default"` расширяется до модели по умолчанию. Цепи ограничены тремя моделями; дополнительные записи игнорируются. В отличие от большинства параметров массива, этот ключ не объединяется в разных файлах параметров: файл с наивысшим приоритетом, который его определяет, предоставляет всю цепь. Флаг [`--fallback-model`](/docs/ru/cli-reference#cli-flags) переопределяет это на один сеанс. См. [Цепи резервных моделей](/docs/ru/model-config#fallback-model-chains)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | `["claude-sonnet-5", "claude-haiku-4-5"]`                                                                                       |
-| `fastMode`                         | Включить [быстрый режим](/docs/ru/fast-mode) для сеансов, где он доступен. Переключение с помощью `/fast` записывает `true` здесь в параметры пользователя и удаляет ключ при отключении быстрого режима                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | `true`                                                                                                                          |
-| `fastModePerSessionOptIn`          | Когда `true`, быстрый режим не сохраняется между сеансами. Каждый сеанс начинается с отключенным быстрым режимом, требуя от пользователей включить его с помощью `/fast`. Предпочтение быстрого режима пользователя по-прежнему сохраняется. См. [Требовать согласие для каждого сеанса](/docs/ru/fast-mode#require-per-session-opt-in)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | `true`                                                                                                                          |
-| `feedbackSurveyRate`               | Вероятность (0–1) того, что [опрос качества сеанса](/docs/ru/data-usage#session-quality-surveys) появится при наличии условий. Установите на `0`, чтобы полностью подавить, или установите [`CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY`](/docs/ru/env-vars) в `env`. Полезно при использовании Amazon Bedrock, Google Cloud's Agent Platform или Microsoft Foundry, где частота выборки по умолчанию не применяется                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | `0.05`                                                                                                                          |
-| `fileCheckpointingEnabled`         | **По умолчанию**: `true`. Снимок файлов перед каждым редактированием, чтобы [`/rewind`](/docs/ru/checkpointing) мог их восстановить. Появляется в `/config` как **Rewind code (checkpoints)**. Чтобы отключить через переменную окружения, установите [`CLAUDE_CODE_DISABLE_FILE_CHECKPOINTING`](/docs/ru/env-vars) в `env`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | `false`                                                                                                                         |
-| `fileSuggestion`                   | Настройте пользовательский скрипт для автодополнения файлов `@`. См. [Параметры предложения файлов](#file-suggestion-settings)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | `{"type": "command", "command": "~/.claude/file-suggestion.sh"}`                                                                |
-| `footerLinksRegexes`               | Отображать дополнительные кликабельные значки в нижнем колонтитуле, когда регулярное выражение совпадает с выводом хода. Каждая запись имеет `pattern`, шаблон `url` с заполняемыми `{name}` плейсхолдерами из именованных групп захвата и необязательный `label`. Читается из параметров пользователя, флага `--settings` и управляемых параметров только. См. [Значки ссылок нижнего колонтитула](#footer-link-badges) для ограничений URL, списка разрешений схемы и лимитов. Требует Claude Code v2.1.176 или позже                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | `[{"type": "regex", "pattern": "\\b(?<key>PROJ-\\d+)\\b", "url": "https://issues.example.com/browse/{key}", "label": "{key}"}]` |
-| `forceLoginMethod`                 | Используйте `claudeai` для ограничения входа учетными записями Claude.ai, `console` для ограничения входа учетными записями Claude Console, или `gateway` для ограничения входа на облачный шлюз; см. [Claude apps gateway](/docs/ru/claude-apps-gateway). Когда установлено в управляемых параметрах, сеансы, аутентифицированные по `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN` или `apiKeyHelper`, блокируются при запуске, так как ни одно значение не может быть удовлетворено без первоначальной OAuth. Сеансы поставщиков третьих сторон, такие как Amazon Bedrock, Google Cloud's Agent Platform и Microsoft Foundry, не блокируются: они аутентифицируются против вашего облачного провайдера, а не Anthropic                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | `claudeai`                                                                                                                      |
-| `forceLoginGatewayUrl`             | Предварительно заполняет и блокирует URL шлюза на экране `/login` Cloud gateway. Либо этот ключ, либо `forceLoginMethod: "gateway"` отображает этот экран; установите оба, чтобы URL был заполнен. Учитывается только на управляемом уровне политики; игнорируется в параметрах пользователя и проекта. См. [Claude apps gateway](/docs/ru/claude-apps-gateway#set-the-gateway-url)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | `"https://claude-gateway.example.com"`                                                                                          |
-| `forceLoginOrgUUID`                | Требовать, чтобы вход принадлежал определенной организации Anthropic. Принимает одну строку UUID, которая также предварительно выбирает эту организацию во время входа, или массив UUID, где любая указанная организация принимается без предварительного выбора. При установке в управляемых параметрах вход не удается, если аутентифицированная учетная запись не принадлежит указанной организации, и сеансы, аутентифицированные по `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN` или `apiKeyHelper`, блокируются при запуске, так как членство в организации не может быть проверено для них. Сеансы поставщиков третьих сторон, такие как Amazon Bedrock, Google Cloud's Agent Platform и Microsoft Foundry, не блокируются: используйте IAM вашего облачного провайдера для ограничения того, какие облачные учетные записи могут быть использованы. Пустой массив не удается закрыто и блокирует вход с сообщением о неправильной конфигурации                                                                                                                                                                                                                                                                                                 | `"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"` или `["xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx", "yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy"]` |
-| `forceRemoteSettingsRefresh`       | (Только управляемые параметры) Блокировать запуск CLI до тех пор, пока удаленные управляемые параметры не будут свежо получены с сервера. Если получение не удается, CLI выходит вместо продолжения с кэшированными или отсутствующими параметрами. Когда не установлено, запуск продолжается без ожидания удаленных параметров. См. [fail-closed enforcement](/docs/ru/server-managed-settings#enforce-fail-closed-startup)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | `true`                                                                                                                          |
-| `gcpAuthRefresh`                   | Пользовательский скрипт, который обновляет GCP Application Default Credentials при их истечении или невозможности загрузки. См. [расширенная конфигурация учетных данных](/docs/ru/google-vertex-ai#advanced-credential-configuration)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | `gcloud auth application-default login`                                                                                         |
-| `hooks`                            | Настройте пользовательские команды для запуска при событиях жизненного цикла. См. [документацию hooks](/docs/ru/hooks) для формата                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | См. [hooks](/docs/ru/hooks)                                                                                                          |
-| `httpHookAllowedEnvVars`           | Список разрешенных имен переменных окружения, которые HTTP hooks могут интерполировать в заголовки. При установке эффективный `allowedEnvVars` каждого hook является пересечением с этим списком. Не определено = без ограничений. Массивы объединяются в разных источниках параметров. См. [Конфигурация Hook](#hook-configuration)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | `["MY_TOKEN", "HOOK_SECRET"]`                                                                                                   |
-| `includeGitInstructions`           | **По умолчанию**: `true`. Включить встроенные инструкции рабочего процесса коммита и PR и снимок статуса git в системный запрос Claude. Установите на `false`, чтобы удалить оба, например при использовании собственных skills рабочего процесса git. Переменная окружения `CLAUDE_CODE_DISABLE_GIT_INSTRUCTIONS` имеет приоритет над этим параметром при установке                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | `false`                                                                                                                         |
-| `inputNeededNotifEnabled`          | **По умолчанию**: `false`. Когда [Remote Control](/docs/ru/remote-control) подключен, отправить push-уведомление на ваш телефон, когда запрос разрешения или вопрос ожидает вашего ввода. Появляется в `/config` как **Push when actions required**. См. [Mobile push notifications](/docs/ru/remote-control#mobile-push-notifications). Требует Claude Code v2.1.119 или позже                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | `true`                                                                                                                          |
-| `language`                         | Настройте предпочитаемый язык ответов Claude (например, `"japanese"`, `"spanish"`, `"french"`). Claude будет отвечать на этом языке по умолчанию. Также устанавливает язык [голосового диктанта](/docs/ru/voice-dictation#change-the-dictation-language) и автоматически созданных названий сеансов. Начиная с v2.1.176, когда не установлено, названия сеансов соответствуют языку вашего разговора                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | `"japanese"`                                                                                                                    |
-| `minimumVersion`                   | Предотвратить понижение версии автоматического обновления ниже определенной версии. Переключение с канала `"latest"` на `"stable"` через `/config` предлагает вам остаться на текущей версии или разрешить понижение. Выбор остаться устанавливает это значение. Также полезно в [управляемых параметрах](/docs/ru/permissions#managed-settings) для закрепления организационного минимума. Для жесткого предела, который блокирует запуск целиком, см. `requiredMinimumVersion`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | `"2.1.100"`                                                                                                                     |
-| `model`                            | Переопределить модель по умолчанию для использования в Claude Code. `--model` и [`ANTHROPIC_MODEL`](/docs/ru/model-config#environment-variables) переопределяют это на один сеанс                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | `"claude-sonnet-5"`                                                                                                             |
-| `modelOverrides`                   | Сопоставить ID моделей Anthropic с ID моделей, специфичными для поставщика, такими как ARN профилей вывода Amazon Bedrock. Каждая запись средства выбора модели использует свое сопоставленное значение при вызове API поставщика. См. [Переопределить ID моделей для каждой версии](/docs/ru/model-config#override-model-ids-per-version)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | `{"claude-opus-4-6": "arn:aws:bedrock:..."}`                                                                                    |
-| `otelHeadersHelper`                | Скрипт для создания динамических заголовков OpenTelemetry. Запускается при запуске и периодически. Установите интервал обновления с помощью [`CLAUDE_CODE_OTEL_HEADERS_HELPER_DEBOUNCE_MS`](/docs/ru/env-vars). См. [Динамические заголовки](/docs/ru/monitoring-usage#dynamic-headers)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | `/bin/generate_otel_headers.sh`                                                                                                 |
-| `outputStyle`                      | Настройте стиль вывода для корректировки системного запроса. См. [документацию стилей вывода](/docs/ru/output-styles)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | `"Explanatory"`                                                                                                                 |
-| `parentSettingsBehavior`           | (Только управляемые параметры) **По умолчанию**: `"first-wins"`. Контролирует, применяются ли управляемые параметры, предоставленные программно процессом хоста встраивания, таким как Agent SDK или расширение IDE, когда также присутствует развернутый администратором управляемый уровень. `"first-wins"`: параметры, предоставленные родителем, отбрасываются и применяется только уровень администратора. `"merge"`: параметры, предоставленные родителем, применяются под уровнем администратора, отфильтрованные так, чтобы они могли ужесточить политику, но не ослабить ее. Не имеет эффекта, когда развернут администратором уровень. Требует Claude Code v2.1.133 или позже                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | `"merge"`                                                                                                                       |
-| `permissions`                      | См. таблицу ниже для структуры разрешений.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |                                                                                                                                 |
-| `plansDirectory`                   | **По умолчанию**: `~/.claude/plans`. Настройте, где хранятся файлы плана. Путь относительно корня проекта.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | `"./plans"`                                                                                                                     |
-| `pluginSuggestionMarketplaces`     | (Только управляемые параметры) Имена marketplace, чьи plugins могут появляться как контекстные предложения установки. Ни одно предложение, объявленное marketplace, не появляется без этого списка разрешений; встроенный совет по дизайну первой стороны не затронут. Предложения поступают из объявления `relevance` каждого plugin в его записи marketplace. Имя вступает в силу только когда marketplace зарегистрирован на машине и его зарегистрированный источник также объявлен в управляемых параметрах, либо как запись `extraKnownMarketplaces` для этого имени, либо как запись `strictKnownMarketplaces`. Marketplace, зарегистрированный из другого источника под разрешенным именем, игнорируется. Официальный marketplace освобожден от требования источника: разрешение его имени одного достаточно, так как это имя может регистрироваться только из официального источника Anthropic.                                                                                                                                                                                                                                                                                                                                              | `["acme-corp-plugins"]`                                                                                                         |
-| `pluginTrustMessage`               | (Только управляемые параметры) Пользовательское сообщение, добавленное к предупреждению о доверии plugin, показываемому перед установкой. Используйте это для добавления контекста, специфичного для организации, например для подтверждения того, что plugins из вашего внутреннего marketplace проверены.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | `"All plugins from our marketplace are approved by IT"`                                                                         |
-| `policyHelper`                     | Развернутый администратором исполняемый файл, который вычисляет управляемые параметры динамически при запуске. Учитывается только из MDM или системного файла `managed-settings.json`. См. [Вычислить управляемые параметры с помощью помощника политики](#compute-managed-settings-with-a-policy-helper). Требует Claude Code v2.1.136 или позже                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | `{"path": "/usr/local/bin/claude-policy"}`                                                                                      |
-| `preferredNotifChannel`            | **По умолчанию**: `"auto"`. Метод для уведомлений о завершении задачи и запросов разрешения: `"auto"`, `"terminal_bell"`, `"iterm2"`, `"iterm2_with_bell"`, `"kitty"`, `"ghostty"` или `"notifications_disabled"`. `"auto"` отправляет уведомление рабочего стола в iTerm2, Ghostty и Kitty и ничего не делает в других терминалах. Установите `"terminal_bell"` для звонка в любом терминале. Появляется в `/config` как **Notifications**. См. [Получить звонок терминала или уведомление](/docs/ru/terminal-config#get-a-terminal-bell-or-notification)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | `"terminal_bell"`                                                                                                               |
-| `prefersReducedMotion`             | Уменьшить или отключить анимацию пользовательского интерфейса (спиннеры, shimmer, эффекты вспышки) для доступности                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | `true`                                                                                                                          |
-| `prUrlTemplate`                    | Шаблон URL для значка PR, показываемого в нижнем колонтитуле и в сводках результатов инструмента. Заменяет `{host}`, `{owner}`, `{repo}`, `{number}` и `{url}` из URL PR, сообщаемого `gh`. Используйте для указания ссылок PR на внутренний инструмент проверки кода вместо `github.com`. Не влияет на автоссылки `#123` в прозе Claude                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | `"https://reviews.example.com/{owner}/{repo}/pull/{number}"`                                                                    |
-| `remoteControlAtStartup`           | Подключить [Remote Control](/docs/ru/remote-control) автоматически при запуске каждого интерактивного сеанса, вместо ожидания `/remote-control`. Установите на `true`, чтобы всегда автоподключаться, `false`, чтобы никогда не автоподключаться, или оставьте неустановленным, чтобы следовать значению по умолчанию вашей организации. Появляется в `/config` как **Enable Remote Control for all sessions**. См. [Enable Remote Control for all sessions](/docs/ru/remote-control#enable-remote-control-for-all-sessions)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | `false`                                                                                                                         |
-| `requiredMaximumVersion`           | Только управляемые параметры. Максимальная версия Claude Code, разрешенная для запуска. Если запущенная версия новее, Claude Code выходит при запуске и инструктирует пользователя установить одобренную версию через одобренный метод организации; `claude install <version>` также может работать. Фоновые автоматические обновления и `claude update` пропускают версии выше потолка, поэтому установка в диапазоне остается в диапазоне. `claude update`, `claude install` и `claude doctor` продолжают работать выше потолка, чтобы пользователи могли восстановиться. Версии, которые предшествуют этому параметру, игнорируют его                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | `"2.1.150"`                                                                                                                     |
-| `requiredMinimumVersion`           | Только управляемые параметры. Минимальная версия Claude Code, требуемая для запуска. Если запущенная версия старше, Claude Code выходит при запуске и инструктирует пользователя обновить через одобренный метод организации. `claude update`, `claude install` и `claude doctor` продолжают работать ниже пола, чтобы пользователи могли восстановиться. Отличается от `minimumVersion`, который предотвращает понижение, но никогда не блокирует запуск. Версии, которые предшествуют этому параметру, игнорируют его                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | `"2.1.150"`                                                                                                                     |
-| `respectGitignore`                 | **По умолчанию**: `true`. Контролировать, соблюдает ли средство выбора файлов `@` шаблоны `.gitignore`. Когда `true`, файлы, соответствующие шаблонам `.gitignore`, исключаются из предложений                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | `false`                                                                                                                         |
-| `respondToBashCommands`            | **По умолчанию**: `true`. Отвечает ли Claude после запуска команды shell с префиксом `!` в поле ввода. Установите на `false`, чтобы добавить вывод команды в контекст без ответа. См. [Shell mode with `!` prefix](/docs/ru/interactive-mode#shell-mode-with-prefix). Требует Claude Code v2.1.186 или позже                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | `false`                                                                                                                         |
-| `showClearContextOnPlanAccept`     | **По умолчанию**: `false`. Показать опцию "очистить контекст" на экране принятия плана. Установите на `true`, чтобы восстановить опцию                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | `true`                                                                                                                          |
-| `showThinkingSummaries`            | **По умолчанию**: `false`. Показать [расширенное мышление](/docs/ru/model-config#extended-thinking) резюме в интерактивных сеансах. Когда не установлено или `false`, блоки мышления редактируются API и показываются как свернутая заглушка. Редактирование изменяет только то, что вы видите, а не то, что генерирует модель: чтобы снизить расходы на мышление, [снизьте бюджет или отключите мышление](/docs/ru/model-config#extended-thinking) вместо этого. Этот параметр не имеет эффекта в неинтерактивном режиме (`-p`), Agent SDK или расширениях IDE, таких как VS Code                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | `true`                                                                                                                          |
-| `showTurnDuration`                 | **По умолчанию**: `true`. Показывать сообщения о продолжительности хода после ответов, например "Cooked for 1m 6s". Появляется в `/config` как **Show turn duration**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | `false`                                                                                                                         |
-| `skillListingBudgetFraction`       | **По умолчанию**: `0.01`. Доля окна контекста модели, зарезервированная для [списка skills](/docs/ru/skills#skill-descriptions-are-cut-short), который видит Claude каждый ход. Когда список превышает бюджет, описания для наименее используемых skills сворачиваются до простых имен, чтобы Claude все еще мог их вызывать, но не видел бы, почему. Увеличьте, чтобы сохранить больше описаний видимыми за счет большего контекста за ход. `/doctor` показывает текущее количество усечений и какие skills затронуты. Требует Claude Code v2.1.105 или позже                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | `0.02`                                                                                                                          |
-| `skillListingMaxDescChars`         | **По умолчанию**: `1536`. Ограничение количества символов для каждого skill на объединенный текст `description` и `when_to_use` в [списке skills](/docs/ru/skills#skill-descriptions-are-cut-short), который видит Claude каждый ход. Текст длиннее этого усекается. Увеличьте, чтобы сохранить длинные описания в целости за счет большего контекста за ход; уменьшьте, чтобы вместить больше skills в рамках [`skillListingBudgetFraction`](#available-settings). Требует Claude Code v2.1.105 или позже                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | `2048`                                                                                                                          |
-| `skillOverrides`                   | {{/* min-version: 2.1.129 */}}Переопределения видимости для каждого skill, ключ которых - имя skill. Значение - `"on"`, `"name-only"`, `"user-invocable-only"` или `"off"`. Позволяет скрыть или свернуть skill без редактирования его SKILL.md. Не применяется к plugin skills, которые управляются через `/plugin`. Меню `/skills` записывает эти значения в `.claude/settings.local.json`. См. [Переопределить видимость skill из параметров](/docs/ru/skills#override-skill-visibility-from-settings). Требует Claude Code v2.1.129 или позже                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | `{"legacy-context": "name-only", "deploy": "off"}`                                                                              |
-| `skipWebFetchPreflight`            | Пропустить [проверку безопасности домена WebFetch](/docs/ru/data-usage#webfetch-domain-safety-check), которая отправляет каждое запрашиваемое имя хоста на `api.anthropic.com` перед выборкой. Установите на `true` в окружениях, которые блокируют трафик к Anthropic, таких как развертывания Amazon Bedrock, Google Cloud's Agent Platform или Microsoft Foundry с ограничивающим исходящим трафиком. При пропуске WebFetch пытается любой URL без консультации со списком блокировок                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | `true`                                                                                                                          |
-| `spinnerTipsEnabled`               | **По умолчанию**: `true`. Показывать советы в спиннере, пока Claude работает. Установите на `false`, чтобы отключить советы                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | `false`                                                                                                                         |
-| `spinnerTipsOverride`              | Переопределить советы спиннера пользовательскими строками. `tips`: массив строк советов. `excludeDefault`: если `true`, показывать только пользовательские советы; если `false` или отсутствует, пользовательские советы объединяются со встроенными советами                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | `{ "excludeDefault": true, "tips": ["Use our internal tool X"] }`                                                               |
-| `spinnerVerbs`                     | Настройте глаголы действия, показываемые в спиннере во время хода. Установите `mode` на `"replace"`, чтобы использовать только ваши глаголы, или `"append"`, чтобы добавить их к значениям по умолчанию                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | `{"mode": "append", "verbs": ["Pondering", "Crafting"]}`                                                                        |
-| `sshConfigs`                       | SSH подключения для отображения в раскрывающемся списке окружения [Desktop](/docs/ru/desktop#pre-configure-ssh-connections-for-your-team). Каждая запись требует `id`, `name` и `sshHost`; `sshPort`, `sshIdentityFile` и `startDirectory` являются необязательными. При установке в управляемых параметрах подключения доступны только для чтения для пользователей. Читается только из управляемых и пользовательских параметров                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | `[{"id": "dev-vm", "name": "Dev VM", "sshHost": "user@dev.example.com"}]`                                                       |
-| `statusLine`                       | Настройте пользовательскую строку состояния для отображения контекста. Поле объекта `padding`, `refreshInterval` и `hideVimModeIndicator` управляют интервалом, периодическими повторными запусками и тем, скрыт ли встроенный индикатор режима vim ниже приглашения. См. [документацию `statusLine`](/docs/ru/statusline#manually-configure-a-status-line)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | `{"type": "command", "command": "~/.claude/statusline.sh"}`                                                                     |
-| `strictKnownMarketplaces`          | (Только управляемые параметры) Список разрешений источников marketplace plugins. Не определено = без ограничений, пустой массив = блокировка. Применяется при добавлении marketplace и при установке, обновлении, обновлении и автоматическом обновлении plugin, поэтому marketplace, добавленный до установки политики, не может быть использован для получения plugins. Заблокированные источники проверяются перед загрузкой, поэтому они никогда не касаются файловой системы. См. [Управляемые ограничения marketplace](/docs/ru/plugin-marketplaces#managed-marketplace-restrictions)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | `[{ "source": "github", "repo": "acme-corp/plugins" }]`                                                                         |
-| `strictPluginOnlyCustomization`    | (Только управляемые параметры) Блокировать skills, agents, hooks и MCP servers из источников пользователя и проекта, поэтому они могут поступать только из plugins или управляемых параметров. `true` блокирует все четыре поверхности; массив блокирует только названные. См. [`strictPluginOnlyCustomization`](#strictpluginonlycustomization)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | `["skills", "hooks"]`                                                                                                           |
-| `syntaxHighlightingDisabled`       | Отключить подсветку синтаксиса в дифах, блоках кода и предпросмотрах файлов                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | `true`                                                                                                                          |
-| `teammateMode`                     | **По умолчанию**: `in-process`. Как отображаются товарищи по [команде агентов](/docs/ru/agent-teams): `in-process`, `auto` (разделенные панели в tmux или iTerm2, в процессе в противном случае), `tmux` (разделенные панели с использованием tmux или iTerm2, обнаруженные из вашего терминала), или }`iterm2` (iTerm2 native split panes via the `it2` CLI, added in v2.1.186). По умолчанию изменилось с `auto` в v2.1.179. `--teammate-mode` переопределяет это на один сеанс. См. [выбрать режим отображения](/docs/ru/agent-teams#choose-a-display-mode)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | `"auto"`                                                                                                                        |
-| `terminalProgressBarEnabled`       | **По умолчанию**: `true`. Показывать полосу прогресса терминала в поддерживаемых терминалах: ConEmu, Ghostty 1.2.0+ и iTerm2 3.6.6+. Появляется в `/config` как **Terminal progress bar**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | `false`                                                                                                                         |
-| `theme`                            | {{/* min-version: 2.1.119 */}}**По умолчанию**: `"dark"`. Цветовая тема для интерфейса: `"auto"`, `"dark"`, `"light"`, `"dark-daltonized"`, `"light-daltonized"`, `"dark-ansi"`, `"light-ansi"` или ссылка на пользовательскую тему, такая как `"custom:<slug>"` или `"custom:<plugin-name>:<slug>"`. См. [Создать пользовательскую тему](/docs/ru/terminal-config#create-a-custom-theme). Появляется в `/config` как **Theme**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | `"dark"`                                                                                                                        |
-| `tui`                              | Средство визуализации Terminal UI. Используйте `"fullscreen"` для безмерцающего [alt-screen renderer](/docs/ru/fullscreen) с виртуализированной прокруткой. Используйте `"default"` для классического main-screen renderer. Установите через `/tui`. Вы также можете установить переменную окружения [`CLAUDE_CODE_NO_FLICKER`](/docs/ru/env-vars). Фоновые сеансы, открытые из [представления агента](/docs/ru/agent-view), всегда используют fullscreen renderer независимо от этого параметра                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | `"fullscreen"`                                                                                                                  |
-| `ultracode`                        | Включить [ultracode](/docs/ru/workflows#let-claude-decide-with-ultracode) для сеанса. Этот ключ не читается из `settings.json`. Установите через `/effort ultracode`, `--settings` или запрос управления Agent SDK. {{/* min-version: 2.1.203 */}}Чтобы запустить сеанс с уже включенным ultracode, запустите с `claude --effort ultracode`, что требует Claude Code v2.1.203 или позже                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | `true`                                                                                                                          |
-| `useAutoModeDuringPlan`            | **По умолчанию**: `true`. Использует ли Plan Mode семантику автоматического режима, когда автоматический режим доступен. Не читается из общих параметров проекта. Появляется в `/config` как "Use auto mode during plan"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | `false`                                                                                                                         |
-| `verbose`                          | {{/* min-version: 2.1.119 */}}**По умолчанию**: `false`. Показать полный вывод инструмента вместо усеченных сводок. Появляется в `/config` как **Verbose output**. Флаг `--verbose` переопределяет это на один сеанс                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | `true`                                                                                                                          |
-| `viewMode`                         | Режим просмотра стенограммы по умолчанию при запуске: `"default"`, `"verbose"` или `"focus"`. Переопределяет липкий выбор `/focus` при установке. Флаг `--verbose` переопределяет это на один сеанс                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | `"verbose"`                                                                                                                     |
-| `vimInsertModeRemaps`              | {{/* min-version: 2.1.208 */}}Сопоставить двухклавишные последовательности режима INSERT с Escape в [режиме редактора vim](/docs/ru/interactive-mode#vim-editor-mode). Каждый ключ - это ровно два печатаемых символа, введенные последовательно, и `"<Esc>"` - единственная поддерживаемая цель; другие записи игнорируются. Читается из параметров пользователя, флага `--settings` и управляемых параметров только, поэтому проверенные в репозитории параметры не могут переопределить ваши сочетания клавиш. Не имеет эффекта, если `editorMode` не `"vim"`. См. [Переопределить сочетания клавиш режима INSERT](/docs/ru/interactive-mode#remap-insert-mode-key-sequences). Требует Claude Code v2.1.208 или позже                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | `{"jj": "<Esc>"}`                                                                                                               |
-| `voice`                            | Параметры [голосового диктанта](/docs/ru/voice-dictation): `enabled` включает диктант, `mode` выбирает `"hold"` или `"tap"`, и `autoSubmit` отправляет запрос при отпускании клавиши в режиме hold. Записывается автоматически при запуске `/voice`. Требует учетную запись Claude.ai                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | `{ "enabled": true, "mode": "tap" }`                                                                                            |
-| `voiceEnabled`                     | Устаревший псевдоним для `voice.enabled`. Предпочитайте объект `voice`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | `true`                                                                                                                          |
-| `wheelScrollAccelerationEnabled`   | {{/* min-version: 2.1.174 */}}**По умолчанию**: `true`. В [fullscreen rendering](/docs/ru/fullscreen#mouse-wheel-scrolling), ускорить скорость прокрутки колеса мыши во время быстрой прокрутки. Установите на `false` для постоянной скорости прокрутки за один оборот колеса. Требует Claude Code v2.1.174 или позже                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | `false`                                                                                                                         |
-| `workflowKeywordTriggerEnabled`    | {{/* min-version: 2.1.157 */}}**По умолчанию**: `true`. Вызывает ли слово `ultracode` в запросе [динамический workflow](/docs/ru/workflows#ask-for-a-workflow-in-your-prompt). Установите на `false`, чтобы вводить слово без срабатывания. Ultracode, `/workflows` и сохраненные команды workflow не затронуты. Появляется в `/config` как **Ultracode keyword trigger**. Добавлено в v2.1.157; до v2.1.160 ключевое слово триггера было `workflow`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | `false`                                                                                                                         |
-| `wslInheritsWindowsSettings`       | (Только управляемые параметры Windows) Когда `true`, Claude Code на WSL читает управляемые параметры из цепочки политик Windows в дополнение к `/etc/claude-code`, с приоритетом источников Windows. Учитывается только при установке в ключе реестра HKLM или `C:\Program Files\ClaudeCode\managed-settings.json`, оба из которых требуют администратора Windows для записи. Чтобы политика HKCU также применялась на WSL, флаг должен быть дополнительно установлен в самом HKCU. Не влияет на нативный Windows                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | `true`                                                                                                                          |
+* **Settings Error**: файл пользователя, проекта или локальный имеет недействительный JSON или значение, которое схема отклоняет. При запуске интерактивного сеанса Claude Code показывает диалог, который позволяет вам исправить файл с помощью Claude, выйти или продолжить без сломанных параметров.
+* **Settings Warning**: только отдельные записи не удаются, такие как неправильное правило разрешения или неизвестное имя события hook. Claude Code пропускает эти значения и держит остальную часть файла в силе.
+* **Managed settings**: Claude Code продолжает применять остальную часть файла. [Недействительные записи в управляемых параметрах](/docs/ru/managed-settings#invalid-entries-in-managed-settings) говорит, что он отбрасывает и какие ключи возвращаются к более строгому значению, пока вы их не исправите. Для документа управляемых параметров, который не является действительным JSON, см. [Документ управляемых параметров не может быть разобран](/docs/ru/errors#managed-settings-document-could-not-be-parsed).
+* **Configuration error**: `~/.claude.json` не может быть разобран. Claude Code копирует сломанный файл в `~/.claude/backups/.claude.json.corrupted.<timestamp>` и спрашивает, выйти и исправить его вручную или сбросить на конфигурацию по умолчанию; запуск `-p` выводит ошибку и выходит. Чтобы восстановить ваше предыдущее состояние, скопируйте обратно один из пяти самых последних файлов `.claude.json.backup.<timestamp>` в `~/.claude/backups/`, которые Claude Code сохраняет перед записью файла.
 
-<h3 id="global-config-settings">
-  Параметры глобальной конфигурации
-</h3>
+После продолжения запустите `/status`, чтобы увидеть затронутые файлы, и `claude doctor` для деталей каждой ошибки.
 
-Эти параметры хранятся в `~/.claude.json` вместо `settings.json`. Добавление их в `settings.json` вызовет ошибку валидации схемы.
+Запуск `-p` не показывает диалог. Если только [документ управляемых параметров не может быть разобран](/docs/ru/errors#managed-settings-document-could-not-be-parsed), Claude Code пропускает сломанный файл или значения и продолжает с остальным, поэтому после запуска `-p`, который игнорирует параметр, запустите `claude doctor`, чтобы увидеть, что он отбросил.
 
-<Note>
-  Версии до v2.1.119 также хранят ряд ключей предпочтений `/config` здесь вместо `settings.json`, включая `theme`, `verbose`, `editorMode`, `autoCompactEnabled` и `preferredNotifChannel`.
-</Note>
+<span id="how-scopes-interact" />
 
-| Ключ                         | Описание                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | Пример     |
-| :--------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------- |
-| `autoConnectIde`             | **По умолчанию**: `false`. Автоматически подключаться к запущенной IDE при запуске Claude Code из внешнего терминала. Появляется в `/config` как **Auto-connect to IDE (external terminal)** при запуске вне терминала VS Code или JetBrains. Переменная окружения [`CLAUDE_CODE_AUTO_CONNECT_IDE`](/docs/ru/env-vars) переопределяет это при установке                                                                                                                                                                                                                                                                                                                                                                                                                                                           | `true`     |
-| `autoInstallIdeExtension`    | **По умолчанию**: `true`. Автоматически устанавливать расширение Claude Code IDE при запуске из терминала VS Code. Появляется в `/config` как **Auto-install IDE extension** при запуске внутри терминала VS Code или JetBrains. Вы также можете установить переменную окружения [`CLAUDE_CODE_IDE_SKIP_AUTO_INSTALL`](/docs/ru/env-vars) на `1`                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | `false`    |
-| `externalEditorContext`      | **По умолчанию**: `false`. Добавить предыдущий ответ Claude как контекст с комментариями `#` при открытии внешнего редактора с помощью `Ctrl+G`. Появляется в `/config` как **Show last response in external editor**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | `true`     |
-| `permissionExplainerEnabled` | **По умолчанию**: `true`. Показать объяснение, созданное моделью, [команды](/docs/ru/permissions#permission-system) при нажатии `Ctrl+E` на запросе разрешения Bash или PowerShell. Установите на `false`, чтобы отключить сочетание клавиш                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | `false`    |
-| `teammateDefaultModel`       | Модель по умолчанию для товарищей по [команде агентов](/docs/ru/agent-teams) когда запрос порождения не указывает одну. Установите на псевдоним модели, такой как `"sonnet"`, или `null` для наследования текущего выбора `/model` лидера. Появляется в `/config` как **Default teammate model**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | `"sonnet"` |
-| `workflowSizeGuideline`      | {{/* min-version: 2.1.202 */}}**По умолчанию**: `unrestricted`, который не отправляет никакого руководства. Устанавливает [количество агентов, на которое Claude нацелен](/docs/ru/workflows#set-a-size-guideline) в динамических workflows, которые он пишет. Claude Code отправляет значение Claude как совет, а не как принудительный лимит. Принимает `unrestricted`, `small`, `medium` или `large`. Появляется в `/config` как **Dynamic workflow size**. Вы также можете установить его напрямую с помощью `/config workflowSizeGuideline=small`. Требует Claude Code v2.1.202 или позже. {{/* min-version: 2.1.203 */}}Руководство по количеству агентов также заменяет порог по умолчанию для [предупреждения `Large workflow`](/docs/ru/workflows#cost); это поведение требует Claude Code v2.1.203 или позже | `"small"`  |
+<span id="key-points-about-the-configuration-system" />
 
-<h3 id="worktree-settings">
-  Параметры Worktree
-</h3>
+<span id="which-value-claude-code-uses" />
 
-Настройте, как `--worktree` создает и управляет git worktrees.
+<span id="which-value-wins" />
 
-| Ключ                          | Описание                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Пример                                |
-| :---------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------ |
-| `worktree.baseRef`            | Какой ref новые worktrees ветвятся от. `"fresh"` (по умолчанию) ветвится от `origin/<default-branch>` для чистого дерева, соответствующего удаленному. `"head"` ветвится от вашего текущего локального `HEAD`, поэтому неотправленные коммиты и состояние ветки функции присутствуют в worktree. Внутри связанного worktree, `"head"` разрешается в `HEAD` этого worktree, а не в основной проверке. Применяется к `--worktree`, инструменту `EnterWorktree` и изоляции subagent                                                                                                              | `"head"`                              |
-| `worktree.symlinkDirectories` | Каталоги для создания символических ссылок из основного репозитория в каждый worktree, чтобы избежать дублирования больших каталогов на диске. По умолчанию никакие каталоги не создаются символическими ссылками                                                                                                                                                                                                                                                                                                                                                                             | `["node_modules", ".cache"]`          |
-| `worktree.sparsePaths`        | Каталоги для проверки в каждом worktree через git sparse-checkout. На диск записываются только перечисленные пути, что быстрее в больших монорепозиториях. Пока существует разреженный worktree, git включает `extensions.worktreeConfig` в общий файл `.git/config` репозитория; см. [Проверить только нужные вам каталоги](/docs/ru/large-codebases#check-out-only-the-directories-you-need)                                                                                                                                                                                                     | `["packages/my-app", "shared/utils"]` |
-| `worktree.bgIsolation`        | {{/* min-version: 2.1.143 */}}Режим изоляции для [фоновых сеансов](/docs/ru/agent-view#how-file-edits-are-isolated). `"worktree"` (по умолчанию) блокирует `Edit`/`Write` в основной проверке до вызова `EnterWorktree`. {{/* min-version: 2.1.203 */}}Вне git репозитория, [hook `WorktreeCreate`](/docs/ru/worktrees#non-git-version-control), который не удается, освобождает блок, чтобы сеанс мог редактировать рабочий каталог на месте; требует Claude Code v2.1.203 или позже. `"none"` позволяет фоновым заданиям редактировать рабочую копию напрямую. Требует Claude Code v2.1.143 или позже | `"none"`                              |
-
-Чтобы скопировать файлы, игнорируемые gitignore, такие как `.env`, в новые worktrees, используйте [файл `.worktreeinclude`](/docs/ru/worktrees#copy-gitignored-files-into-worktrees) в корне вашего проекта вместо параметра.
-
-<h3 id="permission-settings">
-  Параметры разрешений
-</h3>
-
-| Ключи                               | Описание                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | Пример                                                                 |
-| :---------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :--------------------------------------------------------------------- |
-| `allow`                             | Массив правил разрешений для разрешения использования инструмента. Глобусы имен инструментов поддерживаются только в позиции инструмента после буквального префикса `mcp__<server>__`, такого как `mcp__github__get_*`; сегмент сервера должен быть без глобусов. См. [Синтаксис правила разрешения](#permission-rule-syntax) ниже для деталей сопоставления шаблонов                                                                                                                                                                                                                                                                                                                                                                                                     | `[ "Bash(git diff *)" ]`                                               |
-| `ask`                               | Массив правил разрешений для запроса подтверждения при использовании инструмента. См. [Синтаксис правила разрешения](#permission-rule-syntax) ниже                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | `[ "Bash(git push *)" ]`                                               |
-| `deny`                              | Массив правил разрешений для запрета использования инструмента. Используйте это для исключения чувствительных файлов из доступа Claude Code. Имена инструментов принимают глобусы: `"*"` запрещает каждый инструмент и `"mcp__*"` запрещает все MCP инструменты. См. [Синтаксис правила разрешения](#permission-rule-syntax) и [Ограничения разрешений Bash](/docs/ru/permissions#tool-specific-permission-rules)                                                                                                                                                                                                                                                                                                                                                              | `[ "WebFetch", "Bash(curl *)", "Read(./.env)", "Read(./secrets/**)" ]` |
-| `additionalDirectories`             | Дополнительные [рабочие каталоги](/docs/ru/permissions#working-directories) для доступа к файлам. Большинство конфигурации `.claude/` [не обнаруживается](/docs/ru/permissions#additional-directories-grant-file-access-not-configuration) из этих каталогов                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | `[ "../docs/" ]`                                                       |
-| `defaultMode`                       | Режим [разрешения](/docs/ru/permission-modes) по умолчанию при открытии Claude Code. Допустимые значения: `default`, `acceptEdits`, `plan`, `auto`, `dontAsk`, `bypassPermissions` и {{/* min-version: 2.1.200 */}}`manual` как псевдоним для `default`, режим, обозначенный как Manual в CLI и расширениях VS Code и JetBrains. Псевдоним `manual` требует Claude Code v2.1.200 или позже. {{/* min-version: 2.1.142 */}}`auto` игнорируется при установке в параметрах проекта или локальных параметрах, поэтому репозиторий не может предоставить себе автоматический режим; установите его в `~/.claude/settings.json` вместо этого. До v2.1.142 параметры проекта могли устанавливать `auto`. Флаг CLI `--permission-mode` переопределяет этот параметр для одного сеанса | `"acceptEdits"`                                                        |
-| `disableBypassPermissionsMode`      | Установите на `"disable"`, чтобы предотвратить активацию режима `bypassPermissions`. Это отключает флаг командной строки `--dangerously-skip-permissions`. Обычно размещается в [управляемых параметрах](/docs/ru/permissions#managed-settings) для применения организационной политики, но работает из любой области                                                                                                                                                                                                                                                                                                                                                                                                                                                          | `"disable"`                                                            |
-| `skipDangerousModePermissionPrompt` | Пропустить подтверждение, показываемое перед входом в режим обхода разрешений через `--dangerously-skip-permissions` или `defaultMode: "bypassPermissions"`. Игнорируется при установке в параметрах проекта (`.claude/settings.json`) для предотвращения автоматического обхода подтверждения ненадежными репозиториями                                                                                                                                                                                                                                                                                                                                                                                                                                                  | `true`                                                                 |
-
-<h3 id="permission-rule-syntax">
-  Синтаксис правила разрешения
-</h3>
-
-Правила разрешения следуют формату `Tool` или `Tool(specifier)`. Правила оцениваются по порядку: сначала правила deny, затем ask, затем allow. Первое совпадающее правило определяет результат независимо от специфичности правила. См. [порядок оценки правила разрешения](/docs/ru/permissions#manage-permissions) для деталей.
-
-Быстрые примеры:
-
-| Правило                        | Эффект                                           |
-| :----------------------------- | :----------------------------------------------- |
-| `Bash`                         | Соответствует всем командам Bash                 |
-| `Bash(npm run *)`              | Соответствует командам, начинающимся с `npm run` |
-| `Read(./.env)`                 | Соответствует чтению файла `.env`                |
-| `WebFetch(domain:example.com)` | Соответствует запросам fetch к example.com       |
-
-Для полного справочника синтаксиса правил, включая поведение подстановочных знаков, шаблоны, специфичные для инструментов, для Read, Edit, WebFetch, MCP и Agent правил, а также ограничения безопасности шаблонов Bash, см. [Синтаксис правила разрешения](/docs/ru/permissions#permission-rule-syntax).
-
-<h3 id="sandbox-settings">
-  Параметры Sandbox
-</h3>
-
-Настройте расширенное поведение sandboxing. Sandboxing изолирует команды bash от вашей файловой системы и сети. См. [Sandboxing](/docs/ru/sandboxing) для деталей.
-
-| Ключи                                  | Описание                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | Пример                                               |
-| :------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------- |
-| `enabled`                              | Включить bash sandboxing (macOS, Linux и WSL2). По умолчанию: false                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | `true`                                               |
-| `failIfUnavailable`                    | Выход с ошибкой при запуске, если `sandbox.enabled` равно true, но sandbox не может запуститься (отсутствуют зависимости или неподдерживаемая платформа). Когда false (по умолчанию), выводится предупреждение и команды выполняются без sandbox. Предназначено для развертываний управляемых параметров, требующих sandboxing как жесткого шлюза                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | `true`                                               |
-| `autoAllowBashIfSandboxed`             | Автоматически одобрить команды bash при sandboxing. По умолчанию: true                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | `true`                                               |
-| `excludedCommands`                     | Команды, которые должны выполняться вне sandbox                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | `["docker *"]`                                       |
-| `allowUnsandboxedCommands`             | Разрешить командам выполняться вне sandbox через параметр `dangerouslyDisableSandbox`. Когда установлено на `false`, люк `dangerouslyDisableSandbox` полностью отключен и все команды должны выполняться в sandbox (или быть в `excludedCommands`). Полезно для корпоративных политик, требующих строгого sandboxing. По умолчанию: true                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | `false`                                              |
-| `filesystem.allowWrite`                | Дополнительные пути, где команды в sandbox могут писать. Массивы объединяются во всех областях параметров: пути пользователя, проекта и управляемые пути объединяются, не заменяются. Также объединяются с путями из правил разрешения `Edit(...)`. См. [префиксы пути sandbox](#sandbox-path-prefixes) ниже.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | `["/tmp/build", "~/.kube"]`                          |
-| `filesystem.denyWrite`                 | Пути, где команды в sandbox не могут писать. Массивы объединяются во всех областях параметров. Также объединяются с путями из правил разрешения `Edit(...)`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | `["/etc", "/usr/local/bin"]`                         |
-| `filesystem.denyRead`                  | Пути, где команды в sandbox не могут читать. Массивы объединяются во всех областях параметров. Также объединяются с путями из правил разрешения `Read(...)`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | `["~/.aws/credentials"]`                             |
-| `filesystem.allowRead`                 | Пути для повторного разрешения чтения в пределах регионов `denyRead`. Путь `allowRead` повторно открывает чтение внутри более широкого региона `denyRead`, и точный путь в `denyRead` остается заблокированным внутри более широкого `allowRead`; см. [таблицу перекрытия](/docs/ru/sandboxing#configure-sandboxing) для примеров. Массивы объединяются во всех областях параметров. Используйте это для создания шаблонов доступа для чтения только рабочей области.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | `["."]`                                              |
-| `filesystem.allowManagedReadPathsOnly` | (Только управляемые параметры) Только пути `allowRead` из управляемых параметров учитываются. `denyRead` по-прежнему объединяется из всех источников. По умолчанию: false                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | `true`                                               |
-| `credentials.files`                    | {{/* min-version: 2.1.187 */}}Файлы учетных данных или каталоги, которые команды в sandbox не могут читать. Применяет тот же блок чтения, что и `filesystem.denyRead`; отдельный ключ держит пути учетных данных сгруппированными с `credentials.envVars` и отдельно от общих правил файловой системы. Каждая запись - это `{ "path": "...", "mode": "deny" }`, и `deny` - единственный поддерживаемый режим для файлов. Пути используют те же [префиксы](#sandbox-path-prefixes), что и параметры `filesystem.*`. Массивы объединяются во всех областях параметров. Требует Claude Code v2.1.187 или позже.                                                                                                                                                                                                                                                                                                                                                       | `[{ "path": "~/.aws/credentials", "mode": "deny" }]` |
-| `credentials.envVars`                  | {{/* min-version: 2.1.187 */}}Переменные окружения для [защиты от команд в sandbox](/docs/ru/sandboxing#protect-credentials). Каждая запись имеет `name` и `mode`; имя должно начинаться с буквы или подчеркивания и содержать только буквы, цифры и подчеркивания. `deny` удаляет переменную из окружения команд в sandbox. Требует Claude Code v2.1.187 или позже. {{/* min-version: 2.1.199 */}}`mask` заменяет переменную значением-дозорным для каждого сеанса внутри sandbox, пока прокси sandbox подставляет реальное значение на исходящих запросах к записям `injectHosts` этой записи; это требует `network.tlsTerminate` и Claude Code v2.1.199 или позже. Записи `mask` учитываются только из параметров пользователя, управляемых или CLI `--settings`, а не из `.claude/settings.json` или `.claude/settings.local.json`. Массивы объединяются во всех областях параметров, и `deny` имеет приоритет, когда одна переменная появляется с обоими режимами. | `[{ "name": "GITHUB_TOKEN", "mode": "deny" }]`       |
-| `credentials.envVars[].injectHosts`    | Хосты, где прокси sandbox подставляет реальное значение записи `mask`. Каждый хост также должен быть покрыт `network.allowedDomains`, либо точно, либо подстановочным знаком. Когда не установлено, прокси подставляет значение на запросы каждому хосту в `network.allowedDomains`. Принимается, но игнорируется, когда `mode` - `deny`. Требует Claude Code v2.1.199 или позже. {{/* min-version: 2.1.199 */}}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | `["api.github.com"]`                                 |
-| `credentials.allowPlaintextInject`     | Разрешить подстановку `mask` на простых HTTP запросах, а также на TLS-завершенных HTTPS. На простом HTTP восходящая идентификация не проверена и учетные данные путешествуют в открытом виде, поэтому оставьте это отключенным вне доверенных тестовых сетей. Учитывается только из параметров пользователя, управляемых или CLI `--settings`, а не из `.claude/settings.json` или `.claude/settings.local.json`. По умолчанию: false. Требует Claude Code v2.1.199 или позже. {{/* min-version: 2.1.199 */}}                                                                                                                                                                                                                                                                                                                                                                                                                                                      | `true`                                               |
-| `network.allowUnixSockets`             | (Только macOS) Пути Unix socket, доступные в sandbox. Игнорируется на Linux и WSL2, где фильтр seccomp не может проверить пути socket; используйте `allowAllUnixSockets` вместо этого.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | `["~/.ssh/agent-socket"]`                            |
-| `network.allowAllUnixSockets`          | Разрешить все подключения Unix socket в sandbox. На Linux и WSL2 это единственный способ разрешить Unix sockets, так как он пропускает фильтр seccomp, который в противном случае блокирует вызовы `socket(AF_UNIX, ...)`. По умолчанию: false                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | `true`                                               |
-| `network.allowLocalBinding`            | Разрешить привязку к портам localhost (только macOS). По умолчанию: false                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | `true`                                               |
-| `network.allowMachLookup`              | Дополнительные имена сервисов XPC/Mach, которые sandbox может искать (только macOS). Поддерживает один завершающий `*` для сопоставления префикса. Требуется для инструментов, которые взаимодействуют через XPC, таких как iOS Simulator или Playwright.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | `["com.apple.coresimulator.*"]`                      |
-| `network.allowedDomains`               | Массив доменов для разрешения исходящего сетевого трафика. Поддерживает подстановочные знаки (например, `*.example.com`).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | `["github.com", "*.npmjs.org"]`                      |
-| `network.deniedDomains`                | Массив доменов для блокировки исходящего сетевого трафика. Поддерживает тот же синтаксис подстановочных знаков, что и `allowedDomains`. Имеет приоритет над `allowedDomains` при совпадении обоих. Объединяется из всех источников параметров независимо от `allowManagedDomainsOnly`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | `["sensitive.cloud.example.com"]`                    |
-| `network.allowManagedDomainsOnly`      | (Только управляемые параметры) Только `allowedDomains` и правила разрешения `WebFetch(domain:...)` из управляемых параметров учитываются. Домены из параметров пользователя, проекта и локальной области игнорируются. Неразрешенные домены автоматически блокируются без запроса пользователя. Запрещенные домены по-прежнему учитываются из всех источников. По умолчанию: false                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | `true`                                               |
-| `network.httpProxyPort`                | Порт HTTP прокси, используемый, если вы хотите использовать собственный прокси. Если не указано, Claude запустит собственный прокси.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | `8080`                                               |
-| `network.socksProxyPort`               | Порт SOCKS5 прокси, используемый, если вы хотите использовать собственный прокси. Если не указано, Claude запустит собственный прокси.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | `8081`                                               |
-| `network.tlsTerminate`                 | Экспериментально. Завершить TLS внутри прокси sandbox, чтобы он мог читать содержимое HTTPS запросов. Требуется для [подстановки учетных данных](/docs/ru/sandboxing#protect-credentials) `mask`. Установите `{}` для создания эфемерного центра сертификации для сеанса, или установите `caCertPath` и `caKeyPath` для использования вашего собственного. Учитывается только из параметров пользователя, управляемых или CLI `--settings`, а не из `.claude/settings.json` или `.claude/settings.local.json`. Требует Claude Code v2.1.199 или позже. {{/* min-version: 2.1.199 */}}                                                                                                                                                                                                                                                                                                                                                                                   | `{}`                                                 |
-| `enableWeakerNestedSandbox`            | Включить более слабый sandbox для непривилегированных окружений Docker (только Linux и WSL2). **Снижает безопасность.** По умолчанию: false                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | `true`                                               |
-| `enableWeakerNetworkIsolation`         | (Только macOS) Разрешить доступ к системной службе доверия TLS (`com.apple.trustd.agent`) в sandbox. Требуется для инструментов на основе Go, таких как `gh`, `gcloud` и `terraform`, для проверки сертификатов TLS при использовании `httpProxyPort` с MITM прокси и пользовательским CA. **Снижает безопасность** путем открытия потенциального пути утечки данных. По умолчанию: false                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | `true`                                               |
-| `allowAppleEvents`                     | (Только macOS) Разрешить команды в sandbox отправлять Apple Events. Требуется для `open`, `osascript` и инструментов, которые открывают URL в браузере, которые в противном случае не удаются с ошибкой `-600`. **Удаляет изоляцию выполнения кода.** Команды в sandbox могут запускать другие приложения без sandbox без запроса пользователя; они также могут отправлять команды AppleScript запущенным приложениям, таким как Terminal, в соответствии с запросом согласия на автоматизацию macOS для каждого приложения (TCC). Учитывается только из параметров пользователя, управляемых или CLI, а не из параметров проекта. По умолчанию: false                                                                                                                                                                                                                                                                                                             | `true`                                               |
-| `bwrapPath`                            | (Только управляемые параметры, Linux/WSL2) Абсолютный путь к двоичному файлу bubblewrap (`bwrap`). Переопределяет автоматическое обнаружение через `PATH`. Учитывается только из [управляемых параметров](/docs/ru/settings#settings-files), а не из параметров пользователя или проекта. Полезно, когда `bwrap` установлен в нестандартном местоположении в управляемых окружениях.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | `/opt/admin/bwrap`                                   |
-| `socatPath`                            | (Только управляемые параметры, Linux/WSL2) Абсолютный путь к двоичному файлу `socat`, используемому для прокси сети sandbox. Переопределяет автоматическое обнаружение через `PATH`. Учитывается только из управляемых параметров.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | `/opt/admin/socat`                                   |
-
-<h4 id="sandbox-path-prefixes">
-  Префиксы пути Sandbox
-</h4>
-
-Пути в `filesystem.allowWrite`, `filesystem.denyWrite`, `filesystem.denyRead`, `filesystem.allowRead` и `credentials.files` поддерживают эти префиксы:
-
-| Префикс               | Значение                                                                                         | Пример                                                                     |
-| :-------------------- | :----------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------- |
-| `/`                   | Абсолютный путь от корня файловой системы                                                        | `/tmp/build` остается `/tmp/build`                                         |
-| `~/`                  | Относительно домашнего каталога                                                                  | `~/.kube` становится `$HOME/.kube`                                         |
-| `./` или без префикса | Относительно корня проекта для параметров проекта, или к `~/.claude` для параметров пользователя | `./output` в `.claude/settings.json` разрешается в `<project-root>/output` |
-
-Более старый префикс `//path` для абсолютных путей по-прежнему работает. Если вы ранее использовали одиночный слэш `/path`, ожидая разрешения относительно проекта, переключитесь на `./path`.
-
-Этот синтаксис отличается от [правил разрешения Read и Edit](/docs/ru/permissions#read-and-edit), которые используют `//path` для абсолютного и `/path` для относительного к проекту. Пути файловой системы sandbox используют стандартные соглашения: `/tmp/build` - это абсолютный путь.
-
-**Пример конфигурации:**
-
-```json theme={null}
-{
-  "sandbox": {
-    "enabled": true,
-    "autoAllowBashIfSandboxed": true,
-    "excludedCommands": ["docker *"],
-    "filesystem": {
-      "allowWrite": ["/tmp/build", "~/.kube"],
-      "denyRead": ["~/.aws/credentials"]
-    },
-    "network": {
-      "allowedDomains": ["github.com", "*.npmjs.org", "registry.yarnpkg.com"],
-      "deniedDomains": ["uploads.github.com"],
-      "allowUnixSockets": [
-        "/var/run/docker.sock"
-      ],
-      "allowLocalBinding": true
-    }
-  }
-}
-```
-
-**Ограничения файловой системы и сети** можно настроить двумя способами, которые объединяются вместе:
-
-* **Параметры `sandbox.filesystem`** (показаны выше): Контролируют пути на границе sandbox уровня ОС. Эти ограничения применяются ко всем командам подпроцесса (например, `kubectl`, `terraform`, `npm`), а не только к инструментам файлов Claude.
-* **Правила разрешений**: Используйте правила разрешения `Edit` allow/deny для управления доступом инструмента файлов Claude, правила `Read` deny для блокировки чтения и правила `WebFetch` allow/deny для управления доменами сети. Пути из этих правил также объединяются в конфигурацию sandbox.
-
-<h3 id="attribution-settings">
-  Параметры атрибуции
-</h3>
-
-Claude Code добавляет атрибуцию к коммитам git и pull requests. Они настраиваются отдельно:
-
-* Коммиты используют [git trailers](https://git-scm.com/docs/git-interpret-trailers) (например, `Co-Authored-By`) по умолчанию, которые можно настроить или отключить
-* Описания pull request - это простой текст
-
-| Ключи        | Описание                                                                                                                                                                                                                                  |
-| :----------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `commit`     | Атрибуция для коммитов git, включая любые trailers. Пустая строка скрывает атрибуцию коммита                                                                                                                                              |
-| `pr`         | Атрибуция для описаний pull request. Пустая строка скрывает атрибуцию pull request                                                                                                                                                        |
-| `sessionUrl` | Добавлять ли ссылку на сеанс claude.ai как trailer `Claude-Session` на коммитах и ссылку в описаниях pull request при запуске из веб-сеанса или сеанса Remote Control. По умолчанию: `true`. Установите на `false`, чтобы опустить ссылку |
-
-**Атрибуция коммита по умолчанию:**
-
-```text theme={null}
-Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
-```
-
-Имя модели в trailer отражает активную модель для сеанса.
-
-**Атрибуция pull request по умолчанию:**
-
-```text theme={null}
-🤖 Generated with [Claude Code](https://claude.com/claude-code)
-```
-
-**Пример:**
-
-```json theme={null}
-{
-  "attribution": {
-    "commit": "Generated with AI\n\nCo-Authored-By: AI <ai@example.com>",
-    "pr": ""
-  }
-}
-```
-
-<Note>
-  Параметр `attribution` имеет приоритет над устаревшим параметром `includeCoAuthoredBy`. Чтобы скрыть всю атрибуцию, установите `commit` и `pr` на пустые строки и `sessionUrl` на `false`.
-</Note>
-
-<h3 id="file-suggestion-settings">
-  Параметры предложения файлов
-</h3>
-
-Настройте пользовательскую команду для автодополнения пути файла `@`. Встроенное предложение файлов использует быстрый обход файловой системы, но большие монорепозитории могут выиграть от индексирования, специфичного для проекта, такого как предварительно построенный индекс файлов или пользовательские инструменты.
-
-```json theme={null}
-{
-  "fileSuggestion": {
-    "type": "command",
-    "command": "~/.claude/file-suggestion.sh"
-  }
-}
-```
-
-Команда запускается с теми же переменными окружения, что и [hooks](/docs/ru/hooks), включая `CLAUDE_PROJECT_DIR`. Она получает JSON через stdin с полем `query`:
-
-```json theme={null}
-{"query": "src/comp"}
-```
-
-Выведите пути файлов, разделенные новой строкой, в stdout (в настоящее время ограничено 15):
-
-```text theme={null}
-src/components/Button.tsx
-src/components/Modal.tsx
-src/components/Form.tsx
-```
-
-**Пример:**
-
-```bash theme={null}
-#!/bin/bash
-query=$(cat | jq -r '.query')
-# Замените your-repo-file-index на вашу собственную команду поиска файлов
-your-repo-file-index --query "$query" | head -20
-```
-
-<h3 id="footer-link-badges">
-  Значки ссылок нижнего колонтитула
-</h3>
-
-Параметр `footerLinksRegexes` отображает дополнительные кликабельные значки в нижнем колонтитуле ниже поля ввода. Используйте его для преобразования ID, выводимых проектными CLI, такими как инструменты проверки и трекеры проблем, в ссылки сеанса.
-
-Регулярное выражение `pattern` каждой записи сопоставляется с выводом хода: результаты инструментов, включая содержимое файлов и полученные страницы, и собственные ответы Claude. Плейсхолдеры `{name}` в `url` и `label` заполняются из именованных групп захвата в шаблоне.
-
-Следующий пример отображает значок всякий раз, когда ключ проблемы, такой как `PROJ-1234`, появляется в выводе хода. Именованная группа `(?<key>...)` захватывает ключ, и `{key}` подставляет его в URL и метку:
-
-```json ~/.claude/settings.json theme={null}
-{
-  "footerLinksRegexes": [
-    {
-      "type": "regex",
-      "pattern": "\\b(?<key>PROJ-\\d+)\\b",
-      "url": "https://issues.example.com/browse/{key}",
-      "label": "{key}"
-    }
-  ]
-}
-```
-
-С этой конфигурацией, когда `PROJ-1234` появляется в результате инструмента или в ответе Claude, чип `PROJ-1234` появляется в нижнем колонтитуле, ссылаясь на `https://issues.example.com/browse/PROJ-1234`.
-
-Следующие ограничения применяются к каждой записи:
-
-| Ограничение        | Поведение                                                                                                                                                                                                        |
-| :----------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Источник URL       | Захваченные значения кодируются в URL, и построенный URL должен совместно использовать источник шаблона. Захват может заполнить сегмент пути или значение запроса, но не может изменить, на что указывает ссылка |
-| Длина URL          | Построенные URL длиннее 2048 символов отбрасываются                                                                                                                                                              |
-| Схема URL          | Должна быть `https`, `http` или признанная схема deep-link редактора или рабочей области: `vscode`, `vscode-insiders`, `cursor`, `windsurf`, `zed`, `jetbrains`, `idea`, `slack`, `linear`, `notion`, `figma`    |
-| Метка              | По умолчанию совпадает с текстом и усекается до 28 столбцов отображения                                                                                                                                          |
-| Количество значков | Максимум 5 значков отображаются. Самый старый вытесняется новыми совпадениями и `/clear` удаляет их                                                                                                              |
-| Область параметров | Читается из параметров пользователя, флага `--settings` и управляемых параметров только. Игнорируется в проекте `.claude/settings.json` и локальном `.claude/settings.local.json`                                |
-
-Когда ход завершается, Claude Code сопоставляет регулярное выражение `pattern` каждой записи с выводом хода на основном потоке, поэтому медленное регулярное выражение блокирует пользовательский интерфейс до завершения. Влож енные квантификаторы, такие как `(a+)+$`, могут занимать экспоненциально долго против определенных входов и замораживать сеанс, поэтому держите каждый `pattern` линейным и избегайте вложения `+` или `*`.
-
-Значки нижнего колонтитула отображаются рядом с [пользовательской строкой состояния](/docs/ru/statusline), когда она настроена; ни один не заменяет другой. Используйте строку состояния для строки, управляемой скриптом, которая вычисляет свой собственный контент из данных сеанса, и значки нижнего колонтитула для преобразования ID из разговора в ссылки без скрипта.
-
-<h3 id="hook-configuration">
-  Конфигурация Hook
-</h3>
-
-Эти параметры контролируют, какие hooks разрешены для запуска и к чему могут получить доступ HTTP hooks. Параметр `allowManagedHooksOnly` можно настроить только в [управляемых параметрах](#settings-files). Списки разрешений URL и переменных окружения можно установить на любом уровне параметров и объединяются в разных источниках.
-
-**Поведение, когда `allowManagedHooksOnly` равно `true`:**
-
-* Управляемые hooks и SDK hooks загружаются
-* Hooks из plugins, принудительно включенных в управляемых параметрах `enabledPlugins`, загружаются. Это позволяет администраторам распространять проверенные hooks через организационный marketplace, блокируя все остальное. Доверие предоставляется по полному ID `plugin@marketplace`, поэтому plugin с тем же именем из другого marketplace остается заблокированным
-* Пользовательские hooks, проектные hooks и все остальные plugin hooks блокируются
-
-**Ограничить URL HTTP hooks:**
-
-Ограничьте, на какие URL могут быть направлены HTTP hooks. Поддерживает `*` как подстановочный знак для сопоставления. Когда массив определен, HTTP hooks, направленные на несовпадающие URL-адреса, молча блокируются. Сопоставление имен хостов не чувствительно к регистру и игнорирует завершающую точку FQDN, соответствуя семантике DNS.
-
-```json theme={null}
-{
-  "allowedHttpHookUrls": ["https://hooks.example.com/*", "http://localhost:*"]
-}
-```
-
-**Ограничить переменные окружения HTTP hook:**
-
-Ограничьте, какие имена переменных окружения HTTP hooks могут интерполировать в значения заголовков. Эффективный `allowedEnvVars` каждого hook является пересечением его собственного списка и этого параметра.
-
-```json theme={null}
-{
-  "httpHookAllowedEnvVars": ["MY_TOKEN", "HOOK_SECRET"]
-}
-```
-
-<h3 id="compute-managed-settings-with-a-policy-helper">
-  Вычислить управляемые параметры с помощью помощника политики
-</h3>
-
-Параметр `policyHelper` указывает на исполняемый файл, который вычисляет управляемые параметры при запуске, поэтому администраторы могут получить политику из состояния устройства, идентификации или удаленного сервиса вместо статического файла. Настройте его из MDM или системного файла `managed-settings.json`. Claude Code игнорирует `policyHelper`, когда он появляется в любой другой области, включая параметры пользователя, параметры проекта, куст реестра HKCU и [параметры, управляемые сервером](/docs/ru/server-managed-settings).
-
-Параметр принимает эти ключи:
-
-| Ключ                | Тип    | Описание                                                                                                             |
-| ------------------- | ------ | -------------------------------------------------------------------------------------------------------------------- |
-| `path`              | string | Абсолютный путь к исполняемому файлу помощника                                                                       |
-| `timeoutMs`         | number | Как долго ждать помощника перед обработкой запуска как неудачного                                                    |
-| `refreshIntervalMs` | number | Как часто повторно запускать помощника в фоне. Установите на `0`, чтобы отключить обновление, или на минимум `60000` |
-
-Помощник записывает конверт JSON в stdout. Поместите параметры под ключ `managedSettings` вместо верхнего уровня, так как объект параметров верхнего уровня анализируется с `managedSettings` неопределенным и не применяет ничего:
-
-```json theme={null}
-{
-  "managedSettings": {
-    "permissions": { "deny": ["Read(//etc/secrets/**)"] }
-  },
-  "claudeMd": "# Organization context\n...",
-  "appendSystemPrompt": "Always cite the internal style guide."
-}
-```
-
-Когда помощник выдает `managedSettings`, этот объект заменяет параметры, управляемые на основе файлов, для запуска. Когда помощник выходит с ненулевым кодом при запуске, Claude Code выводит ошибку и отказывается запуститься, поэтому помощник, которому нужна устойчивость к сбоям, должен обслуживать из собственного кэша и выходить с `0`.
-
-<h3 id="settings-precedence">
+<h2 id="settings-precedence">
   Приоритет параметров
-</h3>
-
-Параметры применяются в порядке приоритета. От наивысшего к наименьшему:
-
-1. **Управляемые параметры** ([управляемые сервером](/docs/ru/server-managed-settings), [политики MDM/OS-уровня](#configuration-scopes) или [управляемые параметры](/docs/ru/settings#settings-files))
-   * Политики, развернутые IT через доставку сервера, профили конфигурации MDM, политики реестра или файлы управляемых параметров
-   * Не могут быть переопределены никаким другим уровнем, включая аргументы командной строки
-   * В пределах управляемого уровня приоритет: [`policyHelper`](#compute-managed-settings-with-a-policy-helper) вывод, который при настройке является единственным используемым управляемым источником > удаленный (параметры, управляемые сервером claude.ai или [Claude apps gateway](/docs/ru/claude-apps-gateway)-доставленные) > политики MDM/OS-уровня > на основе файлов (`managed-settings.d/*.json` и `managed-settings.json`, объединенные вместе) > реестр HKCU (только Windows). Используется только один управляемый источник; источники не объединяются в разных уровнях, с одним исключением: ключи блокировки sandbox `sandbox.network.allowManagedDomainsOnly` и `sandbox.filesystem.allowManagedReadPathsOnly`, с их связанными списками разрешений, `allowAllClaudeAiMcps` и пути двоичных файлов sandbox `sandbox.bwrapPath` и `sandbox.socatPath` учитываются, когда любой управляемый источник, контролируемый администратором, их устанавливает; уровень HKCU, доступный для записи пользователем, исключен.
-   * Хосты встраивания, такие как Claude Desktop, могут предоставлять политику через опцию SDK `managedSettings`. По умолчанию это игнорируется, когда присутствует любой управляемый источник, развернутый администратором: параметры, управляемые сервером, политика MDM или OS-уровня, или файл управляемых параметров. Резервный реестр HKCU, доступный для записи пользователем, не считается управляемым источником, развернутым администратором. Администраторы могут согласиться, установив [`parentSettingsBehavior`](#available-settings) на `"merge"`. Значения встраивателя отфильтрованы, чтобы они могли ужесточить управляемую политику, но не ослабить ее.
-
-2. **Аргументы командной строки**
-   * Временные переопределения для конкретного сеанса. JSON, переданный через `--settings <file-or-json>`, объединяется с параметрами на основе файлов, используя те же правила, что и другие уровни: ключ, установленный здесь, переопределяет тот же ключ в локальных, проектных или пользовательских параметрах, и пропуск ключа оставляет значение нижнего уровня на месте
-
-3. **Локальные параметры проекта** (`.claude/settings.local.json`)
-   * Личные параметры, специфичные для проекта
-
-4. **Общие параметры проекта** (`.claude/settings.json`)
-   * Параметры проекта, совместно используемые командой в системе управления версиями
-
-5. **Параметры пользователя** (`~/.claude/settings.json`)
-   * Личные глобальные параметры
-
-Эта иерархия гарантирует, что организационные политики всегда применяются, при этом позволяя командам и отдельным лицам настраивать свой опыт. Один и тот же приоритет применяется независимо от того, запускаете ли вы Claude Code из CLI, [расширения VS Code](/docs/ru/vs-code) или [JetBrains IDE](/docs/ru/jetbrains).
-
-Например, если ваши параметры пользователя установили `permissions.defaultMode` на `acceptEdits` и параметры проекта установили его на `default`, применяется значение проекта. Пример ниже охватывает, как вместо этого объединяются параметры со значениями массива, такие как правила разрешений.
-
-<Note>
-  **Параметры массива объединяются в разных областях.** Когда один и тот же параметр со значением массива (такой как `sandbox.filesystem.allowWrite` или `permissions.allow`) появляется в нескольких областях, массивы **объединяются и дедублицируются**, не заменяются. Это означает, что области с более низким приоритетом могут добавлять записи без переопределения установленных областями с более высоким приоритетом, и наоборот. Например, если управляемые параметры устанавливают `allowWrite` на `["/opt/company-tools"]` и пользователь добавляет `["~/.kube"]`, оба пути включены в окончательную конфигурацию.
-
-  Два параметра массива не объединяются таким образом:
-
-  * [`fallbackModel`](#available-settings) - это упорядоченная цепь, где позиция имеет значение: файл с наивысшим приоритетом, который его определяет, предоставляет всю цепь.
-  * [`availableModels`](#available-settings): {{/* min-version: 2.1.175 */}}когда [источник управляемых параметров с наивысшим приоритетом](/docs/ru/server-managed-settings#settings-precedence) его определяет, этот список применяется как есть и записи пользователя, проекта и локальной области не могут его расширить. В разных неуправляемых областях массивы объединяются как обычно. См. [Поведение объединения](/docs/ru/model-config#merge-behavior).
-</Note>
-
-<h3 id="verify-active-settings">
-  Проверить активные параметры
-</h3>
-
-Запустите `/status` внутри Claude Code, чтобы увидеть, какие источники параметров активны. Внутри меню вкладка **Status** включает строку `Setting sources`, которая перечисляет каждый уровень Claude Code, загруженный для текущего сеанса, такой как `User settings` или `Project local settings`. Когда действуют [управляемые параметры](/docs/ru/admin-setup#decide-how-settings-reach-devices), запись показывает канал доставки в скобках, например `Enterprise managed settings (remote)`, `(plist)`, `(HKLM)`, `(HKCU)` или `(file)`. Уровень появляется в списке только когда этот источник загружается с по крайней мере одним ключом, поэтому пустой список означает, что источники параметров не были найдены.
-
-Строка `Setting sources` подтверждает, какие источники читаются. Она не показывает, какой уровень предоставил каждый отдельный ключ. Вкладка **Config** в том же диалоге - это редактор для фиксированного набора переключателей, таких как тема и подробный вывод, а не представление содержимого вашего `settings.json`.
-
-Если файл параметров содержит ошибки, такие как недействительный JSON или значение, которое не прошло валидацию, `/status` перечисляет затронутые файлы. Запустите `/doctor` для деталей каждой ошибки.
-
-<h3 id="key-points-about-the-configuration-system">
-  Ключевые моменты о системе конфигурации
-</h3>
-
-* **Файлы памяти (`CLAUDE.md`)**: Содержат инструкции и контекст, которые Claude загружает при запуске
-* **Файлы параметров (JSON)**: Настраивают разрешения, переменные окружения и поведение инструмента
-* **Skills**: Пользовательские запросы, которые можно вызвать с помощью `/skill-name` или загружены Claude автоматически
-* **MCP servers**: Расширяют Claude Code дополнительными инструментами и интеграциями
-* **Приоритет**: Конфигурации более высокого уровня (Managed) переопределяют конфигурации более низкого уровня (User/Project)
-* **Наследование**: Параметры объединяются в разных областях; скалярные значения из областей с более высоким приоритетом переопределяют, и массивы объединяются, с двумя исключениями, описанными в [примечании об объединении массивов](#settings-precedence)
-
-<h3 id="system-prompt">
-  Системный запрос
-</h3>
-
-Внутренний системный запрос Claude Code не опубликован. Чтобы добавить пользовательские инструкции, используйте файлы `CLAUDE.md` или флаг `--append-system-prompt`.
-
-<h3 id="exclude-sensitive-files">
-  Исключение чувствительных файлов
-</h3>
-
-Чтобы предотвратить доступ Claude Code к файлам, содержащим чувствительную информацию, такую как ключи API, секреты и файлы окружения, используйте параметр `permissions.deny` в вашем файле `.claude/settings.json`:
-
-```json theme={null}
-{
-  "permissions": {
-    "deny": [
-      "Read(./.env)",
-      "Read(./.env.*)",
-      "Read(./secrets/**)",
-      "Read(./config/credentials.json)",
-      "Read(./build)"
-    ]
-  }
-}
-```
-
-Это заменяет устаревшую конфигурацию `ignorePatterns`. Файлы, соответствующие этим шаблонам, исключаются из обнаружения файлов и результатов поиска, и операции чтения этих файлов запрещены.
-
-<h2 id="subagent-configuration">
-  Конфигурация Subagent
 </h2>
 
-Claude Code поддерживает пользовательские AI subagents, которые можно настроить на уровне пользователя и проекта. Эти subagents хранятся как файлы Markdown с YAML frontmatter:
+Когда один и тот же ключ появляется в нескольких местах, Claude Code использует значение из наивысшего уровня, который его устанавливает. Стек ниже показывает уровни, наивысший вверху; ключ на более высоком уровне переопределяет тот же ключ где-либо ниже.
 
-* **Subagents пользователя**: `~/.claude/agents/`, доступны во всех ваших проектах
-* **Subagents проекта**: `.claude/agents/`, специфичны для вашего проекта и могут быть совместно использованы с вашей командой
+<SettingsPrecedence />
 
-Файлы Subagent определяют специализированных AI помощников с пользовательскими запросами и разрешениями инструментов. Узнайте больше о создании и использовании subagents в [документации subagents](/docs/ru/sub-agents).
+По порядку, наивысший приоритет первым:
 
-<h2 id="plugin-configuration">
-  Конфигурация Plugin
-</h2>
+1. **Управляемые параметры**: параметры, которые ваша организация развертывает через файл `managed-settings.json`, политику MDM или [параметры, управляемые сервером](/docs/ru/server-managed-settings) из консоли claude.ai. Ничто из того, что вы устанавливаете, их не переопределяет: ключ, который вы передаете с `--settings`, не переопределяет тот же управляемый ключ, и флаг, такой как `--model`, выбирает только из моделей, которые разрешает ваша организация. Управляемый `model` устанавливает модель, с которой начинается каждая сессия, и вы все еще можете переключаться с помощью `/model`; блокировка — это [`availableModels`](/docs/ru/settings-reference#availablemodels), которая ограничивает `/model`, `--model` и ключ `model` в ваших собственных файлах. Когда ваша организация предоставляет более одного управляемого источника, правила для [приоритета в пределах управляемого уровня](/docs/ru/managed-settings#precedence-within-the-managed-tier) указывают, что Claude Code читает из каждого.
+2. **Аргументы командной строки**: флаги, которые вы передаете при запуске `claude` из терминала, для одной сессии; см. [Изменить параметр для одной сессии](#change-a-setting-for-one-session). Claude Code объединяет JSON, который вы передаете с `--settings <file-or-json>`, с вашими файлами параметров по тем же правилам, что и другие уровни: он берет ключ, который вы устанавливаете здесь, над тем же ключом в локальных, проектных или пользовательских параметрах, и сохраняет значение более низкого уровня для ключа, который вы опускаете.
+3. **Локальные параметры проекта** (`.claude/settings.local.json`): ваши личные параметры для этого проекта.
+4. **Общие параметры проекта** (`.claude/settings.json`): параметры, которые ваша команда проверяет в систему управления версиями.
+5. **Пользовательские параметры** (`~/.claude/settings.json`): ваши личные параметры для каждого проекта.
 
-Claude Code поддерживает систему plugins, которая позволяет вам расширить функциональность с помощью skills, agents, hooks и MCP servers. Plugins распространяются через marketplaces и могут быть настроены на уровне пользователя и репозитория.
+Переменные окружения не являются уровнем в этом стеке. Когда поведение имеет как переменную оболочки, так и ключ параметров, какой из них применяется, решается для каждой пары отдельно, а не по уровню: `ANTHROPIC_MODEL`, экспортированная в вашей оболочке, применяется над ключом `model` из любого файла, в то время как `ANTHROPIC_DEFAULT_MODEL` применяется только когда ни один файл не устанавливает `model`. [Справочник переменных окружения](/docs/ru/env-vars#precedence) указывает, какие ключи имеют пару и какой из них Claude Code читает первым. Блок `env` внутри файла параметров — это обычный ключ и следует уровням выше.
 
-<h3 id="plugin-settings">
-  Параметры Plugin
+Для нескольких ключей, чувствительных к безопасности, Claude Code соблюдает более строгое значение из более низкого уровня над управляемым значением; [Исключения из приоритета управляемых параметров](#exceptions-to-managed-settings-precedence) их перечисляет.
+
+<h3 id="lists-merge-instead-of-overriding">
+  Списки объединяются вместо переопределения
 </h3>
 
-Параметры, связанные с plugins, в `settings.json`:
+Когда вы устанавливаете один и тот же ключ списка, такой как `permissions.allow`, в более чем одном файле, Claude Code объединяет списки вместо выбора одного, поэтому каждый файл может добавлять записи без удаления записей другого файла. Четыре ключа, которые содержат списки моделей или записи для каждой модели, следуют своим собственным правилам:
 
-```json theme={null}
-{
-  "enabledPlugins": {
-    "formatter@acme-tools": true,
-    "deployer@acme-tools": true,
-    "analyzer@security-plugins": false
-  },
-  "extraKnownMarketplaces": {
-    "acme-tools": {
-      "source": {
-        "source": "github",
-        "repo": "acme-corp/claude-plugins"
-      }
-    }
-  }
-}
-```
+* [`fallbackModel`](/docs/ru/settings-reference#fallbackmodel) — это упорядоченная цепь, где позиция имеет значение, поэтому Claude Code берет все значение из файла с наивысшим приоритетом, который его определяет.
+* [`modelPicker`](/docs/ru/settings-reference#modelpicker) содержит один упорядоченный список строк плюс флаг замены, поэтому Claude Code никогда не объединяет строки из двух источников. Он берет все значение из наивысшего из управляемых параметров, `--settings` и пользовательских параметров, которые его определяют, и игнорирует ключ в проектных и локальных параметрах. Требует Claude Code v2.1.242 или позже.
+* [`availableModels`](/docs/ru/settings-reference#availablemodels): когда применяемые управляемые параметры Claude Code его определяют, Claude Code применяет этот список как есть и игнорирует записи, которые вы добавляете в пользовательские, проектные или локальные параметры, если только приложение, которое встраивает Claude Code, не предоставляет свой собственный список моделей; см. [Исключения из приоритета управляемых параметров](#exceptions-to-managed-settings-precedence). Во всех управляемых источниках список также никогда не объединяется; [как Claude Code объединяет управляемые источники](/docs/ru/managed-settings#how-claude-code-combines-managed-sources) указывает, какой список источника применяется. Во всех неуправляемых областях Claude Code объединяет массивы как обычно.
+* [`modelSettings`](/docs/ru/settings-reference#modelsettings): Claude Code разрешает его одну модель за раз, вместе с [`effortLevel`](/docs/ru/settings-reference#effortlevel). Запись `modelSettings` указывает, какое значение файла применяется к модели.
 
-<h4 id="enabledplugins">
-  `enabledPlugins`
-</h4>
+<span id="examples" />
 
-Контролирует, какие plugins включены. Формат: `"plugin-name@marketplace-name": true/false`. Plugin без записи в любой области возвращается к его значению [`defaultEnabled`](/docs/ru/plugins-reference#default-enablement).
-
-**Области**:
-
-* **Параметры пользователя** (`~/.claude/settings.json`): Личные предпочтения plugins
-* **Параметры проекта** (`.claude/settings.json`): Plugins, специфичные для проекта, совместно используемые с командой
-* **Локальные параметры** (`.claude/settings.local.json`): Переопределения для каждой машины, не зафиксированные, когда Claude Code их создает
-* **Управляемые параметры** (`managed-settings.json`): Переопределения организационной политики, которые блокируют установку на всех уровнях и скрывают plugin из marketplace
-
-<Note>
-  Параметры проекта имеют приоритет над параметрами пользователя, поэтому установка plugin на `false` в `~/.claude/settings.json` не отключает plugin, который параметры проекта `.claude/settings.json` включают. Чтобы отказаться от plugin, включенного проектом, на вашей машине, установите его на `false` в `.claude/settings.local.json` вместо этого.
-
-  Plugins, принудительно включенные управляемыми параметрами, не могут быть отключены таким образом, так как управляемые параметры переопределяют локальные параметры.
-
-  Включение plugin из внешнего источника, такого как репозиторий GitHub или пакет npm, в файле `.claude/settings.json` проекта не устанавливает его для других людей. Начиная с Claude Code v2.1.195, каждый путь, который загружает plugins, просит каждого пользователя [установить и доверить plugin](/docs/ru/discover-plugins#configure-team-marketplaces) перед его запуском.
-</Note>
-
-**Пример**:
-
-```json theme={null}
-{
-  "enabledPlugins": {
-    "code-formatter@team-tools": true,
-    "deployment-tools@team-tools": true,
-    "experimental-features@personal": false
-  }
-}
-```
-
-<h4 id="pluginconfigs">
-  `pluginConfigs`
-</h4>
-
-Хранит значения параметров, не содержащих конфиденциальную информацию, которые собирает [`userConfig`](/docs/ru/plugins-reference#user-configuration) prompt plugin, индексированные по ID plugin. Claude Code записывает этот ключ в параметры пользователя, когда вы заполняете диалоговое окно конфигурации plugin, поэтому вам не нужно редактировать его вручную. Конфиденциальные параметры хранятся в macOS Keychain вместо этого, или в `~/.claude/.credentials.json` на платформах без поддерживаемого keychain.
-
-Этот пример хранит один параметр для plugin, установленного из marketplace `acme-tools`:
-
-```json theme={null}
-{
-  "pluginConfigs": {
-    "deployer@acme-tools": {
-      "options": {
-        "api_endpoint": "https://api.example.com"
-      }
-    }
-  }
-}
-```
-
-`pluginConfigs` читается из параметров пользователя, флага `--settings` и управляемых параметров только. Записи в файле `.claude/settings.json` или `.claude/settings.local.json` проекта игнорируются, потому что эти значения подставляются в конфигурации hook, MCP и LSP plugin, и клонированный репозиторий не должен иметь возможность их предоставить. До v2.1.207 параметры проекта и локальные параметры также читались.
-
-<h4 id="extraknownmarketplaces">
-  `extraKnownMarketplaces`
-</h4>
-
-Определяет дополнительные marketplaces, которые должны быть доступны для репозитория. Обычно используется в параметрах уровня репозитория для обеспечения доступа членов команды к требуемым источникам plugins.
-
-**Когда репозиторий включает `extraKnownMarketplaces`**:
-
-1. Членам команды предлагается установить marketplace при доверии папке
-2. Членам команды затем предлагается установить plugins из этого marketplace
-3. Пользователи могут пропустить нежелательные marketplaces или plugins (хранятся в параметрах пользователя)
-4. Установка соблюдает границы доверия и требует явного согласия
-
-**Пример**:
-
-```json theme={null}
-{
-  "extraKnownMarketplaces": {
-    "acme-tools": {
-      "source": {
-        "source": "github",
-        "repo": "acme-corp/claude-plugins"
-      }
-    },
-    "security-plugins": {
-      "source": {
-        "source": "git",
-        "url": "https://git.example.com/security/plugins.git"
-      }
-    }
-  }
-}
-```
-
-**Типы источников Marketplace**:
-
-* `github`: Репозиторий GitHub (использует `repo`)
-* `git`: Любой URL git (использует `url`)
-* `directory`: Путь локальной файловой системы (использует `path`, только для разработки)
-* `hostPattern`: Шаблон regex для сопоставления хостов marketplace (использует `hostPattern`)
-* `settings`: встроенный marketplace, объявленный непосредственно в settings.json без отдельного размещенного репозитория (использует `name` и `plugins`)
-
-Тип источника `git` работает с любым сервисом хостинга git, включая самостоятельно размещенные GitLab и Bitbucket. Claude Code клонирует репозиторий с той же аутентификацией, которую использовал бы `git clone` на этой машине: настроенные помощники учетных данных или ключи SSH. Токен поставщика, такой как `GITHUB_TOKEN`, вступает в силу только через помощника учетных данных, который его читает. См. [Приватные репозитории](/docs/ru/plugin-marketplaces#private-repositories) для деталей настройки.
-
-Для источников `github` и `git` установите `"skipLfs": true` внутри объекта `source` (рядом с `repo` или `url`) для пропуска загрузок Git LFS, когда Claude Code клонирует или обновляет репозиторий marketplace. Файлы указателей LFS остаются указателями вместо загрузки их содержимого. Используйте это, когда репозиторий содержит большие объекты LFS, не связанные с содержимым plugin. Требует Claude Code v2.1.153 или позже.
-
-Каждая запись marketplace также принимает опциональное логическое значение `autoUpdate`. Установите `"autoUpdate": true` рядом с `source`, чтобы Claude Code обновлял этот marketplace и обновлял его установленные plugins при запуске. Если опущено, официальные marketplaces Anthropic по умолчанию имеют значение `true`, а все остальные marketplaces по умолчанию имеют значение `false`. См. [Настройка автоматических обновлений](/docs/ru/discover-plugins#configure-auto-updates).
-
-Используйте `source: 'settings'` для объявления небольшого набора plugins встроенным образом без настройки размещенного репозитория marketplace. Plugins, указанные здесь, должны ссылаться на внешние источники, такие как GitHub или npm. Вам по-прежнему нужно включить каждый plugin отдельно в `enabledPlugins`.
-
-```json theme={null}
-{
-  "extraKnownMarketplaces": {
-    "team-tools": {
-      "source": {
-        "source": "settings",
-        "name": "team-tools",
-        "plugins": [
-          {
-            "name": "code-formatter",
-            "source": {
-              "source": "github",
-              "repo": "acme-corp/code-formatter"
-            }
-          }
-        ]
-      }
-    }
-  }
-}
-```
-
-<h4 id="strictknownmarketplaces">
-  `strictKnownMarketplaces`
-</h4>
-
-**Только управляемые параметры**: Контролирует, какие marketplaces plugins пользователи могут добавить и установить plugins из них. Этот параметр можно настроить только в [управляемых параметрах](/docs/ru/settings#settings-files) и предоставляет администраторам строгий контроль над источниками marketplace.
-
-**Местоположения файлов управляемых параметров**:
-
-* **macOS**: `/Library/Application Support/ClaudeCode/managed-settings.json`
-* **Linux и WSL**: `/etc/claude-code/managed-settings.json`
-* **Windows**: `C:\Program Files\ClaudeCode\managed-settings.json`
-
-**Ключевые характеристики**:
-
-* Доступно только в управляемых параметрах (`managed-settings.json`)
-* Не может быть переопределено параметрами пользователя или проекта (наивысший приоритет)
-* Применяется ДО операций сети/файловой системы (заблокированные источники никогда не выполняются)
-* Использует точное сопоставление для спецификаций источников (включая `ref`, `path` для источников git), кроме `hostPattern` и `pathPattern`, которые используют сопоставление regex
-
-**Поведение списка разрешений**:
-
-* `undefined` (по умолчанию): Без ограничений - пользователи могут добавить любой marketplace
-* Пустой массив `[]`: Полная блокировка - пользователи не могут добавить новые marketplaces
-* Список источников: Пользователи могут добавить только marketplaces, которые точно совпадают
-
-**Все поддерживаемые типы источников**:
-
-Список разрешений поддерживает несколько типов источников marketplace. Большинство источников используют точное сопоставление, в то время как `hostPattern` и `pathPattern` используют сопоставление regex с хостом marketplace и путем файловой системы соответственно.
-
-1. **Репозитории GitHub**:
-
-```json theme={null}
-{ "source": "github", "repo": "acme-corp/approved-plugins" }
-{ "source": "github", "repo": "acme-corp/security-tools", "ref": "v2.0" }
-{ "source": "github", "repo": "acme-corp/plugins", "ref": "main", "path": "marketplace" }
-```
-
-Поля: `repo` (обязательно), `ref` (опционально: ветка или тег), `path` (опционально: подкаталог)
-
-2. **Репозитории Git**:
-
-```json theme={null}
-{ "source": "git", "url": "https://gitlab.example.com/tools/plugins.git" }
-{ "source": "git", "url": "https://bitbucket.org/acme-corp/plugins.git", "ref": "production" }
-{ "source": "git", "url": "ssh://git@git.example.com/plugins.git", "ref": "v3.1", "path": "approved" }
-```
-
-Поля: `url` (обязательно), `ref` (опционально: ветка или тег), `path` (опционально: подкаталог)
-
-3. **Marketplaces на основе URL**:
-
-```json theme={null}
-{ "source": "url", "url": "https://plugins.example.com/marketplace.json" }
-{ "source": "url", "url": "https://cdn.example.com/marketplace.json", "headers": { "Authorization": "Bearer ${TOKEN}" } }
-```
-
-Поля: `url` (обязательно), `headers` (опционально: HTTP заголовки для аутентифицированного доступа)
-
-<Note>
-  Marketplaces на основе URL загружают только файл `marketplace.json`. Они не загружают файлы plugins с сервера. Plugins в marketplaces на основе URL должны использовать внешние источники (GitHub, npm или URL git) вместо относительных путей. Для plugins с относительными путями используйте marketplace на основе Git. См. [Troubleshooting](/docs/ru/plugin-marketplaces#plugins-with-relative-paths-fail-in-url-based-marketplaces) для деталей.
-</Note>
-
-4. **Пакеты NPM**:
-
-```json theme={null}
-{ "source": "npm", "package": "@acme-corp/claude-plugins" }
-{ "source": "npm", "package": "@acme-corp/approved-marketplace" }
-```
-
-Поля: `package` (обязательно, поддерживает scoped пакеты)
-
-5. **Пути файлов**:
-
-```json theme={null}
-{ "source": "file", "path": "/usr/local/share/claude/acme-marketplace.json" }
-{ "source": "file", "path": "/opt/acme-corp/plugins/marketplace.json" }
-```
-
-Поля: `path` (обязательно: абсолютный путь к файлу marketplace.json)
-
-6. **Пути каталогов**:
-
-```json theme={null}
-{ "source": "directory", "path": "/usr/local/share/claude/acme-plugins" }
-{ "source": "directory", "path": "/opt/acme-corp/approved-marketplaces" }
-```
-
-Поля: `path` (обязательно: абсолютный путь к каталогу, содержащему `.claude-plugin/marketplace.json`)
-
-7. **Сопоставление шаблона хоста**:
-
-```json theme={null}
-{ "source": "hostPattern", "hostPattern": "^github\\.example\\.com$" }
-{ "source": "hostPattern", "hostPattern": "^gitlab\\.internal\\.example\\.com$" }
-```
-
-Поля: `hostPattern` (обязательно: шаблон regex для сопоставления с хостом marketplace)
-
-Используйте сопоставление шаблона хоста, когда вы хотите разрешить все marketplaces с определенного хоста без перечисления каждого репозитория отдельно. Это полезно для организаций с внутренними серверами GitHub Enterprise или GitLab, где разработчики создают свои собственные marketplaces.
-
-Извлечение хоста по типу источника:
-
-* `github`: всегда сопоставляется с `github.com`
-* `git`: извлекает имя хоста из URL (поддерживает форматы HTTPS и SSH)
-* `url`: извлекает имя хоста из URL
-* `npm`, `file`, `directory`: не поддерживается для сопоставления шаблона хоста
-
-8. **Сопоставление шаблона пути**:
-
-```json theme={null}
-{ "source": "pathPattern", "pathPattern": "^/opt/approved/" }
-{ "source": "pathPattern", "pathPattern": ".*" }
-```
-
-Поля: `pathPattern` (обязательно: шаблон regex, сопоставляемый с полем `path` источников `file` и `directory`)
-
-Используйте сопоставление шаблона пути для разрешения marketplaces на основе файловой системы наряду с ограничениями `hostPattern` для сетевых источников. Установите `".*"` для разрешения всех локальных путей или более узкий шаблон для ограничения определенными каталогами.
-
-**Примеры конфигурации**:
-
-Пример: разрешить только определенные marketplaces:
-
-```json theme={null}
-{
-  "strictKnownMarketplaces": [
-    {
-      "source": "github",
-      "repo": "acme-corp/approved-plugins"
-    },
-    {
-      "source": "github",
-      "repo": "acme-corp/security-tools",
-      "ref": "v2.0"
-    },
-    {
-      "source": "url",
-      "url": "https://plugins.example.com/marketplace.json"
-    },
-    {
-      "source": "npm",
-      "package": "@acme-corp/compliance-plugins"
-    }
-  ]
-}
-```
-
-Пример: отключить все добавления marketplace:
-
-```json theme={null}
-{
-  "strictKnownMarketplaces": []
-}
-```
-
-Пример: разрешить все marketplaces с внутреннего git сервера:
-
-```json theme={null}
-{
-  "strictKnownMarketplaces": [
-    {
-      "source": "hostPattern",
-      "hostPattern": "^github\\.example\\.com$"
-    }
-  ]
-}
-```
-
-**Требования точного сопоставления**:
-
-Источники marketplace должны совпадать точно для разрешения добавления пользователем. Для источников на основе git (`github` и `git`), это включает все опциональные поля:
-
-* `repo` или `url` должны совпадать точно
-* Поле `ref` должно совпадать точно (или оба быть не определены)
-* Поле `path` должно совпадать точно (или оба быть не определены)
-
-Примеры источников, которые не совпадают:
-
-```json theme={null}
-// Это РАЗНЫЕ источники:
-{ "source": "github", "repo": "acme-corp/plugins" }
-{ "source": "github", "repo": "acme-corp/plugins", "ref": "main" }
-
-// Это также РАЗНЫЕ:
-{ "source": "github", "repo": "acme-corp/plugins", "path": "marketplace" }
-{ "source": "github", "repo": "acme-corp/plugins" }
-```
-
-**Сравнение с `extraKnownMarketplaces`**:
-
-| Аспект                        | `strictKnownMarketplaces`                             | `extraKnownMarketplaces`                               |
-| ----------------------------- | ----------------------------------------------------- | ------------------------------------------------------ |
-| **Назначение**                | Применение организационной политики                   | Удобство команды                                       |
-| **Файл параметров**           | Только `managed-settings.json`                        | Любой файл параметров                                  |
-| **Поведение**                 | Блокирует добавления, не входящие в список разрешений | Автоматически устанавливает отсутствующие marketplaces |
-| **Когда применяется**         | До операций сети/файловой системы                     | После запроса доверия пользователя                     |
-| **Может быть переопределено** | Нет (наивысший приоритет)                             | Да (параметрами с более высоким приоритетом)           |
-| **Формат источника**          | Прямой объект источника                               | Именованный marketplace с вложенным источником         |
-| **Случай использования**      | Соответствие, ограничения безопасности                | Адаптация, стандартизация                              |
-
-**Различие формата**:
-
-`strictKnownMarketplaces` использует прямые объекты источников:
-
-```json theme={null}
-{
-  "strictKnownMarketplaces": [
-    { "source": "github", "repo": "acme-corp/plugins" }
-  ]
-}
-```
-
-`extraKnownMarketplaces` требует именованные marketplaces:
-
-```json theme={null}
-{
-  "extraKnownMarketplaces": {
-    "acme-tools": {
-      "source": { "source": "github", "repo": "acme-corp/plugins" }
-    }
-  }
-}
-```
-
-**Использование обоих вместе**:
-
-`strictKnownMarketplaces` - это политический шлюз: он контролирует, что пользователи могут добавить, но не регистрирует никакие marketplaces. Чтобы одновременно ограничить и предварительно зарегистрировать marketplace для всех пользователей, установите оба в `managed-settings.json`:
-
-```json theme={null}
-{
-  "strictKnownMarketplaces": [
-    { "source": "github", "repo": "acme-corp/plugins" }
-  ],
-  "extraKnownMarketplaces": {
-    "acme-tools": {
-      "source": { "source": "github", "repo": "acme-corp/plugins" }
-    }
-  }
-}
-```
-
-Если установлен только `strictKnownMarketplaces`, пользователи по-прежнему могут добавить разрешенный marketplace вручную через `/plugin marketplace add`, но он не доступен автоматически.
-
-**Важные примечания**:
-
-* Ограничения проверяются ДО любых запросов сети или операций файловой системы
-* При блокировке пользователи видят четкие сообщения об ошибках, указывающие, что источник заблокирован управляемой политикой
-* Ограничение применяется при добавлении marketplace и при установке, обновлении, обновлении и автоматическом обновлении plugin. Marketplace, добавленный до установки политики, не может быть использован для установки или обновления plugins после того, как его источник больше не совпадает со списком разрешений
-* Управляемые параметры имеют наивысший приоритет и не могут быть переопределены
-
-См. [Управляемые ограничения marketplace](/docs/ru/plugin-marketplaces#managed-marketplace-restrictions) для документации, ориентированной на пользователя.
-
-<h4 id="strictpluginonlycustomization">
-  `strictPluginOnlyCustomization`
-</h4>
-
-**Только управляемые параметры**: блокирует skills, agents, hooks и MCP servers из источников пользователя и проекта, поэтому они могут поступать только из plugins или управляемых параметров. Объедините это с `strictKnownMarketplaces` для контроля полной цепочки поставок настройки: список разрешений marketplace контролирует, какие plugins пользователи могут установить, и этот параметр блокирует все, что не поступает из plugin или из управляемых параметров.
-
-Значение либо `true` для блокировки всех четырех поверхностей, либо массив, называющий поверхности для блокировки:
-
-```json theme={null}
-{
-  "strictPluginOnlyCustomization": ["skills", "hooks"]
-}
-```
-
-Для каждой заблокированной поверхности Claude Code пропускает источники уровня пользователя и проекта и загружает только plugin-предоставленные и управляемые источники:
-
-| Поверхность | Заблокировано при блокировке                                    | Все еще загружает                                                        |
-| :---------- | :-------------------------------------------------------------- | :----------------------------------------------------------------------- |
-| `skills`    | `~/.claude/skills/`, `.claude/skills/`                          | Plugin skills, встроенные skills, skills в каталоге управляемой политики |
-| `agents`    | `~/.claude/agents/`, `.claude/agents/`                          | Plugin agents, встроенные agents, agents в каталоге управляемой политики |
-| `hooks`     | Hooks в пользовательских, проектных и локальных `settings.json` | Plugin hooks, hooks в управляемых параметрах                             |
-| `mcp`       | Servers в `~/.claude.json` и `.mcp.json`                        | Plugin MCP servers, [`managed-mcp.json`](/docs/ru/managed-mcp) servers        |
-
-Имена поверхностей, которые версия Claude Code не распознает, игнорируются, а не вызывают ошибку файла параметров, поэтому вы можете добавить новые имена поверхностей до того, как все клиенты обновятся.
-
-<h3 id="manage-plugins">
-  Управление Plugins
+<h3 id="precedence-examples">
+  Примеры приоритета
 </h3>
 
-Используйте команду `/plugin` для интерактивного управления plugins:
+Пока Claude работает, Claude Code показывает подсказку в одну строку под спиннером, например "Используйте /config для изменения режима разрешений по умолчанию (включая Plan Mode)". Предположим, вы хотите отключить эти подсказки, поэтому вы устанавливаете [`spinnerTipsEnabled`](/docs/ru/settings-reference#spinnertipsenabled) в `false` в `~/.claude/settings.json`. Каждый сценарий ниже — это что-то, что может их снова включить, и что вы можете с этим сделать.
 
-* Просмотрите доступные plugins из marketplaces
-* Установите/удалите plugins
-* Включите/отключите plugins
-* Просмотрите детали plugins (skills, agents, hooks, предоставляемые)
-* Добавьте/удалите marketplaces
+<h4 id="team-settings-override-personal-settings">
+  Параметры команды переопределяют личные параметры
+</h4>
 
-Узнайте больше о системе plugins в [документации plugins](/docs/ru/plugins).
+Параметры `.claude/settings.json` вашей команды устанавливают это в `true`. Claude Code использует значение проекта, потому что общие параметры проекта находятся выше пользовательских, поэтому вы видите подсказки в этом проекте и больше нигде.
 
-<h2 id="environment-variables">
-  Переменные окружения
+Вы можете вернуть свое значение: добавьте `"spinnerTipsEnabled": false` в `.claude/settings.local.json` в этом проекте. Локальные параметры проекта находятся выше общих параметров проекта, поэтому ваши сессии там перестанут показывать подсказки, а сессии ваших товарищей по команде не изменятся.
+
+<h4 id="organization-settings-override-everything">
+  Параметры организации переопределяют все
+</h4>
+
+Управляемые параметры вашей организации устанавливают это в `true`. Ничто из того, что вы поместите в пользовательские, проектные или локальные параметры, не отключит подсказки, и `--settings` тоже не отключит. Управляемые параметры — это наивысший уровень.
+
+Вы не можете вернуть свое значение. Запустите `/status`, чтобы увидеть, какой управляемый источник применяется, и попросите вашего администратора изменить политику.
+
+<h4 id="the-command-line-overrides-your-files-for-one-session">
+  Командная строка переопределяет ваши файлы для одной сессии
+</h4>
+
+Вы запустили сессию с `claude --settings '{"spinnerTipsEnabled": true}'`. Командная строка находится выше каждого файла, кроме управляемых, поэтому эта сессия показывает подсказки, даже если ваши файлы говорят `false`.
+
+Вы получите свое значение обратно в следующей сессии; `--settings` длится одну сессию и не записывает в какой-либо файл.
+
+<h4 id="a-flag-or-environment-variable-sets-the-same-thing">
+  Флаг или переменная окружения устанавливает то же самое
+</h4>
+
+Некоторые ключи имеют флаг командной строки или переменную окружения, которая переопределяет значение параметров независимо от того, какой файл его установил: `ANTHROPIC_MODEL` переопределяет параметр [`model`](/docs/ru/settings-reference#model), а `--model` переопределяет оба для сессии.
+
+Можете ли вы вернуть свое значение, зависит от ключа: отмените переменную или удалите флаг, и проверьте запись ключа на [справочнике параметров](/docs/ru/settings-reference) и строку переменной на [справочнике переменных окружения](/docs/ru/env-vars), чтобы узнать, какой из них использует Claude Code.
+
+<span id="keys-ignored-in-a-repository-file" />
+
+<span id="keys-only-you-or-your-organization-can-set" />
+
+<span id="common-cases" />
+
+<span id="which-value-applies-in-common-situations" />
+
+<h3 id="troubleshoot-a-setting-that-doesn’t-apply">
+  Устранение неполадок с параметром, который не применяется
+</h3>
+
+Когда вы устанавливаете ключ и Claude Code не ведет себя так, как если бы вы это сделали, начните с `/status`, чтобы увидеть, какие файлы он загрузил, затем найдите ваш симптом ниже. [Отладка вашей конфигурации](/docs/ru/debug-your-config) охватывает более широкие проверки, включая тест чистой конфигурации.
+
+<h4 id="a-value-you-set-is-ignored">
+  Значение, которое вы установили, игнорируется
+</h4>
+
+Что-то еще устанавливает тот же ключ, файл не может установить это значение, или файл не загрузился:
+
+* **Более высокий уровень его устанавливает.** Другой файл параметров, флаг `--settings` или управляемый источник устанавливает ключ выше вашего; [стек](#settings-precedence) указывает, какой. Флаг или переменная окружения также может переопределить ключ самостоятельно, решаемый ключ за ключом; запись ключа на [справочнике параметров](/docs/ru/settings-reference) указывает, какой из них использует Claude Code, и [запись `env`](/docs/ru/settings-reference#env) охватывает управляемое значение `env` в сравнении с экспортом оболочки.
+* **Ключ безопасности сохраняет свое строгое значение.** Для нескольких ключей Claude Code соблюдает ограничивающее значение из любого файла, поэтому проектный `true` для [`disableClaudeAiConnectors`](/docs/ru/settings-reference#disableclaudeaiconnectors) остается включенным; см. [Исключения из приоритета управляемых параметров](#exceptions-to-managed-settings-precedence).
+* **Файл не может установить это значение.** Значения [`permissions.defaultMode`](/docs/ru/settings-reference#permissions-defaultmode) `auto` и `bypassPermissions` не вступают в силу из проектных или локальных параметров; установите их в пользовательские или управляемые параметры вместо этого, или передайте `--permission-mode` для одной сессии. До v2.1.257 `bypassPermissions` вступал в силу из любого файла.
+
+  Переменная экспорта телеметрии в блоке [`env`](/docs/ru/settings-reference#env) также не вступает в силу из проектных или локальных параметров, кроме нескольких отключенных значений. [Переменные, которые Claude Code игнорирует в `env`](/docs/ru/settings-reference#variables-claude-code-ignores-in-env) перечисляет переменные и эти значения.
+* **Файл сломан.** Неверный JSON или отклоненное значение заставляет Claude Code пропустить файл или запись; см. [Исправить сломанный файл параметров](#fix-a-broken-settings-file).
+
+<h4 id="a-change-you-made-in-claude-code-is-lost-in-new-sessions">
+  Изменение, которое вы сделали в Claude Code, теряется в новых сессиях
+</h4>
+
+Когда вы сохраняете выбор для новых сессий из Claude Code, например модель по умолчанию с `/model`, Claude Code записывает это в ваш файл пользовательских параметров, `~/.claude/settings.json`. Если вы не можете писать в этот файл, например потому что другой инструмент его генерирует или связывает его с копией только для чтения, изменение применяется к текущей сессии и исчезает в следующей. Установите ключ в инструменте, который генерирует файл, или замените файл на тот, в который вы можете писать.
+
+Если вы можете писать в файл и изменение все еще не сохраняется, проверьте, было ли изменение [только для одной сессии](#change-a-setting-for-one-session) или [более высокий уровень устанавливает тот же ключ](#a-value-you-set-is-ignored). Для ключа `model` [Новая сессия начинается с другой модели, чем вы выбрали](/docs/ru/model-config#a-new-session-starts-on-a-different-model-than-you-picked) перечисляет больше причин.
+
+<h4 id="a-managed-change-hasn’t-reached-you">
+  Управляемое изменение не достигло вас
+</h4>
+
+Управляемые источники достигают работающей сессии по расписанию в [таблице доставки](/docs/ru/managed-settings#choose-a-delivery-mechanism), поэтому сначала перезагрузите сессию. Если `/status` затем называет другой источник, чем тот, который изменил ваш администратор, применяется источник с более высоким приоритетом; [Как Claude Code объединяет управляемые источники](/docs/ru/managed-settings#how-claude-code-combines-managed-sources) дает порядок.
+
+<h4 id="a-committed-key-doesn’t-reach-teammates">
+  Зафиксированный ключ не достигает товарищей по команде
+</h4>
+
+Две вещи не позволяют ключу в `.claude/settings.json` применяться для всех, кто его клонирует:
+
+* **Claude Code игнорирует ключ в файле репозитория.** Ищите `User, local, or managed`, `User or managed`, `Managed` или `Global config` в столбце Scope [индекса параметров](/docs/ru/settings-reference#settings-index). Эти ключи никогда не применяются из общего файла, кроме нескольких, которые файл репозитория все еще может отключить. Каждая из этих записей говорит об этом на строке Scope. Ключи `Global config` применяются только из `~/.claude.json`.
+
+  Внутри ключа `env` переменные экспорта телеметрии также никогда не применяются из общего файла, кроме нескольких отключенных значений; см. [Переменные, которые Claude Code игнорирует в `env`](/docs/ru/settings-reference#variables-claude-code-ignores-in-env).
+* **Ключ ждет доверия.** Правила `permissions.allow`, `permissions.additionalDirectories`, `extraKnownMarketplaces` и большинство значений [`env`](/docs/ru/settings-reference#env) применяются только после того, как каждый товарищ по команде [доверяет папке](/docs/ru/permissions#project-allow-rules-and-workspace-trust). До этого они все еще видят подсказки и не получают плагины с маркетплейса, который объявляет файл. Правила `deny` и `ask` применяются сразу же.
+
+<h4 id="permission-rules-combine-differently-than-you-expected">
+  Правила разрешений объединяются иначе, чем вы ожидали
+</h4>
+
+* **Вы выбрали "Да, и больше не спрашивайте" в подсказке разрешения, но все еще получаете подсказку для того же инструмента.** Этот выбор сохранил правило `allow` в ваш локальный файл, и правило `allow` там не превосходит правило `ask` из проектного или управляемого файла; [как правила разрешений объединяются](/docs/ru/permissions#settings-precedence) объясняет порядок. В расширении VS Code карточка одобрения позволяет вам выбрать файл назначения, включая общий файл проекта, что изменяет правило для всех; в CLI Claude Code пишет только в ваш локальный файл.
+* **Правила разрешения вашей организации все еще применяются наряду с вашими.** Это ожидаемо: Claude Code объединяет [`permissions.allow`](/docs/ru/settings-reference#permissions-allow) во всех областях, если только ваша организация не устанавливает [`allowManagedPermissionRulesOnly`](/docs/ru/settings-reference#allowmanagedpermissionrulesonly).
+
+<span id="security-keys-where-the-stricter-value-applies" />
+
+<h3 id="exceptions-to-managed-settings-precedence">
+  Исключения из приоритета управляемых параметров
+</h3>
+
+Для нескольких ключей, значения которых ограничивают сессию, Claude Code соблюдает ограничивающее значение из области, которая в противном случае не могла бы переопределить управляемые параметры. Найдите ключ в этой таблице, чтобы увидеть, какое значение он соблюдает и откуда.
+
+| Ключ                                                                            | Значение, которое соблюдает Claude Code                                                                                         | Примечания                                                                                                                                                                                 |
+| :------------------------------------------------------------------------------ | :------------------------------------------------------------------------------------------------------------------------------ | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`disableClaudeAiConnectors`](/docs/ru/settings-reference#disableclaudeaiconnectors) | `true` из любой области                                                                                                         | Соблюдается даже когда управляемый источник устанавливает `false`                                                                                                                          |
+| [`enableArtifact`](/docs/ru/settings-reference#enableartifact)                       | `false` из любой области и `disableArtifact: true` из любой области                                                             | Соблюдается даже когда управляемый источник устанавливает `true`; ничто не включает [инструмент Artifact](/docs/ru/artifacts#disable-artifacts) обратно. Требует Claude Code v2.1.242 или позже |
+| [`isolatePeerMachines`](/docs/ru/settings-reference#isolatepeermachines)             | `true` из любой области                                                                                                         | Соблюдается даже когда управляемый источник устанавливает `false`                                                                                                                          |
+| [`remoteControlAtStartup`](/docs/ru/settings-reference#remotecontrolatstartup)       | `false` из `.claude/settings.json` или `.claude/settings.local.json`                                                            | Соблюдается даже когда управляемый источник устанавливает `true`; проектный или локальный `true` игнорируется                                                                              |
+| [`crossSessionInbound`](/docs/ru/settings-reference#crosssessioninbound)             | Более строгое значение из `.claude/settings.json` или `.claude/settings.local.json`, на лестнице `accept` \< `hold` \< `refuse` | Соблюдается над управляемыми, `--settings` и пользовательскими значениями; проектное или локальное значение, которое не является более строгим, игнорируется                               |
+| [`useAutoModeDuringPlan`](/docs/ru/settings-reference#useautomodeduringplan)         | `false` из любого управляемого источника, `--settings`, `~/.claude/settings.json` или `.claude/settings.local.json`             | Соблюдается даже когда выигрывающий управляемый источник устанавливает `true`; `false` в `.claude/settings.json` игнорируется                                                              |
+| [`syncClaudeAiSkills`](/docs/ru/settings-reference#syncclaudeaiskills)               | `false` из любого управляемого источника, `--settings`, `~/.claude/settings.json` или `.claude/settings.local.json`             | Соблюдается даже когда выигрывающий управляемый источник устанавливает `true`; `false` в `.claude/settings.json` игнорируется                                                              |
+| [`syncClaudeAiPlugins`](/docs/ru/settings-reference#syncclaudeaiplugins)             | `false` из любого управляемого источника, `--settings`, `~/.claude/settings.json` или `.claude/settings.local.json`             | Соблюдается даже когда выигрывающий управляемый источник устанавливает `true`; `false` в `.claude/settings.json` игнорируется                                                              |
+| [`maxEffortLevel`](/docs/ru/settings-reference#maxeffortlevel)                       | Более низкий предел из любой области, включая `--settings`                                                                      | Соблюдается даже когда применяемые управляемые параметры Claude Code устанавливают более высокий предел; применяется самый низкий предел. Требует Claude Code v2.1.267 или позже           |
+
+Приложение, которое запускает Claude Code внутри себя и устанавливает [`CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST`](/docs/ru/env-vars), также является исключением. Claude Code берет конфигурацию модели этого приложения над ключами `model`, `fallbackModel`, `modelPicker` и `modelOverrides` из каждого управляемого источника, и над переменными выбора модели в управляемом блоке `env`, такими как `ANTHROPIC_MODEL` и семейство `ANTHROPIC_DEFAULT_*_MODEL`. Claude Code сохраняет управляемый список разрешений [`availableModels`](/docs/ru/settings-reference#availablemodels) в силе, если только приложение не предоставляет свой собственный.
+
+<h2 id="settings-in-cloud-sessions">
+  Параметры в облачных сеансах
 </h2>
 
-Переменные окружения позволяют вам управлять поведением Claude Code без редактирования файлов параметров. Любая переменная также может быть настроена в [`settings.json`](#available-settings) под ключом `env` для применения к каждому сеансу или развертывания для вашей команды.
+[Облачный сеанс](/docs/ru/claude-code-on-the-web) работает в [облачной среде](/docs/ru/cloud-environments) на свежем клоне вашего репозитория, не на вашей машине. Это изменяет, какие параметры его достигают:
 
-См. [справочник переменных окружения](/docs/ru/env-vars) для полного списка.
+* **Общие параметры проекта** (`.claude/settings.json`): читаются в сеансе с одним репозиторием, потому что файл является частью клона и сеанс начинается внутри него. Зафиксируйте параметр там, чтобы применить его в этих сеансах. Сеанс с несколькими репозиториями начинается выше клонов и читает только ключи `enabledPlugins` и `extraKnownMarketplaces` из файла `.claude/settings.json` каждого репозитория, но не правила разрешений, hooks, `env` или другие ключи. Маркетплейсы и плагины, которые эти два ключа объявляют, по-прежнему [не загружаются в облачном сеансе](/docs/ru/cloud-environments#what-carries-over-from-your-setup).
+* **Параметры пользователя и локальные параметры проекта** (`~/.claude/settings.json` и `.claude/settings.local.json`): не читаются. Оба остаются на вашей машине, и локальный файл не находится в клоне.
+* **Managed settings**: только [параметры, управляемые сервером](/docs/ru/server-managed-settings) достигают облачного сеанса; файл `managed-settings.json` или профиль MDM на вашем устройстве не достигают. [Самостоятельно размещенная среда](/docs/ru/self-hosted-environments) также читает файл управляемых параметров в образе своего runner. [Как Claude Code объединяет управляемые источники](/docs/ru/managed-settings#how-claude-code-combines-managed-sources) говорит, когда этот файл применяется.
+* **`/config`**: в вашем браузере на claude.ai/code открывает раздел Claude Code ваших параметров claude.ai вместо изменения значения. Чтобы изменить параметр для облачного сеанса, установите [переменную окружения](/docs/ru/cloud-environments#set-environment-variables) в среде или в сеансе с одним репозиторием зафиксируйте ключ в файле `.claude/settings.json` этого репозитория.
 
-<h2 id="tools-available-to-claude">
-  Инструменты, доступные Claude
+[Что переносится из вашей установки](/docs/ru/cloud-environments#what-carries-over-from-your-setup) перечисляет остальное: `CLAUDE.md`, skills, MCP servers, plugins и учетные данные.
+
+<h2 id="what’s-next">
+  Что дальше
 </h2>
 
-Claude Code имеет доступ к набору инструментов для чтения, редактирования, поиска, запуска команд и организации subagents. Имена инструментов - это точные строки, которые вы используете в правилах разрешений и сопоставителях hooks.
-
-См. [справочник инструментов](/docs/ru/tools-reference) для полного списка и деталей поведения инструмента Bash.
-
-<h2 id="see-also">
-  См. также
-</h2>
-
-* [Permissions](/docs/ru/permissions): система разрешений, синтаксис правил, шаблоны, специфичные для инструментов, и управляемые политики
-* [Authentication](/docs/ru/authentication): настройка доступа пользователей к Claude Code
-* [Debug your configuration](/docs/ru/debug-your-config): диагностика причин, по которым параметр, hook или MCP сервер не вступают в силу
-* [Troubleshoot installation and login](/docs/ru/troubleshoot-install): установка, аутентификация и проблемы платформы
+* [Все параметры](/docs/ru/settings-reference): каждый ключ, с местом, где вы его устанавливаете и примером
+* [Примеры файлов параметров](/docs/ru/settings-example): личный файл, файл команды и файл управляемых параметров организации
+* [Настройка разрешений](/docs/ru/permissions): правила allow, ask и deny, и что Claude Code запускает без запроса
+* [Переменные окружения](/docs/ru/env-vars): переменные, которые Claude Code читает и блок `env`
+* [Отладьте вашу конфигурацию](/docs/ru/debug-your-config): когда параметр не применяется
+* [Справочник каталога Claude](/docs/ru/claude-directory): каждый файл, который Claude Code читает, включая subagents, MCP servers, plugins и `CLAUDE.md`

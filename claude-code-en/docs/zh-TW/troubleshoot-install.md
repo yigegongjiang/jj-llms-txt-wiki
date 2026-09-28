@@ -21,9 +21,10 @@
 | `curl: (22) The requested URL returned error: 403`                                         | [安裝指令碼傳回 403](#install-script-returns-html-instead-of-a-shell-script)                                                             |
 | `curl: (23)` 或 `curl: (56) Failure writing output to destination`                          | [檢查連線或使用替代安裝程式](#curl-56-failure-writing-output-to-destination)                                                                   |
 | Linux 上安裝期間 `Killed`，或 `Installation was killed before it could finish (exit code 137)`    | [釋放記憶體或新增交換空間](#install-killed-on-low-memory-linux-servers)                                                                       |
+| `Raw mode is not supported` 安裝期間                                                           | [重新執行安裝程式](#raw-mode-is-not-supported-during-install)                                                                             |
 | `TLS connect error` 或 `SSL/TLS secure channel`                                             | [更新 CA 憑證](#tls-or-ssl-connection-errors)                                                                                         |
 | `Failed to fetch version` 或無法連線到下載伺服器                                                      | [檢查網路和代理設定](#check-network-connectivity)                                                                                          |
-| `irm is not recognized` 或 `&& is not valid`                                                | [在您的 shell 上使用正確的命令](#wrong-install-command-on-windows)                                                                           |
+| `irm is not recognized` 或 `The token '&&' is not a valid statement separator`              | [在您的 shell 上使用正確的命令](#wrong-install-command-on-windows)                                                                           |
 | `Cask 'claude-code' is unavailable: No Cask with this name exists`                         | [更新 Homebrew](#homebrew-cask-unavailable-or-outdated)                                                                             |
 | `'bash' is not recognized as the name of a cmdlet`                                         | [使用 Windows 安裝程式命令](#wrong-install-command-on-windows)                                                                            |
 | `A parameter cannot be found that matches parameter name 'fsSL'`                           | [使用 Windows 安裝程式命令](#wrong-install-command-on-windows)                                                                            |
@@ -34,11 +35,17 @@
 | `Illegal instruction`                                                                      | [架構或 CPU 指令集不相符](#illegal-instruction)                                                                                            |
 | WSL 中的 `cannot execute binary file: Exec format error`                                     | [WSL1 原生二進位回歸](#exec-format-error-on-wsl1)                                                                                        |
 | PowerShell 安裝程式完成但找不到 `claude` 或顯示舊版本                                                      | [新增安裝目錄到您的 PATH](#verify-your-path)，然後開啟新的終端                                                                                      |
-| macOS 上的 `dyld: cannot load`、`dyld: Symbol not found` 或 `Abort trap`                       | [二進位不相容](#dyld-cannot-load-on-macos)                                                                                              |
-| `Invoke-Expression: Missing argument in parameter list`                                    | [安裝指令碼傳回 HTML](#install-script-returns-html-instead-of-a-shell-script)                                                            |
+| macOS 上的 `dyld: Symbol not found`、`dyld: cannot load` 或 `Abort trap`                       | [二進位不相容](#dyld-cannot-load-on-macos)                                                                                              |
+| `claude update` 在 `Checking for updates` 後掛起，或 `claude doctor` 掛起且無輸出                      | [移動 shell 設定路徑上的目錄](#claude-update-or-claude-doctor-hangs)                                                                        |
+| `Invoke-Expression` 或 `iex` 解析錯誤引用 HTML 標籤或 CSS，或 `ParserError` 搭配 `ParseException`        | [安裝指令碼傳回 HTML](#install-script-returns-html-instead-of-a-shell-script)                                                            |
+| `running scripts is disabled on this system` 或 `PSSecurityException`                       | [允許 npm shims 執行](#running-scripts-is-disabled-on-this-system)                                                                    |
+| `Error: claude native binary not installed`                                                | [完成 npm 安裝](#native-binary-not-found-after-npm-install)                                                                           |
+| `npm error code ENOTEMPTY` 在更新或重新安裝期間                                                      | [移除剩餘的套件目錄](#npm-enotempty-during-update-or-reinstall)                                                                            |
+| 在 Windows 上，安裝命令列印指令碼文字且未安裝任何內容                                                            | [執行完整的安裝命令](#wrong-install-command-on-windows)                                                                                    |
 | `App unavailable in region`                                                                | Claude Code 在您的國家/地區不可用。請參閱[支援的國家/地區](https://www.anthropic.com/supported-countries)。                                             |
 | `unable to get local issuer certificate`                                                   | [設定公司 CA 憑證](#tls-or-ssl-connection-errors)                                                                                       |
 | `OAuth error` 或 `403 Forbidden`                                                            | [修復身份驗證](#login-and-authentication)                                                                                               |
+| 設定期間 `Unable to connect to Anthropic services`                                             | 請參閱錯誤參考中的 [Unable to connect to Anthropic services](/docs/zh-TW/errors#unable-to-connect-to-anthropic-services)                        |
 | `Could not load the default credentials` 或 `Could not load credentials from any providers` | [Amazon Bedrock、Google Cloud 的 Agent Platform 或 Microsoft Foundry 認證](#bedrock-agent-platform-or-foundry-credentials-not-loading) |
 | `ChainedTokenCredential authentication failed` 或 `CredentialUnavailableError`              | [Amazon Bedrock、Google Cloud 的 Agent Platform 或 Microsoft Foundry 認證](#bedrock-agent-platform-or-foundry-credentials-not-loading) |
 | `API Error: 500`、`529 Overloaded`、`429` 或上面未列出的其他 4xx 和 5xx 錯誤                             | 請參閱[錯誤參考](/docs/zh-TW/errors)                                                                                                          |
@@ -59,13 +66,28 @@
 
 安裝程式從 `downloads.claude.ai` 下載。驗證您可以連線到它：
 
-```bash theme={null}
-curl -sI https://downloads.claude.ai/claude-code-releases/latest
-```
+<Tabs>
+  <Tab title="macOS/Linux">
+    ```bash theme={null}
+    curl -sI https://downloads.claude.ai/claude-code-releases/latest
+    ```
+  </Tab>
 
-在 PowerShell 中，改為執行 `curl.exe -sI`。PowerShell 將 `curl` 別名為 `Invoke-WebRequest`，它會拒絕 `-sI` 旗標。
+  <Tab title="Windows PowerShell">
+    ```powershell theme={null}
+    curl.exe -sI https://downloads.claude.ai/claude-code-releases/latest
+    ```
 
-`HTTP/2 200` 行表示您已連線到伺服器。如果您看不到任何輸出、`Could not resolve host` 或連線逾時，您的網路正在阻止連線。常見原因：
+    PowerShell 將 `curl` 別名為 `Invoke-WebRequest`，它會拒絕 `-sI` 旗標，所以明確呼叫 `curl.exe`。
+  </Tab>
+</Tabs>
+
+如果第一行顯示 `200` 狀態，表示您已連線到伺服器。在 macOS 和 Linux 上您會看到 `HTTP/2 200`，在 Windows 上從 `curl.exe` 會看到 `HTTP/1.1 200 OK`。其他結果指向原因：
+
+* `403`：通常是代理或網路篩選器阻止主機，或 Claude Code [在您的地區不可用](https://www.anthropic.com/supported-countries)
+* `5xx`：通常是暫時性服務問題；等待幾分鐘後重試
+
+如果您看不到任何輸出、`Could not resolve host` 或連線逾時，您的網路正在阻止連線。常見原因：
 
 * 公司防火牆或代理阻止 `downloads.claude.ai`
 * 區域網路限制：嘗試 VPN 或替代網路
@@ -234,15 +256,19 @@ npm uninstall -g @anthropic-ai/claude-code
 
 移除舊版本地 npm 安裝：
 
-```bash theme={null}
-rm -rf ~/.claude/local
-```
+<Tabs>
+  <Tab title="macOS/Linux">
+    ```bash theme={null}
+    rm -rf ~/.claude/local
+    ```
+  </Tab>
 
-在 Windows 上，使用 PowerShell：
-
-```powershell theme={null}
-Remove-Item -Recurse -Force "$env:USERPROFILE\.claude\local"
-```
+  <Tab title="Windows PowerShell">
+    ```powershell theme={null}
+    Remove-Item -Recurse -Force "$env:USERPROFILE\.claude\local"
+    ```
+  </Tab>
+</Tabs>
 
 在 macOS 上移除 Homebrew 安裝。如果您安裝了 `claude-code@latest` cask，請替換該名稱：
 
@@ -284,15 +310,19 @@ sudo chown -R $(whoami) ~/.local
 
 確認二進位檔存在且可執行：
 
-```bash theme={null}
-ls -la "$(command -v claude)"
-```
+<Tabs>
+  <Tab title="macOS/Linux">
+    ```bash theme={null}
+    ls -la "$(command -v claude)"
+    ```
+  </Tab>
 
-在 Windows 上，使用 PowerShell：
-
-```powershell theme={null}
-Get-Command claude | Select-Object Source
-```
+  <Tab title="Windows PowerShell">
+    ```powershell theme={null}
+    Get-Command claude | Select-Object Source
+    ```
+  </Tab>
+</Tabs>
 
 在 Linux 上，檢查遺失的共用程式庫。如果 `ldd` 顯示遺失的程式庫，您可能需要安裝系統套件。在 Alpine Linux 和其他基於 musl 的發行版上，請參閱 [Alpine Linux 設定](/docs/zh-TW/setup#alpine-linux-and-musl-based-distributions)。
 
@@ -323,11 +353,16 @@ bash: line 1: syntax error near unexpected token `<'
 bash: line 1: `<!DOCTYPE html>'
 ```
 
-在 PowerShell 上，同樣的問題顯示為：
+在 PowerShell 上，同樣的問題顯示為解析錯誤，指向傳回的頁面，`iex` 嘗試執行 HTML 和 CSS 作為 PowerShell：
 
 ```text theme={null}
-Invoke-Expression: Missing argument in parameter list.
+iex : At line:1 char:2310
++ ... igin="anonymous"/><script type="text/javascript">!function(o,c){var n ...
+Missing argument in parameter list.
+...
 ```
+
+措辭因 PowerShell 版本和系統語言而異：您可能會看到 `Missing expression after unary operator '--'` 或帶有 `ParseException` 的 `ParserError`。引用文字中的 HTML 標籤或 CSS 識別此失敗。如果您改用 `-OutFile install.ps1` 下載，保存的檔案是相同的網頁，所以這也無法幫助。
 
 根據請求的路由方式，您可能會看到 403 且沒有 HTML 主體：
 
@@ -357,6 +392,8 @@ curl: (22) The requested URL returned error: 403
    winget install Anthropic.ClaudeCode
    ```
 
+   然後執行 `claude --version` 以確認：命令列印版本號，例如 `2.1.211 (Claude Code)`。如果 shell 報告找不到 `claude`，開啟新的終端視窗並重試：您安裝的工作階段保留其舊的 `PATH`。
+
 2. **幾分鐘後重試**：問題通常是暫時的。等待並再次嘗試原始命令。
 
 <h3 id="command-not-found-claude-after-installation">
@@ -380,27 +417,7 @@ curl: (22) The requested URL returned error: 403
 
 `curl ... | bash` 命令下載指令碼並將其傳送到 Bash 以執行。此錯誤以及相關的 `curl: (23) Failure writing output to destination` 表示 Bash 未收到完整的指令碼。結束代碼 56 表示下載本身被中斷，結束代碼 23 表示 curl 無法將其收到的內容寫入管道，通常是因為 Bash 提前結束。
 
-**解決方案：**
-
-1. **檢查網路穩定性**：Claude Code 二進位檔託管在 `downloads.claude.ai`。測試您是否可以連線到它：
-   ```bash theme={null}
-   curl -sI https://downloads.claude.ai/claude-code-releases/latest
-   ```
-   `HTTP/2 200` 行表示您已連線到伺服器，原始失敗可能是間歇性的；重試安裝命令。如果您看到 `Could not resolve host` 或連線逾時，您的網路正在阻止下載。
-
-2. **嘗試替代安裝方法**：
-
-   在 macOS 上：
-
-   ```bash theme={null}
-   brew install --cask claude-code
-   ```
-
-   在 Windows 上：
-
-   ```powershell theme={null}
-   winget install Anthropic.ClaudeCode
-   ```
+測試您是否可以連線到 `downloads.claude.ai`，請參閱[檢查網路連線](#check-network-connectivity)中的檢查。如果您連線到伺服器，原始失敗可能是間歇性的；重試安裝命令。您也可以[嘗試替代安裝方法](/docs/zh-TW/setup#install-claude-code)。
 
 <h3 id="homebrew-cask-unavailable-or-outdated">
   Homebrew cask 無法使用或已過時
@@ -440,16 +457,46 @@ brew install --cask claude-code
    ```
 
 3. **檢查代理或防火牆干擾**：執行 TLS 檢查的公司代理可能導致這些錯誤，包括 `unable to get local issuer certificate` 和 `SELF_SIGNED_CERT_IN_CHAIN`。對於安裝步驟，使用 `--cacert` 將 curl 指向您的公司 CA 套件：
-   ```bash theme={null}
-   curl --cacert /path/to/corporate-ca.pem -fsSL https://claude.ai/install.sh | bash
-   ```
+
+   <Tabs>
+     <Tab title="macOS/Linux">
+       ```bash theme={null}
+       curl --cacert /path/to/corporate-ca.pem -fsSL https://claude.ai/install.sh | bash
+       ```
+     </Tab>
+
+     <Tab title="Windows PowerShell">
+       PowerShell 安裝程式透過 .NET 下載，該 .NET 針對 Windows 憑證存放區驗證 TLS。如果代理的 CA 憑證尚未在 Windows 存放區中，請要求您的 IT 團隊新增它，然後執行安裝程式：
+
+       ```powershell theme={null}
+       irm https://claude.ai/install.ps1 | iex
+       ```
+     </Tab>
+   </Tabs>
+
    對於安裝後的 Claude Code 本身，設定 `NODE_EXTRA_CA_CERTS` 以便 API 請求信任相同的套件：
-   ```bash theme={null}
-   export NODE_EXTRA_CA_CERTS=/path/to/corporate-ca.pem
-   ```
+
+   <Tabs>
+     <Tab title="macOS/Linux">
+       ```bash theme={null}
+       export NODE_EXTRA_CA_CERTS=/path/to/corporate-ca.pem
+       ```
+     </Tab>
+
+     <Tab title="Windows PowerShell">
+       ```powershell theme={null}
+       $env:NODE_EXTRA_CA_CERTS = 'C:\path\to\corporate-ca.pem'
+       ```
+     </Tab>
+   </Tabs>
+
    如果您沒有憑證檔案，請詢問您的 IT 團隊。您也可以嘗試直接連線以確認代理是原因。
 
-4. **在 Windows 上，如果您的網路阻止撤銷檢查，請切換安裝程式**。錯誤 `CRYPT_E_NO_REVOCATION_CHECK (0x80092012)` 和 `CRYPT_E_REVOCATION_OFFLINE (0x80092013)` 表示 curl 已連線到伺服器，但您的網路阻止了憑證撤銷查詢，這在公司防火牆後面很常見。將 curl 的 `--ssl-revoke-best-effort` 旗標新增不會修復此問題：該旗標僅適用於下載 `install.cmd` 本身，指令碼自己的下載在沒有它的情況下執行，因此安裝失敗並出現相同的錯誤。改用容許被阻止查詢的安裝方法。開啟 PowerShell 並執行 PowerShell 安裝程式，它透過 .NET 下載，當撤銷伺服器無法連線時不會失敗：
+4. **在 Windows 上，解決被阻止的撤銷檢查**。錯誤 `CRYPT_E_NO_REVOCATION_CHECK (0x80092012)` 和 `CRYPT_E_REVOCATION_OFFLINE (0x80092013)` 表示 curl 已連線到伺服器，但您的網路阻止了憑證撤銷查詢，這在公司防火牆後面很常見。如果失敗的命令是下載 `install.cmd` 的 `curl`，從命令提示字元重新執行它，並新增 `--ssl-revoke-best-effort`：
+   ```batch theme={null}
+   curl --ssl-revoke-best-effort -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del install.cmd
+   ```
+   當指令碼自己的下載遇到相同的錯誤時，它會自動使用最佳努力撤銷檢查重試它們，因此旗標僅在您自己執行的命令上需要。最佳努力檢查容許無法連線的撤銷伺服器，但仍然拒絕已知被撤銷的憑證，符合瀏覽器處理撤銷的方式。您也可以透過從 PowerShell 執行 PowerShell 安裝程式來完全避免 curl 的撤銷檢查，該程式透過 .NET 下載，當撤銷伺服器無法連線時不會失敗：
    ```powershell theme={null}
    irm https://claude.ai/install.ps1 | iex
    ```
@@ -459,40 +506,13 @@ brew install --cask claude-code
   `Failed to fetch version from downloads.claude.ai`
 </h3>
 
-安裝程式無法連線到下載伺服器。這通常表示 `downloads.claude.ai` 在您的網路上被阻止。
-
-**解決方案：**
-
-1. **直接測試連線**：
-   ```bash theme={null}
-   curl -sI https://downloads.claude.ai/claude-code-releases/latest
-   ```
-
-2. **如果在代理後面**，設定 `HTTPS_PROXY` 以便安裝程式可以透過它路由。請參閱[代理設定](/docs/zh-TW/network-config#proxy-configuration)以取得詳細資訊。
-   ```bash theme={null}
-   export HTTPS_PROXY=http://proxy.example.com:8080
-   curl -fsSL https://claude.ai/install.sh | bash
-   ```
-
-3. **如果在受限網路上**，嘗試不同的網路或 VPN，或使用替代安裝方法：
-
-   在 macOS 上：
-
-   ```bash theme={null}
-   brew install --cask claude-code
-   ```
-
-   在 Windows 上：
-
-   ```powershell theme={null}
-   winget install Anthropic.ClaudeCode
-   ```
+安裝程式無法連線到下載伺服器。這通常表示 `downloads.claude.ai` 在您的網路上被阻止。請參閱[檢查網路連線](#check-network-connectivity)。
 
 <h3 id="wrong-install-command-on-windows">
   Windows 上的錯誤安裝命令
 </h3>
 
-如果您看到 `'irm' is not recognized`、`The token '&&' is not valid`、`A parameter cannot be found that matches parameter name 'fsSL'` 或 `'bash' is not recognized as the name of a cmdlet`，您複製了不同 shell 或作業系統的安裝命令。
+如果您看到 `'irm' is not recognized`、`The token '&&' is not a valid statement separator`、`A parameter cannot be found that matches parameter name 'fsSL'` 或 `'bash' is not recognized as the name of a cmdlet`，您複製了不同 shell 或作業系統的安裝命令。如果命令列印指令碼的文字而不是安裝任何東西，您只執行了它的一部分。
 
 * **`irm` 未被識別**：您在 CMD 中，而非 PowerShell。您有兩個選項：
 
@@ -523,8 +543,45 @@ brew install --cask claude-code
   irm https://claude.ai/install.ps1 | iex
   ```
 
+* **命令列印指令碼文字而不是安裝**：您執行了命令的下載部分，但沒有執行它的部分。`irm https://claude.ai/install.ps1` 單獨會將下載的指令碼列印到終端。將其傳送到 `iex` 以執行它：
+
+  ```powershell theme={null}
+  irm https://claude.ai/install.ps1 | iex
+  ```
+
+  在 CMD 中，`curl -fsSL https://claude.ai/install.cmd` 沒有 `-o` 會列印批次指令碼而不是保存它。執行完整命令：
+
+  ```batch theme={null}
+  curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del install.cmd
+  ```
+
+無論您使用哪個安裝程式，確認它有效：開啟新的終端並執行 `claude --version`，它列印版本號，例如 `2.1.211 (Claude Code)`。
+
+<h3 id="running-scripts-is-disabled-on-this-system">
+  `running scripts is disabled on this system`
+</h3>
+
+在 Windows 上透過 npm 安裝或執行 Claude Code 可能因 `SecurityError` 而失敗：
+
+```text theme={null}
+npm : File C:\Program Files\nodejs\npm.ps1 cannot be loaded because running scripts is disabled on this system. For more information, see about_Execution_Policies at https:/go.microsoft.com/fwlink/?LinkID=135170.
+...
+    + CategoryInfo          : SecurityError: (:) [], PSSecurityException
+```
+
+當您在 npm 安裝後執行 `claude` 時，相同的錯誤名稱 `claude.ps1`。PowerShell 的執行原則正在阻止 npm 為其命令建立的 `.ps1` 啟動器指令碼。該原則適用於指令碼檔案，因此它不影響 PowerShell 安裝程式 `irm https://claude.ai/install.ps1 | iex`，它直接執行下載的文字。
+
+**解決方案：**
+
+1. **允許您的使用者本機建立的指令碼**，然後重試：
+   ```powershell theme={null}
+   Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+   ```
+2. **改為呼叫 `.cmd` 啟動器**：`npm.cmd` 和 `claude.cmd` 做相同的工作，該原則不涵蓋它們。
+3. **改用 [PowerShell 安裝程式](/docs/zh-TW/setup#install-claude-code)**，而不是 npm。它安裝二進位檔而不是 `.ps1` 指令碼。
+
 <h3 id="the-process-cannot-access-the-file-during-windows-install">
-  Windows 上的 `The process cannot access the file` 在安裝期間
+  Windows 安裝期間的 `The process cannot access the file`
 </h3>
 
 如果 PowerShell 安裝程式因 `Failed to download binary: The process cannot access the file ... because it is being used by another process` 而失敗，安裝程式無法寫入 `%USERPROFILE%\.claude\downloads`。這通常表示先前的安裝嘗試仍在執行，或防毒軟體正在掃描該資料夾中部分下載的二進位檔。
@@ -540,16 +597,14 @@ irm https://claude.ai/install.ps1 | iex
   低記憶體 Linux 伺服器上安裝被終止
 </h3>
 
-在安裝期間出現 `Killed` 訊息通常表示 Linux 記憶體不足 (OOM) 殺手終止了 `claude install` 步驟，因為系統用盡了可用記憶體。這在小型 VPS 和雲端執行個體上很常見。安裝指令碼報告原因並以代碼 137 結束：
+在安裝期間出現 `Killed` 訊息通常表示 Linux 記憶體不足 (OOM) 殺手終止了 `claude install` 步驟，因為系統用盡了可用記憶體。這在小型 VPS 和雲端執行個體上很常見。安裝指令碼報告原因並以代碼 137 結束。在此範例中，行號和程序 ID 因版本和執行而異：
 
 ```text theme={null}
 Setting up Claude Code...
-bash: line 142: 34803 Killed    "$binary_path" install ${TARGET:+"$TARGET"}
+bash: line 183: 34803 Killed    "$binary_path" install ${TARGET:+"$TARGET"}
 Installation was killed before it could finish (exit code 137). This usually means the system ran out of memory.
 Claude Code needs roughly 512MB of free memory to install. Free up memory, then run this script again.
 ```
-
-在 v2.1.200 之前，指令碼僅以 shell 的裸 `Killed` 行結束，沒有說明。
 
 安裝需要大約 512 MB 的可用記憶體，執行 Claude Code 需要更多。請參閱[系統需求](/docs/zh-TW/setup#system-requirements)。
 
@@ -590,10 +645,47 @@ Claude Code needs roughly 512MB of free memory to install. Free up memory, then 
    RUN curl -fsSL https://claude.ai/install.sh | bash
    ```
 
-2. **如果使用 Docker Desktop，請增加 Docker 記憶體限制**：
-   ```bash theme={null}
-   docker build --memory=4g .
-   ```
+2. **如果使用 Docker Desktop，請增加 Docker 記憶體**。建置容器共享分配給 Docker Desktop 虛擬機器的記憶體，因此開啟 Docker Desktop 中的 **Settings > Resources**，提高記憶體限制，然後重新執行建置。
+
+<h3 id="raw-mode-is-not-supported-during-install">
+  安裝期間的 `Raw mode is not supported`
+</h3>
+
+當您的組織的[伺服器管理的設定](/docs/zh-TW/server-managed-settings)包含需要[安全性核准](/docs/zh-TW/server-managed-settings#security-approval-dialogs)的變更時，Claude Code 2.1.246 之前的版本嘗試在 `claude install` 期間顯示核准對話方塊。對話方塊需要 stdin 上的終端。當安裝程式從管道執行 `claude install` 時，如 `curl -fsSL https://claude.ai/install.sh | bash` 所做的，stdin 是管道而不是終端，因此安裝因包含 `Raw mode is not supported` 的錯誤而失敗。
+
+Claude Code v2.1.246 及更新版本在 `claude install` 或 `claude update` 期間不顯示對話方塊。命令使用您上次核准的設定執行，Claude Code 在您的下一個互動工作階段中顯示對話方塊。如果您的組織的啟動設定[等待設定擷取](/docs/zh-TW/server-managed-settings#enforce-fail-closed-startup)，例如當它設定 `forceRemoteSettingsRefresh` 時，對話方塊仍會在這些命令期間出現，從管道執行的安裝仍會失敗。
+
+在每個其他設定中，重新執行安裝程式會超過此錯誤，因為即使您要求它安裝舊版本，指令碼也會執行最新版本的 `install` 命令。為您的平台重新執行命令：
+
+<Tabs>
+  <Tab title="macOS/Linux">
+    ```bash theme={null}
+    curl -fsSL https://claude.ai/install.sh | bash
+    ```
+  </Tab>
+
+  <Tab title="Windows PowerShell">
+    ```powershell theme={null}
+    irm https://claude.ai/install.ps1 | iex
+    ```
+  </Tab>
+</Tabs>
+
+`claude --version` 列印重新執行安裝的版本。
+
+<h3 id="claude-update-or-claude-doctor-hangs">
+  `claude update` 或 `claude doctor` 掛起
+</h3>
+
+`claude update` 和 `claude doctor` 掃描您的 shell 設定檔以尋找過時的 `claude` 別名：`~/.zshrc`、`~/.bashrc` 和 `~/.config/fish/config.fish`，加上在 macOS 上存在的 `~/.bash_profile`、`~/.bash_login` 或 `~/.profile` 中的第一個。如果您設定 `ZDOTDIR`，Zsh 檔案是 `$ZDOTDIR/.zshrc`。當這些路徑之一是目錄時，Claude Code 會跳過它，兩個命令都正常完成。在 v2.1.214 之前，這些路徑之一的目錄使兩個命令掛起，並使 `/status` 的系統診斷部分保持空白。`claude doctor` 掛起且沒有輸出；`claude update` 在列印 `Checking for updates` 後立即掛起。
+
+如果您在較早版本上遇到掛起，請找到目錄。在此命令的輸出中，以 `d` 開頭的行將該路徑標記為目錄。`No such file or directory` 行表示該路徑上沒有任何內容，不是原因：
+
+```bash theme={null}
+ls -ld ~/.zshrc ~/.bashrc ~/.bash_profile ~/.bash_login ~/.profile ~/.config/fish/config.fish
+```
+
+將目錄移到一邊，或更新到 v2.1.214 或更新版本。由於 `claude update` 在受影響的版本上掛起，改為透過重新執行[安裝指令碼](/docs/zh-TW/setup#install-claude-code)進行更新。
 
 <h3 id="claude-desktop-overrides-the-claude-command-on-windows">
   Claude Desktop 在 Windows 上覆蓋 `claude` 命令
@@ -613,7 +705,14 @@ Git for Windows 是選用的。Claude Code 在缺少 Git Bash 時使用 [PowerSh
 
 **若要改為安裝 Git for Windows**，請從 [git-scm.com/downloads/win](https://git-scm.com/downloads/win) 下載。在設定期間，選擇「Add to PATH」。安裝後重新啟動您的終端。安裝它會啟用 Bash 工具，在使用基於 Bash 的指令碼和工具時很有用。
 
-**如果 Git 已安裝**但 Claude Code 找不到它，請在您的 [settings.json 檔案](/docs/zh-TW/settings)中設定路徑：
+**如果 Git 已安裝**但 Claude Code 找不到它，請比較其位置與 Claude Code 檢查的位置。當 `CLAUDE_CODE_GIT_BASH_PATH` 未設定時，Claude Code 按此順序尋找 `bash.exe`：
+
+1. 預設安裝位置 `C:\Program Files\Git` 和 `C:\Program Files (x86)\Git`。
+2. 您的 `PATH` 上的 `git`，使用該 Git 安裝中的 `bin\bash.exe`。
+
+在步驟 2 中，Claude Code 跳過位於您啟動 Claude Code 的資料夾中的 `git`，或在包含 `node_modules` 或虛擬環境資料夾（例如 `.venv` 或 `env`）的路徑下方，例如當您從 `C:\dev\env\myproject` 啟動時的 `C:\dev\env\myproject\Git`。這可防止 Claude Code 執行專案放在那裡的可執行檔。如果您的 Git 在這樣的位置，請將 `CLAUDE_CODE_GIT_BASH_PATH` 指向它。
+
+**若要將 Claude Code 指向特定的 Git 安裝**，透過在 PowerShell 中執行 `where.exe git` 找到它，然後在您的 [settings.json 檔案](/docs/zh-TW/settings)中將該安裝中的 `bin\bash.exe` 路徑設定為 `CLAUDE_CODE_GIT_BASH_PATH`：
 
 ```json theme={null}
 {
@@ -623,11 +722,9 @@ Git for Windows 是選用的。Claude Code 在缺少 Git Bash 時使用 [PowerSh
 }
 ```
 
-如果您的 Git 安裝在其他地方，透過在 PowerShell 中執行 `where.exe git` 找到路徑，並使用該目錄中的 `bin\bash.exe` 路徑。
+**如果 `CLAUDE_CODE_GIT_BASH_PATH` 設定為正確的路徑且檔案存在**但 Claude Code 仍然不使用它，請先檢查檔案的名稱。Claude Code 僅接受名為 `bash.exe`、`sh.exe`、`bash` 或 `sh` 的檔案；使用任何其他名稱（例如 Git for Windows 的 `git-bash.exe` 啟動器），它會忽略變數並自動偵測 Git Bash，就像它未設定一樣，記錄可透過 `--debug` 看到的警告。不存在的路徑會得到相同的後備和警告。在 v2.1.219 之前，Claude Code 使用任何現有檔案作為 shell，而不檢查其名稱，當路徑不存在時在啟動時以 `Claude Code was unable to find CLAUDE_CODE_GIT_BASH_PATH path` 結束。
 
-**如果路徑正確且檔案存在**但 Claude Code 仍然報告找不到它，端點安全軟體（例如 AppLocker、群組原則軟體限制原則或 EDR 代理）可能正在干擾。在 v2.1.116 之前的版本上，Claude Code 生成了一個子程序 (`cmd.exe`) 來驗證路徑，這些原則可以阻止 — 常見的信號是 `cmd.exe /c dir "C:\Program Files\Git\bin\bash.exe"` 在您直接在 PowerShell 中執行時有效，但在由 `claude.exe` 啟動時無聲地失敗。
-
-Claude Code v2.1.116 及更新版本直接檢查檔案系統，因此請先更新。如果錯誤在目前版本上仍然存在，請要求您的 IT 團隊在您的端點保護原則中將 `claude.exe` 和它生成的程序（包括 `cmd.exe` 和 `bash.exe`）加入允許清單。
+如果檔案的名稱正確，端點安全軟體（例如 AppLocker、群組原則軟體限制原則或 EDR 代理）可能正在干擾。要求您的 IT 團隊在您的端點保護原則中將 `claude.exe` 和它生成的程序（包括 `cmd.exe` 和 `bash.exe`）加入允許清單。
 
 <h3 id="claude-code-does-not-support-32-bit-windows">
   Claude Code 不支援 32 位元 Windows
@@ -669,6 +766,7 @@ Error loading shared library libstdc++.so.6: No such file or directory
    ```bash theme={null}
    apk add libgcc libstdc++ ripgrep
    ```
+   在 Alpine 上，`ripgrep` 在社群儲存庫中。如果 `apk` 報告套件遺失，請參閱 [Alpine Linux 設定](/docs/zh-TW/setup#alpine-linux-and-musl-based-distributions)。
 
 <h3 id="illegal-instruction">
   `Illegal instruction`
@@ -690,19 +788,21 @@ Error loading shared library libstdc++.so.6: No such file or directory
   macOS 上的 `dyld: cannot load`
 </h3>
 
-如果在安裝期間看到 `dyld: cannot load`、`dyld: Symbol not found` 或 `Abort trap: 6`，二進位檔與您的 macOS 版本或硬體不相容。
+如果在安裝期間看到 `dyld: Symbol not found`、`dyld: cannot load` 或 `Abort trap: 6`，二進位檔與您的 macOS 版本或硬體不相容。
 
-```text theme={null}
-dyld: cannot load 'claude-2.1.42-darwin-x64' (load command 0x80000034 is unknown)
-Abort trap: 6
-```
-
-參考 `libicucore` 的 `Symbol not found` 錯誤也表示您的 macOS 版本比二進位檔支援的版本更舊：
+參考 `libicucore` 的 `Symbol not found` 錯誤表示您的 macOS 版本比二進位檔支援的版本更舊：
 
 ```text theme={null}
 dyld: Symbol not found: _ubrk_clone
   Referenced from: claude-darwin-x64 (which was built for Mac OS X 13.0)
   Expected in: /usr/lib/libicucore.A.dylib
+```
+
+載入器可以改為拒絕二進位檔的載入命令，這也表示您的 macOS 版本太舊：
+
+```text theme={null}
+dyld: cannot load 'claude-2.1.42-darwin-x64' (load command 0x80000034 is unknown)
+Abort trap: 6
 ```
 
 **解決方案：**
@@ -783,13 +883,74 @@ curl -fsSL https://claude.ai/install.sh | bash
   npm 安裝後找不到原生二進位檔
 </h3>
 
-`@anthropic-ai/claude-code` npm 套件透過每個平台的可選相依性（如 `@anthropic-ai/claude-code-darwin-arm64`）拉入原生二進位檔。如果安裝後執行 `claude` 列印 `Could not find native binary package "@anthropic-ai/claude-code-<platform>"`，請檢查以下原因：
+`@anthropic-ai/claude-code` npm 套件透過每個平台的可選相依性（如 `@anthropic-ai/claude-code-darwin-arm64`）拉入原生二進位檔。npm 然後執行套件的 postinstall 指令碼，該指令碼將該二進位檔複製到位置作為 `claude` 命令；在它執行之前，`claude` 是佔位符指令碼。如果下載或 postinstall 步驟被跳過，佔位符保留在位置，在 macOS 和 Linux 上執行 `claude` 列印：
 
-* **可選相依性已停用。** 從您的 npm 安裝命令中移除 `--omit=optional`、從 pnpm 移除 `--no-optional` 或從 yarn 移除 `--ignore-optional`，並檢查 `.npmrc` 是否未設定 `optional=false`。然後重新安裝。原生二進位檔僅作為可選相依性提供，因此如果跳過它，沒有 JavaScript 後備。
+```text theme={null}
+Error: claude native binary not installed.
+
+Either postinstall did not run (--ignore-scripts, some pnpm configs)
+or the platform-native optional dependency was not downloaded
+(--omit=optional).
+
+Run the postinstall manually (adjust path for local vs global install):
+  node node_modules/@anthropic-ai/claude-code/install.cjs
+
+Or reinstall without --ignore-scripts / --omit=optional.
+```
+
+在 Windows 上，`bin/claude.exe` 是相同的 shell 指令碼佔位符而不是真實可執行檔，因此 PowerShell 和 CMD 報告他們無法執行檔案，而不是列印此訊息。
+
+檢查以下原因：
+
+* **可選相依性已停用。** 從您的 npm 安裝命令中移除 `--omit=optional`、從 pnpm 移除 `--no-optional` 或從 yarn 移除 `--ignore-optional`，並檢查 `.npmrc` 是否未設定 `optional=false`。然後重新安裝。原生二進位檔僅作為可選相依性提供，因此如果跳過它，沒有 JavaScript 後備，重新執行 `install.cjs` 無法放置從未下載的二進位檔。
+* **安裝指令碼已停用。** `--ignore-scripts` 和某些 pnpm 設定跳過 postinstall 步驟，但仍然下載平台套件。執行 `node node_modules/@anthropic-ai/claude-code/install.cjs`，如訊息所建議，或不使用旗標重新安裝。如果 postinstall 根本無法在您的環境中執行，`node node_modules/@anthropic-ai/claude-code/cli-wrapper.cjs` 找到下載的套件並啟動它，代價是每次啟動時額外的 Node 程序。如果包裝器改為列印 `Could not find native binary package`，平台套件從未下載，因此首先修復上面的可選相依性原因。
 * **不支援的平台。** 預建二進位檔針對 `darwin-arm64`、`darwin-x64`、`linux-x64`、`linux-arm64`、`linux-x64-musl`、`linux-arm64-musl`、`win32-x64` 和 `win32-arm64` 發佈。Claude Code 不為其他平台提供二進位檔；請參閱[系統需求](/docs/zh-TW/setup#system-requirements)。在 FreeBSD 上，安裝程式報告平台為不支援。在 v2.1.205 之前，它將 FreeBSD 視為 Linux 並下載了無法執行的二進位檔。
 * **公司 npm 鏡像缺少平台套件。** 確保您的登錄鏡像除了元套件外，還鏡像所有八個 `@anthropic-ai/claude-code-*` 平台套件。
 
-使用 `--ignore-scripts` 安裝不會觸發此錯誤。跳過連結二進位檔到位置的 postinstall 步驟，因此 Claude Code 回退到在每次啟動時定位和生成平台二進位檔的包裝器。這有效但啟動速度較慢；使用啟用的指令碼重新安裝以進行直接執行。
+<h3 id="npm-enotempty-during-update-or-reinstall">
+  npm `ENOTEMPTY` 錯誤在更新或重新安裝期間
+</h3>
+
+當您在現有安裝上執行 `npm install -g @anthropic-ai/claude-code` 時，npm 在移動舊套件目錄時可能失敗：
+
+```text theme={null}
+npm error code ENOTEMPTY
+npm error syscall rename
+npm error path /home/you/.nvm/versions/node/v22.13.1/lib/node_modules/@anthropic-ai/claude-code
+npm error dest /home/you/.nvm/versions/node/v22.13.1/lib/node_modules/@anthropic-ai/.claude-code-tVWAnUUt
+npm error errno -39
+npm error ENOTEMPTY: directory not empty, rename '...'
+```
+
+`npm error path` 行命名 npm 無法移動的目錄。刪除該目錄和其旁邊的任何剩餘 `.claude-code-*` 目錄，較早中斷的執行可能會留下。下面的命令使用 `npm root -g` 找到您的全域套件目錄；如果 `npm error path` 行命名的目錄不在 `npm root -g` 列印的目錄下，例如因為您使用 nvm 切換了 Node 版本，改為刪除錯誤命名的目錄：
+
+<Tabs>
+  <Tab title="macOS/Linux">
+    ```bash theme={null}
+    rm -rf "$(npm root -g)/@anthropic-ai/claude-code"
+    ```
+
+    然後移除任何剩餘的臨時目錄。如果 zsh 列印 `no matches found`，沒有要移除的：
+
+    ```bash theme={null}
+    rm -rf "$(npm root -g)/@anthropic-ai/.claude-code-"*
+    ```
+  </Tab>
+
+  <Tab title="Windows PowerShell">
+    ```powershell theme={null}
+    Remove-Item -Recurse -Force "$(npm root -g)/@anthropic-ai/claude-code", "$(npm root -g)/@anthropic-ai/.claude-code-*"
+    ```
+  </Tab>
+</Tabs>
+
+然後重新安裝：
+
+```bash theme={null}
+npm install -g @anthropic-ai/claude-code
+```
+
+使用 `claude --version` 確認，它列印版本號，例如 `2.1.211 (Claude Code)`。
 
 <h2 id="login-and-authentication">
   登入和身份驗證
@@ -841,10 +1002,21 @@ curl -fsSL https://claude.ai/install.sh | bash
 
 要改用您的訂閱，請取消設定環境變數並從您的 shell 設定檔中移除它：
 
-```bash theme={null}
-unset ANTHROPIC_API_KEY
-claude
-```
+<Tabs>
+  <Tab title="macOS/Linux">
+    ```bash theme={null}
+    unset ANTHROPIC_API_KEY
+    claude
+    ```
+  </Tab>
+
+  <Tab title="Windows PowerShell">
+    ```powershell theme={null}
+    Remove-Item Env:ANTHROPIC_API_KEY
+    claude
+    ```
+  </Tab>
+</Tabs>
 
 檢查 `~/.zshrc`、`~/.bashrc` 或 `~/.profile` 中的 `export ANTHROPIC_API_KEY=...` 行並移除它們以永久進行變更。在 Windows 上，檢查您在 `$PROFILE` 的 PowerShell 設定檔和您的使用者環境變數中的 `ANTHROPIC_API_KEY`。在 Claude Code 內執行 `/status` 以確認哪個身份驗證方法是有效的。
 
@@ -879,7 +1051,33 @@ claude auth login
 
 執行 `/login` 以重新身份驗證。如果這經常發生，請檢查您的系統時鐘是否準確，因為令牌驗證取決於正確的時間戳。
 
-在 macOS 上，當 Keychain 被鎖定或其密碼與您的帳戶密碼不同步時，登入也可能失敗，這會阻止 Claude Code 儲存認證。執行 `claude doctor` 以檢查 Keychain 存取。要手動解鎖 Keychain，請執行 `security unlock-keychain ~/Library/Keychains/login.keychain-db`。如果解鎖無幫助，請開啟 Keychain Access，選擇 `login` keychain，並選擇「編輯」>「變更 Keychain 'login' 的密碼」以將其與您的帳戶密碼重新同步。
+一台機器上的平行工作階段共享已儲存的登入，並協調其更新，以便只有一個程序一次重新整理令牌。在 v2.1.211 之前，從睡眠喚醒機器可能導致兩個工作階段使用相同令牌進行更新，這會撤銷已儲存的登入，並提示每個開啟的工作階段立即再次登入。
+
+在 macOS 上，Claude Code 將認證儲存到登入 Keychain。當 Keychain 拒絕寫入時，例如當它在 SSH 工作階段中被鎖定或其密碼與您的帳戶密碼不同步時，Claude Code 改為將您的登入儲存到純文字 `~/.claude/.credentials.json` 檔案。建立 API 金鑰的 Console 登入會失敗，直到 Keychain 再次可寫入。
+
+要使 Keychain 再次可寫入並將您的登入移回加密的 Keychain：
+
+<Steps>
+  <Step title="檢查 Keychain 存取">
+    執行 `claude doctor` 以檢查 Keychain 存取。當 Keychain 拒絕寫入時，報告會列出以 `macOS Keychain is not writable` 開頭的警告，後面跟著建議的修正。當報告未列出 Keychain 警告時，Keychain 可寫入，您可以跳到最後一步。
+  </Step>
+
+  <Step title="解鎖 Keychain">
+    ```bash theme={null}
+    security unlock-keychain ~/Library/Keychains/login.keychain-db
+    ```
+
+    當命令要求時輸入您的 Keychain 密碼，然後再次執行 `claude doctor`。當解鎖成功時，報告不再列出 Keychain 警告。
+  </Step>
+
+  <Step title="如果解鎖無幫助，請重新同步 Keychain 密碼">
+    開啟 Keychain Access，選擇 `login` keychain，並選擇「編輯」>「變更 Keychain 'login' 的密碼」以將其與您的帳戶密碼重新同步。然後再次執行 `claude doctor`。一旦報告不再列出 Keychain 警告，請繼續下一步。
+  </Step>
+
+  <Step title="登出並重新登入">
+    一旦 Keychain 再次可寫入，Claude Code 會在下次寫入認證時將認證移回。要立即強制執行，請執行 `/logout`，然後執行 `/login`。登出會移除所有已儲存的認證，包括純文字檔案的內容、已儲存的 MCP 伺服器登入和外掛敏感值，因此預期之後需要重新授權 MCP 伺服器和重新輸入外掛祕密。再次登入會將您的登入儲存在 Keychain 中。
+  </Step>
+</Steps>
 
 <h3 id="bedrock-agent-platform-or-foundry-credentials-not-loading">
   Bedrock、Agent Platform 或 Foundry 認證未載入
@@ -918,3 +1116,4 @@ az login
 1. 檢查 [GitHub 儲存庫](https://github.com/anthropics/claude-code/issues)以了解已知問題，或使用您的作業系統、您執行的安裝命令和完整錯誤輸出開啟新問題
 2. 如果 `claude --version` 有效但其他內容有問題，執行 `claude doctor` 以取得自動診斷報告
 3. 如果您可以啟動工作階段，請在 Claude Code 內使用 `/feedback` 報告問題
+4. 如果問題與您的帳戶而非安裝有關，例如登入迴圈、無法識別的訂閱或已停用的組織，請聯絡 Anthropic 支援：登入 [claude.ai](https://claude.ai)（Console 使用者：[platform.claude.com](https://platform.claude.com)），點擊左下角的您的首字母縮寫，然後選擇**取得協助**。請參閱[如何取得支援](https://support.claude.com/en/articles/9015913-how-to-get-support)以了解完整流程。

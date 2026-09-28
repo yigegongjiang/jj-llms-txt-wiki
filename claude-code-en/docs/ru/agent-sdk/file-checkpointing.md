@@ -15,7 +15,7 @@ File checkpointing отслеживает изменения файлов, вн�
 * **Восстановиться после ошибок**, когда агент вносит неправильные изменения
 
 <Warning>
-  Отслеживаются только изменения, внесённые через инструменты Write, Edit и NotebookEdit. Изменения, внесённые через команды Bash (например, `echo > file.txt` или `sed -i`), не захватываются системой checkpoint.
+  Отслеживаются только изменения, внесённые через инструменты Write, Edit и NotebookEdit. Изменения, внесённые через команды Bash (например, `echo > file.txt` или `sed -i`), не захватываются системой checkpoint, и также не захватываются правки, которые применяет [subagent](/docs/ru/agent-sdk/subagents), за исключением [skill с `context: fork`](/docs/ru/skills#run-skills-in-a-subagent), который работает на переднем плане.
 </Warning>
 
 <h2 id="how-checkpointing-works">
@@ -24,25 +24,11 @@ File checkpointing отслеживает изменения файлов, вн�
 
 Когда вы включаете file checkpointing, SDK создаёт резервные копии файлов перед их изменением через инструменты Write, Edit или NotebookEdit. Пользовательские сообщения в потоке ответов включают UUID checkpoint, который вы можете использовать как точку восстановления.
 
-Checkpoint работает с этими встроенными инструментами, которые агент использует для изменения файлов:
-
-| Инструмент   | Описание                                                                 |
-| ------------ | ------------------------------------------------------------------------ |
-| Write        | Создаёт новый файл или перезаписывает существующий файл новым содержимым |
-| Edit         | Вносит целевые правки в определённые части существующего файла           |
-| NotebookEdit | Изменяет ячейки в Jupyter notebooks (файлы `.ipynb`)                     |
-
 <Note>
   File rewinding восстанавливает файлы на диске в предыдущее состояние. Это не отматывает саму беседу. История беседы и контекст остаются нетронутыми после вызова `rewindFiles()` (TypeScript) или `rewind_files()` (Python).
 </Note>
 
-Система checkpoint отслеживает:
-
-* Файлы, созданные во время сеанса
-* Файлы, изменённые во время сеанса
-* Исходное содержимое изменённых файлов
-
-Когда вы отматываете к checkpoint, созданные файлы удаляются, а изменённые файлы восстанавливаются до их содержимого в этот момент.
+Когда вы отматываете к checkpoint, Claude Code удаляет файлы, которые он создал, и восстанавливает файлы, которые он изменил, до их содержимого в этот момент. Claude Code пропускает отслеживаемый путь, который является символической ссылкой, жёсткой ссылкой или другим нерегулярным файлом. Он также пропускает отслеживаемый файл, родительский каталог которого больше не разрешается в его местоположение во время checkpoint, или чей резервную копию он не может безопасно прочитать. [`RewindFilesResult`](/docs/ru/agent-sdk/typescript#rewindfilesresult) подсчитывает каждый пропущенный путь в своём поле `skippedLinks`. Пропуск требует Claude Code v2.1.216 или позже; до v2.1.216 rewind писал и удалял через ссылки на отслеживаемых путях.
 
 <h2 id="implement-checkpointing">
   Реализация checkpointing
@@ -122,13 +108,21 @@ Checkpoint работает с этими встроенными инструм�
     let sessionId: string | undefined;
 
     // Step 2: Capture checkpoint UUID from the first user message
-    for await (const message of response) {
-      if (message.type === "user" && message.uuid && !checkpointId) {
-        checkpointId = message.uuid;
+    try {
+      for await (const message of response) {
+        if (message.type === "user" && message.uuid && !checkpointId) {
+          checkpointId = message.uuid;
+        }
+        if ("session_id" in message && !sessionId) {
+          sessionId = message.session_id;
+        }
       }
-      if ("session_id" in message && !sessionId) {
-        sessionId = message.session_id;
-      }
+    } catch (error) {
+      // A single-shot query() throws after yielding an error result. If the
+      // failure was an error result, sessionId and checkpointId were already
+      // captured by the loop above; connection or process failures yield no
+      // result message.
+      console.error(`Session ended with an error: ${error}`);
     }
 
     // Step 3: Later, rewind by resuming the session with an empty prompt
@@ -185,7 +179,7 @@ Checkpoint работает с этими встроенными инструм�
   </Step>
 
   <Step title="Захват UUID checkpoint и ID сеанса">
-    С установленным параметром `replay-user-messages` (показано выше), каждое пользовательское сообщение в потоке ответов имеет UUID, который служит checkpoint.
+    С установленным параметром `replay-user-messages`, каждое пользовательское сообщение в потоке ответов имеет UUID, который служит checkpoint.
 
     Для большинства случаев использования захватите UUID первого пользовательского сообщения (`message.uuid`); отмотка к нему восстанавливает все файлы в их исходное состояние. Чтобы сохранить несколько checkpoint и отмотать к промежуточным состояниям, см. [Несколько точек восстановления](#multiple-restore-points).
 
@@ -233,7 +227,8 @@ Checkpoint работает с этими встроенными инструм�
       ) as client:
           await client.query("")  # Empty prompt to open the connection
           async for message in client.receive_response():
-              await client.rewind_files(checkpoint_id)
+              if checkpoint_id:
+                  await client.rewind_files(checkpoint_id)
               break
       ```
 
@@ -244,7 +239,9 @@ Checkpoint работает с этими встроенными инструм�
       });
 
       for await (const msg of rewindQuery) {
-        await rewindQuery.rewindFiles(checkpointId);
+        if (checkpointId) {
+          await rewindQuery.rewindFiles(checkpointId);
+        }
         break;
       }
       ```
@@ -256,7 +253,7 @@ Checkpoint работает с этими встроенными инструм�
     CLAUDE_CODE_ENABLE_SDK_FILE_CHECKPOINTING=true claude -p --resume <session-id> --rewind-files <checkpoint-uuid>
     ```
 
-    Флаг `--rewind-files` не отображается в выводе `claude --help`, но CLI принимает его, как показано.
+    Флаг `--rewind-files` не отображается в выводе `claude --help`, но CLI принимает его, как показано. Когда отмотка успешна, команда выводит `Files rewound to state at message <checkpoint-uuid>` и завершается без отправки приглашения.
   </Step>
 </Steps>
 
@@ -440,17 +437,25 @@ Checkpoint работает с этими встроенными инструм�
     const checkpoints: Checkpoint[] = [];
     let sessionId: string | undefined;
 
-    for await (const message of response) {
-      if (message.type === "user" && message.uuid) {
-        checkpoints.push({
-          id: message.uuid,
-          description: `After turn ${checkpoints.length + 1}`,
-          timestamp: new Date()
-        });
+    try {
+      for await (const message of response) {
+        if (message.type === "user" && message.uuid) {
+          checkpoints.push({
+            id: message.uuid,
+            description: `After turn ${checkpoints.length + 1}`,
+            timestamp: new Date()
+          });
+        }
+        if ("session_id" in message && !sessionId) {
+          sessionId = message.session_id;
+        }
       }
-      if ("session_id" in message && !sessionId) {
-        sessionId = message.session_id;
-      }
+    } catch (error) {
+      // A single-shot query() throws after yielding an error result. If the
+      // failure was an error result, sessionId and the checkpoints array were
+      // already populated by the loop above; connection or process failures
+      // yield no result message.
+      console.error(`Session ended with an error: ${error}`);
     }
 
     // Later: rewind to any checkpoint by resuming the session
@@ -624,15 +629,23 @@ Checkpoint работает с этими встроенными инструм�
           options: opts
         });
 
-        for await (const message of response) {
-          // Capture the first user message UUID - this is our restore point
-          if (message.type === "user" && message.uuid && !checkpointId) {
-            checkpointId = message.uuid;
+        try {
+          for await (const message of response) {
+            // Capture the first user message UUID - this is our restore point
+            if (message.type === "user" && message.uuid && !checkpointId) {
+              checkpointId = message.uuid;
+            }
+            // Capture the session ID so we can resume later
+            if ("session_id" in message) {
+              sessionId = message.session_id;
+            }
           }
-          // Capture the session ID so we can resume later
-          if ("session_id" in message) {
-            sessionId = message.session_id;
-          }
+        } catch (error) {
+          // A single-shot query() throws after yielding an error result. If the
+          // failure was an error result, checkpointId and sessionId were already
+          // captured by the loop above; connection or process failures yield no
+          // result message.
+          console.error(`Session ended with an error: ${error}`);
         }
 
         console.log("Done! Open utils.ts to see the added doc comments.\n");
@@ -671,13 +684,6 @@ Checkpoint работает с этими встроенными инструм�
       main();
       ```
     </CodeGroup>
-
-    Этот пример демонстрирует полный рабочий процесс checkpointing:
-
-    1. **Включение checkpointing**: настройте SDK с `enable_file_checkpointing=True` и `permission_mode="acceptEdits"` для автоматического одобрения правок файлов
-    2. **Захват данных checkpoint**: по мере выполнения агента сохраняйте UUID первого пользовательского сообщения (вашу точку восстановления) и ID сеанса
-    3. **Запрос на отмотку**: после завершения агента проверьте ваш служебный файл, чтобы увидеть комментарии к документации, затем решите, хотите ли вы отменить изменения
-    4. **Возобновление и отмотка**: если да, возобновите сеанс с пустым приглашением и вызовите `rewind_files()` для восстановления исходного файла
   </Step>
 
   <Step title="Запуск примера">
@@ -711,12 +717,13 @@ Checkpoint работает с этими встроенными инструм�
 
 File checkpointing имеет следующие ограничения:
 
-| Ограничение                                | Описание                                                            |
-| ------------------------------------------ | ------------------------------------------------------------------- |
-| Только инструменты Write/Edit/NotebookEdit | Изменения, внесённые через команды Bash, не отслеживаются           |
-| Один сеанс                                 | Checkpoints привязаны к сеансу, который их создал                   |
-| Только содержимое файла                    | Создание, перемещение или удаление каталогов не отменяется отмоткой |
-| Локальные файлы                            | Удалённые или сетевые файлы не отслеживаются                        |
+| Ограничение                                | Описание                                                                                                                                                                                                                       |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Только инструменты Write/Edit/NotebookEdit | Изменения, внесённые через команды Bash, не отслеживаются                                                                                                                                                                      |
+| Edits subagent                             | Edits, которые применяет [subagent](/docs/ru/agent-sdk/subagents), не отслеживаются и не восстанавливаются, за исключением skill с `context: fork`, работающего на переднем плане; используйте git для отката неотслеживаемых edits |
+| Один сеанс                                 | Checkpoints привязаны к сеансу, который их создал                                                                                                                                                                              |
+| Только содержимое файла                    | Создание, перемещение или удаление каталогов не отменяется отмоткой                                                                                                                                                            |
+| Локальные файлы                            | Удалённые или сетевые файлы не отслеживаются                                                                                                                                                                                   |
 
 <h2 id="troubleshooting">
   Troubleshooting
@@ -743,8 +750,8 @@ File checkpointing имеет следующие ограничения:
 
 **Решение**: Добавьте `extra_args={"replay-user-messages": None}` (Python) или `extraArgs: { 'replay-user-messages': null }` (TypeScript) в ваши параметры.
 
-<h3 id="no-file-checkpoint-found-for-message-error">
-  Ошибка "No file checkpoint found for message"
+<h3 id="no-file-checkpoint-found-for-this-message-error">
+  Ошибка "No file checkpoint found for this message"
 </h3>
 
 Эта ошибка возникает, когда данные checkpoint не существуют для указанного UUID пользовательского сообщения.
@@ -786,7 +793,8 @@ CLAUDE_CODE_ENABLE_SDK_FILE_CHECKPOINTING=true claude -p --resume <session-id> -
   ) as client:
       await client.query("")
       async for message in client.receive_response():
-          await client.rewind_files(checkpoint_id)
+          if checkpoint_id:
+              await client.rewind_files(checkpoint_id)
           break
   ```
 
@@ -797,9 +805,17 @@ CLAUDE_CODE_ENABLE_SDK_FILE_CHECKPOINTING=true claude -p --resume <session-id> -
     options: { ...opts, resume: sessionId }
   });
 
-  for await (const msg of rewindQuery) {
-    await rewindQuery.rewindFiles(checkpointId);
-    break;
+  try {
+    for await (const msg of rewindQuery) {
+      if (checkpointId) {
+        await rewindQuery.rewindFiles(checkpointId);
+      }
+      break;
+    }
+  } catch (error) {
+    // An error here means the rewind didn't complete, for example the checkpoint
+    // wasn't found or the session couldn't be resumed.
+    console.error(`Rewind session ended with an error: ${error}`);
   }
   ```
 </CodeGroup>

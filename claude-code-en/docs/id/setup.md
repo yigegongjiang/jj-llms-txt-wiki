@@ -41,10 +41,10 @@ Claude Code berjalan pada platform dan konfigurasi berikut:
   Baru mengenal terminal? Lihat [panduan terminal](/docs/id/terminal-guide) untuk instruksi langkah demi langkah.
 </Tip>
 
-To install Claude Code, use one of the following methods:
+Untuk menginstal Claude Code, gunakan salah satu metode berikut:
 
 <Tabs>
-  <Tab title="Native Install (Recommended)">
+  <Tab title="Native Install (Direkomendasikan)">
     **macOS, Linux, WSL:**
 
     ```bash theme={null}
@@ -63,14 +63,14 @@ To install Claude Code, use one of the following methods:
     curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del install.cmd
     ```
 
-    If you see `The token '&&' is not a valid statement separator`, you're in PowerShell, not CMD. If you see `'irm' is not recognized as an internal or external command`, you're in CMD, not PowerShell. Your prompt shows `PS C:\` when you're in PowerShell and `C:\` without the `PS` when you're in CMD.
+    Jika Anda melihat `The token '&&' is not a valid statement separator`, Anda berada di PowerShell, bukan CMD. Jika Anda melihat `'irm' is not recognized as an internal or external command`, Anda berada di CMD, bukan PowerShell. Prompt Anda menunjukkan `PS C:\` ketika Anda berada di PowerShell dan `C:\` tanpa `PS` ketika Anda berada di CMD.
 
-    If the install command fails with `syntax error near unexpected token '<'`, a `403`, or another curl error, see [Troubleshoot installation](/docs/en/troubleshoot-install#find-your-error) to match the error to a fix and for alternative install methods.
+    Jika perintah instalasi gagal dengan `syntax error near unexpected token '<'`, `403`, atau kesalahan curl lainnya, lihat [Troubleshoot installation](/docs/id/troubleshoot-install#find-your-error) untuk mencocokkan kesalahan dengan perbaikan dan untuk metode instalasi alternatif.
 
-    [Git for Windows](https://git-scm.com/downloads/win) is recommended on native Windows so Claude Code can use the Bash tool. If Git for Windows is not installed, Claude Code uses PowerShell as the shell tool instead. WSL setups do not need Git for Windows.
+    [Git for Windows](https://git-scm.com/downloads/win) direkomendasikan pada Windows native sehingga Claude Code dapat menggunakan alat Bash. Jika Git for Windows tidak diinstal, Claude Code menggunakan PowerShell sebagai alat shell sebagai gantinya. Pengaturan WSL tidak memerlukan Git for Windows.
 
     <Info>
-      Native installations automatically update in the background to keep you on the latest version.
+      Instalasi native secara otomatis diperbarui di latar belakang untuk membuat Anda tetap menggunakan versi terbaru.
     </Info>
   </Tab>
 
@@ -79,10 +79,10 @@ To install Claude Code, use one of the following methods:
     brew install --cask claude-code
     ```
 
-    Homebrew offers two casks. `claude-code` tracks the stable release channel, which is typically about a week behind and skips releases with major regressions. `claude-code@latest` tracks the latest channel and receives new versions as soon as they ship.
+    Homebrew menawarkan dua casks. `claude-code` melacak saluran rilis stabil, yang biasanya sekitar seminggu di belakang dan melewatkan rilis dengan regresi besar. `claude-code@latest` melacak saluran terbaru dan menerima versi baru segera setelah mereka dirilis.
 
     <Info>
-      Homebrew installations do not auto-update. Run `brew upgrade claude-code` or `brew upgrade claude-code@latest`, depending on which cask you installed, to get the latest features and security fixes.
+      Instalasi Homebrew tidak auto-update. Jalankan `brew upgrade claude-code` atau `brew upgrade claude-code@latest`, tergantung pada cask mana yang Anda instal, untuk mendapatkan fitur terbaru dan perbaikan keamanan.
     </Info>
   </Tab>
 
@@ -92,18 +92,20 @@ To install Claude Code, use one of the following methods:
     ```
 
     <Info>
-      WinGet installations do not auto-update. Run `winget upgrade Anthropic.ClaudeCode` periodically to get the latest features and security fixes.
+      Instalasi WinGet tidak auto-update. Jalankan `winget upgrade Anthropic.ClaudeCode` secara berkala untuk mendapatkan fitur terbaru dan perbaikan keamanan.
     </Info>
   </Tab>
 </Tabs>
 
-You can also install with [apt, dnf, or apk](/docs/en/setup#install-with-linux-package-managers) on Debian, Fedora, RHEL, and Alpine.
+Anda juga dapat menginstal dengan [apt, dnf, atau apk](/docs/id/setup#install-with-linux-package-managers) pada Debian, Fedora, RHEL, dan Alpine.
 
 Setelah instalasi selesai, buka terminal di proyek yang ingin Anda kerjakan dan mulai Claude Code:
 
 ```bash theme={null}
 claude
 ```
+
+Claude Code membuka sesi interaktif di terminal Anda.
 
 Jika Anda mengalami masalah apa pun selama instalasi, lihat [Troubleshoot installation and login](/docs/id/troubleshoot-install).
 
@@ -138,7 +140,7 @@ Setelah instalasi, luncurkan `claude` dari terminal apa pun.
   }
   ```
 
-Ketika Git for Windows diinstal, alat PowerShell sedang diluncurkan secara progresif sebagai opsi tambahan bersama Bash. Atur `CLAUDE_CODE_USE_POWERSHELL_TOOL=1` untuk memilih masuk atau `0` untuk memilih keluar. Lihat [alat PowerShell](/docs/id/tools-reference#powershell-tool) untuk pengaturan dan batasan.
+Ketika Git for Windows diinstal, alat PowerShell tersedia bersama Bash: diaktifkan secara default untuk akun claude.ai dan Console, dan diaktifkan dengan `CLAUDE_CODE_USE_POWERSHELL_TOOL=1` di sesi Amazon Bedrock, Google Cloud's Agent Platform, dan Microsoft Foundry. Atur ke `0` untuk mematikan alat. Lihat [alat PowerShell](/docs/id/tools-reference#powershell-tool) untuk pengaturan dan batasan.
 
 **Opsi 2: WSL**
 
@@ -148,15 +150,23 @@ Buka distribusi WSL Anda dan jalankan penginstal Linux dari [instruksi instalasi
   Alpine Linux dan distribusi berbasis musl
 </h3>
 
-Penginstal asli di Alpine dan distribusi berbasis musl/uClibc lainnya memerlukan `libgcc`, `libstdc++`, dan `ripgrep`. Instal ini menggunakan manajer paket distribusi Anda, kemudian atur `USE_BUILTIN_RIPGREP=0`.
+Menginstal Claude Code di Alpine dan distribusi berbasis musl/uClibc lainnya memerlukan `bash` dan `curl` untuk perintah instalasi, serta `libgcc`, `libstdc++`, dan `ripgrep` saat runtime. Alpine tidak menyertakan `bash` atau `curl` secara default, jadi perintah instalasi yang didokumentasikan gagal dengan kesalahan `not found` sampai Anda menginstalnya. Instal paket-paket ini menggunakan manajer paket distribusi Anda, kemudian atur `USE_BUILTIN_RIPGREP=0`.
 
 Contoh ini menginstal paket yang diperlukan di Alpine:
 
 ```bash theme={null}
-apk add libgcc libstdc++ ripgrep
+apk add bash curl libgcc libstdc++ ripgrep
 ```
 
-Kemudian atur `USE_BUILTIN_RIPGREP` ke `0` di file [`settings.json`](/docs/id/settings#available-settings) Anda:
+Di Alpine, `ripgrep` berada di repositori komunitas. Jika `apk` melaporkan bahwa paket hilang, tambahkan repositori komunitas ke `/etc/apk/repositories`, menggunakan versi Alpine Anda:
+
+```bash theme={null}
+echo "https://dl-cdn.alpinelinux.org/alpine/v3.22/community" >> /etc/apk/repositories
+```
+
+Jalankan `apk update` untuk menyegarkan indeks paket, dan coba lagi perintah `apk add`.
+
+Kemudian atur `USE_BUILTIN_RIPGREP` ke `0` di file [`settings.json`](/docs/id/settings-reference#all-settings) Anda:
 
 ```json theme={null}
 {
@@ -176,6 +186,8 @@ Setelah menginstal, konfirmkan Claude Code berfungsi:
 claude --version
 ```
 
+Instalasi yang berfungsi dengan baik mencetak nomor versi seperti `2.1.211 (Claude Code)`.
+
 Jika ini gagal dengan `command not found` atau kesalahan lainnya, lihat [Troubleshoot installation and login](/docs/id/troubleshoot-install).
 
 Untuk pemeriksaan yang lebih terperinci tentang instalasi dan konfigurasi Anda, jalankan [`claude doctor`](/docs/id/troubleshooting#get-more-help):
@@ -184,13 +196,15 @@ Untuk pemeriksaan yang lebih terperinci tentang instalasi dan konfigurasi Anda, 
 claude doctor
 ```
 
+`claude doctor` mencetak diagnostik instalasi dan pengaturan hanya-baca tanpa memulai sesi, termasuk kesehatan instalasi, kesalahan validasi file pengaturan, dan peringatan apa pun dengan perbaikan yang disarankan.
+
 <h2 id="authenticate">
   Autentikasi
 </h2>
 
 Claude Code memerlukan akun Pro, Max, Team, Enterprise, atau Console. Paket Claude.ai gratis tidak termasuk akses Claude Code. Anda juga dapat menggunakan Claude Code dengan penyedia API pihak ketiga seperti [Amazon Bedrock](/docs/id/amazon-bedrock), [Google Cloud's Agent Platform](/docs/id/google-vertex-ai), atau [Microsoft Foundry](/docs/id/microsoft-foundry).
 
-Setelah menginstal, masuk dengan menjalankan `claude` dan mengikuti petunjuk browser. Lihat [Autentikasi](/docs/id/authentication) untuk semua jenis akun dan opsi pengaturan tim.
+Setelah menginstal, masuk dengan menjalankan `claude` dan mengikuti petunjuk browser. Jika variabel lingkungan `ANTHROPIC_API_KEY` diatur, Claude Code meminta Anda sekali untuk menyetujui kunci alih-alih membuka browser. Lihat [Autentikasi](/docs/id/authentication) untuk semua jenis akun dan opsi pengaturan tim.
 
 <h2 id="update-claude-code">
   Perbarui Claude Code
@@ -243,7 +257,7 @@ Konfigurasi ini melalui `/config` → **Auto-update channel**, atau tambahkan ke
 }
 ```
 
-Untuk penerapan enterprise, Anda dapat memberlakukan saluran rilis yang konsisten di seluruh organisasi Anda menggunakan [managed settings](/docs/id/permissions#managed-settings).
+Untuk penerapan enterprise, Anda dapat memberlakukan saluran rilis yang konsisten di seluruh organisasi Anda menggunakan [managed settings](/docs/id/managed-settings).
 
 Instalasi Homebrew memilih saluran berdasarkan nama cask sebagai gantinya: `claude-code` melacak stable dan `claude-code@latest` melacak latest.
 
@@ -264,15 +278,15 @@ Tambahkan ke [file settings.json](/docs/id/settings) Anda untuk menetapkan batas
 }
 ```
 
-Dalam [managed settings](/docs/id/permissions#managed-settings), ini memberlakukan minimum di seluruh organisasi yang tidak dapat ditimpa oleh pengaturan pengguna dan proyek.
+Dalam [managed settings](/docs/id/managed-settings), ini memberlakukan minimum di seluruh organisasi yang tidak dapat ditimpa oleh pengaturan pengguna dan proyek.
 
-Pengaturan `minimumVersion` hanya membatasi pembaruan. Untuk membuat Claude Code menolak untuk memulai di luar rentang versi, gunakan pengaturan terkelola `requiredMinimumVersion` dan `requiredMaximumVersion` sebagai gantinya. Pembaruan juga menghormati batas `requiredMaximumVersion`. Lihat [available settings](/docs/id/settings#available-settings).
+Pengaturan `minimumVersion` hanya membatasi pembaruan. Untuk membuat Claude Code menolak untuk memulai di luar rentang versi, gunakan pengaturan terkelola `requiredMinimumVersion` dan `requiredMaximumVersion` sebagai gantinya. Pembaruan juga menghormati batas `requiredMaximumVersion`. Lihat [`requiredMinimumVersion`](/docs/id/settings-reference#requiredminimumversion) dan [`requiredMaximumVersion`](/docs/id/settings-reference#requiredmaximumversion).
 
 <h3 id="disable-auto-updates">
   Nonaktifkan pembaruan otomatis
 </h3>
 
-Atur `DISABLE_AUTOUPDATER` ke `"1"` di kunci `env` dari file [`settings.json`](/docs/id/settings#available-settings) Anda:
+Atur `DISABLE_AUTOUPDATER` ke `"1"` di kunci `env` dari file [`settings.json`](/docs/id/settings-reference#all-settings) Anda:
 
 ```json theme={null}
 {
@@ -281,6 +295,8 @@ Atur `DISABLE_AUTOUPDATER` ke `"1"` di kunci `env` dari file [`settings.json`](/
   }
 }
 ```
+
+Pada instalasi asli atau npm, konfirmasi perubahan berlaku dengan menjalankan `claude doctor` dan periksa bahwa baris `Auto-updates` menampilkan `disabled (set by env: DISABLE_AUTOUPDATER)` bukan `enabled`.
 
 `DISABLE_AUTOUPDATER` hanya menghentikan pemeriksaan latar belakang; `claude update` dan `claude install` masih berfungsi. Untuk memblokir semua jalur pembaruan, termasuk pembaruan manual, atur [`DISABLE_UPDATES`](/docs/id/env-vars) sebagai gantinya. Gunakan ini ketika Anda mendistribusikan Claude Code melalui saluran Anda sendiri dan perlu pengguna tetap di versi yang Anda sediakan.
 
@@ -293,6 +309,8 @@ Untuk menerapkan pembaruan segera tanpa menunggu pemeriksaan latar belakang beri
 ```bash theme={null}
 claude update
 ```
+
+Ketika pembaruan diinstal, perintah melaporkan `Successfully updated from <old version> to version <new version>`. Jika Anda sudah di versi terbaru, perintah melaporkan `Claude Code is up to date (<version>)`. Instalasi yang dikelola oleh Homebrew, WinGet, atau apk melaporkan `Claude is up to date!` sebagai gantinya.
 
 <h2 id="advanced-installation-options">
   Opsi instalasi lanjutan
@@ -372,6 +390,8 @@ Untuk menginstal nomor versi tertentu:
   </Tab>
 </Tabs>
 
+Untuk mengkonfirmasi versi mana yang terinstal, jalankan `claude --version`: perintah mencetak versi yang tepat yang Anda lewatkan, seperti `2.1.89 (Claude Code)`.
+
 <h3 id="install-with-linux-package-managers">
   Instal dengan manajer paket Linux
 </h3>
@@ -382,18 +402,31 @@ Semua repositori ditandatangani dengan [kunci penandatanganan rilis Claude Code]
 
 <Tabs>
   <Tab title="apt">
-    Untuk Debian dan Ubuntu. Perintah instalasi di bawah mengunduh kunci penandatanganan dengan `curl`, yang instalasi Debian dan Ubuntu segar mungkin tidak sertakan. Jika unduhan gagal dengan `sudo: curl: command not found`, instal curl terlebih dahulu:
+    Untuk Debian dan Ubuntu. Perintah instalasi di bawah mengunduh kunci penandatanganan dengan `curl` dan memverifikasinya dengan `gpg`, yang instalasi Debian dan Ubuntu segar mungkin tidak sertakan. Jika salah satu perintah melaporkan `command not found`, instal keduanya terlebih dahulu:
 
     ```bash theme={null}
-    sudo apt install curl
+    sudo apt install curl gnupg
     ```
 
-    Perintah berikut mengonfigurasi saluran `stable`:
+    Unduh kunci penandatanganan:
 
     ```bash theme={null}
     sudo install -d -m 0755 /etc/apt/keyrings
     sudo curl -fsSL https://downloads.claude.ai/keys/claude-code.asc \
       -o /etc/apt/keyrings/claude-code.asc
+    ```
+
+    Jika unduhan ini gagal, `apt update` nanti gagal dengan `NO_PUBKEY BAA929FF1A7ECACE`. Konfirmasi kunci diunduh dan milik Anthropic sebelum melanjutkan:
+
+    ```bash theme={null}
+    gpg --show-keys /etc/apt/keyrings/claude-code.asc
+    ```
+
+    Sidik jari yang dicetak gpg harus `31DDDE24DDFAB679F42D7BD2BAA929FF1A7ECACE`. Jika gpg melaporkan bahwa file tidak dapat dibuka atau tidak berisi data OpenPGP yang valid, unduhan gagal atau mengembalikan konten yang salah: konfirmasi jaringan Anda dapat menjangkau `downloads.claude.ai`, kemudian jalankan kembali perintah unduh.
+
+    Daftarkan repositori di saluran `stable` dan instal:
+
+    ```bash theme={null}
     echo "deb [signed-by=/etc/apt/keyrings/claude-code.asc] https://downloads.claude.ai/claude-code/apt/stable stable main" \
       | sudo tee /etc/apt/sources.list.d/claude-code.list
     sudo apt update
@@ -406,8 +439,6 @@ Semua repositori ditandatangani dengan [kunci penandatanganan rilis Claude Code]
     echo "deb [signed-by=/etc/apt/keyrings/claude-code.asc] https://downloads.claude.ai/claude-code/apt/latest latest main" \
       | sudo tee /etc/apt/sources.list.d/claude-code.list
     ```
-
-    Verifikasi sidik jari kunci GPG sebelum mempercayainya: `gpg --show-keys /etc/apt/keyrings/claude-code.asc` harus melaporkan `31DD DE24 DDFA B679 F42D 7BD2 BAA9 29FF 1A7E CACE`.
 
     Untuk upgrade nanti, jalankan `sudo apt update && sudo apt upgrade claude-code`.
   </Tab>

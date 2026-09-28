@@ -35,7 +35,7 @@ export const ContextWindow = () => {
     tokens: 280,
     color: '#6B6964',
     vis: 'hidden',
-    desc: 'Working directory, platform, shell, OS version, and whether this is a git repo. Git branch, status, and recent commits load as a separate block at the very end of the system prompt.',
+    desc: 'Working directory, platform, shell, OS version, and whether this is a git repo. Git branch, status, and recent commits load as a separate block.',
     link: null
   }, {
     t: 0.08,
@@ -112,7 +112,6 @@ export const ContextWindow = () => {
     tokens: 380,
     color: '#4A9B8E',
     vis: 'brief',
-    restoredAfterCompact: true,
     desc: 'This rule in `.claude/rules/` has a `paths:` pattern matching `src/api/**`. It loaded automatically when Claude read a file in that directory. You see "Loaded .claude/rules/api-conventions.md" in your terminal, but not the rule content.',
     link: '/en/memory#path-specific-rules'
   }, {
@@ -142,7 +141,6 @@ export const ContextWindow = () => {
     tokens: 290,
     color: '#4A9B8E',
     vis: 'brief',
-    restoredAfterCompact: true,
     desc: 'Another path-scoped rule, this one matching `*.test.ts` files. Triggered when Claude read auth.test.ts. Shown as a one-line "Loaded" notice.',
     link: '/en/memory#path-specific-rules'
   }, {
@@ -180,7 +178,7 @@ export const ContextWindow = () => {
     color: '#B8860B',
     vis: 'hidden',
     desc: 'A PostToolUse hook in `settings.json` runs prettier after every file edit and reports back via `hookSpecificOutput.additionalContext`. That field enters Claude\'s context. Plain stdout on exit 0 does not. It is written to the debug log only.',
-    tip: 'Output JSON with `additionalContext` to send info to Claude. For PostToolUse hooks, exit code 2 surfaces stderr as an error but cannot block since the tool already ran. Keep output concise since it enters context without truncation.',
+    tip: 'Output JSON with `additionalContext` to send info to Claude. For PostToolUse hooks, exit code 2 surfaces stderr as an error but cannot block since the tool already ran. Output over 10,000 characters is saved to a file; Claude gets a preview and the file path instead.',
     link: '/en/hooks-guide'
   }, {
     t: 0.62,
@@ -333,7 +331,7 @@ export const ContextWindow = () => {
     color: '#558A42',
     vis: 'full',
     desc: "You ran a shell command with the ! prefix to see which files Claude modified. The command and its output both enter context as part of your message. Useful for grounding Claude in command output without Claude running it.",
-    link: '/en/interactive-mode#bash-mode-with-prefix'
+    link: '/en/interactive-mode#shell-mode-with-prefix'
   }, {
     t: 0.89,
     kind: 'user',
@@ -625,8 +623,8 @@ export const ContextWindow = () => {
     if (detailRef.current) detailRef.current.scrollTop = 0;
   }, [hovEvent]);
   const focusT = hovEvent ? hovEvent.t : time;
-  const takeaway = isCompacted ? 'Compaction replaces the conversation with a structured summary. System prompt, CLAUDE.md, memory, and MCP tools reload automatically. Claude Code also re-reads up to five of the files modified most recently, reloads the rules that match them, and re-injects the skills you invoked. The skill listing does not reload.' : focusT < STARTUP_END ? 'A lot loads before you type anything. CLAUDE.md, memory, skills, and MCP tools are all in context before your first prompt.' : focusT < 0.28 ? "Your prompt is tiny compared to what's already loaded. Most of Claude's context is project knowledge, not your words." : focusT < 0.50 ? 'Each file Claude reads grows the context. Path-scoped rules load automatically alongside matching files.' : focusT < 0.71 ? 'Hooks fire automatically on tool events. Output reaches Claude via additionalContext JSON. Exit code 2 surfaces stderr to Claude. Plain stdout on exit 0 goes to the debug log, not the transcript.' : focusT < 0.79 ? 'Follow-up questions keep building on the same context. Everything from earlier is still there.' : focusT < 0.87 ? "The subagent works in its own separate context window. None of its file reads touch yours. Only the final summary comes back." : focusT < 0.88 ? 'Bang commands run in your shell and prefix the output to your next message. Useful for grounding Claude in command results without it running them.' : focusT < 0.90 ? 'User-only skills stay out of context entirely until you invoke them. The skill index at startup only lists skills Claude can call on its own.' : '/compact summarizes the conversation to free space while keeping key information. In a real session, run it when context starts affecting performance or before a long new task.';
-  const terminalView = isCompacted ? 'A "Conversation compacted" message, then a one-line "Read auth.ts" for each re-read file and "Skills restored (commit-push)". The rules show as "Loaded" lines on Claude\'s next turn. None of the content itself appears.' : focusT < STARTUP_END ? 'The input box, waiting for your first message. Everything above loads silently before you type anything.' : focusT < 0.28 ? 'Your prompt. Claude hasn\'t started working yet.' : focusT < 0.52 ? 'Your prompt and "Reading files...". Rules show as one-line "Loaded" notices, not their content.' : focusT < 0.72 ? "Claude's response and file diffs. Hooks fire silently. Tool output like npm test shows as a brief summary, not the full content." : focusT < 0.79 ? 'Your follow-up prompt.' : focusT < 0.86 ? "A brief notice that a subagent is working, then its result. You don't see the subagent's individual file reads." : focusT < 0.90 ? "Claude's response, your git status output, and the commit-push skill running." : 'Your full conversation. /compact is available to run.';
+  const takeaway = isCompacted ? 'Compaction replaces the conversation with a structured summary. System prompt, CLAUDE.md, memory, and MCP tools reload automatically. Claude Code also re-reads up to five of the files modified most recently and re-injects the skills you invoked. The skill listing does not reload.' : focusT < STARTUP_END ? 'A lot loads before you type anything. CLAUDE.md, memory, skills, and MCP tools are all in context before your first prompt.' : focusT < 0.28 ? "Your prompt is tiny compared to what's already loaded. Most of Claude's context is project knowledge, not your words." : focusT < 0.50 ? 'Each file Claude reads grows the context. Path-scoped rules load automatically alongside matching files.' : focusT < 0.71 ? 'Hooks fire automatically on tool events. Output reaches Claude via additionalContext JSON. Exit code 2 surfaces stderr to Claude. Plain stdout on exit 0 goes to the debug log, not the transcript.' : focusT < 0.79 ? 'Follow-up questions keep building on the same context. Everything from earlier is still there.' : focusT < 0.87 ? "The subagent works in its own separate context window. None of its file reads touch yours. Only the final summary comes back." : focusT < 0.88 ? 'Bang commands run in your shell and prefix the output to your next message. Useful for grounding Claude in command results without it running them.' : focusT < 0.90 ? 'User-only skills stay out of context entirely until you invoke them. The skill index at startup only lists skills Claude can call on its own.' : '/compact summarizes the conversation to free space while keeping key information. In a real session, run it when context starts affecting performance or before a long new task.';
+  const terminalView = isCompacted ? 'A "Conversation compacted" message, then a one-line "Read auth.ts" for each re-read file and "Skills restored (commit-push)". None of the content itself appears.' : focusT < STARTUP_END ? 'The input box, waiting for your first message. Everything above loads silently before you type anything.' : focusT < 0.28 ? 'Your prompt. Claude hasn\'t started working yet.' : focusT < 0.52 ? 'Your prompt and "Reading files...". Rules show as one-line "Loaded" notices, not their content.' : focusT < 0.72 ? "Claude's response and file diffs. Hooks fire silently. Tool output like npm test shows as a brief summary, not the full content." : focusT < 0.79 ? 'Your follow-up prompt.' : focusT < 0.86 ? "A brief notice that a subagent is working, then its result. You don't see the subagent's individual file reads." : focusT < 0.90 ? "Claude's response, your git status output, and the commit-push skill running." : 'Your full conversation. /compact is available to run.';
   const mono = 'var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace)';
   const renderWithCode = s => s.split('`').map((part, i) => i % 2 === 1 ? <code key={i} style={{
     fontFamily: mono,
@@ -952,7 +950,7 @@ export const ContextWindow = () => {
     lineHeight: 1.5,
     marginTop: 4
   }}>
-                This is what's left in context: startup content, which lives outside the message history and reloads after compaction, a structured summary of the entire conversation, the files modified most recently, which Claude Code re-reads along with the rules that match them, and the body of each skill you invoked. Skill descriptions don't reload.
+                This is what's left in context: startup content, which lives outside the message history and reloads after compaction, a structured summary of the entire conversation, the files modified most recently, and the body of each skill you invoked. Skill descriptions don't reload.
               </div>
             </div>}
           {time > 0 && visible.length > 0 && <div style={{
@@ -1583,35 +1581,42 @@ Claude Code 的上下文視窗包含 Claude 對您的會話所知的一切：您
 <ContextWindow />
 
 <h2 id="what-the-timeline-shows">
-  時間線顯示的內容
+  時間軸顯示的內容
 </h2>
 
-該會話演示了一個現實流程，包含代表性的令牌計數：
+該工作階段展示了一個現實的流程，包含代表性的權杖計數：
 
-* **在您輸入任何內容之前**：CLAUDE.md、自動記憶、MCP 工具名稱和技能描述都加載到上下文中。您自己的設置可能會在此處添加更多內容，例如[輸出樣式](/docs/zh-TW/output-styles)或來自 [`--append-system-prompt`](/docs/zh-TW/cli-reference) 的文本，兩者都以相同方式進入系統提示。
-* **當 Claude 工作時**：每個文件讀取都會添加到上下文中，[路徑範圍規則](/docs/zh-TW/memory#path-specific-rules)會自動與匹配的文件一起加載，並且[PostToolUse hook](/docs/zh-TW/hooks-guide)在每次編輯後觸發。
-* **後續提示**：[子代理](/docs/zh-TW/sub-agents)在其自己的單獨上下文視窗中處理研究，因此大型文件讀取不會進入您的視窗。只有摘要和一個小的元數據預告片返回。
-* **最後**：`/compact` 用結構化摘要替換對話。大多數啟動內容會自動重新加載；下表顯示每個機制會發生什麼。
+* **在您輸入任何內容之前**：CLAUDE.md、自動記憶、MCP 工具名稱和技能描述都會載入到上下文中。[AGENTS.md 檔案](/docs/zh-TW/memory#agents-md)也可以載入，無論是單獨載入還是與 CLAUDE.md 一起載入。您自己的設定可能會在此處添加更多內容，例如[輸出風格](/docs/zh-TW/output-styles)或來自 [`--append-system-prompt`](/docs/zh-TW/cli-reference) 的文字。
+* **當 Claude 工作時**：每次檔案讀取都會增加上下文，[路徑範圍規則](/docs/zh-TW/memory#path-specific-rules)會自動與匹配的檔案一起載入，並且[PostToolUse hook](/docs/zh-TW/hooks-guide) 會在每次編輯後觸發。
+* **後續提示**：[子代理](/docs/zh-TW/sub-agents)在其自己的獨立上下文視窗中處理研究，因此大型檔案讀取不會進入您的視窗。只有摘要和一個小的中繼資料預告片會返回。
+* **在逐步解說的最後**：您執行 `/compact`，它會將對話替換為結構化摘要。大多數啟動內容會自動重新載入；下表顯示每個機制會發生什麼。
 
 <h2 id="what-survives-compaction">
-  壓縮後的存活內容
+  壓縮後保留的內容
 </h2>
 
-當長會話壓縮時，Claude Code 會總結對話歷史以適應上下文視窗。自 v2.1.198 起，總結請求會繼承您的會話的[延伸思考](/docs/zh-TW/model-config#extended-thinking)配置，因此當您的會話啟用思考時，它會在啟用思考的情況下進行推理，否則保持關閉。思考只會影響摘要的生成方式；您的會話設定在之後保持不變。您的指令會發生什麼取決於它們的加載方式：
+當長時間的工作階段進行壓縮時，Claude Code 會總結對話歷史以適應上下文視窗。自 v2.1.198 起，總結請求會繼承您工作階段的[延伸思考](/docs/zh-TW/model-config#extended-thinking)設定，因此當您的工作階段啟用思考時，它會在啟用思考的情況下進行推理，否則保持關閉。思考只會影響摘要的生成方式；您的工作階段設定在之後保持不變。每種內容發生的情況取決於它的載入方式：
 
-| 機制                          | 壓縮後                                          |
-| :-------------------------- | :------------------------------------------- |
-| 系統提示和輸出樣式                   | 不變；不是消息歷史的一部分                                |
-| 項目根目錄 CLAUDE.md 和無範圍規則      | 從磁盤重新注入                                      |
-| 自動記憶                        | 從磁盤重新注入                                      |
-| 帶有 `paths:` frontmatter 的規則 | 丟失，直到再次讀取匹配的文件                               |
-| 子目錄中的嵌套 CLAUDE.md           | 丟失，直到再次讀取該子目錄中的文件                            |
-| 調用的技能主體                     | 重新注入，每個技能上限為 5,000 個令牌，總計 25,000 個令牌；最舊的優先刪除 |
-| Hooks                       | 不適用；hooks 作為代碼運行，不是上下文                       |
+| 機制                                                                                                                            | 壓縮後                                          |
+| :---------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------- |
+| 系統提示和輸出風格                                                                                                                     | 兩者仍然適用                                       |
+| 專案根目錄 CLAUDE.md 和未限定範圍的規則                                                                                                     | 從磁碟重新注入                                      |
+| 自動記憶                                                                                                                          | 從磁碟重新注入                                      |
+| [Git 狀態快照](/docs/zh-TW/settings-reference#includegitinstructions)                                                                  | Claude Code 從您的儲存庫讀取新的快照                     |
+| Claude 在[計畫模式](/docs/zh-TW/permission-modes#analyze-before-you-edit-with-plan-mode)中編寫的計畫                                          | 從磁碟重新注入                                      |
+| 具有 `paths:` frontmatter 的規則                                                                                                   | Claude Code 在 Claude 讀取它們匹配的檔案時重新載入它們        |
+| 子目錄中的巢狀 CLAUDE.md                                                                                                             | Claude Code 在 Claude 讀取該子目錄中的檔案時重新載入它們       |
+| Claude 讀取或編輯的檔案                                                                                                               | Claude Code 重新讀取最多五個，最近修改的優先                 |
+| 已叫用的技能主體                                                                                                                      | 重新注入，每個技能上限為 5,000 個權杖，總計 25,000 個權杖；最舊的優先刪除 |
+| [背景命令](/docs/zh-TW/interactive-mode#background-bash-commands)和背景[子代理](/docs/zh-TW/sub-agents#run-subagents-in-foreground-or-background) | 保持執行。Claude Code 提醒 Claude 哪些仍在執行，以便它不會啟動重複的 |
+| hooks 較早新增的上下文                                                                                                                | 與其餘對話一起總結                                    |
+| 符合 `compact` 來源的 [SessionStart hooks](/docs/zh-TW/hooks-guide#re-inject-context-after-compaction)                                  | Claude Code 執行它們並將其輸出新增到壓縮的上下文中              |
 
-路徑範圍規則和嵌套 CLAUDE.md 文件在讀取其觸發文件時加載到消息歷史中，因此壓縮會將它們與其他所有內容一起總結。下次 Claude 讀取匹配的文件時，它們會重新加載。如果規則必須在壓縮過程中持續存在，請刪除 `paths:` frontmatter 或將其移動到項目根目錄 CLAUDE.md。
+壓縮後立即，Claude Code 重新讀取 Claude 在工作階段中讀取或編輯的最多五個檔案，選擇最近修改的檔案。超過 5,000 個權杖的檔案會以路徑參考的形式返回，不含其內容，顯示為 `Referenced file` 而不是 `Read`。
 
-技能主體在壓縮後重新注入，但大型技能會被截斷以適應每個技能的上限，一旦超過總預算，最舊的調用技能就會被刪除。截斷保留文件的開始部分，因此請將最重要的指令放在 `SKILL.md` 的頂部附近。
+路徑限定範圍的規則和巢狀 CLAUDE.md 檔案在讀取其觸發檔案時載入到訊息歷史記錄中，因此壓縮會將它們與其他所有內容一起總結。如果規則必須在壓縮後保持，請刪除 `paths:` frontmatter 或將其移至專案根目錄 CLAUDE.md。
+
+技能主體在壓縮後重新注入，但大型技能會被截斷以適應每個技能的上限，一旦超過總預算，最舊的已叫用技能就會被刪除。截斷會保留檔案的開頭，因此請將最重要的指示放在 `SKILL.md` 的頂部附近。
 
 <h2 id="when-your-context-fills-up">
   當您的上下文填滿時
@@ -1622,16 +1627,22 @@ Claude Code 會在您接近限制時自動壓縮，因此完整的上下文視�
 您也可以在自動傳遞運行之前採取行動：
 
 * **使用焦點進行壓縮**：在開始長時間新任務之前，運行帶有指令的 `/compact`，例如 `/compact focus on the auth bug fix`。摘要保留您選擇的內容，而不是自動傳遞猜測的重要內容。
+* **壓縮對話的一部分**：運行 `/rewind`，選擇一條訊息，然後選擇**從此處摘要**或**摘要至此處**。請參閱[重新開始和摘要](/docs/zh-TW/checkpointing#rewind-and-summarize)以了解每個選項保留的內容以及如何引導摘要。
+* **更早壓縮**：運行 [`/autocompact`](/docs/zh-TW/commands#all-commands) 並指定令牌計數，例如 `/autocompact 500k`，以設定在自動傳遞運行之前上下文視窗的填滿程度。請參閱[設定自動壓縮視窗](/docs/zh-TW/model-config#set-the-auto-compact-window)以了解接受的值和覆蓋。
 * **在任務之間清除**：切換到不相關的工作時運行 `/clear`。舊對話會擠出您接下來需要的文件，並在每條消息上花費令牌。
 * **委託大型讀取**：將研究發送給[子代理](/docs/zh-TW/sub-agents)，以便文件內容保留在其上下文視窗中，而不是您的。
 
-如果您需要更大的視窗而不是更小的對話，Fable 5、Sonnet 5、Opus 4.6 及更高版本以及 Sonnet 4.6 支持 100 萬令牌上下文視窗。請參閱[擴展上下文](/docs/zh-TW/model-config#extended-context)以了解按計劃的可用性以及如何選擇 `[1m]` 模型變體。Sonnet 5 以 1M 運行，無需選擇 `[1m]` 變體；請參閱[Sonnet 5 上下文視窗](/docs/zh-TW/model-config#sonnet-5-context-window)以了解其自動壓縮閾值和 LLM 閘道例外。壓縮在更大的限制下以相同方式工作。
+如果您需要更大的視窗而不是更小的對話，Fable 模型、Sonnet 5、Opus 4.6 及更高版本以及 Sonnet 4.6 支持 100 萬令牌上下文視窗。請參閱[擴展上下文](/docs/zh-TW/model-config#extended-context)以了解按計劃的可用性以及如何選擇 `[1m]` 模型變體。壓縮在更大的限制下以相同方式工作。
+
+Sonnet 5 以 1M 上下文視窗運行，沒有 `[1m]` 變體可選擇。請參閱[Sonnet 5 上下文視窗](/docs/zh-TW/model-config#sonnet-5-context-window)以了解其自動壓縮閾值和 LLM 閘道例外。
+
+自動壓縮運行的位置取決於您的模型和設定。請參閱[預設自動壓縮閾值](/docs/zh-TW/model-config#default-auto-compact-thresholds)以了解每個模型的邊界，以及[為閘道或自訂模型 ID 更正視窗](/docs/zh-TW/model-config#correct-the-window-for-a-gateway-or-custom-model-id)，如果 Claude Code 為您的模型 ID（例如 [LLM 閘道](/docs/zh-TW/llm-gateway)別名）假設了錯誤的視窗。
 
 <h2 id="check-your-own-session">
   檢查您自己的會話
 </h2>
 
-該可視化使用代表性數字。要在任何時刻查看您的實際上下文使用情況，請運行 `/context` 以獲取按類別的實時分解和優化建議。運行 `/memory` 以檢查在啟動時加載了哪些 CLAUDE.md 和自動記憶文件。
+該可視化使用代表性數字。要在任何時刻查看您的實際上下文使用情況，請運行 `/context` 以獲取按類別的實時分解和優化建議，包括加載了哪些 CLAUDE.md 和自動記憶文件。運行 `/memory` 以開啟和編輯這些文件。
 
 <h2 id="related-resources">
   相關資源

@@ -34,7 +34,7 @@ export const ClaudeExplorer = () => {
         oneLiner: 'Project instructions Claude reads every session',
         when: 'Loaded into context at the start of every session',
         description: 'Project-specific instructions that shape how Claude works in this repository. Put your conventions, common commands, and architectural context here so Claude operates with the same assumptions your team does.',
-        tips: ['Target under 200 lines. Longer files still load in full but may reduce adherence', <>CLAUDE.md loads into every session. If something only matters for specific tasks, move it to a <A href="/docs/en/skills">skill</A> or a path-scoped <A href="/docs/en/memory#organize-rules-with-claude/rules/">rule</A> so it loads only when needed</>, 'List the commands you run most, like build, test, and format, so Claude knows them without you spelling them out each time', <>Run <C>/memory</C> to open and edit CLAUDE.md from within a session</>, <>Also works at <C>.claude/CLAUDE.md</C> if you prefer to keep the project root clean</>],
+        tips: ['Target under 200 lines. Longer files still load in full but may reduce adherence', <>CLAUDE.md loads into every session. If something only matters for specific tasks, move it to a <A href="/docs/en/skills">skill</A> or a path-scoped <A href="/docs/en/memory#organize-rules-with-claude/rules/">rule</A> so it loads only when needed</>, 'List the commands you run most, like build, test, and format, so Claude knows them without you spelling them out each time', <>Run <C>/memory</C> to open and edit CLAUDE.md from within a session</>, <>Also works at <C>.claude/CLAUDE.md</C> if you prefer to keep the project root clean</>, <>If your repo already has an <C>AGENTS.md</C> for other coding agents, Claude Code <A href="/docs/en/memory#agents-md">can read that</A> on its own or alongside CLAUDE.md</>],
         exampleIntro: 'This example is for a TypeScript and React project. It lists the build and test commands, the framework conventions Claude should follow, and project-specific rules like export style and file layout.',
         example: `# Project conventions
 
@@ -113,7 +113,7 @@ config/secrets.json`,
           oneLiner: 'Permissions, hooks, and configuration',
           when: <>Overrides global <C>~/.claude/settings.json</C>. Local settings, CLI flags, and managed settings override this</>,
           description: 'Settings that Claude Code applies directly. Permissions control which commands and tools Claude can use; hooks run your scripts at specific points in a session. Unlike CLAUDE.md, which Claude reads as guidance, these are enforced whether Claude follows them or not.',
-          contains: [<><A href="/docs/en/permissions">permissions</A>: allow, deny, or prompt before Claude uses specific tools or commands</>, <><A href="/docs/en/hooks">hooks</A>: run your own scripts on events like before a tool call or after a file edit</>, <><A href="/docs/en/statusline">statusLine</A>: customize the line shown at the bottom while Claude works</>, <><A href="/docs/en/settings-reference#available-settings">model</A>: pick a default model for this project</>, <><A href="/docs/en/settings-reference#environment-variables">env</A>: environment variables set in every session</>, <><A href="/docs/en/output-styles">outputStyle</A>: select a custom system-prompt style from output-styles/</>],
+          contains: [<><A href="/docs/en/permissions">permissions</A>: allow, deny, or prompt before Claude uses specific tools or commands</>, <><A href="/docs/en/hooks">hooks</A>: run your own scripts on events like before a tool call or after a file edit</>, <><A href="/docs/en/statusline">statusLine</A>: customize the line shown at the bottom while Claude works</>, <><A href="/docs/en/settings-reference#available-settings">model</A>: pick a default model for this project</>, <><A href="/docs/en/settings-reference#environment-variables">env</A>: environment variables set in every session</>, <><A href="/docs/en/output-styles">outputStyle</A>: select a custom output style from output-styles/</>],
           tips: [<>Bash permission patterns support wildcards: <C>Bash(npm test *)</C> matches any command starting with <C>npm test</C></>, <>Array settings like <C>permissions.allow</C> combine across all scopes; scalar settings like <C>model</C> use the most specific value</>],
           exampleIntro: <>This example allows <C>npm test</C> and <C>npm run</C> commands without prompting, blocks <C>rm -rf</C>, and runs Prettier on files after Claude edits or writes them.</>,
           example: `{
@@ -322,7 +322,7 @@ Investigate and fix the issue above.
           icon: 'folder',
           color: '#5AA7A7',
           oneLiner: 'Project-scoped output styles, if your team shares any',
-          when: 'Applied at session start when selected via the outputStyle setting',
+          when: 'Files read at startup; the style you select with outputStyle applies to every response',
           description: <>Output styles are usually personal, so most live in <C>~/.claude/output-styles/</C>. Put one here if your team shares a style, like a review mode everyone uses. See <A href="#ce-global-output-styles">the Global tab</A> for the full explanation and example.</>,
           docsLink: '/en/output-styles',
           children: []
@@ -638,10 +638,10 @@ type: reference
           type: 'folder',
           icon: 'folder',
           color: '#5AA7A7',
-          oneLiner: 'Custom system-prompt sections that adjust how Claude works',
-          when: 'Applied at session start when selected via the outputStyle setting',
-          description: [<>Each markdown file defines an output style: a section appended to the system prompt that, by default, also drops the built-in software-engineering task instructions. Use this to adapt Claude Code for uses beyond coding, or to add teaching or review modes.</>, <>Select a built-in or custom style with <C>/config</C> or the <C>outputStyle</C> key in settings. Styles here are available in every project; project-level styles with the same name take precedence.</>],
-          tips: ['Built-in styles Default, Proactive, Concise, Explanatory, and Learning are included with Claude Code; custom styles go here', <>Set <C>keep-coding-instructions: true</C> in frontmatter to keep the default task instructions alongside your additions</>, 'Changes take effect on the next session since the system prompt is fixed at startup for caching'],
+          oneLiner: 'Custom instruction sets that adjust how Claude works',
+          when: 'Files read at startup; the style you select with outputStyle applies to every response',
+          description: [<>Each markdown file defines an output style: a set of instructions for Claude that, by default, also replaces the built-in software-engineering task instructions. Use this to adapt Claude Code for uses beyond coding, or to add teaching or review modes.</>, <>Select a built-in or custom style with <C>/output-style</C>, <C>/config</C>, or the <C>outputStyle</C> key in settings. Styles here are available in every project; project-level styles with the same name take precedence.</>],
+          tips: ['Built-in styles Default, Proactive, Concise, Explanatory, and Learning are included with Claude Code; custom styles go here', <>Set <C>keep-coding-instructions: true</C> in frontmatter to keep the default task instructions alongside your additions</>, 'Switching styles mid-session applies from your next message; in the terminal, a style file you create or edit mid-session is picked up after a restart'],
           docsLink: '/en/output-styles',
           children: [{
             id: 'output-style-example',
@@ -652,7 +652,7 @@ type: reference
             badge: 'local',
             oneLiner: 'Example style that adds explanations and leaves small changes for you',
             when: <>Active when <C>outputStyle</C> in settings is set to <C>teaching</C></>,
-            description: <>This style appends instructions to the system prompt: Claude adds a "Why this approach" note after each task and leaves TODO(human) markers for changes under 10 lines instead of writing them itself. Select it by setting <C>outputStyle</C> to the filename without .md, or to the <C>name</C> field if you set one in frontmatter.</>,
+            description: <>With this style, Claude adds a "Why this approach" note after each task and leaves TODO(human) markers for changes under 10 lines instead of writing them itself. Select it by setting <C>outputStyle</C> to the filename without .md, or to the <C>name</C> field if you set one in frontmatter.</>,
             example: `---
 description: Explains reasoning and asks you to implement small pieces
 keep-coding-instructions: true
@@ -1434,7 +1434,7 @@ Claude Code는 프로젝트 디렉토리와 홈 디렉토리의 `~/.claude`에�
 
 Windows에서 `~/.claude`는 `%USERPROFILE%\.claude`로 확인됩니다. [`CLAUDE_CONFIG_DIR`](/docs/ko/env-vars)을 설정하면, 이 페이지의 모든 `~/.claude` 경로가 대신 해당 디렉토리 아래에 있습니다.
 
-대부분의 사용자는 `CLAUDE.md`와 `settings.json`만 편집합니다. 디렉토리의 나머지는 선택 사항입니다. 필요에 따라 skills, rules, subagents를 추가합니다.
+대부분의 사용자는 `CLAUDE.md`와 `settings.json`만 편집합니다. 리포지토리에 이미 다른 코딩 에이전트용 `AGENTS.md`가 있는 경우, Claude Code는 [자체적으로 또는 `CLAUDE.md`와 함께 읽을 수 있습니다](/docs/ko/memory#agents-md). 디렉토리의 나머지는 선택 사항입니다. 필요에 따라 skills, rules, subagents를 추가합니다.
 
 <h2 id="explore-the-directory">
   디렉토리 탐색
@@ -1450,11 +1450,12 @@ Windows에서 `~/.claude`는 `%USERPROFILE%\.claude`로 확인됩니다. [`CLAUD
 
 탐색기는 작성하고 편집하는 파일을 다룹니다. 관련된 몇 가지 파일은 다른 위치에 있습니다.
 
-| 파일                      | 위치                  | 목적                                                                                                                                                                                 |
-| ----------------------- | ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `managed-settings.json` | 시스템 수준, OS에 따라 다름   | 재정의할 수 없는 엔터프라이즈 강제 설정입니다. [서버 관리 설정](/docs/ko/server-managed-settings)을 참조하세요.                                                                                                         |
-| `CLAUDE.local.md`       | 프로젝트 루트             | 이 프로젝트에 대한 개인 기본 설정으로, CLAUDE.md와 함께 로드됩니다. 수동으로 생성하고 `.gitignore`에 추가합니다.                                                                                                         |
-| 설치된 플러그인                | `~/.claude/plugins` | 복제된 마켓플레이스, 설치된 플러그인 버전, 플러그인별 데이터로, `claude plugin` 명령으로 관리됩니다. 고아 버전은 플러그인 업데이트 또는 제거 후 7일 후에 삭제됩니다. [플러그인 캐싱](/docs/ko/plugins-reference#plugin-caching-and-file-resolution)을 참조하세요. |
+| 파일                      | 위치                              | 목적                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| ----------------------- | ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `managed-settings.json` | 시스템 수준, OS에 따라 다름               | 재정의할 수 없는 엔터프라이즈 강제 설정입니다. [좁은 예외](/docs/ko/settings#security-keys-where-the-stricter-value-applies)를 제외하고는 재정의할 수 없습니다. [파일을 저장할 위치](/docs/ko/managed-settings#deploy-a-managed-settings-file) 및 [Claude Code가 사용하는 관리되는 소스](/docs/ko/managed-settings#precedence-within-the-managed-tier)를 참조하세요.                                                                                                                                                                                                                                                                                                                                       |
+| `CLAUDE.local.md`       | 프로젝트 루트                         | 이 프로젝트에 대한 개인 기본 설정으로, CLAUDE.md와 함께 로드됩니다. 수동으로 생성하고 `.gitignore`에 추가합니다.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `AGENTS.md`             | 프로젝트 루트, `.claude/`, 또는 모든 디렉터리 | AI 코딩 에이전트를 위해 작성하는 프로젝트 지침입니다. Claude Code는 [이를 로드](/docs/ko/memory#agents-md)할 수 있으며, `CLAUDE.md`와 함께 로드할 수도 있습니다.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| 설치된 플러그인                | `~/.claude/plugins`             | 복제된 마켓플레이스, 설치된 플러그인 버전, `installed_plugins.json` 설치 기록, 플러그인별 데이터로, `claude plugin` 명령으로 관리됩니다. [claude.ai 계정에서 동기화된](/docs/ko/plugins/loading#synced-plugins) 플러그인은 `~/.claude/plugins/synced/`로 다운로드됩니다. 마켓플레이스 [`command` 소스](/docs/ko/plugins/marketplace-reference#command-plugin-source)에서 링크 모드로 설치된 플러그인의 경우, Claude Code는 복사본 대신 여기에 링크를 저장하고, 플러그인의 파일은 명령이 출력하는 디렉터리에 남아 있습니다. `command` 소스는 Claude Code v2.1.229 이상이 필요합니다. 로컬 디렉터리 마켓플레이스에서 상대 경로로 나열된 플러그인도 캐시 복사본이 아닌 소스 디렉터리에서 [제자리에 로드](/docs/ko/plugins/loading#find-plugins-on-disk)됩니다. [플러그인 캐싱](/docs/ko/plugins/loading#find-plugins-on-disk)에서 고아 버전이 정리되는 방식을 참조하세요. |
 
 `~/.claude`는 또한 작업할 때 Claude Code가 작성하는 데이터를 보유합니다. 트랜스크립트, 프롬프트 기록, 파일 스냅샷, 캐시, 로그입니다. 아래의 [애플리케이션 데이터](#application-data)를 참조하세요.
 
@@ -1469,8 +1470,8 @@ Windows에서 `~/.claude`는 `%USERPROFILE%\.claude`로 확인됩니다. [`CLAUD
 | Claude에 프로젝트 컨텍스트 및 규칙 제공    | `CLAUDE.md`                              | 프로젝트 또는 전역 | [메모리](/docs/ko/memory)                         |
 | 특정 도구 호출 허용 또는 차단            | `settings.json` `permissions` 또는 `hooks` | 프로젝트 또는 전역 | [권한](/docs/ko/permissions), [Hooks](/docs/ko/hooks) |
 | 도구 호출 전후에 스크립트 실행            | `settings.json` `hooks`                  | 프로젝트 또는 전역 | [Hooks](/docs/ko/hooks)                        |
-| 세션에 대한 환경 변수 설정              | `settings.json` `env`                    | 프로젝트 또는 전역 | [설정](/docs/ko/settings#available-settings)     |
-| 개인 재정의를 git에서 제외             | `settings.local.json`                    | 프로젝트만      | [설정 범위](/docs/ko/settings#settings-files)      |
+| 세션에 대한 환경 변수 설정              | `settings.json` `env`                    | 프로젝트 또는 전역 | [설정](/docs/ko/settings-reference#all-settings) |
+| 개인 재정의를 git에서 제외             | `settings.local.json`                    | 프로젝트만      | [설정 범위](/docs/ko/settings#where-settings-live) |
 | `/name`으로 호출하는 프롬프트 또는 기능 추가 | `skills/<name>/SKILL.md`                 | 프로젝트 또는 전역 | [Skills](/docs/ko/skills)                      |
 | 자신의 도구가 있는 특화된 subagent 정의   | `agents/*.md`                            | 프로젝트 또는 전역 | [Subagents](/docs/ko/sub-agents)               |
 | 스크립트에서 많은 subagent 조율        | `workflows/*.js`                         | 프로젝트 또는 전역 | [동적 워크플로우](/docs/ko/workflows)                 |
@@ -1486,7 +1487,7 @@ Windows에서 `~/.claude`는 `%USERPROFILE%\.claude`로 확인됩니다. [`CLAUD
 <Note>
   이 파일에 입력한 내용을 재정의할 수 있는 여러 가지가 있습니다.
 
-  * 조직에서 배포한 [관리 설정](/docs/ko/server-managed-settings)이 모든 것보다 우선합니다.
+  * 조직에서 배포한 [관리 설정](/docs/ko/server-managed-settings)이 모든 것보다 우선합니다. [설정 우선순위의 예외](/docs/ko/settings#exceptions-to-managed-settings-precedence) 제외
   * `--permission-mode` 또는 `--settings`와 같은 CLI 플래그는 해당 세션에 대해 `settings.json`을 재정의합니다.
   * 일부 환경 변수는 동등한 설정보다 우선하지만, 이는 다양합니다. 각각에 대해 [환경 변수 참조](/docs/ko/env-vars)를 확인하세요.
 
@@ -1500,19 +1501,35 @@ Windows에서 `~/.claude`는 `%USERPROFILE%\.claude`로 확인됩니다. [`CLAUD
 | [`CLAUDE.md`](#ce-claude-md)                        | 프로젝트 및 전역 | ✓  | 매 세션마다 로드되는 지침                                                          | [메모리](/docs/ko/memory)                                               |
 | [`rules/*.md`](#ce-rules)                           | 프로젝트 및 전역 | ✓  | 주제 범위 지침, 선택적으로 경로 제한                                                   | [규칙](/docs/ko/memory#organize-rules-with-claude/rules/)              |
 | [`settings.json`](#ce-settings-json)                | 프로젝트 및 전역 | ✓  | 권한, hooks, 환경 변수, 모델 기본값                                                | [설정](/docs/ko/settings)                                              |
-| [`settings.local.json`](#ce-settings-local-json)    | 프로젝트만     |    | 개인 재정의, 자동 gitignored                                                   | [설정 범위](/docs/ko/settings#settings-files)                            |
+| [`settings.local.json`](#ce-settings-local-json)    | 프로젝트만     |    | 개인 재정의, Claude Code가 설정을 저장할 때 gitignored                               | [설정 범위](/docs/ko/settings#where-settings-live)                       |
 | [`.mcp.json`](#ce-mcp-json)                         | 프로젝트만     | ✓  | 팀 공유 MCP 서버                                                             | [MCP 범위](/docs/ko/mcp#mcp-installation-scopes)                       |
 | [`.worktreeinclude`](#ce-worktreeinclude)           | 프로젝트만     | ✓  | 새 worktrees로 복사할 Gitignored 파일                                          | [Worktrees](/docs/ko/worktrees#copy-gitignored-files-into-worktrees) |
 | [`skills/<name>/SKILL.md`](#ce-skills)              | 프로젝트 및 전역 | ✓  | `/name`으로 호출되거나 자동 호출되는 재사용 가능한 프롬프트                                    | [Skills](/docs/ko/skills)                                            |
 | [`commands/*.md`](#ce-commands)                     | 프로젝트 및 전역 | ✓  | 단일 파일 프롬프트; skills와 동일한 메커니즘                                            | [Skills](/docs/ko/skills)                                            |
-| [`output-styles/*.md`](#ce-output-styles)           | 프로젝트 및 전역 | ✓  | 사용자 정의 시스템 프롬프트 섹션                                                      | [출력 스타일](/docs/ko/output-styles)                                     |
+| [`output-styles/*.md`](#ce-output-styles)           | 프로젝트 및 전역 | ✓  | Claude의 작동 방식을 조정하는 사용자 정의 지침 세트                                        | [출력 스타일](/docs/ko/output-styles)                                     |
 | [`agents/*.md`](#ce-agents)                         | 프로젝트 및 전역 | ✓  | 자신의 프롬프트와 도구가 있는 subagent 정의                                            | [Subagents](/docs/ko/sub-agents)                                     |
 | [`workflows/*.js`](#ce-workflows)                   | 프로젝트 및 전역 | ✓  | Claude가 작성하고 `/workflows`에서 저장한 동적 워크플로우 스크립트; 각 파일은 `/<name>` 명령어가 됩니다 | [동적 워크플로우](/docs/ko/workflows)                                       |
 | [`agent-memory/<name>/`](#ce-agent-memory)          | 프로젝트 및 전역 | ✓  | Subagents의 지속적 메모리                                                      | [지속적 메모리](/docs/ko/sub-agents#enable-persistent-memory)              |
-| [`~/.claude.json`](#ce-claude-json)                 | 전역만       |    | 앱 상태, OAuth, UI 토글, 개인 MCP 서버                                           | [전역 설정](/docs/ko/settings#global-config-settings)                    |
+| [`~/.claude.json`](#ce-claude-json)                 | 전역만       |    | 앱 상태, OAuth, UI 토글, 개인 MCP 서버                                           | [전역 설정](/docs/ko/settings-reference#global-config-settings)          |
 | [`projects/<project>/memory/`](#ce-global-projects) | 전역만       |    | 자동 메모리: Claude의 세션 간 자체 메모                                              | [자동 메모리](/docs/ko/memory#auto-memory)                                |
 | [`keybindings.json`](#ce-keybindings)               | 전역만       |    | 사용자 정의 키보드 단축키                                                          | [키바인딩](/docs/ko/keybindings)                                         |
 | [`themes/*.json`](#ce-themes)                       | 전역만       |    | 사용자 정의 색상 테마                                                            | [사용자 정의 테마](/docs/ko/terminal-config#create-a-custom-theme)          |
+
+<h2 id="frontmatter-fields-by-file">
+  파일별 프론트매터 필드
+</h2>
+
+Skills, command 파일, subagents, output styles, 그리고 rules는 파일 상단의 YAML [프론트매터](/docs/ko/glossary#frontmatter)에서 구성을 읽으며, 각각은 자신의 필드 집합을 허용합니다. 이 표는 각 파일의 필드 이름을 나열하고 이들을 설명하는 참조로 연결합니다.
+
+| 파일                       | 프론트매터 필드                                                                                                                                                                                                                                                                      | 참조                                                            |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| `skills/<name>/SKILL.md` | `name`, `description`, `when_to_use`, `argument-hint`, `arguments`, `disable-model-invocation`, `user-invocable`, `allowed-tools`, `disallowed-tools`, `model`, `effort`, `context`, `agent`, `background`, `hooks`, `paths`, `shell`, `metadata`, `license`, `compatibility` | [Skill 프론트매터](/docs/ko/skills#frontmatter-reference)               |
+| `commands/*.md`          | `name`과 `paths`를 제외한 skill 필드                                                                                                                                                                                                                                                 | [Skill 프론트매터](/docs/ko/skills#frontmatter-reference)               |
+| `agents/*.md`            | `name`, `description`, `tools`, `disallowedTools`, `model`, `permissionMode`, `maxTurns`, `skills`, `mcpServers`, `hooks`, `memory`, `background`, `effort`, `isolation`, `color`, `initialPrompt`, `omitClaudeMd`, `experimental`                                            | [Subagent 프론트매터](/docs/ko/sub-agents#supported-frontmatter-fields) |
+| `output-styles/*.md`     | `name`, `description`, `keep-coding-instructions`, `force-for-plugin`                                                                                                                                                                                                         | [Output style 프론트매터](/docs/ko/output-styles#frontmatter)           |
+| `rules/*.md`             | `paths`                                                                                                                                                                                                                                                                       | [Rule 프론트매터](/docs/ko/memory#rules-frontmatter-reference)          |
+
+[플러그인](/docs/ko/plugins/components#agents)에서 제공되는 Agents는 subagent 필드의 부분 집합을 준수합니다.
 
 <h2 id="troubleshoot-configuration">
   설정 문제 해결
@@ -1524,104 +1541,162 @@ Windows에서 `~/.claude`는 `%USERPROFILE%\.claude`로 확인됩니다. [`CLAUD
   애플리케이션 데이터
 </h2>
 
-작성하는 설정 외에도 `~/.claude`는 세션 중에 Claude Code가 작성하는 데이터를 보유합니다. 이 파일은 일반 텍스트입니다. 도구를 통과하는 모든 항목은 디스크의 트랜스크립트에 저장됩니다: 파일 내용, 명령 출력, 붙여넣은 텍스트입니다.
+작성한 설정 외에도 `~/.claude`에는 Claude Code가 세션 중에 작성하는 데이터가 저장됩니다. 이 파일들은 평문입니다. 도구를 통과하는 모든 것은 디스크의 트랜스크립트에 기록됩니다: 파일 내용, 명령 출력, 붙여넣은 텍스트.
 
 <h3 id="cleaned-up-automatically">
   자동으로 정리됨
 </h3>
 
-아래 경로의 파일은 [`cleanupPeriodDays`](/docs/ko/settings#available-settings)보다 오래되면 시작 시 삭제됩니다. 기본값은 30일입니다.
+Claude Code는 [`cleanupPeriodDays`](/docs/ko/settings-reference#cleanupperioddays)보다 오래된 아래 경로의 파일들을 삭제합니다. 보존 기간을 안전하게 결정할 수 있는 한 말입니다. 기본값은 30일이고 최소값은 1입니다. `0`으로 설정하면 유효성 검사 오류가 발생합니다. 동일한 나이 기준이 [고아 worktrees의 자동 제거](/docs/ko/worktrees#clean-up-subagent-and-background-session-worktrees)에도 적용됩니다.
 
-| `~/.claude/` 아래 경로                           | 내용                                                                                                                                                                     |
-| -------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `projects/<project>/<session>.jsonl`         | 전체 대화 트랜스크립트: 모든 메시지, 도구 호출, 도구 결과                                                                                                                                     |
-| `projects/<project>/<session>/subagents/`    | [Subagent](/docs/ko/sub-agents) 대화 트랜스크립트로, 상위 세션 트랜스크립트가 만료될 때 함께 제거됨                                                                                                      |
-| `projects/<project>/<session>/tool-results/` | 별도 파일로 유출된 대형 도구 출력                                                                                                                                                    |
-| `file-history/<session>/`                    | Claude가 변경한 파일의 편집 전 스냅샷으로, [checkpoint 복원](/docs/ko/checkpointing)에 사용됨. 가장 최근의 100개 checkpoint에 대한 스냅샷을 보유하며, 보유된 checkpoint가 참조하지 않는 스냅샷 파일은 각 파일의 첫 번째 스냅샷을 제외하고 삭제됩니다. |
-| `plans/`                                     | [plan mode](/docs/ko/permission-modes#analyze-before-you-edit-with-plan-mode) 중에 작성된 계획 파일                                                                                  |
-| `debug/`                                     | 세션별 디버그 로그로, `--debug`로 시작하거나 `/debug`를 실행할 때만 작성됨                                                                                                                     |
-| `paste-cache/`, `image-cache/`               | 대형 붙여넣기 및 첨부 이미지의 내용                                                                                                                                                   |
-| `session-env/`                               | 세션별 환경 메타데이터                                                                                                                                                           |
-| `tasks/`                                     | 작업 도구로 작성된 세션별 작업 목록                                                                                                                                                   |
-| `shell-snapshots/`                           | 시작 시 캡처되고 [Bash tool](/docs/ko/tools-reference#bash-tool-behavior)에 의해 각 명령에 적용되는 별칭, 함수, 셸 옵션입니다. 정상 종료 시 제거됩니다. 스윕은 충돌 후 남겨진 항목을 정리합니다.                                   |
-| `backups/`                                   | 설정 마이그레이션 전에 `~/.claude.json`의 타임스탬프 복사본                                                                                                                               |
-| `feedback-bundles/`                          | 제3자 공급자에서 `/feedback`으로 작성되거나 Anthropic 자격 증명이 구성되지 않은 경우 작성된 수정된 트랜스크립트 아카이브로, Anthropic 계정 팀에 전송하기 위함                                                                |
-| `todos/`, `statsig/`, `logs/`                | 이전 버전의 레거시 디렉토리입니다. 더 이상 작성되지 않습니다. 스윕은 내용을 제거한 후 빈 디렉토리를 제거합니다.                                                                                                       |
+| `~/.claude/` 아래 경로                                                                                                              | 내용                                                                                                                                                                                                                          |
+| ------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `projects/<project>/<session>.jsonl`                                                                                            | 전체 대화 트랜스크립트: 모든 메시지, 도구 호출 및 도구 결과                                                                                                                                                                                         |
+| `projects/<project>/<session>.orphaned-<timestamp>-<suffix>.jsonl`, `projects/<project>/<session>.jsonl.superseded-<timestamp>` | Claude Code가 덮어쓰거나 삭제하는 대신 따로 보관한 세션의 이전 트랜스크립트입니다. 세션 선택기에 나타나지 않습니다                                                                                                                                                       |
+| `projects/<project>/<session>/subagents/`                                                                                       | [Subagent](/docs/ko/sub-agents) 대화 트랜스크립트, 상위 세션 트랜스크립트가 오래되면 함께 제거됨                                                                                                                                                             |
+| `projects/<project>/<session>/tool-results/`                                                                                    | 별도 파일로 유출된 대형 도구 출력                                                                                                                                                                                                         |
+| `file-history/<session>/`                                                                                                       | Claude Code가 변경한 파일의 편집 전 스냅샷, [checkpoint 복원](/docs/ko/checkpointing)에 사용됨. 가장 최근의 100개 checkpoint에 대한 스냅샷을 보유합니다. 보존된 checkpoint가 참조하지 않는 스냅샷 파일은 각 파일의 첫 번째 스냅샷을 제외하고 삭제됩니다                                                   |
+| `plans/`                                                                                                                        | [plan mode](/docs/ko/permission-modes#analyze-before-you-edit-with-plan-mode) 중에 작성된 Plan 파일                                                                                                                                     |
+| `debug/`                                                                                                                        | 세션별 디버그 로그, 디버그 로깅이 켜져 있을 때 작성됨. 예를 들어 [`--debug`](/docs/ko/cli-reference#cli-flags)로 시작하거나 `/debug`를 실행할 때                                                                                                                      |
+| `paste-cache/`                                                                                                                  | 대형 붙여넣기의 내용                                                                                                                                                                                                                 |
+| `image-cache/<session>/`                                                                                                        | Claude Code v2.1.274 이전 버전에서 저장한 첨부 이미지입니다. 이후 버전은 붙여넣은 이미지와 첨부 이미지를 `~/.claude` 외부에 저장하며, [`CLAUDE_CODE_TMPDIR`](/docs/ko/env-vars)이 제어하는 임시 디렉토리 아래 각 세션에 대한 `images/` 디렉토리에 저장합니다. 스윕은 나이에 관계없이 여기에 있는 다른 세션의 남은 디렉토리를 제거합니다. |
+| `uploads/<session>/`                                                                                                            | 웹 또는 모바일 앱에서 첨부한 파일 및 모바일 앱에서 첨부한 사진. [Remote Control](/docs/ko/remote-control) 세션에 메시지를 보낼 때입니다. [cloud session](/docs/ko/claude-code-on-the-web)에 대한 첨부는 대신 해당 세션의 자체 클라우드 환경에 저장되며, 사용자의 머신에는 저장되지 않습니다.                           |
+| `session-env/`                                                                                                                  | 세션별 환경 메타데이터                                                                                                                                                                                                                |
+| `tasks/`                                                                                                                        | 작업 도구로 작성된 작업 목록, 목록당 하나의 디렉토리                                                                                                                                                                                              |
+| `shell-snapshots/`                                                                                                              | 시작 시 캡처된 별칭, 함수 및 셸 옵션. [Bash tool](/docs/ko/tools-reference#bash-tool-behavior)에 의해 각 명령에 적용됩니다. 정상 종료 시 제거됩니다. 스윕은 충돌 후 남은 것을 정리합니다.                                                                                           |
+| `backups/`                                                                                                                      | `~/.claude.json`의 이전 버전, Claude Code가 파일을 다시 쓸 때 복사됨. Claude Code는 가장 최신 5개와 구문 분석할 수 없는 모든 버전의 복사본을 유지합니다.                                                                                                                 |
+| `feedback-bundles/`                                                                                                             | `/feedback`에 의해 작성된 수정된 트랜스크립트 아카이브. 타사 제공자에게 또는 Anthropic 자격증명이 구성되지 않았을 때 Anthropic 계정 팀에 보내기 위해                                                                                                                          |
+| `feedback/drafts/`                                                                                                              | 대기 중인 [Claude 작성 피드백](/docs/ko/tools-reference#sendfeedback-tool-behavior). `/feedback`에서 검토 대기 중입니다. `cleanupPeriodDays` 또는 30일 후 스윕됨. 큐가 10개 초안 제한에 도달하면 Claude Code는 가장 오래된 초안을 삭제하여 공간을 확보합니다.                               |
+| `usage-data/`                                                                                                                   | `report.html` 및 [`/insights`](/docs/ko/costs#analyze-your-usage-patterns)에 의해 작성된 타임스탬프 보고서 복사본, 그리고 이를 구축하는 데 사용되는 캐시된 세션별 분석 데이터                                                                                               |
+| `skills/.trash/`, `plugins/.trash/`                                                                                             | [Skills](/docs/ko/skills#how-synced-skills-behave) 및 [plugins](/docs/ko/plugins/loading#synced-plugins). claude.ai 동기화가 제거한 것. 예를 들어 claude.ai에서 하나를 끄거나 동기화를 중지한 후. 파일은 스윕이 삭제할 때까지 복구할 수 있도록 여기에 남아 있습니다                            |
+| `todos/`, `statsig/`, `logs/`                                                                                                   | 이전 버전의 레거시 디렉토리입니다. 더 이상 작성되지 않습니다. 스윕은 내용을 제거한 다음 빈 디렉토리를 제거합니다.                                                                                                                                                           |
+
+`sessions/`의 세션 파일, 자동 메모리, Claude Desktop 및 Cowork 트랜스크립트는 각각 자체 보존 규칙을 따릅니다:
+
+* **`sessions/`**: 실행 중인 각 세션에 대해 하나의 작은 파일을 보유합니다. 동시 세션 및 충돌을 감지하는 데 사용됩니다. 나이 기반 스윕의 일부가 아닙니다: Claude Code는 세션이 종료될 때 각 파일을 제거하고 다음 시작 시 충돌 남은 것을 정리합니다.
+* **자동 메모리**: 스윕은 프로젝트의 [자동 메모리](/docs/ko/memory#auto-memory) 디렉토리 `projects/<project>/memory/`의 메모리 파일을 삭제하지 않습니다. Claude Code는 전체 보존 기간 동안 비어 있었던 경우에만 해당 디렉토리를 제거합니다. v2.1.228 이전에는 스윕이 메모리 디렉토리 내의 폴더를 세션 데이터로 취급하고 그 아래의 오래된 파일을 삭제할 수 있었습니다.
+* **Claude Desktop 및 Cowork 트랜스크립트**: Claude Code는 Claude Desktop 또는 Cowork에서 시작하거나 가장 최근에 계속한 세션의 트랜스크립트를 모든 나이에서 유지합니다. 이 트랜스크립트에 나이 제한을 주려면 [`desktopSessionCleanupPeriodDays`](/docs/ko/settings-reference#desktopsessioncleanupperioddays)를 설정하세요. [관리 설정](/docs/ko/managed-settings)이 `cleanupPeriodDays`를 설정하면 Claude Code는 대신 해당 기간 후에 이 트랜스크립트를 삭제합니다. Claude Code v2.1.248 이상 필요; 이전 버전은 `cleanupPeriodDays` 후에 삭제합니다.
+
+Claude Code는 다음 경우에 나이 기반 스윕을 건너뜁니다:
+
+* **Bare mode**: [`--bare`](/docs/ko/headless#start-faster-with-bare-mode)로 `claude -p`를 실행할 때, Claude Code는 해당 세션에서 스윕을 실행하지 않습니다.
+* **일시 중지된 스윕**: Claude Code가 보존 기간을 안전하게 결정할 수 없으면 보존 정리 스윕을 일시 중지합니다. [`retention_sweep` 이벤트](/docs/ko/monitoring-usage#retention-sweep-event)는 이를 일시 중지하는 각 구성을 나열합니다. 원인이 읽거나 구문 분석할 수 없는 설정 파일이거나 `cleanupPeriodDays` 또는 `desktopSessionCleanupPeriodDays`가 명시적으로 설정된 설정 오류인 경우, Claude Code는 설정 오류를 수정할 때까지 `/status`에 경고를 표시합니다. [관리 설정](/docs/ko/server-managed-settings)이 `cleanupPeriodDays`를 제공하면 Claude Code는 어느 경우든 관리 값에서 스윕을 실행합니다.
 
 <h3 id="kept-until-you-delete-them">
   삭제할 때까지 유지됨
 </h3>
 
-다음 경로는 자동 정리 대상이 아니며 무기한 지속됩니다.
+보존 정리 스윕은 아래 경로를 제거하지 않습니다. Claude Code는 삭제할 때까지 유지합니다. 단, 로그아웃할 때 삭제하는 두 개의 캐시는 제외합니다.
 
-| `~/.claude/` 아래 경로     | 내용                                                                                           |
-| ---------------------- | -------------------------------------------------------------------------------------------- |
-| `history.jsonl`        | 입력한 모든 프롬프트로, 타임스탬프 및 프로젝트 경로 포함. 위쪽 화살표 회상에 사용됨.                                            |
-| `stats-cache.json`     | `/usage`로 표시된 집계 토큰 및 비용 계산                                                                  |
-| `remote-settings.json` | 조직의 [서버 관리 설정](/docs/ko/server-managed-settings)의 캐시된 복사본입니다. 조직이 설정한 경우에만 존재합니다. 각 시작 시 새로고침됩니다. |
+| `~/.claude/` 아래 경로     | 내용                                                                                                                                                                                                                               |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `history.jsonl`        | 입력한 모든 프롬프트, 타임스탬프 및 프로젝트 경로 포함. 위쪽 화살표 회상, `Ctrl+R` 히스토리 검색 및 `!` 셸 명령 완성에 사용됩니다.                                                                                                                                               |
+| `stats-cache.json`     | `/usage`에 표시된 집계된 토큰 및 비용 수                                                                                                                                                                                                      |
+| `remote-settings.json` | [서버 관리 설정](/docs/ko/server-managed-settings)의 캐시된 복사본. 조직의 경우 또는 조직이 구성하지 않은 경우 `{}`. 세션이 [이를 가져올](/docs/ko/server-managed-settings#platform-availability) 때만 존재합니다. Claude Code는 시작 시 및 세션 중 매시간 업데이트를 확인합니다. Claude Code는 로그아웃할 때 삭제합니다. |
+| `cache/changelog.md`   | Claude Code 변경 로그의 캐시된 복사본, `/release-notes`에 표시됨. 백그라운드에서 새로 고쳐집니다.                                                                                                                                                             |
+| `policy-limits.json`   | 조직의 캐시된 기능 정책 설정. 일부 계정 유형에만 존재합니다. 자동으로 새로 고쳐집니다. `policy-limits.json.stamp.json` 사이드카는 캐시가 속한 계정 또는 API 키를 기록합니다. Claude Code는 로그아웃할 때 두 파일을 모두 삭제합니다.                                                                         |
 
-기타 작은 캐시 및 잠금 파일은 사용하는 기능에 따라 나타나며 안전하게 삭제할 수 있습니다.
+<span id="state-files-to-keep" />
+
+사용하는 기능에 따라 다른 파일이 나타납니다. 캐시 및 잠금 파일은 안전하게 삭제할 수 있습니다. 이 상태 파일을 유지하세요:
+
+* `.credentials.json`: 사용자의 [로그인 자격증명](/docs/ko/authentication#credential-management)
+* `agent-memory/`: [subagent 메모리](/docs/ko/sub-agents#enable-persistent-memory)
+* `jobs/` 및 `daemon/`: [background session](/docs/ko/agent-view#where-state-is-stored) 상태
 
 <h3 id="plaintext-storage">
-  일반 텍스트 저장소
+  평문 저장소
 </h3>
 
-트랜스크립트 및 기록은 저장 시 암호화되지 않습니다. OS 파일 권한이 유일한 보호입니다. 도구가 `.env` 파일을 읽거나 명령이 자격 증명을 인쇄하면, 해당 값이 `projects/<project>/<session>.jsonl`에 작성됩니다. 노출을 줄이려면:
+트랜스크립트 및 히스토리는 저장 시 암호화되지 않습니다. OS 파일 권한만이 유일한 보호입니다. 도구가 `.env` 파일을 읽거나 명령이 자격증명을 인쇄하면 해당 값이 `projects/<project>/<session>.jsonl`에 기록됩니다. 노출을 줄이려면:
 
-* `cleanupPeriodDays`를 낮춰 트랜스크립트를 유지하는 기간을 단축합니다.
-* [`CLAUDE_CODE_SKIP_PROMPT_HISTORY`](/docs/ko/env-vars) 환경 변수를 설정하여 모든 모드에서 트랜스크립트 및 프롬프트 기록 작성을 건너뜁니다. 비대화형 모드에서는 대신 `-p`와 함께 `--no-session-persistence`를 전달하거나 Agent SDK에서 `persistSession: false`를 설정할 수 있습니다.
-* [권한 규칙](/docs/ko/permissions)을 사용하여 자격 증명 파일의 읽기를 거부합니다.
+* `cleanupPeriodDays`를 낮춰 Claude Code가 트랜스크립트를 유지하는 기간을 단축하세요
+* [`desktopSessionCleanupPeriodDays`](/docs/ko/settings-reference#desktopsessioncleanupperioddays)를 설정하여 Claude Desktop 및 Cowork 트랜스크립트에도 나이 제한을 주세요
+* [`CLAUDE_CODE_SKIP_PROMPT_HISTORY`](/docs/ko/env-vars) 환경 변수를 설정하여 모든 모드에서 트랜스크립트 및 프롬프트 히스토리 작성을 건너뛰세요. 비대화형 모드에서는 대신 `-p`와 함께 `--no-session-persistence`를 전달하거나 TypeScript Agent SDK에서 `persistSession: false`를 설정할 수 있습니다. Python SDK에는 동등한 옵션이 없습니다.
+* [권한 규칙](/docs/ko/permissions)을 사용하여 자격증명 파일의 읽기를 거부하세요
 
 <h3 id="clear-local-data">
   로컬 데이터 지우기
 </h3>
 
-`claude project purge`를 실행하여 한 프로젝트에 대해 Claude Code가 보유한 상태를 삭제합니다. 이 명령은 Claude Code v2.1.124 이상이 필요합니다. 다음을 삭제합니다:
+`claude project purge`를 실행하여 Claude Code가 한 프로젝트에 대해 보유한 상태를 삭제합니다. 다음을 삭제합니다:
 
 * `projects/` 아래의 트랜스크립트 및 자동 메모리
-* 세션별 `tasks/`, `debug/`, `file-history/` 항목
+* 세션별 `tasks/`, `debug/` 및 `file-history/` 항목
 * `history.jsonl`의 일치하는 프롬프트 라인
 * `~/.claude.json`의 프로젝트 항목
 
-이 명령은 전체 삭제 계획을 인쇄하고 항목을 제거하기 전에 확인을 요청합니다.
+프로젝트의 세션에서 붙여넣거나 첨부한 이미지는 `~/.claude` 대신 Claude Code의 임시 디렉토리 아래에 저장되므로 purge는 이를 제거하지 않습니다. [보존 스윕](#cleaned-up-automatically)은 `cleanupPeriodDays`보다 오래되면 삭제합니다.
 
-삭제하지 않고 계획을 미리 봅니다:
+명령은 전체 삭제 계획을 인쇄하고 아무것도 제거하기 전에 확인을 요청합니다.
+
+아래 예제는 `~/work/my-repo`를 자리 표시자로 사용합니다. 프로젝트의 경로로 바꾸세요. 경로와 일치하는 상태가 없으면 명령은 오류를 인쇄하고 상태 1로 종료합니다.
+
+아무것도 삭제하지 않고 계획 미리 보기:
 
 ```bash theme={null}
 claude project purge ~/work/my-repo --dry-run
 ```
 
-단일 확인 프롬프트로 삭제합니다:
+계획은 각 일치하는 항목과 포함된 이유를 나열합니다:
+
+```text theme={null}
+Purge plan for /home/user/work/my-repo:
+
+  dir:    /home/user/.claude/projects/-home-user-work-my-repo
+           project transcripts (.jsonl) and memory/
+  config: projects["/home/user/work/my-repo"]
+           project entry in ~/.claude.json (trust, history, MCP servers)
+  filter: /home/user/.claude/history.jsonl
+           12 prompt(s) typed in this project
+
+shell-snapshots/ are not project-scoped and will not be touched
+backups/ may still contain this project entry in old .claude.json snapshots (/home/user/.claude/backups); at most 5 are kept and they rotate out automatically
+Dry run: 3 item(s) would be deleted.
+```
+
+단일 확인 프롬프트로 삭제:
 
 ```bash theme={null}
 claude project purge ~/work/my-repo
 ```
 
-경로를 생략하여 대화형 목록에서 프로젝트를 선택합니다.
+명령은 동일한 계획을 인쇄한 다음 `Delete 3 item(s) for /home/user/work/my-repo? This cannot be undone. [y/N]`를 묻고 `y`로 답변한 경우에만 삭제합니다.
 
-스크립트에서 사용하기 위해 확인 프롬프트를 건너뜁니다:
+대화형 목록에서 프로젝트를 선택하려면 경로를 생략하세요.
+
+스크립트에서 사용하기 위해 확인 프롬프트를 건너뛰세요:
 
 ```bash theme={null}
 claude project purge ~/work/my-repo --yes
 ```
 
-경로 대신 `--all`을 전달하여 한 번에 모든 프로젝트의 상태를 제거합니다. 이는 `history.jsonl`을 필터링하지 않고 완전히 삭제합니다. `-i`를 전달하여 삭제 계획을 한 번에 하나씩 단계별로 진행합니다.
+경로 대신 `--all`을 전달하여 한 번에 모든 프로젝트의 상태를 purge합니다. 이는 `history.jsonl`을 필터링하는 대신 완전히 삭제합니다. `-i`를 전달하여 삭제 계획을 한 번에 하나씩 단계별로 진행합니다.
 
-이 명령은 프로젝트 범위가 아니므로 `shell-snapshots/` 및 `backups/`는 그대로 두고 계획 출력에서 이에 대해 경고합니다. 주어진 경로와 일치하는 상태가 없으면 상태 1로 종료됩니다.
+명령은 `shell-snapshots/` 및 `backups/`를 그대로 두는데, 이는 프로젝트 범위가 아니기 때문이며 계획 출력에서 이에 대해 경고합니다.
 
-위의 애플리케이션 데이터 경로를 언제든지 손으로 삭제할 수 있습니다. 새 세션은 영향을 받지 않습니다. 아래 표는 과거 세션에서 손실되는 항목을 보여줍니다.
+위의 [애플리케이션 데이터 경로](#state-files-to-keep)를 제외한 모든 경로를 직접 삭제할 수도 있습니다. 새 세션은 영향을 받지 않습니다. 아래 표는 과거 세션에서 손실되는 것을 보여줍니다.
 
-| 삭제                                                                                                                                                                                           | 손실 항목                         |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- |
-| `~/.claude/projects/`                                                                                                                                                                        | 과거 세션의 재개, 계속, 되감기            |
-| `~/.claude/history.jsonl`                                                                                                                                                                    | 위쪽 화살표 프롬프트 회상                |
-| `~/.claude/file-history/`                                                                                                                                                                    | 과거 세션의 checkpoint 복원          |
-| `~/.claude/stats-cache.json`                                                                                                                                                                 | `/usage`로 표시된 과거 합계           |
-| `~/.claude/remote-settings.json`                                                                                                                                                             | 없음. 다음 시작 시 다시 가져옵니다.         |
-| `~/.claude/debug/`, `~/.claude/plans/`, `~/.claude/paste-cache/`, `~/.claude/image-cache/`, `~/.claude/session-env/`, `~/.claude/tasks/`, `~/.claude/shell-snapshots/`, `~/.claude/backups/` | 사용자 대면 항목 없음                  |
-| `~/.claude/todos/`, `~/.claude/statsig/`, `~/.claude/logs/`                                                                                                                                  | 없음. 현재 버전에서 작성되지 않는 레거시 디렉토리. |
+| 삭제                                                                                                                   | 손실되는 것                                                                                                                              |
+| -------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `~/.claude/projects/`                                                                                                | 과거 세션의 재개, 계속 및 되감기, 그리고 모든 프로젝트의 자동 메모리                                                                                            |
+| `~/.claude/history.jsonl`                                                                                            | 위쪽 화살표 프롬프트 회상, `Ctrl+R` 히스토리 검색 및 `!` 셸 명령 완성                                                                                      |
+| `~/.claude/paste-cache/`                                                                                             | 회상된 프롬프트의 붙여넣은 텍스트. [대형 콘텐츠 붙여넣기](/docs/ko/terminal-config#paste-large-content) 참조                                                       |
+| `~/.claude/uploads/`                                                                                                 | 과거 [Remote Control](/docs/ko/remote-control) 세션이 경로로 참조하는 첨부                                                                             |
+| `~/.claude/file-history/`                                                                                            | 과거 세션의 checkpoint 복원                                                                                                                |
+| `~/.claude/stats-cache.json`                                                                                         | `/usage`에 표시된 과거 합계                                                                                                                 |
+| `~/.claude/usage-data/`                                                                                              | 과거 [`/insights`](/docs/ko/costs#analyze-your-usage-patterns) 보고서 및 이를 구축하는 데 사용된 캐시된 분석 데이터                                              |
+| `~/.claude/feedback-bundles/`                                                                                        | Anthropic 계정 팀에 아직 보내지 않은 피드백 및 버그 보고서 아카이브                                                                                         |
+| `~/.claude/feedback/drafts/`                                                                                         | 보내지 않은 [Claude 작성 피드백](/docs/ko/tools-reference#sendfeedback-tool-behavior)                                                              |
+| `~/.claude/remote-settings.json`                                                                                     | 없음. 다음 시작 시 다시 가져옵니다.                                                                                                               |
+| `~/.claude/cache/changelog.md`                                                                                       | 없음. 백그라운드에서 새로 고쳐집니다.                                                                                                               |
+| `~/.claude/policy-limits.json`                                                                                       | 없음. 자동으로 새로 고쳐집니다.                                                                                                                  |
+| `~/.claude/tasks/`                                                                                                   | 재개된 세션이 선택할 작업 목록                                                                                                                   |
+| `~/.claude/skills/.trash/`, `~/.claude/plugins/.trash/`                                                              | [동기화된 skills](/docs/ko/skills#how-synced-skills-behave) 및 [동기화된 plugins](/docs/ko/plugins/loading#synced-plugins)를 복구할 기회. Claude Code가 제거한 것 |
+| `~/.claude/debug/`, `~/.claude/plans/`, `~/.claude/session-env/`, `~/.claude/shell-snapshots/`, `~/.claude/backups/` | 사용자 대면 없음                                                                                                                           |
+| `~/.claude/todos/`, `~/.claude/statsig/`, `~/.claude/logs/`, `~/.claude/image-cache/`                                | 없음. 현재 버전에서 작성되지 않는 레거시 디렉토리.                                                                                                       |
 
-`~/.claude.json`, `~/.claude/settings.json`, `~/.claude/plugins/`를 삭제하지 마세요. 이들은 인증, 기본 설정, 설치된 플러그인을 보유합니다.
+`~/.claude.json`, `~/.claude/settings.json` 또는 `~/.claude/plugins/`를 삭제하지 마세요. 이들은 인증, 기본 설정 및 설치된 plugins을 보유합니다.
 
 <h2 id="related-resources">
   관련 리소스

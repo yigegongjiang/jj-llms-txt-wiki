@@ -2,1245 +2,825 @@
 > Fetch the complete documentation index at: https://code.claude.com/docs/llms.txt
 > Use this file to discover all available pages before exploring further.
 
-# Pengaturan Claude Code
+# File pengaturan dan urutan prioritas
 
-> Konfigurasikan Claude Code dengan pengaturan global dan tingkat proyek, serta variabel lingkungan.
+> Ubah pengaturan Claude Code, pilih cakupan kunci, verifikasi perubahan, dan pelajari nilai mana yang digunakan Claude Code saat kunci diatur di beberapa tempat.
 
-Claude Code menawarkan berbagai pengaturan untuk mengonfigurasi perilakunya sesuai kebutuhan Anda. Anda dapat mengonfigurasi Claude Code dengan menjalankan perintah `/config`, yang membuka antarmuka Pengaturan bertab di mana Anda dapat melihat informasi status dan memodifikasi opsi konfigurasi. Mulai dari v2.1.181, Anda dapat mengubah satu opsi tanpa membuka antarmuka dengan melewatkan `key=value` ke `/config`, misalnya `/config verbose=true`.
+export const SettingsPrecedence = () => {
+  const LEVELS = [{
+    n: 1,
+    name: 'Managed settings',
+    file: 'managed-settings.json, MDM, or the claude.ai console',
+    who: 'Your organization',
+    w: 390
+  }, {
+    n: 2,
+    name: 'Command line',
+    file: 'claude --settings',
+    who: 'You, this session',
+    w: 420
+  }, {
+    n: 3,
+    name: 'Project local',
+    file: '.claude/settings.local.json',
+    who: 'You, this project',
+    w: 480
+  }, {
+    n: 4,
+    name: 'Shared project',
+    file: '.claude/settings.json',
+    who: 'Everyone in the project',
+    w: 540
+  }, {
+    n: 5,
+    name: 'User',
+    file: '~/.claude/settings.json',
+    who: 'You, every project',
+    w: 600
+  }];
+  const W = 760;
+  const ROW = 58;
+  const GAP = 8;
+  const TOP = 34;
+  const H = TOP + LEVELS.length * (ROW + GAP) + 30;
+  const cx = W / 2;
+  const mono = 'var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace)';
+  const sans = 'var(--font-sans, system-ui, -apple-system, sans-serif)';
+  return <div className="sp-root not-prose" role="img" aria-label="Settings precedence, highest first: managed settings, command line, project local, shared project, user. A key set at a higher level overrides the same key set lower down.">
+      <style>{`
+        .sp-root { --sp-text: #1A1918; --sp-sub: #5E5D59; --sp-faint: #8A8880; --sp-fill: #F5F4EF; --sp-stroke: rgba(0,0,0,0.12); --sp-top: #D97757; --sp-top-fill: rgba(217,119,87,0.14); --sp-arrow: #8A8880; margin: 1.25rem 0; }
+        .dark .sp-root { --sp-text: #F1EFE9; --sp-sub: #B8B5AD; --sp-faint: #8A8880; --sp-fill: #24231F; --sp-stroke: rgba(255,255,255,0.12); --sp-top-fill: rgba(217,119,87,0.22); --sp-arrow: #8A8880; }
+        .sp-root svg { width: 100%; height: auto; display: block; max-width: ${W}px; margin: 0 auto; }
+      `}</style>
+      <svg viewBox={`0 0 ${W} ${H}`} xmlns="http://www.w3.org/2000/svg">
+        <text x={cx} y={18} textAnchor="middle" fontFamily={sans} fontSize="12.5" fontWeight="600" fill="var(--sp-sub)">Highest precedence</text>
+        {LEVELS.map((l, i) => {
+    const y = TOP + i * (ROW + GAP);
+    const x = cx - l.w / 2;
+    const top = i === 0;
+    return <g key={l.n}>
+              <rect x={x} y={y} width={l.w} height={ROW} rx={10} fill={top ? 'var(--sp-top-fill)' : 'var(--sp-fill)'} stroke={top ? 'var(--sp-top)' : 'var(--sp-stroke)'} strokeWidth={top ? 1.5 : 1} />
+              <text x={x + 14} y={y + 24} fontFamily={sans} fontSize="14" fontWeight="600" fill="var(--sp-text)">{l.n}. {l.name}</text>
+              <text x={x + 14} y={y + 43} fontFamily={mono} fontSize="11.5" fill="var(--sp-sub)">{l.file}</text>
+              <text x={x + l.w - 14} y={y + 24} textAnchor="end" fontFamily={sans} fontSize="12" fill="var(--sp-faint)">{l.who}</text>
+            </g>;
+  })}
+        <text x={cx} y={H - 10} textAnchor="middle" fontFamily={sans} fontSize="12.5" fontWeight="600" fill="var(--sp-sub)">Lowest precedence</text>
+        <g stroke="var(--sp-arrow)" strokeWidth="1.5" fill="none">
+          <line x1={W - 40} y1={TOP + 10} x2={W - 40} y2={H - 38} />
+          <path d={`M ${W - 46} ${TOP + 18} L ${W - 40} ${TOP + 10} L ${W - 34} ${TOP + 18}`} />
+        </g>
+        <text x={W - 40} y={H - 22} textAnchor="middle" fontFamily={sans} fontSize="10.5" fill="var(--sp-faint)">overrides</text>
+      </svg>
+    </div>;
+};
 
-<h2 id="configuration-scopes">
-  Cakupan konfigurasi
-</h2>
+export const SettingsScope = ({defaultSelected = 'project'}) => {
+  const FILES = [{
+    id: 'user',
+    path: '~/.claude/settings.json'
+  }, {
+    id: 'project',
+    path: 'acme-app/.claude/settings.json'
+  }, {
+    id: 'local',
+    path: 'acme-app/.claude/settings.local.json'
+  }, {
+    id: 'managed',
+    path: 'Managed settings',
+    ring: 'managed-settings.json, MDM, or the claude.ai console'
+  }];
+  const SHORT = {
+    user: '~/.claude/settings.json',
+    project: 'acme-app/.claude/settings.json',
+    local: 'acme-app/.claude/settings.local.json',
+    managed: 'managed-settings.json, MDM, or the claude.ai console'
+  };
+  const TILE_MARK = {
+    project: 'settings.json',
+    local: 'settings.local.json'
+  };
+  const initial = FILES.some(f => f.id === defaultSelected) ? defaultSelected : 'project';
+  const [sel, setSel] = useState(initial);
+  const [scale, setScale] = useState(1);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const rootRef = useRef(null);
+  const frameRef = useRef(null);
+  const CANVAS_W = 862;
+  const CANVAS_H = 240;
+  useEffect(() => {
+    const el = frameRef.current;
+    if (!el) return;
+    const measure = () => setScale(Math.min(1, el.clientWidth / CANVAS_W));
+    measure();
+    if (typeof ResizeObserver === 'undefined') {
+      window.addEventListener('resize', measure);
+      return () => window.removeEventListener('resize', measure);
+    }
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+  useEffect(() => {
+    const onFsChange = () => setIsFullscreen(!!document.fullscreenElement);
+    document.addEventListener('fullscreenchange', onFsChange);
+    return () => document.removeEventListener('fullscreenchange', onFsChange);
+  }, []);
+  const toggleFullscreen = () => {
+    if (!rootRef.current) return;
+    if (document.fullscreenElement) document.exitFullscreen(); else rootRef.current.requestFullscreen().catch(() => {});
+  };
+  const COVERAGE = {
+    user: ['website', 'api', 'yacme'],
+    project: ['yacme', 'tacme', 'cacme'],
+    local: ['yacme'],
+    managed: ['website', 'api', 'yacme', 'tacme', 'cacme']
+  };
+  const RINGS = {
+    local: {
+      l: 282,
+      t: 50,
+      w: 142,
+      h: 124
+    },
+    project: {
+      l: 282,
+      t: 50,
+      w: 560,
+      h: 124
+    },
+    user: {
+      l: 2,
+      t: 34,
+      w: 446,
+      h: 198
+    },
+    managed: {
+      l: 0,
+      t: 32,
+      w: 862,
+      h: 204
+    }
+  };
+  const TILES = [{
+    id: 'website',
+    name: 'website/',
+    left: 30,
+    caption: ''
+  }, {
+    id: 'api',
+    name: 'api/',
+    left: 160,
+    caption: ''
+  }, {
+    id: 'yacme',
+    name: 'acme-app/',
+    left: 290,
+    caption: ''
+  }, {
+    id: 'tacme',
+    name: 'acme-app/',
+    left: 497,
+    caption: sel === 'project' ? 'their clone, once you commit the file' : 'their clone'
+  }, {
+    id: 'cacme',
+    name: 'acme-app/',
+    left: 704,
+    caption: sel === 'project' ? 'fresh clone, once you commit the file' : sel === 'managed' ? 'server-managed only' : 'fresh clone'
+  }];
+  const FILE_AT = {
+    user: {
+      machine: 'you',
+      tiles: []
+    },
+    project: {
+      machine: null,
+      tiles: ['yacme', 'tacme', 'cacme']
+    },
+    local: {
+      machine: null,
+      tiles: ['yacme']
+    },
+    managed: {
+      machine: null,
+      tiles: []
+    }
+  };
+  const fileAt = FILE_AT[sel];
+  const coverage = COVERAGE[sel];
+  const ring = RINGS[sel];
+  const selFile = FILES.find(f => f.id === sel);
+  const FolderIcon = ({open}) => <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" aria-hidden="true">
+      <path d="M1.5 4.5a1 1 0 0 1 1-1h3.2l1.3 1.5h6a1 1 0 0 1 1 1V12a1 1 0 0 1-1 1h-10.5a1 1 0 0 1-1-1z" />
+      {open && <path d="M1.5 7.5h13" />}
+    </svg>;
+  const FileIcon = () => <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" aria-hidden="true">
+      <path d="M4 1.5h5.5L13 5v9.5H4z" />
+      <path d="M9.5 1.5V5H13" />
+    </svg>;
+  const CloudIcon = () => <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" aria-hidden="true">
+      <path d="M4.5 12.5h7a2.5 2.5 0 0 0 .4-4.97A3.5 3.5 0 0 0 5.2 6.6 3 3 0 0 0 4.5 12.5z" />
+    </svg>;
+  const LaptopIcon = () => <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" aria-hidden="true">
+      <rect x="2.5" y="3" width="11" height="7.5" rx="1" />
+      <path d="M1 12.5h14" />
+    </svg>;
+  return <div ref={rootRef} className={'ssc-root not-prose' + (isFullscreen ? ' ssc-fs' : '')}>
+      <style>{`
+        .ssc-root {
+          --ssc-bg: #FFFFFF;
+          --ssc-text: #1A1918;
+          --ssc-sub: #5E5D59;
+          --ssc-faint: #8A8880;
+          --ssc-border: rgba(0,0,0,0.12);
+          --ssc-panel: #F5F4EF;
+          --ssc-tile: #FAFAF8;
+          --ssc-clay: #D97757;
+          --ssc-clay-bg: rgba(217,119,87,0.14);
+          --ssc-label: #B0562F;
+          --ssc-hover: rgba(115,114,108,0.10);
+          font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
+          background: var(--ssc-bg);
+          color: var(--ssc-text);
+          border: 1px solid var(--ssc-border);
+          border-radius: 16px;
+          padding: 20px 24px 24px;
+          margin: 1.5rem 0;
+          box-sizing: border-box;
+        }
+        .dark .ssc-root {
+          --ssc-bg: #1B1A18;
+          --ssc-text: #F1EFE9;
+          --ssc-sub: #B8B5AD;
+          --ssc-faint: #8A8880;
+          --ssc-border: rgba(255,255,255,0.12);
+          --ssc-panel: #24231F;
+          --ssc-tile: #2A2925;
+          --ssc-clay-bg: rgba(217,119,87,0.20);
+          --ssc-label: #EBC9B7;
+        }
+        .ssc-fs { display: flex; flex-direction: column; justify-content: center; align-items: center; margin: 0; border-radius: 0; height: 100vh; }
+        .ssc-fs .ssc-head { width: 100%; max-width: ${CANVAS_W}px; }
+        .ssc-fs .ssc-frame { width: 100%; }
+        .ssc-mono { font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace); }
+        .ssc-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 20px; }
+        .ssc-files { display: flex; gap: 8px; flex-wrap: wrap; }
+        .ssc-file {
+          font-size: 12.5px; font-weight: 430; padding: 8px 13px; border-radius: 10px; cursor: pointer;
+          border: 0.5px solid var(--ssc-border); background: var(--ssc-tile); color: var(--ssc-text);
+          white-space: nowrap; transition: background 0.2s, border-color 0.2s;
+        }
+        .ssc-file:hover { filter: brightness(0.97); }
+        .ssc-file[aria-pressed="true"] { font-weight: 600; border: 1.5px solid var(--ssc-clay); background: var(--ssc-clay-bg); }
+        .ssc-fsbtn {
+          display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; flex-shrink: 0;
+          border: none; background: none; border-radius: 6px; cursor: pointer; color: var(--ssc-faint); font-size: 15px;
+        }
+        .ssc-fsbtn:hover { background: var(--ssc-hover); }
+        .ssc-frame { width: 100%; max-width: ${CANVAS_W}px; margin: 0 auto; }
+        .ssc-canvas { position: relative; width: ${CANVAS_W}px; height: ${CANVAS_H}px; transform-origin: top left; }
+        .ssc-machine { position: absolute; top: 42px; height: 182px; background: var(--ssc-panel); border-radius: 16px; }
+        .ssc-machine-label { position: absolute; top: 192px; display: flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; }
+        .ssc-tile {
+          position: absolute; top: 58px; width: 126px; height: 108px; border-radius: 12px; padding: 11px 12px; box-sizing: border-box;
+          background: var(--ssc-tile); border: 0.5px solid var(--ssc-border); opacity: 0.6;
+          transition: background 0.25s, border-color 0.25s, opacity 0.25s;
+        }
+        .ssc-tile.ssc-on { background: var(--ssc-clay-bg); border: 1px solid var(--ssc-clay); opacity: 1; }
+        .ssc-tile-name { display: flex; align-items: center; gap: 6px; color: var(--ssc-faint); }
+        .ssc-tile.ssc-on .ssc-tile-name { color: var(--ssc-clay); }
+        .ssc-tile-name span { font-size: 12px; font-weight: 430; white-space: nowrap; color: var(--ssc-text); }
+        .ssc-tile.ssc-on .ssc-tile-name span { font-weight: 600; }
+        .ssc-tile-caption { font-size: 10.5px; color: var(--ssc-sub); margin-top: 5px; line-height: 1.35; }
+        .ssc-filemark {
+          position: absolute; left: 5px; right: 5px; bottom: 8px; display: inline-flex; align-items: center; justify-content: center; gap: 2px;
+          font-size: 8.5px; color: var(--ssc-label); background: var(--ssc-bg); border: 1px solid var(--ssc-clay);
+          border-radius: 6px; padding: 2px 3px; white-space: nowrap; overflow: hidden;
+        }
+        .ssc-filemark svg { flex-shrink: 0; }
+        .ssc-machine-filemark { display: inline-flex; align-items: center; gap: 4px; margin-left: 10px; font-size: 10.5px; font-weight: 500; color: var(--ssc-label); }
+        .ssc-ring {
+          position: absolute; border: 2px solid var(--ssc-clay); border-radius: 18px; pointer-events: none;
+          transition: left 0.35s ease, top 0.35s ease, width 0.35s ease, height 0.35s ease;
+        }
+        .ssc-ring-label {
+          position: absolute; font-size: 12px; font-weight: 600; color: var(--ssc-label); white-space: nowrap; pointer-events: none;
+          transition: left 0.35s ease, top 0.35s ease;
+        }
+      `}</style>
 
-Claude Code menggunakan sistem cakupan untuk menentukan di mana konfigurasi berlaku dan siapa yang membagikannya. Memahami cakupan membantu Anda memutuskan cara mengonfigurasi Claude Code untuk penggunaan pribadi, kolaborasi tim, atau penyebaran perusahaan.
+      <div className="ssc-head">
+        <div className="ssc-files" role="group" aria-label="Settings file">
+          {FILES.map(f => <button key={f.id} type="button" className="ssc-file ssc-mono" aria-pressed={f.id === sel} onClick={() => setSel(f.id)}>{f.path}</button>)}
+        </div>
+        <button type="button" className="ssc-fsbtn" onClick={toggleFullscreen} aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'} title={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}>{isFullscreen ? '⤡' : '⛶'}</button>
+      </div>
 
-<h3 id="available-scopes">
-  Cakupan yang tersedia
-</h3>
+      <div ref={frameRef} className="ssc-frame" style={{
+    height: CANVAS_H * scale + 'px'
+  }}>
+        <div className="ssc-canvas" style={{
+    transform: 'scale(' + scale + ')'
+  }}>
+          <div className="ssc-machine" style={{
+    left: '10px',
+    width: '430px'
+  }} />
+          <span className="ssc-machine-label" style={{
+    left: '30px'
+  }}><LaptopIcon />Your machine{fileAt.machine === 'you' && <span className="ssc-machine-filemark ssc-mono"><FileIcon />{selFile.path}</span>}</span>
+          <div className="ssc-machine" style={{
+    left: '460px',
+    width: '200px'
+  }} />
+          <span className="ssc-machine-label" style={{
+    left: '470px'
+  }}><LaptopIcon />A teammate’s machine</span>
+          <div className="ssc-machine" style={{
+    left: '682px',
+    width: '170px'
+  }} />
+          <span className="ssc-machine-label" style={{
+    left: '692px'
+  }}><CloudIcon />A cloud session</span>
 
-| Cakupan     | Lokasi                                                                                         | Siapa yang terpengaruh                                                                                                                                                                    | Dibagikan dengan tim?  |
-| :---------- | :--------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------- |
-| **Managed** | Pengaturan yang dikelola server, plist / registry, atau `managed-settings.json` tingkat sistem | Semua anggota organisasi untuk pengiriman yang dikelola server; semua pengguna di mesin untuk plist, HKLM registry, dan pengiriman file; pengguna saat ini untuk pengiriman HKCU registry | Ya (digunakan oleh IT) |
-| **User**    | Direktori `~/.claude/`                                                                         | Anda, di semua proyek                                                                                                                                                                     | Tidak                  |
-| **Project** | `.claude/` di repositori                                                                       | Semua kolaborator di repositori ini                                                                                                                                                       | Ya (dikomit ke git)    |
-| **Local**   | `.claude/settings.local.json`                                                                  | Anda, hanya di repositori ini                                                                                                                                                             | Tidak (diabaikan git)  |
+          {TILES.map(t => {
+    const on = coverage.includes(t.id);
+    return <div key={t.id} className={'ssc-tile' + (on ? ' ssc-on' : '')} style={{
+      left: t.left + 'px'
+    }}>
+                <div className="ssc-tile-name"><FolderIcon open={on} /><span className="ssc-mono">{t.name}</span></div>
+                {t.caption && <div className="ssc-tile-caption">{t.caption}</div>}
+                {fileAt.tiles.includes(t.id) && <span className="ssc-filemark ssc-mono" title={SHORT[sel]}><FileIcon />{TILE_MARK[sel]}</span>}
+              </div>;
+  })}
 
-<h3 id="when-to-use-each-scope">
-  Kapan menggunakan setiap cakupan
-</h3>
+          <div className="ssc-ring" style={{
+    left: ring.l + 'px',
+    top: ring.t + 'px',
+    width: ring.w + 'px',
+    height: ring.h + 'px'
+  }} />
+          <span className="ssc-ring-label ssc-mono" style={{
+    left: ring.l + 14 + 'px',
+    top: ring.t - 26 + 'px'
+  }}>{selFile.ring || selFile.path}</span>
+        </div>
+      </div>
+    </div>;
+};
 
-**Cakupan Managed** adalah untuk:
+Pengaturan adalah kunci JSON yang mengubah perilaku Claude Code: model mana yang dimulainya, apa yang dapat dijalankannya tanpa bertanya, file mana yang tidak dapat dibacanya, tampilannya di terminal Anda, dan apa yang diterapkan organisasi Anda.
 
-* Kebijakan keamanan yang harus diterapkan di seluruh organisasi
-* Persyaratan kepatuhan yang tidak dapat ditimpa
-* Konfigurasi standar yang digunakan oleh IT/DevOps
+<Tip>
+  Untuk mencari kunci tertentu, buka [Semua pengaturan](/docs/id/settings-reference), yang mencantumkan setiap kunci dengan file tempat Anda menetapkannya, defaultnya, dan contohnya.
+</Tip>
 
-**Cakupan User** paling baik untuk:
-
-* Preferensi pribadi yang Anda inginkan di mana-mana (tema, pengaturan editor)
-* Tools dan plugins yang Anda gunakan di semua proyek
-* Kunci API dan autentikasi (disimpan dengan aman)
-
-**Cakupan Project** paling baik untuk:
-
-* Pengaturan bersama tim (izin, hooks, MCP servers)
-* Plugins yang harus dimiliki seluruh tim
-* Standardisasi tooling di seluruh kolaborator
-
-**Cakupan Local** paling baik untuk:
-
-* Penggantian pribadi untuk proyek tertentu
-* Pengaturan pengujian sebelum dibagikan dengan tim
-* Pengaturan spesifik mesin yang tidak akan berfungsi untuk orang lain
-
-<h3 id="how-scopes-interact">
-  Bagaimana cakupan berinteraksi
-</h3>
-
-Ketika pengaturan yang sama muncul dalam beberapa cakupan, Claude Code menerapkannya dalam urutan prioritas:
-
-1. **Managed** (tertinggi): tidak dapat ditimpa oleh apa pun
-2. **Argumen baris perintah**: penggantian sesi sementara
-3. **Local**: menimpa pengaturan proyek dan pengguna
-4. **Project**: menimpa pengaturan pengguna
-5. **User** (terendah): berlaku ketika tidak ada yang menentukan pengaturan
-
-Misalnya, jika pengaturan pengguna Anda menetapkan `spinnerTipsEnabled` ke `true` dan pengaturan proyek menetapkannya ke `false`, nilai proyek berlaku. Aturan izin berperilaku berbeda karena mereka menggabungkan di seluruh cakupan daripada menimpa. Lihat [Preseden pengaturan](#settings-precedence).
-
-<h3 id="what-uses-scopes">
-  Apa yang menggunakan cakupan
-</h3>
-
-Cakupan berlaku untuk banyak fitur Claude Code:
-
-| Fitur           | Lokasi pengguna           | Lokasi proyek                        | Lokasi lokal                  |
-| :-------------- | :------------------------ | :----------------------------------- | :---------------------------- |
-| **Settings**    | `~/.claude/settings.json` | `.claude/settings.json`              | `.claude/settings.local.json` |
-| **Subagents**   | `~/.claude/agents/`       | `.claude/agents/`                    | Tidak ada                     |
-| **MCP servers** | `~/.claude.json`          | `.mcp.json`                          | `~/.claude.json` (per-proyek) |
-| **Plugins**     | `~/.claude/settings.json` | `.claude/settings.json`              | `.claude/settings.local.json` |
-| **CLAUDE.md**   | `~/.claude/CLAUDE.md`     | `CLAUDE.md` atau `.claude/CLAUDE.md` | `CLAUDE.local.md`             |
-
-Di Windows, jalur yang ditampilkan sebagai `~/.claude` diselesaikan ke `%USERPROFILE%\.claude`.
-
-***
-
-<h2 id="settings-files">
-  File pengaturan
-</h2>
-
-File `settings.json` adalah mekanisme resmi untuk mengonfigurasi Claude Code melalui pengaturan hierarki:
-
-* **Pengaturan pengguna** didefinisikan dalam `~/.claude/settings.json` dan berlaku untuk semua proyek.
-* **Pengaturan proyek** disimpan di direktori proyek Anda:
-  * `.claude/settings.json` untuk pengaturan yang diperiksa ke dalam kontrol sumber dan dibagikan dengan tim Anda
-  * `.claude/settings.local.json` untuk pengaturan yang tidak diperiksa, berguna untuk preferensi pribadi dan eksperimen. Ketika Claude Code membuat `.claude/settings.local.json`, Claude Code mengonfigurasi git untuk mengabaikan file tersebut. Jika Anda membuat file sendiri, tambahkan ke gitignore secara manual.
-
-    Karena file ini milik Anda daripada repositori, aturan izin `allow` miliknya berlaku tanpa langkah [kepercayaan workspace](/docs/id/permissions#project-allow-rules-and-workspace-trust) yang diperlukan oleh aturan allow `.claude/settings.json`. Jika repositori menyediakan file, misalnya dengan melakukan commit, kepercayaan workspace masih berlaku.
-* **Pengaturan Managed**: Untuk organisasi yang memerlukan kontrol terpusat, Claude Code mendukung beberapa mekanisme pengiriman untuk pengaturan yang dikelola. Semua menggunakan format JSON yang sama dan tidak dapat ditimpa oleh pengaturan pengguna atau proyek:
-
-  * **Pengaturan yang dikelola server**: dikirimkan dari jarak jauh saat sign-in, baik dari server Anthropic melalui konsol admin claude.ai atau dari [Claude apps gateway](/docs/id/claude-apps-gateway) yang di-host sendiri. Lihat [pengaturan yang dikelola server](/docs/id/server-managed-settings).
-  * **Kebijakan tingkat MDM/OS**: dikirimkan melalui manajemen perangkat asli di macOS dan Windows:
-    * macOS: domain preferensi terkelola `com.anthropic.claudecode`. Kunci tingkat atas plist mencerminkan `managed-settings.json`, dengan pengaturan bersarang sebagai kamus dan array sebagai array plist. Terapkan melalui profil konfigurasi di Jamf, Iru (Kandji), atau alat MDM serupa.
-    * Windows: kunci registry `HKLM\SOFTWARE\Policies\ClaudeCode` dengan nilai `Settings` (REG\_SZ atau REG\_EXPAND\_SZ) berisi JSON (digunakan melalui Group Policy atau Intune)
-    * Windows (tingkat pengguna): `HKCU\SOFTWARE\Policies\ClaudeCode` (prioritas kebijakan terendah, hanya digunakan ketika tidak ada sumber tingkat admin)
-  * **Berbasis file**: `managed-settings.json` dan `managed-mcp.json` digunakan ke direktori sistem:
-
-    * macOS: `/Library/Application Support/ClaudeCode/`
-    * Linux dan WSL: `/etc/claude-code/`
-    * Windows: `C:\Program Files\ClaudeCode\`
-
-    <Warning>
-      Jalur Windows warisan `C:\ProgramData\ClaudeCode\managed-settings.json` tidak lagi didukung sejak v2.1.75. Administrator yang menggunakan pengaturan ke lokasi tersebut harus memigrasikan file ke `C:\Program Files\ClaudeCode\managed-settings.json`.
-    </Warning>
-
-    Pengaturan yang dikelola berbasis file juga mendukung direktori drop-in di `managed-settings.d/` dalam direktori sistem yang sama bersama `managed-settings.json`. Ini memungkinkan tim terpisah untuk menggunakan fragmen kebijakan independen tanpa mengoordinasikan pengeditan ke file tunggal.
-
-    Mengikuti konvensi systemd, `managed-settings.json` digabungkan terlebih dahulu sebagai dasar, kemudian semua file `*.json` dalam direktori drop-in diurutkan secara alfabetis dan digabungkan di atas. File yang lebih baru menimpa yang lebih awal untuk nilai skalar; array digabungkan dan dihilangkan duplikatnya; objek digabungkan secara mendalam. File tersembunyi yang dimulai dengan `.` diabaikan.
-
-    Gunakan prefiks numerik untuk mengontrol urutan penggabungan, misalnya `10-telemetry.json` dan `20-security.json`.
-
-  Lihat [pengaturan yang dikelola](/docs/id/permissions#managed-only-settings) dan [Konfigurasi MCP yang Dikelola](/docs/id/managed-mcp) untuk detail.
-
-  [Repositori](https://github.com/anthropics/claude-code/tree/main/examples/mdm) ini mencakup template penyebaran pemula untuk Jamf, Iru (Kandji), Intune, dan Group Policy. Gunakan ini sebagai titik awal dan sesuaikan dengan kebutuhan Anda.
-
-  <Note>
-    Penyebaran yang dikelola juga dapat membatasi **penambahan marketplace plugin** menggunakan `strictKnownMarketplaces`. Untuk informasi lebih lanjut, lihat [Pembatasan marketplace yang dikelola](/docs/id/plugin-marketplaces#managed-marketplace-restrictions).
-  </Note>
-* **Konfigurasi lainnya** disimpan dalam `~/.claude.json`. File ini berisi sesi OAuth, konfigurasi [MCP server](/docs/id/mcp) untuk cakupan pengguna dan lokal, status per-proyek (tools yang diizinkan, pengaturan kepercayaan), dan berbagai cache. MCP servers dengan cakupan proyek disimpan secara terpisah dalam `.mcp.json`.
+Claude Code membaca pengaturan dari file pengaturan JSON seperti `~/.claude/settings.json`. Ia mencarinya di beberapa lokasi, dan [file tempat ia membaca pengaturan menentukan siapa pengaturan itu berlaku untuk](#settings-files-and-who-they-affect). Halaman ini mencakup file-file tersebut: file mana yang harus Anda masukkan pengaturan, cara mengubah pengaturan dan mengonfirmasi bahwa pengaturan itu diterapkan, dan nilai mana yang digunakan Claude Code saat kunci yang sama diatur di lebih dari satu file. [Konfigurasikan izin](/docs/id/permissions) mencakup apa yang dapat dijalankan Claude Code tanpa bertanya dan cara menulis aturan `allow`, `ask`, dan `deny`.
 
 <Note>
-  Claude Code secara otomatis membuat cadangan file konfigurasi dengan stempel waktu dan menyimpan lima cadangan terbaru untuk mencegah kehilangan data.
+  Halaman ini mencakup Claude Code yang berjalan di mesin Anda: terminal, ekstensi [VS Code](/docs/id/vs-code) dan [JetBrains](/docs/id/jetbrains), dan [aplikasi desktop](/docs/id/desktop), yang semuanya membaca file pengaturan yang sama. Sesi cloud di [Claude Code di web](/docs/id/claude-code-on-the-web) berjalan di mesin yang berbeda dan hanya membaca beberapa di antaranya; lihat [Pengaturan dalam sesi cloud](#settings-in-cloud-sessions).
 </Note>
 
-```JSON Contoh settings.json theme={null}
+<span id="settings-files" />
+
+<span id="configuration-scopes" />
+
+<span id="available-scopes" />
+
+<span id="when-to-use-each-scope" />
+
+<span id="what-uses-scopes" />
+
+<span id="subagent-configuration" />
+
+<span id="where-settings-live" />
+
+<h2 id="settings-files-and-who-they-affect">
+  File pengaturan dan siapa yang terpengaruh
+</h2>
+
+Claude Code membaca pengaturan dari empat file, dan organisasi juga dapat mengirimkan pengaturan terkelola dari konsol claude.ai. Setiap sumber memiliki cakupan: set orang dan proyek yang pengaturan yang disimpan di dalamnya berlaku, baik itu hanya Anda, semua orang dalam proyek, atau semua orang di organisasi Anda.
+
+| Cakupan        | File                                                                                             | Siapa yang terpengaruh                                                                                                                                                                  | Gunakan untuk                                                                  |
+| :------------- | :----------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------- |
+| Pengguna       | `~/.claude/settings.json`                                                                        | Anda, di setiap proyek di mesin ini                                                                                                                                                     | Preferensi pribadi: tema, mode editor, model default, aturan izin Anda sendiri |
+| Proyek bersama | `.claude/settings.json`                                                                          | Semua orang yang bekerja di folder yang memuatnya. Di repositori git, commit itu sehingga rekan kerja mendapatkannya                                                                    | Izin tim, hooks, plugins, dan variabel lingkungan yang dibutuhkan proyek       |
+| Proyek lokal   | `.claude/settings.local.json`                                                                    | Anda, hanya di proyek ini. Claude Code menyimpannya di luar git saat membuat file; jika Anda membuatnya dengan tangan, tambahkan ke `.gitignore` sendiri                                | Penggantian pribadi untuk satu proyek, dan pengujian sebelum Anda berbagi      |
+| Terkelola      | `managed-settings.json` dan [sumber terkelola](/docs/id/managed-settings#delivery-mechanisms) lainnya | Semua orang organisasi Anda menerapkannya; tidak ada yang Anda atur yang menggantikannya, kecuali beberapa [pengecualian sensitif keamanan](#exceptions-to-managed-settings-precedence) | Kebijakan keamanan dan persyaratan kepatuhan                                   |
+
+Di kolom File, `~/.claude` adalah folder `.claude` di direktori home Anda, dan `.claude` kosong adalah folder `.claude` di dalam proyek Anda.
+
+<span id="where-each-file-applies" />
+
+<span id="compare-what-each-file-reaches" />
+
+<h3 id="compare-the-scope-of-each-settings-file">
+  Bandingkan cakupan setiap file pengaturan
+</h3>
+
+Misalkan Anda memiliki tiga proyek di mesin Anda, `website/`, `api/`, dan `acme-app/`, rekan kerja memiliki klon mereka sendiri dari `acme-app/`, dan Anda memulai [sesi cloud](#settings-in-cloud-sessions) di `acme-app/`.
+
+Grafik di bawah menunjukkan folder mana yang pengaturan berlaku saat Anda memulai Claude Code dari mereka. Klik file pengaturan untuk melihat folder yang dijangkaunya.
+
+<SettingsScope />
+
+* **`~/.claude/settings.json`**: setiap proyek di mesin Anda, dan tidak ada di mesin rekan kerja atau di sesi cloud
+* **`acme-app/.claude/settings.json`**: `acme-app/` Anda. Ini menjangkau klon rekan kerja dan sesi cloud hanya jika Anda commit file ke kontrol versi; sampai Anda melakukannya, itu adalah file di disk Anda seperti yang lain dan tidak ada orang lain yang memilikinya
+* **`acme-app/.claude/settings.local.json`**: hanya `acme-app/` Anda. Claude Code menambahkannya ke pengecualian git global Anda pertama kali menulis file, sehingga tetap keluar dari commit Anda; jika Anda membuat file dengan tangan, [tambahkan ke `.gitignore` sendiri](#keep-personal-settings-out-of-a-repository)
+* **Pengaturan terkelola**, baik file `managed-settings.json`, kebijakan MDM, atau [pengaturan yang dikelola server](/docs/id/server-managed-settings) dari konsol claude.ai: setiap proyek di setiap mesin organisasi Anda menerapkannya, atau yang Anda masuk dengan akun organisasi Anda. Hanya pengaturan yang dikelola server yang menjangkau sesi cloud
+
+<span id="which-files-you-have" />
+
+<h3 id="find-or-create-your-settings-files">
+  Temukan atau buat file pengaturan Anda
+</h3>
+
+Menginstal Claude Code tidak membuat file pengaturan apa pun. Jika mesin atau proyek Anda sudah memiliki satu, itu berasal dari salah satu sumber ini:
+
+* **Terkelola**: organisasi Anda menerapkannya. Anda tidak membuat atau mengeditnya.
+* **Proyek bersama**: proyek yang sudah menggunakan Claude Code mungkin memiliki satu yang di-commit. Jika tidak, buatnya di `.claude/settings.json` di folder proyek.
+* **Pengguna** dan **Proyek lokal**: buatnya sendiri, atau biarkan Claude Code membuatnya. Ini menulis `~/.claude/settings.json` pertama kali Anda mengubah opsi di menu `/config` yang disimpannya dalam pengaturan pengguna, seperti tema, dan `.claude/settings.local.json` pertama kali Anda memberikan persetujuan berdiri di prompt izin, seperti "Ya, dan jangan tanya lagi" untuk perintah Bash. Beberapa opsi `/config`, termasuk **Tampilkan tips**, disimpan ke `.claude/settings.local.json` sebagai gantinya dari file pengguna.
+
+<Info>
+  Di Windows, `~/.claude` berarti `%USERPROFILE%\.claude`. Untuk menyimpan file direktori home di tempat lain, atur [`CLAUDE_CONFIG_DIR`](/docs/id/env-vars); Claude Code kemudian menyimpan pengaturan, riwayat sesi, dan plugins Anda di sana sebagai gantinya.
+</Info>
+
+Claude Code juga menyimpan file kelima, [`~/.claude.json`](/docs/id/claude-directory#ce-claude-json), yang ditulis untuk dirinya sendiri; Anda tidak perlu mengeditnya. Ini menyimpan sesi masuk Anda, konfigurasi [server MCP](/docs/id/mcp), status per-proyek seperti keputusan kepercayaan, dan [kunci konfigurasi global](/docs/id/settings-reference#global-config-settings) yang `/config` tulis untuk Anda.
+
+<h3 id="share-settings-with-your-team">
+  Bagikan pengaturan dengan tim Anda
+</h3>
+
+Commit `.claude/settings.json` sehingga semua orang yang mengkloning repositori mendapatkan izin, hooks, dan plugins yang sama. Setiap rekan kerja masih dapat menggantikannya untuk diri mereka sendiri di `.claude/settings.local.json` mereka sendiri, sehingga pengecualian pribadi tidak perlu commit. Untuk file tim lengkap, lihat [pengaturan bersama tim](/docs/id/settings-example#a-teams-shared-settings).
+
+Beberapa dari apa yang Anda commit menunggu sampai setiap rekan kerja [mempercayai folder](/docs/id/permissions#project-allow-rules-and-workspace-trust), dan beberapa kunci tidak pernah berlaku dari file repositori; [Troubleshoot a setting that doesn't apply](#common-cases) mencakup keduanya.
+
+<span id="local-settings-file" />
+
+<span id="where-claude-code-saves-the-project-local-file" />
+
+<span id="the-project-local-file" />
+
+<span id="keep-personal-settings-out-of-the-repository" />
+
+<h3 id="keep-personal-settings-out-of-a-repository">
+  Jaga pengaturan pribadi keluar dari repositori
+</h3>
+
+Untuk mengubah pengaturan untuk diri sendiri di satu proyek tanpa mengubahnya untuk rekan kerja Anda, simpan di `.claude/settings.local.json` di dalam proyek. Claude Code menerapkan file itu di atas `.claude/settings.json` yang di-commit, jadi jika file tim Anda menetapkan `"model": "claude-sonnet-5"` dan Anda menginginkan Opus, masukkan `"model": "claude-opus-5-5"` di file lokal Anda dan hanya sesi Anda yang berubah.
+
+Claude Code juga menulis ke file ini, menyimpannya keluar dari commit Anda, dan menerapkan aturan izinnya tanpa langkah kepercayaan:
+
+* **Claude Code juga menulisnya.** Ketika Claude meminta izin untuk menjalankan perintah Bash dan Anda memilih "Ya, dan jangan tanya lagi", Claude Code menyimpan [persetujuan izin](/docs/id/permissions#permission-system) itu di sini sebagai aturan `allow`.
+* **Anda tidak perlu gitignore sendiri, kecuali Anda membuatnya dengan tangan.** Pertama kali Claude Code menulis file di repositori git yang tidak sudah mengabaikannya, itu menambahkan `**/.claude/settings.local.json` ke file pengecualian git global Anda, sehingga file tetap keluar dari commit Anda di setiap repositori. File itu adalah `core.excludesFile` ketika konfigurasi git global Anda menetapkannya ke jalur absolut atau jalur dengan awalan `~`; jika tidak, itu adalah `$XDG_CONFIG_HOME/git/ignore`, atau `~/.config/git/ignore` ketika `XDG_CONFIG_HOME` tidak diatur. Jika Anda membuat file dengan tangan dan Claude Code belum menulis ke dalamnya, tambahkan ke `.gitignore` sendiri.
+* **Aturan izinnya tidak menunggu kepercayaan sementara file tetap tidak dilacak.** Karena file adalah milik Anda dan bukan repositori, Claude Code menerapkan aturan `allow` tanpa langkah [kepercayaan ruang kerja](/docs/id/permissions#project-allow-rules-and-workspace-trust) yang diperlukan untuk file yang di-commit. Jika file dilacak oleh git, langkah kepercayaan juga berlaku untuk itu; lihat [Ketika file pengaturan lokal Anda memerlukan kepercayaan](/docs/id/permissions#when-your-local-settings-file-needs-trust).
+
+<span id="where-claude-code-looks-for-each-file" />
+
+<span id="how-claude-code-keeps-the-local-file-out-of-git" />
+
+<span id="local-allow-rules-dont-wait-for-workspace-trust" />
+
+<h4 id="where-claude-code-keeps-the-local-file-in-a-git-repository">
+  Tempat Claude Code menyimpan file lokal di repositori git
+</h4>
+
+Ketika Claude meminta izin untuk menjalankan perintah Bash dan Anda memilih "Ya, dan jangan tanya lagi", Claude Code menyimpan persetujuan itu sebagai aturan `allow` di `.claude/settings.local.json`. Jika Anda memulai Claude Code di subdirektori repositori git, itu membaca dan menulis file itu di akar repositori dan menerapkan persetujuan di seluruh repositori. Di [worktree](/docs/id/worktrees), itu menggunakan file di akar checkout utama.
+
+Dua aturan memenuhi syarat lokasi akar:
+
+* **Ketika file tetap dengan `.claude/settings.json` sebagai gantinya**: di luar repositori git, ketika akar repositori adalah direktori home Anda, di Windows, atau ketika akar repositori atau entri `.git` atau `.claude` tidak dimiliki oleh pengguna Anda.
+* **Jalur dalam file tidak jangkar di akar repositori**: aturan izin yang dimulai dengan `/` atau jalur sandbox relatif [jangkar di direktori kerja utama sesi](/docs/id/permissions#read-and-edit) sebagai gantinya.
+
+Sebelum v2.1.211, Claude Code menyimpan file di direktori awal. Itu masih membaca file versi sebelumnya yang ditinggalkan di sana di samping file akar; di mana keduanya menetapkan kunci yang sama, nilai akar berlaku, dan aturan izin dari kedua file berlaku. Helper [`resolveSettings()`](/docs/id/agent-sdk/typescript#resolvesettings) SDK Agent selalu membaca file dari direktori awal.
+
+Claude Code membaca `.claude/settings.json` bersama dari [direktori kerja utama](/docs/id/permissions#working-directories) sesi, jadi untuk menggunakan file yang di-commit di akar repositori, mulai Claude Code di sana. Setelah Anda [memindahkan sesi dengan `/cd`](/docs/id/permissions#move-the-session-to-another-directory), Claude Code membaca kedua file proyek dari direktori baru sebagai gantinya, menempatkan file lokal dengan aturan yang sama. Membaca mereka dari direktori yang Anda pindahkan memerlukan Claude Code v2.1.246 atau lebih baru.
+
+<span id="managed-settings-delivery" />
+
+<span id="precedence-within-the-managed-tier" />
+
+<span id="parent-settings-from-embedding-hosts" />
+
+<span id="enforce-settings-for-an-organization" />
+
+<span id="settings-your-organization-manages" />
+
+<h3 id="check-what-your-organization-enforces">
+  Periksa apa yang organisasi Anda terapkan
+</h3>
+
+Jika organisasi Anda mengelola Claude Code, beberapa pengaturan diputuskan untuk Anda dan tidak ada yang Anda masukkan dalam file Anda sendiri yang mengubahnya. Untuk melihat mana, jalankan `/status`: baris `Setting sources` menamai sumber terkelola yang berlaku untuk Anda. Pengaturan terkelola berlaku di mana pun Claude Code berjalan di mesin ini; [Apa yang dapat diubah pengembang](/docs/id/managed-settings#what-a-developer-can-change) mencakup hak admin lokal dan alat selain Claude Code.
+
+Pengaturan terkelola menjangkau Anda melalui [mekanisme pengiriman](/docs/id/managed-settings#delivery-mechanisms) di halaman pengaturan terkelola, paling umum:
+
+* [Pengaturan yang dikelola server](/docs/id/server-managed-settings), yang Claude Code ambil dari konsol admin claude.ai atau [gateway aplikasi Claude](/docs/id/claude-apps-gateway) yang di-host sendiri
+* Kebijakan MDM atau tingkat OS, dan file `managed-settings.json` di direktori sistem
+* Host penyematan seperti Claude Desktop, melalui opsi SDK `managedSettings`; lihat [Kontrol kebijakan dari host penyematan](/docs/id/managed-settings#parent-settings-from-embedding-hosts)
+
+Di sesi [Cowork](https://claude.com/docs/cowork/overview) yang berjalan di mesin Anda di aplikasi Claude Desktop, Claude Code tidak mengambil pengaturan yang dikelola server dari konsol admin claude.ai, dan itu membaca kebijakan yang diterapkan ke perangkat Anda kecuali konfigurasi Claude Desktop organisasi Anda menetapkan `requireCoworkFullVmSandbox`. [Di mana dan kapan kebijakan berlaku](/docs/id/managed-settings#where-and-when-a-policy-applies) mencakup Cowork dan sesi cloud.
+
+Jika Anda adalah administrator, [Siapkan Claude Code untuk organisasi Anda](/docs/id/admin-setup) memandu memilih apa yang akan diterapkan, dan [Terapkan pengaturan terkelola](/docs/id/managed-settings) mencakup pengiriman dan cara mengonfirmasi kebijakan berlaku.
+
+<h2 id="change-a-setting">
+  Ubah pengaturan
+</h2>
+
+Anda dapat mengubah pengaturan dari menu `/config`, dengan mengedit file pengaturan, atau untuk satu sesi dari baris perintah.
+
+<span id="system-prompt" />
+
+Prompt sistem Claude Code tidak dipublikasikan. Untuk memberikan Claude instruksi berdiri, gunakan file [`CLAUDE.md`](/docs/id/memory) atau flag `--append-system-prompt`.
+
+<h3 id="use-the-/config-menu">
+  Gunakan menu /config
+</h3>
+
+Jalankan `/config` di dalam Claude Code dan buka tab **Config**. Ia mencantumkan set pendek opsi pribadi seperti tema, mode editor, dan output verbose, bukan setiap kunci pengaturan. Pilih opsi untuk mengubahnya; Claude Code menyimpannya untuk Anda:
+
+* **Sebagian besar opsi**: `~/.claude/settings.json`
+* **Beberapa opsi, seperti Tampilkan tips**: `.claude/settings.local.json`
+* **[Opsi konfigurasi global](/docs/id/settings-reference#global-config-settings)**: `~/.claude.json`
+
+Untuk menetapkan satu opsi tanpa menu, lewatkan `key=value`, seperti `/config verbose=true`.
+
+<Note>
+  `/config` adalah bagian dari antarmuka terminal. Panel chat [VS Code](/docs/id/vs-code) dan [aplikasi desktop](/docs/id/desktop) tidak membukanya; ubah pengaturan di sana dengan mengedit file pengaturan atau melalui pengaturan aplikasi itu sendiri.
+</Note>
+
+<h3 id="edit-a-settings-file">
+  Edit file pengaturan
+</h3>
+
+Buka file pengaturan untuk cakupan yang Anda inginkan di editor Anda dan tambahkan atau ubah kunci. File pengaturan adalah JSON ketat: komentar `//` atau koma tertinggal adalah kesalahan sintaks, dan Claude Code melaporkan file sebagai [Kesalahan Pengaturan](#fix-a-broken-settings-file) saat startup berikutnya. Misalnya, untuk membiarkan Claude Code menjalankan perintah lint dan test Anda tanpa bertanya dan menghentikannya membaca file `.env`, tambahkan ini ke `~/.claude/settings.json`:
+
+```json ~/.claude/settings.json theme={null}
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "permissions": {
     "allow": [
       "Bash(npm run lint)",
-      "Bash(npm run test *)",
-      "Read(~/.zshrc)"
+      "Bash(npm run test *)"
     ],
     "deny": [
-      "Bash(curl *)",
       "Read(./.env)",
-      "Read(./.env.*)",
-      "Read(./secrets/**)"
+      "Read(./.env.*)"
     ]
-  },
-  "env": {
-    "CLAUDE_CODE_ENABLE_TELEMETRY": "1",
-    "OTEL_METRICS_EXPORTER": "otlp"
-  },
-  "companyAnnouncements": [
-    "Welcome to Acme Corp! Review our code guidelines at docs.acme.com",
-    "Reminder: Code reviews required for all PRs",
-    "New security policy in effect"
-  ]
+  }
 }
 ```
 
-Baris `$schema` dalam contoh di atas menunjuk ke [skema JSON resmi](https://json.schemastore.org/claude-code-settings.json) untuk pengaturan Claude Code. Menambahkannya ke `settings.json` Anda memungkinkan pelengkapan otomatis dan validasi inline di VS Code, Cursor, dan editor lain yang mendukung validasi skema JSON.
+Setiap entri di bawah `permissions` adalah aturan yang menamai tool dan apa yang boleh dilakukannya; [Konfigurasikan izin](/docs/id/permissions) menjelaskan sintaksnya. Baris `$schema` menunjuk ke [skema JSON yang dipublikasikan](https://json.schemastore.org/claude-code-settings.json) untuk pengaturan Claude Code, yang memberi Anda pelengkapan otomatis dan validasi inline di VS Code, Cursor, dan editor lain yang mendukung skema JSON. Skema dapat tertinggal di belakang rilis CLI terbaru, jadi peringatan validasi pada kunci yang baru didokumentasikan tidak berarti konfigurasi Anda tidak valid.
 
-Skema yang dipublikasikan diperbarui secara berkala dan mungkin tidak menyertakan pengaturan yang ditambahkan dalam rilis CLI terbaru, jadi peringatan validasi pada bidang yang baru didokumentasikan tidak harus berarti konfigurasi Anda tidak valid.
+Setelah Anda menyimpan, jalankan `/status` di dalam Claude Code untuk mengonfirmasi file dimuat; [Konfirmasi apa yang dimuat](#check-what-loaded) mengatakan apa yang ditunjukkan baris `Setting sources` dan bagaimana file yang rusak dilaporkan.
+
+Untuk file pribadi lengkap, file tim, dan file organisasi, masing-masing ditampilkan dengan komentar pada setiap kunci yang ditetapkannya, lihat [file pengaturan contoh](/docs/id/settings-example).
+
+<span id="pass-settings-for-one-session" />
+
+<h3 id="change-a-setting-for-one-session">
+  Ubah pengaturan untuk satu sesi
+</h3>
+
+Untuk mencoba nilai tanpa menyimpannya, aturnya saat Anda memulai Claude Code. Nilai berlaku untuk sesi itu dan file pengaturan Anda tetap seperti sebelumnya. Anda memiliki tiga cara untuk melakukannya:
+
+* **`--settings`**: lewatkan kunci sebagai JSON, inline atau sebagai jalur ke file. Claude Code menerapkannya di atas file pengguna, proyek, dan lokal Anda dan di bawah pengaturan yang dikelola. Ia dapat menetapkan kunci apa pun yang dapat ditetapkan file pengaturan pengguna Anda; ia tidak dapat menetapkan kunci `Managed` atau `Global config`.
+* **Flag untuk kunci itu**: beberapa kunci memiliki flag mereka sendiri, seperti `--model` untuk `model` dan `--effort` untuk `effortLevel` dan `modelSettings`.
+* **Variabel lingkungan**: ekspor variabel berpasangan kunci sebelum Anda menjalankan `claude`, seperti `ANTHROPIC_MODEL` untuk `model`.
+
+Setiap entri kunci di [referensi pengaturan](/docs/id/settings-reference) mencantumkan penggantian per-sesinya dan mana yang memiliki prioritas, jadi periksa entri untuk kunci yang ingin Anda ubah.
+
+Perintah yang Anda jalankan di dalam sesi sebagian besar menyimpan pilihan Anda: ketika Anda mengubah pengaturan di `/config`, Claude Code menulis ke file pengaturan Anda, dan `/model` menyimpan nilai sebagai default Anda untuk sesi baru.
+
+Jika Anda menekan `s` di pemilih `/model`, Claude Code beralih model tanpa menyimpannya sebagai default pengguna Anda. [Sesuaikan level usaha](/docs/id/model-config#adjust-effort-level) mengatakan level `/effort` mana yang Claude Code simpan sebagai default Anda untuk model yang Anda gunakan dan mana yang berlaku hanya untuk sesi saat ini.
+
+Misalnya, untuk memulai satu sesi di Opus tanpa mengubah default Anda:
+
+```bash theme={null}
+claude --settings '{"model": "claude-opus-5-5"}'
+```
 
 <h3 id="when-edits-take-effect">
   Saat pengeditan berlaku
 </h3>
 
-Claude Code memantau file pengaturan Anda dan memuat ulang saat berubah, jadi pengeditan pada sebagian besar kunci berlaku untuk sesi yang sedang berjalan tanpa restart. Ini termasuk `permissions`, `hooks`, dan credential helpers seperti `apiKeyHelper`. Reload mencakup pengaturan pengguna, proyek, lokal, dan yang dikelola, dan [hook `ConfigChange`](/docs/id/hooks#configchange) diaktifkan untuk setiap perubahan yang terdeteksi.
+Claude Code memantau file pengaturan Anda dan memuat ulang saat berubah, jadi ia menerapkan sebagian besar pengeditan ke sesi yang sedang berjalan tanpa restart, termasuk pengeditan ke `permissions`, `hooks`, dan pembantu kredensial seperti `apiKeyHelper`. Claude Code juga memuat file pengaturan yang Anda buat di tengah sesi jika foldernya ada saat sesi dimulai. Untuk folder `.claude/` proyek, ia memuat file bahkan ketika Anda membuat folder di sesi yang sama.
 
-Beberapa kunci dibaca sekali saat startup sesi dan berlaku pada restart berikutnya:
+Reload mencakup pengaturan pengguna, proyek, lokal, dan yang dikelola, dan Claude Code menjalankan hook [`ConfigChange`](/docs/id/hooks#configchange) untuk setiap perubahan file pengaturan yang terdeteksi, bukan untuk pengaturan yang dikelola yang tiba dari MDM atau konsol claude.ai. Pengaturan yang dikelola yang tiba melalui MDM atau dari konsol claude.ai mencapai sesi yang sedang berjalan sesuai jadwal daripada saat disimpan; [tabel pengiriman](/docs/id/managed-settings#choose-a-delivery-mechanism) memberikannya per sumber.
 
-* `model`: gunakan [`/model`](/docs/id/model-config#setting-your-model) untuk beralih di tengah sesi
-* [`outputStyle`](/docs/id/output-styles): bagian dari prompt sistem, yang dibangun kembali pada `/clear` atau restart
+Claude Code membaca beberapa kunci hanya sekali, saat startup sesi, jadi pengeditan ke salah satunya tidak mencapai sesi yang sedang berjalan. Kunci tingkat admin yang juga menunggu restart, seperti `requiredMinimumVersion`, tercantum di bawah [tempat dan kapan kebijakan berlaku](/docs/id/managed-settings#where-and-when-a-policy-applies). Yang paling mungkin Anda edit di tengah sesi:
 
-<h3 id="invalid-entries-in-managed-settings">
-  Entri tidak valid dalam pengaturan yang dikelola
+* [`model`](/docs/id/settings-reference#model): gunakan [`/model`](/docs/id/model-config#setting-your-model) untuk beralih di tengah sesi. Setiap model memiliki cache prompt-nya sendiri, jadi permintaan pertama setelah switch membaca ulang seluruh percakapan tanpa cache; lihat [Beralih model](/docs/id/prompt-caching#switching-models)
+* [`effortLevel`](/docs/id/settings-reference#effortlevel) dan [`modelSettings`](/docs/id/settings-reference#modelsettings): gunakan [`/effort`](/docs/id/model-config#adjust-effort-level) untuk mengubah usaha di tengah sesi
+
+<span id="verify-active-settings" />
+
+<span id="check-what-loaded" />
+
+<h3 id="confirm-what-loaded">
+  Konfirmasi apa yang dimuat
 </h3>
 
-Pengaturan yang dikelola diuraikan dengan toleran. Ketika konfigurasi yang dikelola berisi entri yang gagal validasi skema, Claude Code menghapus entri tersebut, mencatat peringatan, dan menegakkan setiap kebijakan yang valid yang tersisa. Satu kesalahan ketik tidak dapat menonaktifkan kebijakan organisasi Anda yang lainnya. Jalankan [`/doctor`](/docs/id/debug-your-config#check-resolved-settings) untuk membuat daftar entri yang dihapus dengan file sumber dan bidangnya.
+Jalankan `/status` di dalam Claude Code untuk melihat sumber pengaturan mana yang aktif. Tab **Status** mencakup baris `Setting sources` yang mencantumkan setiap file pengaturan yang Claude Code muat untuk sesi saat ini, seperti `User settings` atau `Project local settings`. Saat [pengaturan yang dikelola](/docs/id/admin-setup#decide-how-settings-reach-devices) berlaku, entri yang dikelola menunjukkan dalam tanda kurung bagaimana mereka mencapai mesin Anda.
 
-Perilaku ini konsisten di ketiga mekanisme pengiriman: [pengaturan yang dikelola server](/docs/id/server-managed-settings), kebijakan plist dan registry yang digunakan melalui MDM, dan file `managed-settings.json`. Memerlukan Claude Code v2.1.169 atau lebih baru.
+Baris mengonfirmasi file mana yang dibaca Claude Code; ia tidak menunjukkan file mana yang memasok setiap kunci. Untuk mencantumkan entri yang Claude Code tolak, jalankan [`claude doctor`](/docs/id/debug-your-config); untuk model yang ditetapkan pengaturan proyek atau yang dikelola, header startup menamai file yang menetapkannya. `/status` dan `/config` membuka dialog yang sama di tab berbeda, dan tab **Config** bukan tampilan konten `settings.json` Anda.
 
-Bidang penegakan keamanan ditangani per bidang daripada dihapus secara grosir saat ada tetapi tidak valid:
-
-| Bidang                       | Perilaku saat ada tetapi tidak valid                                                                                                                                                                                                                                                   |
-| :--------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `allowedMcpServers`          | Diterapkan sebagai daftar putih kosong, jadi tidak ada MCP servers yang diterima sampai nilainya diperbaiki. Entri individual yang tidak valid dihapus dan subset yang valid diterapkan.                                                                                               |
-| `allowManagedMcpServersOnly` | Diperlakukan sebagai `true`.                                                                                                                                                                                                                                                           |
-| `availableModels`            | Diterapkan sebagai daftar putih kosong, jadi hanya model Default yang tersedia sampai nilainya diperbaiki. Entri non-string individual dihapus dan subset yang valid diterapkan. Berlaku dalam v2.1.175 dan lebih baru.                                                                |
-| `enforceAvailableModels`     | Diperlakukan sebagai `true`. Berlaku dalam v2.1.175 dan lebih baru.                                                                                                                                                                                                                    |
-| `forceLoginOrgUUID`          | Tidak ada organisasi yang diizinkan untuk login sampai nilainya diperbaiki.                                                                                                                                                                                                            |
-| `deniedMcpServers`           | Entri individual yang tidak valid dihapus dan subset yang valid diterapkan. Nilai yang sepenuhnya tidak valid dijatuhkan dengan peringatan, karena menolak setiap server akan memblokir servers yang kebijakan tidak pernah namakan.                                                   |
-| `sandbox.credentials`        | Entri individual yang tidak valid dalam `files` atau `envVars` dihapus dengan peringatan dan subset yang valid diterapkan. Nilai `credentials` yang sepenuhnya tidak valid dijatuhkan dengan peringatan sementara sisa `sandbox` masih berlaku. Berlaku dalam v2.1.191 dan lebih baru. |
-
-`requiredMinimumVersion` dan `requiredMaximumVersion` gagal terbuka dengan desain: nilai yang tidak valid dihapus daripada diterapkan, jadi push kebijakan yang buruk tidak dapat mencegah Claude Code dari memulai.
-
-Kesalahan validasi muncul di tiga tempat:
-
-* Sesi interaktif menampilkan dialog saat startup yang mencantumkan entri yang tidak valid.
-* Jalankan headless dengan `-p` cetak ringkasan ke stderr.
-* [`claude doctor`](/docs/id/debug-your-config) mencantumkan setiap entri yang tidak valid dengan sumber dan bidangnya.
-
-Validasi perubahan kebijakan dengan menjalankan `claude doctor` pada mesin uji sebelum menggunakannya di seluruh armada.
-
-Toleransi ini hanya berlaku untuk pengaturan yang dikelola. File pengaturan pengguna, proyek, dan lokal tetap ketat: file yang gagal validasi ditolak secara keseluruhan dan dilaporkan.
-
-<h3 id="available-settings">
-  Pengaturan yang tersedia
+<h3 id="fix-a-broken-settings-file">
+  Perbaiki file pengaturan yang rusak
 </h3>
 
-`settings.json` mendukung sejumlah opsi:
+Jika Anda salah ketik JSON atau menetapkan kunci ke nilai yang tidak diterima Claude Code, Claude Code memberi tahu Anda saat awal sesi interaktif. Apa yang ditampilkan tergantung pada berapa banyak file yang terpengaruh:
 
-| Kunci                              | Deskripsi                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Contoh                                                                                                                           |
-| :--------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------- |
-| `advisorModel`                     | Model untuk [advisor tool](/docs/id/advisor) sisi server. Menerima alias model seperti `"opus"`, `"sonnet"`, atau `"fable"` (v2.1.170+), atau ID model lengkap. Ditulis secara otomatis saat Anda menjalankan `/advisor`. Tidak diatur untuk menonaktifkan advisor                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | `"opus"`                                                                                                                         |
-| `agent`                            | Jalankan thread utama sebagai subagent bernama, dan atur agent default untuk sesi yang dikirimkan dari `claude agents`. Menerapkan prompt sistem subagent, pembatasan tool, dan model. Lihat [Panggil subagents secara eksplisit](/docs/id/sub-agents#invoke-subagents-explicitly)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | `"code-reviewer"`                                                                                                                |
-| `agentPushNotifEnabled`            | **Default**: `false`. Ketika [Remote Control](/docs/id/remote-control) terhubung, izinkan Claude mengirim notifikasi push proaktif ke ponsel Anda, misalnya ketika tugas panjang selesai. Muncul di `/config` sebagai **Push when Claude decides**. Lihat [Mobile push notifications](/docs/id/remote-control#mobile-push-notifications). Memerlukan Claude Code v2.1.119 atau lebih baru                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | `true`                                                                                                                           |
-| `allowAllClaudeAiMcps`             | (Pengaturan yang dikelola saja) Muat konektor claude.ai bersama `managed-mcp.json` yang digunakan, yang sebaliknya mengambil kontrol eksklusif dan menekan mereka. Lihat [Konfigurasi MCP yang Dikelola](/docs/id/managed-mcp)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | `true`                                                                                                                           |
-| `allowedChannelPlugins`            | (Pengaturan yang dikelola saja) Daftar putih plugin channel yang dapat mendorong pesan. Menggantikan daftar putih Anthropic default saat diatur. Tidak terdefinisi = kembali ke default, array kosong = blokir semua plugin channel. Memerlukan `channelsEnabled: true`. Lihat [Batasi plugin channel mana yang dapat dijalankan](/docs/id/channels#restrict-which-channel-plugins-can-run)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | `[{ "marketplace": "claude-plugins-official", "plugin": "telegram" }]`                                                           |
-| `allowedHttpHookUrls`              | Daftar putih pola URL yang dapat ditargetkan oleh HTTP hooks. Mendukung `*` sebagai wildcard. Saat diatur, hooks dengan URL yang tidak cocok diblokir. Tidak terdefinisi = tidak ada pembatasan, array kosong = blokir semua HTTP hooks. Array digabungkan di seluruh sumber pengaturan. Lihat [Konfigurasi Hook](#hook-configuration)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | `["https://hooks.example.com/*"]`                                                                                                |
-| `allowedMcpServers`                | Saat diatur dalam managed-settings.json, daftar putih MCP servers yang dapat dikonfigurasi pengguna. Tidak terdefinisi = tidak ada pembatasan, array kosong = lockdown. Berlaku untuk semua cakupan. Daftar hitam memiliki prioritas. Lihat [Konfigurasi MCP yang Dikelola](/docs/id/managed-mcp)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | `[{ "serverName": "github" }]`                                                                                                   |
-| `allowManagedHooksOnly`            | (Pengaturan yang dikelola saja) Hanya hooks yang dikelola, SDK hooks, dan hooks dari plugins yang dipaksa diaktifkan dalam pengaturan yang dikelola `enabledPlugins` yang dimuat. Hooks pengguna, proyek, dan semua plugin hooks lainnya diblokir. Lihat [Konfigurasi Hook](#hook-configuration)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | `true`                                                                                                                           |
-| `allowManagedMcpServersOnly`       | (Pengaturan yang dikelola saja) Hanya `allowedMcpServers` dari pengaturan yang dikelola yang dihormati. `deniedMcpServers` masih digabungkan dari semua sumber. Pengguna masih dapat menambahkan MCP servers, tetapi hanya daftar putih yang ditentukan admin yang berlaku. Lihat [Konfigurasi MCP yang Dikelola](/docs/id/managed-mcp)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | `true`                                                                                                                           |
-| `allowManagedPermissionRulesOnly`  | (Pengaturan yang dikelola saja) Cegah pengaturan pengguna dan proyek dari mendefinisikan aturan izin `allow`, `ask`, atau `deny`. Hanya aturan dalam pengaturan yang dikelola yang berlaku. Lihat [Pengaturan khusus yang dikelola](/docs/id/permissions#managed-only-settings)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | `true`                                                                                                                           |
-| `alwaysThinkingEnabled`            | Aktifkan [pemikiran yang diperluas](/docs/id/model-config#extended-thinking) secara default untuk semua sesi. Biasanya dikonfigurasi melalui perintah `/config` daripada mengedit langsung. Untuk memaksa pemikiran mati terlepas dari pengaturan ini, atur [`MAX_THINKING_TOKENS=0`](/docs/id/env-vars) dalam `env`, yang menonaktifkan pemikiran pada Anthropic API kecuali pada Fable 5, yang tidak dapat memiliki pemikiran dimatikan. Pada [penyedia pihak ketiga](/docs/id/third-party-integrations) ini menghilangkan parameter `thinking` sebagai gantinya, dan model adaptive-reasoning mungkin masih berpikir                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | `true`                                                                                                                           |
-| `apiKeyHelper`                     | Skrip khusus, yang akan dieksekusi dalam `/bin/sh` pada macOS dan Linux, `cmd` pada Windows, untuk menghasilkan nilai auth. Nilai ini akan dikirim sebagai header `X-Api-Key` dan `Authorization: Bearer` untuk permintaan model. Atur interval penyegaran dengan [`CLAUDE_CODE_API_KEY_HELPER_TTL_MS`](/docs/id/env-vars)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | `/bin/generate_temp_api_key.sh`                                                                                                  |
-| `askUserQuestionTimeout`           | **Default**: `"never"`. Waktu idle sebelum dialog [`AskUserQuestion`](/docs/id/tools-reference) yang belum dijawab auto-continues dengan opsi apa pun yang sudah Anda pilih. Menerima `"60s"`, `"5m"`, `"10m"`, atau `"never"`. Dengan default, pertanyaan menunggu sampai Anda menjawabnya. Muncul di `/config` sebagai **Question auto-continue timeout**, yang menulis kunci ini ke pengaturan pengguna. Tidak dibaca dari pengaturan proyek atau lokal. Memerlukan Claude Code v2.1.200 atau lebih baru                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | `"5m"`                                                                                                                           |
-| `attribution`                      | Sesuaikan atribusi untuk komit git dan pull request. Lihat [Pengaturan atribusi](#attribution-settings)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | `{"commit": "🤖 Generated with Claude Code", "pr": ""}`                                                                          |
-| `autoCompactEnabled`               | **Default**: `true`. Secara otomatis kompak percakapan ketika konteks mendekati batas. Muncul di `/config` sebagai **Auto-compact**. Untuk menonaktifkan melalui variabel lingkungan, atur [`DISABLE_AUTO_COMPACT`](/docs/id/env-vars) dalam `env`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | `false`                                                                                                                          |
-| `autoMemoryDirectory`              | Direktori khusus untuk penyimpanan [memori otomatis](/docs/id/memory#storage-location). Menerima jalur absolut atau jalur dengan awalan `~/`. Dari pengaturan proyek atau lokal, ini dihormati hanya setelah Anda menerima dialog kepercayaan workspace, karena repositori yang diklon dapat menyediakan file ini                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | `"~/my-memory-dir"`                                                                                                              |
-| `autoMemoryEnabled`                | **Default**: `true`. Aktifkan [memori otomatis](/docs/id/memory#enable-or-disable-auto-memory). Saat `false`, Claude tidak membaca dari atau menulis ke direktori memori otomatis. Anda juga dapat mengalihkan ini dengan `/memory` selama sesi. Untuk menonaktifkan melalui variabel lingkungan, atur [`CLAUDE_CODE_DISABLE_AUTO_MEMORY`](/docs/id/env-vars) dalam `env`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | `false`                                                                                                                          |
-| `autoMode`                         | Sesuaikan apa yang diblokir dan diizinkan oleh pengklasifikasi [mode otomatis](/docs/id/permission-modes#eliminate-prompts-with-auto-mode). Berisi array aturan prosa `environment`, `allow`, `soft_deny`, dan `hard_deny`. Sertakan string literal `"$defaults"` dalam array untuk mewarisi aturan bawaan pada posisi tersebut. Lihat [Konfigurasikan mode otomatis](/docs/id/auto-mode-config). Dibaca dari pengaturan pengguna, flag `--settings`, dan pengaturan yang dikelola saja. Diabaikan dalam `.claude/settings.json` proyek dan `.claude/settings.local.json` lokal. Sebelum v2.1.207, `.claude/settings.local.json` juga dibaca                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | `{"soft_deny": ["$defaults", "Never run terraform apply"]}`                                                                      |
-| `autoMode.classifyAllShell`        | **Default**: `false`. Saat `true`, menangguhkan setiap aturan allow Bash dan PowerShell saat mode otomatis aktif sehingga semua perintah shell merutekan melalui pengklasifikasi, bukan hanya aturan yang cocok dengan pola eksekusi kode arbitrer. Lihat [Rutekan semua perintah shell melalui pengklasifikasi](/docs/id/auto-mode-config#route-all-shell-commands-through-the-classifier). Memerlukan Claude Code v2.1.193 atau lebih baru                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | `true`                                                                                                                           |
-| `autoScrollEnabled`                | **Default**: `true`. Dalam [rendering fullscreen](/docs/id/fullscreen), ikuti output baru ke bagian bawah percakapan. Muncul di `/config` sebagai **Auto-scroll**. Prompt izin masih bergulir ke tampilan saat ini dimatikan                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | `false`                                                                                                                          |
-| `autoUpdatesChannel`               | **Default**: `"latest"`. Saluran rilis untuk diikuti untuk pembaruan. Gunakan `"stable"` untuk versi yang biasanya sekitar satu minggu lama dan melewati versi dengan regresi besar, atau `"latest"` untuk rilis terbaru. Untuk menonaktifkan auto-updates sepenuhnya, atur [`DISABLE_AUTOUPDATER`](/docs/id/setup#disable-auto-updates) dalam `env`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | `"stable"`                                                                                                                       |
-| `availableModels`                  | Batasi model mana yang dapat dipilih pengguna untuk sesi utama, [subagents](/docs/id/sub-agents), [skills](/docs/id/skills), dan [advisor](/docs/id/advisor). Tidak mempengaruhi opsi Default kecuali `enforceAvailableModels` juga diatur. Lihat [Batasi pemilihan model](/docs/id/model-config#restrict-model-selection)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | `["sonnet", "haiku"]`                                                                                                            |
-| `awaySummaryEnabled`               | Tampilkan ringkasan sesi satu baris saat Anda kembali ke terminal setelah beberapa menit pergi. Atur ke `false` atau matikan Session recap di `/config` untuk menonaktifkan. Sama dengan [`CLAUDE_CODE_ENABLE_AWAY_SUMMARY`](/docs/id/env-vars)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | `true`                                                                                                                           |
-| `awsAuthRefresh`                   | Skrip khusus yang memodifikasi direktori `.aws` (lihat [konfigurasi kredensial lanjutan](/docs/id/amazon-bedrock#advanced-credential-configuration))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | `aws sso login --profile myprofile`                                                                                              |
-| `awsCredentialExport`              | Skrip khusus yang menampilkan JSON dengan kredensial AWS (lihat [konfigurasi kredensial lanjutan](/docs/id/amazon-bedrock#advanced-credential-configuration))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | `/bin/generate_aws_grant.sh`                                                                                                     |
-| `axScreenReader`                   | Render output yang ramah screen-reader: teks datar tanpa border dekoratif atau animasi. Mode screen-reader menggunakan renderer klasik, jadi pengaturan `tui` tidak berpengaruh saat aktif; [background sessions](/docs/id/agent-view) yang terpasang masih render fullscreen. Variabel lingkungan [`CLAUDE_AX_SCREEN_READER`](/docs/id/env-vars) dan flag [`--ax-screen-reader`](/docs/id/cli-reference#cli-flags) memiliki prioritas. Memerlukan Claude Code v2.1.181 atau lebih baru                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | `true`                                                                                                                           |
-| `blockedMarketplaces`              | (Pengaturan yang dikelola saja) Daftar hitam sumber marketplace. Diterapkan pada penambahan marketplace dan instalasi plugin, pembaruan, penyegaran, dan auto-update, jadi marketplace yang ditambahkan sebelum kebijakan ditetapkan tidak dapat digunakan untuk mengambil plugin. Sumber yang diblokir diperiksa sebelum mengunduh, jadi mereka tidak pernah menyentuh sistem file. Lihat [Pembatasan marketplace yang dikelola](/docs/id/plugin-marketplaces#managed-marketplace-restrictions)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | `[{ "source": "github", "repo": "untrusted/plugins" }]`                                                                          |
-| `browserExternalPageTools`         | (Pengaturan yang dikelola saja) Atur ke `"disabled"` untuk mencegah Claude menggunakan tools untuk membaca atau bertindak pada halaman eksternal di [Browser pane](/docs/id/desktop#browse-external-sites) aplikasi desktop. Pengguna masih dapat menavigasi ke situs eksternal sendiri, dan preview server dev lokal tidak terpengaruh                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | `"disabled"`                                                                                                                     |
-| `channelsEnabled`                  | (Pengaturan yang dikelola saja) Izinkan [channels](/docs/id/channels) untuk organisasi. Pada paket Claude.ai Team dan Enterprise, channels diblokir saat ini tidak diatur atau `false`. Untuk akun [Anthropic Console](/docs/id/authentication#claude-console-authentication) menggunakan autentikasi kunci API, channels diizinkan secara default kecuali organisasi Anda menggunakan pengaturan yang dikelola, dalam hal ini kunci ini harus diatur ke `true`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | `true`                                                                                                                           |
-| `claudeMd`                         | (Pengaturan yang dikelola saja) Instruksi gaya CLAUDE.md yang disuntikkan sebagai memori yang dikelola organisasi. Hanya dihormati saat diatur dalam pengaturan yang dikelola atau kebijakan dan diabaikan dalam pengaturan pengguna, proyek, dan lokal. Lihat [CLAUDE.md di seluruh organisasi](/docs/id/memory#deploy-organization-wide-claude-md)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | `"Always run make lint before committing."`                                                                                      |
-| `claudeMdExcludes`                 | Pola glob atau jalur absolut file `CLAUDE.md` untuk dilewati saat memuat [memory](/docs/id/memory). Pola cocok dengan jalur file absolut. Hanya berlaku untuk memori pengguna, proyek, dan lokal; file kebijakan yang dikelola tidak dapat dikecualikan                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | `["**/vendor/**/CLAUDE.md"]`                                                                                                     |
-| `cleanupPeriodDays`                | **Default**: `30` hari, minimum `1`. Claude Code menghapus [file sesi dan data aplikasi lainnya](/docs/id/claude-directory#cleaned-up-automatically) yang lebih lama dari periode ini saat startup. Pengaturan `0` ditolak dengan kesalahan validasi. Juga mengontrol cutoff usia untuk penghapusan otomatis [worktrees yatim piatu](/docs/id/worktrees#clean-up-worktrees) saat startup. Jika Claude Code tidak dapat membaca atau menguraikan file pengaturan, Claude Code menjeda penyapuan pembersihan retensi dan menampilkan peringatan di `/status` sampai Anda memperbaiki file, kecuali [pengaturan yang dikelola](/docs/id/server-managed-settings) menyediakan `cleanupPeriodDays`, dalam hal ini penyapuan berjalan pada nilai yang dikelola. Sebelum v2.1.203, pembersihan berjalan pada default 30 hari dalam keadaan itu dan dapat menghapus transkrip yang `cleanupPeriodDays` yang lebih lama dimaksudkan untuk disimpan; file yang lebih baru dari 30 hari tidak pernah dihapus. Untuk menonaktifkan penulisan transkrip sepenuhnya, atur variabel lingkungan [`CLAUDE_CODE_SKIP_PROMPT_HISTORY`](/docs/id/env-vars). Dalam mode non-interaktif, lewatkan `--no-session-persistence` bersama `-p` atau atur `persistSession: false` dalam Agent SDK. | `20`                                                                                                                             |
-| `companyAnnouncements`             | Pengumuman untuk ditampilkan kepada pengguna saat startup. Jika beberapa pengumuman disediakan, mereka akan diputar secara acak.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | `["Welcome to Acme Corp! Review our code guidelines at docs.acme.com"]`                                                          |
-| `defaultShell`                     | **Default**: `"bash"`, atau `"powershell"` di Windows saat Bash tidak tersedia. Shell default untuk perintah `!` input-box. Menerima `"bash"` atau `"powershell"`. Pengaturan `"powershell"` merutekan perintah `!` interaktif melalui PowerShell di Windows. Memerlukan `CLAUDE_CODE_USE_POWERSHELL_TOOL=1`. Lihat [PowerShell tool](/docs/id/tools-reference#powershell-tool)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | `"powershell"`                                                                                                                   |
-| `deniedMcpServers`                 | Saat diatur dalam managed-settings.json, daftar hitam MCP servers yang secara eksplisit diblokir. Berlaku untuk semua cakupan termasuk servers yang dikelola. Daftar hitam memiliki prioritas atas daftar putih. Lihat [Konfigurasi MCP yang Dikelola](/docs/id/managed-mcp)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | `[{ "serverName": "filesystem" }]`                                                                                               |
-| `disableAgentView`                 | Atur ke `true` untuk mematikan [background agents dan agent view](/docs/id/agent-view): `claude agents`, `--bg`, `/background`, dan supervisor on-demand. Biasanya diatur dalam [pengaturan yang dikelola](/docs/id/permissions#managed-settings). Setara dengan pengaturan `CLAUDE_CODE_DISABLE_AGENT_VIEW` ke `1`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | `true`                                                                                                                           |
-| `disableAllHooks`                  | Nonaktifkan semua [hooks](/docs/id/hooks) dan [status line](/docs/id/statusline) khusus apa pun                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | `true`                                                                                                                           |
-| `disableArtifact`                  | Atur ke `true` untuk menonaktifkan tool [Artifact](/docs/id/artifacts), yang menerbitkan output sesi sebagai halaman web pribadi di claude.ai. Setara dengan pengaturan `CLAUDE_CODE_DISABLE_ARTIFACT` ke `1`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | `true`                                                                                                                           |
-| `disableAutoMode`                  | Atur ke `"disable"` untuk mencegah [mode otomatis](/docs/id/permission-modes#eliminate-prompts-with-auto-mode) diaktifkan. Menghapus `auto` dari siklus `Shift+Tab` dan menolak `--permission-mode auto` saat startup. Paling berguna dalam [pengaturan yang dikelola](/docs/id/permissions#managed-settings) di mana pengguna tidak dapat menimpanya                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | `"disable"`                                                                                                                      |
-| `disableBrowserExternalNavigation` | (Pengaturan yang dikelola saja) Atur ke `true` untuk mematikan browsing eksternal di [Browser pane](/docs/id/desktop#browse-external-sites) aplikasi desktop. Baik pengguna maupun Claude tidak dapat menavigasi ke situs eksternal, dan preview server dev localhost tidak terpengaruh. Nilai harus boolean JSON `true`; string `"true"` diabaikan                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | `true`                                                                                                                           |
-| `disableBundledSkills`             | Atur ke `true` untuk menonaktifkan [skills](/docs/id/skills) dan workflows yang dikirimkan dengan Claude Code: skills bundel dan workflows dihapus sepenuhnya, sementara perintah slash bawaan seperti `/init` tetap dapat diketik tetapi disembunyikan dari model. `/doctor` tetap dapat diketik seperti perintah bawaan; sembunyikan dengan [`DISABLE_DOCTOR_COMMAND`](/docs/id/env-vars) sebagai gantinya. Skills dari plugins, `.claude/skills/`, dan `.claude/commands/` tidak terpengaruh. Setara dengan pengaturan `CLAUDE_CODE_DISABLE_BUNDLED_SKILLS` ke `1`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | `true`                                                                                                                           |
-| `disableClaudeAiConnectors`        | Nonaktifkan [claude.ai MCP connectors](/docs/id/mcp#use-mcp-servers-from-claude-ai) sehingga mereka tidak auto-fetched atau terhubung. Atur dalam cakupan pengaturan apa pun. `true` dalam sumber apa pun memiliki prioritas, jadi `.claude/settings.json` proyek yang diperiksa dapat memilih repositori dari konektor cloud, tetapi proyek-level `false` tidak dapat menimpa tingkat pengguna atau kebijakan `true`. Servers yang dilewatkan secara eksplisit melalui `--mcp-config` tidak terpengaruh. Untuk menolak konektor individual daripada semuanya, gunakan [`deniedMcpServers`](/docs/id/managed-mcp). Memerlukan Claude Code v2.1.182 atau lebih baru                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | `true`                                                                                                                           |
-| `disableDeepLinkRegistration`      | Atur ke `"disable"` untuk mencegah Claude Code mendaftarkan penanganan protokol `claude-cli://` dengan sistem operasi saat startup. [Deep links](/docs/id/deep-links) memungkinkan tools eksternal membuka sesi Claude Code dengan prompt yang sudah diisi sebelumnya. Berguna di lingkungan di mana pendaftaran penanganan protokol dibatasi atau dikelola secara terpisah                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | `"disable"`                                                                                                                      |
-| `disabledMcpjsonServers`           | Daftar MCP servers spesifik dari file `.mcp.json` untuk menolak                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | `["filesystem"]`                                                                                                                 |
-| `disableRemoteControl`             | Nonaktifkan [Remote Control](/docs/id/remote-control): memblokir `claude remote-control`, flag `--remote-control`, auto-start, dan toggle dalam sesi. Biasanya ditempatkan dalam [pengaturan yang dikelola](/docs/id/permissions#managed-settings) untuk penegakan MDM per-perangkat, tetapi berfungsi dari cakupan apa pun. Memerlukan Claude Code v2.1.128 atau lebih baru                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | `true`                                                                                                                           |
-| `disableSideloadFlags`             | (Pengaturan yang dikelola saja) Tolak flag CLI `--plugin-dir`, `--plugin-url`, `--agents`, dan `--mcp-config` saat startup, yang pengguna dapat lewatkan untuk melewati [`strictKnownMarketplaces`](#strictknownmarketplaces) untuk satu run. Juga menolak flag ini dari permukaan apa pun yang meluncurkan CLI dengan mereka secara internal, saat ini [Cowork](/docs/id/desktop) sesi lokal di aplikasi desktop. `--mcp-config` yang servers-nya semuanya entri `type: "sdk"` dalam proses masih diterima, jadi Agent SDK dan ekstensi VS Code tetap bekerja. Tidak memblokir `claude mcp add`, `.mcp.json`, atau SDK `setMcpServers()`; pasangkan dengan [`allowedMcpServers`](/docs/id/managed-mcp) untuk kontrol MCP per-server. Memerlukan Claude Code v2.1.193 atau lebih baru                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | `true`                                                                                                                           |
-| `disableSkillShellExecution`       | Nonaktifkan eksekusi shell inline untuk blok `` !`...` `` dan ` ```! ` dalam [skills](/id/skills) dan perintah khusus dari sumber pengguna, proyek, plugin, atau direktori tambahan. Perintah diganti dengan `[shell command execution disabled by policy]` daripada dijalankan. Skills bundel dan yang dikelola tidak terpengaruh. Paling berguna dalam [pengaturan yang dikelola](/id/permissions#managed-settings) di mana pengguna tidak dapat menimpanya                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | `true`                                                                                                                           |
-| `disableWorkflows`                 | **Default**: `false`. Nonaktifkan [dynamic workflows](/docs/id/workflows#turn-workflows-off) dan perintah workflow bundel. Setara dengan pengaturan `CLAUDE_CODE_DISABLE_WORKFLOWS` ke `1`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | `true`                                                                                                                           |
-| `editorMode`                       | **Default**: `"normal"`. Mode binding kunci untuk prompt input: `"normal"` atau `"vim"`. Muncul di `/config` sebagai **Editor mode**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | `"vim"`                                                                                                                          |
-| `effortLevel`                      | Pertahankan [tingkat usaha](/docs/id/model-config#adjust-effort-level) di seluruh sesi. Menerima `"low"`, `"medium"`, `"high"`, atau `"xhigh"`. Ditulis secara otomatis saat Anda menjalankan `/effort` dengan salah satu nilai tersebut. `--effort` dan [`CLAUDE_CODE_EFFORT_LEVEL`](/docs/id/env-vars) menimpa ini untuk satu sesi. Lihat [Sesuaikan tingkat usaha](/docs/id/model-config#adjust-effort-level) untuk model yang didukung                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | `"xhigh"`                                                                                                                        |
-| `enableAllProjectMcpServers`       | Secara otomatis menyetujui semua MCP servers yang ditentukan dalam file `.mcp.json` proyek. Sejak v2.1.196, `claude mcp list` dan `claude mcp get` menghormati kunci ini dalam folder yang tidak terpercaya hanya dari [file pengaturan yang tidak diperiksa ke dalam repositori](/docs/id/mcp#managing-your-servers)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | `true`                                                                                                                           |
-| `enableArtifact`                   | Aktifkan atau nonaktifkan tool [Artifact](/docs/id/artifacts) untuk pengguna ini. Saat tidak diatur, default mengikuti [ketersediaan](/docs/id/artifacts#availability) fitur untuk akun Anda. Baris **Artifacts** di `/config` menulis kunci ini. `disableArtifact` yang dikelola dan [pengaturan admin](/docs/id/artifacts#manage-artifacts-for-your-organization) organisasi Anda memiliki prioritas, dan kunci diabaikan dalam pengaturan proyek dan lokal (`.claude/settings.json`, `.claude/settings.local.json`), yang repositori dapat diperiksa. Memerlukan Claude Code v2.1.196 atau lebih baru                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | `true`                                                                                                                           |
-| `enabledMcpjsonServers`            | Daftar MCP servers spesifik dari file `.mcp.json` untuk menyetujui. Sejak v2.1.196, `claude mcp list` dan `claude mcp get` menghormati kunci ini dalam folder yang tidak terpercaya hanya dari [file pengaturan yang tidak diperiksa ke dalam repositori](/docs/id/mcp#managing-your-servers)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | `["memory", "github"]`                                                                                                           |
-| `enforceAvailableModels`           | Perluas daftar putih `availableModels` ke model Default. Saat `true` dalam pengaturan yang dikelola dan `availableModels` adalah array non-kosong, opsi Default kembali ke entri yang diizinkan pertama yang tersedia, tetapi hanya ketika model default yang akan diselesaikan oleh Default (default [organisasi](/docs/id/model-config#organization-default-model) saat satu berlaku, sebaliknya default tipe akun) tidak ada dalam daftar putih; default yang diizinkan disimpan sebagainya. Tidak berpengaruh saat `availableModels` tidak diatur atau kosong. Lihat [Paksakan daftar putih untuk model Default](/docs/id/model-config#enforce-the-allowlist-for-the-default-model). Memerlukan Claude Code v2.1.175 atau lebih baru                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | `true`                                                                                                                           |
-| `env`                              | Variabel lingkungan yang diterapkan ke setiap sesi dan ke subprocess yang Claude Code luncurkan darinya. Atur variabel ke `""` untuk menimpa export shell dengan string kosong, yang Claude Code perlakukan sebagai tidak diatur untuk pemilihan penyedia. Subprocess masih mewarisi nilai kosong. `NO_COLOR` dan `FORCE_COLOR` yang diatur di sini mencapai hanya subprocess; untuk mengubah warna antarmuka Claude Code sendiri, atur di shell Anda sebelum meluncurkan `claude`. Sejak v2.1.195, variabel identitas yang lingkungan hosting Claude Code atur, misalnya `CLAUDE_CODE_REMOTE` dan `CLAUDE_CODE_ACCOUNT_UUID`, diabaikan saat diatur di sini                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | `{"FOO": "bar"}`                                                                                                                 |
-| `fallbackModel`                    | Model fallback untuk dicoba secara berurutan ketika model utama kelebihan beban atau tidak tersedia. Claude Code beralih ke model berikutnya yang tersedia dalam rantai untuk sisa giliran dan menampilkan pemberitahuan. `"default"` berkembang menjadi model default. Rantai dibatasi pada tiga model; entri ekstra diabaikan. Tidak seperti sebagian besar pengaturan array, kunci ini tidak digabungkan di seluruh file pengaturan: file dengan prioritas tertinggi yang mendefinisikannya memasok seluruh rantai. Flag [`--fallback-model`](/docs/id/cli-reference#cli-flags) menimpa ini untuk satu sesi. Lihat [Fallback model chains](/docs/id/model-config#fallback-model-chains)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | `["claude-sonnet-5", "claude-haiku-4-5"]`                                                                                        |
-| `fastMode`                         | Aktifkan [fast mode](/docs/id/fast-mode) untuk sesi di mana tersedia. Mengalihkan dengan `/fast` menulis `true` di sini dalam pengaturan pengguna dan menghapus kunci saat Anda mematikan fast mode                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | `true`                                                                                                                           |
-| `fastModePerSessionOptIn`          | Saat `true`, fast mode tidak bertahan di seluruh sesi. Setiap sesi dimulai dengan fast mode mati, memerlukan pengguna untuk mengaktifkannya dengan `/fast`. Preferensi fast mode pengguna masih disimpan. Lihat [Memerlukan opt-in per sesi](/docs/id/fast-mode#require-per-session-opt-in)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | `true`                                                                                                                           |
-| `feedbackSurveyRate`               | Probabilitas (0–1) bahwa [survei kualitas sesi](/docs/id/data-usage#session-quality-surveys) muncul saat memenuhi syarat. Atur ke `0` untuk menekan sepenuhnya, atau atur [`CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY`](/docs/id/env-vars) dalam `env`. Berguna saat menggunakan Amazon Bedrock, Google Cloud's Agent Platform, atau Microsoft Foundry di mana tingkat sampel default tidak berlaku                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | `0.05`                                                                                                                           |
-| `fileCheckpointingEnabled`         | **Default**: `true`. Snapshot file sebelum setiap edit sehingga [`/rewind`](/docs/id/checkpointing) dapat memulihkannya. Muncul di `/config` sebagai **Rewind code (checkpoints)**. Untuk menonaktifkan melalui variabel lingkungan, atur [`CLAUDE_CODE_DISABLE_FILE_CHECKPOINTING`](/docs/id/env-vars) dalam `env`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | `false`                                                                                                                          |
-| `fileSuggestion`                   | Konfigurasikan skrip khusus untuk pelengkapan otomatis file `@`. Lihat [Pengaturan saran file](#file-suggestion-settings)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | `{"type": "command", "command": "~/.claude/file-suggestion.sh"}`                                                                 |
-| `footerLinksRegexes`               | Render lencana yang dapat diklik tambahan di footer saat regex cocok dengan output giliran. Setiap entri memiliki `pattern`, template `url` dengan placeholder `{name}` yang diisi dari grup penangkapan bernama, dan `label` opsional. Dibaca dari pengaturan pengguna, flag `--settings`, dan pengaturan yang dikelola saja. Lihat [Footer link badges](#footer-link-badges) untuk batasan URL, daftar skema yang diizinkan, dan batas. Memerlukan Claude Code v2.1.176 atau lebih baru                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | `[{"type": "regex", "pattern": "\\b(?<key>PROJ-\\d+)\\b", "url": "https://issues.example.com/browse/{key}", "label": "{key}"}]`  |
-| `forceLoginMethod`                 | Gunakan `claudeai` untuk membatasi login ke akun Claude.ai, `console` untuk membatasi login ke akun Claude Console, atau `gateway` untuk membatasi login ke cloud gateway; lihat [Claude apps gateway](/docs/id/claude-apps-gateway). Saat diatur dalam pengaturan yang dikelola, sesi yang diautentikasi oleh `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN`, atau `apiKeyHelper` diblokir saat startup, karena kredensial lingkungan tidak dapat memenuhi metode login yang diperlukan. Sesi penyedia pihak ketiga seperti Amazon Bedrock, Google Cloud's Agent Platform, dan Microsoft Foundry tidak diblokir: mereka mengautentikasi terhadap penyedia cloud Anda daripada Anthropic                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | `claudeai`                                                                                                                       |
-| `forceLoginGatewayUrl`             | Pra-isi dan kunci URL gateway pada layar Cloud gateway `/login`. Baik kunci ini atau `forceLoginMethod: "gateway"` menampilkan layar itu; atur keduanya sehingga URL diisi. Dihormati hanya di tingkat kebijakan yang dikelola; diabaikan dalam pengaturan pengguna dan proyek. Lihat [Claude apps gateway](/docs/id/claude-apps-gateway#set-the-gateway-url)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | `"https://claude-gateway.example.com"`                                                                                           |
-| `forceLoginOrgUUID`                | Memerlukan login untuk milik organisasi Anthropic tertentu. Menerima string UUID tunggal, yang juga pra-memilih organisasi tersebut selama login, atau array UUID di mana organisasi yang terdaftar apa pun diterima tanpa pra-pemilihan. Saat diatur dalam pengaturan yang dikelola, login gagal jika akun yang diautentikasi tidak milik organisasi yang terdaftar, dan sesi yang diautentikasi oleh `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN`, atau `apiKeyHelper` diblokir saat startup karena keanggotaan organisasi tidak dapat diverifikasi untuk mereka. Sesi penyedia pihak ketiga seperti Amazon Bedrock, Google Cloud's Agent Platform, dan Microsoft Foundry tidak diblokir: gunakan IAM cloud Anda untuk membatasi akun cloud mana yang dapat digunakan. Array kosong gagal tertutup dan memblokir login dengan pesan salah konfigurasi                                                                                                                                                                                                                                                                                                                                                                                             | `"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"` atau `["xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx", "yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy"]` |
-| `forceRemoteSettingsRefresh`       | (Pengaturan yang dikelola saja) Blokir startup CLI sampai pengaturan yang dikelola jarak jauh segar diambil dari server. Jika pengambilan gagal, CLI keluar daripada melanjutkan dengan pengaturan yang di-cache atau tidak ada. Saat tidak diatur, startup berlanjut tanpa menunggu pengaturan jarak jauh. Lihat [penegakan fail-closed](/docs/id/server-managed-settings#enforce-fail-closed-startup)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | `true`                                                                                                                           |
-| `gcpAuthRefresh`                   | Skrip khusus yang menyegarkan GCP Application Default Credentials saat kedaluwarsa atau tidak dapat dimuat. Lihat [konfigurasi kredensial lanjutan](/docs/id/google-vertex-ai#advanced-credential-configuration)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | `gcloud auth application-default login`                                                                                          |
-| `hooks`                            | Konfigurasikan perintah khusus untuk dijalankan pada acara siklus hidup. Lihat [dokumentasi hooks](/docs/id/hooks) untuk format                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | Lihat [hooks](/docs/id/hooks)                                                                                                         |
-| `httpHookAllowedEnvVars`           | Daftar putih nama variabel lingkungan yang dapat diinterpolasi oleh HTTP hooks ke dalam header. Saat diatur, `allowedEnvVars` efektif setiap hook adalah persimpangan dari daftar sendiri dan pengaturan ini. Tidak terdefinisi = tidak ada pembatasan. Array digabungkan di seluruh sumber pengaturan. Lihat [Konfigurasi Hook](#hook-configuration)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | `["MY_TOKEN", "HOOK_SECRET"]`                                                                                                    |
-| `includeGitInstructions`           | **Default**: `true`. Sertakan instruksi alur kerja komit dan PR bawaan dan snapshot status git dalam prompt sistem Claude. Atur ke `false` untuk menghapus keduanya, misalnya saat menggunakan skills alur kerja git Anda sendiri. Variabel lingkungan `CLAUDE_CODE_DISABLE_GIT_INSTRUCTIONS` memiliki prioritas atas pengaturan ini saat diatur                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | `false`                                                                                                                          |
-| `inputNeededNotifEnabled`          | **Default**: `false`. Ketika [Remote Control](/docs/id/remote-control) terhubung, kirim notifikasi push ke ponsel Anda ketika prompt izin atau pertanyaan menunggu input Anda. Muncul di `/config` sebagai **Push when actions required**. Lihat [Mobile push notifications](/docs/id/remote-control#mobile-push-notifications). Memerlukan Claude Code v2.1.119 atau lebih baru                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | `true`                                                                                                                           |
-| `language`                         | Konfigurasikan bahasa respons pilihan Claude (misalnya, `"japanese"`, `"spanish"`, `"french"`). Claude akan merespons dalam bahasa ini secara default. Juga menetapkan bahasa [voice dictation](/docs/id/voice-dictation#change-the-dictation-language) dan judul sesi yang dibuat secara otomatis. Sejak v2.1.176, saat tidak diatur, judul sesi cocok dengan bahasa percakapan Anda                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | `"japanese"`                                                                                                                     |
-| `minimumVersion`                   | Lantai yang mencegah auto-updates latar belakang dan `claude update` dari menginstal versi di bawah ini. Beralih dari saluran `"latest"` ke `"stable"` melalui `/config` meminta Anda untuk tetap pada versi saat ini atau memungkinkan downgrade. Memilih untuk tetap menetapkan nilai ini. Juga berguna dalam [pengaturan yang dikelola](/docs/id/permissions#managed-settings) untuk menyematkan minimum di seluruh organisasi. Untuk lantai keras yang memblokir startup sepenuhnya, lihat `requiredMinimumVersion`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | `"2.1.100"`                                                                                                                      |
-| `model`                            | Timpa model default untuk digunakan untuk Claude Code. `--model` dan [`ANTHROPIC_MODEL`](/docs/id/model-config#environment-variables) menimpa ini untuk satu sesi                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | `"claude-sonnet-5"`                                                                                                              |
-| `modelOverrides`                   | Peta ID model Anthropic ke ID model spesifik penyedia seperti ARN profil inferensi Bedrock. Setiap entri pemilih model menggunakan nilai yang dipetakan saat memanggil API penyedia. Lihat [Timpa ID model per versi](/docs/id/model-config#override-model-ids-per-version)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | `{"claude-opus-4-6": "arn:aws:bedrock:..."}`                                                                                     |
-| `otelHeadersHelper`                | Skrip untuk menghasilkan header OpenTelemetry dinamis. Berjalan saat startup dan secara berkala. Atur interval penyegaran dengan [`CLAUDE_CODE_OTEL_HEADERS_HELPER_DEBOUNCE_MS`](/docs/id/env-vars). Lihat [Header dinamis](/docs/id/monitoring-usage#dynamic-headers)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | `/bin/generate_otel_headers.sh`                                                                                                  |
-| `outputStyle`                      | Konfigurasikan gaya output untuk menyesuaikan prompt sistem. Lihat [dokumentasi gaya output](/docs/id/output-styles)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | `"Explanatory"`                                                                                                                  |
-| `parentSettingsBehavior`           | (Pengaturan yang dikelola saja) **Default**: `"first-wins"`. Mengontrol apakah pengaturan yang dikelola yang disediakan secara terprogram oleh proses host penyematan, seperti Agent SDK atau ekstensi IDE, berlaku saat tingkat yang dikelola yang digunakan admin juga ada. `"first-wins"`: pengaturan yang disediakan parent dijatuhkan dan hanya tingkat admin yang berlaku. `"merge"`: pengaturan yang disediakan parent berlaku di bawah tingkat admin, disaring sehingga mereka dapat mengencangkan kebijakan tetapi tidak melonggarkannya. Tidak berpengaruh saat tidak ada tingkat admin yang digunakan. Memerlukan Claude Code v2.1.133 atau lebih baru                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | `"merge"`                                                                                                                        |
-| `permissions`                      | Lihat tabel di bawah untuk struktur izin.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |                                                                                                                                  |
-| `plansDirectory`                   | **Default**: `~/.claude/plans`. Sesuaikan di mana file rencana disimpan. Jalur relatif terhadap akar proyek.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | `"./plans"`                                                                                                                      |
-| `pluginSuggestionMarketplaces`     | (Pengaturan yang dikelola saja) Nama marketplace yang plugin-nya dapat muncul sebagai saran instalasi kontekstual. Tidak ada saran yang dideklarasikan marketplace muncul tanpa daftar putih ini; tip desain frontend pihak pertama bawaan tidak terpengaruh. Saran berasal dari deklarasi `relevance` setiap plugin dalam entri marketplace-nya. Nama hanya berlaku saat marketplace terdaftar di mesin dan sumber terdaftarnya juga dideklarasikan dalam pengaturan yang dikelola, baik sebagai entri `extraKnownMarketplaces` untuk nama itu atau sebagai entri `strictKnownMarketplaces`. Marketplace yang terdaftar dari sumber berbeda di bawah nama yang diizinkan diabaikan. Marketplace resmi dikecualikan dari persyaratan sumber: mengizinkan namanya saja sudah cukup, karena nama itu hanya dapat terdaftar dari sumber Anthropic resmi.                                                                                                                                                                                                                                                                                                                                                                                              | `["acme-corp-plugins"]`                                                                                                          |
-| `pluginTrustMessage`               | (Pengaturan yang dikelola saja) Pesan khusus ditambahkan ke peringatan kepercayaan plugin yang ditampilkan sebelum instalasi. Gunakan ini untuk menambahkan konteks spesifik organisasi, misalnya untuk mengonfirmasi bahwa plugin dari marketplace internal Anda telah disaring.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | `"All plugins from our marketplace are approved by IT"`                                                                          |
-| `policyHelper`                     | Admin-deployed executable yang menghitung pengaturan yang dikelola secara dinamis saat startup. Hanya dihormati dari MDM atau file `managed-settings.json` sistem. Lihat [Hitung pengaturan yang dikelola dengan policy helper](#compute-managed-settings-with-a-policy-helper). Memerlukan Claude Code v2.1.136 atau lebih baru                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | `{"path": "/usr/local/bin/claude-policy"}`                                                                                       |
-| `preferredNotifChannel`            | **Default**: `"auto"`. Metode untuk notifikasi task-complete dan permission-prompt: `"auto"`, `"terminal_bell"`, `"iterm2"`, `"iterm2_with_bell"`, `"kitty"`, `"ghostty"`, atau `"notifications_disabled"`. `"auto"` mengirim notifikasi desktop di iTerm2, Ghostty, dan Kitty dan tidak melakukan apa pun di terminal lain. Atur `"terminal_bell"` untuk membunyikan karakter bell di terminal apa pun. Muncul di `/config` sebagai **Notifications**. Lihat [Dapatkan terminal bell atau notifikasi](/docs/id/terminal-config#get-a-terminal-bell-or-notification)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | `"terminal_bell"`                                                                                                                |
-| `prefersReducedMotion`             | Kurangi atau nonaktifkan animasi UI (spinners, shimmer, efek flash) untuk aksesibilitas                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | `true`                                                                                                                           |
-| `prUrlTemplate`                    | Template URL untuk lencana PR yang ditampilkan di footer dan dalam ringkasan hasil tool. Mengganti `{host}`, `{owner}`, `{repo}`, `{number}`, dan `{url}` dari URL PR yang dilaporkan `gh`. Gunakan untuk mengarahkan tautan PR ke alat review kode internal daripada `github.com`. Tidak mempengaruhi autolinks `#123` dalam prosa Claude                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | `"https://reviews.example.com/{owner}/{repo}/pull/{number}"`                                                                     |
-| `remoteControlAtStartup`           | Hubungkan [Remote Control](/docs/id/remote-control) secara otomatis saat setiap sesi interaktif dimulai, daripada menunggu `/remote-control`. Atur ke `true` untuk selalu auto-connect, `false` untuk tidak pernah auto-connect, atau biarkan tidak diatur untuk mengikuti default organisasi Anda. Muncul di `/config` sebagai **Enable Remote Control for all sessions**. Lihat [Enable Remote Control for all sessions](/docs/id/remote-control#enable-remote-control-for-all-sessions)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | `false`                                                                                                                          |
-| `requiredMaximumVersion`           | Pengaturan yang dikelola saja. Versi Claude Code maksimum yang diizinkan untuk memulai. Jika versi yang sedang berjalan lebih baru, Claude Code keluar saat startup dan menginstruksikan pengguna untuk menginstal versi yang disetujui melalui metode yang disetujui organisasi; `claude install <version>` juga dapat berfungsi. Auto-updates latar belakang dan `claude update` melewati versi di atas batas, jadi instalasi dalam jangkauan tetap dalam jangkauan. `claude update`, `claude install`, dan `claude doctor` terus bekerja di atas batas sehingga pengguna dapat pulih. Versi yang mendahului pengaturan ini mengabaikannya                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | `"2.1.150"`                                                                                                                      |
-| `requiredMinimumVersion`           | Pengaturan yang dikelola saja. Versi Claude Code minimum yang diperlukan untuk memulai. Jika versi yang sedang berjalan lebih lama, Claude Code keluar saat startup dan menginstruksikan pengguna untuk memperbarui melalui metode yang disetujui organisasi. `claude update`, `claude install`, dan `claude doctor` terus bekerja di bawah lantai sehingga pengguna dapat pulih. Berbeda dari `minimumVersion`, yang mencegah downgrade tetapi tidak pernah memblokir startup. Versi yang mendahului pengaturan ini mengabaikannya                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | `"2.1.150"`                                                                                                                      |
-| `respectGitignore`                 | **Default**: `true`. Kontrol apakah pemilih file `@` menghormati pola `.gitignore`. Saat `true`, file yang cocok dengan pola `.gitignore` dikecualikan dari saran                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | `false`                                                                                                                          |
-| `respondToBashCommands`            | **Default**: `true`. Apakah Claude merespons setelah perintah shell input-box `!` berjalan. Atur ke `false` untuk menambahkan output perintah ke konteks tanpa respons. Lihat [Shell mode with `!` prefix](/docs/id/interactive-mode#shell-mode-with-prefix). Memerlukan Claude Code v2.1.186 atau lebih baru                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | `false`                                                                                                                          |
-| `showClearContextOnPlanAccept`     | **Default**: `false`. Tampilkan opsi "clear context" pada layar penerimaan rencana. Atur ke `true` untuk mengembalikan opsi                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | `true`                                                                                                                           |
-| `showThinkingSummaries`            | **Default**: `false`. Tampilkan ringkasan [pemikiran yang diperluas](/docs/id/model-config#extended-thinking) dalam sesi interaktif. Saat tidak diatur atau `false`, blok pemikiran diredaksi oleh API dan ditampilkan sebagai stub yang runtuh. Redaksi hanya mengubah apa yang Anda lihat, bukan apa yang dihasilkan model: untuk mengurangi pengeluaran pemikiran, [turunkan anggaran atau nonaktifkan pemikiran](/docs/id/model-config#extended-thinking) sebagai gantinya. Pengaturan ini tidak berpengaruh dalam mode non-interaktif (`-p`), Agent SDK, atau ekstensi IDE seperti VS Code                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | `true`                                                                                                                           |
-| `showTurnDuration`                 | **Default**: `true`. Tampilkan pesan durasi giliran setelah respons, misalnya "Cooked for 1m 6s". Muncul di `/config` sebagai **Show turn duration**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | `false`                                                                                                                          |
-| `skillListingBudgetFraction`       | **Default**: `0.01`. Fraksi jendela konteks model yang dicadangkan untuk [skill listing](/docs/id/skills#skill-descriptions-are-cut-short) yang Claude lihat setiap giliran, jadi default mencadangkan 1%. Saat listing melebihi anggaran, deskripsi untuk skills yang paling jarang digunakan dijatuhkan dan hanya nama mereka yang terdaftar, jadi Claude masih dapat menginvokasinya tetapi tidak dapat melihat apa yang mereka lakukan. Naikkan untuk menjaga lebih banyak deskripsi terlihat dengan biaya lebih banyak konteks per giliran. `/doctor` memperkirakan biaya listing terhadap anggaran                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | `0.02`                                                                                                                           |
-| `skillListingMaxDescChars`         | **Default**: `1536`. Batas karakter per-skill pada teks `description` dan `when_to_use` gabungan dalam [skill listing](/docs/id/skills#skill-descriptions-are-cut-short) yang Claude lihat setiap giliran. Teks yang lebih panjang dari ini dipotong. Naikkan untuk menjaga deskripsi panjang tetap utuh dengan biaya lebih banyak konteks per giliran; turunkan untuk menyesuaikan lebih banyak skills di bawah [`skillListingBudgetFraction`](#available-settings)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | `2048`                                                                                                                           |
-| `skillOverrides`                   | Penggantian visibilitas per-skill yang dikunci berdasarkan nama skill. Nilai adalah `"on"`, `"name-only"`, `"user-invocable-only"`, atau `"off"`. Memungkinkan Anda menyembunyikan atau menciutkan skill tanpa mengedit SKILL.md-nya. Tidak berlaku untuk plugin skills, yang dikelola melalui `/plugin`. Menu `/skills` menulis ini ke `.claude/settings.local.json`. Lihat [Timpa visibilitas skill dari pengaturan](/docs/id/skills#override-skill-visibility-from-settings). Memerlukan Claude Code v2.1.129 atau lebih baru                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | `{"legacy-context": "name-only", "deploy": "off"}`                                                                               |
-| `skipWebFetchPreflight`            | Lewati [pemeriksaan keamanan domain WebFetch](/docs/id/data-usage#webfetch-domain-safety-check) yang mengirim setiap nama host yang diminta ke `api.anthropic.com` sebelum mengambil. Atur ke `true` di lingkungan yang memblokir lalu lintas ke Anthropic, seperti penyebaran Amazon Bedrock, Google Cloud's Agent Platform, atau Microsoft Foundry dengan egress yang ketat. Saat dilewati, WebFetch mencoba URL apa pun tanpa berkonsultasi dengan daftar blokir                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | `true`                                                                                                                           |
-| `spinnerTipsEnabled`               | **Default**: `true`. Tampilkan tips dalam spinner saat Claude bekerja. Atur ke `false` untuk menonaktifkan tips                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | `false`                                                                                                                          |
-| `spinnerTipsOverride`              | Timpa tips spinner dengan string khusus. `tips`: array string tip. `excludeDefault`: jika `true`, hanya tampilkan tips khusus; jika `false` atau tidak ada, tips khusus digabungkan dengan tips bawaan                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | `{ "excludeDefault": true, "tips": ["Use our internal tool X"] }`                                                                |
-| `spinnerVerbs`                     | Sesuaikan kata kerja aksi yang ditampilkan saat giliran sedang berlangsung. Atur `mode` ke `"replace"` untuk menggunakan hanya kata kerja Anda, atau `"append"` untuk menambahkannya ke default                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | `{"mode": "append", "verbs": ["Pondering", "Crafting"]}`                                                                         |
-| `sshConfigs`                       | Koneksi SSH untuk ditampilkan dalam dropdown lingkungan [Desktop](/docs/id/desktop#pre-configure-ssh-connections-for-your-team). Setiap entri memerlukan `id`, `name`, dan `sshHost`; `sshPort`, `sshIdentityFile`, dan `startDirectory` bersifat opsional. Saat diatur dalam pengaturan yang dikelola, koneksi bersifat read-only untuk pengguna. Dibaca dari pengaturan yang dikelola dan pengguna saja                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | `[{"id": "dev-vm", "name": "Dev VM", "sshHost": "user@dev.example.com"}]`                                                        |
-| `statusLine`                       | Konfigurasikan status line khusus untuk menampilkan konteks. Bidang opsional objek `padding`, `refreshInterval`, dan `hideVimModeIndicator` mengontrol spasi, re-run berkala, dan apakah indikator mode vim bawaan di bawah prompt disembunyikan. Lihat [dokumentasi `statusLine`](/docs/id/statusline#manually-configure-a-status-line)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | `{"type": "command", "command": "~/.claude/statusline.sh"}`                                                                      |
-| `strictKnownMarketplaces`          | (Pengaturan yang dikelola saja) Daftar putih sumber marketplace plugin. Tidak terdefinisi = tidak ada pembatasan, array kosong = lockdown. Diterapkan pada penambahan marketplace dan instalasi plugin, pembaruan, penyegaran, dan auto-update, jadi marketplace yang ditambahkan sebelum kebijakan ditetapkan tidak dapat digunakan untuk mengambil plugin. Lihat [Pembatasan marketplace yang dikelola](/docs/id/plugin-marketplaces#managed-marketplace-restrictions)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | `[{ "source": "github", "repo": "acme-corp/plugins" }]`                                                                          |
-| `strictPluginOnlyCustomization`    | (Pengaturan yang dikelola saja) Blokir skills, agents, hooks, dan MCP servers dari sumber pengguna dan proyek, sehingga mereka hanya dapat berasal dari plugins atau pengaturan yang dikelola. `true` mengunci keempat permukaan; array mengunci hanya yang dinamai. Lihat [`strictPluginOnlyCustomization`](#strictpluginonlycustomization)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | `["skills", "hooks"]`                                                                                                            |
-| `syntaxHighlightingDisabled`       | Nonaktifkan syntax highlighting dalam diffs, code blocks, dan file previews                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | `true`                                                                                                                           |
-| `teammateMode`                     | **Default**: `in-process`. Bagaimana [rekan tim agent](/docs/id/agent-teams) ditampilkan: `in-process`, `auto` (panel terpisah saat berjalan di dalam tmux atau iTerm2, dalam proses sebaliknya), `tmux` (panel terpisah menggunakan tmux atau iTerm2, dideteksi dari terminal Anda), atau }`iterm2` (panel terpisah iTerm2 asli melalui CLI `it2`, ditambahkan dalam v2.1.186). Default berubah dari `auto` dalam v2.1.179. `--teammate-mode` menimpa ini untuk satu sesi. Lihat [pilih mode tampilan](/docs/id/agent-teams#choose-a-display-mode)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | `"auto"`                                                                                                                         |
-| `terminalProgressBarEnabled`       | **Default**: `true`. Tampilkan bilah kemajuan terminal di terminal yang didukung: ConEmu, Ghostty 1.2.0+, dan iTerm2 3.6.6+. Muncul di `/config` sebagai **Terminal progress bar**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | `false`                                                                                                                          |
-| `theme`                            | **Default**: `"dark"`. Tema warna untuk antarmuka: `"auto"`, `"dark"`, `"light"`, `"dark-daltonized"`, `"light-daltonized"`, `"dark-ansi"`, `"light-ansi"`, atau referensi tema khusus seperti `"custom:<slug>"` atau `"custom:<plugin-name>:<slug>"`. Lihat [Buat tema khusus](/docs/id/terminal-config#create-a-custom-theme). Muncul di `/config` sebagai **Theme**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | `"dark"`                                                                                                                         |
-| `tui`                              | Renderer UI terminal. Gunakan `"fullscreen"` untuk renderer alt-screen bebas flicker dengan scrollback virtual. Gunakan `"default"` untuk renderer main-screen klasik. Atur melalui `/tui`. Anda juga dapat menetapkan variabel lingkungan [`CLAUDE_CODE_NO_FLICKER`](/docs/id/env-vars)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | `"fullscreen"`                                                                                                                   |
-| `ultracode`                        | Aktifkan [ultracode](/docs/id/workflows#let-claude-decide-with-ultracode) untuk sesi saat ini. Kunci ini tidak dibaca dari `settings.json`. Atur melalui `/effort ultracode`, `--settings`, atau permintaan kontrol Agent SDK. Untuk memulai sesi dengan ultracode sudah aktif, luncurkan dengan `claude --effort ultracode`, yang memerlukan Claude Code v2.1.203 atau lebih baru                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | `true`                                                                                                                           |
-| `useAutoModeDuringPlan`            | **Default**: `true`. Apakah plan mode menggunakan semantik mode otomatis saat mode otomatis tersedia. Tidak dibaca dari pengaturan proyek bersama. Muncul di `/config` sebagai "Use auto mode during plan"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | `false`                                                                                                                          |
-| `verbose`                          | **Default**: `false`. Tampilkan output tool lengkap daripada ringkasan yang dipotong. Muncul di `/config` sebagai **Verbose output**. Flag `--verbose` menimpa ini untuk satu sesi                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | `true`                                                                                                                           |
-| `viewMode`                         | Mode tampilan transkrip default saat startup: `"default"`, `"verbose"`, atau `"focus"`. Menimpa pemilihan `/focus` yang lengket saat diatur. Flag `--verbose` menimpa ini untuk satu sesi                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | `"verbose"`                                                                                                                      |
-| `vimInsertModeRemaps`              | Peta dua-kunci INSERT-mode sequences ke Escape dalam [vim editor mode](/docs/id/interactive-mode#vim-editor-mode). Setiap kunci adalah tepat dua karakter yang dapat dicetak yang diketik secara berurutan, dan `"<Esc>"` adalah satu-satunya target yang didukung; entri lainnya diabaikan. Dibaca dari pengaturan pengguna, flag `--settings`, dan pengaturan yang dikelola saja, jadi pengaturan yang diperiksa repositori tidak dapat mengubah keystroke Anda. Tidak berpengaruh kecuali `editorMode` adalah `"vim"`. Lihat [Remap INSERT-mode key sequences](/docs/id/interactive-mode#remap-insert-mode-key-sequences). Memerlukan Claude Code v2.1.208 atau lebih baru                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | `{"jj": "<Esc>"}`                                                                                                                |
-| `voice`                            | Pengaturan [voice dictation](/docs/id/voice-dictation): `enabled` mengaktifkan dictation, `mode` memilih `"hold"` atau `"tap"`, dan `autoSubmit` mengirim prompt pada pelepasan kunci dalam mode hold. Ditulis secara otomatis saat Anda menjalankan `/voice`. Memerlukan akun Claude.ai                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | `{ "enabled": true, "mode": "tap" }`                                                                                             |
-| `voiceEnabled`                     | Alias warisan untuk `voice.enabled`. Lebih suka objek `voice`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | `true`                                                                                                                           |
-| `wheelScrollAccelerationEnabled`   | **Default**: `true`. Dalam [rendering fullscreen](/docs/id/fullscreen#mouse-wheel-scrolling), percepat kecepatan scroll mouse-wheel selama scroll cepat. Atur ke `false` untuk laju scroll konstan per notch wheel. Memerlukan Claude Code v2.1.174 atau lebih baru                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | `false`                                                                                                                          |
-| `workflowKeywordTriggerEnabled`    | **Default**: `true`. Apakah kata kunci `ultracode` dalam prompt memicu [dynamic workflow](/docs/id/workflows#ask-for-a-workflow-in-your-prompt). Atur ke `false` untuk mengetik kata tanpa memicu satu. Pengaturan usaha ultracode, `/workflows`, dan perintah workflow yang disimpan tidak terpengaruh. Muncul di `/config` sebagai **Ultracode keyword trigger**. Ditambahkan dalam v2.1.157; sebelum v2.1.160 kata kunci pemicu adalah `workflow`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | `false`                                                                                                                          |
-| `wslInheritsWindowsSettings`       | (Pengaturan yang dikelola Windows saja) Saat `true`, Claude Code di WSL membaca pengaturan yang dikelola dari rantai kebijakan Windows selain `/etc/claude-code`, dengan sumber Windows memiliki prioritas. Hanya dihormati saat diatur dalam kunci registry HKLM atau `C:\Program Files\ClaudeCode\managed-settings.json`, keduanya memerlukan admin Windows untuk menulis. Untuk kebijakan HKCU juga berlaku di WSL, flag harus juga diatur di HKCU itu sendiri. Tidak berpengaruh pada Windows asli                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | `true`                                                                                                                           |
+* **Kesalahan Pengaturan**: file pengguna, proyek, atau lokal memiliki JSON tidak valid atau nilai yang ditolak skema. Saat awal sesi interaktif Claude Code menampilkan dialog yang memungkinkan Anda memperbaiki file dengan bantuan Claude, keluar, atau lanjutkan tanpa pengaturan yang rusak.
+* **Peringatan Pengaturan**: hanya entri individual yang gagal, seperti aturan izin yang salah bentuk atau nama acara hook yang tidak dikenal. Claude Code melewati nilai-nilai itu dan menjaga sisa file tetap berlaku.
+* **Pengaturan yang dikelola**: Claude Code terus menegakkan sisa file. [Entri tidak valid dalam pengaturan yang dikelola](/docs/id/managed-settings#invalid-entries-in-managed-settings) mengatakan apa yang dijatuhkan dan kunci mana yang kembali ke nilai yang lebih ketat sampai Anda memperbaikinya. Untuk dokumen pengaturan yang dikelola yang bukan JSON valid, lihat [Dokumen pengaturan yang dikelola tidak dapat diuraikan](/docs/id/errors#managed-settings-document-could-not-be-parsed).
+* **Kesalahan konfigurasi**: `~/.claude.json` tidak dapat diuraikan. Claude Code menyalin file yang rusak ke `~/.claude/backups/.claude.json.corrupted.<timestamp>` dan menanyakan apakah akan keluar dan memperbaikinya dengan tangan atau mengatur ulang ke konfigurasi default; run `-p` mencetak kesalahan dan keluar. Untuk memulihkan status sebelumnya, salin kembali salah satu dari lima file `.claude.json.backup.<timestamp>` terbaru di `~/.claude/backups/`, yang Claude Code simpan sebelum menulis file.
 
-<h3 id="global-config-settings">
-  Pengaturan konfigurasi global
-</h3>
+Setelah Anda lanjutkan, jalankan `/status` untuk melihat file yang terpengaruh dan `claude doctor` untuk detail setiap kesalahan.
 
-Pengaturan ini disimpan dalam `~/.claude.json` daripada `settings.json`. Menambahkannya ke `settings.json` akan memicu kesalahan validasi skema.
+Run `-p` menampilkan tidak ada dialog. Kecuali [dokumen pengaturan yang dikelola tidak dapat diuraikan](/docs/id/errors#managed-settings-document-could-not-be-parsed), Claude Code melewati file atau nilai yang rusak dan lanjutkan dengan sisanya, jadi setelah run `-p` yang mengabaikan pengaturan, jalankan `claude doctor` untuk melihat apa yang dijatuhkannya.
 
-<Note>
-  Versi sebelum v2.1.119 juga menyimpan sejumlah kunci preferensi `/config` di sini daripada dalam `settings.json`, termasuk `theme`, `verbose`, `editorMode`, `autoCompactEnabled`, dan `preferredNotifChannel`.
-</Note>
+<span id="how-scopes-interact" />
 
-| Kunci                        | Deskripsi                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | Contoh     |
-| :--------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------- |
-| `autoConnectIde`             | **Default**: `false`. Secara otomatis terhubung ke IDE yang sedang berjalan saat Claude Code dimulai dari terminal eksternal. Muncul di `/config` sebagai **Auto-connect to IDE (external terminal)** saat berjalan di luar terminal VS Code atau JetBrains. Variabel lingkungan [`CLAUDE_CODE_AUTO_CONNECT_IDE`](/docs/id/env-vars) menimpa ini saat diatur                                                                                                                                                                                                                                                                                                                                                | `true`     |
-| `autoInstallIdeExtension`    | **Default**: `true`. Secara otomatis instal ekstensi IDE Claude Code saat berjalan dari terminal VS Code. Muncul di `/config` sebagai **Auto-install IDE extension** saat berjalan di dalam terminal VS Code atau JetBrains. Anda juga dapat menetapkan variabel lingkungan [`CLAUDE_CODE_IDE_SKIP_AUTO_INSTALL`](/docs/id/env-vars) ke `1`                                                                                                                                                                                                                                                                                                                                                                 | `false`    |
-| `externalEditorContext`      | **Default**: `false`. Tambahkan respons sebelumnya Claude sebagai konteks berkomentar `#` saat Anda membuka editor eksternal dengan `Ctrl+G`. Muncul di `/config` sebagai **Show last response in external editor**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | `true`     |
-| `permissionExplainerEnabled` | **Default**: `true`. Tampilkan penjelasan yang dihasilkan model dari [perintah](/docs/id/permissions#permission-system) saat Anda menekan `Ctrl+E` pada prompt izin Bash atau PowerShell. Atur ke `false` untuk mematikan pintasan                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | `false`    |
-| `teammateDefaultModel`       | Model default untuk [agent team](/docs/id/agent-teams) teammates saat prompt spawn tidak menentukan satu. Atur ke alias model seperti `"sonnet"`, atau `null` untuk mewarisi pemilihan `/model` saat ini lead. Muncul di `/config` sebagai **Default teammate model**                                                                                                                                                                                                                                                                                                                                                                                                                                       | `"sonnet"` |
-| `workflowSizeGuideline`      | **Default**: `unrestricted`, yang tidak mengirim panduan. Menetapkan [jumlah agent yang Claude targetkan](/docs/id/workflows#set-a-size-guideline) dalam dynamic workflows yang ditulis. Claude Code mengirim nilai ke Claude sebagai saran, bukan batas yang diterapkan. Menerima `unrestricted`, `small`, `medium`, atau `large`. Muncul di `/config` sebagai **Dynamic workflow size**. Anda juga dapat menetapkannya langsung dengan `/config workflowSizeGuideline=small`. Memerlukan Claude Code v2.1.202 atau lebih baru. Panduan agent count juga menggantikan ambang default untuk [peringatan `Large workflow`](/docs/id/workflows#cost); perilaku itu memerlukan Claude Code v2.1.203 atau lebih baru | `"small"`  |
+<span id="key-points-about-the-configuration-system" />
 
-<h3 id="worktree-settings">
-  Pengaturan worktree
-</h3>
+<span id="which-value-claude-code-uses" />
 
-Konfigurasikan bagaimana `--worktree` membuat dan mengelola git worktrees.
+<span id="which-value-wins" />
 
-| Kunci                         | Deskripsi                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Contoh                                |
-| :---------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------ |
-| `worktree.baseRef`            | Ref mana yang baru worktrees cabang dari. `"fresh"` (default) cabang dari `origin/<default-branch>` untuk pohon bersih yang cocok dengan remote. `"head"` cabang dari `HEAD` lokal Anda saat ini, jadi komit yang tidak didorong dan status cabang fitur ada di worktree. Di dalam linked worktree, `"head"` diselesaikan ke `HEAD` worktree itu, bukan checkout utama. Berlaku untuk `--worktree`, tool `EnterWorktree`, dan isolasi subagent                                                                                                                 | `"head"`                              |
-| `worktree.symlinkDirectories` | Direktori untuk symlink dari repositori utama ke setiap worktree untuk menghindari duplikasi direktori besar di disk. Tidak ada direktori yang disymlink secara default                                                                                                                                                                                                                                                                                                                                                                                        | `["node_modules", ".cache"]`          |
-| `worktree.sparsePaths`        | Direktori untuk diperiksa di setiap worktree melalui git sparse-checkout. Hanya jalur yang terdaftar plus file tingkat root yang ditulis ke disk, yang lebih cepat di monorepo besar. Saat sparse worktree ada, git mengaktifkan `extensions.worktreeConfig` dalam `.git/config` bersama repositori; lihat [Check out only the directories you need](/docs/id/large-codebases#check-out-only-the-directories-you-need)                                                                                                                                              | `["packages/my-app", "shared/utils"]` |
-| `worktree.bgIsolation`        | Mode isolasi untuk [background sessions](/docs/id/agent-view#how-file-edits-are-isolated). `"worktree"` (default) memblokir `Edit`/`Write` dalam checkout utama sampai `EnterWorktree` dipanggil. Di luar repositori git, hook [`WorktreeCreate`](/docs/id/worktrees#non-git-version-control) yang gagal melepaskan blok sehingga sesi dapat mengedit direktori kerja di tempat; memerlukan Claude Code v2.1.203 atau lebih baru. `"none"` memungkinkan pekerjaan latar belakang mengedit salinan kerja secara langsung. Memerlukan Claude Code v2.1.143 atau lebih baru | `"none"`                              |
-
-Untuk menyalin file yang diabaikan git seperti `.env` ke worktrees baru, gunakan file [`.worktreeinclude`](/docs/id/worktrees#copy-gitignored-files-into-worktrees) di akar proyek Anda daripada pengaturan.
-
-<h3 id="permission-settings">
-  Pengaturan izin
-</h3>
-
-| Kunci                               | Deskripsi                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | Contoh                                                                 |
-| :---------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------- |
-| `allow`                             | Array aturan izin untuk memungkinkan penggunaan tool. Glob nama tool didukung hanya dalam posisi tool setelah prefiks `mcp__<server>__` literal, seperti `mcp__github__get_*`; segmen server harus bebas glob. Lihat [Sintaks aturan izin](#permission-rule-syntax) di bawah untuk detail pencocokan pola                                                                                                                                                                                                                                                                                                                                                                                                                                       | `[ "Bash(git diff *)" ]`                                               |
-| `ask`                               | Array aturan izin untuk meminta konfirmasi saat penggunaan tool. Lihat [Sintaks aturan izin](#permission-rule-syntax) di bawah                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | `[ "Bash(git push *)" ]`                                               |
-| `deny`                              | Array aturan izin untuk menolak penggunaan tool. Gunakan ini untuk mengecualikan file sensitif dari akses Claude Code. Nama tool menerima pola glob: `"*"` menolak setiap tool dan `"mcp__*"` menolak semua tools MCP. Lihat [Sintaks aturan izin](#permission-rule-syntax) dan [Batasan izin Bash](/docs/id/permissions#tool-specific-permission-rules)                                                                                                                                                                                                                                                                                                                                                                                             | `[ "WebFetch", "Bash(curl *)", "Read(./.env)", "Read(./secrets/**)" ]` |
-| `additionalDirectories`             | [Direktori kerja](/docs/id/permissions#working-directories) tambahan untuk akses file. Sebagian besar konfigurasi `.claude/` [tidak ditemukan](/docs/id/permissions#additional-directories-grant-file-access-not-configuration) dari direktori ini                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | `[ "../docs/" ]`                                                       |
-| `defaultMode`                       | Mode [izin](/docs/id/permission-modes) default saat membuka Claude Code. Nilai yang valid: `default`, `acceptEdits`, `plan`, `auto`, `dontAsk`, `bypassPermissions`, dan {{/* min-version: 2.1.200 */}}`manual` sebagai alias untuk `default`, mode yang diberi label Manual di CLI dan ekstensi VS Code dan JetBrains. Alias `manual` memerlukan Claude Code v2.1.200 atau lebih baru. {{/* min-version: 2.1.142 */}}`auto` diabaikan saat diatur dalam pengaturan proyek atau lokal, jadi repositori tidak dapat memberikan dirinya sendiri mode otomatis; atur di `~/.claude/settings.json` sebagai gantinya. Sebelum v2.1.142, pengaturan proyek dapat menetapkan `auto`. Flag CLI `--permission-mode` menimpa pengaturan ini untuk sesi tunggal | `"acceptEdits"`                                                        |
-| `disableBypassPermissionsMode`      | Atur ke `"disable"` untuk mencegah mode `bypassPermissions` diaktifkan. Ini menonaktifkan flag baris perintah `--dangerously-skip-permissions`. Paling berguna dalam [pengaturan yang dikelola](/docs/id/permissions#managed-settings) untuk menegakkan kebijakan organisasi, tetapi berfungsi dari cakupan apa pun                                                                                                                                                                                                                                                                                                                                                                                                                                  | `"disable"`                                                            |
-| `skipDangerousModePermissionPrompt` | Lewati prompt konfirmasi yang ditampilkan sebelum memasuki mode bypass permissions melalui `--dangerously-skip-permissions` atau `defaultMode: "bypassPermissions"`. Diabaikan saat diatur dalam pengaturan proyek (`.claude/settings.json`) untuk mencegah repositori yang tidak terpercaya dari auto-bypass prompt                                                                                                                                                                                                                                                                                                                                                                                                                            | `true`                                                                 |
-
-<h3 id="permission-rule-syntax">
-  Sintaks aturan izin
-</h3>
-
-Aturan izin mengikuti format `Tool` atau `Tool(specifier)`. Aturan dievaluasi secara berurutan: aturan deny terlebih dahulu, kemudian ask, kemudian allow. Aturan pertama yang cocok menentukan hasil terlepas dari spesifisitas aturan. Lihat [urutan evaluasi aturan izin](/docs/id/permissions#manage-permissions) untuk detail.
-
-Contoh cepat:
-
-| Aturan                         | Efek                                                |
-| :----------------------------- | :-------------------------------------------------- |
-| `Bash`                         | Cocok dengan semua perintah Bash                    |
-| `Bash(npm run *)`              | Cocok dengan perintah yang dimulai dengan `npm run` |
-| `Read(./.env)`                 | Cocok dengan membaca file `.env`                    |
-| `WebFetch(domain:example.com)` | Cocok dengan permintaan fetch ke example.com        |
-
-Untuk referensi sintaks aturan lengkap, termasuk perilaku wildcard, pola spesifik tool untuk Read, Edit, WebFetch, MCP, dan aturan Agent, dan batasan keamanan pola Bash, lihat [Sintaks aturan izin](/docs/id/permissions#permission-rule-syntax).
-
-<h3 id="sandbox-settings">
-  Pengaturan sandbox
-</h3>
-
-Konfigurasikan perilaku sandboxing lanjutan. Sandboxing mengisolasi perintah bash dari sistem file dan jaringan Anda. Lihat [Sandboxing](/docs/id/sandboxing) untuk detail.
-
-| Kunci                                  | Deskripsi                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | Contoh                                               |
-| :------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------- |
-| `enabled`                              | Aktifkan bash sandboxing (macOS, Linux, dan WSL2). Default: false                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | `true`                                               |
-| `failIfUnavailable`                    | Keluar dengan kesalahan saat startup jika `sandbox.enabled` adalah true tetapi sandbox tidak dapat dimulai (dependensi yang hilang atau platform yang tidak didukung). Saat false (default), peringatan ditampilkan dan perintah berjalan tanpa sandbox. Dimaksudkan untuk penyebaran pengaturan yang dikelola yang memerlukan sandboxing sebagai gerbang keras                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | `true`                                               |
-| `autoAllowBashIfSandboxed`             | Secara otomatis menyetujui perintah bash saat sandboxed. Default: true                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | `true`                                               |
-| `excludedCommands`                     | Perintah yang harus dijalankan di luar sandbox                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | `["docker *"]`                                       |
-| `allowUnsandboxedCommands`             | Izinkan perintah dijalankan di luar sandbox melalui parameter `dangerouslyDisableSandbox`. Saat diatur ke `false`, pintu keluar `dangerouslyDisableSandbox` sepenuhnya dinonaktifkan dan semua perintah harus dijalankan sandboxed (atau berada dalam `excludedCommands`). Berguna untuk kebijakan perusahaan yang memerlukan sandboxing ketat. Default: true                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | `false`                                              |
-| `filesystem.allowWrite`                | Jalur tambahan di mana perintah sandboxed dapat menulis. Array digabungkan di seluruh semua cakupan pengaturan: jalur pengguna, proyek, dan yang dikelola digabungkan, bukan diganti. Juga digabungkan dengan jalur dari aturan izin `Edit(...)` allow. Lihat [prefiks jalur sandbox](#sandbox-path-prefixes) di bawah.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | `["/tmp/build", "~/.kube"]`                          |
-| `filesystem.denyWrite`                 | Jalur di mana perintah sandboxed tidak dapat menulis. Array digabungkan di seluruh semua cakupan pengaturan. Juga digabungkan dengan jalur dari aturan izin `Edit(...)` deny.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | `["/etc", "/usr/local/bin"]`                         |
-| `filesystem.denyRead`                  | Jalur di mana perintah sandboxed tidak dapat membaca. Array digabungkan di seluruh semua cakupan pengaturan. Juga digabungkan dengan jalur dari aturan izin `Read(...)` deny.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | `["~/.aws/credentials"]`                             |
-| `filesystem.allowRead`                 | Jalur untuk mengizinkan kembali pembacaan dalam region `denyRead`. Entri `allowRead` membuka kembali pembacaan di dalam region `denyRead` yang lebih luas, dan jalur tepat dalam `denyRead` tetap diblokir di dalam `allowRead` yang lebih luas; lihat [tabel overlap](/docs/id/sandboxing#configure-sandboxing) untuk contoh. Array digabungkan di seluruh semua cakupan pengaturan. Gunakan ini untuk membuat pola akses baca khusus workspace.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | `["."]`                                              |
-| `filesystem.allowManagedReadPathsOnly` | (Pengaturan yang dikelola saja) Hanya jalur `filesystem.allowRead` dari pengaturan yang dikelola yang dihormati. `denyRead` masih digabungkan dari semua sumber. Default: false                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | `true`                                               |
-| `credentials.files`                    | File kredensial atau direktori yang perintah sandboxed tidak dapat membaca. Menerapkan blokir baca yang sama seperti `filesystem.denyRead`; kunci terpisah menjaga jalur kredensial dikelompokkan dengan `credentials.envVars` dan terpisah dari aturan sistem file umum. Setiap entri adalah `{ "path": "...", "mode": "deny" }`, dan `deny` adalah satu-satunya mode yang didukung untuk file. Jalur menggunakan [prefiks](#sandbox-path-prefixes) yang sama seperti pengaturan `filesystem.*`. Array digabungkan di seluruh semua cakupan pengaturan. Memerlukan Claude Code v2.1.187 atau lebih baru.                                                                                                                                                                                                                                                                                                                                                    | `[{ "path": "~/.aws/credentials", "mode": "deny" }]` |
-| `credentials.envVars`                  | Variabel lingkungan untuk [melindungi dari perintah sandboxed](/docs/id/sandboxing#protect-credentials). Setiap entri memiliki `name` dan `mode`; nama harus dimulai dengan huruf atau garis bawah dan hanya berisi huruf, digit, dan garis bawah. `deny` menghapus variabel dari lingkungan perintah sandboxed. Memerlukan Claude Code v2.1.187 atau lebih baru. {{/* min-version: 2.1.199 */}}`mask` mengganti variabel dengan nilai sentinel per-sesi di dalam sandbox sementara proxy sandbox mengganti nilai nyata pada permintaan keluar ke `injectHosts` entri itu; memerlukan `network.tlsTerminate` dan Claude Code v2.1.199 atau lebih baru. Entri `mask` hanya dihormati dari pengaturan pengguna, yang dikelola, atau CLI `--settings`, bukan dari `.claude/settings.json` atau `.claude/settings.local.json`. Array digabungkan di seluruh semua cakupan pengaturan, dan `deny` memiliki prioritas saat variabel yang sama muncul dengan kedua mode. | `[{ "name": "GITHUB_TOKEN", "mode": "deny" }]`       |
-| `credentials.envVars[].injectHosts`    | Host di mana proxy sandbox mengganti nilai nyata dari entri `mask`. Setiap host juga harus dicakup oleh `network.allowedDomains`, baik tepat atau dengan wildcard. Saat tidak diatur, proxy mengganti nilai pada permintaan ke setiap host dalam `network.allowedDomains`. Diterima tetapi diabaikan saat `mode` adalah `deny`. Memerlukan Claude Code v2.1.199 atau lebih baru. {{/* min-version: 2.1.199 */}}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | `["api.github.com"]`                                 |
-| `credentials.allowPlaintextInject`     | Izinkan substitusi `mask` pada permintaan HTTP biasa serta HTTPS yang dihentikan TLS. Pada HTTP biasa identitas upstream tidak diverifikasi dan kredensial berjalan dalam cleartext, jadi biarkan ini mati di luar jaringan uji terpercaya. Hanya dihormati dari pengaturan pengguna, yang dikelola, atau CLI `--settings`, bukan dari `.claude/settings.json` atau `.claude/settings.local.json`. Default: false. Memerlukan Claude Code v2.1.199 atau lebih baru. {{/* min-version: 2.1.199 */}}                                                                                                                                                                                                                                                                                                                                                                                                                                                           | `true`                                               |
-| `network.allowUnixSockets`             | (macOS saja) Jalur soket Unix yang dapat diakses dalam sandbox. Diabaikan di Linux dan WSL2, di mana filter seccomp tidak dapat memeriksa jalur soket; gunakan `allowAllUnixSockets` sebagai gantinya.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | `["~/.ssh/agent-socket"]`                            |
-| `network.allowAllUnixSockets`          | Izinkan semua koneksi soket Unix dalam sandbox. Di Linux dan WSL2 ini adalah satu-satunya cara untuk mengizinkan soket Unix, karena melewati filter seccomp yang sebaliknya memblokir panggilan `socket(AF_UNIX, ...)`. Default: false                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | `true`                                               |
-| `network.allowLocalBinding`            | Izinkan pengikatan ke port localhost (macOS saja). Default: false                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | `true`                                               |
-| `network.allowMachLookup`              | Nama layanan XPC/Mach tambahan yang dapat dicari sandbox (macOS saja). Mendukung `*` tunggal di akhir untuk pencocokan prefiks. Diperlukan untuk tools yang berkomunikasi melalui XPC seperti iOS Simulator atau Playwright.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | `["com.apple.coresimulator.*"]`                      |
-| `network.allowedDomains`               | Array domain untuk memungkinkan lalu lintas jaringan keluar. Mendukung wildcard (misalnya, `*.example.com`).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | `["github.com", "*.npmjs.org"]`                      |
-| `network.deniedDomains`                | Array domain untuk memblokir lalu lintas jaringan keluar. Mendukung sintaks wildcard yang sama seperti `allowedDomains`. Memiliki prioritas atas `allowedDomains` saat keduanya cocok. Digabungkan dari semua sumber pengaturan terlepas dari `allowManagedDomainsOnly`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | `["sensitive.cloud.example.com"]`                    |
-| `network.allowManagedDomainsOnly`      | (Pengaturan yang dikelola saja) Hanya `allowedDomains` dan aturan allow `WebFetch(domain:...)` dari pengaturan yang dikelola yang dihormati. Domain dari pengaturan pengguna, proyek, dan lokal diabaikan. Domain yang tidak diizinkan diblokir secara otomatis tanpa meminta pengguna. Domain yang ditolak masih dihormati dari semua sumber. Default: false                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | `true`                                               |
-| `network.httpProxyPort`                | Port proxy HTTP yang digunakan jika Anda ingin membawa proxy Anda sendiri. Jika tidak ditentukan, Claude akan menjalankan proxy-nya sendiri.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | `8080`                                               |
-| `network.socksProxyPort`               | Port proxy SOCKS5 yang digunakan jika Anda ingin membawa proxy Anda sendiri. Jika tidak ditentukan, Claude akan menjalankan proxy-nya sendiri.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | `8081`                                               |
-| `network.tlsTerminate`                 | Eksperimental. Hentikan TLS di dalam proxy sandbox sehingga dapat membaca konten permintaan HTTPS. Diperlukan untuk substitusi kredensial `mask` [](/docs/id/sandboxing#protect-credentials). Atur `{}` untuk menghasilkan otoritas sertifikat ephemeral untuk sesi, atau atur `caCertPath` dan `caKeyPath` untuk menggunakan milik Anda sendiri. Hanya dihormati dari pengaturan pengguna, yang dikelola, atau CLI `--settings`, bukan dari `.claude/settings.json` atau `.claude/settings.local.json`. Memerlukan Claude Code v2.1.199 atau lebih baru. {{/* min-version: 2.1.199 */}}                                                                                                                                                                                                                                                                                                                                                                          | `{}`                                                 |
-| `enableWeakerNestedSandbox`            | Aktifkan sandbox yang lebih lemah untuk lingkungan Docker tanpa hak istimewa (Linux dan WSL2 saja). **Mengurangi keamanan.** Default: false                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | `true`                                               |
-| `enableWeakerNetworkIsolation`         | (macOS saja) Izinkan akses ke layanan kepercayaan TLS sistem (`com.apple.trustd.agent`) dalam sandbox. Diperlukan untuk tools berbasis Go seperti `gh`, `gcloud`, dan `terraform` untuk memverifikasi sertifikat TLS saat menggunakan `httpProxyPort` dengan proxy MITM dan CA khusus. **Mengurangi keamanan** dengan membuka jalur eksfiltrasi data potensial. Default: false                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | `true`                                               |
-| `allowAppleEvents`                     | (macOS saja) Izinkan perintah sandboxed mengirim Apple Events. Diperlukan untuk `open`, `osascript`, dan tools yang membuka URL di browser, yang sebaliknya gagal dengan error `-600`. **Menghapus isolasi eksekusi kode.** Perintah sandboxed dapat meluncurkan aplikasi lain tanpa sandbox dengan tidak ada prompt pengguna; mereka juga dapat mengirim perintah AppleScript ke aplikasi yang sedang berjalan seperti Terminal, tunduk pada prompt persetujuan otomasi per-app macOS (TCC). Hanya dihormati dari pengaturan pengguna, yang dikelola, atau CLI, bukan dari pengaturan proyek. Default: false                                                                                                                                                                                                                                                                                                                                                | `true`                                               |
-| `bwrapPath`                            | (Pengaturan yang dikelola saja, Linux/WSL2) Jalur absolut ke binary bubblewrap (`bwrap`). Menimpa deteksi otomatis melalui `PATH`. Hanya dihormati dari [pengaturan yang dikelola](/docs/id/settings#settings-precedence), bukan dari pengaturan pengguna atau proyek. Berguna saat `bwrap` diinstal di lokasi non-standar di lingkungan yang dikelola.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | `/opt/admin/bwrap`                                   |
-| `socatPath`                            | (Pengaturan yang dikelola saja, Linux/WSL2) Jalur absolut ke binary `socat` yang digunakan untuk proxy jaringan sandbox. Menimpa deteksi otomatis melalui `PATH`. Hanya dihormati dari pengaturan yang dikelola.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | `/opt/admin/socat`                                   |
-
-<h4 id="sandbox-path-prefixes">
-  Prefiks jalur sandbox
-</h4>
-
-Jalur dalam `filesystem.allowWrite`, `filesystem.denyWrite`, `filesystem.denyRead`, `filesystem.allowRead`, dan `credentials.files` mendukung prefiks ini:
-
-| Prefiks                     | Arti                                                                                                | Contoh                                                                           |
-| :-------------------------- | :-------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------- |
-| `/`                         | Jalur absolut dari akar sistem file                                                                 | `/tmp/build` tetap `/tmp/build`                                                  |
-| `~/`                        | Relatif terhadap direktori home                                                                     | `~/.kube` menjadi `$HOME/.kube`                                                  |
-| `./` atau tidak ada prefiks | Relatif terhadap akar proyek untuk pengaturan proyek, atau ke `~/.claude` untuk pengaturan pengguna | `./output` dalam `.claude/settings.json` diselesaikan ke `<project-root>/output` |
-
-Prefiks `//path` yang lebih lama untuk jalur absolut masih berfungsi. Jika Anda sebelumnya menggunakan `/path` tunggal mengharapkan resolusi relatif proyek, beralih ke `./path`. Sintaks ini berbeda dari [aturan izin Read dan Edit](/docs/id/permissions#read-and-edit), yang menggunakan `//path` untuk absolut dan `/path` untuk relatif proyek. Jalur sistem file sandbox menggunakan konvensi standar: `/tmp/build` adalah jalur absolut.
-
-**Contoh konfigurasi:**
-
-```json theme={null}
-{
-  "sandbox": {
-    "enabled": true,
-    "autoAllowBashIfSandboxed": true,
-    "excludedCommands": ["docker *"],
-    "filesystem": {
-      "allowWrite": ["/tmp/build", "~/.kube"],
-      "denyRead": ["~/.aws/credentials"]
-    },
-    "network": {
-      "allowedDomains": ["github.com", "*.npmjs.org", "registry.yarnpkg.com"],
-      "deniedDomains": ["uploads.github.com"],
-      "allowUnixSockets": [
-        "/var/run/docker.sock"
-      ],
-      "allowLocalBinding": true
-    }
-  }
-}
-```
-
-**Pembatasan sistem file dan jaringan** dapat dikonfigurasi dalam dua cara yang digabungkan bersama:
-
-* **Pengaturan `sandbox.filesystem`** (ditampilkan di atas): Kontrol jalur pada batas sandbox tingkat OS. Pembatasan ini berlaku untuk semua perintah subprocess (misalnya, `kubectl`, `terraform`, `npm`), bukan hanya tools file Claude.
-* **Aturan izin**: Gunakan aturan allow/deny `Edit` untuk mengontrol akses tools file Claude, aturan deny `Read` untuk memblokir pembacaan, dan aturan allow/deny `WebFetch` untuk mengontrol domain jaringan. Jalur dari aturan ini juga digabungkan ke dalam konfigurasi sandbox.
-
-<h3 id="attribution-settings">
-  Pengaturan atribusi
-</h3>
-
-Claude Code menambahkan atribusi ke komit git dan pull request. Ini dikonfigurasi secara terpisah:
-
-* Komit menggunakan [git trailers](https://git-scm.com/docs/git-interpret-trailers) (seperti `Co-Authored-By`) secara default, yang dapat disesuaikan atau dinonaktifkan
-* Deskripsi pull request adalah teks biasa
-
-| Kunci        | Deskripsi                                                                                                                                                                                                                                         |
-| :----------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `commit`     | Atribusi untuk komit git, termasuk trailer apa pun. String kosong menyembunyikan atribusi komit                                                                                                                                                   |
-| `pr`         | Atribusi untuk deskripsi pull request. String kosong menyembunyikan atribusi pull request                                                                                                                                                         |
-| `sessionUrl` | Apakah akan menambahkan tautan sesi claude.ai sebagai trailer `Claude-Session` pada komit dan tautan dalam deskripsi pull request saat berjalan dari sesi web atau Remote Control. Defaults ke `true`. Atur ke `false` untuk menghilangkan tautan |
-
-**Atribusi komit default:**
-
-```text theme={null}
-Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
-```
-
-Nama model dalam trailer mencerminkan model aktif untuk sesi.
-
-**Atribusi pull request default:**
-
-```text theme={null}
-🤖 Generated with [Claude Code](https://claude.com/claude-code)
-```
-
-**Contoh:**
-
-```json theme={null}
-{
-  "attribution": {
-    "commit": "Generated with AI\n\nCo-Authored-By: AI <ai@example.com>",
-    "pr": ""
-  }
-}
-```
-
-<Note>
-  Pengaturan `attribution` memiliki prioritas atas pengaturan `includeCoAuthoredBy` yang usang. Untuk menyembunyikan semua atribusi, atur `commit` dan `pr` ke string kosong dan `sessionUrl` ke `false`.
-</Note>
-
-<h3 id="file-suggestion-settings">
-  Pengaturan saran file
-</h3>
-
-Konfigurasikan perintah khusus untuk pelengkapan otomatis jalur file `@`. Saran file bawaan menggunakan traversal sistem file cepat, tetapi monorepo besar mungkin mendapat manfaat dari pengindeksan spesifik proyek seperti indeks file yang telah dibangun sebelumnya atau tooling khusus.
-
-```json theme={null}
-{
-  "fileSuggestion": {
-    "type": "command",
-    "command": "~/.claude/file-suggestion.sh"
-  }
-}
-```
-
-Perintah berjalan dengan variabel lingkungan yang sama seperti [hooks](/docs/id/hooks), termasuk `CLAUDE_PROJECT_DIR`. Ini menerima JSON melalui stdin dengan bidang `query`:
-
-```json theme={null}
-{"query": "src/comp"}
-```
-
-Keluarkan jalur file yang dipisahkan baris baru ke stdout (saat ini dibatasi hingga 15):
-
-```text theme={null}
-src/components/Button.tsx
-src/components/Modal.tsx
-src/components/Form.tsx
-```
-
-**Contoh:**
-
-```bash theme={null}
-#!/bin/bash
-query=$(cat | jq -r '.query')
-# Ganti your-repo-file-index dengan perintah pencarian file Anda sendiri
-your-repo-file-index --query "$query" | head -20
-```
-
-<h3 id="footer-link-badges">
-  Lencana tautan footer
-</h3>
-
-Pengaturan `footerLinksRegexes` merender lencana yang dapat diklik tambahan di footer di bawah kotak input. Gunakan untuk mengubah ID yang dicetak oleh CLI proyek, seperti tools review dan issue trackers, menjadi tautan sesi.
-
-Regex `pattern` setiap entri dicocokkan dengan output giliran: hasil tool, termasuk konten file dan halaman yang diambil, dan respons Claude sendiri. Placeholder `{name}` dalam `url` dan `label` diisi dari grup penangkapan bernama dalam pola.
-
-Contoh berikut merender lencana setiap kali kunci masalah seperti `PROJ-1234` muncul dalam output giliran. Grup bernama `(?<key>...)` menangkap kunci, dan `{key}` menggantikannya ke dalam URL dan label:
-
-```json ~/.claude/settings.json theme={null}
-{
-  "footerLinksRegexes": [
-    {
-      "type": "regex",
-      "pattern": "\\b(?<key>PROJ-\\d+)\\b",
-      "url": "https://issues.example.com/browse/{key}",
-      "label": "{key}"
-    }
-  ]
-}
-```
-
-Dengan ini dikonfigurasi, saat `PROJ-1234` muncul dalam hasil tool atau dalam balasan Claude, chip `PROJ-1234` muncul di footer menghubungkan ke `https://issues.example.com/browse/PROJ-1234`.
-
-Batasan berikut berlaku untuk setiap entri:
-
-| Batasan            | Perilaku                                                                                                                                                                                                      |
-| :----------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Asal URL           | Nilai yang ditangkap adalah URL-encoded dan URL yang dibangun harus berbagi asal literal template. Penangkapan dapat mengisi segmen jalur atau nilai kueri tetapi tidak dapat mengubah tempat tautan menunjuk |
-| Panjang URL        | URL yang dibangun lebih panjang dari 2048 karakter dijatuhkan                                                                                                                                                 |
-| Skema URL          | Harus `https`, `http`, atau skema deep-link editor atau workspace yang diakui: `vscode`, `vscode-insiders`, `cursor`, `windsurf`, `zed`, `jetbrains`, `idea`, `slack`, `linear`, `notion`, `figma`            |
-| Label              | Default ke teks yang cocok dan dipotong ke 28 kolom tampilan                                                                                                                                                  |
-| Jumlah lencana     | Paling banyak 5 lencana render. Yang tertua digantikan oleh kecocokan yang lebih baru dan `/clear` menghapusnya                                                                                               |
-| Cakupan pengaturan | Dibaca dari pengaturan pengguna, flag `--settings`, dan pengaturan yang dikelola saja. Diabaikan dalam `.claude/settings.json` proyek dan `.claude/settings.local.json` lokal                                 |
-
-Saat giliran selesai, Claude Code mencocokkan regex `pattern` setiap entri dengan output giliran pada thread utama, jadi regex lambat memblokir UI sampai selesai. Quantifier bersarang seperti `(a+)+$` dapat memakan waktu secara eksponensial terhadap input tertentu dan membekukan sesi, jadi jaga setiap `pattern` linear dan hindari bersarang `+` atau `*`.
-
-Lencana footer render bersama [status line khusus](/docs/id/statusline) saat satu dikonfigurasi; tidak satupun menggantikan yang lain. Gunakan status line untuk baris yang didorong skrip yang menghitung kontennya sendiri dari data sesi, dan lencana footer untuk mengubah ID dari percakapan menjadi tautan tanpa skrip.
-
-<h3 id="hook-configuration">
-  Konfigurasi hook
-</h3>
-
-Pengaturan ini mengontrol hook mana yang diizinkan untuk dijalankan dan apa yang dapat diakses oleh HTTP hooks. Pengaturan `allowManagedHooksOnly` hanya dapat dikonfigurasi dalam [pengaturan yang dikelola](#settings-files). Daftar putih URL dan env var dapat diatur di tingkat pengaturan apa pun dan digabungkan di seluruh sumber.
-
-**Perilaku saat `allowManagedHooksOnly` adalah `true`:**
-
-* Hooks yang dikelola dan hooks SDK dimuat
-* Hooks dari plugins yang dipaksa diaktifkan dalam pengaturan yang dikelola `enabledPlugins` dimuat. Ini memungkinkan administrator mendistribusikan hooks yang disaring melalui marketplace organisasi sambil memblokir segalanya. Kepercayaan diberikan oleh ID `plugin@marketplace` penuh, jadi plugin dengan nama yang sama dari marketplace berbeda tetap diblokir
-* Hooks pengguna, hooks proyek, dan semua plugin hooks lainnya diblokir
-
-**Batasi URL HTTP hook:**
-
-Batasi URL mana yang dapat ditargetkan oleh HTTP hooks. Mendukung `*` sebagai wildcard untuk pencocokan. Saat array didefinisikan, HTTP hooks yang menargetkan URL yang tidak cocok diblokir secara diam-diam. Pencocokan nama host tidak peka huruf besar-kecil dan mengabaikan titik FQDN di akhir, mencocokkan semantik DNS.
-
-```json theme={null}
-{
-  "allowedHttpHookUrls": ["https://hooks.example.com/*", "http://localhost:*"]
-}
-```
-
-**Batasi variabel lingkungan HTTP hook:**
-
-Batasi nama variabel lingkungan mana yang dapat diinterpolasi oleh HTTP hooks ke dalam nilai header. `allowedEnvVars` efektif setiap hook adalah persimpangan dari daftar sendiri dan pengaturan ini.
-
-```json theme={null}
-{
-  "httpHookAllowedEnvVars": ["MY_TOKEN", "HOOK_SECRET"]
-}
-```
-
-<h3 id="compute-managed-settings-with-a-policy-helper">
-  Hitung pengaturan yang dikelola dengan policy helper
-</h3>
-
-Pengaturan `policyHelper` menunjuk ke executable yang menghitung pengaturan yang dikelola saat startup, sehingga admin dapat menurunkan kebijakan dari postur perangkat, identitas, atau layanan jarak jauh daripada file statis. Konfigurasikan dari MDM atau file `managed-settings.json` sistem. Claude Code mengabaikan `policyHelper` saat muncul dalam cakupan apa pun, termasuk pengaturan pengguna, pengaturan proyek, hive registry HKCU, dan [pengaturan yang dikelola server](/docs/id/server-managed-settings).
-
-Pengaturan menerima kunci ini:
-
-| Kunci               | Tipe   | Deskripsi                                                                                                                         |
-| ------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------- |
-| `path`              | string | Jalur absolut ke executable helper                                                                                                |
-| `timeoutMs`         | number | Berapa lama menunggu helper sebelum memperlakukan run sebagai gagal                                                               |
-| `refreshIntervalMs` | number | Seberapa sering menjalankan kembali helper di latar belakang. Atur ke `0` untuk menonaktifkan refresh, atau ke setidaknya `60000` |
-
-Helper menulis amplop JSON ke stdout. Letakkan pengaturan di bawah kunci `managedSettings` daripada di tingkat atas, karena objek pengaturan telanjang diuraikan dengan `managedSettings` tidak terdefinisi dan menerapkan tidak ada:
-
-```json theme={null}
-{
-  "managedSettings": {
-    "permissions": { "deny": ["Read(//etc/secrets/**)"] }
-  },
-  "claudeMd": "# Organization context\n...",
-  "appendSystemPrompt": "Always cite the internal style guide."
-}
-```
-
-Saat helper memancarkan `managedSettings`, objek itu menggantikan pengaturan yang dikelola berbasis file untuk run. Saat helper keluar non-zero saat startup, Claude Code mencetak kesalahan dan menolak untuk memulai, jadi helper yang memerlukan ketahanan pemadaman harus melayani dari cache sendiri dan keluar `0`.
-
-<h3 id="settings-precedence">
-  Prioritas pengaturan
-</h3>
-
-Pengaturan berlaku dalam urutan prioritas. Dari tertinggi ke terendah:
-
-1. **Pengaturan yang dikelola** ([yang dikelola server](/docs/id/server-managed-settings), [kebijakan tingkat MDM/OS](#configuration-scopes), atau [pengaturan yang dikelola](/docs/id/settings#settings-files))
-   * Kebijakan yang digunakan oleh IT melalui pengiriman server, profil konfigurasi MDM, kebijakan registry, atau file pengaturan yang dikelola
-   * Tidak dapat ditimpa oleh tingkat apa pun, termasuk argumen baris perintah
-   * Dalam tingkat yang dikelola, hanya satu sumber yang digunakan dan yang lain diabaikan daripada digabungkan. Prioritas, tertinggi terlebih dahulu:
-     * Output [`policyHelper`](#compute-managed-settings-with-a-policy-helper): ketika dikonfigurasi, ini adalah satu-satunya sumber yang dikelola yang digunakan
-     * Remote (pengaturan yang dikelola server claude.ai atau kebijakan yang dikirimkan [Claude apps gateway](/docs/id/claude-apps-gateway))
-     * Kebijakan tingkat MDM/OS
-     * Berbasis file (`managed-settings.d/*.json` dan `managed-settings.json`, digabungkan bersama)
-     * Registry HKCU (Windows saja)
-   * Beberapa kunci adalah pengecualian, dihormati ketika sumber yang dikelola yang dikontrol admin apa pun menetapkannya daripada hanya sumber pemenang. Sumber registry HKCU yang dapat ditulis pengguna dikecualikan. Kunci pengecualian adalah:
-     * kunci sandbox lock `sandbox.network.allowManagedDomainsOnly` dan `sandbox.filesystem.allowManagedReadPathsOnly`, dengan daftar putih terkait mereka
-     * `allowAllClaudeAiMcps`
-     * jalur binary sandbox `sandbox.bwrapPath` dan `sandbox.socatPath`
-     * [`forceRemoteSettingsRefresh`](/docs/id/server-managed-settings)
-   * Host penyematan seperti Claude Desktop dapat memasok kebijakan melalui opsi SDK `managedSettings`. Secara default ini diabaikan ketika ada sumber yang dikelola yang digunakan admin: pengaturan yang dikelola server, kebijakan MDM atau OS-level, atau file pengaturan yang dikelola. Fallback registry HKCU yang dapat ditulis pengguna tidak dihitung sebagai sumber yang dikelola yang digunakan admin. Administrator dapat memilih dengan menetapkan [`parentSettingsBehavior`](#available-settings) ke `"merge"`. Nilai embedder disaring sehingga mereka dapat mengencangkan kebijakan yang dikelola tetapi tidak melonggarkannya.
-
-2. **Argumen baris perintah**
-   * Penggantian sementara untuk sesi tertentu. JSON yang dilewatkan melalui `--settings <file-or-json>` digabungkan dengan pengaturan berbasis file menggunakan aturan yang sama seperti lapisan lainnya: kunci yang diatur di sini menimpa kunci yang sama dalam pengaturan lokal, proyek, atau pengguna, dan menghilangkan kunci membiarkan nilai lapisan lebih rendah tetap ada
-
-3. **Pengaturan proyek lokal** (`.claude/settings.local.json`)
-   * Pengaturan proyek pribadi
-
-4. **Pengaturan proyek bersama** (`.claude/settings.json`)
-   * Pengaturan proyek bersama tim dalam kontrol sumber
-
-5. **Pengaturan pengguna** (`~/.claude/settings.json`)
-   * Pengaturan global pribadi
-
-Hierarki ini memastikan bahwa kebijakan organisasi selalu diterapkan sambil tetap memungkinkan tim dan individu untuk menyesuaikan pengalaman mereka. Prioritas yang sama berlaku apakah Anda menjalankan Claude Code dari CLI, [ekstensi VS Code](/docs/id/vs-code), atau [IDE JetBrains](/docs/id/jetbrains).
-
-Misalnya, jika pengaturan pengguna Anda menetapkan `permissions.defaultMode` ke `acceptEdits` dan pengaturan bersama proyek menetapkannya ke `default`, nilai proyek berlaku. Contoh di bawah mencakup bagaimana pengaturan bernilai array seperti aturan izin digabungkan sebagai gantinya.
-
-<Note>
-  **Pengaturan array digabungkan di seluruh cakupan.** Ketika pengaturan yang bernilai array yang sama (seperti `sandbox.filesystem.allowWrite` atau `permissions.allow`) muncul dalam beberapa cakupan, array **digabungkan dan dihilangkan duplikatnya**, bukan diganti. Ini berarti cakupan prioritas lebih rendah dapat menambahkan entri tanpa menimpa yang ditetapkan oleh cakupan prioritas lebih tinggi, dan sebaliknya. Misalnya, jika pengaturan yang dikelola menetapkan `allowWrite` ke `["/opt/company-tools"]` dan pengguna menambahkan `["~/.kube"]`, kedua jalur disertakan dalam konfigurasi akhir.
-
-  Dua pengaturan array tidak digabungkan dengan cara ini:
-
-  * [`fallbackModel`](#available-settings) adalah rantai yang dipesan di mana posisi membawa makna: file dengan prioritas tertinggi yang mendefinisikannya memasok seluruh nilai.
-  * [`availableModels`](#available-settings): saat [sumber yang dikelola dengan prioritas tertinggi](/docs/id/server-managed-settings#settings-precedence) mendefinisikannya, daftar itu berlaku sebagainya dan entri pengguna, proyek, dan lokal tidak dapat memperluas. Di seluruh cakupan non-managed array digabungkan seperti biasa. Lihat [Perilaku penggabungan](/docs/id/model-config#merge-behavior).
-</Note>
-
-<h3 id="verify-active-settings">
-  Verifikasi pengaturan aktif
-</h3>
-
-Jalankan `/status` di dalam Claude Code untuk melihat sumber pengaturan mana yang aktif. Di dalam menu, tab **Status** mencakup baris `Setting sources` yang mencantumkan setiap lapisan Claude Code yang dimuat untuk sesi saat ini, seperti `User settings` atau `Project local settings`. Ketika [pengaturan yang dikelola](/docs/id/admin-setup#decide-how-settings-reach-devices) berlaku, entri menunjukkan saluran pengiriman dalam tanda kurung, misalnya `Enterprise managed settings (remote)`, `(plist)`, `(HKLM)`, `(HKCU)`, atau `(file)`. Lapisan muncul dalam daftar hanya saat sumber itu dimuat dengan setidaknya satu kunci, jadi daftar kosong berarti tidak ada sumber pengaturan yang ditemukan.
-
-Baris `Setting sources` mengonfirmasi sumber mana yang sedang dibaca. Ini tidak menunjukkan lapisan mana yang memasok setiap kunci individual. Tab **Config** dalam dialog yang sama adalah editor untuk set toggle tetap seperti tema dan output verbose, bukan tampilan konten `settings.json` Anda.
-
-Jika file pengaturan berisi kesalahan, seperti JSON tidak valid atau nilai yang gagal validasi, `/status` mencantumkan file yang terpengaruh. Jalankan `/doctor` untuk melihat detail untuk setiap kesalahan.
-
-<h3 id="key-points-about-the-configuration-system">
-  Poin kunci tentang sistem konfigurasi
-</h3>
-
-* **File memori (`CLAUDE.md`)**: Berisi instruksi dan konteks yang dimuat Claude saat startup
-* **File pengaturan (JSON)**: Konfigurasikan izin, variabel lingkungan, dan perilaku tool
-* **Skills**: Prompt khusus yang dapat dipanggil dengan `/skill-name` atau dimuat oleh Claude secara otomatis
-* **MCP servers**: Perluas Claude Code dengan tools dan integrasi tambahan
-* **Prioritas**: Konfigurasi tingkat lebih tinggi (Managed) menimpa yang tingkat lebih rendah (User/Project)
-* **Warisan**: Pengaturan digabungkan di seluruh cakupan; nilai skalar dari cakupan prioritas lebih tinggi menimpa, dan array digabungkan, dengan dua pengecualian yang dijelaskan dalam [Catatan penggabungan array](#settings-precedence)
-
-<h3 id="system-prompt">
-  Prompt sistem
-</h3>
-
-Prompt sistem internal Claude Code tidak dipublikasikan. Untuk menambahkan instruksi khusus, gunakan file `CLAUDE.md` atau flag `--append-system-prompt`.
-
-<h3 id="exclude-sensitive-files">
-  Mengecualikan file sensitif
-</h3>
-
-Untuk mencegah Claude Code mengakses file yang berisi informasi sensitif seperti kunci API, rahasia, dan file lingkungan, gunakan pengaturan `permissions.deny` dalam file `.claude/settings.json` Anda:
-
-```json theme={null}
-{
-  "permissions": {
-    "deny": [
-      "Read(./.env)",
-      "Read(./.env.*)",
-      "Read(./secrets/**)",
-      
-      "Read(./config/credentials.json)",
-      "Read(./build)"
-    ]
-  }
-}
-```
-
-Ini menggantikan konfigurasi `ignorePatterns` yang usang. File yang cocok dengan pola ini dikecualikan dari penemuan file dan hasil pencarian, dan operasi baca pada file ini ditolak.
-
-<h2 id="subagent-configuration">
-  Konfigurasi subagent
+<h2 id="settings-precedence">
+  Urutan prioritas pengaturan
 </h2>
 
-Claude Code mendukung subagents AI khusus yang dapat dikonfigurasi di tingkat pengguna dan proyek. Subagents ini disimpan sebagai file Markdown dengan frontmatter YAML:
+Saat kunci yang sama muncul di lebih dari satu tempat, Claude Code menggunakan nilai dari level tertinggi yang menetapkannya. Tumpukan di bawah menunjukkan level, tertinggi di atas; kunci di level yang lebih tinggi menimpa kunci yang sama di mana pun di bawahnya.
 
-* **Subagents pengguna**: `~/.claude/agents/`, tersedia di semua proyek Anda
-* **Subagents proyek**: `.claude/agents/`, spesifik untuk proyek Anda dan dapat dibagikan dengan tim Anda
+<SettingsPrecedence />
 
-File subagent mendefinisikan asisten AI khusus dengan prompt khusus dan izin tool. Pelajari lebih lanjut tentang membuat dan menggunakan subagents dalam [dokumentasi subagents](/docs/id/sub-agents).
+Secara berurutan, prioritas tertinggi terlebih dahulu:
 
-<h2 id="plugin-configuration">
-  Konfigurasi plugin
-</h2>
+1. **Pengaturan yang dikelola**: pengaturan yang diterapkan organisasi Anda, oleh file `managed-settings.json`, kebijakan MDM, atau [pengaturan yang dikelola server](/docs/id/server-managed-settings) dari konsol claude.ai. Tidak ada yang Anda atur menimpanya: kunci yang Anda lewatkan dengan `--settings` tidak menimpa kunci yang dikelola yang sama, dan flag seperti `--model` hanya memilih dari model yang diizinkan organisasi Anda. Model `model` yang dikelola menetapkan model yang dimulai setiap sesi, dan Anda masih dapat beralih dengan `/model`; kuncinya adalah [`availableModels`](/docs/id/settings-reference#availablemodels), yang membatasi `/model`, `--model`, dan kunci `model` dalam file Anda sendiri. Saat organisasi Anda mengirimkan lebih dari satu sumber yang dikelola, aturan untuk [urutan prioritas dalam tier yang dikelola](/docs/id/managed-settings#precedence-within-the-managed-tier) mengatakan apa yang dibaca Claude Code dari masing-masing.
+2. **Argumen baris perintah**: flag yang Anda lewatkan saat memulai `claude` dari terminal, untuk satu sesi; lihat [Ubah pengaturan untuk satu sesi](#change-a-setting-for-one-session). Claude Code menggabungkan JSON yang Anda lewatkan dengan `--settings <file-or-json>` dengan file pengaturan Anda dengan aturan yang sama seperti level lain: ia mengambil kunci yang Anda atur di sini di atas kunci yang sama dalam pengaturan lokal, proyek, atau pengguna, dan menyimpan nilai level yang lebih rendah untuk kunci yang Anda lewatkan.
+3. **Pengaturan proyek lokal** (`.claude/settings.local.json`): pengaturan pribadi Anda untuk proyek ini.
+4. **Pengaturan proyek bersama** (`.claude/settings.json`): pengaturan yang tim Anda periksa ke kontrol sumber.
+5. **Pengaturan pengguna** (`~/.claude/settings.json`): pengaturan pribadi Anda untuk setiap proyek.
 
-Claude Code mendukung sistem plugin yang memungkinkan Anda memperluas fungsionalitas dengan skills, agents, hooks, dan MCP servers. Plugin didistribusikan melalui marketplace dan dapat dikonfigurasi di tingkat pengguna dan repositori.
+Variabel lingkungan bukan level dalam tumpukan ini. Saat perilaku memiliki variabel shell dan kunci pengaturan, mana yang berlaku diputuskan per pasangan, bukan per level: `ANTHROPIC_MODEL` yang diekspor dalam shell Anda berlaku di atas kunci `model` dari file apa pun, sementara `ANTHROPIC_DEFAULT_MODEL` hanya berlaku saat tidak ada file yang menetapkan `model`. [Referensi variabel lingkungan](/docs/id/env-vars#precedence) mengatakan kunci mana yang memiliki pasangan dan mana yang dibaca Claude Code terlebih dahulu. Blok `env` di dalam file pengaturan adalah kunci biasa dan mengikuti level di atas.
 
-<h3 id="plugin-settings">
-  Pengaturan plugin
+Untuk beberapa kunci yang sensitif terhadap keamanan, Claude Code menghormati nilai yang lebih ketat dari level yang lebih rendah di atas nilai yang dikelola; [Pengecualian untuk urutan prioritas pengaturan yang dikelola](#exceptions-to-managed-settings-precedence) mencantumnya.
+
+<h3 id="lists-merge-instead-of-overriding">
+  Daftar digabungkan daripada ditimpa
 </h3>
 
-Pengaturan terkait plugin dalam `settings.json`:
+Saat Anda menetapkan kunci daftar yang sama, seperti `permissions.allow`, di lebih dari satu file, Claude Code menggabungkan daftar daripada memilih satu, jadi setiap file dapat menambahkan entri tanpa menghapus file lain. Empat kunci yang menyimpan daftar model atau entri per-model mengikuti aturan mereka sendiri:
 
-```json theme={null}
-{
-  "enabledPlugins": {
-    "formatter@acme-tools": true,
-    "deployer@acme-tools": true,
-    "analyzer@security-plugins": false
-  },
-  "extraKnownMarketplaces": {
-    "acme-tools": {
-      "source": {
-        "source": "github",
-        "repo": "acme-corp/claude-plugins"
-      }
-    }
-  }
-}
-```
+* [`fallbackModel`](/docs/id/settings-reference#fallbackmodel) adalah rantai yang dipesan di mana posisi membawa makna, jadi Claude Code mengambil seluruh nilai dari file dengan prioritas tertinggi yang mendefinisikannya.
+* [`modelPicker`](/docs/id/settings-reference#modelpicker) menyimpan satu daftar baris yang dipesan ditambah flag penggantian, jadi Claude Code tidak pernah menggabungkan baris dari dua sumber. Ia mengambil seluruh nilai dari yang tertinggi dari pengaturan yang dikelola, `--settings`, dan pengaturan pengguna yang mendefinisikannya, dan mengabaikan kunci dalam pengaturan proyek dan lokal. Memerlukan Claude Code v2.1.242 atau lebih baru.
+* [`availableModels`](/docs/id/settings-reference#availablemodels): saat pengaturan yang dikelola yang diterapkan Claude Code mendefinisikannya, Claude Code menerapkan daftar itu apa adanya dan mengabaikan entri yang Anda tambahkan dalam pengaturan pengguna, proyek, atau lokal, kecuali aplikasi yang menyematkan Claude Code memasok daftar model-nya sendiri; lihat [Pengecualian untuk urutan prioritas pengaturan yang dikelola](#exceptions-to-managed-settings-precedence). Di seluruh sumber yang dikelola daftar tidak pernah digabungkan juga; [bagaimana Claude Code menggabungkan sumber yang dikelola](/docs/id/managed-settings#how-claude-code-combines-managed-sources) mengatakan daftar sumber mana yang berlaku. Di seluruh cakupan non-managed Claude Code menggabungkan array seperti biasa.
+* [`modelSettings`](/docs/id/settings-reference#modelsettings): Claude Code menyelesaikannya satu model pada satu waktu, bersama dengan [`effortLevel`](/docs/id/settings-reference#effortlevel). Entri `modelSettings` menyatakan file mana yang nilainya berlaku untuk model.
 
-<h4 id="enabledplugins">
-  `enabledPlugins`
-</h4>
+<span id="examples" />
 
-Mengontrol plugin mana yang diaktifkan. Format: `"plugin-name@marketplace-name": true/false`. Plugin tanpa entri di cakupan apa pun kembali ke nilai [`defaultEnabled`](/docs/id/plugins-reference#default-enablement) nya.
-
-**Cakupan**:
-
-* **Pengaturan pengguna** (`~/.claude/settings.json`): Preferensi plugin pribadi
-* **Pengaturan proyek** (`.claude/settings.json`): Plugin spesifik proyek yang dibagikan dengan tim
-* **Pengaturan lokal** (`.claude/settings.local.json`): Penggantian per-mesin, diabaikan saat Claude Code membuatnya
-* **Pengaturan yang dikelola** (`managed-settings.json`): Penggantian kebijakan organisasi yang memblokir instalasi di semua cakupan dan menyembunyikan plugin dari marketplace
-
-<Note>
-  Pengaturan proyek memiliki prioritas lebih tinggi daripada pengaturan pengguna, jadi mengatur plugin ke `false` dalam `~/.claude/settings.json` tidak menonaktifkan plugin yang diaktifkan oleh `.claude/settings.json` proyek. Untuk menolak plugin yang diaktifkan proyek di mesin Anda, atur ke `false` dalam `.claude/settings.local.json` sebagai gantinya.
-
-  Plugin yang dipaksa diaktifkan oleh pengaturan yang dikelola tidak dapat dinonaktifkan dengan cara ini, karena pengaturan yang dikelola menggantikan pengaturan lokal.
-
-  Mengaktifkan plugin dari sumber eksternal seperti repositori GitHub atau paket npm dalam `.claude/settings.json` proyek tidak menginstalnya untuk orang lain. Mulai dari Claude Code v2.1.195, setiap jalur yang memuat plugin meminta setiap pengguna untuk [menginstal dan mempercayai plugin](/docs/id/discover-plugins#configure-team-marketplaces) sebelum dijalankan.
-</Note>
-
-**Contoh**:
-
-```json theme={null}
-{
-  "enabledPlugins": {
-    "code-formatter@team-tools": true,
-    "deployment-tools@team-tools": true,
-    "experimental-features@personal": false
-  }
-}
-```
-
-<h4 id="pluginconfigs">
-  `pluginConfigs`
-</h4>
-
-Menyimpan nilai opsi non-sensitif yang dikumpulkan oleh prompt [`userConfig`](/docs/id/plugins-reference#user-configuration) plugin, diindeks berdasarkan ID plugin. Claude Code menulis kunci ini ke pengaturan pengguna saat Anda mengisi dialog konfigurasi plugin, sehingga Anda tidak perlu mengeditnya secara manual. Opsi sensitif disimpan di macOS Keychain sebagai gantinya, atau di `~/.claude/.credentials.json` pada platform tanpa keychain yang didukung.
-
-Contoh ini menyimpan satu opsi untuk plugin yang diinstal dari marketplace `acme-tools`:
-
-```json theme={null}
-{
-  "pluginConfigs": {
-    "deployer@acme-tools": {
-      "options": {
-        "api_endpoint": "https://api.example.com"
-      }
-    }
-  }
-}
-```
-
-`pluginConfigs` dibaca dari pengaturan pengguna, flag `--settings`, dan pengaturan yang dikelola saja. Entri dalam `.claude/settings.json` proyek atau `.claude/settings.local.json` diabaikan, karena nilai-nilai ini diganti ke dalam konfigurasi hook, MCP, dan LSP plugin, dan repositori yang dikloning tidak boleh dapat memasoknya. Sebelum v2.1.207, pengaturan proyek dan lokal juga dibaca.
-
-<h4 id="extraknownmarketplaces">
-  `extraKnownMarketplaces`
-</h4>
-
-Mendefinisikan marketplace tambahan yang harus tersedia untuk repositori. Biasanya digunakan dalam pengaturan tingkat repositori untuk memastikan anggota tim memiliki akses ke sumber plugin yang diperlukan.
-
-**Ketika repositori menyertakan `extraKnownMarketplaces`**:
-
-1. Anggota tim diminta untuk menginstal marketplace saat mereka mempercayai folder
-2. Anggota tim kemudian diminta untuk menginstal plugin dari marketplace tersebut
-3. Pengguna dapat melewati marketplace atau plugin yang tidak diinginkan (disimpan dalam pengaturan pengguna)
-4. Instalasi menghormati batas kepercayaan dan memerlukan persetujuan eksplisit
-
-**Contoh**:
-
-```json theme={null}
-{
-  "extraKnownMarketplaces": {
-    "acme-tools": {
-      "source": {
-        "source": "github",
-        "repo": "acme-corp/claude-plugins"
-      }
-    },
-    "security-plugins": {
-      "source": {
-        "source": "git",
-        "url": "https://git.example.com/security/plugins.git"
-      }
-    }
-  }
-}
-```
-
-**Jenis sumber marketplace**:
-
-* `github`: Repositori GitHub (menggunakan `repo`)
-* `git`: URL git apa pun (menggunakan `url`)
-* `directory`: Jalur sistem file lokal (menggunakan `path`, hanya untuk pengembangan)
-* `hostPattern`: Pola regex untuk mencocokkan host marketplace (menggunakan `hostPattern`)
-* `settings`: marketplace inline yang dideklarasikan langsung dalam settings.json tanpa repositori yang dihosting terpisah (menggunakan `name` dan `plugins`)
-
-Jenis sumber `git` bekerja dengan layanan hosting git apa pun, termasuk GitLab dan Bitbucket yang dihosting sendiri. Claude Code mengkloning repositori dengan autentikasi yang sama yang akan digunakan `git clone` di mesin tersebut: pembantu kredensial yang dikonfigurasi atau kunci SSH. Token penyedia seperti `GITHUB_TOKEN` hanya berlaku melalui pembantu kredensial yang membacanya. Lihat [Repositori pribadi](/docs/id/plugin-marketplaces#private-repositories) untuk detail pengaturan.
-
-Untuk sumber `github` dan `git`, atur `"skipLfs": true` di dalam objek `source` (bersama `repo` atau `url`) untuk melewati unduhan Git LFS saat Claude Code mengkloning atau memperbarui repositori marketplace. File pointer LFS tetap sebagai pointer daripada mengunduh kontennya. Gunakan ini ketika repositori berisi objek LFS besar yang tidak terkait dengan konten plugin. Memerlukan Claude Code v2.1.153 atau lebih baru.
-
-Setiap entri marketplace juga menerima Boolean `autoUpdate` opsional. Atur `"autoUpdate": true` bersama `source` untuk membuat Claude Code menyegarkan marketplace tersebut dan memperbarui plugin yang terinstal di latar belakang setelah startup. Jika dihilangkan, marketplace Anthropic resmi default ke `true` dan semua marketplace lainnya default ke `false`. Lihat [Konfigurasi pembaruan otomatis](/docs/id/discover-plugins#configure-auto-updates).
-
-Gunakan `source: 'settings'` untuk mendeklarasikan serangkaian plugin kecil inline tanpa menyiapkan repositori marketplace yang dihosting. Plugin yang terdaftar di sini harus mereferensikan sumber eksternal seperti GitHub atau npm. Anda masih perlu mengaktifkan setiap plugin secara terpisah dalam `enabledPlugins`.
-
-```json theme={null}
-{
-  "extraKnownMarketplaces": {
-    "team-tools": {
-      "source": {
-        "source": "settings",
-        "name": "team-tools",
-        "plugins": [
-          {
-            "name": "code-formatter",
-            "source": {
-              "source": "github",
-              "repo": "acme-corp/code-formatter"
-            }
-          }
-        ]
-      }
-    }
-  }
-}
-```
-
-<h4 id="strictknownmarketplaces">
-  `strictKnownMarketplaces`
-</h4>
-
-**Pengaturan yang dikelola saja**: Mengontrol marketplace plugin mana yang diizinkan pengguna untuk ditambahkan dan menginstal plugin darinya. Pengaturan ini hanya dapat dikonfigurasi dalam [pengaturan yang dikelola](/docs/id/settings#settings-files) dan memberikan administrator kontrol ketat atas sumber marketplace.
-
-**Lokasi file pengaturan yang dikelola**:
-
-* **macOS**: `/Library/Application Support/ClaudeCode/managed-settings.json`
-* **Linux dan WSL**: `/etc/claude-code/managed-settings.json`
-* **Windows**: `C:\Program Files\ClaudeCode\managed-settings.json`
-
-**Karakteristik kunci**:
-
-* Hanya tersedia dalam pengaturan yang dikelola (`managed-settings.json`)
-* Tidak dapat ditimpa oleh pengaturan pengguna atau proyek (prioritas tertinggi)
-* Diterapkan sebelum operasi jaringan dan sistem file, sehingga sumber yang diblokir tidak pernah dijalankan
-* Menggunakan pencocokan tepat untuk spesifikasi sumber (termasuk `ref`, `path` untuk sumber git), kecuali `hostPattern` dan `pathPattern`, yang menggunakan pencocokan regex
-
-**Perilaku daftar putih**:
-
-* `undefined` (default): tidak ada pembatasan, sehingga pengguna dapat menambahkan marketplace apa pun
-* Array kosong `[]`: lockdown lengkap, sehingga pengguna tidak dapat menambahkan marketplace baru apa pun
-* Daftar sumber: pengguna hanya dapat menambahkan marketplace yang cocok dengan tepat
-
-**Semua jenis sumber yang didukung**:
-
-Daftar putih mendukung beberapa jenis sumber marketplace. Sebagian besar sumber menggunakan pencocokan tepat, sementara `hostPattern` dan `pathPattern` menggunakan pencocokan regex terhadap host marketplace dan jalur sistem file masing-masing.
-
-1. **Repositori GitHub**:
-
-```json theme={null}
-{ "source": "github", "repo": "acme-corp/approved-plugins" }
-{ "source": "github", "repo": "acme-corp/security-tools", "ref": "v2.0" }
-{ "source": "github", "repo": "acme-corp/plugins", "ref": "main", "path": "marketplace" }
-```
-
-Bidang: `repo` (diperlukan), `ref` (opsional: cabang atau tag), `path` (opsional: subdirektori)
-
-2. **Repositori Git**:
-
-```json theme={null}
-{ "source": "git", "url": "https://gitlab.example.com/tools/plugins.git" }
-{ "source": "git", "url": "https://bitbucket.org/acme-corp/plugins.git", "ref": "production" }
-{ "source": "git", "url": "ssh://git@git.example.com/plugins.git", "ref": "v3.1", "path": "approved" }
-```
-
-Bidang: `url` (diperlukan), `ref` (opsional: cabang atau tag), `path` (opsional: subdirektori)
-
-3. **Marketplace berbasis URL**:
-
-```json theme={null}
-{ "source": "url", "url": "https://plugins.example.com/marketplace.json" }
-{ "source": "url", "url": "https://cdn.example.com/marketplace.json", "headers": { "Authorization": "Bearer ${TOKEN}" } }
-```
-
-Bidang: `url` (diperlukan), `headers` (opsional: header HTTP untuk akses terautentikasi)
-
-<Note>
-  Marketplace berbasis URL hanya mengunduh file `marketplace.json`. Mereka tidak mengunduh file plugin dari server. Plugin dalam marketplace berbasis URL harus menggunakan sumber eksternal (GitHub, npm, atau URL git) daripada jalur relatif. Untuk plugin dengan jalur relatif, gunakan marketplace berbasis Git sebagai gantinya. Lihat [Troubleshooting](/docs/id/plugin-marketplaces#plugins-with-relative-paths-fail-in-url-based-marketplaces) untuk detail.
-</Note>
-
-4. **Paket NPM**:
-
-```json theme={null}
-{ "source": "npm", "package": "@acme-corp/claude-plugins" }
-{ "source": "npm", "package": "@acme-corp/approved-marketplace" }
-```
-
-Bidang: `package` (diperlukan, mendukung paket berscopus)
-
-5. **Jalur file**:
-
-```json theme={null}
-{ "source": "file", "path": "/usr/local/share/claude/acme-marketplace.json" }
-{ "source": "file", "path": "/opt/acme-corp/plugins/marketplace.json" }
-```
-
-Bidang: `path` (diperlukan: jalur absolut ke file marketplace.json)
-
-6. **Jalur direktori**:
-
-```json theme={null}
-{ "source": "directory", "path": "/usr/local/share/claude/acme-plugins" }
-{ "source": "directory", "path": "/opt/acme-corp/approved-marketplaces" }
-```
-
-Bidang: `path` (diperlukan: jalur absolut ke direktori yang berisi `.claude-plugin/marketplace.json`)
-
-7. **Pencocokan pola host**:
-
-```json theme={null}
-{ "source": "hostPattern", "hostPattern": "^github\\.example\\.com$" }
-{ "source": "hostPattern", "hostPattern": "^gitlab\\.internal\\.example\\.com$" }
-```
-
-Bidang: `hostPattern` (diperlukan: pola regex untuk mencocokkan terhadap host marketplace)
-
-Gunakan pencocokan pola host saat Anda ingin memungkinkan semua marketplace dari host tertentu tanpa menghitung setiap repositori secara individual. Ini berguna untuk organisasi dengan server GitHub Enterprise atau GitLab internal di mana pengembang membuat marketplace mereka sendiri.
-
-Ekstraksi host berdasarkan jenis sumber:
-
-* `github`: selalu cocok dengan `github.com`
-* `git`: mengekstrak nama host dari URL (mendukung format HTTPS dan SSH)
-* `url`: mengekstrak nama host dari URL
-* `npm`, `file`, `directory`: tidak didukung untuk pencocokan pola host
-
-8. **Pencocokan pola jalur**:
-
-```json theme={null}
-{ "source": "pathPattern", "pathPattern": "^/opt/approved/" }
-{ "source": "pathPattern", "pathPattern": ".*" }
-```
-
-Bidang: `pathPattern` (diperlukan: pola regex yang dicocokkan terhadap bidang `path` dari sumber `file` dan `directory`)
-
-Gunakan pencocokan pola jalur untuk memungkinkan marketplace berbasis sistem file bersama dengan pembatasan `hostPattern` untuk sumber jaringan. Atur `".*"` untuk memungkinkan semua jalur lokal, atau pola yang lebih sempit untuk membatasi ke direktori tertentu.
-
-**Contoh konfigurasi**:
-
-Contoh: izinkan marketplace spesifik saja:
-
-```json theme={null}
-{
-  "strictKnownMarketplaces": [
-    {
-      "source": "github",
-      "repo": "acme-corp/approved-plugins"
-    },
-    {
-      "source": "github",
-      "repo": "acme-corp/security-tools",
-      "ref": "v2.0"
-    },
-    {
-      "source": "url",
-      "url": "https://plugins.example.com/marketplace.json"
-    },
-    {
-      "source": "npm",
-      "package": "@acme-corp/compliance-plugins"
-    }
-  ]
-}
-```
-
-Contoh: nonaktifkan semua penambahan marketplace:
-
-```json theme={null}
-{
-  "strictKnownMarketplaces": []
-}
-```
-
-Contoh: izinkan semua marketplace dari server git internal:
-
-```json theme={null}
-{
-  "strictKnownMarketplaces": [
-    {
-      "source": "hostPattern",
-      "hostPattern": "^github\\.example\\.com$"
-    }
-  ]
-}
-```
-
-**Persyaratan pencocokan tepat**:
-
-Sumber marketplace harus cocok dengan tepat agar penambahan pengguna diizinkan. Untuk sumber berbasis git (`github` dan `git`), ini termasuk semua bidang opsional:
-
-* `repo` atau `url` harus cocok dengan tepat
-* Bidang `ref` harus cocok dengan tepat (atau keduanya tidak terdefinisi)
-* Bidang `path` harus cocok dengan tepat (atau keduanya tidak terdefinisi)
-
-Contoh sumber yang tidak cocok:
-
-```json theme={null}
-// Ini adalah sumber BERBEDA:
-{ "source": "github", "repo": "acme-corp/plugins" }
-{ "source": "github", "repo": "acme-corp/plugins", "ref": "main" }
-
-// Ini juga BERBEDA:
-{ "source": "github", "repo": "acme-corp/plugins", "path": "marketplace" }
-{ "source": "github", "repo": "acme-corp/plugins" }
-```
-
-**Perbandingan dengan `extraKnownMarketplaces`**:
-
-| Aspek                | `strictKnownMarketplaces`                           | `extraKnownMarketplaces`                    |
-| -------------------- | --------------------------------------------------- | ------------------------------------------- |
-| **Tujuan**           | Penegakan kebijakan organisasi                      | Kenyamanan tim                              |
-| **File pengaturan**  | `managed-settings.json` saja                        | File pengaturan apa pun                     |
-| **Perilaku**         | Blokir penambahan yang tidak ada dalam daftar putih | Instal otomatis marketplace yang hilang     |
-| **Saat diterapkan**  | Sebelum operasi jaringan/sistem file                | Setelah prompt kepercayaan pengguna         |
-| **Dapat ditimpa**    | Tidak (prioritas tertinggi)                         | Ya (oleh pengaturan prioritas lebih tinggi) |
-| **Format sumber**    | Objek sumber langsung                               | Marketplace bernama dengan sumber bersarang |
-| **Kasus penggunaan** | Pembatasan kepatuhan, keamanan                      | Onboarding, standardisasi                   |
-
-**Perbedaan format**:
-
-`strictKnownMarketplaces` menggunakan objek sumber langsung:
-
-```json theme={null}
-{
-  "strictKnownMarketplaces": [
-    { "source": "github", "repo": "acme-corp/plugins" }
-  ]
-}
-```
-
-`extraKnownMarketplaces` memerlukan marketplace bernama:
-
-```json theme={null}
-{
-  "extraKnownMarketplaces": {
-    "acme-tools": {
-      "source": { "source": "github", "repo": "acme-corp/plugins" }
-    }
-  }
-}
-```
-
-**Menggunakan keduanya bersama**:
-
-`strictKnownMarketplaces` adalah gerbang kebijakan: mengontrol apa yang dapat ditambahkan pengguna tetapi tidak mendaftarkan marketplace apa pun. Untuk membatasi dan pra-mendaftarkan marketplace untuk semua pengguna, atur keduanya dalam `managed-settings.json`:
-
-```json theme={null}
-{
-  "strictKnownMarketplaces": [
-    { "source": "github", "repo": "acme-corp/plugins" }
-  ],
-  "extraKnownMarketplaces": {
-    "acme-tools": {
-      "source": { "source": "github", "repo": "acme-corp/plugins" }
-    }
-  }
-}
-```
-
-Dengan hanya `strictKnownMarketplaces` yang diatur, pengguna masih dapat menambahkan marketplace yang diizinkan secara manual melalui `/plugin marketplace add`, tetapi tidak tersedia secara otomatis.
-
-**Catatan penting**:
-
-* Pembatasan diperiksa sebelum permintaan jaringan atau operasi sistem file apa pun
-* Saat diblokir, pengguna melihat pesan kesalahan yang jelas menunjukkan sumber diblokir oleh kebijakan yang dikelola
-* Pembatasan diterapkan pada penambahan marketplace dan pada instalasi plugin, pembaruan, penyegaran, dan pembaruan otomatis. Marketplace yang ditambahkan sebelum kebijakan ditetapkan tidak dapat digunakan untuk menginstal atau memperbarui plugin setelah sumbernya tidak lagi cocok dengan daftar putih
-* Pengaturan yang dikelola memiliki prioritas tertinggi dan tidak dapat ditimpa
-
-Lihat [Pembatasan marketplace yang dikelola](/docs/id/plugin-marketplaces#managed-marketplace-restrictions) untuk dokumentasi yang menghadap pengguna.
-
-<h4 id="strictpluginonlycustomization">
-  `strictPluginOnlyCustomization`
-</h4>
-
-**Pengaturan yang dikelola saja**: memblokir skills, agents, hooks, dan MCP servers dari sumber pengguna dan proyek, sehingga mereka hanya dapat berasal dari plugin atau pengaturan yang dikelola. Gabungkan dengan `strictKnownMarketplaces` untuk mengontrol rantai pasokan kustomisasi penuh: daftar putih marketplace mengontrol plugin mana yang dapat diinstal pengguna, dan pengaturan ini memblokir semua yang tidak berasal dari plugin atau dari pengaturan yang dikelola.
-
-Nilainya adalah `true` untuk mengunci keempat permukaan, atau array yang menamai permukaan yang akan dikunci:
-
-```json theme={null}
-{
-  "strictPluginOnlyCustomization": ["skills", "hooks"]
-}
-```
-
-Untuk setiap permukaan yang dikunci, Claude Code melewati sumber tingkat pengguna dan proyek dan hanya memuat sumber yang disediakan plugin dan yang dikelola:
-
-| Permukaan | Diblokir saat dikunci                                              | Masih memuat                                                                   |
-| :-------- | :----------------------------------------------------------------- | :----------------------------------------------------------------------------- |
-| `skills`  | `~/.claude/skills/`, `.claude/skills/`                             | Plugin skills, bundled skills, skills dalam direktori kebijakan yang dikelola  |
-| `agents`  | `~/.claude/agents/`, `.claude/agents/`                             | Plugin agents, built-in agents, agents dalam direktori kebijakan yang dikelola |
-| `hooks`   | Hooks dalam pengaturan `settings.json` pengguna, proyek, dan lokal | Plugin hooks, hooks dalam pengaturan yang dikelola                             |
-| `mcp`     | Servers dalam `~/.claude.json` dan `.mcp.json`                     | Plugin MCP servers, servers [`managed-mcp.json`](/docs/id/managed-mcp)              |
-
-Nama permukaan yang tidak dikenali oleh versi Claude Code diabaikan daripada gagal file pengaturan, jadi Anda dapat menambahkan nama permukaan baru sebelum semua klien diperbarui.
-
-<h3 id="manage-plugins">
-  Mengelola plugin
+<h3 id="precedence-examples">
+  Contoh urutan prioritas
 </h3>
 
-Gunakan perintah `/plugin` untuk mengelola plugin secara interaktif:
+Saat Claude bekerja, Claude Code menampilkan tip satu baris di bawah spinner, seperti "Gunakan /config untuk mengubah mode izin default Anda (termasuk Plan Mode)". Misalkan Anda menginginkan tips itu mati, jadi Anda menetapkan [`spinnerTipsEnabled`](/docs/id/settings-reference#spinnertipsenabled) ke `false` di `~/.claude/settings.json`. Setiap skenario di bawah adalah sesuatu yang dapat menghidupkannya kembali, dan apa yang dapat Anda lakukan tentangnya.
 
-* Jelajahi plugin yang tersedia dari marketplace
-* Instal/copot plugin
-* Aktifkan/nonaktifkan plugin
-* Lihat detail plugin (skills, agents, hooks yang disediakan)
-* Tambah/hapus marketplace
+<h4 id="team-settings-override-personal-settings">
+  Pengaturan tim menimpa pengaturan pribadi
+</h4>
 
-Pelajari lebih lanjut tentang sistem plugin dalam [dokumentasi plugins](/docs/id/plugins).
+`.claude/settings.json` tim Anda menetapkannya ke `true`. Claude Code menggunakan nilai proyek karena proyek bersama duduk di atas pengguna, jadi Anda melihat tips di proyek itu dan tidak di tempat lain.
 
-<h2 id="environment-variables">
-  Variabel lingkungan
+Anda dapat mendapatkan nilai Anda kembali: tambahkan `"spinnerTipsEnabled": false` ke `.claude/settings.local.json` di proyek itu. Proyek lokal duduk di atas proyek bersama, jadi sesi Anda di sana berhenti menampilkan tips dan sesi rekan kerja Anda tidak berubah.
+
+<h4 id="organization-settings-override-everything">
+  Pengaturan organisasi menimpa segalanya
+</h4>
+
+Pengaturan yang dikelola organisasi Anda menetapkannya ke `true`. Tidak ada yang Anda masukkan dalam pengaturan pengguna, proyek, atau lokal yang mematikan tips, dan juga tidak `--settings`. Managed adalah level teratas.
+
+Anda tidak dapat mendapatkan nilai Anda kembali. Jalankan `/status` untuk melihat sumber yang dikelola mana yang berlaku, dan tanyakan administrator Anda apakah kebijakan harus berubah.
+
+<h4 id="the-command-line-overrides-your-files-for-one-session">
+  Baris perintah menimpa file Anda untuk satu sesi
+</h4>
+
+Anda memulai sesi dengan `claude --settings '{"spinnerTipsEnabled": true}'`. Baris perintah duduk di atas setiap file kecuali yang dikelola, jadi sesi itu menampilkan tips meskipun file Anda mengatakan `false`.
+
+Anda mendapatkan nilai Anda kembali pada sesi berikutnya; `--settings` berlangsung satu sesi dan tidak menulis ke file apa pun.
+
+<h4 id="a-flag-or-environment-variable-sets-the-same-thing">
+  Flag atau variabel lingkungan menetapkan hal yang sama
+</h4>
+
+Beberapa kunci memiliki flag baris perintah atau variabel lingkungan yang menimpa nilai pengaturan terlepas dari file mana yang menetapkannya: `ANTHROPIC_MODEL` menimpa pengaturan [`model`](/docs/id/settings-reference#model), dan `--model` menimpa keduanya untuk sesi.
+
+Apakah Anda dapat mendapatkan nilai Anda kembali tergantung pada kunci: batalkan variabel atau lepaskan flag, dan periksa entri kunci di [referensi pengaturan](/docs/id/settings-reference) dan baris variabel di [referensi variabel lingkungan](/docs/id/env-vars) untuk mana yang digunakan Claude Code.
+
+<span id="keys-ignored-in-a-repository-file" />
+
+<span id="keys-only-you-or-your-organization-can-set" />
+
+<span id="common-cases" />
+
+<span id="which-value-applies-in-common-situations" />
+
+<h3 id="troubleshoot-a-setting-that-doesn’t-apply">
+  Troubleshoot pengaturan yang tidak berlaku
+</h3>
+
+Saat Anda menetapkan kunci dan Claude Code tidak berperilaku seolah-olah Anda memilikinya, mulai dengan `/status` untuk melihat file mana yang dimuat, kemudian temukan gejala Anda di bawah. [Debug konfigurasi Anda](/docs/id/debug-your-config) mencakup pemeriksaan yang lebih luas, termasuk tes konfigurasi bersih.
+
+<h4 id="a-value-you-set-is-ignored">
+  Nilai yang Anda atur diabaikan
+</h4>
+
+Sesuatu yang lain menetapkan kunci yang sama, file tidak dapat menetapkan nilai itu, atau file tidak dimuat:
+
+* **Level yang lebih tinggi menetapkannya.** File pengaturan lain, flag `--settings`, atau sumber yang dikelola menetapkan kunci di atas milik Anda; [tumpukan](#settings-precedence) mengatakan mana. Flag atau variabel lingkungan juga dapat menimpa kunci atas namanya sendiri, diputuskan kunci demi kunci; entri kunci di [referensi pengaturan](/docs/id/settings-reference) mengatakan mana yang digunakan Claude Code, dan [entri `env`](/docs/id/settings-reference#env) mencakup nilai `env` yang dikelola versus ekspor shell.
+* **Kunci keamanan menyimpan nilai ketatnya.** Untuk beberapa kunci Claude Code menghormati nilai yang membatasi dari file apa pun, jadi `true` proyek untuk [`disableClaudeAiConnectors`](/docs/id/settings-reference#disableclaudeaiconnectors) tetap aktif; lihat [Pengecualian untuk urutan prioritas pengaturan yang dikelola](#exceptions-to-managed-settings-precedence).
+* **File tidak dapat menetapkan nilai itu.** Nilai [`permissions.defaultMode`](/docs/id/settings-reference#permissions-defaultmode) `auto` dan `bypassPermissions` tidak berlaku dari pengaturan proyek atau lokal; aturnya dalam pengaturan pengguna atau yang dikelola sebagai gantinya, atau lewatkan `--permission-mode` untuk satu sesi. Sebelum v2.1.257, `bypassPermissions` berlaku dari file apa pun.
+
+  Variabel ekspor telemetri dalam blok [`env`](/docs/id/settings-reference#env) juga tidak berlaku dari pengaturan proyek atau lokal, terlepas dari beberapa nilai off. [Variabel yang diabaikan Claude Code dalam `env`](/docs/id/settings-reference#variables-claude-code-ignores-in-env) mencantumkan variabel dan nilai-nilai tersebut.
+* **File rusak.** JSON tidak valid atau nilai yang ditolak membuat Claude Code melewati file atau entri; lihat [Perbaiki file pengaturan yang rusak](#fix-a-broken-settings-file).
+
+<h4 id="a-change-you-made-in-claude-code-is-lost-in-new-sessions">
+  Perubahan yang Anda buat di Claude Code hilang di sesi baru
+</h4>
+
+Saat Anda menyimpan pilihan untuk sesi baru dari dalam Claude Code, seperti model default dengan `/model`, Claude Code menulisnya ke file pengaturan pengguna Anda, `~/.claude/settings.json`. Jika Anda tidak dapat menulis ke file itu, misalnya karena tool lain menghasilkannya atau menghubungkannya ke salinan read-only, perubahan berlaku untuk sesi saat ini dan hilang di sesi berikutnya. Atur kunci dalam tool yang menghasilkan file, atau ganti file dengan yang dapat Anda tulis.
+
+Jika Anda dapat menulis ke file dan perubahan masih tidak bertahan, periksa apakah perubahan itu [hanya untuk satu sesi](#change-a-setting-for-one-session) atau [level yang lebih tinggi menetapkan kunci yang sama](#a-value-you-set-is-ignored). Untuk kunci `model`, [Sesi baru dimulai pada model yang berbeda dari yang Anda pilih](/docs/id/model-config#a-new-session-starts-on-a-different-model-than-you-picked) mencantumkan lebih banyak penyebab.
+
+<h4 id="a-managed-change-hasn’t-reached-you">
+  Perubahan yang dikelola belum mencapai Anda
+</h4>
+
+Sumber yang dikelola mencapai sesi yang sedang berjalan sesuai jadwal dalam [tabel pengiriman](/docs/id/managed-settings#choose-a-delivery-mechanism), jadi mulai ulang sesi terlebih dahulu. Jika `/status` kemudian menamai sumber yang berbeda dari yang diubah administrator Anda, sumber dengan prioritas lebih tinggi berlaku; [Bagaimana Claude Code menggabungkan sumber yang dikelola](/docs/id/managed-settings#how-claude-code-combines-managed-sources) memberikan urutan.
+
+<h4 id="a-committed-key-doesn’t-reach-teammates">
+  Kunci yang dikomit tidak mencapai rekan kerja
+</h4>
+
+Dua hal menjaga kunci di `.claude/settings.json` dari penerapan untuk semua orang yang mengkloning:
+
+* **Claude Code mengabaikan kunci dalam file repositori.** Cari `User, local, or managed`, `User or managed`, `Managed`, atau `Global config` di kolom Scope dari [indeks pengaturan](/docs/id/settings-reference#settings-index). Kunci-kunci itu tidak pernah berlaku dari file bersama, terlepas dari beberapa yang file repositori masih dapat matikan. Setiap entri itu mengatakan demikian pada baris Scope-nya. Kunci `Global config` hanya berlaku dari `~/.claude.json`.
+
+  Di dalam kunci `env`, variabel ekspor telemetri tidak pernah berlaku dari file bersama juga, terlepas dari beberapa nilai off; lihat [Variabel yang diabaikan Claude Code dalam `env`](/docs/id/settings-reference#variables-claude-code-ignores-in-env).
+* **Kunci menunggu kepercayaan.** Aturan `permissions.allow`, `permissions.additionalDirectories`, `extraKnownMarketplaces`, dan sebagian besar nilai [`env`](/docs/id/settings-reference#env) hanya berlaku setelah setiap rekan kerja [mempercayai folder](/docs/id/permissions#project-allow-rules-and-workspace-trust). Sampai saat itu mereka masih melihat prompt dan tidak mendapatkan plugins dari marketplace yang dideklarasikan file. Aturan `deny` dan `ask` berlaku segera.
+
+<h4 id="permission-rules-combine-differently-than-you-expected">
+  Aturan izin digabungkan berbeda dari yang Anda harapkan
+</h4>
+
+* **Anda memilih "Ya, dan jangan tanya lagi" pada prompt izin tetapi masih mendapat prompt untuk tool yang sama.** Pilihan itu menyimpan aturan `allow` ke file lokal Anda, dan aturan `allow` di sana tidak mengungguli aturan `ask` dari file proyek atau yang dikelola; [bagaimana aturan izin digabungkan](/docs/id/permissions#settings-precedence) menjelaskan urutan. Di ekstensi VS Code kartu persetujuan memungkinkan Anda memilih file tujuan, termasuk file bersama proyek, yang mengubah aturan untuk semua orang; di CLI, Claude Code hanya menulis ke file lokal Anda.
+* **Aturan allow organisasi Anda masih berlaku bersama milik Anda.** Itu diharapkan: Claude Code menggabungkan [`permissions.allow`](/docs/id/settings-reference#permissions-allow) di seluruh cakupan, kecuali organisasi Anda menetapkan [`allowManagedPermissionRulesOnly`](/docs/id/settings-reference#allowmanagedpermissionrulesonly).
+
+<span id="security-keys-where-the-stricter-value-applies" />
+
+<h3 id="exceptions-to-managed-settings-precedence">
+  Pengecualian untuk urutan prioritas pengaturan yang dikelola
+</h3>
+
+Untuk beberapa kunci yang nilainya membatasi sesi, Claude Code menghormati nilai yang membatasi dari cakupan yang sebaliknya tidak dapat menimpa pengaturan yang dikelola. Temukan kunci dalam tabel ini untuk melihat nilai mana yang dihormatinya dan dari mana.
+
+| Kunci                                                                           | Nilai yang dihormati Claude Code                                                                                                   | Catatan                                                                                                                                                                                             |
+| :------------------------------------------------------------------------------ | :--------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`disableClaudeAiConnectors`](/docs/id/settings-reference#disableclaudeaiconnectors) | `true` dari cakupan apa pun                                                                                                        | Dihormati bahkan saat sumber yang dikelola menetapkan `false`                                                                                                                                       |
+| [`enableArtifact`](/docs/id/settings-reference#enableartifact)                       | `false` dari cakupan apa pun, dan `disableArtifact: true` dari cakupan apa pun                                                     | Dihormati bahkan saat sumber yang dikelola menetapkan `true`; tidak ada yang menghidupkan [tool Artifact](/docs/id/artifacts#disable-artifacts) kembali. Memerlukan Claude Code v2.1.242 atau lebih baru |
+| [`isolatePeerMachines`](/docs/id/settings-reference#isolatepeermachines)             | `true` dari cakupan apa pun                                                                                                        | Dihormati bahkan saat sumber yang dikelola menetapkan `false`                                                                                                                                       |
+| [`remoteControlAtStartup`](/docs/id/settings-reference#remotecontrolatstartup)       | `false` dari `.claude/settings.json` atau `.claude/settings.local.json`                                                            | Dihormati bahkan saat sumber yang dikelola menetapkan `true`; `true` proyek atau lokal diabaikan                                                                                                    |
+| [`crossSessionInbound`](/docs/id/settings-reference#crosssessioninbound)             | Nilai yang lebih ketat dari `.claude/settings.json` atau `.claude/settings.local.json`, pada tangga `accept` \< `hold` \< `refuse` | Dihormati di atas nilai yang dikelola, `--settings`, dan pengguna; nilai proyek atau lokal yang tidak lebih ketat diabaikan                                                                         |
+| [`useAutoModeDuringPlan`](/docs/id/settings-reference#useautomodeduringplan)         | `false` dari sumber yang dikelola, `--settings`, `~/.claude/settings.json`, atau `.claude/settings.local.json` apa pun             | Dihormati bahkan saat sumber yang dikelola pemenang menetapkan `true`; `false` di `.claude/settings.json` diabaikan                                                                                 |
+| [`syncClaudeAiSkills`](/docs/id/settings-reference#syncclaudeaiskills)               | `false` dari sumber yang dikelola, `--settings`, `~/.claude/settings.json`, atau `.claude/settings.local.json` apa pun             | Dihormati bahkan saat sumber yang dikelola pemenang menetapkan `true`; `false` di `.claude/settings.json` diabaikan                                                                                 |
+| [`syncClaudeAiPlugins`](/docs/id/settings-reference#syncclaudeaiplugins)             | `false` dari sumber yang dikelola, `--settings`, `~/.claude/settings.json`, atau `.claude/settings.local.json` apa pun             | Dihormati bahkan saat sumber yang dikelola pemenang menetapkan `true`; `false` di `.claude/settings.json` diabaikan                                                                                 |
+| [`maxEffortLevel`](/docs/id/settings-reference#maxeffortlevel)                       | Batas yang lebih rendah dari cakupan apa pun, termasuk `--settings`                                                                | Dihormati bahkan saat pengaturan yang dikelola yang diterapkan Claude Code menetapkan batas yang lebih tinggi; batas terendah berlaku. Memerlukan Claude Code v2.1.267 atau lebih baru              |
+
+Aplikasi yang menjalankan Claude Code di dalamnya dan menetapkan [`CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST`](/docs/id/env-vars) juga merupakan pengecualian. Claude Code mengambil konfigurasi model aplikasi itu di atas kunci `model`, `fallbackModel`, `modelPicker`, dan `modelOverrides` dari setiap sumber yang dikelola, dan di atas variabel pemilihan model dalam blok `env` yang dikelola, seperti `ANTHROPIC_MODEL` dan keluarga `ANTHROPIC_DEFAULT_*_MODEL`. Claude Code menjaga daftar putih [`availableModels`](/docs/id/settings-reference#availablemodels) yang dikelola berlaku kecuali aplikasi memasok miliknya sendiri.
+
+<h2 id="settings-in-cloud-sessions">
+  Pengaturan dalam sesi cloud
 </h2>
 
-Variabel lingkungan memungkinkan Anda mengontrol perilaku Claude Code tanpa mengedit file pengaturan. Variabel apa pun juga dapat dikonfigurasi dalam [`settings.json`](#available-settings) di bawah kunci `env` untuk menerapkannya ke setiap sesi atau mengulanginya ke tim Anda.
+Sesi [cloud](/docs/id/claude-code-on-the-web) berjalan di [lingkungan cloud](/docs/id/cloud-environments) pada klon segar repositori Anda, bukan di mesin Anda. Itu mengubah pengaturan mana yang mencapainya:
 
-Lihat [referensi variabel lingkungan](/docs/id/env-vars) untuk daftar lengkap.
+* **Pengaturan proyek bersama** (`.claude/settings.json`): dibaca dalam sesi dengan satu repositori, karena file adalah bagian dari klon dan sesi dimulai di dalamnya. Komit pengaturan di sana untuk menerapkannya dalam sesi tersebut. Sesi dengan beberapa repositori dimulai di atas klon dan membaca hanya kunci `enabledPlugins` dan `extraKnownMarketplaces` dari `.claude/settings.json` setiap repositori, bukan aturan izin, hooks, `env`, atau kunci lainnya. Marketplace dan plugin yang dideklarasikan oleh dua kunci tersebut masih [tidak dimuat dalam sesi cloud](/docs/id/cloud-environments#what-carries-over-from-your-setup).
+* **Pengaturan pengguna dan proyek lokal** (`~/.claude/settings.json` dan `.claude/settings.local.json`): tidak dibaca. Keduanya tetap di mesin Anda, dan file lokal tidak ada dalam klon.
+* **Pengaturan yang dikelola**: hanya [pengaturan yang dikelola server](/docs/id/server-managed-settings) yang mencapai sesi cloud; file `managed-settings.json` atau profil MDM di perangkat Anda tidak. [Lingkungan yang di-host sendiri](/docs/id/self-hosted-environments) juga membaca file pengaturan yang dikelola dalam gambar runner-nya. [Bagaimana Claude Code menggabungkan sumber yang dikelola](/docs/id/managed-settings#how-claude-code-combines-managed-sources) mengatakan kapan file itu berlaku.
+* **`/config`**: di browser Anda di claude.ai/code, membuka bagian Claude Code dari pengaturan claude.ai Anda daripada mengubah nilai. Untuk mengubah pengaturan untuk sesi cloud, atur [variabel lingkungan](/docs/id/cloud-environments#set-environment-variables) di lingkungan, atau dalam sesi dengan satu repositori, komit kunci ke `.claude/settings.json` repositori tersebut.
 
-<h2 id="tools-available-to-claude">
-  Tools yang tersedia untuk Claude
+[Apa yang dibawa dari pengaturan Anda](/docs/id/cloud-environments#what-carries-over-from-your-setup) mencantumkan sisanya: `CLAUDE.md`, skills, server MCP, plugins, dan kredensial.
+
+<h2 id="what’s-next">
+  Apa selanjutnya
 </h2>
 
-Claude Code memiliki akses ke serangkaian tools untuk membaca, mengedit, mencari, menjalankan perintah, dan mengorkestrasi subagents. Nama tool adalah string tepat yang Anda gunakan dalam aturan izin dan pencocokan hook.
-
-Lihat [referensi tools](/docs/id/tools-reference) untuk daftar lengkap dan detail perilaku tool Bash.
-
-<h2 id="see-also">
-  Lihat juga
-</h2>
-
-* [Permissions](/docs/id/permissions): sistem izin, sintaks aturan, pola spesifik tool, dan kebijakan yang dikelola
-* [Authentication](/docs/id/authentication): atur akses pengguna ke Claude Code
-* [Debug your configuration](/docs/id/debug-your-config): diagnosis mengapa pengaturan, hook, atau server MCP tidak berlaku
-* [Troubleshoot installation and login](/docs/id/troubleshoot-install): instalasi, autentikasi, dan masalah platform
+* [Semua pengaturan](/docs/id/settings-reference): setiap kunci, dengan tempat Anda menetapkannya dan contohnya
+* [File pengaturan contoh](/docs/id/settings-example): file pribadi, file tim, dan file yang dikelola organisasi
+* [Konfigurasikan izin](/docs/id/permissions): aturan allow, ask, dan deny, dan apa yang dijalankan Claude Code tanpa bertanya
+* [Variabel lingkungan](/docs/id/env-vars): variabel yang dibaca Claude Code dan blok `env`
+* [Debug konfigurasi Anda](/docs/id/debug-your-config): saat pengaturan tidak berlaku
+* [Referensi direktori Claude](/docs/id/claude-directory): setiap file yang dibaca Claude Code, termasuk subagents, server MCP, plugins, dan `CLAUDE.md`

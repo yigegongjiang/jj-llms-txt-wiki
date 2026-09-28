@@ -20,9 +20,13 @@ La sécurité de votre code est primordiale. Claude Code est construit avec la s
   Architecture basée sur les permissions
 </h3>
 
-Claude Code utilise des permissions strictes en lecture seule par défaut. Lorsque des actions supplémentaires sont nécessaires (édition de fichiers, exécution de tests, exécution de commandes), Claude Code demande une permission explicite. Les utilisateurs contrôlent s'il faut approuver les actions une seule fois ou les autoriser automatiquement.
+En mode Manuel, Claude Code démarre avec des permissions en lecture seule. Lorsque Claude Code a besoin de modifier des fichiers, d'exécuter des tests ou d'exécuter des commandes, il vous le demande d'abord, et vous choisissez d'approuver l'action une seule fois ou de l'autoriser à partir de ce moment.
 
-Claude Code nécessite une approbation avant d'exécuter les commandes Bash qui peuvent modifier votre système. Un ensemble intégré de [commandes en lecture seule](/docs/fr/permissions#read-only-commands) telles que `ls`, `cat` et `git status` s'exécute sans invite. Cette approche permet aux utilisateurs et aux organisations de configurer les permissions directement.
+En mode Manuel, Claude Code demande également avant d'exécuter les commandes Bash qui peuvent modifier votre système. Il exécute un ensemble intégré de [commandes en lecture seule](/docs/fr/permissions#read-only-commands) telles que `ls`, `cat` et `git status` sans demander. Vous et votre organisation configurez ces permissions directement.
+
+En [mode auto](/docs/fr/permission-modes#eliminate-prompts-with-auto-mode), un modèle de classificateur distinct examine les actions à votre place et bloque celles qu'il juge non sécurisées. [Comment le classificateur évalue les actions](/docs/fr/permission-modes#how-the-classifier-evaluates-actions) énumère les actions que Claude Code approuve directement, celles qu'il envoie au classificateur et celles pour lesquelles Claude Code vous demande toujours. Vos règles d'approbation et de refus explicites s'appliquent toujours, et votre organisation peut [désactiver le mode auto](/docs/fr/permission-modes#eliminate-prompts-with-auto-mode).
+
+Le mode de permission dans lequel une session démarre dépend de votre plan, de la surface à partir de laquelle vous la démarrez, et de vos paramètres et de ceux de votre organisation ; voir [Modes de permission](/docs/fr/permission-modes#which-mode-a-session-starts-in).
 
 Pour une configuration détaillée des permissions, consultez [Permissions](/docs/fr/permissions).
 
@@ -32,8 +36,8 @@ Pour une configuration détaillée des permissions, consultez [Permissions](/doc
 
 Pour atténuer les risques dans les systèmes agentiques :
 
-* **Outil bash en sandbox** : [Sandbox](/docs/fr/sandboxing) les commandes bash avec isolation du système de fichiers et du réseau, réduisant les invites de permission tout en maintenant la sécurité. Activez avec `/sandbox` pour définir les limites où Claude Code peut travailler de manière autonome
-* **Limite du répertoire de travail** : Claude Code ne peut écrire que dans le dossier où il a été démarré et ses sous-dossiers, et ne peut pas modifier les fichiers dans les répertoires parents sans permission explicite. La lecture de chemins en dehors de cette limite avec les outils Read, Grep et Glob est possible après une invite d'approbation. Étendez la limite avec des [répertoires supplémentaires](/docs/fr/permissions#working-directories) pour ignorer l'invite, ou restreignez l'accès en lecture plus large disponible pour les commandes Bash en lecture seule avec les [règles `denyRead` du sandbox](/docs/fr/sandboxing#filesystem-isolation), qui s'appliquent uniquement lorsque le sandboxing est activé
+* **Outil bash en sandbox** : [Sandbox](/docs/fr/sandboxing) les commandes bash avec isolation du système de fichiers et du réseau, réduisant les invites de permission tout en maintenant la sécurité. Configurez avec `/sandbox` pour définir les limites où Claude Code peut travailler de manière autonome
+* **Limite du répertoire de travail** : En mode Manuel, Claude Code ne peut écrire que dans le dossier où il a été démarré et ses sous-dossiers, et ne peut pas modifier les fichiers dans les répertoires parents sans permission explicite. En mode Manuel, Claude Code vous demande également avant de lire les chemins en dehors de cette limite avec les outils Read, Grep et Glob. Étendez la limite avec des [répertoires supplémentaires](/docs/fr/permissions#working-directories) pour ignorer l'invite, ou restreignez l'accès en lecture plus large disponible pour les commandes Bash en lecture seule avec les [règles `denyRead` du sandbox](/docs/fr/sandboxing#filesystem-isolation), qui s'appliquent uniquement lorsque le sandboxing est activé
 * **Atténuation de la fatigue des invites** : Support pour la liste blanche des commandes sûres fréquemment utilisées par utilisateur, par base de code ou par organisation
 * **Mode Accepter les modifications** : Accepte automatiquement les modifications de fichiers et un ensemble fixe de commandes Bash du système de fichiers comme `mkdir`, `touch`, `rm`, `mv`, `cp` et `sed` pour les chemins du répertoire de travail. Les autres commandes Bash et les chemins hors de la portée continuent à afficher des invites
 
@@ -53,10 +57,10 @@ L'injection de prompt est une technique où un attaquant tente de contourner ou 
   Protections principales
 </h3>
 
-* **Système de permissions** : Les opérations sensibles nécessitent une approbation explicite
+* **Système de permissions** : En mode Manuel, les opérations sensibles nécessitent une approbation explicite
 * **Analyse contextuelle** : Détecte les instructions potentiellement nuisibles en analysant la demande complète
 * **Assainissement des entrées** : Prévient l'injection de commandes en traitant les entrées utilisateur
-* **Approbation des commandes réseau** : Les commandes qui récupèrent du contenu sur le web comme `curl` et `wget` ne sont pas approuvées automatiquement par défaut. Elles demandent une approbation comme n'importe quelle autre commande Bash non en lecture seule, vous pouvez donc toujours approuver une fois ou ajouter une règle d'autorisation explicite comme `Bash(curl *)`. Pour les bloquer entièrement, ajoutez-les à [`permissions.deny`](/docs/fr/permissions#tool-specific-permission-rules)
+* **Approbation des commandes réseau** : Les commandes qui récupèrent du contenu sur le web comme `curl` et `wget` ne sont pas approuvées automatiquement par défaut. En mode Manuel, elles demandent une approbation comme n'importe quelle autre commande Bash non en lecture seule, vous pouvez donc toujours approuver une fois ou ajouter une règle d'autorisation explicite comme `Bash(curl *)`. Pour arrêter Claude d'exécuter ces commandes, ajoutez-les à [`permissions.deny`](/docs/fr/permissions#tool-specific-permission-rules). Une règle de refus correspond à la commande [telle qu'écrite](/docs/fr/permissions#bash-rule-limits) ; pour l'application du réseau qui ne dépend pas du texte de la commande, consultez [l'isolement du réseau sandbox](/docs/fr/sandboxing#network-isolation)
 
 <h3 id="privacy-safeguards">
   Protections de la vie privée
@@ -74,13 +78,13 @@ Pour plus de détails, veuillez consulter nos [Conditions commerciales](https://
   Protections supplémentaires
 </h3>
 
-* **Approbation des demandes réseau** : Les outils qui effectuent des demandes réseau nécessitent une approbation utilisateur par défaut
+* **Approbation des demandes réseau** : En mode Manuel, la plupart des outils qui effectuent des demandes réseau nécessitent une approbation utilisateur par défaut
 * **Fenêtres de contexte isolées** : Web fetch utilise une fenêtre de contexte séparée pour éviter d'injecter des prompts potentiellement malveillants
 * **Vérification de confiance** : Les premières exécutions de base de code et les nouveaux serveurs MCP nécessitent une vérification de confiance
   * Remarque : La vérification de confiance est désactivée lors de l'exécution non-interactive avec le drapeau `-p`
   * Remarque : Lorsque vous démarrez Claude Code directement dans votre répertoire personnel, l'acceptation de la confiance est conservée pour la session actuelle uniquement et n'est pas écrite sur le disque, donc l'invite réapparaît à chaque lancement. Il n'y a aucun paramètre pour la conserver. Démarrez Claude Code à partir d'un sous-répertoire de projet à la place, où l'acceptation de la confiance est enregistrée par répertoire
-* **Détection d'injection de commande** : Les commandes bash suspectes nécessitent une approbation manuelle même si elles ont été précédemment autorisées
-* **Correspondance en cas d'échec fermé** : Les commandes non appariées par défaut nécessitent une approbation manuelle
+* **Détection d'injection de commande** : En mode Manuel, les commandes bash suspectes nécessitent une approbation manuelle même si elles ont été précédemment autorisées
+* **Correspondance en cas d'échec fermé** : En mode Manuel, les commandes non appariées nécessitent une approbation par défaut
 * **Descriptions en langage naturel** : Les commandes bash complexes incluent des explications pour la compréhension de l'utilisateur
 * **Stockage sécurisé des identifiants** : Les clés API et les tokens sont stockés dans le Keychain macOS lorsqu'il est disponible, et protégés par les permissions de fichiers sur Windows et Linux. Consultez [Gestion des identifiants](/docs/fr/authentication#credential-management)
 
@@ -120,16 +124,16 @@ Consultez [Sécurité et confidentialité VS Code](/docs/fr/vs-code#security-and
   Sécurité de l'exécution cloud
 </h2>
 
-Lors de l'utilisation de [Claude Code sur le web](/docs/fr/claude-code-on-the-web), des contrôles de sécurité supplémentaires sont en place :
+Lors de l'utilisation de [sessions cloud](/docs/fr/claude-code-on-the-web), des contrôles de sécurité supplémentaires sont en place. Les sessions que votre organisation achemine vers un [environnement auto-hébergé](/docs/fr/self-hosted-environments) s'exécutent sur votre propre infrastructure, où l'isolation, l'accès réseau sortant et les identifiants git relèvent de la responsabilité de votre déploiement. Dans les environnements hébergés par Anthropic :
 
 * **Machines virtuelles isolées** : Chaque session cloud s'exécute dans une VM isolée gérée par Anthropic
 * **Contrôles d'accès réseau** : L'accès réseau est limité par défaut et peut être configuré pour être désactivé ou autoriser uniquement des domaines spécifiques
 * **Protection des identifiants** : L'authentification est gérée via un proxy sécurisé qui utilise un identifiant limité à l'intérieur du sandbox, qui est ensuite traduit en votre jeton d'authentification GitHub réel
 * **Restrictions de branche** : Les opérations de push Git sont limitées à la branche de travail actuelle
-* **Journalisation d'audit** : Toutes les opérations dans les environnements cloud sont enregistrées à des fins de conformité et d'audit
-* **Nettoyage automatique** : Les environnements cloud sont automatiquement terminés après la fin de la session
+* **Journalisation d'audit** : Toutes les opérations dans les sessions cloud sont enregistrées à des fins de conformité et d'audit
+* **Nettoyage automatique** : Les VMs de session sont récupérées après une période d'inactivité
 
-Pour plus de détails sur l'exécution cloud, consultez [Claude Code sur le web](/docs/fr/claude-code-on-the-web).
+Pour plus de détails sur l'exécution cloud, consultez [Utiliser Claude Code dans le cloud](/docs/fr/claude-code-on-the-web) ; pour configurer l'accès réseau pour les sessions cloud, consultez [Configurer les environnements cloud](/docs/fr/cloud-environments#network-access).
 
 Les sessions de [Contrôle à distance](/docs/fr/remote-control) fonctionnent différemment : l'interface web se connecte à un processus Claude Code s'exécutant sur votre machine locale. Toute l'exécution du code et l'accès aux fichiers restent locaux, et le trafic de session transite par l'API Anthropic via TLS ; une fois connecté, la transcription de la session est stockée sur les serveurs Anthropic pour synchroniser la conversation entre les appareils, comme décrit dans [Connexion et sécurité](/docs/fr/remote-control#connection-and-security). Aucune VM cloud ou sandbox n'est impliquée. La connexion utilise plusieurs identifiants de courte durée et à portée étroite, chacun limité à un objectif spécifique et expirant indépendamment, pour limiter le rayon d'explosion de tout identifiant compromis unique.
 
@@ -150,7 +154,7 @@ Les sessions de [Contrôle à distance](/docs/fr/remote-control) fonctionnent di
   Sécurité d'équipe
 </h3>
 
-* Utilisez les [paramètres gérés](/docs/fr/settings#settings-files) pour appliquer les normes organisationnelles
+* Utilisez les [paramètres gérés](/docs/fr/settings#where-settings-live) pour appliquer les normes organisationnelles
 * Partagez les configurations de permission approuvées via le contrôle de source
 * Formez les membres de l'équipe aux meilleures pratiques de sécurité
 * Surveillez l'utilisation de Claude Code via les [métriques OpenTelemetry](/docs/fr/monitoring-usage)
@@ -172,9 +176,11 @@ Si vous découvrez une vulnérabilité de sécurité dans Claude Code :
 </h2>
 
 * [Plugin de conseils en sécurité](/docs/fr/security-guidance) : faire examiner et corriger par Claude les vulnérabilités dans ses propres modifications de code pendant la session
+* [`/security-review`](/docs/fr/commands#all-commands) : exécuter une vérification de sécurité à la demande sur les modifications de votre branche actuelle
 * [Environnements sandbox](/docs/fr/sandbox-environments) : comparer les approches d'isolation et en choisir une pour votre modèle de menace
 * [Sandboxing](/docs/fr/sandboxing) : isolation du système de fichiers et du réseau pour les commandes Bash
 * [Permissions](/docs/fr/permissions) : configurer les permissions et les contrôles d'accès
 * [Surveillance de l'utilisation](/docs/fr/monitoring-usage) : suivre et auditer l'activité Claude Code
 * [Conteneurs de développement](/docs/fr/devcontainer) : environnements sécurisés et isolés
 * [Centre de confiance Anthropic](https://trust.anthropic.com) : certifications de sécurité et conformité
+* [Guide du CISO sur l'IA agentive](https://claude.com/blog/ciso-guide-to-agentic-ai) : un cadre de travail pour les responsables de la sécurité afin d'évaluer les déploiements d'IA agentive

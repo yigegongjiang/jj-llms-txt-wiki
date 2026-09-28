@@ -8,8 +8,6 @@
 
 カスタムツールは Agent SDK を拡張し、Claude が会話中に呼び出せる独自の関数を定義できるようにします。SDK のインプロセス MCP サーバーを使用すると、Claude にデータベース、外部 API、ドメイン固有のロジック、またはアプリケーションが必要とするその他の機能へのアクセスを提供できます。
 
-このガイドでは、入力スキーマとハンドラーを使用してツールを定義し、それらを MCP サーバーにバンドルし、`query` に渡し、Claude がアクセスできるツールを制御する方法について説明します。また、エラーハンドリング、ツール注釈、および画像などの非テキストコンテンツを返す方法についても説明します。
-
 <h2 id="quick-reference">
   クイックリファレンス
 </h2>
@@ -33,12 +31,12 @@
 ツールは 4 つの部分で定義され、TypeScript の [`tool()`](/docs/ja/agent-sdk/typescript#tool) ヘルパーまたは Python の [`@tool`](/docs/ja/agent-sdk/python#tool) デコレーターに引数として渡されます。
 
 * **名前：** Claude がツールを呼び出すために使用する一意の識別子。
-* **説明：** ツールが何をするかを説明します。Claude はこれを読んで、ツールをいつ呼び出すかを決定します。
-* **入力スキーマ：** Claude が提供する必要がある引数。TypeScript では常に [Zod スキーマ](https://zod.dev/)であり、ハンドラーの `args` は自動的に型付けされます。Python では `{"latitude": float}` のような名前から型へのマッピングであり、SDK が JSON Schema に変換します。Python デコレーターは、列挙型、範囲、オプションフィールド、またはネストされたオブジェクトが必要な場合、完全な [JSON Schema](https://json-schema.org/understanding-json-schema/about) 辞書も受け入れます。
+* **説明：** ツールが何をするか。Claude はこれを読んで、ツールをいつ呼び出すかを決定します。
+* **入力スキーマ：** Claude が提供する必要がある引数。TypeScript では常に [Zod スキーマ](https://zod.dev/)であり、ハンドラーの `args` は自動的に型付けされます。Python では、`{"latitude": float}` のような名前から型へのマッピングである dict であり、SDK が JSON Schema に変換します。Python デコレーターは、列挙型、範囲、オプションフィールド、またはネストされたオブジェクトが必要な場合、完全な [JSON Schema](https://json-schema.org/understanding-json-schema/about) dict も直接受け入れます。
 * **ハンドラー：** Claude がツールを呼び出すときに実行される非同期関数。検証された引数を受け取り、以下を含むオブジェクトを返す必要があります。
-  * `content`（必須）：結果ブロックの配列。各ブロックは `"text"`、`"image"`、`"audio"`、`"resource"`、または `"resource_link"` の `type` を持ちます。非テキストブロックについては、[画像とリソースを返す](#return-images-and-resources)を参照してください。
-  * `structuredContent`（オプション）：結果をマシン可読データとして保持する JSON オブジェクト。`content` と共に返されます。[構造化データを返す](#return-structured-data)を参照してください。
-  * `isError`（オプション）：ツール障害を通知するために `true` に設定し、Claude が対応できるようにします。[エラーを処理する](#handle-errors)を参照してください。
+  * `content`（必須）：結果ブロックの配列。各ブロックは `"text"`、`"image"`、`"audio"`、`"resource"`、または `"resource_link"` の `type` を持ちます。テキスト以外のブロックについては、[画像とリソースを返す](#return-images-and-resources)を参照してください。
+  * `structuredContent`（オプション）：結果を機械可読データとして保持する JSON オブジェクト。`content` と一緒に返されます。[構造化データを返す](#return-structured-data)を参照してください。
+  * `isError`（オプション）：ツール障害を通知するために `true` に設定して、Claude が対応できるようにします。[エラーを処理する](#handle-errors)を参照してください。
 
 ツールを定義した後、[`createSdkMcpServer`](/docs/ja/agent-sdk/typescript#createsdkmcpserver)（TypeScript）または [`create_sdk_mcp_server`](/docs/ja/agent-sdk/python#create_sdk_mcp_server)（Python）でサーバーにラップします。サーバーはアプリケーション内でインプロセスで実行され、別のプロセスとしては実行されません。
 
@@ -55,7 +53,7 @@
   from claude_agent_sdk import tool, create_sdk_mcp_server
 
 
-  # ツールを定義：名前、説明、入力スキーマ、ハンドラー
+  # Define a tool: name, description, input schema, handler
   @tool(
       "get_temperature",
       "Get the current temperature at a location",
@@ -74,7 +72,7 @@
           )
           data = response.json()
 
-      # コンテンツ配列を返す - Claude はこれをツール結果として見ます
+      # Return a content array - Claude sees this as the tool result
       return {
           "content": [
               {
@@ -85,7 +83,7 @@
       }
 
 
-  # ツールをインプロセス MCP サーバーにラップします
+  # Wrap the tool in an in-process MCP server
   weather_server = create_sdk_mcp_server(
       name="weather",
       version="1.0.0",
@@ -97,29 +95,29 @@
   import { tool, createSdkMcpServer } from "@anthropic-ai/claude-agent-sdk";
   import { z } from "zod";
 
-  // ツールを定義：名前、説明、入力スキーマ、ハンドラー
+  // Define a tool: name, description, input schema, handler
   const getTemperature = tool(
     "get_temperature",
     "Get the current temperature at a location",
     {
-      latitude: z.number().describe("Latitude coordinate"), // .describe() は Claude が見るフィールド説明を追加します
+      latitude: z.number().describe("Latitude coordinate"), // .describe() adds a field description Claude sees
       longitude: z.number().describe("Longitude coordinate")
     },
     async (args) => {
-      // args はスキーマから型付けされます：{ latitude: number; longitude: number }
+      // args is typed from the schema: { latitude: number; longitude: number }
       const response = await fetch(
         `https://api.open-meteo.com/v1/forecast?latitude=${args.latitude}&longitude=${args.longitude}&current=temperature_2m&temperature_unit=fahrenheit`
       );
       const data: any = await response.json();
 
-      // コンテンツ配列を返す - Claude はこれをツール結果として見ます
+      // Return a content array - Claude sees this as the tool result
       return {
         content: [{ type: "text", text: `Temperature: ${data.current.temperature_2m}°F` }]
       };
     }
   );
 
-  // ツールをインプロセス MCP サーバーにラップします
+  // Wrap the tool in an in-process MCP server
   const weatherServer = createSdkMcpServer({
     name: "weather",
     version: "1.0.0",
@@ -128,19 +126,19 @@
   ```
 </CodeGroup>
 
-完全なパラメーター詳細については、[`tool()`](/docs/ja/agent-sdk/typescript#tool) TypeScript リファレンスまたは [`@tool`](/docs/ja/agent-sdk/python#tool) Python リファレンスを参照してください。JSON Schema 入力形式と戻り値の構造を含みます。
+完全なパラメーター詳細（JSON Schema 入力形式と戻り値の構造を含む）については、[`tool()`](/docs/ja/agent-sdk/typescript#tool) TypeScript リファレンスまたは [`@tool`](/docs/ja/agent-sdk/python#tool) Python リファレンスを参照してください。
 
 <Tip>
-  パラメーターをオプションにするには：TypeScript では、Zod フィールドに `.default()` を追加します。Python では、辞書スキーマはすべてのキーを必須として扱うため、パラメーターをスキーマから除外し、説明文字列で言及し、ハンドラーで `args.get()` で読み取ります。以下の [`get_precipitation_chance` ツール](#add-more-tools)は両方のパターンを示しています。
+  パラメーターをオプションにするには：TypeScript では、Zod フィールドに `.default()` を追加します。Python では、dict スキーマはすべてのキーを必須として扱うため、パラメーターをスキーマから除外し、説明文字列で言及し、ハンドラーで `args.get()` で読み取ります。以下の [`get_precipitation_chance` ツール](#add-more-tools)は両方のパターンを示しています。
 </Tip>
 
 <h3 id="call-a-custom-tool">
   カスタムツールを呼び出す
 </h3>
 
-作成した MCP サーバーを `mcpServers` オプション経由で `query` に渡します。`mcpServers` のキーは各ツールの完全修飾名の `{server_name}` セグメントになります：`mcp__{server_name}__{tool_name}`。その名前を `allowedTools` にリストして、ツールが許可プロンプトなしで実行されるようにします。
+`mcpServers` オプション経由で `query` に作成した MCP サーバーを渡します。`mcpServers` のキーは各ツールの完全修飾名 `mcp__{server_name}__{tool_name}` の `{server_name}` セグメントになります。その名前を `allowedTools` にリストして、ツールが権限プロンプトなしで実行されるようにします。
 
-これらのスニペットは、[上記の例](#weather-tool-example)の `weatherServer` を再利用して、特定の場所の天気について Claude に尋ねます。
+これらのスニペットは、[天気ツールの例](#weather-tool-example)の `weatherServer` を再利用して、特定の場所の天気について Claude に尋ねます。
 
 <CodeGroup>
   ```python Python theme={null}
@@ -158,7 +156,7 @@
           prompt="What's the temperature in San Francisco?",
           options=options,
       ):
-          # ResultMessage はすべてのツール呼び出しが完了した後の最終メッセージです
+          # ResultMessage is the final message after all tool calls complete
           if isinstance(message, ResultMessage) and message.subtype == "success":
               print(message.result)
 
@@ -176,7 +174,7 @@
       allowedTools: ["mcp__weather__get_temperature"]
     }
   })) {
-    // "result" はすべてのツール呼び出しが完了した後の最終メッセージです
+    // "result" is the final message after all tool calls complete
     if (message.type === "result" && message.subtype === "success") {
       console.log(message.result);
     }
@@ -184,17 +182,19 @@
   ```
 </CodeGroup>
 
+このスニペットを [天気ツールの例](#weather-tool-example)のツールとサーバー定義と 1 つのファイルに組み合わせ、Python の場合は `python weather.py` で、TypeScript の場合は `npx tsx weather.ts` で実行します。Claude は `get_temperature` を呼び出し、スクリプトはサンフランシスコの現在の気温を含む 1 行の回答を出力します。
+
 <h3 id="add-more-tools">
   さらにツールを追加する
 </h3>
 
-サーバーは `tools` 配列にリストされた数だけのツールを保持します。複数のツールがサーバーにある場合、`allowedTools` で各ツールを個別にリストするか、ワイルドカード `mcp__weather__*` を使用してサーバーが公開するすべてのツールをカバーできます。
+サーバーは `tools` 配列にリストされているのと同じ数のツールを保持します。サーバーに複数のツールがある場合、`allowedTools` で各ツールを個別にリストするか、ワイルドカード `mcp__weather__*` を使用してサーバーが公開するすべてのツールをカバーできます。
 
-以下の例は、[天気ツールの例](#weather-tool-example)の `weatherServer` に 2 番目のツール `get_precipitation_chance` を追加し、両方のツールを配列で再構築します。
+以下の例は 2 番目のツール `get_precipitation_chance` を定義し、[天気ツールの例](#weather-tool-example)の `weatherServer` 定義を、配列内の両方のツールをリストするものに置き換えます。
 
 <CodeGroup>
   ```python Python theme={null}
-  # 同じサーバーの 2 番目のツールを定義します
+  # Define a second tool for the same server
   @tool(
       "get_precipitation_chance",
       "Get the hourly precipitation probability for a location. "
@@ -202,7 +202,7 @@
       {"latitude": float, "longitude": float},
   )
   async def get_precipitation_chance(args: dict[str, Any]) -> dict[str, Any]:
-      # 'hours' はスキーマにありません - .get() で読み取ってオプションにします
+      # 'hours' isn't in the schema - read it with .get() to make it optional
       hours = args.get("hours", 12)
       async with httpx.AsyncClient() as client:
           response = await client.get(
@@ -227,7 +227,7 @@
       }
 
 
-  # 両方のツールを配列で再構築します
+  # Rebuild the server with both tools in the array
   weather_server = create_sdk_mcp_server(
       name="weather",
       version="1.0.0",
@@ -236,7 +236,7 @@
   ```
 
   ```typescript TypeScript theme={null}
-  // 同じサーバーの 2 番目のツールを定義します
+  // Define a second tool for the same server
   const getPrecipitationChance = tool(
     "get_precipitation_chance",
     "Get the hourly precipitation probability for a location",
@@ -248,7 +248,7 @@
         .int()
         .min(1)
         .max(24)
-        .default(12) // .default() はパラメーターをオプションにします
+        .default(12) // .default() makes the parameter optional
         .describe("How many hours of forecast to return")
     },
     async (args) => {
@@ -264,7 +264,7 @@
     }
   );
 
-  // 両方のツールを配列で再構築します
+  // Rebuild the server with both tools in the array
   const weatherServer = createSdkMcpServer({
     name: "weather",
     version: "1.0.0",
@@ -273,22 +273,22 @@
   ```
 </CodeGroup>
 
-この配列内のすべてのツールは、毎ターン、コンテキストウィンドウスペースを消費します。数十のツールを定義している場合は、[ツール検索](/docs/ja/agent-sdk/tool-search)を参照して、代わりにオンデマンドで読み込みます。
+[ツール検索](/docs/ja/agent-sdk/tool-search)はデフォルトで有効になっており、SDK MCP ツールを遅延させます。Claude は各ツールの名前をコンパクトなリストで表示し、必要に応じてその完全なスキーマを読み込みます。ツール検索が無効になっている場合、この配列内のすべてのツールは毎ターン、コンテキストウィンドウスペースを消費します。TypeScript では、[`tool()`](/docs/ja/agent-sdk/typescript#tool) の `extras` 引数または [`createSdkMcpServer()`](/docs/ja/agent-sdk/typescript#createsdkmcpserver) のオプションで `alwaysLoad: true` を渡して、ツールの完全なスキーマを初期プロンプトに保持します。
 
 <h3 id="add-tool-annotations">
   ツール注釈を追加する
 </h3>
 
-[ツール注釈](https://modelcontextprotocol.io/docs/concepts/tools#tool-annotations)は、ツールの動作を説明するオプションのメタデータです。TypeScript の `tool()` ヘルパーの 5 番目の引数として、または Python の `@tool` デコレーターの `annotations` キーワード引数として渡します。すべてのヒントフィールドはブール値です。
+[ツール注釈](https://modelcontextprotocol.io/docs/concepts/tools#tool-annotations)は、ツールの動作を説明するオプションのメタデータです。TypeScript の `tool()` ヘルパーの 5 番目の引数として、または Python の `@tool` デコレーターの `annotations` キーワード引数経由で渡します。すべてのヒントフィールドはブール値です。
 
 | フィールド             | デフォルト   | 意味                                                |
 | :---------------- | :------ | :------------------------------------------------ |
-| `readOnlyHint`    | `false` | ツールは環境を変更しません。ツールが他の読み取り専用ツールと並列で呼び出せるかどうかを制御します。 |
-| `destructiveHint` | `true`  | ツールは破壊的な更新を実行する可能性があります。情報提供のみです。                 |
-| `idempotentHint`  | `false` | 同じ引数での繰り返し呼び出しは追加の効果がありません。情報提供のみです。              |
-| `openWorldHint`   | `true`  | ツールはプロセス外のシステムに到達します。情報提供のみです。                    |
+| `readOnlyHint`    | `false` | ツールは環境を変更しません。ツールを他の読み取り専用ツールと並列で呼び出せるかどうかを制御します。 |
+| `destructiveHint` | `true`  | ツールは破壊的な更新を実行する可能性があります。情報提供のみ。                   |
+| `idempotentHint`  | `false` | 同じ引数での繰り返し呼び出しは追加の効果がありません。情報提供のみ。                |
+| `openWorldHint`   | `true`  | ツールはプロセス外のシステムに到達します。情報提供のみ。                      |
 
-注釈はメタデータであり、強制ではありません。`readOnlyHint: true` でマークされたツールは、ハンドラーがそれを行う場合、ディスクに書き込むことができます。注釈をハンドラーに正確に保ちます。
+注釈はメタデータであり、強制ではありません。`readOnlyHint: true` とマークされたツールでも、ハンドラーがそれを行う場合はディスクに書き込むことができます。注釈をハンドラーに正確に保つようにしてください。
 
 この例は、[天気ツールの例](#weather-tool-example)の `get_temperature` ツールに `readOnlyHint` を追加します。
 
@@ -303,19 +303,22 @@
       {"latitude": float, "longitude": float},
       annotations=ToolAnnotations(
           readOnlyHint=True
-      ),  # Claude がこれを他の読み取り専用呼び出しとバッチ処理できるようにします
+      ),  # Lets Claude batch this with other read-only calls
   )
   async def get_temperature(args):
       return {"content": [{"type": "text", "text": "..."}]}
   ```
 
   ```typescript TypeScript theme={null}
+  import { tool } from "@anthropic-ai/claude-agent-sdk";
+  import { z } from "zod";
+
   tool(
     "get_temperature",
     "Get the current temperature at a location",
     { latitude: z.number(), longitude: z.number() },
     async (args) => ({ content: [{ type: "text", text: `...` }] }),
-    { annotations: { readOnlyHint: true } } // Claude がこれを他の読み取り専用呼び出しとバッチ処理できるようにします
+    { annotations: { readOnlyHint: true } } // Lets Claude batch this with other read-only calls
   );
   ```
 </CodeGroup>
@@ -323,55 +326,47 @@
 [TypeScript](/docs/ja/agent-sdk/typescript#toolannotations) または [Python](/docs/ja/agent-sdk/python#toolannotations) リファレンスで `ToolAnnotations` を参照してください。
 
 <h2 id="control-tool-access">
-  ツールアクセスを制御する
+  ツールアクセスの制御
 </h2>
 
-[天気ツールの例](#weather-tool-example)はサーバーを登録し、`allowedTools` にツールをリストしました。このセクションでは、ツール名がどのように構成されるか、および複数のツールがある場合や組み込みを制限したい場合にアクセスをスコープする方法について説明します。
-
-<h3 id="tool-name-format">
-  ツール名形式
-</h3>
-
-MCP ツールが Claude に公開されるとき、それらの名前は特定の形式に従います。
-
-* パターン：`mcp__{server_name}__{tool_name}`
-* 例：`weather` サーバーの `get_temperature` という名前のツールは `mcp__weather__get_temperature` になります
+[天気ツールの例](#weather-tool-example)は、サーバーを登録し、`allowedTools` にツールをリストしました。このセクションでは、複数のツールがある場合や組み込みツールを制限したい場合のアクセス範囲の設定方法について説明します。ツール名の構成方法については、[カスタムツールの呼び出し](#call-a-custom-tool)を参照してください。
 
 <h3 id="configure-allowed-tools">
-  許可されたツールを設定する
+  許可されたツールの設定
 </h3>
 
-`tools` オプションと許可/禁止リストは 2 つのレイヤーに影響します。可用性はツールが Claude のコンテキストに表示されるかどうかを制御し、許可は Claude がそれを試みた後に呼び出しが承認されるかどうかを制御します。`tools` と裸の名前の `disallowedTools` エントリは可用性を変更します。`allowedTools` とスコープされた `disallowedTools` ルールは許可のみを変更します。
+`tools` オプションと許可/禁止リストは、2 つのレイヤーに影響します。可用性はツールが Claude のコンテキストに表示されるかどうかを制御し、権限は Claude がツールを試みた後に呼び出しが承認されるかどうかを制御します。`tools` と単純名の `disallowedTools` エントリは可用性を変更します。`allowedTools` とスコープ付き `disallowedTools` ルールは権限を変更します。[タスク追跡ツール](/docs/ja/agent-sdk/todo-tracking#model-availability)の 1 つを `allowedTools` に名前を付けた場合、Claude Code もセッションをオプトインします。
 
-| オプション                     | レイヤー | 効果                                                                                                                                  |
-| :------------------------ | :--- | :---------------------------------------------------------------------------------------------------------------------------------- |
-| `tools: ["Read", "Grep"]` | 可用性  | リストされた組み込みのみが Claude のコンテキストにあります。リストされていない組み込みは削除されます。MCP ツールは影響を受けません。                                                            |
-| `tools: []`               | 可用性  | すべての組み込みが削除されます。Claude は MCP ツールのみを使用できます。                                                                                          |
-| 許可されたツール                  | 許可   | リストされたツールは許可プロンプトなしで実行されます。リストされていないツールは利用可能なままです。呼び出しは[許可フロー](/docs/ja/agent-sdk/permissions)を通ります。                                     |
-| 禁止されたツール                  | 両方   | `"Bash"` などの裸のツール名はツールを Claude のコンテキストから削除します。これは `tools` から省略するのと同じです。`"Bash(rm *)"` などのスコープされたルールはツールをコンテキストに残し、一致する呼び出しのみを拒否します。 |
+| オプション                     | レイヤー | 効果                                                                                                                                                                             |
+| :------------------------ | :--- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `tools: ["Read", "Grep"]` | 可用性  | リストされた組み込みツールのみが Claude のコンテキストに含まれます。リストされていない組み込みツールは削除されます。MCP ツールは影響を受けません。                                                                                                |
+| `tools: []`               | 可用性  | すべての組み込みツールが削除されます。Claude は MCP ツールのみを使用できます。                                                                                                                                  |
+| 許可されたツール                  | 権限   | リストされたツールは権限プロンプトなしで実行されます。その他のリストされていないツールは利用可能なままです。呼び出しは[権限フロー](/docs/ja/agent-sdk/permissions)を通じて行われます。                                                                        |
+| 禁止されたツール                  | 両方   | `"Bash"` などの単純なツール名は、`tools` から省略するのと同じように、ツールを Claude のコンテキストから削除します。`"Bash(rm *)"` などのスコープ付きルールは、ツールをコンテキストに残し、[記述されたとおり](/docs/ja/permissions#bash-rule-limits)一致する呼び出しのみを拒否します。 |
 
-組み込みを完全に削除するには、`tools` から省略するか、`disallowedTools`（Python：`disallowed_tools`）に裸の名前をリストします。どちらもツールをコンテキストから外すため、Claude はそれを試みることはありません。スコープされた `disallowedTools` ルールは一致する呼び出しをブロックしますが、ツールを表示したままにするため、Claude はそれを試みるターンを無駄にする可能性があります。完全な評価順序については、[許可を設定する](/docs/ja/agent-sdk/permissions)を参照してください。
+組み込みツールを完全に削除するには、`tools` から省略するか、`disallowedTools`（Python: `disallowed_tools`）に単純名をリストします。どちらもツールをコンテキストから除外するため、Claude はそれを試みることはありません。スコープ付き `disallowedTools` ルールは一致する呼び出しをブロックしますが、ツールを表示したままにするため、Claude はそれを試みるターンを無駄にする可能性があります。評価順序の詳細については、[権限の設定](/docs/ja/agent-sdk/permissions)を参照してください。
 
 <h2 id="handle-errors">
   エラーを処理する
 </h2>
 
-ハンドラーエラーはエージェントループを停止しません。SDK のインプロセス MCP サーバーはキャッチされない例外をキャッチし、エラー結果として返すため、エラーをどのように報告するかによって Claude が読む内容が決まります。クエリが失敗するかどうかではなく：
+ハンドラーエラーはエージェントループを停止しません。SDK のインプロセス MCP サーバーはキャッチされない例外をキャッチし、エラー結果として返すため、エラーをどのように報告するかが Claude が読む内容を決定します。クエリが失敗するかどうかではありません。
 
 | 何が起こるか                                                              | 結果                                                                            |
 | :------------------------------------------------------------------ | :---------------------------------------------------------------------------- |
-| ハンドラーがキャッチされない例外をスロー                                                | MCP サーバーはそれをエラー結果に変換し、生の例外メッセージを含みます。Claude はそのメッセージを見て、エージェントループが続行します。      |
-| ハンドラーがエラーをキャッチして `isError: true`（TS）/ `"is_error": True`（Python）を返す | Claude はあなたが作成したメッセージを見ます。生の例外が欠けているコンテキスト（どのリクエストが失敗したか、代わりに何を試すかなど）を追加できます。 |
+| ハンドラーがキャッチされない例外をスロー                                                | MCP サーバーはそれをエラー結果に変換し、生の例外メッセージを含めます。Claude はそのメッセージを見て、エージェントループは続行します。      |
+| ハンドラーがエラーをキャッチして `isError: true`（TS）/ `"is_error": True`（Python）を返す | Claude はあなたが作成したメッセージを見ます。生の例外が欠いているコンテキスト（どのリクエストが失敗したか、代わりに何を試すかなど）を追加できます。 |
 
-どちらの場合も Claude は再試行したり、別のツールを試したり、失敗を説明したりできます。生の例外メッセージが Claude が対応するのに十分でない場合は、自分でエラーをキャッチしてください。
+どちらの場合でも Claude は再試行したり、別のツールを試したり、失敗を説明したりできます。生の例外メッセージが Claude が対応するのに十分でない場合は、自分でエラーをキャッチしてください。
 
-以下の例は、ハンドラー内で 2 種類の障害をキャッチし、Claude が読むエラーメッセージを作成します。200 以外の HTTP ステータスは応答からキャッチされ、エラー結果として返されます。ネットワークエラーまたは無効な JSON は、周囲の `try/except`（Python）または `try/catch`（TypeScript）でキャッチされ、エラー結果としても返されます。どちらの場合も Claude は、生の例外文字列ではなく、失敗を説明するメッセージを受け取ります。
+以下の例は、ハンドラー内で 2 種類の失敗をキャッチし、Claude が読むエラーメッセージを作成します。200 以外の HTTP ステータスはレスポンスからキャッチされ、エラー結果として返されます。ネットワークエラーまたは無効な JSON は、周囲の `try/except`（Python）または `try/catch`（TypeScript）によってキャッチされ、エラー結果として返されます。どちらの場合でも Claude は、生の例外文字列の代わりに失敗を説明するメッセージを受け取ります。
 
 <CodeGroup>
   ```python Python theme={null}
   import json
   import httpx
   from typing import Any
+  from claude_agent_sdk import tool
 
 
   @tool(
@@ -384,8 +379,8 @@ MCP ツールが Claude に公開されるとき、それらの名前は特定�
           async with httpx.AsyncClient() as client:
               response = await client.get(args["endpoint"])
               if response.status_code != 200:
-                  # Claude が対応できるようにツール結果として失敗を返します。
-                  # is_error はこれを失敗した呼び出しとしてマークし、奇妙に見えるデータではなく。
+                  # Return the failure as a tool result so Claude can react to it.
+                  # is_error marks this as a failed call rather than odd-looking data.
                   return {
                       "content": [
                           {
@@ -399,8 +394,8 @@ MCP ツールが Claude に公開されるとき、それらの名前は特定�
               data = response.json()
               return {"content": [{"type": "text", "text": json.dumps(data, indent=2)}]}
       except Exception as e:
-          # Claude が読むメッセージを作成します。キャッチされない例外は
-          # コンテキストなしで生の str(e) として Claude に到達します。
+          # Composes the message Claude reads. An uncaught exception would
+          # reach Claude as the raw str(e) with no context.
           return {
               "content": [{"type": "text", "text": f"Failed to fetch data: {str(e)}"}],
               "is_error": True,
@@ -408,6 +403,9 @@ MCP ツールが Claude に公開されるとき、それらの名前は特定�
   ```
 
   ```typescript TypeScript theme={null}
+  import { tool } from "@anthropic-ai/claude-agent-sdk";
+  import { z } from "zod";
+
   tool(
     "fetch_data",
     "Fetch data from an API",
@@ -419,8 +417,8 @@ MCP ツールが Claude に公開されるとき、それらの名前は特定�
         const response = await fetch(args.endpoint);
 
         if (!response.ok) {
-          // Claude が対応できるようにツール結果として失敗を返します。
-          // isError はこれを失敗した呼び出しとしてマークし、奇妙に見えるデータではなく。
+          // Return the failure as a tool result so Claude can react to it.
+          // isError marks this as a failed call rather than odd-looking data.
           return {
             content: [
               {
@@ -442,8 +440,8 @@ MCP ツールが Claude に公開されるとき、それらの名前は特定�
           ]
         };
       } catch (error) {
-        // Claude が読むメッセージを作成します。キャッチされない throw は
-        // コンテキストなしで生のエラーメッセージとして Claude に到達します。
+        // Composes the message Claude reads. An uncaught throw would
+        // reach Claude as the raw error message with no context.
         return {
           content: [
             {
@@ -463,30 +461,33 @@ MCP ツールが Claude に公開されるとき、それらの名前は特定�
   画像とリソースを返す
 </h2>
 
-ツール結果の `content` 配列は `text`、`image`、`audio`、`resource`、および `resource_link` ブロックを受け入れます。同じ応答でそれらを混ぜることができます。TypeScript では、オーディオブロックはディスクに保存され、Claude は保存されたファイルパスを含むテキストブロックを受け取ります。Python では、SDK はツール結果からオーディオブロックを削除し、警告をログに記録します。リソースリンクブロックはリンクの名前、URI、および説明を含むテキストブロックに変換されます。
+ツール結果の `content` 配列は、`text`、`image`、`audio`、`resource`、および `resource_link` ブロックを受け入れます。同じレスポンス内でこれらを混在させることができます。TypeScript では、SDK はオーディオブロックをディスクに保存し、Claude は保存されたファイルパスを含むテキストブロックを受け取ります。Python では、SDK はツール結果からオーディオブロックを削除し、警告をログに記録します。
+
+Claude は各リソースリンクブロックをテキストブロックとして受け取ります。このテキストブロックには、リンクの名前、URI、および説明が含まれます。TypeScript では、アプリケーションはユーザーメッセージの `tool_use_result` 上で [`resourceLinks`](/docs/ja/agent-sdk/typescript#sdkmcpresourcelink) としてリンク自体も受け取ります。Python では、SDK はそれらを CLI が結果を見る前にテキストに平坦化するため、Python の [`resourceLinks` キー](/docs/ja/agent-sdk/python#usermessage) はインプロセスツールに対して生成されることはありません。
 
 <h3 id="images">
   画像
 </h3>
 
-画像ブロックは画像バイトをインラインで、base64 としてエンコードされた状態で運びます。URL フィールドはありません。URL に存在する画像を返すには、ハンドラーで取得し、応答バイトを読み取り、返す前に base64 エンコードします。結果は視覚入力として処理されます。
+画像ブロックは、画像バイトをインラインで、base64 としてエンコードされた形式で保持します。URL フィールドはありません。URL に存在する画像を返すには、ハンドラー内でそれをフェッチし、レスポンスバイトを読み取り、返す前に base64 エンコードしてください。結果は視覚入力として処理されます。
 
-| フィールド      | 型         | 注釈                                                                 |
+| フィールド      | 型         | 注記                                                                 |
 | :--------- | :-------- | :----------------------------------------------------------------- |
 | `type`     | `"image"` |                                                                    |
-| `data`     | `string`  | Base64 エンコードされたバイト。`data:image/...;base64,` プレフィックスなしの生の base64 のみ |
+| `data`     | `string`  | Base64 エンコードされたバイト。生の base64 のみ、`data:image/...;base64,` プレフィックスなし |
 | `mimeType` | `string`  | 必須。例えば `image/png`、`image/jpeg`、`image/webp`、`image/gif`           |
 
 <CodeGroup>
   ```python Python theme={null}
   import base64
   import httpx
+  from claude_agent_sdk import tool
 
 
-  # URL から画像を取得して Claude に返すツールを定義します
+  # Define a tool that fetches an image from a URL and returns it to Claude
   @tool("fetch_image", "Fetch an image from a URL and return it to Claude", {"url": str})
   async def fetch_image(args):
-      async with httpx.AsyncClient() as client:  # 画像バイトを取得します
+      async with httpx.AsyncClient() as client:  # Fetch the image bytes
           response = await client.get(args["url"])
 
       return {
@@ -495,16 +496,19 @@ MCP ツールが Claude に公開されるとき、それらの名前は特定�
                   "type": "image",
                   "data": base64.b64encode(response.content).decode(
                       "ascii"
-                  ),  # 生のバイトを base64 エンコードします
+                  ),  # Base64-encode the raw bytes
                   "mimeType": response.headers.get(
                       "content-type", "image/png"
-                  ),  # 応答から MIME タイプを読み取ります
+                  ),  # Read MIME type from the response
               }
           ]
       }
   ```
 
   ```typescript TypeScript theme={null}
+  import { tool } from "@anthropic-ai/claude-agent-sdk";
+  import { z } from "zod";
+
   tool(
     "fetch_image",
     "Fetch an image from a URL and return it to Claude",
@@ -512,15 +516,15 @@ MCP ツールが Claude に公開されるとき、それらの名前は特定�
       url: z.string().url()
     },
     async (args) => {
-      const response = await fetch(args.url); // 画像バイトを取得します
-      const buffer = Buffer.from(await response.arrayBuffer()); // base64 エンコーディング用にバッファに読み込みます
+      const response = await fetch(args.url); // Fetch the image bytes
+      const buffer = Buffer.from(await response.arrayBuffer()); // Read into a Buffer for base64 encoding
       const mimeType = response.headers.get("content-type") ?? "image/png";
 
       return {
         content: [
           {
             type: "image",
-            data: buffer.toString("base64"), // 生のバイトを base64 エンコードします
+            data: buffer.toString("base64"), // Base64-encode the raw bytes
             mimeType
           }
         ]
@@ -534,14 +538,14 @@ MCP ツールが Claude に公開されるとき、それらの名前は特定�
   リソース
 </h3>
 
-リソースブロックは URI で識別されるコンテンツを埋め込みます。URI は Claude が参照するためのラベルです。実際のコンテンツはブロックの `text` または `blob` フィールドに含まれます。これは、生成されたファイルや外部システムのレコードなど、後で名前で対処することが理にかなっているツールが生成するものを使用します。
+リソースブロックは、URI で識別されるコンテンツを埋め込みます。URI はコンテンツの参照用ラベルです。実際のコンテンツはブロックの `text` または `blob` フィールドに含まれます。これは、ツールが後で名前で参照することが理にかなったもの（生成されたファイルや外部システムのレコードなど）を生成する場合に使用します。
 
-| フィールド               | 型            | 注釈                                                                                     |
+| フィールド               | 型            | 注記                                                                                     |
 | :------------------ | :----------- | :------------------------------------------------------------------------------------- |
 | `type`              | `"resource"` |                                                                                        |
 | `resource.uri`      | `string`     | コンテンツの識別子。任意の URI スキーム                                                                 |
-| `resource.text`     | `string`     | テキストの場合のコンテンツ。`blob` ではなく、これを提供します                                                     |
-| `resource.blob`     | `string`     | バイナリの場合、base64 エンコードされたコンテンツ。TypeScript のみ：Python SDK はツール結果からバイナリリソースを削除し、警告をログに記録します |
+| `resource.text`     | `string`     | テキストの場合のコンテンツ。これまたは `blob` を提供します。両方ではなく                                               |
+| `resource.blob`     | `string`     | バイナリの場合、base64 エンコードされたコンテンツ。TypeScript のみ：Python SDK はバイナリリソースをツール結果から削除し、警告をログに記録します |
 | `resource.mimeType` | `string`     | オプション                                                                                  |
 
 この例は、ツールハンドラー内から返されるリソースブロックを示しています。URI `file:///tmp/report.md` は Claude が後で参照できるラベルです。SDK はそのパスから読み取りません。
@@ -553,9 +557,9 @@ MCP ツールが Claude に公開されるとき、それらの名前は特定�
       {
         type: "resource",
         resource: {
-          uri: "file:///tmp/report.md", // Claude が参照するためのラベル。SDK が読み取るパスではありません
+          uri: "file:///tmp/report.md", // Label for Claude to reference, not a path the SDK reads
           mimeType: "text/markdown",
-          text: "# Report\n..." // 実際のコンテンツ、インライン
+          text: "# Report\n..." // The actual content, inline
         }
       }
     ]
@@ -568,9 +572,9 @@ MCP ツールが Claude に公開されるとき、それらの名前は特定�
           {
               "type": "resource",
               "resource": {
-                  "uri": "file:///tmp/report.md",  # Claude が参照するためのラベル。SDK が読み取るパスではありません
+                  "uri": "file:///tmp/report.md",  # Label for Claude to reference, not a path the SDK reads
                   "mimeType": "text/markdown",
-                  "text": "# Report\n...",  # 実際のコンテンツ、インライン
+                  "text": "# Report\n...",  # The actual content, inline
               },
           }
       ]
@@ -586,7 +590,7 @@ MCP ツールが Claude に公開されるとき、それらの名前は特定�
 
 `structuredContent` は結果のオプションの JSON オブジェクトで、`content` 配列とは別です。テキスト文字列または画像から解析する代わりに、Claude が正確なフィールドとして読み取ることができる生の値を返すために使用します。
 
-`structuredContent` が設定されると、Claude は JSON と `content` からの任意の画像またはリソースブロックを受け取ります。`content` のテキストブロックは転送されません。構造化データを複製すると想定されるためです。以下の例は、チャートを画像ブロックとしてレンダリングし、同じハンドラーから `structuredContent` でそれの背後にあるデータポイントを返します。
+`structuredContent` が設定されている場合、Claude は JSON と `content` からのすべての画像またはリソースブロックを受け取ります。`content` のテキストブロックは転送されません。これらは構造化データを複製していると想定されているためです。以下の例は、チャートを画像ブロックとしてレンダリングし、同じハンドラーから `structuredContent` でその背後にあるデータポイントを返します。スニペットでは、`chartPngBuffer` はレンダリングされた PNG バイトを保持する `Buffer` です。
 
 ```typescript TypeScript theme={null}
 return {
@@ -606,19 +610,19 @@ return {
 ```
 
 <Note>
-  Python `@tool` デコレーターはハンドラーの戻り辞書から `content` と `is_error` のみを転送します。Python から `structuredContent` を返すには、インプロセス SDK サーバーの代わりに [スタンドアロン MCP サーバー](/docs/ja/agent-sdk/mcp)を実行します。
+  Python の `@tool` デコレーターは、ハンドラーの戻り値の辞書から `content` と `is_error` のみを転送します。Python から `structuredContent` を返すには、in-process SDK サーバーの代わりに[スタンドアロン MCP サーバー](/docs/ja/agent-sdk/mcp)を実行してください。
 </Note>
 
 <h2 id="example-unit-converter">
   例：単位変換ツール
 </h2>
 
-このツールは長さ、温度、重量の単位間で値を変換します。ユーザーは「100 キロメートルをマイルに変換」または「72°F は摂氏何度か」と尋ねることができ、Claude はリクエストから正しい単位タイプと単位を選択します。
+このツールは、長さ、温度、重さの単位間で値を変換します。ユーザーは「100 キロメートルをマイルに変換して」または「72°F は摂氏温度で何度ですか」と尋ねることができ、Claude はリクエストから正しい単位タイプと単位を選択します。
 
-2 つのパターンを示しています。
+2 つのパターンを示しています：
 
-* **列挙型スキーマ：** `unit_type` は固定値のセットに制限されます。TypeScript では `z.enum()` を使用します。Python では、辞書スキーマは列挙型をサポートしないため、完全な JSON Schema 辞書が必要です。
-* **サポートされていない入力処理：** 変換ペアが見つからない場合、ハンドラーは `isError: true` を返すため、Claude はユーザーに何が間違っていたかを伝えることができ、失敗を通常の結果として扱いません。
+* **Enum スキーマ：** `unit_type` は固定値のセットに制限されます。TypeScript では、`z.enum()` を使用します。Python では、dict スキーマは enum をサポートしていないため、完全な JSON Schema dict が必要です。
+* **サポートされていない入力の処理：** 変換ペアが見つからない場合、ハンドラーは `isError: true` を返すため、Claude は失敗を通常の結果として扱うのではなく、ユーザーに何が間違ったかを伝えることができます。
 
 <CodeGroup>
   ```python Python theme={null}
@@ -626,8 +630,8 @@ return {
   from claude_agent_sdk import tool, create_sdk_mcp_server
 
 
-  # TypeScript の z.enum() は JSON Schema の "enum" 制約になります。
-  # 辞書スキーマに同等のものはないため、完全な JSON Schema が必要です。
+  # z.enum() in TypeScript becomes an "enum" constraint in JSON Schema.
+  # The dict schema has no equivalent, so full JSON Schema is required.
   @tool(
       "convert_units",
       "Convert a value from one unit to another",
@@ -777,7 +781,9 @@ return {
   ```
 </CodeGroup>
 
-サーバーが定義されたら、天気の例と同じ方法で `query` に渡します。この例は、同じツールが異なる単位タイプを処理することを示すために、ループで 3 つの異なるプロンプトを送信します。各応答について、`AssistantMessage` オブジェクト（Claude がそのターン中に行ったツール呼び出しを含む）を検査し、最終的な `ResultMessage` テキストを出力する前に各 `ToolUseBlock` を出力します。これにより、Claude がツールを使用しているのか、独自の知識から答えているのかを確認できます。
+サーバーが定義されたら、天気の例と同じ方法で `query` に渡します。この例は、同じツールが異なる単位タイプを処理することを示すために、ループで 3 つの異なるプロンプトを送信します。各レスポンスについて、`AssistantMessage` オブジェクト（Claude がそのターン中に行ったツール呼び出しを含む）を検査し、各 `ToolUseBlock` を出力してから最終的な `ResultMessage` テキストを出力します。これにより、Claude がツールを使用している場合と独自の知識から回答している場合を確認できます。
+
+[ツール検索](/docs/ja/agent-sdk/tool-search)はデフォルトで有効になっているため、出力には Claude が遅延ツールスキーマを読み込む際の `ToolSearch` 呼び出しも含まれる場合があります。
 
 <CodeGroup>
   ```python Python theme={null}
@@ -804,13 +810,19 @@ return {
       ]
 
       for prompt in prompts:
-          async for message in query(prompt=prompt, options=options):
-              if isinstance(message, AssistantMessage):
-                  for block in message.content:
-                      if isinstance(block, ToolUseBlock):
-                          print(f"[tool call] {block.name}({block.input})")
-              elif isinstance(message, ResultMessage) and message.subtype == "success":
-                  print(f"Q: {prompt}\nA: {message.result}\n")
+          try:
+              async for message in query(prompt=prompt, options=options):
+                  if isinstance(message, AssistantMessage):
+                      for block in message.content:
+                          if isinstance(block, ToolUseBlock):
+                              print(f"[tool call] {block.name}({block.input})")
+                  elif isinstance(message, ResultMessage) and message.subtype == "success":
+                      print(f"Q: {prompt}\nA: {message.result}\n")
+          except Exception as error:
+              # A single-shot query() raises after yielding an error result. Only success
+              # results are printed above, so handle the failure here and continue with
+              # the next prompt.
+              print(f"Call failed: {error}")
 
 
   asyncio.run(main())
@@ -826,22 +838,29 @@ return {
   ];
 
   for (const prompt of prompts) {
-    for await (const message of query({
-      prompt,
-      options: {
-        mcpServers: { converter: converterServer },
-        allowedTools: ["mcp__converter__convert_units"]
-      }
-    })) {
-      if (message.type === "assistant") {
-        for (const block of message.message.content) {
-          if (block.type === "tool_use") {
-            console.log(`[tool call] ${block.name}`, block.input);
-          }
+    try {
+      for await (const message of query({
+        prompt,
+        options: {
+          mcpServers: { converter: converterServer },
+          allowedTools: ["mcp__converter__convert_units"]
         }
-      } else if (message.type === "result" && message.subtype === "success") {
-        console.log(`Q: ${prompt}\nA: ${message.result}\n`);
+      })) {
+        if (message.type === "assistant") {
+          for (const block of message.message.content) {
+            if (block.type === "tool_use") {
+              console.log(`[tool call] ${block.name}`, block.input);
+            }
+          }
+        } else if (message.type === "result" && message.subtype === "success") {
+          console.log(`Q: ${prompt}\nA: ${message.result}\n`);
+        }
       }
+    } catch (error) {
+      // A single-shot query() throws after yielding an error result. Only success
+      // results are logged above, so handle the failure here and continue with
+      // the next prompt.
+      console.error(`Call failed: ${error}`);
     }
   }
   ```
@@ -851,19 +870,10 @@ return {
   次のステップ
 </h2>
 
-カスタムツールは非同期関数を標準インターフェースにラップします。このページのパターンを同じサーバーで混ぜることができます。単一のサーバーは、データベースツール、API ゲートウェイツール、および画像レンダラーを並べて保持できます。
+このページのパターンを同じサーバー内で組み合わせることができます。単一のサーバーは、データベースツール、API ゲートウェイツール、画像レンダラーを並行して保持できます。
 
 ここから：
 
-* サーバーが数十のツールに成長する場合は、[ツール検索](/docs/ja/agent-sdk/tool-search)を参照して、Claude がそれらを必要とするまで読み込みを遅延させます。
-* 独自のツールを構築する代わりに、外部 MCP サーバー（ファイルシステム、GitHub、Slack）に接続するには、[MCP サーバーを接続する](/docs/ja/agent-sdk/mcp)を参照してください。
-* どのツールが自動的に実行されるか、承認が必要かを制御するには、[許可を設定する](/docs/ja/agent-sdk/permissions)を参照してください。
-
-<h2 id="related-documentation">
-  関連ドキュメント
-</h2>
-
-* [TypeScript SDK リファレンス](/docs/ja/agent-sdk/typescript)
-* [Python SDK リファレンス](/docs/ja/agent-sdk/python)
-* [MCP ドキュメント](https://modelcontextprotocol.io)
-* [SDK 概要](/docs/ja/agent-sdk/overview)
+* サーバーが数十個のツールに成長する場合は、[ツール検索](/docs/ja/agent-sdk/tool-search)を参照して、Claude がそれらを必要とするまで読み込みを遅延させてください。
+* 独自に構築する代わりに外部 MCP サーバー（ファイルシステム、GitHub、Slack）に接続するには、[MCP サーバーを接続](/docs/ja/agent-sdk/mcp)を参照してください。
+* どのツールが自動的に実行されるか、または承認が必要かを制御するには、[権限を設定](/docs/ja/agent-sdk/permissions)を参照してください。

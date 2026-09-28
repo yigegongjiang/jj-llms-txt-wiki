@@ -105,9 +105,12 @@ Microsoft Foundry で Claude Code を構成する前に、以下を確認して�
 1. [Microsoft Foundry ポータル](https://ai.azure.com/)に移動します
 2. 新しいリソースを作成し、リソース名をメモします
 3. Claude モデルのデプロイメントを作成します。各デプロイメントに付与する名前をメモしてください。ステップ 4 でこれらの名前をモデル変数として設定します：
+
    * Claude Opus
    * Claude Sonnet
    * Claude Haiku
+
+   デプロイメントを構成する際に、[ホスティングオプション](https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry#hosting-options)も選択します。これにより、推論が Azure で実行されるか、Anthropic インフラストラクチャで実行されるかが決まります。
 
 <h3 id="2-configure-azure-credentials">
   2) Azure 認証情報を構成する
@@ -179,7 +182,7 @@ export ANTHROPIC_FOUNDRY_RESOURCE={resource}
 
 モデル変数をステップ 1 で作成したデプロイメント名と一致するように設定します。
 
-`ANTHROPIC_DEFAULT_OPUS_MODEL` がない場合、Foundry の `opus` エイリアスは Opus 4.6 に解決されます。最新のモデルを使用するために Opus 4.8 ID に設定します：
+`ANTHROPIC_DEFAULT_OPUS_MODEL` がない場合、Foundry の `opus` エイリアスは Opus 4.6 に解決されます。より新しい Opus モデル（Opus 4.8 など）の ID に設定します：
 
 ```bash theme={null}
 export ANTHROPIC_DEFAULT_OPUS_MODEL='claude-opus-4-8'
@@ -196,6 +199,8 @@ export ANTHROPIC_DEFAULT_HAIKU_MODEL='claude-haiku-4-5'
 ```bash theme={null}
 export ENABLE_PROMPT_CACHING_1H=1
 ```
+
+メインの会話と Claude Code が実行するリクエストで異なる TTL を設定するには、[TTL を自分で選択](/docs/ja/prompt-caching#choose-the-ttl-yourself)してください。
 
 <h3 id="5-run-claude-code">
   5. Claude Code を実行する

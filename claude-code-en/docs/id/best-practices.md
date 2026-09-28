@@ -12,7 +12,7 @@ Ini mengubah cara Anda bekerja. Alih-alih menulis kode sendiri dan meminta Claud
 
 Namun otonomi ini masih datang dengan kurva pembelajaran. Claude bekerja dalam batasan tertentu yang perlu Anda pahami.
 
-Panduan ini mencakup pola yang telah terbukti efektif di seluruh tim internal Anthropic dan untuk insinyur yang menggunakan Claude Code di berbagai basis kode, bahasa, dan lingkungan. Untuk cara loop agentic bekerja di balik layar, lihat [Cara Claude Code Bekerja](/docs/id/how-claude-code-works).
+Panduan ini mencakup pola yang telah terbukti efektif di seluruh tim internal Anthropic dan untuk insinyur yang menggunakan Claude Code di berbagai basis kode, bahasa, dan lingkungan. Untuk cara loop agentic bekerja, lihat [Cara Claude Code Bekerja](/docs/id/how-claude-code-works).
 
 ***
 
@@ -34,7 +34,7 @@ Ini penting karena kinerja LLM menurun saat konteks terisi. Ketika jendela konte
 
 Claude berhenti ketika pekerjaan terlihat selesai. Tanpa pemeriksaan yang dapat dijalankannya, "terlihat selesai" adalah satu-satunya sinyal yang tersedia, dan Anda menjadi loop verifikasi: setiap kesalahan menunggu Anda untuk menyadarinya. Berikan Claude sesuatu yang menghasilkan lulus atau gagal, dan loop akan menutup dengan sendirinya. Claude melakukan pekerjaan, menjalankan pemeriksaan, membaca hasilnya, dan melakukan iterasi hingga pemeriksaan lulus.
 
-Pemeriksaan adalah apa pun yang mengembalikan sinyal yang dapat dibaca Claude dalam percakapan: rangkaian tes, kode keluar build, linter, skrip yang membedakan output terhadap fixture, atau [tangkapan layar browser](/docs/id/chrome) dibandingkan dengan desain.
+Pemeriksaan adalah apa pun yang mengembalikan sinyal yang dapat dibaca Claude dalam percakapan: rangkaian tes, kode keluar build, linter, skrip yang membedakan output terhadap fixture, atau [tangkapan layar browser](/docs/id/chrome) dibandingkan dengan desain. Jalankan [`/verify`](/docs/id/skills#run-and-verify-your-app) sendiri setelah pemeriksaan Claude lulus untuk mengonfirmasi perubahan terhadap aplikasi yang berjalan.
 
 | Strategi                                  | Sebelum                                                  | Sesudah                                                                                                                                                                                                               |
 | ----------------------------------------- | -------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -45,7 +45,7 @@ Pemeriksaan adalah apa pun yang mengembalikan sinyal yang dapat dibaca Claude da
 Setelah pemeriksaan ada, putuskan seberapa ketat pemeriksaan tersebut membatasi penghentian:
 
 * **Dalam satu prompt**: minta Claude menjalankan pemeriksaan dan melakukan iterasi dalam pesan yang sama, seperti dalam tabel di atas.
-* **Sepanjang sesi**: atur pemeriksaan sebagai [kondisi `/goal`](/docs/id/goal). Evaluator terpisah memeriksa ulang setelah setiap giliran dan Claude terus bekerja sampai kondisi terpenuhi.
+* **Sepanjang sesi**: atur pemeriksaan sebagai [kondisi `/goal`](/docs/id/goal). Evaluator terpisah memeriksa ulang setelah setiap giliran dan Claude terus bekerja sampai goal terpenuhi. Jika Claude terhenti, Claude Code pada akhirnya menghentikan run dengan goal masih ditetapkan — lihat [bagaimana evaluasi /goal bekerja](/docs/id/goal#how-evaluation-works).
 * **Sebagai gerbang deterministik**: [hook Stop](/docs/id/hooks#stop) menjalankan pemeriksaan Anda sebagai skrip dan memblokir giliran dari berakhir sampai lulus. Claude Code menimpa hook dan mengakhiri giliran setelah 8 blok berturut-turut.
 * **Dengan pendapat kedua**: [subagent verifikasi](/docs/id/sub-agents) atau [alur kerja dinamis](/docs/id/workflows) yang memeriksa temuannya sendiri memiliki model segar yang mencoba menyangkal hasil, sehingga agen yang melakukan pekerjaan bukan yang menilainya.
 
@@ -69,9 +69,9 @@ Alur kerja yang direkomendasikan memiliki empat fase:
 
 <Steps>
   <Step title="Jelajahi">
-    Masukkan plan mode. Claude membaca file dan menjawab pertanyaan tanpa membuat perubahan.
+    Masukkan plan mode dengan menekan `Shift+Tab` hingga bilah status menunjukkan `⏸ plan mode on`, atau mulai sesi dengan `claude --permission-mode plan`. Claude membaca file dan menjawab pertanyaan tanpa membuat perubahan.
 
-    ```txt claude (plan mode) theme={null}
+    ```txt title="claude (plan mode)" wrap theme={null}
     read /src/auth and understand how we handle sessions and login.
     also look at how we manage environment variables for secrets.
     ```
@@ -80,7 +80,7 @@ Alur kerja yang direkomendasikan memiliki empat fase:
   <Step title="Rencanakan">
     Minta Claude untuk membuat rencana implementasi terperinci.
 
-    ```txt claude (plan mode) theme={null}
+    ```txt title="claude (plan mode)" wrap theme={null}
     I want to add Google OAuth. What files need to change?
     What's the session flow? Create a plan.
     ```
@@ -89,9 +89,9 @@ Alur kerja yang direkomendasikan memiliki empat fase:
   </Step>
 
   <Step title="Implementasikan">
-    Beralih keluar dari plan mode dan biarkan Claude kode, memverifikasi terhadap rencananya.
+    Beralih keluar dari plan mode dengan menyetujui rencana atau menekan `Shift+Tab`, kemudian biarkan Claude kode, memverifikasi terhadap rencananya.
 
-    ```txt claude (default mode) theme={null}
+    ```txt title="claude" wrap theme={null}
     implement the OAuth flow from your plan. write tests for the
     callback handler, run the test suite and fix any failures.
     ```
@@ -100,7 +100,7 @@ Alur kerja yang direkomendasikan memiliki empat fase:
   <Step title="Komit">
     Minta Claude untuk melakukan komit dengan pesan deskriptif dan membuat PR.
 
-    ```txt claude (default mode) theme={null}
+    ```txt title="claude" wrap theme={null}
     commit with a descriptive message and open a PR
     ```
   </Step>
@@ -169,8 +169,6 @@ Beberapa langkah setup membuat Claude Code jauh lebih efektif di semua sesi Anda
 
 CLAUDE.md adalah file khusus yang dibaca Claude di awal setiap percakapan. Sertakan perintah Bash, gaya kode, dan aturan alur kerja. Ini memberikan Claude konteks persisten yang tidak dapat disimpulkan dari kode saja.
 
-Perintah `/init` menganalisis basis kode Anda untuk mendeteksi sistem build, kerangka kerja tes, dan pola kode, memberikan Anda fondasi solid untuk disempurnakan.
-
 Tidak ada format yang diperlukan untuk file CLAUDE.md, tetapi tetap singkat dan mudah dibaca manusia. Sebagai contoh:
 
 ```markdown CLAUDE.md theme={null}
@@ -183,7 +181,7 @@ Tidak ada format yang diperlukan untuk file CLAUDE.md, tetapi tetap singkat dan 
 - Prefer running single tests, and not the whole test suite, for performance
 ```
 
-CLAUDE.md dimuat setiap sesi, jadi hanya sertakan hal-hal yang berlaku secara luas. Untuk pengetahuan domain atau alur kerja yang hanya relevan kadang-kadang, gunakan [skills](/docs/id/skills) sebagai gantinya. Claude memuat mereka sesuai permintaan tanpa membengkak setiap percakapan.
+Jalankan `/context` untuk mengonfirmasi Claude memuat file. CLAUDE.md dimuat setiap sesi, jadi hanya sertakan hal-hal yang berlaku secara luas. Untuk pengetahuan domain atau alur kerja yang hanya relevan kadang-kadang, gunakan [skills](/docs/id/skills) sebagai gantinya. Claude memuat mereka sesuai permintaan tanpa membengkak setiap percakapan.
 
 Tetap ringkas. Untuk setiap baris, tanyakan: *"Apakah menghapus ini akan menyebabkan Claude membuat kesalahan?"* Jika tidak, potong. File CLAUDE.md yang membengkak menyebabkan Claude mengabaikan instruksi aktual Anda!
 
@@ -197,39 +195,24 @@ Tetap ringkas. Untuk setiap baris, tanyakan: *"Apakah menghapus ini akan menyeba
 | Keanehan lingkungan pengembang (variabel env yang diperlukan) | Praktik yang jelas sendiri seperti "tulis kode yang bersih"      |
 | Gotcha umum atau perilaku yang tidak jelas                    | Deskripsi file demi file dari basis kode                         |
 
-Jika Claude terus melakukan sesuatu yang tidak Anda inginkan meskipun memiliki aturan melawannya, file mungkin terlalu panjang dan aturan hilang. Jika Claude mengajukan pertanyaan yang dijawab di CLAUDE.md, frasenya mungkin ambigu. Perlakukan CLAUDE.md seperti kode: tinjau saat ada yang salah, pangkas secara teratur, dan uji perubahan dengan mengamati apakah perilaku Claude benar-benar bergeser.
+Jika Claude terus melakukan sesuatu yang tidak Anda inginkan meskipun memiliki aturan melawannya, file mungkin terlalu panjang dan aturan hilang. Jika Claude mengajukan pertanyaan yang dijawab di CLAUDE.md, frasenya mungkin ambigu. Perlakukan CLAUDE.md seperti kode: tinjau saat ada yang salah, pangkas secara teratur, dan uji perubahan dengan mengamati apakah perilaku Claude benar-benar bergeser. Untuk CLAUDE.md yang diperiksa, jalankan [`/doctor`](/docs/id/commands#all-commands) dan Claude mengusulkan pemotongan untuk konten yang dapat diturunkan dari basis kode.
 
-Anda dapat menyesuaikan instruksi dengan menambahkan penekanan (misalnya, "PENTING" atau "ANDA HARUS") untuk meningkatkan kepatuhan. Periksa CLAUDE.md ke dalam git sehingga tim Anda dapat berkontribusi. File ini meningkat nilainya seiring waktu.
+Jika Claude terus melewatkan satu instruksi, tambahkan penekanan seperti "PENTING" ke baris itu saja. Jika Anda menekankan banyak baris, tidak ada yang menonjol. Periksa CLAUDE.md ke dalam git sehingga tim Anda dapat berkontribusi. File ini meningkat nilainya seiring waktu.
 
-File CLAUDE.md dapat mengimpor file tambahan menggunakan sintaks `@path/to/import`:
-
-```markdown CLAUDE.md theme={null}
-See @README.md for project overview and @package.json for available npm commands.
-
-# Additional Instructions
-- Git workflow: @docs/git-instructions.md
-- Personal overrides: @~/.claude/my-project-instructions.md
-```
-
-Anda dapat menempatkan file CLAUDE.md di beberapa lokasi:
-
-* **Folder home (`~/.claude/CLAUDE.md`)**: berlaku untuk semua sesi Claude
-* **Root proyek (`./CLAUDE.md`)**: periksa ke dalam git untuk dibagikan dengan tim Anda
-* **Root proyek (`./CLAUDE.local.md`)**: catatan khusus proyek pribadi; tambahkan file ini ke `.gitignore` Anda sehingga tidak dibagikan dengan tim Anda
-* **Direktori induk**: berguna untuk monorepo di mana `root/CLAUDE.md` dan `root/foo/CLAUDE.md` ditarik secara otomatis
-* **Direktori anak**: Claude menarik file CLAUDE.md anak sesuai permintaan saat bekerja dengan file di direktori tersebut
+File CLAUDE.md dapat mengimpor file tambahan menggunakan sintaks `@path/to/import`. Untuk aturan impor dan di mana file CLAUDE.md dapat berada, lihat [file CLAUDE.md](/docs/id/memory#claude-md-files).
 
 <h3 id="configure-permissions">
   Konfigurasi izin
 </h3>
 
 <Tip>
-  Gunakan [auto mode](/docs/id/permission-modes#eliminate-prompts-with-auto-mode) untuk membiarkan classifier menangani persetujuan, `/permissions` untuk allowlist perintah spesifik, atau `/sandbox` untuk isolasi tingkat OS. Masing-masing mengurangi gangguan sambil membuat Anda tetap mengendalikan.
+  Untuk mendapatkan lebih sedikit prompt tanpa mengorbankan kontrol, pra-setujui alat yang Anda percayai dengan `/permissions` dan biarkan perintah sandboxed berjalan tanpa bertanya dengan `/sandbox`. Beralih ke mode Manual ketika Anda ingin menyetujui pengeditan dan perintah sendiri.
 </Tip>
 
-Secara default, Claude Code meminta izin untuk tindakan yang mungkin memodifikasi sistem Anda: penulisan file, perintah Bash, alat MCP, dll. Ini aman tetapi membosankan. Setelah persetujuan kesepuluh Anda tidak benar-benar meninjau lagi, Anda hanya mengklik. Ada tiga cara untuk mengurangi gangguan ini:
+Di paket Pro, Max, dan Team, auto mode adalah [mode izin awal bawaan](/docs/id/permission-modes#eliminate-prompts-with-auto-mode) untuk sesi terminal interaktif dan VS Code: model classifier terpisah meninjau sebagian besar tindakan alih-alih Anda dan hanya memblokir apa yang terlihat berisiko, seperti eskalasi cakupan, infrastruktur yang tidak dikenal, atau tindakan yang didorong konten bermusuhan.
 
-* **Auto mode**: model classifier terpisah meninjau perintah dan memblokir hanya apa yang terlihat berisiko: eskalasi cakupan, infrastruktur yang tidak dikenal, atau tindakan yang didorong konten bermusuhan. Terbaik ketika Anda mempercayai arah umum tugas tetapi tidak ingin mengklik setiap langkah
+Dalam mode Manual, mode izin awal bawaan di paket lain, Claude Code meminta sebelum tindakan yang mungkin memodifikasi sistem Anda: penulisan file, perintah Bash, alat MCP. Itu aman tetapi membosankan. Setelah persetujuan kesepuluh Anda mengklik saja daripada meninjau. Dua alat mengurangi gangguan tersebut dalam mode Manual dan berlaku dalam mode auto juga:
+
 * **Allowlist izin**: izinkan alat spesifik yang Anda tahu aman, seperti `npm run lint` atau `git commit`
 * **Sandboxing**: aktifkan isolasi tingkat OS yang membatasi akses sistem file dan jaringan, memungkinkan Claude bekerja lebih bebas dalam batas yang ditentukan
 
@@ -252,7 +235,7 @@ Claude juga efektif dalam mempelajari alat CLI yang tidak diketahuinya. Coba pro
 </h3>
 
 <Tip>
-  Jalankan `claude mcp add` untuk menghubungkan alat eksternal seperti Notion, Figma, atau database Anda.
+  Jalankan `claude mcp add` dengan nama server dan URL atau perintah untuk menghubungkan alat eksternal seperti Notion, Figma, atau database Anda. Sebagai contoh: `claude mcp add --transport http notion https://mcp.notion.com/mcp`.
 </Tip>
 
 Dengan [server MCP](/docs/id/mcp), Anda dapat meminta Claude untuk mengimplementasikan fitur dari pelacak masalah, query database, menganalisis data pemantauan, mengintegrasikan desain dari Figma, dan mengotomatisasi alur kerja.
@@ -351,7 +334,7 @@ Beri tahu Claude untuk menggunakan subagent secara eksplisit: *"Gunakan subagent
   Jalankan `/plugin` untuk menjelajahi marketplace. Plugins menambahkan skills, alat, dan integrasi tanpa konfigurasi.
 </Tip>
 
-[Plugins](/docs/id/plugins) menggabungkan skills, hooks, subagents, dan server MCP menjadi satu unit yang dapat diinstal dari komunitas dan Anthropic. Jika Anda bekerja dengan bahasa yang diketik, instal [plugin code intelligence](/docs/id/discover-plugins#code-intelligence) untuk memberikan Claude navigasi simbol presisi dan deteksi kesalahan otomatis setelah pengeditan.
+[Plugins](/docs/id/plugins/overview) menggabungkan skills, hooks, subagents, dan server MCP menjadi satu unit yang dapat diinstal dari komunitas dan Anthropic. Jika Anda bekerja dengan bahasa yang diketik, instal [plugin code intelligence](/docs/id/plugins/code-intelligence) untuk memberikan Claude navigasi simbol presisi dan deteksi kesalahan otomatis setelah pengeditan.
 
 Untuk panduan memilih antara skills, subagents, hooks, dan MCP, lihat [Perluas Claude Code](/docs/id/features-overview#match-features-to-your-goal).
 
@@ -361,7 +344,7 @@ Untuk panduan memilih antara skills, subagents, hooks, dan MCP, lihat [Perluas C
   Berkomunikasi secara efektif
 </h2>
 
-Cara Anda berkomunikasi dengan Claude Code secara signifikan mempengaruhi kualitas hasil.
+Tanyakan kepada Claude pertanyaan yang akan Anda tanyakan kepada insinyur lain, dan untuk fitur yang lebih besar, biarkan Claude mewawancarai Anda dan menulis spesifikasi sebelum Anda mulai mengimplementasikan.
 
 <h3 id="ask-codebase-questions">
   Tanyakan pertanyaan basis kode
@@ -389,9 +372,9 @@ Menggunakan Claude Code dengan cara ini adalah alur kerja onboarding yang efekti
   Untuk fitur yang lebih besar, biarkan Claude mewawancarai Anda terlebih dahulu. Mulai dengan prompt minimal dan minta Claude untuk mewawancarai Anda menggunakan alat `AskUserQuestion`.
 </Tip>
 
-Claude menanyakan tentang hal-hal yang mungkin belum Anda pertimbangkan, termasuk implementasi teknis, UI/UX, kasus tepi, dan trade-off.
+Claude menanyakan tentang hal-hal yang mungkin belum Anda pertimbangkan, termasuk implementasi teknis, UI/UX, kasus tepi, dan trade-off. Ganti `[brief description]` dengan fitur Anda sebelum mengirim prompt.
 
-```text theme={null}
+```text wrap theme={null}
 I want to build [brief description]. Interview me in detail using the AskUserQuestion tool.
 
 Ask about technical implementation, UI/UX, edge cases, concerns, and tradeoffs. Don't ask obvious questions, dig into the hard parts I might not have considered.
@@ -443,9 +426,9 @@ Selama sesi panjang, jendela konteks Claude dapat terisi dengan percakapan yang 
 * Gunakan `/clear` sering antara tugas untuk mengatur ulang jendela konteks sepenuhnya
 * Ketika auto compaction dipicu, Claude meringkas apa yang paling penting, termasuk pola kode, status file, dan keputusan kunci
 * Untuk kontrol lebih, jalankan `/compact <instructions>`, seperti `/compact Focus on the API changes`
-* Untuk mengompaksi hanya bagian dari percakapan, gunakan `Esc + Esc` atau `/rewind`, pilih checkpoint pesan, dan pilih **Summarize from here** atau **Summarize up to here**. Yang pertama mengondensasi pesan dari titik itu maju sambil menjaga konteks awal tetap utuh; yang kedua mengondensasi pesan awal sambil menjaga pesan terbaru tetap lengkap. Lihat [Restore vs. summarize](/docs/id/checkpointing#restore-vs-summarize).
+* Untuk mengompaksi hanya bagian dari percakapan, gunakan `Esc + Esc` atau `/rewind`, pilih checkpoint pesan, dan pilih **Summarize from here** atau **Summarize up to here**. Yang pertama mengondensasi pesan dari titik itu maju sambil menjaga konteks awal tetap utuh; yang kedua mengondensasi pesan awal sambil menjaga pesan terbaru tetap lengkap. Lihat [menu rewind's summarize options](/docs/id/checkpointing#rewind-and-summarize).
 * Sesuaikan perilaku compaction di CLAUDE.md dengan instruksi seperti `"When compacting, always preserve the full list of modified files and any test commands"` untuk memastikan konteks kritis bertahan dari ringkasan
-* Untuk pertanyaan cepat yang tidak perlu tetap dalam konteks, gunakan [`/btw`](/docs/id/interactive-mode#side-questions-with-%2Fbtw). Jawabannya muncul dalam overlay yang dapat ditutup dan tidak pernah memasuki riwayat percakapan, jadi Anda dapat memeriksa detail tanpa menumbuhkan konteks.
+* Untuk pertanyaan yang tidak perlu tetap dalam konteks, gunakan [`/btw`](/docs/id/interactive-mode#side-questions-with-%2Fbtw). Jawabannya tidak pernah memasuki riwayat percakapan, jadi Anda dapat memeriksa detail tanpa menumbuhkan konteks.
 
 <h3 id="use-subagents-for-investigation">
   Gunakan subagents untuk investigasi
@@ -455,27 +438,21 @@ Selama sesi panjang, jendela konteks Claude dapat terisi dengan percakapan yang 
   Delegasikan penelitian dengan `"use subagents to investigate X"`. Mereka mengeksplorasi dalam konteks terpisah, menjaga percakapan utama Anda bersih untuk implementasi.
 </Tip>
 
-Karena konteks adalah batasan fundamental Anda, subagents adalah salah satu alat paling kuat yang tersedia. Ketika Claude meneliti basis kode, ia membaca banyak file, semuanya mengonsumsi konteks Anda. Subagents berjalan dalam jendela konteks terpisah dan melaporkan kembali ringkasan:
+Karena konteks adalah batasan fundamental Anda, gunakan subagents untuk menjaga penelitian di luar konteks. Ketika Claude meneliti basis kode, ia membaca banyak file, semuanya mengonsumsi konteks Anda. Subagents berjalan dalam jendela konteks terpisah dan melaporkan kembali ringkasan:
 
-```text theme={null}
+```text wrap theme={null}
 Use subagents to investigate how our authentication system handles token
 refresh, and whether we have any existing OAuth utilities I should reuse.
 ```
 
-Subagent mengeksplorasi basis kode, membaca file yang relevan, dan melaporkan kembali dengan temuan, semuanya tanpa mengacaukan percakapan utama Anda.
-
-Anda juga dapat menggunakan subagents untuk verifikasi setelah Claude mengimplementasikan sesuatu:
-
-```text theme={null}
-use a subagent to review this code for edge cases
-```
+Anda juga dapat menggunakan subagents untuk verifikasi setelah Claude mengimplementasikan sesuatu. Lihat [Add an adversarial review step](#add-an-adversarial-review-step).
 
 <h3 id="rewind-with-checkpoints">
   Rewind dengan checkpoints
 </h3>
 
 <Tip>
-  Setiap prompt yang Anda kirim membuat checkpoint. Anda dapat mengembalikan percakapan, kode, atau keduanya ke checkpoint sebelumnya.
+  Setiap prompt yang Anda kirim yang memulai giliran membuat checkpoint. Anda dapat mengembalikan percakapan, kode, atau keduanya ke checkpoint sebelumnya.
 </Tip>
 
 Claude secara otomatis membuat snapshot file sebelum setiap perubahan sehingga checkpoint dapat mengembalikannya. Tekan Escape dua kali atau jalankan `/rewind` untuk membuka menu rewind. Anda dapat mengembalikan percakapan saja, mengembalikan kode saja, mengembalikan keduanya, atau meringkas dari pesan yang dipilih. Lihat [Checkpointing](/docs/id/checkpointing) untuk detail.
@@ -494,7 +471,7 @@ Alih-alih merencanakan setiap langkah dengan hati-hati, Anda dapat memberi tahu 
   Beri nama sesi dengan `/rename` dan perlakukan mereka seperti cabang: setiap alur kerja mendapatkan konteks persisten sendiri.
 </Tip>
 
-Claude Code menyimpan percakapan secara lokal, jadi ketika tugas mencakup beberapa sesi Anda tidak harus menjelaskan ulang konteksnya. Jalankan `claude --continue` untuk melanjutkan dari sesi terbaru, atau `claude --resume` untuk memilih dari daftar. Berikan sesi nama deskriptif seperti `oauth-migration` sehingga Anda dapat menemukannya nanti. Lihat [Manage sessions](/docs/id/sessions) untuk set lengkap kontrol resume, branch, dan naming.
+Claude Code menyimpan percakapan secara lokal, jadi ketika tugas mencakup beberapa sesi Anda tidak harus menjelaskan ulang konteksnya. Jalankan [`claude --continue`](/docs/id/sessions#resume-a-session) untuk melanjutkan dari sesi terbaru, atau `claude --resume` untuk memilih dari daftar. Berikan sesi nama deskriptif seperti `oauth-migration` sehingga Anda dapat menemukannya nanti. Lihat [Manage sessions](/docs/id/sessions) untuk set lengkap kontrol resume, branch, dan naming.
 
 ***
 
@@ -503,8 +480,6 @@ Claude Code menyimpan percakapan secara lokal, jadi ketika tugas mencakup bebera
 </h2>
 
 Setelah Anda efektif dengan satu Claude, kalikan output Anda dengan sesi paralel, mode non-interaktif, dan pola fan-out.
-
-Semuanya sejauh ini mengasumsikan satu manusia, satu Claude, dan satu percakapan. Tetapi Claude Code skalakan secara horizontal. Teknik di bagian ini menunjukkan bagaimana Anda dapat melakukan lebih banyak.
 
 <h3 id="run-non-interactive-mode">
   Jalankan mode non-interaktif
@@ -527,6 +502,8 @@ claude -p "List all API endpoints" --output-format json
 claude -p "Analyze this log file" --output-format stream-json --verbose
 ```
 
+Perintah pertama mencetak teks biasa. Format `json` mengembalikan satu objek JSON dengan bidang `result`. Format `stream-json` mencetak satu objek JSON per baris, dimulai dengan acara init.
+
 <h3 id="run-multiple-claude-sessions">
   Jalankan beberapa sesi Claude
 </h3>
@@ -535,12 +512,14 @@ claude -p "Analyze this log file" --output-format stream-json --verbose
   Jalankan beberapa sesi Claude secara paralel untuk mempercepat pengembangan, menjalankan eksperimen terisolasi, atau memulai alur kerja kompleks.
 </Tip>
 
-Pilih pendekatan paralel yang sesuai dengan seberapa banyak koordinasi yang ingin Anda lakukan sendiri:
+Pilih pendekatan paralel yang sesuai dengan seberapa banyak koordinasi yang ingin Anda lakukan sendiri, dan tambahkan pesan ketika sesi perlu melewatkan temuan satu sama lain:
 
 * [Worktrees](/docs/id/worktrees): jalankan sesi CLI terpisah dalam checkout git terisolasi sehingga edit tidak bertabrakan
+* [Cross-session messaging](/docs/id/cross-session-messaging): biarkan sesi yang Anda jalankan sendiri melewatkan temuan satu sama lain
 * [Aplikasi desktop](/docs/id/desktop#work-in-parallel-with-sessions): kelola beberapa sesi lokal secara visual, masing-masing dalam worktree-nya sendiri
-* [Claude Code di web](/docs/id/claude-code-on-the-web): jalankan sesi pada infrastruktur cloud yang dikelola Anthropic dalam VM terisolasi
-* [Tim agen](/docs/id/agent-teams): koordinasi otomatis dari beberapa sesi dengan tugas bersama, pesan, dan pemimpin tim
+* [Claude Code di web](/docs/id/claude-code-on-the-web): jalankan sesi di cloud, pada infrastruktur yang dikelola Anthropic secara default
+* [Agent view](/docs/id/agent-view): pratinjau penelitian. Jalankan `claude agents` untuk mengirim sesi yang terus berjalan di latar belakang dan tonton dari satu layar
+* [Agent teams](/docs/id/agent-teams): eksperimental dan dinonaktifkan secara default. Koordinasi otomatis dari beberapa sesi dengan tugas bersama, pesan, dan pemimpin tim
 
 Selain paralelisasi pekerjaan, beberapa sesi memungkinkan alur kerja yang berfokus pada kualitas. Konteks segar meningkatkan tinjauan kode karena Claude tidak akan bias terhadap kode yang baru saja ditulisnya.
 
@@ -562,23 +541,23 @@ Anda dapat melakukan sesuatu yang serupa dengan tes: biarkan satu Claude menulis
   Loop melalui tugas memanggil `claude -p` untuk masing-masing. Gunakan `--allowedTools` untuk cakupan izin untuk operasi batch.
 </Tip>
 
-Untuk migrasi besar atau analisis, Anda dapat mendistribusikan pekerjaan di seluruh banyak invokasi Claude paralel:
+Untuk migrasi besar atau analisis, Anda dapat mendistribusikan pekerjaan di seluruh banyak invokasi Claude paralel. Jalankan [`/batch <instruction>`](/docs/id/commands#all-commands) untuk membuat Claude membagi perubahan di seluruh 5 hingga 30 subagent. Setiap subagent bekerja dalam worktree-nya sendiri. Untuk menjalankan fan-out dari skrip Anda sendiri, loop melalui `claude -p`:
 
 <Steps>
   <Step title="Hasilkan daftar tugas">
-    Biarkan Claude membuat daftar semua file yang perlu dimigrasikan (misalnya, `list all 2,000 Python files that need migrating`)
+    Biarkan Claude menulis daftar file yang perlu dimigrasikan ke file, sehingga loop di langkah berikutnya dapat membacanya, dengan prompt seperti `list all 2,000 Python files that need migrating and save the list to files.txt`
   </Step>
 
   <Step title="Tulis skrip untuk loop melalui daftar">
     ```bash theme={null}
     for file in $(cat files.txt); do
-      claude -p "Migrate $file from React to Vue. Return OK or FAIL." \
+      claude -p "Migrate $file from Python 2 to Python 3. Return OK or FAIL." \
         --allowedTools "Edit,Bash(git commit *)"
     done
     ```
   </Step>
 
-  <Step title="Uji pada beberapa file, kemudian jalankan dalam skala">
+  <Step title="Uji pada beberapa file, kemudian jalankan pada semua file">
     Perbaiki prompt Anda berdasarkan apa yang salah dengan 2-3 file pertama, kemudian jalankan pada set lengkap. Bendera `--allowedTools` membatasi apa yang dapat dilakukan Claude, yang penting ketika Anda menjalankan tanpa pengawasan.
   </Step>
 </Steps>
@@ -588,8 +567,6 @@ Anda juga dapat mengintegrasikan Claude ke dalam pipeline pemrosesan/data yang a
 ```bash theme={null}
 claude -p "<your prompt>" --output-format json | your_command
 ```
-
-Gunakan `--verbose` untuk debugging selama pengembangan, dan matikan dalam produksi.
 
 <h3 id="run-autonomously-with-auto-mode">
   Jalankan secara otonom dengan auto mode
@@ -601,7 +578,7 @@ Untuk eksekusi tanpa gangguan dengan pemeriksaan keamanan latar belakang, gunaka
 claude --permission-mode auto -p "fix all lint errors"
 ```
 
-Untuk run non-interaktif dengan bendera `-p`, auto mode membatalkan jika classifier secara berulang memblokir tindakan, karena tidak ada pengguna untuk kembali. Lihat [kapan auto mode kembali](/docs/id/permission-modes#when-auto-mode-falls-back) untuk ambang batas.
+Ketika classifier secara berulang memblokir tindakan dalam run non-interaktif dengan bendera `-p`, Claude Code tidak menghentikan run. Lihat [kapan auto mode kembali](/docs/id/permission-modes#when-auto-mode-falls-back) untuk apa yang terjadi sebagai gantinya dan untuk ambang batas.
 
 <h3 id="add-an-adversarial-review-step">
   Tambahkan langkah tinjauan adversarial
@@ -615,13 +592,13 @@ Semakin lama Claude bekerja tanpa pengawasan, semakin penting pemeriksaan indepe
 
 Untuk pemeriksaan kebenaran, jalankan skill [`/code-review`](/docs/id/commands) yang disertakan, yang meninjau diff saat ini untuk bug dalam subagent segar dan mengembalikan temuan ke sesi. Untuk memeriksa diff terhadap rencana Anda, tulis prompt tinjauan sendiri. Beri nama pekerjaan untuk diperiksa, rencana untuk memeriksanya, dan apa yang dihitung sebagai temuan:
 
-```text theme={null}
+```text wrap theme={null}
 Gunakan subagent untuk meninjau diff rate limiter terhadap PLAN.md. Periksa bahwa
 setiap persyaratan diimplementasikan, kasus tepi yang terdaftar memiliki tes, dan
 tidak ada yang di luar cakupan tugas yang berubah. Laporkan kesenjangan, bukan preferensi gaya.
 ```
 
-Karena peninjau berjalan sebagai subagent, sesi implementasi menerima kesenjangan secara langsung dan dapat memperbaikinya dan meninjau ulang tanpa Anda menyalin temuan antar jendela. Untuk run otonom yang lebih lama, [tim agen](/docs/id/agent-teams) dapat menjaga loop ini berjalan di seluruh banyak tugas sementara Anda spot-check temuan yang dicatat.
+Karena peninjau berjalan sebagai subagent, sesi implementasi menerima kesenjangan secara langsung dan dapat memperbaikinya dan meninjau ulang tanpa Anda menyalin temuan antar jendela.
 
 <Callout>
   Peninjau yang diminta untuk menemukan kesenjangan biasanya akan melaporkan beberapa, bahkan ketika pekerjaan itu solid, karena itulah yang diminta untuk dilakukan. Mengejar setiap temuan menyebabkan over-engineering: lapisan abstraksi ekstra, kode defensif, dan tes untuk kasus yang tidak dapat terjadi. Beri tahu peninjau untuk menandai hanya kesenjangan yang mempengaruhi kebenaran atau persyaratan yang dinyatakan, dan perlakukan sisanya sebagai opsional.

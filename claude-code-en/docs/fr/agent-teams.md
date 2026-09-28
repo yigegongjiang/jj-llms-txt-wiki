@@ -7,16 +7,12 @@
 > Coordonnez plusieurs instances Claude Code travaillant ensemble en tant qu'équipe, avec des tâches partagées, la messagerie inter-agents et la gestion centralisée.
 
 <Warning>
-  Les équipes d'agents sont expérimentales et désactivées par défaut. Activez-les en ajoutant `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS` à votre [settings.json](/docs/fr/settings) ou à votre environnement. Sans cette variable, aucune équipe n'est configurée au démarrage de la session, aucun répertoire d'équipe n'est écrit, et Claude ne crée pas ou ne propose pas de coéquipiers. Les équipes d'agents ont des [limitations connues](#limitations) concernant la reprise de session, la coordination des tâches et le comportement d'arrêt.
+  Les équipes d'agents sont expérimentales et désactivées par défaut. Activez-les en définissant `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` dans votre [settings.json](/docs/fr/settings) ou environnement. Sans cette variable, aucune équipe n'est configurée au démarrage de la session, aucun répertoire d'équipe n'est écrit, et Claude ne crée pas ou ne propose pas de coéquipiers. Les équipes d'agents ont des [limitations connues](#limitations) concernant la reprise de session, la coordination des tâches et le comportement d'arrêt.
 </Warning>
 
-Les équipes d'agents vous permettent de coordonner plusieurs instances Claude Code travaillant ensemble. Une session agit comme chef d'équipe, coordonnant le travail, assignant des tâches et synthétisant les résultats. Les coéquipiers travaillent indépendamment, chacun dans sa propre fenêtre de contexte, et communiquent directement les uns avec les autres.
+Les équipes d'agents vous permettent de coordonner plusieurs instances Claude Code travaillant ensemble. Une session agit comme chef d'équipe, coordonnant le travail, assignant des tâches et synthétisant les résultats. Les coéquipiers travaillent indépendamment, chacun dans sa propre fenêtre de contexte, et communiquent directement les uns avec les autres. Vous pouvez également parler directement à n'importe quel coéquipier sans passer par le chef.
 
-Contrairement aux [subagents](/docs/fr/sub-agents), qui s'exécutent au sein d'une seule session et ne peuvent que rendre compte à l'agent principal, vous pouvez également interagir directement avec les coéquipiers individuels sans passer par le chef.
-
-<Note>
-  Cette page décrit les équipes d'agents à partir de la v2.1.178. Avec `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS` défini, la création d'un coéquipier n'a plus besoin d'une étape de configuration, et le nettoyage se fait automatiquement à la fermeture de la session. Avant la v2.1.178, vous demandiez à Claude de créer et de nommer une équipe en premier, et Claude utilisait les outils `TeamCreate` et `TeamDelete` pour la configurer et la supprimer. Ces deux outils n'existent plus. L'entrée `team_name` sur l'outil Agent est acceptée mais ignorée, et le champ `team_name` dans les [payloads de hook](/docs/fr/hooks#taskcreated) `TaskCreated`, `TaskCompleted` et `TeammateIdle` porte le nom dérivé de la session et est déprécié.
-</Note>
+Avant de configurer une équipe, vérifiez si une option plus légère fait le travail. Les [subagents](/docs/fr/sub-agents) fonctionnent au sein d'une seule session, et avec la [messagerie inter-sessions](/docs/fr/cross-session-messaging), Claude peut transmettre les résultats entre les sessions que vous exécutez vous-même.
 
 <h2 id="when-to-use-agent-teams">
   Quand utiliser les équipes d'agents
@@ -35,21 +31,21 @@ Les équipes d'agents ajoutent une surcharge de coordination et utilisent consid
   Comparer avec les subagents
 </h3>
 
-Les équipes d'agents et les [subagents](/docs/fr/sub-agents) vous permettent tous deux de paralléliser le travail, mais ils fonctionnent différemment. Choisissez en fonction de la nécessité pour vos travailleurs de communiquer les uns avec les autres :
+Les équipes d'agents et les [subagents](/docs/fr/sub-agents) vous permettent tous deux de paralléliser le travail, mais ils fonctionnent différemment. Pour les sessions séparées qui se transmettent des messages les unes aux autres sans équipe, consultez la [messagerie inter-sessions](/docs/fr/cross-session-messaging).
 
-<Frame caption="Les subagents ne rendent compte que des résultats à l'agent principal et ne se parlent jamais. Dans les équipes d'agents, les coéquipiers partagent une liste de tâches, revendiquent du travail et communiquent directement les uns avec les autres.">
+<Frame caption="Les subagents rendent compte des résultats à l'agent principal. Dans les équipes d'agents, les coéquipiers partagent une liste de tâches, revendiquent du travail et communiquent directement les uns avec les autres.">
   <img src="https://mintcdn.com/claude-code/nsvRFSDNfpSU5nT7/images/subagents-vs-agent-teams-light.png?fit=max&auto=format&n=nsvRFSDNfpSU5nT7&q=85&s=2f8db9b4f3705dd3ab931fbe2d96e42a" className="dark:hidden" alt="Diagramme comparant les architectures des subagents et des équipes d'agents. Les subagents sont générés par l'agent principal, font du travail et rendent compte des résultats. Les équipes d'agents se coordonnent via une liste de tâches partagée, avec les coéquipiers communiquant directement les uns avec les autres." width="4245" height="1615" data-path="images/subagents-vs-agent-teams-light.png" />
 
   <img src="https://mintcdn.com/claude-code/nsvRFSDNfpSU5nT7/images/subagents-vs-agent-teams-dark.png?fit=max&auto=format&n=nsvRFSDNfpSU5nT7&q=85&s=d573a037540f2ada6a9ae7d8285b46fd" className="hidden dark:block" alt="Diagramme comparant les architectures des subagents et des équipes d'agents. Les subagents sont générés par l'agent principal, font du travail et rendent compte des résultats. Les équipes d'agents se coordonnent via une liste de tâches partagée, avec les coéquipiers communiquant directement les uns avec les autres." width="4245" height="1615" data-path="images/subagents-vs-agent-teams-dark.png" />
 </Frame>
 
-|                    | Subagents                                                          | Équipes d'agents                                                |
-| :----------------- | :----------------------------------------------------------------- | :-------------------------------------------------------------- |
-| **Contexte**       | Fenêtre de contexte propre ; les résultats reviennent à l'appelant | Fenêtre de contexte propre ; complètement indépendant           |
-| **Communication**  | Rendre compte uniquement à l'agent principal                       | Les coéquipiers se messagent directement                        |
-| **Coordination**   | L'agent principal gère tout le travail                             | Liste de tâches partagée avec auto-coordination                 |
-| **Meilleur pour**  | Les tâches ciblées où seul le résultat compte                      | Le travail complexe nécessitant discussion et collaboration     |
-| **Coût en tokens** | Inférieur : les résultats sont résumés au contexte principal       | Supérieur : chaque coéquipier est une instance Claude distincte |
+|                    | Subagents                                                                                                                                                                          | Équipes d'agents                                                                                                                                              |
+| :----------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Contexte**       | Fenêtre de contexte propre ; les résultats reviennent à l'appelant                                                                                                                 | Fenêtre de contexte propre ; complètement indépendant                                                                                                         |
+| **Communication**  | Rendre un résultat à l'appelant. Les subagents que Claude a nommés lors de leur création peuvent également [se messaguer les uns les autres](/docs/fr/sub-agents#what-loads-at-startup) | Les coéquipiers se messagent directement                                                                                                                      |
+| **Coordination**   | L'agent principal gère tout le travail                                                                                                                                             | Auto-coordination via des messages, plus une liste de tâches partagée pour les [agents disposant des outils Task](/docs/fr/tools-reference#task-tool-availability) |
+| **Meilleur pour**  | Les tâches ciblées où seul le résultat compte                                                                                                                                      | Le travail complexe nécessitant discussion et collaboration                                                                                                   |
+| **Coût en tokens** | Inférieur : les résultats sont résumés au contexte principal                                                                                                                       | Supérieur : chaque coéquipier est une instance Claude distincte                                                                                               |
 
 Utilisez les subagents lorsque vous avez besoin de travailleurs rapides et ciblés qui rendent compte. Utilisez les équipes d'agents lorsque les coéquipiers doivent partager les conclusions, se contester mutuellement et se coordonner de manière autonome.
 
@@ -67,6 +63,10 @@ Les équipes d'agents sont désactivées par défaut. Activez-les en définissan
 }
 ```
 
+L'activation des équipes d'agents modifie également la délégation ordinaire. Claude peut [nommer un sous-agent](/docs/fr/sub-agents#subagent-names) de sa propre initiative, et tant que les équipes d'agents sont activées, un sous-agent que Claude nomme se lance en tant que coéquipier, de sorte que les équipes peuvent se former même si vous n'en aviez pas demandé une. Pour plus d'informations, consultez [Comment Claude démarre les équipes d'agents](#how-claude-starts-agent-teams) ; pour désactiver ce comportement, consultez [Claude crée des coéquipiers au lieu de sous-agents](#claude-spawns-teammates-instead-of-subagents).
+
+La création de coéquipiers nécessite également une session interactive. En [mode non-interactif](/docs/fr/headless) avec l'indicateur `-p`, y compris les sessions Agent SDK, Claude ne crée pas de coéquipiers, et un sous-agent que Claude nomme s'exécute en tant que [sous-agent](/docs/fr/sub-agents) ordinaire même avec les équipes d'agents activées.
+
 <h2 id="start-your-first-agent-team">
   Démarrer votre première équipe d'agents
 </h2>
@@ -75,19 +75,21 @@ Après avoir activé les équipes d'agents, décrivez la tâche et les coéquipi
 
 Cet exemple fonctionne bien car les trois rôles sont indépendants et peuvent explorer le problème sans attendre les uns les autres :
 
-```text theme={null}
+```text wrap theme={null}
 Je conçois un outil CLI qui aide les développeurs à suivre les commentaires TODO dans
 leur base de code. Créez trois coéquipiers pour explorer cela sous différents angles :
 un sur l'UX, un sur l'architecture technique, un jouant l'avocat du diable.
 ```
 
-À partir de là, Claude remplit une [liste de tâches partagée](/docs/fr/interactive-mode#task-list), crée des coéquipiers pour chaque perspective, les fait explorer le problème, et synthétise les conclusions une fois terminé.
+À partir de là, Claude remplit une [liste de tâches partagée](/docs/fr/interactive-mode#task-list) dans une [session qui dispose des outils Task](/docs/fr/tools-reference#task-tool-availability), crée des coéquipiers pour chaque perspective, les fait explorer le problème, et synthétise les conclusions une fois terminé.
+
+Claude peut parfois utiliser des [sous-agents](/docs/fr/sub-agents) au lieu de créer une équipe. Les sous-agents apparaissent dans le même panneau d'agents que les coéquipiers, donc le panneau seul ne confirme pas qu'une équipe s'est formée. Si Claude a créé des sous-agents à la place, demandez à nouveau et demandez explicitement une équipe d'agents.
 
 Le terminal du chef liste les coéquipiers dans le panneau d'agents en dessous de l'entrée du prompt. À partir du panneau :
 
 * **Flèches haut et bas** : sélectionner un coéquipier
 * **Entrée** : ouvrir la transcription du coéquipier sélectionné et lui envoyer un message directement
-* **Échap** : interrompre le tour actuel du coéquipier sélectionné
+* **Échap** : effacer la sélection. Pendant que vous consultez la transcription d'un coéquipier, Échap interrompt le tour actuel de ce coéquipier
 
 À partir de la v2.1.199, la ligne d'un coéquipier inactif reste dans le panneau tant que n'importe quel coéquipier ou sous-agent travaille encore, vous pouvez donc la sélectionner pour examiner sa transcription ou lui envoyer plus de travail. Une fois que chaque agent du panneau est inactif, les lignes inactives se masquent après 30 secondes et réapparaissent au prochain tour du coéquipier ; le coéquipier continue de fonctionner et reste adressable pendant qu'il est masqué. Dans les versions v2.1.181 à v2.1.198, une ligne inactif s'est masquée 30 secondes après la fin de son propre tour, même si d'autres coéquipiers travaillaient encore ; les lignes inactives ne sont pas masquées dans les versions antérieures à v2.1.181.
 
@@ -114,11 +116,11 @@ Les équipes d'agents supportent deux modes d'affichage :
   `tmux` a des limitations connues sur certains systèmes d'exploitation et fonctionne traditionnellement mieux sur macOS. L'utilisation de `tmux -CC` dans iTerm2 est le point d'entrée suggéré dans `tmux`.
 </Note>
 
-La valeur par défaut est `"in-process"`. Avant la v2.1.179, la valeur par défaut était `"auto"`, donc les sessions mises à niveau qui ouvraient précédemment des volets divisés restent maintenant dans un terminal sauf si vous définissez le mode explicitement. Définissez `"auto"` pour activer les volets divisés lorsque vous êtes déjà en train de s'exécuter dans une session tmux ou si votre terminal est iTerm2, en revenant à in-process sinon. Le paramètre `"tmux"` active le mode volets divisés et détecte automatiquement s'il faut utiliser tmux ou iTerm2 en fonction de votre terminal.
+La valeur par défaut est `"in-process"`. Définissez `"auto"` pour activer les volets divisés lorsque vous êtes déjà en train de s'exécuter dans une session tmux, ou lorsque votre terminal est iTerm2 avec le CLI `it2` installé, en revenant à in-process sinon. Le paramètre `"tmux"` active le mode volets divisés et détecte automatiquement s'il faut utiliser tmux ou iTerm2 en fonction de votre terminal.
 
-À partir de la v2.1.186, définissez `"iterm2"` pour utiliser explicitement les volets divisés natifs d'iTerm2. Ce mode nécessite le CLI [`it2`](https://github.com/mkusaka/it2) et affiche une erreur avec la commande d'installation si `it2` est manquant. L'invite de configuration qui propose d'installer `it2` ou de basculer vers tmux apparaît sous `"auto"` ou `"tmux"` lorsque votre terminal est iTerm2 et que tmux est disponible comme solution de secours.
+Définissez `"iterm2"` pour utiliser explicitement les volets divisés natifs d'iTerm2. Ce mode nécessite le CLI [`it2`](https://github.com/mkusaka/it2) et affiche une erreur avec la commande d'installation si `it2` est manquant. L'invite de configuration qui propose d'installer `it2` ou de basculer vers tmux apparaît sous `"auto"` ou `"tmux"` lorsque votre terminal est iTerm2 et que tmux est disponible comme solution de secours.
 
-Pour remplacer la valeur par défaut, définissez [`teammateMode`](/docs/fr/settings#available-settings) dans `~/.claude/settings.json` :
+Pour remplacer la valeur par défaut, définissez [`teammateMode`](/docs/fr/settings-reference#teammatemode) dans `~/.claude/settings.json` :
 
 ```json theme={null}
 {
@@ -132,6 +134,8 @@ Pour définir le mode pour une seule session, passez-le en tant que drapeau :
 claude --teammate-mode auto
 ```
 
+Le drapeau `--teammate-mode` est expérimental et n'apparaît pas dans `claude --help`.
+
 Le mode volets divisés nécessite soit [tmux](https://github.com/tmux/tmux/wiki) soit iTerm2 avec le CLI [`it2`](https://github.com/mkusaka/it2). Pour installer manuellement :
 
 * **tmux** : installez via le gestionnaire de paquets de votre système. Consultez le [wiki tmux](https://github.com/tmux/tmux/wiki/Installing) pour les instructions spécifiques à la plateforme.
@@ -143,29 +147,44 @@ Le mode volets divisés nécessite soit [tmux](https://github.com/tmux/tmux/wiki
 
 Claude décide du nombre de coéquipiers à générer en fonction de votre tâche, ou vous pouvez spécifier exactement ce que vous voulez :
 
-```text theme={null}
-Générez 4 coéquipiers pour refactoriser ces modules en parallèle. Utilisez
-Sonnet pour chaque coéquipier.
+```text wrap theme={null}
+Générez 4 coéquipiers pour refactoriser ces modules en parallèle. Utilisez Sonnet pour
+chaque coéquipier.
 ```
 
-Les coéquipiers n'héritent pas de la sélection `/model` du chef par défaut. Pour modifier le modèle utilisé lorsque l'invite ne spécifie pas un, définissez **Modèle de coéquipier par défaut** dans `/config`. Choisissez **Par défaut (modèle du chef)** pour que les coéquipiers suivent le modèle actuel du chef.
+Claude Code choisit le modèle de chaque coéquipier parmi le premier de ceux-ci qui s'applique :
+
+1. Le modèle que votre invite de génération nomme pour ce coéquipier.
+2. Pour un coéquipier généré à partir d'une [définition de sous-agent](#use-subagent-definitions-for-teammates), le `model` de la définition, où `inherit` sélectionne le modèle du chef.
+3. [`CLAUDE_CODE_SUBAGENT_MODEL`](/docs/fr/model-config#environment-variables), lorsqu'il est défini sur autre chose que `inherit`.
+4. Le modèle actuel du chef.
+
+Si vous définissez [`CLAUDE_CODE_SUBAGENT_MODEL_FORCE=1`](/docs/fr/sub-agents#run-every-subagent-on-one-model), les deux premières sources ne s'appliquent pas. Claude Code choisit le modèle de chaque coéquipier à partir de `CLAUDE_CODE_SUBAGENT_MODEL` lorsqu'il est défini sur autre chose que `inherit`, et à partir du modèle actuel du chef sinon. Nécessite Claude Code v2.1.257 ou ultérieur.
+
+Avant la v2.1.251, `CLAUDE_CODE_SUBAGENT_MODEL` venait en premier dans cet ordre.
+
+<Note>
+  `teammateDefaultModel` a été supprimé dans la v2.1.234 ; Claude Code ignore une valeur restante. Nommez le modèle dans votre invite à la place.
+</Note>
+
+Claude Code vérifie le modèle qu'il sélectionne pour un coéquipier par rapport à la liste d'autorisation [`availableModels`](/docs/fr/model-config#restrict-model-selection) de votre organisation. Lorsque la liste d'autorisation bloque une valeur, Claude Code substitue un autre modèle :
+
+* **Alias de famille tel que `opus`** : sur l'API Anthropic et Claude Platform sur AWS, Claude Code exécute le coéquipier sur la version la plus récente de cette famille que la liste d'autorisation permet. Sur les fournisseurs avec des ID de modèle spécifiques au fournisseur, où la [substitution ne fonctionne pas](/docs/fr/model-config#restrict-model-selection), un alias bloqué revient comme toute autre valeur bloquée selon la puce suivante
+* **Toute autre valeur bloquée, y compris un alias de famille sur les fournisseurs où la substitution ne fonctionne pas, ou un alias dont la famille n'a pas de version autorisée** : Claude Code exécute le coéquipier sur le modèle du chef à la place. Si vous définissez `CLAUDE_CODE_SUBAGENT_MODEL`, Claude Code essaie d'abord ce modèle, selon ces mêmes règles
 
 Les coéquipiers héritent du [niveau d'effort](/docs/fr/model-config#adjust-effort-level) du chef. En mode volets divisés, cela s'applique à partir de la v2.1.186 ; les versions antérieures ne transmettaient pas l'effort de session du chef aux coéquipiers en mode volets divisés.
 
-<h3 id="require-plan-approval-for-teammates">
-  Exiger l'approbation du plan pour les coéquipiers
+<h3 id="have-teammates-plan-before-implementing">
+  Exiger que les coéquipiers planifient avant de mettre en œuvre
 </h3>
 
-Pour les tâches complexes ou risquées, vous pouvez exiger que les coéquipiers planifient avant de mettre en œuvre. Le coéquipier travaille en mode plan en lecture seule jusqu'à ce que le chef approuve son approche :
+Pour les tâches complexes ou risquées, vous pouvez exiger que les coéquipiers planifient avant de mettre en œuvre. Un coéquipier que Claude génère tandis que le chef est en [mode plan](/docs/fr/permission-modes#analyze-before-you-edit-with-plan-mode) fonctionne en mode plan en lecture seule jusqu'à ce que son plan soit prêt. Basculez d'abord le chef en mode plan, puis demandez le coéquipier :
 
-```text theme={null}
+```text wrap theme={null}
 Générez un coéquipier architecte pour refactoriser le module d'authentification.
-Exigez l'approbation du plan avant qu'il ne fasse des modifications.
 ```
 
-Lorsqu'un coéquipier termine la planification, il envoie une demande d'approbation du plan au chef. Le chef examine le plan et l'approuve ou le rejette avec des commentaires. S'il est rejeté, le coéquipier reste en mode plan, révise en fonction des commentaires et resoumis. Une fois approuvé, le coéquipier quitte le mode plan et commence la mise en œuvre.
-
-Le chef prend les décisions d'approbation de manière autonome. Pour influencer le jugement du chef, donnez-lui des critères dans votre invite, tels que « n'approuvez que les plans qui incluent la couverture de test » ou « rejetez les plans qui modifient le schéma de base de données ».
+Lorsqu'un coéquipier termine la planification, il envoie une demande d'approbation du plan au chef. Claude Code approuve le plan dans la session du chef dès que la demande arrive, sans que le chef l'examine. Les modifications et commandes du coéquipier passent toujours par les invites de permission décrites dans [Permissions](#permissions). Une fois approuvé, le coéquipier quitte le mode plan et commence la mise en œuvre.
 
 <h3 id="talk-to-teammates-directly">
   Parler directement aux coéquipiers
@@ -186,6 +205,8 @@ Le modèle et le mode rapide d'un coéquipier sont fixés lorsqu'il est génér�
 
 La liste de tâches partagée coordonne le travail dans l'équipe. Le chef crée des tâches et les coéquipiers les accomplissent. Les tâches ont trois états : en attente, en cours et terminées. Les tâches peuvent également dépendre d'autres tâches : une tâche en attente avec des dépendances non résolues ne peut pas être revendiquée jusqu'à ce que ces dépendances soient complétées.
 
+Les agents [sans les outils Task](/docs/fr/tools-reference#task-tool-availability) se coordonnent par des messages à la place de la liste de tâches partagée.
+
 Le chef peut assigner des tâches explicitement, ou les coéquipiers peuvent les revendiquer eux-mêmes :
 
 * **Le chef assigne** : dites au chef quelle tâche donner à quel coéquipier
@@ -199,7 +220,7 @@ La revendication de tâche utilise le verrouillage de fichiers pour prévenir le
 
 Pour terminer gracieusement la session d'un coéquipier, référencez-le par son nom. Par exemple, avec un coéquipier nommé chercheur :
 
-```text theme={null}
+```text wrap theme={null}
 Demandez au coéquipier chercheur d'arrêter
 ```
 
@@ -227,12 +248,9 @@ Cette section couvre l'architecture et la mécanique derrière les équipes d'ag
   Comment Claude démarre les équipes d'agents
 </h3>
 
-Une équipe d'agents se forme lorsque le premier coéquipier est généré, la session principale agissant comme le chef. Il y a deux façons dont les coéquipiers sont générés :
+Pour démarrer une équipe, demandez à Claude des coéquipiers. Claude lance un coéquipier lorsqu'il appelle l'[outil Agent](/docs/fr/tools-reference) avec un [`name`](/docs/fr/sub-agents#subagent-names) tandis que les équipes d'agents sont activées, sauf si l'appel est un [fork](/docs/fr/sub-agents#fork-the-current-conversation) ou passe `isolation` sur l'appel lui-même. Claude Code ne vous demande pas de confirmer le lancement.
 
-* **Vous demandez des coéquipiers** : donnez à Claude une tâche qui bénéficie du travail parallèle et demandez explicitement des coéquipiers. Claude les génère en fonction de vos instructions.
-* **Claude propose des coéquipiers** : si Claude détermine que votre tâche bénéficierait du travail parallèle, il peut suggérer de générer des coéquipiers. Vous confirmez avant qu'il ne procède.
-
-Dans les deux cas, vous restez maître. Claude ne générera pas de coéquipiers sans votre approbation.
+Claude nomme également les subagents ordinaires de lui-même afin de pouvoir les contacter ultérieurement. Ces appels suivent la même règle, de sorte que les équipes peuvent se former même si vous n'en aviez pas demandé une. Si vous préférez les subagents, [désactivez les équipes d'agents](#claude-spawns-teammates-instead-of-subagents).
 
 <h3 id="architecture">
   Architecture
@@ -247,24 +265,24 @@ Une équipe d'agents se compose de :
 | **Liste de tâches**   | Liste partagée d'éléments de travail que les coéquipiers revendiquent et complètent   |
 | **Boîte aux lettres** | Système de messagerie pour la communication entre agents                              |
 
-Consultez [Choisir un mode d'affichage](#choose-a-display-mode) pour les options de configuration d'affichage. Les messages des coéquipiers arrivent au chef automatiquement.
-
 La boîte aux lettres de chaque agent est un fichier JSON à `~/.claude/teams/{team-name}/inboxes/{agent-name}.json`. Claude Code valide chaque entrée lorsqu'il lit un fichier de boîte aux lettres. Les entrées qui ne correspondent pas au format de message sont signalées comme des erreurs et supprimées du fichier ; les messages valides sont toujours livrés. Avant la v2.1.207, une seule entrée de boîte aux lettres malformée causait une erreur répétée chaque seconde et bloquait la livraison pour cette boîte aux lettres jusqu'à ce que vous supprimiez le fichier manuellement.
 
-Le système gère automatiquement les dépendances de tâches. Lorsqu'un coéquipier complète une tâche dont d'autres tâches dépendent, les tâches bloquées se débloquent sans intervention manuelle.
+Claude Code signale un message comme envoyé uniquement lorsque l'écriture dans le fichier de boîte aux lettres du destinataire réussit, que le message soit du texte brut ou un message de protocole structuré tel qu'une approbation de plan ou une demande d'arrêt. Lorsque l'écriture échoue, par exemple parce que le disque est plein ou que le répertoire de boîte aux lettres n'est pas accessible en écriture, l'agent émetteur reçoit une erreur et rien n'est envoyé. Consultez [Impossible d'écrire dans la boîte de réception d'un coéquipier](/docs/fr/errors#failed-to-write-to-a-teammate-inbox) pour les messages d'erreur et les étapes de récupération.
+
+Claude Code gère automatiquement les dépendances de tâches : lorsqu'un coéquipier complète une tâche dont d'autres tâches dépendent, il déverrouille les tâches dépendantes sans aucune action de votre part.
 
 Les équipes et les tâches sont stockées localement sous un nom dérivé de la session. Le nom est `session-` suivi des huit premiers caractères de l'ID de session :
 
 * **Configuration d'équipe** : `~/.claude/teams/{team-name}/config.json`
 * **Liste de tâches** : `~/.claude/tasks/{team-name}/`
 
-Claude Code génère automatiquement ces deux éléments au démarrage de la session et les met à jour à mesure que les coéquipiers rejoignent, deviennent inactifs ou partent. Le répertoire de configuration d'équipe est supprimé lorsque la session se termine. Le répertoire de liste de tâches persiste localement et n'est jamais téléchargé, donc les sessions reprises conservent leurs tâches. La rétention est régie par le même [`cleanupPeriodDays`](/docs/fr/settings#available-settings) que vous contrôlez déjà pour les transcriptions de session.
+Claude Code génère automatiquement ces deux éléments au démarrage de la session et les met à jour à mesure que les coéquipiers rejoignent, deviennent inactifs ou partent. Le répertoire de configuration d'équipe est supprimé lorsque la session se termine. Le répertoire de liste de tâches persiste localement et n'est jamais téléchargé, donc les sessions reprises conservent leurs tâches. La rétention est régie par le même [`cleanupPeriodDays`](/docs/fr/settings-reference#cleanupperioddays) que vous contrôlez déjà pour les transcriptions de session, en suivant les [règles de nettoyage de rétention](/docs/fr/claude-directory#cleaned-up-automatically).
 
 La configuration d'équipe contient l'état d'exécution tel que les ID de session et les ID de volet tmux, donc ne l'éditez pas à la main ou ne la pré-créez pas : vos modifications sont écrasées lors de la prochaine mise à jour d'état.
 
 Pour définir des rôles de coéquipiers réutilisables, utilisez plutôt les [définitions de subagents](#use-subagent-definitions-for-teammates).
 
-La configuration d'équipe contient un tableau `members` avec le nom de chaque coéquipier, l'ID d'agent et le type d'agent. Les coéquipiers peuvent lire ce fichier pour découvrir les autres membres de l'équipe.
+La configuration d'équipe contient un tableau `members` avec le nom et l'ID d'agent de chaque coéquipier. L'entrée du chef porte toujours le type d'agent `team-lead`. L'entrée d'un coéquipier porte le type d'agent que le chef a nommé lors de son lancement, qu'il s'agisse d'un [type intégré](/docs/fr/sub-agents#built-in-subagents) ou d'une [définition de subagent](#use-subagent-definitions-for-teammates), et omet le champ lorsque le chef n'en a nommé aucun. Les coéquipiers peuvent lire ce fichier pour découvrir les autres membres de l'équipe.
 
 Il n'y a pas d'équivalent au niveau du projet de la configuration d'équipe. Un fichier comme `.claude/teams/teams.json` dans votre répertoire de projet n'est pas reconnu comme configuration ; Claude le traite comme un fichier ordinaire.
 
@@ -272,29 +290,44 @@ Il n'y a pas d'équivalent au niveau du projet de la configuration d'équipe. Un
   Utiliser les définitions de subagents pour les coéquipiers
 </h3>
 
-Lors de la génération d'un coéquipier, vous pouvez référencer un type de [subagent](/docs/fr/sub-agents) de n'importe quelle [portée de subagent](/docs/fr/sub-agents#choose-the-subagent-scope) : projet, utilisateur, plugin ou défini par CLI. Cela vous permet de définir un rôle une fois, comme un examinateur de sécurité ou un exécuteur de tests, et de le réutiliser à la fois comme subagent délégué et comme coéquipier d'équipe d'agents.
+Lors de la génération d'un coéquipier dans l'un ou l'autre mode d'affichage, vous pouvez référencer un type de [subagent](/docs/fr/sub-agents) du projet, de l'utilisateur ou de la [portée de subagent](/docs/fr/sub-agents#choose-the-subagent-scope) gérée. Cela vous permet de définir un rôle une fois, comme un examinateur de sécurité ou un exécuteur de tests, et de le réutiliser à la fois comme subagent délégué et comme coéquipier d'équipe d'agents.
 
-Pour utiliser une définition de subagent, mentionnez-la par nom lorsque vous demandez à Claude de générer le coéquipier :
+Pour utiliser une définition de subagent, nommez-la lorsque vous demandez à Claude de lancer le coéquipier :
 
-```text theme={null}
-Générez un coéquipier utilisant le type d'agent security-reviewer pour auditer le module d'authentification.
+```text wrap theme={null}
+Lancez un coéquipier utilisant le type d'agent security-reviewer pour auditer le module d'authentification.
 ```
 
-Le coéquipier honore les restrictions de la liste d'outils de cette définition et le modèle, et le corps de la définition est ajouté au prompt système du coéquipier en tant qu'instructions supplémentaires plutôt que de le remplacer. Les outils de coordination d'équipe tels que `SendMessage` et les outils de gestion des tâches sont toujours disponibles pour un coéquipier même lorsque `tools` restreint d'autres outils.
+Claude Code lit la définition de subagent que vous avez nommée et applique ces parties à ce coéquipier. Lorsqu'une partie dépend du [mode d'affichage](#choose-a-display-mode) du coéquipier, l'entrée le précise :
 
-<Note>
-  Les champs frontmatter `skills` et `mcpServers` dans une définition de subagent ne sont pas appliqués lorsque cette définition s'exécute en tant que coéquipier. Les coéquipiers chargent les skills et les serveurs MCP à partir de vos paramètres de projet et d'utilisateur, comme une session régulière.
-</Note>
+* **`tools`** : Claude Code limite le coéquipier aux outils de la liste `tools` de la définition. Pour un coéquipier en processus, Claude Code ajoute `SendMessage` à cette liste, et dans une [session qui dispose des outils Task](/docs/fr/tools-reference#task-tool-availability) il ajoute également `TaskCreate`, `TaskGet`, `TaskList` et `TaskUpdate`.
+* **`model`** : Claude Code utilise le `model` de la définition dans l'un ou l'autre mode d'affichage lorsque votre prompt de lancement n'en nomme pas un. Consultez [comment Claude Code choisit le modèle d'un coéquipier](#specify-teammates-and-models).
+* **Body** : pour un coéquipier en processus, Claude Code ajoute le body de la définition à son prompt système par défaut en tant qu'instructions supplémentaires. Pour un coéquipier en volet divisé, Claude Code utilise le body à la place de son prompt système par défaut.
+* **`skills`** : Claude Code n'applique pas les `skills` de la définition à un coéquipier dans l'un ou l'autre mode d'affichage. Le coéquipier charge les skills à partir de vos paramètres de projet et d'utilisateur.
+* **`mcpServers`** : pour un coéquipier en volet divisé, Claude Code applique les `mcpServers` de la définition selon les [règles pour ce champ](/docs/fr/sub-agents#scope-mcp-servers-to-a-subagent), qui couvrent également une session démarrée avec `--agent`. Un coéquipier en processus ignore le champ et charge les serveurs MCP à partir de vos paramètres de projet et d'utilisateur.
+
+Lorsque Claude envoie un message à un coéquipier en processus qui n'est plus en cours d'exécution, Claude Code le relance dans la même session, restaure toute conversation enregistrée pour lui, et lui donne le message comme son prochain prompt. Après avoir repris une session, les coéquipiers ne sont pas relancés de cette manière, selon [la limitation de reprise](#limitations).
+
+Pour un coéquipier qu'il relance, Claude Code réapplique une définition qui provient du répertoire `.claude/agents/` d'un projet ou d'un répertoire `--add-dir` uniquement si vous avez [approuvé le dossier dans lequel se trouve le fichier d'agent](/docs/fr/permissions#what-runs-before-you-trust-a-folder). Approuver un dossier parent ne compte pas. Jusqu'à ce moment, le coéquipier revient sans aucun des outils ou instructions de la définition, en conservant uniquement les outils que Claude Code ajoute à chaque coéquipier en processus. Consultez [la définition d'agent du coéquipier n'a pas été restaurée](/docs/fr/errors#teammate-agent-definition-not-restored) pour le texte de la notification.
 
 <h3 id="permissions">
   Permissions
 </h3>
 
-Les coéquipiers commencent avec les paramètres de permission du chef. Si le chef s'exécute avec `--dangerously-skip-permissions`, tous les coéquipiers le font aussi. Après la génération, vous pouvez modifier les modes de coéquipiers individuels, mais vous ne pouvez pas définir les modes par coéquipier au moment de la génération.
+Les coéquipiers commencent avec le mode de permission du chef, sauf le mode [`dontAsk`](/docs/fr/permission-modes#allow-only-pre-approved-tools-with-dontask-mode), qu'ils n'héritent pas. Si le chef s'exécute avec `--dangerously-skip-permissions`, tous les coéquipiers le font aussi. Après la génération, vous pouvez modifier le mode de permission d'un coéquipier individuel, mais vous ne pouvez pas définir les modes de permission par coéquipier au moment de la génération.
 
-Lorsqu'un agent envoie un message à un autre via `SendMessage`, l'agent destinataire est informé qu'il provient d'une autre session Claude, et non de vous. Un coéquipier ne peut pas approuver une invite de permission ou fournir un consentement en votre nom, et un coéquipier auquel une action a été refusée ne peut pas la relayer à un autre coéquipier pour contourner la vérification. En [mode automatique](/docs/fr/permission-modes#eliminate-prompts-with-auto-mode), le classificateur traite une approbation relayée par un autre agent comme une entrée non fiable plutôt que comme une confirmation de votre part.
+Les invites de permission des coéquipiers remontent à la session chef, donc approuvez-les vous-même là-bas. [L'approbation du plan](#have-teammates-plan-before-implementing) est l'exception conçue : la session chef accorde les approbations de plan des coéquipiers sans une invite séparée pour vous.
 
-Les invites de permission des coéquipiers remontent à la session chef, donc approuvez-les vous-même là-bas. [L'approbation du plan](#require-plan-approval-for-teammates) est l'exception conçue : la session chef accorde les approbations de plan des coéquipiers sans une invite séparée pour vous.
+<h4 id="messages-between-agents">
+  Messages entre agents
+</h4>
+
+Lorsqu'un agent envoie un message à un autre via `SendMessage`, Claude Code indique à l'agent destinataire que le message provient d'une autre session Claude, et non de vous. Un coéquipier ne peut pas approuver une invite de permission ou fournir un consentement en votre nom, et un coéquipier auquel une action a été refusée ne peut pas la relayer à un autre coéquipier pour contourner la vérification. Les mêmes règles s'appliquent à un message qui arrive de [l'une de vos autres sessions Claude Code](/docs/fr/cross-session-messaging#how-a-session-treats-an-incoming-message), en dehors de l'équipe entièrement.
+
+En [mode automatique](/docs/fr/permission-modes#eliminate-prompts-with-auto-mode), le classificateur applique deux vérifications aux messages entre agents :
+
+* Il traite une approbation relayée par un autre agent comme une entrée non fiable plutôt que comme une confirmation de votre part.
+* Il examine chaque message avant que Claude Code ne le livre, qu'il s'agisse d'un message brut ou d'un message de protocole structuré tel qu'une demande d'arrêt ou une réponse d'approbation de plan. Un message qu'il bloque n'atteint jamais le destinataire.
 
 <h3 id="context-and-communication">
   Contexte et communication
@@ -305,8 +338,8 @@ Chaque coéquipier a sa propre fenêtre de contexte. Lorsqu'il est généré, un
 **Comment les coéquipiers partagent les informations :**
 
 * **Livraison automatique de messages** : lorsque les coéquipiers envoient des messages, ils sont livrés automatiquement aux destinataires. Le chef n'a pas besoin d'interroger les mises à jour.
-* **Notifications d'inactivité** : lorsqu'un coéquipier termine et s'arrête, il notifie automatiquement le chef. À partir de la v2.1.198, un coéquipier dont le tour se termine sur une erreur API notifie le chef qu'il a échoué et inclut le texte d'erreur, au lieu d'apparaître comme terminé normalement.
-* **Liste de tâches partagée** : tous les agents peuvent voir l'état des tâches et revendiquer le travail disponible.
+* **Notifications d'inactivité** : lorsqu'un coéquipier termine et s'arrête, il notifie automatiquement le chef et inclut sa réponse finale dans la notification. Un coéquipier dont le tour se termine sur une erreur API notifie le chef qu'il a échoué et inclut le texte d'erreur.
+* **Liste de tâches partagée** : [les agents qui disposent des outils Task](/docs/fr/tools-reference#task-tool-availability) peuvent voir l'état des tâches et revendiquer le travail disponible.
 * **Messagerie des coéquipiers** : envoyer un message à un coéquipier spécifique par son nom. Pour atteindre tout le monde, envoyez un message par destinataire.
 
 Le chef assigne à chaque coéquipier un nom lorsqu'il le génère, et n'importe quel coéquipier peut envoyer un message à n'importe quel autre par ce nom. Pour obtenir des noms prévisibles que vous pouvez référencer dans les prompts ultérieurs, dites au chef comment appeler chaque coéquipier dans votre instruction de génération.
@@ -316,6 +349,8 @@ Le chef assigne à chaque coéquipier un nom lorsqu'il le génère, et n'importe
 </h3>
 
 Les équipes d'agents utilisent considérablement plus de tokens qu'une seule session. Chaque coéquipier a sa propre fenêtre de contexte, et l'utilisation des tokens augmente avec le nombre de coéquipiers actifs. Pour la recherche, l'examen et le travail sur les nouvelles fonctionnalités, les tokens supplémentaires en valent généralement la peine. Pour les tâches de routine, une seule session est plus rentable. Consultez les [coûts des tokens des équipes d'agents](/docs/fr/costs#agent-team-token-costs) pour les conseils d'utilisation.
+
+Un coéquipier en processus dont les demandes sortent du [bucket TTL du cache](/docs/fr/prompt-caching#which-ttl-each-request-gets) de la conversation principale, donc son cache dure cinq minutes par défaut, y compris sur un abonnement Claude. Pour le conserver pendant une heure, définissez [`subagentPromptCacheTtl`](/docs/fr/settings-reference#subagentpromptcachettl) sur `1h`. L'API facture les écritures de cache d'une heure à un taux plus élevé.
 
 <h2 id="use-case-examples">
   Exemples de cas d'usage
@@ -329,7 +364,7 @@ Ces exemples montrent comment les équipes d'agents gèrent les tâches où l'ex
 
 Un seul examinateur tend à graviter vers un type de problème à la fois. Diviser les critères d'examen en domaines indépendants signifie que la sécurité, l'impact sur les performances et la couverture de test reçoivent tous une attention approfondie simultanément. Le prompt assigne à chaque coéquipier une lentille distincte pour qu'ils ne se chevauchent pas :
 
-```text theme={null}
+```text wrap theme={null}
 Spawn three teammates to review PR #142:
 - One focused on security implications
 - One checking performance impact
@@ -345,7 +380,7 @@ Chaque examinateur travaille à partir de la même PR mais applique un filtre di
 
 Lorsque la cause première est peu claire, un seul agent tend à trouver une explication plausible et s'arrête. Le prompt combat cela en rendant les coéquipiers explicitement adversaires : le travail de chacun n'est pas seulement d'enquêter sur sa propre théorie mais de contester les autres.
 
-```text theme={null}
+```text wrap theme={null}
 Users report the app exits after one message instead of staying connected.
 Spawn 5 agent teammates to investigate different hypotheses. Have them talk to
 each other to try to disprove each other's theories, like a scientific
@@ -366,7 +401,7 @@ Avec plusieurs enquêteurs indépendants essayant activement de réfuter les uns
 
 Les coéquipiers chargent automatiquement le contexte du projet, y compris CLAUDE.md, serveurs MCP et skills, mais ils n'héritent pas de l'historique de conversation du chef. Consultez [Contexte et communication](#context-and-communication) pour les détails. Incluez les détails spécifiques à la tâche dans le prompt de génération :
 
-```text theme={null}
+```text wrap theme={null}
 Générez un coéquipier examinateur de sécurité avec le prompt : « Examinez le module d'authentification
 à src/auth/ pour les vulnérabilités de sécurité. Concentrez-vous sur la gestion des tokens, la gestion
 des sessions et la validation des entrées. L'application utilise des tokens JWT stockés dans
@@ -383,9 +418,7 @@ Il n'y a pas de limite stricte au nombre de coéquipiers, mais des contraintes p
 * **La surcharge de coordination augmente** : plus de coéquipiers signifie plus de communication, de coordination de tâches et de risques de conflits
 * **Rendements décroissants** : au-delà d'un certain point, les coéquipiers supplémentaires n'accélèrent pas le travail proportionnellement
 
-Commencez avec 3 à 5 coéquipiers pour la plupart des flux de travail. Cela équilibre le travail parallèle avec une coordination gérable. Les exemples de ce guide utilisent 3 à 5 coéquipiers car cette plage fonctionne bien dans différents types de tâches.
-
-Avoir 5 à 6 [tâches](/docs/fr/agent-teams#architecture) par coéquipier garde tout le monde productif sans changement de contexte excessif. Si vous avez 15 tâches indépendantes, 3 coéquipiers est un bon point de départ.
+Commencez avec 3 à 5 coéquipiers pour la plupart des flux de travail. Cela équilibre le travail parallèle avec une coordination gérable. Si vous avez 15 tâches indépendantes, 3 coéquipiers est un bon point de départ.
 
 Augmentez l'échelle uniquement lorsque le travail bénéficie véritablement d'avoir des coéquipiers travaillant simultanément. Trois coéquipiers ciblés surpassent souvent cinq dispersés.
 
@@ -407,7 +440,7 @@ Augmentez l'échelle uniquement lorsque le travail bénéficie véritablement d'
 
 Parfois, le chef commence à mettre en œuvre des tâches lui-même au lieu d'attendre les coéquipiers. Si vous remarquez cela :
 
-```text theme={null}
+```text wrap theme={null}
 Attendez que vos coéquipiers complètent leurs tâches avant de procéder
 ```
 
@@ -448,14 +481,39 @@ Si les coéquipiers n'apparaissent pas après avoir demandé à Claude de créer
   ```
 * Pour iTerm2, vérifiez que le CLI `it2` est installé et que l'API Python est activée dans les préférences d'iTerm2.
 
+<h3 id="claude-spawns-teammates-instead-of-subagents">
+  Claude crée des coéquipiers au lieu de sous-agents
+</h3>
+
+Tandis que les équipes d'agents sont activées, un sous-agent que Claude nomme dans la session du chef se lance en tant que coéquipier. Claude [peut nommer des sous-agents de sa propre initiative](#how-claude-starts-agent-teams), donc cela peut se produire lors d'une délégation que vous n'aviez jamais encadrée comme du travail d'équipe.
+
+Pour que les sous-agents nommés se lancent à nouveau en tant que sous-agents, désactivez les équipes d'agents en définissant `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS` à `0` :
+
+```json settings.json theme={null}
+{
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "0"
+  }
+}
+```
+
+Vous n'avez pas besoin de démarrer une nouvelle session : Claude Code réapplique les valeurs `env` du fichier de paramètres à la session en cours lorsque vous enregistrez, et relit la variable chaque fois que Claude crée un sous-agent, donc le prochain sous-agent que Claude nomme se lance en tant que sous-agent.
+
+Définir la variable à `0` dans votre `settings.json` utilisateur remplace une exportation de shell. D'autres sources de paramètres peuvent toujours activer les équipes d'agents :
+
+* **Fichiers de paramètres de priorité supérieure** : les paramètres de projet, les paramètres locaux et une charge utile `--settings` s'appliquent après les paramètres utilisateur, donc une entrée `env` qui définit la variable à `1` dans l'un d'eux gagne. Voir [Priorité des paramètres](/docs/fr/settings#settings-precedence).
+* **Paramètres gérés** : les [paramètres gérés](/docs/fr/server-managed-settings) s'appliquent après toute autre source. Si votre organisation active les équipes d'agents là-bas, demandez à votre administrateur de modifier la valeur gérée.
+
+Après la modification, Claude peut toujours nommer des sous-agents, et le nom continue de fonctionner comme une [adresse `SendMessage`](/docs/fr/sub-agents#resume-subagents). Claude reçoit le résultat de chaque sous-agent lorsqu'il se termine.
+
 <h3 id="too-many-permission-prompts">
   Trop de demandes de permission
 </h3>
 
 Les demandes de permission des coéquipiers remontent au chef, ce qui peut créer des frictions. Pré-approuvez les opérations courantes dans vos [paramètres de permission](/docs/fr/permissions) avant de générer les coéquipiers pour réduire les interruptions.
 
-<h3 id="teammates-stopping-on-errors">
-  Les coéquipiers s'arrêtent sur les erreurs
+<h3 id="agents-stopping-early">
+  Les agents s'arrêtent prématurément
 </h3>
 
 Les coéquipiers peuvent s'arrêter après avoir rencontré des erreurs au lieu de se rétablir. Vérifiez leur sortie en sélectionnant le coéquipier dans le panneau d'agent et en appuyant sur Entrée en mode in-process, ou en cliquant sur le volet en mode divisé, puis :
@@ -463,13 +521,9 @@ Les coéquipiers peuvent s'arrêter après avoir rencontré des erreurs au lieu 
 * Donnez-leur des instructions supplémentaires directement
 * Générez un coéquipier de remplacement pour continuer le travail
 
-À partir de la v2.1.198, un message du chef ou d'un autre coéquipier réveille un coéquipier in-process qui attend de réessayer une demande API échouée, il réessaie donc immédiatement au lieu d'attendre le délai de réessai complet.
+Un message du chef ou d'un autre coéquipier réveille un coéquipier in-process qui attend de réessayer une demande API échouée, il réessaie donc immédiatement au lieu d'attendre le délai de réessai complet.
 
-<h3 id="lead-shuts-down-before-work-is-done">
-  Le chef s'arrête avant que le travail ne soit terminé
-</h3>
-
-Le chef peut décider que l'équipe est terminée avant que toutes les tâches ne soient réellement complètes. Si cela se produit, dites-lui de continuer. Vous pouvez également dire au chef d'attendre que les coéquipiers terminent avant de procéder s'il commence à faire du travail au lieu de déléguer.
+Le chef peut aussi s'arrêter prématurément, décidant que l'équipe est terminée avant que toutes les tâches ne soient réellement complètes. Si cela se produit, dites-lui de continuer.
 
 <h3 id="orphaned-tmux-sessions">
   Sessions tmux orphelines
@@ -493,14 +547,10 @@ Les équipes d'agents sont expérimentales. Les limitations actuelles à connaî
 * **L'arrêt peut être lent** : les coéquipiers terminent leur demande actuelle ou appel d'outil avant de s'arrêter, ce qui peut prendre du temps.
 * **Une équipe par session** : une session a exactement une équipe, limitée à cette session. Vous ne pouvez pas créer d'équipes nommées supplémentaires ou partager une équipe entre les sessions.
 * **Pas d'équipes imbriquées** : les coéquipiers ne peuvent pas générer leurs propres coéquipiers. Seul le chef peut gérer l'équipe.
-* **Pas de sous-agents d'arrière-plan à partir de coéquipiers in-process** : les propres sous-agents d'un coéquipier in-process s'exécutent au premier plan. Demander un sous-agent d'arrière-plan, que ce soit avec `run_in_background` ou une définition de sous-agent qui définit `background: true`, retourne une erreur, car le travail d'arrière-plan d'un coéquipier ne peut pas survivre au processus du chef. Les sous-agents lancés à partir de la conversation principale suivent la [valeur par défaut d'arrière-plan](/docs/fr/sub-agents#run-subagents-in-foreground-or-background).
+* **Pas de sous-agents d'arrière-plan à partir de coéquipiers in-process** : les propres sous-agents d'un coéquipier in-process s'exécutent au premier plan, car le travail d'arrière-plan d'un coéquipier ne peut pas survivre au processus du chef. Claude Code retourne une erreur quand un coéquipier génère un sous-agent dont la définition définit `background: true`. Une demande `run_in_background: true` d'un coéquipier échoue également, soit avec une erreur, soit en s'exécutant silencieusement au premier plan, comme décrit dans [comment Claude Code choisit le premier plan ou l'arrière-plan](/docs/fr/sub-agents#run-subagents-in-foreground-or-background). Les sous-agents lancés à partir de la conversation principale suivent la [valeur par défaut d'arrière-plan](/docs/fr/sub-agents#run-subagents-in-foreground-or-background).
 * **Le chef est fixe** : la session principale est le chef pour sa durée de vie. Vous ne pouvez pas promouvoir un coéquipier en chef ou transférer le leadership.
-* **Permissions définies au moment de la génération** : tous les coéquipiers commencent avec le mode de permission du chef. Vous pouvez modifier les modes de coéquipiers individuels après la génération, mais vous ne pouvez pas définir les modes par coéquipier au moment de la génération.
+* **Permissions définies au moment de la génération** : les coéquipiers commencent avec le mode de permission décrit sous [Permissions](#permissions). Vous pouvez modifier le mode de permission d'un coéquipier individuel après la génération, mais vous ne pouvez pas définir les modes de permission par coéquipier au moment de la génération.
 * **Les volets divisés nécessitent tmux ou iTerm2** : le mode in-process par défaut fonctionne dans n'importe quel terminal. Le mode volets divisés n'est pas supporté dans le terminal intégré de VS Code, Windows Terminal ou Ghostty.
-
-<Tip>
-  **`CLAUDE.md` fonctionne normalement** : les coéquipiers lisent les fichiers `CLAUDE.md` de leur répertoire de travail. Utilisez ceci pour fournir des conseils spécifiques au projet à tous les coéquipiers.
-</Tip>
 
 <h2 id="next-steps">
   Prochaines étapes
@@ -509,5 +559,5 @@ Les équipes d'agents sont expérimentales. Les limitations actuelles à connaî
 Explorez les approches connexes pour le travail parallèle et la délégation :
 
 * **Délégation légère** : les [subagents](/docs/fr/sub-agents) génèrent des agents auxiliaires pour la recherche ou la vérification au sein de votre session, mieux pour les tâches qui n'ont pas besoin de coordination inter-agents
+* **Messagerie entre vos propres sessions** : la [messagerie inter-sessions](/docs/fr/cross-session-messaging) permet à Claude de transmettre les résultats entre les sessions que vous exécutez vous-même
 * **Sessions parallèles manuelles** : les [Git worktrees](/docs/fr/worktrees) vous permettent d'exécuter plusieurs sessions Claude Code vous-même sans coordination d'équipe automatisée
-* **Comparer les approches** : consultez la comparaison [subagent vs équipe d'agents](/docs/fr/features-overview#compare-similar-features) pour une répartition côte à côte

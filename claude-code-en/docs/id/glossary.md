@@ -6,17 +6,25 @@
 
 > Definisi untuk terminologi Claude Code. Pelajari apa itu agentic loop, compaction, CLAUDE.md, hooks, subagents, MCP, dan konsep inti lainnya.
 
-Glosarium ini mendefinisikan terminologi Claude Code. Setiap entri menghubungkan ke halaman tempat konsep dibahas secara mendalam. Untuk konsep tingkat model seperti tokens, temperature, dan RAG, lihat [glosarium platform](https://platform.claude.com/docs/id/about-claude/glossary).
+Glosarium ini mendefinisikan terminologi Claude Code. Setiap entri menghubungkan ke halaman tempat konsep dibahas secara mendalam. Untuk konsep tingkat model seperti tokens, temperature, dan RAG, lihat [glosarium platform](https://platform.claude.com/docs/id/about-claude/glossary). Untuk istilah Claude Desktop seperti desktop extension, MCPB, dan DXT, lihat [Pusat Bantuan Claude](https://support.claude.com/).
 
 <h2 id="a">
   A
 </h2>
 
+<h3 id="agents-md">
+  AGENTS.md
+</h3>
+
+Sebuah file markdown dari instruksi proyek yang Anda tulis untuk agen coding AI. Jika repositori Anda memiliki satu dan tidak ada [CLAUDE.md](#claude-md), Claude membacanya sebagai instruksi proyek Anda tanpa Anda menambahkan file kedua. Anda dapat mengubah pengaturan **Project instructions** di `/config` untuk membuat Claude membaca kedua file atau hanya `CLAUDE.md`. Membaca `AGENTS.md` secara langsung memerlukan Claude Code v2.1.277 atau lebih baru. Dalam beberapa sesi Claude [tidak dapat membaca `AGENTS.md`](/docs/id/memory#when-agents-md-support-is-unavailable), jadi [impor dari `CLAUDE.md`](/docs/id/memory#share-one-file-with-other-coding-tools) sebagai gantinya.
+
+Pelajari lebih lanjut: [AGENTS.md](/docs/id/memory#agents-md)
+
 <h3 id="agent-teams">
   Agent teams
 </h3>
 
-Beberapa sesi Claude Code independen yang dikoordinasikan oleh pemimpin tim, dengan daftar tugas bersama dan pesan peer-to-peer. Tidak seperti [subagents](#subagent), yang berjalan dalam satu sesi dan hanya melaporkan ke induk, rekan kerja masing-masing memiliki jendela konteks mereka sendiri dan Anda dapat berinteraksi dengan salah satu dari mereka secara langsung. Agent teams bersifat eksperimental dan harus diaktifkan dengan menetapkan `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`.
+Beberapa sesi Claude Code independen yang dikoordinasikan oleh pemimpin tim, dengan daftar tugas bersama dan pesan peer-to-peer. Tidak seperti [subagents](#subagent), yang berjalan dalam satu sesi dan hanya melaporkan ke induk, rekan kerja masing-masing memiliki jendela konteks mereka sendiri dan Anda dapat berinteraksi dengan salah satu dari mereka secara langsung. Agent teams bersifat eksperimental dan dinonaktifkan secara default; lihat [Enable agent teams](/docs/id/agent-teams#enable-agent-teams).
 
 Pelajari lebih lanjut: [Run agent teams](/docs/id/agent-teams)
 
@@ -64,7 +72,7 @@ Pelajari lebih lanjut: [Auto memory](/docs/id/memory#auto-memory)
   Auto mode
 </h3>
 
-Sebuah [permission mode](#permission-mode) di mana model classifier terpisah meninjau tindakan di latar belakang, sehingga sebagian besar berjalan tanpa prompt persetujuan; aturan ask eksplisit masih meminta. Classifier memblokir eskalasi scope, infrastruktur yang tidak dipercaya, dan [prompt injection](#prompt-injection). Classifier tidak pernah melihat hasil tool, jadi instruksi yang disuntikkan tidak dapat mempengaruhi keputusannya.
+Sebuah [permission mode](#permission-mode) di mana model classifier terpisah meninjau tindakan alih-alih Anda, sehingga Claude Code menjalankan sebagian besar dari mereka tanpa menanyakan Anda. Claude Code masih menanyakan Anda sebelum tindakan yang cocok dengan aturan ask eksplisit Anda. Pada paket Pro, Max, dan Team, auto mode adalah [permission mode awal bawaan](/docs/id/permission-modes#which-mode-a-session-starts-in) untuk sesi terminal interaktif dan VS Code. Classifier memblokir eskalasi scope, infrastruktur yang tidak dipercaya, dan [prompt injection](#prompt-injection). Hasil tool dilepas dari apa yang dilihatnya, sehingga konten berbahaya dalam file atau halaman web tidak dapat memanipulasinya secara langsung.
 
 Pelajari lebih lanjut: [Eliminate prompts with auto mode](/docs/id/permission-modes#eliminate-prompts-with-auto-mode)
 
@@ -76,7 +84,7 @@ Pelajari lebih lanjut: [Eliminate prompts with auto mode](/docs/id/permission-mo
   Bare mode
 </h3>
 
-Bendera startup, `--bare`, yang melewati auto-discovery hooks, skills, plugins, MCP servers, auto memory, dan CLAUDE.md. Hanya bendera yang Anda lewatkan secara eksplisit yang berlaku. Direkomendasikan untuk CI dan panggilan script di mana Anda memerlukan perilaku identik di seluruh mesin terlepas dari konfigurasi lokal.
+Dengan `--bare`, Claude Code dimulai tanpa memuat hooks, skills, perintah kustom, subagents, plugins, server MCP, auto memory, atau CLAUDE.md, kecuali skills di direktori yang Anda lewatkan dengan `--add-dir`. Direkomendasikan untuk CI dan panggilan script di mana Anda memerlukan hasil yang sama di setiap mesin.
 
 Pelajari lebih lanjut: [Mulai lebih cepat dengan bare mode](/docs/id/headless#start-faster-with-bare-mode)
 
@@ -104,7 +112,7 @@ Pelajari lebih lanjut: [Channels](/docs/id/channels)
   Checkpoint
 </h3>
 
-Titik pemulihan yang dibuat di setiap prompt yang Anda kirim. Claude Code mengambil snapshot file sebelum setiap edit sehingga checkpoint dapat mengembalikannya. Tekan `Esc` dua kali atau jalankan `/rewind` untuk mengembalikan kode, percakapan, atau keduanya ke titik sebelumnya, atau untuk merangkum bagian percakapan dari pesan yang dipilih. Checkpoint disimpan dengan percakapan, sehingga sesi yang dilanjutkan masih dapat `/rewind` ke dalamnya. Mereka terpisah dari git dan tidak melacak perubahan yang dibuat melalui tool Bash.
+Titik pemulihan yang dibuat di setiap prompt yang Anda kirim yang memulai giliran. Claude Code mengambil snapshot file sebelum setiap edit sehingga checkpoint dapat mengembalikannya. Tekan `Esc` dua kali atau jalankan `/rewind` untuk mengembalikan kode, percakapan, atau keduanya ke titik sebelumnya, atau untuk merangkum bagian percakapan dari pesan yang dipilih. Checkpoint disimpan dengan percakapan, sehingga sesi yang dilanjutkan masih dapat `/rewind` ke dalamnya. Mereka terpisah dari git dan tidak melacak perubahan yang dibuat melalui tool Bash.
 
 Pelajari lebih lanjut: [Checkpointing](/docs/id/checkpointing)
 
@@ -122,15 +130,25 @@ Pelajari lebih lanjut: [The `.claude` directory](/docs/id/claude-directory)
 
 File markdown dari instruksi persisten yang Anda tulis untuk Claude, dimuat di awal setiap sesi sebagai pesan pengguna setelah system prompt. Letakkan konvensi proyek, catatan arsitektur, dan aturan "selalu lakukan X" di sini. Project-root CLAUDE.md bertahan [compaction](#compaction) dan dibaca ulang segar dari disk sesudahnya.
 
-Anda dapat menempatkan CLAUDE.md di scope proyek di `./CLAUDE.md` atau `./.claude/CLAUDE.md`, di scope pengguna di `~/.claude/CLAUDE.md`, atau sebagai [managed policy](#managed-settings) untuk organisasi Anda. Semua file yang ditemukan digabungkan ke dalam konteks daripada menimpa satu sama lain, diurutkan dari scope terluas ke paling spesifik.
+Anda dapat menempatkan CLAUDE.md di scope proyek di `./CLAUDE.md` atau `./.claude/CLAUDE.md`, di scope pengguna di `~/.claude/CLAUDE.md`, atau sebagai [managed policy](#managed-settings) untuk organisasi Anda. Semua file yang ditemukan digabungkan ke dalam konteks daripada menimpa satu sama lain, diurutkan dari scope terluas ke paling spesifik. Claude Code juga dapat memuat file [AGENTS.md](#agents-md) proyek, sendiri atau bersama CLAUDE.md.
 
 Pelajari lebih lanjut: [CLAUDE.md files](/docs/id/memory#claude-md-files)
+
+<h3 id="cloud-session">
+  Cloud session
+</h3>
+
+Sesi Claude Code yang terus berjalan setelah Anda menutup laptop, karena berjalan di infrastruktur cloud daripada mesin Anda: dikelola oleh Anthropic secara default, atau [self-hosted environment](/docs/id/self-hosted-environments) yang dioperasikan organisasi Anda. Anda memulainya dari claude.ai/code, aplikasi Claude mobile, aplikasi Desktop dengan **Cloud** dipilih, `claude --cloud`, atau [routine](/docs/id/routines). Sesi di terminal, IDE, atau aplikasi Desktop Anda dengan **Local** dipilih adalah sesi lokal; untuk menjangkau sesi lokal dari perangkat lain, gunakan [Remote Control](#remote-control).
+
+Pelajari lebih lanjut: [Use Claude Code in the cloud](/docs/id/claude-code-on-the-web)
 
 <h3 id="command">
   Command
 </h3>
 
 Instruksi yang dapat digunakan kembali yang Anda panggil dengan mengetik `/name` dalam prompt. Perintah built-in seperti `/clear`, `/model`, dan `/compact` mengontrol sesi. Anda dapat menentukan perintah Anda sendiri sebagai file di `.claude/commands/`, atau menginstalnya dari [plugin](#plugin). [Skills](#skill) adalah cara yang direkomendasikan untuk mengemas perintah multi-langkah.
+
+Dua penggunaan lain dari kata ini tidak terkait: subperintah CLI `claude` seperti `claude mcp add`, yang tercantum dalam [referensi CLI](/docs/id/cli-reference#cli-commands), dan field `command` dari entri [MCP server](#mcp-server) stdio, yang menentukan executable yang Claude Code luncurkan untuk memulai server.
 
 Pelajari lebih lanjut: [Commands](/docs/id/commands) · [Skills](/docs/id/skills)
 
@@ -141,6 +159,14 @@ Pelajari lebih lanjut: [Commands](/docs/id/commands) · [Skills](/docs/id/skills
 Ringkasan otomatis percakapan Anda ketika [context window](#context-window) mendekati batasnya. Output tool yang lebih lama dihapus terlebih dahulu, kemudian percakapan diringkas. Project-root CLAUDE.md dan auto memory bertahan compaction dan dimuat ulang dari disk; instruksi yang diberikan hanya dalam percakapan mungkin hilang. Jalankan `/compact` untuk memicu secara manual, secara opsional dengan fokus seperti `/compact focus on the API changes`.
 
 Pelajari lebih lanjut: [What survives compaction](/docs/id/context-window#what-survives-compaction) · [When context fills up](/docs/id/how-claude-code-works#when-context-fills-up)
+
+<h3 id="connector">
+  Connector
+</h3>
+
+Sebuah [MCP server](#mcp-server) yang ditambahkan ke akun claude.ai Anda daripada dikonfigurasi di Claude Code. Ketika Anda masuk ke Claude Code dengan akun tersebut, connector Anda muncul di `/mcp` bersama server yang Anda tambahkan secara lokal. Organisasi juga dapat menyediakan connector dan menetapkan kontrol per-tool pada mereka.
+
+Pelajari lebih lanjut: [Use MCP servers from claude.ai](/docs/id/mcp#use-mcp-servers-from-claude-ai)
 
 <h3 id="context-window">
   Context window
@@ -170,7 +196,7 @@ Pelajari lebih lanjut: [Sessions from Dispatch](/docs/id/desktop#sessions-from-d
   Effort level
 </h3>
 
-Pengaturan yang mengontrol berapa banyak anggaran thinking adaptive-reasoning yang Claude gunakan pada setiap giliran. Effort yang lebih tinggi berarti lebih banyak thinking tokens dan reasoning yang lebih dalam; effort yang lebih rendah lebih cepat dan lebih murah. Effort didukung di Fable 5, di Opus 4.6 dan yang lebih baru, serta di Sonnet 4.6 dan yang lebih baru.
+Pengaturan yang mengontrol adaptive reasoning, yang memungkinkan model memutuskan apakah dan seberapa banyak untuk berpikir pada setiap langkah. Effort yang lebih tinggi berarti lebih banyak thinking tokens dan reasoning yang lebih dalam; effort yang lebih rendah lebih cepat dan lebih murah. Effort didukung pada model Fable, pada Opus 4.6 dan yang lebih baru, serta pada Sonnet 4.6 dan yang lebih baru.
 
 Pelajari lebih lanjut: [Adjust effort level](/docs/id/model-config#adjust-effort-level)
 
@@ -181,6 +207,18 @@ Pelajari lebih lanjut: [Adjust effort level](/docs/id/model-config#adjust-effort
 Reasoning step-by-step yang terlihat yang dilakukan model sebelum merespons. Anda dapat menyesuaikannya dengan [effort level](#effort-level), atau membatasi thinking tokens dengan `MAX_THINKING_TOKENS` pada model dengan anggaran thinking tetap. Thinking muncul dalam teks italic abu-abu di terminal.
 
 Pelajari lebih lanjut: [Use extended thinking](/docs/id/model-config#extended-thinking)
+
+<h2 id="f">
+  F
+</h2>
+
+<h3 id="frontmatter">
+  Frontmatter
+</h3>
+
+Sebuah blok pengaturan YAML di bagian paling atas file Markdown, di antara baris pembuka `---` dan baris penutup `---`. Skills, subagents, output styles, dan rules masing-masing membaca konfigurasi mereka dari frontmatter, seperti `description` skill atau `tools` subagent, dan memperlakukan semua yang setelah `---` penutup sebagai instruksi. `---` pembuka harus menjadi baris pertama file. Setiap jenis file menerima set bidang tersendiri.
+
+Pelajari lebih lanjut: [Skill frontmatter](/docs/id/skills#frontmatter-reference), [Subagent frontmatter](/docs/id/sub-agents#supported-frontmatter-fields), [Output style frontmatter](/docs/id/output-styles#frontmatter), [Rule frontmatter](/docs/id/memory#rules-frontmatter-reference)
 
 <h2 id="h">
   H
@@ -210,7 +248,7 @@ Pelajari lebih lanjut: [Get started with hooks](/docs/id/hooks-guide) · [Hooks 
 
 Pengaturan yang diberlakukan di seluruh organisasi oleh IT atau DevOps, dikirimkan dari server Anthropic melalui konsol admin atau diterapkan ke perangkat di jalur tingkat OS di luar `~/.claude`. Pengguna dan pengaturan proyek tidak dapat mengesampingkan managed settings. Pengiriman yang dikelola server berlaku pada [konfigurasi yang memenuhi syarat](/docs/id/server-managed-settings#platform-availability); lihat [Pertimbangan keamanan](/docs/id/server-managed-settings#security-considerations). Gunakan ini untuk kebijakan keamanan, persyaratan kepatuhan, atau tooling standar di seluruh armada.
 
-Pelajari lebih lanjut: [Server-managed settings](/docs/id/server-managed-settings) · [Settings files](/docs/id/settings#settings-files)
+Pelajari lebih lanjut: [Server-managed settings](/docs/id/server-managed-settings) · [Settings files](/docs/id/settings#where-settings-live)
 
 <h3 id="mcp-model-context-protocol">
   MCP (Model Context Protocol)
@@ -220,11 +258,19 @@ Standar terbuka untuk menghubungkan tools AI ke sumber data eksternal dan layana
 
 Pelajari lebih lanjut: [Model Context Protocol](/docs/id/mcp)
 
+<h3 id="mcp-server">
+  MCP server
+</h3>
+
+Program yang memberikan Claude tools, prompts, atau resources melalui [MCP](#mcp-model-context-protocol). Anda menambahkan servers dengan `claude mcp add`, di `.mcp.json`, melalui [plugin](#plugin), atau sebagai [connector](#connector) claude.ai. Server stdio lokal berjalan sebagai proses yang Claude Code mulai dari field `command` dan `args` konfigurasinya, yang tidak ada hubungannya dengan [commands](#command) yang Anda ketik di prompt.
+
+Pelajari lebih lanjut: [Model Context Protocol](/docs/id/mcp)
+
 <h3 id="mcp-tool-search">
   MCP Tool Search
 </h3>
 
-Mekanisme penghematan konteks yang menunda skema MCP tool sampai diperlukan. Hanya nama tool yang dimuat saat startup; Claude mengambil skema lengkap sesuai permintaan ketika memutuskan untuk menggunakan tool spesifik. Ini menjaga MCP servers idle dari mengonsumsi banyak konteks.
+Mekanisme penghematan konteks yang menunda skema MCP tool sampai diperlukan. Hanya nama tool dan instruksi server yang dimuat saat startup; Claude mengambil skema lengkap sesuai permintaan ketika memutuskan untuk menggunakan tool spesifik. Ini menjaga MCP servers idle dari mengonsumsi banyak konteks.
 
 Pelajari lebih lanjut: [Scale with MCP Tool Search](/docs/id/mcp#scale-with-mcp-tool-search)
 
@@ -248,7 +294,7 @@ Pelajari lebih lanjut: [Run Claude Code programmatically](/docs/id/headless)
   Output style
 </h3>
 
-Konfigurasi yang memodifikasi system prompt Claude untuk mengubah perilaku respons, nada, atau format. Output styles mematikan bagian khusus software-engineering dari system prompt default, tidak seperti [CLAUDE.md](#claude-md) yang dikirimkan sebagai pesan pengguna mengikuti system prompt. Style built-in termasuk Default, Proactive, Explanatory, dan Learning.
+Konfigurasi yang mengubah instruksi yang Claude Code berikan kepada Claude, untuk menetapkan perilaku respons, nada, atau format. Tidak seperti [CLAUDE.md](#claude-md), yang menambahkan konteks proyek bersama instruksi default Claude Code, output style kustom dapat menggantikan instruksi rekayasa perangkat lunak default.
 
 Pelajari lebih lanjut: [Output styles](/docs/id/output-styles)
 
@@ -286,15 +332,15 @@ Pelajari lebih lanjut: [Analisis sebelum Anda mengedit dengan plan mode](/docs/i
   Plugin
 </h3>
 
-Bundle skills, hooks, subagents, dan MCP servers yang dikemas sebagai unit yang dapat diinstal tunggal. Plugin skills diberi namespace sebagai `plugin-name:skill-name` sehingga beberapa plugin dapat hidup berdampingan. Distribusikan plugins di seluruh tim melalui [marketplace](/docs/id/plugin-marketplaces).
+Bundle skills, hooks, subagents, dan MCP servers yang dikemas sebagai unit yang dapat diinstal tunggal. Plugin skills diberi namespace sebagai `plugin-name:skill-name` sehingga beberapa plugin dapat hidup berdampingan. Distribusikan plugins di seluruh tim melalui [marketplace](/docs/id/plugins/overview).
 
-Pelajari lebih lanjut: [Plugins](/docs/id/plugins)
+Pelajari lebih lanjut: [Plugins](/docs/id/plugins/overview)
 
 <h3 id="project-trust">
   Project trust
 </h3>
 
-Dialog yang menerima direktori sebelum Claude Code memuat konfigurasinya. Penerimaan disimpan per direktori proyek, kecuali direktori home Anda, di mana kepercayaan dipegang untuk sesi saat ini saja dan prompt muncul kembali pada setiap peluncuran. Trust gates auto-installation marketplace plugins dan eksekusi project-defined hooks. Mempercayai direktori berarti `.claude/settings.json`, `.mcp.json`, dan file config lainnya berlaku.
+Dialog yang menerima direktori sebelum Claude Code memuat konfigurasinya. Penerimaan disimpan per direktori proyek, kecuali direktori home Anda, di mana kepercayaan dipegang untuk sesi saat ini saja dan prompt muncul kembali pada setiap peluncuran. Sampai Anda mempercayai direktori, Claude Code menahan beberapa konten yang disediakan repositorinya, seperti aturan allow proyek dan marketplace dari `.claude/settings.json`. [Apa yang berjalan sebelum Anda mempercayai folder](/docs/id/permissions#what-runs-before-you-trust-a-folder) mencantumkan setiap jenis konten, termasuk apa yang dijalankan sesi `-p` tanpa dialog.
 
 Pelajari lebih lanjut: [Direktori `.claude`](/docs/id/claude-directory)
 
@@ -302,7 +348,7 @@ Pelajari lebih lanjut: [Direktori `.claude`](/docs/id/claude-directory)
   Prompt injection
 </h3>
 
-Instruksi bermusuhan yang tertanam dalam file, halaman web, atau hasil tool yang mencoba mengalihkan Claude ke arah tindakan yang tidak pernah Anda minta. Pertahanan Claude Code termasuk sistem izin, deteksi injeksi perintah, dan verifikasi kepercayaan. [Auto mode](#auto-mode) menambahkan probe sisi server yang memindai hasil tool untuk konten mencurigakan dan classifier yang tidak pernah melihat hasil tool, jadi teks yang disuntikkan tidak dapat mempengaruhi keputusan persetujuannya.
+Instruksi bermusuhan yang tertanam dalam file, halaman web, atau hasil tool yang mencoba mengalihkan Claude ke arah tindakan yang tidak pernah Anda minta. Pertahanan Claude Code termasuk sistem izin, deteksi injeksi perintah, dan verifikasi kepercayaan. [Auto mode](#auto-mode) menambahkan probe sisi server yang memindai hasil tool untuk konten mencurigakan dan classifier yang meninjau tindakan dengan hasil tool dihapus, sehingga teks yang disuntikkan tidak dapat memanipulasinya secara langsung.
 
 Pelajari lebih lanjut: [Lindungi dari prompt injection](/docs/id/security#protect-against-prompt-injection)
 
@@ -314,7 +360,7 @@ Pelajari lebih lanjut: [Lindungi dari prompt injection](/docs/id/security#protec
   Remote Control
 </h3>
 
-Cara untuk melanjutkan sesi Claude Code lokal dari telepon atau browser Anda melalui claude.ai. Eksekusi kode dan file Anda tetap di mesin Anda; antarmuka bersifat remote. Berbeda dari Claude Code di web, yang berjalan dalam sandbox cloud.
+Cara untuk melanjutkan sesi Claude Code lokal dari telepon atau browser Anda melalui claude.ai. Eksekusi kode dan file Anda tetap di mesin Anda; antarmuka bersifat remote. Berbeda dari [sesi cloud](/docs/id/claude-code-on-the-web), yang berjalan dalam sandbox cloud.
 
 Pelajari lebih lanjut: [Remote Control](/docs/id/remote-control)
 
@@ -350,9 +396,9 @@ Pelajari lebih lanjut: [Work with sessions](/docs/id/how-claude-code-works#work-
   Settings layers
 </h3>
 
-Hierarki yang Claude Code baca konfigurasi dari, dalam urutan prioritas dari tertinggi ke terendah: [managed policy](#managed-settings), argumen command-line, local settings di `.claude/settings.local.json`, project settings di `.claude/settings.json`, kemudian user settings di `~/.claude/settings.json`. Array merge di seluruh layer; scalar di layer yang lebih tinggi mengesampingkan yang lebih rendah.
+Hierarki yang Claude Code baca konfigurasi dari, dalam urutan prioritas dari tertinggi ke terendah: [managed policy](#managed-settings), argumen command-line, local settings di `.claude/settings.local.json`, project settings di `.claude/settings.json`, kemudian user settings di `~/.claude/settings.json`. Array merge di seluruh layer; scalar di layer yang lebih tinggi mengesampingkan yang lebih rendah. Lihat [Settings precedence](/docs/id/settings#settings-precedence).
 
-Pelajari lebih lanjut: [Settings files](/docs/id/settings#settings-files)
+Pelajari lebih lanjut: [Settings files](/docs/id/settings#where-settings-live)
 
 <h3 id="skill">
   Skill
@@ -368,7 +414,7 @@ Pelajari lebih lanjut: [Extend Claude with skills](/docs/id/skills)
   Subagent
 </h3>
 
-Asisten AI khusus yang berjalan di jendela konteks sendiri dengan system prompt kustom, akses tool spesifik, dan izin independen. Bekerja pada tugas yang didelegasikan dan mengembalikan ringkasan ke percakapan utama. Gunakan subagents untuk menjaga eksplorasi besar keluar dari konteks utama Anda atau untuk menjalankan penelitian paralel. Berbeda dari [agent teams](#agent-teams), di mana setiap agen adalah sesi independen penuh yang dapat Anda bicarakan secara langsung.
+Asisten AI khusus yang berjalan di jendela konteks sendiri dengan system prompt kustom, akses tool spesifik, dan izin independen. Bekerja pada tugas yang didelegasikan dan mengembalikan ringkasan ke percakapan utama. Gunakan subagents untuk menjaga eksplorasi besar keluar dari konteks utama Anda atau untuk menjalankan penelitian paralel. Subagent tetap berada di dalam sesi yang memunculkannya. Untuk meneruskan temuan antar sesi terpisah yang Anda jalankan sendiri, gunakan [cross-session messaging](/docs/id/cross-session-messaging).
 
 Subagents built-in termasuk Explore, Plan, dan general-purpose.
 
@@ -378,7 +424,7 @@ Pelajari lebih lanjut: [Create custom subagents](/docs/id/sub-agents)
   Surface
 </h3>
 
-Tempat apa pun Anda mengakses Claude Code: CLI, VS Code, JetBrains, Desktop, atau claude.ai. Semua surface berbagi engine yang sama, jadi CLAUDE.md, settings, dan skills Anda bekerja dengan cara yang sama di seluruhnya. Slack dan Chrome extension adalah integrasi yang terhubung ke surface daripada surface itu sendiri.
+Tempat apa pun Anda mengakses Claude Code: CLI, VS Code, JetBrains, Desktop, atau claude.ai. Semua surface berbagi engine yang sama. Sesi di mesin Anda membaca CLAUDE.md lokal, settings, dan skills; [cloud sessions](/docs/id/cloud-environments#what-carries-over-from-your-setup) dimulai dari klon segar repositori Anda dan tidak membaca `~/.claude/` di mesin Anda. Slack dan Chrome extension adalah integrasi yang terhubung ke surface daripada surface itu sendiri.
 
 Pelajari lebih lanjut: [Platforms and integrations](/docs/id/platforms)
 
@@ -390,9 +436,9 @@ Pelajari lebih lanjut: [Platforms and integrations](/docs/id/platforms)
   Teleport
 </h3>
 
-Perintah, `/teleport`, yang menarik sesi Claude Code cloud ke terminal lokal Anda. Claude mengambil branch, memuat riwayat percakapan, dan melanjutkan dari keadaan terakhir sesi web. Arah sebaliknya adalah `--cloud`, yang mengirim tugas lokal untuk dijalankan di web.
+Perintah, `/teleport`, yang menarik sesi Claude Code cloud ke terminal lokal Anda. Claude mengambil branch, memuat riwayat percakapan, dan melanjutkan dari keadaan terakhir sesi cloud. Arah sebaliknya adalah `--cloud`, yang mengirim tugas lokal untuk dijalankan di cloud.
 
-Pelajari lebih lanjut: [Dari web ke terminal](/docs/id/claude-code-on-the-web#from-web-to-terminal)
+Pelajari lebih lanjut: [Dari cloud ke terminal](/docs/id/claude-code-on-the-web#from-cloud-to-terminal)
 
 <h3 id="tool">
   Tool
@@ -442,8 +488,9 @@ Pelajari lebih lanjut: [Run parallel sessions with git worktrees](/docs/id/workt
 
 Istilah-istilah ini muncul dalam docs yang lebih lama, posting blog, dan konten komunitas. Gunakan nama saat ini saat mencari di situs ini.
 
-| Old term        | Now called                                    | Notes                                |
-| --------------- | --------------------------------------------- | ------------------------------------ |
-| Headless mode   | [Non-interactive mode](#non-interactive-mode) | Same `-p` flag, same behavior        |
-| Custom commands | [Skills](#skill)                              | `.claude/commands/` files still work |
-| Slash commands  | Commands                                      | "Slash" dropped from product copy    |
+| Old term                                                                | Now called                                    | Notes                                                                         |
+| ----------------------------------------------------------------------- | --------------------------------------------- | ----------------------------------------------------------------------------- |
+| Headless mode                                                           | [Non-interactive mode](#non-interactive-mode) | Same `-p` flag, same behavior                                                 |
+| Web session; "Claude Code on the web" as the name for any cloud session | [Cloud session](#cloud-session)               | "Claude Code on the web" now names only the browser surface at claude.ai/code |
+| Custom commands                                                         | [Skills](#skill)                              | `.claude/commands/` files still work                                          |
+| Slash commands                                                          | Commands                                      | "Slash" dropped from product copy                                             |

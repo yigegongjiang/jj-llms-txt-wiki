@@ -26,10 +26,10 @@ Claude Code 外掛程式適用於大多數 JetBrains IDEs，包括：
 </h2>
 
 * **快速啟動**：使用 `Cmd+Esc`（Mac）或 `Ctrl+Esc`（Windows/Linux）直接從編輯器開啟 Claude Code，或點擊 UI 中的 Claude Code 按鈕
-* **差異檢視**：程式碼變更可直接在 IDE 差異檢視器中顯示，而不是在終端機中
+* **差異檢視**：Claude Code 會在 IDE 差異檢視器中開啟程式碼變更，而不是在終端機中；可透過 `/config` 中的 **Diff tool** 設定來變更此行為
 * **選擇內容共享**：IDE 中的目前選擇或分頁會自動與 Claude Code 共享。[`Read` 拒絕規則](/docs/zh-TW/permissions#read-and-edit)會阻止此共享以符合檔案
 * **檔案參考快捷方式**：使用 `Cmd+Option+K`（Mac）或 `Alt+Ctrl+K`（Linux/Windows）插入檔案參考，例如 `@src/auth.ts#L1-99`
-* **診斷共享**：IDE 中的診斷錯誤（例如 lint 和語法錯誤）會在您工作時自動與 Claude 共享
+* **診斷共享**：Claude 會透過呼叫 [`getDiagnostics` tool](#the-built-in-ide-mcp-server) 來讀取 IDE 的檢查診斷，例如 lint 和語法錯誤；Claude Code 在編輯後不會自行向外掛程式要求診斷
 
 <h2 id="installation">
   安裝
@@ -50,10 +50,6 @@ Claude Code 外掛程式適用於大多數 JetBrains IDEs，包括：
 如果 `claude` 安裝在您的 IDE 找不到的位置，請在外掛程式的 [Claude 命令設定](#general-settings)中設定完整路徑。
 
 Claude Code 適用於任何付費 Claude 訂閱（Pro、Max、Team 或 Enterprise）或 Claude Console 帳戶，無需 API 金鑰。當您第一次執行 `claude` 時，系統會提示您[登入](/docs/zh-TW/authentication#log-in-to-claude-code) Claude Code。
-
-<Note>
-  安裝外掛程式後，您可能需要完全重新啟動 IDE 才能使其生效。
-</Note>
 
 <h2 id="usage">
   使用方式
@@ -79,6 +75,8 @@ claude
 /ide
 ```
 
+當連接成功時，Claude Code 會確認並顯示類似 `Connected to IntelliJ IDEA.` 的訊息。如果 Claude Code 偵測到執行中的 IDE 但該 IDE 沒有安裝外掛程式，`/ide` 會為您安裝外掛程式，並要求您重新啟動 IDE。
+
 如果您希望 Claude 能夠存取與 IDE 相同的檔案，請從與 IDE 專案根目錄相同的目錄啟動 Claude Code。
 
 <h2 id="configuration">
@@ -93,7 +91,9 @@ claude
 
 1. 執行 `claude`
 2. 輸入 `/config` 命令
-3. 將差異工具設定為 `auto` 以在 IDE 中顯示差異，或設定為 `terminal` 以在終端機中保留差異
+3. 將 **Diff tool** 設定為 `auto` 以在 IDE 中顯示差異，或設定為 `terminal` 以在終端機中保留差異
+
+**Diff tool** 項目只有在 Claude Code 連接到 IDE 時才會出現在 `/config` 中，因此請從 JetBrains 終端機執行 `claude`，或先從外部終端機執行 [`/ide`](/docs/zh-TW/commands)。請參閱 [`diffTool`](/docs/zh-TW/settings-reference#difftool) 以了解基礎設定。
 
 <h3 id="plugin-settings">
   外掛程式設定
@@ -137,10 +137,8 @@ claude
 </h3>
 
 <Warning>
-  使用 JetBrains 遠端開發時，您必須透過 **Settings → Plugin (Host)** 在遠端主機上安裝外掛程式。
+  使用 JetBrains 遠端開發時，您必須透過 **Settings → Plugin (Host)** 在遠端主機上安裝外掛程式，而不是在您的本機用戶端機器上。
 </Warning>
-
-外掛程式必須安裝在遠端主機上，而不是在您的本機用戶端機器上。
 
 <h3 id="wsl-configuration">
   WSL 設定
@@ -162,7 +160,7 @@ claude
     hostname -I
     ```
 
-    記下子網路，例如 `172.21.123.45` 在 `172.21.0.0/16` 中。
+    記下您的子網路：取得位址的前兩個區段，並在其後加上 `.0.0/16`。例如，如果位址是 `172.21.123.45`，您的子網路是 `172.21.0.0/16`。
   </Step>
 
   <Step title="建立防火牆規則">
@@ -212,11 +210,11 @@ networkingMode=mirrored
   IDE 未被偵測
 </h3>
 
-如果執行 `claude` 顯示「未偵測到可用的 IDEs」：
+如果執行 `/ide` 命令顯示「未偵測到可用的 IDEs」：
 
 * 驗證外掛程式已安裝並啟用
 * 完全重新啟動 IDE
-* 檢查您是否從整合終端機執行 Claude Code
+* 如果您預期在執行 `/ide` 時自動連線，請檢查您是否從 IDE 的整合終端機啟動 `claude`
 * 對於 WSL 使用者，請參閱上方的 [WSL 設定](#wsl-configuration)
 
 <h3 id="command-not-found">
@@ -233,11 +231,11 @@ networkingMode=mirrored
   安全考量
 </h2>
 
-當 Claude Code 在啟用 [`acceptEdits` 權限模式](/docs/zh-TW/permission-modes#auto-approve-file-edits-with-acceptedits-mode)的 JetBrains IDE 中執行時，它可能能夠修改可由您的 IDE 自動執行的 IDE 設定檔。這可能會增加在 `acceptEdits` 模式下執行 Claude Code 的風險，並允許繞過 Claude Code 對 bash 執行的權限提示。
+當 Claude Code 在啟用 [`acceptEdits` 權限模式](/docs/zh-TW/permission-modes#auto-approve-file-edits-with-acceptedits-mode)的 JetBrains IDE 中執行時，它可能能夠修改可由您的 IDE 自動執行的 IDE 設定檔。這可能會增加在 `acceptEdits` 模式下執行 Claude Code 的風險，並允許繞過 Claude Code 對 Bash 執行的權限提示。
 
 在 JetBrains IDEs 中執行時，請考慮：
 
-* 對編輯使用手動核准模式
+* 對編輯使用手動模式，因為 `acceptEdits` 和自動模式都會核准您工作目錄內的編輯，除了[受保護的路徑](/docs/zh-TW/permission-modes#protected-paths)外，不會詢問
 * 特別注意確保 Claude 僅與受信任的提示一起使用
 * 注意 Claude Code 有權限修改的檔案
 
@@ -247,7 +245,7 @@ networkingMode=mirrored
   內建 IDE MCP 伺服器
 </h3>
 
-當外掛程式處於活動狀態時，它會執行一個本機 MCP 伺服器，CLI 會自動連接到該伺服器。這就是 CLI 如何在 IDE 的原生差異檢視器中開啟差異、讀取您目前的選擇以進行 `@`-提及，以及將檢查診斷拉入對話中的方式。
+當外掛程式處於活動狀態時，它會執行一個本機 MCP 伺服器，CLI 會自動連接到該伺服器。這就是 CLI 如何在 IDE 的原生差異檢視器中開啟差異、讀取您目前的選擇以進行 `@`-提及，以及讓 Claude 讀取檢查診斷的方式。
 
 伺服器名稱為 `ide`，並且從 `/mcp` 中隱藏，因為沒有任何內容可配置。不過，如果您的組織使用 [`PreToolUse` hook](/docs/zh-TW/hooks#pretooluse) 來允許列表 MCP 工具，您需要知道它存在。
 
@@ -257,9 +255,9 @@ networkingMode=mirrored
 
 **向模型公開的工具。** 伺服器裝載多個工具，但只有一個對模型可見。其餘的是 CLI 用於自己的 UI 的內部 RPC，例如開啟差異和讀取選擇，並在工具清單到達 Claude 之前被篩選出來。
 
-| 工具名稱（如 hooks 所見）           | 它的作用                                     | 唯讀 |
-| -------------------------- | ---------------------------------------- | -- |
-| `mcp__ide__getDiagnostics` | 傳回 IDE 的檢查診斷，即編輯器中顯示的錯誤和警告。可選擇性地限定於一個檔案。 | 是  |
+| 工具名稱（如 hooks 所見）           | 它的作用                                                                               | 唯讀 |
+| -------------------------- | ---------------------------------------------------------------------------------- | -- |
+| `mcp__ide__getDiagnostics` | 傳回 IDE 的檢查診斷，即編輯器中顯示的錯誤和警告。每次呼叫涵蓋一個檔案：Claude 指定的檔案，或如果 Claude 未指定檔案，則為您的活動編輯器中的檔案。 | 是  |
 
 JetBrains 外掛程式不會向模型公開程式碼執行工具。
 

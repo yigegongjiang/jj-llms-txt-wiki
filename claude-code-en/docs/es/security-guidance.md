@@ -10,41 +10,47 @@ El plugin security guidance hace que Claude revise sus propios cambios de códig
 
 Una vez instalado, el plugin se ejecuta automáticamente. No hay nada que invocar y ningún comando separado que recordar.
 
-El plugin es el compañero en sesión de [Code Review](/docs/es/code-review), que se ejecuta en solicitudes de extracción. Este plugin reduce lo que llega al PR. Code Review atrapa lo que hace. Para ver cómo el plugin se superpone con revisión bajo demanda y escaneo de CI, consulte [Cómo se ajusta esto con otras herramientas de seguridad](#how-this-fits-with-other-security-tools).
+El plugin es el compañero en sesión de [Code Review](/docs/es/code-review), que se ejecuta en solicitudes de extracción. Este plugin reduce lo que llega al PR. Code Review detecta lo que sí llega al PR. Para ver cómo el plugin se superpone con revisión bajo demanda y escaneo de CI, o para escanear código que ya tiene en lugar de cambios que Claude está escribiendo, consulte [Cómo se ajusta esto con otras herramientas de seguridad](#how-this-fits-with-other-security-tools).
 
 <h2 id="prerequisites">
   Requisitos previos
 </h2>
 
-* Claude Code CLI versión 2.1.144 o posterior
-* Python 3.8 o posterior en su `PATH`. El plugin intenta `python3`, `python` y `py -3` en ese orden
+* Python 3.7 o posterior en su `PATH`. La revisión de confirmación agéntica requiere Python 3.10 o posterior, al igual que todas las revisiones respaldadas por modelos cuando Claude Code utiliza un proveedor de terceros como Amazon Bedrock o la Plataforma de Agentes de Google Cloud. El plugin prefiere los intérpretes versionados `python3.13` a través de `python3.10`, luego recurre a `python3`, `python` y `py -3`
 * Un repositorio git para el directorio en el que trabaja. Las revisiones de fin de turno y confirmación se comparan con el estado de git y se omiten silenciosamente fuera de un repositorio. La verificación de patrón por edición funciona en cualquier lugar
 
-En la primera ejecución, el plugin crea un entorno virtual bajo `~/.claude/security/` e instala el Claude Agent SDK en él, lo que requiere `pip` y acceso a la red. Si esa instalación falla, la revisión de confirmación vuelve a una revisión de un solo disparo en lugar de la agéntica. En Windows, se omite el paso del entorno virtual, por lo que la revisión de confirmación agéntica se ejecuta solo si `claude-agent-sdk` ya es importable y de lo contrario vuelve de la misma manera.
+En la primera ejecución, el plugin crea un entorno virtual bajo `~/.claude/security/` e instala el Claude Agent SDK en él, lo que requiere `pip` y acceso a la red. Si esa instalación falla, o el Python disponible es más antiguo que 3.10, la revisión de confirmación en autenticación de primera parte recurre a una revisión de un solo disparo en lugar de la agéntica; en un proveedor de terceros como Amazon Bedrock o la Plataforma de Agentes de Google Cloud, las revisiones respaldadas por modelos necesitan el SDK en sí, por lo que se omiten. El plugin muestra un aviso único cuando una versión anterior de Python es la causa.
 
 <h2 id="install-the-plugin">
   Instalar el plugin
 </h2>
 
-En una sesión de Claude Code, instale desde el [marketplace oficial de Anthropic](/docs/es/discover-plugins#official-anthropic-marketplace):
+En una sesión de Claude Code en terminal, instale desde el [marketplace oficial de Anthropic](/docs/es/plugins/anthropic-marketplaces):
 
 ```text theme={null}
 /plugin install security-guidance@claude-plugins-official
 ```
 
-La instalación solicita un alcance. Elija alcance de usuario para escribir el plugin en su configuración de usuario, de modo que se cargue en cada nueva sesión local que inicie en esta máquina. Si Claude Code informa que el marketplace no se encuentra, ejecute `/plugin marketplace add anthropics/claude-plugins-official` primero, luego reintente la instalación.
+`/plugin` abre un panel interactivo en la CLI de terminal. Si Claude responde que `/plugin` no está disponible en este entorno, instale de otra manera:
 
-Luego actívelo en la sesión actual con `/reload-plugins`, que aplica cambios de plugin pendientes sin un reinicio:
+* **Aplicación de escritorio Claude, sesión local o SSH**: abra el [navegador de plugins](/docs/es/desktop#install-plugins) haciendo clic en el botón **+** junto al prompt, luego **Plugins**, luego **Agregar plugin**
+* **Extensión de VS Code**: instale desde el [diálogo **Administrar plugins**](/docs/es/vs-code#manage-plugins)
+* **Sesiones en la nube**: una sesión en la nube no carga plugins de su configuración de usuario o del archivo `.claude/settings.json` del repositorio, como explica [Lo que se transfiere de su configuración](/docs/es/cloud-environments#what-carries-over-from-your-setup). Para plugins que su organización distribuye a través de configuración administrada, consulte [Administrar plugins para su organización](/docs/es/plugins/org)
 
-```text theme={null}
-/reload-plugins
-```
+La instalación en terminal solicita un alcance. Elija alcance de usuario para escribir el plugin en su configuración de usuario, de modo que se cargue en cada nueva sesión local que inicie en esta máquina.
 
-<h3 id="enable-in-cloud-sessions-and-shared-repositories">
-  Habilitar en sesiones en la nube y repositorios compartidos
+Si la instalación falla, haga coincidir el mensaje que Claude Code reporta:
+
+* `Marketplace "claude-plugins-official" not found`: agregue el marketplace con `/plugin marketplace add anthropics/claude-plugins-official`, luego reintente la instalación.
+* El plugin [no se encuentra en el marketplace](/docs/es/plugins/install#install-a-plugin): verifique el nombre del plugin.
+
+Verifique el resumen de instalación. Si reporta `Run /reload-plugins to activate.`, consulte [Aplicar cambios de plugin sin reiniciar](/docs/es/plugins/cli-reference#reload-plugins) para activar el plugin en su sesión actual.
+
+<h3 id="enable-for-your-team-in-local-sessions">
+  Habilitar en sesiones locales para su equipo
 </h3>
 
-Los plugins con alcance de usuario no se transfieren a [Claude Code en la web](/docs/es/claude-code-on-the-web), porque esas sesiones se ejecutan en la infraestructura de Anthropic en lugar de su máquina. Para habilitar el plugin allí, o para activarlo para todos los que clonan un repositorio, declárelo en la configuración del proyecto registrada:
+Para activar el plugin en las sesiones locales que sus compañeros de equipo inician en el repositorio, declárelo en la configuración registrada del proyecto:
 
 ```json .claude/settings.json theme={null}
 {
@@ -54,27 +60,27 @@ Los plugins con alcance de usuario no se transfieren a [Claude Code en la web](/
 }
 ```
 
-Los administradores pueden habilitar el plugin en toda la organización configurando [`enabledPlugins`](/docs/es/settings#plugin-settings) en [configuración administrada](/docs/es/admin-setup).
+Los administradores pueden habilitar el plugin en toda la organización configurando [`enabledPlugins`](/docs/es/settings-reference#enabledplugins) en [configuración administrada](/docs/es/admin-setup).
 
 <h2 id="what-the-plugin-checks">
-  Qué verifica el plugin
+  Lo que el plugin verifica
 </h2>
 
-El plugin revisa el trabajo de Claude en tres puntos, cada uno a una profundidad diferente:
+El plugin revisa el trabajo de Claude en tres puntos, cada uno con una profundidad diferente:
 
 * [En cada edición de archivo](#on-each-file-edit): una coincidencia de patrón rápida para llamadas riesgosas, sin llamada de modelo
-* [Al final de cada turno](#at-the-end-of-each-turn): una revisión de modelo de fondo de todo lo que ese turno cambió
-* [En cada confirmación o inserción que Claude realiza](#on-each-commit-or-push-claude-makes): una revisión agéntica más profunda que lee el código circundante
+* [Al final de cada turno](#at-the-end-of-each-turn): una revisión de modelo en segundo plano de todo lo que ese turno cambió
+* [En cada commit o push que Claude realiza](#on-each-commit-or-push-claude-makes): una revisión agéntica más profunda que lee el código circundante
 
-Puede extender cada capa [agregando sus propias reglas](#add-your-own-rules). Las verificaciones integradas no se pueden eliminar individualmente, pero puede [deshabilitar cada capa](#disable-or-uninstall) de forma independiente.
+Puede extender cada capa [agregando sus propias reglas](#add-your-own-rules). Las verificaciones integradas no se pueden eliminar individualmente, pero puede [desactivar cada capa](#disable-or-uninstall) de forma independiente.
 
 <h3 id="on-each-file-edit">
   En cada edición de archivo
 </h3>
 
-Cuando Claude escribe en un archivo, el plugin escanea el nuevo contenido en busca de patrones conocidos riesgosos. Esta es una coincidencia de patrón sin llamada de modelo, por lo que no agrega costo de uso.
+Cuando Claude escribe en un archivo, el plugin escanea el nuevo contenido en busca de patrones conocidos riesgosos. Esta es una coincidencia de patrón sin llamada de modelo, por lo que no agrega ningún costo de uso.
 
-Categorías de patrones de ejemplo:
+Categorías de patrón de ejemplo:
 
 * Ejecución de código dinámico: `eval(`, `new Function`, `os.system`, `child_process.exec`
 * Deserialización insegura: `pickle`
@@ -89,9 +95,9 @@ Puede [agregar sus propios patrones](#add-custom-per-edit-patterns) a esta capa 
   Al final de cada turno
 </h3>
 
-Un turno es una ronda de respuesta de Claude: usted envía un mensaje, Claude trabaja y responde, y el turno termina. Después de cada turno, el plugin calcula un diff de git de todo lo que cambió en el árbol de trabajo durante el turno, incluidos los cambios de las herramientas de edición de Claude, comandos Bash y subagentos, y lo envía a una revisión de Claude separada enfocada en seguridad. La revisión se ejecuta en segundo plano, por lo que la respuesta de Claude no se retrasa. Si la revisión encuentra problemas, Claude se vuelve a solicitar con los hallazgos y los aborda como seguimiento.
+Un turno es una ronda de Claude respondiendo: usted envía un mensaje, Claude trabaja y responde, y el turno termina. Después de cada turno, el plugin calcula un git diff de todo lo que cambió en el árbol de trabajo durante el turno, incluidos los cambios de las herramientas de edición de Claude, comandos Bash y subagentes, y lo envía a una revisión de Claude separada enfocada en seguridad. La revisión se ejecuta en segundo plano, por lo que la respuesta de Claude no se retrasa. Si la revisión encuentra problemas, Claude se vuelve a solicitar con los hallazgos y los aborda como seguimiento.
 
-Esto detecta problemas que una coincidencia de cadena no puede, como:
+Esto detecta lo que sí llega a problemas que una coincidencia de cadena no puede, tales como:
 
 * Omisión de autorización
 * Referencias directas a objetos inseguras
@@ -99,23 +105,23 @@ Esto detecta problemas que una coincidencia de cadena no puede, como:
 * Falsificación de solicitud del lado del servidor
 * Criptografía débil
 
-Usted ve tanto el hallazgo como la resolución de Claude directamente en su sesión. La revisión cubre hasta 30 archivos modificados por turno y se activa como máximo tres veces seguidas antes de ceder el control a usted.
+Usted ve tanto el hallazgo como la resolución de Claude directamente en su sesión. La revisión cubre hasta 30 archivos cambiados por turno y se activa como máximo tres veces seguidas antes de ceder el control a usted.
 
 <h3 id="on-each-commit-or-push-claude-makes">
-  En cada confirmación o inserción que Claude realiza
+  En cada commit o push que Claude realiza
 </h3>
 
-Cuando Claude ejecuta `git commit` o `git push` a través de su herramienta Bash, el plugin ejecuta una revisión agéntica más profunda del cambio en segundo plano. Esta revisión lee el código circundante, incluidos los llamadores, sanitizadores y archivos relacionados, para decidir si un hallazgo es real antes de informarlo. El contexto adicional mantiene los falsos positivos bajos en patrones que se ven peligrosos en aislamiento pero son seguros en su base de código.
+Cuando Claude ejecuta `git commit` o `git push` a través de su herramienta Bash, el plugin ejecuta una revisión agéntica más profunda del cambio en segundo plano. Esta revisión lee el código circundante, incluidos los llamadores, sanitizadores y archivos relacionados, para decidir si un hallazgo es real antes de reportarlo. El contexto adicional mantiene los falsos positivos bajos en patrones que se ven peligrosos en aislamiento pero son seguros en su base de código.
 
-Esta capa se activa solo en confirmaciones e inserciones que Claude realiza a través de su herramienta Bash. Las confirmaciones que ejecuta desde su propio shell, incluido el escape de shell `!` dentro de una sesión, no se revisan. Las revisiones de confirmación e inserción se limitan a 20 por hora móvil. Si los hallazgos de la revisión de confirmación duplican lo que la revisión de fin de turno ya informó, Claude no se vuelve a solicitar, por lo que una confirmación limpia no produce salida visible de esta capa.
+Esta capa se activa solo en commits y pushes que Claude realiza a través de su herramienta Bash. Los commits que ejecuta desde su propio shell, incluido el escape de shell `!` dentro de una sesión, no se revisan. Las revisiones de commit y push se limitan a 20 por hora móvil. Si los hallazgos de la revisión de commit duplican lo que la revisión de fin de turno ya reportó, Claude no se vuelve a solicitar, por lo que un commit limpio no produce salida visible de esta capa.
 
 <h3 id="review-independence-and-limits">
   Independencia de revisión y límites
 </h3>
 
-El plugin no le pide a la misma instancia de Claude que escribió el código que se califique a sí misma. La verificación por edición es una coincidencia de cadena determinista sin modelo involucrado. Las revisiones de fin de turno y confirmación se ejecutan como una llamada de Claude separada con un contexto nuevo y un mensaje enfocado en seguridad: el revisor comienza desde el diff, no tiene inversión en el enfoque original y solo se le instruye para encontrar problemas.
+El plugin no le pide a la misma instancia de Claude que escribió el código que se califique a sí misma. La verificación por edición es una coincidencia de cadena determinista sin modelo involucrado. Las revisiones de fin de turno y commit se ejecutan como una llamada de Claude separada con un contexto fresco y un prompt enfocado en seguridad: el revisor comienza desde el diff, no tiene inversión en el enfoque original, e instrucciones solo para encontrar problemas.
 
-Ninguna de las capas bloquea escrituras o confirmaciones. Los hallazgos llegan a Claude que escribe como instrucciones, Claude los aborda en la conversación, y el modelo de revisión puede perder problemas. Trate el plugin como una capa de defensa en profundidad, no como una solución de seguridad completa. Consulte [Cómo se ajusta esto con otras herramientas de seguridad](#how-this-fits-with-other-security-tools).
+Ninguna de las capas bloquea escrituras o commits. Los hallazgos llegan a Claude que escribe como instrucciones, Claude los aborda en la conversación, y el modelo de revisión puede perder problemas. Trate el plugin como una capa de defensa en profundidad, no como una solución de seguridad completa. Vea [Cómo esto se ajusta con otras herramientas de seguridad](#how-this-fits-with-other-security-tools).
 
 <h2 id="add-your-own-rules">
   Agregue sus propias reglas
@@ -175,11 +181,11 @@ El plugin también lee `.claude/security-patterns.yml` y `.claude/security-patte
 
 El plugin busca `claude-security-guidance.md` y `security-patterns.yaml` en las mismas ubicaciones, independientemente de cómo se habilitó el plugin:
 
-| Alcance        | Ruta                                        | Notas                                         |
-| :------------- | :------------------------------------------ | :-------------------------------------------- |
-| Usuario        | `~/.claude/claude-security-guidance.md`     | Se aplica a cada proyecto en su máquina       |
-| Proyecto       | `.claude/claude-security-guidance.md`       | Registrado con el repositorio                 |
-| Proyecto local | `.claude/claude-security-guidance.local.md` | Ignorado por Git, para anulaciones personales |
+| Alcance        | Ruta                                        | Notas                                                    |
+| :------------- | :------------------------------------------ | :------------------------------------------------------- |
+| Usuario        | `~/.claude/claude-security-guidance.md`     | Se aplica a cada proyecto en su máquina                  |
+| Proyecto       | `.claude/claude-security-guidance.md`       | Registrado con el repositorio                            |
+| Proyecto local | `.claude/claude-security-guidance.local.md` | Para anulaciones personales; agréguelo a su `.gitignore` |
 
 El plugin carga todas las ubicaciones que existen y las concatena, con un límite combinado de 8 KB para el archivo de orientación. Los administradores pueden distribuir reglas en toda la organización empujando el archivo de alcance de usuario a `~/.claude/` a través de la administración de dispositivos. Las mismas rutas se aplican a `security-patterns.yaml`.
 
@@ -187,7 +193,7 @@ El plugin carga todas las ubicaciones que existen y las concatena, con un límit
   Costo de uso
 </h2>
 
-La [verificación de patrón por edición](#on-each-file-edit) no realiza llamada de modelo y no agrega costo. Las revisiones de [fin de turno](#at-the-end-of-each-turn) y [confirmación](#on-each-commit-or-push-claude-makes) cada una gasta uso de modelo adicional que cuenta hacia su [uso](/docs/es/costs) como cualquier otra solicitud de Claude. La revisión de confirmación es agéntica y puede tomar varios turnos de modelo por confirmación, limitada a 20 revisiones por hora móvil. Espere aproximadamente una llamada de revisión por turno que cambie archivos y una revisión más profunda por confirmación, ambas sujetas a los límites anteriores.
+La [verificación de patrón por edición](#on-each-file-edit) no realiza llamada de modelo y no agrega costo. Las revisiones de [fin de turno](#at-the-end-of-each-turn) y [confirmación](#on-each-commit-or-push-claude-makes) cada una gasta uso de modelo adicional que cuenta hacia su [uso](/docs/es/costs) como cualquier otra solicitud de Claude. La revisión de confirmación es agéntica y puede tomar varios turnos de modelo por confirmación. Espere aproximadamente una llamada de revisión por turno que cambie archivos y una revisión más profunda por confirmación, ambas sujetas a los límites anteriores.
 
 Ambas revisiones respaldadas por modelo usan Claude Opus 4.7 de forma predeterminada. Configure `SECURITY_REVIEW_MODEL` para elegir un modelo diferente para la revisión de fin de turno y `SG_AGENTIC_MODEL` para la revisión de confirmación.
 
@@ -219,7 +225,7 @@ Para eliminarlo de su alcance de usuario:
 /plugin uninstall security-guidance@claude-plugins-official
 ```
 
-Si el plugin se habilitó a través del `.claude/settings.json` de un proyecto, deshabilitarlo desde `/plugin` escribe una anulación a su `.claude/settings.local.json` en lugar de editar el archivo registrado, por lo que el plugin permanece desactivado para usted mientras que los compañeros de equipo no se ven afectados. El mismo diálogo también ofrece desinstalar el plugin para todos eliminándolo del `.claude/settings.json` compartido; esa opción requiere Claude Code v2.1.203 o posterior. Si se habilitó a través de [configuración administrada](/docs/es/admin-setup), solo un administrador puede deshabilitarlo.
+Si el plugin se habilitó a través del `.claude/settings.json` de un proyecto, desinstalar desde `/plugin` escribe una anulación a su `.claude/settings.local.json` en lugar de editar el archivo registrado, por lo que el plugin permanece desactivado para usted mientras que los compañeros de equipo no se ven afectados. El mismo diálogo también ofrece desinstalar el plugin para todos eliminándolo del `.claude/settings.json` compartido. Si se habilitó a través de [configuración administrada](/docs/es/admin-setup), solo un administrador puede deshabilitarlo.
 
 <h2 id="how-the-plugin-integrates-with-claude-code">
   Cómo se integra el plugin con Claude Code
@@ -243,14 +249,15 @@ Si construye sus propios hooks, el [código fuente del plugin](https://github.co
 
 El plugin es una capa en un enfoque de defensa en profundidad. Detecta problemas lo antes posible, mientras el código aún está en el editor, pero no es una garantía y no reemplaza verificaciones posteriores. Una pila típica:
 
-| Etapa                      | Herramienta                                                       | Qué cubre                                                                                                                |
-| :------------------------- | :---------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------- |
-| En sesión                  | Plugin de orientación de seguridad                                | Vulnerabilidades comunes en código que Claude escribe, corregidas en la misma sesión                                     |
-| Bajo demanda               | [`/security-review`](/docs/es/commands#all-commands)                   | Paso de seguridad único en la rama actual, ejecutado cuando lo solicita                                                  |
-| En solicitud de extracción | [Code Review](/docs/es/code-review), planes de equipo y empresa        | Revisión de corrección y seguridad multiagente con contexto completo de base de código                                   |
-| En CI                      | Sus analizadores estáticos existentes y escáneres de dependencias | Reglas específicas del idioma, verificaciones de cadena de suministro y aplicación de políticas que el plugin no intenta |
+| Etapa                          | Herramienta                                                       | Qué cubre                                                                                                                  |
+| :----------------------------- | :---------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------- |
+| En sesión                      | Plugin de orientación de seguridad                                | Vulnerabilidades comunes en código que Claude escribe, corregidas en la misma sesión                                       |
+| Bajo demanda, paso único       | [`/security-review`](/docs/es/commands#all-commands)                   | Paso de seguridad único en la rama actual, ejecutado cuando lo solicita                                                    |
+| Bajo demanda, escaneo profundo | [Plugin de seguridad de Claude](/docs/es/claude-security)              | Escaneo de vulnerabilidades multiagente de un repositorio o diff, con hallazgos y parches revisados de forma independiente |
+| En solicitud de extracción     | [Code Review](/docs/es/code-review), planes de equipo y empresa        | Revisión de corrección y seguridad multiagente con contexto completo de base de código                                     |
+| En CI                          | Sus analizadores estáticos existentes y escáneres de dependencias | Reglas específicas del idioma, verificaciones de cadena de suministro y aplicación de políticas que el plugin no intenta   |
 
-Cada etapa posterior atrapa lo que las anteriores pierden. El valor del plugin es reducir el volumen que llega a ellas, no eliminar la necesidad de ellas.
+Para encontrar problemas de seguridad en código que ya tiene, en lugar de en cambios que Claude está escribiendo, pida a Claude en una sesión que revise un archivo o directorio específico en busca de vulnerabilidades, o use el [Plugin de seguridad de Claude](/docs/es/claude-security) para un escaneo multiagente más profundo de todo el repositorio; [`/security-review`](/docs/es/commands#all-commands) cubre solo los cambios en su rama actual. De cualquier forma, la revisión lee el código fuente en su checkout, no un sitio en ejecución o un servicio implementado.
 
 <h2 id="troubleshooting">
   Solución de problemas
@@ -261,7 +268,7 @@ El plugin escribe diagnósticos de tiempo de ejecución en `~/.claude/security/l
 Razones comunes por las que una capa de revisión se omite sin un mensaje en la conversación:
 
 * El directorio no es un repositorio git: las revisiones de fin de turno y confirmación requieren estado de git y se omiten fuera de un repositorio
-* La sesión no tiene autenticación de Anthropic: las revisiones respaldadas por modelo se omiten y solo se ejecuta la verificación de patrón por edición
+* La sesión no tiene autenticación de Anthropic y ningún proveedor de terceros configurado: las revisiones respaldadas por modelo se omiten y solo se ejecuta la verificación de patrón por edición
 * Un archivo `security-patterns.yaml` está presente pero PyYAML no es importable: el archivo se ignora. Use `security-patterns.json` en su lugar
 
 <h2 id="related-resources">
@@ -272,4 +279,4 @@ Para profundizar en los temas que toca esta página:
 
 * [Code Review](/docs/es/code-review): configurar la revisión multiagente en tiempo de PR
 * [Automatizar flujos de trabajo con hooks](/docs/es/hooks-guide): construir sus propias verificaciones en los mismos puntos del ciclo de vida
-* [Descubrir e instalar plugins](/docs/es/discover-plugins#official-anthropic-marketplace): explorar otros plugins oficiales
+* [Buscar plugins en el marketplace oficial](/docs/es/plugins/anthropic-marketplaces#find-plugins-in-the-official-marketplace): dónde explorar los otros plugins oficiales

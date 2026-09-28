@@ -19,11 +19,11 @@
 
 本頁涵蓋如何[建立連結](#build-a-link)、[在執行手冊中嵌入連結或從 shell 觸發](#examples)，以及[在每個平台上管理或停用處理程式註冊](#registration-and-supported-platforms)。
 
-<h2 id="how-it-works">
-  運作方式
+<h2 id="how-deep-links-work">
+  深層連結的運作方式
 </h2>
 
-`claude-cli://` 前綴是一個自訂 URL 配置，Claude Code 會向您的作業系統註冊，類似於 `mailto:` 連結如何開啟您的電子郵件用戶端。該連結可以存在於網頁、wiki、Slack 訊息或任何呈現連結的應用程式中。當您點擊一個時：
+`claude-cli://` 前綴是一個自訂 URL 配置，Claude Code 會向您的作業系統註冊，類似於 `mailto:` 連結如何開啟您的電子郵件用戶端。當您點擊一個深層連結時：
 
 1. 瀏覽器或應用程式將 URL 交給您的作業系統。
 2. 作業系統識別 `claude-cli://` 前綴並在您的機器上啟動 Claude Code。
@@ -32,9 +32,7 @@
 
 連結本身可以託管在任何地方，但工作階段始終在您點擊的電腦上本地開啟。請參閱[註冊和支援的平台](#registration-and-supported-platforms)以了解在每個作業系統上開啟哪個終端機模擬器。
 
-<Note>
-  顯示連結的平台必須允許自訂 URL 配置。GitHub 呈現的 Markdown 允許 `http` 和 `https`，但會在 README、問題、拉取請求和 wiki 中移除 `claude-cli://` 等配置。只有連結文字顯示，沒有連結在其後面，URL 被隱藏。請參閱[疑難排解](#the-link-renders-as-plain-text-instead-of-being-clickable)以了解解決方法。
-</Note>
+顯示連結的平台必須允許自訂 URL 配置。如需了解 GitHub 如何處理這些連結以及解決方法，請參閱[連結呈現為純文字而不是可點擊的](#the-link-renders-as-plain-text-instead-of-being-clickable)。
 
 <h3 id="what-a-launched-session-shows">
   啟動的工作階段顯示什麼
@@ -54,12 +52,14 @@
 claude-cli://open
 ```
 
+若要在不將連結放在頁面上的情況下試用，請將其貼到瀏覽器的位址列中，或[從 shell 開啟它](#open-a-link-from-the-shell)。
+
 新增參數以控制工作階段開始的位置和提示框包含的內容：
 
 | 參數     | 描述                                                                                                                                                             |
 | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `q`    | 要預先填入提示框的文字。[URL 編碼](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent)該值。在多行提示中使用 `%0A` 表示換行符。最多 5,000 個字元。 |
-| `cwd`  | 用作工作目錄的絕對路徑。網路和 UNC 路徑被拒絕，包含隱形或雙向控制字元的路徑也被拒絕。                                                                                                                  |
+| `cwd`  | 用作工作目錄的絕對路徑。網路和 UNC 路徑被拒絕，包含 `..` 段落或隱形或雙向控制字元的路徑也被拒絕。                                                                                                         |
 | `repo` | 一個 GitHub `owner/name` slug。Claude Code 將其解析為它之前看過的本地複製，並從那裡開始。如果您沒有匹配的複製，工作階段將在您的主目錄中開啟。                                                                      |
 
 `cwd` 和 `repo` 是[設定工作目錄的兩種方式](#choose-between-cwd-and-repo)。如果您同時傳遞兩者，`cwd` 優先，`repo` 被忽略，即使 `cwd` 路徑不存在。
@@ -77,7 +77,7 @@ Investigate the failed deploy of payments-api.
 Check recent commits to main and the last successful build.
 ```
 
-您可以在按下 Enter 發送之前編輯提示。如果您沒有儲存庫的本地複製，工作階段將在您的主目錄中開啟。請參閱[在 `cwd` 和 `repo` 之間選擇](#choose-between-cwd-and-repo)以了解當您有多個複製或 worktrees 時如何選擇本地路徑。
+您可以在按下 Enter 發送之前編輯提示。請參閱[在 `cwd` 和 `repo` 之間選擇](#choose-between-cwd-and-repo)以了解當您有多個複製或 worktrees 時如何選擇本地路徑。
 
 <h3 id="choose-between-cwd-and-repo">
   在 `cwd` 和 `repo` 之間選擇
@@ -87,9 +87,7 @@ Check recent commits to main and the last successful build.
 
 當連結被共享且每個人將其複製到不同位置時，使用 `repo`。Claude Code 將 slug 解析為本地路徑，如下所示：
 
-* 每次您在 Git 儲存庫中執行 `claude` 時，該目錄的檔案系統路徑都會針對儲存庫的 GitHub `owner/name` slug 進行記錄。
-* 當深層連結到達時，`repo` 開啟您最近使用的任何匹配路徑。多個複製和 worktrees 被分別追蹤，因此它選擇您最後工作的那個。
-* 查詢只找到您已至少執行過一次 Claude Code 的路徑。
+* `repo` 開啟您最近執行 `claude` 的連結儲存庫的複製或 worktree。每次您在 Git 儲存庫中執行 `claude` 時，Claude Code 會針對儲存庫的 GitHub `owner/name` slug 記錄該目錄的路徑。Claude Code 分別追蹤複製和 worktrees。
 * 連結不會改變簽出的分支。工作階段在該目錄目前的任何狀態下開啟。
 
 啟動的工作階段顯示它選擇了哪個路徑，因此您可以確認正確的複製已開啟。
@@ -124,7 +122,7 @@ Check recent commits to main and the last successful build.
   從 shell 開啟連結
 </h3>
 
-您也可以從 shell 指令碼、別名或自動化中開啟深層連結，而不是點擊它。使用連結作為參數呼叫您作業系統的 URL 開啟命令。
+您也可以從 shell 指令碼、別名或自動化中開啟深層連結，而不是點擊它。使用連結作為參數呼叫您作業系統的 URL 開啟命令。這些命令依賴於 Claude Code [在您於機器上傳送互動式工作階段的第一個提示時註冊](#registration-and-supported-platforms)的處理程式。
 
 <Tabs>
   <Tab title="macOS">
@@ -133,6 +131,8 @@ Check recent commits to main and the last successful build.
     ```bash theme={null}
     open "claude-cli://open?repo=acme/payments&q=review%20open%20PRs"
     ```
+
+    成功時，會開啟一個新的終端視窗，Claude Code 執行中，提示已預先填入。
   </Tab>
 
   <Tab title="Linux">
@@ -141,6 +141,8 @@ Check recent commits to main and the last successful build.
     ```bash theme={null}
     xdg-open "claude-cli://open?repo=acme/payments&q=review%20open%20PRs"
     ```
+
+    成功時，會開啟一個新的終端視窗，Claude Code 執行中，提示已預先填入。如果 shell 報告找不到 `xdg-open`，請參閱[疑難排解](#xdg-open-is-not-found-on-linux)。
   </Tab>
 
   <Tab title="Windows">
@@ -155,6 +157,8 @@ Check recent commits to main and the last successful build.
     ```cmd theme={null}
     start "" "claude-cli://open?repo=acme/payments&q=review%20open%20PRs"
     ```
+
+    成功時，會開啟一個新的終端視窗，Claude Code 執行中，提示已預先填入。
   </Tab>
 </Tabs>
 
@@ -162,7 +166,7 @@ Check recent commits to main and the last successful build.
   註冊和支援的平台
 </h2>
 
-Claude Code 在您第一次在 macOS、Linux 和 Windows 上啟動互動式工作階段時，向您的作業系統註冊 `claude-cli://` 處理程式。您不需要執行單獨的安裝命令。註冊只寫入使用者級別的位置：
+Claude Code 在您第一次在 macOS、Linux 和 Windows 上傳送互動式工作階段的第一個提示時，向您的作業系統註冊 `claude-cli://` 處理程式。啟動 `claude` 並在不傳送提示的情況下退出不會註冊處理程式。您不需要執行單獨的安裝命令。註冊只寫入使用者級別的位置：
 
 | 平台      | 處理程式位置                                                                                                |
 | ------- | ----------------------------------------------------------------------------------------------------- |
@@ -172,7 +176,7 @@ Claude Code 在您第一次在 macOS、Linux 和 Windows 上啟動互動式工�
 
 處理程式在偵測到的終端機模擬器中啟動 Claude Code。在 macOS 上，Claude Code 記住您最近互動式工作階段中的終端機並重複使用它，支援 iTerm2、Ghostty、kitty、Alacritty、WezTerm 和 Terminal.app。在 Linux 上，它遵守 `$TERMINAL` 環境變數，然後是 `x-terminal-emulator`，然後是常見模擬器的列表。在 Windows 上，它優先選擇 Windows Terminal，然後是 PowerShell，然後是 `cmd.exe`。
 
-要完全防止註冊，請在 `settings.json` 中將 [`disableDeepLinkRegistration`](/docs/zh-TW/settings) 設定為 `"disable"`。要在整個組織中強制執行此操作，使用者無法重新啟用它，請改為在[受管設定](/docs/zh-TW/server-managed-settings)中設定它。
+要完全防止註冊，請在 `settings.json` 中將 [`disableDeepLinkRegistration`](/docs/zh-TW/settings-reference#disabledeeplinkregistration) 設定為 `"disable"`。要在整個組織中強制執行此操作，使用者無法重新啟用它，請改為在[受管設定](/docs/zh-TW/server-managed-settings)中設定它。
 
 <h2 id="open-a-vs-code-tab-instead-of-a-terminal">
   開啟 VS Code 標籤而不是終端機
@@ -188,7 +192,13 @@ VS Code 擴充功能在 `vscode://anthropic.claude-code/open` 註冊自己的處
   點擊連結沒有反應
 </h3>
 
-處理程式可能尚未註冊。在該機器上啟動一個互動式 `claude` 工作階段一次，退出，然後再試一次連結。如果您在沒有桌面環境的 Linux 上，`xdg-open` 可能沒有任何東西可以分派。
+處理程式可能尚未註冊。註冊發生在您傳送互動式工作階段的第一個提示時，而不是在工作階段啟動時。在該機器上啟動一個互動式 `claude` 工作階段，傳送任何提示，退出，然後再試一次連結。如果您在沒有桌面環境的 Linux 上，`xdg-open` 可能沒有任何東西可以分派。
+
+<h3 id="xdg-open-is-not-found-on-linux">
+  在 Linux 上找不到 xdg-open
+</h3>
+
+`xdg-open` 命令是 `xdg-utils` 套件的一部分，最小伺服器映像、容器和 WSL 發行版通常會省略它。使用您的發行版的套件管理員安裝 `xdg-utils`，例如 `sudo apt install xdg-utils`，然後再次執行該命令。如果命令隨後執行但沒有任何東西開啟，`xdg-open` 可能沒有桌面環境可以分派；請參閱[點擊連結沒有反應](#clicking-the-link-does-nothing)。
 
 <h3 id="the-link-renders-as-plain-text-instead-of-being-clickable">
   連結呈現為純文字而不是可點擊的
@@ -200,7 +210,7 @@ VS Code 擴充功能在 `vscode://anthropic.claude-code/open` 註冊自己的處
   工作階段在我的主目錄中開啟而不是儲存庫
 </h3>
 
-`repo` 參數只解析為 Claude Code 已經看過的複製。在複製中執行一次 `claude`，以便記錄其路徑，或將連結切換為使用 `cwd` 和絕對路徑。
+`repo` 參數只解析為 Claude Code 已經看過的複製。在複製中執行一次 `claude`，以便 Claude Code 記錄其路徑，或將連結切換為使用 `cwd` 和絕對路徑。
 
 <h3 id="the-link-opens-the-wrong-terminal">
   連結開啟了錯誤的終端機

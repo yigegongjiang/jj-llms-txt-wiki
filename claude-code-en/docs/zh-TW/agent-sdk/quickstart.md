@@ -19,29 +19,29 @@
 </h2>
 
 * **Node.js 18+** 或 **Python 3.10+**
-* 一個 **Anthropic 帳戶**（[在此註冊](https://platform.claude.com/)）
+* 一個 **Anthropic 帳戶**。如果您還沒有帳戶，[在此註冊](https://platform.claude.com/)。
 
 <h2 id="setup">
-  設置
+  設定
 </h2>
 
 <Steps>
-  <Step title="創建項目文件夾">
-    為此快速開始創建一個新目錄：
+  <Step title="建立專案資料夾">
+    為此快速入門建立新目錄：
 
     ```bash theme={null}
     mkdir my-agent
     cd my-agent
     ```
 
-    對於您自己的項目，您可以從任何文件夾運行 SDK；默認情況下，它將有權訪問該目錄及其子目錄中的文件。
+    對於您自己的專案，您可以從任何資料夾執行 SDK；預設情況下，它將能夠存取該目錄及其子目錄中的檔案。
   </Step>
 
   <Step title="安裝 SDK">
     為您的語言安裝 Agent SDK 套件：
 
     <Tabs>
-      <Tab title="TypeScript（新項目）">
+      <Tab title="TypeScript (新專案)">
         ```bash theme={null}
         npm init -y
         npm pkg set type=module
@@ -49,20 +49,20 @@
         npm install --save-dev tsx
         ```
 
-        在 `package.json` 中設置 `"type": "module"` 讓您的代理腳本使用頂級 `await`，而 [tsx](https://tsx.is) 直接運行 TypeScript 文件。
+        在 `package.json` 中設定 `"type": "module"` 可讓您的代理程式指令碼使用頂層 `await`，而 [tsx](https://tsx.hirok.io) 可直接執行 TypeScript 檔案。npm 在安裝成功時會列印 `added N packages`。
       </Tab>
 
-      <Tab title="TypeScript（現有項目）">
+      <Tab title="TypeScript (現有專案)">
         ```bash theme={null}
         npm install @anthropic-ai/claude-agent-sdk
         npm install --save-dev tsx
         ```
 
-        [tsx](https://tsx.is) 直接運行 TypeScript 文件。如果您的項目使用 CommonJS，請將您的代理腳本命名為 `agent.mts` 而不是 `agent.ts`。`.mts` 擴展名使 tsx 將文件視為 ES 模塊，因此頂級 `await` 無需將整個項目轉換為 ES 模塊即可工作。在本快速開始後面的創建和運行步驟中，使用 `agent.mts` 代替 `agent.ts`。
+        [tsx](https://tsx.hirok.io) 可直接執行 TypeScript 檔案。如果您的專案使用 CommonJS，請將代理程式指令碼命名為 `agent.mts` 而不是 `agent.ts`。`.mts` 副檔名使 tsx 將檔案視為 ES 模組，因此頂層 `await` 可以正常運作，無需將整個專案轉換為 ES 模組。在本快速入門稍後的建立和執行步驟中，使用 `agent.mts` 代替 `agent.ts`。
       </Tab>
 
-      <Tab title="Python（uv）">
-        [uv](https://docs.astral.sh/uv/) 是一個快速的 Python 套件管理器，可自動處理虛擬環境：
+      <Tab title="Python (uv)">
+        [安裝 uv](https://docs.astral.sh/uv/)，一個快速的 Python 套件管理器，可自動處理虛擬環境。然後初始化專案並新增 SDK：
 
         ```bash theme={null}
         uv init
@@ -70,8 +70,8 @@
         ```
       </Tab>
 
-      <Tab title="Python（pip）">
-        創建並啟用虛擬環境，然後安裝該套件。
+      <Tab title="Python (pip)">
+        建立並啟動虛擬環境，然後安裝套件。
 
         在 macOS 或 Linux 上：
 
@@ -89,17 +89,20 @@
         pip install claude-agent-sdk
         ```
 
-        如果 PowerShell 因執行策略錯誤而阻止 `Activate.ps1`，請先運行 `Set-ExecutionPolicy -Scope Process RemoteSigned`。
+        如果 PowerShell 因執行原則錯誤而阻止 `Activate.ps1`，請先執行 `Set-ExecutionPolicy -Scope Process RemoteSigned`。
       </Tab>
     </Tabs>
 
     <Note>
-      TypeScript SDK 為您的平台捆綁了一個原生 Claude Code 二進制文件作為可選依賴項，因此您無需單獨安裝 Claude Code。
+      TypeScript 和 Python SDK 都包含原生 Claude Code 二進位檔，因此大多數安裝不需要單獨安裝 Claude Code。某些安裝沒有包含的二進位檔：
+
+      * 如果 pip 安裝 Python SDK 的原始碼發行版而不是平台 wheel（例如在 ARM64 Windows 上），則不會包含二進位檔。[原生安裝 Claude Code](/docs/zh-TW/setup#install-claude-code)。Python SDK 會在您的 `PATH` 上找到它。
+      * TypeScript SDK 通過 npm 可選相依性安裝其二進位檔，因此跳過它們的安裝（例如 `npm ci --omit=optional`）即使在支援的平台上也不會獲得二進位檔。重新安裝而不跳過可選相依性，或[原生安裝 Claude Code](/docs/zh-TW/setup#install-claude-code) 並將 `pathToClaudeCodeExecutable` 設定為其路徑。
     </Note>
   </Step>
 
-  <Step title="設置您的 API 金鑰">
-    從 [Claude 控制台](https://platform.claude.com/) 取得 API 金鑰，然後在您將運行代理的 shell 中將其設置為環境變數：
+  <Step title="設定您的 API 金鑰">
+    從 [Claude 主控台](https://platform.claude.com/) 取得 API 金鑰，然後在您將執行代理程式的 shell 中將其設定為環境變數：
 
     <Tabs>
       <Tab title="macOS / Linux">
@@ -108,26 +111,26 @@
         ```
       </Tab>
 
-      <Tab title="Windows（PowerShell）">
+      <Tab title="Windows (PowerShell)">
         ```powershell theme={null}
         $env:ANTHROPIC_API_KEY = "your-api-key"
         ```
       </Tab>
     </Tabs>
 
-    SDK 從運行您的代理的進程環境中讀取金鑰；它不會自動加載 `.env` 文件。如果您將金鑰保存在 `.env` 文件中，請自己加載它，例如使用 `dotenv` 套件，然後再調用 SDK。
+    SDK 從執行您的代理程式的程序環境中讀取金鑰；它不會自動載入 `.env` 檔案。如果您將金鑰保存在 `.env` 檔案中，請自行載入它，例如使用 `dotenv` 套件，然後再呼叫 SDK。
 
-    SDK 也支援透過第三方 API 提供商進行身份驗證：
+    SDK 也支援透過第三方 API 提供者進行驗證：
 
     * **Amazon Bedrock**：設定 `CLAUDE_CODE_USE_BEDROCK=1` 環境變數並設定 AWS 認證
-    * **Claude Platform on AWS**：設定 `CLAUDE_CODE_USE_ANTHROPIC_AWS=1` 和 `ANTHROPIC_AWS_WORKSPACE_ID`，然後設定 AWS 認證
+    * **AWS 上的 Claude Platform**：設定 `CLAUDE_CODE_USE_ANTHROPIC_AWS=1` 和 `ANTHROPIC_AWS_WORKSPACE_ID`，然後設定 AWS 認證
     * **Google Cloud 的 Agent Platform**：設定 `CLAUDE_CODE_USE_VERTEX=1` 環境變數並設定 Google Cloud 認證
-    * **Microsoft Azure**：設定 `CLAUDE_CODE_USE_FOUNDRY=1` 環境變數並設定 Azure 認證
+    * **Microsoft Foundry**：設定 `CLAUDE_CODE_USE_FOUNDRY=1` 環境變數並設定 Azure 認證
 
-    如需詳細資訊，請參閱 [Amazon Bedrock](/docs/zh-TW/amazon-bedrock)、[Claude Platform on AWS](/docs/zh-TW/claude-platform-on-aws)、[Google Cloud 的 Agent Platform](/docs/zh-TW/google-vertex-ai) 或 [Microsoft Foundry](/docs/zh-TW/microsoft-foundry) 的設置指南。
+    如需詳細資訊，請參閱 [Amazon Bedrock](/docs/zh-TW/amazon-bedrock)、[AWS 上的 Claude Platform](/docs/zh-TW/claude-platform-on-aws)、[Google Cloud 的 Agent Platform](/docs/zh-TW/google-vertex-ai) 或 [Microsoft Foundry](/docs/zh-TW/microsoft-foundry) 的設定指南。
 
     <Note>
-      除非事先獲得批准，否則 Anthropic 不允許第三方開發人員提供 claude.ai 登入或對其產品的速率限制，包括基於 Claude Agent SDK 構建的代理。請改用本文件中描述的 API 金鑰身份驗證方法。
+      除非事先獲得批准，否則 Anthropic 不允許第三方開發人員為其產品（包括基於 Claude Agent SDK 建立的代理程式）提供 claude.ai 登入或速率限制。請改用本文件中描述的 API 金鑰驗證方法。
     </Note>
   </Step>
 </Steps>
@@ -156,10 +159,10 @@ def get_user_name(user):
 2. `get_user_name(None)` 因 TypeError 而崩潰
 
 <h2 id="build-an-agent-that-finds-and-fixes-bugs">
-  構建查找並修復錯誤的代理
+  建立一個尋找並修復錯誤的代理
 </h2>
 
-如果您使用 Python SDK，請創建 `agent.py`，或者如果使用 TypeScript，請創建 `agent.ts`。如果您現有的項目使用 CommonJS，請改用 `agent.mts`：
+如果您使用 Python SDK，請建立 `agent.py`；如果使用 TypeScript，請建立 `agent.ts`。如果您現有的專案使用 CommonJS，請改用 `agent.mts`：
 
 <CodeGroup>
   ```python Python theme={null}
@@ -217,27 +220,27 @@ def get_user_name(user):
   ```
 </CodeGroup>
 
-此代碼有三個主要部分：
+此程式碼有三個主要部分：
 
-1. **`query`**：創建 agentic 循環的主要入口點。它返回一個異步迭代器，因此您使用 `async for` 在 Claude 工作時流式傳輸消息。請參閱 [Python](/docs/zh-TW/agent-sdk/python#query) 或 [TypeScript](/docs/zh-TW/agent-sdk/typescript#query) SDK 參考中的完整 API。
+1. **`query`**：主要進入點，建立代理迴圈。它會傳回非同步迭代器，因此您可以使用 `async for` 在 Claude 工作時串流訊息。請參閱 [Python](/docs/zh-TW/agent-sdk/python#query) 或 [TypeScript](/docs/zh-TW/agent-sdk/typescript#query) SDK 參考中的完整 API。
 
-2. **`prompt`**：您希望 Claude 執行的操作。Claude 根據任務確定要使用哪些工具。
+2. **`prompt`**：您想讓 Claude 執行的任務。Claude 會根據任務判斷要使用哪些工具。
 
-3. **`options`**：代理的配置。此示例使用 `allowedTools` 預先批准 `Read`、`Edit` 和 `Glob`，並使用 `permissionMode: "acceptEdits"` 自動批准文件更改。其他選項包括 `systemPrompt`、`mcpServers` 等。請參閱 [Python](/docs/zh-TW/agent-sdk/python#claudeagentoptions) 或 [TypeScript](/docs/zh-TW/agent-sdk/typescript#options) 的所有選項。
+3. **`options`**：代理的設定。此範例使用 `allowedTools` 預先核准 `Read`、`Edit` 和 `Glob`，並使用 `permissionMode: "acceptEdits"` 自動核准檔案變更。其他選項包括 `systemPrompt`、`mcpServers` 等。請參閱 [Python](/docs/zh-TW/agent-sdk/python#claudeagentoptions) 或 [TypeScript](/docs/zh-TW/agent-sdk/typescript#options) 的所有選項。
 
-`async for` 循環在 Claude 思考、調用工具、觀察結果並決定下一步操作時持續運行。每次迭代都會產生一條消息：Claude 的推理、工具調用、工具結果或最終結果。SDK 處理編排（工具執行、上下文管理、重試），因此您只需使用流。當 Claude 完成任務或遇到錯誤時，循環結束。
+`async for` 迴圈會持續執行，因為 Claude 思考、呼叫工具、觀察結果，並決定接下來要做什麼。每次迭代都會產生一條訊息：Claude 的推理、工具呼叫、工具結果或最終結果。SDK 會處理協調、工具執行、內容管理和重試，因此您只需使用串流。當 Claude 完成任務或遇到錯誤時，迴圈就會結束。
 
-循環內的消息處理會過濾人類可讀的輸出。如果沒有過濾，您會看到原始消息對象，包括系統初始化和內部狀態，這對於調試很有用，但通常很冗長。
+迴圈內的訊息處理會篩選出人類可讀的輸出。如果不進行篩選，您會看到原始訊息物件，包括系統初始化和內部狀態，這對除錯很有用，但在其他情況下會很雜亂。
 
 <Note>
-  此示例使用流式傳輸來實時顯示進度。如果您不需要實時輸出（例如，對於後台作業或 CI 管道），您可以一次收集所有消息。有關詳細信息，請參閱[流式傳輸與單輪模式](/docs/zh-TW/agent-sdk/streaming-vs-single-mode)。
+  此範例使用串流來即時顯示進度。如果您不需要即時輸出（例如，用於背景工作或 CI 管道），您可以一次收集所有訊息。如需詳細資訊，請參閱[串流與單回合模式](/docs/zh-TW/agent-sdk/streaming-vs-single-mode)。
 </Note>
 
 <h3 id="run-your-agent">
-  運行您的代理
+  執行您的代理
 </h3>
 
-您的代理已準備好。使用以下命令運行它：
+您的代理已準備好。使用下列命令執行它：
 
 <Tabs>
   <Tab title="TypeScript">
@@ -245,17 +248,17 @@ def get_user_name(user):
     npx tsx agent.ts
     ```
 
-    如果您將腳本命名為 `agent.mts`，請改為運行 `npx tsx agent.mts`。
+    如果您將指令碼命名為 `agent.mts`，請改為執行 `npx tsx agent.mts`。
   </Tab>
 
-  <Tab title="Python（uv）">
+  <Tab title="Python (uv)">
     ```bash theme={null}
     uv run agent.py
     ```
   </Tab>
 
-  <Tab title="Python（pip）">
-    使用您仍然激活的虛擬環境：
+  <Tab title="Python (pip)">
+    在您的虛擬環境仍然啟用的情況下：
 
     ```bash theme={null}
     python agent.py
@@ -263,35 +266,37 @@ def get_user_name(user):
   </Tab>
 </Tabs>
 
-運行後，檢查 `utils.py`。您將看到處理空列表和空用戶的防禦性代碼。您的代理自主地：
+在執行時，代理會列印其推理和它呼叫的每個工具，最後以 `Done: success` 結束。執行後，檢查 `utils.py`。您會看到防禦性程式碼處理空清單和空值使用者。您的代理自主地：
 
-1. **讀取** `utils.py` 以理解代碼
-2. **分析**邏輯並識別會導致崩潰的邊界情況
-3. **編輯**文件以添加適當的錯誤處理
+1. **讀取** `utils.py` 以了解程式碼
+2. **分析**邏輯並識別會導致當機的邊界情況
+3. **編輯**檔案以新增適當的錯誤處理
 
-這就是 Agent SDK 的不同之處：Claude 直接執行工具，而不是要求您實現它們。
+這就是 Agent SDK 的不同之處：Claude 直接執行工具，而不是要求您實作它們。
 
 <Note>
-  如果您看到'API key not found'，請確保您已在運行代理的 shell 中設置 `ANTHROPIC_API_KEY` 環境變數。SDK 不會自動加載 `.env` 文件。如需更多幫助，請參閱[完整故障排除指南](/docs/zh-TW/troubleshooting)。
+  如果您看到驗證錯誤，例如 `Not logged in` 或 `Invalid API key`，請確保您已在執行代理的 shell 中設定 `ANTHROPIC_API_KEY` 環境變數。SDK 不會自動載入 `.env` 檔案。
+
+  如需這些和其他驗證錯誤的原因和修復方法，請參閱錯誤參考中的[驗證錯誤](/docs/zh-TW/errors#authentication-errors)。
 </Note>
 
 <h3 id="try-other-prompts">
   嘗試其他提示
 </h3>
 
-現在您的代理已設置好，嘗試一些不同的提示：
+現在您的代理已設定好，請嘗試一些不同的提示：
 
 * `"Add docstrings to all functions in utils.py"`
 * `"Add type hints to all functions in utils.py"`
 * `"Create a README.md documenting the functions in utils.py"`
 
 <h3 id="customize-your-agent">
-  自定義您的代理
+  自訂您的代理
 </h3>
 
-您可以通過更改選項來修改代理的行為。以下是一些示例：
+您可以透過變更選項來修改代理的行為。以下是一些範例：
 
-**添加網絡搜索功能：**
+**新增網路搜尋功能：**
 
 <CodeGroup>
   ```python Python theme={null}
@@ -310,7 +315,7 @@ def get_user_name(user):
   ```
 </CodeGroup>
 
-**給 Claude 一個自定義系統提示：**
+**給 Claude 一個自訂系統提示：**
 
 <CodeGroup>
   ```python Python theme={null}
@@ -332,7 +337,7 @@ def get_user_name(user):
   ```
 </CodeGroup>
 
-**在終端中運行命令：**
+**在終端機中執行命令：**
 
 <CodeGroup>
   ```python Python theme={null}
@@ -351,7 +356,9 @@ def get_user_name(user):
   ```
 </CodeGroup>
 
-啟用 `Bash` 後，嘗試：`"Write unit tests for utils.py, run them, and fix any failures"`
+啟用 `Bash` 後，請嘗試：`"Write unit tests for utils.py, run them, and fix any failures"`
+
+每個這些程式碼片段都會在同一個選項物件上設定欄位。如需更多資訊，請參閱[設定您的代理](/docs/zh-TW/agent-sdk/configuration)。
 
 <h2 id="key-concepts">
   關鍵概念
@@ -365,28 +372,19 @@ def get_user_name(user):
 | `Read`、`Edit`、`Glob`               | 分析和修改代碼   |
 | `Read`、`Edit`、`Bash`、`Glob`、`Grep` | 完全自動化     |
 
-**權限模式**控制您想要多少人工監督：
-
-| 模式                  | 行為                                                                                                                                                                               | 用例             |
-| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
-| `acceptEdits`       | 自動批准文件編輯和常見文件系統命令，詢問其他操作                                                                                                                                                         | 受信任的開發工作流      |
-| `plan`              | 運行只讀工具；文件編輯永遠不會自動批准，並到達您的 `canUseTool` 回調                                                                                                                                        | 在批准執行前確定任務範圍   |
-| `dontAsk`           | 拒絕不在 `allowedTools` 中的任何內容；連接器工具[您的組織設定為 `ask`](/docs/zh-TW/mcp#organization-controls-on-connector-tools)和需要用戶互動的工具即使您已列出它們也會被拒絕                                                      | 鎖定的無頭代理        |
-| `auto`              | 模型分類器批准或拒絕每個工具調用                                                                                                                                                                 | 具有安全防護的自主代理    |
-| `bypassPermissions` | 運行每個工具而不提示，除了明確的 [`ask` 規則](/docs/zh-TW/agent-sdk/permissions#how-permissions-are-evaluated)符合的工具、連接器工具[您的組織設定為 `ask`](/docs/zh-TW/mcp#organization-controls-on-connector-tools)和需要用戶互動的工具 | 沙箱 CI、完全受信任的環境 |
-| `default`           | 需要 `canUseTool` 回調來處理批准                                                                                                                                                          | 自定義批准流程        |
-
-上面的示例使用 `acceptEdits` 模式，它自動批准文件操作，以便代理可以無需交互提示地運行。如果您想提示用戶批准，請使用 `default` 模式並提供一個 [`canUseTool` 回調](/docs/zh-TW/agent-sdk/user-input)來收集用戶輸入。如需更多控制，請參閱[權限](/docs/zh-TW/agent-sdk/permissions)。
+**權限模式**控制您想要多少人工監督。SDK 會按照固定順序評估活躍模式以及您的允許和拒絕規則，詳見[權限如何被評估](/docs/zh-TW/agent-sdk/permissions#how-permissions-are-evaluated)。如需完整的模式列表、其行為以及何時使用各個模式，請參閱[代理迴圈如何運作中的權限模式](/docs/zh-TW/agent-sdk/agent-loop#permission-mode)。
 
 <h2 id="next-steps">
   後續步驟
 </h2>
 
-現在您已創建了第一個代理，了解如何擴展其功能並根據您的用例進行定制：
+現在您已建立了第一個代理程式，請了解如何擴展其功能並根據您的使用案例進行客製化：
 
-* **[權限](/docs/zh-TW/agent-sdk/permissions)**：控制您的代理可以執行的操作以及何時需要批准
-* **[Hooks](/docs/zh-TW/agent-sdk/hooks)**：在工具調用之前或之後運行自定義代碼
-* **[會話](/docs/zh-TW/agent-sdk/sessions)**：構建維護上下文的多輪代理
-* **[MCP 服務器](/docs/zh-TW/agent-sdk/mcp)**：連接到數據庫、瀏覽器、API 和其他外部系統
-* **[託管](/docs/zh-TW/agent-sdk/hosting)**：將代理部署到 Docker、雲和 CI/CD
-* **[示例代理](https://github.com/anthropics/claude-agent-sdk-demos)**：查看完整示例：電子郵件助手、研究代理等
+* **[設定您的代理程式](/docs/zh-TW/agent-sdk/configuration)**：組合選項物件並找到涵蓋每個設定的頁面
+* **[權限](/docs/zh-TW/agent-sdk/permissions)**：控制您的代理程式可以執行的操作以及何時需要批准
+* **[Hooks](/docs/zh-TW/agent-sdk/hooks)**：在工具呼叫之前或之後執行自訂程式碼
+* **[Sessions](/docs/zh-TW/agent-sdk/sessions)**：建立維持上下文的多輪代理程式
+* **[MCP servers](/docs/zh-TW/agent-sdk/mcp)**：連接到資料庫、瀏覽器、API 和其他外部系統
+* **[Hosting](/docs/zh-TW/agent-sdk/hosting)**：將代理程式部署到 Docker、雲端和 CI/CD
+* **[Example agents](https://github.com/anthropics/claude-agent-sdk-demos)**：查看完整範例：電子郵件助手、研究代理程式等
+* **[Troubleshooting](/docs/zh-TW/agent-sdk/troubleshooting)**：修復 CLI 無法啟動或退出時的錯誤，或結果未能以結構化輸出形式到達時的問題

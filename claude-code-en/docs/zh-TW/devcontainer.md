@@ -59,6 +59,8 @@ Claude Code 透過 [Claude Code Dev Container Feature](https://github.com/anthro
     ```
 
     將 `image` 行替換為您的專案的基礎映像，或如果您現有的檔案使用 Dockerfile，則將其移除。
+
+    Claude Code 功能會在基礎映像未提供 Node.js 時自行安裝。如果該安裝失敗且構建停止並顯示 `Failed to install Node.js and npm`，請將 `"ghcr.io/devcontainers/features/node:1": {}` 新增到上述 `features` 區塊中 Claude Code 功能的上方，然後重新構建。
   </Step>
 
   <Step title="重新構建容器">
@@ -89,21 +91,26 @@ Claude Code 透過 [Claude Code Dev Container Feature](https://github.com/anthro
   在重新構建時保持身份驗證和設定
 </h2>
 
-預設情況下，容器的主目錄在重新構建時會被丟棄，因此工程師必須每次都重新登入。Claude Code 將其身份驗證令牌、使用者設定和工作階段歷史記錄儲存在 [`~/.claude`](/docs/zh-TW/claude-directory) 下。在該路徑掛載一個命名磁碟區以在重新構建時保持此狀態。
+預設情況下，容器的主目錄在重新構建時會被丟棄，因此工程師必須每次都重新登入。Claude Code 將其身份驗證令牌、使用者設定和工作階段歷史記錄儲存在 [`~/.claude`](/docs/zh-TW/claude-directory) 目錄下。它將您的 OAuth 帳戶、個人 MCP 伺服器和每個專案的信任設定儲存在 [`~/.claude.json`](/docs/zh-TW/settings-reference#global-config-settings) 中，這是位於該目錄外的單獨檔案，因此僅在 `~/.claude` 掛載一個磁碟區不足以讓您保持登入狀態。在 `~/.claude` 掛載一個命名磁碟區，並將 [`CLAUDE_CONFIG_DIR`](/docs/zh-TW/env-vars) 設定為相同路徑，以便 Claude Code 在磁碟區內寫入 `.claude.json`。
 
-以下示例在 `node` 使用者的主目錄掛載一個磁碟區：
+以下示例為 `remoteUser` 為 `node` 的容器掛載磁碟區並設定 `CLAUDE_CONFIG_DIR`：
 
 ```json devcontainer.json theme={null}
 "mounts": [
   "source=claude-code-config,target=/home/node/.claude,type=volume"
-]
+],
+"containerEnv": {
+  "CLAUDE_CONFIG_DIR": "/home/node/.claude"
+}
 ```
 
-將 `/home/node` 替換為您的容器的 `remoteUser` 的主目錄。如果您在 `~/.claude` 以外的位置掛載磁碟區，請設定 [`CLAUDE_CONFIG_DIR`](/docs/zh-TW/env-vars) 為掛載路徑，以便 Claude Code 在那裡讀取和寫入。
+將 `/home/node` 替換為您的容器的 `remoteUser` 的主目錄。如果您已經設定了 `containerEnv`，例如在[強制執行組織政策](#enforce-organization-policy)中，請將 `CLAUDE_CONFIG_DIR` 新增到該物件，而不是新增第二個物件。
 
 若要隔離每個專案的狀態，而不是在所有儲存庫中共享一個磁碟區，請在來源名稱中包含 `${devcontainerId}` 變數。[參考配置](https://github.com/anthropics/claude-code/blob/main/.devcontainer/devcontainer.json)為此目的使用 `source=claude-code-config-${devcontainerId}`。
 
-在 GitHub Codespaces 中，`~/.claude` 在停止和啟動 codespace 時會保持，但在重新構建容器時仍會被清除，因此上面的磁碟區掛載也適用於此。若要在 codespace 之間進行身份驗證，請將 `ANTHROPIC_API_KEY` 或來自 [`claude setup-token`](/docs/zh-TW/authentication#generate-a-long-lived-token) 的 `CLAUDE_CODE_OAUTH_TOKEN` 儲存為 [Codespaces 祕密](https://docs.github.com/en/codespaces/managing-your-codespaces/managing-your-account-specific-secrets-for-github-codespaces)；Codespaces 會自動將祕密作為環境變數提供給容器內。
+在 GitHub Codespaces 中，`~/.claude` 在停止和啟動 codespace 時會保持，但在重新構建容器時仍會被清除，因此上面的配置也適用於此。
+
+若要在 codespace 之間進行身份驗證，請將 `ANTHROPIC_API_KEY` 或來自 [`claude setup-token`](/docs/zh-TW/authentication#generate-a-long-lived-token) 的 `CLAUDE_CODE_OAUTH_TOKEN` 儲存為 [Codespaces 祕密](https://docs.github.com/en/codespaces/managing-your-codespaces/managing-your-account-specific-secrets-for-github-codespaces)。Codespaces 會自動將祕密作為環境變數提供給容器內。
 
 <h2 id="enforce-organization-policy">
   強制執行組織政策
@@ -111,14 +118,14 @@ Claude Code 透過 [Claude Code Dev Container Feature](https://github.com/anthro
 
 開發容器是應用組織政策的便利場所，因為相同的映像和配置在每位工程師的機器上執行。
 
-Claude Code 在 Linux 上讀取 `/etc/claude-code/managed-settings.json` 並在[設定層級結構](/docs/zh-TW/settings#how-scopes-interact)中以最高優先級應用它，因此那裡的值會覆蓋工程師在 `~/.claude` 或專案的 `.claude/` 目錄中設定的任何內容。從您的 Dockerfile 複製檔案到位置：
+Claude Code 在 Linux 上讀取 `/etc/claude-code/managed-settings.json` 並在[設定層級結構](/docs/zh-TW/settings#settings-precedence)中以最高優先級應用它，因此那裡的值會覆蓋工程師在 `~/.claude` 或專案的 `.claude/` 目錄中設定的任何內容。從您的 Dockerfile 複製檔案到位置：
 
 ```dockerfile Dockerfile theme={null}
 RUN mkdir -p /etc/claude-code
 COPY managed-settings.json /etc/claude-code/managed-settings.json
 ```
 
-因為 Dockerfile 存在於儲存庫中，任何具有寫入存取權限的人都可以更改或移除此步驟。對於工程師無法透過編輯儲存庫檔案來繞過的政策，請透過[伺服器管理的設定](/docs/zh-TW/server-managed-settings)或您的 MDM 提供託管設定。請參閱[託管設定檔案](/docs/zh-TW/settings#settings-files)以了解可用的鍵和其他傳遞路徑。
+因為 Dockerfile 存在於儲存庫中，任何具有寫入存取權限的人都可以更改或移除此步驟。對於工程師無法透過編輯儲存庫檔案來繞過的政策，請透過[伺服器管理的設定](/docs/zh-TW/server-managed-settings)或您的 MDM 提供託管設定。請參閱[託管設定檔案](/docs/zh-TW/managed-settings#delivery-mechanisms)以了解可用的鍵和其他傳遞路徑。
 
 若要設定適用於容器中每個 Claude Code 工作階段的[環境變數](/docs/zh-TW/env-vars)，請將它們新增到您的 `devcontainer.json` 中的 `containerEnv`。以下示例選擇退出遙測和錯誤報告，並防止 Claude Code 在安裝後自動更新：
 
@@ -129,7 +136,9 @@ COPY managed-settings.json /etc/claude-code/managed-settings.json
 }
 ```
 
-Dev Container Feature 始終安裝最新的 Claude Code 版本。若要為可重現的構建固定特定的 Claude Code 版本，請從您的 Dockerfile 使用 `npm install -g @anthropic-ai/claude-code@X.Y.Z` 安裝它，而不是使用該功能，並設定 `DISABLE_AUTOUPDATER`，如上所示。
+`CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` 也會停用[遠端控制](/docs/zh-TW/remote-control#requirements)和其他[需要功能旗標擷取的功能](/docs/zh-TW/env-vars#features-that-need-feature-flag-fetching)所依賴的功能旗標評估，因此容器中的工作階段無法使用它們。
+
+Dev Container Feature 始終安裝最新的 Claude Code 版本。若要為可重現的構建固定特定的 Claude Code 版本，請從您的 Dockerfile 使用 `npm install -g @anthropic-ai/claude-code@X.Y.Z` 安裝它，而不是使用該功能，並在 `containerEnv` 中設定 `DISABLE_AUTOUPDATER` 為 `1`。
 
 如需完整的政策控制清單（包括權限規則、工具限制和 MCP 伺服器允許清單），請參閱[為您的組織設定 Claude Code](/docs/zh-TW/admin-setup)。
 
@@ -141,7 +150,7 @@ Dev Container Feature 始終安裝最新的 Claude Code 版本。若要為可重
 
 您可以將容器的出站流量限制為僅 Claude Code 需要的網域。請參閱[網路存取要求](/docs/zh-TW/network-config#network-access-requirements)以了解推理和身份驗證網域，以及[遙測服務](/docs/zh-TW/data-usage#telemetry-services)以了解可選的遙測和錯誤報告連接以及如何停用它們。
 
-參考容器包含一個 [`init-firewall.sh`](https://github.com/anthropics/claude-code/blob/main/.devcontainer/init-firewall.sh) 指令碼，該指令碼會阻止除 Claude Code 和您的開發工具需要的網域之外的所有出站流量。在容器內執行防火牆需要額外的權限，因此參考透過 `runArgs` 新增 `NET_ADMIN` 和 `NET_RAW` 功能。防火牆指令碼和這些功能對 Claude Code 本身不是必需的：您可以將它們省略並改為依賴您自己的網路控制。
+參考容器包含一個 [`init-firewall.sh`](https://github.com/anthropics/claude-code/blob/main/.devcontainer/init-firewall.sh) 指令碼，該指令碼會限制出站流量僅限於指令碼允許的目的地。在容器內執行防火牆需要額外的權限，因此參考透過 `runArgs` 新增 `NET_ADMIN` 和 `NET_RAW` 功能。防火牆指令碼和這些功能對 Claude Code 本身不是必需的：您可以將它們省略並改為依賴您自己的網路控制。
 
 <h2 id="run-without-permission-prompts">
   無需權限提示即可執行
@@ -151,7 +160,7 @@ Dev Container Feature 始終安裝最新的 Claude Code 版本。若要為可重
 
 跳過權限提示會移除您在工具呼叫執行前進行審查的機會。Claude 仍然可以修改綁定掛載工作區中的任何檔案（該檔案直接出現在您的主機上），並到達容器的網路政策允許的任何內容。將此標誌與上面的[網路出站流量限制](#restrict-network-egress)配對，以限制繞過的工作階段可以到達的內容。
 
-如果您想要更少的提示而不停用安全檢查，請考慮改為[自動模式](/docs/zh-TW/permission-modes#eliminate-prompts-with-auto-mode)，該模式具有在執行前審查操作的分類器。若要完全防止工程師使用 `--dangerously-skip-permissions`，請在[託管設定](/docs/zh-TW/settings#permission-settings)中將 `permissions.disableBypassPermissionsMode` 設定為 `"disable"`。
+如果您想要更少的提示而不停用安全檢查，請考慮改為[自動模式](/docs/zh-TW/permission-modes#eliminate-prompts-with-auto-mode)，該模式具有在執行前審查操作的分類器。若要完全防止工程師使用 `--dangerously-skip-permissions`，請在[託管設定](/docs/zh-TW/settings-reference#permission-settings)中將 `permissions.disableBypassPermissionsMode` 設定為 `"disable"`。
 
 <h2 id="try-the-reference-container">
   試用參考容器
@@ -194,7 +203,7 @@ Dev Container Feature 始終安裝最新的 Claude Code 版本。若要為可重
 Claude Code 在您的開發容器中執行後，下面的頁面涵蓋組織推出的其餘部分：選擇身份驗證路徑、在儲存庫外提供託管政策、監控使用情況以及了解 Claude Code 儲存和傳送的內容。
 
 * [為您的組織設定 Claude Code](/docs/zh-TW/admin-setup)：選擇身份驗證提供者、決定政策如何到達裝置以及規劃推出
-* [伺服器管理的設定](/docs/zh-TW/server-managed-settings)：從 Claude.ai 管理員控制台提供託管政策，以便工程師無法透過編輯儲存庫檔案來繞過它
+* [伺服器管理的設定](/docs/zh-TW/server-managed-settings)：從 claude.ai 管理員控制台提供託管政策，以便工程師無法透過編輯儲存庫檔案來繞過它
 * [監控使用情況和審計活動](/docs/zh-TW/monitoring-usage)：匯出 OpenTelemetry 指標並審查您的團隊正在執行的內容
 * [網路存取要求](/docs/zh-TW/network-config#network-access-requirements)：代理和防火牆的完整網域允許清單
 * [遙測服務和選擇退出](/docs/zh-TW/data-usage#telemetry-services)：Claude Code 預設傳送的內容以及停用它的環境變數

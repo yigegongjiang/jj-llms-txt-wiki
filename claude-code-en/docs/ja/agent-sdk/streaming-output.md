@@ -6,7 +6,7 @@
 
 > テキストとツール呼び出しがストリーミングされるときに、Agent SDK からリアルタイムレスポンスを取得します
 
-デフォルトでは、Agent SDK は Claude がレスポンスの生成を完了した後に、完全な `AssistantMessage` オブジェクトを返します。テキストとツール呼び出しが生成されるときにインクリメンタルな更新を受け取るには、オプションで `include_partial_messages`（Python）または `includePartialMessages`（TypeScript）を `true` に設定して、部分的なメッセージストリーミングを有効にします。
+デフォルトでは、Agent SDK は Claude がレスポンスの生成を完了した後に、完全な `AssistantMessage` オブジェクトを返します。テキストとツール呼び出しが生成されるときにインクリメンタルな更新を受け取るには、部分的なメッセージストリーミングを有効にします。
 
 <Tip>
   このページは出力ストリーミング（リアルタイムでトークンを受け取ること）について説明しています。入力モード（メッセージの送信方法）については、[エージェントにメッセージを送信する](/docs/ja/agent-sdk/streaming-vs-single-mode)を参照してください。また、[CLI 経由で Agent SDK を使用してレスポンスをストリーミングする](/docs/ja/headless)こともできます。
@@ -79,36 +79,16 @@
 
 部分的なメッセージが有効な場合、生の Claude API ストリーミングイベントがオブジェクトでラップされて返されます。タイプは各 SDK で異なる名前を持ちます：
 
-* **Python**: `StreamEvent`（`claude_agent_sdk.types` からインポート）
-* **TypeScript**: `SDKPartialAssistantMessage` with `type: 'stream_event'`
+* **Python**: [`StreamEvent`](/docs/ja/agent-sdk/python#streamevent)（`claude_agent_sdk.types` からインポート）
+* **TypeScript**: [`SDKPartialAssistantMessage`](/docs/ja/agent-sdk/typescript#sdkpartialassistantmessage) with `type: 'stream_event'`
 
-どちらも生の Claude API イベントを含み、蓄積されたテキストではありません。テキストデルタを自分で抽出して蓄積する必要があります。各タイプの構造は以下の通りです：
-
-<CodeGroup>
-  ```python Python theme={null}
-  @dataclass
-  class StreamEvent:
-      uuid: str  # このイベントの一意の識別子
-      session_id: str  # セッション識別子
-      event: dict[str, Any]  # 生の Claude API ストリームイベント
-      parent_tool_use_id: str | None  # 常に None
-  ```
-
-  ```typescript TypeScript theme={null}
-  type SDKPartialAssistantMessage = {
-    type: "stream_event";
-    event: BetaRawMessageStreamEvent; // Anthropic SDK から
-    parent_tool_use_id: string | null;
-    uuid: UUID;
-    session_id: string;
-    ttft_ms?: number; // メッセージ開始イベントにのみ存在する、最初のトークンまでの時間（ミリ秒）
-  };
-  ```
-</CodeGroup>
+どちらも生の Claude API イベントを含み、蓄積されたテキストではありません。テキストデルタを自分で抽出して蓄積する必要があります。
 
 `parent_tool_use_id` フィールドは Python では常に `None`、TypeScript では `null` です。ストリームイベントはメインセッションのみに対して発行されます。サブエージェントからのトークンレベルのデルタは転送されません。出力をサブエージェントに属性付けするには、`parent_tool_use_id` を含む完全なメッセージを使用してください。[サブエージェント呼び出しの検出](/docs/ja/agent-sdk/subagents#detect-subagent-invocation)を参照してください。
 
-`event` フィールドには、[Claude API](https://platform.claude.com/docs/ja/build-with-claude/streaming#event-types) からの生のストリーミングイベントが含まれます。一般的なイベントタイプは以下の通りです：
+Claude Code は、ターンの最初の非 ping ストリームイベントで `user_message_uuid` を設定し、ターンが応答しているメッセージが変わるときに再度設定します。これは [`user_message_uuid`](/docs/ja/agent-sdk/typescript#user_message_uuid) の条件下で行われます。Python の `StreamEvent` はこのフィールドを公開していません。
+
+`event` フィールドには、[Claude API](https://platform.claude.com/docs/en/build-with-claude/streaming#event-types) からの生のストリーミングイベントが含まれます。一般的なイベントタイプは以下の通りです：
 
 | イベントタイプ               | 説明                            |
 | :-------------------- | :---------------------------- |
@@ -123,75 +103,26 @@
   メッセージフロー
 </h2>
 
-部分的なメッセージが有効な場合、メッセージは以下の順序で返されます：
+Claude Code は、空でない各コンテンツブロックが完了するたびに `AssistantMessage` を発行します。そのため、テキストブロックとツール呼び出しを含むレスポンスは 2 つの `AssistantMessage` オブジェクトを生成します。各メッセージは独自のコンテンツブロックのみを含み、両方とも同じメッセージ ID を共有します。これは TypeScript では `message.message.id` として、Python では `message.message_id` として読み取ります。部分メッセージが有効な場合、各 `AssistantMessage` はそのブロックの `content_block_stop` イベントの前に到着し、メッセージは以下の順序で受け取ります。
 
 ```text theme={null}
 StreamEvent (message_start)
-StreamEvent (content_block_start) - テキストブロック
-StreamEvent (content_block_delta) - テキストチャンク...
+StreamEvent (content_block_start) - text block
+StreamEvent (content_block_delta) - text chunks...
+AssistantMessage - complete text block
 StreamEvent (content_block_stop)
-StreamEvent (content_block_start) - tool_use ブロック
-StreamEvent (content_block_delta) - ツール入力チャンク...
+StreamEvent (content_block_start) - tool_use block
+StreamEvent (content_block_delta) - tool input chunks...
+AssistantMessage - complete tool_use block
 StreamEvent (content_block_stop)
 StreamEvent (message_delta)
 StreamEvent (message_stop)
-AssistantMessage - すべてのコンテンツを含む完全なメッセージ
-... ツール実行 ...
-... 次のターンのストリーミングイベント ...
-ResultMessage - 最終結果
+... tool executes ...
+... more streaming events for next turn ...
+ResultMessage - final result
 ```
 
-部分的なメッセージが有効でない場合（Python では `include_partial_messages`、TypeScript では `includePartialMessages`）、`StreamEvent` を除くすべてのメッセージタイプを受け取ります。一般的なタイプには `SystemMessage`（セッション初期化）、`AssistantMessage`（完全なレスポンス）、`ResultMessage`（最終結果）、および会話履歴がコンパクト化されたときを示すコンパクト境界メッセージ（TypeScript では `SDKCompactBoundaryMessage`、Python では `SystemMessage` with subtype `"compact_boundary"`）が含まれます。
-
-<h2 id="stream-text-responses">
-  テキストレスポンスをストリーミングする
-</h2>
-
-生成されるときにテキストを表示するには、`delta.type` が `text_delta` である `content_block_delta` イベントを探します。これらには、インクリメンタルなテキストチャンクが含まれます。以下の例は、各チャンクが到着するときに出力します：
-
-<CodeGroup>
-  ```python Python theme={null}
-  from claude_agent_sdk import query, ClaudeAgentOptions
-  from claude_agent_sdk.types import StreamEvent
-  import asyncio
-
-
-  async def stream_text():
-      options = ClaudeAgentOptions(include_partial_messages=True)
-
-      async for message in query(prompt="Explain how databases work", options=options):
-          if isinstance(message, StreamEvent):
-              event = message.event
-              if event.get("type") == "content_block_delta":
-                  delta = event.get("delta", {})
-                  if delta.get("type") == "text_delta":
-                      # 各テキストチャンクが到着するときに出力
-                      print(delta.get("text", ""), end="", flush=True)
-
-      print()  # 最後の改行
-
-
-  asyncio.run(stream_text())
-  ```
-
-  ```typescript TypeScript theme={null}
-  import { query } from "@anthropic-ai/claude-agent-sdk";
-
-  for await (const message of query({
-    prompt: "Explain how databases work",
-    options: { includePartialMessages: true }
-  })) {
-    if (message.type === "stream_event") {
-      const event = message.event;
-      if (event.type === "content_block_delta" && event.delta.type === "text_delta") {
-        process.stdout.write(event.delta.text);
-      }
-    }
-  }
-
-  console.log(); // 最後の改行
-  ```
-</CodeGroup>
+部分メッセージが有効でない場合、`StreamEvent` を除くすべてのメッセージタイプを受け取ります。一般的なタイプには `SystemMessage`（セッション初期化）、`AssistantMessage`（完全なコンテンツブロック）、`ResultMessage`（最終結果）、および会話履歴がコンパクト化されたときを示すコンパクト境界メッセージ（TypeScript では `SDKCompactBoundaryMessage`、Python では subtype `"compact_boundary"` の `SystemMessage`）が含まれます。
 
 <h2 id="stream-tool-calls">
   ツール呼び出しをストリーミングする

@@ -10,8 +10,6 @@ Agent SDK 建立在與 Claude Code 相同的基礎上，這意味著您的 SDK �
 
 當您省略 `settingSources` 時，`query()` 會讀取與 Claude Code CLI 相同的檔案系統設定：使用者、專案和本機設定、CLAUDE.md 檔案以及 `.claude/` skills、代理和命令。若要在沒有這些的情況下執行，請傳遞 `settingSources: []`，這會將代理限制為您以程式設計方式設定的內容。無論此選項如何，都會讀取受管原則設定和全域 `~/.claude.json` 設定。請參閱 [settingSources 不控制的內容](#what-settingsources-does-not-control)。
 
-如需每項功能的概念概述及何時使用，請參閱 [擴展 Claude Code](/docs/zh-TW/features-overview)。
-
 <h2 id="control-filesystem-settings-with-settingsources">
   使用 settingSources 控制檔案系統設定
 </h2>
@@ -23,23 +21,29 @@ Agent SDK 建立在與 Claude Code 相同的基礎上，這意味著您的 SDK �
 <CodeGroup>
   ```python Python theme={null}
   from claude_agent_sdk import query, ClaudeAgentOptions, AssistantMessage, ResultMessage
+  import asyncio
 
-  async for message in query(
-      prompt="Help me refactor the auth module",
-      options=ClaudeAgentOptions(
-          # "user" loads from ~/.claude/, "project" loads from ./.claude/ in cwd.
-          # Together they give the agent access to CLAUDE.md, skills, hooks, and
-          # permissions from both locations.
-          setting_sources=["user", "project"],
-          allowed_tools=["Read", "Edit", "Bash"],
-      ),
-  ):
-      if isinstance(message, AssistantMessage):
-          for block in message.content:
-              if hasattr(block, "text"):
-                  print(block.text)
-      if isinstance(message, ResultMessage) and message.subtype == "success":
-          print(f"\nResult: {message.result}")
+
+  async def main():
+      async for message in query(
+          prompt="Help me refactor the auth module",
+          options=ClaudeAgentOptions(
+              # "user" loads from ~/.claude/, "project" loads from ./.claude/ in cwd.
+              # Together they give the agent access to CLAUDE.md, skills, hooks, and
+              # permissions from both locations.
+              setting_sources=["user", "project"],
+              allowed_tools=["Read", "Edit", "Bash"],
+          ),
+      ):
+          if isinstance(message, AssistantMessage):
+              for block in message.content:
+                  if hasattr(block, "text"):
+                      print(block.text)
+          if isinstance(message, ResultMessage) and message.subtype == "success":
+              print(f"\nResult: {message.result}")
+
+
+  asyncio.run(main())
   ```
 
   ```typescript TypeScript theme={null}
@@ -67,17 +71,19 @@ Agent SDK 建立在與 Claude Code 相同的基礎上，這意味著您的 SDK �
   ```
 </CodeGroup>
 
+當此程式執行時，助理的回應會列印到標準輸出，然後在執行完成後列印最終結果行。
+
 每個來源都會從特定位置載入設定，其中 `<cwd>` 是您透過 `cwd` 選項傳遞的工作目錄，或如果未設定則為程序的目前目錄。如需完整的型別定義，請參閱 [`SettingSource`](/docs/zh-TW/agent-sdk/typescript#settingsource)（TypeScript）或 [`SettingSource`](/docs/zh-TW/agent-sdk/python#settingsource)（Python）。
 
-| 來源          | 載入的內容                                                                   | 位置                                                                                                             |
-| :---------- | :---------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------- |
-| `"project"` | 專案 CLAUDE.md、`.claude/rules/*.md`、專案 skills、專案 hooks、專案 `settings.json` | `<cwd>/.claude/` 用於 `settings.json` 和 hooks；`<cwd>` 和每個父目錄用於 CLAUDE.md 和 rules；`<cwd>` 和每個父目錄直到儲存庫根目錄用於 skills |
-| `"user"`    | 使用者 CLAUDE.md、`~/.claude/rules/*.md`、使用者 skills、使用者設定                   | `~/.claude/`                                                                                                   |
-| `"local"`   | CLAUDE.local.md、`.claude/settings.local.json`                           | `<cwd>/.claude/` 用於 `settings.local.json`；`<cwd>` 和每個父目錄用於 CLAUDE.local.md                                     |
+| 來源          | 載入的內容                                                                                         | 位置                                                                                                                                                                                                                                                                                                                                                                             |
+| :---------- | :-------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `"project"` | 專案 `settings.json` 和 hooks；專案 CLAUDE.md 和 `.claude/rules/*.md`；專案 skills、commands 和 subagents | `<cwd>/.claude/` 用於 `settings.json` 和 hooks；`<cwd>` 和每個父目錄用於 CLAUDE.md 和 rules；`<cwd>` 和每個父目錄直到儲存庫根目錄用於 skills、commands 和 subagents，加上您透過 `additionalDirectories` 或 `add_dirs` 選項傳遞的每個目錄的 `.claude/skills/`、`.claude/commands/` 和 `.claude/agents/` 資料夾，SDK 會將其作為 [`--add-dir`](/docs/zh-TW/permissions#additional-directories-grant-file-access-not-configuration) 傳遞給 Claude Code |
+| `"user"`    | 使用者 `settings.json`；使用者 CLAUDE.md 和 `~/.claude/rules/*.md`；使用者 skills、commands 和 subagents    | `~/.claude/` 用於 `settings.json`、CLAUDE.md 和 rules；`~/.claude/skills/`、`~/.claude/commands/` 和 `~/.claude/agents/` 用於 skills、commands 和 subagents                                                                                                                                                                                                                               |
+| `"local"`   | CLAUDE.local.md、`.claude/settings.local.json`                                                 | `<cwd>/.claude/` 用於 `settings.local.json`；`<cwd>` 和每個父目錄用於 CLAUDE.local.md                                                                                                                                                                                                                                                                                                     |
 
 省略 `settingSources` 等同於 `["user", "project", "local"]`。
 
-`cwd` 選項決定 SDK 在何處尋找專案層級輸入。CLAUDE.md 和 rules 從 `<cwd>` 和每個父目錄載入。Skills 從 `<cwd>` 和每個父目錄直到儲存庫根目錄載入。專案 `settings.json` 和 hooks 僅從 `<cwd>/.claude/` 載入，沒有父目錄回退。
+`cwd` 選項決定 SDK 在何處尋找專案層級輸入。專案 `settings.json` 和 hooks 僅從 `<cwd>/.claude/` 載入，沒有父目錄回退。
 
 <h3 id="what-settingsources-does-not-control">
   settingSources 不控制的內容
@@ -85,12 +91,13 @@ Agent SDK 建立在與 Claude Code 相同的基礎上，這意味著您的 SDK �
 
 `settingSources` 涵蓋使用者、專案和本機設定。無論其值如何，都會讀取一些輸入：
 
-| 輸入                                                             | 行為                                                                                                                                                                                        | 停用方式                                                                                                                                                          |
-| :------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 受管原則設定                                                         | 端點管理的原則（無論是 MDM plist、登錄原則或受管設定檔）從主機載入；[伺服器管理的設定](/docs/zh-TW/server-managed-settings)在工作階段使用組織 OAuth 登入或直接配置的 API 金鑰進行驗證時擷取，在[符合條件的配置](/docs/zh-TW/server-managed-settings#platform-availability)上 | 端點原則：從主機移除受管設定檔、plist 或登錄原則。伺服器管理的設定：由您的組織管理員控制；無法從 SDK 停用                                                                                                    |
-| `~/.claude.json` 全域設定                                          | 始終讀取                                                                                                                                                                                      | 在 `env` 中使用 `CLAUDE_CONFIG_DIR` 重新定位                                                                                                                          |
-| `~/.claude/projects/<project>/memory/` 的自動記憶體                  | 預設載入到系統提示中。代理程式使用標準 `Write` 和 `Edit` 工具而非專用記憶體工具寫入新記憶體，因此必須啟用這些工具才能讓代理程式儲存記憶體                                                                                                             | 在設定中設定 `autoMemoryEnabled: false`，或在 `env` 中設定 `CLAUDE_CODE_DISABLE_AUTO_MEMORY=1`                                                                            |
-| [claude.ai MCP 連接器](/docs/zh-TW/mcp#use-mcp-servers-from-claude-ai) | 當作用中驗證方法是 claude.ai 訂閱時載入。傳遞 `mcpServers: {}` 不會抑制它們                                                                                                                                      | 設定 `strictMcpConfig: true`、[`disableClaudeAiConnectors: true`](/docs/zh-TW/mcp#disable-claude-ai-connectors) 在設定中，或在 `env` 中設定 `ENABLE_CLAUDEAI_MCP_SERVERS=false` |
+| 輸入                                                                                                                 | 行為                                                                                                                                                                                                                                                                                                     | 停用方式                                                                                                                                                          |
+| :----------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 受管原則設定                                                                                                             | 端點管理的原則（例如 MDM plist、登錄原則或受管設定檔）從主機載入。[伺服器管理的設定](/docs/zh-TW/server-managed-settings)在工作階段使用符合條件的認證（例如組織 OAuth 登入、直接配置的 API 金鑰或 `user_oauth` [Anthropic 設定檔](/docs/zh-TW/authentication#anthropic-profiles-and-federation-credentials)）進行驗證時，在[符合條件的配置](/docs/zh-TW/server-managed-settings#platform-availability)上擷取 | 端點原則：從主機移除受管設定檔、plist 或登錄原則。伺服器管理的設定：由您的 Claude 組織中的[擁有者](/docs/zh-TW/server-managed-settings#access-control)控制；您無法從 SDK 停用它們                                      |
+| `~/.claude.json` 全域設定                                                                                              | 始終讀取                                                                                                                                                                                                                                                                                                   | 在 `env` 中使用 `CLAUDE_CONFIG_DIR` 重新定位                                                                                                                          |
+| `~/.claude/projects/<project>/memory/` 的自動記憶體                                                                      | 預設載入到系統提示中。代理程式使用標準 `Write` 和 `Edit` 工具而非專用記憶體工具寫入新記憶體，因此必須啟用這些工具才能讓代理程式儲存記憶體                                                                                                                                                                                                                          | 在設定中設定 `autoMemoryEnabled: false`，或在 `env` 中設定 `CLAUDE_CODE_DISABLE_AUTO_MEMORY=1`                                                                            |
+| [claude.ai MCP 連接器](/docs/zh-TW/mcp#use-mcp-servers-from-claude-ai)                                                     | 當工作階段使用您的 claude.ai 登入進行驗證時載入。當 `CLAUDE_CODE_OAUTH_TOKEN` 持有來自 [`claude setup-token`](/docs/zh-TW/authentication#generate-a-long-lived-token) 的權杖時不會載入，該權杖只能進行模型請求。傳遞 `mcpServers: {}` 不會抑制連接器                                                                                                              | 設定 `strictMcpConfig: true`、[`disableClaudeAiConnectors: true`](/docs/zh-TW/mcp#disable-claude-ai-connectors) 在設定中，或在 `env` 中設定 `ENABLE_CLAUDEAI_MCP_SERVERS=false` |
+| [`sandbox.credentials`](/docs/zh-TW/sandboxing#protect-credentials) `deny` 項目和 `~/.claude/settings.json` 中的檔案 `mask` 項目 | 當[命令沙箱](/docs/zh-TW/sandboxing)執行時，Claude Code 會套用 `deny` 項目，並將 `credentials.files` `mask` 項目保持為限制，即使 `settingSources` 排除使用者設定。Claude Code 僅使用這些項目來縮小沙箱化命令可以存取的內容                                                                                                                                           | 從 `~/.claude/settings.json` 移除項目                                                                                                                              |
 
 <Warning>
   不要依賴預設 `query()` 選項進行多租戶隔離。因為上述輸入無論 `settingSources` 如何都會被讀取，SDK 程序可能會拾取主機層級設定和每個目錄的記憶體。對於多租戶部署，在其自己的檔案系統中執行每個租戶，並設定 `settingSources: []` 加上在 `env` 中設定 `CLAUDE_CODE_DISABLE_AUTO_MEMORY=1`。[伺服器管理的設定](/docs/zh-TW/server-managed-settings)在程序使用組織認證進行驗證時擷取；檔案系統隔離不會移除它們。請參閱[安全部署](/docs/zh-TW/agent-sdk/secure-deployment)。
@@ -100,7 +107,7 @@ Agent SDK 建立在與 Claude Code 相同的基礎上，這意味著您的 SDK �
   專案指令（CLAUDE.md 和規則）
 </h2>
 
-`CLAUDE.md` 檔案和 `.claude/rules/*.md` 檔案為您的代理提供有關您的專案的持久上下文：編碼慣例、建置命令、架構決策和指令。當 `settingSources` 包含 `"project"`（如上面的範例所示）時，SDK 在工作階段開始時將這些檔案載入到上下文中。代理隨後會遵循您的專案慣例，而無需在每個提示中重複它們。
+`CLAUDE.md` 檔案和 `.claude/rules/*.md` 檔案為您的代理提供有關您的專案的持久上下文：編碼慣例、建置命令、架構決策和指令。當 `settingSources` 包含 `"project"`（如 [`settingSources` 範例](#control-filesystem-settings-with-settingsources)所示）時，SDK 在工作階段開始時將這些檔案載入到上下文中。代理隨後會遵循您的專案慣例，而無需在每個提示中重複它們。
 
 <h3 id="claude-md-load-locations">
   CLAUDE.md 載入位置
@@ -135,19 +142,25 @@ Skills 透過 `settingSources` 從檔案系統中發現。當 `query()` 上的 `
 <CodeGroup>
   ```python Python theme={null}
   from claude_agent_sdk import query, ClaudeAgentOptions, ResultMessage
+  import asyncio
+
 
   # Skills in .claude/skills/ are discovered automatically
   # when settingSources includes "project"
-  async for message in query(
-      prompt="Review this PR using our code review checklist",
-      options=ClaudeAgentOptions(
-          setting_sources=["user", "project"],
-          skills="all",
-          allowed_tools=["Read", "Grep", "Glob"],
-      ),
-  ):
-      if isinstance(message, ResultMessage) and message.subtype == "success":
-          print(message.result)
+  async def main():
+      async for message in query(
+          prompt="Review this PR using our code review checklist",
+          options=ClaudeAgentOptions(
+              setting_sources=["user", "project"],
+              skills="all",
+              allowed_tools=["Read", "Grep", "Glob"],
+          ),
+      ):
+          if isinstance(message, ResultMessage) and message.subtype == "success":
+              print(message.result)
+
+
+  asyncio.run(main())
   ```
 
   ```typescript TypeScript theme={null}
@@ -174,8 +187,6 @@ Skills 透過 `settingSources` 從檔案系統中發現。當 `query()` 上的 `
   Skills 必須建立為檔案系統成品（`.claude/skills/<name>/SKILL.md`）。SDK 沒有用於註冊 skills 的程式設計 API。請參閱 [SDK 中的代理 Skills](/docs/zh-TW/agent-sdk/skills) 以取得完整詳細資訊。
 </Note>
 
-如需建立和使用 skills 的詳細資訊，請參閱 [SDK 中的代理 Skills](/docs/zh-TW/agent-sdk/skills)。
-
 <h2 id="hooks">
   Hooks
 </h2>
@@ -185,19 +196,18 @@ SDK 支援兩種定義 hooks 的方式，它們並行執行：
 * **檔案系統 hooks：** 在 `settings.json` 中定義的 shell 命令，當 `settingSources` 包含相關來源時載入。這些是您為 [互動式 Claude Code 工作階段](/docs/zh-TW/hooks-guide) 設定的相同 hooks。
 * **程式設計 hooks：** 直接傳遞給 `query()` 的回呼函式。這些在您的應用程式程序中執行，可以返回結構化決策。請參閱 [使用 hooks 控制執行](/docs/zh-TW/agent-sdk/hooks)。
 
-兩種類型都在相同的 hook 生命週期中執行。如果您已經在專案的 `.claude/settings.json` 中有 hooks，並且您設定 `settingSources: ["project"]`，那些 hooks 會在 SDK 中自動執行，無需額外設定。
-
-Hook 回呼接收工具輸入並返回決策字典。返回 `{}` 表示允許工具繼續。若要阻止執行，請返回一個 `hookSpecificOutput` 物件，其中包含 `permissionDecision: "deny"` 和 `permissionDecisionReason`。原因會作為工具結果發送給 Claude。頂層的 `decision` 和 `reason` 欄位已針對 `PreToolUse` 棄用。請參閱 [hooks 指南](/docs/zh-TW/agent-sdk/hooks) 以取得完整的回呼簽名和返回型別。
+Hook 回呼接收工具輸入並返回決策字典。返回 `{}` 表示允許工具繼續。若要阻止執行，請返回一個 `hookSpecificOutput` 物件，其中包含 `permissionDecision: "deny"` 和 `permissionDecisionReason`。原因會作為工具結果發送給 Claude。請參閱 [hooks 指南](/docs/zh-TW/agent-sdk/hooks) 以取得完整的回呼簽名和返回型別。
 
 <CodeGroup>
   ```python Python theme={null}
   from claude_agent_sdk import query, ClaudeAgentOptions, HookMatcher, ResultMessage
+  import asyncio
 
 
   # PreToolUse hook callback. Positional args:
   #   input_data: HookInput dict with tool_name, tool_input, hook_event_name
   #   tool_use_id: str | None, the ID of the tool call being intercepted
-  #   context: HookContext, carries session metadata
+  #   context: HookContext, reserved for future abort-signal support
   async def audit_bash(input_data, tool_use_id, context):
       command = input_data.get("tool_input", {}).get("command", "")
       if "rm -rf" in command:
@@ -213,19 +223,23 @@ Hook 回呼接收工具輸入並返回決策字典。返回 `{}` 表示允許工
 
   # Filesystem hooks from .claude/settings.json run automatically
   # when settingSources loads them. You can also add programmatic hooks:
-  async for message in query(
-      prompt="Refactor the auth module",
-      options=ClaudeAgentOptions(
-          setting_sources=["project"],  # Loads hooks from .claude/settings.json
-          hooks={
-              "PreToolUse": [
-                  HookMatcher(matcher="Bash", hooks=[audit_bash]),
-              ]
-          },
-      ),
-  ):
-      if isinstance(message, ResultMessage) and message.subtype == "success":
-          print(message.result)
+  async def main():
+      async for message in query(
+          prompt="Refactor the auth module",
+          options=ClaudeAgentOptions(
+              setting_sources=["project"],  # Loads hooks from .claude/settings.json
+              hooks={
+                  "PreToolUse": [
+                      HookMatcher(matcher="Bash", hooks=[audit_bash]),
+                  ]
+              },
+          ),
+      ):
+          if isinstance(message, ResultMessage) and message.subtype == "success":
+              print(message.result)
+
+
+  asyncio.run(main())
   ```
 
   ```typescript TypeScript theme={null}
@@ -274,7 +288,7 @@ Hook 回呼接收工具輸入並返回決策字典。返回 `{}` 表示允許工
 | Hook 類型                   | 最適合                                                                                                                                                                  |
 | :------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **檔案系統**（`settings.json`） | 在 CLI 和 SDK 工作階段之間共享 hooks。支援 `"command"`（shell 指令碼）、`"http"`（POST 到端點）、`"mcp_tool"`（呼叫連接的 MCP 伺服器的工具）、`"prompt"`（LLM 評估提示）和 `"agent"`（生成驗證器代理）。這些在主代理和它生成的任何子代理中執行。 |
-| **程式設計**（`query()` 中的回呼）  | 應用程式特定邏輯、結構化決策和進程內整合。這些也在子代理內執行。回呼接收 `agent_id` 和 `agent_type` 以進行區分。                                                                                                |
+| **程式設計**（`query()` 中的回呼）  | 應用程式特定邏輯、結構化決策和進程內整合。這些也在子代理內執行。hook 輸入（回呼的第一個引數）攜帶 `agent_id` 和 `agent_type` 欄位，用於識別哪個代理觸發了 hook。                                                                   |
 
 <Note>
   TypeScript SDK 支援超出 Python 的其他 hook 事件，包括 `SessionStart`、`SessionEnd`、`TeammateIdle` 和 `TaskCompleted`。請參閱 [hooks 指南](/docs/zh-TW/agent-sdk/hooks) 以取得完整的事件相容性表。
@@ -297,10 +311,6 @@ Agent SDK 為您提供了多種方式來擴展代理的行為。如果您不確�
 | 協調多個 Claude Code 實例，具有共享任務清單和直接的代理間訊息傳遞 | [代理團隊](/docs/zh-TW/agent-teams)                | 不直接透過 SDK 選項設定。代理團隊是一個 CLI 功能，其中一個工作階段充當團隊主管，協調獨立隊友之間的工作 |
 | 在工具呼叫上執行確定性邏輯（審計、阻止、轉換）                 | [Hooks](/docs/zh-TW/agent-sdk/hooks)           | `hooks` 參數與回呼，或透過 `settingSources` 載入的 shell 指令碼         |
 | 為 Claude 提供對外部服務的結構化工具存取                | [MCP](/docs/zh-TW/agent-sdk/mcp)               | `mcpServers` 參數                                          |
-
-<Tip>
-  **子代理與代理團隊：** 子代理是短暫的和隔離的：新的對話、一個任務、摘要返回給父代理。代理團隊協調多個獨立的 Claude Code 實例，這些實例共享任務清單並直接相互訊息傳遞。代理團隊是一個 CLI 功能。請參閱 [子代理繼承的內容](/docs/zh-TW/agent-sdk/subagents#what-subagents-inherit) 和 [代理團隊比較](/docs/zh-TW/agent-teams#compare-with-subagents) 以取得詳細資訊。
-</Tip>
 
 您啟用的每項功能都會增加代理的上下文視窗。如需每項功能的成本以及這些功能如何分層組合，請參閱 [擴展 Claude Code](/docs/zh-TW/features-overview#understand-context-costs)。
 

@@ -15,7 +15,7 @@ As linhas de status são úteis quando você:
 * Trabalha em várias sessões e precisa distingui-las
 * Quer que a ramificação git e o status estejam sempre visíveis
 
-A linha de status é renderizada em sua própria linha acima dos crachás de rodapé integrados e não os substitui. Para adicionar crachás de links clicáveis ao rodapé quando uma ID aparece na conversa, sem escrever um script, configure [`footerLinksRegexes`](/docs/pt/settings#footer-link-badges) em vez disso.
+A linha de status é renderizada em sua própria linha acima dos crachás de rodapé integrados e não os substitui. Com uma linha de status personalizada configurada, Claude Code para de mostrar a maioria das dicas de teclado do rodapé, incluindo `esc to interrupt`, o fallback `? for shortcuts` e a dica de [ditado por voz](/docs/pt/voice-dictation) `hold space to speak`. Para adicionar crachás de links clicáveis ao rodapé quando uma ID aparece na conversa, sem escrever um script, configure [`footerLinksRegexes`](/docs/pt/settings-reference#footerlinksregexes) em vez disso.
 
 Aqui está um exemplo de uma [linha de status de múltiplas linhas](#display-multiple-lines) que exibe informações do git na primeira linha e uma barra de contexto codificada por cores na segunda.
 
@@ -41,11 +41,13 @@ O comando `/statusline` aceita instruções em linguagem natural descrevendo o q
 /statusline show model name and context percentage with a progress bar
 ```
 
+Aprove os prompts de edição de arquivo se o Claude Code solicitar permissão durante a configuração.
+
 <h3 id="manually-configure-a-status-line">
   Configure manualmente uma linha de status
 </h3>
 
-Adicione um campo `statusLine` às suas configurações de usuário (`~/.claude/settings.json`, onde `~` é seu diretório inicial) ou [configurações de projeto](/docs/pt/settings#settings-files). Defina `type` como `"command"` e aponte `command` para um caminho de script ou um comando de shell inline. Para um passo a passo completo de criação de um script, consulte [Construir uma linha de status passo a passo](#build-a-status-line-step-by-step).
+Adicione um campo `statusLine` às suas configurações de usuário (`~/.claude/settings.json`, onde `~` é seu diretório inicial) ou [configurações de projeto](/docs/pt/settings#where-settings-live). Defina `type` como `"command"` e aponte `command` para um caminho de script ou um comando de shell inline. Para um passo a passo completo de criação de um script, consulte [Construir uma linha de status passo a passo](#build-a-status-line-step-by-step).
 
 ```json theme={null}
 {
@@ -84,7 +86,7 @@ Execute `/statusline` e peça para remover ou limpar sua linha de status (por ex
   Construir uma linha de status passo a passo
 </h2>
 
-Este passo a passo mostra o que está acontecendo nos bastidores criando manualmente uma linha de status que exibe o modelo atual, diretório de trabalho e porcentagem de uso da janela de contexto.
+Este passo a passo mostra o que `/statusline` configura para você criando manualmente uma linha de status que exibe o modelo atual, diretório de trabalho e porcentagem de uso da janela de contexto.
 
 <Note>Executar [`/statusline`](#use-the-%2Fstatusline-command) com uma descrição do que você quer configura tudo isso automaticamente para você.</Note>
 
@@ -96,7 +98,7 @@ Estes exemplos usam scripts Bash, que funcionam no macOS e Linux. No Windows, co
 
 <Steps>
   <Step title="Crie um script que leia JSON e imprima a saída">
-    O Claude Code envia dados JSON para seu script via stdin. Este script usa [`jq`](https://jqlang.github.io/jq/), um analisador JSON de linha de comando que você pode precisar instalar, para extrair o nome do modelo, diretório e porcentagem de contexto, depois imprime uma linha formatada.
+    O Claude Code envia dados JSON para seu script via stdin. Este script usa [`jq`](https://jqlang.org/), um analisador JSON de linha de comando que você pode precisar instalar, para extrair o nome do modelo, diretório e porcentagem de contexto, depois imprime uma linha formatada.
 
     Salve isto em `~/.claude/statusline.sh` (onde `~` é seu diretório inicial, como `/Users/username` no macOS ou `/home/username` no Linux):
 
@@ -136,7 +138,7 @@ Estes exemplos usam scripts Bash, que funcionam no macOS e Linux. No Windows, co
     }
     ```
 
-    Sua linha de status aparece na parte inferior da interface. As configurações são recarregadas automaticamente, mas as alterações não aparecerão até sua próxima interação com o Claude Code.
+    Sua linha de status aparece na parte inferior da interface. O Claude Code recarrega as configurações automaticamente e executa seu script assim que você salva o arquivo.
   </Step>
 </Steps>
 
@@ -144,13 +146,24 @@ Estes exemplos usam scripts Bash, que funcionam no macOS e Linux. No Windows, co
   Como as linhas de status funcionam
 </h2>
 
-O Claude Code executa seu script e envia [dados de sessão JSON](#available-data) para ele via stdin. Seu script lê o JSON, extrai o que precisa e imprime texto para stdout. O Claude Code exibe tudo o que seu script imprime.
+O Claude Code executa seu script com [dados de sessão JSON](#available-data) na entrada padrão e exibe tudo o que o script imprime na saída padrão.
 
 **Quando é atualizado**
 
-Seu script é executado após cada nova mensagem do assistente, após `/compact` terminar, quando o modo de permissão muda ou quando o modo vim alterna. As atualizações são debounced em 300ms, significando que mudanças rápidas são agrupadas e seu script é executado uma vez que as coisas se estabilizam. Se uma nova atualização for acionada enquanto seu script ainda está em execução, a execução em andamento é cancelada. Se você editar seu script, as alterações não aparecerão até que sua próxima interação com o Claude Code acione uma atualização.
+Seu script é executado uma vez quando uma sessão inicia, incluindo quando você retoma uma. Depois disso, ele é executado novamente quando:
 
-Estes gatilhos podem ficar silenciosos quando a sessão principal está ociosa, por exemplo enquanto um coordenador aguarda subagentes em segundo plano. Para manter segmentos baseados em tempo ou de origem externa atualizados durante períodos ociosos, defina [`refreshInterval`](#manually-configure-a-status-line) para também executar novamente o comando em um temporizador fixo.
+* Uma nova mensagem do assistente chega
+* `/compact` termina
+* O modo de permissão muda
+* O modo Vim alterna
+* Você altera o `command` nas suas configurações de `statusLine`
+* Um temporizador [`refreshInterval`](#manually-configure-a-status-line) decorre, se você definir um
+* Uma janela de [limite de taxa](#rate-limit-usage) nos dados que seu script recebeu por último atinge seu tempo `resets_at`
+* Um [cache de prompt](#prompt-cache-fields) aquecido nos dados que seu script recebeu por último atinge seu tempo `expires_at`
+
+O Claude Code debounce as atualizações em 300ms, portanto mudanças rápidas são agrupadas e seu script é executado uma vez após as mudanças pararem. Uma alteração no próprio `command` ignora o debounce: o Claude Code executa o novo comando imediatamente. Se uma nova atualização for acionada enquanto seu script ainda está em execução, o Claude Code cancela o script em andamento. Se você editar seu script, as alterações aparecem na próxima vez que um gatilho de atualização o re-executa.
+
+Os gatilhos acionados por eventos podem ficar silenciosos quando a sessão principal está ociosa, por exemplo enquanto um coordenador aguarda subagentes em segundo plano. Para manter segmentos baseados em tempo ou de origem externa atualizados durante períodos ociosos, defina [`refreshInterval`](#manually-configure-a-status-line) para também re-executar o comando em um temporizador fixo.
 
 **O que seu script pode exibir**
 
@@ -160,7 +173,7 @@ Estes gatilhos podem ficar silenciosos quando a sessão principal está ociosa, 
 
 **Dimensionando a saída para o terminal**
 
-O Claude Code captura a saída do seu script em vez de conectá-la diretamente ao terminal, portanto `tput cols` e a detecção de largura em nível de linguagem não podem ler o tamanho do terminal de dentro do script. Leia as variáveis de ambiente `COLUMNS` e `LINES` em vez disso. O Claude Code define estas variáveis para as dimensões atuais do terminal antes de executar seu script. Requer Claude Code v2.1.153 ou posterior.
+O Claude Code captura a saída do seu script em vez de conectá-la diretamente ao terminal, portanto `tput cols` e a detecção de largura em nível de linguagem não podem ler o tamanho do terminal de dentro do script. Leia as variáveis de ambiente `COLUMNS` e `LINES` em vez disso. O Claude Code define estas variáveis para as dimensões atuais do terminal antes de executar seu script.
 
 <Note>A linha de status é executada localmente e não consome tokens de API. Ela se oculta temporariamente durante certas interações da interface, incluindo sugestões de preenchimento automático, o menu de ajuda e prompts de permissão.</Note>
 
@@ -170,43 +183,47 @@ O Claude Code captura a saída do seu script em vez de conectá-la diretamente a
 
 O Claude Code envia os seguintes campos JSON para seu script via stdin:
 
-| Campo                                                                            | Descrição                                                                                                                                                                                                                                                                                              |
-| -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `model.id`, `model.display_name`                                                 | Identificador do modelo atual e nome de exibição                                                                                                                                                                                                                                                       |
-| `cwd`, `workspace.current_dir`                                                   | Diretório de trabalho atual. Ambos os campos contêm o mesmo valor; `workspace.current_dir` é preferido para consistência com `workspace.project_dir`.                                                                                                                                                  |
-| `workspace.project_dir`                                                          | Diretório onde o Claude Code foi iniciado, que pode diferir de `cwd` se o diretório de trabalho mudar durante uma sessão                                                                                                                                                                               |
-| `workspace.added_dirs`                                                           | Diretórios adicionais adicionados via `/add-dir` ou `--add-dir`. Array vazio se nenhum foi adicionado                                                                                                                                                                                                  |
-| `workspace.git_worktree`                                                         | Nome da git worktree quando o diretório atual está dentro de uma worktree vinculada criada com `git worktree add`. Ausente na worktree principal. Preenchido para qualquer git worktree, diferentemente de `worktree.*` que se aplica apenas a sessões `--worktree`                                    |
-| `workspace.repo.host`, `workspace.repo.owner`, `workspace.repo.name`             | Identidade do repositório analisada a partir do remote `origin`, por exemplo `"github.com"`, `"anthropics"`, `"claude-code"`. Ausente fora de um repositório git ou quando nenhum remote `origin` está configurado                                                                                     |
-| `cost.total_cost_usd`                                                            | Custo total estimado da sessão em USD, calculado no lado do cliente. Pode diferir de sua fatura real                                                                                                                                                                                                   |
-| `cost.total_duration_ms`                                                         | Tempo total decorrido desde o início da sessão, em milissegundos                                                                                                                                                                                                                                       |
-| `cost.total_api_duration_ms`                                                     | Tempo total gasto aguardando respostas de API em milissegundos                                                                                                                                                                                                                                         |
-| `cost.total_lines_added`, `cost.total_lines_removed`                             | Linhas de código alteradas                                                                                                                                                                                                                                                                             |
-| `context_window.total_input_tokens`, `context_window.total_output_tokens`        | Contagens de tokens atualmente na janela de contexto, da resposta de API mais recente. A entrada inclui leituras e escritas de cache. Antes da v2.1.132, estas eram totais cumulativos de sessão                                                                                                       |
-| `context_window.context_window_size`                                             | Tamanho máximo da janela de contexto em tokens. 200000 por padrão, ou 1000000 para modelos com contexto estendido.                                                                                                                                                                                     |
-| `context_window.used_percentage`                                                 | Porcentagem pré-calculada da janela de contexto usada                                                                                                                                                                                                                                                  |
-| `context_window.remaining_percentage`                                            | Porcentagem pré-calculada da janela de contexto restante                                                                                                                                                                                                                                               |
-| `context_window.current_usage`                                                   | Contagens de tokens da última chamada de API, descritas em [campos de janela de contexto](#context-window-fields)                                                                                                                                                                                      |
-| `exceeds_200k_tokens`                                                            | Se a contagem total de tokens (tokens de entrada, cache e saída combinados) da resposta de API mais recente excede 200k. Este é um limite fixo independentemente do tamanho real da janela de contexto.                                                                                                |
-| `effort.level`                                                                   | Nível de esforço de raciocínio atual (`low`, `medium`, `high`, `xhigh` ou `max`). Reflete o valor da sessão em tempo real, incluindo mudanças de `/effort` durante a sessão. Ultracode não é um nível distinto e relata como `xhigh`. Ausente quando o modelo atual não suporta o parâmetro de esforço |
-| `thinking.enabled`                                                               | Se o pensamento estendido está habilitado para a sessão                                                                                                                                                                                                                                                |
-| `rate_limits.five_hour.used_percentage`, `rate_limits.seven_day.used_percentage` | Porcentagem do limite de taxa de 5 horas ou 7 dias consumida, de 0 a 100                                                                                                                                                                                                                               |
-| `rate_limits.five_hour.resets_at`, `rate_limits.seven_day.resets_at`             | Segundos de época Unix quando a janela de limite de taxa de 5 horas ou 7 dias é redefinida                                                                                                                                                                                                             |
-| `session_id`                                                                     | Identificador único de sessão                                                                                                                                                                                                                                                                          |
-| `session_name`                                                                   | Nome de sessão personalizado definido com a flag `--name` ou `/rename`. Ausente se nenhum nome personalizado foi definido                                                                                                                                                                              |
-| `prompt_id`                                                                      | UUID identificando o prompt do usuário sendo processado no momento. Corresponde ao atributo [`prompt.id` em eventos OpenTelemetry](/docs/pt/monitoring-usage#event-correlation-attributes). Ausente até a primeira entrada do usuário. Requer Claude Code v2.1.196 ou posterior                             |
-| `transcript_path`                                                                | Caminho para o arquivo de transcrição de conversa                                                                                                                                                                                                                                                      |
-| `version`                                                                        | Versão do Claude Code                                                                                                                                                                                                                                                                                  |
-| `output_style.name`                                                              | Nome do estilo de saída atual                                                                                                                                                                                                                                                                          |
-| `vim.mode`                                                                       | Modo vim atual (`NORMAL`, `INSERT`, `VISUAL` ou `VISUAL LINE`) quando [modo vim](/docs/pt/interactive-mode#vim-editor-mode) está habilitado                                                                                                                                                                 |
-| `agent.name`                                                                     | Nome do agente ao executar com a flag `--agent` ou configurações de agente configuradas                                                                                                                                                                                                                |
-| `pr.number`, `pr.url`                                                            | Solicitação de pull aberta para o branch atual. Espelha o badge de PR na barra de status inferior. Ausente até que um PR seja encontrado, quando não em um repositório git, ou uma vez que o PR seja mesclado ou fechado                                                                               |
-| `pr.review_state`                                                                | Status de revisão do PR aberto: `approved`, `pending`, `changes_requested` ou `draft`. Pode estar independentemente ausente mesmo quando `pr` está presente                                                                                                                                            |
-| `worktree.name`                                                                  | Nome da worktree ativa. Presente apenas durante sessões `--worktree`                                                                                                                                                                                                                                   |
-| `worktree.path`                                                                  | Caminho absoluto para o diretório da worktree                                                                                                                                                                                                                                                          |
-| `worktree.branch`                                                                | Nome da ramificação git para a worktree (por exemplo, `"worktree-my-feature"`). Ausente para worktrees baseadas em hook                                                                                                                                                                                |
-| `worktree.original_cwd`                                                          | O diretório em que o Claude estava antes de entrar na worktree                                                                                                                                                                                                                                         |
-| `worktree.original_branch`                                                       | Ramificação git verificada antes de entrar na worktree. Ausente para worktrees baseadas em hook                                                                                                                                                                                                        |
+| Campo                                                                            | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `model.id`, `model.display_name`                                                 | Identificador do modelo atual e nome de exibição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `cwd`, `workspace.current_dir`                                                   | Diretório de trabalho atual. Ambos os campos contêm o mesmo valor; `workspace.current_dir` é preferido para consistência com `workspace.project_dir`.                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `workspace.project_dir`                                                          | Diretório onde o Claude Code foi iniciado, que pode diferir de `cwd` se o diretório de trabalho mudar durante uma sessão                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `workspace.added_dirs`                                                           | Diretórios adicionais adicionados via `/add-dir` ou `--add-dir`. Array vazio se nenhum foi adicionado                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `workspace.git_worktree`                                                         | Nome da git worktree quando o diretório atual está dentro de uma worktree vinculada criada com `git worktree add`. Ausente na worktree principal. Preenchido para qualquer git worktree, diferentemente de `worktree.*`, que está presente apenas enquanto a sessão está em uma [sessão de worktree](/docs/pt/worktrees)                                                                                                                                                                                                                                                                  |
+| `workspace.repo.host`, `workspace.repo.owner`, `workspace.repo.name`             | Identidade do repositório analisada a partir do remote `origin`, por exemplo, `"github.com"`, `"anthropics"`, `"claude-code"`. Ausente fora de um repositório git ou quando nenhum remote `origin` está configurado. Para um projeto gitlab.com aninhado em subgrupos, `owner` é o caminho completo do namespace com barras, como `"group/subgroup"`. Antes da v2.1.260, `workspace.repo` estava ausente para esses projetos                                                                                                                                                         |
+| `cost.total_cost_usd`                                                            | Custo total estimado da sessão em USD, calculado no lado do cliente ao preço de lista, a menos que uma tabela [`modelPricing`](/docs/pt/settings-reference#modelpricing) esteja em vigor. Pode diferir de sua fatura real. Redefine para \$0 quando `/clear` inicia uma nova sessão. Antes da v2.1.211, o total era mantido após `/clear`                                                                                                                                                                                                                                                 |
+| `cost.total_duration_ms`                                                         | Tempo total decorrido desde o início da sessão, em milissegundos. Acumula entre retomadas e não inclui tempo enquanto a sessão não está em execução                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `cost.total_api_duration_ms`                                                     | Tempo total gasto aguardando respostas de API em milissegundos                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `cost.total_lines_added`, `cost.total_lines_removed`                             | Linhas de código alteradas                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| `context_window.total_input_tokens`, `context_window.total_output_tokens`        | Contagens de tokens atualmente na janela de contexto, da resposta de API mais recente. A entrada inclui leituras e escritas de cache                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `context_window.context_window_size`                                             | Tamanho máximo da janela de contexto em tokens. 200000 por padrão, ou 1000000 para modelos com contexto estendido.                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| `context_window.used_percentage`                                                 | Porcentagem pré-calculada da janela de contexto usada                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `context_window.remaining_percentage`                                            | Porcentagem pré-calculada da janela de contexto restante                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `context_window.current_usage`                                                   | Contagens de tokens da última chamada de API, descritas em [campos de janela de contexto](#context-window-fields)                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `exceeds_200k_tokens`                                                            | Se a contagem total de tokens (tokens de entrada, cache e saída combinados) da resposta de API mais recente excede 200k. Este é um limite fixo independentemente do tamanho real da janela de contexto.                                                                                                                                                                                                                                                                                                                                                                              |
+| `fast_mode`                                                                      | Se o [modo rápido](/docs/pt/fast-mode) está habilitado para a sessão                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `effort.level`                                                                   | Nível de esforço de raciocínio atual (`low`, `medium`, `high`, `xhigh` ou `max`). Reflete o valor da sessão em tempo real, incluindo mudanças de `/effort` durante a sessão. Ultracode não é um nível distinto e relata como `xhigh`. Ausente quando o modelo atual não suporta o parâmetro de esforço                                                                                                                                                                                                                                                                               |
+| `thinking.enabled`                                                               | Se o pensamento estendido está habilitado para a sessão                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `rate_limits.five_hour.used_percentage`, `rate_limits.seven_day.used_percentage` | Porcentagem do limite de taxa de 5 horas ou 7 dias consumida, de 0 a 100                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `rate_limits.five_hour.resets_at`, `rate_limits.seven_day.resets_at`             | Segundos de época Unix quando a janela de limite de taxa de 5 horas ou 7 dias é redefinida                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| `rate_limits.spend_limit.used_percentage`, `rate_limits.spend_limit.resets_at`   | Atrás de um [gateway de aplicativos Claude](/docs/pt/claude-apps-gateway-spend-limits#usage-warnings-in-claude-code), a porcentagem usada do limite de gastos que se aplica a você, e os segundos de época Unix quando seu período é redefinido. A porcentagem varia de 0 a 100, ou acima de 100 uma vez que você excede o limite. Requer Claude Code v2.1.251 ou posterior                                                                                                                                                                                                               |
+| `prompt_cache`                                                                   | As estatísticas de [cache de prompt](/docs/pt/prompt-caching) da sessão para a conversa principal: taxa de acerto, falhas e se o cache está aquecido. Consulte [campos de cache de prompt](#prompt-cache-fields) para cada campo. Ausente até a primeira resposta de API da conversa principal. Requer Claude Code v2.1.251 ou posterior                                                                                                                                                                                                                                                  |
+| `session_id`                                                                     | Identificador único de sessão                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `session_name`                                                                   | Nome de sessão. Usa o nome personalizado definido com a flag `--name` ou `/rename` quando um existe, caso contrário, o título de sessão gerado por IA. O [nome de exibição padrão](/docs/pt/sessions#name-your-sessions), como `my-app-3f`, não popula este campo. Ausente quando a sessão não tem um nome personalizado nem um título gerado por IA                                                                                                                                                                                                                                      |
+| `prompt_id`                                                                      | UUID identificando o prompt do usuário sendo processado no momento. Corresponde ao atributo [`prompt.id` em eventos OpenTelemetry](/docs/pt/monitoring-usage#event-correlation-attributes). Ausente até a primeira entrada do usuário. Requer Claude Code v2.1.196 ou posterior                                                                                                                                                                                                                                                                                                           |
+| `transcript_path`                                                                | Caminho para o arquivo de transcrição de conversa                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `version`                                                                        | Versão do Claude Code                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `output_style.name`                                                              | Nome do estilo de saída atual                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `vim.mode`                                                                       | Modo vim atual (`NORMAL`, `INSERT`, `VISUAL` ou `VISUAL LINE`) quando [modo vim](/docs/pt/interactive-mode#vim-editor-mode) está habilitado                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| `agent.name`                                                                     | Nome do agente ao executar com a flag `--agent` ou configurações de agente configuradas                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `pr.number`, `pr.url`                                                            | Solicitação de pull aberta para o branch atual. Espelha o badge de PR na barra de rodapé. Em um repositório com um remote GitLab, o Claude Code preenche esses campos a partir da [solicitação de mesclagem](/docs/pt/interactive-mode#gitlab-merge-requests) aberta do branch, então `pr.number` é o número da solicitação de mesclagem. Os dados de solicitação de mesclagem requerem Claude Code v2.1.234 ou posterior. Ausente quando não em um repositório git, até que uma solicitação de pull ou solicitação de mesclagem seja encontrada, ou uma vez que seja mesclada ou fechada |
+| `pr.review_state`                                                                | Status de revisão do PR aberto: `approved`, `pending`, `changes_requested` ou `draft`. Pode estar independentemente ausente mesmo quando `pr` está presente                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `pr.kind`                                                                        | `mr` quando `pr` descreve uma [solicitação de mesclagem GitLab](/docs/pt/interactive-mode#gitlab-merge-requests). Ausente para solicitações de pull do GitHub, então scripts escritos antes deste campo continuam funcionando. Para uma solicitação de mesclagem, o Claude Code define `review_state` para `approved` quando o GitLab relata que é mesclável, `pending` para qualquer outro estado aberto, e `draft` para um rascunho. Requer Claude Code v2.1.234 ou posterior                                                                                                           |
+| `worktree.name`                                                                  | Nome da worktree ativa. Presente apenas enquanto a sessão está em uma [sessão de worktree](/docs/pt/worktrees)                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| `worktree.path`                                                                  | Caminho absoluto para o diretório da worktree                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `worktree.branch`                                                                | Nome da ramificação git para a worktree (por exemplo, `"worktree-my-feature"`). Ausente para worktrees baseadas em hook                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `worktree.original_cwd`                                                          | O diretório em que o Claude estava antes de entrar na worktree                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `worktree.original_branch`                                                       | Ramificação git verificada antes de entrar na worktree. Ausente para worktrees baseadas em hook                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 
 <Accordion title="Esquema JSON completo">
   Seu comando de linha de status recebe esta estrutura JSON via stdin:
@@ -219,7 +236,7 @@ O Claude Code envia os seguintes campos JSON para seu script via stdin:
     "prompt_id": "550e8400-e29b-41d4-a716-446655440000",
     "transcript_path": "/path/to/transcript.jsonl",
     "model": {
-      "id": "claude-opus-4-8",
+      "id": "claude-opus-5-5",
       "display_name": "Opus"
     },
     "workspace": {
@@ -258,6 +275,29 @@ O Claude Code envia os seguintes campos JSON para seu script via stdin:
       }
     },
     "exceeds_200k_tokens": false,
+    "prompt_cache": {
+      "warm": true,
+      "caching_observed": true,
+      "ttl": "1h",
+      "expires_at": 1738429200,
+      "requests": 14,
+      "misses": 2,
+      "expected_rebuilds": 1,
+      "hit_ratio": 0.91,
+      "cache_write_tokens": 352000,
+      "miss_recache_tokens": 310200,
+      "last_miss_at": 1738425230,
+      "last_miss_cause": {
+        "causes": ["tools_changed"],
+        "tools_added": 2,
+        "tools_removed": 0
+      },
+      "miss_causes": {
+        "tools_changed": 2
+      },
+      "recache_tokens_if_cold": 45000
+    },
+    "fast_mode": false,
     "effort": {
       "level": "high"
     },
@@ -272,6 +312,10 @@ O Claude Code envia os seguintes campos JSON para seu script via stdin:
       "seven_day": {
         "used_percentage": 41.2,
         "resets_at": 1738857600
+      },
+      "spend_limit": {
+        "used_percentage": 62.8,
+        "resets_at": 1740787200
       }
     },
     "vim": {
@@ -297,16 +341,17 @@ O Claude Code envia os seguintes campos JSON para seu script via stdin:
 
   **Campos que podem estar ausentes** (não presentes em JSON):
 
-  * `session_name`: aparece apenas quando um nome personalizado foi definido com `--name` ou `/rename`
+  * `session_name`: aparece quando um nome personalizado foi definido com `--name` ou `/rename`, ou uma vez que um título de sessão gerado por IA existe. O nome de exibição padrão, como `my-app-3f`, não popula este campo
   * `prompt_id`: aparece apenas após a primeira entrada do usuário
   * `workspace.git_worktree`: aparece apenas quando o diretório atual está dentro de uma git worktree vinculada
   * `workspace.repo`: aparece apenas dentro de um repositório git com um remote `origin` configurado
   * `effort`: aparece apenas quando o modelo atual suporta o parâmetro de esforço de raciocínio
   * `vim`: aparece apenas quando o modo vim está habilitado
   * `agent`: aparece apenas ao executar com a flag `--agent` ou configurações de agente configuradas
-  * `pr`: aparece apenas enquanto um PR aberto é encontrado para o branch atual, e é removido uma vez que o PR seja mesclado ou fechado. `pr.review_state` pode estar independentemente ausente
-  * `worktree`: aparece apenas durante sessões `--worktree`. Quando presente, `branch` e `original_branch` também podem estar ausentes para worktrees baseadas em hook
-  * `rate_limits`: aparece apenas para assinantes Claude.ai (Pro/Max) após a primeira resposta de API na sessão. Cada janela (`five_hour`, `seven_day`) pode estar independentemente ausente. Use `jq -r '.rate_limits.five_hour.used_percentage // empty'` para lidar com ausência graciosamente.
+  * `pr`: aparece apenas enquanto um PR aberto ou solicitação de mesclagem GitLab é encontrado para o branch atual, e é removido uma vez que seja mesclado ou fechado. `pr.review_state` e `pr.kind` podem estar independentemente ausentes
+  * `worktree`: aparece apenas enquanto a sessão está em uma [sessão de worktree](/docs/pt/worktrees). Quando presente, `branch` e `original_branch` também podem estar ausentes para worktrees baseadas em hook
+  * `rate_limits`: aparece apenas para assinantes Claude.ai Pro e Max, ou atrás de um gateway de aplicativos Claude que define um limite de gastos para você, e apenas após a primeira resposta de API na sessão. Cada janela (`five_hour`, `seven_day`, `spend_limit`) pode estar independentemente ausente, e o Claude Code remove uma janela uma vez que seu tempo `resets_at` passa. Use `jq -r '.rate_limits.five_hour.used_percentage // empty'` para lidar com ausência graciosamente.
+  * `prompt_cache`: aparece após a primeira resposta de API da conversa principal. Consulte [campos de cache de prompt](#prompt-cache-fields)
 
   **Campos que podem ser `null`**:
 
@@ -320,7 +365,7 @@ O Claude Code envia os seguintes campos JSON para seu script via stdin:
   Campos de janela de contexto
 </h3>
 
-O objeto `context_window` descreve a janela de contexto em tempo real da resposta de API mais recente. A partir da v2.1.132, `total_input_tokens` e `total_output_tokens` refletem o uso de contexto atual, não totais cumulativos de sessão.
+O objeto `context_window` descreve a janela de contexto em tempo real da resposta de API mais recente.
 
 * **Totais combinados** (`total_input_tokens`, `total_output_tokens`): tokens atualmente na janela de contexto. `total_input_tokens` é a soma de `input_tokens`, `cache_creation_input_tokens` e `cache_read_input_tokens`; `total_output_tokens` são os tokens de saída da resposta mais recente. Ambos são `0` antes da primeira resposta de API.
 * **Uso por componente** (`current_usage`): as mesmas contagens de tokens divididas por categoria. Use isto quando você precisar de acertos de cache separados da entrada fresca.
@@ -340,6 +385,46 @@ Se você calcular a porcentagem de contexto manualmente a partir de `current_usa
 
 O objeto `current_usage` é `null` antes da primeira chamada de API em uma sessão, e novamente imediatamente após `/compact` até que a próxima chamada de API a repopule.
 
+<h3 id="prompt-cache-fields">
+  Campos de cache de prompt
+</h3>
+
+O objeto `prompt_cache` resume como a conversa principal da sessão está usando o [cache de prompt](/docs/pt/prompt-caching). O Claude Code o calcula a partir das contagens de tokens de cache nas respostas da API, então funciona em todos os provedores.
+
+O objeto aparece após a primeira resposta de API da conversa principal. O Claude Code não conta solicitações de subagentos nessas estatísticas. Requer Claude Code v2.1.251 ou posterior.
+
+A tabela lista cada campo com seu significado. Os timestamps são segundos de época Unix, a mesma unidade que `rate_limits.*.resets_at`. Uma linha de status curta geralmente mostra um ou dois destes; `warm` e `hit_ratio` resumem o estado do cache mais diretamente.
+
+| Campo                    | Descrição                                                                                                                                                                                                                                                        |
+| ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `warm`                   | Se o prefixo em cache ainda está dentro de seu TTL. `false` quando a última resposta não relatou tokens de cache, mesmo enquanto `caching_observed` é `true`                                                                                                     |
+| `caching_observed`       | Se alguma resposta nesta sessão relatou tokens de cache. `false` significa que o cache de prompt está desativado, ou seu provedor ou gateway não o relata                                                                                                        |
+| `ttl`                    | [Tempo de vida do cache](/docs/pt/prompt-caching#cache-lifetime) do prefixo em cache atual: `"5m"` ou `"1h"`                                                                                                                                                          |
+| `expires_at`             | Quando o prefixo em cache sai de seu TTL e fica frio, em segundos de época. `null` quando a última resposta não relatou tokens de cache                                                                                                                          |
+| `requests`               | Solicitações de API registradas para a conversa principal nesta sessão                                                                                                                                                                                           |
+| `misses`                 | Solicitações que reprocessaram conteúdo que o cache já continha: mais de 5% e pelo menos 2.000 tokens do que a solicitação poderia ter lido do cache, sem compactação ou limpeza de resultado de ferramenta para explicar a deficiência nas leituras de cache    |
+| `expected_rebuilds`      | Reconstruções de cache que seguiram uma compactação ou uma limpeza de resultados de ferramenta antigos                                                                                                                                                           |
+| `hit_ratio`              | Tokens de leitura de cache como uma fração de todos os tokens de entrada nesta sessão, de 0 a 1. O denominador conta leituras de cache, escritas de cache e entrada não armazenada em cache. `null` enquanto essas contagens são todas zero                      |
+| `cache_write_tokens`     | Todos os tokens escritos no cache nesta sessão, a escrita inicial da primeira solicitação incluída                                                                                                                                                               |
+| `miss_recache_tokens`    | Tokens escritos no cache pelas solicitações contadas como falhas                                                                                                                                                                                                 |
+| `last_miss_at`           | Quando a última falha aconteceu, em segundos de época. `null` enquanto a sessão não tem falhas                                                                                                                                                                   |
+| `last_miss_cause`        | O que o Claude Code identificou como a provável causa da última falha, descrito em [Causa da última falha](#last-miss-cause). Requer Claude Code v2.1.260 ou posterior                                                                                           |
+| `miss_causes`            | Quantas das falhas diagnosticadas desta sessão tiveram cada causa, indexadas pelos mesmos nomes de causa que `last_miss_cause`. Requer Claude Code v2.1.260 ou posterior                                                                                         |
+| `recache_tokens_if_cold` | Tokens que a próxima solicitação armazena em cache novamente se o cache tiver ficado frio até então. `null` logo após uma compactação ou uma limpeza de resultados de ferramenta antigos, até que a próxima solicitação registre o tamanho da conversa reescrita |
+
+O Claude Code mostra as mesmas estatísticas no terminal, na linha [`/usage` do comando `Prompt cache (main)`](/docs/pt/costs#prompt-cache-statistics).
+
+<h4 id="last-miss-cause">
+  Causa da última falha
+</h4>
+
+O objeto `last_miss_cause` relata o que o Claude Code identificou como a provável causa da falha mais recente. Seu array `causes` contém um ou mais nomes de causa, como `tools_changed`, `system_prompt_changed`, `ttl_expired_5m` ou `likely_server_side`. O objeto é `null` até a primeira falha da sessão, e novamente sempre que o Claude Code não conseguir identificar uma causa para a falha mais recente. Requer Claude Code v2.1.260 ou posterior.
+
+Duas causas adicionam contagens ao objeto:
+
+* `tools_added` e `tools_removed`: com `tools_changed`, quantas ferramentas foram adicionadas ou removidas da solicitação
+* `system_char_delta`: com `system_prompt_changed`, a mudança no comprimento do prompt do sistema, em caracteres
+
 <h2 id="examples">
   Exemplos
 </h2>
@@ -350,7 +435,7 @@ Estes exemplos mostram padrões comuns de linha de status. Para usar qualquer ex
 2. Torne-o executável: `chmod +x ~/.claude/statusline.sh`
 3. Adicione o caminho às suas [configurações](#manually-configure-a-status-line)
 
-Os exemplos de Bash usam [`jq`](https://jqlang.github.io/jq/) para analisar JSON. Python e Node.js têm análise JSON integrada.
+Os exemplos de Bash usam [`jq`](https://jqlang.org/) para analisar JSON. Python e Node.js têm análise JSON integrada.
 
 <h3 id="context-window-usage">
   Uso da janela de contexto
@@ -584,7 +669,7 @@ Cada script formata o custo como moeda e converte milissegundos em minutos e seg
   Exibir múltiplas linhas
 </h3>
 
-Seu script pode exibir múltiplas linhas para criar uma exibição mais rica. Cada instrução `echo` produz uma linha separada na área de status.
+Seu script pode exibir múltiplas linhas para criar uma exibição mais rica.
 
 <Frame>
   <img src="https://mintcdn.com/claude-code/nibzesLaJVh4ydOq/images/statusline-multiline.png?fit=max&auto=format&n=nibzesLaJVh4ydOq&q=85&s=60f11387658acc9ff75158ae85f2ac87" alt="Uma linha de status de múltiplas linhas mostrando nome do modelo, diretório, ramificação git na primeira linha, e uma barra de progresso de uso de contexto com custo e duração na segunda linha" width="776" height="212" data-path="images/statusline-multiline.png" />
@@ -693,7 +778,7 @@ Este exemplo combina várias técnicas: cores baseadas em limite (verde abaixo d
   Links clicáveis
 </h3>
 
-Este exemplo cria um link clicável para seu repositório GitHub. Ele lê a URL remota do git, converte o formato SSH para HTTPS com `sed` e envolve o nome do repositório em códigos de escape OSC 8. Mantenha Cmd (macOS) ou Ctrl (Windows/Linux) pressionado e clique para abrir o link em seu navegador.
+Este exemplo cria um link clicável para seu repositório GitHub. Mantenha Cmd (macOS) ou Ctrl (Windows/Linux) pressionado e clique para abrir o link em seu navegador.
 
 <Frame>
   <img src="https://mintcdn.com/claude-code/nibzesLaJVh4ydOq/images/statusline-links.png?fit=max&auto=format&n=nibzesLaJVh4ydOq&q=85&s=4bcc6e7deb7cf52f41ab85a219b52661" alt="Uma linha de status mostrando um link clicável para um repositório GitHub" width="726" height="198" data-path="images/statusline-links.png" />
@@ -775,9 +860,11 @@ Cada script obtém a URL remota do git, converte o formato SSH para HTTPS e envo
   Uso de limite de taxa
 </h3>
 
-Exiba o uso do limite de taxa de assinatura Claude.ai na linha de status. O objeto `rate_limits` contém `five_hour` (janela móvel de 5 horas) e `seven_day` (janelas semanais). Cada janela fornece `used_percentage` (0-100) e `resets_at` (segundos de época Unix quando a janela é redefinida).
+Exiba o uso do limite de taxa de assinatura Claude.ai na linha de status. O objeto `rate_limits` contém uma janela móvel `five_hour` e uma janela semanal `seven_day`. Cada janela fornece `used_percentage`, de 0 a 100, e `resets_at`, os segundos de época Unix quando a janela é redefinida.
 
-Este campo está presente apenas para assinantes Claude.ai (Pro/Max) após a primeira resposta de API. Cada script trata o campo ausente graciosamente:
+Atrás de um gateway de aplicativos Claude com limites de gastos, `rate_limits` carrega `spend_limit` com os mesmos dois campos para o limite de gastos que se aplica a você, exceto que seu `used_percentage` pode ultrapassar 100 uma vez que você exceda o limite. Requer Claude Code v2.1.251 ou posterior.
+
+O objeto `rate_limits` está presente apenas para assinantes Claude.ai Pro e Max, ou atrás de um gateway de aplicativos Claude com limites de gastos, e apenas após a primeira resposta de API. Cada script trata o campo ausente graciosamente:
 
 <CodeGroup>
   ```bash Bash theme={null}
@@ -863,8 +950,11 @@ Cada script verifica se o arquivo de cache está ausente ou mais antigo que 5 se
 
   cache_is_stale() {
       [ ! -f "$CACHE_FILE" ] || \
-      # stat -f %m is macOS, stat -c %Y is Linux
-      [ $(($(date +%s) - $(stat -f %m "$CACHE_FILE" 2>/dev/null || stat -c %Y "$CACHE_FILE" 2>/dev/null || echo 0))) -gt $CACHE_MAX_AGE ]
+      # stat -c %Y (Linux) or stat -f %m (macOS) prints the file's last-modified
+      # time. The Linux form must run first: on Linux, the macOS form prints a
+      # filesystem report to stdout before failing, and that output would be
+      # captured by the command substitution and break the arithmetic.
+      [ $(($(date +%s) - $(stat -c %Y "$CACHE_FILE" 2>/dev/null || stat -f %m "$CACHE_FILE" 2>/dev/null || echo 0))) -gt $CACHE_MAX_AGE ]
   }
 
   if cache_is_stale; then
@@ -1044,13 +1134,15 @@ A configuração `subagentStatusLine` renderiza um corpo de linha personalizado 
 }
 ```
 
-O comando é executado uma vez por tick de atualização com todas as linhas de subagente visíveis passadas como um único objeto JSON em stdin. A entrada inclui os [campos de hook base](/docs/pt/hooks#common-input-fields), um campo `columns` com a largura de linha utilizável e um array `tasks`. Cada tarefa tem `id`, `name`, `type`, `status`, `description`, `label`, `startTime`, `model`, `contextWindowSize`, `tokenCount`, `tokenSamples` e `cwd`.
+O comando é executado uma vez por tick de atualização com todas as linhas de subagente visíveis passadas como um único objeto JSON em stdin. A entrada inclui os [campos de hook base](/docs/pt/hooks#common-input-fields), um campo `columns` com a largura de linha utilizável e um array `tasks`. Cada tarefa tem `id`, `name`, `type`, `status`, `description`, `label`, `startTime`, `model`, `effort`, `contextWindowSize`, `tokenCount`, `tokenSamples` e `cwd`.
 
 O campo `model` por tarefa é o ID do modelo resolvido em que a tarefa é executada. `contextWindowSize` é a janela de contexto desse modelo em tokens, calculada da mesma forma que a `context_window.context_window_size` da linha de status principal, para que você possa renderizar uma porcentagem por linha a partir de `tokenCount`. Ambos os campos exigem Claude Code v2.1.205 ou posterior e são omitidos para uma tarefa cujo modelo ainda não foi resolvido.
 
+O campo `effort` por tarefa é o esforço de raciocínio definido para esse subagente, em seu [frontmatter de definição](/docs/pt/sub-agents#supported-frontmatter-fields) ou na invocação individual. O valor é um dos strings de nível de esforço `low`, `medium`, `high`, `xhigh` ou `max`, ou um orçamento de token numérico. O campo relata o valor configurado conforme escrito: se o modelo não suportar esse nível, o esforço que Claude Code realmente aplica pode ser diferente. O campo exige Claude Code v2.1.214 ou posterior e está ausente quando o subagente herda o nível de esforço da sessão.
+
 Escreva uma linha JSON para stdout por linha que você queira substituir, na forma `{"id": "<task id>", "content": "<row body>"}`. A string `content` é renderizada como está, incluindo cores ANSI e hiperlinks OSC 8. Omita o `id` de uma tarefa para manter a renderização padrão para essa linha; emita uma string `content` vazia para ocultá-la.
 
-Os mesmos portões de confiança e `disableAllHooks` que se aplicam a `statusLine` se aplicam aqui. Plugins podem enviar um `subagentStatusLine` padrão em seu [`settings.json`](/docs/pt/plugins-reference#standard-plugin-layout).
+Os mesmos portões de confiança, `disableAllHooks` e [`allowManagedHooksOnly`](/docs/pt/settings-reference#allowmanagedhooksonly) que se aplicam a `statusLine` se aplicam aqui. Plugins podem enviar um `subagentStatusLine` padrão em seu [`settings.json`](/docs/pt/plugins/manifest-reference#standard-layout), mas diferentemente de hooks, valores de plugin não são executados sob `allowManagedHooksOnly` mesmo quando o plugin é forçadamente ativado nas configurações gerenciadas `enabledPlugins`.
 
 <h2 id="tips">
   Dicas
@@ -1072,7 +1164,8 @@ Projetos comunitários como [ccstatusline](https://github.com/sirmalloc/ccstatus
 * Verifique se seu script produz saída para stdout, não stderr
 * Execute seu script manualmente para verificar se produz saída
 * No Windows com Git Bash instalado, barras invertidas no caminho `command` provavelmente estão sendo consumidas como caracteres de escape antes do script ser executado. Use barras normais no caminho. Veja [Configuração do Windows](#windows-configuration).
-* Se `disableAllHooks` estiver definido como `true` em suas configurações, a linha de status também será desabilitada. Remova esta configuração ou defina-a como `false` para reabilitar.
+* Se `disableAllHooks` estiver definido como `true` fora das configurações gerenciadas após a [precedência de configurações](/docs/pt/hooks#disable-or-remove-hooks) ser aplicada, o Claude Code executa apenas um `statusLine` das configurações gerenciadas, e sem um `statusLine` gerenciado a linha de status fica desabilitada. Remova a configuração ou defina-a como `false` no arquivo que a define para reabilitar. Veja [`disableAllHooks`](/docs/pt/settings-reference#disableallhooks).
+* Se sua organização define `allowManagedHooksOnly` nas configurações gerenciadas, sua linha de status personalizada desaparece sem aviso: você só pode obter uma linha de status de um valor `statusLine` nessas configurações gerenciadas. Veja [o que é executado sob `allowManagedHooksOnly`](/docs/pt/settings-reference#what-runs-under-allowmanagedhooksonly) para o comportamento completo, e pergunte ao seu administrador se essa configuração se aplica a você.
 * Execute `claude --debug` para registrar o código de saída e stderr da primeira invocação de linha de status em uma sessão
 * Peça ao Claude para ler seu arquivo de configurações e executar o comando `statusLine` diretamente para descobrir erros
 
@@ -1093,7 +1186,7 @@ Projetos comunitários como [ccstatusline](https://github.com/sirmalloc/ccstatus
 
 * Terminal.app não suporta links clicáveis
 
-* Se o texto do link aparecer mas não for clicável, o Claude Code pode não ter detectado suporte a hiperlink em seu terminal. Isto afeta comumente Windows Terminal e outros emuladores não na lista de detecção automática. Defina a variável de ambiente `FORCE_HYPERLINK` para substituir a detecção antes de iniciar o Claude Code:
+* Se o texto do link aparecer mas não for clicável, o Claude Code pode não ter detectado suporte a hiperlink em seu terminal. Defina a variável de ambiente `FORCE_HYPERLINK` para substituir a detecção antes de iniciar o Claude Code:
 
   ```bash theme={null}
   FORCE_HYPERLINK=1 claude
@@ -1117,8 +1210,8 @@ Projetos comunitários como [ccstatusline](https://github.com/sirmalloc/ccstatus
 
 **Confiança do espaço de trabalho necessária**
 
-* O comando de linha de status só é executado se você aceitou o diálogo de confiança do espaço de trabalho para o diretório atual. Como `statusLine` executa um comando de shell, ele requer a mesma aceitação de confiança que hooks e outras configurações que executam shell.
-* Se a confiança não for aceita, você verá a notificação `statusline skipped · restart to fix` em vez da saída da sua linha de status. Reinicie o Claude Code e aceite o prompt de confiança para habilitá-lo.
+* Como `statusLine` executa um comando de shell, o Claude Code o executa sob a mesma [regra de confiança do espaço de trabalho que hooks em arquivos de configurações](/docs/pt/permissions#what-runs-before-you-trust-a-folder). Aceitar o diálogo para a pasta, ou para um diretório pai cuja confiança se estende a ela, é suficiente.
+* Até então, a linha de status permanece em branco, e `claude --debug` registra `Status line command skipped: workspace trust not accepted`. Reinicie o Claude Code e aceite o diálogo de confiança para habilitá-lo.
 
 **Erros de script ou travamentos**
 
@@ -1129,6 +1222,8 @@ Projetos comunitários como [ccstatusline](https://github.com/sirmalloc/ccstatus
 
 **Notificações compartilham a linha de status**
 
-* Notificações do sistema como erros de servidor MCP e atualizações automáticas são exibidas no lado direito da mesma linha que sua linha de status. Notificações transitórias como o aviso de contexto baixo também circulam por esta área.
+Fora da [renderização em tela cheia](/docs/pt/fullscreen), o Claude Code mostra notificações na mesma linha que sua linha de status. Na renderização em tela cheia, o Claude Code oferece às notificações uma linha própria.
+
+* Notificações do sistema como erros de servidor MCP e atualizações automáticas são exibidas no lado direito da linha. Notificações transitórias como o aviso de contexto baixo também circulam por esta área.
 * Habilitar modo verbose adiciona um contador de tokens a esta área
 * Em terminais estreitos, essas notificações podem truncar sua saída de linha de status

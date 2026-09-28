@@ -4,51 +4,71 @@
 
 # Hosting the Agent SDK
 
-> Menerapkan Agent SDK dalam produksi: arsitektur subprocess, persistensi sesi, penskalaan, observabilitas, dan isolasi multi-tenant untuk Docker, Kubernetes, dan penyedia sandbox.
+> Terapkan Agent SDK dalam produksi: arsitektur subprocess, persistensi sesi, penskalaan, observabilitas, dan isolasi multi-tenant untuk Docker, Kubernetes, dan penyedia sandbox.
 
-Agent SDK menjalankan dan mengawasi subprocess `claude` CLI yang memiliki shell, direktori kerja, dan file sesi di disk. Menghosting ini tidak seperti menghosting pembungkus API stateless. Setiap agen yang berjalan adalah proses yang berumur panjang yang terikat pada status lokal, yang membentuk cara Anda mengalokasikan sumber daya, mempertahankan sesi, dan menskalakan di seluruh tenant.
+Agent SDK menjalankan dan mengawasi subprocess `claude` CLI yang memiliki shell, direktori kerja, dan file sesi di disk. Menghosting ini tidak seperti menghosting pembungkus API yang stateless. Setiap agen yang berjalan adalah proses yang berumur panjang yang terikat pada status lokal, yang membentuk cara Anda mengalokasikan sumber daya, mempertahankan sesi, dan menskalakan di seluruh tenant.
 
-Halaman ini mencakup self-hosting pada infrastruktur Anda sendiri: pahami [model subprocess](#the-subprocess-model), [pilih pola sesi](#choose-a-session-pattern), [sediakan kontainer](#provision-the-container), dan [tangani masalah produksi](#handle-production-concerns) seperti persistensi, observabilitas, autentikasi, dan isolasi multi-tenant. Untuk Dockerfile yang dapat digunakan dan manifes Kubernetes, lihat [hosting cookbook](https://github.com/anthropics/claude-cookbooks/tree/main/claude_agent_sdk/hosting).
+Halaman ini mencakup self-hosting pada infrastruktur Anda sendiri. Untuk Dockerfile yang dapat digunakan dan manifes Kubernetes, lihat [hosting cookbook](https://github.com/anthropics/claude-cookbooks/tree/main/claude_agent_sdk/hosting).
 
-Jika Anda tidak memerlukan kontrol infrastruktur, isolasi khusus, atau data plane Anda sendiri, pertimbangkan [Managed Agents](https://platform.claude.com/docs/id/managed-agents/overview) sebagai gantinya: REST API yang dihosting di mana Anthropic menjalankan agen dan sandbox, sehingga aplikasi Anda mengirim peristiwa dan streaming kembali hasil tanpa infrastruktur hosting untuk dioperasikan.
-
-<Info>
-  Untuk pengerasan keamanan di luar sandboxing dasar, termasuk kontrol jaringan, manajemen kredensial, dan opsi isolasi, lihat [Secure Deployment](/docs/id/agent-sdk/secure-deployment).
-</Info>
+Jika Anda tidak perlu menjalankan loop agen itu sendiri pada infrastruktur Anda sendiri, pertimbangkan [Managed Agents](https://platform.claude.com/docs/en/managed-agents/overview) sebagai gantinya. Anthropic menghosting loop agen, dan aplikasi Anda mengirim acara dan menerima hasil yang dialirkan melalui SDK klien atau REST API. Eksekusi alat berjalan di sandbox cloud yang dikelola Anthropic atau [sandbox yang dihosting sendiri](https://platform.claude.com/docs/en/managed-agents/self-hosted-sandboxes) pada infrastruktur Anda sendiri.
 
 <h2 id="the-subprocess-model">
   Model subprocess
 </h2>
 
-Setiap keputusan hosting di halaman ini mengikuti dari cara SDK menjalankan agen. Ketika kode Anda memanggil `query()`, SDK menjalankan proses CLI `claude` terpisah dan berkomunikasi dengannya melalui stdio. Subprocess tersebut memiliki shell, direktori kerja, dan transkrip sesi JSONL di disk lokal.
+Setiap keputusan hosting di halaman ini mengikuti dari cara SDK menjalankan agen. Ketika kode Anda memanggil `query()`, SDK menspawn proses CLI `claude` terpisah dan berkomunikasi dengannya melalui stdio. Subprocess tersebut memiliki shell, direktori kerja, dan transkrip sesi JSONL di disk lokal.
 
-<img src="https://mintcdn.com/claude-code/ikqp3_70mqIahteV/images/agent-sdk/hosting-subprocess.svg?fit=max&auto=format&n=ikqp3_70mqIahteV&q=85&s=9dac857ca9d3b1410c3734900c386004" alt="Request flow: client to your app, which spawns a claude CLI subprocess over stdio inside the container; the subprocess writes to local disk and calls api.anthropic.com over HTTPS" width="920" height="220" data-path="images/agent-sdk/hosting-subprocess.svg" />
+<img src="https://mintcdn.com/claude-code/ikqp3_70mqIahteV/images/agent-sdk/hosting-subprocess.svg?fit=max&auto=format&n=ikqp3_70mqIahteV&q=85&s=9dac857ca9d3b1410c3734900c386004" className="dark:hidden" alt="Alur permintaan: klien ke aplikasi Anda, yang menspawn subprocess CLI claude melalui stdio di dalam kontainer; subprocess menulis ke disk lokal dan memanggil api.anthropic.com melalui HTTPS" width="920" height="220" data-path="images/agent-sdk/hosting-subprocess.svg" />
 
-Satu sesi agen memetakan ke satu subprocess. Menjalankan N sesi bersamaan berarti N subprocess, masing-masing dengan pohon proses dan file transkrip sendiri. Secara default mereka semua mewarisi direktori kerja aplikasi Anda, jadi teruskan `cwd` pada setiap panggilan `query()` ketika sesi memerlukan sistem file terpisah:
+<img src="https://mintcdn.com/claude-code/_xqph1dUOslCOwsj/images/agent-sdk/hosting-subprocess-dark.svg?fit=max&auto=format&n=_xqph1dUOslCOwsj&q=85&s=3fdeff3d7f44b2b67762668acfbb25f5" className="hidden dark:block" alt="Alur permintaan: klien ke aplikasi Anda, yang menspawn subprocess CLI claude melalui stdio di dalam kontainer; subprocess menulis ke disk lokal dan memanggil api.anthropic.com melalui HTTPS" width="920" height="220" data-path="images/agent-sdk/hosting-subprocess-dark.svg" />
+
+Satu sesi agen memetakan ke satu subprocess. Menjalankan N sesi bersamaan berarti N subprocess, masing-masing dengan pohon proses dan file transkrip sendiri. Secara default, semuanya mewarisi direktori kerja aplikasi Anda. Ketika sesi membutuhkan sistem file terpisah, teruskan `cwd` yang berbeda dalam opsi panggilan `query()` setiap sesi:
 
 <CodeGroup>
   ```typescript TypeScript theme={null}
-  query({ prompt, options: { cwd: "/work/session-a" } })
+  import { query } from "@anthropic-ai/claude-agent-sdk";
+
+  for await (const message of query({
+    prompt: "Summarize the files in this directory",
+    options: { cwd: "/work/session-a" },
+  })) {
+    console.log(message);
+  }
   ```
 
   ```python Python theme={null}
-  query(prompt=prompt, options=ClaudeAgentOptions(cwd="/work/session-a"))
+  import asyncio
+
+  from claude_agent_sdk import ClaudeAgentOptions, query
+
+
+  async def main():
+      async for message in query(
+          prompt="Summarize the files in this directory",
+          options=ClaudeAgentOptions(cwd="/work/session-a"),
+      ):
+          print(message)
+
+
+  asyncio.run(main())
   ```
 </CodeGroup>
 
+Contoh TypeScript di halaman ini menggunakan `await` tingkat atas, jadi simpan sebagai file `.mts` atau atur `"type": "module"` di `package.json`.
+
 <h3 id="state-that-lives-on-local-disk">
-  State yang berada di disk lokal
+  State yang hidup di disk lokal
 </h3>
 
-Tiga jenis state agen berada di sistem file kontainer secara default. Tidak satupun dari mereka bertahan dari restart kontainer, scale-down, atau perpindahan ke node yang berbeda.
+Tiga jenis state agen hidup di sistem file kontainer secara default. Tidak satupun dari mereka yang bertahan dari restart kontainer, scale-down, atau perpindahan ke node yang berbeda.
 
-| State                       | Lokasi Default                                                                             |
-| --------------------------- | ------------------------------------------------------------------------------------------ |
-| Session transcripts         | `~/.claude/projects/`, atau direktori `projects/` di bawah `CLAUDE_CONFIG_DIR` jika diatur |
-| `CLAUDE.md` memory files    | `~/.claude/CLAUDE.md` untuk user tier dan direktori kerja sesi untuk project tier          |
-| Working-directory artifacts | Direktori kerja sesi                                                                       |
+| State                   | Lokasi Default                                                                             |
+| ----------------------- | ------------------------------------------------------------------------------------------ |
+| Transkrip sesi          | `~/.claude/projects/`, atau direktori `projects/` di bawah `CLAUDE_CONFIG_DIR` jika diatur |
+| File memori `CLAUDE.md` | `~/.claude/CLAUDE.md` untuk tier pengguna dan direktori kerja sesi untuk tier proyek       |
+| Artefak direktori kerja | Direktori kerja sesi                                                                       |
 
-Untuk mempertahankan transkrip di seluruh host, konfigurasikan adaptor [`SessionStore`](/docs/id/agent-sdk/session-storage). Memory files dan artefak direktori kerja lainnya memerlukan strategi penyimpanan mereka sendiri, seperti volume yang dipasang atau sinkronisasi object-store.
+Untuk mempertahankan transkrip di seluruh host, konfigurasikan adaptor [`SessionStore`](/docs/id/agent-sdk/session-storage). File memori dan artefak direktori kerja lainnya memerlukan strategi penyimpanan mereka sendiri, seperti volume yang dipasang atau sinkronisasi object-store.
 
 Untuk cara sesi, resumption, dan forking bekerja di tingkat API, lihat [Sessions](/docs/id/agent-sdk/sessions).
 
@@ -66,16 +86,38 @@ Buat kontainer untuk setiap tugas pengguna dan hancurkan ketika tugas selesai. T
 
 Contoh beban kerja termasuk investigasi dan perbaikan bug, ekstraksi faktur dan tanda terima, terjemahan dokumen, dan transformasi media.
 
-Kontainer menjalankan entrypoint satu kali yang memanggil SDK dan keluar. Contoh di bawah menunjukkan versi TypeScript minimal. Simpan sebagai `entrypoint.mts` atau atur `"type": "module"` di `package.json` sehingga `await` tingkat atas tersedia.
+Kontainer menjalankan entrypoint satu kali yang membaca tugas dari variabel lingkungan `TASK_PROMPT`, memanggil SDK, dan keluar.
 
-```typescript theme={null}
-import { query } from "@anthropic-ai/claude-agent-sdk";
+<CodeGroup>
+  ```typescript TypeScript theme={null}
+  import { query } from "@anthropic-ai/claude-agent-sdk";
 
-const prompt = process.env.TASK_PROMPT!;
-for await (const message of query({ prompt, options: { maxTurns: 20 } })) {
-  console.log(message);
-}
-```
+  const prompt = process.env.TASK_PROMPT!;
+  for await (const message of query({ prompt, options: { maxTurns: 20 } })) {
+    console.log(message);
+  }
+  ```
+
+  ```python Python theme={null}
+  import asyncio
+  import os
+
+  from claude_agent_sdk import ClaudeAgentOptions, query
+
+
+  async def main():
+      async for message in query(
+          prompt=os.environ["TASK_PROMPT"],
+          options=ClaudeAgentOptions(max_turns=20),
+      ):
+          print(message)
+
+
+  asyncio.run(main())
+  ```
+</CodeGroup>
+
+Skrip mencetak setiap pesan saat tiba, termasuk pesan hasil yang `subtype`-nya adalah `success` ketika tugas selesai dalam batas giliran. Jika tugas mencapai batas 20 giliran, `subtype` pesan hasil adalah `error_max_turns` dan panggilan `query()` menimbulkan kesalahan setelah menghasilkannya, jadi bungkus loop dalam blok try jika kontainer perlu keluar dengan bersih. Lihat [Tangani hasil](/docs/id/agent-sdk/agent-loop#handle-the-result) untuk subtipe kesalahan.
 
 <h3 id="long-running-sessions">
   Sesi berjalan lama
@@ -85,19 +127,19 @@ Jalankan instans kontainer persisten, sering kali menghosting beberapa proses SD
 
 Contoh beban kerja termasuk agen email yang menyeleksi dan merespons surat masuk, pembuat situs yang menghosting situs yang dapat diedit per pengguna melalui port kontainer, dan chatbot yang menangani lalu lintas berkelanjutan dari platform seperti Slack.
 
-Kontainer mengekspos endpoint HTTP atau WebSocket dan memetakan setiap sesi aktif ke kueri yang berumur panjang dan subproses di baliknya. Di TypeScript, gunakan [`streamInput()`](/docs/id/agent-sdk/typescript#query-object) untuk menambahkan giliran ke sesi aktif dan [`startup()`](/docs/id/agent-sdk/typescript#startup) untuk pra-pemanasan subproses sebelum lalu lintas masuk. Di Python, gunakan [`ClaudeSDKClient`](/docs/id/agent-sdk/python#claudesdkclient) untuk menjaga sesi tetap terbuka di seluruh giliran. Ukuran kontainer sehingga dapat menampung jumlah maksimum sesi bersamaan dalam memori.
+Kontainer mengekspos endpoint HTTP atau WebSocket dan memetakan setiap sesi aktif ke kueri berjalan lama dan subproses di belakangnya. Di TypeScript, gunakan [`streamInput()`](/docs/id/agent-sdk/typescript#query-object) untuk menambahkan giliran ke sesi aktif dan [`startup()`](/docs/id/agent-sdk/typescript#startup) untuk pra-pemanasan subproses sebelum lalu lintas masuk. Di Python, gunakan [`ClaudeSDKClient`](/docs/id/agent-sdk/python#claudesdkclient) untuk menjaga sesi tetap terbuka di seluruh giliran. Ukuran kontainer sehingga dapat menampung jumlah maksimum sesi bersamaan dalam memori.
 
 <h3 id="hybrid-sessions">
   Sesi Hybrid
 </h3>
 
-Kontainer ephemeral yang terhidrasi dari [`SessionStore`](/docs/id/agent-sdk/session-storage) saat startup dan mempertahankan pembaruan kembali. Terbaik untuk sesi yang mencakup banyak interaksi tetapi menganggur di antara mereka. Kontainer berhenti selama periode menganggur dan kembali hidup ketika pengguna kembali.
+Kontainer ephemeral yang terhidrasi dari [`SessionStore`](/docs/id/agent-sdk/session-storage) saat startup dan mempertahankan pembaruan kembali. Terbaik untuk sesi yang mencakup banyak interaksi tetapi menganggur di antara mereka. Kontainer berhenti selama periode menganggur dan kembali ketika pengguna kembali.
 
 Contoh beban kerja termasuk manajer proyek pribadi dengan check-in intermiten, penelitian mendalam yang dijeda dan dilanjutkan selama berjam-jam, dan agen dukungan pelanggan yang memuat riwayat tiket di seluruh interaksi.
 
 Sesuaikan waktu tunggu idle penyedia Anda dengan seberapa sering Anda mengharapkan pengguna kembali. Mematikan kontainer tanpa `SessionStore` yang dikonfigurasi kehilangan transkrip dengannya, jadi penyimpanan diperlukan untuk pola ini, bukan opsional.
 
-Pola ini bergantung pada melanjutkan sesi berdasarkan ID dengan penyimpanan bersama yang terlampir:
+Pola bergantung pada melanjutkan sesi berdasarkan ID dengan penyimpanan bersama yang terlampir:
 
 <CodeGroup>
   ```typescript TypeScript theme={null}
@@ -105,7 +147,7 @@ Pola ini bergantung pada melanjutkan sesi berdasarkan ID dengan penyimpanan bers
 
   declare const userInput: string;
   declare const sessionId: string;          // looked up from your database by user
-  declare const sessionStore: SessionStore; // S3, Redis, Postgres, or your own adapter
+  declare const sessionStore: SessionStore; // an object store, key-value store, database, or your own adapter
 
   for await (const message of query({
     prompt: userInput,
@@ -116,20 +158,28 @@ Pola ini bergantung pada melanjutkan sesi berdasarkan ID dengan penyimpanan bers
   ```
 
   ```python Python theme={null}
-  from claude_agent_sdk import query, ClaudeAgentOptions
+  from claude_agent_sdk import query, ClaudeAgentOptions, SessionStore
+  import asyncio
 
-  async for message in query(
-      prompt=user_input,
-      options=ClaudeAgentOptions(
-          resume=session_id,            # looked up from your database by user
-          session_store=session_store,  # S3, Redis, Postgres, or your own adapter
-      ),
-  ):
-      ...
+  user_input: str = ...
+  session_id: str = ...              # looked up from your database by user
+  session_store: SessionStore = ...  # an object store, key-value store, database, or your own adapter
+
+
+  async def main():
+      async for message in query(
+          prompt=user_input,
+          options=ClaudeAgentOptions(
+              resume=session_id,
+              session_store=session_store,
+          ),
+      ):
+          ...
+
+
+  asyncio.run(main())
   ```
 </CodeGroup>
-
-Lihat [Penyimpanan sesi](/docs/id/agent-sdk/session-storage) untuk antarmuka `SessionStore` lengkap dan adaptor referensi.
 
 <h3 id="multi-agent-container">
   Kontainer multi-agen
@@ -147,79 +197,70 @@ Berikan setiap agen direktori kerjanya sendiri sehingga mereka tidak menimpa fil
   Sandboxing berbasis kontainer
 </h3>
 
-Jalankan SDK di dalam kontainer bersandbox untuk isolasi proses, batasan sumber daya, kontrol jaringan, dan sistem file yang bersifat sementara. Beberapa penyedia mengkhususkan diri dalam lingkungan kontainer bersandbox yang sesuai dengan model Agent SDK.
+Jalankan SDK di dalam kontainer bersandbox untuk isolasi proses, batasan sumber daya, kontrol jaringan, dan sistem file yang bersifat sementara.
 
 Pertanyaan yang harus dijawab saat memilih penyedia:
 
 * **Siapa yang menjalankan sandbox**: penyedia sandbox-as-a-service mengoperasikan infrastruktur untuk Anda, sementara opsi self-hosted memberikan perangkat lunak untuk dijalankan di server Anda sendiri.
-* **Latensi cold-start**: berapa lama dari "buat sandbox" hingga "siap menerima permintaan pertama." Pola ephemeral memerlukan start sub-detik. Pola long-running dapat mentoleransi lebih banyak.
-* **Penyimpanan persisten**: apakah penyedia menawarkan volume tahan lama atau hanya disk ephemeral. Pola hybrid memerlukan penyimpanan tahan lama di suatu tempat, baik di dalam sandbox atau di sampingnya.
-* **Model penetapan harga**: per-detik, per-permintaan, atau penagihan per jam tetap. Penetapan harga per-detik cocok untuk beban kerja ephemeral yang bersifat bursty. Per jam cocok untuk sesi long-running.
-* **Jaringan**: dukungan untuk aturan egress khusus, proxy outbound, dan peering VPC pribadi untuk lingkungan yang diatur.
+* **Cold-start latency**: berapa lama dari "membuat sandbox" hingga "siap menerima permintaan pertama." Pola ephemeral memerlukan start sub-detik. Pola long-running dapat mentoleransi lebih banyak.
+* **Persistent storage**: apakah penyedia menawarkan volume yang tahan lama atau hanya disk ephemeral. Pola hybrid memerlukan penyimpanan yang tahan lama di suatu tempat, baik di dalam sandbox atau di sampingnya.
+* **Pricing model**: per-detik, per-permintaan, atau penagihan per jam tetap. Harga per-detik cocok untuk beban kerja ephemeral yang bersifat bursty. Per jam cocok untuk sesi long-running.
+* **Networking**: dukungan untuk aturan egress khusus, proxy outbound, dan peering VPC pribadi untuk lingkungan yang diatur.
 
-Penyedia untuk dievaluasi:
-
-* [Modal Sandbox](https://modal.com/docs/guide/sandbox), dengan [demo implementation](https://modal.com/docs/examples/claude-slack-gif-creator)
-* [Cloudflare Sandboxes](https://github.com/cloudflare/sandbox-sdk)
-* [Daytona](https://www.daytona.io/)
-* [E2B](https://e2b.dev/)
-* [Fly Machines](https://fly.io/docs/machines/)
-* [Vercel Sandbox](https://vercel.com/docs/functions/sandbox)
-
-Untuk opsi self-hosted seperti Docker, gVisor, dan Firecracker, dan konfigurasi isolasi terperinci, lihat [Isolation Technologies](/docs/id/agent-sdk/secure-deployment#isolation-technologies).
+Untuk opsi self-hosted seperti Docker, gVisor, dan Firecracker, serta konfigurasi isolasi terperinci, lihat [Isolation Technologies](/docs/id/agent-sdk/secure-deployment#isolation-technologies).
 
 <h3 id="runtime-dependencies">
-  Dependensi runtime
+  Runtime dependencies
 </h3>
 
-Kontainer hanya memerlukan runtime bahasa SDK Anda:
+Kontainer memerlukan runtime bahasa SDK Anda:
 
 * Python 3.10+ untuk Python SDK, atau Node.js 18+ untuk TypeScript SDK
-* Kedua paket SDK menggabungkan binary Claude Code asli untuk platform host, jadi tidak perlu instalasi Claude Code atau Node.js terpisah untuk CLI yang dihasilkan
+* Baik TypeScript maupun Python SDK membundel binary Claude Code native untuk sebagian besar instalasi, dan CLI yang dihasilkan tidak memerlukan instalasi Node.js terpisah. Lihat [catatan instalasi quickstart](/docs/id/agent-sdk/quickstart) untuk instalasi yang memerlukan instalasi Claude Code native terpisah.
 
-Binary yang digabungkan disematkan ke versi paket SDK, jadi memperbarui SDK adalah cara Anda memperbarui CLI. SDK mengikuti semver: ambil rilis patch secara berkelanjutan dan tinjau changelog [TypeScript](https://github.com/anthropics/claude-agent-sdk-typescript/blob/main/CHANGELOG.md) atau [Python](https://github.com/anthropics/claude-agent-sdk-python/blob/main/CHANGELOG.md) sebelum mengambil minor.
+Binary yang dibundel disematkan ke versi paket SDK, jadi memperbarui SDK adalah cara Anda memperbarui CLI. SDK mengikuti semver: ambil rilis patch secara berkelanjutan dan tinjau changelog [TypeScript](https://github.com/anthropics/claude-agent-sdk-typescript/blob/main/CHANGELOG.md) atau [Python](https://github.com/anthropics/claude-agent-sdk-python/blob/main/CHANGELOG.md) sebelum mengambil minor.
 
 <h3 id="resources">
-  Sumber daya
+  Resources
 </h3>
 
 1 GiB RAM, 5 GiB disk, dan 1 CPU per agent adalah titik awal yang wajar untuk instance yang baru dimulai. Penggunaan memori tumbuh dengan panjang sesi dan aktivitas tool, jadi ukuran untuk panjang sesi dan concurrency yang benar-benar Anda butuhkan daripada baseline idle. Lihat [Scaling and concurrency](#scaling-and-concurrency) untuk cara menghitung agent per host.
 
 <h3 id="network">
-  Jaringan
+  Network
 </h3>
 
-SDK memerlukan outbound HTTPS ke `api.anthropic.com`, atau ke endpoint regional penyedia Anda saat berjalan di Amazon Bedrock atau Google Cloud's Agent Platform. Jika agent Anda menggunakan [MCP servers](/docs/id/agent-sdk/mcp) atau tool eksternal, mereka memerlukan akses outbound ke endpoint tersebut juga. Untuk production, arahkan traffic outbound melalui proxy egress yang memberlakukan allowlist domain, menyuntikkan kredensial, dan mencatat permintaan. Lihat [Secure Deployment](/docs/id/agent-sdk/secure-deployment) untuk pola lengkapnya.
+SDK memerlukan outbound HTTPS ke `api.anthropic.com`, atau ke endpoint regional penyedia Anda saat berjalan di Amazon Bedrock atau Agent Platform Google Cloud. Jika agent Anda menggunakan [MCP servers](/docs/id/agent-sdk/mcp) atau tool eksternal, mereka memerlukan akses outbound ke endpoint tersebut juga. Untuk production, arahkan traffic outbound melalui egress proxy yang memberlakukan domain allowlists, menyuntikkan kredensial, dan mencatat permintaan. Lihat [Secure Deployment](/docs/id/agent-sdk/secure-deployment) untuk pola lengkapnya.
 
 Untuk traffic inbound, ekspos port HTTP atau WebSocket di kontainer. Aplikasi Anda menangani permintaan klien di port tersebut dan memanggil SDK secara internal; subprocess itu sendiri tidak mendengarkan di jaringan.
 
 <h2 id="handle-production-concerns">
-  Menangani kekhawatiran produksi
+  Tangani kekhawatiran produksi
 </h2>
 
-Kerjakan keputusan-keputusan ini sebelum mengirimkan agen yang di-host sendiri.
+Kerjakan keputusan-keputusan ini sebelum meluncurkan agen yang di-host sendiri.
 
 <h3 id="session-and-state-persistence">
   Persistensi sesi dan status
 </h3>
 
-Disk lokal default hilang saat restart, scale-down, atau perpindahan ke node yang berbeda. Untuk sesi apa pun yang diharapkan pengguna untuk dilanjutkan, cerminkan transkrip ke penyimpanan yang tahan lama dengan adaptor [`SessionStore`](/docs/id/agent-sdk/session-storage). Lihat [Implementasi referensi](/docs/id/agent-sdk/session-storage#reference-implementations) untuk adaptor S3, Redis, dan Postgres serta suite kepatuhan untuk milik Anda sendiri.
+Disk lokal default hilang saat restart, scale-down, atau perpindahan ke node yang berbeda. Untuk sesi apa pun yang diharapkan pengguna untuk lanjutkan, cerminkan transkrip ke penyimpanan yang tahan lama dengan adaptor [`SessionStore`](/docs/id/agent-sdk/session-storage). Lihat [Implementasi referensi](/docs/id/agent-sdk/session-storage#reference-implementations) untuk adaptor contoh untuk object store, key-value store, dan database, serta suite kepatuhan untuk milik Anda sendiri.
 
 Tiga hal yang perlu diketahui tentang perilaku `SessionStore`:
 
 * **Transkrip saja**: `SessionStore` mencerminkan transkrip, bukan file memori `CLAUDE.md` atau artefak direktori kerja lainnya. Pasang volume bersama atau sinkronkan yang lain secara terpisah.
-* **Cermin, bukan penggantian**: subprocess menulis ke disk lokal terlebih dahulu, dan penyimpanan menerima salinan setiap batch. Penulisan lokal tetap berwenang.
-* **Pesan `mirror_error`**: batch yang ditolak penyimpanan dikirim hingga tiga kali total, dengan backoff singkat sebelum setiap percobaan ulang; panggilan yang habis waktu tidak dicoba ulang. Jika batch masih gagal, SDK melepasnya, memancarkan pesan `{ type: "system", subtype: "mirror_error" }`, dan melanjutkan kueri. Beri peringatan pada ini jika daya tahan penyimpanan penting.
+* **Cermin, bukan penggantian**: subprocess menulis ke disk lokal terlebih dahulu, dan SDK meneruskan salinan setiap batch ke toko. Transkrip lokal sesi segar bertahan lebih lama dari jalannya; sesi yang dilanjutkan dari toko menghapus salinan lokalnya di akhir, jadi toko menyimpan salinan yang tahan lama saja. Lihat [Arsitektur dual-write](/docs/id/agent-sdk/session-storage#dual-write-architecture).
+* **Pesan `mirror_error`**: ketika SDK tidak dapat mengirimkan batch ke toko, SDK menghapus batch, memancarkan pesan `{ type: "system", subtype: "mirror_error" }`, dan melanjutkan kueri. Beri peringatan pada ini jika daya tahan toko penting. Lihat [Mirror writes adalah best-effort](/docs/id/agent-sdk/session-storage#mirror-writes-are-best-effort) untuk perilaku retry dan timeout.
 
 <h3 id="observability">
   Observabilitas
 </h3>
 
-Agen Agent SDK adalah proses yang berumur panjang yang menjalankan panggilan alat di banyak putaran API. Tanpa telemetri, Anda tidak dapat melihat alat mana yang berjalan, berapa lama waktu yang dibutuhkan, atau di mana sesi terhenti.
+Agen Agent SDK adalah proses yang berumur panjang yang menelurkan panggilan alat di banyak putaran API. Tanpa telemetri, Anda tidak dapat melihat alat mana yang berjalan, berapa lama waktu yang dibutuhkan, atau di mana sesi terhenti.
 
 SDK mewarisi konfigurasi OpenTelemetry dari lingkungan. Atur variabel lingkungan OTEL di tingkat kontainer atau orchestrator sehingga setiap panggilan `query()` mengekspor span, metrik, dan peristiwa log ke kolektor Anda. Contoh di bawah ini mengaktifkan ekspor OTLP untuk ketiga sinyal. `CLAUDE_CODE_ENHANCED_TELEMETRY_BETA` hanya diperlukan untuk jejak; abaikan jika Anda hanya mengekspor metrik dan log.
 
-```bash title=".env' theme={null}
+```bash title=".env" theme={null}
 CLAUDE_CODE_ENABLE_TELEMETRY=1
 CLAUDE_CODE_ENHANCED_TELEMETRY_BETA=1
 OTEL_TRACES_EXPORTER=otlp
@@ -232,13 +273,13 @@ OTEL_EXPORTER_OTLP_ENDPOINT=http://collector.example.com:4318
 Teks prompt dan input alat tidak disertakan dalam ekspor secara default. Lihat [Kontrol data sensitif dalam ekspor](/docs/id/agent-sdk/observability#control-sensitive-data-in-exports) untuk flag opt-in, dan [Observabilitas](/docs/id/agent-sdk/observability) untuk katalog sinyal lengkap.
 
 <h3 id="auth-and-secrets">
-  Otentikasi dan rahasia
+  Auth dan rahasia
 </h3>
 
-Tiga kekhawatiran otentikasi penting pada waktu hosting:
+Tiga kekhawatiran auth penting pada waktu hosting:
 
-* **API Anthropic**: subprocess membaca `ANTHROPIC_API_KEY` dari lingkungannya. Suplai dari manajer rahasia Anda, atau atur `ANTHROPIC_BASE_URL` untuk merutekan panggilan model melalui proxy yang menyuntikkan kunci di luar kontainer. Lihat [Manajemen kredensial](/docs/id/agent-sdk/secure-deployment#credential-management) untuk pola proxy dan [Ikhtisar SDK](/docs/id/agent-sdk/overview#get-started) untuk metode otentikasi yang didukung.
-* **Inbound**: letakkan otentikasi di gateway di depan kontainer agen. Agen harus menerima permintaan yang telah diautentikasi sebelumnya dan tidak boleh menjadi komponen yang memvalidasi token pengguna.
+* **Anthropic API**: subprocess membaca `ANTHROPIC_API_KEY` dari lingkungannya. Suplai dari manajer rahasia Anda, atau atur `ANTHROPIC_BASE_URL` untuk merutekan panggilan model melalui proxy yang menyuntikkan kunci di luar kontainer. Lihat [Manajemen kredensial](/docs/id/agent-sdk/secure-deployment#credential-management) untuk pola proxy dan [Setup dalam quickstart SDK](/docs/id/agent-sdk/quickstart#setup) untuk metode autentikasi yang didukung.
+* **Inbound**: letakkan autentikasi di gateway di depan kontainer agen. Agen harus menerima permintaan yang sudah diautentikasi sebelumnya dan tidak boleh menjadi komponen yang memvalidasi token pengguna.
 * **Alat outbound**: jaga kredensial alat keluar dari lingkungan agen. Rutekan panggilan outbound melalui proxy yang menyuntikkan kunci API setelah permintaan meninggalkan kontainer. Agen membuat panggilan; proxy menambahkan kredensial.
 
 <h3 id="scaling-and-concurrency">
@@ -253,17 +294,15 @@ Ukuran setiap host dengan rumus ini:
 agents per host = (host RAM - overhead) / (per-session RAM ceiling)
 ```
 
-Ukur batas RAM per-sesi dengan menjalankan sesi representatif ke panjang target Anda di bawah beban alat yang diharapkan dan mencatat RSS puncak. Titik awal 1 GiB dalam [Sumber Daya](#resources) adalah lantai, bukan batas.
+Ukur ceiling per-sesi dengan menjalankan sesi representatif ke panjang target Anda di bawah beban alat yang diharapkan dan mencatat RSS puncak. Titik awal 1 GiB di [Resources](#resources) adalah lantai, bukan ceiling.
 
-Perutean horizontal-scale tergantung pada pola Anda. Untuk sesi yang berjalan lama, di mana kontainer menampung banyak sesi, jalankan pool kontainer di belakang load balancer dan pin setiap sesi ke satu kontainer menggunakan consistent hashing pada `sessionId`. Sesi yang disematkan terus mengenai kontainer yang sama, dan oleh karena itu subprocess yang sama yang berjalan, sampai dikeluarkan atau kontainer dimulai ulang.
-
-Fanout besar dari [subagen](/docs/id/agent-sdk/subagents) bersamaan dari sesi tunggal dapat mencapai batas laju API. Pecahkan pekerjaan menjadi batch yang lebih kecil daripada mengeluarkan satu dispatch yang lebar.
+Perutean horizontal-scale tergantung pada pola Anda. Untuk sesi yang berjalan lama, di mana kontainer menyimpan banyak sesi, jalankan pool kontainer di belakang load balancer dan pin setiap sesi ke satu kontainer menggunakan consistent hashing pada `sessionId`. Sesi yang disematkan terus mengenai kontainer yang sama, dan oleh karena itu subprocess yang sama yang berjalan, sampai dikeluarkan atau kontainer dimulai ulang.
 
 <h3 id="cost">
   Biaya
 </h3>
 
-Biaya token Anthropic biasanya mendominasi biaya infrastruktur kontainer dengan urutan besarnya atau lebih. Kontainer yang disediakan secara minimal berjalan kira-kira \$0,05 per jam, sementara sesi agen panjang tunggal dapat menghabiskan dolar dalam token. Lihat [Pelacakan biaya](/docs/id/agent-sdk/cost-tracking) untuk akuntansi token per-sesi.
+Biaya token Anthropic biasanya mendominasi biaya infrastruktur kontainer dengan urutan besarnya atau lebih. Kontainer yang disediakan secara minimal berjalan kira-kira \$0.05 per jam, sementara sesi agen panjang tunggal dapat menghabiskan dolar dalam token. Lihat [Pelacakan biaya](/docs/id/agent-sdk/cost-tracking) untuk akuntansi token per-sesi.
 
 <h3 id="multi-tenant-isolation">
   Isolasi multi-tenant
@@ -273,13 +312,13 @@ Perilaku SDK default membaca pengaturan dan file memori `CLAUDE.md` dari sistem 
 
 Untuk mengisolasi tenant di dalam kontainer bersama:
 
-* Lewatkan `settingSources: []` dalam TypeScript atau `setting_sources=[]` dalam Python sehingga tidak ada pengaturan sistem file yang dimuat.
-* Atur `CLAUDE_CODE_DISABLE_AUTO_MEMORY=1` dalam `env`. [Memori otomatis](/docs/id/memory#auto-memory) di `~/.claude/projects/<project>/memory/` dimuat ke prompt sistem terlepas dari `settingSources`. Lihat [Apa yang settingSources tidak kontrol](/docs/id/agent-sdk/claude-code-features#what-settingsources-does-not-control) untuk input lain yang dimuat tanpa syarat.
-* Arahkan `CLAUDE_CONFIG_DIR` ke direktori per-tenant sehingga tenant tidak berbagi konfigurasi global `~/.claude.json`.
+* Lewatkan `settingSources: []` di TypeScript atau `setting_sources=[]` di Python untuk melewati pengaturan pengguna, proyek, dan lokal.
+* Atur `CLAUDE_CODE_DISABLE_AUTO_MEMORY=1` di `env`. [Auto memory](/docs/id/memory#auto-memory) di `~/.claude/projects/<project>/memory/` dimuat ke prompt sistem terlepas dari `settingSources`. Lihat [Apa yang settingSources tidak kontrol](/docs/id/agent-sdk/claude-code-features#what-settingsources-does-not-control) untuk input lain yang dimuat tanpa syarat.
+* Arahkan `CLAUDE_CONFIG_DIR` ke direktori per-tenant sehingga tenant tidak berbagi config global `~/.claude.json`. Ketika setiap direktori config melayani satu direktori kerja dan Anda tidak berbagi [`SessionStore`](/docs/id/agent-sdk/session-storage) di seluruh tenant, Anda juga dapat mengatur [`CLAUDE_CODE_PROJECT_DIR_NAME`](/docs/id/sessions#name-the-project-directory-yourself) di `env` untuk menjaga jalur transkrip di bawahnya tetap pendek. Memerlukan Agent SDK TypeScript v0.3.234 atau lebih baru, atau Agent SDK Python v0.2.140 atau lebih baru.
 * Gunakan direktori kerja per-tenant. Lewatkan `cwd` secara eksplisit pada setiap panggilan `query()`.
 * Terapkan aturan egress per-tenant di proxy Anda, seperti IP outbound yang berbeda, kredensial, atau daftar allowlist domain, sehingga tenant yang dikompromikan tidak dapat mengeksfiltrasikan data melalui kebijakan outbound tenant lain.
 
-Contoh di bawah ini menerapkan empat opsi tingkat SDK bersama-sama. Bangun `tenantDir` dan `configDir` sehingga setiap tenant mendapatkan jalur yang tidak dapat dibaca tenant lain. Dalam TypeScript, `env` menggantikan lingkungan subprocess, jadi sebarkan `...process.env` untuk menjaga variabel yang diwarisi seperti `PATH` dan `ANTHROPIC_API_KEY`. Dalam Python, `env` digabungkan di atas lingkungan yang diwarisi.
+Contoh di bawah ini menerapkan pengaturan, auto memory, direktori config, dan opsi direktori kerja bersama-sama. Bangun `tenantDir` dan `configDir` sehingga setiap tenant mendapatkan jalur yang tidak dapat dibaca tenant lain. Di TypeScript, `env` menggantikan lingkungan subprocess, jadi sebarkan `...process.env` untuk menjaga variabel yang diwarisi seperti `PATH` dan `ANTHROPIC_API_KEY`. Di Python, `env` digabungkan di atas lingkungan yang diwarisi.
 
 <CodeGroup>
   ```typescript TypeScript theme={null}
@@ -307,36 +346,54 @@ Contoh di bawah ini menerapkan empat opsi tingkat SDK bersama-sama. Bangun `tena
 
   ```python Python theme={null}
   from claude_agent_sdk import query, ClaudeAgentOptions
+  import asyncio
 
-  async for message in query(
-      prompt=prompt,
-      options=ClaudeAgentOptions(
-          cwd=tenant_dir,
-          setting_sources=[],
-          env={
-              "CLAUDE_CONFIG_DIR": config_dir,
-              "CLAUDE_CODE_DISABLE_AUTO_MEMORY": "1",
-          },
-      ),
-  ):
-      ...
+  prompt: str = ...
+  tenant_dir: str = ...
+  config_dir: str = ...
+
+
+  async def main():
+      async for message in query(
+          prompt=prompt,
+          options=ClaudeAgentOptions(
+              cwd=tenant_dir,
+              setting_sources=[],
+              env={
+                  "CLAUDE_CONFIG_DIR": config_dir,
+                  "CLAUDE_CODE_DISABLE_AUTO_MEMORY": "1",
+              },
+          ),
+      ):
+          ...
+
+
+  asyncio.run(main())
   ```
 </CodeGroup>
-
-Untuk kontrol jaringan per-tenant, lihat [Penerapan Aman](/docs/id/agent-sdk/secure-deployment).
 
 <h2 id="known-limitations">
   Keterbatasan yang Diketahui
 </h2>
 
-Rencanakan di sekitar ini dalam desain penyebaran Anda.
+Rencanakan hal-hal ini dalam desain penyebaran Anda.
 
-| Keterbatasan                                           | Apa yang harus dilakukan                                                                                                                                                                                                                                                                                             |
-| ------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Tidak ada timeout sesi tingkat atas                    | Sesi tidak akan timeout dengan sendirinya. Atur `maxTurns` dalam `Options` untuk membatasi berapa banyak putaran penggunaan alat yang diambil agen sebelum berhenti.                                                                                                                                                 |
-| Pertumbuhan memori selama sesi panjang                 | Batasi panjang sesi atau daur ulang subproses secara berkala. Lihat [Penskalaan dan konkurensi](#scaling-and-concurrency).                                                                                                                                                                                           |
-| Fanout subagen paralel besar dapat mencapai batas laju | Pecah pekerjaan menjadi batch yang lebih kecil daripada mengeluarkan satu pengiriman yang luas.                                                                                                                                                                                                                      |
-| Tidak ada batas waktu dinding per subagen              | Batasi setiap [subagen](/docs/id/agent-sdk/subagents) dengan `maxTurns` dalam `AgentDefinition`-nya. Hanya untuk subagen latar belakang, `CLAUDE_ASYNC_AGENT_STALL_TIMEOUT_MS` menetapkan watchdog stall yang aktif ketika subagen `run_in_background` berhenti menghasilkan output; ini bukan batas waktu runtime total. |
+| Keterbatasan                                           | Apa yang harus dilakukan                                                                                                                                                                                                                                  |
+| ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Tidak ada timeout sesi tingkat atas                    | Sesi tidak akan habis waktu dengan sendirinya. Atur `maxTurns` di TypeScript atau `max_turns` di Python untuk membatasi berapa banyak putaran penggunaan alat yang diambil agen sebelum berhenti.                                                         |
+| Pertumbuhan memori selama sesi panjang                 | Batasi panjang sesi atau daur ulang subproses secara berkala. Lihat [Penskalaan dan konkurensi](#scaling-and-concurrency).                                                                                                                                |
+| Fanout subagen paralel besar dapat mencapai batas laju | Pecah pekerjaan menjadi batch yang lebih kecil daripada mengeluarkan satu pengiriman yang luas.                                                                                                                                                           |
+| Tidak ada batas waktu dinding per subagen              | Batasi setiap [subagen](/docs/id/agent-sdk/subagents) dengan `maxTurns` di `AgentDefinition`-nya. `CLAUDE_ASYNC_AGENT_STALL_TIMEOUT_MS` menetapkan watchdog stall yang aktif ketika subagen berhenti menghasilkan output; ini bukan batas waktu runtime total. |
+
+<h2 id="troubleshoot-deployment-failures">
+  Troubleshoot deployment failures
+</h2>
+
+Gunakan bagian ini ketika agen yang berfungsi di mesin Anda gagal dalam layanan yang diterapkan. Setiap item di bawah ini menamai kegagalan dan menautkan entri yang mencakupnya:
+
+* **CLI not found at service start**: di Python, kontainer atau manajer layanan menjalankan aplikasi Anda dengan `PATH` yang berbeda dari shell Anda, jadi instalasi yang berfungsi secara lokal tidak terlihat oleh proses. Di TypeScript, pembangunan gambar melewatkan dependensi opsional SDK, atau `pathToClaudeCodeExecutable` menunjuk ke file yang tidak ada di gambar. Lihat [Claude Code not found](/docs/id/agent-sdk/troubleshooting#clinotfounderror-claude-code-not-found).
+* **CLI present in the image but won't launch**: Claude Code tidak dapat dimulai dari biner yang tidak cocok dengan arsitektur kontainer atau libc, atau dari file yang kehilangan izin eksekusinya dalam pembangunan gambar. Lihat [Failed to start Claude Code](/docs/id/agent-sdk/troubleshooting#cliconnectionerror-failed-to-start-claude-code).
+* **Claude Code process exits mid-run**: kesalahan yang diterima aplikasi Anda tergantung pada bahasa SDK dan pada apakah CLI melaporkan hasil kesalahan terlebih dahulu. Entri di bawah [CLI process exit](/docs/id/agent-sdk/troubleshooting#cli-process-exit) mencakup setiap pesan.
 
 <h2 id="next-steps">
   Langkah Berikutnya

@@ -626,13 +626,14 @@ export const PromptLibrary = ({text = {}, labels = {}, tagLabels = {}, phaseLabe
       return base + (href.startsWith('/en/') ? '/' + locale + href.slice(3) : href);
     };
   }, []);
+  const SAFE_HREF = /^(\/(?![\/\\\s])|#|https?:\/\/)/;
   const linkify = s => {
     const out = [];
     let last = 0;
     const re = /\[([^\]]+)\]\(([^)]+)\)/g;
     for (let m; m = re.exec(s); ) {
       if (m.index > last) out.push(s.slice(last, m.index));
-      out.push(<a key={m.index} href={doc(m[2])}>{m[1]}</a>);
+      out.push(SAFE_HREF.test(m[2]) ? <a key={m.index} href={doc(m[2])}>{m[1]}</a> : m[1]);
       last = re.lastIndex;
     }
     if (last < s.length) out.push(s.slice(last));
@@ -776,7 +777,7 @@ export const PromptLibrary = ({text = {}, labels = {}, tagLabels = {}, phaseLabe
             </div>
             <div className="pl-label">{L.whyWorks}</div>
             <div className="pl-teaches">{linkify(p.teaches)}</div>
-            {p.nextHref && p.next && <div className="pl-next">
+            {p.nextHref && p.next && SAFE_HREF.test(p.nextHref) && <div className="pl-next">
                 <span className="pl-next-label">{L.makeItStick}</span>
                 <a href={doc(p.nextHref)}>{codeify(p.next)} →</a>
               </div>}
@@ -1202,7 +1203,7 @@ export const text = {
   },
   "migrate-a-pattern-across": {
     title: "코드베이스 전체에서 패턴 마이그레이션",
-    teaches: "이전 패턴과 새 패턴을 설명하십시오. Claude에 먼저 모든 위치를 식별하도록 요청하면 호출 사이트가 응답에 나열되므로 놓친 것이 없는지 확인할 수 있습니다."
+    teaches: "이전 패턴과 새 패턴을 설명하십시오. Claude에 먼저 모든 위치를 식별하도록 요청하면 호출 사이트가 응답에 나열되므로 놓친 것이 없는지 확인할 수 있습니다. 많은 파일에 걸친 마이그레이션의 경우 [/batch](/docs/ko/commands)를 실행하십시오. Claude가 작업을 승인할 단위로 분할하고 백그라운드 서브에이전트가 변경을 수행합니다."
   },
   "optimize-against-a-measurable": {
     title: "측정 가능한 목표에 대해 최적화",
@@ -1337,37 +1338,37 @@ export const text = {
 
 **단계가 아닌 결과를 설명하십시오.** 원하는 것을 말하고 Claude가 파일을 찾도록 하십시오. 아래 프롬프트는 단일 파일 경로를 지정하지 않고도 작동합니다.
 
-```text theme={null}
+```text wrap theme={null}
 공개 API에 속도 제한을 추가하고 기존 테스트가 여전히 통과하는지 확인하십시오
 ```
 
-**자신의 작업을 확인할 수 있는 방법을 제공하십시오.** 같은 프롬프트에서 실행, 테스트, 비교 또는 검증을 요청하면 Claude가 한 번의 시도 후 중지하지 않고 반복합니다.
+**자신의 작업을 확인할 수 있는 방법을 제공하십시오.** 같은 프롬프트에서 실행, 테스트, 비교 또는 검증을 요청하면 Claude가 한 번의 시도 후 중지하지 않고 반복합니다. 완료된 변경 사항을 실행 중인 앱과 비교하려면 [`/verify`](/docs/ko/skills#run-and-verify-your-app)를 실행하십시오.
 
-```text theme={null}
+```text wrap theme={null}
 마이그레이션을 작성하고, 개발 데이터베이스에 대해 실행하고, 스키마가 일치하는지 확인하십시오
 ```
 
 **참조를 지적하십시오.** 기존 파일, 테스트 또는 패턴의 이름을 지정하여 새 코드가 이미 있는 것과 일치하도록 하십시오.
 
-```text theme={null}
+```text wrap theme={null}
 프로필 페이지와 동일한 레이아웃을 따르는 설정 페이지를 추가하십시오
 ```
 
 **측정 가능한 목표를 명시하십시오.** 목표가 성능이나 커버리지일 때 메트릭과 임계값을 제공하면 완료가 명확합니다.
 
-```text theme={null}
+```text wrap theme={null}
 번들 크기를 200KB 미만으로 줄이고 제거한 항목을 보여주십시오
 ```
 
 **아티팩트를 제공하십시오.** 오류, 로그, 스크린샷 및 계획 출력을 프롬프트에 직접 붙여넣거나 `@`를 입력하여 파일을 참조하십시오. Claude가 설명 대신 소스를 읽습니다.
 
-```text theme={null}
+```text wrap theme={null}
 빌드가 실패하는 이유는 무엇입니까? @build.log
 ```
 
 **답변을 원하는 방식을 말하십시오.** 형식, 길이 또는 대상을 지정하면 설명이 사용 방식에 맞습니다. 모든 응답에 대해 형식을 기본값으로 만들려면 [출력 스타일](/docs/ko/output-styles)을 설정하십시오.
 
-```text theme={null}
+```text wrap theme={null}
 결제 재시도 로직이 어떻게 작동하는지 다이어그램이 있는 HTML 페이지로 설명한 후 브라우저에서 열어주십시오
 ```
 
@@ -1384,7 +1385,7 @@ export const text = {
 * [Anthropic 팀이 Claude Code를 사용하는 방법](https://claude.com/blog/how-anthropic-teams-use-claude-code): 엔지니어링, 제품, 디자인 및 데이터 팀의 실제 워크플로우, [법률](https://claude.com/blog/how-anthropic-uses-claude-legal), [마케팅](https://claude.com/blog/how-anthropic-uses-claude-marketing), [사이버보안](https://claude.com/blog/how-anthropic-uses-claude-cybersecurity)에 대한 심화 학습
 * [에이전트 코딩 확장 가이드](https://resources.anthropic.com/hubfs/Scaling%20agentic%20coding%20across%20your%20organization.pdf): 엔터프라이즈 채택 가이드
 
-이 패턴의 비디오 연습을 보려면 Anthropic Academy의 무료 [Claude Code in Action](https://anthropic.skilljar.com/claude-code-in-action) 과정을 참조하십시오.
+이 패턴의 비디오 연습을 보려면 [Claude Academy](https://academy.claude.com/)의 무료 [Claude Code in Action](https://academy.claude.com/courses/claude-code-in-action) 과정을 참조하십시오.
 
 <h2 id="related-resources">
   관련 리소스

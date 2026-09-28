@@ -626,13 +626,14 @@ export const PromptLibrary = ({text = {}, labels = {}, tagLabels = {}, phaseLabe
       return base + (href.startsWith('/en/') ? '/' + locale + href.slice(3) : href);
     };
   }, []);
+  const SAFE_HREF = /^(\/(?![\/\\\s])|#|https?:\/\/)/;
   const linkify = s => {
     const out = [];
     let last = 0;
     const re = /\[([^\]]+)\]\(([^)]+)\)/g;
     for (let m; m = re.exec(s); ) {
       if (m.index > last) out.push(s.slice(last, m.index));
-      out.push(<a key={m.index} href={doc(m[2])}>{m[1]}</a>);
+      out.push(SAFE_HREF.test(m[2]) ? <a key={m.index} href={doc(m[2])}>{m[1]}</a> : m[1]);
       last = re.lastIndex;
     }
     if (last < s.length) out.push(s.slice(last));
@@ -776,7 +777,7 @@ export const PromptLibrary = ({text = {}, labels = {}, tagLabels = {}, phaseLabe
             </div>
             <div className="pl-label">{L.whyWorks}</div>
             <div className="pl-teaches">{linkify(p.teaches)}</div>
-            {p.nextHref && p.next && <div className="pl-next">
+            {p.nextHref && p.next && SAFE_HREF.test(p.nextHref) && <div className="pl-next">
                 <span className="pl-next-label">{L.makeItStick}</span>
                 <a href={doc(p.nextHref)}>{codeify(p.next)} →</a>
               </div>}
@@ -1202,7 +1203,7 @@ export const text = {
   },
   "migrate-a-pattern-across": {
     title: "Migrieren Sie ein Muster in der gesamten Codebasis",
-    teaches: "Beschreiben Sie das alte Muster und das neue. Claude zuerst aufzufordern, jeden Ort zu identifizieren, bedeutet, dass die Aufrufstellen in der Antwort aufgelistet sind, sodass Sie überprüfen können, dass keine übersehen wurden."
+    teaches: "Beschreiben Sie das alte Muster und das neue. Claude zuerst aufzufordern, jeden Ort zu identifizieren, bedeutet, dass die Aufrufstellen in der Antwort aufgelistet sind, sodass Sie überprüfen können, dass keine übersehen wurden. Für eine Migration über viele Dateien hinweg führen Sie [/batch](/docs/de/commands) aus. Claude teilt die Arbeit in Einheiten auf, die Sie genehmigen können, dann machen Hintergrund-Subagenten die Änderungen."
   },
   "optimize-against-a-measurable": {
     title: "Optimieren Sie gegen ein messbares Ziel",
@@ -1222,7 +1223,7 @@ export const text = {
   "review-a-pull-request": {
     title: "Überprüfen Sie einen Pull Request",
     teaches: "Claude überprüft mit der gesamten Codebasis im Kontext, nicht nur dem Diff. Es liest den geänderten Code und das, was er aufruft, sodass es Probleme erkennt, die eine Diff-only-Überprüfung vermissen würde.",
-    next: "Schalten Sie dies für jeden PR mit Code Review ein"
+    next: "Führen Sie `/code-review <pr#>` in einem Befehl aus, oder schalten Sie Code Review für jeden PR ein"
   },
   "review-infrastructure-changes-before": {
     title: "Überprüfen Sie Infrastrukturänderungen vor dem Anwenden",
@@ -1337,37 +1338,37 @@ Die obigen Prompts teilen einige Muster. Sie zu erkennen hilft Ihnen, jeden Prom
 
 **Beschreiben Sie das Ergebnis, nicht die Schritte.** Sagen Sie, was Sie möchten, und lassen Sie Claude die Dateien finden. Der folgende Prompt funktioniert, ohne einen einzigen Dateipfad zu nennen.
 
-```text theme={null}
+```text wrap theme={null}
 add rate limiting to the public API and make sure existing tests still pass
 ```
 
-**Geben Sie ihm eine Möglichkeit, seine eigene Arbeit zu überprüfen.** Bitten Sie darum, auszuführen, zu testen, zu vergleichen oder zu überprüfen, im gleichen Prompt, damit Claude iteriert, anstatt nach einem Versuch zu stoppen.
+**Geben Sie ihm eine Möglichkeit, seine eigene Arbeit zu überprüfen.** Bitten Sie darum, auszuführen, zu testen, zu vergleichen oder zu überprüfen, im gleichen Prompt, damit Claude iteriert, anstatt nach einem Versuch zu stoppen. Um die fertige Änderung gegen die laufende App zu überprüfen, führen Sie [`/verify`](/docs/de/skills#run-and-verify-your-app) aus.
 
-```text theme={null}
+```text wrap theme={null}
 write the migration, run it against the dev database, and confirm the schema matches
 ```
 
 **Verweisen Sie auf eine Referenz.** Nennen Sie eine vorhandene Datei, einen Test oder ein Muster, um zu entsprechen, sodass der neue Code konsistent mit dem ist, was Sie bereits haben.
 
-```text theme={null}
+```text wrap theme={null}
 add a settings page that follows the same layout as the profile page
 ```
 
 **Geben Sie das messbare Ziel an.** Wenn das Ziel Leistung oder Abdeckung ist, geben Sie die Metrik und den Schwellenwert an, damit die Fertigstellung eindeutig ist.
 
-```text theme={null}
+```text wrap theme={null}
 get the bundle size under 200KB and show me what you removed
 ```
 
 **Geben Sie das Artefakt an.** Fügen Sie Fehler, Protokolle, Screenshots und Plan-Ausgabe direkt in den Prompt ein, oder geben Sie `@` ein, um auf eine Datei zu verweisen. Claude liest die Quelle, anstatt Ihre Beschreibung davon.
 
-```text theme={null}
+```text wrap theme={null}
 why is the build failing? @build.log
 ```
 
 **Sagen Sie, wie Sie die Antwort möchten.** Nennen Sie das Format, die Länge oder das Publikum, damit die Erklärung passt, wie Sie sie verwenden werden. Um ein Format zur Standardeinstellung für jede Antwort zu machen, legen Sie einen [Ausgabestil](/docs/de/output-styles) fest.
 
-```text theme={null}
+```text wrap theme={null}
 explain how the payment retry logic works as an HTML page with a diagram, then open it in my browser
 ```
 
@@ -1384,7 +1385,7 @@ Diese Prompts basieren auf Mustern aus veröffentlichten Anthropic-Ressourcen. J
 * [Wie Anthropic-Teams Claude Code nutzen](https://claude.com/blog/how-anthropic-teams-use-claude-code): Echte Arbeitsabläufe aus Engineering-, Produkt-, Design- und Daten-Teams mit tiefgreifenden Einblicken in [Recht](https://claude.com/blog/how-anthropic-uses-claude-legal), [Marketing](https://claude.com/blog/how-anthropic-uses-claude-marketing) und [Cybersicherheit](https://claude.com/blog/how-anthropic-uses-claude-cybersecurity)
 * [Leitfaden zum Skalieren von agentengestütztem Coding](https://resources.anthropic.com/hubfs/Scaling%20agentic%20coding%20across%20your%20organization.pdf): Der Enterprise-Adoptionsleitfaden
 
-Für Video-Walkthroughs dieser Muster siehe den kostenlosen [Claude Code in Action](https://anthropic.skilljar.com/claude-code-in-action)-Kurs auf der Anthropic Academy.
+Für Video-Walkthroughs dieser Muster siehe den kostenlosen [Claude Code in Action](https://academy.claude.com/courses/claude-code-in-action)-Kurs auf [Claude Academy](https://academy.claude.com/).
 
 <h2 id="related-resources">
   Verwandte Ressourcen

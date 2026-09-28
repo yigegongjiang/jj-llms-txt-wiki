@@ -35,7 +35,7 @@ export const ContextWindow = () => {
     tokens: 280,
     color: '#6B6964',
     vis: 'hidden',
-    desc: 'Working directory, platform, shell, OS version, and whether this is a git repo. Git branch, status, and recent commits load as a separate block at the very end of the system prompt.',
+    desc: 'Working directory, platform, shell, OS version, and whether this is a git repo. Git branch, status, and recent commits load as a separate block.',
     link: null
   }, {
     t: 0.08,
@@ -112,7 +112,6 @@ export const ContextWindow = () => {
     tokens: 380,
     color: '#4A9B8E',
     vis: 'brief',
-    restoredAfterCompact: true,
     desc: 'This rule in `.claude/rules/` has a `paths:` pattern matching `src/api/**`. It loaded automatically when Claude read a file in that directory. You see "Loaded .claude/rules/api-conventions.md" in your terminal, but not the rule content.',
     link: '/en/memory#path-specific-rules'
   }, {
@@ -142,7 +141,6 @@ export const ContextWindow = () => {
     tokens: 290,
     color: '#4A9B8E',
     vis: 'brief',
-    restoredAfterCompact: true,
     desc: 'Another path-scoped rule, this one matching `*.test.ts` files. Triggered when Claude read auth.test.ts. Shown as a one-line "Loaded" notice.',
     link: '/en/memory#path-specific-rules'
   }, {
@@ -180,7 +178,7 @@ export const ContextWindow = () => {
     color: '#B8860B',
     vis: 'hidden',
     desc: 'A PostToolUse hook in `settings.json` runs prettier after every file edit and reports back via `hookSpecificOutput.additionalContext`. That field enters Claude\'s context. Plain stdout on exit 0 does not. It is written to the debug log only.',
-    tip: 'Output JSON with `additionalContext` to send info to Claude. For PostToolUse hooks, exit code 2 surfaces stderr as an error but cannot block since the tool already ran. Keep output concise since it enters context without truncation.',
+    tip: 'Output JSON with `additionalContext` to send info to Claude. For PostToolUse hooks, exit code 2 surfaces stderr as an error but cannot block since the tool already ran. Output over 10,000 characters is saved to a file; Claude gets a preview and the file path instead.',
     link: '/en/hooks-guide'
   }, {
     t: 0.62,
@@ -333,7 +331,7 @@ export const ContextWindow = () => {
     color: '#558A42',
     vis: 'full',
     desc: "You ran a shell command with the ! prefix to see which files Claude modified. The command and its output both enter context as part of your message. Useful for grounding Claude in command output without Claude running it.",
-    link: '/en/interactive-mode#bash-mode-with-prefix'
+    link: '/en/interactive-mode#shell-mode-with-prefix'
   }, {
     t: 0.89,
     kind: 'user',
@@ -625,8 +623,8 @@ export const ContextWindow = () => {
     if (detailRef.current) detailRef.current.scrollTop = 0;
   }, [hovEvent]);
   const focusT = hovEvent ? hovEvent.t : time;
-  const takeaway = isCompacted ? 'Compaction replaces the conversation with a structured summary. System prompt, CLAUDE.md, memory, and MCP tools reload automatically. Claude Code also re-reads up to five of the files modified most recently, reloads the rules that match them, and re-injects the skills you invoked. The skill listing does not reload.' : focusT < STARTUP_END ? 'A lot loads before you type anything. CLAUDE.md, memory, skills, and MCP tools are all in context before your first prompt.' : focusT < 0.28 ? "Your prompt is tiny compared to what's already loaded. Most of Claude's context is project knowledge, not your words." : focusT < 0.50 ? 'Each file Claude reads grows the context. Path-scoped rules load automatically alongside matching files.' : focusT < 0.71 ? 'Hooks fire automatically on tool events. Output reaches Claude via additionalContext JSON. Exit code 2 surfaces stderr to Claude. Plain stdout on exit 0 goes to the debug log, not the transcript.' : focusT < 0.79 ? 'Follow-up questions keep building on the same context. Everything from earlier is still there.' : focusT < 0.87 ? "The subagent works in its own separate context window. None of its file reads touch yours. Only the final summary comes back." : focusT < 0.88 ? 'Bang commands run in your shell and prefix the output to your next message. Useful for grounding Claude in command results without it running them.' : focusT < 0.90 ? 'User-only skills stay out of context entirely until you invoke them. The skill index at startup only lists skills Claude can call on its own.' : '/compact summarizes the conversation to free space while keeping key information. In a real session, run it when context starts affecting performance or before a long new task.';
-  const terminalView = isCompacted ? 'A "Conversation compacted" message, then a one-line "Read auth.ts" for each re-read file and "Skills restored (commit-push)". The rules show as "Loaded" lines on Claude\'s next turn. None of the content itself appears.' : focusT < STARTUP_END ? 'The input box, waiting for your first message. Everything above loads silently before you type anything.' : focusT < 0.28 ? 'Your prompt. Claude hasn\'t started working yet.' : focusT < 0.52 ? 'Your prompt and "Reading files...". Rules show as one-line "Loaded" notices, not their content.' : focusT < 0.72 ? "Claude's response and file diffs. Hooks fire silently. Tool output like npm test shows as a brief summary, not the full content." : focusT < 0.79 ? 'Your follow-up prompt.' : focusT < 0.86 ? "A brief notice that a subagent is working, then its result. You don't see the subagent's individual file reads." : focusT < 0.90 ? "Claude's response, your git status output, and the commit-push skill running." : 'Your full conversation. /compact is available to run.';
+  const takeaway = isCompacted ? 'Compaction replaces the conversation with a structured summary. System prompt, CLAUDE.md, memory, and MCP tools reload automatically. Claude Code also re-reads up to five of the files modified most recently and re-injects the skills you invoked. The skill listing does not reload.' : focusT < STARTUP_END ? 'A lot loads before you type anything. CLAUDE.md, memory, skills, and MCP tools are all in context before your first prompt.' : focusT < 0.28 ? "Your prompt is tiny compared to what's already loaded. Most of Claude's context is project knowledge, not your words." : focusT < 0.50 ? 'Each file Claude reads grows the context. Path-scoped rules load automatically alongside matching files.' : focusT < 0.71 ? 'Hooks fire automatically on tool events. Output reaches Claude via additionalContext JSON. Exit code 2 surfaces stderr to Claude. Plain stdout on exit 0 goes to the debug log, not the transcript.' : focusT < 0.79 ? 'Follow-up questions keep building on the same context. Everything from earlier is still there.' : focusT < 0.87 ? "The subagent works in its own separate context window. None of its file reads touch yours. Only the final summary comes back." : focusT < 0.88 ? 'Bang commands run in your shell and prefix the output to your next message. Useful for grounding Claude in command results without it running them.' : focusT < 0.90 ? 'User-only skills stay out of context entirely until you invoke them. The skill index at startup only lists skills Claude can call on its own.' : '/compact summarizes the conversation to free space while keeping key information. In a real session, run it when context starts affecting performance or before a long new task.';
+  const terminalView = isCompacted ? 'A "Conversation compacted" message, then a one-line "Read auth.ts" for each re-read file and "Skills restored (commit-push)". None of the content itself appears.' : focusT < STARTUP_END ? 'The input box, waiting for your first message. Everything above loads silently before you type anything.' : focusT < 0.28 ? 'Your prompt. Claude hasn\'t started working yet.' : focusT < 0.52 ? 'Your prompt and "Reading files...". Rules show as one-line "Loaded" notices, not their content.' : focusT < 0.72 ? "Claude's response and file diffs. Hooks fire silently. Tool output like npm test shows as a brief summary, not the full content." : focusT < 0.79 ? 'Your follow-up prompt.' : focusT < 0.86 ? "A brief notice that a subagent is working, then its result. You don't see the subagent's individual file reads." : focusT < 0.90 ? "Claude's response, your git status output, and the commit-push skill running." : 'Your full conversation. /compact is available to run.';
   const mono = 'var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace)';
   const renderWithCode = s => s.split('`').map((part, i) => i % 2 === 1 ? <code key={i} style={{
     fontFamily: mono,
@@ -952,7 +950,7 @@ export const ContextWindow = () => {
     lineHeight: 1.5,
     marginTop: 4
   }}>
-                This is what's left in context: startup content, which lives outside the message history and reloads after compaction, a structured summary of the entire conversation, the files modified most recently, which Claude Code re-reads along with the rules that match them, and the body of each skill you invoked. Skill descriptions don't reload.
+                This is what's left in context: startup content, which lives outside the message history and reloads after compaction, a structured summary of the entire conversation, the files modified most recently, and the body of each skill you invoked. Skill descriptions don't reload.
               </div>
             </div>}
           {time > 0 && visible.length > 0 && <div style={{
@@ -1588,28 +1586,35 @@ La ventana de contexto de Claude Code contiene todo lo que Claude sabe sobre su 
 
 La sesión recorre un flujo realista con conteos de tokens representativos:
 
-* **Antes de que escriba algo**: CLAUDE.md, memoria automática, nombres de herramientas MCP y descripciones de skills se cargan en el contexto. Su propia configuración puede agregar más aquí, como un [estilo de salida](/docs/es/output-styles) o texto de [`--append-system-prompt`](/docs/es/cli-reference), que ambos van al prompt del sistema de la misma manera.
+* **Antes de que escriba algo**: CLAUDE.md, memoria automática, nombres de herramientas MCP y descripciones de skills se cargan en el contexto. [Los archivos AGENTS.md](/docs/es/memory#agents-md) también pueden cargarse, por su cuenta o junto con CLAUDE.md. Su propia configuración puede agregar más aquí, como un [estilo de salida](/docs/es/output-styles) o texto de [`--append-system-prompt`](/docs/es/cli-reference).
 * **Mientras Claude trabaja**: cada lectura de archivo se suma al contexto, [reglas con alcance de ruta](/docs/es/memory#path-specific-rules) se cargan automáticamente junto con archivos coincidentes, y un [hook PostToolUse](/docs/es/hooks-guide) se activa después de cada edición.
 * **El prompt de seguimiento**: un [subagent](/docs/es/sub-agents) maneja la investigación en su propia ventana de contexto separada, por lo que las lecturas de archivos grandes se mantienen fuera de la suya. Solo el resumen y un pequeño remolque de metadatos regresan.
-* **Al final**: `/compact` reemplaza la conversación con un resumen estructurado. La mayoría del contenido de inicio se recarga automáticamente; la tabla a continuación muestra qué sucede con cada mecanismo.
+* **Al final del recorrido**: ejecuta `/compact`, que reemplaza la conversación con un resumen estructurado. La mayoría del contenido de inicio se recarga automáticamente; la tabla a continuación muestra qué sucede con cada mecanismo.
 
 <h2 id="what-survives-compaction">
   Qué sobrevive a la compactación
 </h2>
 
-Cuando una sesión larga se compacta, Claude Code resume el historial de conversación para que quepa en la ventana de contexto. A partir de v2.1.198, la solicitud de resumen hereda la configuración de [pensamiento extendido](/docs/es/model-config#extended-thinking) de su sesión, por lo que razona con el pensamiento habilitado cuando su sesión lo tiene habilitado y se mantiene desactivado en caso contrario. El pensamiento afecta solo cómo se produce el resumen; la configuración de su sesión permanece sin cambios después. Lo que sucede con sus instrucciones depende de cómo se cargaron:
+Cuando una sesión larga se compacta, Claude Code resume el historial de conversación para que quepa en la ventana de contexto. A partir de v2.1.198, la solicitud de resumen hereda la configuración de [pensamiento extendido](/docs/es/model-config#extended-thinking) de su sesión, por lo que razona con el pensamiento habilitado cuando su sesión lo tiene habilitado y se mantiene desactivado en caso contrario. El pensamiento afecta solo cómo se produce el resumen; la configuración de su sesión permanece sin cambios después. Lo que sucede con cada tipo de contenido depende de cómo se cargó:
 
-| Mecanismo                                           | Después de la compactación                                                                                        |
-| :-------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------- |
-| Prompt del sistema y estilo de salida               | Sin cambios; no es parte del historial de mensajes                                                                |
-| CLAUDE.md de raíz del proyecto y reglas sin alcance | Re-inyectadas desde el disco                                                                                      |
-| Memoria automática                                  | Re-inyectada desde el disco                                                                                       |
-| Reglas con frontmatter `paths:`                     | Perdidas hasta que se lea un archivo coincidente nuevamente                                                       |
-| CLAUDE.md anidado en subdirectorios                 | Perdido hasta que se lea un archivo en ese subdirectorio nuevamente                                               |
-| Cuerpos de skills invocados                         | Re-inyectados, limitados a 5,000 tokens por skill y 25,000 tokens en total; los más antiguos se descartan primero |
-| Hooks                                               | No aplicable; los hooks se ejecutan como código, no como contexto                                                 |
+| Mecanismo                                                                                                                                                            | Después de la compactación                                                                                           |
+| :------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------- |
+| Prompt del sistema y estilo de salida                                                                                                                                | Ambos siguen aplicándose                                                                                             |
+| CLAUDE.md de raíz del proyecto y reglas sin alcance                                                                                                                  | Re-inyectadas desde el disco                                                                                         |
+| Memoria automática                                                                                                                                                   | Re-inyectada desde el disco                                                                                          |
+| [Instantánea de estado de Git](/docs/es/settings-reference#includegitinstructions)                                                                                        | Claude Code lee una nueva desde su repositorio                                                                       |
+| El plan que Claude escribió en [modo plan](/docs/es/permission-modes#analyze-before-you-edit-with-plan-mode)                                                              | Re-inyectado desde el disco                                                                                          |
+| Reglas con frontmatter `paths:`                                                                                                                                      | Claude Code las recarga cuando Claude lee archivos que coinciden                                                     |
+| CLAUDE.md anidado en subdirectorios                                                                                                                                  | Claude Code lo recarga cuando Claude lee archivos en ese subdirectorio                                               |
+| Archivos que Claude leyó o editó                                                                                                                                     | Claude Code re-lee hasta cinco, los más recientemente modificados primero                                            |
+| Cuerpos de skills invocados                                                                                                                                          | Re-inyectados, limitados a 5,000 tokens por skill y 25,000 tokens en total; los más antiguos se descartan primero    |
+| [Comandos en segundo plano](/docs/es/interactive-mode#background-bash-commands) y [subagentes](/docs/es/sub-agents#run-subagents-in-foreground-or-background) en segundo plano | Continúan ejecutándose. Claude Code le recuerda a Claude cuáles siguen ejecutándose para que no inicie uno duplicado |
+| Contexto que los hooks agregaron anteriormente                                                                                                                       | Resumido con el resto de la conversación                                                                             |
+| [Hooks SessionStart](/docs/es/hooks-guide#re-inject-context-after-compaction) que coinciden con la fuente `compact`                                                       | Claude Code los ejecuta y agrega su salida al contexto compactado                                                    |
 
-Las reglas con alcance de ruta y los archivos CLAUDE.md anidados se cargan en el historial de mensajes cuando se lee su archivo de activación, por lo que la compactación los resume junto con todo lo demás. Se recargan la próxima vez que Claude lee un archivo coincidente. Si una regla debe persistir a través de la compactación, elimine el frontmatter `paths:` o muévalo a CLAUDE.md de raíz del proyecto.
+Justo después de la compactación, Claude Code re-lee hasta cinco de los archivos que Claude ha leído o editado en la sesión, eligiendo los modificados más recientemente. Un archivo de más de 5,000 tokens regresa como una referencia de ruta sin su contenido, mostrado como `Referenced file` en lugar de `Read`.
+
+Las reglas con alcance de ruta y los archivos CLAUDE.md anidados se cargan en el historial de mensajes cuando se lee su archivo de activación, por lo que la compactación los resume junto con todo lo demás. Si una regla debe persistir a través de la compactación, elimine el frontmatter `paths:` o muévalo a CLAUDE.md de raíz del proyecto.
 
 Los cuerpos de skills se re-inyectan después de la compactación, pero los skills grandes se truncan para ajustarse al límite por skill, y los skills invocados más antiguos se descartan una vez que se excede el presupuesto total. El truncamiento mantiene el inicio del archivo, por lo que coloque las instrucciones más importantes cerca de la parte superior de `SKILL.md`.
 
@@ -1622,16 +1627,22 @@ Claude Code se compacta automáticamente a medida que se acerca al límite, por 
 También puede actuar antes de que se ejecute el paso automático:
 
 * **Compactar con un enfoque**: ejecute `/compact` con instrucciones, como `/compact focus on the auth bug fix`, antes de comenzar una tarea nueva larga. El resumen mantiene lo que usted elige en lugar de lo que el paso automático adivina que es importante.
+* **Compactar parte de la conversación**: ejecute `/rewind`, seleccione un mensaje y elija **Summarize from here** o **Summarize up to here**. Vea [Rewind and summarize](/docs/es/checkpointing#rewind-and-summarize) para saber qué opción mantiene cada una y cómo guiar el resumen.
+* **Compactar antes**: ejecute [`/autocompact`](/docs/es/commands#all-commands) con un recuento de tokens, como `/autocompact 500k`, para establecer qué tan llena está la ventana de contexto antes de que se ejecute el paso automático. Vea [Set the auto-compact window](/docs/es/model-config#set-the-auto-compact-window) para valores aceptados e invalidaciones.
 * **Limpiar entre tareas**: ejecute `/clear` cuando cambie a trabajo no relacionado. La conversación antigua desplaza los archivos que necesita a continuación y cuesta tokens en cada mensaje.
 * **Delegar lecturas grandes**: envíe investigación a un [subagent](/docs/es/sub-agents) para que el contenido del archivo permanezca en su ventana de contexto, no en la suya.
 
-Si necesita una ventana más grande en lugar de una conversación más pequeña, Fable 5, Sonnet 5, Opus 4.6 y posteriores, y Sonnet 4.6 admiten una ventana de contexto de 1 millón de tokens. Vea [Contexto extendido](/docs/es/model-config#extended-context) para disponibilidad por plan y cómo seleccionar una variante de modelo `[1m]`. Sonnet 5 se ejecuta a 1M sin variante `[1m]` para seleccionar; vea [Ventana de contexto de Sonnet 5](/docs/es/model-config#sonnet-5-context-window) para sus umbrales de compactación automática y la excepción de la puerta de enlace LLM. La compactación funciona de la misma manera en el límite más grande.
+Si necesita una ventana más grande en lugar de una conversación más pequeña, los modelos Fable, Sonnet 5, Opus 4.6 y posteriores, y Sonnet 4.6 admiten una ventana de contexto de 1 millón de tokens. Vea [Extended context](/docs/es/model-config#extended-context) para disponibilidad por plan y cómo seleccionar una variante de modelo `[1m]`. La compactación funciona de la misma manera en el límite más grande.
+
+Sonnet 5 se ejecuta con la ventana de contexto de 1M y no tiene variante `[1m]` para seleccionar. Vea [Sonnet 5 context window](/docs/es/model-config#sonnet-5-context-window) para sus umbrales de compactación automática y la excepción de la puerta de enlace LLM.
+
+El punto donde se ejecuta la compactación automática depende de su modelo y configuración. Vea [Default auto-compact thresholds](/docs/es/model-config#default-auto-compact-thresholds) para los límites por modelo, y [Correct the window for a gateway or custom model ID](/docs/es/model-config#correct-the-window-for-a-gateway-or-custom-model-id) si Claude Code asume la ventana incorrecta para su ID de modelo, como un alias de [LLM gateway](/docs/es/llm-gateway).
 
 <h2 id="check-your-own-session">
   Verifique su propia sesión
 </h2>
 
-La visualización utiliza números representativos. Para ver su uso real de contexto en cualquier momento, ejecute `/context` para un desglose en vivo por categoría con sugerencias de optimización. Ejecute `/memory` para verificar qué archivos CLAUDE.md y memoria automática se cargaron al inicio.
+La visualización utiliza números representativos. Para ver su uso real de contexto en cualquier momento, ejecute `/context` para un desglose en vivo por categoría con sugerencias de optimización, incluidos qué archivos CLAUDE.md y memoria automática se cargaron. Ejecute `/memory` para abrir y editar esos archivos.
 
 <h2 id="related-resources">
   Recursos relacionados

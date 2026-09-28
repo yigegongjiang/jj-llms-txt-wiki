@@ -105,9 +105,12 @@ Primero, cree un recurso de Claude en Azure:
 1. Navegue al [portal de Microsoft Foundry](https://ai.azure.com/)
 2. Cree un nuevo recurso, anotando el nombre de su recurso
 3. Cree implementaciones para los modelos de Claude, anotando el nombre de implementación que asigne a cada uno; establecerá estos nombres como las variables de modelo en el paso 4:
+
    * Claude Opus
    * Claude Sonnet
    * Claude Haiku
+
+   Cuando configure una implementación, también elige su [opción de alojamiento](https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry#hosting-options), que determina si la inferencia se ejecuta en Azure o en la infraestructura de Anthropic.
 
 <h3 id="2-configure-azure-credentials">
   2) Configurar credenciales de Azure
@@ -179,7 +182,7 @@ export ANTHROPIC_FOUNDRY_RESOURCE={resource}
 
 Establezca las variables de modelo para que coincidan con los nombres de implementación que creó en el paso 1.
 
-Sin `ANTHROPIC_DEFAULT_OPUS_MODEL`, el alias `opus` en Microsoft Foundry se resuelve a Opus 4.6. Establézcalo en el ID de Opus 4.8 para usar el modelo más reciente:
+Sin `ANTHROPIC_DEFAULT_OPUS_MODEL`, el alias `opus` en Microsoft Foundry se resuelve a Opus 4.6. Establézcalo en el ID de un modelo Opus más reciente, como Opus 4.8:
 
 ```bash theme={null}
 export ANTHROPIC_DEFAULT_OPUS_MODEL='claude-opus-4-8'
@@ -196,6 +199,8 @@ Para los ID de modelos actuales y heredados, consulte [Descripción general de m
 ```bash theme={null}
 export ENABLE_PROMPT_CACHING_1H=1
 ```
+
+Para establecer diferentes TTL para su conversación principal y para las solicitudes que Claude Code realiza fuera de ella, [elija el TTL usted mismo](/docs/es/prompt-caching#choose-the-ttl-yourself).
 
 <h3 id="5-run-claude-code">
   5. Ejecutar Claude Code

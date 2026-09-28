@@ -6,30 +6,22 @@
 
 > Chargez des plugins personnalisés pour étendre Claude Code avec des skills, des agents, des hooks et des serveurs MCP via le SDK Agent
 
-Les plugins vous permettent d'étendre Claude Code avec des fonctionnalités personnalisées qui peuvent être partagées entre les projets. Via le SDK Agent, vous pouvez charger programmatiquement des plugins à partir de répertoires locaux pour ajouter des skills, des agents, des hooks et des serveurs MCP à vos sessions d'agent.
+Les plugins vous permettent d'étendre Claude Code avec des fonctionnalités personnalisées qui peuvent être partagées entre les projets. Via le SDK Agent, vous pouvez charger programmatiquement des plugins à partir de répertoires locaux pour ajouter des capacités à vos sessions d'agent. Un plugin peut inclure :
 
-<h2 id="what-are-plugins">
-  Que sont les plugins ?
-</h2>
+* **Skills** : capacités que Claude invoque de manière autonome lorsqu'elles sont pertinentes. Vous pouvez également invoquer directement un skill de plugin avec `/plugin-name:skill-name`.
+* **Agents** : sous-agents spécialisés pour des tâches spécifiques
+* **Hooks** : gestionnaires d'événements qui répondent à l'utilisation d'outils et à d'autres événements
+* **Serveurs MCP** : intégrations d'outils externes via Model Context Protocol
 
-Les plugins sont des packages d'extensions Claude Code qui peuvent inclure :
-
-* **Skills** : Capacités invoquées par le modèle que Claude utilise de manière autonome (peuvent également être invoquées avec `/skill-name`)
-* **Agents** : Sous-agents spécialisés pour des tâches spécifiques
-* **Hooks** : Gestionnaires d'événements qui répondent à l'utilisation d'outils et à d'autres événements
-* **Serveurs MCP** : Intégrations d'outils externes via Model Context Protocol
-
-<Note>
-  Le répertoire `commands/` est un format hérité. Utilisez `skills/` pour les nouveaux plugins. Claude Code continue de supporter les deux formats pour la compatibilité rétroactive.
-</Note>
-
-Pour des informations complètes sur la structure des plugins et comment créer des plugins, consultez [Plugins](/docs/fr/plugins).
+Pour des informations complètes sur la structure des plugins et comment créer des plugins, consultez [Plugins](/docs/fr/plugins/overview).
 
 <h2 id="loading-plugins">
   Chargement des plugins
 </h2>
 
-Chargez les plugins en fournissant leurs chemins du système de fichiers local dans votre configuration d'options. Le champ `type` doit être `"local"`, la seule valeur que le SDK accepte. Pour utiliser un plugin distribué via une [marketplace](/docs/fr/plugin-marketplaces) ou un référentiel distant, téléchargez-le d'abord et fournissez le chemin du répertoire local. Le SDK supporte le chargement de plusieurs plugins à partir de différents emplacements.
+Chargez les plugins en fournissant leurs chemins du système de fichiers local dans votre configuration d'options. Le champ `type` doit être `"local"`, la seule valeur que le SDK accepte. Le SDK supporte le chargement de plusieurs plugins à partir de différents emplacements.
+
+Pour utiliser un plugin distribué via une [marketplace](/docs/fr/plugins/overview) ou un référentiel distant, téléchargez-le d'abord et fournissez le chemin du répertoire local. Pour la disposition du répertoire dont un plugin a besoin, consultez la [référence de structure des plugins](#plugin-structure-reference) ci-dessous.
 
 <CodeGroup>
   ```typescript TypeScript theme={null}
@@ -77,11 +69,11 @@ Chargez les plugins en fournissant leurs chemins du système de fichiers local d
 
 Les chemins des plugins peuvent être :
 
-* **Chemins relatifs** : Résolus par rapport à votre répertoire de travail actuel (par exemple, `"./plugins/my-plugin"`)
-* **Chemins absolus** : Chemins complets du système de fichiers (par exemple, `"/home/user/plugins/my-plugin"`)
+* **Chemins relatifs** : résolus par rapport à l'option `cwd` (par exemple, `"./plugins/my-plugin"`)
+* **Chemins absolus** : chemins complets du système de fichiers (par exemple, `"/home/user/plugins/my-plugin"`)
 
 <Note>
-  Le chemin doit pointer vers le répertoire racine du plugin : le parent de `skills/`, `agents/`, `hooks/`, `commands/` (hérité), ou `.claude-plugin/`, et non un sous-répertoire.
+  Le chemin doit pointer vers le répertoire racine du plugin : le parent de `skills/`, `agents/`, `hooks/`, `commands/`, ou `.claude-plugin/`.
 </Note>
 
 <h2 id="verifying-plugin-installation">
@@ -101,17 +93,17 @@ Lorsque les plugins se chargent avec succès, ils apparaissent dans le message d
     }
   })) {
     if (message.type === "system" && message.subtype === "init") {
-      // Vérifier les plugins chargés
+      // Check loaded plugins
       console.log("Plugins:", message.plugins);
-      // Exemple : [{ name: "my-plugin", path: "./my-plugin" }]
+      // Example: [{ name: "my-plugin", path: "/absolute/path/to/my-plugin" }]
 
-      // Les compétences du plugin apparaissent avec le nom du plugin comme préfixe
+      // Plugin skills appear with the plugin name as a prefix
       console.log("Skills:", message.skills);
-      // Exemple : ["my-plugin:greet"]
+      // Example: ["my-plugin:greet"]
 
-      // Les commandes du plugin utilisent le même préfixe, et les compétences apparaissent également ici
+      // Plugin commands use the same prefix, and skills appear here too
       console.log("Commands:", message.slash_commands);
-      // Exemple : ["compact", "context", "my-plugin:custom-command", "my-plugin:greet"]
+      // Example: ["compact", "context", "my-plugin:custom-command", "my-plugin:greet"]
     }
   }
   ```
@@ -129,24 +121,24 @@ Lorsque les plugins se chargent avec succès, ils apparaissent dans le message d
           ),
       ):
           if isinstance(message, SystemMessage) and message.subtype == "init":
-              # Vérifier les plugins chargés
+              # Check loaded plugins
               print("Plugins:", message.data.get("plugins"))
-              # Exemple : [{"name": "my-plugin", "path": "./my-plugin"}]
+              # Example: [{"name": "my-plugin", "path": "/absolute/path/to/my-plugin"}]
 
-              # Les compétences du plugin apparaissent avec le nom du plugin comme préfixe
+              # Plugin skills appear with the plugin name as a prefix
               print("Skills:", message.data.get("skills"))
-              # Exemple : ["my-plugin:greet"]
+              # Example: ["my-plugin:greet"]
 
-              # Les commandes du plugin utilisent le même préfixe, et les compétences apparaissent également ici
+              # Plugin commands use the same prefix, and skills appear here too
               print("Commands:", message.data.get("slash_commands"))
-              # Exemple : ["compact", "context", "my-plugin:custom-command", "my-plugin:greet"]
+              # Example: ["compact", "context", "my-plugin:custom-command", "my-plugin:greet"]
 
 
   asyncio.run(main())
   ```
 </CodeGroup>
 
-<h2 id="using-plugin-skills">
+<h2 id="use-plugin-skills">
   Utilisation des skills des plugins
 </h2>
 
@@ -178,9 +170,9 @@ Les skills des plugins sont automatiquement espacés de noms avec le nom du plug
   async def main():
       # Load a plugin with a custom /greet skill
       async for message in query(
-          prompt="/demo-plugin:greet",  # Use plugin skill with namespace
+          prompt="/my-plugin:greet",  # Use plugin skill with namespace
           options=ClaudeAgentOptions(
-              plugins=[{"type": "local", "path": "./plugins/demo-plugin"}]
+              plugins=[{"type": "local", "path": "./my-plugin"}]
           ),
       ):
           # Claude executes the custom greeting skill from the plugin
@@ -207,10 +199,10 @@ Voici un exemple complet démontrant le chargement et l'utilisation des plugins 
 <CodeGroup>
   ```typescript TypeScript theme={null}
   import { query } from "@anthropic-ai/claude-agent-sdk";
-  import * as path from "path";
+  import { fileURLToPath } from "node:url";
 
   async function runWithPlugin() {
-    const pluginPath = path.join(__dirname, "plugins", "my-plugin");
+    const pluginPath = fileURLToPath(new URL("./plugins/my-plugin", import.meta.url));
 
     console.log("Loading plugin from:", pluginPath);
 
@@ -240,8 +232,9 @@ Voici un exemple complet démontrant le chargement et l'utilisation des plugins 
   #!/usr/bin/env python3
   """Example demonstrating how to use plugins with the Agent SDK."""
 
+  import asyncio
   from pathlib import Path
-  import anyio
+
   from claude_agent_sdk import (
       AssistantMessage,
       ClaudeAgentOptions,
@@ -253,7 +246,7 @@ Voici un exemple complet démontrant le chargement et l'utilisation des plugins 
 
   async def run_with_plugin():
       """Example using a custom plugin."""
-      plugin_path = Path(__file__).parent / "plugins" / "demo-plugin"
+      plugin_path = Path(__file__).parent / "plugins" / "my-plugin"
 
       print(f"Loading plugin from: {plugin_path}")
 
@@ -277,7 +270,7 @@ Voici un exemple complet démontrant le chargement et l'utilisation des plugins 
 
 
   if __name__ == "__main__":
-      anyio.run(run_with_plugin)
+      asyncio.run(run_with_plugin())
   ```
 </CodeGroup>
 
@@ -290,60 +283,45 @@ Un répertoire de plugin contient généralement un fichier manifeste `.claude-p
 ```text theme={null}
 my-plugin/
 ├── .claude-plugin/
-│   └── plugin.json          # Manifeste du plugin (optionnel, composants découverts automatiquement sans lui)
-├── skills/                   # Agent Skills (invoquées de manière autonome ou via /skill-name)
+│   └── plugin.json          # Plugin manifest (optional, components auto-discovered without it)
+├── skills/                   # Agent Skills (invoked autonomously or via /plugin-name:skill-name)
 │   └── my-skill/
 │       └── SKILL.md
-├── commands/                 # Héritage : utilisez skills/ à la place
+├── commands/                 # Skills as flat .md files
 │   └── custom-cmd.md
-├── agents/                   # Agents personnalisés
+├── agents/                   # Custom agents
 │   └── specialist.md
-├── hooks/                    # Gestionnaires d'événements
+├── hooks/                    # Event handlers
 │   └── hooks.json
-└── .mcp.json                # Définitions du serveur MCP
+└── .mcp.json                # MCP server definitions
 ```
 
-Pour des informations détaillées sur la création de plugins, consultez :
+<Note>
+  Le répertoire `commands/` contient les skills sous forme de fichiers Markdown plats. Utilisez `skills/` pour les nouveaux plugins. Claude Code supporte les deux emplacements.
+</Note>
 
-* [Plugins](/docs/fr/plugins) - Guide complet de développement de plugins
-* [Référence des plugins](/docs/fr/plugins-reference) - Spécifications techniques et schémas
-
-<h2 id="common-use-cases">
-  Cas d'usage courants
-</h2>
-
-<h3 id="development-and-testing">
-  Développement et test
-</h3>
-
-Chargez les plugins pendant le développement sans les installer globalement :
-
-```typescript theme={null}
-plugins: [{ type: "local", path: "./dev-plugins/my-plugin" }];
-```
-
-<h3 id="project-specific-extensions">
-  Extensions spécifiques au projet
-</h3>
-
-Incluez les plugins dans votre référentiel de projet pour la cohérence à l'échelle de l'équipe :
-
-```typescript theme={null}
-plugins: [{ type: "local", path: "./project-plugins/team-workflows" }];
-```
-
-<h3 id="multiple-plugin-sources">
+<h2 id="multiple-plugin-sources">
   Plusieurs sources de plugins
-</h3>
+</h2>
 
 Combinez les plugins de différents emplacements :
 
 ```typescript theme={null}
+import * as os from "node:os";
+import * as path from "node:path";
+
 plugins: [
   { type: "local", path: "./local-plugin" },
-  { type: "local", path: "~/.claude/custom-plugins/shared-plugin" }
+  {
+    type: "local",
+    path: path.join(os.homedir(), ".claude", "custom-plugins", "shared-plugin")
+  }
 ];
 ```
+
+<Note>
+  Le SDK n'étend pas les chemins avec tilde comme `~/plugins`. Si un chemin de plugin n'existe pas, le SDK ignore ce plugin et la session continue, donc vérifiez la liste `plugins` dans le message d'initialisation pour confirmer que chaque plugin s'est chargé.
+</Note>
 
 <h2 id="troubleshooting">
   Dépannage
@@ -355,9 +333,10 @@ plugins: [
 
 Si votre plugin n'apparaît pas dans le message d'initialisation :
 
-1. **Vérifiez le chemin** : Assurez-vous que le chemin pointe vers le répertoire racine du plugin, le parent de `skills/`, `agents/`, `hooks/`, `commands/` (hérité), ou `.claude-plugin/`
-2. **Validez plugin.json** : Si votre plugin inclut un manifeste, assurez-vous qu'il a une syntaxe JSON valide
-3. **Vérifiez les permissions de fichier** : Assurez-vous que le répertoire du plugin est lisible
+1. **Vérifiez le chemin** : assurez-vous que le chemin pointe vers le répertoire racine du plugin, le parent de `skills/`, `agents/`, `hooks/`, `commands/`, ou `.claude-plugin/`
+2. **Validez plugin.json** : si votre plugin inclut un manifeste, assurez-vous qu'il a une syntaxe JSON valide
+3. **Vérifiez les permissions de fichier** : assurez-vous que le répertoire du plugin est lisible
+4. **Confirmez que le répertoire existe** : le SDK ignore un chemin inexistant, et le plugin n'apparaît pas dans la liste `plugins` du message d'initialisation
 
 <h3 id="skills-not-appearing">
   Les skills n'apparaissent pas
@@ -365,26 +344,16 @@ Si votre plugin n'apparaît pas dans le message d'initialisation :
 
 Si les skills des plugins ne fonctionnent pas :
 
-1. **Utilisez l'espace de noms** : Invoquez les skills des plugins en tant que `/plugin-name:skill-name`
-2. **Vérifiez le message d'initialisation** : Vérifiez que le skill apparaît dans la liste `skills` avec l'espace de noms correct
-3. **Validez les fichiers de skill** : Assurez-vous que chaque skill a un fichier `SKILL.md` dans son propre sous-répertoire sous `skills/`, par exemple `skills/my-skill/SKILL.md`
-
-<h3 id="path-resolution-issues">
-  Problèmes de résolution de chemin
-</h3>
-
-Si les chemins relatifs ne fonctionnent pas :
-
-1. **Vérifiez le répertoire de travail** : Les chemins relatifs sont résolus à partir de votre répertoire de travail actuel
-2. **Utilisez des chemins absolus** : Pour la fiabilité, envisagez d'utiliser des chemins absolus
-3. **Normalisez les chemins** : Utilisez les utilitaires de chemin pour construire les chemins correctement
+1. **Utilisez l'espace de noms** : invoquez les skills des plugins en tant que `/plugin-name:skill-name`
+2. **Vérifiez le message d'initialisation** : vérifiez que le skill apparaît dans la liste `skills` avec l'espace de noms correct
+3. **Validez les fichiers de skill** : assurez-vous que chaque skill a un fichier `SKILL.md` dans son propre sous-répertoire sous `skills/`, par exemple `skills/my-skill/SKILL.md`
 
 <h2 id="see-also">
   Voir aussi
 </h2>
 
-* [Plugins](/docs/fr/plugins) - Guide complet de développement de plugins
-* [Référence des plugins](/docs/fr/plugins-reference) - Spécifications techniques
-* [Commands](/docs/fr/agent-sdk/slash-commands) - Utilisation des commandes dans le SDK
+* [Plugins](/docs/fr/plugins/overview) - Guide complet de développement de plugins
+* [Référence des plugins](/docs/fr/plugins/manifest-reference) - Spécifications techniques
+* [Commands](/docs/fr/agent-sdk/skills#dispatch-commands-by-name) - Dispatching commands in the SDK
 * [Subagents](/docs/fr/agent-sdk/subagents) - Travail avec des agents spécialisés
 * [Skills](/docs/fr/agent-sdk/skills) - Utilisation des Agent Skills

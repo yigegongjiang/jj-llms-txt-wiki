@@ -188,7 +188,7 @@ export const Experiment = ({flag, treatment, children}) => {
 
 <Experiment flag="docs-contact-sales-cta" treatment={<ContactSalesCard surface="claude_platform_on_aws" />} />
 
-Claude Platform on AWS — это API Claude, управляемый Anthropic, с аутентификацией AWS, контролем доступа IAM и выставлением счетов через AWS Marketplace. Запросы поступают непосредственно в API Anthropic, поэтому вы получаете те же модели и функции API, что и в [Claude API](https://platform.claude.com/docs) по тому же графику выпусков. Функции на стороне клиента, которые Claude Code включает через сервис флагов функций Anthropic, такие как [`/loop` самостоятельное управление темпом](/docs/ru/scheduled-tasks#let-claude-choose-the-interval), отключены по умолчанию, и [инструмент advisor](/docs/ru/advisor) недоступен. Полный список см. в [матрице доступности функций](/docs/ru/feature-availability#summary-by-provider). Вы аутентифицируетесь с помощью учетных данных AWS или ключа API рабочей области, и вы платите через AWS Marketplace.
+Claude Platform on AWS — это API Claude, управляемый Anthropic, с аутентификацией AWS, контролем доступа IAM и выставлением счетов через AWS Marketplace. Запросы поступают непосредственно в API Anthropic, поэтому вы получаете те же модели и функции API, что и в [Claude API](https://platform.claude.com/docs) по тому же графику выпусков. Функции на стороне клиента, которые Claude Code включает через сервис флагов функций Anthropic, отключены по умолчанию, и [инструмент advisor](/docs/ru/advisor) недоступен. Полный список см. в [матрице доступности функций](/docs/ru/feature-availability#summary-by-provider).
 
 Используйте это руководство, чтобы направить Claude Code на рабочую область, которую вы уже подготовили через Claude Platform on AWS. Для подписки AWS и настройки рабочей области, которые предшествуют этому, см. [документацию Claude Platform on AWS](https://platform.claude.com/docs/en/build-with-claude/claude-platform-on-aws).
 
@@ -230,7 +230,7 @@ export AWS_PROFILE=my-profile
 
 Для CI и автоматизации дайте средству выполнения роль IAM с разрешением на вызов сервиса Anthropic и установите `AWS_REGION`. Цепочка учетных данных автоматически подхватывает роль.
 
-Если ваши учетные данные SSO истекают во время сеанса, настройте [`awsAuthRefresh`](/docs/ru/amazon-bedrock#advanced-credential-configuration), чтобы Claude Code повторно запустил вашу команду входа и повторил попытку вместо сбоя. Автоматическое обновление на Claude Platform on AWS требует Claude Code v2.1.198 или более поздней версии; более ранние версии останавливаются с подсказкой запустить `/login`, что не может обновить учетные данные AWS. Добавьте команду в ваш `settings.json`:
+Если ваши учетные данные SSO истекают во время сеанса, настройте [`awsAuthRefresh`](/docs/ru/amazon-bedrock#advanced-credential-configuration), чтобы Claude Code повторно запустил вашу команду входа и повторил попытку вместо сбоя. Автоматическое обновление на Claude Platform on AWS требует Claude Code v2.1.198 или более поздней версии; более ранние версии останавливаются с подсказкой запустить `/login`, что не может обновить учетные данные AWS. Добавьте команду в ваш [файл настроек](/docs/ru/settings), например `~/.claude/settings.json`:
 
 ```json theme={null}
 {
@@ -238,7 +238,9 @@ export AWS_PROFILE=my-profile
 }
 ```
 
-С настроенным `awsAuthRefresh`, `/login` показывает опцию **Claude Platform on AWS · refresh credentials** в разделе **Using 3rd-party platforms**. Выбор этой опции запускает настроенную команду и повторно читает ваши учетные данные AWS без перезагрузки Claude Code.
+Claude Code также запускает эту команду при запуске, когда не может проверить ваши существующие учетные данные AWS, и показывает вывод команды на панели `Authentication` до завершения входа.
+
+С настроенным `awsAuthRefresh` запустите `/login`, выберите **3rd-party platform**, затем выберите **Claude Platform on AWS · refresh credentials** в разделе **Using 3rd-party platforms**. Claude Code запускает настроенную команду и повторно читает ваши учетные данные AWS без перезагрузки.
 
 **Вариант B: ключ API рабочей области**
 
@@ -253,7 +255,7 @@ export ANTHROPIC_AWS_API_KEY=sk-ant-xxxxx
 Обращайтесь с ключами API рабочей области как с любыми другими производственными учетными данными. [Файл пользовательских настроек](/docs/ru/settings) блок `env` — это удобный способ ограничить ключ вашей машиной без глобального экспорта.
 
 <Note>
-  Команды `/login` и `/logout` не подписывают вас на подписку Claude.ai для Claude Platform on AWS. Аутентификация выполняется через ваши учетные данные AWS или ключ API рабочей области. Исключением является опция **refresh credentials**, которую `/login` показывает при настроенном `awsAuthRefresh`, которая повторно читает ваши учетные данные AWS, как описано выше.
+  Команды `/login` и `/logout` не подписывают вас на подписку Claude.ai для Claude Platform on AWS. Аутентификация выполняется через ваши учетные данные AWS или ключ API рабочей области.
 </Note>
 
 <h3 id="2-configure-claude-code">
@@ -268,7 +270,9 @@ export ANTHROPIC_AWS_WORKSPACE_ID=wrkspc_01ABCDEFGHIJKLMN
 export AWS_REGION=us-east-1
 ```
 
-`ANTHROPIC_AWS_WORKSPACE_ID` является обязательным и отправляется при каждом запросе как заголовок `anthropic-workspace-id`. Базовый URL вычисляется из `AWS_REGION` как `https://aws-external-anthropic.{region}.api.aws`. Чтобы переопределить URL напрямую, установите `ANTHROPIC_AWS_BASE_URL`.
+`ANTHROPIC_AWS_WORKSPACE_ID` является обязательным. Claude Code отправляет его при каждом запросе как заголовок `anthropic-workspace-id`. Замените пример значения `wrkspc_01ABCDEFGHIJKLMN` на ваш собственный идентификатор рабочей области из вашей настройки Claude Platform on AWS.
+
+Claude Code вычисляет базовый URL как `https://aws-external-anthropic.{region}.api.aws` из региона AWS, который он разрешает с [той же приоритетностью, что и Amazon Bedrock](/docs/ru/amazon-bedrock#3-configure-claude-code). Чтобы переопределить URL напрямую, установите `ANTHROPIC_AWS_BASE_URL`.
 
 Claude Platform on AWS является добровольным, даже если учетные данные AWS присутствуют в вашей среде. Amazon Bedrock и Microsoft Foundry имеют приоритет в маршрутизации поставщиков, поэтому отмените установку `CLAUDE_CODE_USE_BEDROCK` и `CLAUDE_CODE_USE_FOUNDRY`, если они установлены.
 
@@ -278,7 +282,7 @@ Claude Platform on AWS является добровольным, даже ес�
 
 Claude Platform on AWS использует те же идентификаторы моделей, что и прямой API Claude.
 
-Псевдонимы по умолчанию `fable`, `opus`, `sonnet` и `haiku` разрешаются в встроенные значения по умолчанию Claude Code для Claude Platform on AWS, которые могут отставать от последнего выпуска. Без `ANTHROPIC_DEFAULT_OPUS_MODEL` псевдоним `opus` разрешается в Opus 4.8. До версии v2.1.207 он разрешался в Opus 4.7.
+Псевдонимы по умолчанию `fable`, `opus`, `sonnet` и `haiku` разрешаются в встроенные значения по умолчанию Claude Code для Claude Platform on AWS, которые могут отставать от последнего выпуска. Без `ANTHROPIC_DEFAULT_OPUS_MODEL` псевдоним `opus` разрешается в Opus 5.5. До версии v2.1.280 он разрешался в Opus 5 с версии v2.1.219, в Opus 4.8 с версии v2.1.207, и в Opus 4.7 до этого.
 
 Если вы развертываете Claude Code для команды, явно закрепите идентификаторы моделей, чтобы новый выпуск не переместил всех сразу:
 
@@ -292,6 +296,20 @@ export ANTHROPIC_DEFAULT_HAIKU_MODEL=claude-haiku-4-5
 Полный список идентификаторов моделей и псевдонимов см. в разделе [Обзор моделей](https://platform.claude.com/docs/en/about-claude/models/overview). Для других переменных, связанных с моделями, см. [Конфигурация модели](/docs/ru/model-config).
 
 [Prompt caching](/docs/ru/prompt-caching) включен автоматически. Чтобы запросить TTL кэша на 1 час вместо стандартного 5 минут, установите `ENABLE_PROMPT_CACHING_1H=1`. API выставляет счета за записи кэша на 1 час по более высокому тарифу. Ознакомьтесь с [ценами на prompt caching](https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing) для получения информации о тарифах.
+
+Чтобы установить разные TTL для вашего основного разговора и для запросов, которые Claude Code делает вне его, [выберите TTL самостоятельно](/docs/ru/prompt-caching#choose-the-ttl-yourself).
+
+<h3 id="4-launch-and-verify">
+  4. Запустите и проверьте
+</h3>
+
+Запустите Claude Code и подтвердите маршрутизацию:
+
+```bash theme={null}
+claude
+```
+
+Баннер при запуске показывает `Claude Platform on AWS`, когда поставщик активен. Запустите `/status` для проверки деталей: строка `API provider` читает `Claude Platform on AWS`, и вывод включает ваш `Workspace ID`, `AWS region` и `Claude Platform on AWS base URL`, если вы установили переопределение.
 
 <h2 id="use-the-agent-sdk">
   Используйте Agent SDK

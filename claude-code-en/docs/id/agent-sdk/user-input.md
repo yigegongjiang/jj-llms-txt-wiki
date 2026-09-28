@@ -12,7 +12,7 @@ Claude meminta input pengguna dalam dua situasi: ketika membutuhkan **izin untuk
 
 Untuk pertanyaan klarifikasi, Claude menghasilkan pertanyaan dan opsi. Peran Anda adalah menyajikannya kepada pengguna dan mengembalikan pilihan mereka. Anda tidak dapat menambahkan pertanyaan Anda sendiri ke alur ini; jika Anda perlu menanyakan sesuatu kepada pengguna, lakukan itu secara terpisah dalam logika aplikasi Anda.
 
-Callback dapat tetap tertunda tanpa batas waktu. Eksekusi tetap dijeda sampai callback Anda kembali, dan SDK hanya membatalkan tunggu ketika kueri itu sendiri dibatalkan. Jika pengguna mungkin membutuhkan waktu lebih lama untuk merespons daripada yang dapat ditahan proses Anda, kembalikan keputusan [`defer` hook](/docs/id/hooks#defer-a-tool-call-for-later), yang memungkinkan proses keluar dan dilanjutkan nanti dari sesi yang disimpan.
+Callback dapat tetap tertunda tanpa batas waktu. Eksekusi tetap dijeda sampai callback Anda kembali. Jika pengguna mungkin membutuhkan waktu lebih lama untuk merespons daripada yang dapat ditahan proses Anda, daftarkan hook [`PreToolUse`](/docs/id/agent-sdk/hooks) yang mengembalikan keputusan [`defer`](/docs/id/hooks#defer-a-tool-call-for-later) alih-alih menunggu dalam callback, sehingga proses dapat keluar dan dilanjutkan nanti dari sesi yang disimpan.
 
 Panduan ini menunjukkan cara mendeteksi setiap jenis permintaan dan merespons dengan tepat.
 
@@ -24,6 +24,9 @@ Berikan callback `canUseTool` dalam opsi kueri Anda. Callback dipicu setiap kali
 
 <CodeGroup>
   ```python Python theme={null}
+  from claude_agent_sdk import ClaudeAgentOptions
+
+
   async def handle_tool_request(tool_name, input_data, context):
       # Minta pengguna dan kembalikan izin atau tolak
       ...
@@ -48,9 +51,9 @@ Callback dipicu dalam dua kasus:
 2. **Claude mengajukan pertanyaan**: Claude memanggil alat `AskUserQuestion`. Periksa apakah `tool_name == "AskUserQuestion"` untuk menanganinya secara berbeda. Jika Anda menentukan array `tools`, sertakan `AskUserQuestion` agar ini berfungsi. Lihat [Menangani pertanyaan klarifikasi](#handle-clarifying-questions) untuk detail.
 
 <Warning>
-  **Callback tidak pernah dipicu untuk alat yang disetujui secara otomatis.** Setiap persetujuan sebelumnya dalam [alur evaluasi izin](/docs/id/agent-sdk/permissions#how-permissions-are-evaluated), aturan izin atau mode seperti `acceptEdits` atau `bypassPermissions`, menyelesaikan panggilan sebelum `canUseTool` dikonsultasikan. Jika Anda mencantumkan alat secara langsung dalam `allowed_tools`, pemeriksaan `canUseTool` untuk alat tersebut tidak pernah berjalan kecuali aturan ask atau mode `plan` mengarahkan panggilan kembali ke prompt. Untuk logika yang harus diterapkan ke setiap panggilan alat, gunakan [hook `PreToolUse`](/docs/id/agent-sdk/hooks), yang dijalankan sebelum sisa alur dan dapat mengizinkan, menolak, atau memodifikasi permintaan.
+  **Callback tidak pernah dipicu untuk alat yang disetujui secara otomatis.** Setiap persetujuan sebelumnya dalam [alur evaluasi izin](/docs/id/agent-sdk/permissions#how-permissions-are-evaluated), aturan izin atau mode seperti `acceptEdits` atau `bypassPermissions`, menyelesaikan panggilan sebelum `canUseTool` dikonsultasikan. Jika Anda mencantumkan alat secara langsung dalam `allowed_tools`, pemeriksaan `canUseTool` untuk alat tersebut berjalan hanya ketika [alur evaluasi](/docs/id/agent-sdk/permissions#how-permissions-are-evaluated) mengarahkan panggilan kembali ke prompt, seperti aturan ask atau mode `plan`. Untuk logika yang harus diterapkan ke setiap panggilan alat, gunakan [hook `PreToolUse`](/docs/id/agent-sdk/hooks), yang dijalankan sebelum sisa alur dan dapat mengizinkan, menolak, atau memodifikasi permintaan.
 
-  `AskUserQuestion`, alat MCP yang ditandai [`requiresUserInteraction`](/docs/id/mcp#require-approval-for-a-specific-tool), dan alat konektor [yang organisasi Anda atur ke `ask`](/docs/id/mcp#organization-controls-on-connector-tools) mencapai callback bahkan ketika aturan izin cocok. Dalam mode `dontAsk` panggilan ini ditolak sebagai gantinya, tanpa memanggil callback.
+  Aturan izin tidak pra-menyetujui [tindakan yang tidak ada mode yang menyetujui secara otomatis](/docs/id/permission-modes#actions-no-mode-auto-approves); lihat [Cara izin dievaluasi](/docs/id/agent-sdk/permissions#how-permissions-are-evaluated) untuk mengetahui mana dari mereka yang mencapai callback dan apa yang terjadi dalam mode `dontAsk` dan `auto`.
 </Warning>
 
 Anda juga dapat menggunakan [hook `PermissionRequest`](/docs/id/agent-sdk/hooks#available-hooks) untuk mengirim notifikasi eksternal (Slack, email, push) ketika Claude menunggu persetujuan.
@@ -59,7 +62,9 @@ Anda juga dapat menggunakan [hook `PermissionRequest`](/docs/id/agent-sdk/hooks#
   Menangani permintaan persetujuan alat
 </h2>
 
-Setelah Anda melewatkan callback `canUseTool` dalam opsi kueri Anda, callback dipicu ketika Claude ingin menggunakan alat yang tidak disetujui secara otomatis. Callback Anda menerima tiga argumen:
+Setelah Anda melewatkan callback `canUseTool` dalam opsi kueri Anda, callback dipicu ketika Claude ingin menggunakan alat yang tidak disetujui oleh apa pun sebelumnya dalam alur izin. Dalam beberapa konfigurasi, seperti mode `dontAsk`, Claude Code tidak memanggilnya; langkah terakhir dari [Bagaimana izin dievaluasi](/docs/id/agent-sdk/permissions#how-permissions-are-evaluated) mencantumkannya dan mengatakan apa yang terjadi pada panggilan sebagai gantinya.
+
+Callback Anda menerima tiga argumen:
 
 | Argumen                             | Deskripsi                                                                                                                                                                                                                                                                                                                                                         |
 | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -199,10 +204,6 @@ Contoh berikut meminta Claude untuk membuat dan menghapus file uji. Ketika Claud
   ```
 </CodeGroup>
 
-<Note>
-  Di Python, `can_use_tool` memerlukan [mode streaming](/docs/id/agent-sdk/streaming-vs-single-mode). Ketika Anda melewatkan aliran pesan terbatas melalui `query(prompt=generator)` atau `ClaudeSDKClient.connect(prompt=async_iterable)`, SDK menutup aliran input setelah pesan terakhir, sebelum callback izin dapat dipanggil, kecuali hook terdaftar atau server MCP dalam proses menjaganya tetap terbuka. Contoh di atas menjaganya tetap terbuka dengan hook `PreToolUse` yang mengembalikan `{"continue_": True}`. Menghubungkan tanpa prompt dan mengirim pesan melalui `ClaudeSDKClient.query()` menjaga aliran tetap terbuka dengan sendirinya dan tidak memerlukan hook.
-</Note>
-
 Contoh ini menggunakan alur `y/n` di mana input apa pun selain `y` diperlakukan sebagai penolakan. Dalam praktik, Anda mungkin membangun UI yang lebih kaya yang memungkinkan pengguna memodifikasi permintaan, memberikan umpan balik, atau mengarahkan Claude sepenuhnya. Lihat [Merespons permintaan alat](#respond-to-tool-requests) untuk semua cara Anda dapat merespons.
 
 <h3 id="respond-to-tool-requests">
@@ -220,26 +221,6 @@ Saat mengizinkan, alat berjalan dengan input yang diminta Claude kecuali Anda me
 
 Saat menolak, berikan pesan yang menjelaskan alasannya. Claude melihat pesan ini dan mungkin menyesuaikan pendekatannya.
 
-<CodeGroup>
-  ```python Python theme={null}
-  from claude_agent_sdk.types import PermissionResultAllow, PermissionResultDeny
-
-  # Izinkan alat untuk dijalankan
-  return PermissionResultAllow(updated_input=input_data)
-
-  # Blokir alat
-  return PermissionResultDeny(message="User rejected this action")
-  ```
-
-  ```typescript TypeScript theme={null}
-  // Izinkan alat untuk dijalankan
-  return { behavior: "allow", updatedInput: input };
-
-  // Blokir alat
-  return { behavior: "deny", message: "User rejected this action" };
-  ```
-</CodeGroup>
-
 Selain mengizinkan atau menolak, Anda dapat memodifikasi input alat atau memberikan konteks yang membantu Claude menyesuaikan pendekatannya:
 
 * **Setujui**: biarkan alat dijalankan seperti yang diminta Claude
@@ -248,6 +229,8 @@ Selain mengizinkan atau menolak, Anda dapat memodifikasi input alat atau memberi
 * **Tolak**: blokir alat dan beri tahu Claude mengapa
 * **Sarankan alternatif**: blokir tetapi arahkan Claude ke arah yang diinginkan pengguna
 * **Alihkan sepenuhnya**: gunakan [input streaming](/docs/id/agent-sdk/streaming-vs-single-mode) untuk mengirim Claude instruksi yang sepenuhnya baru
+
+Pembantu `ask_user` dan `askUser` dalam cuplikan berikut berdiri untuk UI prompt aplikasi Anda sendiri.
 
 <Tabs>
   <Tab title="Setujui">
@@ -571,12 +554,12 @@ Langkah-langkah berikut menunjukkan cara menangani pertanyaan klarifikasi:
 
 Input berisi pertanyaan yang dihasilkan Claude dalam array `questions`. Setiap pertanyaan memiliki bidang-bidang ini:
 
-| Bidang        | Deskripsi                                                                                                                                                |
-| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `question`    | Teks pertanyaan lengkap untuk ditampilkan                                                                                                                |
-| `header`      | Label pendek untuk pertanyaan (maks 12 karakter)                                                                                                         |
-| `options`     | Array 2-4 pilihan, masing-masing dengan `label` dan `description`. TypeScript: secara opsional `preview` (lihat [di bawah](#option-previews-typescript)) |
-| `multiSelect` | Jika `true`, pengguna dapat memilih beberapa opsi                                                                                                        |
+| Bidang        | Deskripsi                                                                                                                                                      |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `question`    | Teks pertanyaan lengkap untuk ditampilkan                                                                                                                      |
+| `header`      | Label pendek untuk pertanyaan (maks 12 karakter)                                                                                                               |
+| `options`     | Array 2-4 pilihan, masing-masing dengan `label` dan `description`. TypeScript: secara opsional `preview`. Lihat [Pratinjau opsi](#option-previews-typescript). |
+| `multiSelect` | Jika `true`, pengguna dapat memilih beberapa opsi                                                                                                              |
 
 Struktur yang diterima callback Anda:
 
@@ -653,7 +636,7 @@ Kembalikan objek `answers` yang memetakan bidang `question` setiap pertanyaan ke
 
 Untuk pertanyaan multi-pilih, berikan array label atau gabungkan dengan `", "`. Untuk input teks bebas per-pertanyaan seperti opsi "Other", masukkan teks pengguna dalam `answers[question]` seperti yang ditunjukkan dalam [Dukung input teks bebas](#support-free-text-input). Atur `response` hanya ketika UI Anda memungkinkan pengguna untuk menutup kartu pertanyaan dan mengetik respons umum yang bukan jawaban untuk pertanyaan spesifik apa pun. Ketika `response` diatur, Claude menerima "The user responded: …" alih-alih daftar jawaban per-pertanyaan.
 
-```json theme={null}
+```jsonc theme={null}
 {
   "questions": [
     // ...

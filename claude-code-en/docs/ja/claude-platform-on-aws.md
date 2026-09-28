@@ -188,7 +188,9 @@ export const Experiment = ({flag, treatment, children}) => {
 
 <Experiment flag="docs-contact-sales-cta" treatment={<ContactSalesCard surface="claude_platform_on_aws" />} />
 
-AWS 上の Claude Platform は、AWS 認証、IAM アクセス制御、AWS Marketplace 請求を備えた Anthropic が運営する Claude API です。リクエストは Anthropic の API に直接到達するため、[Claude API](https://platform.claude.com/docs) と同じモデルと API 機能を同じリリーススケジュールで取得できます。Claude Code が Anthropic の機能フラグサービスを通じてオンにするクライアント側機能（[`/loop` 自動ペーシング](/docs/ja/scheduled-tasks#let-claude-choose-the-interval)など）はデフォルトではオフであり、[アドバイザーツール](/docs/ja/advisor)は利用できません。完全なリストについては、[機能可用性マトリックス](/docs/ja/feature-availability#summary-by-provider)を参照してください。AWS 認証情報またはワークスペース API キーで認証し、AWS Marketplace を通じて支払います。
+AWS 上の Claude Platform は、AWS 認証、IAM アクセス制御、AWS Marketplace 請求を備えた Anthropic が運営する Claude API です。リクエストは Anthropic の API に直接到達するため、[Claude API](https://platform.claude.com/docs) と同じモデルと API 機能を同じリリーススケジュールで取得できます。AWS 認証情報またはワークスペース API キーで認証し、AWS Marketplace を通じて支払います。
+
+Claude Code が Anthropic の機能フラグサービスを通じてオンにするクライアント側機能はデフォルトではオフであり、[アドバイザーツール](/docs/ja/advisor)は利用できません。完全なリストについては、[機能可用性マトリックス](/docs/ja/feature-availability#summary-by-provider)を参照してください。
 
 このガイドを使用して、AWS 上の Claude Platform を通じてすでにプロビジョニングしたワークスペースに Claude Code をポイントします。このガイドの前に行う AWS サブスクリプションとワークスペースのセットアップについては、[AWS 上の Claude Platform ドキュメント](https://platform.claude.com/docs/en/build-with-claude/claude-platform-on-aws)を参照してください。
 
@@ -230,7 +232,7 @@ export AWS_PROFILE=my-profile
 
 CI と自動化の場合、Anthropic サービスを呼び出す権限を持つ IAM ロールをランナーに付与し、`AWS_REGION` を設定します。認証情報チェーンはロールを自動的に取得します。
 
-SSO 認証情報がセッション中に期限切れになった場合、[`awsAuthRefresh`](/docs/ja/amazon-bedrock#advanced-credential-configuration) を設定して、Claude Code がログインコマンドを再実行し、失敗する代わりに再試行するようにします。AWS 上の Claude Platform での自動更新には Claude Code v2.1.198 以降が必要です。それより前のバージョンは `/login` を実行するプロンプトで停止します。これは AWS 認証情報を更新できません。コマンドを `settings.json` に追加します。
+SSO 認証情報がセッション中に期限切れになった場合、[`awsAuthRefresh`](/docs/ja/amazon-bedrock#advanced-credential-configuration) を設定して、Claude Code がログインコマンドを再実行し、失敗する代わりに再試行するようにします。AWS 上の Claude Platform での自動更新には Claude Code v2.1.198 以降が必要です。それより前のバージョンは `/login` を実行するプロンプトで停止します。これは AWS 認証情報を更新できません。コマンドを [設定ファイル](/docs/ja/settings)（`~/.claude/settings.json` など）に追加します。
 
 ```json theme={null}
 {
@@ -238,7 +240,9 @@ SSO 認証情報がセッション中に期限切れになった場合、[`awsAu
 }
 ```
 
-`awsAuthRefresh` が設定されている場合、`/login` は **Using 3rd-party platforms** の下に **Claude Platform on AWS · refresh credentials** オプションを表示します。これを選択すると、設定されたコマンドが実行され、Claude Code を再起動せずに AWS 認証情報が再度読み込まれます。
+Claude Code は起動時にこのコマンドを実行して既存の AWS 認証情報を検証できない場合も実行し、ログインが完了するまで `Authentication` パネルにコマンドの出力を表示します。
+
+`awsAuthRefresh` が設定されている場合、`/login` を実行し、**3rd-party platform** を選択してから、**Using 3rd-party platforms** の下で **Claude Platform on AWS · refresh credentials** を選択します。Claude Code は設定されたコマンドを実行し、再起動せずに AWS 認証情報を再度読み込みます。
 
 **オプション B: ワークスペース API キー**
 
@@ -253,7 +257,7 @@ export ANTHROPIC_AWS_API_KEY=sk-ant-xxxxx
 ワークスペース API キーは他の本番認証情報と同様に扱ってください。[ユーザー設定ファイル](/docs/ja/settings) の `env` ブロックは、グローバルにエクスポートせずにキーをマシンにスコープするための便利な方法です。
 
 <Note>
-  `/login` および `/logout` コマンドは Claude.ai サブスクリプションに対してサインインしません。AWS 上の Claude Platform の場合、認証は AWS 認証情報またはワークスペース API キーを通じて実行されます。例外は、`awsAuthRefresh` が設定されている場合に `/login` が表示する **refresh credentials** オプションで、これは上記で説明したように AWS 認証情報を再度読み込みます。
+  `/login` および `/logout` コマンドは Claude.ai サブスクリプションに対して Claude Platform on AWS にサインインしません。認証は AWS 認証情報またはワークスペース API キーを通じて実行されます。
 </Note>
 
 <h3 id="2-configure-claude-code">
@@ -268,7 +272,9 @@ export ANTHROPIC_AWS_WORKSPACE_ID=wrkspc_01ABCDEFGHIJKLMN
 export AWS_REGION=us-east-1
 ```
 
-`ANTHROPIC_AWS_WORKSPACE_ID` は必須であり、すべてのリクエストで `anthropic-workspace-id` ヘッダーとして送信されます。ベース URL は `AWS_REGION` から `https://aws-external-anthropic.{region}.api.aws` として計算されます。URL を直接オーバーライドするには、`ANTHROPIC_AWS_BASE_URL` を設定します。
+`ANTHROPIC_AWS_WORKSPACE_ID` は必須です。Claude Code はすべてのリクエストで `anthropic-workspace-id` ヘッダーとして送信します。例の `wrkspc_01ABCDEFGHIJKLMN` 値を AWS 上の Claude Platform セットアップから取得した独自のワークスペース ID に置き換えます。
+
+Claude Code はベース URL を AWS リージョンから `https://aws-external-anthropic.{region}.api.aws` として計算します。これは [Amazon Bedrock と同じ優先度](/docs/ja/amazon-bedrock#3-configure-claude-code) で解決されます。URL を直接オーバーライドするには、`ANTHROPIC_AWS_BASE_URL` を設定します。
 
 AWS 上の Claude Platform は、環境に AWS 認証情報が存在する場合でもオプトインです。Amazon Bedrock と Microsoft Foundry はプロバイダールーティングで優先されるため、設定されている場合は `CLAUDE_CODE_USE_BEDROCK` と `CLAUDE_CODE_USE_FOUNDRY` をアンセットします。
 
@@ -278,7 +284,7 @@ AWS 上の Claude Platform は、環境に AWS 認証情報が存在する場合
 
 AWS 上の Claude Platform は、直接 Claude API と同じモデル ID を使用します。
 
-デフォルトのエイリアス `fable`、`opus`、`sonnet`、`haiku` は Claude Code の AWS 上の Claude Platform 用の組み込みデフォルトに解決されます。これは最新リリースより遅れる可能性があります。`ANTHROPIC_DEFAULT_OPUS_MODEL` がない場合、`opus` エイリアスは Opus 4.8 に解決されます。v2.1.207 より前では、Opus 4.7 に解決されていました。
+デフォルトのエイリアス `fable`、`opus`、`sonnet`、`haiku` は Claude Code の AWS 上の Claude Platform 用の組み込みデフォルトに解決されます。これは最新リリースより遅れる可能性があります。`ANTHROPIC_DEFAULT_OPUS_MODEL` がない場合、`opus` エイリアスは Opus 5.5 に解決されます。v2.1.280 より前では、v2.1.219 から Opus 5 に解決されていました。v2.1.207 から Opus 4.8 に解決されていました。それより前は Opus 4.7 に解決されていました。
 
 Claude Code をチームにデプロイする場合、モデル ID を明示的にピン留めして、新しいリリースがすべてのユーザーを一度に移動しないようにします。
 
@@ -292,6 +298,20 @@ export ANTHROPIC_DEFAULT_HAIKU_MODEL=claude-haiku-4-5
 モデル ID とエイリアスの完全なリストについては、[モデル概要](https://platform.claude.com/docs/en/about-claude/models/overview) を参照してください。その他のモデル関連の変数については、[モデル設定](/docs/ja/model-config) を参照してください。
 
 [プロンプトキャッシング](/docs/ja/prompt-caching) は自動的に有効になります。5 分のデフォルトの代わりに 1 時間のキャッシュ TTL をリクエストするには、`ENABLE_PROMPT_CACHING_1H=1` を設定します。API は 1 時間のキャッシュ書き込みをより高いレートで請求します。レートについては、[プロンプトキャッシング価格](https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing) を参照してください。
+
+メインの会話と Claude Code が実行するリクエストに異なる TTL を設定するには、[TTL を自分で選択](/docs/ja/prompt-caching#choose-the-ttl-yourself) してください。
+
+<h3 id="4-launch-and-verify">
+  4. 起動して検証する
+</h3>
+
+Claude Code を起動し、ルーティングを確認します。
+
+```bash theme={null}
+claude
+```
+
+起動バナーはプロバイダーがアクティブな場合に `Claude Platform on AWS` を表示します。`/status` を実行して詳細を確認します。`API provider` 行は `Claude Platform on AWS` を読み取り、出力には `Workspace ID`、`AWS region`、およびオーバーライドを設定した場合は `Claude Platform on AWS base URL` が含まれます。
 
 <h2 id="use-the-agent-sdk">
   Agent SDK を使用する
@@ -352,7 +372,7 @@ Claude Code が解決した IAM プリンシパルは、ワークスペースで
   リクエストがワークスペース不足エラーで失敗する
 </h3>
 
-`ANTHROPIC_AWS_WORKSPACE_ID` がアンセットまたは空の可能性があります。すべての AWS 上の Claude Platform リクエストにはワークスペース ID を含める必要があります。AWS 認証情報によって暗示されません。AWS Console サービスページの **Workspaces** の下で ID を見つけ、Claude Code を開始する前にエクスポートします。
+`ANTHROPIC_AWS_WORKSPACE_ID` がアンセットまたは空の可能性があります。すべての AWS 上の Claude Platform リクエストにはワークスペース ID を含める必要があります。AWS 認証情報によって暗示されません。Claude Platform on AWS セットアップで ID を見つけ、Claude Code を開始する前にエクスポートします。
 
 <h3 id="requests-still-go-to-api-anthropic-com">
   リクエストが依然として `api.anthropic.com` に送信される

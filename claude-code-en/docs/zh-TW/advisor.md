@@ -34,11 +34,9 @@
 * **`advisorModel` 設定**：在您的[設定檔](/docs/zh-TW/settings)中配置持久預設值
 * **`--advisor` 旗標**：在啟動時為單一會話設定顧問
 
-如果其中任何一個設定了顧問模型，則對於主要模型[支援它](#choose-an-advisor-model)的會話，顧問會被啟用。若要停止使用它，請參閱[關閉顧問](#turn-the-advisor-off)。
+這些方法中的任何一個都會為主要模型[支援它](#choose-an-advisor-model)的會話啟用顧問。會話啟動後，Claude Code 會顯示 `Advisor Tool (experimental) is on and may use more tokens · /advisor` 通知。若要停止使用顧問，請參閱[關閉顧問](#turn-the-advisor-off)。
 
-<Note>
-  若要使用 Fable 5 作為顧問，您需要 Claude Code v2.1.170 或更新版本以及您的組織的 [Fable 5 存取權](/docs/zh-TW/model-config#work-with-fable-5)。
-</Note>
+在某些方案中，使用 Fable 作為顧問還需要您一次性[同意將 Fable 使用量計費到使用額度](/docs/zh-TW/model-config#fable-and-usage-credits)。如需了解在您給予同意之前會發生什麼，請參閱 [Fable 顧問和使用額度](#fable-advisor-and-usage-credits)。
 
 <h3 id="use-the-/advisor-command">
   使用 `/advisor` 命令
@@ -50,7 +48,17 @@
 /advisor opus
 ```
 
-您的選擇會儲存到使用者設定中的 `advisorModel`，並在會話間保持。如果您組織的 [`availableModels`](/docs/zh-TW/model-config#restrict-model-selection) 允許清單排除了已儲存的顧問模型，則顧問不會被叫用，直到您使用 `/advisor` 選擇允許的模型。如果您目前的主要模型不支援顧問，選擇仍會被儲存，並在您使用 [`/model`](/docs/zh-TW/model-config#setting-your-model) 切換到[相容的主要模型](#choose-an-advisor-model)時啟動。
+該命令會確認 `Advisor set to` 後跟顧問模型名稱。您的選擇會儲存到使用者設定中的 `advisorModel`，並在會話間保持，除了 [`advisorModel` 項目](/docs/zh-TW/settings-reference#advisormodel)列出的僅適用於目前會話的情況。
+
+該命令也適用於沒有終端選擇器的地方：在[非互動模式](/docs/zh-TW/headless)中使用 `-p`、在 Agent SDK 中、在桌面應用程式中，以及透過[遠端控制](/docs/zh-TW/remote-control)。這需要 Claude Code v2.1.260 或更新版本。在這些介面上：
+
+* 執行不帶引數的 `/advisor` 以列印目前的顧問模型及其接受的別名。
+* 執行帶有模型的 `/advisor`，例如 `/advisor opus`，以設定它。
+* 執行 `/advisor off` 以關閉它。
+
+Claude Code 不會叫用您組織的 [`availableModels`](/docs/zh-TW/model-config#restrict-model-selection) 允許清單排除的已儲存顧問。若要使用顧問，請使用 `/advisor` 選擇允許的模型。Claude Code 仍會儲存您目前主要模型不支援的顧問。該顧問會在您使用 [`/model`](/docs/zh-TW/model-config#setting-your-model) 切換到[相容的主要模型](#choose-an-advisor-model)後啟動。如果 API 已在目前對話中拒絕了已儲存的顧問，它會保持關閉狀態，直到 `/clear` 或 `/compact`，即使在您切換模型之後也是如此。
+
+在某些方案中，使用 Fable 作為顧問還需要您一次性[同意將 Fable 使用量計費到使用額度](/docs/zh-TW/model-config#fable-and-usage-credits)。如需了解 `/advisor fable` 在您給予同意之前會執行什麼操作，請參閱 [Fable 顧問和使用額度](#fable-advisor-and-usage-credits)。
 
 <h3 id="set-advisormodel-in-settings">
   在設定中設定 `advisorModel`
@@ -74,7 +82,14 @@
 claude --advisor opus
 ```
 
-該旗標在該會話中優先於 `advisorModel` 設定。如果會話的主要模型不支援顧問，或如果要求的顧問模型被您組織的 [`availableModels`](/docs/zh-TW/model-config#restrict-model-selection) 允許清單排除，它會以錯誤退出。
+Claude Code 在該會話中使用旗標而不是 `advisorModel` 設定。它不會在 `claude --help` 中列出 `--advisor`。如果以下任何情況成立，Claude Code 會在啟動時以錯誤退出：
+
+* 會話的主要模型不支援顧問
+* 要求的模型（例如 Haiku）無法充當顧問
+* 您組織的 [`availableModels`](/docs/zh-TW/model-config#restrict-model-selection) 允許清單排除了要求的模型
+* 您要求了 Fable，而您的帳戶仍需要[使用額度同意](#fable-advisor-and-usage-credits)
+
+如果您使用 `--advisor` 啟動[背景會話](/docs/zh-TW/agent-view)，且上述任何情況成立，Claude Code 會在沒有顧問的情況下啟動會話，而不是退出。
 
 <h2 id="choose-an-advisor-model">
   選擇顧問模型
@@ -82,25 +97,38 @@ claude --advisor opus
 
 顧問的能力必須至少與主要模型相同。每個主要模型接受的顧問為：
 
-| 主要模型                | 接受的顧問                   | 備註                                                                                     |
-| ------------------- | ----------------------- | -------------------------------------------------------------------------------------- |
-| Haiku 4.5           | Fable、Opus、Sonnet       | Haiku 可以呼叫顧問但不能充當顧問                                                                    |
-| Sonnet 4.6          | Fable、Opus、Sonnet       |                                                                                        |
-| Sonnet 5            | Fable、Opus、Sonnet 5     | Sonnet 4.6 顧問會被拒絕                                                                      |
-| Opus 4.6            | Fable、Opus、Sonnet 5     | Sonnet 5 和 Opus 4.6 的能力排名相同，因此 Opus 4.6 主要模型接受 Sonnet 5 顧問                             |
-| Opus 4.7 或更新版本      | Fable、Opus 4.7、Opus 4.8 | Opus 4.7 和 Opus 4.8 的能力排名相同，因此任一個都接受另一個作為顧問。Opus 4.7 主要模型搭配 Opus 4.6 或 Sonnet 5 顧問會被拒絕 |
-| Fable 5 (v2.1.170+) | Fable                   | Opus 或 Sonnet 顧問會被拒絕                                                                   |
+| 主要模型                | 接受的顧問                         | 備註                                                      |
+| ------------------- | ----------------------------- | ------------------------------------------------------- |
+| Haiku 4.5           | Fable、Opus、Sonnet             | Haiku 可以呼叫顧問但不能充當顧問                                     |
+| Sonnet 4.6          | Fable、Opus、Sonnet             |                                                         |
+| Sonnet 5            | Fable、Opus 4.7 或更新版本、Sonnet 5 | Sonnet 4.6 顧問會被拒絕，API 會拒絕 Opus 4.6 顧問                   |
+| Opus 4.6            | Fable、Opus、Sonnet 5           | Sonnet 4.6 顧問會被拒絕                                       |
+| Opus 4.7 或 Opus 4.8 | Fable 和 Opus 4.7 或更新版本        | Opus 4.6 或 Sonnet 顧問會被拒絕                                |
+| Opus 5.5 或 Opus 5   | Fable 和 Opus 5 或更新版本          | Opus 4.6 或 Sonnet 顧問會被拒絕，API 會拒絕 Opus 4.7 或 Opus 4.8 顧問 |
+| Fable 5             | Fable 5.1 或 Fable 5           | Opus 或 Sonnet 顧問會被拒絕                                    |
+| Fable 5.1           | Fable 5.1                     | Opus 或 Sonnet 顧問會被拒絕，API 會拒絕 Fable 5 顧問                 |
 
-Fable 5 需要 Claude Code v2.1.170 或更新版本以及 Fable 5 存取權，無論它是充當主要模型還是顧問。
+Fable 5.1 需要 Claude Code v2.1.257 或更新版本。兩個 Fable 模型都需要 [Fable 存取權](/docs/zh-TW/model-config#work-with-fable)。
 
-將顧問設定為 `opus`、`sonnet` 或 `fable`。這些別名解析為每個模型的最新版本。您也可以傳遞完整的模型 ID，例如 `claude-opus-4-8`。
+將顧問設定為 `fable`、`opus` 或 `sonnet`。這些別名解析為 Claude Code 為每個模型系列內建的預設版本，會隨著新的 Claude Code 版本發佈而更新。您也可以傳遞完整的模型 ID，例如 `claude-opus-5-5`。
 
 子代理繼承已設定的顧問，並針對其自身模型應用相同的配對檢查。
 
-Claude Code 在傳送請求前驗證配對：
+Claude Code 在傳送請求前驗證配對，API 也會再次驗證：
 
-* 如果顧問的能力低於主要模型，顧問不會附加到主要模型的請求。`/advisor` 命令輸出和通知會顯示此情況。其自身模型滿足配對的子代理仍可使用顧問。
+* 對於表格中列為被拒絕的顧問，Claude Code 不會將其附加到主要模型的請求。`/advisor` 命令輸出和通知會顯示此情況。其自身模型滿足配對的子代理仍可使用顧問。
+* 對於表格中列為因 API 拒絕的顧問，Claude Code 會附加它，API 會拒絕它。Claude Code 隨後會在沒有顧問的情況下重新傳送該請求，其餘對話會在沒有顧問的情況下執行，因此您看不到錯誤且不會獲得顧問呼叫。使用 `/advisor` 選擇接受的顧問；變更會在 `/clear` 或 `/compact` 之後以及新工作階段中生效。
 * 如果主要模型或顧問是 Claude Code 無法識別的模型，顧問不會附加。
+
+<h3 id="fable-advisor-and-usage-credits">
+  Fable 顧問和使用額度
+</h3>
+
+在某些方案中，Fable 使用會計入使用額度，Fable 作為顧問也會以相同方式計費。如果您的帳戶需要 [一次性同意將 Fable 使用計費到使用額度](/docs/zh-TW/model-config#fable-and-usage-credits)，當您使用 `/model` 選擇 Fable 模型時，Claude Code 會要求同意，在您接受該同意之前不會將 Fable 套用為顧問。
+
+在您接受之前，當您輸入 `/advisor fable` 或在 `/advisor` 選擇器中選擇 Fable 時，Claude Code 不會將 Fable 儲存為顧問。它會改為指向您 `/model fable`。使用 `claude --advisor fable` 時，Claude Code 會在啟動時以指向 `/model fable` 的訊息退出。在 [背景工作階段](#use-the-advisor-flag) 中，它會在沒有顧問的情況下啟動工作階段，而不是退出。如果 Fable 已儲存為您的 `advisorModel`，Claude Code 會在沒有顧問的情況下傳送請求。在其主要模型支援顧問的互動式工作階段中，它也會顯示指向 `/model fable` 的通知。
+
+若要接受同意，請執行 `/model fable` 並選擇在 Fable 上繼續。Claude Code 會記錄同意並 [將 Fable 儲存為您選擇的模型](/docs/zh-TW/model-config#default-model-setting)。然後選擇 Fable 作為顧問。
 
 <h3 id="common-model-pairings">
   常見模型配對
@@ -108,14 +136,14 @@ Claude Code 在傳送請求前驗證配對：
 
 任何接受的配對都有效。這些組合以不同方式平衡成本與能力：
 
-| 配對                    | 何時使用                                                                               |
-| --------------------- | ---------------------------------------------------------------------------------- |
-| Sonnet 主要 + Opus 顧問   | Sonnet 處理例行工作，並將計畫、模糊失敗和完成檢查升級到 Opus                                               |
-| Sonnet 主要 + Fable 顧問  | 在決策點獲得 Fable 5 指導，而無需全程執行 Fable 5。需要 v2.1.170 或更新版本以及 Fable 5 存取權                  |
-| Haiku 主要 + Opus 顧問    | 具有強大計畫的最低成本主要模型。預期成本高於單獨使用 Haiku，但低於將主要模型切換到 Sonnet 或 Opus                         |
-| Opus 主要 + Opus 顧問     | 第二個 Opus 審查第一個。適用於獨立檢查比成本更重要的高風險任務                                                 |
-| Fable 主要 + Fable 顧問   | 當 Fable 5 可用時（v2.1.170+）的最高能力配對。Fable 是比 Opus 和 Sonnet 更高的層級，因此是 Fable 主要模型唯一接受的顧問 |
-| Sonnet 主要 + Sonnet 顧問 | 用於捕捉例行疏漏的較低成本第二意見                                                                  |
+| 配對                    | 何時使用                                                              |
+| --------------------- | ----------------------------------------------------------------- |
+| Sonnet 主要 + Opus 顧問   | Sonnet 處理例行工作，並將計畫、模糊失敗和完成檢查升級到 Opus                              |
+| Sonnet 主要 + Fable 顧問  | 在決策點獲得 Fable 指導，而無需全程執行 Fable。需要 Fable 存取權                        |
+| Haiku 主要 + Opus 顧問    | 具有強大計畫的最低成本主要模型。預期成本高於單獨使用 Haiku，但低於將主要模型切換到 Sonnet 或 Opus        |
+| Opus 主要 + Opus 顧問     | 第二個 Opus 審查第一個。適用於獨立檢查比成本更重要的高風險任務                                |
+| Fable 主要 + Fable 顧問   | 當 Fable 可用時的最高能力配對。Claude Code 不會將 Opus 或 Sonnet 顧問套用到 Fable 主要模型 |
+| Sonnet 主要 + Sonnet 顧問 | 用於捕捉例行疏漏的較低成本第二意見                                                 |
 
 <h2 id="when-claude-consults-the-advisor">
   Claude 何時諮詢顧問
@@ -129,17 +157,25 @@ Claude 決定何時呼叫顧問。它傾向於在提交方案前、錯誤不斷�
   會話期間您看到的內容
 </h2>
 
-當 Claude 呼叫顧問時，文字記錄會在呼叫進行中顯示帶有顧問模型名稱的 `Advising` 行。當結果返回時，該行確認顧問已審查對話。按 `Ctrl+O` 展開它並閱讀顧問的完整指導。
+當 Claude 呼叫顧問時，文字記錄會在呼叫進行中顯示帶有顧問模型名稱的 `Advising` 行。當結果返回時，該行會報告顧問是否提供了指導：
+
+* **Reviewed**：該行確認顧問已審查對話。當顧問返回可讀的指導時，按 `Ctrl+O` 閱讀。
+* **Declined**：該行顯示 `Advisor declined to advise on this request`。如果顧問提供了原因，按 `Ctrl+O` 閱讀。
 
 Claude 通常遵循顧問的指導，但在其自身證據與特定聲明相矛盾時進行調整：如果建議的步驟在嘗試時失敗，或檔案內容與建議相矛盾，Claude 會表面衝突而不是無條件地遵循指導。
 
-顧問始終收到完整的對話，Claude 控制時機。如需更多控制或不同的配置，請參閱[顧問與子代理和 opusplan 的比較](#compare-with-related-features)。
+顧問始終收到完整的對話，Claude 控制時機。如需更多控制或不同的設定，請參閱[顧問與子代理和 opusplan 的比較](#compare-with-related-features)。
 
 <h2 id="cost">
   成本
 </h2>
 
-每個顧問呼叫都會將對話發送到顧問模型，因此除了主要模型的使用外，還會以顧問模型的費率消耗代幣。使用 API 計費時，顧問代幣按顧問模型的輸入和輸出費率計費。在訂閱計畫上，顧問使用計入您計畫的使用限制。
+當 Claude 呼叫顧問時，顧問模型會讀取對話，因此除了主要模型的使用外，每次呼叫都會以顧問模型的費率消耗代幣。這些顧問代幣如何計費取決於您的付款方式：
+
+* **API 計費**：您需要按顧問模型的輸入和輸出費率支付顧問代幣
+* **訂閱計畫**：顧問使用計入您計畫的使用限制，除非 Fable 顧問在 Fable 使用計費的計畫上計入[使用額度](/docs/zh-TW/model-config#fable-and-usage-credits)
+
+如果您的帳戶需要使用額度同意，Fable 顧問在您同意前不會計費，因為 Claude Code [在那之前不會套用選擇](#fable-advisor-and-usage-credits)。
 
 Claude 在決策點而非每個輪次都呼叫顧問，因此將更快的主要模型與更強大的顧問配對通常比全程執行更強大的模型成本更低。顧問使用計入 [`/usage`](/docs/zh-TW/costs#track-your-costs) 顯示的會話總計。
 
@@ -149,7 +185,7 @@ Claude 在決策點而非每個輪次都呼叫顧問，因此將更快的主要�
   對提示快取的影響
 </h2>
 
-在會話中途啟用或停用顧問不會使主要模型的[提示快取](/docs/zh-TW/prompt-caching)失效。與[變更模型或努力等級](/docs/zh-TW/prompt-caching#actions-that-invalidate-the-cache)不同，切換 `/advisor` 會保持快取的前綴完整，顧問返回的指導會在後續輪次中作為文字記錄的一部分被快取。
+在會話中途啟用或停用顧問不會使主要模型的[提示快取](/docs/zh-TW/prompt-caching)失效。與[變更模型](/docs/zh-TW/prompt-caching#switching-models)不同，切換 `/advisor` 會保持快取的前綴完整，顧問返回的指導會在後續輪次中作為文字記錄的一部分被快取。
 
 顧問模型自身對對話的讀取不會被快取。每個顧問呼叫都會全新處理完整的文字記錄，呼叫之間沒有重複使用。
 
@@ -159,20 +195,21 @@ Claude 在決策點而非每個輪次都呼叫顧問，因此將更快的主要�
 
 顧問工具需要以下所有條件：
 
-* **僅限 Anthropic API**：顧問是伺服器執行的工具。它在 Amazon Bedrock、Claude Platform on AWS、Google Cloud 的 Agent Platform 或 Microsoft Foundry 上不可用。透過配置有 `ANTHROPIC_BASE_URL` 的 [LLM 閘道](/docs/zh-TW/llm-gateway)，可用性取決於閘道是否將請求完整轉發到 Anthropic API。
-* **支援的主要模型**：Opus 4.6 或更新版本、Sonnet 4.6 或更新版本，或 Haiku 4.5。Fable 5 在 Claude Code v2.1.170 或更新版本上也符合條件。
+* **僅限 Anthropic API**：顧問是伺服器執行的工具。它在 Amazon Bedrock、Claude Platform on AWS、Google Cloud 的 Agent Platform 或 Microsoft Foundry 上不可用。透過配置有 `ANTHROPIC_BASE_URL` 的 [LLM 閘道](/docs/zh-TW/llm-gateway)，可用性取決於閘道是否將請求完整轉發到 Anthropic API。如果閘道或其上游無法識別顧問工具，請參閱[自動重試和錯誤轉發](/docs/zh-TW/llm-gateway-protocol#automatic-retry-and-error-forwarding)以了解 Claude Code 如何回應。
+* **支援的主要模型**：Fable、Opus 4.6 或更新版本、Sonnet 4.6 或更新版本，或 Haiku 4.5。請參閱[選擇顧問模型](#choose-an-advisor-model)以了解每個顧問接受的模型。
+* **功能旗標擷取**：Claude Code 透過從 Anthropic 擷取的功能旗標來開啟顧問。在設定了關閉旗標擷取的變數（例如 `DISABLE_TELEMETRY`）的工作階段中，顧問保持關閉。請參閱[需要功能旗標擷取的功能](/docs/zh-TW/env-vars#features-that-need-feature-flag-fetching)。
 
 <h2 id="turn-the-advisor-off">
   關閉顧問
 </h2>
 
-若要停止使用顧問並清除已儲存的 `advisorModel`，執行 `/advisor off` 或在 `/advisor` 選擇器中選擇 **No advisor**：
+若要停止使用顧問，執行 `/advisor off` 或在 `/advisor` 選擇器中選擇 **No advisor**：
 
 ```
 /advisor off
 ```
 
-若要完全停用顧問工具，設定 `CLAUDE_CODE_DISABLE_ADVISOR_TOOL=1`。`/advisor` 命令變為無法使用，任何已設定的 `advisorModel` 都會被忽略。`--advisor` 旗標被接受但沒有效果；傳遞它的現有指令碼會繼續運作而不會出現錯誤。請參閱[環境變數](/docs/zh-TW/env-vars)。
+若要完全停用顧問工具，設定 `CLAUDE_CODE_DISABLE_ADVISOR_TOOL=1`。`/advisor` 命令變為無法使用，任何已設定的 `advisorModel` 都會被忽略。`--advisor` 旗標被接受但沒有效果。請參閱[環境變數](/docs/zh-TW/env-vars)。
 
 <h2 id="compare-with-related-features">
   與相關功能的比較
@@ -185,7 +222,7 @@ Claude 在決策點而非每個輪次都呼叫顧問，因此將更快的主要�
 | 顧問工具                                                     | 在任務中途的決策點                                                                                         | Claude 在需要指導時呼叫它  |
 | [`opusplan`](/docs/zh-TW/model-config#opusplan-model-setting) | 在計畫模式期間（當 [`availableModels`](/docs/zh-TW/model-config#restrict-model-selection) 允許時），然後切換到 Sonnet 以執行 | 您進入計畫模式           |
 | [子代理](/docs/zh-TW/sub-agents#choose-a-model)搭配 `model` 設定     | 針對整個委派的子任務                                                                                        | Claude 委派，或您呼叫子代理 |
-| [`/model`](/docs/zh-TW/model-config#setting-your-model)       | 針對所有後續輪次                                                                                          | 您切換模型             |
+| [`/model`](/docs/zh-TW/model-config#setting-your-model)       | 從下一個請求開始                                                                                          | 您切換模型             |
 
 <h2 id="see-also">
   另請參閱

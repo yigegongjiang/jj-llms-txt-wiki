@@ -21,13 +21,15 @@ Claude Code 結合了一個能夠推理您程式碼的模型與[內建工具](/d
 擴展插入代理迴圈的不同部分：
 
 * **[CLAUDE.md](/docs/zh-TW/memory)** 添加 Claude 在每個會話中看到的持久上下文
+* **[Output styles](/docs/zh-TW/output-styles)** 為會話中的每個回應設定 Claude 的角色、語調和回應格式
 * **[Skills](/docs/zh-TW/skills)** 添加可重複使用的知識和可調用的工作流程
 * **[Code intelligence](/docs/zh-TW/tools-reference#lsp-tool-behavior)** 將 Claude 連接到語言伺服器以進行符號級導航和即時類型錯誤
 * **[MCP](/docs/zh-TW/mcp)** 將 Claude 連接到外部服務和工具
 * **[Subagents](/docs/zh-TW/sub-agents)** 在隔離的上下文中運行自己的迴圈，返回摘要
-* **[Agent teams](/docs/zh-TW/agent-teams)** 協調多個獨立會話，具有共享任務和點對點訊息傳遞
-* **[Hooks](/docs/zh-TW/hooks-guide)** 在生命週期事件上觸發，可以運行指令碼、HTTP 請求、提示或 subagent
-* **[Plugins](/docs/zh-TW/plugins)** 和 **[marketplaces](/docs/zh-TW/plugin-marketplaces)** 打包和分發這些功能
+* **[Dynamic workflows](/docs/zh-TW/workflows)** 從 Claude 編寫的指令碼運行許多 subagents，返回一個結果
+* **[Cross-session messaging](/docs/zh-TW/cross-session-messaging)** 讓 Claude 將訊息從您的一個會話傳遞到另一個會話
+* **[Hooks](/docs/zh-TW/hooks-guide)** 在 Claude Code 達到生命週期事件時運行您的指令碼、HTTP 請求、MCP 工具呼叫、提示或 subagent
+* **[Plugins](/docs/zh-TW/plugins/overview)** 和 **[marketplaces](/docs/zh-TW/plugins/overview)** 打包和分發這些功能
 
 [Skills](/docs/zh-TW/skills) 是最靈活的擴展。Skill 是一個包含知識、工作流程或指令的 markdown 檔案。您可以使用像 `/deploy` 這樣的命令調用 skills，或者 Claude 可以在相關時自動載入它們。Skills 可以在您目前的對話中運行，或通過 subagents 在隔離的上下文中運行。
 
@@ -37,18 +39,20 @@ Claude Code 結合了一個能夠推理您程式碼的模型與[內建工具](/d
 
 功能範圍從 Claude 在每個會話中看到的始終開啟的上下文，到您或 Claude 可以調用的按需功能，再到在特定事件上運行的背景自動化。下表顯示了可用的功能以及何時使用每一個。
 
-| 功能                                                                | 它的作用                           | 何時使用                         | 範例                                        |
-| ----------------------------------------------------------------- | ------------------------------ | ---------------------------- | ----------------------------------------- |
-| **CLAUDE.md**                                                     | 每次對話載入的持久上下文                   | 專案約定、「始終執行 X」規則              | 「使用 pnpm，而不是 npm。在提交前運行測試。」               |
-| **Skill**                                                         | Claude 可以使用的指令、知識和工作流程         | 可重複使用的內容、參考文件、可重複的任務         | `/deploy` 運行您的部署檢查清單；包含端點模式的 API 文件 skill |
-| **Subagent**                                                      | 返回摘要結果的隔離執行上下文                 | 上下文隔離、並行任務、專門的工作者            | 讀取許多檔案但僅返回關鍵發現的研究任務                       |
-| **[Agent teams](/docs/zh-TW/agent-teams)**                             | 協調多個獨立的 Claude Code 會話         | 並行研究、新功能開發、使用競爭假設進行除錯        | 生成審查者以同時檢查安全性、效能和測試                       |
-| **[Code intelligence](/docs/zh-TW/tools-reference#lsp-tool-behavior)** | 語言伺服器導航和診斷                     | 類型化語言、大型程式碼庫，其中 grep 速度慢或不精確 | 跳轉到符號的定義，而不是讀取整個檔案                        |
-| **MCP**                                                           | 連接到外部服務                        | 外部資料或操作                      | 查詢您的資料庫、發佈到 Slack、控制瀏覽器                   |
-| **Hook**                                                          | 由事件觸發的指令碼、HTTP 請求、提示或 subagent | 必須在每個匹配事件上運行的自動化             | 在每次檔案編輯後運行 ESLint                         |
-| **[Artifact](/docs/zh-TW/artifacts)**                                  | 將會話輸出發佈為私人、互動式網頁               | 您想以視覺方式查看或共享的輸出，而不是作為終端文字    | 隨著 Claude 進行調查而更新的事件時間表                   |
+| 功能                                                                | 它的作用                                    | 何時使用                                        | 範例                                        |
+| ----------------------------------------------------------------- | --------------------------------------- | ------------------------------------------- | ----------------------------------------- |
+| **CLAUDE.md**                                                     | 每次對話載入的持久上下文                            | 專案約定、「始終執行 X」規則                             | 「使用 pnpm，而不是 npm。在提交前運行測試。」               |
+| **[輸出風格](/docs/zh-TW/output-styles)**                                  | 為整個會話設定 Claude 的角色、語調和回應格式的指令           | 您想在每個回應中使用的語音、長度或格式，或 Claude 作為軟體工程師以外的角色工作 | 用於較短回應的內建簡潔風格；一個自訂風格，首先用圖表回答每個問題          |
+| **Skill**                                                         | Claude 可以使用的指令、知識和工作流程                  | 可重複使用的內容、參考文件、可重複的任務                        | `/deploy` 運行您的部署檢查清單；包含端點模式的 API 文件 skill |
+| **Subagent**                                                      | 返回摘要結果的隔離執行上下文                          | 上下文隔離、並行任務、專門的工作者                           | 讀取許多檔案但僅返回關鍵發現的研究任務                       |
+| **[Dynamic workflow](/docs/zh-TW/workflows)**                          | Claude 編寫的在背景中運行許多 subagents 的指令碼       | 超出少數 subagents 的工作，或您想交叉檢查的發現               | 審計整個程式碼庫，第二組代理驗證每個發現                      |
+| **[Cross-session messaging](/docs/zh-TW/cross-session-messaging)**     | Claude 將訊息從您的一個會話傳遞到另一個會話               | 您自己運行的需要彼此發現的會話，中途任務                        | 一個會話警告另一個會話，它所做的更改會破壞另一個會話正在構建的內容         |
+| **[Code intelligence](/docs/zh-TW/tools-reference#lsp-tool-behavior)** | 語言伺服器導航和診斷                              | 類型化語言、大型程式碼庫，其中 grep 速度慢或不精確                | 跳轉到符號的定義，而不是讀取整個檔案                        |
+| **MCP**                                                           | 連接到外部服務                                 | 外部資料或操作                                     | 查詢您的資料庫、發佈到 Slack、控制瀏覽器                   |
+| **Hook**                                                          | 由事件觸發的指令碼、HTTP 請求、MCP 工具呼叫、提示或 subagent | 必須在每個匹配事件上運行的自動化                            | 在每次檔案編輯後運行 ESLint                         |
+| **[Artifact](/docs/zh-TW/artifacts)**                                  | 將會話輸出發佈為私人、互動式網頁                        | 您想以視覺方式查看或共享的輸出，而不是作為終端文字                   | 隨著 Claude 進行調查而更新的事件時間表                   |
 
-**[Plugins](/docs/zh-TW/plugins)** 是打包層。Plugin 將 skills、hooks、subagents 和 MCP servers 捆綁到單個可安裝單元中。Plugin skills 是命名空間的（如 `/my-plugin:review`），因此多個 plugins 可以共存。當您想在多個儲存庫中重複使用相同的設置或通過 **[marketplace](/docs/zh-TW/plugin-marketplaces)** 分發給他人時，使用 plugins。
+**[Plugins](/docs/zh-TW/plugins/overview)** 是打包層。Plugin 將 skills、hooks、subagents 和 MCP servers 捆綁到單個可安裝單元中。Plugin skills 是命名空間的（如 `/my-plugin:review`），因此多個 plugins 可以共存。當您想在多個儲存庫中重複使用相同的設置或通過 **[marketplace](/docs/zh-TW/plugins/overview)** 分發給他人時，使用 plugins。
 
 <h3 id="build-your-setup-over-time">
   隨著時間推移構建您的設置
@@ -56,16 +60,17 @@ Claude Code 結合了一個能夠推理您程式碼的模型與[內建工具](/d
 
 您不需要預先配置所有內容。每個功能都有一個可識別的觸發器，大多數團隊大致按以下順序添加它們：
 
-| 觸發器                          | 添加                                                                            |
-| :--------------------------- | :---------------------------------------------------------------------------- |
-| Claude 兩次出錯的約定或命令            | 將其添加到 [CLAUDE.md](/docs/zh-TW/memory)                                              |
-| 您一直在輸入相同的提示來啟動任務             | 將其保存為使用者可調用的 [skill](/docs/zh-TW/skills)                                           |
-| 您第三次將相同的劇本或多步驟程序粘貼到聊天中       | 將其捕獲為 [skill](/docs/zh-TW/skills)                                                  |
-| 您一直在從 Claude 無法看到的瀏覽器選項卡複製資料 | 將該系統連接為 [MCP server](/docs/zh-TW/mcp)                                              |
-| Claude 讀取許多檔案以找到符號的定義或使用位置   | 為您的語言安裝 [code intelligence plugin](/docs/zh-TW/discover-plugins#code-intelligence) |
-| 一個附帶任務用您不會再次參考的輸出淹沒您的對話      | 通過 [subagent](/docs/zh-TW/sub-agents) 路由它                                          |
-| 您希望每次都發生某事而無需詢問              | 編寫 [hook](/docs/zh-TW/hooks-guide)                                                 |
-| 第二個儲存庫需要相同的設置                | 將其打包為 [plugin](/docs/zh-TW/plugins)                                                |
+| 觸發器                            | 添加                                                                   |
+| :----------------------------- | :------------------------------------------------------------------- |
+| Claude 兩次出錯的約定或命令              | 將其添加到 [CLAUDE.md](/docs/zh-TW/memory)                                     |
+| 您一直在要求 Claude 更簡潔、解釋更多或以相同格式回答 | 設定 [輸出風格](/docs/zh-TW/output-styles)                                      |
+| 您一直在輸入相同的提示來啟動任務               | 將其保存為使用者可調用的 [skill](/docs/zh-TW/skills)                                  |
+| 您第三次將相同的劇本或多步驟程序粘貼到聊天中         | 將其捕獲為 [skill](/docs/zh-TW/skills)                                         |
+| 您一直在從 Claude 無法看到的瀏覽器選項卡複製資料   | 將該系統連接為 [MCP server](/docs/zh-TW/mcp)                                     |
+| Claude 讀取許多檔案以找到符號的定義或使用位置     | 為您的語言安裝 [code intelligence plugin](/docs/zh-TW/plugins/code-intelligence) |
+| 一個附帶任務用您不會再次參考的輸出淹沒您的對話        | 通過 [subagent](/docs/zh-TW/sub-agents) 路由它                                 |
+| 您希望每次都發生某事而無需詢問                | 編寫 [hook](/docs/zh-TW/hooks-guide)                                        |
+| 第二個儲存庫需要相同的設置                  | 將其打包為 [plugin](/docs/zh-TW/plugins/overview)                              |
 
 相同的觸發器告訴您何時更新您已經擁有的內容。重複的錯誤或反覆出現的審查評論是 CLAUDE.md 編輯，而不是聊天中的一次性更正。您一直手動調整的工作流程是需要另一次修訂的 skill。
 
@@ -110,7 +115,23 @@ Claude Code 結合了一個能夠推理您程式碼的模型與[內建工具](/d
 
     **如果它是 Claude 有時需要的參考資料（API 文件、風格指南）或您使用 `/<name>` 觸發的工作流程（部署、審查、發佈），請將其放在 skill 中**。
 
-    **經驗法則：** 保持 CLAUDE.md 在 200 行以下。如果它在增長，將參考內容移動到 skills 或拆分為 [`.claude/rules/`](/docs/zh-TW/memory#organize-rules-with-claude%2Frules%2F) 檔案。
+    **經驗法則：** 保持 CLAUDE.md 在 200 行以下。如果它在增長，將參考內容移動到 skills 或拆分為 [`.claude/rules/`](/docs/zh-TW/memory#organize-rules-with-claude/rules/) 檔案。
+  </Tab>
+
+  <Tab title="CLAUDE.md vs Output style">
+    兩者都給予 Claude 常設指令。CLAUDE.md 攜帶 Claude 應該知道的內容，輸出風格設定 Claude 如何回應。
+
+    | 方面      | CLAUDE.md            | 輸出風格                                                           |
+    | ------- | -------------------- | -------------------------------------------------------------- |
+    | **保持**  | 關於您的專案的事實和規則         | 角色、語調和回應格式                                                     |
+    | **切換**  | 始終載入                 | 一次一個活躍；[隨時切換風格](/docs/zh-TW/output-styles#change-your-output-style) |
+    | **最適合** | 構建命令、約定、「永遠不要執行 X」規則 | 較短的回應、代碼旁邊的解釋、非工程角色                                            |
+
+    **如果它對無論您在哪種風格中的專案都是真實的，請將其放在 CLAUDE.md 中**：編碼約定、構建命令、專案結構。
+
+    **如果它是關於回應本身並且您可能想再次關閉它，請使用輸出風格**：長度、格式、Claude 解釋多少，或不同的角色，例如寫作助手。Claude Code 包括 [內建風格](/docs/zh-TW/output-styles#built-in-output-styles)，您可以編寫自己的風格。
+
+    **它們結合。** 無論您選擇哪種風格，CLAUDE.md 都保持載入。Claude 遵循兩者作為指令，所以都不是強制執行的。對於必須每次都發生的任何事情，使用 [hook](/docs/zh-TW/hooks-guide)。
   </Tab>
 
   <Tab title="CLAUDE.md vs Rules vs Skills">
@@ -129,29 +150,17 @@ Claude Code 結合了一個能夠推理您程式碼的模型與[內建工具](/d
     **使用 skills** 用於 Claude 有時只需要的內容，如 API 文件或您使用 `/<name>` 觸發的部署檢查清單。
   </Tab>
 
-  <Tab title="Subagent vs Agent team">
-    兩者都並行化工作，但它們在架構上不同：
+  <Tab title="Subagent vs Dynamic workflow">
+    兩者都在您的主要對話之外進行工作。使用 subagents，Claude 逐個回合決定接下來運行什麼。在工作流程中，指令碼決定：
 
-    * **Subagents** 在您的會話內運行並將結果報告回您的主要上下文
-    * **Agent teams** 是相互通訊的獨立 Claude Code 會話
+    * **Subagents** 是 Claude 生成的工作者，每個都向生成它的對話返回摘要
+    * **[Dynamic workflows](/docs/zh-TW/workflows)** 是 Claude 編寫的在背景中運行許多 subagents 並返回一個結果的指令碼
 
-    | 方面       | Subagent          | Agent team            |
-    | -------- | ----------------- | --------------------- |
-    | **上下文**  | 自己的上下文視窗；結果返回給呼叫者 | 自己的上下文視窗；完全獨立         |
-    | **通訊**   | 僅向主代理報告結果         | 隊友直接相互訊息傳遞            |
-    | **協調**   | 主代理管理所有工作         | 具有自我協調的共享任務清單         |
-    | **最適合**  | 只有結果重要的專注任務       | 需要討論和協作的複雜工作          |
-    | **令牌成本** | 較低：結果摘要回主上下文      | 較高：每個隊友是單獨的 Claude 實例 |
+    **當您需要快速、專注的工作者時，使用 subagent**：研究問題、驗證聲明、審查檔案。Subagent 執行工作並返回摘要，因此您的主要對話保持乾淨。Claude 在生成時命名的 Subagents 也可以[彼此訊息傳遞](/docs/zh-TW/sub-agents#what-loads-at-startup)。
 
-    **當您需要快速、專注的工作者時，使用 subagent**：研究問題、驗證聲明、審查檔案。Subagent 執行工作並返回摘要。您的主要對話保持乾淨。
+    **當工作[超出少數 subagents](/docs/zh-TW/workflows#when-to-use-a-workflow)時，使用 dynamic workflow**，或當您想在看到發現之前交叉檢查發現時，例如程式碼庫範圍的審計、大型遷移或從多個角度起草的計劃。要啟動一個，[在您的提示中要求工作流程](/docs/zh-TW/workflows#ask-for-a-workflow-in-your-prompt)。
 
-    **當隊友需要共享發現、相互質疑和獨立協調時，使用 agent team**。Agent teams 最適合具有競爭假設的研究、並行程式碼審查，以及每個隊友擁有單獨部分的新功能開發。
-
-    **轉換點：** 如果您運行並行 subagents 但遇到上下文限制，或者您的 subagents 需要相互通訊，agent teams 是自然的下一步。
-
-    <Note>
-      Agent teams 是實驗性的，預設情況下被禁用。有關設置和目前限制，請參閱 [agent teams](/docs/zh-TW/agent-teams)。
-    </Note>
+    **要將發現從您的一個會話傳遞到另一個會話**，要求第一個會話的 Claude 發送它。Claude 使用 [cross-session messaging](/docs/zh-TW/cross-session-messaging) 傳遞它。[並行運行代理](/docs/zh-TW/agents)比較了運行多個 Claude 的其他方式，包括您交付並稍後檢查的會話。
   </Tab>
 
   <Tab title="MCP vs Skill">
@@ -168,16 +177,14 @@ Claude Code 結合了一個能夠推理您程式碼的模型與[內建工具](/d
     **MCP** 給予 Claude 與外部系統互動的能力。沒有 MCP，Claude 無法查詢您的資料庫或發佈到 Slack。
 
     **Skills** 給予 Claude 關於如何有效使用這些工具的知識，以及您可以使用 `/<name>` 觸發的工作流程。Skill 可能包括您的團隊資料庫架構和查詢模式，或具有您的團隊訊息格式規則的 `/post-to-slack` 工作流程。
-
-    範例：MCP 伺服器將 Claude 連接到您的資料庫。Skill 教導 Claude 您的資料模型、常見查詢模式，以及用於不同任務的表格。
   </Tab>
 
   <Tab title="Hook vs Skill">
-    Hook 在生命週期事件上觸發；skill 被載入上下文供 Claude 應用。
+    Claude Code 在生命週期事件上運行 hook；它將 skill 載入上下文供 Claude 應用。
 
     | 方面        | Hook                                                                 | Skill                              |
     | --------- | -------------------------------------------------------------------- | ---------------------------------- |
-    | **運行**    | 殼層命令、HTTP 請求、LLM 提示或 subagent                                        | Claude 讀取並遵循的指令                    |
+    | **運行**    | 殼層命令、HTTP 請求、MCP 工具呼叫、LLM 提示或 subagent                               | Claude 讀取並遵循的指令                    |
     | **由以下觸發** | [生命週期事件](/docs/zh-TW/hooks#hook-events)，例如 `PostToolUse` 或 `SessionStart` | 您輸入 `/<name>`，或 Claude 將描述與您的任務相匹配 |
     | **確定性**   | 始終在其事件上觸發；觸發器是有保證的                                                   | Claude 解釋指令；結果可能會有所不同              |
     | **上下文成本** | 零，除非 hook 返回輸出                                                       | 描述在每個會話載入；使用時完整內容載入                |
@@ -199,10 +206,10 @@ Claude Code 結合了一個能夠推理您程式碼的模型與[內建工具](/d
 
 功能可以在多個級別定義：使用者範圍、每個專案、通過 plugins，或通過受管理的策略。您也可以在子目錄中嵌套 CLAUDE.md 檔案，或在 monorepo 的特定套件中放置 skills。當相同的功能存在於多個級別時，以下是它們的分層方式：
 
-* **CLAUDE.md 檔案** 是累加的：所有級別同時對 Claude 的上下文貢獻內容。來自您的工作目錄及以上的檔案在啟動時載入；子目錄在您在其中工作時載入。當指令衝突時，Claude 使用判斷來協調它們，更具體的指令通常優先。請參閱 [CLAUDE.md 檔案如何載入](/docs/zh-TW/memory#how-claude-md-files-load)。
-* **Skills 和 subagents** 按名稱覆蓋：當相同名稱存在於多個級別時，一個定義根據優先級獲勝（skills 為受管理 > 使用者 > 專案；subagents 為受管理 > CLI 標誌 > 專案 > 使用者 > plugin）。Plugin skills 是[命名空間](/docs/zh-TW/plugins#add-skills-to-your-plugin)的，以避免衝突。請參閱 [skill 發現](/docs/zh-TW/skills#where-skills-live) 和 [subagent 範圍](/docs/zh-TW/sub-agents#choose-the-subagent-scope)。
+* **CLAUDE.md 檔案** 是累加的：所有級別同時對 Claude 的上下文貢獻內容。來自您的工作目錄及以上的檔案在啟動時載入；子目錄在您在其中工作時載入。當指令衝突時，Claude 使用判斷來協調它們。請參閱 [CLAUDE.md 檔案如何載入](/docs/zh-TW/memory#how-claude-md-files-load)。
+* **Skills 和 subagents** 按名稱覆蓋：當相同名稱存在於多個級別時，一個定義根據優先級獲勝（skills 為受管理 > 使用者 > 專案；subagents 為受管理 > CLI 標誌 > 專案 > 使用者 > plugin）。Plugin skills 是[命名空間](/docs/zh-TW/plugins/components#skills)的，以避免衝突。請參閱 [skill 發現](/docs/zh-TW/skills#resolve-skills-that-share-a-name) 和 [subagent 範圍](/docs/zh-TW/sub-agents#choose-the-subagent-scope)。
 * **MCP 伺服器** 按名稱覆蓋：本地 > 專案 > 使用者。請參閱 [MCP 範圍](/docs/zh-TW/mcp#scope-hierarchy-and-precedence)。
-* **Hooks** 合併：所有註冊的 hooks 為其匹配事件觸發，無論來源如何。請參閱 [hooks](/docs/zh-TW/hooks-guide)。
+* **Hooks** 合併：所有註冊的 hooks 為其匹配事件觸發，無論來源如何。請參閱 [hooks](/docs/zh-TW/hooks)。
 
 <h3 id="combine-features">
   結合功能
@@ -231,16 +238,17 @@ Claude Code 結合了一個能夠推理您程式碼的模型與[內建工具](/d
 
 每個功能都有不同的載入策略和上下文成本：
 
-| 功能                    | 何時載入       | 什麼載入               | 上下文成本             |
-| --------------------- | ---------- | ------------------ | ----------------- |
-| **CLAUDE.md**         | 會話開始       | 完整內容               | 每個請求              |
-| **Skills**            | 會話開始 + 使用時 | 啟動時的描述，使用時的完整內容    | 低（每個請求的描述）\*      |
-| **MCP 伺服器**           | 會話開始       | 工具名稱；完整架構按需        | 低，直到使用工具          |
-| **Code intelligence** | 檔案編輯後和按需   | 編輯後的診斷；查詢時的符號位置    | 低；減少其他地方的檔案讀取     |
-| **Subagents**         | 生成時        | 具有指定 skills 的新鮮上下文 | 與主會話隔離            |
-| **Hooks**             | 觸發時        | 無（外部運行）            | 零，除非 hook 返回額外上下文 |
+| 功能                    | 何時載入           | 什麼載入                                                                            | 上下文成本             |
+| --------------------- | -------------- | ------------------------------------------------------------------------------- | ----------------- |
+| **CLAUDE.md**         | 會話開始           | 完整內容                                                                            | 每個請求              |
+| **Output styles**     | 會話開始，以及當您切換風格時 | 活躍風格的完整指令；預設風格無任何內容                                                             | 每個請求              |
+| **Skills**            | 會話開始 + 使用時     | 啟動時的描述，使用時的完整內容                                                                 | 低（每個請求的描述）\*      |
+| **MCP 伺服器**           | 會話開始           | 工具名稱；完整架構按需                                                                     | 低，直到使用工具          |
+| **Code intelligence** | 檔案編輯後和按需       | 編輯後的診斷；查詢時的符號位置                                                                 | 低；減少其他地方的檔案讀取     |
+| **Subagents**         | 生成時            | 具有指定 skills 的新鮮上下文，或用於[分支](/docs/zh-TW/sub-agents#fork-the-current-conversation)的父對話 | 與主會話隔離            |
+| **Hooks**             | 觸發時            | 無（外部運行）                                                                         | 零，除非 hook 返回額外上下文 |
 
-\*預設情況下，skill 描述在會話開始時載入，以便 Claude 決定何時使用它們。在 skill 的 frontmatter 中設置 `disable-model-invocation: true` 以將其完全隱藏在 Claude 中，直到您手動調用它。這將 skills 的上下文成本降低到零，您只需自己觸發這些 skills。對於您未編寫的 skill，在設置中設置 [`skillOverrides`](/docs/zh-TW/skills#override-skill-visibility-from-settings) 以執行相同操作，而無需編輯其檔案。
+\*預設情況下，skill 描述在會話開始時載入，以便 Claude 決定何時使用它們。在 skill 的 frontmatter 中設置 `disable-model-invocation: true` 以將其完全隱藏在 Claude 中，直到您手動調用它。對於您未編寫的 skill，在設置中設置 [`skillOverrides`](/docs/zh-TW/skills#override-skill-visibility-from-settings) 以執行相同操作，而無需編輯其檔案。
 
 <h3 id="understand-how-features-load">
   了解功能如何載入
@@ -248,7 +256,9 @@ Claude Code 結合了一個能夠推理您程式碼的模型與[內建工具](/d
 
 每個功能在您的會話中的不同點載入。下面的選項卡說明每個功能何時載入以及什麼進入上下文。
 
-<img src="https://mintcdn.com/claude-code/ikqp3_70mqIahteV/images/context-loading.svg?fit=max&auto=format&n=ikqp3_70mqIahteV&q=85&s=aab139e750494a237ae2e0c8f9139b0a" alt="上下文載入：CLAUDE.md 在會話開始時載入並保留在每個請求中。MCP 工具名稱在啟動時載入，完整架構延遲到使用。Skills 在啟動時載入描述，在調用時載入完整內容。Subagents 獲得隔離的上下文。Hooks 外部運行。" width="720" height="382" data-path="images/context-loading.svg" />
+<img src="https://mintcdn.com/claude-code/ikqp3_70mqIahteV/images/context-loading.svg?fit=max&auto=format&n=ikqp3_70mqIahteV&q=85&s=aab139e750494a237ae2e0c8f9139b0a" className="dark:hidden" alt="上下文載入：CLAUDE.md 在會話開始時載入並保留在每個請求中。MCP 工具名稱在啟動時載入，完整架構延遲到使用。Skills 在啟動時載入描述，在調用時載入完整內容。Subagents 獲得隔離的上下文。Hooks 外部運行。" width="720" height="382" data-path="images/context-loading.svg" />
+
+<img src="https://mintcdn.com/claude-code/_xqph1dUOslCOwsj/images/context-loading-dark.svg?fit=max&auto=format&n=_xqph1dUOslCOwsj&q=85&s=b274089ef9612d9c760bca9838557626" className="hidden dark:block" alt="上下文載入：CLAUDE.md 在會話開始時載入並保留在每個請求中。MCP 工具名稱在啟動時載入，完整架構延遲到使用。Skills 在啟動時載入描述，在調用時載入完整內容。Subagents 獲得隔離的上下文。Hooks 外部運行。" width="720" height="382" data-path="images/context-loading-dark.svg" />
 
 <Tabs>
   <Tab title="CLAUDE.md">
@@ -258,11 +268,11 @@ Claude Code 結合了一個能夠推理您程式碼的模型與[內建工具](/d
 
     **繼承：** Claude 從您的工作目錄讀取 CLAUDE.md 檔案直到根目錄，並在訪問這些檔案時在子目錄中發現嵌套的檔案。有關詳細資訊，請參閱 [CLAUDE.md 檔案如何載入](/docs/zh-TW/memory#how-claude-md-files-load)。
 
-    <Tip>保持 CLAUDE.md 在 200 行以下。將參考資料移動到 skills，它們按需載入。</Tip>
+    <Tip>保持 CLAUDE.md 在 200 行以下。將參考資料移動到 skills，它們按需載入。若要取得[已簽入 CLAUDE.md 的修剪建議](/docs/zh-TW/memory#my-claude-md-is-too-large)，請執行 `/doctor`。</Tip>
   </Tab>
 
   <Tab title="Skills">
-    Skills 是 Claude 工具包中的額外功能。它們可以是參考資料（如 API 風格指南）或可調用的工作流程，您可以使用 `/<name>` 觸發（如 `/deploy`）。Claude Code 附帶[捆綁的 skills](/docs/zh-TW/commands)，如 `/code-review`、`/batch` 和 `/debug`，開箱即用。您也可以創建自己的。Claude 在適當時使用 skills，或者您可以直接調用一個。
+    Skills 是 Claude 工具包中的額外功能。它們可以是參考資料（如 API 風格指南）或可調用的工作流程，您可以使用 `/<name>` 觸發（如 `/deploy`）。Claude Code 附帶[捆綁的 skills](/docs/zh-TW/commands)，如 `/code-review`、`/batch` 和 `/debug`，開箱即用。您也可以創建自己的。
 
     **何時：** 取決於 skill 的配置。預設情況下，描述在會話開始時載入，完整內容在使用時載入。對於僅使用者 skills（`disable-model-invocation: true`），在您調用它們之前不會載入任何內容。
 
@@ -272,7 +282,7 @@ Claude Code 結合了一個能夠推理您程式碼的模型與[內建工具](/d
 
     **上下文成本：** 低，直到使用。僅使用者 skills 在調用前成本為零。
 
-    **在 subagents 中：** Skills 在 subagents 中的工作方式不同。不是按需載入，skills 列表中列出的 skills 在啟動時完全預載入其上下文。Subagents 仍然可以通過 Skill 工具發現和調用未列出的專案、使用者和 plugin skills。
+    **在 subagents 中：** Skills 在 subagents 中的工作方式不同。不是按需載入，subagent 的 `skills` 欄位中列出的 skills 在啟動時完全預載入其上下文。Subagents 仍然可以通過 Skill 工具發現和調用未列出的專案、使用者和 plugin skills。
 
     <Tip>對具有副作用的 skills 使用 `disable-model-invocation: true`。這節省上下文並確保只有您觸發它們。</Tip>
   </Tab>
@@ -280,11 +290,11 @@ Claude Code 結合了一個能夠推理您程式碼的模型與[內建工具](/d
   <Tab title="MCP 伺服器">
     **何時：** 會話開始。
 
-    **什麼載入：** 來自連接伺服器的工具名稱。完整 JSON 架構保持延遲，直到 Claude 需要特定工具。
+    **什麼載入：** 來自連接伺服器的工具名稱和伺服器指令。完整 JSON 架構保持延遲，直到 Claude 需要特定工具。
 
     **上下文成本：** [工具搜尋](/docs/zh-TW/mcp#scale-with-mcp-tool-search)預設啟用，因此閒置 MCP 工具消耗最少上下文。
 
-    <Tip>運行 `/mcp` 以查看連接狀態和每個伺服器的令牌成本。Claude Code [自動重新連接到遠程伺服器](/docs/zh-TW/mcp#automatic-reconnection)（如果它們斷開連接），您可以斷開您未主動使用的伺服器。</Tip>
+    <Tip>執行 `/mcp` 以查看每個伺服器的連接狀態。執行 `/context all` 以查看每個已載入 MCP 工具使用多少令牌。Claude Code [自動重新連接到遠程伺服器](/docs/zh-TW/mcp#automatic-reconnection)（如果它們斷開連接），您可以斷開您未主動使用的伺服器。</Tip>
   </Tab>
 
   <Tab title="Code intelligence">
@@ -294,7 +304,7 @@ Claude Code 結合了一個能夠推理您程式碼的模型與[內建工具](/d
 
     **上下文成本：** 低。符號查詢通常會取代廣泛的檔案讀取，因此淨上下文使用可能會下降。
 
-    <Tip>LSP 工具在您為您的語言安裝[程式碼智能 plugin](/docs/zh-TW/discover-plugins#code-intelligence)之前處於非活動狀態。</Tip>
+    <Tip>LSP 工具在您為您的語言安裝[程式碼智能 plugin](/docs/zh-TW/plugins/code-intelligence)之前處於非活動狀態。</Tip>
   </Tab>
 
   <Tab title="Subagents">
@@ -302,18 +312,20 @@ Claude Code 結合了一個能夠推理您程式碼的模型與[內建工具](/d
 
     **什麼載入：** 新鮮、隔離的上下文，包含：
 
-    * 代理的自身系統提示，而不是完整的 Claude Code 系統提示
+    * 代理的自身系統提示，而不是 Claude Code 系統提示
     * 代理 `skills:` 欄位中列出的 skills 的完整內容
-    * CLAUDE.md 和 git 狀態，除了內置的 Explore 和 Plan 代理[省略兩者](/docs/zh-TW/sub-agents#what-loads-at-startup)
+    * CLAUDE.md 和 git 狀態，除了內置的 Explore 和 Plan 代理[省略兩者](/docs/zh-TW/sub-agents#what-loads-at-startup)，以及定義設置 [`omitClaudeMd`](/docs/zh-TW/sub-agents#supported-frontmatter-fields) 的代理跳過使用者、專案和本地 CLAUDE.md 檔案
     * 主代理在提示中傳遞的任何上下文
 
-    **上下文成本：** 與主會話隔離。Subagents 不繼承您的對話歷史或調用的 skills。
+    對於[分支](/docs/zh-TW/sub-agents#fork-the-current-conversation)，Claude Code 載入父對話到目前為止、系統提示和工具。
+
+    **上下文成本：** 與主會話隔離。
 
     <Tip>對不需要您完整對話上下文的工作使用 subagents。它們的隔離防止膨脹您的主會話。</Tip>
   </Tab>
 
   <Tab title="Hooks">
-    **何時：** 觸發時。Hooks 在特定生命週期事件（如工具執行、會話邊界、提示提交、權限請求和壓縮）時觸發。有關完整清單，請參閱 [Hooks](/docs/zh-TW/hooks)。
+    **何時：** 觸發時。Claude Code 在特定生命週期事件（如工具執行、會話邊界、提示提交、權限請求和壓縮）時執行 hooks。有關完整清單，請參閱 [Hooks](/docs/zh-TW/hooks)。
 
     **什麼載入：** 預設情況下無。Hooks 在主對話外執行。
 
@@ -342,8 +354,12 @@ Claude Code 結合了一個能夠推理您程式碼的模型與[內建工具](/d
     將工作卸載到隔離的上下文
   </Card>
 
-  <Card title="Agent teams" icon="network" href="/docs/zh-TW/agent-teams">
-    協調多個並行工作的會話
+  <Card title="Dynamic workflows" icon="network" href="/docs/zh-TW/workflows">
+    從一個指令碼執行許多 subagents
+  </Card>
+
+  <Card title="Cross-session messaging" icon="terminal" href="/docs/zh-TW/cross-session-messaging">
+    讓 Claude 向您的其他工作階段傳送訊息
   </Card>
 
   <Card title="MCP" icon="plug" href="/docs/zh-TW/mcp">
@@ -351,14 +367,14 @@ Claude Code 結合了一個能夠推理您程式碼的模型與[內建工具](/d
   </Card>
 
   <Card title="Hooks" icon="bolt" href="/docs/zh-TW/hooks-guide">
-    使用 hooks 自動化工作流程
+    使用 hooks 自動化動作
   </Card>
 
-  <Card title="Plugins" icon="puzzle-piece" href="/docs/zh-TW/plugins">
+  <Card title="Plugins" icon="puzzle-piece" href="/docs/zh-TW/plugins/overview">
     捆綁和共享功能集
   </Card>
 
-  <Card title="Marketplaces" icon="store" href="/docs/zh-TW/plugin-marketplaces">
+  <Card title="Marketplaces" icon="store" href="/docs/zh-TW/plugins/create-marketplace">
     託管和分發 plugin 集合
   </Card>
 </CardGroup>

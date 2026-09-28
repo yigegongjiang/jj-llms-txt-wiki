@@ -36,7 +36,7 @@ Claude tiene varias formas de interactuar con una aplicación o servicio. Comput
 * Si la tarea es trabajo en navegador y tiene [Claude en Chrome](/docs/es/chrome) configurado, Claude lo usa.
 * Si ninguno de esos se aplica, Claude usa computer use.
 
-El control de pantalla se reserva para cosas que nada más puede alcanzar: aplicaciones nativas, simuladores y herramientas sin API.
+El control de pantalla se reserva para cosas que nada más puede alcanzar: aplicaciones nativas, simuladores como el iOS Simulator, y herramientas sin API.
 
 <h2 id="enable-computer-use">
   Habilitar computer use
@@ -98,6 +98,8 @@ Las aplicaciones con amplio alcance muestran una advertencia adicional en el men
 
 Estas aplicaciones no están bloqueadas. La advertencia le permite decidir si la tarea justifica ese nivel de acceso.
 
+Apruebe Finder para permitir que Claude haga clic en el escritorio, el Dock o una ventana de Finder.
+
 El nivel de control de Claude también varía según la categoría de aplicación: los navegadores y plataformas de trading son solo lectura, las terminales e IDEs son solo clic, y todo lo demás obtiene control total. Consulte [permisos de aplicación en Desktop](/docs/es/desktop#app-permissions) para el desglose completo de niveles.
 
 <h2 id="how-claude-works-on-your-screen">
@@ -110,7 +112,7 @@ Comprender el flujo le ayuda a anticipar qué hará Claude y cómo intervenir.
   Una sesión a la vez
 </h3>
 
-Computer use mantiene un bloqueo en toda la máquina desde la primera acción de computer use hasta que la sesión que lo adquirió sale. A partir de v2.1.195, terminar la tarea no libera el bloqueo; solo salir de la sesión lo hace. Si otra sesión de Claude Code ya está usando su computadora, los nuevos intentos fallan con un mensaje que le dice qué sesión mantiene el bloqueo. Salga de esa sesión primero.
+Solo una sesión a la vez puede usar su computadora. Una sesión adquiere un bloqueo en su primera acción de computer use y lo libera cuando la sesión sale, no cuando la tarea finaliza. El computer use de una segunda sesión falla con un error que nombra la sesión que mantiene el bloqueo. Salga de esa sesión primero.
 
 <h3 id="apps-are-hidden-while-claude-works">
   Las aplicaciones se ocultan mientras Claude trabaja
@@ -132,7 +134,7 @@ No hay configuración para cambiar el tamaño objetivo. Si el texto o los contro
   Detener en cualquier momento
 </h3>
 
-Cuando Claude adquiere el bloqueo, aparece una notificación de macOS: "Claude is using your computer · press Esc to stop". Presione `Esc` en cualquier lugar para abortar la acción actual inmediatamente, o presione `Ctrl+C` en la terminal. De cualquier manera, Claude se detiene, muestra sus aplicaciones y le devuelve el control. La sesión mantiene el [bloqueo de computer use](#one-session-at-a-time) hasta que sale.
+La primera vez que Claude usa su computadora en cada turno, aparece una notificación de macOS: "Claude is using your computer · press Esc to stop". Presione `Esc` en cualquier lugar para abortar la acción actual inmediatamente, o presione `Ctrl+C` en la terminal. De cualquier manera, Claude se detiene, muestra sus aplicaciones y le devuelve el control. La sesión mantiene el [bloqueo de computer use](#one-session-at-a-time) hasta que sale.
 
 Una segunda notificación aparece cuando Claude termina.
 
@@ -197,7 +199,7 @@ Open the iOS Simulator, launch the app, tap through the onboarding
 screens, and tell me if any screen takes more than a second to load.
 ```
 
-Claude controla el simulador de la misma manera que lo haría con un ratón.
+Claude controla el simulador de la misma manera que lo haría con un ratón. Este flujo se aplica a la CLI; en la aplicación de escritorio, la misma solicitud abre el [panel del simulador de iOS](/docs/es/desktop-ios-simulator) en lugar del control de pantalla.
 
 <h2 id="differences-from-the-desktop-app">
   Diferencias de la aplicación de escritorio

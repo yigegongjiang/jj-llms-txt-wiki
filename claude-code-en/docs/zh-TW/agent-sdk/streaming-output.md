@@ -6,7 +6,7 @@
 
 > 當文字和工具呼叫串流進來時，從 Agent SDK 取得即時回應
 
-根據預設，Agent SDK 會在 Claude 完成生成每個回應後產生完整的 `AssistantMessage` 物件。若要在文字和工具呼叫生成時接收增量更新，請在選項中將 `include_partial_messages`（Python）或 `includePartialMessages`（TypeScript）設定為 `true` 來啟用部分訊息串流。
+根據預設，Agent SDK 會在 Claude 完成生成每個非空內容區塊（例如文字區塊或工具呼叫）後產生完整的 `AssistantMessage`。若要在文字和工具呼叫生成時接收增量更新，請啟用部分訊息串流。
 
 <Tip>
   本頁涵蓋輸出串流（即時接收權杖）。如需輸入模式（如何傳送訊息），請參閱[傳送訊息給代理](/docs/zh-TW/agent-sdk/streaming-vs-single-mode)。您也可以[透過 CLI 使用 Agent SDK 串流回應](/docs/zh-TW/headless)。
@@ -79,34 +79,14 @@
 
 啟用部分訊息時，您會收到包裝在物件中的原始 Claude API 串流事件。該類型在每個 SDK 中有不同的名稱：
 
-* **Python**：`StreamEvent`（從 `claude_agent_sdk.types` 匯入）
-* **TypeScript**：`SDKPartialAssistantMessage`，其中 `type: 'stream_event'`
+* **Python**：[`StreamEvent`](/docs/zh-TW/agent-sdk/python#streamevent)（從 `claude_agent_sdk.types` 匯入）
+* **TypeScript**：[`SDKPartialAssistantMessage`](/docs/zh-TW/agent-sdk/typescript#sdkpartialassistantmessage)，其中 `type: 'stream_event'`
 
-兩者都包含原始 Claude API 事件，而不是累積的文字。您需要自己提取和累積文字增量。以下是每種類型的結構：
+兩者都包含原始 Claude API 事件，而非累積的文字。您需要自行提取和累積文字差異。
 
-<CodeGroup>
-  ```python Python theme={null}
-  @dataclass
-  class StreamEvent:
-      uuid: str  # Unique identifier for this event
-      session_id: str  # Session identifier
-      event: dict[str, Any]  # The raw Claude API stream event
-      parent_tool_use_id: str | None  # Always None
-  ```
+在 Python 中，`parent_tool_use_id` 欄位始終為 `None`，在 TypeScript 中為 `null`。串流事件僅針對主工作階段發出；來自子代理的權杖級差異不會被轉發。若要將輸出歸因於子代理，請使用完整訊息，其中包含 `parent_tool_use_id`。請參閱[偵測子代理叫用](/docs/zh-TW/agent-sdk/subagents#detect-subagent-invocation)。
 
-  ```typescript TypeScript theme={null}
-  type SDKPartialAssistantMessage = {
-    type: "stream_event";
-    event: BetaRawMessageStreamEvent; // From Anthropic SDK
-    parent_tool_use_id: string | null;
-    uuid: UUID;
-    session_id: string;
-    ttft_ms?: number; // Time to first token in ms, present only on message_start events
-  };
-  ```
-</CodeGroup>
-
-`parent_tool_use_id` 欄位在 Python 中始終為 `None`，在 TypeScript 中始終為 `null`。串流事件僅針對主工作階段發出；來自子代理的令牌級增量不會被轉發。若要將輸出歸因於子代理，請使用完整訊息，其中包含 `parent_tool_use_id`。請參閱[偵測子代理叫用](/docs/zh-TW/agent-sdk/subagents#detect-subagent-invocation)。
+Claude Code 在該回合的第一個非 ping 串流事件上設定 `user_message_uuid`，以及當該回合正在回答的訊息變更時再次設定，條件如 [`user_message_uuid`](/docs/zh-TW/agent-sdk/typescript#user_message_uuid) 中所述。Python `StreamEvent` 不會公開此欄位。
 
 `event` 欄位包含來自 [Claude API](https://platform.claude.com/docs/en/build-with-claude/streaming#event-types) 的原始串流事件。常見的事件類型包括：
 
@@ -123,75 +103,26 @@
   訊息流
 </h2>
 
-啟用部分訊息後，您會按此順序接收訊息：
+Claude Code 在每個非空內容區塊完成時發出一個 `AssistantMessage`，因此包含文字區塊和工具呼叫的回應會產生兩個 `AssistantMessage` 物件。每個物件只攜帶自己的內容區塊，兩者共享相同的訊息 ID，您在 TypeScript 中讀取為 `message.message.id`，在 Python 中讀取為 `message.message_id`。啟用部分訊息後，每個 `AssistantMessage` 在該區塊的 `content_block_stop` 事件之前到達，您會按以下順序接收訊息：
 
 ```text theme={null}
 StreamEvent (message_start)
 StreamEvent (content_block_start) - text block
 StreamEvent (content_block_delta) - text chunks...
+AssistantMessage - complete text block
 StreamEvent (content_block_stop)
 StreamEvent (content_block_start) - tool_use block
 StreamEvent (content_block_delta) - tool input chunks...
+AssistantMessage - complete tool_use block
 StreamEvent (content_block_stop)
 StreamEvent (message_delta)
 StreamEvent (message_stop)
-AssistantMessage - complete message with all content
 ... tool executes ...
 ... more streaming events for next turn ...
 ResultMessage - final result
 ```
 
-未啟用部分訊息（Python 中的 `include_partial_messages`、TypeScript 中的 `includePartialMessages`）時，您會收到除 `StreamEvent` 外的所有訊息類型。常見類型包括 `SystemMessage`（工作階段初始化）、`AssistantMessage`（完整回應）、`ResultMessage`（最終結果）和指示何時壓縮對話歷史記錄的緊湊邊界訊息（TypeScript 中的 `SDKCompactBoundaryMessage`；Python 中具有子類型 `"compact_boundary"` 的 `SystemMessage`）。
-
-<h2 id="stream-text-responses">
-  串流文字回應
-</h2>
-
-若要在生成文字時顯示它，請尋找 `content_block_delta` 事件，其中 `delta.type` 是 `text_delta`。這些包含增量文字區塊。下面的範例在每個區塊到達時列印它：
-
-<CodeGroup>
-  ```python Python theme={null}
-  from claude_agent_sdk import query, ClaudeAgentOptions
-  from claude_agent_sdk.types import StreamEvent
-  import asyncio
-
-
-  async def stream_text():
-      options = ClaudeAgentOptions(include_partial_messages=True)
-
-      async for message in query(prompt="Explain how databases work", options=options):
-          if isinstance(message, StreamEvent):
-              event = message.event
-              if event.get("type") == "content_block_delta":
-                  delta = event.get("delta", {})
-                  if delta.get("type") == "text_delta":
-                      # Print each text chunk as it arrives
-                      print(delta.get("text", ""), end="", flush=True)
-
-      print()  # Final newline
-
-
-  asyncio.run(stream_text())
-  ```
-
-  ```typescript TypeScript theme={null}
-  import { query } from "@anthropic-ai/claude-agent-sdk";
-
-  for await (const message of query({
-    prompt: "Explain how databases work",
-    options: { includePartialMessages: true }
-  })) {
-    if (message.type === "stream_event") {
-      const event = message.event;
-      if (event.type === "content_block_delta" && event.delta.type === "text_delta") {
-        process.stdout.write(event.delta.text);
-      }
-    }
-  }
-
-  console.log(); // Final newline
-  ```
-</CodeGroup>
+未啟用部分訊息時，您會接收除 `StreamEvent` 外的所有訊息類型。常見類型包括 `SystemMessage`（工作階段初始化）、`AssistantMessage`（完整內容區塊）、`ResultMessage`（最終結果）和一個緊湊邊界訊息，指示何時壓縮了對話歷史記錄（TypeScript 中為 `SDKCompactBoundaryMessage`；Python 中為具有子類型 `"compact_boundary"` 的 `SystemMessage`）。
 
 <h2 id="stream-tool-calls">
   串流工具呼叫

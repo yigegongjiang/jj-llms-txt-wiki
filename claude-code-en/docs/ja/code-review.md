@@ -7,7 +7,7 @@
 > マルチエージェント分析を使用してコードベース全体を検査し、ロジックエラー、セキュリティ脆弱性、リグレッションを検出する自動化された PR レビューを設定します
 
 <Note>
-  Code Review はリサーチプレビュー段階であり、[Team および Enterprise](https://claude.ai/admin-settings/claude-code) サブスクリプションで利用可能です。[Zero Data Retention](/docs/ja/zero-data-retention) が有効になっている組織では利用できません。
+  Code Review はリサーチプレビュー段階であり、[Team および Enterprise](https://claude.ai/admin-settings/claude-code) サブスクリプションで利用可能です。[Zero Data Retention](/docs/ja/zero-data-retention) が有効になっている組織では利用できません。その他のプランでは、`/code-review` コマンドを使用して[ローカルで差分をレビュー](#review-a-diff-locally)することができます。
 </Note>
 
 Code Review は GitHub プルリクエストを分析し、コードの問題が見つかった行にインラインコメントとして結果を投稿します。特化したエージェントのフリートがコード変更をコードベース全体のコンテキストで検査し、ロジックエラー、セキュリティ脆弱性、壊れたエッジケース、微妙なリグレッションを探します。
@@ -20,15 +20,11 @@ Claude を管理サービスではなく独自の CI インフラストラクチ
 
 * [レビューの仕組み](#how-reviews-work)
 * [セットアップ](#set-up-code-review)
-* [`@claude review` と `@claude review once` を使用した](#manually-trigger-reviews)レビューの手動トリガー
+* [`@claude review` と `@claude review always` を使用した](#manually-trigger-reviews)レビューの手動トリガー
 * [`CLAUDE.md` と `REVIEW.md` を使用した](#customize-reviews)レビューのカスタマイズ
 * [料金](#pricing)
 * [トラブルシューティング](#troubleshooting)失敗した実行と欠落したコメント
 * [ローカルで差分をレビューする](#review-a-diff-locally) `/code-review` コマンドを使用
-
-<Note>
-  GitHub アプリをインストールせずにターミナルでローカルに差分をレビューするには、任意の Claude Code セッションで `/code-review` コマンドを実行してください。[ローカルで差分をレビューする](#review-a-diff-locally)を参照してください。
-</Note>
 
 <h2 id="how-reviews-work">
   レビューの仕組み
@@ -60,7 +56,9 @@ Claude を管理サービスではなく独自の CI インフラストラクチ
 
 Claude からの各レビューコメントには、👍 と 👎 が既に添付されているため、GitHub UI で両方のボタンがワンクリック評価のために表示されます。結果が有用だった場合は 👍 をクリックし、間違っていたか騒々しかった場合は 👎 をクリックしてください。Anthropic は PR がマージされた後にリアクションカウントを収集し、それを使用してレビュアーをチューニングします。リアクションは再レビューをトリガーしたり、PR 上の何かを変更したりしません。
 
-インラインコメントに返信しても、Claude が応答したり PR を更新したりするようにプロンプトされません。結果に対処するには、コードを修正してプッシュしてください。PR がプッシュトリガーレビューにサブスクライブされている場合、次の実行は問題が修正されるとスレッドを解決します。プッシュせずに新しいレビューをリクエストするには、[トップレベルの PR コメント](#manually-trigger-reviews)として `@claude review once` とコメントしてください。
+インラインコメントに返信しても、Claude が応答したり PR を更新したりするようにプロンプトされません。結果に対処するには、コードを修正してプッシュしてください。PR がプッシュトリガーレビューにサブスクライブされている場合、次の実行は問題が修正されるとスレッドを解決します。プッシュせずに新しいレビューをリクエストするには、[トップレベルの PR コメント](#manually-trigger-reviews)として `@claude review` とコメントしてください。
+
+結果を却下するにはコード変更なしでスレッドを解決してください。返信しても却下されません。
 
 <h3 id="check-run-output">
   チェック実行出力
@@ -75,7 +73,7 @@ Claude からの各レビューコメントには、👍 と 👎 が既に添�
 
 各結果は、**Files changed** タブの注釈としても表示され、関連する diff 行に直接マークされます。Important の結果は赤いマーカーで、nit は黄色の警告で、既存のバグは灰色の通知でレンダリングされます。注釈と重大度テーブルはインラインレビューコメントとは独立してチェック実行に書き込まれるため、移動した行のインラインコメントが GitHub に拒否された場合でも利用可能なままです。
 
-チェック実行は常に中立的な結論で完了するため、ブランチ保護ルールを通じてマージをブロックすることはありません。Code Review の結果に基づいてマージをゲートしたい場合は、チェック実行出力から重大度の内訳を読み取り、独自の CI で使用してください。Details テキストの最後の行は、ワークフローが `gh` と jq で解析できるマシン可読コメントです：
+チェック実行は常に中立的な結論で完了するため、ブランチ保護ルールを通じてマージをブロックすることはありません。Code Review の結果に基づいてマージをゲートしたい場合は、チェック実行出力から重大度の内訳を読み取り、独自の CI で使用してください。Details テキストの最後の行は、ワークフローが `gh` と jq で解析できるマシン可読コメントです。コミットのチェック実行を一覧表示するには、`gh api repos/OWNER/REPO/commits/<commit-sha>/check-runs --jq '.check_runs[] | {id, name}'` を使用して、`Claude Code Review` 実行の `id` を取得します。`OWNER`、`REPO`、`CHECK_RUN_ID` をリポジトリ所有者、リポジトリ名、およびそのID に置き換えます：
 
 ```bash theme={null}
 gh api repos/OWNER/REPO/check-runs/CHECK_RUN_ID \
@@ -106,13 +104,9 @@ gh api repos/OWNER/REPO/check-runs/CHECK_RUN_ID \
   </Step>
 
   <Step title="Claude GitHub App をインストールする">
-    プロンプトに従って、Claude GitHub App を GitHub 組織にインストールします。アプリは以下のリポジトリ権限をリクエストします：
+    プロンプトに従って Claude GitHub App をインストールします。レビュー対象のリポジトリを所有する GitHub 組織を選択し、アプリがアクセスできるリポジトリを選択して、リクエストされた権限を承認します。
 
-    * **Contents**: 読み取りと書き込み
-    * **Issues**: 読み取りと書き込み
-    * **Pull requests**: 読み取りと書き込み
-
-    Code Review は contents への読み取りアクセスと pull requests への書き込みアクセスを使用します。より広い権限セットは、後で有効にする場合、[GitHub Actions](/docs/ja/github-actions) もサポートします。
+    Claude が pull request をレビューするには、アプリの読み取りアクセスを通じてリポジトリコンテンツを読み取り、その書き込みアクセスを通じて pull requests とチェックに対してコメントと [check run](#check-run-output) を投稿します。インストール中に、[GitHub Actions](/docs/ja/github-actions) などの他の Claude 機能によって共有される、より広い権限セットを付与します。詳細なリストについては [GitHub App permissions](/docs/ja/github-actions#github-app-permissions) を参照してください。
   </Step>
 
   <Step title="リポジトリを選択する">
@@ -124,7 +118,9 @@ gh api repos/OWNER/REPO/check-runs/CHECK_RUN_ID \
 
     * **Once after PR creation**: PR が開かれるか ready for review としてマークされたときにレビューが 1 回実行されます
     * **After every push**: PR ブランチへのすべてのプッシュでレビューが実行され、PR が進化するにつれて新しい問題をキャッチし、フラグが立てられた問題を修正するとスレッドを自動解決します
-    * **Manual**: [PR で `@claude review` または `@claude review once` とコメント](#manually-trigger-reviews)したときのみレビューが開始されます。`@claude review` はまた、その後のプッシュでレビューに PR をサブスクライブします
+    * **Manual**: PR を開くか PR ブランチにプッシュしてもレビューは開始されません。[`@claude review`](#manually-trigger-reviews) とコメントしてレビューをリクエストするか、`@claude review always` とコメントして、その後のプッシュでレビューに PR をサブスクライブします
+
+    どのオプションを選択しても、Claude は [fork からの pull request](#review-pull-requests-from-forks) をレビューするのは、誰かが `@claude review` とコメントしたときだけです。
 
     すべてのプッシュでレビューすると、最も多くのレビューが実行され、最もコストがかかります。Manual モードは、特定の PR をレビューにオプトインしたい高トラフィックリポジトリ、または PR が ready になったら PR のレビューを開始したい場合に便利です。
   </Step>
@@ -138,25 +134,43 @@ gh api repos/OWNER/REPO/check-runs/CHECK_RUN_ID \
   レビューを手動でトリガーする
 </h2>
 
-2 つのコメントコマンドがオンデマンドでレビューを開始します。どちらもリポジトリの設定されたトリガーに関係なく機能するため、Manual モードで特定の PR をレビューにオプトインするか、他のモードで即座に再レビューを取得するために使用できます。
+コメントコマンドはオンデマンドでレビューを開始します。リポジトリの設定されたトリガーに関係なく機能するため、Manual モードで特定の PR をレビューにオプトインするか、他のモードで即座に再レビューを取得するために使用できます。
 
-| コマンド                  | 実行内容                                             |
-| :-------------------- | :----------------------------------------------- |
-| `@claude review`      | レビューを開始し、その後のプッシュでレビューがトリガーされるように PR をサブスクライブします |
-| `@claude review once` | 今後のプッシュにサブスクライブせずに単一のレビューを開始します                  |
+| コマンド                    | 実行内容                                             |
+| :---------------------- | :----------------------------------------------- |
+| `@claude review`        | サブスクライブせずに単一のレビューを開始します                          |
+| `@claude review always` | レビューを開始し、その後のプッシュでレビューがトリガーされるように PR をサブスクライブします |
+| `@claude review once`   | `@claude review` と同じです。サブスクライブせずに単一のレビューを開始します   |
 
-PR の現在の状態についてフィードバックが必要だが、その後のすべてのプッシュでレビューが発生するのを望まない場合は、`@claude review once` を使用します。これは頻繁なプッシュを伴う長時間実行される PR や、PR のレビュー動作を変更せずに 1 回限りの 2 番目の意見が必要な場合に便利です。
+Manual モードに設定されたリポジトリの高優先度 PR など、PR への後続のすべてのプッシュで新しいレビューを開始したい場合は、`@claude review always` を使用します。ベアコマンドは PR をサブスクライブしないため、後続のプッシュがレビューをトリガーするかどうかを変更せずに、1 回限りの 2 番目の意見をリクエストできます。
 
-どちらのコマンドでもレビューをトリガーするには：
+<Note>
+  2026 年 7 月の更新前は、`@claude review` は PR を push トリガーレビューにサブスクライブしていました。その動作に依存していた場合は、代わりに `@claude review always` をコメントしてください。`@claude review once` は引き続き機能し、ベアコマンドと同じように動作します。
+</Note>
+
+これらのコマンドのいずれかでレビューをトリガーするには：
 
 * トップレベルの PR コメントとして投稿し、diff 行のインラインコメントではない
-* コメントの開始にコマンドを配置し、ワンショット形式を使用している場合は `once` を同じ行に配置します
-* リポジトリへのオーナー、メンバー、またはコラボレーターアクセス権を持つ必要があります
+* コメントの開始にコマンドを配置し、`once` または `always` をコマンドの残りの部分と同じ行に配置します
+* リポジトリへの書き込み、メンテナンス、または管理者権限を持つ必要があります
 * PR は開いている必要があります
+
+リポジトリが組織に属し、その組織でのメンバーシップが非公開である場合（GitHub のデフォルト）、GitHub は Claude にメンバーとして識別されません。Claude はコメントに 👀 で反応する可能性がありますが、チームまたは組織のベース権限が書き込みアクセスを提供している場合でも、リポジトリに直接コラボレーターとして追加されていない限り、レビューは開始されません。これを修正するには、[組織のメンバーシップを公開](https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-your-membership-in-organizations/publicizing-or-hiding-organization-membership)するか、リポジトリ管理者にリポジトリにコラボレーターとして追加するよう依頼してください。
 
 自動トリガーとは異なり、手動トリガーはドラフト PR で実行されます。明示的なリクエストはドラフトステータスに関係なく、今すぐレビューが必要であることを示すためです。
 
 その PR でレビューが既に実行されている場合、リクエストは進行中のレビューが完了するまでキューに入ります。PR のチェック実行を通じて進捗を監視できます。
+
+<h3 id="review-pull-requests-from-forks">
+  フォークからのプルリクエストをレビューする
+</h3>
+
+Claude はリポジトリの **Review Behavior** 設定に関係なく、フォークからのプルリクエストを自動的にレビューしません。開始するには、プルリクエストに `@claude review` をコメントしてください。[コメントコマンドの要件](#manually-trigger-reviews)は引き続き適用され、必要な書き込みアクセスはフォークではなくベースリポジトリへのアクセスです。
+
+フォークプルリクエストの別のレビューを取得するには、新しい `@claude review` コメントを投稿してください。`@claude review always` も機能しますが、後続のプッシュでプルリクエストをレビューにサブスクライブしません。フォークプルリクエストでレビューを開始するのはコメントコマンド以外の何もありません：
+
+* チェック実行で **Re-run** をクリックしてもレビューは開始されません
+* 新しいコミットをプッシュしてもレビューは開始されません。**After every push** に設定されたリポジトリでも同様です
 
 <h2 id="customize-reviews">
   レビューをカスタマイズする
@@ -165,7 +179,7 @@ PR の現在の状態についてフィードバックが必要だが、その�
 Code Review はリポジトリから 2 つのファイルを読み取り、フラグを立てる内容をガイドします。これらは、リビューにどの程度強く影響するかが異なります：
 
 * **`CLAUDE.md`**: Claude Code がすべてのタスク（レビューだけではなく）に使用する共有プロジェクト指示。Code Review はそれをプロジェクトコンテキストとして読み取り、新しく導入された違反を nit としてフラグ立てします。
-* **`REVIEW.md`**: レビューのみのガイダンス、レビューパイプラインのすべてのエージェントに最優先として直接注入されます。フラグを立てるもの、重大度、結果の報告方法を変更するために使用します。
+* **`REVIEW.md`**: レビューのみのガイダンス、レビューパイプラインの検出と検証を行うエージェントに与えられ、結果をランク付けして報告するエージェントによって参照されます。チームがフラグを立てたいもの、どの重大度で、結果がどのように報告されるかを指定するために使用します。
 
 <h3 id="claude-md">
   CLAUDE.md
@@ -181,9 +195,9 @@ Claude はディレクトリ階層のすべてのレベルで `CLAUDE.md` ファ
   REVIEW\.md
 </h3>
 
-`REVIEW.md` はリポジトリルートのファイルで、Code Review がリポジトリ上でどのように動作するかをオーバーライドします。その内容は、レビューパイプラインのすべてのエージェントのシステムプロンプトに最優先の指示ブロックとして注入され、デフォルトのレビューガイダンスより優先されます。
+`REVIEW.md` はリポジトリルートのファイルで、Code Review をリポジトリに合わせて調整します。レビューパイプラインの結果を検出および検証するエージェントはその内容をリポジトリのレビュー指示として受け取り、Code Review のデフォルトレビューガイダンスと並行して、結果をランク付けして報告するエージェントはそれを参照してから重大度を決定し、レビューを作成します。
 
-逐語的に貼り付けられるため、`REVIEW.md` はプレーンな指示です：[`@` import 構文](/docs/ja/memory#import-additional-files)は展開されず、参照されたファイルはプロンプトに読み込まれません。実装したいルールをファイルに直接配置します。
+フラグを立てたいルールを `REVIEW.md` に直接配置します。
 
 <h4 id="what-you-can-tune">
   チューニング可能な内容
@@ -197,7 +211,7 @@ Claude はディレクトリ階層のすべてのレベルで `CLAUDE.md` ファ
 
 **スキップルール**: Claude が結果を投稿しないべきパス、ブランチパターン、結果カテゴリを一覧表示します。一般的な候補は、生成されたコード、ロックファイル、ベンダーされた依存関係、マシン作成ブランチ、および linting やスペルチェックなど CI が既に実装しているものです。完全な精査を保証しないが何らかのレビューを保証するパスについては、完全にスキップするのではなく、より高いバーを設定します：「`scripts/` では、ほぼ確実で重大な場合のみ報告します」。
 
-**リポジトリ固有のチェック**: すべての PR でフラグを立てたいルールを追加します。例えば「新しい API ルートには統合テストが必要」。`REVIEW.md` は最優先として注入されるため、これらは長い `CLAUDE.md` の同じルールよりも確実に着地します。
+**リポジトリ固有のチェック**: すべての PR でフラグを立てたいルールを追加します。例えば「新しい API ルートには統合テストが必要」。`REVIEW.md` はレビューパイプラインのすべての検出および検証エージェントに直接到達するため、これらは長い `CLAUDE.md` の同じルールよりも確実に着地します。
 
 **検証バー**: 結果クラスが投稿される前に証拠を要求します。例えば「動作クレームは命名からの推論ではなく、ソースの `file:line` 引用が必要」は、そうでなければ著者に往復を費やさせる偽陽性を削減します。
 
@@ -254,25 +268,25 @@ Important は、動作を壊す、データをリークする、またはロー�
 | Feedback             | 開発者が問題に対処したため自動解決されたレビューコメントのカウント |
 | Repository breakdown | リポジトリごとのレビューされた PR とコメント解決のカウント   |
 
-管理設定のリポジトリテーブルは、各リポジトリの平均レビューコストも表示します。ダッシュボードのコスト数値は活動を監視するための推定値です。請求書に正確な支出については、Anthropic の請求書を参照してください。
+ダッシュボードのコスト数値は活動を監視するための推定値です。請求書に正確な支出については、Anthropic の請求書を参照してください。
 
 <h2 id="pricing">
   料金
 </h2>
 
-Code Review はトークン使用量に基づいて請求されます。各レビューは平均 \$15～25 のコストで、PR サイズ、コードベースの複雑さ、検証が必要な問題の数に応じてスケーリングされます。Code Review の使用は[usage credits](https://support.claude.com/ja/articles/12429409-extra-usage-for-paid-claude-plans)を通じて個別に請求され、プランの含まれた使用量にはカウントされません。
+Code Review はトークン使用量に基づいて課金されます。各レビューの平均コストは \$15～25 で、PR のサイズ、コードベースの複雑さ、検証が必要な問題の数に応じてスケーリングします。Code Review の使用量は [使用クレジット](https://support.claude.com/en/articles/12429409-extra-usage-for-paid-claude-plans) を通じて個別に課金され、プランに含まれる使用量にはカウントされません。
 
-選択するレビュートリガーは総コストに影響します：
+選択するレビュートリガーは総コストに影響します。
 
-* **Once after PR creation**: PR ごとに 1 回実行されます
-* **After every push**: 各プッシュで実行され、プッシュ数でコストが乗算されます
-* **Manual**: PR で誰かが `@claude review` とコメントするまでレビューはありません
+* **PR 作成後に 1 回**: PR ごとに 1 回実行されます
+* **すべてのプッシュ後**: 各プッシュで実行され、プッシュ数によってコストが乗算されます
+* **手動**: オープンまたはプッシュ時にレビューは実行されないため、コストはユーザーがリクエストしたレビューからのみ発生します
 
-どのモードでも、`@claude review` と[コメント](#manually-trigger-reviews)すると、PR がプッシュトリガーレビューにオプトインされるため、そのコメント後のプッシュごとに追加コストが発生します。今後のプッシュにサブスクライブせずに単一のレビューを実行するには、代わりに `@claude review once` とコメントしてください。
+PR 作成後に 1 回または手動モードでは、`@claude review always` とコメントすると [PR がプッシュトリガーレビューにオプトインされ](#manually-trigger-reviews)、そのコメント後のプッシュごとに追加コストが発生します。すべてのプッシュ後モードでは、プッシュは既にレビューをトリガーするため、サブスクリプションはプッシュごとのコストを変更しません。`@claude review` とコメントすると、将来のプッシュにサブスクライブせずに単一のレビューが実行されます。Claude は [フォークからのプルリクエスト](#review-pull-requests-from-forks) をレビューするのは、ユーザーが `@claude review` とコメントした場合のみであるため、フォークプルリクエストはどのモードでもプッシュごとのコストを発生させません。
 
-コストは、組織が他の Claude Code 機能に Amazon Bedrock または Google Cloud の Agent Platform を使用しているかどうかに関係なく、Anthropic の請求書に表示されます。Code Review の月次支出上限を設定するには、[claude.ai/admin-settings/usage](https://claude.ai/admin-settings/usage) にアクセスして、Claude Code Review サービスの制限を設定します。
+組織が他の Claude Code 機能に Amazon Bedrock または Google Cloud の Agent Platform を使用しているかどうかに関わらず、コストは Anthropic の請求書に表示されます。Code Review の月間支出上限を設定するには、[claude.ai/admin-settings/usage](https://claude.ai/admin-settings/usage) にアクセスして Claude Code Review サービスの制限を設定してください。
 
-[analytics](#view-usage) の週次コストチャートまたは管理設定のリポジトリごとの平均コスト列を通じて支出を監視します。
+[分析](#view-usage) の週間コストチャートまたは管理設定のリポジトリごとの平均コスト列を通じて支出を監視してください。
 
 <h2 id="troubleshooting">
   トラブルシューティング
@@ -286,9 +300,7 @@ Code Review はトークン使用量に基づいて請求されます。各レ�
 
 レビューインフラストラクチャが内部エラーに遭遇するか、時間制限を超える場合、チェック実行は **Code review encountered an error** または **Code review timed out** というタイトルで完了します。結論は依然として中立的であるため、マージをブロックするものはありませんが、結果は投稿されません。
 
-レビューを再度実行するには、PR で `@claude review once` とコメントしてください。これは PR を今後のプッシュにサブスクライブせずに新しいレビューを開始します。PR が既にプッシュトリガーレビューにサブスクライブされている場合、新しいコミットをプッシュすることも新しいレビューを開始します。
-
-GitHub の Checks タブの **Re-run** ボタンは Code Review を再トリガーしません。コメントコマンドまたは新しいプッシュを代わりに使用してください。
+レビューを再度実行するには、PR で `@claude review` とコメントしてください。これは PR を今後のプッシュにサブスクライブせずに新しいレビューを開始します。PR が [フォークから](#review-pull-requests-from-forks) のものでない場合、GitHub の Checks タブの **Claude Code Review** チェックで **Re-run** をクリックすることもできます。再実行も PR をサブスクライブせずに新しいレビューを開始します。
 
 <h3 id="review-didn’t-run-and-the-pr-shows-a-spend-cap-message">
   レビューが実行されず、PR が支出上限メッセージを表示する
@@ -310,22 +322,125 @@ GitHub の Checks タブの **Re-run** ボタンは Code Review を再トリガ�
   ローカルで差分をレビューする
 </h2>
 
-[`/code-review` コマンド](/docs/ja/commands)はターミナルで差分をレビューし、GitHub App をインストールせずに実行します。任意の Claude Code セッションで実行します：正確性バグを報告し、再利用、簡素化、効率化のクリーンアップを報告します。デフォルトでは、ローカルレビューはブランチのアップストリームより先のコミットとワーキングツリーの未コミット変更をカバーします。`--comment` を渡してインライン PR コメントとして結果を投稿するか、`--fix` を渡してレビュー後に結果をワーキングツリーに適用します。
+[`/code-review` コマンド](/docs/ja/commands)はターミナルで差分をレビューし、GitHub App をインストールせずに実行します。正確性バグと再利用、簡素化、効率化のクリーンアップを報告します。
 
-低い[努力レベル](/docs/ja/model-config#adjust-effort-level)はより少なく、より高い信頼度の結果を返し、`high` から `max` はより広いカバレッジを提供し、不確実な結果を含む場合があります。努力引数がない場合、レビューはセッションの現在の努力を使用します。デフォルトの差分以外をレビューするには、ターゲットを渡します：ファイルパス、PR 番号、ブランチ名、または `main...my-feature` などの ref 範囲です。ref 範囲形式は、ブランチのアップストリームがどのように設定されているかに関係なく、`my-feature` から `main` へのプルリクエストに含まれるコミット済み差分をレビューします。
+`/review` は `/code-review` のエイリアスです。v2.1.223 より前は、GitHub プルリクエストの単一パス読み取り専用レビューを実行する別のコマンドでした。
 
-`/code-review ultra --fix` はクラウドでより深い[ultrareview](/docs/ja/ultrareview)を実行し、セッションに戻ってきたときに結果をワーキングツリーに適用します。Ultrareview は独自のスコープを使用します：現在のブランチとリポジトリのデフォルトブランチ、およびワーキングツリーの未コミットおよびステージされた変更です。
+<Steps>
+  <Step title="/code-review を実行する">
+    作業しているセッションから、コマンドを実行します：
 
-このコマンドは v2.1.147 より前は `/simplify` という名前で、デフォルトで修正を適用していました。v2.1.154 から、`/simplify` はバグを探さずに修正を適用するクリーンアップのみのレビューを実行します。バグ検出のために `/simplify` をスクリプト化した場合は、変更されていない `/code-review --fix` に切り替えてください。
+    ```text theme={null}
+    /code-review
+    ```
+
+    ブランチのアップストリームより先のコミットと未コミット変更をレビューするため、レポートするものがあるようにブランチまたはワーキングツリーで作業する必要があります。別のものをレビューするには、ターゲットを渡します：ファイルパス、PR 番号、ブランチ名、または `main...my-feature` などの ref 範囲です。
+
+    フラグを追加することもできます：
+
+    * `--fix`：レビュー後に結果をワーキングツリーに適用します
+    * `--comment`：GitHub プルリクエストにインラインコメントとして結果を投稿するか、GitLab マージリクエストに単一のノートとして投稿します
+    * `--post`：`github.com` プルリクエストの `ultra` クラウドレビューで、起動ダイアログで PR に結果を投稿することを事前選択します。[プルリクエストに結果を投稿する](/docs/ja/ultrareview#post-findings-to-the-pull-request)を参照してください。Claude Code v2.1.227 以降が必要です
+
+    GitLab マージリクエストに `--comment` を渡すと、Claude Code は GitLab の `glab` CLI を通じて結果を投稿します。Claude Code v2.1.257 以降が必要です。`glab` がインストールされていない場合、Claude はターミナルに結果を出力します。
+
+    マージリクエストを URL または `!123` 参照として渡します。Claude Code は、チェックアウトのオリジンが `gitlab.com` 上にある場合にのみ、ベアな番号またはブランチ名をマージリクエストとして扱います。自己管理 GitLab インスタンスでは、URL または `!123` 形式を渡します。
+  </Step>
+
+  <Step title="作業を続ける">
+    レビューは独自のコンテキストウィンドウを持つバックグラウンド[サブエージェント](/docs/ja/sub-agents)として実行されるため、会話を埋めません。結果はレビューが完了したときに会話に到着します。
+  </Step>
+
+  <Step title="結果に対応する">
+    Claude にレビューが見つけたものを修正するよう依頼します。`--fix` または `--comment` を渡した場合、レビューはすでに結果を適用または投稿しています。
+  </Step>
+</Steps>
+
+Claude は以下の両方の実行で、ホストアプリケーションが結果リストをリクエストした場合でも、返信のテキストとして結果を報告します：
+
+* ターミナルセッション。ここで `/code-review` は[フォークされたサブエージェント](/docs/ja/skills#run-skills-in-a-subagent)としてレビューを実行します
+* テキストまたは JSON 出力を含む `-p` 実行
+
+[デスクトップアプリ](/docs/ja/desktop)などの結果リストをリクエストするホストアプリケーションでは、Claude は[`ReportFindings` ツール](/docs/ja/tools-reference)を通じてレビューの結果を報告します。Claude Code は結果を結果リストとしてレンダリングし、各エントリはファイルの場所、1 文の要約、および結果が持つ場合は `correctness` などのカテゴリタグを表示します。ホストリクエストはすべての努力レベルで適用され、Claude Code v2.1.218 以降が必要です。
+
+Claude が後でセッションで報告された結果を修正すると、それらを再度報告し、Claude Code は更新された結果リストの各結果を修正済み、スキップ済み、または変更不要としてマークします。
+
+<h3 id="what-the-review-reads-and-edits">
+  レビューが読み取り、編集するもの
+</h3>
+
+レビューは任意の Claude Code セッションのように `CLAUDE.md` に従いますが、[`REVIEW.md`](#review-md)は読み取りません。バックグラウンドレビューはその `--fix` 編集をセッションの[チェックポイント](/docs/ja/checkpointing#subagent-edits-not-restored)の外で適用するため、`/rewind` はそれらを元に戻しません。git を使用してそれらを戻します。レビューが[フォアグラウンドで実行](#run-in-the-foreground)される場合、独自のターン中にワーキングツリーを編集するため、`/rewind` は通常どおりその編集を復元します。
+
+<h3 id="tune-effort-and-arguments">
+  努力とアーギュメントを調整する
+</h3>
+
+[努力レベル](/docs/ja/model-config#adjust-effort-level)を渡してカバレッジと信頼度をトレードオフします。`low` と `medium` では、レビューは最も確信している結果のみを報告するため、偽陽性が少なくなります。`high` から `max` はカバレッジを広げ、レビューが確信していない結果を含む場合があります。
+
+レベルを入力しない場合、レビューは以前のセッションでも、入力した `low` から `max` の最後のレベルを再利用し、Claude Code は `Reusing high effort, the level you typed last time` などの通知を表示します。`/code-review high` のようにレベルを入力して、後の実行が再利用するものを変更します。非対話型 `-p` 実行で渡すレベルはそれを更新しません。`ultra` は記憶されたレベルを更新も使用もしません。レベルを入力したことがない場合、レビューはセッションの現在の努力を使用します。v2.1.223 より前は、レベルのない `/code-review` は常にセッションの現在の努力を使用していました。
+
+努力レベルとフラグの後、Claude Code は行の残りを 2 つの方法のいずれかで読み取ります：
+
+* **`ultra` なし**：残りのすべてはレビュータ​​ーゲットです。別のコマンド名で始まる場合でも同様です。`/code-review /fix-issue 123` は `/fix-issue 123` をターゲットテキストとしてレビューし、`/fix-issue` を 2 番目の[スタックされたスキル](/docs/ja/skills#pass-arguments-to-skills)として読み込みません。v2.1.218 より前は、`/code-review` の後にスタックされたコマンドは独自のスキルとして展開されました。
+* **`ultra` あり**：Claude Code は単一の単語をベースブランチまたは PR 番号として読み取り、ブランチまたは PR に名前を付けない長いテキストを[レビューに添付されたノート](/docs/ja/ultrareview#pass-a-request-in-plain-words)に変換します。`/code-review ultra check my auth changes` は現在のブランチをレビューし、Claude は結果をノートに関連付けます。
+
+<h3 id="run-in-the-foreground">
+  フォアグラウンドで実行する
+</h3>
+
+レビューはデフォルトでバックグラウンドで実行されます。v2.1.218 より前は、会話内で実行されました。以下のような場合はフォアグラウンドで実行されます：
+
+* 前のレビューがまだ進行中に `/code-review` を再度実行する
+* 非対話型モード（`-p` フラグまたは Agent SDK）で実行します。Claude Code はレビューを待機し、結果を応答に含めます。ただし `ultra` は除きます。これは[クラウドレビューを待たずに起動](#escalate-to-ultrareview)します
+* [`CLAUDE_CODE_DISABLE_BACKGROUND_TASKS`](/docs/ja/env-vars)を `1` に設定します。これはすべての他のバックグラウンドタスク機能もオフにします
+
+<h3 id="let-claude-start-the-review">
+  Claude にレビューを開始させる
+</h3>
+
+Claude は独自に `/code-review` を開始できます。変更をレビューするよう平文で依頼すると、コマンドを入力せずにスキルを実行でき、プロンプトとして `/code-review` を持つ[スケジュールされたタスク](/docs/ja/scheduled-tasks)はレビューを実行します。
+
+スケジュールされたタスクは[クラウドレビュー](#escalate-to-ultrareview)を起動しないため、`ultra` 引数なしで `/code-review` をスケジュールします。
+
+Claude とスケジュールされたタスクがレビューを開始するのを停止しながら、入力するために `/code-review` を利用可能に保つには、`~/.claude/settings.json` などの[設定ファイル](/docs/ja/settings#where-settings-live)に[`skillOverrides`](/docs/ja/skills#override-skill-visibility-from-settings)エントリを追加します：
+
+```json theme={null}
+{
+  "skillOverrides": {
+    "code-review": "user-invocable-only"
+  }
+}
+```
+
+v2.1.246 より前は、Claude は Anthropic から取得されたフィーチャーフラグがオンになった場所でのみ独自に `/code-review` を開始しました。[フィーチャーフラグを取得しないセッション](/docs/ja/env-vars#features-that-need-feature-flag-fetching)では、`/code-review` は入力したときのみ実行され、スケジュールされた `/code-review` は平文として Claude に到達しました。
+
+<h3 id="escalate-to-ultrareview">
+  ultrareview にエスカレートする
+</h3>
+
+`/code-review ultra --fix` はクラウドでより深い[ultrareview](/docs/ja/ultrareview)を実行し、セッションに戻ってきたときに結果をワーキングツリーに適用します。
+
+Ultrareview は独自のスコープを使用します：現在のブランチとリポジトリのデフォルトブランチ、およびワーキングツリーの未コミットおよびステージされた変更です。`.env` および `*.tfvars` ファイルなどの認証情報またはキーのような名前のファイルの未コミット変更については、Claude Code は[ローカルリポジトリをクラウドセッションにアップロードするためのルール](/docs/ja/claude-code-on-the-web#send-local-repositories-without-github)に従います。`/code-review ultra develop` などのブランチ名を渡して、別のベースと比較します。
+
+ターゲットが `github.com` プルリクエストの場合、Claude に[完成した結果を PR に投稿](/docs/ja/ultrareview#post-findings-to-the-pull-request)させることができます。GitHub アカウントからのコメントとして。Claude Code v2.1.227 以降が必要です。
+
+<Note>
+  Ultrareview は claude.ai アカウントでの認証が必要であり、Amazon Bedrock、Google Cloud の Agent Platform、Microsoft Foundry、または Zero Data Retention が有効な組織では利用できません。ultrareview が利用できない場合、`/code-review ultra` はセッション内でローカルレビューを実行します。
+</Note>
+
+スクリプトまたは CI からクラウドレビューを開始するには、`claude -p '/code-review ultra'` を実行します。Claude Code はレビューを起動し、追跡用のリンクを出力します。Claude Code v2.1.218 以降が必要です。
+
+レビューが[使用クレジット](https://support.claude.com/en/articles/12429409-extra-usage-for-paid-claude-plans)を請求する場合、Claude Code は起動前に停止します。請求確認には対話型セッションが必要なためです。代わりに[`claude ultrareview` サブコマンド](/docs/ja/ultrareview#run-ultrareview-non-interactively)を実行します。実行することで、料金に同意します。
+
+このコマンドは v2.1.147 より前は `/simplify` という名前で、デフォルトで修正を適用していました。`/simplify` はバグを探さずに修正を適用するクリーンアップのみのレビューを実行します。バグ検出のために `/simplify` をスクリプト化した場合は、`/code-review --fix` に切り替えます。
 
 <h2 id="related-resources">
   関連リソース
 </h2>
-
-Code Review は Claude Code の残りの部分と連携するように設計されています。PR を開く前にローカルでレビューを実行したい場合、自己ホスト型セットアップが必要な場合、または `CLAUDE.md` がツール全体で Claude の動作をどのように形成するかについてさらに詳しく知りたい場合、これらのページは次の良い停止点です：
 
 * [Commands](/docs/ja/commands): ローカルの Claude Code セッションで `/code-review` を実行して、プッシュ前に差分をチェック
 * [GitHub Actions](/docs/ja/github-actions): コードレビューを超えたカスタム自動化のための独自の GitHub Actions ワークフローで Claude を実行
 * [GitLab CI/CD](/docs/ja/gitlab-ci-cd): GitLab パイプライン用の自己ホスト型 Claude 統合
 * [Memory](/docs/ja/memory): Claude Code 全体で `CLAUDE.md` ファイルがどのように機能するか
 * [Analytics](/docs/ja/analytics): コードレビューを超えた Claude Code 使用状況を追跡
+* [How Anthropic secures its AI-native software development lifecycle](https://claude.com/blog/how-anthropic-secures-its-ai-native-software-development-lifecycle): 自動レビューが Anthropic のセキュアな開発プロセスの 1 つのレイヤーとしてどのように適合するか

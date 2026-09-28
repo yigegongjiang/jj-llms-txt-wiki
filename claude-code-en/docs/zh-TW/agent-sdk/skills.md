@@ -2,55 +2,74 @@
 > Fetch the complete documentation index at: https://code.claude.com/docs/llms.txt
 > Use this file to discover all available pages before exploring further.
 
-# SDK 中的 Agent Skills
+# 使用 Skills 擴展 Agent
 
-> 使用 Claude Agent SDK 中的 Agent Skills 擴展 Claude 的專門功能
+> 控制 Claude 在 Claude Agent SDK 會話中可以調用的 Skills，按名稱分派命令，以及編寫會話發現的 Skills
 
-<h2 id="overview">
-  概述
+Agent Skills 使用專門功能擴展 Claude，Claude 會在相關時自動調用這些功能。Skills 被打包為 `SKILL.md` 文件，包含說明、描述和可選的支持資源。本頁面也涵蓋了 [Agent SDK 會話中的命令](#commands-in-agent-sdk-sessions)。
+
+有關 Skills 的全面資訊，包括優勢、架構和編寫指南，請參閱 [Agent Skills 概述](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview)。
+
+<h2 id="how-skills-work-with-the-agent-sdk">
+  Skills 如何與 Agent SDK 搭配運作
 </h2>
 
-Agent Skills 使用專門功能擴展 Claude，Claude 會在相關時自動調用這些功能。Skills 被打包為 `SKILL.md` 文件，包含說明、描述和可選的支持資源。
+使用 Claude Agent SDK 時，skills 具有以下特性：
 
-有關 Skills 的全面信息，包括優勢、架構和編寫指南，請參閱 [Agent Skills 概述](https://platform.claude.com/docs/zh-TW/agents-and-tools/agent-skills/overview)。
+* **定義為檔案系統成品**：你在自己的目錄中建立每個 skill 作為 `SKILL.md` 檔案，例如 `.claude/skills/<name>/SKILL.md`
+* **從檔案系統載入**：SDK 從由 `settingSources`（TypeScript）或 `setting_sources`（Python）控制的檔案系統位置載入 skills
+* **自動探索**：一旦檔案系統設定載入，SDK 會在啟動時從使用者和專案目錄探索 skill 中繼資料，並在 Claude 叫用 skill 時載入完整內容
+* **由模型叫用**：Claude 根據上下文自主選擇何時使用它們
+* **由使用者叫用**：你可以在提示中傳送 `/<name>` 來直接分派 skill。請參閱 [Agent SDK 工作階段中的命令](#commands-in-agent-sdk-sessions)
+* **透過 `skills` 選項進行範圍設定**：探索到的 skills 預設為啟用。傳遞 skill 名稱清單、`"all"` 或 `[]` 來控制 Claude 可以叫用哪些 skills
 
-<h2 id="how-skills-work-with-the-sdk">
-  Skills 如何與 SDK 配合使用
-</h2>
-
-使用 Claude Agent SDK 時，Skills 的特點是：
-
-1. **定義為文件系統工件**：在特定目錄（`.claude/skills/`）中創建為 `SKILL.md` 文件
-2. **從文件系統加載**：Skills 從由 `settingSources`（TypeScript）或 `setting_sources`（Python）控制的文件系統位置加載
-3. **自動發現**：加載文件系統設置後，在啟動時從用戶和項目目錄發現 Skill 元數據；觸發時加載完整內容
-4. **由模型調用**：Claude 根據上下文自動選擇何時使用它們
-5. **通過 `skills` 選項進行篩選**：發現的 Skills 默認啟用。傳遞 Skill 名稱列表、`"all"` 或 `[]` 來控制會話中可用的 Skills
-
-與子代理不同（可以以編程方式定義），Skills 必須創建為文件系統工件。SDK 不提供用於註冊 Skills 的編程 API。
+與你可以在 [`agents` 選項](/docs/zh-TW/agent-sdk/subagents#programmatic-definition-recommended)中定義的 subagents 不同，你將 skills 建立為磁碟上的檔案。SDK 不提供用於註冊它們的程式設計 API。
 
 <Note>
-  Skills 通過文件系統設置源發現。使用默認 `query()` 選項時，SDK 加載用戶和項目源，因此 `~/.claude/skills/`、`<cwd>/.claude/skills/` 和 `<cwd>` 的任何父目錄（直到存儲庫根目錄）中的 `.claude/skills/` 中的 Skills 可用。如果您明確設置 `settingSources`，請包含 `'user'` 或 `'project'` 以保持 Skill 發現，或使用 [`plugins` 選項](/docs/zh-TW/agent-sdk/plugins) 從特定路徑加載 Skills。
+  Skills 透過檔案系統設定來源進行探索。使用預設 `query()` 選項時，SDK 會載入使用者和專案來源，因此 `~/.claude/skills/`、`<cwd>/.claude/skills/` 和 `.claude/skills/` 中的 skills（位於 `<cwd>` 的任何父目錄中，直到儲存庫根目錄）都可用。專案來源也涵蓋 `<dir>/.claude/skills/`（位於你透過 `additionalDirectories`（TypeScript）或 `add_dirs`（Python）傳遞的每個目錄中），因為 SDK 會將這些目錄作為 [`--add-dir`](/docs/zh-TW/skills#skills-from-additional-directories) 傳遞給 Claude Code。如果你明確設定 `settingSources`，請包含 `'project'` 以保留專案和新增目錄 skills，以及 `'user'` 以保留你的個人 skills，或使用 [`plugins` 選項](/docs/zh-TW/agent-sdk/plugins)從特定路徑載入 skills。
 </Note>
 
-<h2 id="using-skills-with-the-sdk">
-  在 SDK 中使用 Skills
+<h2 id="use-skills-with-the-agent-sdk">
+  在 Agent SDK 中使用 Skills
 </h2>
 
-在 `query()` 上設置 `skills` 選項以控制會話中可用的 Skills。省略時，發現的 Skills 啟用且 Skill 工具可用，與 CLI 行為匹配。傳遞 `"all"` 以啟用每個發現的 Skill，傳遞 Skill 名稱列表以僅啟用那些，或傳遞 `[]` 以禁用全部。設置 `skills` 時，SDK 會自動將 Skill 工具新增至 `allowedTools`。如果您也傳遞明確的 `tools` 列表，請在該列表中包含 `"Skill"`，以便 Claude 可以叫用 skills。
+在 `query()` 上設置 `skills` 選項以控制會話中 Claude 可以調用的 Skills。省略時，發現的 Skills 啟用且 Skill 工具可用，與 CLI 行為匹配。傳遞 `"all"` 以讓 Claude 調用每個發現的 Skill，傳遞 Skill 名稱列表以僅允許那些，或傳遞 `[]` 以讓 Claude 不調用任何 Skill。
 
-配置後，Claude 自動從檔案系統發現 Skills 並在與使用者請求相關時叫用它們。
+例如，要讓 Claude 僅調用兩個命名的 Skills：
+
+<CodeGroup>
+  ```python Python theme={null}
+  options = ClaudeAgentOptions(skills=["pdf", "docx"])
+  ```
+
+  ```typescript TypeScript theme={null}
+  const options = { skills: ["pdf", "docx"] };
+  ```
+</CodeGroup>
+
+<h3 id="set-up-skills-in-a-session">
+  在會話中設置 Skills
+</h3>
+
+當您設置 `skills` 時，SDK 會自動將 Skill 工具添加到 `allowedTools`。如果您也傳遞明確的 `tools` 列表，請在該列表中包含 `"Skill"`，以便 Claude 可以調用 Skills。
+
+配置後，Claude 自動從文件系統發現 Skills 並在與使用者請求相關時調用它們。
+
+以下示例在會話中啟用每個發現的 Skill，並預先批准 Skills 通常需要的工具。該示例將 `cwd` 設置為進程的當前工作目錄，因此請從具有當前目錄或任何父目錄（直到存儲庫根目錄）中的 `.claude/skills/` 目錄的項目內運行它：
 
 <CodeGroup>
   ```python Python theme={null}
   import asyncio
+  import os
+
   from claude_agent_sdk import query, ClaudeAgentOptions
 
 
   async def main():
       options = ClaudeAgentOptions(
-          cwd="/path/to/project",  # Project with .claude/skills/
-          setting_sources=["user", "project"],  # Load Skills from filesystem
-          skills="all",  # Enable every discovered Skill
+          cwd=os.getcwd(),  # .claude/skills/ here or in a parent directory
+          setting_sources=["user", "project"],  # Load skills from filesystem
+          skills="all",  # Let Claude invoke every discovered skill
           allowed_tools=["Read", "Write", "Bash"],
       )
 
@@ -69,9 +88,9 @@ Agent Skills 使用專門功能擴展 Claude，Claude 會在相關時自動調�
   for await (const message of query({
     prompt: "Help me process this PDF document",
     options: {
-      cwd: "/path/to/project", // Project with .claude/skills/
-      settingSources: ["user", "project"], // Load Skills from filesystem
-      skills: "all", // Enable every discovered Skill
+      cwd: process.cwd(), // .claude/skills/ here or in a parent directory
+      settingSources: ["user", "project"], // Load skills from filesystem
+      skills: "all", // Let Claude invoke every discovered skill
       allowedTools: ["Read", "Write", "Bash"]
     }
   })) {
@@ -80,84 +99,320 @@ Agent Skills 使用專門功能擴展 Claude，Claude 會在相關時自動調�
   ```
 </CodeGroup>
 
-要僅啟用特定 Skills，請傳遞它們的名稱。名稱與 `SKILL.md` 中的 `name` 欄位或 Skill 的目錄名稱匹配。對於外掛提供的 Skills，使用 `plugin:skill`。
+<h3 id="confirm-skills-loaded">
+  確認 Skills 已加載
+</h3>
+
+在流的開始附近，SDK 會產生一個子類型為 `init` 的系統訊息。檢查其 `skills` 陣列以確認您的 Skills 在 Claude 開始工作之前已加載。該陣列包括您已定義的使用者可調用 Skills（具有 `description` 或 `when_to_use` frontmatter 欄位），以及 [Claude Code 包含的捆綁 Skills](/docs/zh-TW/skills#bundled-skills)。
+
+該陣列僅列出使用者可調用的 Skills。具有 frontmatter 中 [`user-invocable: false`](/docs/zh-TW/skills#control-who-invokes-a-skill) 的 Skill 會加載並保持對 Claude 可用，但不會出現在陣列中。該陣列列出相同的 Skills，無論它們是否在您的 `skills` 列表中。
+
+<h3 id="allow-only-specific-skills">
+  僅允許特定 Skills
+</h3>
+
+要讓 Claude 僅調用特定 Skills，請在 `skills` 列表中傳遞它們的名稱。名稱與 `SKILL.md` 中的 `name` 欄位或 Skill 的目錄名稱匹配。對於外掛提供的 Skills，使用 `plugin:skill`。
+
+該列表僅接受確切的 Skill 名稱。如果一個條目不能作為確切名稱工作，`query()` 會在會話開始前拒絕該列表。請參閱 [無效的 Skill 名稱錯誤](#invalid-skill-name-error) 以了解名稱規則和每個 SDK 引發的錯誤。
+
+模型看不到未列出的 Skills，Skill 工具會拒絕它們，而它們的文件仍保留在磁碟上，並可通過 Read 和 Bash 訪問。限制列表不會限制 [按名稱分派](#dispatch-commands-by-name)。
+
+要讓 Claude 調用每個發現的 Skill，請傳遞 `skills: "all"` 而不是通配符。
+
+<h2 id="commands-in-agent-sdk-sessions">
+  Agent SDK 工作階段中的命令
+</h2>
+
+本節是 SDK 的命令文件。命令是您透過在提示中傳送 `/<name>` 來執行的任何操作。命令表面上的項目在其支援方式上有所不同：
+
+* **內建命令**：執行編碼到 Claude Code 程序中的邏輯，例如 `/compact`
+* **捆綁技能**：隨 Claude Code 一起提供的提示工件，例如 `/code-review`
+* **您的技能**：您編寫的提示工件，每個都是包含 `SKILL.md` 檔案的目錄。使用者可呼叫的技能名稱會自動加入表面，因此分派您自己的 `/security-check` 和執行內建命令的方式相同
+* **自訂命令檔案**：一種較舊的工件形式，具有相同的行為，位於 `.claude/commands/` 中的平面 Markdown 檔案，其檔案名稱會變成命令名稱。技能是其推薦的後繼者
+
+根據預設，您和 Claude 都可以呼叫任何技能。您可以透過技能的[前置資料](/docs/zh-TW/skills#control-who-invokes-a-skill)限制任一路徑。如需命令和技能的定義，請參閱詞彙表的[命令](/docs/zh-TW/glossary#command)和[技能](/docs/zh-TW/glossary#skill)項目。請參閱[Claude Code 中的命令](/docs/zh-TW/commands)以了解每個內建命令，以及[使用技能擴展 Claude](/docs/zh-TW/skills)以了解兩種工件形式的完整指南。
+
+<h3 id="discover-available-commands">
+  探索可用命令
+</h3>
+
+您可以透過 SDK 分派無需互動式終端機的命令。`system/init` 訊息在其 `slash_commands` 欄位中列出工作階段中可用的命令。需要互動式終端機的命令（例如 `/theme` 和 `/terminal-setup`）不會出現在清單中。在工作階段開始時存取該欄位：
 
 <CodeGroup>
-  ```python Python theme={null}
-  options = ClaudeAgentOptions(skills=["pdf", "docx"])
+  ```typescript TypeScript theme={null}
+  import { query } from "@anthropic-ai/claude-agent-sdk";
+
+  for await (const message of query({
+    prompt: "Hello Claude",
+    options: { maxTurns: 1 }
+  })) {
+    if (message.type === "system" && message.subtype === "init") {
+      console.log("Available commands:", message.slash_commands);
+    }
+  }
   ```
 
-  ```typescript TypeScript theme={null}
-  const options = { skills: ["pdf", "docx"] };
+  ```python Python theme={null}
+  import asyncio
+  from claude_agent_sdk import query, ClaudeAgentOptions, SystemMessage
+
+
+  async def main():
+      async for message in query(prompt="Hello Claude", options=ClaudeAgentOptions(max_turns=1)):
+          if isinstance(message, SystemMessage) and message.subtype == "init":
+              print("Available commands:", message.data["slash_commands"])
+
+
+  asyncio.run(main())
   ```
 </CodeGroup>
 
-`skills` 選項是內容篩選器，不是沙箱。未列出的 Skills 對模型隱藏並被 Skill 工具拒絕，但它們的檔案仍在磁碟上，可透過 Read 和 Bash 存取。
+列印的清單混合了內建命令、捆綁技能、您的使用者可呼叫技能和 `.claude/commands/` 檔案：
 
-<h2 id="skill-locations">
-  Skill 位置
-</h2>
+```text theme={null}
+Available commands: ["clear", "compact", "context", "usage", "code-review", "verify", "security-check", ...]
+```
 
-Skills 根據您的 `settingSources`/`setting_sources` 配置從文件系統目錄加載：
+在其前置資料中具有 [`user-invocable: false`](/docs/zh-TW/skills#control-who-invokes-a-skill) 的技能不會出現在此清單或[確認技能已載入](#confirm-skills-loaded)中的 `skills` 陣列中。設定 [MCP 伺服器](/docs/zh-TW/agent-sdk/mcp)的工作階段也可以公開 [MCP 提示作為命令](/docs/zh-TW/mcp#use-mcp-prompts-as-commands)。
 
-* **項目 Skills**（`.claude/skills/`）：通過 git 與您的團隊共享 - 當 `setting_sources` 包含 `"project"` 時加載
-* **用戶 Skills**（`~/.claude/skills/`）：跨所有項目的個人 Skills - 當 `setting_sources` 包含 `"user"` 時加載
-* **Plugin Skills**：與已安裝的 Claude Code plugins 捆綁
+<h3 id="dispatch-commands-by-name">
+  按名稱分派命令
+</h3>
 
-<h2 id="creating-skills">
+透過將命令包含在提示字串中來傳送命令，就像傳送一般文字一樣。分派不取決於 `skills` 選項。傳送 `/<name>` 會執行使用者可呼叫的技能，即使您的 `skills` 清單省略了它。作用於對話歷史記錄的命令（例如 `/compact`）需要先前的訊息才能使用。
+
+一個 `/<name>` 既不符合工作階段中的命令也不符合內建 Claude Code 命令的情況不會導致查詢失敗。Claude Code 會將提示傳送給 Claude 作為一般訊息，並附上命令未執行的說明，因此查詢會花費一個模型輪次並返回 Claude 的回覆。在 v2.1.274 之前，一個不符合任何內容的 `/<name>` 會返回 `Unknown command: /<name>` 作為結果，不花費模型輪次。
+
+一個 `/<name>` 符合在工作階段中不可用的內建 Claude Code 命令（例如 `/theme`）會返回 `/theme isn't available in this environment.` 作為結果，不花費模型輪次。
+
+<Note>
+  命令可以像任何其他提示一樣達到 `maxTurns` / `max_turns` 限制，以錯誤結果而不是 `success` 結束查詢。如需錯誤結果合約，請參閱[處理結果](/docs/zh-TW/agent-sdk/agent-loop#handle-the-result)。如果您的命令可能達到限制，請在 TypeScript 中用 `try`/`catch` 或在 Python 中用 `try`/`except` 包裝迴圈，如[單一訊息輸入](/docs/zh-TW/agent-sdk/streaming-vs-single-mode#single-message-input)中所示，或設定 `maxTurns` 足夠高以完成工作。
+</Note>
+
+<h3 id="compact-history-with-/compact">
+  使用 `/compact` 壓縮歷史記錄
+</h3>
+
+`/compact` 命令透過總結較舊的訊息同時保留重要內容來減少對話歷史記錄的大小。壓縮需要現有的對話，其中有足夠的先前訊息要總結。此範例首先有一個對話，然後壓縮它並讀取報告結果的 `compact_boundary` 系統訊息：
+
+<CodeGroup>
+  ```typescript TypeScript theme={null}
+  import { query } from "@anthropic-ai/claude-agent-sdk";
+
+  // Compaction needs existing history, so have a conversation first
+  try {
+    for await (const message of query({
+      prompt: "Explain what this project does",
+      options: { maxTurns: 2 }
+    })) {
+      if (message.type === "result" && message.subtype === "success") {
+        console.log(message.result);
+      }
+    }
+  } catch (error) {
+    // A single-shot query() throws after yielding an error result,
+    // so the follow-up query below still runs.
+    console.error(`Session ended with an error: ${error}`);
+  }
+
+  // Compact the same conversation
+  for await (const message of query({
+    prompt: "/compact",
+    options: { continue: true, maxTurns: 1 }
+  })) {
+    if (message.type === "system" && message.subtype === "compact_boundary") {
+      console.log("Compaction completed");
+      console.log("Pre-compaction tokens:", message.compact_metadata.pre_tokens);
+      console.log("Trigger:", message.compact_metadata.trigger);
+      // Example output:
+      // Compaction completed
+      // Pre-compaction tokens: 1842
+      // Trigger: manual
+    }
+  }
+  ```
+
+  ```python Python theme={null}
+  import asyncio
+  from claude_agent_sdk import query, ClaudeAgentOptions, ResultMessage, SystemMessage
+
+
+  async def main():
+      # Compaction needs existing history, so have a conversation first
+      try:
+          async for message in query(
+              prompt="Explain what this project does",
+              options=ClaudeAgentOptions(max_turns=2),
+          ):
+              if isinstance(message, ResultMessage) and message.subtype == "success":
+                  print(message.result)
+      except Exception as error:
+          # A single-shot query() raises after yielding an error result,
+          # so the follow-up query below still runs.
+          print(f"Session ended with an error: {error}")
+
+      # Compact the same conversation
+      async for message in query(
+          prompt="/compact",
+          options=ClaudeAgentOptions(continue_conversation=True, max_turns=1),
+      ):
+          if isinstance(message, SystemMessage) and message.subtype == "compact_boundary":
+              print("Compaction completed")
+              print("Pre-compaction tokens:", message.data["compact_metadata"]["pre_tokens"])
+              print("Trigger:", message.data["compact_metadata"]["trigger"])
+              # Example output:
+              # Compaction completed
+              # Pre-compaction tokens: 1842
+              # Trigger: manual
+
+
+  asyncio.run(main())
+  ```
+</CodeGroup>
+
+<Note>
+  `compact_boundary` 訊息只在壓縮執行時到達。如果沒有要總結的內容，`/compact` 會報告原因而不是引發。執行仍以 `success` 結果結束，沒有 `compact_boundary` 訊息，結果文字會帶有原因，例如在單一簡短交換後的 `Not enough messages to compact.`。全新的單一查詢 `query()` 呼叫以空內容開始，因此請在具有先前輪次的工作階段中使用此模式，例如在[串流輸入模式](/docs/zh-TW/agent-sdk/streaming-vs-single-mode)中或恢復工作階段時。
+</Note>
+
+<h3 id="reset-context-with-/clear">
+  使用 `/clear` 重設內容
+</h3>
+
+`/clear` 命令將對話重設為空內容，因此後續提示以沒有先前對話歷史記錄開始。先前的對話保留在磁碟上。您可以透過將其工作階段 ID 傳遞給[`resume` 選項](/docs/zh-TW/agent-sdk/sessions#resume-by-id)來返回該對話。
+
+`/clear` 在[串流輸入模式](/docs/zh-TW/agent-sdk/streaming-vs-single-mode)中很有用，您可以在單一連線上傳送多個提示。對於單一查詢 `query()` 呼叫，每個呼叫已經以空內容開始，因此傳送 `/clear` 沒有實際效果。改為啟動新的 `query()`。
+
+<h2 id="create-skills">
   創建 Skills
 </h2>
 
-Skills 定義為包含具有 YAML frontmatter 和 Markdown 內容的 `SKILL.md` 文件的目錄。`description` 字段確定 Claude 何時調用您的 Skill。
+將每個 Skill 創建為包含具有 YAML frontmatter 和 Markdown 內容的 `SKILL.md` 文件的目錄。`description` 欄位確定 Claude 何時調用您的 Skill。
 
 **示例目錄結構**：
 
-```bash theme={null}
-.claude/skills/processing-pdfs/
+```text theme={null}
+.claude/skills/security-check/
 └── SKILL.md
 ```
 
-有關創建 Skills 的完整指導，包括 SKILL.md 結構、多文件 Skills 和示例，請參閱：
+<h3 id="choose-a-discovery-level">
+  選擇發現級別
+</h3>
 
-* [Claude Code 中的 Agent Skills](/docs/zh-TW/skills)：包含示例的完整指南
-* [Agent Skills 最佳實踐](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices)：編寫指南和命名約定
+在兩個最常見的 [發現級別](/docs/zh-TW/skills#where-skills-live) 中保存 Skills：
 
-<h2 id="tool-restrictions">
-  工具限制
+* **項目 Skills**：`.claude/skills/`，僅在當前項目中可用
+* **個人 Skills**：`~/.claude/skills/`，在所有項目中可用
+
+如果您在 `.claude/commands/` 中有現有的自定義命令文件，它們會繼續工作。`.claude/commands/deploy.md` 中的命令文件創建 `/deploy` 並以與 `.claude/skills/deploy/SKILL.md` 中的 Skill 相同的方式工作。如果命令文件和 Skill 共享名稱，請參閱 [解決共享名稱的 Skills](/docs/zh-TW/skills#resolve-skills-that-share-a-name) 以了解哪一個運行。SDK 從與 Skills 相同的兩個範圍加載 `.claude/commands/` 和 `~/.claude/commands/` 文件。請參閱 [使用 Skills 擴展 Claude](/docs/zh-TW/skills) 以了解兩種工件形式的完整指南。
+
+<h3 id="create-and-dispatch-your-first-skill">
+  創建並分派您的第一個 Skill
+</h3>
+
+要查看完整流程，請創建 `.claude/skills/security-check/SKILL.md`：
+
+```markdown theme={null}
+---
+name: security-check
+description: Run a security vulnerability scan
+---
+
+Analyze the codebase for security vulnerabilities including:
+- SQL injection risks
+- XSS vulnerabilities
+- Exposed credentials
+- Insecure configurations
+```
+
+文件存在後，Skill 可通過 SDK 使用。Claude 在請求與其描述匹配時調用它，您可以直接分派它：
+
+<CodeGroup>
+  ```typescript TypeScript theme={null}
+  import { query } from "@anthropic-ai/claude-agent-sdk";
+
+  for await (const message of query({
+    prompt: "/security-check",
+    options: { maxTurns: 10 }
+  })) {
+    if (message.type === "result" && message.subtype === "success") {
+      console.log(message.result);
+    }
+  }
+  ```
+
+  ```python Python theme={null}
+  import asyncio
+  from claude_agent_sdk import query, ClaudeAgentOptions, ResultMessage
+
+
+  async def main():
+      async for message in query(
+          prompt="/security-check", options=ClaudeAgentOptions(max_turns=10)
+      ):
+          if isinstance(message, ResultMessage) and message.subtype == "success":
+              print(message.result)
+
+
+  asyncio.run(main())
+  ```
+</CodeGroup>
+
+成功的運行以 `success` 結果結束，其文本包含掃描發現。針對具有植入問題的小型 Express 應用程式，結果文本開始於：
+
+```text theme={null}
+**Security scan of `app.js` — 4 findings (most severe first):**
+
+1. **SQL Injection** (line 8) — `req.query.name` is concatenated directly into the SQL string. Trivially exploitable (`' OR '1'='1`, `'; DROP TABLE users;--`). **Fix:** use parameterized queries, e.g. `db.query("SELECT * FROM users WHERE name = ?", [req.query.name], cb)`.
+...
+```
+
+Skill 的名稱也出現在初始化消息的 `slash_commands` 陣列中。
+
+<Note>
+  Claude Code 包括捆綁的 `code-review` 和 `verify` Skills。如果您以其中之一命名 `.claude/commands/` 文件，例如 `.claude/commands/code-review.md`，該文件的命令會遮蔽捆綁的 Skill，`slash_commands` 列出名稱一次。
+</Note>
+
+<h2 id="pre-approve-tools-for-skills">
+  為 Skills 預先批准工具
 </h2>
 
 <Note>
-  SKILL.md 中的 `allowed-tools` frontmatter 欄位僅在直接使用 Claude Code CLI 時受支持。**通過 SDK 使用 Skills 時不適用**。
-
-  使用 SDK 時，通過查詢配置中的主 `allowedTools` 選項控制工具存取。
+  對於項目和個人 Skills，Claude Code 在 SDK 會話中應用 [`allowed-tools`](/docs/zh-TW/skills#pre-approve-tools-for-a-skill) frontmatter 欄位。您也可以通過查詢配置中的 `allowedTools` 選項（Python 中的 `allowed_tools`）為這些 Skills 預先批准工具。從 claude.ai [同步的 Skills](/docs/zh-TW/skills#how-claude-code-handles-the-frontmatter-of-a-synced-skill) 遵循它們自己的 frontmatter 規則。
 </Note>
 
-要在 SDK 應用程式中控制 Skills 的工具存取，使用 `allowedTools` 預先批准特定工具。沒有 `canUseTool` 回呼時，列表中沒有的任何內容都被拒絕：
-
-<Note>
-  假設第一個範例中的匯入陳述式在以下程式碼片段中。
-</Note>
+Skills 使用會話的工具運行。下面的示例使用 `allowedTools`（Python 中的 `allowed_tools`）預先批准 `Read`、`Grep` 和 `Glob`，因此 Claude 可以在運行 [security-check Skill](#create-and-dispatch-your-first-skill) 時檢查文件，而無需停止以獲得批准：
 
 <CodeGroup>
   ```python Python theme={null}
+  import asyncio
+
+  from claude_agent_sdk import query, ClaudeAgentOptions
+
   options = ClaudeAgentOptions(
-      setting_sources=["user", "project"],  # Load Skills from filesystem
+      setting_sources=["user", "project"],  # Load skills from filesystem
       skills="all",
       allowed_tools=["Read", "Grep", "Glob"],
   )
 
-  async for message in query(prompt="Analyze the codebase structure", options=options):
-      print(message)
+
+  async def main():
+      async for message in query(prompt="Check this project for security issues", options=options):
+          print(message)
+
+
+  asyncio.run(main())
   ```
 
   ```typescript TypeScript theme={null}
+  import { query } from "@anthropic-ai/claude-agent-sdk";
+
   for await (const message of query({
-    prompt: "Analyze the codebase structure",
+    prompt: "Check this project for security issues",
     options: {
-      settingSources: ["user", "project"], // Load Skills from filesystem
+      settingSources: ["user", "project"], // Load skills from filesystem
       skills: "all",
-      allowedTools: ["Read", "Grep", "Glob"],
-      permissionMode: "dontAsk" // Deny anything not in allowedTools
+      allowedTools: ["Read", "Grep", "Glob"]
     }
   })) {
     console.log(message);
@@ -165,90 +420,26 @@ Skills 定義為包含具有 YAML frontmatter 和 Markdown 內容的 `SKILL.md` 
   ```
 </CodeGroup>
 
-<h2 id="discovering-available-skills">
-  發現可用的 Skills
-</h2>
+在流中，Skill 調用顯示為 Skill 工具使用，後跟對項目文件的 Read 調用。運行以 `success` 結果結束，其文本包含發現。
 
-要查看 SDK 應用程序中可用的 Skills，只需詢問 Claude：
-
-<CodeGroup>
-  ```python Python theme={null}
-  options = ClaudeAgentOptions(
-      setting_sources=["user", "project"],  # Load Skills from filesystem
-      skills="all",
-  )
-
-  async for message in query(prompt="What Skills are available?", options=options):
-      print(message)
-  ```
-
-  ```typescript TypeScript theme={null}
-  for await (const message of query({
-    prompt: "What Skills are available?",
-    options: {
-      settingSources: ["user", "project"], // Load Skills from filesystem
-      skills: "all"
-    }
-  })) {
-    console.log(message);
-  }
-  ```
-</CodeGroup>
-
-Claude 將根據您當前的工作目錄和已安裝的插件列出可用的 Skills。
-
-<h2 id="testing-skills">
-  測試 Skills
-</h2>
-
-通過提出與其描述相匹配的問題來測試 Skills：
-
-<CodeGroup>
-  ```python Python theme={null}
-  options = ClaudeAgentOptions(
-      cwd="/path/to/project",
-      setting_sources=["user", "project"],  # Load Skills from filesystem
-      skills="all",
-      allowed_tools=["Read", "Bash"],
-  )
-
-  async for message in query(prompt="Extract text from invoice.pdf", options=options):
-      print(message)
-  ```
-
-  ```typescript TypeScript theme={null}
-  for await (const message of query({
-    prompt: "Extract text from invoice.pdf",
-    options: {
-      cwd: "/path/to/project",
-      settingSources: ["user", "project"], // Load Skills from filesystem
-      skills: "all",
-      allowedTools: ["Read", "Bash"]
-    }
-  })) {
-    console.log(message);
-  }
-  ```
-</CodeGroup>
-
-如果描述與您的請求相匹配，Claude 會自動調用相關的 Skill。
+該列表預先批准命名的工具，而不是限制其他工具。有關完整的權限流程，包括權限模式和 `canUseTool` 回調，請參閱 [權限](/docs/zh-TW/agent-sdk/permissions)。
 
 <h2 id="troubleshooting">
-  故障排除
+  疑難排解
 </h2>
 
 <h3 id="skills-not-found">
   找不到 Skills
 </h3>
 
-**檢查 settingSources 配置**：Skills 通過 `user` 和 `project` 設置源發現。如果您明確設置 `settingSources`/`setting_sources` 並省略這些源，Skills 不會加載：
+**檢查 settingSources 設定**：SDK 透過 `user` 和 `project` 設定來源探索 skills。如果您明確設定 `settingSources`/`setting_sources` 並省略這些來源，SDK 不會載入 skills：
 
 <CodeGroup>
   ```python Python theme={null}
-  # Skills not loaded: setting_sources excludes user and project
+  # Skills 未載入：setting_sources 排除了 user 和 project
   options = ClaudeAgentOptions(setting_sources=[], skills="all")
 
-  # Skills loaded: user and project sources included
+  # Skills 已載入：user 和 project 來源已包含
   options = ClaudeAgentOptions(
       setting_sources=["user", "project"],
       skills="all",
@@ -256,53 +447,53 @@ Claude 將根據您當前的工作目錄和已安裝的插件列出可用的 Ski
   ```
 
   ```typescript TypeScript theme={null}
-  // Skills not loaded: settingSources excludes user and project
-  const options = {
+  // Skills 未載入：settingSources 排除了 user 和 project
+  const optionsWithoutSkills = {
     settingSources: [],
     skills: "all"
   };
 
-  // Skills loaded: user and project sources included
-  const options = {
+  // Skills 已載入：user 和 project 來源已包含
+  const optionsWithSkills = {
     settingSources: ["user", "project"],
     skills: "all"
   };
   ```
 </CodeGroup>
 
-有關 `settingSources`/`setting_sources` 的更多詳細信息，請參閱 [TypeScript SDK 參考](/docs/zh-TW/agent-sdk/typescript#settingsource) 或 [Python SDK 參考](/docs/zh-TW/agent-sdk/python#settingsource)。
+如需了解每個來源載入的 skill 目錄，請參閱[檔案系統來源表](/docs/zh-TW/agent-sdk/claude-code-features#control-filesystem-settings-with-settingsources)。如需更多關於 `settingSources`/`setting_sources` 的詳細資訊，請參閱 [TypeScript SDK 參考](/docs/zh-TW/agent-sdk/typescript#settingsource)或 [Python SDK 參考](/docs/zh-TW/agent-sdk/python#settingsource)。
 
-**檢查工作目錄**：SDK 從 `cwd` 選項中的 `.claude/skills/` 以及每個父目錄直到存儲庫根目錄加載 Skills。確保 `cwd` 指向包含 `.claude/skills/` 的目錄或其下方，在同一存儲庫內：
+**檢查工作目錄**：SDK 從 `cwd` 選項中的 `.claude/skills/` 以及每個父目錄（直到儲存庫根目錄）載入 skills。確保 `cwd` 指向包含 `.claude/skills/` 的目錄或其下方目錄，且在同一個儲存庫內：
 
 <CodeGroup>
   ```python Python theme={null}
-  # Ensure your cwd points to the directory containing .claude/skills/
+  # 確保您的 cwd 指向包含 .claude/skills/ 的目錄
   options = ClaudeAgentOptions(
-      cwd="/path/to/project",  # .claude/skills/ here or in a parent directory
-      setting_sources=["user", "project"],  # Loads skills from these sources
+      cwd="/path/to/project",  # .claude/skills/ 在此或在父目錄中
+      setting_sources=["user", "project"],  # 從這些來源載入 skills
       skills="all",
   )
   ```
 
   ```typescript TypeScript theme={null}
-  // Ensure your cwd points to the directory containing .claude/skills/
+  // 確保您的 cwd 指向包含 .claude/skills/ 的目錄
   const options = {
-    cwd: "/path/to/project", // .claude/skills/ here or in a parent directory
-    settingSources: ["user", "project"], // Loads skills from these sources
+    cwd: "/path/to/project", // .claude/skills/ 在此或在父目錄中
+    settingSources: ["user", "project"], // 從這些來源載入 skills
     skills: "all"
   };
   ```
 </CodeGroup>
 
-有關完整模式，請參閱上面的「在 SDK 中使用 Skills」部分。
+請參閱[使用 Agent SDK 的 Skills](#use-skills-with-the-agent-sdk) 以了解完整的模式。
 
-**驗證文件系統位置**：
+**驗證檔案系統位置**：
 
 ```bash theme={null}
-# Check project Skills
+# 檢查專案 skills
 ls .claude/skills/*/SKILL.md
 
-# Check personal Skills
+# 檢查個人 skills
 ls ~/.claude/skills/*/SKILL.md
 ```
 
@@ -310,35 +501,75 @@ ls ~/.claude/skills/*/SKILL.md
   Skill 未被使用
 </h3>
 
-**檢查 `skills` 選項**：如果您傳遞了 `skills` 列表，確認 Skill 的名稱已包含。傳遞 `[]` 會禁用所有 Skills。
+**檢查 `skills` 選項**：如果您傳遞了 `skills` 清單，請確認 skill 的名稱已包含在內。當 Claude 嘗試叫用未列出的 skill 時，Skill 工具會傳回 `Skill <name> is not in this session's skills allowlist`。將名稱新增到您的清單中，或透過在提示中傳送 `/<name>` 直接分派 skill，這樣無需列出即可運作。
 
-**檢查描述**：確保它具體且包含相關關鍵字。有關編寫有效描述的指導，請參閱 [Agent Skills 最佳實踐](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices#writing-effective-descriptions)。
+**檢查描述**：確保它具體且包含相關關鍵字。請參閱 [Agent Skills 最佳實踐](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices#writing-effective-descriptions)以取得有關撰寫有效描述的指導。
+
+<h3 id="invalid-skill-name-error">
+  無效的 skill 名稱錯誤
+</h3>
+
+當您 `skills` 清單中的名稱無法作為確切的 skill 名稱時，`query()` 會在啟動 Claude Code 程序之前拒絕該清單。觸發拒絕的名稱包括：
+
+* 空名稱
+* 包含括號、逗號或控制字元的名稱
+* 用空白字元填充的名稱
+* 萬用字元形式，例如裸露的 `*` 或 `:*` 後綴
+
+每個 SDK 以不同的方式呈現拒絕：
+
+<Tabs>
+  <Tab title="TypeScript">
+    TypeScript SDK 會擲出 `Error`，說明項目違反的規則。例如，`skills: ["docs:*"]` 會擲出：
+
+    ```text theme={null}
+    Invalid skill name "docs:*": wildcard-suffix names are not allowed; list each skill by its exact name.
+    ```
+
+    空名稱會報告 `Skill names must be non-empty strings.`
+
+    在 TypeScript Agent SDK 0.3.221 之前，SDK 未執行此檢查。
+  </Tab>
+
+  <Tab title="Python">
+    Python SDK 會引發 `ValueError`，說明項目違反的規則。例如，`skills=["docs:*"]` 會引發：
+
+    ```text theme={null}
+    ValueError: Invalid skill name 'docs:*': wildcard-suffix names are not allowed; list each skill by its exact name.
+    ```
+
+    空名稱會報告 `Skill names must be non-empty strings`。
+
+    在 Python Agent SDK 0.2.129 之前，SDK 未執行此檢查。
+  </Tab>
+</Tabs>
 
 <h3 id="additional-troubleshooting">
-  其他故障排除
+  其他疑難排解
 </h3>
 
-有關一般 Skills 故障排除（YAML 語法、調試等），請參閱 [Claude Code Skills 故障排除部分](/docs/zh-TW/skills#troubleshooting)。
+如需一般 skills 疑難排解，例如 YAML 語法錯誤和偵錯，請參閱 [Claude Code skills 疑難排解部分](/docs/zh-TW/skills#troubleshooting)。
 
-<h2 id="related-documentation">
-  相關文檔
+<h2 id="next-steps">
+  後續步驟
 </h2>
 
-<h3 id="skills-guides">
-  Skills 指南
-</h3>
+[Claude Code Skills 指南](/docs/zh-TW/skills) 涵蓋了深入的編寫。其指導適用於 SDK 會話。從這些部分開始：
 
-* [Claude Code 中的 Agent Skills](/docs/zh-TW/skills)：包含創建、示例和故障排除的完整 Skills 指南
+* [Frontmatter 參考](/docs/zh-TW/skills#frontmatter-reference)：每個支持的欄位
+* [將參數傳遞給 Skills](/docs/zh-TW/skills#pass-arguments-to-skills)：`$ARGUMENTS`、`$0`、`$1` 和 Skill 堆疊。[完整替換表](/docs/zh-TW/skills#available-string-substitutions) 添加命名參數和 `${CLAUDE_*}` 變數
+* [注入動態上下文](/docs/zh-TW/skills#inject-dynamic-context)：`` !`command` `` 行在 Claude 看到 Skill 內容之前運行
+* [選擇 Skills 加載的位置](/docs/zh-TW/skills#where-skills-live)：每個 Skill 位置、外掛命名空間以及兩個共享名稱時哪個 Skill 運行
+
+<h2 id="related-resources">
+  相關資源
+</h2>
+
+* [Claude Code 中的命令](/docs/zh-TW/commands)：完整的命令表面，包括每個內置命令
 * [Agent Skills 概述](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview)：概念概述、優勢和架構
 * [Agent Skills 最佳實踐](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices)：有效 Skills 的編寫指南
 * [Agent Skills Cookbook](https://platform.claude.com/cookbook/skills-notebooks-01-skills-introduction)：示例 Skills 和模板
-
-<h3 id="sdk-resources">
-  SDK 資源
-</h3>
-
 * [SDK 中的子代理](/docs/zh-TW/agent-sdk/subagents)：類似的基於文件系統的代理，具有編程選項
-* [SDK 中的斜杠命令](/docs/zh-TW/agent-sdk/slash-commands)：用戶調用的命令
 * [SDK 概述](/docs/zh-TW/agent-sdk/overview)：一般 SDK 概念
-* [TypeScript SDK 參考](/docs/zh-TW/agent-sdk/typescript)：完整 API 文檔
-* [Python SDK 參考](/docs/zh-TW/agent-sdk/python)：完整 API 文檔
+* [TypeScript SDK 參考](/docs/zh-TW/agent-sdk/typescript)：完整 API 文件
+* [Python SDK 參考](/docs/zh-TW/agent-sdk/python)：完整 API 文件

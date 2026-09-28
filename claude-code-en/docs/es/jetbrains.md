@@ -26,10 +26,10 @@ El plugin de Claude Code funciona con la mayoría de JetBrains IDEs, incluyendo:
 </h2>
 
 * **Lanzamiento rápido**: utiliza `Cmd+Esc` (Mac) o `Ctrl+Esc` (Windows/Linux) para abrir Claude Code directamente desde tu editor, o haz clic en el botón de Claude Code en la interfaz
-* **Visualización de diferencias**: los cambios de código se pueden mostrar directamente en el visor de diferencias del IDE en lugar de la terminal
+* **Visualización de diferencias**: Claude Code abre los cambios de código en el visor de diferencias del IDE en lugar de la terminal; cambia esto con la configuración **Diff tool** en `/config`
 * **Contexto de selección**: la selección actual o pestaña en el IDE se comparte automáticamente con Claude Code. Las [reglas de denegación de `Read`](/docs/es/permissions#read-and-edit) bloquean este intercambio para los archivos coincidentes
 * **Atajos de referencia de archivos**: utiliza `Cmd+Option+K` (Mac) o `Alt+Ctrl+K` (Linux/Windows) para insertar referencias de archivos como `@src/auth.ts#L1-99`
-* **Compartición de diagnósticos**: los errores de diagnóstico del IDE, como errores de lint y sintaxis, se comparten automáticamente con Claude mientras trabajas
+* **Compartición de diagnósticos**: Claude lee los diagnósticos de inspección del IDE, como errores de lint y sintaxis, llamando a la herramienta [`getDiagnostics`](#the-built-in-ide-mcp-server); Claude Code no solicita diagnósticos del plugin por su cuenta después de ediciones
 
 <h2 id="installation">
   Instalación
@@ -50,10 +50,6 @@ El plugin ejecuta el comando `claude` en la terminal integrada de su IDE y se co
 Si `claude` está instalado en algún lugar que su IDE no puede encontrar, establezca la ruta completa en la [configuración del comando Claude](#general-settings) del plugin.
 
 Claude Code funciona con cualquier suscripción de Claude de pago (Pro, Max, Team o Enterprise) o una cuenta de Claude Console, y no se requiere ninguna clave API. Se le pedirá que [inicie sesión](/docs/es/authentication#log-in-to-claude-code) la primera vez que ejecute `claude`.
-
-<Note>
-  Después de instalar el plugin, es posible que necesite reiniciar completamente su IDE para que surta efecto.
-</Note>
 
 <h2 id="usage">
   Uso
@@ -79,6 +75,8 @@ claude
 /ide
 ```
 
+Cuando la conexión se realiza correctamente, Claude Code confirma con un mensaje como `Connected to IntelliJ IDEA.` Si Claude Code detecta un IDE en ejecución que no tiene el plugin, `/ide` instala el plugin para ti y te pide que reinicies el IDE.
+
 Si deseas que Claude tenga acceso a los mismos archivos que tu IDE, inicia Claude Code desde el mismo directorio que la raíz del proyecto de tu IDE.
 
 <h2 id="configuration">
@@ -93,7 +91,9 @@ Configura la integración del IDE a través de la configuración de Claude Code:
 
 1. Ejecuta `claude`
 2. Ingresa el comando `/config`
-3. Establece la herramienta de diferencias en `auto` para mostrar diferencias en el IDE, o `terminal` para mantenerlas en la terminal
+3. Establece la **herramienta de diferencias** en `auto` para mostrar diferencias en el IDE, o `terminal` para mantenerlas en la terminal
+
+La entrada **herramienta de diferencias** aparece en `/config` solo cuando Claude Code está conectado al IDE, así que ejecuta `claude` desde la terminal de JetBrains o ejecuta [`/ide`](/docs/es/commands) primero desde una terminal externa. Consulta [`diffTool`](/docs/es/settings-reference#difftool) para la configuración subyacente.
 
 <h3 id="plugin-settings">
   Ajustes de plugins
@@ -137,10 +137,8 @@ Esto permite que la tecla ESC interrumpa correctamente las operaciones de Claude
 </h3>
 
 <Warning>
-  Cuando utilices JetBrains Remote Development, debes instalar el plugin en el host remoto a través de **Settings → Plugin (Host)**.
+  Cuando utilices JetBrains Remote Development, debes instalar el plugin en el host remoto a través de **Settings → Plugin (Host)**, no en tu máquina cliente local.
 </Warning>
-
-El plugin debe instalarse en el host remoto, no en tu máquina cliente local.
 
 <h3 id="wsl-configuration">
   Configuración de WSL
@@ -162,7 +160,7 @@ Esta es la solución recomendada porque mantiene tu modo de red WSL2 existente.
     hostname -I
     ```
 
-    Anota la subred, por ejemplo `172.21.123.45` está en `172.21.0.0/16`.
+    Anota tu subred: toma los dos primeros segmentos de la dirección y síguelos con `.0.0/16`. Por ejemplo, si la dirección es `172.21.123.45`, tu subred es `172.21.0.0/16`.
   </Step>
 
   <Step title="Crea una regla de firewall">
@@ -212,11 +210,11 @@ Si el plugin está instalado pero las características de Claude Code no aparece
   IDE no detectado
 </h3>
 
-Si ejecutar `claude` muestra "No available IDEs detected":
+Si el comando `/ide` muestra "No available IDEs detected":
 
 * Verifica que el plugin esté instalado y habilitado
 * Reinicia completamente el IDE
-* Comprueba que estés ejecutando Claude Code desde la terminal integrada
+* Si esperabas una conexión automática sin ejecutar `/ide`, comprueba que hayas lanzado `claude` desde la terminal integrada del IDE
 * Para usuarios de WSL, consulta la [configuración de WSL](#wsl-configuration) anterior
 
 <h3 id="command-not-found">
@@ -233,11 +231,11 @@ Si hacer clic en el icono de Claude muestra "command not found":
   Consideraciones de seguridad
 </h2>
 
-Cuando Claude Code se ejecuta en un JetBrains IDE en modo de permiso [`acceptEdits`](/docs/es/permission-modes#auto-approve-file-edits-with-acceptedits-mode), puede ser capaz de modificar archivos de configuración del IDE que pueden ser ejecutados automáticamente por su IDE. Esto puede aumentar el riesgo de ejecutar Claude Code en modo `acceptEdits` y permitir eludir los indicadores de permiso de Claude Code para la ejecución de bash.
+Cuando Claude Code se ejecuta en un JetBrains IDE en modo de permiso [`acceptEdits`](/docs/es/permission-modes#auto-approve-file-edits-with-acceptedits-mode), puede ser capaz de modificar archivos de configuración del IDE que pueden ser ejecutados automáticamente por su IDE. Esto puede aumentar el riesgo de ejecutar Claude Code en modo `acceptEdits` y permitir eludir los indicadores de permiso de Claude Code para la ejecución de Bash.
 
 Cuando se ejecuta en JetBrains IDEs, considere:
 
-* Usar el modo de aprobación manual para ediciones
+* Usar el modo Manual para ediciones, porque `acceptEdits` y el modo automático aprueban ediciones dentro de su directorio de trabajo sin preguntar, excepto en [rutas protegidas](/docs/es/permission-modes#protected-paths)
 * Tener especial cuidado para asegurar que Claude solo se use con indicadores de confianza
 * Ser consciente de qué archivos Claude Code tiene acceso para modificar
 
@@ -247,7 +245,7 @@ Para problemas de instalación o inicio de sesión de Claude Code fuera del IDE,
   El servidor MCP integrado del IDE
 </h3>
 
-Cuando el plugin está activo, ejecuta un servidor MCP local al que la CLI se conecta automáticamente. Así es como la CLI abre diffs en el visor de diffs nativo del IDE, lee su selección actual para menciones `@`, e incorpora diagnósticos de inspección en la conversación.
+Cuando el plugin está activo, ejecuta un servidor MCP local al que la CLI se conecta automáticamente. Así es como la CLI abre diffs en el visor de diffs nativo del IDE, lee su selección actual para menciones `@`, y permite que Claude lea diagnósticos de inspección.
 
 El servidor se llama `ide` y está oculto de `/mcp` porque no hay nada que configurar. Sin embargo, si su organización utiliza un [hook `PreToolUse`](/docs/es/hooks#pretooluse) para crear una lista de herramientas MCP permitidas, necesitará saber que existe.
 
@@ -257,9 +255,9 @@ El servidor se llama `ide` y está oculto de `/mcp` porque no hay nada que confi
 
 **Herramientas expuestas al modelo.** El servidor aloja varias herramientas, pero solo una es visible para el modelo. El resto son RPC internas que la CLI utiliza para su propia interfaz de usuario, como abrir diffs y leer selecciones, y se filtran antes de que la lista de herramientas llegue a Claude.
 
-| Nombre de herramienta (como se ve en hooks) | Qué hace                                                                                                                                 | Solo lectura |
-| ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
-| `mcp__ide__getDiagnostics`                  | Devuelve los diagnósticos de inspección del IDE, los errores y advertencias mostrados en el editor. Opcionalmente limitado a un archivo. | Sí           |
+| Nombre de herramienta (como se ve en hooks) | Qué hace                                                                                                                                                                                                                           | Solo lectura |
+| ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| `mcp__ide__getDiagnostics`                  | Devuelve los diagnósticos de inspección del IDE, los errores y advertencias mostrados en el editor. Cada llamada cubre un archivo: el archivo que Claude especifica, o el archivo en su editor activo si Claude no especifica uno. | Sí           |
 
 El plugin de JetBrains no expone una herramienta de ejecución de código al modelo.
 

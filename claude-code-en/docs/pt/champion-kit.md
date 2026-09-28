@@ -8,7 +8,7 @@
 
 Esta página é para engenheiros individuais que já estão usando Claude Code e desejam ajudar sua equipe a adotá-lo. Ela cobre o que compartilhar, como responder às perguntas que você receberá, um guia de trinta dias e respostas a preocupações comuns.
 
-A adoção de uma ferramenta de desenvolvedor raramente acontece por causa de um anúncio de lançamento. Acontece porque alguém da equipe começa a usar a ferramenta bem, fala sobre ela abertamente e facilita para outros seguirem. O trabalho que você faz como campeão tem um efeito desproporcional: cada exemplo que você compartilha encurta a curva de aprendizado para os engenheiros que vêm depois de você, e cada pergunta que você responde em público transforma a experiência de uma pessoa em algo que toda a equipe pode construir. Você está agindo como um multiplicador para sua equipe, não como um help desk, e este guia é estruturado para manter o papel sustentável nesses termos.
+A adoção de uma ferramenta de desenvolvedor raramente acontece por causa de um anúncio de lançamento. Acontece porque alguém da equipe começa a usar a ferramenta bem, fala sobre ela abertamente e facilita para outros seguirem. O trabalho que você faz como campeão tem um efeito desproporcional: cada exemplo que você compartilha encurta a curva de aprendizado para os engenheiros que vêm depois de você, e cada pergunta que você responde em público transforma a experiência de uma pessoa em algo que toda a equipe pode construir.
 
 <h2 id="the-champion-role">
   O papel do campeão
@@ -22,20 +22,18 @@ O papel consiste em três comportamentos que se reforçam mutuamente.
 | Seja a pessoa que as pessoas perguntam | Quando um colega pergunta como você realizou algo, responda com o prompt real que você usou para que ele possa aplicá-lo diretamente à sua própria tarefa.                                            | Um exemplo concreto e executável remove a lacuna entre curiosidade e um primeiro uso bem-sucedido, que é onde a maioria dos esforços de adoção estagna.                                                           |
 | Cresça o círculo                       | Estabeleça um pequeno número de hábitos leves e recorrentes, como um canal dedicado ou uma thread semanal, para que o momentum continue mesmo quando sua atenção estiver em outro lugar.              | A adoção que depende de uma única pessoa é frágil. A adoção que é realizada por hábitos compartilhados continua a se compor por conta própria.                                                                    |
 
-A maioria disso se encaixa naturalmente no trabalho que você já está fazendo. A diferença é uma pequena quantidade de intenção adicional sobre onde suas descobertas são postadas e como suas respostas se propagam.
-
 <h3 id="what-this-should-cost-you">
   O que isso deve custar você
 </h3>
 
 Defina expectativas com você mesmo e com seu líder. As atividades abaixo são destinadas a se encaixarem em uma semana de trabalho normal, e o papel deve permanecer um multiplicador do seu trabalho existente em vez de uma responsabilidade de suporte adicional.
 
-| Atividade                                       | Tempo por semana    | Orientação                                                                                                                        |
-| ----------------------------------------------- | ------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| Postando vitórias e prompts                     | Cerca de 15 minutos | Capture-os no momento com uma captura de tela e uma ou duas frases; evite transformá-los em redações formais.                     |
-| Respondendo perguntas em um canal compartilhado | Cerca de 20 minutos | Responda publicamente uma vez, depois vincule de volta a essa resposta quando a pergunta se repetir.                              |
-| Hospedando uma thread semanal de show-and-tell  | Cerca de 5 minutos  | Você posta o prompt de abertura; a equipe fornece o conteúdo.                                                                     |
-| Emparelhamento opcional ou walkthroughs         | 0 a 30 minutos      | Reserve isso para colegas que estão genuinamente bloqueados e ofereça o link [Quickstart](/docs/pt/quickstart) antes de agendar tempo. |
+| Atividade                                       | Tempo por semana    | Orientação                                                                                                            |
+| ----------------------------------------------- | ------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| Postando vitórias e prompts                     | Cerca de 15 minutos | Capture-os no momento com uma captura de tela e uma ou duas frases; evite transformá-los em redações formais.         |
+| Respondendo perguntas em um canal compartilhado | Cerca de 20 minutos | Responda publicamente uma vez, depois vincule de volta a essa resposta quando a pergunta se repetir.                  |
+| Hospedando uma thread semanal de show-and-tell  | Cerca de 5 minutos  | Você posta o prompt de abertura; a equipe fornece o conteúdo.                                                         |
+| Emparelhamento opcional ou walkthroughs         | 0 a 30 minutos      | Reserve isso para colegas que estão bloqueados, e ofereça o link [Quickstart](/docs/pt/quickstart) antes de agendar tempo. |
 
 <h2 id="share-what-you-discover">
   Compartilhe o que você descobre
@@ -139,7 +137,7 @@ Uma resposta como "Tente plan mode, pressione `Shift+Tab` até vê-lo" é mais �
   Cresça o círculo
 </h2>
 
-O objetivo não é construir um programa ou possuir um lançamento. É estabelecer um pequeno número de hábitos leves que permitam que o momentum continue depois que você parar de impulsioná-lo ativamente. Quando as perguntas no canal estão sendo respondidas por pessoas além de você, o papel cumpriu seu trabalho.
+O objetivo é estabelecer um pequeno número de hábitos leves que permitam que o momentum continue depois que você parar de impulsioná-lo ativamente. Você não precisa construir um programa ou possuir um lançamento. Quando as perguntas no canal estão sendo respondidas por pessoas além de você, o papel cumpriu seu trabalho.
 
 <h3 id="patterns-that-tend-to-work">
   Padrões que tendem a funcionar

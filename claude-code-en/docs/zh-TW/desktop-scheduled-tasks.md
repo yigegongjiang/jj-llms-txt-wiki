@@ -8,28 +8,28 @@
 
 排程任務會在您選擇的時間和頻率自動啟動新的工作階段。使用它們進行定期工作，例如每日程式碼審查、相依性更新檢查，或從您的日曆和收件匣提取資訊的早晨簡報。
 
-Desktop 應用程式的 **Routines** 頁面可讓您建立本機排程任務和遠端 [routines](/docs/zh-TW/routines)。本機任務在您的機器上執行，可直接存取您的檔案和工具，但只有在應用程式開啟且您的電腦處於喚醒狀態時才會觸發。遠端 routine 在 Anthropic 管理的雲端基礎設施上執行，即使您的電腦關閉也能執行，並且也可以透過 API 呼叫或 GitHub 事件觸發。本頁涵蓋本機排程任務；如需遠端 routine 及其觸發選項，請參閱 [Routines](/docs/zh-TW/routines)。
+Desktop 應用程式的 **Routines** 頁面可讓您建立本機排程任務和遠端 [routines](/docs/zh-TW/routines)。本機任務在您的機器上執行，可直接存取您的檔案和工具，但只有在應用程式開啟且您的電腦處於喚醒狀態時才會觸發。遠端 routine 在雲端執行，即使您的電腦關閉也能執行，並且也可以透過 API 呼叫或 GitHub 事件觸發。本頁涵蓋本機排程任務；如需遠端 routine 及其觸發選項，請參閱 [Routines](/docs/zh-TW/routines)。
 
 <h2 id="compare-scheduling-options">
   比較排程選項
 </h2>
 
-Claude Code offers three ways to schedule recurring or one-off work:
+Claude Code 提供三種方式來排程定期或一次性的工作：
 
-|                            | [Cloud](/docs/en/routines)               | [Desktop](/docs/en/desktop-scheduled-tasks) | [`/loop`](/docs/en/scheduled-tasks)      |
-| :------------------------- | :---------------------------------- | :------------------------------------- | :---------------------------------- |
-| Runs on                    | Cloud, Anthropic-managed by default | Your machine                           | Your machine                        |
-| Requires machine on        | No                                  | Yes                                    | Yes                                 |
-| Requires open session      | No                                  | No                                     | Yes                                 |
-| Persistent across restarts | Yes                                 | Yes                                    | Restored on `--resume` if unexpired |
-| Access to local files      | No (fresh clone)                    | Yes                                    | Yes                                 |
-| MCP servers                | Connectors configured per task      | [Config files](/docs/en/mcp) and connectors | Inherits from session               |
-| Permission prompts         | No (runs autonomously)              | Configurable per task                  | Inherits from session               |
-| Customizable schedule      | Via `/schedule` in the CLI          | Yes                                    | Yes                                 |
-| Minimum interval           | 1 hour                              | 1 minute                               | 1 minute                            |
+|           | [Cloud](/docs/zh-TW/routines) | [Desktop](/docs/zh-TW/desktop-scheduled-tasks) | [`/loop`](/docs/zh-TW/scheduled-tasks)                          |
+| :-------- | :----------------------- | :---------------------------------------- | :--------------------------------------------------------- |
+| 執行位置      | Cloud，預設由 Anthropic 管理   | 您的機器                                      | 您的機器                                                       |
+| 需要機器開啟    | 否                        | 是                                         | 是                                                          |
+| 需要開啟的工作階段 | 否                        | 否                                         | 是                                                          |
+| 跨重新啟動持續存在 | 是                        | 是                                         | 在 `--resume` 上復原，有[例外](/docs/zh-TW/scheduled-tasks#limitations) |
+| 存取本機檔案    | 否（全新複製）                  | 是                                         | 是                                                          |
+| MCP 伺服器   | 每個工作配置的連接器               | [設定檔](/docs/zh-TW/mcp)和連接器                     | 繼承自工作階段                                                    |
+| 權限提示      | 否（自主執行）                  | 每個工作可設定                                   | 繼承自工作階段                                                    |
+| 可自訂排程     | 透過 CLI 中的 `/schedule`    | 是                                         | 是                                                          |
+| 最小間隔      | 1 小時                     | 1 分鐘                                      | 1 分鐘                                                       |
 
 <Tip>
-  Use **cloud tasks** for work that should run reliably without your machine. Use **Desktop tasks** when you need access to local files and tools. Use **`/loop`** for quick polling during a session.
+  使用**雲端工作**來執行應該在沒有您的機器的情況下可靠執行的工作。當您需要存取本機檔案和工具時，使用**Desktop 工作**。使用 **`/loop`** 進行工作階段期間的快速輪詢。
 </Tip>
 
 <Note>
@@ -40,7 +40,7 @@ Claude Code offers three ways to schedule recurring or one-off work:
   建立排程任務
 </h2>
 
-按一下側邊欄中的 **Routines**，然後按一下 **New routine** 並選擇 **Local**。設定這些欄位：
+在 Claude Desktop 1.1.5368 之前，本機排程任務不可用。在 [**Code** 標籤](/docs/zh-TW/desktop)中，按一下側邊欄中的 **Routines** 或側邊欄的 **More** 選單，然後按一下 **New routine** 並選擇 **Local**。設定這些欄位：
 
 | 欄位           | 說明                                                                                                          |
 | ------------ | ----------------------------------------------------------------------------------------------------------- |
@@ -73,7 +73,7 @@ Claude Code offers three ways to schedule recurring or one-off work:
 
 排程任務在您的機器上執行。Desktop 在應用程式開啟時每分鐘檢查一次排程，並在任務到期時啟動新的工作階段，獨立於您開啟的任何手動工作階段。每個任務在排程時間後會有幾分鐘的小延遲，以錯開 API 流量。延遲是確定性的：同一任務始終在相同的偏移量處啟動。
 
-當任務觸發時，您會收到桌面通知，新的工作階段會在側邊欄的 **Scheduled** 部分下出現。開啟它以查看 Claude 執行的操作、審查變更或回應權限提示。工作階段的工作方式與任何其他工作階段相同：Claude 可以編輯檔案、執行命令、建立提交和開啟提取請求。
+當任務觸發時，您會收到桌面通知，新的工作階段會在側邊欄的 **Scheduled** 部分下出現。開啟它以查看 Claude 執行的操作、審查變更或回應權限提示。Claude 可以編輯檔案、執行命令、建立提交和開啟提取請求，與您自己啟動的工作階段相同，但無法透過 desktop 應用程式的工作階段介面傳送或接收[您的 desktop 工作階段之間的訊息](/docs/zh-TW/desktop#work-across-sessions)。
 
 任務只有在 desktop 應用程式執行且您的電腦處於喚醒狀態時才會執行。如果您的電腦在排程時間內進入睡眠狀態，該執行會被跳過。若要防止閒置睡眠，請在 Settings 中的 **Desktop app → General** 下啟用 **Keep computer awake**。關閉筆記型電腦蓋仍會使其進入睡眠狀態。對於需要在電腦關閉時執行或應該透過 API 呼叫或 GitHub 事件觸發的任務，請改為建立遠端 [routine](/docs/zh-TW/routines)。
 
@@ -89,17 +89,17 @@ Claude Code offers three ways to schedule recurring or one-off work:
   排程任務的權限
 </h2>
 
-每個任務都有其自己的權限模式，您在建立或編輯任務時設定。來自 `~/.claude/settings.json` 的允許規則也適用於排程任務工作階段。如果任務在 Ask 模式下執行，並且需要執行它沒有權限的工具，執行會停滯，直到您批准它。工作階段保持在側邊欄中開啟，以便您稍後可以回答。
+每個任務都有其自己的權限模式，您在建立或編輯任務時設定。來自 `~/.claude/settings.json` 的允許規則也適用於排程任務工作階段。如果任務在 [Manual 模式](/docs/zh-TW/desktop#choose-a-permission-mode)下執行，並且需要執行它沒有權限的工具，執行會停滯，直到您批准它。工作階段保持在側邊欄中開啟，以便您稍後可以回答。
 
 為了避免停滯，在建立任務後按一下 **Run now**，監視權限提示，並為每個提示選擇「always allow」。該任務的未來執行會自動批准相同的工具，無需提示。您可以從任務的詳細資料頁面審查和撤銷這些批准。
 
-您的組織設定為 `ask` 的 Connector 工具和標記為 [`requiresUserInteraction`](/docs/zh-TW/mcp#require-approval-for-a-specific-tool) 的 MCP 工具會在每次呼叫時提示，並且不提供 always-allow 選項。呼叫這些工具的執行每次都會停滯。
+標記為 [`requiresUserInteraction`](/docs/zh-TW/mcp#require-approval-for-a-specific-tool) 的 MCP 工具會在每次呼叫時提示，並且不提供 always-allow 選項。呼叫這些工具的執行每次都會停滯。
 
 <h2 id="manage-scheduled-tasks">
   管理排程任務
 </h2>
 
-按一下 **Routines** 清單中的任務以開啟其詳細資料頁面。從這裡您可以：
+在 **Code** 標籤中，按一下 **Routines** 清單中的任務以開啟其詳細資料頁面。從這裡您可以：
 
 * **Run now**：立即啟動任務，無需等待下一個排程時間
 * **Status**：在 Active 和 Paused 之間切換，以暫停或繼續排程執行，無需刪除任務
@@ -118,7 +118,7 @@ Claude Code offers three ways to schedule recurring or one-off work:
   相關資源
 </h2>
 
-* [Routines](/docs/zh-TW/routines)：在 Anthropic 管理的基礎設施上按排程、透過 API 呼叫或回應 GitHub 事件執行任務，即使您的電腦關閉也能執行
+* [Routines](/docs/zh-TW/routines)：在雲端按排程、透過 API 呼叫或回應 GitHub 事件執行任務，即使您的電腦關閉也能執行
 * [在排程上執行提示](/docs/zh-TW/scheduled-tasks)：在 CLI 中使用 `/loop` 的工作階段範圍排程
 * [Claude Code GitHub Actions](/docs/zh-TW/github-actions)：在 CI 中按排程執行 Claude，而不是在您的機器上執行
 * [使用 Claude Code Desktop](/docs/zh-TW/desktop)：完整的 Desktop 應用程式指南

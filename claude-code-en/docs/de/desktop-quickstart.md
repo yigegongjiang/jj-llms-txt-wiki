@@ -9,20 +9,20 @@
 Die Desktop-App bietet Ihnen Claude Code mit einer grafischen Benutzeroberfläche, die für die Ausführung mehrerer Sitzungen nebeneinander konzipiert ist: eine Seitenleiste zur Verwaltung paralleler Arbeit, ein Drag-and-Drop-Layout mit integriertem Terminal und Datei-Editor, visuelle Diff-Überprüfung, Live-App-Vorschau, GitHub-PR-Überwachung mit automatischem Merge und geplante Aufgaben. Kein Terminal erforderlich.
 
 <CardGroup cols={3}>
-  <Card title="Download for macOS" icon="apple" href="https://claude.ai/api/desktop/darwin/universal/dmg/latest/redirect?utm_source=claude_code&utm_medium=docs">
-    Universal build for Intel and Apple Silicon
+  <Card title="Für macOS herunterladen" icon="apple" href="https://claude.ai/api/desktop/darwin/universal/dmg/latest/redirect?utm_source=claude_code&utm_medium=docs">
+    Universeller Build für Intel und Apple Silicon
   </Card>
 
-  <Card title="Download for Windows" icon="windows" href="https://claude.ai/api/desktop/win32/x64/setup/latest/redirect?utm_source=claude_code&utm_medium=docs">
-    For x64 processors
+  <Card title="Für Windows herunterladen" icon="windows" href="https://claude.ai/api/desktop/win32/x64/setup/latest/redirect?utm_source=claude_code&utm_medium=docs">
+    Für x64-Prozessoren
   </Card>
 
-  <Card title="Get Claude for Linux (beta)" icon="linux" href="/docs/en/desktop-linux">
-    apt or .deb for Ubuntu and Debian
+  <Card title="Claude für Linux abrufen (Beta)" icon="linux" href="/docs/de/desktop-linux">
+    apt oder .deb für Ubuntu und Debian
   </Card>
 </CardGroup>
 
-For Windows ARM64, download the [ARM64 installer](https://claude.ai/api/desktop/win32/arm64/setup/latest/redirect?utm_source=claude_code\&utm_medium=docs). On Linux, install with apt; see [Claude Desktop on Linux](/docs/en/desktop-linux).
+Für Windows ARM64 laden Sie das [ARM64-Installationsprogramm](https://claude.ai/api/desktop/win32/arm64/setup/latest/redirect?utm_source=claude_code\&utm_medium=docs) herunter. Unter Linux installieren Sie mit apt; siehe [Claude Desktop unter Linux](/docs/de/desktop-linux).
 
 <Note>
   Claude Code erfordert ein [Pro-, Max-, Team- oder Enterprise-Abonnement](https://claude.com/pricing?utm_source=claude_code\&utm_medium=docs\&utm_content=desktop_quickstart_pricing).
@@ -34,7 +34,7 @@ Die Desktop-App hat drei Registerkarten:
 
 * **Chat**: Allgemeine Konversation ohne Dateizugriff, ähnlich wie claude.ai.
 * **Cowork**: Ein autonomer Hintergrund-Agent, der an Aufgaben in einer Sandbox-VM mit eigener Umgebung arbeitet und unabhängig läuft, während Sie andere Dinge tun. On-Device-Cowork-Sitzungen führen die VM auf Ihrem Computer aus; Remote-Cowork-Sitzungen führen stattdessen auf einer von Anthropic verwalteten VM aus.
-* **Code**: Ein interaktiver Coding-Assistent mit direktem Zugriff auf Ihre lokalen Dateien. Sie überprüfen und genehmigen jede Änderung in Echtzeit.
+* **Code**: Ein interaktiver Coding-Assistent mit direktem Zugriff auf Ihre lokalen Dateien. Abhängig vom Berechtigungsmodus genehmigen Sie jede Änderung, wenn Claude sie vorschlägt, oder überprüfen die Änderungen, nachdem Claude sie vorgenommen hat.
 
 Chat und Cowork werden im [Claude Help Center](https://support.claude.com/) behandelt; die Installation und Bereitstellung der Desktop-App wird in den [Claude Desktop-Supportartikeln](https://support.claude.com/en/collections/16163169-claude-desktop) behandelt. Diese Seite konzentriert sich auf die Registerkarte **Code**.
 
@@ -58,25 +58,25 @@ Die Desktop-App enthält Claude Code. Sie müssen Node.js oder die CLI nicht sep
   Starten Sie Ihre erste Sitzung
 </h2>
 
-Wählen Sie mit der geöffneten Registerkarte „Code" ein Projekt aus und geben Sie Claude etwas zu tun.
+Öffnen Sie die Registerkarte Code, wählen Sie ein Projekt aus und geben Sie Claude eine Aufgabe.
 
 <Steps>
   <Step title="Wählen Sie eine Umgebung und einen Ordner">
     Wählen Sie **Lokal**, um Claude auf Ihrem Computer mit Ihren Dateien direkt auszuführen. Klicken Sie auf **Ordner auswählen** und wählen Sie Ihr Projektverzeichnis.
 
     <Tip>
-      Beginnen Sie mit einem kleinen Projekt, das Sie gut kennen. Es ist die schnellste Möglichkeit zu sehen, was Claude Code kann. Unter Windows muss [Git](https://git-scm.com/downloads/win) für lokale Sitzungen installiert sein. Die meisten Macs enthalten Git standardmäßig.
+      Beginnen Sie mit einem kleinen Projekt, das Sie gut kennen. Das ist der schnellste Weg, um zu sehen, was Claude Code kann.
     </Tip>
 
-    Sie können auch auswählen:
+    Sie können auch folgende Optionen wählen:
 
-    * **Remote**: Führen Sie Sitzungen auf der Cloud-Infrastruktur von Anthropic aus, die auch dann fortgesetzt werden, wenn Sie die App schließen. Cloud-Sitzungen verwenden die gleiche Infrastruktur wie [Claude Code im Web](/docs/de/claude-code-on-the-web).
-    * **SSH**: Verbinden Sie sich über SSH mit einem Remote-Computer, z. B. Ihren eigenen Servern, Cloud-VMs oder Dev-Containern. Desktop installiert Claude Code beim ersten Verbindungsaufbau automatisch auf dem Remote-Computer.
+    * **Cloud**: Führen Sie Sitzungen in der Cloud aus, die auch dann fortgesetzt werden, wenn Sie die App schließen. Siehe [Claude Code in der Cloud verwenden](/docs/de/claude-code-on-the-web), um zu erfahren, wie Cloud-Sitzungen funktionieren.
+    * **SSH**: Verbinden Sie sich über SSH mit einem Remote-Computer, z. B. mit Ihren eigenen Servern, Cloud-VMs oder Dev-Containern. Desktop installiert Claude Code beim ersten Verbinden automatisch auf dem Remote-Computer.
     * **WSL** (Windows): Führen Sie die Sitzung in einer [WSL 2-Distribution](/docs/de/desktop-wsl) aus; Claude Code, Tools und Git werden auf der Linux-Seite mit nativen Pfaden ausgeführt.
   </Step>
 
   <Step title="Wählen Sie ein Modell">
-    Wählen Sie ein Modell aus der Dropdown-Liste neben der Schaltfläche „Senden". Siehe [Modelle](/docs/de/model-config#available-models) für einen Vergleich der verfügbaren Modelle. Sie können das Modell später aus der gleichen Dropdown-Liste ändern.
+    Wählen Sie ein Modell aus dem Dropdown-Menü neben der Schaltfläche zum Senden. Siehe [Modelle](/docs/de/model-config#available-models) für einen Vergleich der verfügbaren Modelle. Sie können das Modell später über das gleiche Dropdown-Menü ändern.
   </Step>
 
   <Step title="Sagen Sie Claude, was zu tun ist">
@@ -86,63 +86,62 @@ Wählen Sie mit der geöffneten Registerkarte „Code" ein Projekt aus und geben
     * `Add tests for the main function`
     * `Create a CLAUDE.md with instructions for this codebase`
 
-    Eine [Sitzung](/docs/de/desktop#work-in-parallel-with-sessions) ist eine Konversation mit Claude über Ihren Code. Jede Sitzung verfolgt ihren eigenen Kontext und ihre Änderungen, sodass Sie an mehreren Aufgaben arbeiten können, ohne dass sie sich gegenseitig beeinflussen.
+    Eine [Sitzung](/docs/de/desktop#work-in-parallel-with-sessions) ist ein Gespräch mit Claude über Ihren Code. Jede Sitzung verfolgt ihren eigenen Kontext und ihre Änderungen.
   </Step>
 
   <Step title="Überprüfen und akzeptieren Sie Änderungen">
-    Standardmäßig startet die Registerkarte „Code" im [Modus „Berechtigungen erfragen"](/docs/de/desktop#choose-a-permission-mode), in dem Claude Änderungen vorschlägt und auf Ihre Genehmigung wartet, bevor er sie anwendet. Sie sehen:
+    Was als Nächstes geschieht, hängt vom [Berechtigungsmodus](/docs/de/desktop#choose-a-permission-mode) ab, der in der Auswahl neben der Schaltfläche zum Senden angezeigt wird:
 
-    1. Eine [Diff-Ansicht](/docs/de/desktop#review-changes-with-diff-view), die genau zeigt, was sich in jeder Datei ändern wird
-    2. Schaltflächen „Akzeptieren"/„Ablehnen", um jede Änderung zu genehmigen oder abzulehnen
+    * **Auto oder Änderungen akzeptieren**: Claude wendet seine Dateiänderungen an, und ein Indikator wie `+12 -1` wird angezeigt, damit Sie diese in der Diff-Ansicht überprüfen können
+    * **Manuell**: Claude schlägt jede Änderung vor und wartet auf Ihre Genehmigung, bevor sie angewendet wird. Ihre Dateien werden erst geändert, wenn Sie akzeptieren. Wenn Sie eine Änderung ablehnen, fragt Claude, wie Sie stattdessen vorgehen möchten
+
+    Im Manuellen Modus sehen Sie:
+
+    1. Eine [Diff-Ansicht](/docs/de/desktop#review-changes-with-diff-view), die genau zeigt, was sich in jeder Datei ändert
+    2. Schaltflächen zum Akzeptieren/Ablehnen, um jede Änderung zu genehmigen oder abzulehnen
     3. Echtzeit-Updates, während Claude Ihre Anfrage bearbeitet
-
-    Wenn Sie eine Änderung ablehnen, fragt Claude, wie Sie anders vorgehen möchten. Ihre Dateien werden erst geändert, wenn Sie sie akzeptieren.
   </Step>
 </Steps>
 
 <h2 id="now-what">
-  Was nun?
+  Und jetzt?
 </h2>
 
-Sie haben Ihre erste Bearbeitung vorgenommen. Für die vollständige Referenz zu allem, was Desktop kann, siehe [Claude Code Desktop verwenden](/docs/de/desktop). Hier sind einige Dinge, die Sie als Nächstes versuchen können.
+Sie haben Ihre erste Bearbeitung durchgeführt. Eine vollständige Referenz zu allem, was Claude Code Desktop kann, finden Sie unter [Claude Code Desktop verwenden](/docs/de/desktop). Hier sind einige Dinge, die Sie als Nächstes ausprobieren können.
 
-**Unterbrechen und lenken.** Sie können Claude jederzeit unterbrechen. Klicken Sie auf die Stoppschaltfläche, um sofort zu unterbrechen, oder geben Sie eine Korrektur ein und drücken Sie **Eingabe**, um sie zu senden, ohne die laufende Aktion zu stoppen. In jedem Fall müssen Sie nicht warten, bis sie fertig ist, oder von vorne anfangen.
+**Unterbrechen und lenken.** Sie können Claude jederzeit umleiten. Klicken Sie auf die Stoppschaltfläche, um sofort zu unterbrechen, oder geben Sie eine Korrektur ein und drücken Sie **Eingabe**, um sie zu senden, ohne die laufende Aktion zu stoppen. In beiden Fällen müssen Sie nicht warten, bis sie abgeschlossen ist, oder von vorne beginnen.
 
-**Geben Sie Claude mehr Kontext.** Geben Sie `@filename` im Eingabefeld ein, um eine bestimmte Datei in die Konversation zu ziehen, fügen Sie Bilder und PDFs mit der Schaltfläche „Anhang" an, oder ziehen Sie Dateien direkt in das Eingabefeld. Je mehr Kontext Claude hat, desto besser sind die Ergebnisse. Siehe [Dateien und Kontext zu Eingaben hinzufügen](/docs/de/desktop#add-files-and-context-to-prompts).
+**Geben Sie Claude mehr Kontext.** Geben Sie `@filename` in das Eingabefeld ein, um eine bestimmte Datei in das Gespräch zu ziehen, fügen Sie Bilder und PDFs mit der Schaltfläche „Anhang" an, oder ziehen Sie Dateien direkt per Drag-and-Drop in die Eingabe. Je mehr Kontext Claude hat, desto besser sind die Ergebnisse. Siehe [Dateien und Kontext hinzufügen](/docs/de/desktop#add-files-and-context-to-prompts).
 
-**Verwenden Sie Skills für wiederholbare Aufgaben.** Geben Sie `/` ein oder klicken Sie auf **+** → **Slash commands**, um [integrierte Befehle](/docs/de/commands), [benutzerdefinierte Skills](/docs/de/skills) und Plugin-Skills zu durchsuchen. Skills sind wiederverwendbare Eingaben, die Sie aufrufen können, wenn Sie sie benötigen, wie Code-Review-Checklisten oder Bereitstellungsschritte.
+**Verwenden Sie Skills für wiederholbare Aufgaben.** Geben Sie `/` ein oder klicken Sie auf **+** → **Slash commands**, um [integrierte Befehle](/docs/de/commands), [benutzerdefinierte Skills](/docs/de/skills) und Plugin-Skills zu durchsuchen. Skills sind wiederverwendbare Eingabeaufforderungen, die Sie jederzeit aufrufen können, z. B. Code-Review-Checklisten oder Bereitstellungsschritte.
 
 **Überprüfen Sie Änderungen vor dem Commit.** Nachdem Claude Dateien bearbeitet hat, wird ein `+12 -1`-Indikator angezeigt. Klicken Sie darauf, um die [Diff-Ansicht](/docs/de/desktop#review-changes-with-diff-view) zu öffnen, überprüfen Sie Änderungen Datei für Datei und kommentieren Sie bestimmte Zeilen. Claude liest Ihre Kommentare und überarbeitet. Klicken Sie auf **Code überprüfen**, um Claude die Diffs selbst auswerten zu lassen und Inline-Vorschläge zu hinterlassen.
 
-**Passen Sie an, wie viel Kontrolle Sie haben.** Ihr [Berechtigungsmodus](/docs/de/desktop#choose-a-permission-mode) steuert, wie viel Claude ohne Genehmigung tun kann:
+**Passen Sie an, wie viel Kontrolle Sie haben.** Ihr [Berechtigungsmodus](/docs/de/desktop#choose-a-permission-mode) bestimmt, wie viel Claude tun kann, ohne um Genehmigung zu fragen:
 
-* **Manuell**: die Standardeinstellung. Claude fragt vor dem Bearbeiten von Dateien oder dem Ausführen von Befehlen.
+* **Auto**: Ein Klassifizierer überprüft Aktionen im Hintergrund und blockiert die riskanten, anstatt Sie zu fragen.
+* **Manuell**: Claude fragt vor dem Bearbeiten von Dateien oder dem Ausführen von Befehlen.
 * **Bearbeitungen akzeptieren**: Claude akzeptiert Dateibearbeitungen automatisch für schnellere Iteration.
 * **Plan**: Claude schlägt einen Ansatz vor, ohne Dateien zu bearbeiten, was vor einem großen Refactoring nützlich ist.
 
-**Fügen Sie Plugins für mehr Funktionen hinzu.** Klicken Sie auf die Schaltfläche **+** neben dem Eingabefeld und wählen Sie **Plugins**, um [Plugins](/docs/de/desktop#install-plugins) zu durchsuchen und zu installieren, die Skills, Agents, MCP servers und mehr hinzufügen.
+**Fügen Sie Plugins für mehr Funktionen hinzu.** Klicken Sie auf die Schaltfläche **+** neben dem Eingabefeld und wählen Sie **Plugins**, um [Plugins](/docs/de/desktop#install-plugins) zu durchsuchen und zu installieren, die Skills, Agents, MCP-Server und mehr hinzufügen.
 
-**Arrangieren Sie Ihren Arbeitsbereich.** Ziehen Sie die Chat-, Diff-, Terminal-, Datei- und Browser-Bereiche in das Layout, das Sie möchten. Öffnen Sie das Terminal mit **Strg+\`**, um Befehle neben Ihrer Sitzung auszuführen, oder klicken Sie auf einen Dateipfad, um ihn im Datei-Bereich zu öffnen. Siehe [Arrangieren Sie Ihren Arbeitsbereich](/docs/de/desktop#arrange-your-workspace).
+**Ordnen Sie Ihren Arbeitsbereich an.** Ziehen Sie die Chat-, Diff-, Terminal-, Datei- und Browser-Bereiche in das gewünschte Layout. Öffnen Sie das Terminal mit **Strg+\`**, um Befehle neben Ihrer Sitzung auszuführen, oder klicken Sie auf einen Dateipfad, um ihn im Dateibereich zu öffnen. Siehe [Arbeitsbereich anordnen](/docs/de/desktop#arrange-your-workspace).
 
-**Zeigen Sie eine Vorschau Ihrer App an.** Wenn Sie Ihren Dev-Server im Desktop ausführen, öffnet sich Ihre App im Browser-Bereich, der auch [externe Websites öffnen](/docs/de/desktop#browse-external-sites) kann. Claude kann die laufende App anzeigen, Endpunkte testen, Protokolle überprüfen und auf das, was es sieht, iterieren. Siehe [Zeigen Sie eine Vorschau Ihrer App an](/docs/de/desktop#preview-your-app).
+**Zeigen Sie eine Vorschau Ihrer App an.** Wenn Sie Ihren Dev-Server auf dem Desktop ausführen, wird Ihre App im Browser-Bereich geöffnet, der auch [externe Websites öffnen](/docs/de/desktop#browse-external-sites) kann. Claude kann die laufende App anzeigen, Endpunkte testen, Protokolle überprüfen und auf das reagieren, was es sieht. Siehe [Zeigen Sie eine Vorschau Ihrer App an](/docs/de/desktop#preview-your-app).
 
-**Verfolgen Sie Ihren Pull Request.** Nachdem Sie einen PR geöffnet haben, überwacht Claude Code die CI-Prüfungsergebnisse und kann Fehler automatisch beheben oder den PR zusammenführen, sobald alle Prüfungen bestanden sind. Siehe [Überwachen Sie den Pull-Request-Status](/docs/de/desktop#monitor-pull-request-status).
+**Verfolgen Sie Ihren Pull Request.** Nach dem Öffnen eines PR überwacht Claude Code die CI-Prüfungsergebnisse und kann Fehler automatisch beheben oder den PR zusammenführen, sobald alle Prüfungen bestanden sind. Siehe [Überwachen Sie den Pull-Request-Status](/docs/de/desktop#monitor-pull-request-status).
 
-**Setzen Sie Claude auf einen Zeitplan.** Richten Sie [geplante Aufgaben](/docs/de/desktop-scheduled-tasks) ein, um Claude automatisch regelmäßig auszuführen: eine tägliche Code-Überprüfung jeden Morgen, eine wöchentliche Abhängigkeitsprüfung oder eine Zusammenfassung, die von Ihren verbundenen Tools abruft.
+**Planen Sie Claude ein.** Richten Sie [geplante Aufgaben](/docs/de/desktop-scheduled-tasks) ein, um Claude automatisch regelmäßig auszuführen: eine tägliche Code-Überprüfung jeden Morgen, eine wöchentliche Abhängigkeitsprüfung oder eine Zusammenfassung, die Daten aus Ihren verbundenen Tools abruft.
 
-**Skalieren Sie auf, wenn Sie bereit sind.** Öffnen Sie [parallele Sitzungen](/docs/de/desktop#work-in-parallel-with-sessions) aus der Seitenleiste, um an mehreren Aufgaben gleichzeitig zu arbeiten, jede in ihrem eigenen Git worktree, und öffnen Sie den [Aufgaben-Bereich](/docs/de/desktop#watch-background-tasks), um die Subagents und Hintergrund-Befehle zu beobachten, die eine Sitzung ausführt. Öffnen Sie einen [Side Chat](/docs/de/desktop#ask-a-side-question-without-derailing-the-session), um eine Frage zu stellen, ohne den Hauptthread zu unterbrechen. Senden Sie [langfristige Arbeit in die Cloud](/docs/de/desktop#run-long-running-tasks-remotely), damit sie auch dann fortgesetzt wird, wenn Sie die App schließen, oder [setzen Sie eine Sitzung im Web oder in Ihrer IDE fort](/docs/de/desktop#continue-in-another-surface), wenn eine Aufgabe länger als erwartet dauert. [Verbinden Sie externe Tools](/docs/de/desktop#extend-claude-code) wie GitHub, Slack und Linear, um Ihren Workflow zusammenzubringen.
-
-<h2 id="coming-from-the-cli">
-  Kommen Sie von der CLI?
-</h2>
-
-Desktop führt die gleiche Engine wie die CLI mit einer grafischen Benutzeroberfläche aus. Sie können beide gleichzeitig auf dem gleichen Projekt ausführen, und sie teilen die Konfiguration (CLAUDE.md-Dateien, MCP servers, hooks, Skills und Einstellungen). Für einen vollständigen Vergleich von Funktionen, Flag-Äquivalenten und was in Desktop nicht verfügbar ist, siehe [CLI-Vergleich](/docs/de/desktop#coming-from-the-cli).
+**Skalieren Sie auf, wenn Sie bereit sind.** Öffnen Sie [parallele Sitzungen](/docs/de/desktop#work-in-parallel-with-sessions) aus der Seitenleiste, um mehrere Aufgaben gleichzeitig zu bearbeiten, jede in ihrem eigenen Git Worktree, und öffnen Sie den [Aufgabenbereich](/docs/de/desktop#watch-background-tasks), um die Subagents und Hintergrund-Befehle zu beobachten, die eine Sitzung ausführt. Öffnen Sie einen [Side Chat](/docs/de/desktop#ask-a-side-question-without-derailing-the-session), um eine Frage zu stellen, ohne den Hauptthread zu unterbrechen. Senden Sie [langfristige Arbeiten in die Cloud](/docs/de/desktop#run-long-running-tasks-in-the-cloud), damit sie fortgesetzt werden, auch wenn Sie die App schließen, oder [setzen Sie eine Sitzung im Web oder in Ihrer IDE fort](/docs/de/desktop#continue-in-another-surface), wenn eine Aufgabe länger als erwartet dauert. [Verbinden Sie externe Tools](/docs/de/desktop#extend-claude-code) wie GitHub, Slack und Linear, um Ihren Workflow zusammenzubringen.
 
 <h2 id="what’s-next">
-  Was kommt als Nächstes
+  Nächste Schritte
 </h2>
 
-* [Claude Code Desktop verwenden](/docs/de/desktop): Berechtigungsmodi, parallele Sitzungen, Diff-Ansicht, Konnektoren und Enterprise-Konfiguration
+* [Claude Code Desktop verwenden](/docs/de/desktop): Berechtigungsmodi, parallele Sitzungen, Diff-Ansicht, Konnektoren und Unternehmenskonfiguration
+* [Vom CLI kommend?](/docs/de/desktop#coming-from-the-cli): Führen Sie Desktop und die CLI auf demselben Projekt aus, und vergleichen Sie Funktionen, Flag-Äquivalente und was in Desktop nicht verfügbar ist
 * [Fehlerbehebung](/docs/de/desktop#troubleshooting): Lösungen für häufige Fehler und Setup-Probleme
-* [Best Practices](/docs/de/best-practices): Tipps zum Schreiben effektiver Eingaben und zum Herausholen des Besten aus Claude Code
-* [Häufige Workflows](/docs/de/common-workflows): Tutorials zum Debuggen, Refactoring, Testen und mehr
+* [Best Practices](/docs/de/best-practices): Tipps zum Schreiben effektiver Prompts und zum Optimieren von Claude Code
+* [Häufige Workflows](/docs/de/common-workflows): Tutorials zum Debuggen, Refaktorieren, Testen und mehr

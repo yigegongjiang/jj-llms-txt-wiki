@@ -13,41 +13,48 @@
 * **上下文效率：** 工具定義可能會消耗上下文窗口的大部分（50 個工具可能使用 10-20K 個令牌），留下較少的空間用於實際工作。
 * **工具選擇準確性：** 同時加載超過 30-50 個工具時，工具選擇準確性會下降。
 
-工具搜尋預設為啟用。
-
 <h2 id="how-tool-search-works">
-  工具搜尋的工作原理
+  工具搜尋如何運作
 </h2>
 
-當工具搜尋處於活動狀態時，工具定義會從上下文窗口中隱藏。代理會收到可用工具的摘要，並在任務需要尚未加載的功能時搜尋相關工具。最相關的五個工具會被加載到上下文中，在後續輪次中保持可用。如果對話足夠長，以至於 SDK 壓縮早期消息以釋放空間，之前發現的工具可能會被移除，代理會根據需要再次搜尋。
+工具搜尋預設為開啟，除了 [設定工具搜尋](#configure-tool-search) 中列出的例外情況。
 
-工具搜尋在 Claude 首次發現工具時增加一個額外的往返（搜尋步驟），但對於大型工具集，這會被每個輪次上下文較小所抵消。對於少於約 10 個工具的情況，預先加載所有工具通常更快。
+當工具搜尋為啟用時，工具定義會從內容視窗中隱藏。代理程式會收到可用工具的摘要，並在任務需要尚未載入的功能時搜尋相關工具。預設情況下，最多五個最相關的工具會被載入到內容中，並在後續回合中保持可用，直到 SDK 壓縮代理程式發現它們的訊息為止。在該壓縮之後，當代理程式下次需要這些工具時，會再次搜尋它們。
 
-有關底層 API 機制的詳細信息，請參閱 [API 中的工具搜尋](https://platform.claude.com/docs/zh-TW/agents-and-tools/tool-use/tool-search-tool)。
+工具搜尋每次 Claude 搜尋工具時都會增加一個額外的往返，但對於大型工具集，這會因每個回合的內容較小而被抵消。對於少於約 10 個工具且其定義能舒適地放入內容視窗的情況，預先載入所有內容通常更快。
+
+有關基礎 API 機制的詳細資訊，請參閱 [API 中的工具搜尋](https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-search-tool)。
 
 <Note>
-  工具搜尋在 Claude Sonnet 4.5、Claude Haiku 4.5、Claude Opus 4.5 及更新版本上受支援；請參閱 [API 文件中的模型相容性](https://platform.claude.com/docs/zh-TW/agents-and-tools/tool-use/tool-search-tool#model-compatibility)以取得目前清單。在 Google Cloud 的 Agent Platform 上，最低支援的模型是 Claude Sonnet 4.5 和 Claude Opus 4.5。
+  Microsoft Foundry [部署在 Azure 上的部署](https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry#hosting-options)不支援工具搜尋，這些部署會在伺服器端拒絕它：SDK 會偵測到拒絕，並改為預先載入該部署的工具定義。[`ENABLE_TOOL_SEARCH`](#configure-tool-search) 無法覆蓋此設定，因為拒絕來自部署本身。
 </Note>
 
 <h2 id="configure-tool-search">
   配置工具搜尋
 </h2>
 
-工具搜尋預設為開啟。在 Google Cloud 的 Agent Platform 上預設為關閉，其中支援 Claude Sonnet 4.5 及更高版本以及 Claude Opus 4.5 及更高版本。當 `ANTHROPIC_BASE_URL` 指向非第一方主機時，它也會被禁用，因為大多數代理不轉發 `tool_reference` 塊。您可以使用 `ENABLE_TOOL_SEARCH` 環境變數覆蓋任一預設值：
+工具搜尋預設為開啟。對於 SDK 的不支援模型清單上的模型，SDK 會預先載入工具定義，而不會有任何 `ENABLE_TOOL_SEARCH` 值覆蓋該行為。在 Google Cloud 的 Agent Platform 上，SDK 會根據模型世代決定：
 
-| 值        | 行為                                                                                                                                                                  |
-| :------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| （未設置）    | 工具搜尋已開啟。工具定義被延遲並按需發現。在 Google Cloud 的 Agent Platform 或非第一方 `ANTHROPIC_BASE_URL` 上回退到預先加載。                                                                           |
-| `true`   | 工具搜尋始終開啟。SDK 即使在 Google Cloud 的 Agent Platform 和通過代理時也會發送 beta 標頭。在 Sonnet 4.5 或 Opus 4.5 之前的 Google Cloud 的 Agent Platform 模型上，或在不支援 `tool_reference` 塊的代理上，請求會失敗。 |
-| `auto`   | 檢查所有工具定義的組合令牌計數與模型的上下文窗口。如果超過 10%，工具搜尋會啟動。如果低於 10%，所有工具會正常加載到上下文中。                                                                                                  |
-| `auto:N` | 與 `auto` 相同，但具有自訂百分比。`auto:5` 在工具定義超過上下文窗口的 5% 時啟動。較低的值會更早啟動。                                                                                                       |
-| `false`  | 工具搜尋已關閉。所有工具定義在每個輪次都被加載到上下文中。                                                                                                                                       |
+* **Claude Opus 4.5、Sonnet 4.5、Haiku 4.5 及更高版本**：工具搜尋預設為開啟。
+* **較早的 Agent Platform 模型**：SDK 會預先載入工具定義，因為其服務堆疊會拒絕所需的 beta 標頭。`ENABLE_TOOL_SEARCH` 無法覆蓋此行為。
 
-設置 [`CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS`](/docs/zh-TW/env-vars) 會保持工具搜尋關閉，且 `ENABLE_TOOL_SEARCH` 無法覆蓋它。該變數會移除 `defer_loading` 工具定義和 `tool_reference` 內容塊所需的 beta 標頭。
+在 Claude Code v2.1.221 之前，除非您設置 `ENABLE_TOOL_SEARCH`，否則 SDK 會為 Google Cloud 的 Agent Platform 上的所有模型禁用工具搜尋。
 
-工具搜尋適用於所有已註冊的工具，無論它們來自遠端 MCP 伺服器還是[自訂 SDK MCP 伺服器](/docs/zh-TW/agent-sdk/custom-tools)。使用 `auto` 時，閾值基於所有伺服器上所有工具定義的組合大小。
+當 `ANTHROPIC_BASE_URL` 指向非第一方主機時，SDK 也會禁用工具搜尋，因為大多數代理不轉發 `tool_reference` 區塊。您可以使用 `ENABLE_TOOL_SEARCH` 環境變數覆蓋該預設值：
 
-在 `query()` 上的 `env` 選項中設置該值。在 TypeScript 中，`env` 會取代子程序環境，因此請展開 `...process.env` 以保留繼承的變數。在 Python 中，`env` 會合併到繼承的環境之上。此示例連接到公開許多工具的遠端 MCP 伺服器，使用萬用字元預先批准所有工具，並使用 `auto:5` 以便在工具定義超過上下文窗口的 5% 時啟動工具搜尋：
+| 值        | 行為                                                                                                                                                                                           |
+| :------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| （未設置）    | 工具搜尋已開啟。工具定義被延遲並按需發現。在 Google Cloud 的 Agent Platform 早於 Claude 4.5 世代的模型、非第一方 `ANTHROPIC_BASE_URL` 或在 Azure 上託管的 Microsoft Foundry 部署上回退到預先載入。                                               |
+| `true`   | 工具搜尋始終開啟，除了在 Azure 上託管的 Microsoft Foundry 部署（其中伺服器端拒絕仍會強制預先載入）和 Google Cloud 的 Agent Platform 早於 Claude 4.5 世代的模型（其中 SDK 會繼續預先載入工具定義）。SDK 會透過代理發送 beta 標頭，在不支援 `tool_reference` 區塊的代理上請求會失敗。 |
+| `auto`   | 計算工具搜尋可以延遲的工具定義中的令牌，並將總數與模型的上下文視窗進行比較。當總數達到視窗的 10% 時，工具搜尋會啟動。低於此值時，SDK 會預先將每個工具定義載入到上下文中。                                                                                                    |
+| `auto:N` | 與 `auto` 相同，但具有自訂百分比。`auto:5` 在這些定義達到上下文視窗的 5% 時啟動。較低的值會更早啟動。                                                                                                                                |
+| `false`  | 工具搜尋已關閉。所有工具定義在每個輪次都被載入到上下文中。                                                                                                                                                                |
+
+設置 [`CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS`](/docs/zh-TW/env-vars) 會保持工具搜尋關閉。您無法透過自行設置 `ENABLE_TOOL_SEARCH` 來覆蓋它。您的組織可以透過 [managed settings](/docs/zh-TW/managed-settings) 在 Claude Code v2.1.227 或更高版本上保持工具搜尋開啟。[停用預發行功能](/docs/zh-TW/llm-gateway-protocol#disable-pre-release-capabilities) 涵蓋覆蓋適用的位置以及變數移除的內容。
+
+工具搜尋適用於所有已註冊的工具，無論它們來自遠端 MCP 伺服器還是 [custom SDK MCP servers](/docs/zh-TW/agent-sdk/custom-tools)。當您使用 `auto` 時，SDK 會計算工具搜尋可以延遲的每個定義，達到一個組合閾值：來自任何伺服器的每個未標記為 [`alwaysLoad`](/docs/zh-TW/mcp#exempt-a-server-from-deferral) 的 MCP 工具，加上按需載入的內建工具。SDK 始終預先載入核心內建工具（例如 Bash、Read 和 Edit），並且不會將其計入閾值。
+
+在 `query()` 上的 `env` 選項中設置該值。在 TypeScript 中，`env` 會取代子程序環境，因此請展開 `...process.env` 以保留繼承的變數。在 Python 中，`env` 會合併到繼承的環境之上。此示例連接到公開許多工具的遠端 MCP 伺服器，使用萬用字元預先批准所有工具，並使用 `auto:5` 以便在工具搜尋可以延遲的定義達到上下文視窗的 5% 時啟動工具搜尋：
 
 <CodeGroup>
   ```typescript TypeScript theme={null}
@@ -67,7 +74,7 @@
         allowedTools: ["mcp__enterprise-tools__*"], // Wildcard pre-approves all tools from this server
         env: {
           ...process.env, // env replaces the subprocess environment, so keep inherited variables
-          ENABLE_TOOL_SEARCH: "auto:5" // Activate tool search when tools exceed 5% of context
+          ENABLE_TOOL_SEARCH: "auto:5" // Activate tool search when deferrable definitions reach 5% of context
         }
       }
     })) {
@@ -98,7 +105,7 @@
               "mcp__enterprise-tools__*"
           ],  # Wildcard pre-approves all tools from this server
           env={
-              "ENABLE_TOOL_SEARCH": "auto:5"  # Activate tool search when tools exceed 5% of context
+              "ENABLE_TOOL_SEARCH": "auto:5"  # Activate tool search when deferrable definitions reach 5% of context
           },
       )
 
@@ -120,9 +127,7 @@
 
 若要執行此示例，請將 `https://tools.example.com/mcp` 替換為您自己的 MCP 伺服器的 URL。成功時，結果文字會列印到主控台。
 
-因為這是單次 `query()` 呼叫，SDK 會在產生錯誤結果後引發，所以此示例會將迴圈包裝在 try 區塊中。若要查看執行失敗的原因，請檢查結果訊息的 `subtype`（例如 `error_during_execution`）在迴圈內。如需有關結果訊息的詳細資訊，請參閱[處理結果](/docs/zh-TW/agent-sdk/agent-loop#handle-the-result)。
-
-將 `ENABLE_TOOL_SEARCH` 設置為 `"false"` 會禁用工具搜尋，並在每個輪次將所有工具定義加載到上下文中。這會移除搜尋往返，當工具集較小（少於約 10 個工具）且定義舒適地適應上下文窗口時，這可能會更快。
+因為這是單次 `query()` 呼叫，SDK 會在產生錯誤結果後引發，所以此示例會將迴圈包裝在 try 區塊中。若要查看執行失敗的原因，請檢查結果訊息的 `subtype`（例如 `error_during_execution`）在迴圈內。如需有關結果訊息的詳細資訊，請參閱 [Handle the result](/docs/zh-TW/agent-sdk/agent-loop#handle-the-result)。
 
 <h2 id="optimize-tool-discovery">
   優化工具發現
@@ -162,14 +167,14 @@
 
 * **最大工具數：** 您的目錄中有 10,000 個工具
 * **搜尋結果：** 預設情況下每次搜尋返回最多五個最相關的工具
-* **模型支援：** Claude Sonnet 4.5、Claude Haiku 4.5、Claude Opus 4.5 及更新版本；請參閱 [API 文件中的模型相容性](https://platform.claude.com/docs/zh-TW/agents-and-tools/tool-use/tool-search-tool#model-compatibility)以取得目前清單。在 Google Cloud 的 Agent Platform 上，支援 Claude Sonnet 4.5 及更新版本和 Claude Opus 4.5 及更新版本。
+* **模型支援：** Claude Sonnet 4.5、Claude Haiku 4.5、Claude Opus 4.5 及更新版本；請參閱 [API 文件中的模型相容性](https://platform.claude.com/docs/zh-TW/agents-and-tools/tool-use/tool-search-tool#model-compatibility)以取得目前清單。Google Cloud 的 Agent Platform 上也適用相同的最低要求。
 
 <h2 id="related-documentation">
-  相關文檔
+  相關文件
 </h2>
 
-* [API 中的工具搜尋](https://platform.claude.com/docs/zh-TW/agents-and-tools/tool-use/tool-search-tool)：工具搜尋的完整 API 文檔，包括自訂實現
-* [連接 MCP 伺服器](/docs/zh-TW/agent-sdk/mcp)：通過 MCP 伺服器連接到外部工具
-* [自訂工具](/docs/zh-TW/agent-sdk/custom-tools)：使用 SDK MCP 伺服器構建您自己的工具
+* [API 中的工具搜尋](https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-search-tool)：工具搜尋的完整 API 文件，包括自訂實作
+* [連接 MCP 伺服器](/docs/zh-TW/agent-sdk/mcp)：透過 MCP 伺服器連接外部工具
+* [自訂工具](/docs/zh-TW/agent-sdk/custom-tools)：使用 SDK MCP 伺服器建立您自己的工具
 * [TypeScript SDK 參考](/docs/zh-TW/agent-sdk/typescript)：完整 API 參考
 * [Python SDK 參考](/docs/zh-TW/agent-sdk/python)：完整 API 參考

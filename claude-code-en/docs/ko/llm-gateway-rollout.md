@@ -10,7 +10,7 @@
 
 <Note>
   * 자신의 머신에서 Claude Code를 기존 게이트웨이에 연결하려면 [Claude Code를 LLM 게이트웨이에 연결](/docs/ko/llm-gateway-connect)을 참조하십시오.
-  * Claude Code가 게이트웨이에 전송하는 내용과 전달할 내용을 알아보려면 [게이트웨이 프로토콜 참조](/docs/ko/llm-gateway-protocol)를 참조하십시오.
+  * Claude Code가 게이트웨이에 전송하는 내용과 전달할 내용을 알아보려면 [게이트웨이 호환성 가이드](/docs/ko/llm-gateway-protocol)를 참조하십시오.
 </Note>
 
 <h2 id="prerequisites">
@@ -33,13 +33,13 @@
 게이트웨이를 제공하는 제품이 무엇이든 다음을 충족해야 합니다.
 
 * **지원되는 API 형식 수락**: [API 형식 표](/docs/ko/llm-gateway-protocol#api-formats)의 형식 중 하나. 아래의 롤아웃 단계는 `POST /v1/messages`의 Anthropic Messages API를 가정하며, 대부분의 게이트웨이가 이를 제공합니다.
-* **응답 스트리밍**: 전체 응답을 버퍼링하는 대신 서버 전송 이벤트를 도착하는 대로 전달합니다.
+* **응답 스트리밍**: 전체 응답을 버퍼링하는 대신 서버 전송 이벤트를 도착하는 대로 전달합니다. [스트리밍](/docs/ko/llm-gateway-protocol#streaming)에서는 버퍼링 또는 제거된 ping이 무엇을 손상시키는지 다룹니다.
 * **Claude 모델 이름 라우팅**: 개발자가 사용하는 각 이름을 업스트림 모델에 매핑합니다. Claude Code는 각 요청에서 `claude-sonnet-4-6`과 같은 모델 이름을 전송합니다. 대부분의 게이트웨이 제품에서 매핑은 게이트웨이 자체 구성의 모델 목록 또는 라우팅 테이블입니다.
 * **헤더 및 본문 변경 없이 전달**: `anthropic-beta`, `anthropic-version` 및 요청 본문을 양방향으로 전달합니다. [기능 통과 표](/docs/ko/llm-gateway-protocol#feature-pass-through)는 각각을 이를 없이는 손상되는 기능에 매핑합니다.
-* **업스트림 오류 수정되지 않은 상태로 반환**: Claude Code의 자동 복구는 오류 표현에 일치하므로 게이트웨이 자체 봉투에 오류를 래핑하면 이를 손상시킵니다.
+* **업스트림 오류 수정되지 않은 상태로 반환**: Claude Code의 자동 복구는 오류 표현에 일치하므로 게이트웨이 자체 봉투에 오류를 래핑하면 이를 손상시킵니다. 봉투의 메시지가 [Claude 앱 게이트웨이가 클라우드 공급자의 오류 표현을 대체하는](/docs/ko/claude-apps-gateway-config#upstream-error-messages) `capability_rejected:` 토큰 중 하나를 포함하지 않는 한 말입니다.
 * **요청 본문 WAF 검사에서 경로 제외**: Claude Code 프롬프트는 소스 코드와 교차 사이트 스크립팅 본문 규칙과 일치하는 XML 스타일 태그를 포함합니다. 게이트웨이 앞의 WAF는 실제 세션에서 `403`을 반환하지만 짧은 테스트 요청은 통과합니다.
 
-선택적으로 `GET /v1/models`를 제공하여 Claude Code가 [모델 검색](/docs/ko/llm-gateway-protocol#model-discovery)을 통해 게이트웨이에서 모델 선택기를 채울 수 있도록 합니다.&#x20;
+선택적으로 `GET /v1/models`를 제공하여 Claude Code가 [모델 검색](/docs/ko/llm-gateway-protocol#model-discovery)을 통해 게이트웨이에서 모델 선택기를 채울 수 있도록 합니다.
 
 <h2 id="rollout-steps">
   롤아웃 단계
@@ -171,7 +171,7 @@ claude -p "Reply with one word: connected"
   구성 배포
 </h3>
 
-모든 개발자 머신에는 게이트웨이 주소와 자격증명이 필요합니다. [관리되는 설정](/docs/ko/settings#settings-files)을 통해 중앙에서 배포할 수 있으므로 개발자가 아무것도 구성하지 않거나 개발자에게 값을 직접 설정하도록 할 수 있습니다.
+모든 개발자 머신에는 게이트웨이 주소와 자격증명이 필요합니다. [관리되는 설정](/docs/ko/managed-settings#delivery-mechanisms)을 통해 중앙에서 배포할 수 있으므로 개발자가 아무것도 구성하지 않거나 개발자에게 값을 직접 설정하도록 할 수 있습니다.
 
 <h4 id="what-to-distribute">
   배포할 항목
@@ -179,21 +179,23 @@ claude -p "Reply with one word: connected"
 
 어느 경로를 선택하든 동일한 변수 집합이 적용됩니다. 대부분의 롤아웃은 `ANTHROPIC_BASE_URL`과 자격증명만 필요합니다. 게이트웨이 설정에서 필요한 경우 조건부 행을 포함하십시오.
 
-| 변수 또는 설정                                                                                                                                                                                               | 수행 작업                                                                                                                | 포함 시기                                                                                                                                                                                                                                                        |
-| :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ANTHROPIC_BASE_URL`                                                                                                                                                                                   | Claude Code의 API 요청을 `api.anthropic.com` 대신 게이트웨이로 전송합니다.                                                            | 항상                                                                                                                                                                                                                                                           |
-| `apiKeyHelper` 또는 `ANTHROPIC_AUTH_TOKEN` 또는 `ANTHROPIC_API_KEY`의 자격증명                                                                                                                                  | 게이트웨이에 대한 각 요청을 인증합니다. 도우미는 키를 가져오는 명령을 실행합니다. 변수는 각각 `Authorization: Bearer` 및 `x-api-key`로 전송되는 정적 키를 보유합니다.       | 항상; 3개 중 1개                                                                                                                                                                                                                                                  |
-| `ANTHROPIC_CUSTOM_HEADERS`                                                                                                                                                                             | 모든 API 요청에 추가 HTTP 헤더를 추가합니다.                                                                                        | 게이트웨이가 모든 요청에 테넌트 또는 라우팅 헤더를 요구하는 경우                                                                                                                                                                                                                         |
-| `CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY`                                                                                                                                                           | 시작 시 게이트웨이의 `/v1/models`을 쿼리하고 반환된 이름을 `/model` 선택기에 추가합니다.                                                          | 게이트웨이가 `/v1/models`을 제공하고 개발자의 선택기를 게이트웨이에서 채우려는 경우                                                                                                                                                                                                          |
-| `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS`                                                                                                                                                               | Claude Code가 사전 릴리스 기능 헤더 및 본문 필드를 전송하지 않도록 중지합니다.                                                                   | 게이트웨이가 베타 필드를 거부하는 Amazon Bedrock 또는 Google Cloud의 Agent Platform 업스트림으로 전달하는 경우. [게이트웨이 요구사항](#gateway-requirements) 참조                                                                                                                                     |
-| `ANTHROPIC_MODEL` 또는 [`ANTHROPIC_DEFAULT_HAIKU_MODEL`](/docs/ko/model-config)                                                                                                                               | Claude Code가 주 세션 및 백그라운드 트래픽에 대해 요청하는 모델 이름을 설정합니다.                                                                 | 게이트웨이가 Claude Code의 기본값과 일치하지 않는 모델 이름을 라우팅하거나 [백그라운드 기능](/docs/ko/costs#background-token-usage)을 다른 모델로 라우팅하는 경우. 게이트웨이에서 재정의 이름과 Claude Code의 기본 이름을 모두 라우팅하십시오. 일부 하위 호출은 재정의와 관계없이 기본 이름을 요청할 수 있기 때문입니다. [모델 구성](/docs/ko/model-config)은 세션의 각 부분이 사용하는 모델을 다룹니다. |
-| `ANTHROPIC_BEDROCK_BASE_URL`, `ANTHROPIC_VERTEX_BASE_URL`, `ANTHROPIC_FOUNDRY_BASE_URL` 또는 `ANTHROPIC_AWS_BASE_URL`과 [해당 공급자의 변수](/docs/ko/llm-gateway-connect#route-to-a-cloud-provider-through-a-gateway) | Claude Code를 게이트웨이를 통해 공급자별 기본 URL로 가리킵니다. Amazon Bedrock 및 Google Cloud의 Agent Platform은 해당 공급자의 기본 요청 형식으로도 전환합니다. | 게이트웨이가 Amazon Bedrock, Google Cloud의 Agent Platform, Microsoft Foundry 또는 AWS의 Claude Platform을 앞에 두는 경우. [API 형식](/docs/ko/llm-gateway-protocol#api-formats) 참조                                                                                                  |
+| 변수 또는 설정                                                                                                                                                                                               | 수행 작업                                                                                                                                          | 포함 시기                                                                                                                                                                                                                                                                                          |
+| :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ANTHROPIC_BASE_URL`                                                                                                                                                                                   | Claude Code의 API 요청을 `api.anthropic.com` 대신 게이트웨이로 전송합니다.                                                                                      | 항상                                                                                                                                                                                                                                                                                             |
+| `apiKeyHelper` 또는 `ANTHROPIC_AUTH_TOKEN` 또는 `ANTHROPIC_API_KEY`의 자격증명                                                                                                                                  | 게이트웨이에 대한 각 요청을 인증합니다. 도우미는 키를 가져오는 명령을 실행합니다. 변수는 각각 `Authorization: Bearer` 및 `x-api-key`로 전송되는 정적 키를 보유합니다.                                 | 항상; 3개 중 1개                                                                                                                                                                                                                                                                                    |
+| `ANTHROPIC_CUSTOM_HEADERS`                                                                                                                                                                             | 모든 API 요청에 추가 HTTP 헤더를 추가합니다.                                                                                                                  | 게이트웨이가 모든 요청에 테넌트 또는 라우팅 헤더를 요구하는 경우                                                                                                                                                                                                                                                           |
+| `CLAUDE_CODE_GATEWAY_HINT_HEADERS`                                                                                                                                                                     | [게이트웨이 힌트 헤더](/docs/ko/llm-gateway-protocol#gateway-hint-headers)를 전송하며, 이는 게이트웨이에서의 라우팅 및 스케줄링 결정을 위해 각 요청을 분류합니다. Claude Code v2.1.273 이상이 필요합니다. | 게이트웨이가 힌트 헤더를 읽는 경우                                                                                                                                                                                                                                                                            |
+| `CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY`                                                                                                                                                           | 시작 시 게이트웨이의 `/v1/models`을 쿼리하고 반환된 이름을 `/model` 선택기에 추가합니다.                                                                                    | 게이트웨이가 `/v1/models`을 제공하고 개발자의 선택기를 게이트웨이에서 채우려는 경우                                                                                                                                                                                                                                            |
+| `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS`                                                                                                                                                               | Claude Code가 사전 릴리스 기능 헤더 및 본문 필드를 전송하지 않도록 중지합니다. [사전 릴리스 기능 비활성화](/docs/ko/llm-gateway-protocol#disable-pre-release-capabilities)는 정확한 범위를 다룹니다.  | 게이트웨이가 베타 필드를 거부하는 Amazon Bedrock 또는 Google Cloud의 Agent Platform 업스트림으로 전달하는 경우. [게이트웨이 요구사항](#gateway-requirements) 참조                                                                                                                                                                       |
+| `CLAUDE_CODE_SKIP_FAST_MODE_NETWORK_ERRORS` 또는 `CLAUDE_CODE_SKIP_FAST_MODE_ORG_CHECK`                                                                                                                  | [빠른 모드](/docs/ko/fast-mode)를 복원합니다. 빠른 모드의 가용성 확인은 `ANTHROPIC_BASE_URL`을 따르지 않고 `api.anthropic.com`을 직접 호출하거나, 차단되거나, Anthropic 자격증명이 없어서 건너뛰어집니다.  | 조직이 빠른 모드를 사용하고 개발자가 `ANTHROPIC_AUTH_TOKEN`만으로 인증하거나, `ANTHROPIC_API_KEY`의 게이트웨이 발급 키 또는 `apiKeyHelper`를 사용하거나, 네트워크가 `api.anthropic.com`에 대한 직접 요청을 차단하거나 가로채는 경우. [프록시 및 LLM 게이트웨이 뒤에서 빠른 모드 사용](/docs/ko/fast-mode#use-fast-mode-behind-proxies-and-llm-gateways)은 구성과 일치하는 두 변수 중 어느 것인지를 다룹니다. |
+| `ANTHROPIC_MODEL` 또는 [`ANTHROPIC_DEFAULT_HAIKU_MODEL`](/docs/ko/model-config)                                                                                                                               | Claude Code가 주 세션 및 백그라운드 트래픽에 대해 요청하는 모델 이름을 설정합니다.                                                                                           | 게이트웨이가 Claude Code의 기본값과 일치하지 않는 모델 이름을 라우팅하거나 [백그라운드 기능](/docs/ko/costs#background-token-usage)을 다른 모델로 라우팅하는 경우. 게이트웨이에서 재정의 이름과 Claude Code의 기본 이름을 모두 라우팅하십시오. 일부 하위 호출은 재정의와 관계없이 기본 이름을 요청할 수 있기 때문입니다. [모델 구성](/docs/ko/model-config)은 세션의 각 부분이 사용하는 모델을 다룹니다.                                   |
+| `ANTHROPIC_BEDROCK_BASE_URL`, `ANTHROPIC_VERTEX_BASE_URL`, `ANTHROPIC_FOUNDRY_BASE_URL` 또는 `ANTHROPIC_AWS_BASE_URL`과 [해당 공급자의 변수](/docs/ko/llm-gateway-connect#route-to-a-cloud-provider-through-a-gateway) | Claude Code를 게이트웨이를 통해 공급자별 기본 URL로 가리킵니다. Amazon Bedrock 및 Google Cloud의 Agent Platform은 해당 공급자의 기본 요청 형식으로도 전환합니다.                           | 게이트웨이가 Amazon Bedrock, Google Cloud의 Agent Platform, Microsoft Foundry 또는 AWS의 Claude Platform을 앞에 두는 경우. [API 형식](/docs/ko/llm-gateway-protocol#api-formats) 참조                                                                                                                                    |
 
 <h4 id="distribute-through-managed-settings">
   관리되는 설정을 통해 배포
 </h4>
 
-[관리되는 설정 파일](/docs/ko/settings#settings-files)의 `env` 블록을 통해 변수를 배포하고, MDM, 레지스트리 정책 또는 구성 관리로 푸시합니다.
+[관리되는 설정 파일](/docs/ko/managed-settings#delivery-mechanisms)의 `env` 블록을 통해 변수를 배포하고, MDM, 레지스트리 정책 또는 구성 관리로 푸시합니다.
 
 ```json theme={null}
 {
@@ -206,7 +208,7 @@ claude -p "Reply with one word: connected"
 
 표의 조건부 변수를 동일한 `env` 블록에 추가합니다. 관리되는 `ANTHROPIC_BASE_URL`은 적용되며 개발자의 셸 내보내기로 재정의할 수 없습니다. Claude Code는 프로세스 환경 및 낮은 우선순위 설정보다 이를 적용하기 때문입니다.
 
-관리되는 설정에서 게이트웨이 자격증명과 함께 `forceLoginMethod` 또는 `forceLoginOrgUUID`를 포함하지 마십시오. Claude Code v2.1.146 이상에서 두 키 중 하나는 시작 시 `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN` 및 `apiKeyHelper`를 차단하므로 개발자는 `This machine's managed settings require a first-party login`을 보고 진행할 수 없습니다.&#x20;
+관리되는 설정에서 게이트웨이 자격증명과 함께 `forceLoginMethod` 또는 `forceLoginOrgUUID`를 포함하지 마십시오. 두 키 중 하나는 시작 시 `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN` 및 `apiKeyHelper`를 차단하므로 개발자는 `This machine's managed settings require a first-party login`을 보거나 [`Administrator policy requires a Cloud gateway sign-in`](/docs/ko/errors#administrator-policy-requires-a-cloud-gateway-sign-in)을 `"gateway"` 값 아래에서 보고 진행할 수 없습니다.
 
 [서버 관리 설정](/docs/ko/server-managed-settings#platform-availability) 배포는 `api.anthropic.com`에 대한 직접 연결이 필요하므로 게이트웨이 라우팅 세션에 도달하지 않습니다. 게이트웨이 배포는 동일한 키를 적용하는 이 파일 기반 관리 설정 경로를 사용합니다.
 
@@ -216,7 +218,7 @@ claude -p "Reply with one word: connected"
 
 * 데스크톱 앱은 관리되는 설정이 아닌 타사 추론 구성에서 게이트웨이 라우팅을 읽습니다. 데스크톱 세션도 게이트웨이를 통해 라우팅되도록 관리되는 설정과 함께 해당 파일을 MDM을 통해 배포하십시오. [데스크톱 타사 구성 문서](https://claude.com/docs/third-party/claude-desktop/configuration) 및 [데스크톱 게이트웨이 문서](https://claude.com/docs/third-party/claude-desktop/gateway)를 참조하십시오.
 * CI 러너는 [러너의 환경](/docs/ko/llm-gateway-connect#configure-each-surface)에서 `ANTHROPIC_BASE_URL` 및 자격증명을 설정해야 합니다.
-* 관리되는 Windows 머신의 WSL은 [`wslInheritsWindowsSettings`](/docs/ko/settings#available-settings)가 `true`일 때만 Windows 관리 설정을 읽습니다.
+* 관리되는 Windows 머신의 WSL은 [`wslInheritsWindowsSettings`](/docs/ko/settings-reference#wslinheritswindowssettings)가 `true`일 때만 Windows 관리 설정을 읽습니다.
 
 <h4 id="hand-developers-the-values-to-set-themselves">
   개발자에게 값을 직접 설정하도록 합니다.
@@ -270,6 +272,8 @@ claude -p "Reply with one word: connected"
 * `Failed to authenticate` 오류는 게이트웨이가 요청을 거부함을 의미합니다. 로그는 어느 자격증명이 실패했는지 나타냅니다. 게이트웨이가 자체 로그하는 거부는 개발자 키를 명명하는 반면, `api.anthropic.com` 또는 공급자의 엔드포인트의 `401`은 게이트웨이가 보유한 공급자 자격증명이 거부되었음을 의미합니다.
 * 게이트웨이가 `x-api-key` 헤더에서 키를 예상할 때 `ANTHROPIC_API_KEY`로 설정된 키에 대한 일회성 승인 프롬프트는 예상됩니다. `ANTHROPIC_AUTH_TOKEN`을 사용하면 프롬프트가 나타나지 않고 변수가 자동으로 인수합니다. 이전에 저장된 claude.ai 로그인은 해당 세션에 대해 비활성입니다.
 
+조직이 [빠른 모드](/docs/ko/fast-mode)를 사용하는 경우 여기서 `/fast`도 실행하십시오. 가용성 확인은 게이트웨이 기본 URL을 따르지 않고 `api.anthropic.com`을 직접 호출하므로 게이트웨이 라우팅 세션은 추론이 작동하더라도 빠른 모드를 사용할 수 없거나 비활성화된 것으로 보고할 수 있습니다. [프록시 및 LLM 게이트웨이 뒤에서 빠른 모드 사용](/docs/ko/fast-mode#use-fast-mode-behind-proxies-and-llm-gateways)은 각 메시지를 복원하는 변수에 매핑하고, [구성의 나머지 부분](#distribute-the-configuration)과 함께 배포됩니다.
+
 마지막으로 전송한 메시지에 대한 게이트웨이의 로그를 확인합니다. 자격증명은 개발자를 식별하고, [`x-claude-code-session-id` 헤더](/docs/ko/llm-gateway-protocol#request-headers)는 요청을 세션별로 그룹화합니다. 기능이 [문제 해결 증상](/docs/ko/llm-gateway-connect#troubleshoot-gateway-errors)으로 실패하면 게이트웨이가 헤더를 제거하거나 오류를 다시 작성하고 있습니다. 위의 [게이트웨이 요구사항](#gateway-requirements)을 참조하십시오.
 
 <h2 id="maintain-the-gateway">
@@ -278,19 +282,34 @@ claude -p "Reply with one word: connected"
 
 롤아웃 후 시간이 지남에 따라 3가지 변경 사항이 게이트웨이에 도달합니다. 각각에는 주의할 증상과 취할 조치가 있습니다.
 
-| 변경                                                         | 게이트웨이가 따라가지 못했을 때의 증상                                                                                           | 조치                                                                                                                                                                  |
-| :--------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 새로운 Claude Code 릴리스는 `anthropic-beta` 값 및 요청 본문 필드를 추가합니다. | 개발자가 Claude Code를 업데이트한 후 새 필드를 명명하는 `400` 오류를 보고합니다. [기능 통과](/docs/ko/llm-gateway-protocol#feature-pass-through) 참조 | 허용 목록을 작성하는 대신 `anthropic-*` 헤더 및 요청 본문을 그대로 전달합니다. 개발자에게 도달하기 전에 새 Claude Code 릴리스를 게이트웨이에 대해 테스트합니다.                                                              |
-| 새로운 Claude 모델을 사용할 수 있게 됩니다.                               | 개발자가 새 모델 이름을 선택하면 `404`를 받습니다. `/model` 선택기에 나열되지 않습니다.                                                        | 게이트웨이의 라우팅 구성에 모델 이름을 추가한 다음 [라우팅 확인](#confirm-the-gateway-routes-your-models)을 다시 실행합니다. `ANTHROPIC_MODEL` 또는 기본 모델 변수를 배포하는 경우 관리되는 설정을 업데이트합니다.                  |
-| 자격증명이 만료되거나 회전이 필요합니다.                                     | 모든 개발자 요청이 업스트림에서 `401`로 실패하기 시작합니다.                                                                            | 게이트웨이의 공급자 자격증명을 자체 일정에 따라 회전합니다. 개발자 키는 게이트웨이에서 회전하고, [`apiKeyHelper`](/docs/ko/llm-gateway-connect#rotate-credentials-with-apikeyhelper)는 설정을 재배포하지 않고 개발자별 회전을 처리합니다. |
+| 변경                                                         | 게이트웨이가 따라가지 못했을 때의 증상                                                                                           | 조치                                                                                                                                                                               |
+| :--------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 새로운 Claude Code 릴리스는 `anthropic-beta` 값 및 요청 본문 필드를 추가합니다. | 개발자가 Claude Code를 업데이트한 후 새 필드를 명명하는 `400` 오류를 보고합니다. [기능 통과](/docs/ko/llm-gateway-protocol#feature-pass-through) 참조 | 허용 목록을 작성하는 대신 `anthropic-*` 헤더 및 요청 본문을 그대로 전달합니다. 개발자에게 도달하기 전에 새 Claude Code 릴리스를 게이트웨이에 대해 테스트합니다. [Claude Code 버전 업그레이드 계획](#plan-claude-code-version-upgrades)의 영역을 확인합니다. |
+| 새로운 Claude 모델을 사용할 수 있게 됩니다.                               | 개발자가 새 모델 이름을 선택하면 `404`를 받습니다. `/model` 선택기에 나열되지 않습니다.                                                        | 게이트웨이의 라우팅 구성에 모델 이름을 추가한 다음 [라우팅 확인](#confirm-the-gateway-routes-your-models)을 다시 실행합니다. `ANTHROPIC_MODEL` 또는 기본 모델 변수를 배포하는 경우 관리되는 설정을 업데이트합니다.                               |
+| 자격증명이 만료되거나 회전이 필요합니다.                                     | 모든 개발자 요청이 업스트림에서 `401`로 실패하기 시작합니다.                                                                            | 게이트웨이의 공급자 자격증명을 자체 일정에 따라 회전합니다. 개발자 키는 게이트웨이에서 회전하고, [`apiKeyHelper`](/docs/ko/llm-gateway-connect#rotate-credentials-with-apikeyhelper)는 설정을 재배포하지 않고 개발자별 회전을 처리합니다.              |
 
-키당 속도 제한을 크기 조정할 때 클라이언트가 `429` 응답을 포함하여 일시적 실패를 [재시도](/docs/ko/errors#automatic-retries)하는 것을 고려하십시오. 최대 10회 백오프를 사용하여 `Retry-After`를 준수합니다. [프로토콜 참조](/docs/ko/llm-gateway-protocol)를 각 Claude Code 릴리스가 전송하는 내용의 계약으로 유지합니다.
+키당 속도 제한을 크기 조정할 때 클라이언트가 `429` 응답을 포함하여 일시적 실패를 [재시도](/docs/ko/errors#automatic-retries)하는 것을 고려하십시오. 최대 10회 백오프를 사용하여 `Retry-After`를 준수합니다. [호환성 가이드](/docs/ko/llm-gateway-protocol)를 각 Claude Code 릴리스가 전송하는 내용의 참조로 유지합니다.
+
+<h3 id="plan-claude-code-version-upgrades">
+  Claude Code 버전 업그레이드 계획
+</h3>
+
+일부 Claude Code 동작은 게이트웨이에서 설정되지 않고 설치된 버전에 내장되어 있으므로, 개발자를 새 릴리스로 이동하면 게이트웨이 구성이 변경되지 않았을 때에도 배포 전체에서 동작이 변경될 수 있습니다. 이 문제가 발생하는 시기를 제어하려면 [`requiredMaximumVersion`](/docs/ko/settings-reference#requiredmaximumversion)을 사용하여 개발자를 테스트된 버전으로 고정하거나, 자신의 채널을 통해 Claude Code를 배포하는 경우 [`DISABLE_UPDATES`](/docs/ko/setup#disable-auto-updates)를 사용합니다. 핀을 올리기 전에 새 릴리스의 [변경 로그](/docs/en/changelog) 항목을 읽고 [게이트웨이에 대해 테스트](#test-claude-code-against-the-gateway)합니다.
+
+릴리스를 테스트할 때, 게이트웨이가 거부하는 새 헤더 또는 요청 필드는 [게이트웨이 유지 관리](#maintain-the-gateway)에 설명된 `400` 오류로 나타납니다. 아래 표는 오류를 생성하지 않는 버전 종속 변경 사항을 다루며, 각 업그레이드 전체에서 각 변경 사항을 일정하게 유지하는 설정을 포함합니다.
+
+| 영역         | 개발자가 업그레이드할 때 변경될 수 있는 사항                                                                                                                                                                                                                                         | 일정하게 유지하는 설정                                                                                                                                                                                                                                                                                    |
+| :--------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 기능 플래그 기본값 | [Anthropic에서 기능 플래그를 가져오지 않는](/docs/ko/env-vars#features-that-need-feature-flag-fetching) 세션(예: 클라우드 공급자의 세션 또는 원격 분석이 꺼진 세션)은 설치된 버전에 내장된 플래그 기본값을 사용합니다. 릴리스가 이러한 기본값 중 하나를 변경하면 해당 개발자가 업그레이드하는 즉시 동작이 변경됩니다.                                                       | 버전 핀 자체, `requiredMaximumVersion` 또는 `DISABLE_UPDATES`                                                                                                                                                                                                                                          |
+| 모델 기능 가정   | 설치된 버전이 인식하지 못하는 모델 ID(예: 게이트웨이 별칭 `prod-opus`)는 나중 버전이 ID를 인식하거나 매핑할 때까지 [적응형 추론](/docs/ko/model-config#adaptive-reasoning-and-fixed-thinking-budgets), 노력 매개변수 및 [컨텍스트 윈도우](/docs/ko/model-config#correct-the-window-for-a-gateway-or-custom-model-id)에 대한 기본 가정에서 실행됩니다. | 게이트웨이에서 Anthropic 모델 ID를 라우팅하거나, Anthropic 모델 ID를 별칭에 매핑하는 [`modelOverrides`](/docs/ko/model-config#override-model-ids-per-version) 항목을 추가합니다. 클라우드 공급자 연결에서는 대신 [고정된 모델의 기능을 선언](/docs/ko/model-config#customize-pinned-model-display-and-capabilities)할 수 있습니다.                                         |
+| 기본 모델 및 별칭 | 새 세션이 기본적으로 시작되는 모델과 `opus` 및 `sonnet`과 같은 별칭이 확인되는 모델은 [각 버전에 내장](/docs/ko/model-config#pin-models-for-third-party-deployments)되어 있으며 개발자가 업그레이드할 때 변경될 수 있습니다.                                                                                                       | 새 세션이 시작되는 모델의 경우 [`ANTHROPIC_DEFAULT_MODEL`](/docs/ko/model-config#set-a-default-model-for-new-sessions), 각 별칭이 확인되는 모델의 경우 [`ANTHROPIC_DEFAULT_*_MODEL` 변수](/docs/ko/model-config#environment-variables)(예: `ANTHROPIC_DEFAULT_OPUS_MODEL`). `ANTHROPIC_DEFAULT_MODEL`은 Claude Code v2.1.236 이상이 필요합니다. |
 
 <h2 id="related-resources">
   관련 리소스
 </h2>
 
 * [Claude Code를 LLM 게이트웨이에 연결](/docs/ko/llm-gateway-connect): 개발자 대면 설정 단계로, 표면별 구성 및 개발자에게 제공할 수 있는 문제 해결 표 포함
-* [게이트웨이 프로토콜 참조](/docs/ko/llm-gateway-protocol): 게이트웨이 운영자를 위한 와이어 계약으로, 엔드포인트, 전달할 헤더 및 기능 통과 표 포함
-* [설정 파일 및 우선순위](/docs/ko/settings#settings-files): 관리되는 설정, 프로젝트 및 사용자 설정이 결합되는 방식 및 각 플랫폼에서 관리되는 파일이 위치하는 곳
+* [게이트웨이 호환성 가이드](/docs/ko/llm-gateway-protocol): 게이트웨이 운영자를 위한 참조로, 엔드포인트, 전달할 헤더 및 기능 통과 표 포함
+* [Claude Code가 사용하는 값](/docs/ko/settings#which-value-claude-code-uses): 관리되는 설정, 프로젝트 및 사용자 설정이 결합되는 방식
+* [전달 메커니즘](/docs/ko/managed-settings#delivery-mechanisms): 각 플랫폼에서 관리되는 파일이 위치하는 곳
 * [조직을 위한 Claude Code 설정](/docs/ko/admin-setup): 이 게이트웨이가 일부인 더 넓은 롤아웃로, 정책 적용, 사용 가시성 및 데이터 처리 포함

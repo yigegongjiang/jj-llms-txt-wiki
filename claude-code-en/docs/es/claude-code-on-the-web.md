@@ -2,31 +2,49 @@
 > Fetch the complete documentation index at: https://code.claude.com/docs/llms.txt
 > Use this file to discover all available pages before exploring further.
 
-# Usar Claude Code en la web
+# Usar Claude Code en la nube
 
-> Configura entornos en la nube, scripts de configuración, acceso a la red y Docker en el sandbox de Anthropic. Mueve sesiones entre web y terminal con `--cloud` y `--teleport`.
+> Ejecute sesiones de Claude Code en la nube desde su navegador, teléfono, aplicación de escritorio o terminal, muévalas con --cloud y --teleport, y corrija automáticamente solicitudes de extracción.
 
 <Note>
-  Claude Code en la web está en vista previa de investigación para usuarios Pro, Max y Team, y para usuarios Enterprise con asientos premium o asientos Chat + Claude Code.
+  Las sesiones en la nube están disponibles en los planes Pro, Max y Team, y para usuarios Enterprise con asientos premium o asientos Chat + Claude Code.
 </Note>
 
-Claude Code en la web ejecuta tareas en infraestructura en la nube administrada por Anthropic en [claude.ai/code](https://claude.ai/code). Las sesiones persisten incluso si cierra su navegador, y puede monitorearlas desde la aplicación móvil Claude.
+Una sesión en la nube es una sesión de Claude Code que se ejecuta en infraestructura en la nube en lugar de en su máquina. De forma predeterminada, se ejecuta en infraestructura que Anthropic administra, o en el [entorno autohospedado](/docs/es/self-hosted-environments) de su organización cuando se enruta allí. La sesión sigue ejecutándose después de cerrar su portátil, y puede verificarla o dirigirla desde cualquier dispositivo.
+
+Puede iniciar una sesión en la nube desde cualquiera de estas superficies:
+
+* **Navegador**: [claude.ai/code](https://claude.ai/code), también llamado Claude Code en la web
+* **Móvil**: la pestaña **Code** en la [aplicación Claude](/docs/es/mobile)
+* **Aplicación de escritorio**: seleccione **Cloud** en lugar de **Local** cuando [inicie una sesión](/docs/es/desktop#run-long-running-tasks-in-the-cloud)
+* **Terminal**: [`claude --cloud`](#from-terminal-to-cloud)
+* **Rutinas**: [ejecuciones programadas y activadas](/docs/es/routines) cada una se ejecuta como una sesión en la nube
+
+Para que Claude inicie y realice un seguimiento de muchas sesiones en la nube para un cuerpo de trabajo, use un [proyecto](/docs/es/claude-projects). Una sesión en su terminal, su IDE o la aplicación de escritorio con **Local** seleccionado se ejecuta en su propia máquina en su lugar. Para dirigir una de esas sesiones locales desde su teléfono o navegador, use [Control remoto](/docs/es/remote-control).
 
 <Tip>
-  ¿Nuevo en Claude Code en la web? Comience con [Primeros pasos](/docs/es/web-quickstart) para conectar su cuenta de GitHub y enviar su primera tarea.
+  ¿Nuevo en sesiones en la nube? Comience con [Primeros pasos](/docs/es/web-quickstart) para conectar su cuenta de GitHub y enviar su primera tarea.
 </Tip>
 
 Esta página cubre:
 
+* [Entornos en la nube](#cloud-environments): dónde se ejecutan las sesiones y dónde configurar eso
 * [Opciones de autenticación de GitHub](#github-authentication-options): dos formas de conectar GitHub
-* [El entorno en la nube](#the-cloud-environment): qué configuración se transfiere, qué herramientas están instaladas y cómo configurar entornos
-* [Scripts de configuración](#setup-scripts) y gestión de dependencias
-* [Acceso a la red](#network-access): niveles, proxies y la lista de permitidos predeterminada
-* [Mover tareas entre web y terminal](#move-tasks-between-web-and-terminal) con `--cloud` y `--teleport`
-* [Trabajar con sesiones](#work-with-sessions): revisar, compartir, archivar, eliminar
+* [Mover tareas entre terminal y nube](#move-tasks-between-terminal-and-cloud) con `--cloud` y `--teleport`
+* [Trabajar con sesiones](#work-with-sessions): modos de permisos, revisión, uso compartido, archivo, eliminación
 * [Correcciones automáticas de solicitudes de extracción](#auto-fix-pull-requests): responder automáticamente a fallos de CI y comentarios de revisión
 * [Seguridad y aislamiento](#security-and-isolation): cómo se aíslan las sesiones
 * [Limitaciones](#limitations): límites de velocidad y restricciones de plataforma
+
+<h2 id="cloud-environments">
+  Entornos en la nube
+</h2>
+
+Cada sesión en la nube se ejecuta en un [entorno en la nube](/docs/es/cloud-environments), la configuración guardada que controla el acceso a la red, las variables de entorno y los scripts de configuración. Si aún no tiene un entorno, la incorporación configura un entorno **Predeterminado** con [acceso a la red **Confiable**](/docs/es/cloud-environments#access-levels), ya sea creándolo para usted o pidiéndole que lo cree. Consulte [El entorno predeterminado](/docs/es/cloud-environments#the-default-environment) para ver cuál de esos sucede en su plan y cómo las sesiones eligen un entorno cuando tiene más de uno.
+
+Los mismos entornos se aplican dondequiera que inicie una sesión en la nube: el navegador, la terminal, [Claude Tag](https://claude.com/docs/claude-tag/overview), [rutinas](/docs/es/routines) y las aplicaciones móvil y de escritorio. Las sesiones de canales de Claude Tag utilizan solo entornos a nivel de organización, ya sean [entornos compartidos](/docs/es/cloud-environments#organization-shared-environments) o [entornos autohospedados](/docs/es/self-hosted-environments).
+
+Consulte [Configurar entornos en la nube](/docs/es/cloud-environments) para cambiar lo que permite un entorno, establecer variables o agregar un script de configuración, y [Herramientas instaladas](/docs/es/cloud-environments#installed-tools) para ver qué incluyen las sesiones sin ninguna configuración.
 
 <h2 id="github-authentication-options">
   Opciones de autenticación de GitHub
@@ -34,631 +52,35 @@ Esta página cubre:
 
 Las sesiones en la nube necesitan acceso a sus repositorios de GitHub para clonar código e insertar ramas. Puede otorgar acceso de dos formas:
 
-| Método           | Cómo funciona                                                                                       | Mejor para                                                                                         |
-| :--------------- | :-------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------- |
-| **GitHub App**   | Autorice la aplicación Claude GitHub durante la [incorporación web](/docs/es/web-quickstart).            | Incorporación en navegador; equipos que desean [Correcciones automáticas](#auto-fix-pull-requests) |
-| **`/web-setup`** | Ejecute `/web-setup` en su terminal para sincronizar su token local de CLI `gh` a su cuenta Claude. | Desarrolladores individuales que ya usan `gh`                                                      |
+| Método           | Cómo se conecta                                                                               | Repositorios que las sesiones pueden alcanzar                                                                   | Mejor para                                                                                         |
+| :--------------- | :-------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------- |
+| **GitHub App**   | Autorice la aplicación Claude GitHub durante la [incorporación web](/docs/es/web-quickstart)       | Cualquier repositorio público, y repositorios privados en los que está instalada la aplicación Claude GitHub    | Incorporación en navegador; equipos que desean [Correcciones automáticas](#auto-fix-pull-requests) |
+| **`/web-setup`** | Ejecute `/web-setup` en su terminal para enviar su token local de CLI `gh` a su cuenta Claude | Cualquier repositorio al que pueda acceder su token `gh`, independientemente de si está instalada la aplicación | Desarrolladores individuales que ya usan `gh`                                                      |
 
-<Note>
-  Con cualquiera de los dos métodos, una sesión en la nube puede acceder a cualquier repositorio que la cuenta de GitHub conectada pueda ver, no solo los repositorios en los que está instalada la aplicación Claude GitHub. La instalación de la aplicación habilita webhooks de PR para [Correcciones automáticas](#auto-fix-pull-requests); no es un control de acceso a nivel de sesión. Para restringir qué repositorios puede alcanzar su equipo desde sesiones en la nube, restrinja el acceso en GitHub mismo, por ejemplo limitando la membresía de equipo o repositorio para las cuentas de GitHub conectadas.
-</Note>
+Instalar la aplicación Claude GitHub en un repositorio también habilita [Correcciones automáticas](#auto-fix-pull-requests) para solicitudes de extracción en él.
 
-Cualquiera de los dos métodos funciona. [`/schedule`](/docs/es/routines) verifica cualquiera de las dos formas de acceso y le solicita que ejecute `/web-setup` si ninguna está configurada. Consulte [Conectar desde su terminal](/docs/es/web-quickstart#connect-from-your-terminal) para el tutorial de `/web-setup`.
+Los hilos en un [proyecto](/docs/es/claude-projects) necesitan que la aplicación esté instalada en cada repositorio que clonan, independientemente del método con el que se conectó. Consulte [Configurar acceso a GitHub](/docs/es/claude-projects#set-up-github-access).
 
-La aplicación GitHub es necesaria para [Correcciones automáticas](#auto-fix-pull-requests), que usa la aplicación para recibir webhooks de PR. Si se conecta con `/web-setup` y luego desea correcciones automáticas, instale la aplicación en esos repositorios.
+Para ver cómo `/schedule` verifica el acceso al repositorio antes de crear una rutina, consulte [Repositorios y permisos de rama](/docs/es/routines#repositories-and-branch-permissions). Consulte [Conectar desde su terminal](/docs/es/web-quickstart#connect-from-your-terminal) para el tutorial de `/web-setup`, incluyendo qué almacena `/web-setup` y cómo eliminarlo.
 
-Los administradores de Team y Enterprise pueden deshabilitar `/web-setup` con el interruptor de configuración web rápida en [claude.ai/admin-settings/claude-code](https://claude.ai/admin-settings/claude-code).
+La configuración rápida de web es una configuración de organización que permite a los miembros conectar GitHub con `/web-setup`, omite la solicitud de instalación de la aplicación Claude GitHub durante la incorporación en navegador, y hace que la incorporación en navegador cree el entorno [**Predeterminado**](/docs/es/cloud-environments#the-default-environment) para ellos en lugar de mostrar el formulario de entorno. En planes Team y Enterprise está deshabilitada de forma predeterminada, lo que oculta `/web-setup`. Un [Propietario](/docs/es/server-managed-settings#access-control) la activa con el interruptor **Configuración rápida de web** en [**Configuración de administrador > Claude Code**](https://claude.ai/admin-settings/claude-code).
 
 <Note>
   Las organizaciones con [Retención de datos cero](/docs/es/zero-data-retention) habilitada no pueden usar `/web-setup` u otras características de sesión en la nube.
 </Note>
 
-<h2 id="the-cloud-environment">
-  El entorno en la nube
-</h2>
-
-Cada sesión se ejecuta en una VM nueva administrada por Anthropic con su repositorio clonado. Esta sección cubre qué está disponible cuando comienza una sesión y cómo personalizarlo.
-
-<h3 id="what’s-available-in-cloud-sessions">
-  Qué está disponible en sesiones en la nube
-</h3>
-
-Las sesiones en la nube comienzan desde un clon nuevo de su repositorio. Cualquier cosa comprometida con el repositorio está disponible. Cualquier cosa que haya instalado o configurado solo en su propia máquina no está disponible en la sesión. La política de su organización llega por separado a través de [configuración administrada por el servidor](/docs/es/server-managed-settings).
-
-|                                                                                                 | Disponible en sesiones en la nube | Por qué                                                                                                                                                                                                                                                                                                                                                                                              |
-| :---------------------------------------------------------------------------------------------- | :-------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Su `CLAUDE.md` del repositorio                                                                  | Sí                                | Parte del clon                                                                                                                                                                                                                                                                                                                                                                                       |
-| Sus hooks `.claude/settings.json` del repositorio                                               | Sí                                | Parte del clon                                                                                                                                                                                                                                                                                                                                                                                       |
-| Sus servidores MCP `.mcp.json` del repositorio                                                  | Sí                                | Parte del clon                                                                                                                                                                                                                                                                                                                                                                                       |
-| Su `.claude/rules/` del repositorio                                                             | Sí                                | Parte del clon                                                                                                                                                                                                                                                                                                                                                                                       |
-| Su `.claude/skills/`, `.claude/agents/`, `.claude/commands/` del repositorio                    | Sí                                | Parte del clon                                                                                                                                                                                                                                                                                                                                                                                       |
-| Plugins declarados en `.claude/settings.json`                                                   | Sí                                | Instalados al inicio de la sesión desde el [marketplace](/docs/es/plugin-marketplaces) que declaró. Requiere acceso a la red para llegar a la fuente del marketplace                                                                                                                                                                                                                                      |
-| Su [configuración administrada por el servidor](/docs/es/server-managed-settings) de la organización | Sí                                | Se obtiene de los servidores de Anthropic cuando comienza la sesión. Consulte [Cobertura de superficie](/docs/es/model-config#surface-coverage) para ver cómo se aplica `availableModels` en sesiones en la nube. La configuración implementada en su dispositivo a través de MDM o archivos de configuración administrada no se aplica, porque la sesión se ejecuta en una VM administrada por Anthropic |
-| Su `~/.claude/CLAUDE.md` de usuario                                                             | No                                | Vive en su máquina, no en el repositorio                                                                                                                                                                                                                                                                                                                                                             |
-| Su `~/.claude/skills/`, `~/.claude/agents/`, `~/.claude/commands/` de usuario                   | No                                | Viven en su máquina, no en el repositorio. Comprométalos en el directorio `.claude/` del repositorio en su lugar. Las skills que habilita en claude.ai se cargan automáticamente en sesiones en la nube                                                                                                                                                                                              |
-| Plugins habilitados solo en su configuración de usuario                                         | No                                | El `enabledPlugins` con alcance de usuario vive en `~/.claude/settings.json`. Declárelos en el `.claude/settings.json` del repositorio en su lugar                                                                                                                                                                                                                                                   |
-| Servidores MCP que agregó con `claude mcp add`                                                  | No                                | Esos escriben en su configuración de usuario local, no en el repositorio. Declare el servidor en [`.mcp.json`](/docs/es/mcp#project-scope) en su lugar                                                                                                                                                                                                                                                    |
-| Tokens de API estáticos y credenciales                                                          | No                                | Aún no existe un almacén de secretos dedicado. Vea a continuación                                                                                                                                                                                                                                                                                                                                    |
-| Autenticación interactiva como AWS SSO                                                          | No                                | No compatible. SSO requiere inicio de sesión basado en navegador que no puede ejecutarse en una sesión en la nube                                                                                                                                                                                                                                                                                    |
-
-Para que su configuración esté disponible en sesiones en la nube, comprométala en el repositorio; la política de su organización llega por separado a través de [configuración administrada por el servidor](/docs/es/server-managed-settings).
-
-Un almacén de secretos dedicado aún no está disponible. Tanto las variables de entorno como los scripts de configuración se almacenan en la configuración del entorno, visible para cualquiera que pueda editar ese entorno. Si necesita secretos en una sesión en la nube, agréguelos como variables de entorno con esa visibilidad en mente.
-
-<h3 id="installed-tools">
-  Herramientas instaladas
-</h3>
-
-Las sesiones en la nube vienen con tiempos de ejecución de lenguaje comunes, herramientas de compilación y bases de datos preinstaladas. La tabla a continuación resume lo que se incluye por categoría.
-
-| Categoría          | Incluido                                                                       |
-| :----------------- | :----------------------------------------------------------------------------- |
-| **Python**         | Python 3.x con pip, poetry, uv, black, mypy, pytest, ruff                      |
-| **Node.js**        | 20, 21 y 22 vía nvm, con npm, yarn, pnpm, bun¹, eslint, prettier, chromedriver |
-| **Ruby**           | 3.1, 3.2, 3.3 con gem, bundler, rbenv                                          |
-| **PHP**            | 8.4 con Composer                                                               |
-| **Java**           | OpenJDK 21 con Maven y Gradle                                                  |
-| **Go**             | última versión estable con soporte de módulos                                  |
-| **Rust**           | rustc y cargo                                                                  |
-| **C/C++**          | GCC, Clang, cmake, ninja, conan                                                |
-| **Docker**         | docker, dockerd, docker compose                                                |
-| **Bases de datos** | PostgreSQL 16, Redis 7.0                                                       |
-| **Utilidades**     | git, jq, yq, ripgrep, tmux, vim, nano                                          |
-
-¹ Bun está instalado pero tiene [problemas de compatibilidad de proxy](#install-dependencies-with-a-sessionstart-hook) conocidos para obtención de paquetes.
-
-Para versiones exactas, pida a Claude que ejecute `check-tools` en una sesión en la nube. Este comando solo existe en sesiones en la nube.
-
-<h3 id="work-with-github-issues-and-pull-requests">
-  Trabajar con problemas y solicitudes de extracción de GitHub
-</h3>
-
-Las sesiones en la nube incluyen herramientas de GitHub integradas que permiten a Claude leer problemas, listar solicitudes de extracción, obtener diffs y publicar comentarios sin ninguna configuración. Estas herramientas se autentican a través del [proxy de GitHub](#github-proxy) usando cualquier método que configuró en [Opciones de autenticación de GitHub](#github-authentication-options), por lo que su token nunca entra en el contenedor.
-
-Puede establecer `GH_TOKEN` o `GITHUB_TOKEN` usted mismo en [configuración de entorno](#configure-your-environment), o dejar ambos sin establecer y dejar que el [proxy de GitHub](#github-proxy) se autentique por usted:
-
-* Si establece un token, se pasa al contenedor sin cambios, por lo que `gh` y sus scripts lo usan directamente.
-* Si no establece ninguno, el contenedor establece ambas variables en la cadena de marcador de posición `proxy-injected` y el proxy sustituye sus credenciales reales en solicitudes salientes de GitHub. `gh` funciona sin un token propio, pero un script que lee `GITHUB_TOKEN` directamente obtiene el marcador de posición, no un token utilizable.
-
-Para verificar cuál es el caso en su sesión, pida a Claude que ejecute `echo $GH_TOKEN`.
-
-La CLI `gh` no está preinstalada. Si necesita un comando `gh` que las herramientas integradas no cubran, como `gh release` o `gh workflow run`, instálelo y auténtiquese usted mismo:
-
-<Steps>
-  <Step title="Instale gh en su script de configuración">
-    Agregue `apt update && apt install -y gh` a su [script de configuración](#setup-scripts).
-  </Step>
-
-  <Step title="Proporcione un token si el proxy no está manejando la autenticación">
-    Si `echo $GH_TOKEN` imprime `proxy-injected`, el [proxy de GitHub](#github-proxy) autentica `gh` para usted y este paso es innecesario. De lo contrario, agregue una variable de entorno `GH_TOKEN` a su [configuración de entorno](#configure-your-environment) con un token de acceso personal de GitHub. `gh` lee `GH_TOKEN` automáticamente, por lo que no se necesita un paso `gh auth login`.
-  </Step>
-</Steps>
-
-<h3 id="link-output-back-to-the-session">
-  Vincule la salida de vuelta a la sesión
-</h3>
-
-Cada sesión en la nube tiene una URL de transcripción en claude.ai, y la sesión puede leer su propio ID desde la variable de entorno `CLAUDE_CODE_REMOTE_SESSION_ID`. Use esto para poner un enlace rastreable en cuerpos de PR, mensajes de confirmación, publicaciones de Slack o informes generados para que un revisor pueda abrir la ejecución que los produjo.
-
-A partir de v2.1.179, los commits que Claude crea en una sesión web incluyen un trailer de git `Claude-Session: <url>`, y los cuerpos de PR incluyen la URL de la sesión en su propia línea. Desde v2.1.182, establezca [`attribution.sessionUrl`](/docs/es/settings#attribution-settings) en `false` para omitir el trailer y el enlace del cuerpo de PR.
-
-Para incluir el enlace de sesión en algo que no sea un commit o PR, como un mensaje de Slack que Claude publica o un archivo de informe que escribe, haga que Claude ejecute el siguiente comando y use su salida. El comando convierte el prefijo `cse_` en el valor de la variable de entorno al prefijo `session_` que la URL de transcripción espera:
-
-```bash theme={null}
-echo "https://claude.ai/code/${CLAUDE_CODE_REMOTE_SESSION_ID/#cse_/session_}"
-```
-
-<h3 id="run-tests-start-services-and-add-packages">
-  Ejecute pruebas, inicie servicios y agregue paquetes
-</h3>
-
-Claude ejecuta pruebas como parte del trabajo en una tarea. Pídalo en su solicitud, como "corregir las pruebas fallidas en `tests/`" o "ejecutar pytest después de cada cambio". Los ejecutores de pruebas como pytest, jest y cargo test están preinstalados y funcionan sin configuración adicional.
-
-PostgreSQL y Redis están preinstalados pero no se ejecutan de forma predeterminada. Pida a Claude que inicie cada uno durante la sesión:
-
-```bash theme={null}
-service postgresql start
-```
-
-```bash theme={null}
-service redis-server start
-```
-
-Docker está disponible para ejecutar servicios en contenedores. Pida a Claude que ejecute `docker compose up` para iniciar los servicios de su proyecto. El acceso a la red para extraer imágenes sigue el [nivel de acceso](#access-levels) de su entorno, y los [Valores predeterminados confiables](#default-allowed-domains) incluyen Docker Hub y otros registros comunes.
-
-Si sus imágenes son grandes o lentas de extraer, agregue `docker compose pull` o `docker compose build` a su [script de configuración](#setup-scripts). Las imágenes extraídas se guardan en el [entorno en caché](#environment-caching), por lo que cada nueva sesión las tiene en el disco. El caché almacena solo archivos, no procesos en ejecución, por lo que Claude aún inicia los contenedores cada sesión.
-
-Para agregar paquetes que no están preinstalados, use un [script de configuración](#setup-scripts). La salida del script se [almacena en caché](#environment-caching), por lo que los paquetes que instale allí están disponibles al inicio de cada sesión sin reinstalar cada vez. También puede pedir a Claude que instale paquetes durante la sesión, pero esas instalaciones no persisten entre sesiones.
-
-<h3 id="resource-limits">
-  Límites de recursos
-</h3>
-
-Las sesiones en la nube se ejecutan con límites de recursos aproximados que pueden cambiar con el tiempo:
-
-* 4 vCPUs
-* 16 GB de RAM
-* 30 GB de disco
-
-Las tareas que requieren significativamente más memoria, como trabajos de compilación grandes o pruebas que consumen mucha memoria, pueden fallar o ser terminadas. Para cargas de trabajo más allá de estos límites, use [Control Remoto](/docs/es/remote-control) para ejecutar Claude Code en su propio hardware.
-
-<h3 id="configure-your-environment">
-  Configure su entorno
-</h3>
-
-Los entornos controlan [acceso a la red](#network-access), variables de entorno y el [script de configuración](#setup-scripts) que se ejecuta antes de que comience una sesión. Consulte [Herramientas instaladas](#installed-tools) para ver qué está disponible sin ninguna configuración. Puede administrar entornos desde la interfaz web o desde la terminal:
-
-| Acción                                                       | Cómo                                                                                                                                                                                                                     |
-| :----------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Agregar un entorno                                           | Seleccione el entorno actual para abrir el selector, luego seleccione **Agregar entorno**. El diálogo incluye nombre, nivel de acceso a la red, variables de entorno y script de configuración.                          |
-| Editar un entorno                                            | Seleccione el icono de nube que muestra el nombre del entorno actual para abrir el selector, pase el cursor sobre un entorno y haga clic en el icono de configuración que aparece a la derecha.                          |
-| Archivar un entorno                                          | Abra el entorno para editar y seleccione **Archivar**. Los entornos archivados se ocultan del selector pero las sesiones existentes continúan ejecutándose.                                                              |
-| Establecer el predeterminado para sesiones en la nube de CLI | Ejecute `/remote-env` en su terminal. Si tiene un único entorno, este comando muestra su configuración actual. `/remote-env` solo selecciona el predeterminado; agregue, edite y archive entornos desde la interfaz web. |
-
-Las variables de entorno usan formato `.env` con un par `KEY=value` por línea. No envuelva valores entre comillas, ya que las comillas se almacenan como parte del valor. Este ejemplo define tres variables:
-
-```text theme={null}
-NODE_ENV=development
-LOG_LEVEL=debug
-DATABASE_URL=postgres://localhost:5432/myapp
-```
-
-<h3 id="organization-shared-environments">
-  Entornos compartidos por la organización
-</h3>
-
-Los propietarios y administradores en planes Team y Enterprise pueden crear entornos en la nube que se comparten con cada miembro de la organización. Los entornos compartidos aparecen en el selector de entorno de cada miembro junto con los suyos personales, por lo que un equipo puede estandarizar en una configuración en lugar de que cada miembro la recree.
-
-Administre entornos compartidos desde la página **Entornos en la nube** en [configuración de administrador](https://claude.ai/admin-settings). Desde allí puede:
-
-* Crear, editar y archivar entornos compartidos. Cada uno tiene los mismos campos que un entorno personal: un nombre, un [nivel de acceso a la red](#access-levels), [variables de entorno](#configure-your-environment) en formato `.env` y un [script de configuración](#setup-scripts).
-* Establecer el entorno predeterminado para la organización.
-
-Los valores en un entorno compartido llegan a las sesiones de cada miembro en ese entorno. Como los entornos personales, los entornos compartidos no tienen un almacén de secretos dedicado, por lo que no incluya secretos.
-
-<h2 id="setup-scripts">
-  Scripts de configuración
-</h2>
-
-Un script de configuración es un script Bash que se ejecuta cuando comienza una nueva sesión en la nube, antes de que se lance Claude Code. Use scripts de configuración para instalar dependencias, configurar herramientas o obtener cualquier cosa que la sesión necesite que no esté preinstalada.
-
-Los scripts se ejecutan como root en Ubuntu 24.04, por lo que `apt install` y la mayoría de los administradores de paquetes de lenguaje funcionan.
-
-Para agregar un script de configuración, abra el diálogo de configuración del entorno e ingrese su script en el campo **Script de configuración**.
-
-Este ejemplo instala la CLI `gh`, que no está preinstalada:
-
-```bash theme={null}
-#!/bin/bash
-apt update && apt install -y gh
-```
-
-Si el script sale con un código distinto de cero, la sesión no se inicia. Agregue `|| true` a comandos no críticos para evitar bloquear la sesión en una instalación intermitente fallida.
-
-Mantenga el tiempo de ejecución total del script por debajo de aproximadamente cinco minutos para que el [caché del entorno](#environment-caching) pueda compilarse. Ejecute instalaciones independientes en paralelo con `&` y `wait`. Si una única descarga no cabe en el límite de cinco minutos, muévala a un [hook SessionStart](#setup-scripts-vs-sessionstart-hooks) que la inicie en segundo plano.
-
-<Note>
-  Los scripts de configuración que instalan paquetes necesitan acceso a la red para llegar a los registros. El acceso a la red predeterminado **Confiable** permite conexiones a [dominios comunes en la lista de permitidos](#default-allowed-domains) incluyendo npm, PyPI, RubyGems y crates.io. Los scripts fallarán al instalar paquetes si su entorno usa acceso a la red **Ninguno**.
-</Note>
-
-<h3 id="environment-caching">
-  Almacenamiento en caché del entorno
-</h3>
-
-El script de configuración se ejecuta la primera vez que inicia una sesión en un entorno. Después de que se completa, Anthropic toma una instantánea del sistema de archivos y reutiliza esa instantánea como punto de partida para sesiones posteriores. Las nuevas sesiones comienzan con sus dependencias, herramientas e imágenes de Docker ya en el disco, y se omite el paso del script de configuración. Esto mantiene el inicio rápido incluso cuando el script instala cadenas de herramientas grandes o extrae imágenes de contenedor.
-
-El caché captura archivos, no procesos en ejecución. Cualquier cosa que el script de configuración escriba en el disco se transfiere. Los servicios o contenedores que inicia no, por lo que inicie esos por sesión pidiendo a Claude o con un [hook SessionStart](#setup-scripts-vs-sessionstart-hooks).
-
-El script de configuración se ejecuta nuevamente para reconstruir el caché cuando cambia el script de configuración del entorno o los hosts de red permitidos, y cuando el caché alcanza su vencimiento después de aproximadamente siete días. Reanudar una sesión existente nunca vuelve a ejecutar el script de configuración.
-
-No necesita habilitar el almacenamiento en caché ni administrar instantáneas usted mismo.
-
-<h3 id="setup-scripts-vs-sessionstart-hooks">
-  Scripts de configuración vs. hooks SessionStart
-</h3>
-
-Use un script de configuración para instalar cosas que la nube necesita pero su portátil ya tiene, como un tiempo de ejecución de lenguaje o herramienta CLI. Use un [hook SessionStart](/docs/es/hooks#sessionstart) para la configuración del proyecto que debe ejecutarse en todas partes, nube y local, como `npm install`.
-
-Ambos se ejecutan al inicio de una sesión, pero pertenecen a diferentes lugares:
-
-|                | Scripts de configuración                                                                             | Hooks SessionStart                                                        |
-| -------------- | ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| Adjunto a      | El entorno en la nube                                                                                | Su repositorio                                                            |
-| Configurado en | Interfaz de usuario del entorno en la nube                                                           | `.claude/settings.json` en su repositorio                                 |
-| Se ejecuta     | Antes de que se lance Claude Code, cuando no hay [entorno en caché](#environment-caching) disponible | Después de que se lance Claude Code, en cada sesión incluyendo reanudadas |
-| Alcance        | Solo entornos en la nube                                                                             | Tanto local como nube                                                     |
-
-Los hooks SessionStart también se pueden definir en su `~/.claude/settings.json` a nivel de usuario localmente, pero la configuración a nivel de usuario no se transfiere a sesiones en la nube. En la nube, los hooks provienen del repositorio y de la [configuración administrada por el servidor](/docs/es/server-managed-settings) de su organización.
-
-<h3 id="install-dependencies-with-a-sessionstart-hook">
-  Instale dependencias con un hook SessionStart
-</h3>
-
-Para instalar dependencias solo en sesiones en la nube, agregue un hook SessionStart a su `.claude/settings.json` del repositorio:
-
-```json theme={null}
-{
-  "hooks": {
-    "SessionStart": [
-      {
-        "matcher": "startup|resume",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/scripts/install_pkgs.sh"
-          }
-        ]
-      }
-    ]
-  }
-}
-```
-
-Cree el script en `scripts/install_pkgs.sh` y hágalo ejecutable con `chmod +x`. La variable de entorno `CLAUDE_CODE_REMOTE` se establece en `true` en sesiones en la nube, por lo que puede usarla para omitir la ejecución local:
-
-```bash theme={null}
-#!/bin/bash
-
-if [ "$CLAUDE_CODE_REMOTE" != "true" ]; then
-  exit 0
-fi
-
-npm install
-pip install -r requirements.txt
-exit 0
-```
-
-Los hooks SessionStart tienen algunas limitaciones en sesiones en la nube:
-
-* **Sin alcance solo en la nube**: los hooks se ejecutan en sesiones locales y en la nube. Para omitir la ejecución local, verifique la variable de entorno `CLAUDE_CODE_REMOTE` como se muestra arriba.
-* **Requiere acceso a la red**: los comandos de instalación necesitan llegar a los registros de paquetes. Si su entorno usa acceso a la red **Ninguno**, estos hooks fallan. La [lista de permitidos predeterminada](#default-allowed-domains) bajo **Confiable** cubre npm, PyPI, RubyGems y crates.io.
-* **Compatibilidad de proxy**: todo el tráfico saliente pasa a través de un [proxy de seguridad](#security-proxy). Algunos administradores de paquetes no funcionan correctamente con este proxy. Bun es un ejemplo conocido.
-* **Agrega latencia de inicio**: los hooks se ejecutan cada vez que comienza o se reanuda una sesión, a diferencia de los scripts de configuración que se benefician del [almacenamiento en caché del entorno](#environment-caching). Mantenga los scripts de instalación rápidos verificando si las dependencias ya están presentes antes de reinstalar.
-
-Para persistir variables de entorno para comandos Bash posteriores, escriba en el archivo en `$CLAUDE_ENV_FILE`. Consulte [hooks SessionStart](/docs/es/hooks#sessionstart) para obtener detalles.
-
-Reemplazar la imagen base con su propia imagen Docker aún no es compatible. Use un script de configuración para instalar lo que necesita en la [imagen proporcionada](#installed-tools), o ejecute su imagen como un contenedor junto a Claude con `docker compose`.
-
-<h2 id="network-access">
-  Acceso a la red
-</h2>
-
-El acceso a la red controla las conexiones salientes desde el entorno en la nube. Cada entorno especifica un nivel de acceso, y puede extenderlo con dominios permitidos personalizados. El predeterminado es **Confiable**, que permite registros de paquetes y otros [dominios en la lista de permitidos](#default-allowed-domains).
-
-Para cambiar el acceso a la red de un entorno, [abra el entorno para editar](#configure-your-environment) y use el selector **Acceso a la red** en el diálogo. No hay una página de Entornos separada. El icono de nube aparece dondequiera que inicie una sesión en la nube o configure una [rutina](/docs/es/routines#environments-and-network-access).
-
-<Note>
-  El tráfico del conector MCP se enruta a través de los servidores de Anthropic, por lo que los conectores que habilita en una sesión o rutina funcionan sin agregar sus hosts a **Dominios permitidos**. Los conectores se configuran por sesión o por rutina; elimine cualquiera que no necesite para limitar qué herramientas puede alcanzar Claude. Esto se basa en el mismo canal vinculado a Anthropic mencionado en [Seguridad y aislamiento](#security-and-isolation).
-</Note>
-
-<h3 id="access-levels">
-  Niveles de acceso
-</h3>
-
-Elija un nivel de acceso cuando cree o edite un entorno:
-
-| Nivel             | Conexiones salientes                                                                                                |
-| :---------------- | :------------------------------------------------------------------------------------------------------------------ |
-| **Ninguno**       | Sin acceso a la red saliente                                                                                        |
-| **Confiable**     | [Dominios en la lista de permitidos](#default-allowed-domains) solo: registros de paquetes, GitHub, SDKs en la nube |
-| **Completo**      | Cualquier dominio                                                                                                   |
-| **Personalizado** | Su propia lista de permitidos, opcionalmente incluyendo los predeterminados                                         |
-
-Las operaciones de GitHub usan un [proxy separado](#github-proxy) que es independiente de esta configuración.
-
-<h3 id="allow-specific-domains">
-  Permita dominios específicos
-</h3>
-
-Para permitir dominios que no están en la lista Confiable, seleccione **Personalizado** en la configuración de acceso a la red del entorno. Aparece un campo **Dominios permitidos**. Ingrese un dominio por línea:
-
-```text theme={null}
-api.example.com
-*.internal.example.com
-registry.example.com
-```
-
-Use `*.` para coincidencia de subdominio comodín. Marque **También incluir lista predeterminada de administradores de paquetes comunes** para mantener los [dominios Confiables](#default-allowed-domains) junto con sus entradas personalizadas, o déjelo sin marcar para permitir solo lo que enumera.
-
-Los dominios permitidos se configuran por entorno. No hay una lista de permitidos a nivel de organización que los Propietarios puedan enviar a los entornos de todos los usuarios; la [configuración administrada por servidor](/docs/es/server-managed-settings) puede restringir sesiones en la nube pero no puede agregar dominios permitidos.
-
-<h3 id="github-proxy">
-  Proxy de GitHub
-</h3>
-
-Por seguridad, todas las operaciones de GitHub pasan a través de un servicio de proxy dedicado que mantiene sus credenciales reales de GitHub fuera del sandbox. El proxy autentica dos tipos de tráfico:
-
-* Interacciones de Git: el cliente de git dentro del sandbox usa una credencial de alcance personalizada, que el proxy verifica y traduce a su token de autenticación real de GitHub
-* Solicitudes de API de GitHub: el proxy sustituye sus credenciales reales en solicitudes de las herramientas de GitHub integradas, y de `gh` cuando su sesión establece el marcador de posición `proxy-injected` descrito en [Trabajar con problemas y solicitudes de extracción de GitHub](#work-with-github-issues-and-pull-requests)
-
-El proxy también restringe las operaciones de inserción de git a la rama de trabajo actual por seguridad, y permite operaciones de clonación, obtención y PR mientras mantiene límites de seguridad.
-
-El proxy limita las solicitudes de API de GitHub y de activos de lanzamiento a repositorios adjuntos a la sesión, independientemente del [nivel de acceso a la red](#access-levels) del entorno. Los scripts de configuración que descargan activos de lanzamiento de repositorios no adjuntos devuelven un 403. Los archivos confirmados de repositorios públicos se obtienen a través de `raw.githubusercontent.com`, que el [proxy de seguridad](#security-proxy) maneja en su lugar. Ese dominio está en la [lista Confiable](#default-allowed-domains) predeterminada, por lo que los archivos permanecen accesibles a menos que el [nivel de acceso](#access-levels) del entorno lo excluya.
-
-<h3 id="security-proxy">
-  Proxy de seguridad
-</h3>
-
-Los entornos se ejecutan detrás de un proxy de red HTTP/HTTPS para propósitos de seguridad y prevención de abuso. Todo el tráfico de Internet saliente pasa a través de este proxy, que proporciona:
-
-* Protección contra solicitudes maliciosas
-* Limitación de velocidad y prevención de abuso
-* Filtrado de contenido para mayor seguridad
-* Un registro de auditoría a nivel de DNS de los nombres de host solicitados
-
-<h3 id="default-allowed-domains">
-  Dominios permitidos predeterminados
-</h3>
-
-Cuando se usa acceso a la red **Confiable**, los siguientes dominios están permitidos de forma predeterminada. Los dominios marcados con `*` indican coincidencia de subdominio comodín, por lo que `*.gcr.io` permite cualquier subdominio de `gcr.io`.
-
-<AccordionGroup>
-  <Accordion title="Servicios Anthropic">
-    * api.anthropic.com
-    * statsig.anthropic.com
-    * docs.claude.com
-    * platform.claude.com
-    * code.claude.com
-    * claude.ai
-  </Accordion>
-
-  <Accordion title="Control de versiones">
-    * github.com
-    * [www.github.com](http://www.github.com)
-    * api.github.com
-    * npm.pkg.github.com
-    * raw\.githubusercontent.com
-    * pkg-npm.githubusercontent.com
-    * objects.githubusercontent.com
-    * release-assets.githubusercontent.com
-    * codeload.github.com
-    * avatars.githubusercontent.com
-    * camo.githubusercontent.com
-    * gist.github.com
-    * gitlab.com
-    * [www.gitlab.com](http://www.gitlab.com)
-    * registry.gitlab.com
-    * bitbucket.org
-    * [www.bitbucket.org](http://www.bitbucket.org)
-    * api.bitbucket.org
-  </Accordion>
-
-  <Accordion title="Registros de contenedores">
-    * registry-1.docker.io
-    * auth.docker.io
-    * index.docker.io
-    * hub.docker.com
-    * [www.docker.com](http://www.docker.com)
-    * production.cloudflare.docker.com
-    * download.docker.com
-    * gcr.io
-    * \*.gcr.io
-    * ghcr.io
-    * mcr.microsoft.com
-    * \*.data.mcr.microsoft.com
-    * public.ecr.aws
-  </Accordion>
-
-  <Accordion title="Plataformas en la nube">
-    * cloud.google.com
-    * accounts.google.com
-    * gcloud.google.com
-    * \*.googleapis.com
-    * storage.googleapis.com
-    * compute.googleapis.com
-    * container.googleapis.com
-    * azure.com
-    * portal.azure.com
-    * microsoft.com
-    * [www.microsoft.com](http://www.microsoft.com)
-    * \*.microsoftonline.com
-    * packages.microsoft.com
-    * dotnet.microsoft.com
-    * dot.net
-    * visualstudio.com
-    * dev.azure.com
-    * \*.amazonaws.com
-    * \*.api.aws
-    * oracle.com
-    * [www.oracle.com](http://www.oracle.com)
-    * java.com
-    * [www.java.com](http://www.java.com)
-    * java.net
-    * [www.java.net](http://www.java.net)
-    * download.oracle.com
-    * yum.oracle.com
-  </Accordion>
-
-  <Accordion title="Administradores de paquetes JavaScript y Node">
-    * registry.npmjs.org
-    * [www.npmjs.com](http://www.npmjs.com)
-    * [www.npmjs.org](http://www.npmjs.org)
-    * npmjs.com
-    * npmjs.org
-    * yarnpkg.com
-    * registry.yarnpkg.com
-  </Accordion>
-
-  <Accordion title="Administradores de paquetes Python">
-    * pypi.org
-    * [www.pypi.org](http://www.pypi.org)
-    * files.pythonhosted.org
-    * pythonhosted.org
-    * test.pypi.org
-    * pypi.python.org
-    * pypa.io
-    * [www.pypa.io](http://www.pypa.io)
-  </Accordion>
-
-  <Accordion title="Administradores de paquetes Ruby">
-    * rubygems.org
-    * [www.rubygems.org](http://www.rubygems.org)
-    * api.rubygems.org
-    * index.rubygems.org
-    * ruby-lang.org
-    * [www.ruby-lang.org](http://www.ruby-lang.org)
-    * rubyforge.org
-    * [www.rubyforge.org](http://www.rubyforge.org)
-    * rubyonrails.org
-    * [www.rubyonrails.org](http://www.rubyonrails.org)
-    * rvm.io
-    * get.rvm.io
-  </Accordion>
-
-  <Accordion title="Administradores de paquetes Rust">
-    * crates.io
-    * [www.crates.io](http://www.crates.io)
-    * index.crates.io
-    * static.crates.io
-    * rustup.rs
-    * static.rust-lang.org
-    * [www.rust-lang.org](http://www.rust-lang.org)
-  </Accordion>
-
-  <Accordion title="Administradores de paquetes Go">
-    * proxy.golang.org
-    * sum.golang.org
-    * index.golang.org
-    * golang.org
-    * [www.golang.org](http://www.golang.org)
-    * goproxy.io
-    * pkg.go.dev
-  </Accordion>
-
-  <Accordion title="Administradores de paquetes JVM">
-    * maven.org
-    * repo.maven.org
-    * central.maven.org
-    * repo1.maven.org
-    * repo.maven.apache.org
-    * jcenter.bintray.com
-    * gradle.org
-    * [www.gradle.org](http://www.gradle.org)
-    * services.gradle.org
-    * plugins.gradle.org
-    * kotlinlang.org
-    * [www.kotlinlang.org](http://www.kotlinlang.org)
-    * spring.io
-    * repo.spring.io
-  </Accordion>
-
-  <Accordion title="Otros administradores de paquetes">
-    * packagist.org (PHP Composer)
-    * [www.packagist.org](http://www.packagist.org)
-    * repo.packagist.org
-    * nuget.org (.NET NuGet)
-    * [www.nuget.org](http://www.nuget.org)
-    * api.nuget.org
-    * pub.dev (Dart/Flutter)
-    * api.pub.dev
-    * hex.pm (Elixir/Erlang)
-    * [www.hex.pm](http://www.hex.pm)
-    * cpan.org (Perl CPAN)
-    * [www.cpan.org](http://www.cpan.org)
-    * metacpan.org
-    * [www.metacpan.org](http://www.metacpan.org)
-    * api.metacpan.org
-    * cocoapods.org (iOS/macOS)
-    * [www.cocoapods.org](http://www.cocoapods.org)
-    * cdn.cocoapods.org
-    * haskell.org
-    * [www.haskell.org](http://www.haskell.org)
-    * hackage.haskell.org
-    * swift.org
-    * [www.swift.org](http://www.swift.org)
-  </Accordion>
-
-  <Accordion title="Distribuciones de Linux">
-    * archive.ubuntu.com
-    * security.ubuntu.com
-    * ubuntu.com
-    * [www.ubuntu.com](http://www.ubuntu.com)
-    * \*.ubuntu.com
-    * ppa.launchpad.net
-    * launchpad.net
-    * [www.launchpad.net](http://www.launchpad.net)
-    * \*.nixos.org
-  </Accordion>
-
-  <Accordion title="Herramientas de desarrollo y plataformas">
-    * dl.k8s.io (Kubernetes)
-    * pkgs.k8s.io
-    * k8s.io
-    * [www.k8s.io](http://www.k8s.io)
-    * releases.hashicorp.com (HashiCorp)
-    * apt.releases.hashicorp.com
-    * rpm.releases.hashicorp.com
-    * archive.releases.hashicorp.com
-    * hashicorp.com
-    * [www.hashicorp.com](http://www.hashicorp.com)
-    * repo.anaconda.com (Anaconda/Conda)
-    * conda.anaconda.org
-    * anaconda.org
-    * [www.anaconda.com](http://www.anaconda.com)
-    * anaconda.com
-    * continuum.io
-    * apache.org (Apache)
-    * [www.apache.org](http://www.apache.org)
-    * archive.apache.org
-    * downloads.apache.org
-    * eclipse.org (Eclipse)
-    * [www.eclipse.org](http://www.eclipse.org)
-    * download.eclipse.org
-    * nodejs.org (Node.js)
-    * [www.nodejs.org](http://www.nodejs.org)
-    * developer.apple.com
-    * developer.android.com
-    * pkg.stainless.com
-    * binaries.prisma.sh
-  </Accordion>
-
-  <Accordion title="Servicios en la nube y monitoreo">
-    * statsig.com
-    * [www.statsig.com](http://www.statsig.com)
-    * api.statsig.com
-    * sentry.io
-    * \*.sentry.io
-    * downloads.sentry-cdn.com
-    * http-intake.logs.datadoghq.com
-    * browser-intake-us5-datadoghq.com
-    * \*.datadoghq.com
-    * \*.datadoghq.eu
-    * api.honeycomb.io
-  </Accordion>
-
-  <Accordion title="Entrega de contenido y espejos">
-    * sourceforge.net
-    * \*.sourceforge.net
-    * packagecloud.io
-    * \*.packagecloud.io
-    * fonts.googleapis.com
-    * fonts.gstatic.com
-  </Accordion>
-
-  <Accordion title="Esquema y configuración">
-    * json-schema.org
-    * [www.json-schema.org](http://www.json-schema.org)
-    * json.schemastore.org
-    * [www.schemastore.org](http://www.schemastore.org)
-  </Accordion>
-
-  <Accordion title="Protocolo de contexto de modelo">
-    * \*.modelcontextprotocol.io
-  </Accordion>
-</AccordionGroup>
-
-<h2 id="move-tasks-between-web-and-terminal">
-  Mover tareas entre web y terminal
+<h2 id="move-tasks-between-terminal-and-cloud">
+  Mover tareas entre terminal y nube
 </h2>
 
 Estos flujos de trabajo requieren la [CLI de Claude Code](/docs/es/quickstart) conectada a la misma cuenta de claude.ai. Puede iniciar nuevas sesiones en la nube desde su terminal, o extraer sesiones en la nube en su terminal para continuar localmente. Las sesiones en la nube persisten incluso si cierra su portátil, y puede monitorearlas desde cualquier lugar, incluyendo la aplicación móvil Claude.
 
 <Note>
-  Desde la CLI, la transferencia de sesión es unidireccional: puede extraer sesiones en la nube en su terminal con `--teleport`, pero no puede insertar una sesión de terminal existente en la web. La bandera `--cloud` crea una nueva sesión en la nube para su repositorio actual. La [aplicación de escritorio](/docs/es/desktop#continue-in-another-surface) proporciona un menú Continuar en que puede enviar una sesión local a la web.
+  Desde la CLI, la transferencia de sesión es unidireccional: puede extraer sesiones en la nube en su terminal con `--teleport`, pero no puede insertar una sesión de terminal existente en la nube. La bandera `--cloud` con una descripción de tarea crea una nueva sesión en la nube para su repositorio actual; con `-p` y un ID de sesión o URL de claude.ai/code, en su lugar [pone en cola un mensaje en esa sesión existente](/docs/es/claude-code-on-the-web#send-follow-ups-from-the-cli). La [aplicación de escritorio](/docs/es/desktop#continue-in-another-surface) proporciona un menú **Continuar en** que puede enviar una sesión local a la nube.
 </Note>
 
-<h3 id="from-terminal-to-web">
-  De terminal a web
+<h3 id="from-terminal-to-cloud">
+  De terminal a nube
 </h3>
 
 Inicie una sesión en la nube desde la línea de comandos con la bandera `--cloud`:
@@ -667,21 +89,25 @@ Inicie una sesión en la nube desde la línea de comandos con la bandera `--clou
 claude --cloud "Fix the authentication bug in src/auth/login.ts"
 ```
 
-Esto crea una nueva sesión en la nube en claude.ai. La sesión clona el remoto de GitHub de su directorio actual en su rama actual, por lo que inserte primero si tiene confirmaciones locales, ya que la VM clona desde GitHub en lugar de su máquina. `--cloud` funciona con un único repositorio a la vez. La tarea se ejecuta en la nube mientras continúa trabajando localmente. La ortografía anterior `--remote` aún funciona como un alias deprecado para `--cloud`.
+Esto crea una nueva sesión en la nube en claude.ai. La VM en la nube clona el remoto de GitHub de su directorio actual en su rama actual, no su desprotección local, así que inserte primero si tiene confirmaciones locales. Consulte [Envíe repositorios locales sin GitHub](#send-local-repositories-without-github) para los casos en los que Claude Code carga su repositorio local en lugar de clonar.
 
-A partir de v2.1.195, la CLI muestra una lista de verificación en vivo de pasos de configuración, como clonar el repositorio y ejecutar su [script de configuración](#setup-scripts), mientras se inicia el contenedor en la nube. Los mensajes que escribe mientras se aprovisiona el contenedor se ponen en cola y se envían una vez que la sesión está lista.
+`--cloud` funciona con un único repositorio a la vez. La tarea se ejecuta en la nube mientras continúa trabajando localmente. La ortografía anterior `--remote` aún funciona como un alias deprecado para `--cloud`.
+
+Mientras se inicia el contenedor en la nube, la CLI muestra una lista de verificación en vivo de pasos de configuración, como clonar el repositorio y ejecutar su [script de configuración](/docs/es/cloud-environments#setup-scripts). Pone en cola los mensajes que escribe durante el aprovisionamiento y los envía una vez que la sesión está lista.
 
 <Note>
-  `--cloud` crea sesiones en la nube. `--remote-control` no está relacionado: expone una sesión de CLI local para monitoreo desde la web. Consulte [Control Remoto](/docs/es/remote-control).
+  `--cloud` crea sesiones en la nube. `--remote-control` no está relacionado: permite monitorear y dirigir una sesión de CLI local desde claude.ai o la aplicación Claude. Consulte [Remote Control](/docs/es/remote-control).
 </Note>
 
-Use `/tasks` en la CLI de Claude Code para verificar el progreso, o abra la sesión en claude.ai o la aplicación móvil Claude para interactuar directamente. Desde allí puede dirigir Claude, proporcionar retroalimentación o responder preguntas como en cualquier otra conversación.
+Abra la sesión en claude.ai o la aplicación móvil Claude para verificar el progreso o interactuar directamente. Desde allí puede dirigir Claude, proporcionar retroalimentación o responder preguntas como en cualquier otra conversación.
+
+Si Claude hace una pregunta y la sesión permanece inactiva, aún puede responder cuando regrese, hasta [vencimiento del entorno](#environment-expired), y la sesión continúa desde su respuesta.
 
 <h4 id="tips-for-cloud-tasks">
   Consejos para tareas en la nube
 </h4>
 
-**Planifique localmente, ejecute remotamente**: para tareas complejas, inicie Claude en modo de plan para colaborar en el enfoque, luego envíe el trabajo a la nube:
+**Planifique localmente, ejecute en la nube**: para tareas complejas, inicie Claude en modo de plan para colaborar en el enfoque, luego envíe el trabajo a la nube:
 
 ```bash theme={null}
 claude --permission-mode plan
@@ -693,10 +119,6 @@ En modo de plan, Claude lee archivos, ejecuta comandos para explorar y propone u
 claude --cloud "Execute the migration plan in docs/migration-plan.md"
 ```
 
-Este patrón le da control sobre la estrategia mientras permite que Claude ejecute de forma autónoma en la nube.
-
-**Planifique en la nube con ultraplan**: para redactar y revisar el plan en una sesión web, use [ultraplan](/docs/es/ultraplan). Claude genera el plan en Claude Code en la web mientras continúa trabajando, luego comenta sobre secciones en su navegador y elige ejecutar remotamente o enviar el plan de vuelta a su terminal.
-
 **Ejecute tareas en paralelo**: cada comando `--cloud` crea su propia sesión en la nube que se ejecuta de forma independiente. Puede iniciar múltiples tareas y todas se ejecutarán simultáneamente en sesiones separadas:
 
 ```bash theme={null}
@@ -705,15 +127,17 @@ claude --cloud "Update the API documentation"
 claude --cloud "Refactor the logger to use structured output"
 ```
 
-Monitoree todas las sesiones con `/tasks` en la CLI de Claude Code. Cuando una sesión se completa, puede crear una PR desde la interfaz web o [teleportar](#from-web-to-terminal) la sesión a su terminal para continuar trabajando.
+Cuando una sesión se completa, puede crear una PR desde claude.ai/code o [teleportar](#from-cloud-to-terminal) la sesión a su terminal para continuar trabajando.
 
 <h4 id="send-local-repositories-without-github">
   Envíe repositorios locales sin GitHub
 </h4>
 
-Cuando ejecuta `claude --cloud` desde un repositorio que no está conectado a GitHub, Claude Code agrupa su repositorio local y lo carga directamente a la sesión en la nube. El paquete incluye su historial de repositorio completo en todas las ramas, más cualquier cambio sin confirmar en archivos rastreados.
+Cuando ejecuta `claude --cloud` desde un repositorio que no tiene un remoto de git, o desde un repositorio de github.com en el que no está instalada la aplicación Claude GitHub, Claude Code agrupa su repositorio local y lo carga directamente a la sesión en la nube. Esto se aplica incluso si conectó GitHub con `/web-setup`. El paquete incluye su historial de repositorio completo en todas las ramas, más cambios sin confirmar en archivos rastreados.
 
-Este respaldo se activa automáticamente cuando el acceso a GitHub no está disponible. Para forzarlo incluso cuando GitHub está conectado, establezca `CCR_FORCE_BUNDLE=1`:
+En macOS, Linux y WSL, Claude Code deja fuera de la carga cambios sin confirmar en archivos nombrados como credenciales o claves, y nombra los archivos que dejó fuera. Esto cubre archivos `.env`, archivos `*.tfvars` de Terraform y archivos de claves como `id_rsa` y `*.pem`. La sesión comienza con la versión confirmada de cada uno, o sin el archivo si ninguno está confirmado. En un worktree vinculado, submódulo o diseño similar, Claude Code carga estos cambios con el resto y nombra los archivos que carga.
+
+Para cargar un paquete incluso cuando Claude Code de otro modo clonaría desde el remoto, establezca `CCR_FORCE_BUNDLE=1`:
 
 ```bash theme={null}
 CCR_FORCE_BUNDLE=1 claude --cloud "Run the test suite and fix any failures"
@@ -724,10 +148,55 @@ Los repositorios agrupados deben cumplir estos límites:
 * El directorio debe ser un repositorio de git con al menos una confirmación
 * El repositorio agrupado debe ser menor de 100 MB. Los repositorios más grandes se replieguen a agrupar solo la rama actual, luego a una instantánea única comprimida del árbol de trabajo, y fallan solo si la instantánea aún es demasiado grande
 * Los archivos sin rastrear no se incluyen; ejecute `git add` en archivos que desea que la sesión en la nube vea
-* Las sesiones creadas desde un paquete no pueden insertar de vuelta a un remoto a menos que también tenga [autenticación de GitHub](#github-authentication-options) configurada
+* Las sesiones creadas desde un paquete pueden insertar de vuelta a un remoto de GitHub solo cuando su [conexión de GitHub](#github-authentication-options) tiene acceso de inserción a ese repositorio
 
-<h3 id="from-web-to-terminal">
-  De web a terminal
+<h3 id="send-follow-ups-from-the-cli">
+  Envíe seguimientos desde la CLI
+</h3>
+
+Una vez que una sesión en la nube se está ejecutando, dondequiera que se ejecute, envíele un mensaje de seguimiento desde la CLI `claude` en cualquier máquina donde esté conectado con `claude auth login`. La CLI se autentica con sus credenciales de cuenta de Anthropic y no envía estado de sesión local, por lo que el comando no necesita ejecutarse desde la máquina que inició la sesión, y es igual en cada shell, incluyendo PowerShell.
+
+El comando publica un mensaje y sale:
+
+```bash theme={null}
+claude -p "your message" --cloud <session-id>
+```
+
+La CLI pone en cola el mensaje en la sesión y sale sin esperar una respuesta. Úselo para dirigir una sesión de larga duración, poner en cola el siguiente paso mientras el actual aún se está terminando, o enviar seguimientos desde un [script de CI](/docs/es/self-hosted-environments-testing#run-the-test-loop). También puede canalizar el mensaje en stdin en lugar de pasarlo como argumento: `echo "your message" | claude -p --cloud <session-id>`.
+
+Para `<session-id>`, pase el ID desnudo, como `session_...` o `cse_...`, o la URL `claude.ai/code/<id>` de la sesión, con o sin el esquema o cadena de consulta. Encuentre el ID en su lista de sesiones en claude.ai/code.
+
+<Note>
+  `--cloud` requiere una cuenta de Anthropic. No está disponible cuando Claude Code está configurado para Amazon Bedrock, Google Cloud's Agent Platform u otro proveedor de terceros. Una [puerta de enlace LLM](/docs/es/llm-gateway) configurada solo a través de `ANTHROPIC_BASE_URL` no cuenta como proveedor de terceros para esta verificación, pero aún necesita iniciar sesión con `claude auth login`. La política `allow_remote_sessions` de su organización también debe estar habilitada. Un Propietario puede activarla en la configuración de administrador de Claude Code en claude.ai/admin-settings/claude-code.
+</Note>
+
+<h4 id="output-and-errors">
+  Salida y errores
+</h4>
+
+En caso de éxito, el comando imprime el ID de sesión y un enlace para ver la sesión:
+
+```
+Sent to cloud session.
+Session ID: session_01DiUkqY2kzbUbDmW1w96rfi
+View: https://claude.ai/code/session_01DiUkqY2kzbUbDmW1w96rfi?from=cli&m=0
+```
+
+Pase `--output-format json` para un resultado legible por máquina: `{ok, session_id, url}` en caso de éxito, o `{ok: false, session_id, error}` cuando el envío falla, por ejemplo cuando falta la sesión o está archivada. Los errores de configuración, como un proveedor no compatible o una política de organización deshabilitada, se imprimen en stderr sin JSON. `--output-format stream-json` no es compatible con `--cloud <session-id>`.
+
+La CLI prefija los errores con `Error: `. Una entrega fallida se envuelve como `failed to send message to cloud session <id>: <reason>`.
+
+| Mensaje                                                                                                                     | Qué significa                                                                                                                                                                                                                                                                                                                                          |
+| --------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `Cloud sessions aren't available with <provider>. They run on Anthropic's infrastructure and require an Anthropic account.` | Claude Code está configurado para un proveedor de terceros. El mensaje nombra el proveedor con la etiqueta que usa su configuración, como `Amazon Bedrock` o `Google Vertex AI`. Elimine la configuración de ese proveedor, por ejemplo desestableciendo `CLAUDE_CODE_USE_BEDROCK`, e inicie sesión con una cuenta de Anthropic (`claude auth login`). |
+| `Cloud sessions are disabled by your organization's policy. Contact your organization admin to enable them.`                | La política de organización `allow_remote_sessions` está deshabilitada.                                                                                                                                                                                                                                                                                |
+| `Couldn't verify your organization's policy for cloud sessions. Check your network connection and try again.`               | Claude Code no pudo obtener la política de su organización, por lo que rechaza el envío en lugar de asumir que las sesiones en la nube están permitidas. Verifique su conexión de red e intente de nuevo.                                                                                                                                              |
+| `Attaching to an existing cloud session is not enabled for your account.`                                                   | Ejecutó `--cloud <session-id>` sin `-p`. Envíe el mensaje con `claude -p "your message" --cloud <session-id>`.                                                                                                                                                                                                                                         |
+| `Session not found: <id>`                                                                                                   | El ID o URL no coincide con una sesión a la que pueda acceder. Verifíquelo contra la URL de claude.ai/code de la sesión.                                                                                                                                                                                                                               |
+| `cloud session <id> is archived and cannot accept new messages`                                                             | La sesión ha sido archivada. Inicie una nueva sesión en su lugar.                                                                                                                                                                                                                                                                                      |
+
+<h3 id="from-cloud-to-terminal">
+  De nube a terminal
 </h3>
 
 Extraiga una sesión en la nube en su terminal usando cualquiera de estos:
@@ -735,9 +204,10 @@ Extraiga una sesión en la nube en su terminal usando cualquiera de estos:
 * **Usando `--teleport`**: desde la línea de comandos, ejecute `claude --teleport` para un selector de sesión interactivo, o `claude --teleport <session-id>` para reanudar una sesión específica directamente. Si tiene cambios sin confirmar, se le pedirá que los guarde primero.
 * **Usando `/teleport`**: dentro de una sesión de CLI existente, ejecute `/teleport` o `/tp` para abrir el mismo selector de sesión sin reiniciar Claude Code.
 * **Desde `/tasks`**: ejecute `/tasks` para ver sus sesiones de fondo, luego presione `t` para teleportarse a una.
-* **Desde la interfaz web**: seleccione **Abrir en CLI** para copiar un comando que puede pegar en su terminal.
+* **Desde claude.ai/code**: seleccione **Abrir en > Terminal** desde el menú de sesión para copiar un comando que puede pegar en su terminal.
+* **Desde dentro de la sesión en la nube**: escriba `/teleport` y Claude Code responde con el comando exacto `claude --teleport <session-id>` para esa sesión, listo para ejecutar desde una desprotección del repositorio. Requiere Claude Code v2.1.223 o posterior en el entorno de la sesión.
 
-Cuando teleporta una sesión, Claude verifica que esté en el repositorio correcto, obtiene y verifica la rama de la sesión en la nube, y carga el historial de conversación completo en su terminal.
+Cuando teleporta una sesión, Claude verifica que esté en el repositorio correcto, obtiene y verifica la rama de la sesión en la nube, y carga el historial de conversación completo en su terminal. La terminal obtiene su propia copia de la sesión: el nuevo trabajo allí permanece local y no aparece en la sesión en la nube en claude.ai o la aplicación móvil Claude. Para continuar dirigiendo desde su teléfono después de teleportar, inicie [`/remote-control`](/docs/es/remote-control) en la sesión local.
 
 `--teleport` es distinto de `--resume`. `--resume` reabre una conversación del historial local de esta máquina y no enumera sesiones en la nube; `--teleport` extrae una sesión en la nube y su rama.
 
@@ -747,65 +217,88 @@ Cuando teleporta una sesión, Claude verifica que esté en el repositorio correc
 
 Teleport verifica estos requisitos antes de reanudar una sesión. Si algún requisito no se cumple, verá un error o se le pedirá que resuelva el problema.
 
-| Requisito            | Detalles                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Estado de git limpio | Su directorio de trabajo no debe tener cambios sin confirmar. Teleport le pide que guarde los cambios si es necesario.                                                                                                                                                                                                                                                                                                                                                                           |
-| Repositorio correcto | Debe ejecutar `--teleport` desde una desprotección del mismo repositorio, no desde una bifurcación. A partir de v2.1.199, Claude Code acepta una desprotección incluso cuando no puede analizar el remoto en un nombre de host, como un alias de host SSH como `git@work:owner/repo.git` o una forma corta reescrita por `insteadOf`. Muestra un mensaje de confirmación primero, y solo cuando el propietario del remoto y el nombre del repositorio coinciden con el repositorio de la sesión. |
-| Rama disponible      | La rama de la sesión en la nube debe haber sido insertada en el remoto. Teleport la obtiene y verifica automáticamente.                                                                                                                                                                                                                                                                                                                                                                          |
-| Misma cuenta         | Debe estar autenticado en la misma cuenta de claude.ai utilizada en la sesión en la nube.                                                                                                                                                                                                                                                                                                                                                                                                        |
+| Requisito            | Detalles                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Estado de git limpio | Su directorio de trabajo no debe tener cambios sin confirmar. Teleport le pide que guarde los cambios si es necesario.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| Repositorio correcto | Debe ejecutar `--teleport` desde un checkout del mismo repositorio, no desde una bifurcación. Si lo ejecuta desde un checkout de un repositorio diferente, Claude Code muestra un error que nombra tanto el repositorio de la sesión como el repositorio de su checkout. Antes de v2.1.219, el error no nombraba el repositorio de su checkout. Si Claude Code no puede analizar su remoto en un nombre de host, por ejemplo un alias de host SSH como `git@work:owner/repo.git`, le pide que confirme, y acepta el checkout cuando el propietario del remoto y el nombre del repositorio coinciden con el repositorio de la sesión. |
+| Rama disponible      | La rama de la sesión en la nube debe haber sido insertada en el remoto. Teleport la obtiene y verifica automáticamente.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| Misma cuenta         | Debe estar autenticado en la misma cuenta de claude.ai utilizada en la sesión en la nube.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 
 <h4 id="teleport-is-unavailable">
   `--teleport` no está disponible
 </h4>
 
-Teleport requiere autenticación de suscripción de claude.ai. Si está autenticado a través de clave de API, Amazon Bedrock, Google Cloud's Agent Platform o Microsoft Foundry, ejecute `/login` para iniciar sesión con su cuenta de claude.ai en su lugar. Si ya está conectado a través de claude.ai y `--teleport` aún no está disponible, su organización puede haber deshabilitado sesiones en la nube.
+Teleport requiere autenticación de suscripción de claude.ai. Si está autenticado a través de clave de API, ejecute `/login` para iniciar sesión con su cuenta de claude.ai en su lugar. Si el error nombra su proveedor en su lugar, las sesiones en la nube no están disponibles a través de proveedores de terceros; consulte la [tabla de errores](#output-and-errors). Si ya está conectado a través de claude.ai y `--teleport` aún no está disponible, su organización puede haber deshabilitado sesiones en la nube.
 
 <h2 id="work-with-sessions">
   Trabajar con sesiones
 </h2>
 
-Las sesiones aparecen en la barra lateral en claude.ai/code. Desde allí puede revisar cambios, compartir con compañeros de equipo, archivar trabajo terminado o eliminar sesiones permanentemente.
+Las sesiones aparecen en la barra lateral en claude.ai/code. Desde allí puede revisar cambios, compartir con compañeros de equipo, archivar trabajo terminado o eliminar sesiones de forma permanente.
 
-<h3 id="manage-context">
-  Administrar contexto
+<h3 id="take-back-a-queued-message">
+  Recuperar un mensaje en cola
 </h3>
 
-Las sesiones en la nube admiten [comandos integrados](/docs/es/commands) que producen salida de texto. Los comandos que solo se ejecutan en la interfaz de terminal, como `/plugin` o `/resume`, no están disponibles. Los comandos que abren un selector o panel en la terminal se comportan de manera diferente en sesiones en la nube:
+Si envía un mensaje mientras Claude está trabajando, el mensaje se pone en cola hasta que Claude lo lee. Para recuperar un mensaje en cola, haga clic en la ✕ que aparece en él. El texto vuelve al cuadro de mensaje para que pueda editarlo o enviar algo más.
 
-* **`/model`, `/effort`, `/fast`, `/color` y `/rename`**: pase el valor como argumento, por ejemplo `/model sonnet`, en lugar de abrir el selector de terminal o el control deslizante. Los formularios de argumento requieren Claude Code v2.1.205 o posterior en el entorno de la sesión y siguen las [notas de disponibilidad](/docs/es/commands#all-commands) de cada comando: `/effort` reporta `Not applied` mientras que el [esfuerzo predeterminado de lanzamiento](/docs/es/model-config#adjust-effort-level) de un modelo está en vigor, y `/fast` funciona solo en una sesión que comenzó con el modo rápido activado.
-* **`/config`**: en la web, abre la sección Claude Code de su configuración en lugar de establecer un valor, y el texto después del comando, incluyendo `key=value`, se ignora. Para cambiar la configuración de una sesión en la nube, use [variables de entorno](#configure-your-environment) o confirme [archivos de configuración](/docs/es/settings) en el repositorio.
+Si Claude ya ha leído el mensaje, permanece en la conversación.
 
-Para administración de contexto específicamente:
+<h3 id="manage-context">
+  Gestionar contexto
+</h3>
+
+Las sesiones en la nube admiten [comandos integrados](/docs/es/commands) que producen salida de texto. Los comandos que solo se ejecutan en la interfaz de terminal, como `/plugin` o `/resume`, no están disponibles. Los comandos que abren un selector o panel en el terminal se comportan de manera diferente en sesiones en la nube:
+
+* **`/model`, `/effort`, `/color` y `/rename`**: pase el valor como argumento, por ejemplo `/model sonnet`, en lugar de abrir el selector de terminal o el control deslizante. Los formularios de argumento requieren Claude Code v2.1.205 o posterior en el entorno de la sesión y siguen las [notas de disponibilidad](/docs/es/commands#all-commands) de cada comando.
+* **`/fast`**: alterna el [modo rápido](/docs/es/fast-mode#use-fast-mode-in-cloud-sessions) para la sesión cuando el modo rápido está [disponible en su cuenta](/docs/es/fast-mode#requirements). Requiere Claude Code v2.1.271 o posterior en el entorno de la sesión.
+* **`/config`**: en su navegador en claude.ai/code, abre la sección Claude Code de su configuración en lugar de establecer un valor, y el texto después del comando, incluido `key=value`, se ignora. Para cambiar una configuración de una sesión en la nube, establezca una [variable de entorno](/docs/es/cloud-environments#set-environment-variables) en el entorno, o en una sesión con un repositorio, confirme la clave en el archivo `.claude/settings.json` de ese repositorio. [Configuración en sesiones en la nube](/docs/es/settings#settings-in-cloud-sessions) enumera lo que cada sesión lee.
+
+Para la gestión de contexto específicamente:
 
 | Comando    | Funciona en sesiones en la nube | Notas                                                                                                                         |
 | :--------- | :------------------------------ | :---------------------------------------------------------------------------------------------------------------------------- |
 | `/compact` | Sí                              | Resume la conversación para liberar contexto. Acepta instrucciones de enfoque opcionales como `/compact keep the test output` |
-| `/context` | Sí                              | Muestra qué está actualmente en la ventana de contexto                                                                        |
+| `/context` | Sí                              | Muestra lo que está actualmente en la ventana de contexto                                                                     |
 | `/clear`   | No                              | Inicie una nueva sesión desde la barra lateral en su lugar                                                                    |
 
-La compactación automática se ejecuta automáticamente cuando la ventana de contexto se acerca a la capacidad. Para activarla antes, establezca [`CLAUDE_AUTOCOMPACT_PCT_OVERRIDE`](/docs/es/env-vars) en sus [variables de entorno](#configure-your-environment). Por ejemplo, `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=70` compacta al 70% de capacidad en lugar de esperar hasta que la ventana esté casi llena. Para cambiar el tamaño de ventana efectivo para cálculos de compactación, use [`CLAUDE_CODE_AUTO_COMPACT_WINDOW`](/docs/es/env-vars).
+La compactación automática se ejecuta automáticamente cuando la ventana de contexto se aproxima a la capacidad. Las sesiones en la nube establecen [`CLAUDE_AUTOCOMPACT_PCT_OVERRIDE`](/docs/es/env-vars) por sí mismas, por lo que la compactación se activa a mitad de la [ventana de compactación automática](/docs/es/model-config#set-the-auto-compact-window) en lugar de cuando la ventana se llena. Ese valor anula uno que agregue en sus [variables de entorno](/docs/es/cloud-environments#set-environment-variables), por lo que agregar la variable allí no cambia cuándo se activa la compactación.
 
-Los [subagentes](/docs/es/sub-agents) funcionan de la misma manera que lo hacen localmente. Claude puede generarlos con la herramienta Task para descargar investigación o trabajo paralelo en una ventana de contexto separada, manteniendo la conversación principal más ligera. Los subagentes definidos en su `.claude/agents/` del repositorio se recogen automáticamente.
+Para cambiar la ventana de compactación automática en su lugar, establezca [`CLAUDE_CODE_AUTO_COMPACT_WINDOW`](/docs/es/env-vars) en sus variables de entorno, o ejecute [`/autocompact`](/docs/es/commands#all-commands) con un recuento de tokens en una sesión donde la variable no está establecida.
 
-Los [equipos de agentes](/docs/es/agent-teams) están deshabilitados de forma predeterminada pero se pueden habilitar agregando `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` a sus [variables de entorno](#configure-your-environment).
+Los [subagentes](/docs/es/sub-agents) funcionan de la misma manera que lo hacen localmente. Claude puede generarlos con la herramienta Agent para descargar investigación o trabajo paralelo en una ventana de contexto separada, manteniendo la conversación principal más ligera. Los subagentes definidos en `.claude/agents/` de su repositorio se recogen automáticamente.
+
+Los [equipos de agentes](/docs/es/agent-teams) están desactivados de forma predeterminada pero se pueden habilitar agregando `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` a sus [variables de entorno](/docs/es/cloud-environments#set-environment-variables).
+
+<h3 id="permission-modes-in-cloud-sessions">
+  Modos de permiso en sesiones en la nube
+</h3>
+
+Elige el [modo de permiso](/docs/es/permission-modes) de una sesión en la nube desde el [menú desplegable de modo](/docs/es/permission-modes#switch-permission-modes), tanto cuando crea la tarea como mientras se ejecuta la sesión. Cuando reabre una sesión cuyo [entorno alojado por Anthropic ha expirado](#environment-expired), o envía un mensaje a una sesión que un ejecutor autohospedado [liberó mientras estaba inactivo](/docs/es/self-hosted-environments-reference#runner-cli-flags), Claude Code reanuda la sesión en el modo de permiso en el que estaba.
 
 <h3 id="review-changes">
   Revisar cambios
 </h3>
 
-Cada sesión muestra un indicador de diferencias con líneas agregadas y eliminadas, como `+42 -18`. Selecciónelo para abrir la vista de diferencias, deje comentarios en línea en líneas específicas y envíelos a Claude con su siguiente mensaje. Consulte [Revisar e iterar](/docs/es/web-quickstart#review-and-iterate) para el tutorial completo incluyendo creación de PR. Para que Claude monitoree la PR para fallos de CI y comentarios de revisión automáticamente, consulte [Correcciones automáticas de solicitudes de extracción](#auto-fix-pull-requests).
+Cada sesión muestra un indicador de diferencia con líneas agregadas y eliminadas, como `+42 -18`. Selecciónelo para abrir la vista de diferencia, dejar comentarios en línea en líneas específicas y enviarlos a Claude con su próximo mensaje.
+
+La vista de diferencia compara los cambios de la sesión contra su rama base de forma predeterminada. Para comparar contra cualquier otra rama en el repositorio, seleccione **Compare against** y elija una.
+
+Claude Code calcula estas diferencias, incluidas las diferencias por archivo mostradas mientras Claude edita, a partir del contenido de blob de git sin procesar, por lo que los controladores de diferencia y los filtros `textconv` configurados en el repositorio no se aplican. Para un archivo en un repositorio que no es uno de los propios checkouts de la sesión, como uno clonado dentro del espacio de trabajo durante la sesión, la diferencia por archivo muestra la edición de Claude en sí misma en lugar de una comparación de git.
+
+Consulte [Revisar e iterar](/docs/es/web-quickstart#review-and-iterate) para el tutorial completo que incluye la creación de PR. Para que Claude monitoree automáticamente el PR para detectar fallos de CI y comentarios de revisión, consulte [Corregir automáticamente solicitudes de extracción](#auto-fix-pull-requests).
 
 <h3 id="share-sessions">
   Compartir sesiones
 </h3>
 
-Para compartir una sesión, alterne su visibilidad según los tipos de cuenta a continuación. Después de eso, comparta el enlace de sesión tal como está. Los destinatarios ven el estado más reciente cuando abren el enlace, pero su vista no se actualiza en tiempo real.
+Para compartir una sesión, alterne su visibilidad de acuerdo con los tipos de cuenta a continuación. Después de eso, comparta el enlace de sesión tal como está. Los destinatarios ven el estado más reciente cuando abren el enlace, pero su vista no se actualiza en tiempo real.
 
 <h4 id="share-from-an-enterprise-or-team-account">
   Compartir desde una cuenta Enterprise o Team
 </h4>
 
-Para cuentas Enterprise y Team, las dos opciones de visibilidad son **Privada** y **Team**. La visibilidad de Team hace que la sesión sea visible para otros miembros de su organización de claude.ai. Las sesiones de [Claude en Slack](/docs/es/slack) se comparten automáticamente con visibilidad de Team.
+Para cuentas Enterprise y Team, las dos opciones de visibilidad son **Private** y **Team**. La visibilidad de Team hace que la sesión sea visible para otros miembros de su organización claude.ai. Las sesiones de [Claude en Slack](/docs/es/slack) se comparten automáticamente con visibilidad de Team.
 
 La verificación de acceso al repositorio está habilitada de forma predeterminada, según la cuenta de GitHub conectada a la cuenta del destinatario. El nombre para mostrar de su cuenta es visible para todos los destinatarios con acceso.
 
@@ -813,11 +306,11 @@ La verificación de acceso al repositorio está habilitada de forma predetermina
   Compartir desde una cuenta Max o Pro
 </h4>
 
-Para cuentas Max y Pro, las dos opciones de visibilidad son **Privada** y **Pública**. La visibilidad pública hace que la sesión sea visible para cualquier usuario que haya iniciado sesión en claude.ai.
+Para cuentas Max y Pro, las dos opciones de visibilidad son **Private** y **Public**. La visibilidad pública hace que la sesión sea visible para cualquier usuario que haya iniciado sesión en claude.ai.
 
-Verifique su sesión para contenido sensible antes de compartir. Las sesiones pueden contener código y credenciales de repositorios privados de GitHub. La verificación de acceso al repositorio no está habilitada de forma predeterminada.
+Verifique su sesión para detectar contenido sensible antes de compartir. Las sesiones pueden contener código y credenciales de repositorios privados de GitHub. La verificación de acceso al repositorio no está habilitada de forma predeterminada.
 
-Para requerir que los destinatarios tengan acceso al repositorio, o para ocultar su nombre de sesiones compartidas, vaya a Configuración > Claude Code > Configuración de uso compartido.
+Para requerir que los destinatarios tengan acceso al repositorio, u ocultar su nombre de sesiones compartidas, vaya a [**Settings > Claude Code > Sharing settings**](https://claude.ai/settings/claude-code).
 
 <h3 id="archive-sessions">
   Archivar sesiones
@@ -834,7 +327,7 @@ Para archivar una sesión, pase el cursor sobre la sesión en la barra lateral y
 Eliminar una sesión elimina permanentemente la sesión y sus datos. Esta acción no se puede deshacer. Puede eliminar una sesión de dos formas:
 
 * **Desde la barra lateral**: filtre sesiones archivadas, luego pase el cursor sobre la sesión que desea eliminar y seleccione el icono de eliminar
-* **Desde el menú de sesión**: abra una sesión, seleccione el menú desplegable junto al título de la sesión y seleccione **Eliminar**
+* **Desde el menú de sesión**: abra una sesión, seleccione el menú desplegable junto al título de la sesión y seleccione **Delete**
 
 Se le pedirá que confirme antes de que se elimine una sesión.
 
@@ -845,17 +338,17 @@ Se le pedirá que confirme antes de que se elimine una sesión.
 Claude puede observar una solicitud de extracción y responder automáticamente a fallos de CI y comentarios de revisión. Claude se suscribe a la actividad de GitHub en la PR, y cuando falla una verificación o un revisor deja un comentario, Claude investiga e inserta una corrección si es clara.
 
 <Note>
-  Las correcciones automáticas requieren que la aplicación Claude GitHub esté instalada en su repositorio. Si aún no lo ha hecho, instálela desde la [página de la aplicación GitHub](https://github.com/apps/claude) o cuando se le solicite durante la [configuración](/docs/es/web-quickstart#connect-github-and-create-an-environment).
+  Las correcciones automáticas requieren que la aplicación Claude GitHub esté instalada en su repositorio. Si aún no lo ha hecho, instálela desde la [página de la aplicación GitHub](https://github.com/apps/claude).
 </Note>
 
 Hay algunas formas de activar correcciones automáticas dependiendo de dónde provenga la PR y qué dispositivo esté usando:
 
-* **PRs creadas en Claude Code en la web**: abra la barra de estado de CI y seleccione **Correcciones automáticas**
-* **Desde su terminal**: ejecute [`/autofix-pr`](/docs/es/commands) mientras está en la rama de la PR. Claude Code detecta la PR abierta con `gh`, genera una sesión web y activa correcciones automáticas en un paso
+* **PRs creadas en una sesión en la nube**: abra la sesión en claude.ai/code, abra la barra de estado de CI y seleccione **Correcciones automáticas**
+* **Desde su terminal**: ejecute [`/autofix-pr`](/docs/es/commands) mientras está en la rama de la PR. Claude Code detecta la PR abierta con `gh`, genera una sesión en la nube y activa correcciones automáticas en un paso
 * **Desde la aplicación móvil**: dígale a Claude que corrija automáticamente la PR, por ejemplo "observa esta PR y corrige cualquier fallo de CI o comentario de revisión"
 * **Cualquier PR existente**: pegue la URL de la PR en una sesión y dígale a Claude que la corrija automáticamente
 
-Las correcciones automáticas son un control por PR. Para dejar de monitorear, abra la barra de estado de CI en la sesión web y desactive el control **Correcciones automáticas**, o dígale a Claude que deje de observar la PR.
+Las correcciones automáticas son un control por PR. Para dejar de monitorear, abra la barra de estado de CI en la sesión en claude.ai/code y desactive el control **Correcciones automáticas**, o dígale a Claude que deje de observar la PR.
 
 <h3 id="how-claude-responds-to-pr-activity">
   Cómo Claude responde a la actividad de PR
@@ -881,10 +374,11 @@ Claude puede responder a hilos de comentarios de revisión en GitHub como parte 
 
 Cada sesión en la nube se separa de su máquina y de otras sesiones a través de varias capas:
 
-* **Máquinas virtuales aisladas**: cada sesión se ejecuta en una VM aislada administrada por Anthropic
-* **Controles de acceso a la red**: el acceso a la red se limita de forma predeterminada y puede deshabilitarse. Cuando se ejecuta con acceso a la red deshabilitado, Claude Code aún puede comunicarse con la API de Anthropic, lo que puede permitir que los datos salgan de la VM.
-* **Protección de credenciales**: las credenciales sensibles como credenciales de git o claves de firma nunca están dentro del sandbox con Claude Code. La autenticación se maneja a través de un proxy seguro usando credenciales de alcance.
-* **Análisis seguro**: el código se analiza y modifica dentro de VMs aisladas antes de crear PRs
+* **Máquinas virtuales aisladas**: cada sesión se ejecuta en una VM aislada administrada por Anthropic. Las sesiones que su organización enruta a un [entorno autohospedado](/docs/es/self-hosted-environments) se ejecutan en su propia infraestructura en su lugar, donde el aislamiento es responsabilidad de su implementación
+* <span id="default-allowed-domains" />**Controles de acceso a la red**: en entornos alojados por Anthropic, el acceso a la red se limita de forma predeterminada y puede deshabilitarse. Consulte [Acceso a la red](/docs/es/cloud-environments#network-access) para los niveles de acceso, los [dominios permitidos predeterminados](/docs/es/cloud-environments#default-allowed-domains) y el tráfico que no pasa por la lista de permitidos. En un entorno autohospedado, usted restringe la salida de la sesión en su propio límite de red. Cuando se ejecuta con acceso a la red deshabilitado, Claude Code aún puede comunicarse con la API de Anthropic, lo que puede permitir que los datos salgan de la VM.
+* **Protección de credenciales**: en entornos alojados por Anthropic, las credenciales de git y las claves de firma permanecen fuera del sandbox, y un proxy se autentica en nombre de la sesión con credenciales de alcance. En un entorno autohospedado, su implementación proporciona credenciales de git; consulte [Configurar git](/docs/es/self-hosted-environments-deploy#configure-git)
+* **Credenciales de API**: en entornos alojados por Anthropic en planes Pro y Max, las claves que [agrega a un entorno en la nube](/docs/es/cloud-environments#add-api-credentials) permanecen fuera del sandbox de la misma manera, adjuntas a solicitudes coincidentes después de que salen de la sesión. Un entorno autohospedado no tiene credenciales de API, y los planes Team y Enterprise aún no las tienen
+* **Análisis seguro**: el código se analiza y modifica dentro del entorno aislado de la sesión antes de crear PRs
 
 <h2 id="troubleshooting">
   Solución de problemas
@@ -896,11 +390,19 @@ Para errores de API en tiempo de ejecución que aparecen en la conversación com
   Falló la creación de sesión
 </h3>
 
-Si una nueva sesión no se inicia con `Session creation failed` o se detiene en el aprovisionamiento, Claude Code no pudo asignar un entorno en la nube.
+Si una nueva sesión no se inicia con `Session creation failed` o se detiene en el aprovisionamiento, Claude Code no pudo asignar una VM para la sesión.
 
 * Verifique [status.claude.com](https://status.claude.com) para incidentes de sesión en la nube
 * Reintente después de un minuto, ya que la capacidad se aprovisiona bajo demanda
-* Confirme que su repositorio es accesible. La cuenta de GitHub que se conecta debe tener acceso al repositorio en GitHub, ya sea a través de la autorización de la aplicación Claude GitHub o un token `gh` sincronizado a través de `/web-setup`. No es necesario instalar la aplicación en el repositorio. Consulte [Opciones de autenticación de GitHub](#github-authentication-options).
+* Confirme que su conexión de GitHub puede alcanzar el repositorio siguiendo [No repositories appear after connecting GitHub](/docs/es/web-quickstart#no-repositories-appear-after-connecting-github)
+
+<h3 id="unable-to-get-organization-uuid">
+  No se puede obtener UUID de organización
+</h3>
+
+`claude --cloud` y `claude --teleport` requieren iniciar sesión con una cuenta de claude.ai. Si se autentica con una clave de API, o sus detalles de cuenta almacenados están obsoletos, estos comandos fallan con `Unable to get organization UUID` o un mensaje de que la autenticación de clave de API no es suficiente. Con autenticación de clave de API o detalles de cuenta obsoletos, ejecutar `claude --teleport` sin un ID de sesión muestra `Error loading Claude Code sessions` en el selector de sesión en lugar de cualquiera de los dos mensajes, y se aplica la misma solución.
+
+Ejecute `/login` para iniciar sesión con su cuenta de claude.ai, luego reintente el comando. Si el error nombra su proveedor en su lugar, consulte la [tabla de errores](#output-and-errors): las sesiones en la nube no están disponibles a través de proveedores de terceros.
 
 <h3 id="remote-control-session-expired-or-access-denied">
   Sesión de Control Remoto expirada o acceso denegado
@@ -916,9 +418,9 @@ Si una nueva sesión no se inicia con `Session creation failed` o se detiene en 
   Entorno expirado
 </h3>
 
-Las sesiones en la nube se detienen después de un período de inactividad y el entorno subyacente se reclama. Desde una terminal local, esto aparece como `Could not resume session ... its environment has expired. Creating a fresh session instead.` En la web, la sesión está marcada como expirada en la lista de sesiones.
+Las sesiones en la nube se detienen después de un período de inactividad y la VM de la sesión se reclama. Una sesión cuenta como inactiva mientras espera que apruebe una llamada de herramienta de [conector MCP](/docs/es/cloud-environments#network-access) o para iniciar sesión en un servidor MCP, y puede expirar durante esa espera.
 
-Reabra la sesión desde [claude.ai/code](https://claude.ai/code) para aprovisionar un entorno nuevo con su historial de conversación restaurado.
+Reabra la sesión desde [claude.ai/code](https://claude.ai/code) para aprovisionar una VM nueva con su historial de conversación restaurado. El trabajo de fondo que aún se estaba ejecutando cuando se reclamó la VM, como subagentes y comandos de shell, no se restaura.
 
 <h2 id="limitations">
   Limitaciones
@@ -926,20 +428,21 @@ Reabra la sesión desde [claude.ai/code](https://claude.ai/code) para aprovision
 
 Antes de confiar en sesiones en la nube para un flujo de trabajo, tenga en cuenta estas restricciones:
 
-* **Límites de velocidad**: Claude Code en la web comparte límites de velocidad con todo otro uso de Claude y Claude Code dentro de su cuenta. Ejecutar múltiples tareas en paralelo consume más límites de velocidad proporcionalmente. No hay cargo de computación separado para la VM en la nube.
-* **Autenticación de repositorio**: solo puede mover sesiones de web a local cuando está autenticado en la misma cuenta
-* **Restricciones de plataforma**: la clonación de repositorio y la creación de solicitudes de extracción requieren GitHub. Las instancias de [GitHub Enterprise Server](/docs/es/github-enterprise-server) autohospedadas son compatibles con planes de Team y Enterprise. GitLab, Bitbucket y otros repositorios que no sean GitHub se pueden enviar a sesiones en la nube como un [paquete local](#send-local-repositories-without-github), pero la sesión no puede insertar resultados de vuelta al remoto
-* **Lista de permitidos de IP de la organización**: las sesiones en la nube llaman a la API de Anthropic desde infraestructura administrada por Anthropic, no desde su red. Si su organización tiene [lista de permitidos de IP](https://support.claude.com/en/articles/13200993-restrict-access-to-claude-with-ip-allowlisting) habilitada, cada sesión en la nube falla con un error de autenticación. Lo mismo se aplica a [Revisión de código](/docs/es/code-review) y [Rutinas](/docs/es/routines). Contacte al [soporte de Anthropic](https://support.claude.com/) para eximir los servicios alojados por Anthropic de la lista de permitidos de IP de su organización.
+* **Límites de velocidad**: las sesiones en la nube comparten límites de velocidad con todo otro uso de Claude y Claude Code dentro de su cuenta. Ejecutar múltiples tareas en paralelo consume más límites de velocidad proporcionalmente. No hay cargo de computación separado para la VM en la nube.
+* **Autenticación de repositorio**: solo puede extraer una sesión en la nube a su terminal cuando está autenticado en la misma cuenta
+* **Restricciones de plataforma**: la clonación de repositorio y la creación de solicitudes de extracción requieren GitHub. Las instancias autohospedadas de [GitHub Enterprise Server](/docs/es/github-enterprise-server) son compatibles con planes de Team y Enterprise. Puede enviar un repositorio de GitLab, Bitbucket u otro que no sea GitHub a una sesión en la nube como un [paquete local](#send-local-repositories-without-github) estableciendo `CCR_FORCE_BUNDLE=1`, pero la sesión no puede insertar resultados de vuelta a ese remoto
+* **Lista de permitidos de IP de la organización**: las sesiones en la nube llaman a la API de Anthropic desde infraestructura administrada por Anthropic, no desde su red, mientras que las sesiones en un [entorno autohospedado](/docs/es/self-hosted-environments) la llaman desde su propia red. Si su organización tiene [lista de permitidos de IP](https://support.claude.com/en/articles/13200993-restrict-access-to-claude-with-ip-allowlisting) habilitada, cada sesión en la nube alojada por Anthropic falla con un error de autenticación. Lo mismo se aplica a [Revisión de código](/docs/es/code-review) y a [Rutinas](/docs/es/routines) que se ejecutan en entornos alojados por Anthropic; una rutina enrutada a un entorno autohospedado llama a la API desde su propia red. Contacte al [soporte de Anthropic](https://support.claude.com/) para eximir los servicios alojados por Anthropic de la lista de permitidos de IP de su organización.
 
 <h2 id="related-resources">
   Recursos relacionados
 </h2>
 
-* [Ultraplan](/docs/es/ultraplan): redacte un plan en una sesión en la nube y revíselo en su navegador
+* [Entornos en la nube](/docs/es/cloud-environments): configure el acceso a la red, las variables de entorno y los scripts de configuración para sesiones en la nube
+* [Proyectos](/docs/es/claude-projects): una conversación donde Claude coordina sesiones en la nube paralelas en sus repositorios e informa los resultados
 * [Ultrareview](/docs/es/ultrareview): ejecute una revisión de código profunda de múltiples agentes en un sandbox en la nube
-* [Routines](/docs/es/routines): automatice el trabajo en un cronograma, a través de llamada de API o en respuesta a eventos de GitHub
+* [Rutinas](/docs/es/routines): automatice el trabajo en un cronograma, a través de llamada de API o en respuesta a eventos de GitHub
 * [Configuración de hooks](/docs/es/hooks): ejecute scripts en eventos del ciclo de vida de la sesión
-* [Referencia de configuración](/docs/es/settings): todas las opciones de configuración
+* [Toda la configuración](/docs/es/settings-reference): todas las opciones de configuración
 * [Seguridad](/docs/es/security): garantías de aislamiento y manejo de datos
 * [Uso de datos](/docs/es/data-usage): qué retiene Anthropic de sesiones en la nube
-* [Claude Tag](https://claude.com/docs/claude-tag/overview): una @Claude administrada por la organización en Slack que se ejecuta en el mismo entorno en la nube
+* [Claude Tag](https://claude.com/docs/claude-tag/overview): una @Claude administrada por la organización en Slack que se ejecuta en la misma infraestructura en la nube

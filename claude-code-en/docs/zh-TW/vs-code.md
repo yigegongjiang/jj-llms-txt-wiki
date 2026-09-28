@@ -18,7 +18,7 @@ VS Code 擴充功能為 Claude Code 提供了原生圖形介面，直接整合�
 
 安裝前，請確保您擁有：
 
-* VS Code 1.98.0 或更高版本
+* VS Code 1.94.0 或更高版本
 * Anthropic 帳戶：任何付費 Claude 訂閱（Pro、Max、Team 或 Enterprise）或 Claude Console 帳戶都可以使用，不需要 API 金鑰。首次開啟擴充功能時，您將[使用此帳戶登入](/docs/zh-TW/authentication#log-in-to-claude-code)。如果您透過第三方提供者（如 Amazon Bedrock 或 Google Cloud 的 Agent Platform）存取 Claude，請參閱[使用第三方提供者](#use-third-party-providers)以取得設定說明。
 
 <Tip>
@@ -50,50 +50,57 @@ VS Code 擴充功能為 Claude Code 提供了原生圖形介面，直接整合�
   <Step title="開啟 Claude Code 面板">
     在整個 VS Code 中，Spark 圖示表示 Claude Code：<img src="https://mintcdn.com/claude-code/c5r9_6tjPMzFdDDT/images/vs-code-spark-icon.svg?fit=max&auto=format&n=c5r9_6tjPMzFdDDT&q=85&s=3ca45e00deadec8c8f4b4f807da94505" alt="Spark icon" style={{display: "inline", height: "0.85em", verticalAlign: "middle"}} width="16" height="16" data-path="images/vs-code-spark-icon.svg" />
 
-    開啟 Claude 的最快方式是點擊**編輯器工具列**（編輯器右上角）中的 Spark 圖示。當您開啟檔案時，該圖示才會出現。
+    開啟 Claude 最快的方式是點擊**編輯器工具列**（編輯器右上角）中的 Spark 圖示。只有當您開啟檔案時，該圖示才會出現。
 
     <img src="https://mintcdn.com/claude-code/mfM-EyoZGnQv8JTc/images/vs-code-editor-icon.png?fit=max&auto=format&n=mfM-EyoZGnQv8JTc&q=85&s=eb4540325d94664c51776dbbfec4cf02" alt="VS Code 編輯器顯示編輯器工具列中的 Spark 圖示" width="2796" height="734" data-path="images/vs-code-editor-icon.png" />
 
     開啟 Claude Code 的其他方式：
 
-    * **活動列**：點擊左側邊欄中的 Spark 圖示以開啟工作階段清單。點擊任何工作階段以將其作為完整編輯器標籤開啟，或開始新的工作階段。此圖示在活動列中始終可見。
+    * **活動列**：點擊左側邊欄中的 Spark 圖示以開啟工作階段清單。點擊任何工作階段以將其開啟至您的[偏好位置](#extension-settings)，或開始新的工作階段。此圖示在活動列中始終可見。
     * **命令面板**：`Cmd+Shift+P`（Mac）或 `Ctrl+Shift+P`（Windows/Linux），輸入「Claude Code」，然後選擇一個選項，例如「在新標籤中開啟」
-    * **狀態列**：點擊視窗右下角的 **✱ Claude Code**。即使沒有開啟檔案，這也有效。
+    * **狀態列**：如果您已將 [`preferredLocation`](#extension-settings) 設定為 `sidebar`，或使用**Claude Code: Open in Side Bar** 開啟 Claude，請點擊視窗右下角的 **✻ Claude Code**。即使沒有開啟檔案，這也能運作。
 
-    您可以拖動 Claude 面板以在 VS Code 中的任何位置重新定位它。有關詳細資訊，請參閱[自訂您的工作流程](#customize-your-workflow)。
+    您可以拖曳 Claude 面板以在 VS Code 中的任何位置重新定位。詳細資訊請參閱[自訂您的工作流程](#customize-your-workflow)。
   </Step>
 
   <Step title="登入">
-    首次開啟面板時，會出現登入畫面。點擊**登入**並在您的瀏覽器中完成授權。
+    第一次開啟面板時，會出現登入畫面。點擊**登入**並在瀏覽器中完成授權。
 
-    如果您稍後看到**未登入 · 請執行 /login**，擴充功能會自動重新開啟登入畫面。如果它沒有出現，請從命令面板使用**Developer: Reload Window**重新載入視窗。
+    如果您稍後看到**未登入 · 請執行 /login**，擴充功能會自動重新開啟登入畫面。如果沒有出現，請從命令面板使用**開發人員：重新載入視窗**重新載入視窗。
 
-    如果您在 shell 中設定了 `ANTHROPIC_API_KEY` 但仍然看到登入提示，VS Code 可能沒有繼承您的 shell 環境。使用 `code .` 從終端機啟動 VS Code，以便它繼承您的環境變數，或改為使用您的 Claude 帳戶登入。
+    如果您在 shell 中設定了 `ANTHROPIC_API_KEY` 但仍然看到登入提示，VS Code 可能未繼承您的 shell 環境。從終端機使用 `code .` 啟動 VS Code，以便它繼承您的環境變數，或改為使用您的 Claude 帳戶登入。
 
-    登入後，會出現**學習 Claude Code** 檢查清單。透過點擊**顯示給我**來完成每一項，或用 X 關閉它。若要稍後重新開啟它，請在 VS Code 設定中的擴充功能 → Claude Code 下取消勾選**隱藏入門**。
+    登入後，會出現**學習 Claude Code** 檢查清單。透過點擊**顯示給我**來完成每個項目，或使用 X 關閉它。若要稍後重新開啟它，請在 VS Code 設定中的「擴充功能」→「Claude Code」下取消勾選**隱藏上線教學**。
   </Step>
 
   <Step title="傳送提示">
-    要求 Claude 幫助您的程式碼或檔案，無論是解釋某些內容的工作原理、除錯問題還是進行變更。
+    要求 Claude 協助您的程式碼或檔案，無論是解釋某些內容的運作方式、除錯問題或進行變更。
 
-    <Tip>Claude 會自動看到您選擇的文字。按 `Option+K`（Mac）/ `Alt+K`（Windows/Linux）也可以在您的提示中插入 @-提及參考（如 `@file.ts#5-10`）。</Tip>
+    <Tip>Claude 會自動看到您選取的文字。按 `Option+K`（Mac）/ `Alt+K`（Windows/Linux）也可以在您的提示中插入 @-mention 參考（例如 `@file.ts#5-10`）。</Tip>
 
     以下是詢問檔案中特定行的範例：
 
-    <img src="https://mintcdn.com/claude-code/FVYz38sRY-VuoGHA/images/vs-code-send-prompt.png?fit=max&auto=format&n=FVYz38sRY-VuoGHA&q=85&s=ede3ed8d8d5f940e01c5de636d009cfd" alt="VS Code 編輯器，在 Python 檔案中選擇了第 2-3 行，Claude Code 面板顯示關於這些行的問題，帶有 @-提及參考" width="3288" height="1876" data-path="images/vs-code-send-prompt.png" />
+    <img src="https://mintcdn.com/claude-code/FVYz38sRY-VuoGHA/images/vs-code-send-prompt.png?fit=max&auto=format&n=FVYz38sRY-VuoGHA&q=85&s=ede3ed8d8d5f940e01c5de636d009cfd" alt="VS Code 編輯器在 Python 檔案中選取第 2-3 行，Claude Code 面板顯示關於這些行的問題，並帶有 @-mention 參考" width="3288" height="1876" data-path="images/vs-code-send-prompt.png" />
   </Step>
 
-  <Step title="審查變更">
-    當 Claude 想要編輯檔案時，它會顯示原始內容和建議變更的並排比較，然後要求許可。您可以接受、拒絕或告訴 Claude 改為做什麼。如果您在接受前直接在差異檢視中編輯建議的內容，Claude 會被告知您修改了它，因此它不會假設檔案與其原始提案相符。
+  <Step title="檢閱變更">
+    您看到的內容取決於提示框底部顯示的[權限模式](/docs/zh-TW/permission-modes#which-mode-a-session-starts-in)：
 
-    <img src="https://mintcdn.com/claude-code/FVYz38sRY-VuoGHA/images/vs-code-edits.png?fit=max&auto=format&n=FVYz38sRY-VuoGHA&q=85&s=e005f9b41c541c5c7c59c082f7c4841c" alt="VS Code 顯示 Claude 建議變更的差異，以及詢問是否進行編輯的許可提示" width="3292" height="1876" data-path="images/vs-code-edits.png" />
+    * 在自動或自動編輯模式中，Claude 會編輯工作區中的大多數檔案而不詢問。
+    * 在手動模式中，當 Claude 想要編輯檔案時，它會顯示原始檔案和建議變更的並排比較，然後要求權限。您可以接受、拒絕或告訴 Claude 改為執行什麼操作。如果您在接受前直接在差異檢視中編輯建議的內容，Claude 會被告知您已修改它，因此不會假設檔案與其原始提案相符。
+
+          <img src="https://mintcdn.com/claude-code/FVYz38sRY-VuoGHA/images/vs-code-edits.png?fit=max&auto=format&n=FVYz38sRY-VuoGHA&q=85&s=e005f9b41c541c5c7c59c082f7c4841c" alt="VS Code 顯示 Claude 建議變更的差異，以及詢問是否進行編輯的權限提示" width="3292" height="1876" data-path="images/vs-code-edits.png" />
+
+    若要逐次檢閱建議的編輯，請使用差異中每個變更下方的**接受此變更**和**拒絕此變更**按鈕。拒絕變更會在建議的內容中還原它；接受會將其標記為已檢閱。接受或拒絕整個檔案仍會完成檢閱。超過 100 個變更的差異會在沒有逐個變更按鈕的情況下開啟，因此請將其作為整個檔案進行檢閱。逐個變更檢閱需要 Claude Code v2.1.275 或更新版本。
+
+    相同的操作可從編輯器的內容功能表和命令面板中取得，分別為**Claude Code: Accept Change at Cursor** 和**Claude Code: Reject Change at Cursor**。
   </Step>
 </Steps>
 
-有關您可以使用 Claude Code 做什麼的更多想法，請參閱[常見工作流程](/docs/zh-TW/common-workflows)。
+如需更多關於您可以使用 Claude Code 執行的操作的想法，請參閱[常見工作流程](/docs/zh-TW/common-workflows)。
 
 <Tip>
-  從命令面板執行'Claude Code: Open Walkthrough'以獲得基礎知識的引導式導覽。
+  從命令面板執行「Claude Code: Open Walkthrough」以取得基礎知識的引導式導覽。
 </Tip>
 
 <h2 id="use-the-prompt-box">
@@ -102,114 +109,229 @@ VS Code 擴充功能為 Claude Code 提供了原生圖形介面，直接整合�
 
 提示框支援多項功能：
 
-* **許可模式**：點擊提示框底部的模式指示器以切換模式，或在 VS Code 設定中的 `claudeCode.initialPermissionMode` 下設定預設值。請參閱[許可模式](/docs/zh-TW/permission-modes#switch-permission-modes)以了解指示器提供的每種模式。
-  * **Manual**：Claude 在檔案編輯和大多數 shell 命令前要求許可。
-  * **Plan**：Claude 描述它將做什麼，並在進行變更前等待批准。VS Code 會自動將計畫作為完整 Markdown 文件開啟，您可以在其中添加內聯評論以在 Claude 開始前提供反饋。
+* **權限模式**：點擊提示框底部的模式指示器以切換權限模式。在 Pro、Max 和 Team 方案上，Auto 是內建的起始權限模式。請參閱[擴充功能如何選擇起始權限模式](/docs/zh-TW/permission-modes#switch-permission-modes)以了解會改變該模式的因素，以及指示器提供的每個權限模式。
+  * **Auto**：分類器會檢查大多數操作，而不是詢問您。請參閱 [auto 模式](/docs/zh-TW/permission-modes#eliminate-prompts-with-auto-mode)以了解它檢查和阻止的內容。
+  * **Manual**：Claude 在檔案編輯和大多數 shell 命令前詢問權限。
+  * **Plan**：Claude 描述它將執行的操作，並在進行變更前等待批准。VS Code 會自動將計畫作為完整 Markdown 文件開啟，您可以在其中新增內嵌註解以在 Claude 開始前提供回饋。
+
+    您也可以在提示框中輸入 `/plan`。需要 Claude Code v2.1.280 或更新版本。
+
+    * `/plan`：切換到計畫模式。如果您已在計畫模式中，會顯示目前的計畫。
+    * `/plan` 搭配工作，例如 `/plan fix the auth bug`：切換到計畫模式並開始規劃該工作。
+    * `/plan open`：當您已在計畫模式中時，在編輯器中開啟計畫檔案。
   * **Edit automatically**：Claude 進行編輯而不詢問。
-* **命令菜單**：點擊 `/` 或輸入 `/` 以開啟命令菜單。選項包括附加檔案、切換模型、切換擴展思考、查看計畫使用情況（`/usage`）以及啟動 [Remote Control](/docs/zh-TW/remote-control) 工作階段（`/remote-control`）。自訂部分提供對 MCP servers、hooks、memory、permissions 和 plugins 的存取。帶有終端機圖示的項目在整合終端機中開啟。
-  * 設定部分包括**為所有工作階段啟用 Remote Control**，它設定 [`remoteControlAtStartup`](/docs/zh-TW/settings#available-settings)，以便[每個新的互動工作階段都自動連接到 Remote Control](/docs/zh-TW/remote-control#enable-remote-control-for-all-sessions)。需要 Claude Code v2.1.203 或更新版本。
-* **上下文指示器**：提示框顯示您使用了多少 Claude 的 context window。Claude 在需要時會自動壓縮，或您可以手動執行 `/compact`。
-* **擴展思考**：讓 Claude 花更多時間推理複雜問題。透過命令菜單（`/`）切換它。Claude 的推理在對話中顯示為摺疊的區塊：點擊一個區塊以讀取它，或按 `Ctrl+O` 以展開或摺疊工作階段中的每個思考區塊。有關詳細資訊，請參閱 [Extended thinking](/docs/zh-TW/model-config#extended-thinking)。
-* **多行輸入**：按 `Shift+Enter` 以添加新行而不傳送。這也適用於問題對話框的「其他」自由文字輸入。
+* **Model**：從命令菜單中選擇 **Switch model…** 以在會話中途變更模型。您也可以點擊提示框底部的模型名稱以開啟相同的選擇器。
+
+  當目前的模型支援[努力等級](/docs/zh-TW/model-config#adjust-effort-level)時，選擇器也會顯示 **Effort** 列和模型名稱按鈕會顯示選定的等級。當您選擇 `max` 以外的等級時，Claude Code 會在您的使用者設定中的 [`modelSettings`](/docs/zh-TW/settings-reference#modelsettings) 下將其儲存為目前模型的預設值；`max` 僅適用於目前會話。模型名稱按鈕和 **Effort** 列需要 Claude Code v2.1.257 或更新版本。
+* **Command menu**：點擊 `/` 或輸入 `/` 以開啟命令菜單。選項包括附加檔案、切換模型和切換延伸思考。
+
+  Customize 部分提供對 MCP 伺服器、slash commands、輸出樣式、hooks、記憶、指示和外掛程式的存取。帶有終端機圖示的項目會在整合終端機中開啟。
+
+  * 若要瀏覽 `/usage` 或 [`/remote-control`](/docs/zh-TW/remote-control) 等命令，請在 Customize 部分中選擇 **Slash commands**。對話方塊會列出它們並提供篩選框。選擇一個以執行它。在提示框中輸入 `/` 仍會內嵌建議命令。需要 Claude Code v2.1.257 或更新版本。
+
+    輸入 `/skills` 也會開啟此對話方塊。每個 [skill](/docs/zh-TW/skills) 列會顯示其[可見性](/docs/zh-TW/skills#override-skill-visibility-from-settings)，例如 **On** 或 **Name only**。點擊可見性以變更它，除了標記為 **locked** 的列，例如外掛程式 skills。`/skills` 快捷方式和可見性控制需要 Claude Code v2.1.280 或更新版本。
+  * 在 Customize 部分中選擇 **Output styles** 以選擇[輸出樣式](/docs/zh-TW/output-styles)，包括您的自訂樣式。需要 Claude Code v2.1.257 或更新版本。
+
+    若要改為建立自訂樣式，請從 **Output styles** 菜單中選擇 **Build a custom style**。Claude Code 會在專案或使用者層級為您寫入[樣式檔案](/docs/zh-TW/output-styles#create-a-custom-output-style)。需要 Claude Code v2.1.261 或更新版本。
+  * 在 Customize 部分中選擇 **Hooks** 以檢視會話中載入的 [hooks](/docs/zh-TW/hooks)，按事件分組。您可以新增、編輯或移除儲存在您的使用者、專案和本機設定檔中的 hooks。來自其他來源（例如受管設定或外掛程式）的 Hooks 是唯讀的。需要 Claude Code v2.1.269 或更新版本。
+  * 在 Customize 部分中選擇 **Permissions** 以檢視會話的[權限規則](/docs/zh-TW/permissions)，分組為 Allow、Ask 和 Deny。您可以將規則新增到您的使用者、專案或本機設定，並移除儲存在那裡的規則。來自其他來源（例如受管設定或僅針對此會話進行的批准）的規則是唯讀的。需要 Claude Code v2.1.269 或更新版本。
+  * 在 Customize 部分中選擇 **Memory** 以開啟或關閉[自動記憶](/docs/zh-TW/memory#auto-memory)。當它開啟時，您也可以瀏覽 Claude 已儲存的記憶，並在您的檔案管理員中顯示儲存它們的資料夾。需要 Claude Code v2.1.274 或更新版本。
+
+    點擊已儲存的記憶以在對話方塊中讀取它，您可以在其中編輯文字、刪除記憶或在編輯器中開啟其檔案。在對話方塊中檢視、編輯和刪除記憶需要 Claude Code v2.1.275 或更新版本。
+  * 在 Customize 部分中選擇 **Instructions** 以編輯 Claude 讀取的 [CLAUDE.md 檔案](/docs/zh-TW/memory#claude-md-files)。選擇一個檔案以在編輯器中開啟它。如果檔案還不存在，Claude Code 會先建立它。需要 Claude Code v2.1.274 或更新版本。
+  * 在 Customize 部分中選擇 **Status**，或輸入 `/status`，以檢查會話的 Claude Code 版本、帳戶、模型和 MCP 伺服器詳細資訊。需要 Claude Code v2.1.280 或更新版本。
+  * 在 Customize 部分中選擇 **Sandbox**，或輸入 `/sandbox`，以查看 Claude 的 Bash 命令是否執行[沙箱化](/docs/zh-TW/sandboxing)。您可以在那裡切換沙箱模式並新增[排除的命令](/docs/zh-TW/settings-reference#sandbox-excludedcommands)。需要 Claude Code v2.1.280 或更新版本。
+  * 在 Customize 部分中選擇 **Claude in Chrome**，或輸入 `/chrome`，以檢查和管理 [Claude in Chrome](/docs/zh-TW/chrome) 連接。兩者都需要使用 claude.ai 帳戶登入。需要 Claude Code v2.1.280 或更新版本。
+  * 在 Context 部分中選擇 **Export conversation**，或輸入 `/export`，以將對話複製為純文字或儲存到檔案。新增檔案名稱，例如 `/export notes.txt`，以跳過對話方塊並選擇儲存檔案的位置。需要 Claude Code v2.1.280 或更新版本。
+  * Settings 部分包括 **Enable Remote Control for all sessions**，它設定 [`remoteControlAtStartup`](/docs/zh-TW/settings-reference#remotecontrolatstartup) 以控制[新的互動式會話是否自動連接到 Remote Control](/docs/zh-TW/remote-control#enable-remote-control-for-all-sessions)。需要 Claude Code v2.1.203 或更新版本。
+
+    當您在 VS Code 視窗中開啟或關閉切換開關時，變更會套用到該 VS Code 視窗中已開啟的會話，而不僅僅是您之後啟動的會話。如果您關閉它，開啟的會話會中斷連接。使用 Claude Code v2.1.261 或更新版本，變更也會到達您其他 VS Code 視窗中開啟的會話。
+  * Settings 部分也包括 **Focus view**，它隱藏工具呼叫、工具結果和思考在可展開的列後面，只留下您的提示和 Claude 的回應。在那裡切換它，使用 `Ctrl+Option+F`（Mac）/ `Ctrl+Alt+F`（Windows/Linux），或從命令選擇區使用 **Claude Code: Toggle Focus view**。變更會套用到每個開啟的會話並在會話間保持。需要 Claude Code v2.1.221 或更新版本。
+
+    Claude 最新的待辦事項清單保持可見，待處理問題中 Claude 詢問的文字也保持可見；這需要 Claude Code v2.1.225 或更新版本。當 Claude 執行 [subagents](/docs/zh-TW/sub-agents) 時，帶有其最新活動的即時進度列會出現在啟動它們的工具呼叫群組下。這需要 Claude Code v2.1.269 或更新版本。
+  * 若要登出您的 Anthropic 帳戶，請在 Settings 部分中選擇 **Sign out**，或輸入 `/logout`。在[第三方提供者](#use-third-party-providers)上，菜單不提供任一選項。需要 Claude Code v2.1.277 或更新版本。
+  * 若要報告錯誤，請點擊菜單底部的 **Report a problem**，或輸入 `/bug` 或 `/feedback` 並附上可選的描述以預填報告。當您提交報告且您已在第一方連接上登入 Anthropic 時，Claude Code 會將其傳送給 Anthropic。在第三方提供者上，或沒有 Anthropic 認證時，對話方塊仍會開啟，但提交會顯示錯誤且不傳送任何內容：與 CLI 的 `/bug` 不同，擴充功能不會寫入本機存檔。需要 Claude Code v2.1.229 或更新版本。
+
+    如果您的組織政策關閉產品回饋，**Report a problem** 不會出現在菜單中，而 `/bug` 和 `/feedback` 會顯示 `Feedback is turned off by your organization's policy or this environment's settings.` 通知，而不是開啟報告。
+* **Side questions**：輸入 `/btw` 後跟一個問題以詢問有關您的會話的問題[而不新增到對話](/docs/zh-TW/interactive-mode#side-questions-with-%2Fbtw)。答案會在聊天旁的面板中開啟，您可以在其中提出後續問題。執行緒在視窗重新載入後仍然存在。Claude Code 保留最新的 20 個交換，並根據 [`cleanupPeriodDays`](/docs/zh-TW/settings-reference#cleanupperioddays) 排程過期儲存的執行緒，只要 Claude Code 可以[安全地確定保留期](/docs/zh-TW/claude-directory#cleaned-up-automatically)。若要清除執行緒，請點擊面板中的垃圾桶圖示。需要 Claude Code v2.1.227 或更新版本。
+* **Copy a response**：將滑鼠懸停在回應上並點擊 **Copy response** 以將其複製到您的剪貼簿，或輸入 `/copy` 以複製最新的回應。`/copy 2` 複製倒數第二個。需要 Claude Code v2.1.277 或更新版本。
+* **Context indicator**：提示框顯示您使用了多少 Claude 的內容視窗。Claude 會在需要時自動壓縮，或您可以手動執行 `/compact`。
+* **Prompt cache clock**：內容指示器旁的時鐘圖示估計對話的 [prompt cache](/docs/zh-TW/prompt-caching) 在過期前還剩多少時間。它從快取的五分鐘或一小時[生命週期](/docs/zh-TW/prompt-caching#cache-lifetime)倒數，每個使用快取的回應都會重新啟動倒數。除了壓縮外，[使快取失效的操作](/docs/zh-TW/prompt-caching#actions-that-invalidate-the-cache)不會重設時鐘，因此在您切換模型後它仍然可以顯示剩餘的分鐘數。
+  * 在倒數結束前，圖示會顯示剩餘的分鐘數，例如 **12m**。
+  * 當倒數結束時，分鐘數消失，圖示變為紅色，或您主題的錯誤顏色，直到下一個回應。快取可能已過期，因此預期您下一條訊息的回應會更慢、更昂貴，同時快取重建。如果五分鐘的生命週期在您的訊息之間不斷用完，請參閱[自己選擇 TTL](/docs/zh-TW/prompt-caching#choose-the-ttl-yourself)。
+  * 對話[壓縮](/docs/zh-TW/prompt-caching#compacting-the-conversation)後，圖示也會變為紅色，沒有分鐘數直到下一個回應，因為快取還不涵蓋壓縮的對話。
+* **Agent map**：當對話包括 [subagents](/docs/zh-TW/sub-agents) 時，代理計數（例如 **2 agents**）會出現在提示框底部。其點顯示任何 subagent 是否正在工作或等待您的權限。
+
+  點擊代理計數以開啟代理地圖，它將對話的 subagents 繪製為主代理下的樹，每個都有其狀態、經過的時間和令牌計數。點擊 subagent 以查看其提示和工具呼叫、開啟其唯讀文字記錄，或在其執行時停止它。需要 Claude Code v2.1.269 或更新版本。
+
+  地圖也會在代理下方列出會話的其他[背景工作](/docs/zh-TW/tools-reference#background-commands)，例如背景 shell 命令和[監視器](/docs/zh-TW/tools-reference#monitor-tool)。點擊一列以開啟工作的卡片並在那裡停止它。
+
+  若要在沒有顯示代理計數時開啟地圖，例如當 Claude 已啟動背景 shell 但沒有 subagents 時，請在提示框中輸入 `/tasks`。地圖中的背景工作和輸入的 `/tasks` 需要 Claude Code v2.1.277 或更新版本。
+* **Extended thinking**：讓 Claude 花更多時間推理複雜問題。透過命令菜單（`/`）開啟它。Claude 的推理在對話中顯示為摺疊的區塊：點擊一個區塊以閱讀它，或按 `Ctrl+O` 以展開或摺疊會話中的每個思考區塊。請參閱[Extended thinking](/docs/zh-TW/model-config#extended-thinking)以了解詳細資訊。
+* **Multi-line input**：按 `Shift+Enter` 以新增一行而不傳送。這也適用於問題對話的「Other」自由文字輸入。
 
 <h3 id="reference-files-and-folders">
   參考檔案和資料夾
 </h3>
 
-使用 @-提及為 Claude 提供有關特定檔案或資料夾的上下文。當您輸入 `@` 後跟檔案或資料夾名稱時，Claude 會讀取該內容，並可以回答有關它的問題或對其進行變更。Claude Code 支援模糊匹配，因此您可以輸入部分名稱來找到您需要的內容：
+使用 @-mentions 為 Claude 提供有關特定檔案或資料夾的內容。當您輸入 `@` 後跟檔案或資料夾名稱時，Claude 會讀取該內容，並可以回答有關它的問題或對其進行變更。Claude Code 支援模糊匹配，因此您可以輸入部分名稱以找到您需要的內容：
 
-```text theme={null}
-> Explain the logic in @auth (fuzzy matches auth.js, AuthService.ts, etc.)
-> What's in @src/components/ (include a trailing slash for folders)
+```text wrap theme={null}
+Explain the logic in @auth (fuzzy matches auth.js, AuthService.ts, etc.)
+What's in @src/components/ (include a trailing slash for folders)
 ```
 
-對於大型 PDF，您可以要求 Claude 讀取特定頁面而不是整個檔案：單一頁面、範圍（如第 1-10 頁）或開放式範圍（如第 3 頁起）。
+對於大型 PDF，您可以要求 Claude 讀取特定頁面而不是整個檔案：單一頁面、範圍如第 1-10 頁，或開放式範圍如第 3 頁起。
 
-當您在編輯器中選擇文字時，Claude 可以自動看到您突出顯示的程式碼。提示框頁腳顯示選擇了多少行。按 `Option+K`（Mac）/ `Alt+K`（Windows/Linux）以插入帶有檔案路徑和行號的 @-提及（例如 `@app.ts#5-10`）。點擊選擇指示器以切換 Claude 是否可以看到您突出顯示的文字 - 眼睛斜線圖示表示選擇對 Claude 隱藏。
+當您在編輯器中選擇文字時，Claude 可以自動看到您的反白程式碼。提示框頁尾顯示選擇了多少行。按 `Option+K`（Mac）/ `Alt+K`（Windows/Linux）以插入帶有檔案路徑和行號的 @-mention（例如 `@app.ts#5-10`）。點擊選擇指示器上的 **X** 以將其從內容中移除，使 Claude 不會接收選擇。當您選擇其他文字時，指示器會重新出現。
 
-您也可以在將檔案拖動到提示框時按住 `Shift` 以將它們添加為附件。點擊任何附件上的 X 以將其從上下文中移除。
+擴充功能會從某些檔案中隱藏選定的文字。當檔案在您的工作區內且符合您的 `files.exclude` 或 `search.exclude` 設定時，Claude 最多會接收檔案的路徑而不是您選擇的文字。同樣適用於 git 忽略的檔案，只要 VS Code 的 `search.useIgnoreFiles` 設定和擴充功能的 [`respectGitIgnore` 設定](#extension-settings)都開啟（預設值），這就是預設值。此篩選器僅涵蓋聊天面板：當 Claude Code 在整合終端機中執行時，CLI 會傳送您選擇的文字，無論檔案如何，因此新增[`Read` 拒絕規則](#the-built-in-ide-mcp-server)以防止檔案的內容到達 Claude。
+
+Claude 也會看到您在編輯器中開啟的檔案，即使沒有選擇任何內容，提示框也會顯示其名稱。若要僅新增您選擇的文字，請關閉[附加開啟檔案設定](vscode://settings/claudeCode.attachOpenFile)。此設定需要 Claude Code v2.1.271 或更新版本。
+
+您也可以將影像和檔案附加到您的訊息：
+
+* 若要附加影像，請從您的剪貼簿將其貼到提示框中。
+* 若要附加檔案，請在將它們拖入提示框時按住 `Shift`。
+* 若要從內容中移除附件，請點擊它上面的 X。
+
+<h3 id="paste-text">
+  貼上文字
+</h3>
+
+您貼上的文字在提示框中保持可見，而不是像在[終端機](/docs/zh-TW/terminal-config#paste-large-content)中那樣摺疊到預留位置。在 Claude Code [標記貼上文字](/docs/zh-TW/terminal-config#how-claude-treats-pasted-text)的會話中，Claude 仍然會將大型貼上視為您貼上而不是輸入的文字。
+
+Claude Code 也會從您貼到提示框中的文字和您傳送的任何其他內容中移除[隱形 Unicode 字元](/docs/zh-TW/interactive-mode#invisible-characters-in-prompts)：
+
+* 如果在您貼上時出現通知，例如 `Removed 3 invisible characters from the pasted text`，文字會進入而不包含這些字元。
+* 如果在您傳送時出現有關移除字元的通知，則沒有傳送任何內容。清理的文字會回到提示框中。再次傳送以傳送如所示的文字。
 
 <h3 id="resume-past-conversations">
   恢復過去的對話
 </h3>
 
-點擊 Claude Code 面板頂部的**工作階段歷史記錄**按鈕以存取您的對話歷史記錄。您可以按關鍵字搜尋或按時間瀏覽（今天、昨天、過去 7 天等）。點擊任何對話以使用完整訊息歷史記錄恢復它。新工作階段會根據您的第一條訊息接收 AI 生成的標題。將滑鼠懸停在工作階段上以顯示重新命名和移除操作：重新命名以給它一個描述性標題，或移除以將其從清單中刪除。有關恢復工作階段的更多資訊，請參閱 [Manage sessions](/docs/zh-TW/sessions)。
+點擊 Claude Code 面板頂部的 **Session history** 按鈕以存取您的對話歷史。您可以按關鍵字搜尋或按時間瀏覽。
+
+點擊任何對話以使用完整的訊息歷史恢復它。如果對話已在目前視窗的另一個標籤中開啟，點擊它會切換到該標籤。如需有關恢復會話的更多資訊，請參閱[管理會話](/docs/zh-TW/sessions)。
+
+* **Session titles**：新會話根據您的第一條訊息接收 AI 生成的標題。
+* **Rename and archive**：將滑鼠懸停在會話上以顯示這些操作。重新命名以給它一個描述性標題，或存檔以將其移動到清單底部的 **Archived sessions** 群組。
+
+預設情況下，14 天內沒有活動的會話會自動移動到 **Archived sessions**，除非它已開啟、未讀或在[群組](#organize-sessions-into-groups)中。自動存檔需要 Claude Code v2.1.265 或更新版本。若要變更期間或關閉它，請開啟[存檔非活動會話設定](vscode://settings/claudeCode.archiveInactiveSessions)並選擇天數或 **Never**。
+
+若要恢復已存檔的會話，請展開 **Archived sessions** 並點擊 **Unarchive session**。若要一次恢復每個已存檔的會話，請將滑鼠懸停在活動列中會話清單中的 **Archived sessions** 標題上，並點擊其取消存檔圖示，這需要 Claude Code v2.1.277 或更新版本。在 v2.1.257 之前，操作是 **Delete session**，它隱藏了一個會話且無法恢復。您當時刪除的會話在升級後會出現在 **Archived sessions** 下。
+
+當您恢復的對話以計畫模式結束時，Claude Code 會恢復計畫模式。需要 Claude Code v2.1.246 或更新版本。Claude Code 在兩種情況下不會恢復它：
+
+* 擴充功能從 `claudeCode.initialPermissionMode` 或從較早對話中進行的選擇[選擇起始權限模式](/docs/zh-TW/permission-modes#switch-permission-modes)
+* 您已設定 `claudeCode.claudeProcessWrapper`
 
 <h3 id="resume-cloud-sessions-from-claude-ai">
-  從 Claude.ai 恢復遠端工作階段
+  從 Claude.ai 恢復雲端會話
 </h3>
 
-如果您使用[網路上的 Claude Code](/docs/zh-TW/claude-code-on-the-web)，您可以直接在 VS Code 中恢復這些遠端工作階段。這需要使用 **Claude.ai Subscription** 登入，而不是 Anthropic Console。
+如果您執行[雲端會話](/docs/zh-TW/claude-code-on-the-web)，您可以直接在 VS Code 中恢復它們。這需要使用 **Claude.ai Subscription** 登入，而不是 Anthropic Console。
 
 <Steps>
-  <Step title="開啟工作階段歷史記錄">
-    點擊 Claude Code 面板頂部的**工作階段歷史記錄**按鈕。
+  <Step title="開啟會話歷史">
+    點擊 Claude Code 面板頂部的 **Session history** 按鈕。
   </Step>
 
-  <Step title="選擇遠端標籤">
-    對話框顯示兩個標籤：本機和遠端。點擊**遠端**以查看來自 claude.ai 的工作階段。
+  <Step title="選擇 Web 標籤">
+    對話方塊顯示兩個標籤：Local 和 Web。點擊 **Web** 以查看來自 claude.ai 的會話。
   </Step>
 
-  <Step title="選擇要恢復的工作階段">
-    瀏覽或搜尋您的遠端工作階段。點擊任何工作階段以下載它並在本機繼續對話。
+  <Step title="選擇要恢復的會話">
+    瀏覽或搜尋您的雲端會話。點擊任何會話以下載它並在本機繼續對話。
   </Step>
 </Steps>
 
 <Note>
-  只有使用 GitHub 儲存庫啟動的網路工作階段才會出現在遠端標籤中。恢復會在本機載入對話歷史記錄；變更不會同步回 claude.ai。
+  只有使用 GitHub 存放庫啟動的雲端會話才會出現在 Web 標籤中。恢復會在本機載入對話歷史；變更不會同步回 claude.ai。
 </Note>
 
 <h3 id="check-account-and-usage">
   檢查帳戶和使用情況
 </h3>
 
-從命令菜單執行 `/usage` 以開啟「帳戶與使用情況」對話框。它顯示您登入的帳戶、方案，以及目前工作階段和本週的使用情況列，包括每個限制重設的時間。
+執行 `/usage` 以開啟帳戶和使用情況對話方塊。它顯示您登入的帳戶，使用情況報告因登入而異：
 
-該對話框也會分解對您的方案限制有貢獻的內容。它會標記佔最近使用情況 10% 或以上的行為，例如快取未命中、長上下文和子代理程式密集或高度平行的工作階段，每個都有減少它的提示。歸因表顯示每個技能、子代理程式、外掛程式和 MCP server 貢獻了多少使用情況。需要 Claude Code v2.1.174 或更新版本。
+* **claude.ai plan**：您方案限制的使用情況列，例如目前會話和週。每個列顯示其限制重設的時間。
 
-使用「日」和「週」切換以在過去 24 小時和過去 7 天之間切換。這些數字是近似值，並從此機器上的本機工作階段計算，因此不包括來自其他裝置或 claude.ai 的使用情況。有關追蹤和減少使用情況的更多資訊，請參閱 [Track your costs](/docs/zh-TW/costs#track-your-costs)。
+  對話方塊也會分解對您的方案限制有貢獻的內容。它標記佔最近使用情況 10% 或以上的行為，例如快取未命中、長內容和子代理程式繁重或高度平行會話，每個都有減少它的提示。Attribution 表格顯示每個 skill、subagent、外掛程式和 MCP 伺服器貢獻了多少使用情況。
+
+  使用 Day 和 Week 切換以在過去 24 小時和過去 7 天之間切換。這些數字是近似值，並從此機器上的本機會話計算，因此不包括來自其他裝置或 claude.ai 的使用情況。
+* **Other sign-ins**：當方案限制不適用於您的登入時，例如在[第三方提供者](#use-third-party-providers)上或使用 API 金鑰時，Usage 部分會改為顯示會話自己的成本和令牌使用情況。CLI 的 `/usage` 在其[會話區塊](/docs/zh-TW/costs#track-your-costs)中顯示相同的總計。活動列中的會話清單也會在其 **Account & usage** 標題下顯示活動會話的總計。需要 Claude Code v2.1.277 或更新版本。
+
+如需有關追蹤和減少使用情況的更多資訊，請參閱[追蹤您的成本](/docs/zh-TW/costs#track-your-costs)。
 
 <h2 id="customize-your-workflow">
   自訂您的工作流程
 </h2>
 
-一旦您啟動並執行，您可以重新定位 Claude 面板、執行多個工作階段或切換到終端機模式。
+您可以重新定位 Claude 面板、執行多個對話、將工作階段清單組織成群組，或切換到終端機模式。
 
 <h3 id="choose-where-claude-lives">
   選擇 Claude 的位置
 </h3>
 
-您可以拖動 Claude 面板以在 VS Code 中的任何位置重新定位它。抓住面板的標籤或標題列並拖動到：
+您可以拖曳 Claude 面板在 VS Code 中重新定位到任何位置。抓住面板的標籤或標題列並拖曳到：
 
-* **次要邊欄**：視窗的右側。在您編碼時保持 Claude 可見。
-* **主要邊欄**：左側邊欄，帶有資源管理器、搜尋等圖示。
-* **編輯器區域**：將 Claude 作為標籤與您的檔案一起開啟。適用於側面任務。
+* **次要側邊欄**：視窗的右側。在您編寫程式碼時保持 Claude 可見。
+* **主要側邊欄**：左側邊欄，包含 Explorer、Search 等圖示。
+* **編輯器區域**：將 Claude 作為標籤開啟，與您的檔案並排。適合處理附帶工作。
+
+當 Claude 在新編輯器群組中開啟標籤時，擴充功能會鎖定該群組，因此當 Claude 標籤處於焦點時您開啟的檔案會進入另一個群組，而不是在其旁邊。
+
+若要停止擴充功能鎖定群組，請關閉 [Lock Editor Groups 設定](vscode://settings/claudeCode.lockEditorGroups)。已經鎖定的群組會保持鎖定狀態，直到您解除鎖定為止。此設定需要 Claude Code v2.1.274 或更新版本。
 
 <Tip>
-  將邊欄用於您的主要 Claude 工作階段，並為側面任務開啟其他標籤。Claude 會記住您偏好的位置。活動列工作階段清單圖示與 Claude 面板分開：工作階段清單在活動列中始終可見，而 Claude 面板圖示只有在面板停靠到左側邊欄時才會出現在那裡。
+  將側邊欄用於您的主要 Claude 工作階段，並為附帶工作開啟額外的標籤。Claude 會記住您偏好的位置。Activity Bar 工作階段清單圖示與 Claude 面板分開：工作階段清單始終在 Activity Bar 中可見，而 Claude 面板圖示只有在面板停靠到左側邊欄時才會出現在那裡。
 </Tip>
+
+執行 **Developer: Reload Window** 或重新啟動 VS Code 後，對話是否會回到其對話內容取決於它在哪裡開啟：
+
+* **編輯器標籤**：對話會與其標籤一起回到。
+* **側邊欄**：如果您在過去 10 分鐘內傳送了訊息或 Claude 在其中回應，對話會回到。如果它沒有回到，請從 [工作階段歷史記錄](#resume-past-conversations) 繼續對話。
+
+如果重新載入在 Claude 執行步驟中途中斷，當對話回到時 Claude 會繼續該步驟，聊天中的通知會標記該繼續。需要 Claude Code v2.1.274 或更新版本。如果步驟在一小時前被中斷或工作階段在其他地方開啟，對話會改為回到閒置狀態。
+
+若要關閉繼續功能，請開啟 [Continue After Reload 設定](vscode://settings/claudeCode.continueAfterReload) 並取消勾選。
 
 <h3 id="run-multiple-conversations">
   執行多個對話
 </h3>
 
-使用命令面板中的**在新標籤中開啟**或**在新視窗中開啟**以開始其他對話。每個對話維護自己的歷史記錄和上下文，允許您並行處理不同的任務。
+使用命令選擇板中的 **Open in New Tab** 或 **Open in New Window** 來啟動額外的對話。每個對話都維護自己的歷史記錄和上下文，讓您可以並行處理不同的工作。
 
-使用標籤時，spark 圖示上的小彩色點表示狀態：藍色表示許可請求待處理，橙色表示 Claude 在標籤隱藏時完成。
+使用標籤時，spark 圖示上的小彩色點表示狀態：藍色表示權限要求待處理，橙色表示 Claude 在標籤隱藏時已完成。
+
+<h3 id="organize-sessions-into-groups">
+  將工作階段組織成群組
+</h3>
+
+在 Activity Bar 的工作階段清單中，您可以將相關工作階段收集到具名的、可摺疊的群組中。需要 Claude Code v2.1.229 或更新版本。
+
+* **群組或取消群組工作階段**：右鍵點擊工作階段以從其建立群組、將其移動到現有群組，或將其從其群組中移除。每個工作階段一次只屬於一個群組，因此將其移動到另一個群組會將其從第一個群組中移除。
+* **一次移動多個工作階段**：`Cmd`-點擊 (Mac) / `Ctrl`-點擊 (Windows/Linux) 每個工作階段，或 `Shift`-點擊以選擇一個範圍，然後右鍵點擊選擇。
+* **從其標籤群組工作階段**：從命令選擇板執行 **Claude Code: Add Session Tab to Group**，然後選擇或建立群組。需要 Claude Code v2.1.257 或更新版本。
+* **重新命名或刪除群組**：右鍵點擊群組標題。刪除群組只會移除群組，其工作階段會回到未群組的清單。
+
+擴充功能會按工作區資料夾儲存群組，因此它們在視窗重新載入後仍然存在，並在您開啟相同資料夾的每個視窗中出現。當您搜尋清單時，擴充功能會在所有群組中的一個平面清單中顯示符合項目。
 
 <h3 id="switch-to-terminal-mode">
   切換到終端機模式
 </h3>
 
-預設情況下，擴充功能開啟圖形聊天面板。如果您偏好 CLI 風格的介面，請開啟[使用終端機設定](vscode://settings/claudeCode.useTerminal)並勾選該框。
+根據預設，擴充功能會開啟圖形化聊天面板。如果您偏好 CLI 風格的介面，請開啟 [Use Terminal 設定](vscode://settings/claudeCode.useTerminal) 並勾選該方塊。
 
-您也可以開啟 VS Code 設定（Mac 上的 `Cmd+,` 或 Windows/Linux 上的 `Ctrl+,`），前往「擴充功能」→「Claude Code」，然後勾選**使用終端機**。
+您也可以開啟 VS Code 設定 (Mac 上為 `Cmd+,` 或 Windows/Linux 上為 `Ctrl+,`)，前往 Extensions → Claude Code，並勾選 **Use Terminal**。
 
 <h2 id="manage-plugins">
   管理 plugins
 </h2>
 
-VS Code 擴充功能包含用於安裝和管理 [plugins](/docs/zh-TW/plugins) 的圖形介面。在提示框中輸入 `/plugins` 以開啟**管理 plugins** 介面。
+VS Code 擴充功能包含一個圖形介面，用於安裝和管理 [plugins](/docs/zh-TW/plugins/overview)。在提示框中輸入 `/plugins` 以開啟**管理 plugins** 介面。
 
 <h3 id="install-plugins">
   安裝 plugins
@@ -219,83 +341,116 @@ plugin 對話框顯示兩個標籤：**Plugins** 和 **Marketplaces**。
 
 在 Plugins 標籤中：
 
-* **已安裝的 plugins** 出現在頂部，帶有切換開關以啟用或停用它們
-* **來自您配置的市場的可用 plugins** 出現在下方
+* **已安裝的 plugins** 顯示在頂部，並帶有切換開關以啟用或停用它們
+* **可用的 plugins** 來自您設定的 marketplaces，顯示在下方
 * 搜尋以按名稱或描述篩選 plugins
 * 點擊任何可用 plugin 上的**安裝**
 
-當您安裝 plugin 時，選擇安裝範圍：
+當您安裝 plugin 時，請選擇安裝範圍：
 
 * **為您安裝**：在您的所有專案中可用（使用者範圍）
 * **為此專案安裝**：與專案協作者共享（專案範圍）
-* **在本機安裝**：僅適用於您，僅在此儲存庫中（本機範圍）
+* **本機安裝**：僅供您使用，僅在此儲存庫中（本機範圍）
 
-<h3 id="manage-marketplaces">
-  管理市場
+<h3 id="share-a-plugin-install-link">
+  分享 plugin 安裝連結
 </h3>
 
-切換到 **Marketplaces** 標籤以添加或移除 plugin 來源：
+若要直接將某人導向安裝特定 plugin，請提供擴充功能的 `install-plugin` URL。開啟它會啟動或聚焦 VS Code、開啟 Claude Code 面板，並在該 plugin 的範圍選擇上開啟**管理 plugins** 對話框。在該人選擇範圍之前，不會安裝任何內容。如果 Claude Code 中尚未設定該 plugin 的 marketplace，對話框會先要求他們新增它。
 
-* 輸入 GitHub 儲存庫、URL 或本機路徑以添加新市場
-* 點擊重新整理圖示以更新市場的 plugin 清單
-* 點擊垃圾桶圖示以移除市場
+```text theme={null}
+vscode://anthropic.claude-code/install-plugin?plugin=code-review&marketplace=anthropics/claude-plugins-official
+```
 
-進行變更後，橫幅會提示您重新啟動 Claude Code 以應用更新。
+該 URL 採用兩個查詢參數：
+
+| 參數            | 描述                                                                                                                                          |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `plugin`      | plugin 的名稱，如其 marketplace 所列。必需。                                                                                                            |
+| `marketplace` | plugin 的來源：GitHub `owner/repo`、`https://` URL 或 git SSH URL，例如 `git@github.com:owner/repo.git`。省略時預設為 `anthropics/claude-plugins-official`。 |
+
+[Marketplaces 標籤](#manage-marketplaces)接受的某些值在連結中不適用，例如本機路徑或 `http://` 位址。對於這些，VS Code 會顯示錯誤訊息，對話框不會開啟。
+
+兩種情況在對話框中以訊息結束，而不是範圍選擇：
+
+* **marketplace 未按該名稱列出 plugin**：對話框報告找不到該 plugin。根據 marketplace 的清單檢查 `plugin` 值。
+* **plugin 已安裝**：對話框會說明這一點，且不會進行任何變更。
+
+GitHub README、議題和某些其他 Markdown 主機會移除其方案不是 `http` 或 `https` 的連結，因此 `vscode://` 連結在那裡呈現為純文字。將 URL 放在這些主機上的程式碼區塊中，如 [連結呈現為純文字而不是可點擊的](/docs/zh-TW/deep-links#the-link-renders-as-plain-text-instead-of-being-clickable) 針對 `claude-cli://` 連結所描述的那樣。
+
+<h3 id="manage-marketplaces">
+  管理 marketplaces
+</h3>
+
+切換到 **Marketplaces** 標籤以新增或移除 plugin 來源：
+
+* 輸入 GitHub 儲存庫、URL 或本機路徑以新增 marketplace
+* 點擊重新整理圖示以更新 marketplace 的 plugin 清單
+* 點擊垃圾桶圖示以移除 marketplace
+
+您在對話框中進行的 plugin 變更會立即套用到該 VS Code 視窗中開啟的 Claude Code 工作階段。如果您開啟對話框的工作階段無法重新載入其 plugins，對話框會提供重試或在該工作階段中重新啟動 Claude 的選項。
 
 <Note>
-  VS Code 中的 plugin 管理在幕後使用相同的 CLI 命令。您在擴充功能中配置的 plugins 和市場也可在 CLI 中使用，反之亦然。
+  VS Code 中的 plugin 管理在幕後使用相同的 CLI 命令。您在擴充功能中設定的 plugins 和 marketplaces 也可在 CLI 中使用，反之亦然。
 </Note>
 
-有關 plugin 系統的更多資訊，請參閱 [Plugins](/docs/zh-TW/plugins) 和 [Plugin marketplaces](/docs/zh-TW/plugin-marketplaces)。
+如需深入瞭解 plugin 系統，請參閱 [Plugins](/docs/zh-TW/plugins/overview) 和 [Plugin marketplaces](/docs/zh-TW/plugins/overview)。
 
 <h2 id="automate-browser-tasks-with-chrome">
   使用 Chrome 自動化瀏覽器任務
 </h2>
 
-將 Claude 連接到您的 Chrome 瀏覽器以測試網路應用程式、使用主控台日誌進行除錯，以及在不離開 VS Code 的情況下自動化瀏覽器工作流程。這需要 [Claude in Chrome extension](https://chromewebstore.google.com/detail/claude/fcoeoabgfenejglbffodgkkbkcdhcgfn) 版本 1.0.36 或更高版本。
+將 Claude 連接到您的 Chrome 瀏覽器，以測試網頁應用程式、使用主控台日誌進行除錯，以及在不離開 VS Code 的情況下自動化瀏覽器工作流程。這需要 [Claude in Chrome 擴充功能](https://chromewebstore.google.com/detail/claude/fcoeoabgfenejglbffodgkkbkcdhcgfn) 版本 1.0.36 或更高版本。
 
-在提示框中輸入 `@browser` 後跟您想要 Claude 做的事情：
+在提示框中輸入 `@browser`，然後輸入您想要 Claude 執行的操作：
 
-```text theme={null}
+```text wrap theme={null}
 @browser go to localhost:3000 and check the console for errors
 ```
 
-您也可以開啟附件菜單以選擇特定的瀏覽器工具，例如開啟新標籤或讀取頁面內容。
+您也可以開啟附件選單，選擇特定的瀏覽器工具，例如開啟新分頁或讀取頁面內容。
 
-Claude 為瀏覽器任務開啟新標籤並共享您的瀏覽器登入狀態，因此它可以存取您已登入的任何網站。
+Claude 會為瀏覽器任務開啟新分頁，並共享您瀏覽器的登入狀態，因此它可以存取您已登入的任何網站。
 
-有關設定說明、完整功能清單和故障排除，請參閱[使用 Claude Code 與 Chrome](/docs/zh-TW/chrome)。
+如需設定說明、完整的功能清單和疑難排解，請參閱 [使用 Claude Code 搭配 Chrome](/docs/zh-TW/chrome)。
 
 <h2 id="vs-code-commands-and-shortcuts">
   VS Code 命令和快捷鍵
 </h2>
 
-開啟命令面板（Mac 上的 `Cmd+Shift+P` 或 Windows/Linux 上的 `Ctrl+Shift+P`）並輸入「Claude Code」以查看 Claude Code 擴充功能的所有可用 VS Code 命令。
+開啟命令面板（Mac 上按 `Cmd+Shift+P` 或 Windows/Linux 上按 `Ctrl+Shift+P`），然後輸入「Claude Code」以查看 Claude Code 擴充功能的所有可用 VS Code 命令。
 
 某些快捷鍵取決於哪個面板「獲得焦點」（接收鍵盤輸入）。當您的游標在程式碼檔案中時，編輯器獲得焦點。當您的游標在 Claude 的提示框中時，Claude 獲得焦點。使用 `Cmd+Esc` / `Ctrl+Esc` 在它們之間切換。
 
 <Note>
-  這些是用於控制擴充功能的 VS Code 命令。並非所有內建 Claude Code 命令都在擴充功能中可用。有關詳細資訊，請參閱 [VS Code 擴充功能與 Claude Code CLI](#vs-code-extension-vs-claude-code-cli)。
+  這些是用於控制擴充功能的 VS Code 命令。並非所有內建的 Claude Code 命令都可在擴充功能中使用。詳見 [VS Code 擴充功能與 Claude Code CLI](#vs-code-extension-vs-claude-code-cli) 以了解詳情。
 </Note>
 
-| 命令                         | 快捷鍵                                                   | 描述                                                                                                                  |
-| -------------------------- | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| Focus Input                | `Cmd+Esc`（Mac）/ `Ctrl+Esc`（Windows/Linux）             | 在編輯器和 Claude 之間切換焦點                                                                                                 |
-| Open in Side Bar           | -                                                     | 在左側邊欄中開啟 Claude                                                                                                     |
-| Open in Terminal           | -                                                     | 在終端機模式中開啟 Claude                                                                                                    |
-| Open in New Tab            | `Cmd+Shift+Esc`（Mac）/ `Ctrl+Shift+Esc`（Windows/Linux） | 將新對話作為編輯器標籤開啟                                                                                                       |
-| Open in New Window         | -                                                     | 在單獨的視窗中開啟新對話                                                                                                        |
-| New Conversation           | `Cmd+N`（Mac）/ `Ctrl+N`（Windows/Linux）                 | 開始新對話。需要 Claude 獲得焦點且 `enableNewConversationShortcut` 設定為 `true`                                                    |
-| Reopen Closed Session      | `Cmd+Shift+T`（Mac）/ `Ctrl+Shift+T`（Windows/Linux）     | 重新開啟最近關閉的 Claude 工作階段標籤。當最後關閉的標籤不是 Claude 工作階段時，會回退到 VS Code 的正常重新開啟關閉編輯器。使用 `enableReopenClosedSessionShortcut` 停用 |
-| Insert @-Mention Reference | `Option+K`（Mac）/ `Alt+K`（Windows/Linux）               | 插入對目前檔案和選擇的參考（需要編輯器獲得焦點）                                                                                            |
-| Show Logs                  | -                                                     | 檢視擴充功能除錯日誌                                                                                                          |
-| Logout                     | -                                                     | 登出您的 Anthropic 帳戶                                                                                                   |
+| 命令                         | 快捷鍵                                                      | 說明                                                                                                                       |
+| -------------------------- | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Focus Input                | `Cmd+Esc` (Mac) / `Ctrl+Esc` (Windows/Linux)             | 在編輯器和 Claude 之間切換焦點                                                                                                      |
+| Focus last message         | -                                                        | 將鍵盤焦點移至對話中最新的訊息，或移至等待權限提示，以便您可以使用鍵盤或螢幕閱讀器從該處讀取。在[終端機模式](#switch-to-terminal-mode)中不可用。需要 Claude Code v2.1.268 或更新版本      |
+| Open in Side Bar           | -                                                        | 在側邊欄中開啟 Claude                                                                                                           |
+| Open in Terminal           | -                                                        | 在終端機模式中開啟 Claude                                                                                                         |
+| Open in New Tab            | `Cmd+Shift+Esc` (Mac) / `Ctrl+Shift+Esc` (Windows/Linux) | 以編輯器標籤頁開啟新對話                                                                                                             |
+| Open in New Window         | -                                                        | 在單獨的視窗中開啟新對話                                                                                                             |
+| New Conversation           | `Cmd+N` (Mac) / `Ctrl+N` (Windows/Linux)                 | 開始新對話。需要 Claude 獲得焦點且 `enableNewConversationShortcut` 設定為 `true`                                                         |
+| Reopen Closed Session      | `Cmd+Shift+T` (Mac) / `Ctrl+Shift+T` (Windows/Linux)     | 重新開啟最近關閉的 Claude 工作階段標籤頁。當最後關閉的標籤頁不是 Claude 工作階段時，會回退到 VS Code 的正常重新開啟關閉編輯器功能。可使用 `enableReopenClosedSessionShortcut` 停用 |
+| Insert @-Mention Reference | `Option+K` (Mac) / `Alt+K` (Windows/Linux)               | 插入對目前檔案和選取項目的參考（需要編輯器獲得焦點）                                                                                               |
+| Accept Change at Cursor    | -                                                        | 在[檢視提議的編輯](#get-started)時，逐次接受游標處的變更。需要 Claude Code v2.1.275 或更新版本                                                       |
+| Reject Change at Cursor    | -                                                        | 在逐次檢視提議的編輯時，還原游標處的變更。需要 Claude Code v2.1.275 或更新版本                                                                       |
+| Toggle Focus view          | `Ctrl+Option+F` (Mac) / `Ctrl+Alt+F` (Windows/Linux)     | 隱藏或顯示對話中的工具活動。在 Claude 面板或側邊欄可見時有效。需要 Claude Code v2.1.221 或更新版本                                                         |
+| Rename Session Tab         | -                                                        | 重新命名作用中 Claude 標籤頁中的工作階段。需要 Claude Code v2.1.257 或更新版本                                                                   |
+| Add Session Tab to Group   | -                                                        | 將作用中 Claude 標籤頁中的工作階段新增至您選擇或建立的[工作階段群組](#organize-sessions-into-groups)。需要 Claude Code v2.1.257 或更新版本                    |
+| Mark Session as Unread     | -                                                        | 在工作階段清單中將作用中 Claude 標籤頁中的工作階段標記為未讀。需要 Claude Code v2.1.257 或更新版本                                                         |
+| Show Logs                  | -                                                        | 檢視擴充功能偵錯日誌                                                                                                               |
+| Logout                     | -                                                        | 登出您的 Anthropic 帳戶                                                                                                        |
 
 <h3 id="launch-a-vs-code-tab-from-other-tools">
-  從其他工具啟動 VS Code 標籤
+  從其他工具啟動 VS Code 標籤頁
 </h3>
 
-擴充功能在 `vscode://anthropic.claude-code/open` 註冊 URI 處理程式。使用它從您自己的工具開啟新的 Claude Code 標籤：shell 別名、瀏覽器書籤，或任何可以開啟 URL 的指令碼。如果 VS Code 尚未執行，開啟 URL 會先啟動它。如果 VS Code 已在執行，URL 會在目前獲得焦點的視窗中開啟。
+該擴充功能在 `vscode://anthropic.claude-code/open` 註冊了 URI 處理程式。使用它從您自己的工具（shell 別名、瀏覽器書籤或任何可以開啟 URL 的指令碼）開啟新的 Claude Code 標籤頁。如果 VS Code 尚未執行，開啟 URL 會先啟動它。如果 VS Code 已在執行，URL 會在目前獲得焦點的視窗中開啟。
 
 使用您的作業系統的 URL 開啟程式叫用處理程式。
 
@@ -310,6 +465,8 @@ Claude 為瀏覽器任務開啟新標籤並共享您的瀏覽器登入狀態，�
     ```bash theme={null}
     xdg-open "vscode://anthropic.claude-code/open"
     ```
+
+    `xdg-open` 命令來自 `xdg-utils` 套件。如果 shell 報告找不到它，請參閱 [xdg-open is not found on Linux](/docs/zh-TW/deep-links#xdg-open-is-not-found-on-linux)。
   </Tab>
 
   <Tab title="Windows">
@@ -327,96 +484,140 @@ Claude 為瀏覽器任務開啟新標籤並共享您的瀏覽器登入狀態，�
   </Tab>
 </Tabs>
 
-處理程式接受兩個選擇性查詢參數：
+該處理程式接受兩個選用查詢參數：
 
-| 參數        | 描述                                                                                                                                                                |
+| 參數        | 說明                                                                                                                                                                |
 | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `prompt`  | 要在提示框中預先填入的文字。必須進行 URL 編碼。提示會預先填入但不會自動提交。                                                                                                                         |
-| `session` | 要恢復的工作階段 ID，而不是開始新對話。工作階段必須屬於目前在 VS Code 中開啟的工作區。如果找不到工作階段，會改為開始新的對話。如果工作階段已在標籤中開啟，該標籤會獲得焦點。若要以程式設計方式擷取工作階段 ID，請參閱[繼續對話](/docs/zh-TW/headless#continue-conversations)。 |
+| `prompt`  | 在提示框中預先填入的文字。必須進行 URL 編碼。提示會預先填入但不會自動提交。                                                                                                                          |
+| `session` | 要繼續的工作階段 ID，而不是開始新對話。工作階段必須屬於目前在 VS Code 中開啟的工作區。如果找不到工作階段，則改為開始新對話。如果工作階段已在標籤頁中開啟，則會焦點該標籤頁。若要以程式設計方式擷取工作階段 ID，請參閱[繼續對話](/docs/zh-TW/headless#continue-conversations)。 |
 
-例如，若要開啟預先填入「review my changes」的標籤：
+例如，若要開啟預先填入「review my changes」的標籤頁：
 
 ```text theme={null}
 vscode://anthropic.claude-code/open?prompt=review%20my%20changes
 ```
 
-若要啟動終端機工作階段而不是 VS Code 標籤，請使用 CLI 的 `claude-cli://` 處理程式。請參閱[從連結啟動工作階段](/docs/zh-TW/deep-links)。
+該擴充功能也會處理 `vscode://anthropic.claude-code/install-plugin`，它會[在一個外掛程式上開啟外掛程式對話](#share-a-plugin-install-link)。若要啟動終端機工作階段而不是 VS Code 標籤頁，請使用 CLI 的 `claude-cli://` 處理程式。請參閱[從連結啟動工作階段](/docs/zh-TW/deep-links)。
 
 <h2 id="configure-settings">
-  配置設定
+  設定設定
 </h2>
 
-擴充功能有兩種類型的設定：
+此擴充功能有兩種類型的設定：
 
-* **VS Code 中的擴充功能設定**：控制擴充功能在 VS Code 中的行為。使用 `Cmd+,`（Mac）或 `Ctrl+,`（Windows/Linux）開啟，然後前往「擴充功能」→「Claude Code」。您也可以輸入 `/` 並選擇**一般配置**以開啟設定。
-* **`~/.claude/settings.json` 中的 Claude Code 設定**：在擴充功能和 CLI 之間共享。用於允許的命令、環境變數、hooks 和 MCP servers。有關詳細資訊，請參閱[設定](/docs/zh-TW/settings)。
+* **VS Code 中的擴充功能設定**：控制擴充功能在 VS Code 中的行為。使用 `Cmd+,`（Mac）或 `Ctrl+,`（Windows/Linux）開啟，然後前往 Extensions → Claude Code。您也可以輸入 `/` 並選擇 **General config…** 來開啟設定。
+* **`~/.claude/settings.json` 中的 Claude Code 設定**：在擴充功能和 CLI 之間共享。用於允許的命令、環境變數、hooks 和 MCP 伺服器。在 Pro、Max 和 Team 方案上，它也是權限模式對話開始時的一個輸入。[切換權限模式](/docs/zh-TW/permission-modes#switch-permission-modes)列出順序。詳見[設定](/docs/zh-TW/settings)。
 
 <Tip>
-  將 `"$schema": "https://json.schemastore.org/claude-code-settings.json"` 添加到您的 `settings.json` 以在 VS Code 中直接獲得所有可用設定的自動完成和內聯驗證。
+  將 `"$schema": "https://json.schemastore.org/claude-code-settings.json"` 新增至您的 `settings.json`，以在 VS Code 中直接取得所有可用設定的自動完成和內嵌驗證。
 </Tip>
 
 <h3 id="extension-settings">
   擴充功能設定
 </h3>
 
-| 設定                                  | 預設值       | 描述                                                                                                                                                                                                           |
-| ----------------------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `useTerminal`                       | `false`   | 以終端機模式而不是圖形面板啟動 Claude                                                                                                                                                                                       |
-| `initialPermissionMode`             | `default` | 控制新對話的批准提示：`default`、`plan`、`acceptEdits` 或 `bypassPermissions`。`manual` 是 `default` 的別名，並選擇模式指示器中標記為**手動**的模式。需要 Claude Code v2.1.200 或更新版本。請參閱[許可模式](/docs/zh-TW/permission-modes)。                             |
-| `preferredLocation`                 | `panel`   | Claude 開啟的位置：`sidebar`（右側）或 `panel`（新標籤）                                                                                                                                                                     |
-| `autosave`                          | `true`    | Claude 讀取或寫入檔案前自動儲存檔案                                                                                                                                                                                        |
-| `useCtrlEnterToSend`                | `false`   | 使用 Ctrl/Cmd+Enter 而不是 Enter 來傳送提示                                                                                                                                                                            |
-| `enableNewConversationShortcut`     | `false`   | 啟用 Cmd/Ctrl+N 以開始新對話                                                                                                                                                                                         |
-| `enableReopenClosedSessionShortcut` | `true`    | 使用 Cmd/Ctrl+Shift+T 重新開啟最近關閉的 Claude 工作階段標籤。當最後關閉的標籤不是 Claude 工作階段時，快捷鍵會改為執行 VS Code 的正常重新開啟已關閉編輯器命令。                                                                                                        |
-| `hideOnboarding`                    | `false`   | 隱藏入門檢查清單（畢業帽圖示）                                                                                                                                                                                              |
-| `respectGitIgnore`                  | `true`    | 從檔案搜尋中排除 .gitignore 模式                                                                                                                                                                                       |
-| `usePythonEnvironment`              | `true`    | 執行 Claude 時啟動工作區的 Python 環境。需要 Python 擴充功能。                                                                                                                                                                  |
-| `environmentVariables`              | `[]`      | 為 Claude 程序設定環境變數。改為使用 Claude Code 設定以進行共享配置。                                                                                                                                                                |
-| `disableLoginPrompt`                | `false`   | 跳過身份驗證提示（用於第三方提供者設定）                                                                                                                                                                                         |
-| `allowDangerouslySkipPermissions`   | `false`   | 將 Bypass permissions 添加到模式選擇器。僅在沒有網際網路存取的 sandbox 中使用。                                                                                                                                                       |
-| `claudeProcessWrapper`              | -         | 用於啟動 Claude 程序的可執行檔。當存在時，捆綁的二進制檔案路徑會作為引數傳遞。如果擴充功能組建不包含您平台的二進制檔案，請將此設定為單獨安裝的 `claude` 二進制檔案。如果擴充功能組建不包含您平台的二進制檔案，請參閱[哪些平台有預先建置的二進制檔案](/docs/zh-TW/troubleshoot-install#native-binary-not-found-after-npm-install)。 |
+VS Code 從您的使用者設定讀取 `initialPermissionMode`，並忽略工作區值。在 v2.1.225 之前，VS Code 預設將設定設為 `default` 並套用工作區值。
 
-<h2 id="vs-code-extension-vs-claude-code-cli">
-  VS Code 擴充功能與 Claude Code CLI
+| 設定                                  | 預設值     | 說明                                                                                                                                                                                                                                                                                                                                                                                                      |
+| ----------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `useTerminal`                       | `false` | 以終端機模式而非圖形面板啟動 Claude                                                                                                                                                                                                                                                                                                                                                                                   |
+| `initialPermissionMode`             | -       | 控制新對話的核准提示：`default`、`plan`、`acceptEdits` 或 `bypassPermissions`。`manual` 是 `default` 的別名，並選擇模式指示器中標示為 **Manual** 的模式。當您將其保留為未設定時，擴充功能會選擇起始權限模式，如[切換權限模式](/docs/zh-TW/permission-modes#switch-permission-modes)中所述。                                                                                                                                                                                           |
+| `preferredLocation`                 | `panel` | Claude 開啟的位置：`sidebar`（右側）或 `panel`（新標籤）                                                                                                                                                                                                                                                                                                                                                                |
+| `lockEditorGroups`                  | `true`  | [鎖定 Claude 為其標籤啟動的編輯器群組](#choose-where-claude-lives)，以便您在 Claude 標籤聚焦時開啟的檔案會進入另一個群組。關閉時，擴充功能永遠不會鎖定編輯器群組。需要 Claude Code v2.1.274 或更新版本                                                                                                                                                                                                                                                                   |
+| `autosave`                          | `true`  | Claude 讀取或寫入檔案前自動儲存檔案                                                                                                                                                                                                                                                                                                                                                                                   |
+| `attachOpenFile`                    | `true`  | 將編輯器中開啟的檔案新增至您的訊息，並在提示框中顯示。關閉時，只會新增您選取的文字。需要 Claude Code v2.1.271 或更新版本                                                                                                                                                                                                                                                                                                                                 |
+| `useCtrlEnterToSend`                | `false` | 使用 Ctrl/Cmd+Enter 而非 Enter 來傳送提示                                                                                                                                                                                                                                                                                                                                                                        |
+| `scrollToBottomOnSend`              | `true`  | 當您傳送訊息時，將對話捲動到底部。關閉時，對話會停留在您離開的位置。需要 Claude Code v2.1.275 或更新版本                                                                                                                                                                                                                                                                                                                                         |
+| `enableNewConversationShortcut`     | `false` | 啟用 Cmd/Ctrl+N 以開始新對話                                                                                                                                                                                                                                                                                                                                                                                    |
+| `enableReopenClosedSessionShortcut` | `true`  | 使用 Cmd/Ctrl+Shift+T 重新開啟最近關閉的 Claude 工作階段標籤。當最後關閉的標籤不是 Claude 工作階段時，快捷鍵會改為執行 VS Code 的正常重新開啟已關閉編輯器命令。                                                                                                                                                                                                                                                                                                   |
+| `archiveInactiveSessions`           | `14`    | 在無活動的這許多天後[自動封存工作階段](#resume-past-conversations)：`1`、`2`、`7` 或 `14`。設定為 `0` 以關閉。需要 Claude Code v2.1.265 或更新版本                                                                                                                                                                                                                                                                                           |
+| `continueAfterReload`               | `true`  | 視窗重新載入後，Claude [繼續已還原工作階段中被中斷的步驟](#choose-where-claude-lives)。需要 Claude Code v2.1.274 或更新版本                                                                                                                                                                                                                                                                                                             |
+| `hideOnboarding`                    | `false` | 隱藏上線檢查清單（畢業帽圖示）                                                                                                                                                                                                                                                                                                                                                                                         |
+| `focusView`                         | `false` | 將工具呼叫、工具結果和思考隱藏在可展開的列後面，只留下您的提示和 Claude 的回應。Claude 的最新待辦事項清單保持可見；這需要 Claude Code v2.1.225 或更新版本。您也可以從命令選單切換焦點檢視。需要 Claude Code v2.1.221 或更新版本                                                                                                                                                                                                                                                           |
+| `respectGitIgnore`                  | `true`  | 從檔案搜尋中排除 .gitignore 模式，以及從[選擇內容](#reference-files-and-folders)                                                                                                                                                                                                                                                                                                                                          |
+| `usePythonEnvironment`              | `true`  | 執行 Claude 時啟動工作區的 Python 環境。需要 Python 擴充功能。                                                                                                                                                                                                                                                                                                                                                             |
+| `environmentVariables`              | `[]`    | 為 Claude 程序設定環境變數。使用 Claude Code 設定以改為共享設定。                                                                                                                                                                                                                                                                                                                                                             |
+| `disableLoginPrompt`                | `false` | 略過驗證提示（用於第三方提供者設定）                                                                                                                                                                                                                                                                                                                                                                                      |
+| `allowDangerouslySkipPermissions`   | `false` | 將略過權限新增至模式選擇器。僅在沒有網際網路存取的沙箱中使用。                                                                                                                                                                                                                                                                                                                                                                         |
+| `claudeProcessWrapper`              | -       | 用於啟動 Claude 程序的可執行檔。當存在時，組合的二進位路徑會作為引數傳遞。如果擴充功能組建不包含您平台的二進位檔，請將其設定為單獨安裝的 `claude` 二進位檔。在包裝的設定中，對話以 Manual 模式開始，除非您設定 `initialPermissionMode` 或在較早的對話中選擇了 Manual、Edit automatically 或 Auto，因為擴充功能會在那裡略過設定和內建預設步驟；請參閱[切換權限模式](/docs/zh-TW/permission-modes#switch-permission-modes)。啟動時出現「不支援的平台」錯誤表示您的平台沒有組合的二進位檔；請參閱[哪些平台有預先建置的二進位檔](/docs/zh-TW/troubleshoot-install#native-binary-not-found-after-npm-install)。 |
+
+<h2 id="use-a-screen-reader">
+  使用螢幕閱讀器
 </h2>
 
-Claude Code 既可作為 VS Code 擴充功能（圖形面板）也可作為 CLI（終端機中的命令列介面）使用。某些功能僅在 CLI 中可用。如果您需要 CLI 專用功能，請在 VS Code 的整合終端機中執行 `claude`。這需要[獨立 CLI 安裝](/docs/zh-TW/setup)：擴充功能不會將 `claude` 新增到您的 PATH。請參閱[在 VS Code 中執行 CLI](#run-cli-in-vs-code)。
+擴充功能的聊天面板可與螢幕閱讀器搭配使用。您無需開啟任何設定：擴充功能會為每位使用者宣佈對話活動，不會有任何視覺變化。這與 CLI 的選擇加入 [螢幕閱讀器模式](/docs/zh-TW/accessibility) 不同，後者會調整終端機介面。
 
-| 功能            | CLI                   | VS Code 擴充功能                             |
-| ------------- | --------------------- | ---------------------------------------- |
-| 命令和 skills    | [全部](/docs/zh-TW/commands) | 子集（輸入 `/` 以查看可用的）                        |
-| MCP server 配置 | 是                     | 部分（透過 CLI 添加伺服器；使用聊天面板中的 `/mcp` 管理現有伺服器） |
-| Checkpoints   | 是                     | 是                                        |
-| `!` bash 快捷方式 | 是                     | 否                                        |
-| Tab 完成        | 是                     | 否                                        |
+聊天面板中的螢幕閱讀器支援需要 Claude Code v2.1.236 或更新版本。
 
-<h3 id="rewind-with-checkpoints">
-  使用 checkpoints 進行倒帶
+在對話期間，擴充功能會宣佈：
+
+* **Claude 的回覆**：擴充功能會在回覆完成時宣佈一次，並在文字串流進入時保持沉默。您的螢幕閱讀器會將程式碼區塊讀作行數摘要，按標籤讀取連結，並逐個儲存格讀取表格；完整回覆在文字記錄中保持可讀。
+* **權限要求和問題**：當擴充功能的權限提示出現時，擴充功能會宣佈要求，並命名 Claude 想要使用的工具。當 Claude 詢問您問題以及當 Claude 完成計畫並等待您的審查時，它也會以相同方式宣佈。
+* **狀態變更**：擴充功能會在 Claude 開始工作時、Claude 準備好接收您的輸入時以及 Claude Code 開始壓縮對話時宣佈。
+* **錯誤和模型提示**：擴充功能會宣佈對話中的錯誤，並在 [使用額度同意提示](/docs/zh-TW/model-config#fable-and-usage-credits) 或 [標記要求提示](/docs/zh-TW/model-config#ask-before-switching) 出現時宣佈。
+
+當 Claude 工作時，您的螢幕閱讀器會讀取文字標籤來代替進度微調器的動畫。
+
+當您重新開啟工作階段或切換到另一個工作階段時，擴充功能不會宣佈任何內容：已還原的歷史記錄、待處理的權限提示和進行中的狀態會保持沉默，直到發生新的事情。
+
+<h3 id="use-the-chat-panel-from-the-keyboard">
+  從鍵盤使用聊天面板
 </h3>
 
-VS Code 擴充功能支援 checkpoints，它們追蹤 Claude 的檔案編輯並讓您倒帶到先前的狀態。將滑鼠懸停在任何訊息上以顯示倒帶按鈕，然後從三個選項中選擇：
+文字記錄中的每一輪都以視覺上隱藏的標題開始，標題以啟動該輪的提示命名，因此您可以使用螢幕閱讀器的標題導覽在各輪之間跳轉。
 
-* **從此處分支對話**：從此訊息開始新的對話分支，同時保持所有程式碼變更完整
-* **將程式碼倒帶到此處**：將檔案變更還原回對話中的此點，同時保持完整的對話歷史記錄
-* **分支對話並倒帶程式碼**：開始新的對話分支並將檔案變更還原到此點
+在一輪內，當您在訊息中移動時，您的螢幕閱讀器會宣佈您所在的訊息來源：
 
-有關 checkpoints 如何工作及其限制的完整詳細資訊，請參閱 [Checkpointing](/docs/zh-TW/checkpointing)。
+* **您的訊息**：「您」
+* **Claude 的訊息**：「Claude」
+* **工具步驟**：「Claude」加上工具名稱，例如「Claude, Bash」
+* **思考區塊**：「Claude, thinking」
+
+由於擴充功能將文字記錄公開為標記區域，您也可以使用 `Tab` 將焦點移至文字記錄本身，並按自己的步調讀取。若要改為將焦點移至最新訊息或待處理的權限提示，請從 [命令選擇板](#vs-code-commands-and-shortcuts) 執行 **Claude Code: Focus last message**。
+
+當權限提示上的選項儲存權限規則或目錄存取時，其標籤的結尾會命名核准的儲存位置，例如「所有專案」或「此工作階段」。在該選項獲得焦點時，按 `Left` 或 `Right` 箭頭鍵以變更目的地，擴充功能會在您移動到每個目的地時宣佈該目的地。您也可以按一下標籤中的目的地。箭頭鍵需要 Claude Code v2.1.268 或更新版本。
+
+<h2 id="vs-code-extension-vs-claude-code-cli">
+  VS Code 擴充功能 vs. Claude Code CLI
+</h2>
+
+Claude Code 可作為 VS Code 擴充功能（圖形面板）和 CLI（終端機中的命令列介面）使用。某些功能僅在 CLI 中可用。如果您需要 CLI 專用功能，請在 VS Code 的整合終端機中執行 `claude`。這需要[獨立 CLI 安裝](/docs/zh-TW/setup)：擴充功能不會將 `claude` 新增至您的 PATH。請參閱[在 VS Code 中執行 CLI](#run-cli-in-vs-code)。
+
+| 功能            | CLI                   | VS Code 擴充功能                                                       |
+| ------------- | --------------------- | ------------------------------------------------------------------ |
+| 命令和 skills    | [全部](/docs/zh-TW/commands) | 子集（輸入 `/` 以查看可用項目）                                                 |
+| MCP 伺服器設定     | 是                     | 是（在聊天面板中使用 `/mcp` [新增和管理伺服器](#connect-to-external-tools-with-mcp)） |
+| Checkpoints   | 是                     | 是                                                                  |
+| `!` Bash 快捷方式 | 是                     | 否                                                                  |
+| Tab 完成        | 是                     | 否                                                                  |
+
+<h3 id="rewind-with-checkpoints">
+  使用 checkpoints 進行 Rewind
+</h3>
+
+VS Code 擴充功能支援 checkpoints，可追蹤 Claude 的檔案編輯並讓您 rewind 到先前的狀態。將滑鼠懸停在任何訊息上以顯示 rewind 按鈕，然後從三個選項中選擇：
+
+* **Fork conversation from here**：從此訊息開始新的對話分支，同時保持所有程式碼變更
+* **Rewind code to here**：將檔案變更還原到對話中的此點，同時保持完整的對話歷史記錄
+* **Fork conversation and rewind code**：開始新的對話分支並將檔案變更還原到此點
+
+如需有關 checkpoints 如何運作及其限制的完整詳細資訊，請參閱 [Checkpointing](/docs/zh-TW/checkpointing)。
 
 <h3 id="run-cli-in-vs-code">
   在 VS Code 中執行 CLI
 </h3>
 
-若要在 VS Code 中使用 CLI，請開啟整合終端機（Windows/Linux 上的 `` Ctrl+` `` 或 Mac 上的 `` Cmd+` ``）並執行 `claude`。CLI 會自動與您的 IDE 整合，以獲得差異檢視和診斷共享等功能。
+若要在 VS Code 中使用 CLI，請開啟整合終端機（Windows/Linux 上為 `` Ctrl+` ``，Mac 上為 `` Cmd+` ``）並執行 `claude`。CLI 會自動與您的 IDE 整合，以支援差異檢視和診斷共享等功能。
 
-安裝擴充功能不會將 `claude` 放在您的 shell PATH 上。擴充功能為其聊天面板捆綁了 CLI 的私有副本，但在終端機中輸入 `claude` 需要[獨立 CLI 安裝](/docs/zh-TW/setup)。執行一次安裝，此頁面上的命令（包括 `claude mcp add` 和 `claude --resume`）在任何終端機中都可以運作。如果安裝後仍未找到 `claude`，請[驗證您的 PATH](/docs/zh-TW/troubleshoot-install#verify-your-path)。
+安裝擴充功能不會將 `claude` 放在您的 shell PATH 上。擴充功能為其聊天面板提供了 CLI 的私人副本，但在終端機中輸入 `claude` 需要[獨立 CLI 安裝](/docs/zh-TW/setup)。執行一次安裝，此頁面上的命令（包括 `claude mcp add` 和 `claude --resume`）將在任何終端機中運作。如果安裝後仍找不到 `claude`，請[驗證您的 PATH](/docs/zh-TW/troubleshoot-install#verify-your-path)。
 
-如果使用外部終端機，請在 Claude Code 中執行 `/ide` 以將其連接到 VS Code。
+如果使用外部終端機，請在 Claude Code 內執行 `/ide` 以將其連接到 VS Code。
 
 <h3 id="switch-between-extension-and-cli">
   在擴充功能和 CLI 之間切換
 </h3>
 
-擴充功能和 CLI 共享相同的對話歷史記錄。若要在 CLI 中繼續擴充功能對話，請在終端機中執行 `claude --resume`。這會開啟一個互動式選擇器，您可以在其中搜尋並選擇您的對話。
+擴充功能和 CLI 共享相同的對話歷史記錄。若要在 CLI 中繼續擴充功能對話，請在終端機中執行 `claude --resume`。這會開啟互動式選擇器，您可以在其中搜尋並選擇您的對話。
 
 <h3 id="include-terminal-output-in-prompts">
   在提示中包含終端機輸出
@@ -428,116 +629,112 @@ VS Code 擴充功能支援 checkpoints，它們追蹤 Claude 的檔案編輯並�
   監控背景程序
 </h3>
 
-當 Claude 執行長時間執行的命令時，擴充功能在狀態列中顯示進度。但是，與 CLI 相比，背景任務的可見性受限。為了獲得更好的可見性，讓 Claude 輸出命令，以便您可以在 VS Code 的整合終端機中執行它。
+在提示框中輸入 `/tasks` 以開啟[代理地圖](#use-the-prompt-box)，其中列出工作階段的背景工作，例如 Claude 作為背景 shell 命令執行的開發伺服器。按一下工作以開啟其卡片並在該處停止它。需要 Claude Code v2.1.277 或更新版本。
 
 <h3 id="connect-to-external-tools-with-mcp">
   使用 MCP 連接到外部工具
 </h3>
 
-MCP（Model Context Protocol）servers 讓 Claude 存取外部工具、資料庫和 API。
+MCP（Model Context Protocol）伺服器讓 Claude 可以存取外部工具、資料庫和 API。
 
-若要添加 MCP server，請開啟整合終端機（`` Ctrl+` `` 或 `` Cmd+` ``）並執行 `claude mcp add`。下面的範例添加了 GitHub 的遠端 MCP server，它使用作為標頭傳遞的[個人存取令牌](https://github.com/settings/personal-access-tokens)進行身份驗證：
+若要在不離開 VS Code 的情況下管理 MCP 伺服器，請在聊天面板中輸入 `/mcp`。從開啟的對話方塊中，您可以新增伺服器、移除儲存在本機、使用者或專案[範圍](/docs/zh-TW/mcp#mcp-installation-scopes)的伺服器、啟用或停用伺服器、重新連接到伺服器以及管理 OAuth 驗證。在對話方塊中新增和移除伺服器需要 Claude Code v2.1.261 或更新版本。
+
+您也可以在 VS Code 的整合終端機中執行 `claude mcp add`（`` Ctrl+` `` 或 `` Cmd+` ``）。對話方塊和終端機命令會儲存到相同的 MCP 設定，來自任一方的變更會在您之後開始的對話中生效。下面的範例新增了 GitHub 的遠端 MCP 伺服器，該伺服器使用作為標頭傳遞的[個人存取權杖](https://github.com/settings/personal-access-tokens)進行驗證：
 
 ```bash theme={null}
 claude mcp add --transport http github https://api.githubcopilot.com/mcp/ \
   --header "Authorization: Bearer YOUR_GITHUB_PAT"
 ```
 
-配置後，要求 Claude 使用工具（例如「Review PR #456」）。
+將 `YOUR_GITHUB_PAT` 替換為您的個人存取權杖。`claude mcp add` 命令會儲存設定而不驗證認證，因此此處接受預留位置值，但伺服器稍後無法連接。若要驗證連接，請開始新對話、輸入 `/mcp`，並檢查伺服器是否顯示**已連接**。具有不良認證的伺服器會顯示**失敗**。
 
-若要在不離開 VS Code 的情況下管理 MCP servers，請在聊天面板中輸入 `/mcp`。MCP 管理對話框讓您啟用或停用伺服器、重新連接到伺服器以及管理 OAuth 身份驗證。有關可用伺服器，請參閱 [MCP 文件](/docs/zh-TW/mcp)。
+設定完成後，要求 Claude 使用這些工具（例如，「Review PR #456」）。
+
+若要尋找要連接的伺服器，請參閱[尋找和建置 MCP 伺服器](/docs/zh-TW/mcp#find-and-build-mcp-servers)。
 
 <h2 id="work-with-git">
   使用 git
 </h2>
 
-Claude Code 與 git 整合以幫助直接在 VS Code 中進行版本控制工作流程。要求 Claude 提交變更、建立拉取請求或跨分支工作。
+Claude Code 與 git 整合，協助您直接在 VS Code 中進行版本控制工作流程。要求 Claude 提交變更、建立提取請求或跨分支工作。若要在具有自己的檔案和分支的隔離 worktree 中啟動 Claude，請參閱 [使用 worktrees 執行平行工作階段](/docs/zh-TW/worktrees)。
 
 <h3 id="create-commits-and-pull-requests">
-  建立提交和拉取請求
+  建立提交和提取請求
 </h3>
 
-Claude 可以暫存變更、編寫提交訊息並根據您的工作建立拉取請求：
+Claude 可以暫存變更、撰寫提交訊息，以及根據您的工作建立提取請求：
 
-```text theme={null}
-> commit my changes with a descriptive message
-> create a pr for this feature
-> summarize the changes I've made to the auth module
+```text wrap theme={null}
+commit my changes with a descriptive message
+create a pr for this feature
+summarize the changes I've made to the auth module
 ```
 
-建立拉取請求時，Claude 會根據實際程式碼變更生成描述，並可以添加有關測試或實現決策的上下文。
-
-<h3 id="use-git-worktrees-for-parallel-tasks">
-  使用 git worktrees 進行並行任務
-</h3>
-
-使用 `--worktree`（`-w`）標誌以在具有自己的檔案和分支的隔離 worktree 中啟動 Claude：
-
-```bash theme={null}
-claude --worktree feature-auth
-```
-
-每個 worktree 維護獨立的檔案狀態，同時共享 git 歷史記錄。這可防止 Claude 實例在處理不同任務時相互干擾。有關更多詳細資訊，請參閱[使用 Git worktrees 執行並行工作階段](/docs/zh-TW/worktrees)。
+建立提取請求時，Claude 會根據實際的程式碼變更產生描述，並可以新增有關測試或實作決策的內容。
 
 <h2 id="use-third-party-providers">
   使用第三方提供者
 </h2>
 
-預設情況下，Claude Code 直接連接到 Anthropic 的 API。如果您的組織使用 Amazon Bedrock、Google Cloud 的 Agent Platform 或 Microsoft Foundry 來存取 Claude，請配置擴充功能以改為使用您的提供者：
+根據預設，Claude Code 直接連接到 Anthropic 的 API。如果您的組織使用 Amazon Bedrock、Google Cloud 的 Agent Platform 或 Microsoft Foundry 來存取 Claude，請設定擴充功能以改用您的提供者：
 
 <Steps>
   <Step title="停用登入提示">
-    開啟[停用登入提示設定](vscode://settings/claudeCode.disableLoginPrompt)並勾選該框。
+    開啟[停用登入提示設定](vscode://settings/claudeCode.disableLoginPrompt)並勾選該方塊。
 
-    您也可以開啟 VS Code 設定（Mac 上的 `Cmd+,` 或 Windows/Linux 上的 `Ctrl+,`），搜尋'Claude Code login'，然後勾選**停用登入提示**。
+    您也可以開啟 VS Code 設定（Mac 上按 `Cmd+,` 或 Windows/Linux 上按 `Ctrl+,`），搜尋「Claude Code login」，然後勾選**停用登入提示**。
   </Step>
 
-  <Step title="配置您的提供者">
-    遵循您的提供者的設定指南：
+  <Step title="設定您的提供者">
+    按照您提供者的設定指南進行：
 
-    * [Amazon Bedrock 上的 Claude Code](/docs/zh-TW/amazon-bedrock)
-    * [Google Cloud 的 Agent Platform 上的 Claude Code](/docs/zh-TW/google-vertex-ai)
-    * [Microsoft Foundry 上的 Claude Code](/docs/zh-TW/microsoft-foundry)
+    * [Claude Code on Amazon Bedrock](/docs/zh-TW/amazon-bedrock)
+    * [Claude Code on Google Cloud's Agent Platform](/docs/zh-TW/google-vertex-ai)
+    * [Claude Code on Microsoft Foundry](/docs/zh-TW/microsoft-foundry)
 
-    這些指南涵蓋在 `~/.claude/settings.json` 中配置您的提供者，這確保您的設定在 VS Code 擴充功能和 CLI 之間共享。
+    這些指南涵蓋在 `~/.claude/settings.json` 中設定您的提供者，這可確保您的設定在 VS Code 擴充功能和 CLI 之間共享。
   </Step>
 </Steps>
 
+在第三方提供者上，擴充功能不提供需要 claude.ai 帳戶的功能，例如使用情況追蹤、[語音聽寫](/docs/zh-TW/voice-dictation)和用於[從 Claude.ai 繼續雲端工作階段](#resume-cloud-sessions-from-claude-ai)的 Web 標籤。如需了解帳戶與使用情況對話框在這些登入上顯示的內容，請參閱[檢查帳戶和使用情況](#check-account-and-usage)。來自較早 `/login` 的 claude.ai 登入會保留下來但未使用：擴充功能不會在任何請求中傳送它。
+
 <h2 id="security-and-privacy">
-  安全和隱私
+  安全性和隱私
 </h2>
 
-您的程式碼保持私密。Claude Code 處理您的程式碼以提供協助，但不使用它來訓練模型。有關資料處理和如何選擇退出日誌記錄的詳細資訊，請參閱[資料和隱私](/docs/zh-TW/data-usage)。
+您的程式碼保持私密。Claude Code 會處理您的程式碼以提供協助，但不會使用它來訓練模型。如需有關資料處理和如何選擇退出記錄的詳細資訊，請參閱[資料和隱私](/docs/zh-TW/data-usage)。
 
-啟用自動編輯許可後，Claude Code 可以修改 VS Code 配置檔案（如 `settings.json` 或 `tasks.json`），VS Code 可能會自動執行。為了在處理不受信任的程式碼時降低風險：
+啟用自動編輯權限後，Claude Code 可以修改 VS Code 設定檔（例如 `settings.json` 或 `tasks.json`），VS Code 可能會自動執行這些檔案。為了在處理不受信任的程式碼時降低風險：
 
 * 為不受信任的工作區啟用 [VS Code 受限模式](https://code.visualstudio.com/docs/editor/workspace-trust#_restricted-mode)
-* 使用手動批准模式而不是自動接受進行編輯
-* 在接受變更前仔細審查它們
+* 使用手動模式而不是自動編輯或自動進行編輯
+* 在接受變更前仔細檢查
 
 <h3 id="the-built-in-ide-mcp-server">
-  內建 IDE MCP server
+  內建 IDE MCP 伺服器
 </h3>
 
-當擴充功能處於活動狀態時，它會執行一個本機 MCP server，CLI 會自動連接到該伺服器。這是 CLI 在 VS Code 的原生差異檢視器中開啟差異、讀取您目前的選擇以進行 `@`-提及，以及 — 當您在 Jupyter notebook 中工作時 — 要求 VS Code 執行儲存格的方式。
+當擴充功能處於活動狀態時，它會執行一個本機 MCP 伺服器，CLI 會自動連接到該伺服器。這就是 CLI 如何在 VS Code 的原生差異檢視器中開啟差異、讀取您目前的選擇以進行 `@` 提及，以及在您在 Jupyter 筆記本中工作時要求 VS Code 執行儲存格的方式。
 
-伺服器名為 `ide`，從 `/mcp` 隱藏，因為沒有什麼可配置的。但是，如果您的組織使用 `PreToolUse` hook 來允許列出 MCP 工具，您需要知道它存在。
+伺服器名稱為 `ide`，並且從 `/mcp` 隱藏，因為沒有任何要設定的內容。不過，如果您的組織使用 `PreToolUse` hook 來允許列表 MCP 工具，您需要知道它的存在。
 
-**選擇和開啟檔案的內容。** 連接時，CLI 會在您傳送的每個提示上包含您目前的編輯器選擇和活動檔案的路徑作為內容。當發生這種情況時，文字記錄會顯示 `⧉ Selected N lines from <file>` 行。若要排除敏感檔案（如 `.env`），請為其路徑新增 [`Read` 拒絕規則](/docs/zh-TW/permissions#read-and-edit)。匹配的拒絕規則會防止該檔案的選定文字和開啟檔案通知到達 Claude。
+**選擇和開啟檔案內容。** 連接時，CLI 會在您傳送的每個提示上包含您目前的編輯器選擇和活動檔案的路徑作為內容。當發生這種情況時，文字記錄會顯示 `⧉ Selected N lines from <file>` 行。若要排除敏感檔案（例如 `.env`），請為其路徑新增 [`Read` 拒絕規則](/docs/zh-TW/permissions#read-and-edit)。相符的拒絕規則會防止該檔案的選定文字和開啟檔案通知到達 Claude。
 
-**傳輸和身份驗證。** 伺服器綁定到 `127.0.0.1` 上的隨機高埠，埠號範圍為 10000–65535，且埠號不可配置。傳輸是未加密的 `ws://`；因為通訊端是環回專用的，任何可以捕獲流量的程序也可以從鎖定檔案讀取令牌，所以 TLS 不會增加保護。每次擴充功能啟動都會生成一個新的隨機身份驗證令牌，將其寫入 `~/.claude/ide/<port>.lock` 的鎖定檔案，CLI 必須將其作為 `X-Claude-Code-Ide-Authorization` 標頭提供才能連接。鎖定檔案在 `0700` 目錄中具有 `0600` 權限，因此只有執行 VS Code 的使用者可以讀取它。如果設定了 `CLAUDE_CONFIG_DIR`，鎖定檔案會改為寫入 `$CLAUDE_CONFIG_DIR/ide/`。
+如果您關閉[附加開啟檔案設定](#extension-settings)，CLI 只有在您在該檔案中選取文字時才會接收活動檔案的路徑。
 
-**向模型公開的工具。** 伺服器託管十幾個工具，但只有兩個對模型可見。其餘的是 CLI 用於自己的 UI 的內部 RPC — 開啟差異、讀取選擇、儲存檔案 — 在工具清單到達 Claude 之前被篩選出來。
+**傳輸和驗證。** 伺服器繫結到 `127.0.0.1` 上的隨機連接埠，範圍在 10000–65535，連接埠不可設定。傳輸是未加密的 `ws://`；因為通訊端是僅限迴圈的，任何可以擷取流量的程序也可以從鎖定檔案讀取權杖，所以 TLS 不會增加保護。每次擴充功能啟動都會產生一個新的隨機驗證權杖，將其寫入位於 `~/.claude/ide/<port>.lock` 的鎖定檔案，CLI 必須將其作為 `X-Claude-Code-Ide-Authorization` 標頭呈現以進行連接。鎖定檔案在 `0700` 目錄中具有 `0600` 權限，因此只有執行 VS Code 的使用者可以讀取它。如果設定了 `CLAUDE_CONFIG_DIR`，鎖定檔案會改為寫入 `$CLAUDE_CONFIG_DIR/ide/`。
 
-| 工具名稱（如 hooks 所見）           | 它的作用                                               | 唯讀 |
-| -------------------------- | -------------------------------------------------- | -- |
-| `mcp__ide__getDiagnostics` | 返回語言伺服器診斷 — VS Code 的「問題」面板中的錯誤和警告。可選地限定於一個檔案。     | 是  |
-| `mcp__ide__executeCode`    | 在活動 Jupyter notebook 的核心中執行 Python 程式碼。請參閱下面的確認流程。 | 否  |
+**公開給模型的工具。** 伺服器裝載十幾個工具，但只有兩個對模型可見。其餘的是 CLI 用於自己的 UI 的內部 RPC（開啟差異、讀取選擇、儲存檔案），在工具清單到達 Claude 之前會被篩選掉。
 
-**Jupyter 執行始終先詢問。** `mcp__ide__executeCode` 無法以靜默方式執行任何內容。在每次呼叫時，程式碼會作為新儲存格插入到活動 notebook 的末尾，VS Code 會將其滾動到檢視中，原生 Quick Pick 會要求您**執行**或**取消**。取消 — 或使用 `Esc` 關閉選擇器 — 會向 Claude 返回錯誤，沒有任何內容執行。當沒有活動 notebook、未安裝 Jupyter 擴充功能（`ms-toolsai.jupyter`）或核心不是 Python 時，該工具也會直接拒絕。
+| 工具名稱（如 hooks 所見）           | 它的作用                                         | 唯讀 |
+| -------------------------- | -------------------------------------------- | -- |
+| `mcp__ide__getDiagnostics` | 傳回語言伺服器診斷 — VS Code 的問題面板中的錯誤和警告。可選擇限定於一個檔案。 | 是  |
+| `mcp__ide__executeCode`    | 在活動 Jupyter 筆記本的核心中執行 Python 程式碼。請參閱下面的確認流程。 | 否  |
+
+**Jupyter 執行始終先詢問。** `mcp__ide__executeCode` 無法以無聲方式執行任何操作。在每次呼叫時，程式碼會作為新儲存格插入到活動筆記本的末尾，VS Code 會將其捲動到檢視中，原生快速選擇會要求您**執行**或**取消**。取消 — 或使用 `Esc` 關閉選擇器 — 會向 Claude 傳回錯誤，不會執行任何操作。當沒有活動筆記本、未安裝 Jupyter 擴充功能 (`ms-toolsai.jupyter`) 或核心不是 Python 時，該工具也會直接拒絕。
 
 <Note>
-  Quick Pick 確認與 `PreToolUse` hooks 分開。`mcp__ide__executeCode` 的允許列表條目讓 Claude *提議*執行儲存格；VS Code 內的 Quick Pick 是讓它*實際*執行的原因。
+  快速選擇確認與 `PreToolUse` hooks 分開。`mcp__ide__executeCode` 的允許列表項目讓 Claude *提議*執行儲存格；VS Code 內的快速選擇是讓它*實際*執行的原因。
 </Note>
 
 <a id="troubleshooting" />
@@ -550,26 +747,26 @@ claude --worktree feature-auth
   擴充功能無法安裝
 </h3>
 
-* 確保您有相容的 VS Code 版本（1.98.0 或更高版本）
+* 確保您有相容的 VS Code 版本（1.94.0 或更新版本）
 * 檢查 VS Code 是否有權限安裝擴充功能
-* 嘗試從 [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=anthropic.claude-code) 直接安裝
+* 嘗試直接從 [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=anthropic.claude-code) 安裝
 
 <h3 id="spark-icon-not-visible">
   Spark 圖示不可見
 </h3>
 
-當您開啟檔案時，Spark 圖示會出現在**編輯器工具列**（編輯器右上角）中。如果您看不到它：
+當您開啟檔案時，Spark 圖示會出現在**編輯器工具列**（編輯器右上角）。如果您看不到它：
 
-1. **開啟檔案**：該圖示需要開啟檔案。僅開啟資料夾是不夠的。
-2. **檢查 VS Code 版本**：需要 1.98.0 或更高版本（幫助 → 關於）
-3. **重新啟動 VS Code**：從命令面板執行「Developer: Reload Window」
+1. **開啟檔案**：該圖示需要開啟檔案。只開啟資料夾是不夠的。
+2. **檢查 VS Code 版本**：需要 1.94.0 或更高版本（說明 → 關於）
+3. **重新啟動 VS Code**：從命令選擇板執行「Developer: Reload Window」
 4. **停用衝突的擴充功能**：暫時停用其他 AI 擴充功能（Cline、Continue 等）
-5. **檢查工作區信任**：擴充功能在受限模式下不工作
+5. **檢查工作區信任**：擴充功能在受限模式下無法運作
 
-或者，點擊**狀態列**（右下角）中的「✱ Claude Code」。即使沒有開啟檔案，這也有效。您也可以使用**命令面板**（`Cmd+Shift+P` / `Ctrl+Shift+P`）並輸入「Claude Code」。
+或者，如果您已將 [`preferredLocation`](#extension-settings) 設定為 `sidebar`，或使用 **Claude Code: Open in Side Bar** 開啟 Claude，請點擊**狀態列**（右下角）中的「✻ Claude Code」。即使沒有開啟檔案，這也能運作。您也可以使用**命令選擇板**（`Cmd+Shift+P` / `Ctrl+Shift+P`）並輸入「Claude Code」。
 
 <h3 id="cmd-esc-does-nothing-on-macos">
-  macOS 上的 Cmd+Esc 無法執行任何操作
+  Cmd+Esc 在 macOS 上無法運作
 </h3>
 
 在 macOS Tahoe 及更新版本上，系統遊戲覆蓋快捷鍵預設綁定到 `Cmd+Esc`，並在按鍵到達 VS Code 之前攔截它。若要釋放快捷鍵：
@@ -578,7 +775,7 @@ claude --worktree feature-auth
 2. 前往鍵盤，然後鍵盤快捷鍵，然後遊戲控制器
 3. 清除遊戲覆蓋核取方塊
 
-或者，將擴充功能重新綁定到不同的鍵：開啟 VS Code [鍵盤快捷鍵編輯器](https://code.visualstudio.com/docs/configure/keybindings)（`Cmd+K Cmd+S`），搜尋 `Claude Code: Focus input`，並指派新的綁定。
+或者，將擴充功能重新綁定到不同的按鍵：開啟 VS Code [快捷鍵編輯器](https://code.visualstudio.com/docs/configure/keybindings)（`Cmd+K Cmd+S`），搜尋 `Claude Code: Focus input`，並指派新的綁定。
 
 <h3 id="claude-code-never-responds">
   Claude Code 從不回應
@@ -586,25 +783,25 @@ claude --worktree feature-auth
 
 如果 Claude Code 沒有回應您的提示：
 
-1. **檢查您的網際網路連接**：確保您有穩定的網際網路連接
-2. **開始新對話**：嘗試開始新的對話以查看問題是否持續
-3. **嘗試 CLI**：從終端機執行 `claude` 以查看您是否獲得更詳細的錯誤訊息
+1. **檢查您的網際網路連線**：確保您有穩定的網際網路連線
+2. **開始新對話**：嘗試開始新的對話，看看問題是否仍然存在
+3. **嘗試 CLI**：從終端執行 `claude` 以查看是否獲得更詳細的錯誤訊息
 
-如果問題持續，請[在 GitHub 上提交問題](https://github.com/anthropics/claude-code/issues)，並提供有關錯誤的詳細資訊。
+如果問題仍然存在，請[在 GitHub 上提交問題](https://github.com/anthropics/claude-code/issues)，並提供有關錯誤的詳細資訊。
 
 <h2 id="uninstall-the-extension">
-  卸載擴充功能
+  解除安裝擴充功能
 </h2>
 
-若要卸載 Claude Code 擴充功能：
+若要解除安裝 Claude Code 擴充功能：
 
-1. 開啟擴充功能檢視（Mac 上的 `Cmd+Shift+X` 或 Windows/Linux 上的 `Ctrl+Shift+X`）
+1. 開啟擴充功能檢視（Mac 上按 `Cmd+Shift+X` 或 Windows/Linux 上按 `Ctrl+Shift+X`）
 2. 搜尋「Claude Code」
-3. 點擊**卸載**
+3. 點擊**解除安裝**
 
-在 VS Code 整合終端中執行 `claude` 會自動重新安裝擴充功能。若要保持卸載狀態，請在 `/config` 中關閉**自動安裝 IDE 擴充功能**，或將 [`autoInstallIdeExtension`](/docs/zh-TW/settings#global-config-settings) 設定為 `false`。您也可以將 [`CLAUDE_CODE_IDE_SKIP_AUTO_INSTALL`](/docs/zh-TW/env-vars) 環境變數設定為 `1`。
+如果您在 VS Code 整合式終端中執行 `claude`，Claude Code 會自動重新安裝擴充功能。若要保持解除安裝狀態，請在 `/config` 中關閉**自動安裝 IDE 擴充功能**，或將 [`autoInstallIdeExtension`](/docs/zh-TW/settings-reference#autoinstallideextension) 設定為 `false`。您也可以將 [`CLAUDE_CODE_IDE_SKIP_AUTO_INSTALL`](/docs/zh-TW/env-vars) 環境變數設定為 `1`。
 
-若要也移除擴充功能資料並重設所有設定，請刪除您平台的擴充功能儲存目錄。
+若要同時移除擴充功能資料並重設所有設定，請刪除您平台的擴充功能儲存目錄。
 
 在 macOS 上：
 
@@ -624,14 +821,14 @@ rm -rf ~/.config/Code/User/globalStorage/anthropic.claude-code
 Remove-Item -Recurse -Force "$env:APPDATA\Code\User\globalStorage\anthropic.claude-code"
 ```
 
-如需其他幫助，請參閱[故障排除指南](/docs/zh-TW/troubleshooting)。
+如需其他協助，請參閱[疑難排解指南](/docs/zh-TW/troubleshooting)。
 
 <h2 id="next-steps">
   後續步驟
 </h2>
 
-現在您已在 VS Code 中設定了 Claude Code：
+現在您已在 VS Code 中設定好 Claude Code：
 
 * [探索常見工作流程](/docs/zh-TW/common-workflows)以充分利用 Claude Code
-* [設定 MCP servers](/docs/zh-TW/mcp) 以使用外部工具擴展 Claude 的功能。使用 CLI 添加伺服器，然後使用聊天面板中的 `/mcp` 管理它們。
-* [配置 Claude Code 設定](/docs/zh-TW/settings)以自訂允許的命令、hooks 等。這些設定在擴充功能和 CLI 之間共享。
+* [設定 MCP 伺服器](/docs/zh-TW/mcp)以使用外部工具擴展 Claude 的功能。在聊天面板中使用 `/mcp` 新增和管理它們。
+* [設定 Claude Code 設定](/docs/zh-TW/settings)以自訂允許的命令、hooks 等。這些設定在擴充功能和 CLI 之間共用。

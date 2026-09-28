@@ -102,7 +102,7 @@ Use esto como su mensaje de implementación estándar en toda la organización. 
     📚 Inicio rápido · VS Code · Curso gratuito de 1 hora
        https://code.claude.com/docs/es/quickstart
        https://code.claude.com/docs/es/vs-code
-       https://anthropic.skilljar.com/claude-code-in-action
+       https://academy.claude.com/courses/claude-code-in-action
 
     Preguntas → este hilo. [Propietario] está a cargo.
     ```
@@ -209,8 +209,6 @@ equipo de Anthropic. Puedo compartir un pequeño manual si estás dentro.
 
 Mensajes de Slack o Teams listos para pegar diseñados para impulsar la activación de características después del lanzamiento. Cada uno sigue el mismo patrón: un gancho, la recompensa, un indicador "pruébalo ahora" y un enlace de documentación. Distribúyalos uno o dos a la semana en `#claude-code`, o elija los pocos que coincidan con las brechas de su equipo. Se mantienen solos sin orden requerido.
 
-Copie el cuerpo del mensaje de cada bloque directamente en Slack o Teams. Reemplace `[marcadores de posición entre corchetes]` antes de enviar.
-
 <h3 id="get-started">
   Comenzar
 </h3>
@@ -227,10 +225,12 @@ Claude Code se ejecuta en los mismos modelos que la aplicación Claude, y puede 
 a mitad de sesión. *Sonnet* es el caballo de batalla predeterminado para trabajo de características cotidianas,
 errores, pruebas y revisiones. Recurra a *Opus* en refactores grandes, depuración complicada,
 o cualquier cosa de alto riesgo. Baje a *Haiku* para preguntas rápidas,
-formato y ediciones mecánicas donde la velocidad gana. *Fable 5* es el modelo más
+formato y ediciones mecánicas donde la velocidad gana. *Fable* es el modelo más
 capaz para sus tareas más difíciles y de mayor duración; no es el
 predeterminado, así que selecciónelo con `/model fable`, y tenga en cuenta que el contenido de ciberseguridad y
-biología se retrocede automáticamente a Opus.
+biología se retrocede automáticamente a Opus. Opus 5.5 y Opus 5 ejecutan sus propias
+comprobaciones también: el contenido marcado cambia a un Opus anterior, excepto
+que el contenido de biología marcado en Opus 5 se rechaza.
 
 *Pruébalo ahora:* escribe `/model` y elige Sonnet si aún no lo has hecho. Es
 el predeterminado correcto para la mayoría de tareas.
@@ -238,12 +238,12 @@ el predeterminado correcto para la mayoría de tareas.
 📖 Configuración de modelo → https://code.claude.com/docs/es/model-config
 ```
 
-| Modelo  | Mejor para                                                                                                                                                                                             |
-| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Fable 5 | Las tareas más difíciles y de mayor duración. Solo opción: selecciónelo con `/model fable`. El contenido de ciberseguridad o biología [se retrocede a Opus](/docs/es/model-config#automatic-model-fallback) |
-| Opus    | Refactores a gran escala, depuración compleja, decisiones de arquitectura, cambios de alto riesgo                                                                                                      |
-| Sonnet  | Trabajo de características cotidianas, corrección de errores, pruebas, documentación, revisión de código. Predeterminado recomendado.                                                                  |
-| Haiku   | Preguntas rápidas, formato, ediciones mecánicas, iteración rápida                                                                                                                                      |
+| Modelo | Mejor para                                                                                                                                                                                                                                                              |
+| ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Fable  | Las tareas más difíciles y de mayor duración. Solo opción: selecciónelo con `/model fable`. El contenido de ciberseguridad o biología [se retrocede a Opus](/docs/es/model-config#automatic-model-fallback)                                                                  |
+| Opus   | Refactores a gran escala, depuración compleja, decisiones de arquitectura, cambios de alto riesgo. En Opus 5.5 y Opus 5, el contenido de ciberseguridad o biología desencadena [retroceso automático de modelo o un rechazo](/docs/es/model-config#automatic-model-fallback) |
+| Sonnet | Trabajo de características cotidianas, corrección de errores, pruebas, documentación, revisión de código. Predeterminado recomendado.                                                                                                                                   |
+| Haiku  | Preguntas rápidas, formato, ediciones mecánicas, iteración rápida                                                                                                                                                                                                       |
 
 **Victorias rápidas para probar primero**
 
@@ -320,7 +320,7 @@ A veces quieres que Claude pregunte antes de cada edición. A veces solo quieres
 que lo envíe. No deberías tener que elegir uno para siempre.
 
 *Shift+Tab* cicla a través de cuánta libertad obtiene Claude: *Manual* (el
-valor de configuración `default`) pregunta antes de cada acción, *acceptEdits* permite que las ediciones de archivos y comandos comunes del sistema de archivos
+valor de configuración `default`) pregunta antes de ediciones de archivo y la mayoría de comandos de shell, *acceptEdits* permite que las ediciones de archivos y comandos comunes del sistema de archivos
 fluyan mientras aún verifica antes de otros comandos de shell, y *plan*
 propone cambios para tu aprobación antes de que se toque nada. El modo plan es
 el constructor de confianza, así que comienza allí para cualquier cosa que toque múltiples archivos.
@@ -426,7 +426,7 @@ y está apuntando a la línea 47-ish"? Captura de pantalla.
 
 Arrastra una captura de pantalla directamente a la terminal y Claude la ve: diálogos de error,
 maquetas de UI, fotos de pizarra, exportaciones de Figma. *Ctrl+V* pega desde
-el portapapeles (usa Ctrl+V en macOS también, no Cmd+V).
+el portapapeles, o *Alt+V* en Windows y WSL.
 
 *Pruébalo ahora:* la próxima vez que algo visual se rompa, captura de pantalla y pégalo
 directamente en el indicador. Luego solo escribe "¿qué está mal aquí?"

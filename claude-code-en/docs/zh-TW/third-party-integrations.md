@@ -86,11 +86,13 @@ export const ContactSalesCard = ({surface}) => {
 
 對於大多數組織，Claude for Teams 或 Claude for Enterprise 提供最佳體驗。團隊成員可以通過單一訂閱同時存取 Claude Code 和網頁版 Claude，具有集中計費和無需基礎設施設置的優勢。
 
-**Claude for Teams** 是自助服務，包括協作功能、管理工具和計費管理。最適合需要快速開始的較小團隊。
+**Claude for Teams** 是自助服務，包括協作功能、管理工具、SSO、計費管理和[伺服器管理的設定](/docs/zh-TW/server-managed-settings)，用於組織範圍的 Claude Code 配置。最適合需要快速開始的較小團隊。
 
-**Claude for Enterprise** 增加了 SSO 和域名捕獲、基於角色的權限、合規性 API 存取和託管策略設置，用於部署組織範圍的 Claude Code 配置。最適合具有安全和合規性要求的大型組織。
+**Claude for Enterprise** 增加了網域擷取、角色型權限和合規性 API 存取。最適合具有安全和合規性要求的大型組織。
 
 了解更多關於 [Team 計劃](https://support.claude.com/en/articles/9266767-what-is-the-team-plan) 和 [Enterprise 計劃](https://support.claude.com/en/articles/9797531-what-is-the-enterprise-plan)。
+
+部署選項的比較涵蓋模型推理執行的位置。若要在您的組織運營的計算上執行 [Claude Code 網頁版](/docs/zh-TW/claude-code-on-the-web) 工作階段，請參閱 [自託管環境](/docs/zh-TW/self-hosted-environments)。
 
 如果您的組織有特定的基礎設施要求，請比較以下選項：
 
@@ -150,8 +152,8 @@ export const ContactSalesCard = ({surface}) => {
 
     <tr>
       <td>身份驗證</td>
-      <td>Claude.ai SSO 或電子郵件</td>
-      <td>API 金鑰</td>
+      <td>claude.ai SSO 或電子郵件</td>
+      <td>API 金鑰或 [Console 登入（無需 API 金鑰）](/docs/zh-TW/authentication#sign-in-without-an-api-key)</td>
       <td>API 金鑰或 AWS 認證</td>
       <td>API 金鑰或 AWS 認證</td>
       <td>GCP 認證</td>
@@ -213,120 +215,9 @@ export const ContactSalesCard = ({surface}) => {
 * **公司代理**：通過 HTTP/HTTPS 代理路由流量。如果您的組織要求所有出站流量都通過代理伺服器以進行安全監控、合規性或網路策略執行，請使用此選項。使用 `HTTPS_PROXY` 或 `HTTP_PROXY` 環境變數進行配置。在 [企業網路配置](/docs/zh-TW/network-config) 中了解更多。
 * **LLM 網關**：位於 Claude Code 和雲端提供商之間的服務，用於處理身份驗證和路由。如果您需要跨團隊的集中使用追蹤、自訂速率限制或預算，或集中身份驗證管理，請使用此選項。使用 `ANTHROPIC_BASE_URL`、`ANTHROPIC_BEDROCK_BASE_URL`、`ANTHROPIC_AWS_BASE_URL`、`ANTHROPIC_VERTEX_BASE_URL` 或 `ANTHROPIC_FOUNDRY_BASE_URL` 環境變數進行配置。在 [LLM 網關](/docs/zh-TW/llm-gateway) 中了解更多。
 
-以下示例顯示在您的 shell 或 shell 配置文件（`.bashrc`、`.zshrc`）中設置的環境變數。有關其他配置方法，請參閱 [設置](/docs/zh-TW/settings)。
+如需針對每個提供商的環境變數，以透過 LLM 網關路由 Amazon Bedrock、Microsoft Foundry 或 Google Cloud 的 Agent Platform，請參閱 [透過網關路由到雲端提供商](/docs/zh-TW/llm-gateway-connect#route-to-a-cloud-provider-through-a-gateway)。在 Claude Code 中執行 `/status` 以驗證工作階段使用的提供商、基礎 URL 和代理。
 
-<h3 id="amazon-bedrock">
-  Amazon Bedrock
-</h3>
-
-<Tabs>
-  <Tab title="公司代理">
-    通過設置以下 [環境變數](/docs/zh-TW/env-vars) 將 Amazon Bedrock 流量路由通過您的公司代理：
-
-    ```bash theme={null}
-    # 啟用 Bedrock
-    export CLAUDE_CODE_USE_BEDROCK=1
-    export AWS_REGION=us-east-1
-
-    # 配置公司代理
-    export HTTPS_PROXY='https://proxy.example.com:8080'
-    ```
-  </Tab>
-
-  <Tab title="LLM 網關">
-    通過設置以下 [環境變數](/docs/zh-TW/env-vars) 將 Amazon Bedrock 流量路由通過您的 LLM 網關：
-
-    ```bash theme={null}
-    # 啟用 Bedrock
-    export CLAUDE_CODE_USE_BEDROCK=1
-
-    # 配置 LLM 網關
-    export ANTHROPIC_BEDROCK_BASE_URL='https://your-llm-gateway.com/bedrock'
-    export CLAUDE_CODE_SKIP_BEDROCK_AUTH=1  # 如果網關處理 AWS 身份驗證
-    ```
-  </Tab>
-</Tabs>
-
-<h3 id="microsoft-foundry">
-  Microsoft Foundry
-</h3>
-
-<Tabs>
-  <Tab title="公司代理">
-    通過設置以下 [環境變數](/docs/zh-TW/env-vars) 將 Microsoft Foundry 流量路由通過您的公司代理：
-
-    ```bash theme={null}
-    # 啟用 Microsoft Foundry
-    export CLAUDE_CODE_USE_FOUNDRY=1
-    export ANTHROPIC_FOUNDRY_RESOURCE=your-resource
-    export ANTHROPIC_FOUNDRY_API_KEY=your-api-key  # 或省略以進行 Entra ID 身份驗證
-
-    # 配置公司代理
-    export HTTPS_PROXY='https://proxy.example.com:8080'
-    ```
-  </Tab>
-
-  <Tab title="LLM 網關">
-    通過設置以下 [環境變數](/docs/zh-TW/env-vars) 將 Microsoft Foundry 流量路由通過您的 LLM 網關：
-
-    ```bash theme={null}
-    # 啟用 Microsoft Foundry
-    export CLAUDE_CODE_USE_FOUNDRY=1
-
-    # 配置 LLM 網關
-    export ANTHROPIC_FOUNDRY_BASE_URL='https://your-llm-gateway.com'
-    export ANTHROPIC_FOUNDRY_API_KEY=your-gateway-key  # 作為 x-api-key 發送
-    ```
-  </Tab>
-</Tabs>
-
-<h3 id="google-cloud’s-agent-platform">
-  Google Cloud's Agent Platform
-</h3>
-
-<Tabs>
-  <Tab title="公司代理">
-    通過設置以下 [環境變數](/docs/zh-TW/env-vars) 將 Google Cloud's Agent Platform 流量路由通過您的公司代理：
-
-    ```bash theme={null}
-    # 啟用 Agent Platform
-    export CLAUDE_CODE_USE_VERTEX=1
-    export CLOUD_ML_REGION=us-east5
-    export ANTHROPIC_VERTEX_PROJECT_ID=your-project-id
-
-    # 配置公司代理
-    export HTTPS_PROXY='https://proxy.example.com:8080'
-    ```
-  </Tab>
-
-  <Tab title="LLM 網關">
-    通過設置以下 [環境變數](/docs/zh-TW/env-vars) 將 Google Cloud's Agent Platform 流量路由通過您的 LLM 網關：
-
-    ```bash theme={null}
-    # 啟用 Agent Platform
-    export CLAUDE_CODE_USE_VERTEX=1
-
-    # 配置 LLM 網關
-    export ANTHROPIC_VERTEX_BASE_URL='https://your-llm-gateway.com/vertex'
-    export CLAUDE_CODE_SKIP_VERTEX_AUTH=1  # 如果網關處理 GCP 身份驗證
-    export ANTHROPIC_VERTEX_PROJECT_ID=your-gcp-project-id
-    export CLOUD_ML_REGION=us-east5
-    ```
-  </Tab>
-</Tabs>
-
-<Tip>
-  在 Claude Code 中使用 `/status` 驗證您的代理和網關配置是否正確應用。例如，使用上面的 Bedrock 網關配置，輸出包括以下行：
-
-  ```
-  API provider: Amazon Bedrock
-  Bedrock base URL: https://your-llm-gateway.com/bedrock
-  AWS region: us-east-1
-  AWS auth skipped
-  ```
-
-  如果您配置了公司代理，`/status` 也會顯示一個 `Proxy` 行，其中包含您的代理 URL。
-</Tip>
+如果您的組織使用 [客戶管理的加密金鑰](https://platform.claude.com/docs/en/manage-claude/cmek) (CMEK)，並透過 LLM 網關或自訂 `ANTHROPIC_BASE_URL` 路由 Claude Code，CMEK 不適用於這些工作階段上 Claude Code 的操作遙測。若要為每位開發人員關閉遙測，請透過受管設定傳遞 `DISABLE_TELEMETRY`，如 [為您的組織關閉遙測](/docs/zh-TW/managed-settings#turn-telemetry-off-for-your-organization) 中所示。
 
 <h2 id="best-practices-for-organizations">
   組織的最佳實踐
@@ -336,44 +227,37 @@ export const ContactSalesCard = ({surface}) => {
   投資於文件和記憶
 </h3>
 
-我們強烈建議投資於文件，以便 Claude Code 理解您的程式碼庫。組織可以在多個級別部署 CLAUDE.md 文件：
-
-* **組織範圍**：部署到系統目錄，如 `/Library/Application Support/ClaudeCode/CLAUDE.md`（macOS）、`/etc/claude-code/CLAUDE.md`（Linux 和 WSL）或 `C:\Program Files\ClaudeCode\CLAUDE.md`（Windows），用於公司範圍的標準
-* **存儲庫級別**：在存儲庫根目錄中建立 `CLAUDE.md` 文件，包含項目架構、構建命令和貢獻指南。將這些檢入源代碼控制，以便所有用戶受益
-
-在 [記憶和 CLAUDE.md 文件](/docs/zh-TW/memory) 中了解更多。
+我們強烈建議投資於文件，以便 Claude Code 能夠理解您的程式碼庫。組織可以在多個層級部署 CLAUDE.md 檔案。請參閱[CLAUDE.md 檔案可以存放的位置](/docs/zh-TW/memory#choose-where-to-put-claude-md-files)和[如何部署組織範圍的 CLAUDE.md](/docs/zh-TW/memory#deploy-organization-wide-claude-md)。
 
 <h3 id="simplify-deployment">
   簡化部署
 </h3>
 
-如果您有自訂開發環境，我們發現創建一個「一鍵」安裝 Claude Code 的方式是在組織中增加採用率的關鍵。
+如果您有自訂開發環境，我們發現建立「一鍵」安裝 Claude Code 的方式是在組織中推動採用的關鍵。
 
 <h3 id="start-with-guided-usage">
   從引導式使用開始
 </h3>
 
-鼓勵新用戶嘗試使用 Claude Code 進行程式碼庫問答，或在較小的錯誤修復或功能請求上使用。要求 Claude Code 制定計劃。檢查 Claude 的建議，如果偏離軌道，請提供反饋。隨著時間的推移，當用戶更好地理解這種新範式時，他們將更有效地讓 Claude Code 更自主地運行。
+鼓勵新使用者嘗試使用 Claude Code 進行程式碼庫問答，或用於較小的錯誤修復或功能請求。要求 Claude Code 制定計畫。檢查 Claude 的建議，如果偏離軌道，請提供回饋。隨著時間推移，當使用者更好地理解這種新範例時，他們將更有效地讓 Claude Code 以更多代理方式運行。
 
 <h3 id="pin-model-versions-for-cloud-providers">
   為雲端提供商固定模型版本
 </h3>
 
-如果您通過 [Amazon Bedrock](/docs/zh-TW/amazon-bedrock)、[Google Cloud 的 Agent Platform](/docs/zh-TW/google-vertex-ai)、[Microsoft Foundry](/docs/zh-TW/microsoft-foundry) 或 [Claude Platform on AWS](/docs/zh-TW/claude-platform-on-aws) 部署，請使用 `ANTHROPIC_DEFAULT_FABLE_MODEL`、`ANTHROPIC_DEFAULT_OPUS_MODEL`、`ANTHROPIC_DEFAULT_SONNET_MODEL` 和 `ANTHROPIC_DEFAULT_HAIKU_MODEL` 固定特定模型版本。如果不固定，模型別名會解析為 Claude Code 針對該提供商的內建預設值，這可能會落後於最新版本，且可能尚未在您的帳戶中啟用。固定讓您控制用戶何時移至新模型。有關每個提供商在預設值不可用時的操作，請參閱 [模型配置](/docs/zh-TW/model-config#pin-models-for-third-party-deployments)。
+如果您透過 [Amazon Bedrock](/docs/zh-TW/amazon-bedrock)、[Google Cloud 的 Agent Platform](/docs/zh-TW/google-vertex-ai)、[Microsoft Foundry](/docs/zh-TW/microsoft-foundry) 或 [Claude Platform on AWS](/docs/zh-TW/claude-platform-on-aws) 進行部署，請使用 `ANTHROPIC_DEFAULT_FABLE_MODEL`、`ANTHROPIC_DEFAULT_OPUS_MODEL`、`ANTHROPIC_DEFAULT_SONNET_MODEL` 和 `ANTHROPIC_DEFAULT_HAIKU_MODEL` 固定特定模型版本。如果不固定，模型別名會解析為 Claude Code 針對該提供商的內建預設值，這可能會滯後於最新版本，且可能尚未在您的帳戶中啟用。固定版本可讓您控制使用者何時移至新模型。請參閱[模型設定](/docs/zh-TW/model-config#pin-models-for-third-party-deployments)，瞭解當預設值不可用時每個提供商的做法。
 
 <h3 id="configure-security-policies">
-  配置安全策略
+  設定安全性原則
 </h3>
 
-安全團隊可以配置託管權限，以定義 Claude Code 允許和不允許執行的操作，這些操作無法被本地配置覆蓋。[了解更多](/docs/zh-TW/security)。
+安全團隊可以設定受管權限，以決定 Claude Code 允許和不允許執行的操作，這些權限無法被本機設定覆寫。[瞭解更多](/docs/zh-TW/security)。
 
 <h3 id="leverage-mcp-for-integrations">
-  利用 MCP 進行整合
+  使用 MCP 進行整合
 </h3>
 
-MCP 是為 Claude Code 提供更多信息的絕佳方式，例如連接到票證管理系統或錯誤日誌。我們建議一個中央團隊配置 MCP servers 並將 `.mcp.json` 配置檢入程式碼庫，以便所有用戶受益。[了解更多](/docs/zh-TW/mcp)。
-
-在 Anthropic，我們信任 Claude Code 在每個 Anthropic 程式碼庫中推動開發。我們希望您享受使用 Claude Code 就像我們一樣。
+MCP 是為 Claude Code 提供更多資訊的絕佳方式，例如連接到票證管理系統或錯誤日誌。我們建議由一個中央團隊設定 MCP 伺服器，並將 `.mcp.json` 設定檔簽入程式碼庫，以便所有使用者受益。[瞭解更多](/docs/zh-TW/mcp)。
 
 <h2 id="next-steps">
   後續步驟

@@ -59,6 +59,8 @@ VS Code 또는 Codespaces에서 컨테이너를 열면 기능이 Claude Code VS 
     ```
 
     `image` 줄을 프로젝트의 기본 이미지로 바꾸거나 기존 파일이 Dockerfile을 사용하는 경우 제거합니다.
+
+    Claude Code 기능은 기본 이미지가 Node.js를 제공하지 않을 때 Node.js 자체를 설치합니다. 해당 설치가 실패하고 빌드가 `Failed to install Node.js and npm`으로 중지되면 Claude Code 기능 위의 `features` 블록에 `"ghcr.io/devcontainers/features/node:1": {}`을 추가하고 다시 빌드합니다.
   </Step>
 
   <Step title="컨테이너 재구축">
@@ -89,21 +91,26 @@ VS Code 또는 Codespaces에서 컨테이너를 열면 기능이 Claude Code VS 
   재구축 시 인증 및 설정 유지
 </h2>
 
-기본적으로 컨테이너의 홈 디렉토리는 재구축 시 삭제되므로 엔지니어는 매번 다시 로그인해야 합니다. Claude Code는 인증 토큰, 사용자 설정 및 세션 기록을 [`~/.claude`](/docs/ko/claude-directory) 아래에 저장합니다. 해당 경로에 명명된 볼륨을 마운트하여 재구축 시 이 상태를 유지합니다.
+기본적으로 컨테이너의 홈 디렉토리는 재구축 시 삭제되므로 엔지니어는 매번 다시 로그인해야 합니다. Claude Code는 인증 토큰, 사용자 설정 및 세션 기록을 [`~/.claude`](/docs/ko/claude-directory) 디렉토리 아래에 저장합니다. OAuth 계정, 개인 MCP 서버 및 프로젝트별 신뢰는 [`~/.claude.json`](/docs/ko/settings-reference#global-config-settings)에 저장되며, 이는 해당 디렉토리 외부의 별도 파일이므로 `~/.claude`에만 볼륨을 마운트하는 것으로는 로그인 상태를 유지할 수 없습니다. `~/.claude`에 명명된 볼륨을 마운트하고 [`CLAUDE_CONFIG_DIR`](/docs/ko/env-vars)을 동일한 경로로 설정하여 Claude Code가 볼륨 내에 `.claude.json`을 작성하도록 합니다.
 
-다음 예제는 `node` 사용자의 홈 디렉토리에 볼륨을 마운트합니다:
+다음 예제는 `remoteUser`가 `node`인 컨테이너에 대해 볼륨을 마운트하고 `CLAUDE_CONFIG_DIR`을 설정합니다:
 
 ```json devcontainer.json theme={null}
 "mounts": [
   "source=claude-code-config,target=/home/node/.claude,type=volume"
-]
+],
+"containerEnv": {
+  "CLAUDE_CONFIG_DIR": "/home/node/.claude"
+}
 ```
 
-`/home/node`를 컨테이너의 `remoteUser`의 홈 디렉토리로 바꿉니다. 볼륨을 `~/.claude` 이외의 위치에 마운트하는 경우 [`CLAUDE_CONFIG_DIR`](/docs/ko/env-vars)을 마운트 경로로 설정하여 Claude Code가 해당 위치에서 읽고 쓰도록 합니다.
+`/home/node`를 컨테이너의 `remoteUser`의 홈 디렉토리로 바꿉니다. 이미 `containerEnv`를 설정한 경우(예: [조직 정책 적용](#enforce-organization-policy)에서), 새로운 것을 추가하는 대신 해당 객체에 `CLAUDE_CONFIG_DIR`을 추가합니다.
 
 모든 저장소에서 하나의 볼륨을 공유하는 대신 프로젝트별로 상태를 격리하려면 소스 이름에 `${devcontainerId}` 변수를 포함합니다. [참조 구성](https://github.com/anthropics/claude-code/blob/main/.devcontainer/devcontainer.json)은 이 목적을 위해 `source=claude-code-config-${devcontainerId}`를 사용합니다.
 
-GitHub Codespaces에서 `~/.claude`는 codespace를 중지하고 시작할 때 유지되지만 컨테이너를 재구축할 때는 여전히 지워지므로 위의 볼륨 마운트가 여기에도 적용됩니다. codespace 간에 인증을 유지하려면 [`claude setup-token`](/docs/ko/authentication#generate-a-long-lived-token)에서 `ANTHROPIC_API_KEY` 또는 `CLAUDE_CODE_OAUTH_TOKEN`을 [Codespaces 시크릿](https://docs.github.com/en/codespaces/managing-your-codespaces/managing-your-account-specific-secrets-for-github-codespaces)으로 저장합니다. Codespaces는 시크릿을 컨테이너 내에서 자동으로 환경 변수로 사용 가능하게 합니다.
+GitHub Codespaces에서 `~/.claude`는 codespace를 중지하고 시작할 때 유지되지만 컨테이너를 재구축할 때는 지워지므로 위의 구성이 여기에도 적용됩니다.
+
+codespace 간에 인증을 유지하려면 [`claude setup-token`](/docs/ko/authentication#generate-a-long-lived-token)에서 `ANTHROPIC_API_KEY` 또는 `CLAUDE_CODE_OAUTH_TOKEN`을 [Codespaces 시크릿](https://docs.github.com/en/codespaces/managing-your-codespaces/managing-your-account-specific-secrets-for-github-codespaces)으로 저장합니다. Codespaces는 시크릿을 컨테이너 내에서 자동으로 환경 변수로 노출합니다.
 
 <h2 id="enforce-organization-policy">
   조직 정책 적용
@@ -111,14 +118,14 @@ GitHub Codespaces에서 `~/.claude`는 codespace를 중지하고 시작할 때 �
 
 개발 컨테이너는 동일한 이미지와 구성이 모든 엔지니어의 머신에서 실행되므로 조직 정책을 적용하기에 편리한 장소입니다.
 
-Claude Code는 Linux에서 `/etc/claude-code/managed-settings.json`을 읽고 [설정 계층](/docs/ko/settings#how-scopes-interact)에서 가장 높은 우선순위로 적용하므로 해당 값은 엔지니어가 `~/.claude` 또는 프로젝트의 `.claude/` 디렉토리에서 설정한 모든 것을 재정의합니다. Dockerfile에서 파일을 제자리에 복사합니다:
+Claude Code는 Linux에서 `/etc/claude-code/managed-settings.json`을 읽고 [설정 계층](/docs/ko/settings#settings-precedence)에서 가장 높은 우선순위로 적용하므로 해당 값은 엔지니어가 `~/.claude` 또는 프로젝트의 `.claude/` 디렉토리에서 설정한 모든 것을 재정의합니다. Dockerfile에서 파일을 제자리에 복사합니다:
 
 ```dockerfile Dockerfile theme={null}
 RUN mkdir -p /etc/claude-code
 COPY managed-settings.json /etc/claude-code/managed-settings.json
 ```
 
-Dockerfile이 저장소에 있으므로 쓰기 액세스 권한이 있는 모든 사람이 이 단계를 변경하거나 제거할 수 있습니다. 엔지니어가 저장소 파일을 편집하여 우회할 수 없는 정책의 경우 [서버 관리 설정](/docs/ko/server-managed-settings) 또는 MDM을 통해 관리 설정을 제공합니다. 사용 가능한 키 및 기타 전달 경로는 [관리 설정 파일](/docs/ko/settings#settings-files)을 참조하세요.
+Dockerfile이 저장소에 있으므로 쓰기 액세스 권한이 있는 모든 사람이 이 단계를 변경하거나 제거할 수 있습니다. 엔지니어가 저장소 파일을 편집하여 우회할 수 없는 정책의 경우 [서버 관리 설정](/docs/ko/server-managed-settings) 또는 MDM을 통해 관리 설정을 제공합니다. 사용 가능한 키 및 기타 전달 경로는 [관리 설정 파일](/docs/ko/managed-settings#delivery-mechanisms)을 참조하세요.
 
 컨테이너의 모든 Claude Code 세션에 적용되는 [환경 변수](/docs/ko/env-vars)를 설정하려면 `devcontainer.json`의 `containerEnv`에 추가합니다. 다음 예제는 원격 분석 및 오류 보고를 거부하고 Claude Code가 설치 후 자동으로 업데이트되는 것을 방지합니다:
 
@@ -129,7 +136,9 @@ Dockerfile이 저장소에 있으므로 쓰기 액세스 권한이 있는 모든
 }
 ```
 
-Dev Container Feature는 항상 최신 Claude Code 릴리스를 설치합니다. 재현 가능한 빌드를 위해 특정 Claude Code 버전을 고정하려면 기능을 사용하는 대신 Dockerfile에서 `npm install -g @anthropic-ai/claude-code@X.Y.Z`로 설치하고 위와 같이 `DISABLE_AUTOUPDATER`를 설정합니다.
+`CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`는 또한 [Remote Control](/docs/ko/remote-control#requirements)과 [기능 플래그 가져오기가 필요한 기타 기능](/docs/ko/env-vars#features-that-need-feature-flag-fetching)이 의존하는 기능 플래그 평가를 비활성화하므로 컨테이너의 세션은 이를 사용할 수 없습니다.
+
+Dev Container Feature는 항상 최신 Claude Code 릴리스를 설치합니다. 재현 가능한 빌드를 위해 특정 Claude Code 버전을 고정하려면 기능을 사용하는 대신 Dockerfile에서 `npm install -g @anthropic-ai/claude-code@X.Y.Z`로 설치하고 `containerEnv`에서 `DISABLE_AUTOUPDATER`를 `1`로 설정합니다.
 
 권한 규칙, 도구 제한 및 MCP 서버 허용 목록을 포함한 정책 제어의 전체 목록은 [조직을 위한 Claude Code 설정](/docs/ko/admin-setup)을 참조하세요.
 
@@ -141,7 +150,7 @@ Dev Container Feature는 항상 최신 Claude Code 릴리스를 설치합니다.
 
 컨테이너의 아웃바운드 트래픽을 Claude Code가 필요로 하는 도메인으로만 제한할 수 있습니다. 추론 및 인증 도메인은 [네트워크 액세스 요구 사항](/docs/ko/network-config#network-access-requirements)을 참조하고, 선택적 원격 분석 및 오류 보고 연결 및 비활성화 방법은 [원격 분석 서비스](/docs/ko/data-usage#telemetry-services)를 참조하세요.
 
-참조 컨테이너에는 Claude Code 및 개발 도구가 필요로 하는 도메인을 제외한 모든 아웃바운드 트래픽을 차단하는 [`init-firewall.sh`](https://github.com/anthropics/claude-code/blob/main/.devcontainer/init-firewall.sh) 스크립트가 포함되어 있습니다. 컨테이너 내에서 방화벽을 실행하려면 추가 권한이 필요하므로 참조는 `runArgs`를 통해 `NET_ADMIN` 및 `NET_RAW` 기능을 추가합니다. 방화벽 스크립트 및 이러한 기능은 Claude Code 자체에는 필요하지 않습니다. 이를 제외하고 대신 자신의 네트워크 제어에 의존할 수 있습니다.
+참조 컨테이너에는 스크립트가 허용하는 대상으로의 아웃바운드 트래픽을 제한하는 [`init-firewall.sh`](https://github.com/anthropics/claude-code/blob/main/.devcontainer/init-firewall.sh) 스크립트가 포함되어 있습니다. 컨테이너 내에서 방화벽을 실행하려면 추가 권한이 필요하므로 참조는 `runArgs`를 통해 `NET_ADMIN` 및 `NET_RAW` 기능을 추가합니다. 방화벽 스크립트 및 이러한 기능은 Claude Code 자체에는 필요하지 않습니다. 이를 제외하고 대신 자신의 네트워크 제어에 의존할 수 있습니다.
 
 <h2 id="run-without-permission-prompts">
   권한 프롬프트 없이 실행
@@ -151,7 +160,7 @@ Dev Container Feature는 항상 최신 Claude Code 릴리스를 설치합니다.
 
 권한 프롬프트를 건너뛰면 도구 호출을 실행하기 전에 검토할 기회가 제거됩니다. Claude는 여전히 바인드 마운트된 작업 공간의 모든 파일을 수정할 수 있으며, 이는 호스트에 직접 나타나고 컨테이너의 네트워크 정책이 허용하는 모든 것에 도달할 수 있습니다. 이 플래그를 [위의 네트워크 송신 제한](#restrict-network-egress)과 쌍으로 사용하여 우회된 세션이 도달할 수 있는 것을 제한합니다.
 
-안전 검사를 비활성화하지 않고 더 적은 프롬프트를 원하면 대신 [자동 모드](/docs/ko/permission-modes#eliminate-prompts-with-auto-mode)를 고려하세요. 이는 분류기가 실행 전에 작업을 검토합니다. 엔지니어가 `--dangerously-skip-permissions`을 전혀 사용하지 못하도록 하려면 [관리 설정](/docs/ko/settings#permission-settings)에서 `permissions.disableBypassPermissionsMode`를 `"disable"`로 설정합니다.
+안전 검사를 비활성화하지 않고 더 적은 프롬프트를 원하면 대신 [자동 모드](/docs/ko/permission-modes#eliminate-prompts-with-auto-mode)를 고려하세요. 이는 분류기가 실행 전에 작업을 검토합니다. 엔지니어가 `--dangerously-skip-permissions`을 전혀 사용하지 못하도록 하려면 [관리 설정](/docs/ko/settings-reference#permission-settings)에서 `permissions.disableBypassPermissionsMode`를 `"disable"`로 설정합니다.
 
 <h2 id="try-the-reference-container">
   참조 컨테이너 시도
@@ -194,10 +203,11 @@ Dev Container Feature는 항상 최신 Claude Code 릴리스를 설치합니다.
 Claude Code가 개발 컨테이너에서 실행되면 아래 페이지는 조직 롤아웃의 나머지 부분을 다룹니다. 인증 경로 선택, 저장소 외부에서 관리 정책 제공, 사용량 모니터링 및 Claude Code가 저장하고 전송하는 것 이해:
 
 * [조직을 위한 Claude Code 설정](/docs/ko/admin-setup): 인증 제공자 선택, 정책이 장치에 도달하는 방법 결정 및 롤아웃 계획
-* [서버 관리 설정](/docs/ko/server-managed-settings): Claude.ai 관리 콘솔에서 관리 정책을 제공하여 엔지니어가 저장소 파일을 편집하여 우회할 수 없도록 합니다.
-* [사용량 모니터링 및 활동 감사](/docs/ko/monitoring-usage): OpenTelemetry 메트릭을 내보내고 팀이 실행 중인 것을 검토합니다.
+* [서버 관리 설정](/docs/ko/server-managed-settings): claude.ai 관리 콘솔에서 관리 정책을 제공하여 엔지니어가 저장소 파일을 편집하여 우회할 수 없도록 합니다
+* [사용량 모니터링 및 활동 감사](/docs/ko/monitoring-usage): OpenTelemetry 메트릭을 내보내고 팀이 실행 중인 것을 검토합니다
 * [네트워크 액세스 요구 사항](/docs/ko/network-config#network-access-requirements): 프록시 및 방화벽을 위한 전체 도메인 허용 목록
 * [원격 분석 서비스 및 거부](/docs/ko/data-usage#telemetry-services): Claude Code가 기본적으로 전송하는 것 및 비활성화하는 환경 변수
 * [`.claude` 디렉토리 탐색](/docs/ko/claude-directory): 볼륨 마운트가 보유하는 것(자격 증명, 설정 및 세션 기록 포함)
+* [샌드박스 환경](/docs/ko/sandbox-environments): 개발 컨테이너와 기본 제공 Bash 샌드박스, 사용자 정의 컨테이너 및 VM 비교
 * [보안 모델](/docs/ko/security): Claude Code의 권한 시스템, 샌드박싱 및 프롬프트 주입 보호가 어떻게 맞는지
 * [권한 모드](/docs/ko/permission-modes): 계획 모드에서 자동 모드에서 우회까지의 전체 범위 및 각각을 사용할 때

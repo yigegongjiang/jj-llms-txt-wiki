@@ -6,7 +6,71 @@
 
 > Claude Code 功能的每週摘要，包含程式碼片段、示範和背景說明。
 
-每週開發摘要重點介紹最有可能改變您工作方式的功能。每個條目都包含可執行的程式碼、簡短的示範和完整文件的連結。如需每個錯誤修復和次要改進，請參閱 [changelog](/docs/zh-TW/changelog)。
+每週開發摘要重點介紹最有可能改變您工作方式的功能。每個條目都包含可執行的程式碼、簡短的示範和完整文件的連結。如需每個錯誤修復和次要改進，請參閱 [changelog](/docs/en/changelog)。
+
+<Update label="Week 37" description="September 7–11, 2026" tags={["v2.1.263–v2.1.269"]}>
+  **`claude plugin eval`**：針對一套測試案例執行您的外掛程式、評分結果，並與無外掛程式基準進行比較。`claude plugin eval init` 為您草擬案例和評分器。
+
+  本週還有：將任何 **Claude Code Desktop 窗格** 彈出到自己的視窗中，稍後再將其停靠回去；**`maxEffortLevel`** 設定會限制每個提供者的努力等級；以及 **WebFetch** 在五分鐘內未完成下載的頁面會失敗而不是掛起。
+
+  [閱讀 Week 37 摘要 →](/docs/zh-TW/whats-new/2026-w37)
+</Update>
+
+<Update label="Week 36" description="August 31 – September 4, 2026" tags={["v2.1.251–v2.1.261"]}>
+  **Claude Fable 5.1**：在 Claude Code 中提供，具有 1M 代幣內容視窗。
+
+  本週還有：在 Pro 和 Max 計畫上，**Desktop 應用中的 computer use** 在 macOS 上在背景執行，同時您繼續工作；在全螢幕渲染中，**`/diff`** 開啟一個即時面板在對話旁邊，當 Claude 編輯時會重新整理；以及 **`/skill-doctor`** 顯示您每個技能在內容中的成本以及它被使用的頻率。
+
+  [閱讀 Week 36 摘要 →](/docs/zh-TW/whats-new/2026-w36)
+</Update>
+
+<Update label="Week 35" description="August 24–28, 2026" tags={["v2.1.240–v2.1.250"]}>
+  **在 Desktop 應用中恢復終端機工作階段**：在 Claude Code Desktop 提示框中輸入 `/resume`，以選擇您從 CLI 啟動的任何工作階段，並保持完整的對話和內容。
+
+  本週還有：**Claude 草擬的回饋** 讓 Claude 在工作階段中出現問題時撰寫回饋報告，您可以檢閱並從 `/feedback` 傳送；**`--restricted`** 啟動工作階段時不使用命令執行工具或您的使用者和專案設定，用於共享機器上的評估工具；以及 **`modelPicker`** 設定控制 `/model` 選擇器列出的模型。
+
+  [閱讀 Week 35 摘要 →](/docs/zh-TW/whats-new/2026-w35)
+</Update>
+
+<Update label="Week 34" description="August 17–21, 2026" tags={["v2.1.234–v2.1.239"]}>
+  **`/design`**：一個研究預覽版，將 Claude Design 的畫板工作流程帶入 CLI 和 Claude Code Desktop，建立在 artifacts 上，讓 Claude 為您的 UI 草擬可編輯的畫板並實現您選擇的那個。
+
+  本週還有：內建的 **Concise output style** 讓 Claude 以結果開頭並跳過前言；任何執行 `claude remote-control` 的機器都會在您的手機上顯示為 **device card**，讓您可以從 Code 標籤在其上啟動工作階段；以及 **`ANTHROPIC_DEFAULT_MODEL`** 設定新工作階段啟動的模型。
+
+  [閱讀 Week 34 摘要 →](/docs/zh-TW/whats-new/2026-w34)
+</Update>
+
+<Update label="Week 33" description="August 10–14, 2026" tags={["v2.1.225–v2.1.233"]}>
+  **Desktop 上的使用量限制後自動繼續**：當您在 Claude Code Desktop 中達到工作階段限制時，在限制卡上勾選 **Auto-continue when limits reset**，應用程式會在限制重設後重試中斷的回合。
+
+  本週還有：**fork mode** 在互動式工作階段中預設開啟，讓 Claude 可以將側邊任務交給繼承完整對話的子代理；**GitLab** 合併請求 URL 適用於 `--worktree` 和 `claude agents` 檢視，市場複製裸 `gitlab.com` URL；以及在提示中輸入 **`@`** 按名稱提及另一個 Claude 工作階段。
+
+  [閱讀 Week 33 摘要 →](/docs/zh-TW/whats-new/2026-w33)
+</Update>
+
+<Update label="Week 32" description="August 3–7, 2026" tags={["v2.1.220–v2.1.224"]}>
+  **跨工作階段訊息傳遞**：在 macOS 和 Linux 上，您的 Claude Code 工作階段現在可以相互傳遞訊息，讓 Claude 將發現或決定從一個工作階段傳遞到另一個工作階段，而不是您重新解釋它。
+
+  本週還有：**self-hosted environments** 在您的組織運營的基礎設施上執行 Claude Code 雲端工作階段，在 Team 和 Enterprise 計畫上進行公開測試；**auto mode** 從 8 月 14 日開始成為 Pro、Max 和 Team 計畫上新工作階段的預設權限模式；以及 **VS Code extension** 獲得 Focus view。
+
+  [閱讀 Week 32 摘要 →](/docs/zh-TW/whats-new/2026-w32)
+</Update>
+
+<Update label="Week 30" description="July 20–24, 2026" tags={["v2.1.214–v2.1.219"]}>
+  **Claude Opus 5**：Claude Code 中的新預設 Opus 模型，具有 1M 代幣內容視窗和快速模式，每 MTok 費用為 $10/$50。
+
+  本週還有：**Claude Code Desktop** 在公開測試版中開啟 iOS Simulator 窗格，讓 Claude 可以執行您的應用程式並在您觀看時點擊瀏覽；**Claude Security plugin** 執行您的程式碼庫的多代理漏洞掃描，並將您選擇的發現轉換為您自己應用的修補程式；以及 **`/code-review`** 作為背景子代理執行。
+
+  [閱讀 Week 30 摘要 →](/docs/zh-TW/whats-new/2026-w30)
+</Update>
+
+<Update label="Week 29" description="July 13–17, 2026" tags={["v2.1.207–v2.1.212"]}>
+  **Artifacts 呼叫您的 MCP 連接器**：已發佈的 artifact 可以在檢視者開啟頁面時透過每個檢視者自己的 MCP 連接器提取即時資料並採取行動，本週還新增了公開共享連結、Team 和 Enterprise 上的編輯者角色，以及從 Claude Tag 工作階段建立的 artifacts。
+
+  本週還有：**screen reader mode** 用純文字、線性文字取代視覺終端機介面，適用於 VoiceOver 和 NVDA 等螢幕閱讀器；**`/fork`** 將您的對話複製到新的背景工作階段，同時您繼續工作；以及 **auto mode** 在 Amazon Bedrock、Google Cloud 的 Agent Platform 和 Microsoft Foundry 上不再需要選擇加入變數。
+
+  [閱讀 Week 29 摘要 →](/docs/zh-TW/whats-new/2026-w29)
+</Update>
 
 <Update label="Week 28" description="July 6–10, 2026" tags={["v2.1.202–v2.1.206"]}>
   **Desktop 上的應用內瀏覽器**：Desktop 上的 Claude Code 現在配備內建瀏覽器，讓 Claude 可以調出文件、設計或任何其他網站，並以與本機開發伺服器預覽相同的方式與頁面互動。

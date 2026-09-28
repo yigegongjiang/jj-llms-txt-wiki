@@ -4,158 +4,188 @@
 
 # Claude Code GitHub Actions
 
-> Aprenda a integrar Claude Code en su flujo de trabajo de desarrollo con Claude Code GitHub Actions
+> Ejecute Claude Code en flujos de trabajo de GitHub Actions para responder a menciones @claude, automatizar tareas y convertir problemas en solicitudes de extracción
 
-Claude Code GitHub Actions trae automatización impulsada por IA a su flujo de trabajo de GitHub. Con una simple mención `@claude` en cualquier PR o problema, Claude puede analizar su código, crear solicitudes de extracción, implementar características y corregir errores, todo mientras sigue los estándares de su proyecto. Para revisiones automáticas publicadas en cada PR sin un disparador, consulte [GitHub Code Review](/docs/es/code-review).
+[Claude Code GitHub Actions](https://github.com/anthropics/claude-code-action) es una GitHub Action que ejecuta Claude Code dentro de los flujos de trabajo de su repositorio. Mencione `@claude` en un comentario de solicitud de extracción o problema para que Claude analice código, implemente cambios e inserte confirmaciones. También puede darle a la GitHub Action de Claude Code un mensaje para que se ejecute automáticamente en cualquier evento de GitHub. Úselo para convertir problemas en solicitudes de extracción, corregir errores desde un comentario o automatizar tareas recurrentes.
 
-<Note>
-  Claude Code GitHub Actions se construye sobre el [Claude Agent SDK](/docs/es/agent-sdk/overview), que permite la integración programática de Claude Code en sus aplicaciones. Puede usar el SDK para crear flujos de trabajo de automatización personalizados más allá de GitHub Actions.
-</Note>
+Varios productos comparten el nombre Claude Code. Esta página cubre la integración de flujo de trabajo `claude-code-action`, que configura con archivos de flujo de trabajo en su repositorio. Para los productos relacionados, consulte:
 
-<h2 id="why-use-claude-code-github-actions">
-  ¿Por qué usar Claude Code GitHub Actions?
-</h2>
-
-* **Creación instantánea de PR**: Describa lo que necesita y Claude crea un PR completo con todos los cambios necesarios
-* **Implementación de código automatizada**: Convierta problemas en código funcional con un único comando
-* **Sigue sus estándares**: Claude respeta sus directrices `CLAUDE.md` y patrones de código existentes
-* **Configuración simple**: Comience en minutos con nuestro instalador y clave API
-* **Seguro por defecto**: Su código permanece en los ejecutores de Github
-
-<h2 id="what-can-claude-do">
-  ¿Qué puede hacer Claude?
-</h2>
-
-Claude Code proporciona una poderosa GitHub Action que transforma la forma en que trabaja con código:
-
-<h3 id="claude-code-action">
-  Claude Code Action
-</h3>
-
-Esta GitHub Action le permite ejecutar Claude Code dentro de sus flujos de trabajo de GitHub Actions. Puede usar esto para crear cualquier flujo de trabajo personalizado sobre Claude Code.
-
-[Ver repositorio →](https://github.com/anthropics/claude-code-action)
+* [Code Review](/docs/es/code-review): revisión automática en cada solicitud de extracción, sin escribir un flujo de trabajo
+* [Claude Code en la nube](/docs/es/claude-code-on-the-web): sesiones de Claude Code que se ejecutan en infraestructura en la nube en lugar de su máquina
+* [Claude Agent SDK](/docs/es/agent-sdk/overview): automatización personalizada fuera de GitHub Actions. La GitHub Action de Claude Code se construye sobre el SDK
+* [GitHub Enterprise Server](/docs/es/github-enterprise-server): Claude Code con GitHub autohospedado
 
 <h2 id="setup">
   Configuración
 </h2>
 
-<h2 id="quick-setup">
+Puede configurar la GitHub Action de Claude Code de una de dos formas:
+
+* **Configuración rápida**: ejecute `/install-github-app` desde Claude Code. Claude Code instala la GitHub App, agrega su secreto de autenticación y prepara la solicitud de extracción del flujo de trabajo para usted
+* **Configuración manual**: instale la aplicación, agregue el secreto y copie el archivo de flujo de trabajo en su repositorio usted mismo. Use esta ruta cuando no ejecute Claude Code localmente, cuando el comando falle o cuando desee control total de los archivos de flujo de trabajo
+
+Para cualquiera de las rutas, necesita acceso de administrador al repositorio.
+
+<h3 id="quick-setup">
   Configuración rápida
-</h2>
+</h3>
 
-Ejecute `/install-github-app` en la terminal de Claude Code para configurar la integración de forma interactiva. El comando instala la aplicación Claude GitHub en su repositorio y luego lo guía a través de la adición de los flujos de trabajo de GitHub Actions y el secreto de la clave API.
+`/install-github-app` funciona solo con repositorios de github.com. Si el repositorio remoto de git está en gitlab.com o bitbucket.org, el comando imprime un aviso y sale en lugar de iniciar la configuración. Para ejecutar Claude Code desde canalizaciones de GitLab, consulte [Claude Code GitLab CI/CD](/docs/es/gitlab-ci-cd).
 
-Después de que se instale la aplicación de GitHub, el comando pregunta si desea continuar con la configuración de GitHub Actions. En Claude Code v2.1.187 y versiones posteriores, puede elegir **Omitir por ahora** para detener solo con la aplicación instalada y volver a los pasos de flujo de trabajo y secreto ejecutando `/install-github-app` nuevamente. Las versiones anteriores proceden directamente a la selección de flujo de trabajo.
+Antes de comenzar, instale la [GitHub CLI](https://cli.github.com) y auténtiquese con `gh auth login`. Claude Code la verifica y le advierte si falta.
+
+Abra `claude` en el repositorio que desea conectar, ejecute `/install-github-app` y siga las indicaciones. Claude Code instala la GitHub App de Claude, luego configura un secreto de autenticación para los flujos de trabajo:
+
+* Si Claude Code ya tiene una clave API, reutiliza esa clave y ofrece mantener el secreto `ANTHROPIC_API_KEY` existente del repositorio si ya está configurado
+* De lo contrario, elija entre crear un token de larga duración con su suscripción de Claude y pegar una clave API
+
+Claude Code guarda la credencial como un secreto del repositorio, denominado `ANTHROPIC_API_KEY` para una clave API o `CLAUDE_CODE_OAUTH_TOKEN` para un token de suscripción.
+
+Claude Code luego inserta una rama con los archivos de flujo de trabajo que selecciona, ya configurados para usar ese secreto, y abre GitHub en su navegador con una solicitud de extracción lista para crear. Cree y fusione esa solicitud de extracción, y `@claude` funciona en el repositorio.
+
+Si selecciona el flujo de trabajo de revisión, Claude publica cada revisión en la solicitud de extracción misma, como un comentario en línea en cada problema que encuentra o como un comentario de resumen cuando no encuentra ninguno. Claude omite algunas solicitudes de extracción, como borradores. El [ejemplo de flujo de trabajo de revisión](#run-a-skill) usa la misma skill y las enumera. Antes de v2.1.229, Claude escribía su revisión solo en el registro de ejecución del flujo de trabajo.
+
+Para actualizar un flujo de trabajo de revisión que una versión anterior generó, haga una de las siguientes:
+
+* Ejecute `/install-github-app` nuevamente. Cuando el repositorio ya tiene un `claude.yml`, seleccione **Actualizar archivo de flujo de trabajo con la última versión**. Claude Code inserta copias nuevas de los archivos de flujo de trabajo en una rama nueva y abre la solicitud de extracción, igual que una primera instalación.
+* Agregue el argumento `--comment` y la línea `claude_args` del [ejemplo de flujo de trabajo de revisión](#run-a-skill) al archivo registrado usted mismo, lo que mantiene cualquier otra edición que haya realizado.
+
+Después de instalar la GitHub App, Claude Code pregunta si desea continuar con la configuración de GitHub Actions. Elija **Omitir por ahora** para detener solo con la GitHub App instalada. Ejecute `/install-github-app` nuevamente más tarde para terminar los pasos de flujo de trabajo y secreto.
 
 <Note>
-  * Debe ser administrador del repositorio para instalar la aplicación de GitHub y agregar secretos
-  * La aplicación de GitHub solicitará permisos de lectura y escritura para Contenidos, Problemas y Solicitudes de extracción
-  * Este método de inicio rápido solo está disponible para usuarios directos de Claude API. Si está usando Amazon Bedrock o Google Cloud's Agent Platform, consulte la sección [Usar con Amazon Bedrock y Google Cloud](#using-with-amazon-bedrock-and-google-cloud).
+  * Cuando instala la GitHub App, le otorga varios permisos. Consulte [Permisos de GitHub App](#github-app-permissions) para el conjunto completo
+  * La configuración rápida funciona con la API de Claude y las suscripciones de Claude. Si usa Amazon Bedrock, Google Cloud's Agent Platform o Microsoft Foundry, consulte [Usar Claude Code GitHub Actions con proveedores en la nube](/docs/es/github-actions-cloud-providers)
 </Note>
 
-<h2 id="manual-setup">
+<h3 id="manual-setup">
   Configuración manual
-</h2>
+</h3>
 
-Si el comando `/install-github-app` falla o prefiere la configuración manual, siga estas instrucciones de configuración manual:
+Para configurar la GitHub Action de Claude Code sin ejecutar `/install-github-app`, instale la aplicación, agregue un secreto y copie un archivo de flujo de trabajo usted mismo:
 
-1. **Instale la aplicación de GitHub de Claude** en su repositorio: [https://github.com/apps/claude](https://github.com/apps/claude)
+<Steps>
+  <Step title="Instale la GitHub App de Claude">
+    Instale la [GitHub App de Claude](https://github.com/apps/claude) en su repositorio. La GitHub Action de Claude Code depende de tres de los permisos de la aplicación:
 
-   La aplicación de GitHub de Claude requiere los siguientes permisos de repositorio:
+    * **Contents**: lectura y escritura, para que Claude pueda modificar archivos del repositorio
+    * **Issues**: lectura y escritura, para que Claude pueda responder a problemas
+    * **Pull requests**: lectura y escritura, para que Claude pueda crear PR e insertar cambios
 
-   * **Contenidos**: Lectura y escritura (para modificar archivos del repositorio)
-   * **Problemas**: Lectura y escritura (para responder a problemas)
-   * **Solicitudes de extracción**: Lectura y escritura (para crear PR e insertar cambios)
+    Durante la instalación, también otorga permisos que otras características de Claude usan. Consulte [Permisos de GitHub App](#github-app-permissions) para el conjunto completo.
+  </Step>
 
-   Para más detalles sobre seguridad y permisos, consulte la [documentación de seguridad](https://github.com/anthropics/claude-code-action/blob/main/docs/security.md).
-2. **Agregue ANTHROPIC\_API\_KEY** a sus secretos del repositorio ([Aprenda cómo usar secretos en GitHub Actions](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions))
-3. **Copie el archivo de flujo de trabajo** de [examples/claude.yml](https://github.com/anthropics/claude-code-action/blob/main/examples/claude.yml) en el directorio `.github/workflows/` de su repositorio
+  <Step title="Agregue un secreto de autenticación">
+    Agregue uno de los siguientes secretos a su repositorio, dependiendo de cómo se autentique. Consulte la guía de GitHub sobre [uso de secretos en GitHub Actions](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions).
+
+    * `ANTHROPIC_API_KEY`: una clave API de Claude de la [Consola de Claude](https://platform.claude.com)
+    * `CLAUDE_CODE_OAUTH_TOKEN`: un token OAuth que se autentica con su suscripción de Claude, disponible en planes Pro, Max, Team y Enterprise. Genere uno ejecutando `claude setup-token` localmente. Consulte [Generar un token de larga duración](/docs/es/authentication#generate-a-long-lived-token)
+
+    En archivos de flujo de trabajo, pase el secreto a la entrada correspondiente: `anthropic_api_key` para una clave API, o `claude_code_oauth_token` para un token OAuth.
+  </Step>
+
+  <Step title="Copie el archivo de flujo de trabajo">
+    Copie [examples/claude.yml](https://github.com/anthropics/claude-code-action/blob/main/examples/claude.yml) en el directorio `.github/workflows/` de su repositorio. El archivo es un flujo de trabajo funcional, no solo un ejemplo. Tal como está confirmado, Claude responde cada vez que alguien menciona `@claude` en un problema o solicitud de extracción, autenticándose con el secreto `ANTHROPIC_API_KEY`. Si agregó `CLAUDE_CODE_OAUTH_TOKEN` en su lugar, cambie la línea `anthropic_api_key` del flujo de trabajo a `claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}`.
+  </Step>
+</Steps>
 
 <Tip>
-  Después de completar la configuración rápida o manual, pruebe la acción etiquetando `@claude` en un comentario de problema o PR.
+  Después de la configuración, pruebe la GitHub Action de Claude Code etiquetando `@claude` en un comentario de problema o PR.
 </Tip>
 
-<h2 id="upgrading-from-beta">
-  Actualización desde Beta
+<h3 id="set-up-for-an-organization">
+  Configurar para una organización
+</h3>
+
+Con la configuración rápida o manual, configura un repositorio a la vez. Para implementar la GitHub Action de Claude Code en toda una organización:
+
+* Instale la [GitHub App de Claude](https://github.com/apps/claude) una vez a nivel de organización, eligiendo todos los repositorios o una lista seleccionada
+* Almacene el secreto de autenticación como un secreto de Actions a nivel de organización para que cada repositorio no necesite su propia copia
+* Agregue el archivo de flujo de trabajo a cada repositorio que deba ejecutar la GitHub Action de Claude Code, o defina el trabajo una vez como un [flujo de trabajo reutilizable](https://docs.github.com/en/actions/using-workflows/reusing-workflows) que cada repositorio llama
+
+Para un secreto compartido entre repositorios, auténtiquese con una clave API de la [Consola de Claude](https://platform.claude.com) en lugar de un token OAuth, ya que un token OAuth está vinculado a la suscripción de la persona que ejecutó `claude setup-token`.
+
+Para evitar almacenar un secreto de larga duración en absoluto, auténtiquese a través de federación de identidad de carga de trabajo, donde la GitHub Action de Claude Code intercambia el token OpenID Connect (OIDC) de GitHub del flujo de trabajo por acceso a la API de Claude a través de una cuenta de servicio de la Consola de Claude. Establezca estas entradas:
+
+* `anthropic_federation_rule_id`: el ID de la regla de federación, `fdrl_...`
+* `anthropic_organization_id`: su ID de organización de Anthropic
+* `anthropic_service_account_id`: el ID de la cuenta de servicio, `svac_...`. Opcional, ya que la regla de federación que crea en la Consola ya apunta a una cuenta de servicio
+* `anthropic_workspace_id`: el ID del espacio de trabajo, `wrkspc_...`. Opcional cuando la regla de federación apunta a un único espacio de trabajo
+
+Otorgue al flujo de trabajo el permiso `id-token: write`, que la GitHub Action de Claude Code necesita para el intercambio de federación incluso cuando pasa su propio `github_token`. Consulte la [guía de configuración de la GitHub Action de Claude Code](https://github.com/anthropics/claude-code-action/blob/main/docs/setup.md) para la configuración del lado de la Consola.
+
+Para preguntas sobre manejo de datos y retención en una revisión de seguridad, consulte [uso de datos](/docs/es/data-usage) y [seguridad](/docs/es/security).
+
+<h3 id="uninstall">
+  Desinstalar
+</h3>
+
+Para eliminar la GitHub Action de Claude Code, deshaga cada parte de la configuración que se aplique a su instalación:
+
+* **Archivos de flujo de trabajo**: elimine los flujos de trabajo que usan `anthropics/claude-code-action` de `.github/workflows/`. Si usó la configuración rápida, busque `claude.yml` y, si seleccionó el flujo de trabajo de revisión, `claude-code-review.yml`. Con los flujos de trabajo eliminados, la GitHub Action de Claude Code ya no se ejecuta
+* **Secretos**: elimine el secreto `ANTHROPIC_API_KEY` o `CLAUDE_CODE_OAUTH_TOKEN` del repositorio, y de los secretos de Actions a nivel de organización si lo [compartió entre repositorios](#set-up-for-an-organization). Si elimina un secreto, la credencial que contenía sigue siendo válida. Para retirar completamente una clave API, también elimine la clave en la [Consola de Claude](https://platform.claude.com)
+* **GitHub App**: desinstale la GitHub App de Claude en la configuración de su repositorio u organización en GitHub Apps, pero solo si no la usa para otra característica de Claude, como Code Review o auto-fix web
+
+Si configuró un [proveedor en la nube](/docs/es/github-actions-cloud-providers), también elimine los secretos del proveedor, como `AWS_ROLE_TO_ASSUME`, los secretos `GCP_*` o los secretos `AZURE_*`, y desinstale la GitHub App personalizada junto con sus secretos `APP_ID` y `APP_PRIVATE_KEY`.
+
+<h3 id="github-app-permissions">
+  Permisos de GitHub App
+</h3>
+
+La [GitHub App de Claude](https://github.com/apps/claude) es compartida por cada característica de Claude que se integra con GitHub, incluida la GitHub Action de Claude Code, [Code Review](/docs/es/code-review) y [auto-fix para solicitudes de extracción](/docs/es/claude-code-on-the-web#auto-fix-pull-requests) en Claude Code en la web. Una GitHub App tiene un conjunto de permisos único que cubre todas sus características, por lo que el conjunto incluye algunos permisos que la GitHub Action de Claude Code no usa.
+
+Cuando instala la aplicación, otorga los siguientes permisos:
+
+| Permiso          | Acceso              |
+| ---------------- | ------------------- |
+| Actions          | Lectura y escritura |
+| Checks           | Lectura y escritura |
+| Contents         | Lectura y escritura |
+| Discussions      | Lectura y escritura |
+| Issues           | Lectura y escritura |
+| Members          | Lectura             |
+| Metadata         | Lectura             |
+| Pull requests    | Lectura y escritura |
+| Repository hooks | Lectura y escritura |
+| Statuses         | Lectura             |
+| Workflows        | Lectura y escritura |
+
+El conjunto de permisos también puede cambiar antes de las características que lo usan. Cuando la aplicación solicita un permiso que no tenía antes, GitHub solicita al propietario de la cuenta que lo apruebe, un propietario de la organización para una instalación de organización, y la instalación mantiene sus permisos antiguos hasta que lo hagan. Por ejemplo, cuando el acceso de Actions cambia de lectura a escritura, la aplicación puede volver a ejecutar flujos de trabajo en lugar de solo ver ejecuciones y registros, por lo que GitHub le pide al propietario que apruebe el cambio.
+
+Cuando instala la aplicación, acepta su conjunto de permisos completo. GitHub no le permite aceptar un subconjunto. Si su organización requiere solo los permisos que usa la GitHub Action de Claude Code, cree una GitHub App personalizada con Contents, Issues y Pull requests en su lugar, siguiendo la [guía de configuración de la GitHub Action de Claude Code](https://github.com/anthropics/claude-code-action/blob/main/docs/setup.md). Una aplicación personalizada cubre solo la GitHub Action de Claude Code. Code Review y auto-fix web aún requieren la aplicación oficial.
+
+Para detalles sobre cómo la GitHub Action de Claude Code limita lo que Claude puede hacer con estos permisos, consulte la [documentación de seguridad](https://github.com/anthropics/claude-code-action/blob/main/docs/security.md).
+
+<h2 id="interactive-and-automation-modes">
+  Modos interactivo y de automatización
 </h2>
 
-<Warning>
-  Claude Code GitHub Actions v1.0 introduce cambios importantes que requieren actualizar sus archivos de flujo de trabajo para actualizar a v1.0 desde la versión beta.
-</Warning>
+La GitHub Action de Claude Code detecta cómo ejecutarse desde su configuración de flujo de trabajo:
 
-Si actualmente está usando la versión beta de Claude Code GitHub Actions, le recomendamos que actualice sus flujos de trabajo para usar la versión GA. La nueva versión simplifica la configuración mientras agrega características poderosas como la detección automática de modo.
+* **Modo interactivo**: cuando el flujo de trabajo no proporciona entrada `prompt`, Claude espera la frase de disparo, `@claude` por defecto, en un comentario de problema o solicitud de extracción, en una revisión de solicitud de extracción o en el cuerpo o título de un problema recién abierto, luego responde a esa solicitud. El progreso y los resultados aparecen como un comentario en el problema o PR que desencadena.
+* **Modo de automatización**: cuando el flujo de trabajo proporciona una entrada `prompt`, Claude se ejecuta sin esperar una mención, sujeto solo a las [comprobaciones sobre quién puede desencadenar ejecuciones](#who-can-trigger-runs). Por defecto, los resultados aparecen en el registro de ejecución del flujo de trabajo en lugar de un comentario. Claude puede publicar en el problema o solicitud de extracción cuando el mensaje lo dirige y tiene una herramienta que puede publicar, como en el [ejemplo de revisión de código](#run-a-skill).
 
-<h3 id="essential-changes">
-  Cambios esenciales
+<h3 id="who-can-trigger-runs">
+  Quién puede desencadenar ejecuciones
 </h3>
 
-Todos los usuarios de beta deben hacer estos cambios en sus archivos de flujo de trabajo para actualizar:
+En ambos modos, la GitHub Action de Claude Code ejecuta dos comprobaciones en el actor que desencadena antes de que Claude comience, y la ejecución falla cuando cualquiera de las comprobaciones la rechaza:
 
-1. **Actualice la versión de la acción**: Cambie `@beta` a `@v1`
-2. **Elimine la configuración de modo**: Elimine `mode: "tag"` o `mode: "agent"` (ahora se detecta automáticamente)
-3. **Actualice las entradas de solicitud**: Reemplace `direct_prompt` con `prompt`
-4. **Mueva opciones de CLI**: Convierta `max_turns`, `model`, `custom_instructions`, etc. a `claude_args`
-
-<h3 id="breaking-changes-reference">
-  Referencia de cambios importantes
-</h3>
-
-| Entrada Beta antigua  | Nueva entrada v1.0                         |
-| --------------------- | ------------------------------------------ |
-| `mode`                | *(Eliminado - se detecta automáticamente)* |
-| `direct_prompt`       | `prompt`                                   |
-| `override_prompt`     | `prompt` con variables de GitHub           |
-| `custom_instructions` | `claude_args: --append-system-prompt`      |
-| `max_turns`           | `claude_args: --max-turns`                 |
-| `model`               | `claude_args: --model`                     |
-| `allowed_tools`       | `claude_args: --allowedTools`              |
-| `disallowed_tools`    | `claude_args: --disallowedTools`           |
-| `claude_env`          | `settings` formato JSON                    |
-
-<h3 id="before-and-after-example">
-  Ejemplo antes y después
-</h3>
-
-**Versión beta:**
-
-```yaml theme={null}
-- uses: anthropics/claude-code-action@beta
-  with:
-    mode: "tag"
-    direct_prompt: "Review this PR for security issues"
-    anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-    custom_instructions: "Follow our coding standards"
-    max_turns: "10"
-    model: "claude-sonnet-5"
-```
-
-**Versión GA (v1.0):**
-
-```yaml theme={null}
-- uses: anthropics/claude-code-action@v1
-  with:
-    prompt: "Review this PR for security issues"
-    anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-    claude_args: |
-      --append-system-prompt "Follow our coding standards"
-      --max-turns 10
-      --model claude-sonnet-5
-```
-
-<Tip>
-  La acción ahora detecta automáticamente si ejecutar en modo interactivo (responde a menciones `@claude`) o modo de automatización (se ejecuta inmediatamente con un solicitud) según su configuración.
-</Tip>
+* **Acceso de escritura**: en eventos de problema y solicitud de extracción, el usuario que desencadena debe tener acceso de escritura al repositorio. Para permitir usuarios específicos sin acceso de escritura, establezca `allowed_non_write_users` y pase su propia entrada `github_token`. Los eventos que ningún usuario crea, como un disparador `schedule`, omiten esta comprobación.
+* **Actor humano**: en cada evento, la GitHub Action de Claude Code rechaza un actor bot a menos que lo enumere en `allowed_bots`, lo que evita que los bots desencadenen Claude en un bucle. Esta comprobación también se aplica a ejecuciones programadas, que GitHub atribuye a un usuario del repositorio, generalmente el que cambió por última vez el cronograma `cron` del flujo de trabajo. Si ese usuario es un bot, enumérelo en `allowed_bots`.
 
 <h2 id="example-use-cases">
   Casos de uso de ejemplo
 </h2>
 
-Claude Code GitHub Actions puede ayudarle con una variedad de tareas. El [directorio de ejemplos](https://github.com/anthropics/claude-code-action/tree/main/examples) contiene flujos de trabajo listos para usar para diferentes escenarios.
+El [directorio de ejemplos](https://github.com/anthropics/claude-code-action/tree/main/examples) contiene flujos de trabajo listos para usar para diferentes escenarios.
 
-<h3 id="basic-workflow">
-  Flujo de trabajo básico
+Los ejemplos en esta página muestran autenticación de clave API. Si se autentica con una suscripción de Claude, reemplace la línea `anthropic_api_key` en cualquier ejemplo con `claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}`.
+
+<h3 id="respond-to-claude-mentions">
+  Responder a menciones @claude
 </h3>
+
+Este flujo de trabajo ejecuta la GitHub Action de Claude Code en modo interactivo, por lo que Claude responde cada vez que alguien menciona `@claude` en un comentario de problema o PR.
 
 ```yaml theme={null}
 name: Claude Code
@@ -166,45 +196,91 @@ on:
     types: [created]
 jobs:
   claude:
+    if: contains(github.event.comment.body, '@claude')
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      id-token: write
+      actions: read
     steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
       - uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          # Responds to @claude mentions in comments
 ```
 
-<h3 id="using-skills">
-  Usar skills
+Las partes de este flujo de trabajo que no son código estándar:
+
+* `id-token: write`: requerido para la autenticación predeterminada de GitHub App de la GitHub Action de Claude Code
+* `actions: read`: permite que Claude lea resultados de CI en PR
+* `actions/checkout`: le da a Claude una copia local del repositorio para trabajar
+* `if`: evita que los ejecutores se inicien en comentarios que no mencionen `@claude`. La GitHub Action de Claude Code también verifica la frase de disparo antes de responder
+
+Una vez que el flujo de trabajo está en su lugar, mencione `@claude` en cualquier comentario de problema o PR con una solicitud:
+
+```text wrap theme={null}
+@claude implement this feature based on the issue description
+@claude how should I implement user authentication for this endpoint?
+@claude fix the TypeError in the user dashboard component
+```
+
+Claude responde en un comentario en el mismo problema o PR y lo actualiza mientras trabaja.
+
+<h3 id="run-a-skill">
+  Ejecutar una skill
 </h3>
 
-La entrada `prompt` acepta una [invocación de skill](/docs/es/skills) así como texto sin formato:
+La entrada `prompt` acepta una invocación de [skill](/docs/es/skills) así como texto sin formato:
 
-* Para un skill en el directorio `.claude/skills/` de su repositorio, ejecute `actions/checkout` antes del paso de acción y pase `/skill-name`.
-* Para un skill empaquetado en un plugin, instale el plugin con las entradas `plugin_marketplaces` y `plugins` y pase el `/plugin-name:skill-name` con espacio de nombres.
+* Para una skill en el directorio `.claude/skills/` de su repositorio, ejecute `actions/checkout` antes del paso `anthropics/claude-code-action` para que los archivos de skill estén disponibles en el ejecutor, luego pase `/skill-name` como `prompt`.
+* Para una skill empaquetada en un [plugin](/docs/es/plugins/overview), instale el plugin con las entradas `plugin_marketplaces` y `plugins`, luego pase el `/plugin-name:skill-name` con espacio de nombres como `prompt`. La entrada `plugins` toma `plugin-name@marketplace-name`, donde el nombre del marketplace viene del manifiesto propio del marketplace en lugar de su URL de repositorio.
 
-El siguiente flujo de trabajo instala el plugin `code-review` y ejecuta su skill en cada solicitud de extracción nueva o actualizada:
+El siguiente flujo de trabajo instala el plugin `code-review` y ejecuta su skill cuando se abre, actualiza, reabre o marca una solicitud de extracción como lista para revisión. Ejecuta el mismo plugin que el flujo de trabajo de revisión de la configuración rápida. Use un flujo de trabajo como este cuando desee controlar el mensaje, el modelo y los disparadores usted mismo. Para revisiones automáticas sin mantener un archivo de flujo de trabajo, consulte [Code Review](/docs/es/code-review). En repositorios públicos, GitHub retiene secretos de ejecuciones desencadenadas por solicitudes de extracción de bifurcación, por lo que la revisión se ejecuta solo en solicitudes de extracción de ramas en el mismo repositorio.
 
 ```yaml theme={null}
 name: Code Review
 on:
   pull_request:
-    types: [opened, synchronize]
+    types: [opened, synchronize, ready_for_review, reopened]
 jobs:
   review:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+      issues: read
+      id-token: write
     steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
       - uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           plugin_marketplaces: "https://github.com/anthropics/claude-code.git"
           plugins: "code-review@claude-code-plugins"
-          prompt: "/code-review:code-review ${{ github.repository }}/pull/${{ github.event.pull_request.number }}"
+          prompt: "/code-review:code-review --comment ${{ github.repository }}/pull/${{ github.event.pull_request.number }}"
+          claude_args: '--allowedTools "mcp__github_inline_comment__create_inline_comment"'
 ```
 
-<h3 id="custom-automation-with-prompts">
-  Automatización personalizada con solicitudes
+Dos líneas en este flujo de trabajo controlan dónde va la revisión:
+
+* **`--comment`**: Claude publica su revisión en la solicitud de extracción, como un comentario en línea en cada problema que encuentra o como un comentario de resumen cuando no encuentra ninguno. Sin él, Claude no publica nada, y usted lee los hallazgos en el registro de ejecución del flujo de trabajo.
+* **`claude_args`**: mantenga esta línea aunque la propia `allowed-tools` frontmatter de la skill nombre la misma herramienta, porque la GitHub Action de Claude Code inicia el servidor MCP que publica comentarios en línea solo cuando `--allowedTools` en `claude_args` lo nombra.
+
+Claude omite solicitudes de extracción en borrador y cerradas, solicitudes de extracción que juzga que no necesitan revisión, como las automatizadas o triviales, y solicitudes de extracción que ya tienen un comentario de Claude.
+
+<h3 id="run-on-a-schedule">
+  Ejecutar en un cronograma
 </h3>
+
+Con una entrada `prompt`, la GitHub Action de Claude Code se ejecuta en modo de automatización en cualquier evento de GitHub, incluido un cronograma cron. Para un mensaje de texto sin formato, Claude no tiene acceso a shell o API de GitHub hasta que otorgue las herramientas que el mensaje necesita, con `--allowedTools` en `claude_args` o una [regla `permissions.allow`](/docs/es/permissions#permission-rule-syntax) en la entrada `settings`. Si invoca una skill en su lugar, Claude puede usar las herramientas que su [frontmatter `allowed-tools`](/docs/es/skills#pre-approve-tools-for-a-skill) otorga. GitHub ejecuta flujos de trabajo programados solo desde la rama predeterminada y, en repositorios públicos, desactiva el cronograma después de 60 días sin actividad del repositorio.
+
+Este flujo de trabajo genera un informe en el registro de ejecución del flujo de trabajo a las 09:00 UTC cada día. Su línea `claude_args` [pasa argumentos de CLI](#pass-cli-arguments) que seleccionan el modelo y permiten dos herramientas MCP de GitHub. Claude lee confirmaciones y problemas a través de la API de GitHub con esas herramientas, por lo que puede omitir el paso de checkout:
 
 ```yaml theme={null}
 name: Daily Report
@@ -214,446 +290,73 @@ on:
 jobs:
   report:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: read
+      id-token: write
     steps:
       - uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           prompt: "Generate a summary of yesterday's commits and open issues"
-          claude_args: "--model opus"
+          claude_args: |
+            --model claude-opus-5-5
+            --allowedTools "mcp__github__list_commits,mcp__github__list_issues"
 ```
-
-<h3 id="common-use-cases">
-  Casos de uso comunes
-</h3>
-
-En comentarios de problema o PR:
-
-```text wrap theme={null}
-@claude implement this feature based on the issue description
-@claude how should I implement user authentication for this endpoint?
-@claude fix the TypeError in the user dashboard component
-```
-
-Claude analizará automáticamente el contexto y responderá apropiadamente.
 
 <h2 id="best-practices">
   Mejores prácticas
 </h2>
 
-<h3 id="claude-md-configuration">
-  Configuración de CLAUDE.md
+<h3 id="define-project-standards-in-claude-md">
+  Defina estándares de proyecto en CLAUDE.md
 </h3>
 
-Cree un archivo `CLAUDE.md` en la raíz de su repositorio para definir directrices de estilo de código, criterios de revisión, reglas específicas del proyecto y patrones preferidos. Este archivo guía la comprensión de Claude de los estándares de su proyecto.
+Cree un archivo `CLAUDE.md` en la raíz de su repositorio para definir directrices de estilo de código, criterios de revisión, reglas específicas del proyecto y patrones preferidos. Claude sigue estas directrices al crear PR y responder a solicitudes. Consulte la [documentación de memoria](/docs/es/memory) para detalles.
 
-<h3 id="security-considerations">
-  Consideraciones de seguridad
+<h3 id="protect-your-credentials">
+  Proteja sus credenciales
 </h3>
 
-<Warning>Nunca confirme claves API directamente en su repositorio.</Warning>
+<Warning>
+  Nunca confirme claves API u tokens OAuth directamente en su repositorio. Siempre almacénelos como GitHub Secrets y haga referencia a ellos en flujos de trabajo, por ejemplo `anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}`.
+</Warning>
 
-Para una guía de seguridad completa que incluya permisos, autenticación y mejores prácticas, consulte la [documentación de seguridad de Claude Code Action](https://github.com/anthropics/claude-code-action/blob/main/docs/security.md).
+Otorgue al flujo de trabajo solo los permisos que necesita y revise los cambios de Claude antes de fusionar.
 
-Siempre use GitHub Secrets para claves API:
+Para una guía de seguridad completa que incluya permisos y autenticación, consulte la [documentación de seguridad de Claude Code Action](https://github.com/anthropics/claude-code-action/blob/main/docs/security.md).
 
-* Agregue su clave API como un secreto del repositorio llamado `ANTHROPIC_API_KEY`
-* Haga referencia a él en flujos de trabajo: `anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}`
-* Limite los permisos de acción solo a lo necesario
-* Revise las sugerencias de Claude antes de fusionar
-
-Siempre use GitHub Secrets (por ejemplo, `${{ secrets.ANTHROPIC_API_KEY }}`) en lugar de codificar claves API directamente en sus archivos de flujo de trabajo.
-
-<h3 id="optimizing-performance">
-  Optimización del rendimiento
+<h3 id="manage-costs">
+  Gestionar costos
 </h3>
 
-Use plantillas de problemas para proporcionar contexto, mantenga su `CLAUDE.md` conciso y enfocado, y configure tiempos de espera apropiados para sus flujos de trabajo.
+Cada ejecución consume dos tipos de recursos:
 
-<h3 id="ci-costs">
-  Costos de CI
-</h3>
+* **Minutos de GitHub Actions**: la GitHub Action de Claude Code se ejecuta en ejecutores alojados en GitHub, que consumen sus minutos de GitHub Actions. Consulte la [documentación de facturación de GitHub](https://docs.github.com/en/billing/managing-billing-for-your-products/managing-billing-for-github-actions/about-billing-for-github-actions) para precios y límites de minutos.
+* **Tokens de API**: cada interacción consume tokens según la longitud de mensajes y respuestas, complejidad de tareas y tamaño de la base de código. Consulte la [página de precios de Claude](https://claude.com/platform/api) para tasas de tokens actuales. Si se autentica con un token OAuth, las ejecuciones usan su suscripción de Claude en lugar de facturación de API.
 
-Al usar Claude Code GitHub Actions, tenga en cuenta los costos asociados:
+Puede reducir ambos tipos de costo dándole a Claude un contexto más claro y limitando cuánto trabajo puede hacer cada ejecución:
 
-**Costos de GitHub Actions:**
-
-* Claude Code se ejecuta en ejecutores alojados en GitHub, que consumen sus minutos de GitHub Actions
-* Consulte la [documentación de facturación de GitHub](https://docs.github.com/en/billing/managing-billing-for-your-products/managing-billing-for-github-actions/about-billing-for-github-actions) para obtener detalles de precios y límites de minutos
-
-**Costos de API:**
-
-* Cada interacción de Claude consume tokens de API según la longitud de solicitudes y respuestas
-* El uso de tokens varía según la complejidad de la tarea y el tamaño de la base de código
-* Consulte la [página de precios de Claude](https://claude.com/platform/api) para obtener las tasas de tokens actuales
-
-**Consejos de optimización de costos:**
-
-* Use comandos específicos `@claude` para reducir llamadas API innecesarias
-* Configure `--max-turns` apropiado en `claude_args` para evitar iteraciones excesivas
+* Escriba solicitudes específicas de `@claude` para que Claude necesite menos turnos para terminar
+* Use plantillas de problemas para proporcionar contexto por adelantado
+* Mantenga su `CLAUDE.md` conciso, ya que Claude lo lee en cada ejecución
+* Establezca `--max-turns` en `claude_args` para limitar iteraciones
 * Establezca tiempos de espera a nivel de flujo de trabajo para evitar trabajos descontrolados
-* Considere usar controles de concurrencia de GitHub para limitar ejecuciones paralelas
+* Use los controles de concurrencia de GitHub para limitar ejecuciones paralelas
 
-<h2 id="configuration-examples">
-  Ejemplos de configuración
+Para seguimiento de uso en toda su organización, consulte el [panel de análisis](/docs/es/analytics) y [monitoreo](/docs/es/monitoring-usage). Para cómo se mide y factura el uso, consulte [costos](/docs/es/costs).
+
+<h2 id="use-a-cloud-provider">
+  Usar un proveedor en la nube
 </h2>
 
-Claude Code Action v1 simplifica la configuración con parámetros unificados:
+Por defecto, la GitHub Action de Claude Code llama a la API de Claude directamente con su clave API u token OAuth. Para enrutar la inferencia a través de su propia cuenta en la nube en su lugar, establezca la entrada para su proveedor y siga [Usar Claude Code GitHub Actions con proveedores en la nube](/docs/es/github-actions-cloud-providers):
 
-```yaml theme={null}
-- uses: anthropics/claude-code-action@v1
-  with:
-    anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-    prompt: "Your instructions here" # Optional
-    claude_args: "--max-turns 5" # Optional CLI arguments
-```
+* **Amazon Bedrock**: `use_bedrock: "true"`
+* **Google Cloud's Agent Platform**: `use_vertex: "true"`
+* **Microsoft Foundry**: `use_foundry: "true"`
 
-Características clave:
-
-* **Interfaz de solicitud unificada** - Use `prompt` para todas las instrucciones
-* **Skills** - Invoque [skills](/docs/es/skills) instalados directamente desde la solicitud
-* **Paso de CLI** - Cualquier argumento de CLI de Claude Code a través de `claude_args`
-* **Disparadores flexibles** - Funciona con cualquier evento de GitHub
-
-Visite el [directorio de ejemplos](https://github.com/anthropics/claude-code-action/tree/main/examples) para archivos de flujo de trabajo completos.
-
-<Tip>
-  Al responder a comentarios de problema o PR, Claude responde automáticamente a menciones @claude. Para otros eventos, use el parámetro `prompt` para proporcionar instrucciones.
-</Tip>
-
-<h2 id="using-with-amazon-bedrock-and-google-cloud">
-  Usar con Amazon Bedrock y Google Cloud
-</h2>
-
-Para entornos empresariales, puede usar Claude Code GitHub Actions con su propia infraestructura en la nube. Este enfoque le da control sobre la residencia de datos y la facturación mientras mantiene la misma funcionalidad.
-
-<h3 id="prerequisites">
-  Requisitos previos
-</h3>
-
-Antes de configurar Claude Code GitHub Actions con proveedores en la nube, necesita:
-
-<h4 id="for-google-cloud’s-agent-platform">
-  Para Google Cloud's Agent Platform:
-</h4>
-
-1. Un proyecto de Google Cloud con Google Cloud's Agent Platform habilitado
-2. Federación de identidad de carga de trabajo configurada para GitHub Actions
-3. Una cuenta de servicio con los permisos requeridos
-4. Una aplicación de GitHub (recomendado) o use el GITHUB\_TOKEN predeterminado
-
-<h4 id="for-amazon-bedrock">
-  Para Amazon Bedrock:
-</h4>
-
-1. Una cuenta de AWS con Amazon Bedrock habilitado
-2. Proveedor de identidad OIDC de GitHub configurado en AWS
-3. Un rol de IAM con permisos de Amazon Bedrock
-4. Una aplicación de GitHub (recomendado) o use el GITHUB\_TOKEN predeterminado
-
-<Steps>
-  <Step title="Crear una aplicación de GitHub personalizada (Recomendado para proveedores de terceros)">
-    Para el mejor control y seguridad al usar proveedores de terceros como Google Cloud's Agent Platform o Amazon Bedrock, le recomendamos crear su propia aplicación de GitHub:
-
-    1. Vaya a [https://github.com/settings/apps/new](https://github.com/settings/apps/new)
-    2. Complete la información básica:
-       * **Nombre de la aplicación de GitHub**: Elija un nombre único (por ejemplo, "YourOrg Claude Assistant")
-       * **URL de inicio**: El sitio web de su organización o la URL del repositorio
-    3. Configure los ajustes de la aplicación:
-       * **Webhooks**: Desmarque "Activo" (no es necesario para esta integración)
-    4. Establezca los permisos requeridos:
-       * **Permisos del repositorio**:
-         * Contenidos: Lectura y escritura
-         * Problemas: Lectura y escritura
-         * Solicitudes de extracción: Lectura y escritura
-    5. Haga clic en "Crear aplicación de GitHub"
-    6. Después de la creación, haga clic en "Generar una clave privada" y guarde el archivo `.pem` descargado
-    7. Anote su ID de aplicación en la página de configuración de la aplicación
-    8. Instale la aplicación en su repositorio:
-       * Desde la página de configuración de su aplicación, haga clic en "Instalar aplicación" en la barra lateral izquierda
-       * Seleccione su cuenta u organización
-       * Elija "Solo repositorios seleccionados" y seleccione el repositorio específico
-       * Haga clic en "Instalar"
-    9. Agregue la clave privada como un secreto a su repositorio:
-       * Vaya a Configuración de su repositorio → Secretos y variables → Acciones
-       * Cree un nuevo secreto llamado `APP_PRIVATE_KEY` con el contenido del archivo `.pem`
-    10. Agregue el ID de la aplicación como un secreto:
-
-    * Cree un nuevo secreto llamado `APP_ID` con el ID de su aplicación de GitHub
-
-    <Note>
-      Esta aplicación se usará con la acción [actions/create-github-app-token](https://github.com/actions/create-github-app-token) para generar tokens de autenticación en sus flujos de trabajo.
-    </Note>
-
-    **Alternativa para Claude API o si no desea configurar su propia aplicación de Github**: Use la aplicación oficial de Anthropic:
-
-    1. Instale desde: [https://github.com/apps/claude](https://github.com/apps/claude)
-    2. No se requiere configuración adicional para autenticación
-  </Step>
-
-  <Step title="Configurar autenticación del proveedor en la nube">
-    Elija su proveedor en la nube y configure autenticación segura:
-
-    <AccordionGroup>
-      <Accordion title="Amazon Bedrock">
-        **Configure AWS para permitir que GitHub Actions se autentique de forma segura sin almacenar credenciales.**
-
-        > **Nota de seguridad**: Use configuraciones específicas del repositorio y otorgue solo los permisos mínimos requeridos.
-
-        **Configuración requerida**:
-
-        1. **Habilitar Amazon Bedrock**:
-           * Solicite acceso a modelos de Claude en Amazon Bedrock
-           * Para modelos entre regiones, solicite acceso en todas las regiones requeridas
-
-        2. **Configurar proveedor de identidad OIDC de GitHub**:
-           * URL del proveedor: `https://token.actions.githubusercontent.com`
-           * Audiencia: `sts.amazonaws.com`
-
-        3. **Crear rol de IAM para GitHub Actions**:
-           * Tipo de entidad de confianza: Identidad web
-           * Proveedor de identidad: `token.actions.githubusercontent.com`
-           * Permisos: política `AmazonBedrockFullAccess`
-           * Configurar política de confianza para su repositorio específico
-
-        **Valores requeridos**:
-
-        Después de la configuración, necesitará:
-
-        * **AWS\_ROLE\_TO\_ASSUME**: El ARN del rol de IAM que creó
-
-        <Tip>
-          OIDC es más seguro que usar claves de acceso estáticas de AWS porque las credenciales son temporales y se rotan automáticamente.
-        </Tip>
-
-        Consulte la [documentación de AWS](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_create_oidc.html) para obtener instrucciones detalladas de configuración de OIDC.
-      </Accordion>
-
-      <Accordion title="Google Cloud's Agent Platform">
-        **Configure Google Cloud para permitir que GitHub Actions se autentique de forma segura sin almacenar credenciales.**
-
-        > **Nota de seguridad**: Use configuraciones específicas del repositorio y otorgue solo los permisos mínimos requeridos.
-
-        **Configuración requerida**:
-
-        1. **Habilitar APIs** en su proyecto de Google Cloud:
-           * API de credenciales de IAM
-           * API de servicio de token de seguridad (STS)
-           * API de Google Cloud's Agent Platform
-
-        2. **Crear recursos de Federación de identidad de carga de trabajo**:
-           * Crear un grupo de identidad de carga de trabajo
-           * Agregar un proveedor OIDC de GitHub con:
-             * Emisor: `https://token.actions.githubusercontent.com`
-             * Asignaciones de atributos para repositorio y propietario
-             * **Recomendación de seguridad**: Use condiciones de atributo específicas del repositorio
-
-        3. **Crear una cuenta de servicio**:
-           * Otorgue solo el rol `Vertex AI User`
-           * **Recomendación de seguridad**: Cree una cuenta de servicio dedicada por repositorio
-
-        4. **Configurar enlaces de IAM**:
-           * Permitir que el grupo de identidad de carga de trabajo suplante la cuenta de servicio
-           * **Recomendación de seguridad**: Use conjuntos de principios específicos del repositorio
-
-        **Valores requeridos**:
-
-        Después de la configuración, necesitará:
-
-        * **GCP\_WORKLOAD\_IDENTITY\_PROVIDER**: El nombre completo del recurso del proveedor
-        * **GCP\_SERVICE\_ACCOUNT**: La dirección de correo electrónico de la cuenta de servicio
-
-        <Tip>
-          Workload Identity Federation elimina la necesidad de claves de cuenta de servicio descargables, mejorando la seguridad.
-        </Tip>
-
-        Para obtener instrucciones de configuración detalladas, consulte la [documentación de Federación de identidad de carga de trabajo de Google Cloud](https://cloud.google.com/iam/docs/workload-identity-federation).
-      </Accordion>
-    </AccordionGroup>
-  </Step>
-
-  <Step title="Agregar secretos requeridos">
-    Agregue los siguientes secretos a su repositorio (Configuración → Secretos y variables → Acciones):
-
-    #### Para Claude API (Directo):
-
-    1. **Para autenticación de API**:
-       * `ANTHROPIC_API_KEY`: Su clave de API de Claude de [console.anthropic.com](https://console.anthropic.com)
-
-    2. **Para aplicación de GitHub (si usa su propia aplicación)**:
-       * `APP_ID`: El ID de su aplicación de GitHub
-       * `APP_PRIVATE_KEY`: El contenido de la clave privada (.pem)
-
-    #### Para Google Cloud's Agent Platform
-
-    1. **Para autenticación de GCP**:
-       * `GCP_WORKLOAD_IDENTITY_PROVIDER`
-       * `GCP_SERVICE_ACCOUNT`
-
-    2. **Para aplicación de GitHub (si usa su propia aplicación)**:
-       * `APP_ID`: El ID de su aplicación de GitHub
-       * `APP_PRIVATE_KEY`: El contenido de la clave privada (.pem)
-
-    #### Para Amazon Bedrock
-
-    1. **Para autenticación de AWS**:
-       * `AWS_ROLE_TO_ASSUME`
-
-    2. **Para aplicación de GitHub (si usa su propia aplicación)**:
-       * `APP_ID`: El ID de su aplicación de GitHub
-       * `APP_PRIVATE_KEY`: El contenido de la clave privada (.pem)
-  </Step>
-
-  <Step title="Crear archivos de flujo de trabajo">
-    Cree archivos de flujo de trabajo de GitHub Actions que se integren con su proveedor en la nube. Los ejemplos a continuación muestran configuraciones completas tanto para Amazon Bedrock como para Google Cloud's Agent Platform:
-
-    <AccordionGroup>
-      <Accordion title="Flujo de trabajo de Amazon Bedrock">
-        **Requisitos previos:**
-
-        * Acceso a Amazon Bedrock habilitado con permisos de modelo de Claude
-        * GitHub configurado como proveedor de identidad OIDC en AWS
-        * Rol de IAM con permisos de Amazon Bedrock que confía en GitHub Actions
-
-        **Secretos de GitHub requeridos:**
-
-        | Nombre del secreto   | Descripción                                                          |
-        | -------------------- | -------------------------------------------------------------------- |
-        | `AWS_ROLE_TO_ASSUME` | ARN del rol de IAM para acceso a Amazon Bedrock                      |
-        | `APP_ID`             | Su ID de aplicación de GitHub (de la configuración de la aplicación) |
-        | `APP_PRIVATE_KEY`    | La clave privada que generó para su aplicación de GitHub             |
-
-        ```yaml theme={null}
-        name: Claude PR Action
-
-        permissions:
-          contents: write
-          pull-requests: write
-          issues: write
-          id-token: write
-
-        on:
-          issue_comment:
-            types: [created]
-          pull_request_review_comment:
-            types: [created]
-          issues:
-            types: [opened, assigned]
-
-        jobs:
-          claude-pr:
-            if: |
-              (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude')) ||
-              (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude')) ||
-              (github.event_name == 'issues' && contains(github.event.issue.body, '@claude'))
-            runs-on: ubuntu-latest
-            env:
-              AWS_REGION: us-west-2
-            steps:
-              - name: Checkout repository
-                uses: actions/checkout@v4
-
-              - name: Generate GitHub App token
-                id: app-token
-                uses: actions/create-github-app-token@v2
-                with:
-                  app-id: ${{ secrets.APP_ID }}
-                  private-key: ${{ secrets.APP_PRIVATE_KEY }}
-
-              - name: Configure AWS Credentials (OIDC)
-                uses: aws-actions/configure-aws-credentials@v4
-                with:
-                  role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
-                  aws-region: us-west-2
-
-              - uses: anthropics/claude-code-action@v1
-                with:
-                  github_token: ${{ steps.app-token.outputs.token }}
-                  use_bedrock: "true"
-                  claude_args: '--model us.anthropic.claude-sonnet-4-6 --max-turns 10'
-        ```
-
-        <Tip>
-          El formato de ID de modelo para Amazon Bedrock incluye un prefijo de región (por ejemplo, `us.anthropic.claude-sonnet-4-6`).
-        </Tip>
-      </Accordion>
-
-      <Accordion title="Flujo de trabajo de Google Cloud's Agent Platform">
-        **Requisitos previos:**
-
-        * API de Google Cloud's Agent Platform habilitada en su proyecto de GCP
-        * Federación de identidad de carga de trabajo configurada para GitHub
-        * Cuenta de servicio con permisos de Google Cloud's Agent Platform
-
-        **Secretos de GitHub requeridos:**
-
-        | Nombre del secreto               | Descripción                                                                            |
-        | -------------------------------- | -------------------------------------------------------------------------------------- |
-        | `GCP_WORKLOAD_IDENTITY_PROVIDER` | Nombre del recurso del proveedor de identidad de carga de trabajo                      |
-        | `GCP_SERVICE_ACCOUNT`            | Correo electrónico de la cuenta de servicio con acceso a Google Cloud's Agent Platform |
-        | `APP_ID`                         | Su ID de aplicación de GitHub (de la configuración de la aplicación)                   |
-        | `APP_PRIVATE_KEY`                | La clave privada que generó para su aplicación de GitHub                               |
-
-        ```yaml theme={null}
-        name: Claude PR Action
-
-        permissions:
-          contents: write
-          pull-requests: write
-          issues: write
-          id-token: write
-
-        on:
-          issue_comment:
-            types: [created]
-          pull_request_review_comment:
-            types: [created]
-          issues:
-            types: [opened, assigned]
-
-        jobs:
-          claude-pr:
-            if: |
-              (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude')) ||
-              (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude')) ||
-              (github.event_name == 'issues' && contains(github.event.issue.body, '@claude'))
-            runs-on: ubuntu-latest
-            steps:
-              - name: Checkout repository
-                uses: actions/checkout@v4
-
-              - name: Generate GitHub App token
-                id: app-token
-                uses: actions/create-github-app-token@v2
-                with:
-                  app-id: ${{ secrets.APP_ID }}
-                  private-key: ${{ secrets.APP_PRIVATE_KEY }}
-
-              - name: Authenticate to Google Cloud
-                id: auth
-                uses: google-github-actions/auth@v2
-                with:
-                  workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
-                  service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
-
-              - uses: anthropics/claude-code-action@v1
-                with:
-                  github_token: ${{ steps.app-token.outputs.token }}
-                  trigger_phrase: "@claude"
-                  use_vertex: "true"
-                  claude_args: '--model claude-sonnet-4-5@20250929 --max-turns 10'
-                env:
-                  ANTHROPIC_VERTEX_PROJECT_ID: ${{ steps.auth.outputs.project_id }}
-                  CLOUD_ML_REGION: us-east5
-                  VERTEX_REGION_CLAUDE_4_5_SONNET: us-east5
-        ```
-
-        <Tip>
-          El ID del proyecto se recupera automáticamente del paso de autenticación de Google Cloud, por lo que no necesita codificarlo.
-        </Tip>
-      </Accordion>
-    </AccordionGroup>
-  </Step>
-</Steps>
+Con los tres proveedores, se autentica a través de federación de identidad OIDC en lugar de una clave API de Claude, por lo que no almacena credenciales de nube estáticas en su repositorio.
 
 <h2 id="troubleshooting">
   Solución de problemas
@@ -663,19 +366,27 @@ Antes de configurar Claude Code GitHub Actions con proveedores en la nube, neces
   Claude no responde a comandos @claude
 </h3>
 
-Verifique que la aplicación de GitHub esté instalada correctamente, compruebe que los flujos de trabajo estén habilitados, asegúrese de que la clave API esté configurada en los secretos del repositorio y confirme que el comentario contenga `@claude` (no `/claude`).
+* Verifique que la GitHub App esté instalada en el repositorio
+* Compruebe que los flujos de trabajo estén habilitados para el repositorio
+* Asegúrese de que su clave API u token OAuth esté configurado en secretos del repositorio
+* Confirme que el comentario contiene `@claude` como una palabra completa, no `/claude` o `@claude-bot`
+* Confirme que el usuario que comenta tiene acceso de escritura al repositorio. Consulte [Quién puede desencadenar ejecuciones](#who-can-trigger-runs) para las excepciones
 
 <h3 id="ci-not-running-on-claude’s-commits">
-  CI no se ejecuta en los commits de Claude
+  CI no se ejecuta en las confirmaciones de Claude
 </h3>
 
-Asegúrese de estar usando la aplicación de GitHub o una aplicación personalizada (no el usuario de Acciones), verifique que los disparadores de flujo de trabajo incluyan los eventos necesarios y confirme que los permisos de la aplicación incluyan disparadores de CI.
+* GitHub no desencadena flujos de trabajo en confirmaciones realizadas con el `GITHUB_TOKEN` predeterminado. Si pasa `github_token: ${{ secrets.GITHUB_TOKEN }}` a la GitHub Action de Claude Code, elimínelo para que se autentique como la GitHub App de Claude, o pase un token de aplicación personalizado en su lugar
+* Compruebe que los disparadores del flujo de trabajo de CI incluyan los eventos que producen los insertos de Claude, como `push` o `pull_request`
 
 <h3 id="authentication-errors">
   Errores de autenticación
 </h3>
 
-Confirme que la clave API sea válida y tenga permisos suficientes. Para Amazon Bedrock o Google Cloud's Agent Platform, verifique la configuración de credenciales y asegúrese de que los secretos tengan los nombres correctos en los flujos de trabajo.
+* Confirme que la clave API u token OAuth sea válido probándolo localmente con `claude` antes de depurar el flujo de trabajo
+* Para Bedrock, Agent Platform y Foundry, consulte la [sección de solución de problemas](/docs/es/github-actions-cloud-providers#troubleshooting) de la página del proveedor en la nube
+
+Para más soluciones, consulte las [Preguntas frecuentes](https://github.com/anthropics/claude-code-action/blob/main/docs/faq.md) de la GitHub Action de Claude Code.
 
 <h2 id="advanced-configuration">
   Configuración avanzada
@@ -685,28 +396,30 @@ Confirme que la clave API sea válida y tenga permisos suficientes. Para Amazon 
   Parámetros de acción
 </h3>
 
-Claude Code Action v1 utiliza una configuración simplificada:
+Estas son las entradas más comúnmente usadas. Cada una se asigna a una clave `with:` en el paso `anthropics/claude-code-action`.
 
-| Parámetro             | Descripción                                                                               | Requerido |
-| --------------------- | ----------------------------------------------------------------------------------------- | --------- |
-| `prompt`              | Instrucciones para Claude (texto sin formato o un nombre de [skill](/docs/es/skills))          | No\*      |
-| `claude_args`         | Argumentos de CLI pasados a Claude Code                                                   | No        |
-| `plugin_marketplaces` | Lista separada por saltos de línea de URLs de Git de marketplace de plugins               | No        |
-| `plugins`             | Lista separada por saltos de línea de nombres de plugins a instalar antes de la ejecución | No        |
-| `anthropic_api_key`   | Clave API de Claude                                                                       | Sí\*\*    |
-| `github_token`        | Token de GitHub para acceso a API                                                         | No        |
-| `trigger_phrase`      | Frase de disparo personalizada (predeterminado: "@claude")                                | No        |
-| `use_bedrock`         | Usar Amazon Bedrock en lugar de Claude API                                                | No        |
-| `use_vertex`          | Usar Google Cloud's Agent Platform en lugar de Claude API                                 | No        |
+| Parámetro                 | Descripción                                                                                                                                                                                        | Requerido                                                                                                                                                                                       |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `prompt`                  | Instrucciones para Claude, como texto sin formato o una invocación de [skill](/docs/es/skills). Cuando se omite, Claude responde a la [frase de disparo](#interactive-and-automation-modes) en su lugar | No                                                                                                                                                                                              |
+| `claude_args`             | Argumentos de CLI pasados a Claude Code                                                                                                                                                            | No                                                                                                                                                                                              |
+| `anthropic_api_key`       | Clave API de Claude                                                                                                                                                                                | Para la API de Claude, a menos que use `claude_code_oauth_token` o [federación de identidad de carga de trabajo](#set-up-for-an-organization). No se usa para Bedrock, Agent Platform o Foundry |
+| `claude_code_oauth_token` | Token OAuth para autenticarse con una suscripción de Claude, generado con `claude setup-token`                                                                                                     | No                                                                                                                                                                                              |
+| `github_token`            | Token para operaciones de GitHub. Cuando se omite, la GitHub Action de Claude Code se autentica como la GitHub App de Claude                                                                       | No                                                                                                                                                                                              |
+| `plugin_marketplaces`     | Lista separada por saltos de línea de URLs de Git de marketplace de plugins                                                                                                                        | No                                                                                                                                                                                              |
+| `plugins`                 | Lista separada por saltos de línea de nombres de plugins a instalar antes de la ejecución                                                                                                          | No                                                                                                                                                                                              |
+| `settings`                | Configuración de Claude Code, como una cadena JSON o una ruta a un archivo JSON de configuración                                                                                                   | No                                                                                                                                                                                              |
+| `trigger_phrase`          | Frase de disparo a la que Claude responde. Predeterminado: `@claude`                                                                                                                               | No                                                                                                                                                                                              |
+| `use_bedrock`             | Usar Amazon Bedrock en lugar de la API de Claude                                                                                                                                                   | No                                                                                                                                                                                              |
+| `use_vertex`              | Usar Google Cloud's Agent Platform en lugar de la API de Claude                                                                                                                                    | No                                                                                                                                                                                              |
+| `use_foundry`             | Usar Microsoft Foundry en lugar de la API de Claude                                                                                                                                                | No                                                                                                                                                                                              |
 
-\*Prompt es opcional - cuando se omite para comentarios de problema/PR, Claude responde a la frase de disparo\
-\*\*Requerido para Claude API directo, no para Amazon Bedrock o Google Cloud's Agent Platform
+Para la lista de entrada completa, consulte la [referencia de configuración](https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md#inputs) de la GitHub Action de Claude Code.
 
-<h4 id="pass-cli-arguments">
+<h3 id="pass-cli-arguments">
   Pasar argumentos de CLI
-</h4>
+</h3>
 
-El parámetro `claude_args` acepta cualquier argumento de CLI de Claude Code:
+El parámetro `claude_args` acepta cualquier [argumento de CLI de Claude Code](/docs/es/cli-reference):
 
 ```yaml theme={null}
 claude_args: "--max-turns 5 --model claude-sonnet-5 --mcp-config /path/to/config.json"
@@ -714,31 +427,30 @@ claude_args: "--max-turns 5 --model claude-sonnet-5 --mcp-config /path/to/config
 
 Argumentos comunes:
 
-* `--max-turns`: Máximo de turnos de conversación (predeterminado: 10)
-* `--model`: Modelo a usar (por ejemplo, `claude-sonnet-5`)
-* `--mcp-config`: Ruta a la configuración de MCP
-* `--allowedTools`: Lista separada por comas de herramientas permitidas. El alias `--allowed-tools` también funciona.
-* `--debug`: Habilitar salida de depuración
+* `--max-turns`: limitar el número de turnos de conversación
+* `--model`: modelo a usar, por ejemplo `claude-sonnet-5`. Sin este argumento, la GitHub Action de Claude Code usa el [modelo predeterminado](/docs/es/model-config) de Claude Code
+* `--mcp-config`: ruta a [configuración de MCP](/docs/es/mcp)
+* `--allowedTools`: lista separada por comas de herramientas permitidas. El alias `--allowed-tools` también funciona
+* `--debug`: habilitar salida de depuración
 
-<h3 id="alternative-integration-methods">
-  Métodos de integración alternativos
-</h3>
+<h2 id="upgrade-from-beta">
+  Actualizar desde beta
+</h2>
 
-Aunque el comando `/install-github-app` es el enfoque recomendado, también puede:
+Si sus flujos de trabajo aún hacen referencia a `anthropics/claude-code-action@beta`, actualícelos a v1:
 
-* **Aplicación de GitHub personalizada**: Para organizaciones que necesitan nombres de usuario personalizados o flujos de autenticación personalizados. Cree su propia aplicación de GitHub con permisos requeridos (contenidos, problemas, solicitudes de extracción) y use la acción actions/create-github-app-token para generar tokens en sus flujos de trabajo.
-* **GitHub Actions manual**: Configuración de flujo de trabajo directo para máxima flexibilidad
-* **Configuración de MCP**: Carga dinámica de servidores del Protocolo de contexto del modelo
+1. Cambie `@beta` a `@v1` en la línea `uses`
+2. Elimine la entrada `mode`, ya que la GitHub Action de Claude Code ahora [detecta el modo automáticamente](#interactive-and-automation-modes)
+3. Reemplace `direct_prompt` con `prompt`
+4. Mueva opciones de CLI como `max_turns` y `model` a `claude_args`. `custom_instructions` no tiene una bandera con el mismo nombre y se convierte en `--append-system-prompt`
 
-Consulte la [documentación de Claude Code Action](https://github.com/anthropics/claude-code-action/blob/main/docs) para obtener guías detalladas sobre autenticación, seguridad y configuración avanzada.
+Para la asignación de entrada completa y ejemplos antes y después, consulte la [guía de migración](https://github.com/anthropics/claude-code-action/blob/main/docs/migration-guide.md).
 
-<h3 id="customizing-claude’s-behavior">
-  Personalizar el comportamiento de Claude
-</h3>
+<h2 id="what’s-next">
+  Qué sigue
+</h2>
 
-Puede configurar el comportamiento de Claude de dos formas:
-
-1. **CLAUDE.md**: Defina estándares de codificación, criterios de revisión y reglas específicas del proyecto en un archivo `CLAUDE.md` en la raíz de su repositorio. Claude seguirá estas directrices al crear PR y responder a solicitudes. Consulte nuestra [documentación de Memory](/docs/es/memory) para más detalles.
-2. **Solicitudes personalizadas**: Use el parámetro `prompt` en el archivo de flujo de trabajo para proporcionar instrucciones específicas del flujo de trabajo. Esto le permite personalizar el comportamiento de Claude para diferentes flujos de trabajo o tareas.
-
-Claude seguirá estas directrices al crear PR y responder a solicitudes.
+* [Usar Claude Code GitHub Actions con proveedores en la nube](/docs/es/github-actions-cloud-providers): enrutar la inferencia a través de Amazon Bedrock, Google Cloud's Agent Platform o Microsoft Foundry
+* [Referencia de configuración](https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md#inputs): la lista completa de entradas de acción
+* [Directorio de ejemplos](https://github.com/anthropics/claude-code-action/tree/main/examples): flujos de trabajo listos para usar para más escenarios
+* [Code Review](/docs/es/code-review): revisión automática de solicitudes de extracción sin mantener un archivo de flujo de trabajo

@@ -8,21 +8,14 @@
 
 Системные подсказки определяют поведение Claude, его возможности и стиль ответов. Начните с предустановки `claude_code` для инструментов кодирования, похожих на CLI или IDE, где человек наблюдает и направляет работу. Напишите свою собственную подсказку для агентов с другой поверхностью, идентичностью или моделью разрешений.
 
-На этой странице рассматривается:
-
-* [Как работают системные подсказки](#how-system-prompts-work), с таблицей решений для выбора между предустановкой, предустановкой с `append` и пользовательской подсказкой
-* [Настройка поведения агента](#customize-agent-behavior) с файлами CLAUDE.md, стилями вывода, `append` или пользовательской строкой
-* [Сравнение четырёх подходов](#compare-the-four-approaches) по постоянству, области действия и тому, что они сохраняют
-* [Объединение подходов](#combine-approaches) для наслоения методов настройки вместе
-
 <h2 id="how-system-prompts-work">
   Как работают системные подсказки
 </h2>
 
 Системная подсказка — это начальный набор инструкций, который определяет поведение Claude на протяжении всего разговора. Agent SDK имеет три начальные точки для неё:
 
-* **Минимальное значение по умолчанию**: когда вы не устанавливаете `systemPrompt` в TypeScript или `system_prompt` в Python, SDK использует минимальную подсказку, которая охватывает вызов инструментов, но исключает рекомендации по кодированию Claude Code, стиль ответов и контекст проекта. Это отличается от `claude -p`, который по умолчанию использует полную подсказку Claude Code. Если вы переходите с CLI и хотите совпадающее поведение, установите предустановку `claude_code`.
-* **Предустановка `claude_code`**: полная системная подсказка, которую использует CLI Claude Code, с инструкциями по использованию инструментов, рекомендациями по стилю и форматированию кода, правилами тона и многословности ответов, инструкциями по безопасности и защите, а также контекстом о рабочем каталоге и окружении. Установите `systemPrompt: { type: "preset", preset: "claude_code" }` в TypeScript или `system_prompt={"type": "preset", "preset": "claude_code"}` в Python, опционально с `append` для добавления ваших собственных инструкций в конец.
+* **Минимальное значение по умолчанию**: когда вы не устанавливаете `systemPrompt` в TypeScript или `system_prompt` в Python, SDK использует минимальную подсказку, которая охватывает вызов инструментов, но исключает остальное содержимое предустановки `claude_code`, включая её инструкции по безопасности и защите, а также контекст о рабочем каталоге и окружении. Это отличается от `claude -p`, который по умолчанию использует системную подсказку Claude Code. Если вы переходите с CLI и хотите совпадающее поведение, установите предустановку `claude_code`.
+* **Предустановка `claude_code`**: системная подсказка, которую использует CLI Claude Code, с инструкциями по использованию инструментов, инструкциями по безопасности и защите, а также контекстом о рабочем каталоге и окружении. Установите `systemPrompt: { type: "preset", preset: "claude_code" }` в TypeScript или `system_prompt={"type": "preset", "preset": "claude_code"}` в Python, опционально с `append` для добавления ваших собственных инструкций в конец.
 * **Пользовательская строка**: подсказка, которую вы пишете сами. SDK отправляет только то, что вы предоставляете.
 
 <h3 id="decide-on-a-starting-point">
@@ -33,7 +26,7 @@
 
 | Что вы создаёте                                                                                                                                      | Используйте                            | Что вы получаете                                                                                                                                                    |
 | :--------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Инструмент CLI или IDE-подобный инструмент кодирования, где человек смотрит и управляет, и значения по умолчанию Claude Code — это то, что вам нужно | Предустановка `claude_code`            | Полная подсказка Claude Code: руководство по инструментам, правила безопасности, удобные для терминала ответы, осведомлённость о соглашениях репозитория            |
+| Инструмент CLI или IDE-подобный инструмент кодирования, где человек смотрит и управляет, и значения по умолчанию Claude Code — это то, что вам нужно | Предустановка `claude_code`            | Подсказка Claude Code, включая руководство по инструментам, правила безопасности и контекст окружения                                                               |
 | Тот же вид инструмента, плюс правила, специфичные для продукта, такие как стандарты кодирования, формат вывода или контекст домена                   | Предустановка `claude_code` с `append` | Всё вышеперечисленное, с вашими инструкциями, добавленными после предустановки. Ничего не удаляется, поэтому это наименее рискованная настройка                     |
 | Агент с другой поверхностью, идентичностью или моделью разрешений, или агент без кодирования                                                         | Пользовательская строка подсказки      | Только то, что вы пишете. Вы берёте на себя ответственность за замену руководства по инструментам и инструкций по безопасности, которые вашему агенту всё ещё нужны |
 | Тонкий цикл вызова инструментов без персоны агента, где вы предоставляете всё поведение в подсказке пользователя                                     | Без опции `systemPrompt`               | Минимальное значение по умолчанию: поддержка вызова инструментов и ничего больше                                                                                    |
@@ -51,13 +44,13 @@
   Настройка поведения агента
 </h2>
 
-Стили вывода, `append` и пользовательская строка подсказки каждый изменяют системную подсказку напрямую. CLAUDE.md идёт другим путём: SDK читает его и внедряет его содержимое в разговор как контекст проекта, а не в системную подсказку, поэтому он формирует поведение наряду с любой выбранной вами системной подсказкой. [Skills](/docs/ru/agent-sdk/skills), [hooks](/docs/ru/agent-sdk/hooks) и [permissions](/docs/ru/agent-sdk/permissions) также формируют поведение вне системной подсказки и рассматриваются на отдельных страницах.
+`append` и пользовательская строка подсказки каждый изменяют системную подсказку напрямую, а стиль вывода изменяет инструкции, которые Claude Code дает Claude для каждого ответа. CLAUDE.md идёт другим путём: SDK читает его и внедряет его содержимое в разговор как контекст проекта, поэтому он формирует поведение наряду с любой выбранной вами системной подсказкой. [Skills](/docs/ru/agent-sdk/skills), [hooks](/docs/ru/agent-sdk/hooks) и [permissions](/docs/ru/agent-sdk/permissions) также формируют поведение вне системной подсказки и рассматриваются на отдельных страницах.
 
 <h3 id="claude-md-files-for-project-level-instructions">
   Файлы CLAUDE.md для инструкций на уровне проекта
 </h3>
 
-Файлы CLAUDE.md предоставляют Claude постоянный контекст проекта и инструкции. SDK внедряет их содержимое в разговор, а не в системную подсказку, поэтому они работают с любой конфигурацией системной подсказки. О том, что поместить в CLAUDE.md, где его разместить и как писать эффективные инструкции, см. [How Claude remembers your project](/docs/ru/memory). Этот раздел охватывает то, что специфично для SDK: как загружается CLAUDE.md.
+Файлы CLAUDE.md предоставляют Claude постоянный контекст проекта и инструкции. SDK внедряет их содержимое в разговор и оставляет системную подсказку нетронутой, поэтому они работают с любой конфигурацией системной подсказки. О том, что поместить в CLAUDE.md, где его разместить и как писать эффективные инструкции, см. [When to add to CLAUDE.md](/docs/ru/memory#when-to-add-to-claude-md) и остальную часть [How Claude remembers your project](/docs/ru/memory). Этот раздел охватывает то, что специфично для SDK: как загружается CLAUDE.md.
 
 SDK читает CLAUDE.md, когда включен соответствующий источник параметров: `'project'` загружает `CLAUDE.md` или `.claude/CLAUDE.md` из рабочего каталога, а `'user'` загружает `~/.claude/CLAUDE.md`. Параметры `query()` по умолчанию включают оба источника, поэтому CLAUDE.md загружается автоматически. Если вы явно установите `settingSources` в TypeScript или `setting_sources` в Python, включите необходимые источники. Загрузка CLAUDE.md контролируется источниками параметров, а не предустановкой `claude_code`.
 
@@ -90,25 +83,34 @@ SDK читает CLAUDE.md, когда включен соответствующ
   ```
 
   ```python Python theme={null}
+  import asyncio
+
   from claude_agent_sdk import query, ClaudeAgentOptions
 
   messages = []
 
-  async for message in query(
-      prompt="Add a new React component for user profiles",
-      options=ClaudeAgentOptions(
-          system_prompt={
-              "type": "preset",
-              "preset": "claude_code",  # Use Claude Code's system prompt
-          },
-          setting_sources=["project"],  # Loads CLAUDE.md from project
-      ),
-  ):
-      messages.append(message)
+
+  async def main():
+      async for message in query(
+          prompt="Add a new React component for user profiles",
+          options=ClaudeAgentOptions(
+              system_prompt={
+                  "type": "preset",
+                  "preset": "claude_code",  # Use Claude Code's system prompt
+              },
+              setting_sources=["project"],  # Loads CLAUDE.md from project
+          ),
+      ):
+          messages.append(message)
+
+
+  asyncio.run(main())
 
   # Now Claude has access to your project guidelines from CLAUDE.md
   ```
 </CodeGroup>
+
+Когда вы запустите любой из примеров, SDK потоком передаёт сообщения по мере работы Claude: системное сообщение инициализации, сообщения помощника, пользовательские сообщения с результатами инструментов и финальное сообщение результата с исходом сеанса.
 
 CLAUDE.md постоянен во всех сеансах в проекте, общий с вашей командой через git и обнаруживается автоматически без изменений кода. Он не загружается, если вы передаёте пустой массив `settingSources`.
 
@@ -116,7 +118,7 @@ CLAUDE.md постоянен во всех сеансах в проекте, о�
   Стили вывода для постоянных конфигураций
 </h3>
 
-Стили вывода — это сохранённые конфигурации, которые изменяют системную подсказку Claude. Они хранятся как файлы markdown и могут быть переиспользованы в разных сеансах и проектах.
+Стили вывода — это сохранённые наборы инструкций, которые изменяют роль, тон и формат вывода Claude. Они хранятся как файлы markdown и могут быть переиспользованы в разных сеансах и проектах.
 
 <h4 id="create-an-output-style">
   Создание стиля вывода
@@ -124,7 +126,7 @@ CLAUDE.md постоянен во всех сеансах в проекте, о�
 
 Стиль вывода — это файл markdown с [frontmatter](/docs/ru/output-styles#frontmatter) для метаданных, за которым следует содержимое подсказки. Сохраните его в `~/.claude/output-styles/` для стиля на уровне пользователя, доступного в каждом проекте, или `.claude/output-styles/` в вашем репозитории для стиля на уровне проекта, который вы можете зафиксировать и поделиться с вашей командой.
 
-По умолчанию пользовательский стиль вывода заменяет инструкции по разработке программного обеспечения предустановки `claude_code` на ваши собственные. Чтобы сохранить их и наложить ваши инструкции сверху, установите `keep-coding-instructions: true` в frontmatter. Сохраняйте их, когда ваш агент всё ещё выполняет работу по разработке программного обеспечения. Оставляйте их, когда вы полностью заменяете роль.
+Пользовательский стиль вывода опускает инструкции по разработке программного обеспечения предустановки `claude_code` и использует ваши собственные. Чтобы сохранить их и наложить ваши инструкции сверху, установите `keep-coding-instructions: true` в frontmatter. Эти инструкции находятся только в полной системной подсказке Claude Code, поэтому параметр не имеет эффекта в сеансе на более короткой системной подсказке, которую вы включаете или отключаете с помощью [`CLAUDE_CODE_SIMPLE_SYSTEM_PROMPT`](/docs/ru/env-vars#variables). Сохраняйте их, когда ваш агент всё ещё выполняет работу по разработке программного обеспечения. Опускайте их, когда вы полностью заменяете роль.
 
 Пример ниже определяет персону рецензента кода, которая сохраняет инструкции кодирования, поскольку проверка кода всё ещё выигрывает от руководства Claude Code по безопасности и качеству кода. Сохраните его как `~/.claude/output-styles/code-reviewer.md`, чтобы сделать его доступным во всех проектах:
 
@@ -150,7 +152,7 @@ For every code submission:
 
 После создания активируйте стили вывода через:
 
-* **CLI**: запустите `/config` и выберите стиль вывода
+* **CLI**: запустите `/output-style <style>`, например `/output-style concise`, или запустите `/config` и выберите один. Команда `/output-style` требует Claude Code v2.1.269 или позже.
 * **Параметры**: установите `outputStyle` в `.claude/settings.local.json`
 * **TypeScript SDK**: установите `outputStyle` внутри встроенного объекта `settings`, передаваемого в `query()`, или укажите `settings` на файл параметров, который его устанавливает. `outputStyle` не является полем `Options` верхнего уровня:
 
@@ -158,7 +160,7 @@ For every code submission:
   const options = { settings: { outputStyle: "Explanatory" } };
   ```
 
-Python SDK не имеет опции для программного выбора стиля вывода. Для развёртываний только с кодом, где вы не можете писать в `.claude/settings.local.json`, используйте `append` или пользовательскую строку подсказки вместо этого.
+В Python SDK установите `outputStyle` через опцию `settings`, которая принимает строку JSON, такую как `'{"outputStyle": "Explanatory"}'`, или путь к файлу параметров, который его устанавливает.
 
 **Примечание для пользователей SDK:** Стили вывода загружаются, когда вы включаете `settingSources: ['user']` или `settingSources: ['project']` (TypeScript) / `setting_sources=["user"]` или `setting_sources=["project"]` (Python) в ваши параметры.
 
@@ -192,23 +194,30 @@ Python SDK не имеет опции для программного выбор
   ```
 
   ```python Python theme={null}
+  import asyncio
+
   from claude_agent_sdk import query, ClaudeAgentOptions, AssistantMessage
 
   messages = []
 
-  async for message in query(
-      prompt="Help me write a Python function to calculate fibonacci numbers",
-      options=ClaudeAgentOptions(
-          system_prompt={
-              "type": "preset",
-              "preset": "claude_code",
-              "append": "Always include detailed docstrings and type hints in Python code.",
-          }
-      ),
-  ):
-      messages.append(message)
-      if isinstance(message, AssistantMessage):
-          print(message.content)
+
+  async def main():
+      async for message in query(
+          prompt="Help me write a Python function to calculate fibonacci numbers",
+          options=ClaudeAgentOptions(
+              system_prompt={
+                  "type": "preset",
+                  "preset": "claude_code",
+                  "append": "Always include detailed docstrings and type hints in Python code.",
+              }
+          ),
+      ):
+          messages.append(message)
+          if isinstance(message, AssistantMessage):
+              print(message.content)
+
+
+  asyncio.run(main())
   ```
 </CodeGroup>
 
@@ -221,7 +230,7 @@ Python SDK не имеет опции для программного выбор
 Чтобы сделать системную подсказку идентичной во всех сеансах, установите `excludeDynamicSections: true` в TypeScript или `"exclude_dynamic_sections": True` в Python. Контекст для каждого сеанса переходит в первое пользовательское сообщение, оставляя только статическую предустановку и ваш текст `append` в системной подсказке, чтобы идентичные конфигурации совместно использовали запись кэша между пользователями и машинами.
 
 <Note>
-  `excludeDynamicSections` требует `@anthropic-ai/claude-agent-sdk` v0.2.98 или позже, или `claude-agent-sdk` v0.1.58 или позже для Python. Это применяется только к форме объекта предустановки и не имеет эффекта, когда `systemPrompt` является строкой.
+  `excludeDynamicSections` требует `@anthropic-ai/claude-agent-sdk` v0.2.98 или позже, или `claude-agent-sdk` v0.1.58 или позже для Python. Установите его только на форме объекта предустановки. SDK игнорирует его, когда вы передаёте пользовательскую подсказку вместо предустановки; чтобы сохранить пользовательскую подсказку в кэше в TypeScript SDK, см. [Cache the static part of a custom prompt](#cache-the-static-part-of-a-custom-prompt).
 </Note>
 
 Следующий пример объединяет общий блок `append` с `excludeDynamicSections`, чтобы флот агентов, работающих из разных каталогов, мог переиспользовать одну и ту же кэшированную системную подсказку:
@@ -246,20 +255,27 @@ Python SDK не имеет опции для программного выбор
   ```
 
   ```python Python theme={null}
+  import asyncio
+
   from claude_agent_sdk import query, ClaudeAgentOptions
 
-  async for message in query(
-      prompt="Triage the open issues in this repo",
-      options=ClaudeAgentOptions(
-          system_prompt={
-              "type": "preset",
-              "preset": "claude_code",
-              "append": "You operate Acme's internal triage workflow. Label issues by component and severity.",
-              "exclude_dynamic_sections": True,
-          },
-      ),
-  ):
-      ...
+
+  async def main():
+      async for message in query(
+          prompt="Triage the open issues in this repo",
+          options=ClaudeAgentOptions(
+              system_prompt={
+                  "type": "preset",
+                  "preset": "claude_code",
+                  "append": "You operate Acme's internal triage workflow. Label issues by component and severity.",
+                  "exclude_dynamic_sections": True,
+              },
+          ),
+      ):
+          ...
+
+
+  asyncio.run(main())
   ```
 </CodeGroup>
 
@@ -301,6 +317,8 @@ Python SDK не имеет опции для программного выбор
   ```
 
   ```python Python theme={null}
+  import asyncio
+
   from claude_agent_sdk import query, ClaudeAgentOptions, AssistantMessage
 
   custom_prompt = """You are a Python coding specialist.
@@ -313,15 +331,92 @@ Python SDK не имеет опции для программного выбор
 
   messages = []
 
-  async for message in query(
-      prompt="Create a data processing pipeline",
-      options=ClaudeAgentOptions(system_prompt=custom_prompt),
-  ):
-      messages.append(message)
-      if isinstance(message, AssistantMessage):
-          print(message.content)
+
+  async def main():
+      async for message in query(
+          prompt="Create a data processing pipeline",
+          options=ClaudeAgentOptions(system_prompt=custom_prompt),
+      ):
+          messages.append(message)
+          if isinstance(message, AssistantMessage):
+              print(message.content)
+
+
+  asyncio.run(main())
   ```
 </CodeGroup>
+
+В Python загружайте большую пользовательскую подсказку из файла с помощью `system_prompt={"type": "file", "path": "..."}` вместо передачи её в виде строки. Python SDK передаёт строковую подсказку как один аргумент командной строки подпроцессу CLI, поэтому подсказка, которая превышает лимит длины аргумента ОС, не работает при порождении процесса до отправки любого запроса API. На Linux ошибка — `Argument list too long`. См. [`SystemPromptFile`](/docs/ru/agent-sdk/python#systempromptfile) для пороговых значений платформы и поведения Windows.
+
+<h4 id="cache-the-static-part-of-a-custom-prompt">
+  Кэширование статической части пользовательской подсказки
+</h4>
+
+В TypeScript SDK вы можете передать пользовательскую подсказку как массив строк вместо одной строки, с маркером `SYSTEM_PROMPT_DYNAMIC_BOUNDARY` между статической частью и остальным. Используйте это, когда ваша подсказка объединяет инструкции, которые одинаковы на каждом запросе, с контекстом, который изменяется для каждого запроса, например клиент или билет, который обрабатывает агент. Когда вы передаёте обе части как одну строку, изменение части для каждого запроса изменяет всю системную подсказку, поэтому статические инструкции пропускают кэш тоже. Форма массива недоступна в Python SDK; [`ClaudeAgentOptions`](/docs/ru/agent-sdk/python#claudeagentoptions) перечисляет формы, которые принимает `system_prompt`.
+
+<Note>
+  SDK разделяет подсказку только когда он вызывает Claude API напрямую или работает на [Claude Platform on AWS](/docs/ru/claude-platform-on-aws). Во всех остальных конфигурациях, таких как Amazon Bedrock, Google Cloud's Agent Platform, Microsoft Foundry или [LLM gateway](/docs/ru/llm-gateway-connect), и когда вы установите [`CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1`](/docs/ru/llm-gateway-protocol#disable-pre-release-capabilities), SDK отправляет всю подсказку как один блок, то же самое, что передача одной строки.
+</Note>
+
+Чтобы разделить подсказку, импортируйте `SYSTEM_PROMPT_DYNAMIC_BOUNDARY` из `@anthropic-ai/claude-agent-sdk` и передайте его как собственный элемент массива между двумя частями. SDK отправляет строки перед маркером как один текстовый блок и строки после него как второй блок, каждый со своей собственной точкой разрыва кэша. В примере ниже агент поддержки загружает свои инструкции по сортировке из файла и получает детали об одном билете на каждый запрос, поэтому инструкции остаются в кэше, пока детали билета изменяются:
+
+```typescript TypeScript theme={null}
+import { readFile } from "node:fs/promises";
+import { query, SYSTEM_PROMPT_DYNAMIC_BOUNDARY } from "@anthropic-ai/claude-agent-sdk";
+
+// Identical on every request
+const instructions = await readFile("triage-instructions.md", "utf8");
+// Different on every request
+const ticketContext = "Customer plan: Enterprise. Other open tickets from this customer: 3.";
+
+for await (const message of query({
+  prompt: "Triage ticket 4821",
+  options: {
+    systemPrompt: [instructions, SYSTEM_PROMPT_DYNAMIC_BOUNDARY, ticketContext]
+  }
+})) {
+  // ...
+}
+```
+
+[Track cache tokens](/docs/ru/agent-sdk/cost-tracking#track-cache-tokens) описывает поля `cache_creation_input_tokens` и `cache_read_input_tokens` на каждом сообщении результата.
+
+SDK собирает блоки из массива следующим образом:
+
+* SDK объединяет строки с каждой стороны маркера с пустой строкой между ними и удаляет сам маркер, поэтому текст маркера не достигает Claude.
+* Если вы включите маркер более одного раза, первый — это разделение и SDK удаляет остальные.
+* Если вы опустите маркер, SDK объединяет все строки в один блок, то же самое, что передача одной строки.
+
+С флагами CLI [`--system-prompt` или `--system-prompt-file`](/docs/ru/cli-reference#system-prompt-flags), подсказка — это одна строка, поэтому нет массива для переноса маркера. Включите строку, содержащую только `__SYSTEM_PROMPT_DYNAMIC_BOUNDARY__`, между статической и частью для каждого запроса вместо этого. Claude Code разделяет подсказку на первой такой строке на те же два блока и удаляет эту строку. Требует Claude Code v2.1.275 или позже.
+
+В SDK предпочитайте форму массива, которая переносит границу без строки маркера.
+
+<h3 id="change-the-prompt-of-an-existing-session">
+  Изменение подсказки существующего сеанса
+</h3>
+
+По умолчанию, если вы передаёте другой `append` или пользовательскую подсказку, когда вы возвращаетесь к сеансу с помощью `resume` или `continue`, Claude не видит это на следующем ходу. Claude Code записывает системную подсказку на первом запросе сеанса и переиспользует эту запись до сжатия сеанса. Новый текст вступает в силу после этого сжатия или в новом сеансе.
+
+<h4 id="update-claude’s-instructions-mid-session">
+  Обновление инструкций Claude в середине сеанса
+</h4>
+
+Если инструкции, которые вы поместили в системную подсказку, должны измениться во время работы сеанса, например потому что ваш пользователь переключил агента в режим только для чтения или отредактировал его конфигурацию в вашем приложении, отправьте новые инструкции в разговор вместо изменения `systemPrompt`:
+
+* **В вашем следующем сообщении**: включите новые инструкции в следующее пользовательское сообщение, которое вы отправляете.
+* **Из hook**: верните [`additionalContext`](/docs/ru/hooks#add-context-for-claude) из callback `UserPromptSubmit` или `PostToolUse` [hook](/docs/ru/agent-sdk/hooks#outputs), написанный как фактическое утверждение, такое как "The workspace is now read-only". SDK вставляет текст в разговор в точке, где сработал hook, поэтому записанная подсказка остаётся неизменной.
+
+<h4 id="turn-recording-off-while-you-iterate-on-wording">
+  Отключение записи во время итерации формулировки
+</h4>
+
+Пока вы итерируете формулировку подсказки и хотите, чтобы каждое редактирование достигло сеанса, который вы возобновляете, установите `snapshot` на false на форме объекта системной подсказки. Claude Code затем перестраивает подсказку на каждом запросе. Поле доступно на форме preset и custom [`systemPrompt`](/docs/ru/agent-sdk/typescript#options) в TypeScript и [`system_prompt`](/docs/ru/agent-sdk/python#systempromptpreset) в Python, и требует `@anthropic-ai/claude-agent-sdk` v0.3.257 или позже, или `claude-agent-sdk` v0.2.153 или позже.
+
+Сохраняйте запись включённой в production. С записью отключённой, другой `append` или пользовательская подсказка на возобновлённом сеансе достигает Claude на следующем ходу, и этот запрос не может переиспользовать [кэш подсказок](/docs/ru/prompt-caching#how-the-cache-is-organized) сеанса. Где API требует [preserved thinking](https://platform.claude.com/docs/en/build-with-claude/preserved-thinking), Claude также теряет своё мышление из более ранних ходов.
+
+Вне [cloud sessions](/docs/ru/cloud-environments), если вы запустите Claude Code в [bare mode](/docs/ru/headless#start-faster-with-bare-mode), передав `--bare` через `extraArgs` или установив `CLAUDE_CODE_SIMPLE=1`, запись остаётся отключённой, если вы не установите `snapshot: true`.
+
+Запись `append` или пользовательской подсказки по умолчанию требует Claude Code v2.1.265 или позже, который TypeScript Agent SDK поставляет с v0.3.265 и Python Agent SDK с v0.2.153. До Claude Code v2.1.268 сеансы, которые не [получают флаги функций](/docs/ru/env-vars#features-that-need-feature-flag-fetching), включая сеансы на Amazon Bedrock, Google Cloud's Agent Platform и Microsoft Foundry, перестраивали подсказку на каждом запросе и `snapshot` не имел эффекта.
 
 <h2 id="compare-the-four-approaches">
   Сравнение четырех подходов
@@ -343,73 +438,14 @@ Python SDK не имеет опции для программного выбор
 
 "С добавлением" означает использование `systemPrompt: { type: "preset", preset: "claude_code", append: "..." }` в TypeScript или `system_prompt={"type": "preset", "preset": "claude_code", "append": "..."}` в Python. CLAUDE.md не изменяет сам системный запрос: SDK внедряет его содержимое в разговор как контекст проекта.
 
-<h2 id="use-cases-and-best-practices">
-  Варианты использования и лучшие практики
-</h2>
-
-<h3 id="when-to-use-claude-md">
-  Когда использовать CLAUDE.md
-</h3>
-
-Используйте CLAUDE.md для инструкций, которые должны применяться к каждому сеансу в проекте, независимо от того, какой системный запрос использует сеанс: стандарты кодирования, общие команды, контекст архитектуры и соглашения команды. CLAUDE.md фиксируется в вашем репозитории, поэтому он остается синхронизированным с кодом, который он описывает. Полное руководство см. в разделе [Когда добавлять в CLAUDE.md](/docs/ru/memory#when-to-add-to-claude-md).
-
-Файлы CLAUDE.md загружаются, когда включен источник параметров `project`, что происходит для параметров `query()` по умолчанию. Если вы явно установите `settingSources` в TypeScript или `setting_sources` в Python, включите `'project'` для продолжения загрузки CLAUDE.md на уровне проекта.
-
-<h3 id="when-to-use-output-styles">
-  Когда использовать стили вывода
-</h3>
-
-Стили вывода предназначены для персон, которые вы хотите повторно использовать в CLI и SDK без изменения кода приложения. Поскольку они находятся в виде файлов в `.claude/output-styles`, одна и та же персона доступна из `/config` в CLI и из любого сеанса SDK, который загружает соответствующий источник параметров.
-
-**Лучше всего подходит для:**
-
-* Постоянных изменений поведения между сеансами
-* Конфигураций, общих для команды
-* Специализированных помощников, таких как рецензент кода, специалист по данным или DevOps помощник
-* Сложных изменений подсказок, которые требуют версионирования
-
-**Примеры:**
-
-* Создание выделенного помощника по оптимизации SQL
-* Построение рецензента кода, ориентированного на безопасность
-* Разработка помощника по обучению с определенной педагогикой
-
-<h3 id="when-to-use-systemprompt-with-append">
-  Когда использовать `systemPrompt` с добавлением
-</h3>
-
-Используйте `append`, когда предустановка `claude_code` уже подходит для вашего продукта и вам нужно только добавить дополнительные инструкции. Вы сохраняете руководство инструментов предустановки, правила безопасности и соглашения кодирования без их переимплементации.
-
-**Лучше всего подходит для:**
-
-* Добавления определенных стандартов кодирования или предпочтений
-* Настройки форматирования вывода
-* Добавления знаний, специфичных для домена
-* Изменения многословности ответов
-* Улучшения поведения Claude Code по умолчанию без потери инструкций инструментов
-
-<h3 id="when-to-use-custom-systemprompt">
-  Когда использовать пользовательский `systemPrompt`
-</h3>
-
-Используйте пользовательский запрос, когда поверхность вашего агента, идентичность или модель разрешений отличаются от Claude Code, как описано в разделе [Решите на начальную точку](#decide-on-a-starting-point). Вы определяете полный набор инструкций, включая любое руководство инструментов и правила безопасности, которые требуются вашему агенту.
-
-**Лучше всего подходит для:**
-
-* Полного контроля над поведением Claude
-* Специализированных однократных задач
-* Тестирования новых стратегий подсказок
-* Ситуаций, когда инструменты по умолчанию не требуются
-* Построения специализированных агентов с уникальным поведением
-
 <h2 id="combine-approaches">
   Объединение подходов
 </h2>
 
-Эти методы можно комбинировать. Постоянный стиль вывода или CLAUDE.md устанавливает долгосрочное поведение, а `append` добавляет инструкции, специфичные для сеанса, поверх них без изменения сохраненной конфигурации.
+Подходы могут быть объединены. Постоянный стиль вывода или CLAUDE.md устанавливает долгосрочное поведение, а `append` добавляет инструкции, специфичные для сеанса, поверх без изменения сохраненной конфигурации.
 
 <h3 id="combine-an-output-style-with-session-specific-additions">
-  Объединение стиля вывода с добавлениями, специфичными для сеанса
+  Объединение стиля вывода с дополнениями, специфичными для сеанса
 </h3>
 
 Приведенный ниже пример предполагает, что стиль вывода Code Reviewer уже активен. Блок `append` добавляет области фокуса, специфичные для сеанса, поверх персоны, так что один сеанс проверки может приоритизировать OAuth и хранение токенов без изменения сохраненного стиля вывода:
@@ -442,28 +478,35 @@ Python SDK не имеет опции для программного выбор
   ```
 
   ```python Python theme={null}
+  import asyncio
+
   from claude_agent_sdk import query, ClaudeAgentOptions
 
   # Assuming "Code Reviewer" output style is active (via /config or settings)
   # Add session-specific focus areas
   messages = []
 
-  async for message in query(
-      prompt="Review this authentication module",
-      options=ClaudeAgentOptions(
-          system_prompt={
-              "type": "preset",
-              "preset": "claude_code",
-              "append": """
-              For this review, prioritize:
-              - OAuth 2.0 compliance
-              - Token storage security
-              - Session management
-              """,
-          }
-      ),
-  ):
-      messages.append(message)
+
+  async def main():
+      async for message in query(
+          prompt="Review this authentication module",
+          options=ClaudeAgentOptions(
+              system_prompt={
+                  "type": "preset",
+                  "preset": "claude_code",
+                  "append": """
+                  For this review, prioritize:
+                  - OAuth 2.0 compliance
+                  - Token storage security
+                  - Session management
+                  """,
+              }
+          ),
+      ):
+          messages.append(message)
+
+
+  asyncio.run(main())
   ```
 </CodeGroup>
 

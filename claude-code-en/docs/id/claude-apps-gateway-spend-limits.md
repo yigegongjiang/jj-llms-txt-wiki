@@ -55,23 +55,51 @@ Kirim salah satu dari:
   Cara penegakan bekerja
 </h2>
 
-Pada setiap permintaan `/v1/messages`, gateway menyelesaikan batas pengembang dan pengeluaran periode-ke-tanggal dalam satu kueri Postgres. Jika mereka melampaui batas apa pun, permintaan mengembalikan `429` dengan `error.type: billing_error` dan header `x-should-retry: false`. Pesan adalah `spend limit reached`, diikuti oleh [`admin.blocked_message`](/docs/id/claude-apps-gateway-config#admin) Anda jika ditetapkan.
+Pada setiap permintaan `/v1/messages`, gateway menyelesaikan batas pengembang dan pengeluaran periode-ke-tanggal dalam satu kueri Postgres. Pengembang yang melampaui batas apa pun mendapatkan `429` dengan `error.type: billing_error` dan header `x-should-retry: false`.
 
-`/v1/messages/count_tokens` dikecualikan. Penghitungan token gratis, jadi berjalan terlepas dari status batas.
+Pesan menyebutkan periode dan waktu reset, seperti `spend limit reached (daily; resets 2026-08-08 00:00 UTC)`, diikuti oleh [`admin.blocked_message`](/docs/id/claude-apps-gateway-config#admin) Anda jika ditetapkan. Ketika pengembang melampaui beberapa batas sekaligus, pesan menyebutkan batas yang reset terakhir. Respons juga membawa header `retry-after` dengan detik yang tersisa hingga reset tersebut. Sebelum v2.1.225 di server gateway, pesannya adalah `spend limit reached` tanpa periode, waktu reset, atau header `retry-after`.
 
-Setelah setiap respons, meter penggunaan membaca jumlah token dari respons saat mengalir ke klien, menghargainya pada harga daftar USD, dan menambah penghitung Postgres untuk ketiga bucket periode. Meter adalah pembaca tunggal pada aliran, jadi byte klien tidak tersentuh dan kegagalan metering tidak merusak respons.
+Pada v2.1.227 atau lebih baru, referensi protokol di `<public_url>/protocol` juga mencantumkan header respons batas penggunaan yang tepat dan badan `429`.
 
-Batas pengeluaran memperkirakan pengeluaran dari jumlah token pada harga daftar USD; mereka adalah pemutus sirkuit, bukan faktur. Untuk penagihan yang berwenang, rekonsiliasi terhadap pelaporan penggunaan penyedia Anda sendiri, seperti Admin API Penggunaan & Biaya Anthropic, log invokasi di Bedrock, atau Cloud Monitoring di Google Cloud.
+Batas reset pada batas kalender UTC: setiap hari pada 00:00 UTC, setiap Senin untuk mingguan, dan pada hari pertama untuk bulanan. Gateway tidak pernah memblokir `/v1/messages/count_tokens`, karena penghitungan token gratis.
 
-Penetapan harga menggunakan tabel yang sama yang digunakan Claude Code CLI untuk tampilan biaya sendiri, dengan kanonikalisasi ID model yang sama di seluruh Anthropic, Bedrock (`us.anthropic.…-v1:0`), Agent Platform (`claude-…@date`), dan bentuk ID Foundry. ID model yang tidak dapat ditempatkan tabel, seperti nama penerapan Foundry atau ARN profil inferensi, dihargai pada tingkat default model yang tidak dikenal sebesar \$5/\$25 per juta token input/output daripada nol, jadi ID yang tidak dikenali tidak dapat melewati batas dengan tidak diukur. Gateway memperingatkan saat boot dan sekali per ID saat runtime ketika model dihargai melalui fallback.
+<h3 id="how-requests-are-priced">
+  Cara permintaan dihargai
+</h3>
 
-Pembatalan klien juga ditagih. Hulu melaporkan token output hanya dalam bingkai terminal aliran, jadi aliran yang dibatalkan tidak membawanya. Meter menyimpan perkiraan lantai konservatif dari ukuran konten yang dialirkan, sekitar empat karakter per token, dan menagihnya ketika dan hanya ketika bingkai penggunaan terminal hilang. Aliran lengkap selalu menagih jumlah yang dilaporkan hulu. Tanpa ini, pengembang yang dibatasi dapat mengalirkan output dan membatalkan setiap permintaan segera sebelum akhir, menghabiskan tanpa pernah dihitung.
+Setelah setiap respons, meter penggunaan membaca jumlah token dan menambahkan biaya ke penghitung harian, mingguan, dan bulanan. Meter tidak pernah menyentuh byte yang dikirim ke klien, jadi kegagalan metering tidak dapat merusak respons. Jumlahnya adalah perkiraan USD, pemutus sirkuit daripada faktur; untuk penagihan, rekonsiliasi terhadap pelaporan penggunaan penyedia Anda.
+
+Meter memilih tarif setiap permintaan dalam urutan ini:
+
+1. Baris [`pricing.overrides`](/docs/id/claude-apps-gateway-config#pricing) yang cocok untuk hulu yang melayani permintaan. Memerlukan v2.1.227 atau lebih baru.
+2. Harga daftar untuk ID model hulu, string yang dikirim gateway ke penyedia, ketika tabel biaya Claude Code mengenalinya. Tabel menerima bentuk Anthropic, Amazon Bedrock, Google Cloud's Agent Platform, dan Microsoft Foundry ID.
+3. Harga daftar untuk [`models[].id`](/docs/id/claude-apps-gateway-config#models) yang Anda petakan ke ID hulu tersebut, untuk string hulu yang tidak membawa nama model, seperti ARN profil inferensi aplikasi Amazon Bedrock atau nama penerapan Microsoft Foundry. Memerlukan v2.1.218 atau lebih baru.
+4. Tingkat model yang tidak dikenal sebesar \$5/\$25 per juta token input/output, jadi ID yang tidak dapat ditempatkan meter tidak pernah gratis. Gateway memperingatkan saat boot dan sekali per ID saat runtime ketika menggunakan tingkat ini.
+
+Tarif mana pun yang berlaku, meter kemudian mengalikan jumlah dengan [`pricing.multiplier`](/docs/id/claude-apps-gateway-config#pricing), default `1`.
+
+Pembatalan klien juga ditagih. Ketika aliran berakhir tanpa bingkai penggunaan akhir hulu, meter menagih perkiraan lantai sekitar empat karakter per token output untuk teks yang sudah dikirim ke klien, jadi membatalkan permintaan lebih awal tidak menghindari batas.
 
 <h3 id="postgres-availability">
   Ketersediaan Postgres
 </h3>
 
-Kueri pra-pemeriksaan Postgres dengan batas waktu dua detik. Jika toko tidak dapat dijangkau atau waktu habis, penegakan gagal terbuka secara default: permintaan dilanjutkan dan gateway mencatat peringatan. Atur [`enforcement.fail_closed_on_error: true`](/docs/id/claude-apps-gateway-config#enforcement) untuk gagal tertutup sebagai gantinya, yang mengembalikan `429 billing_error` yang sama dengan pesan `spend limit unavailable`. Gagal-terbuka menjaga pemadaman toko agar tidak menjadi pemadaman inferensi; gagal-tertutup menjamin tidak ada pengeluaran yang tidak diukur.
+Kueri pra-pemeriksaan Postgres dengan batas waktu dua detik. Jika toko tidak dapat dijangkau atau waktu habis, penegakan gagal terbuka secara default: permintaan dilanjutkan, gateway mencatat peringatan, dan respons tidak membawa header `anthropic-ratelimit-unified-*`. Atur [`enforcement.fail_closed_on_error: true`](/docs/id/claude-apps-gateway-config#enforcement) untuk gagal tertutup sebagai gantinya, yang mengembalikan `429 billing_error` yang sama tetapi dengan pesan `spend limit unavailable` dan tanpa periode, waktu reset, atau header `retry-after`. Gagal-terbuka menjaga pemadaman toko agar tidak menjadi pemadaman inferensi; gagal-tertutup menjamin tidak ada pengeluaran yang tidak diukur.
+
+<h3 id="usage-warnings-in-claude-code">
+  Peringatan penggunaan di Claude Code
+</h3>
+
+Claude Code memperingatkan pengembang saat mereka mendekati batas mereka: sekali utilitas melampaui 75%, dan lagi melampaui 95% dari batas yang paling banyak dikonsumsi. Ketika gateway memblokir permintaan, Claude Code menampilkan pesan `429` gateway apa adanya, termasuk `admin.blocked_message` Anda.
+
+Peringatan bekerja dari header respons:
+
+* Dengan v2.1.225 atau lebih baru di server gateway, setiap respons `/v1/messages` yang berhasil untuk pengembang yang memiliki batas membawa utilitas batas mereka sendiri dan waktu reset dalam header `anthropic-ratelimit-unified-*`.
+* Dengan v2.1.225 atau lebih baru di mesin pengembang juga, Claude Code membaca header dan menampilkan peringatan.
+
+Header selalu menggambarkan batas pengembang mereka sendiri: gateway menghapus header batas laju penyedia hulu, yang menggambarkan kuota bersama Anda, dan tidak pernah meneruskannya.
+
+Dengan v2.1.251 atau lebih baru di mesin pengembang, Claude Code juga membaca header yang sama untuk menampilkan bilah **Spend limit** di `/usage`, dengan persentase batas mereka yang digunakan dan kapan reset, dan untuk menambahkan objek `rate_limits.spend_limit` ke [baris status](/docs/id/statusline#rate-limit-usage) input. Claude Code menampilkan keduanya sebagai persentase daripada jumlah dolar, dan tidak memerlukan apa pun yang lebih baru dari v2.1.225 di server gateway.
 
 <h2 id="admin-api-reference">
   Referensi Admin API
@@ -79,14 +107,14 @@ Kueri pra-pemeriksaan Postgres dengan batas waktu dua detik. Jika toko tidak dap
 
 Titik akhir di bawah ini disajikan di bawah `/v1/organizations/spend_limits`.
 
-| Metode dan jalur                               | Deskripsi                                                                             |
-| ---------------------------------------------- | ------------------------------------------------------------------------------------- |
-| `GET /v1/organizations/spend_limits`           | Daftar batas yang dikonfigurasi. Kueri: `?limit=&after_id=&before_id=`.               |
-| `POST /v1/organizations/spend_limits`          | Buat atau ganti batas untuk `{scope, period}`.                                        |
-| `GET /v1/organizations/spend_limits/{id}`      | Ambil satu batas berdasarkan ID dengan awalan `spl_`.                                 |
-| `DELETE /v1/organizations/spend_limits/{id}`   | Hapus satu batas. Mengembalikan `{type: "spend_limit_deleted", id}`.                  |
-| `GET /v1/organizations/spend_limits/effective` | Batas yang diselesaikan dan pengeluaran periode-ke-tanggal per prinsipal per periode. |
-| `GET /v1/organizations/spend_limits/audit`     | Jejak mutasi admin, terbaru-pertama. Kueri: `?limit=`.                                |
+| Metode dan jalur                               | Deskripsi                                                                                                                                                                         |
+| ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `GET /v1/organizations/spend_limits`           | Daftar batas yang dikonfigurasi, secara opsional disaring ke satu `scope_type` dari `organization`, `rbac_group`, atau `user`. Kueri: `?limit=&after_id=&before_id=&scope_type=`. |
+| `POST /v1/organizations/spend_limits`          | Buat atau ganti batas untuk `{scope, period}`.                                                                                                                                    |
+| `GET /v1/organizations/spend_limits/{id}`      | Ambil satu batas berdasarkan ID dengan awalan `spl_`.                                                                                                                             |
+| `DELETE /v1/organizations/spend_limits/{id}`   | Hapus satu batas. Mengembalikan `{type: "spend_limit_deleted", id}`.                                                                                                              |
+| `GET /v1/organizations/spend_limits/effective` | Batas yang diselesaikan dan pengeluaran periode-ke-tanggal per prinsipal per periode.                                                                                             |
+| `GET /v1/organizations/spend_limits/audit`     | Jejak mutasi admin, terbaru-pertama. Kueri: `?limit=&after_id=`.                                                                                                                  |
 
 Konvensi mencerminkan Admin API Anthropic:
 
@@ -94,7 +122,7 @@ Konvensi mencerminkan Admin API Anthropic:
 * ID dengan awalan `spl_`
 * Jumlah sebagai string angka keseluruhan sen USD; `POST` menolak `currency` lain apa pun dengan `400`
 * Amplop kesalahan `{type: "error", error: {type, message}, request_id}`
-* Header respons `request-id` pada setiap respons admin, sukses atau kesalahan, cocok dengan `request_id` badan
+* Header respons `request-id` pada setiap respons admin, sukses atau kesalahan; badan kesalahan juga membawanya sebagai `request_id`
 
 Setiap mutasi menulis baris sebelum/sesudah ke `admin_audit` dalam transaksi yang sama, dikaitkan dengan `admin-key:<id>` atau `oidc:<sub>`.
 
@@ -129,13 +157,13 @@ Batas bersumber grup diselesaikan terhadap grup terakhir terlihat dengan tie-bre
   `/audit`
 </h3>
 
-Mengembalikan jejak mutasi batas pengeluaran: siapa yang mengubah batas mana, snapshot sebelum/sesudah, dan alasan opsional, terbaru-pertama. `has_more` tepat. Titik akhir ini mengikuti konvensi Admin API lokal daripada bentuk kawat pihak pertama.
+Mengembalikan jejak mutasi batas pengeluaran: siapa yang mengubah batas mana, dengan snapshot sebelum/sesudah, terbaru-pertama. `has_more` tepat. Titik akhir ini mengikuti konvensi Admin API lokal daripada bentuk kawat pihak pertama.
 
 <h3 id="pagination">
   Paginasi
 </h3>
 
-Daftar mentah halaman berdasarkan `after_id` dan `before_id`, yang merupakan ID `spl_…` yang saling eksklusif; hasil diurutkan berdasarkan pembuatan dan `has_more` mencerminkan arah traversal. `/effective` halaman berdasarkan token `next_page` buram yang diteruskan kembali sebagai `?page=`, dengan prinsipal diurutkan naik sehingga halaman tetap stabil saat pengeluaran sedang dicatat. `limit` adalah 1–1000, default 20, di keduanya.
+Daftar mentah halaman berdasarkan `after_id` dan `before_id`, yang merupakan ID `spl_…` yang saling eksklusif; hasil diurutkan berdasarkan pembuatan dan `has_more` mencerminkan arah traversal. `/effective` halaman berdasarkan token `next_page` buram yang diteruskan kembali sebagai `?page=`, dengan prinsipal diurutkan naik sehingga halaman tetap stabil saat pengeluaran sedang dicatat. `limit` adalah 1–1000, default 20, di keduanya. `/audit` halaman berdasarkan `after_id`, ID numerik `id` dari acara terakhir pada halaman sebelumnya, dan `limit` defaultnya adalah 100.
 
 <h2 id="data-lifecycle">
   Siklus hidup data
@@ -149,8 +177,6 @@ Gateway menyimpan empat tabel terkait pengeluaran; sapuan per jam memberlakukan 
 | `spend_limits`     | Batas yang dikonfigurasi                                                           | Sampai dihapus melalui API                                                                                   |
 | `admin_audit`      | Jejak mutasi                                                                       | [`admin.audit_retention_days`](/docs/id/claude-apps-gateway-config#admin), default 365                            |
 | `principal_emails` | Email terakhir terlihat setiap prinsipal, nama tampilan, dan grup IdP. Berisi PII. | [`admin.identity_retention_days`](/docs/id/claude-apps-gateway-config#admin) sejak aktivitas terakhir, default 90 |
-
-`identity_retention_days` sengaja lebih pendek dari `spend_retention_months`: identitas yang dihapus provisioning berhenti menyegarkan dan menua, sementara penghitung pengeluaran anonimnya tetap untuk pelaporan tahun-ke-tahun.
 
 Ketika pengembang pergi, hapus batas per-pengguna apa pun melalui `DELETE /v1/organizations/spend_limits/{id}`; pengeluaran dan baris identitas mereka menua pada jendela retensi di atas. Untuk menghapus satu orang segera, untuk offboarding atau permintaan akses subjek data (DSAR), jalankan `DELETE FROM principal_emails WHERE principal = '<sub>'` langsung terhadap database gateway. Itu menghapus satu-satunya tabel yang menyimpan email, nama, dan grup mereka. Baris `spend` dan `admin_audit` mereferensikan OIDC `sub` pseudonim saja dan menua pada jendela mereka sendiri.
 

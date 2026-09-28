@@ -71,7 +71,7 @@ Di mana Anda meluncurkan `claude` menentukan file mana yang dapat dibaca dan die
 | Repository root | Setiap file                                           | Root hanya; file subdirektori dimuat sesuai permintaan ketika Claude membaca di sana | Tugas mencakup beberapa paket atau subsistem      |
 | Subdirektori    | Subtree itu saja, sampai Anda memberikan lebih banyak | Direktori itu plus setiap ancestor                                                   | Pekerjaan dibatasi pada satu paket atau subsistem |
 
-Pengaturan proyek di `.claude/settings.json` hanya dimuat dari direktori awal Anda dan tidak diwariskan dari direktori induk dengan cara file CLAUDE.md: `.claude/settings.json` di repository root hanya berlaku ketika Anda memulai dari root.
+Pengaturan proyek di `.claude/settings.json` tidak diwariskan dari direktori induk dengan cara file CLAUDE.md. Untuk mengetahui direktori mana `.claude/settings.json` yang dibaca sesi, lihat [di mana Claude Code mencari setiap file](/docs/id/settings#where-claude-code-looks-for-each-file).
 
 Setiap bagian di bawah menyatakan apakah file pengaturannya berada di repository root atau di subdirektori tempat Anda memulai, dan apakah itu berkomitmen atau disimpan secara lokal.
 
@@ -85,39 +85,28 @@ Claude Code memuat setiap file [CLAUDE.md](/docs/id/memory) dari direktori kerja
 
 Pemisahan umum adalah dua level:
 
-* **Root `CLAUDE.md`**: instruksi yang berlaku di mana-mana, seperti standar coding, konvensi commit, dan tata letak repository
+* **Root `CLAUDE.md`**: instruksi yang berlaku di mana-mana, seperti standar coding dan konvensi commit
 * **Per-subdirektori `CLAUDE.md`**: konvensi spesifik untuk stack area itu. Dalam monorepo itu satu per paket. Dalam pohon tunggal besar itu satu per subsistem seperti `src/db/` atau `src/api/`
 
 Komitkan file ini ke repository sehingga rekan kerja mewarisinya. Pemilik setiap direktori biasanya memelihara filenya.
 
-Root `CLAUDE.md` mengorientasikan Claude ke struktur repository:
+Untuk memangkas file yang sudah diperiksa, jalankan [pemeriksaan `/doctor`](/docs/id/memory#my-claude-md-is-too-large). Root `CLAUDE.md` menyimpan aturan yang berlaku di setiap paket:
 
 ```markdown CLAUDE.md theme={null}
-Ini adalah monorepo dengan tiga paket di bawah packages/:
-
-- packages/api: Node.js REST API dengan Express, TypeScript, dan PostgreSQL
-- packages/web: Frontend React dengan Vite, TypeScript, dan TailwindCSS
-- packages/shared: utilitas TypeScript bersama yang digunakan oleh api dan web
-
-Jalankan perintah dari direktori paket, bukan root monorepo.
-Setiap paket memiliki tsconfig.json, package.json, dan test suite-nya sendiri.
+Jalankan skrip paket dari direktori paket, bukan root monorepo.
+Awali subjek commit dengan nama paket, misalnya `api: add rate limiting`.
+Jangan pernah edit file di bawah packages/*/generated/. Jalankan `npm run codegen` di paket sebagai gantinya.
 ```
 
-`CLAUDE.md` setiap subdirektori, di sini `packages/api/CLAUDE.md`, menambahkan konteks spesifik untuk stack area itu:
+`CLAUDE.md` setiap subdirektori, di sini `packages/api/CLAUDE.md`, menambahkan konvensi spesifik untuk area itu:
 
 ```markdown packages/api/CLAUDE.md theme={null}
-Paket ini adalah server REST API.
-
-- Jalankan tes: `npm test` (menggunakan Vitest)
-- Jalankan dev server: `npm run dev` (port 3001)
-- Migrasi database: `npm run migrate`
-- Variabel lingkungan: salin `.env.example` ke `.env`
-
-Rute API berada di src/routes/. Setiap file rute mengekspor router Express.
-Kueri database menggunakan Knex di src/db/. Jangan pernah menulis string SQL mentah di handler rute.
+Salin `.env.example` ke `.env` sebelum menjalankan apa pun. Tes dan dev server gagal tanpanya.
+Tulis kueri database dengan Knex query builder. Jangan pernah letakkan string SQL mentah di route handlers.
+Jangan pernah edit migrasi setelah digabung. Tambahkan migrasi baru sebagai gantinya.
 ```
 
-Ketika Anda memulai Claude dari `packages/api/`, itu memuat baik `packages/api/CLAUDE.md` dan root `CLAUDE.md`. Claude melihat instruksi lokal bersama aturan repository-wide, tanpa instruksi dari `packages/web/` dalam konteks. Hal yang sama berlaku untuk subdirektori apa pun dalam pohon non-monorepo.
+Ketika Anda memulai Claude dari `packages/api/`, itu memuat baik `packages/api/CLAUDE.md` dan root `CLAUDE.md`. Claude melihat instruksi lokal bersama aturan repository-wide, tanpa instruksi dari `packages/web/` dalam konteks. Hal yang sama berlaku untuk subdirektori apa pun dalam pohon non-monorepo. Untuk mengonfirmasi file mana yang dimuat, jalankan `/context` dan periksa daftar di bawah **Memory files**.
 
 Beberapa cara untuk menjaga file tetap terkini seiring dengan perubahan codebase dan model:
 
@@ -125,20 +114,20 @@ Beberapa cara untuk menjaga file tetap terkini seiring dengan perubahan codebase
 * **Kunjungi kembali setelah rilis model utama**: instruksi yang mengatasi keterbatasan model yang lebih lama mungkin menjadi overhead setelah model yang lebih baru menangani kasus itu sendiri. Misalnya, aturan yang memaksa refactor file tunggal dapat dihapus setelah keterbatasan hilang
 * **Tambahkan hook Stop yang mengusulkan pembaruan**: hook [`Stop`](/docs/id/hooks#stop) menerima jalur ke transkrip sesi ketika Claude selesai merespons, jadi skrip dapat meninjau sesi dan mengusulkan pembaruan CLAUDE.md sementara kesenjangan yang dieksposnya masih segar
 
-Untuk lebih lanjut tentang bagaimana file CLAUDE.md dimuat dan berinteraksi, lihat [Memory dan project instructions](/docs/id/memory).
+Untuk lebih lanjut tentang bagaimana file CLAUDE.md dimuat dan berinteraksi, lihat [Memory and project instructions](/docs/id/memory).
 
 <h3 id="choose-between-per-directory-claude-md-and-path-scoped-rules">
-  Pilih antara CLAUDE.md per-direktori dan aturan path-scoped
+  Choose between per-directory CLAUDE.md and path-scoped rules
 </h3>
 
-File `CLAUDE.md` per-direktori dan [aturan path-scoped](/docs/id/memory#path-specific-rules) di bawah `.claude/rules/` keduanya memungkinkan Anda menargetkan instruksi ke bagian pohon. Mereka berbeda dalam di mana file berada dan kapan dimuat.
+File `CLAUDE.md` per-direktori dan [path-scoped rules](/docs/id/memory#path-specific-rules) di bawah `.claude/rules/` keduanya memungkinkan Anda menargetkan instruksi ke bagian pohon. Mereka berbeda dalam di mana file berada dan kapan dimuat.
 
-| Pendekatan                             | Lokasi file                         | Dimuat ketika                                                                                                | Gunakan ketika                                                                                      |
-| :------------------------------------- | :---------------------------------- | :----------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------- |
-| Per-direktori `CLAUDE.md`              | Di dalam direktori, bersama kodenya | Saat peluncuran ketika dimulai dari direktori itu, atau sesuai permintaan ketika Claude membaca file di sana | Pemilik direktori memelihara konvensi mereka sendiri; instruksi diversi dengan kode                 |
-| Aturan path-scoped di `.claude/rules/` | `.claude/` pusat di repo root       | Ketika Claude bekerja dengan file yang cocok dengan glob `paths:` aturan                                     | Anda ingin semua konvensi di satu tempat, atau aturan yang sama berlaku untuk banyak jalur tersebar |
+| Approach                             | File location                       | Loads when                                                                                                   | Use when                                                                                            |
+| :----------------------------------- | :---------------------------------- | :----------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------- |
+| Per-directory `CLAUDE.md`            | Di dalam direktori, bersama kodenya | Saat peluncuran ketika dimulai dari direktori itu, atau sesuai permintaan ketika Claude membaca file di sana | Pemilik direktori memelihara konvensi mereka sendiri; instruksi diversi dengan kode                 |
+| Path-scoped rule di `.claude/rules/` | `.claude/` pusat di repo root       | Ketika Claude bekerja dengan file yang cocok dengan glob `paths:` aturan                                     | Anda ingin semua konvensi di satu tempat, atau aturan yang sama berlaku untuk banyak jalur tersebar |
 
-Untuk perbandingan yang juga mencakup skills, lihat [Bandingkan fitur serupa](/docs/id/features-overview#compare-similar-features).
+Untuk perbandingan yang juga mencakup skills, lihat [Compare similar features](/docs/id/features-overview#compare-similar-features).
 
 <h3 id="exclude-irrelevant-claude-md-files">
   Exclude irrelevant CLAUDE.md files
@@ -148,13 +137,12 @@ Ketika Anda memulai Claude dari repository root, `CLAUDE.md` setiap subdirektori
 
 Gunakan ini untuk direktori yang tidak pernah Anda kerjakan, seperti paket tim lain, kode legacy, atau subtree yang di-vendor. Daftar pengecualian bersifat statis, bukan switch per-tugas. Untuk fokus pada satu paket hari ini dan paket lain besok, [mulai Claude dari direktori paket itu](#choose-where-to-start-claude) bukan mengedit pengecualian.
 
-Jika Anda hanya menginginkan pengecualian ini untuk diri sendiri, letakkan pengaturan di `.claude/settings.local.json`. Claude Code mengabaikan file itu ketika membuatnya; karena Anda membuatnya dengan tangan di sini, tambahkan ke gitignore Anda. Pola menggunakan sintaks glob yang cocok dengan jalur file absolut, jadi mulai pola gaya-relatif dengan `**/` untuk cocok di mana saja di pohon. Contoh di bawah mengecualikan paket yang dimiliki oleh tim lain:
+Jika Anda hanya menginginkan pengecualian ini untuk diri sendiri, letakkan pengaturan di `.claude/settings.local.json`. Claude Code menambahkan file itu ke gitignore global Anda ketika menyimpan pengaturan di sana. Karena Anda membuatnya dengan tangan di sini, tambahkan ke gitignore Anda sendiri. Pola menggunakan sintaks glob yang cocok dengan jalur file absolut, jadi mulai pola gaya-relatif dengan `**/` untuk cocok di mana saja di pohon. Contoh di bawah mengecualikan paket yang dimiliki oleh tim lain:
 
 ```json .claude/settings.local.json theme={null}
 {
   "claudeMdExcludes": [
-    "**/packages/admin-dashboard/**",
-    "**/packages/legacy-*/**"
+    "**/packages/web/**"
   ]
 }
 ```
@@ -164,12 +152,12 @@ Ini melewati setiap CLAUDE.md dan file rules di bawah paket itu. Root CLAUDE.md 
 Pola ini mencakup kasus umum lainnya:
 
 * `"**/packages/*/CLAUDE.md"`: mengecualikan CLAUDE.md setiap paket sambil menjaga root
-* `"**/packages/web/**"`: mengecualikan segalanya di bawah paket web, termasuk rules
+* `"**/packages/legacy-*/**"`: mengecualikan setiap paket yang namanya cocok dengan glob, termasuk rules
 * `"/home/user/monorepo/legacy/CLAUDE.md"`: mengecualikan satu file tertentu berdasarkan jalur absolut
 
-File CLAUDE.md kebijakan yang dikelola tidak dapat dikecualikan, jadi instruksi organisasi-wide selalu berlaku. Anda dapat mengatur `claudeMdExcludes` di [scope pengaturan](/docs/id/settings#configuration-scopes) apa pun: user, project, local, atau managed. Array menggabung di seluruh scope, jadi tim dapat mengatur default level-proyek sementara individu menambahkan override lokal.
+File CLAUDE.md kebijakan yang dikelola tidak dapat dikecualikan, jadi instruksi organisasi-wide selalu berlaku. Anda dapat mengatur `claudeMdExcludes` di [settings scope](/docs/id/settings#where-settings-live) apa pun: user, project, local, atau managed. Array menggabung di seluruh scope, jadi tim dapat mengatur default level-proyek sementara individu menambahkan override lokal.
 
-Untuk dokumentasi pengecualian lengkap, lihat [Kecualikan file CLAUDE.md tertentu](/docs/id/memory#exclude-specific-claude-md-files).
+Untuk dokumentasi pengecualian lengkap, lihat [Exclude specific CLAUDE.md files](/docs/id/memory#exclude-specific-claude-md-files).
 
 <h2 id="reduce-what-claude-reads">
   Kurangi apa yang Claude baca
@@ -183,42 +171,53 @@ Instruksi hanya bagian dari apa yang berakhir dalam konteks Claude. Pembacaan fi
 
 Pencarian konten Claude menghormati `.gitignore` secara default, jadi jalur yang sudah terdaftar di sana, seperti `node_modules/`, `dist/`, dan `build/`, tetap keluar dari hasil pencarian tanpa konfigurasi tambahan.
 
-Untuk jalur yang diperiksa, seperti SDK yang di-vendor atau kode yang dihasilkan berkomitmen, tambahkan aturan deny `Read` di `permissions.deny` untuk memblokir Claude dari membuka file itu bahkan ketika pencarian mencantumnya.
+Untuk jalur yang diperiksa, seperti SDK yang di-vendor atau kode yang dihasilkan berkomitmen, tambahkan aturan deny `Read` di `permissions.deny` untuk memblokir Claude dari membuka file itu.
 
-Untuk menerapkan pengecualian ini untuk semua orang yang bekerja di repository, komitkan ke `.claude/settings.json`. Untuk menyimpannya pribadi, gunakan `.claude/settings.local.json` sebagai gantinya. Seperti pengaturan proyek lainnya di halaman ini, file ini hanya dimuat dari direktori awal Anda. Letakkan di repository root jika Anda memulai Claude di sana, atau di `.claude/` setiap paket jika Anda memulai dari subdirektori. Untuk memberlakukan aturan deny yang sama di setiap sesi terlepas dari direktori awal, atur di [managed settings](/docs/id/settings#settings-files), yang tidak dapat ditimpa oleh pengaturan user dan project.
+Aturan deny dapat mencakup semua orang yang bekerja di repository, hanya Anda, atau setiap sesi di mesin, tergantung pada file pengaturan mana yang Anda masukkan:
 
-Contoh di bawah memblokir artefak build dan SDK yang di-vendor:
+* **Semua orang yang bekerja di repository**: komitkan aturan ke `.claude/settings.json`, di root repository jika Anda memulai Claude di sana, atau di `.claude/` setiap paket jika Anda memulai dari subdirektori. Seperti pengaturan proyek lainnya di halaman ini, file itu tidak diwariskan dari direktori induk.
+* **Hanya Anda**: gunakan `.claude/settings.local.json` di root repository, yang dimuat di setiap sesi CLI di dalam repository terlepas dari direktori awal, kecuali dalam kasus di mana Claude Code [tidak menggunakan root repository](/docs/id/settings#where-claude-code-looks-for-each-file), seperti di Windows. Pola relatif seperti contoh `Read(./**/vendor/**/*)` masih [jangkar di direktori kerja saat ini sesi](/docs/id/permissions#read-and-edit) daripada root repository, jadi jika Anda memulai sesi dari subdirektori, tulis aturan di file ini sebagai jalur absolut `//`, seperti `Read(//absolute/path/to/repo/**/vendor/**/*)`. Sebelum v2.1.211, `.claude/settings.local.json` juga dimuat hanya dari direktori awal.
+* **Semua orang, ditegakkan di setiap sesi**: atur aturan di [managed settings](/docs/id/managed-settings), yang tidak dapat ditimpa oleh pengaturan user dan project.
+
+Contoh di bawah memblokir artefak build dan SDK yang di-vendor. Pola direktorinya berakhir dengan `/**/*` daripada `/**` sehingga setiap aturan mencakup segalanya di dalam direktori tetapi bukan direktori itu sendiri. Claude kemudian masih dapat mendaftar direktori itu atau mengubah ke dalamnya, misalnya dengan `ls dist` atau `cd build`.
 
 ```json .claude/settings.json theme={null}
 {
   "permissions": {
     "deny": [
-      "Read(./**/dist/**)",
-      "Read(./**/build/**)",
+      "Read(./**/dist/**/*)",
+      "Read(./**/build/**/*)",
       "Read(./**/*.generated.*)",
-      "Read(./vendor/**)"
+      "Read(./**/vendor/**/*)"
     ]
   }
 }
 ```
 
-Aturan deny mencakup alat file bawaan Claude dan perintah Bash yang dikenali, termasuk `cat`, `head`, `grep`, dan `find`, ketika jalur yang ditolak diteruskan sebagai argumen. Mereka tidak memfilter jalur yang ditolak dari output pencarian rekursif, dan mereka tidak mencakup subprocess arbitrer yang membuka file sendiri. Untuk sintaks pola lengkap, lihat [Aturan izin Read dan Edit](/docs/id/permissions#read-and-edit).
+Aturan deny mencakup alat file bawaan Claude. Di Bash, mereka mencakup perintah file yang dikenali Claude Code, seperti `cat`, `head`, `grep`, dan `find`, ketika jalur yang ditolak muncul sebagai argumen, dan target dari [redirection](/docs/id/permissions#redirections) seperti `< file`. Claude Code juga membuat upaya terbaik untuk meninggalkan jalur yang ditolak keluar dari hasil alat Grep dan Glob bawaan. Pencarian Bash seperti `grep -r` atau `find` di atas direktori yang berisi file yang ditolak masih menyertakan mereka dalam outputnya.
+
+Aturan deny tidak mencakup subprocess yang membuka file sendiri. Untuk sintaks pola lengkap, lihat [Aturan izin Read dan Edit](/docs/id/permissions#read-and-edit).
 
 <h3 id="reduce-file-reads-with-code-intelligence">
   Reduce file reads with code intelligence
 </h3>
 
-Dalam codebase besar, menemukan di mana simbol didefinisikan atau digunakan dapat menghabiskan banyak pembacaan file dan panggilan grep. [Plugin code intelligence](/docs/id/discover-plugins#code-intelligence) menghubungkan Claude ke language server sehingga dapat melompat ke definisi, menemukan referensi, dan permukaan kesalahan tipe secara langsung bukan memindai pohon.
+Dalam codebase besar, menemukan di mana simbol didefinisikan atau digunakan dapat menghabiskan banyak pembacaan file dan panggilan grep. [Plugin code intelligence](/docs/id/plugins/code-intelligence) menghubungkan Claude ke language server sehingga dapat melompat ke definisi, menemukan referensi, dan permukaan kesalahan tipe secara langsung bukan memindai pohon.
 
-Marketplace resmi memiliki plugin untuk TypeScript, Python, Go, Rust, dan bahasa umum lainnya. Contoh di bawah menginstal plugin TypeScript:
+Marketplace resmi memiliki plugin untuk TypeScript, Python, Go, Rust, dan bahasa umum lainnya. Jalankan perintah di bawah ini di dalam sesi Claude Code untuk menginstal plugin TypeScript:
 
 ```shell theme={null}
 /plugin install typescript-lsp@claude-plugins-official
 ```
 
-Untuk mengaktifkan plugin untuk semua orang di repository bukan menginstalnya sendiri, tambahkan ke pengaturan proyek [`enabledPlugins`](/docs/id/settings#plugin-settings).
+Jika instalasi gagal, cocokkan pesan yang dilaporkan Claude Code:
 
-Plugin code intelligence memerlukan biner language server bahasa di setiap mesin pengembang. Lihat [biner mana yang diperlukan setiap bahasa](/docs/id/discover-plugins#code-intelligence). Menginstal dari marketplace resmi memerlukan akses jaringan ke GitHub, di mana marketplace dihosting. Di jaringan terbatas, [tambahkan marketplace dari host Git internal atau jalur lokal](/docs/id/discover-plugins#add-from-other-git-hosts) sebagai gantinya.
+* `Marketplace "claude-plugins-official" not found`: tambahkan marketplace dengan `/plugin marketplace add anthropics/claude-plugins-official`, kemudian coba ulang instalasi.
+* Plugin [tidak ditemukan di marketplace](/docs/id/plugins/install#install-a-plugin): periksa nama plugin.
+
+Untuk mengaktifkan plugin untuk semua orang di repository daripada menginstalnya sendiri, tambahkan ke pengaturan proyek [`enabledPlugins`](/docs/id/settings-reference#plugin-settings).
+
+Plugin code intelligence memerlukan biner language server bahasa di setiap mesin pengembang. Lihat [biner mana yang diperlukan setiap bahasa](/docs/id/plugins/code-intelligence). Menginstal dari marketplace resmi memerlukan akses jaringan ke GitHub, di mana marketplace dihosting. Di jaringan terbatas, [tambahkan marketplace dari host Git internal atau jalur lokal](/docs/id/plugins/install#add-a-marketplace) sebagai gantinya.
 
 Ini berpasangan baik dengan `claudeMdExcludes` dan aturan `Read` deny di atas. Mereka menjaga konten yang tidak relevan keluar dari konteks, dan code intelligence menjaga Claude dari membaca melalui apa yang tersisa untuk menemukan definisi.
 
@@ -234,7 +233,11 @@ Pengaturan ini mengontrol apa yang ada di disk di worktrees dan direktori mana C
 
 Flag `--worktree` memulai sesi di worktree git baru sehingga perubahan tetap terisolasi dari checkout utama Anda. Secara default itu memeriksa seluruh repository. Dalam repository besar, pengaturan `worktree.sparsePaths` menggunakan git sparse-checkout untuk menulis hanya direktori yang terdaftar plus file level-root ke disk, sehingga worktrees dimulai lebih cepat dan menggunakan lebih sedikit ruang.
 
-Jika semua orang yang bekerja di direktori ini memerlukan jalur yang sama, komitkan pengaturan ke `.claude/settings.json`. Untuk menambahkan jalur untuk diri sendiri, gunakan `.claude/settings.local.json`: daftar menggabung di seluruh scope, jadi file lokal dapat menambahkan jalur ke daftar berkomitmen tetapi tidak menghapusnya. Contoh di bawah menunjukkan file berkomitmen:
+Jika semua orang yang bekerja di direktori ini memerlukan jalur yang sama, komitkan pengaturan ke `.claude/settings.json`. Untuk menambahkan jalur untuk diri sendiri, gunakan `.claude/settings.local.json`: daftar menggabung di seluruh scope, jadi file lokal dapat menambahkan jalur ke daftar berkomitmen tetapi tidak menghapusnya.
+
+Contoh JSON pada halaman ini menunjukkan satu pengaturan sekaligus. Jika `.claude/settings.json` Anda sudah berisi kunci lain, seperti aturan `permissions.deny` di atas, tambahkan kunci `worktree` bersama mereka daripada mengganti file. [Put it together](#put-it-together) menunjukkan hasil gabungan.
+
+Contoh di bawah menunjukkan file berkomitmen:
 
 ```json .claude/settings.json theme={null}
 {
@@ -252,7 +255,7 @@ Ketika Claude membuat worktree, itu memeriksa hanya `.claude/`, `packages/api/`,
 
 Ini sangat berguna untuk [isolasi worktree subagent](/docs/id/worktrees#isolate-subagents-with-worktrees). Subagent adalah instance Claude paralel yang dihasilkan untuk subtask, dan masing-masing yang berjalan di worktree mendapat checkout ringan bukan pohon penuh. Semua worktrees dalam sesi berbagi `sparsePaths` yang sama, jadi jika satu subagent memerlukan `packages/api/` dan yang lain memerlukan `packages/web/`, daftarkan keduanya.
 
-Daftarkan direktori di `sparsePaths`, bukan file individual. File level-root seperti `package.json`, `tsconfig.base.json`, dan file lock selalu diperiksa bersama direktori yang Anda daftarkan. Direktori level-root tidak, jadi sertakan `.claude` dalam daftar jika Anda menginginkan `.claude/settings.json`, `.claude/rules/`, atau `.claude/skills/` repository root tersedia di dalam worktree.
+Daftarkan direktori di `sparsePaths`, bukan file individual. File level-root seperti `package.json`, `tsconfig.base.json`, dan file lock selalu diperiksa bersama direktori yang Anda daftarkan. Direktori level-root tidak, jadi sertakan `.claude` dalam daftar jika Anda menginginkan repository root's `.claude/settings.json` atau `.claude/rules/` tersedia di dalam worktree. Untuk project skills, agents, dan commands, lihat [What worktrees share with the main checkout](/docs/id/worktrees#what-worktrees-share-with-the-main-checkout).
 
 Sparse checkout memerlukan git untuk mengaktifkan `extensions.worktreeConfig` di `.git/config` bersama repository saat worktree sparse ada. Claude Code menghapus entri itu setelah worktree terakhir dihapus, tetapi hanya jika Claude Code yang menambahkannya. Itu tidak pernah menghapus nilai yang Anda atur sendiri. Sebelum v2.1.207, entri tetap ada setelah worktree terakhir dihapus, dan alat berbasis go-git seperti `tea` gagal membuka repository sampai Anda menjalankan `git config --unset extensions.worktreeConfig`.
 
@@ -279,7 +282,7 @@ Ini membuat symlink dari `node_modules/` setiap worktree kembali ke salinan repo
   Pengaturan `sparsePaths` dan `symlinkDirectories` dibaca dari direktori awal Anda sebelum worktree dibuat. Setelah pembuatan, direktori kerja sesi adalah worktree root, bukan subdirektori tempat Anda meluncurkan. Pengaturan proyek di dalam worktree oleh karena itu dimuat dari `.claude/settings.json` worktree root, salinan berkomitmen dari file root repository. Letakkan pengaturan lain apa pun yang Anda butuhkan di dalam worktrees, seperti aturan izin atau hooks, di `.claude/settings.json` repository root.
 </Note>
 
-Untuk referensi pengaturan worktree lengkap, lihat [Worktree settings](/docs/id/settings#worktree-settings).
+Untuk referensi pengaturan worktree lengkap, lihat [Worktree settings](/docs/id/settings-reference#worktree).
 
 <h3 id="grant-access-across-packages-or-repositories">
   Grant access across packages or repositories
@@ -291,7 +294,7 @@ Ketika Anda memulai Claude dari `packages/api/`, itu dapat membaca dan menulis f
 
 Pengaturan `additionalDirectories` di `.claude/settings.json` memberikan Claude akses ke direktori di luar direktori kerja. Contoh di bawah memberikan akses ke dua paket sibling:
 
-```json .claude/settings.json theme={null}
+```json packages/api/.claude/settings.json theme={null}
 {
   "permissions": {
     "additionalDirectories": [
@@ -323,7 +326,7 @@ Untuk memuat file CLAUDE.md dan rules dari direktori yang ditambahkan dengan `--
 CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1 claude --add-dir ../shared
 ```
 
-Variabel lingkungan tidak berpengaruh pada direktori yang terdaftar dalam pengaturan `additionalDirectories`. Lihat [Muat dari direktori tambahan](/docs/id/memory#load-from-additional-directories) untuk detail.
+Variabel lingkungan tidak berpengaruh pada direktori yang terdaftar dalam pengaturan `additionalDirectories`. Lihat [Load from additional directories](/docs/id/memory#load-from-additional-directories) untuk detail.
 
 Untuk direktori sibling yang semua orang di area ini butuhkan, komitkan `additionalDirectories` ke `.claude/settings.json`. Untuk pilihan pribadi atau akses satu kali, gunakan `.claude/settings.local.json` atau lewatkan `--add-dir` saat peluncuran.
 
@@ -382,17 +385,17 @@ Untuk lebih lanjut tentang membuat dan mengorganisir skills, lihat [Skills](/doc
   Jaga skills tetap dapat ditemukan
 </h3>
 
-Dengan skills tersebar di banyak direktori, daftar yang Claude pilih dari dapat tumbuh besar. Claude memilih skill dengan membaca nama dan deskripsi setiap skill yang ditemukan, dan hanya konten skill yang dipilih dimuat penuh ke dalam konteks. Bagian ini mencakup cara menjaga daftar itu tetap kecil dan menulis deskripsi yang bertahan pemendekkan.
+Dengan skills tersebar di banyak direktori, daftar yang Claude pilih dari dapat tumbuh besar. Claude memilih skill dengan membaca nama dan deskripsi setiap skill yang ditemukan, dan hanya konten skill yang dipilih dimuat penuh ke dalam konteks. Bagian ini mencakup cara menjaga daftar itu tetap kecil.
 
 Skill mana yang dalam scope tergantung pada di mana Anda memulai Claude:
 
 * **Dari subdirektori seperti `packages/api/`**: skills dari direktori itu, setiap parent hingga repository root, dan level user dan enterprise
-* **Dari repository root**: skills dari setiap subdirektori Claude sentuh selama sesi, yang dapat terakumulasi menjadi ratusan
+* **Dari repository root**: skills root, ditambah skills dari setiap subdirektori Claude sentuh selama sesi, yang dapat terakumulasi menjadi ratusan
 * **Setelah menambahkan sibling dengan [`--add-dir`](#grant-access-across-packages-or-repositories)**: skills sibling itu juga dimuat. Pengaturan `additionalDirectories` memberikan akses file saja dan tidak memuat skills
 
-Nama selalu dimuat, tetapi [deskripsi dipendekkan ketika ada banyak](/docs/id/skills#skill-descriptions-are-cut-short), yang dapat menghapus kata kunci Claude gunakan untuk memutuskan apakah skill berlaku. Jaga deskripsi tetap pendek dan pimpin dengan kata yang permintaan akan berisi, seperti "menulis atau memodifikasi tes di `packages/api/`".
+Nama selalu dimuat, tetapi [ketika ada banyak, beberapa skills kehilangan deskripsi mereka sepenuhnya](/docs/id/skills#skill-descriptions-are-cut-short), yang dapat menghapus kata kunci Claude gunakan untuk memutuskan apakah skill berlaku. Jaga deskripsi tetap pendek dan pimpin dengan kata yang permintaan akan berisi, seperti "menulis atau memodifikasi tes di `packages/api/`".
 
-Untuk skills yang banyak direktori bagikan, seperti konvensi PR atau checklist deploy, letakkan di `.claude/skills/` repository root sehingga mereka dimuat dari direktori awal apa pun. Ketika shared skills memerlukan riwayat versi mereka sendiri atau harus bekerja di seluruh repositories, paketkan sebagai [plugin](/docs/id/plugins) sebagai gantinya. Plugin skills menggunakan namespace `plugin-name:skill-name`, jadi mereka tidak pernah bertabrakan dengan skills per-direktori. Tim platform dapat memversi dan memperbarui mereka di satu tempat.
+Untuk skills yang banyak direktori bagikan, seperti konvensi PR atau checklist deploy, letakkan di `.claude/skills/` repository root sehingga mereka dimuat dari direktori awal apa pun. Ketika shared skills memerlukan riwayat versi mereka sendiri atau harus bekerja di seluruh repositories, paketkan sebagai [plugin](/docs/id/plugins/overview) sebagai gantinya. Plugin skills menggunakan namespace `plugin-name:skill-name`, jadi mereka tidak pernah bertabrakan dengan skills per-direktori. Tim platform dapat memversi dan memperbarui mereka di satu tempat.
 
 Untuk menemukan skills mana yang tidak digunakan, aktifkan [logs exporter](/docs/id/monitoring-usage) OpenTelemetry dan atur `OTEL_LOG_TOOL_DETAILS=1` sehingga nama skill dicatat verbatim bukan diredaksi. Event [`skill_activated`](/docs/id/monitoring-usage#skill-activated-event) mencatat setiap invokasi dalam atribut `skill.name`-nya, dan `invocation_trigger` mencatat apakah perintah, Claude, atau skill bersarang menginvokasinya, yang memberi tahu Anda apa yang harus dikonsolidasikan atau dihentikan.
 
@@ -405,7 +408,7 @@ File CLAUDE.md per-direktori dapat menjadi sulit untuk diatur seiring dengan per
 Pindahkan konvensi dan konten referensi keluar dari CLAUDE.md yang selalu dimuat dan ke mekanisme yang dimuat sesuai permintaan:
 
 * [Skills](/docs/id/skills): materi referensi Claude dimuat hanya ketika relevan dengan tugas
-* [Plugins](/docs/id/plugins): bundel terversi dari skills, hooks, dan perintah yang tim platform miliki secara terpusat
+* [Plugins](/docs/id/plugins/overview): bundel terversi dari skills, hooks, dan perintah yang tim platform miliki secara terpusat
 * [MCP servers](/docs/id/mcp): jika organisasi Anda sudah menjalankan pencarian kode atau indeks RAG di atas repository, eksposnya sebagai alat MCP sehingga Claude menanyainya bukan membaca file secara langsung
 
 Lihat [pengaturan yang dikelola server atau endpoint](/docs/id/server-managed-settings#choose-between-server-managed-and-endpoint-managed-settings) untuk bagaimana tim platform dapat memberlakukan ini secara terpusat.
@@ -414,15 +417,15 @@ Lihat [pengaturan yang dikelola server atau endpoint](/docs/id/server-managed-se
   Recommend the right plugin at session start
 </h3>
 
-Setelah konvensi hidup di plugins, rekan kerja yang memulai Claude di bagian pohon yang tidak familiar tidak memiliki sinyal tentang plugin mana yang pemilik area itu pertahankan. Hook [`SessionStart`](/docs/id/hooks#sessionstart) dapat menutup kesenjangan itu, karena apa pun yang hook cetak ke stdout ditambahkan ke konteks Claude sebelum prompt pertama.
+Setelah konvensi hidup di plugins, rekan kerja yang memulai Claude di bagian pohon yang tidak familiar tidak memiliki sinyal tentang plugin mana yang pemilik area itu pertahankan. Hook [`SessionStart`](/docs/id/hooks#sessionstart) dapat menutup kesenjangan itu, karena Claude Code menambahkan teks biasa yang hook cetak ke stdout ke konteks Claude sebelum prompt pertama.
 
-Misalnya, Anda dapat menulis skrip yang membaca direktori peluncuran dari [input hook](/docs/id/hooks#common-input-fields), mencarinya dalam peta path-to-plugin yang berkomitmen ke repository, dan mencetak rekomendasi untuk Claude relay dalam balasan pertamanya. Lihat [Otomatisasi tindakan dengan hooks](/docs/id/hooks-guide) untuk menulis dan mendaftarkan hook.
+Misalnya, Anda dapat menulis skrip yang membaca direktori peluncuran dari [input hook](/docs/id/hooks#common-input-fields), mencarinya dalam peta path-to-plugin yang berkomitmen ke repository, dan mencetak rekomendasi untuk Claude relay dalam balasan pertamanya. Lihat [Automate actions with hooks](/docs/id/hooks-guide) untuk menulis dan mendaftarkan hook.
 
 <h2 id="put-it-together">
   Put it together
 </h2>
 
-Konfigurasi gabungan di bawah menggunakan tata letak monorepo. File yang sama bekerja untuk subdirektori apa pun dalam pohon tunggal besar. Pengaturan proyek hanya dimuat dari direktori tempat Anda memulai Claude, jadi `.claude/settings.json` setiap subdirektori harus mandiri bukan berlapis pada file root.
+Konfigurasi gabungan di bawah menggunakan tata letak monorepo. File yang sama bekerja untuk subdirektori apa pun dalam pohon tunggal besar. Setiap `.claude/settings.json` subdirektori harus mandiri daripada berlapis pada file root.
 
 Contoh berkomitmen `worktree`, `additionalDirectories`, dan aturan deny `Read` di `.claude/settings.json` sehingga setiap pengembang di `packages/api/` mendapat akses sibling yang sama, jalur sparse, dan pengecualian. File di bawah adalah pengaturan per-area berkomitmen untuk `packages/api/`:
 
@@ -443,8 +446,8 @@ Contoh berkomitmen `worktree`, `additionalDirectories`, dan aturan deny `Read` d
       "../shared"
     ],
     "deny": [
-      "Read(./**/dist/**)",
-      "Read(./**/build/**)"
+      "Read(./**/dist/**/*)",
+      "Read(./**/build/**/*)"
     ]
   }
 }
@@ -458,8 +461,8 @@ Entri `additionalDirectories` berlaku ketika Anda memulai Claude dari `packages/
 {
   "permissions": {
     "deny": [
-      "Read(./**/dist/**)",
-      "Read(./**/build/**)"
+      "Read(./**/dist/**/*)",
+      "Read(./**/build/**/*)"
     ]
   }
 }
@@ -500,7 +503,7 @@ Konfigurasi di atas mengontrol apa yang Claude lihat. Ketika perubahan tunggal m
 Dua teknik membantu menjaga perubahan lintas-paket konsisten:
 
 * **Berikan Claude seluruh perubahan dalam satu sesi**: menyerahkan edit bersama dan situs panggilannya bersama-sama menjaga keputusan di balik setiap edit konsisten, bukan menurunkan mereka per paket
-* **Simpan rencana ke file sebelum mengedit**: [rencanakan terlebih dahulu](/docs/id/best-practices#explore-first-then-plan-then-code) dan minta Claude menulis rencana ke file markdown di repository. Sesi lintas-paket panjang [mengompak konteksnya](/docs/id/context-window#what-survives-compaction) sepanjang jalan, dan rencana yang disimpan bertahan di mana riwayat percakapan mungkin tidak
+* **Rencanakan sebelum mengedit**: [rencanakan terlebih dahulu](/docs/id/best-practices#explore-first-then-plan-then-code) dalam [plan mode](/docs/id/permission-modes#analyze-before-you-edit-with-plan-mode), dan Claude menulis rencana ke file. Sesi lintas-paket panjang [mengompak konteksnya](/docs/id/context-window#what-survives-compaction) sepanjang jalan. Claude Code menyuntikkan kembali file rencana setelah setiap compaction, sehingga rencana bertahan di mana riwayat percakapan mungkin tidak
 
 <h2 id="next-steps">
   Langkah berikutnya

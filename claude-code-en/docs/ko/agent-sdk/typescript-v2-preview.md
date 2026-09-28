@@ -29,7 +29,7 @@ npm install @anthropic-ai/claude-agent-sdk@0.2
 ```
 
 <Note>
-  SDK는 선택적 종속성으로 플랫폼용 네이티브 Claude Code 바이너리를 번들로 제공하므로 Claude Code를 별도로 설치할 필요가 없습니다.
+  SDK는 선택적 종속성으로 플랫폼용 네이티브 Claude Code 바이너리를 번들로 제공하므로 대부분의 설치에서 Claude Code를 별도로 설치할 필요가 없습니다. 설치가 필요한 경우는 [빠른 시작의 설치 참고](/docs/ko/agent-sdk/quickstart)를 참조하십시오.
 </Note>
 
 <h2 id="quick-start">
@@ -318,6 +318,8 @@ for await (const msg of resumedSession.stream()) {
 </h3>
 
 세션은 수동으로 닫거나 [`await using`](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-2.html#using-declarations-and-explicit-resource-management)을 사용하여 자동으로 닫을 수 있습니다. 이는 자동 리소스 정리를 위한 TypeScript 5.2+ 기능입니다. 이전 TypeScript 버전을 사용 중이거나 호환성 문제가 발생하면 대신 수동 정리를 사용합니다.
+
+아래 예제는 정리 패턴만 보여주며 메시지를 보내지 않으므로 실행해도 출력이 없습니다.
 
 **자동 정리 (TypeScript 5.2+):**
 

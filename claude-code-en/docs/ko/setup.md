@@ -41,10 +41,10 @@ Claude Code는 다음 플랫폼 및 구성에서 실행됩니다:
   터미널이 처음이신가요? 단계별 지침은 [터미널 가이드](/docs/ko/terminal-guide)를 참조하세요.
 </Tip>
 
-To install Claude Code, use one of the following methods:
+Claude Code를 설치하려면 다음 방법 중 하나를 사용하십시오:
 
 <Tabs>
-  <Tab title="Native Install (Recommended)">
+  <Tab title="기본 설치 (권장)">
     **macOS, Linux, WSL:**
 
     ```bash theme={null}
@@ -63,14 +63,14 @@ To install Claude Code, use one of the following methods:
     curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del install.cmd
     ```
 
-    If you see `The token '&&' is not a valid statement separator`, you're in PowerShell, not CMD. If you see `'irm' is not recognized as an internal or external command`, you're in CMD, not PowerShell. Your prompt shows `PS C:\` when you're in PowerShell and `C:\` without the `PS` when you're in CMD.
+    `The token '&&' is not a valid statement separator` 오류가 표시되면 CMD가 아닌 PowerShell에 있는 것입니다. `'irm' is not recognized as an internal or external command` 오류가 표시되면 PowerShell이 아닌 CMD에 있는 것입니다. PowerShell에 있을 때는 프롬프트에 `PS C:\`가 표시되고, CMD에 있을 때는 `PS` 없이 `C:\`만 표시됩니다.
 
-    If the install command fails with `syntax error near unexpected token '<'`, a `403`, or another curl error, see [Troubleshoot installation](/docs/en/troubleshoot-install#find-your-error) to match the error to a fix and for alternative install methods.
+    설치 명령이 `syntax error near unexpected token '<'`, `403` 또는 다른 curl 오류로 실패하면 [설치 문제 해결](/docs/ko/troubleshoot-install#find-your-error)을 참조하여 오류를 수정 방법과 일치시키고 대체 설치 방법을 확인하십시오.
 
-    [Git for Windows](https://git-scm.com/downloads/win) is recommended on native Windows so Claude Code can use the Bash tool. If Git for Windows is not installed, Claude Code uses PowerShell as the shell tool instead. WSL setups do not need Git for Windows.
+    [Git for Windows](https://git-scm.com/downloads/win)는 Claude Code가 Bash 도구를 사용할 수 있도록 기본 Windows에서 권장됩니다. Git for Windows가 설치되지 않은 경우 Claude Code는 대신 PowerShell을 셸 도구로 사용합니다. WSL 설정에는 Git for Windows가 필요하지 않습니다.
 
     <Info>
-      Native installations automatically update in the background to keep you on the latest version.
+      기본 설치는 최신 버전으로 유지하기 위해 백그라운드에서 자동으로 업데이트됩니다.
     </Info>
   </Tab>
 
@@ -79,10 +79,10 @@ To install Claude Code, use one of the following methods:
     brew install --cask claude-code
     ```
 
-    Homebrew offers two casks. `claude-code` tracks the stable release channel, which is typically about a week behind and skips releases with major regressions. `claude-code@latest` tracks the latest channel and receives new versions as soon as they ship.
+    Homebrew는 두 가지 cask를 제공합니다. `claude-code`는 안정적인 릴리스 채널을 추적하며, 일반적으로 약 1주일 뒤에 있고 주요 회귀가 있는 릴리스를 건너뜁니다. `claude-code@latest`는 최신 채널을 추적하고 새 버전이 출시되는 즉시 받습니다.
 
     <Info>
-      Homebrew installations do not auto-update. Run `brew upgrade claude-code` or `brew upgrade claude-code@latest`, depending on which cask you installed, to get the latest features and security fixes.
+      Homebrew 설치는 자동으로 업데이트되지 않습니다. 설치한 cask에 따라 `brew upgrade claude-code` 또는 `brew upgrade claude-code@latest`를 실행하여 최신 기능 및 보안 수정 사항을 받으십시오.
     </Info>
   </Tab>
 
@@ -92,18 +92,20 @@ To install Claude Code, use one of the following methods:
     ```
 
     <Info>
-      WinGet installations do not auto-update. Run `winget upgrade Anthropic.ClaudeCode` periodically to get the latest features and security fixes.
+      WinGet 설치는 자동으로 업데이트되지 않습니다. 최신 기능 및 보안 수정 사항을 받으려면 주기적으로 `winget upgrade Anthropic.ClaudeCode`를 실행하십시오.
     </Info>
   </Tab>
 </Tabs>
 
-You can also install with [apt, dnf, or apk](/docs/en/setup#install-with-linux-package-managers) on Debian, Fedora, RHEL, and Alpine.
+또한 Debian, Fedora, RHEL 및 Alpine에서 [apt, dnf 또는 apk](/docs/ko/setup#install-with-linux-package-managers)로 설치할 수 있습니다.
 
 설치가 완료된 후 작업하려는 프로젝트에서 터미널을 열고 Claude Code를 시작하세요:
 
 ```bash theme={null}
 claude
 ```
+
+Claude Code는 터미널에서 대화형 세션을 엽니다.
 
 설치 중에 문제가 발생하면 [설치 및 로그인 문제 해결](/docs/ko/troubleshoot-install)을 참조하세요.
 
@@ -138,7 +140,7 @@ PowerShell 또는 CMD에서 설치하는지 여부는 실행하는 설치 명령
   }
   ```
 
-Git for Windows가 설치되면 PowerShell 도구는 Bash와 함께 추가 옵션으로 점진적으로 출시되고 있습니다. 옵트인하려면 `CLAUDE_CODE_USE_POWERSHELL_TOOL=1`을 설정하거나 옵트아웃하려면 `0`을 설정하세요. 설정 및 제한사항은 [PowerShell 도구](/docs/ko/tools-reference#powershell-tool)를 참조하세요.
+Git for Windows가 설치되면 PowerShell 도구는 Bash와 함께 사용 가능합니다: claude.ai 및 Console 계정의 경우 기본적으로 활성화되며, Amazon Bedrock, Google Cloud의 Agent Platform 및 Microsoft Foundry 세션에서는 `CLAUDE_CODE_USE_POWERSHELL_TOOL=1`로 활성화됩니다. 도구를 끄려면 `0`으로 설정하세요. 설정 및 제한사항은 [PowerShell 도구](/docs/ko/tools-reference#powershell-tool)를 참조하세요.
 
 **옵션 2: WSL**
 
@@ -148,15 +150,23 @@ WSL 배포판을 열고 위의 [설치 지침](#install-claude-code)에서 Linux
   Alpine Linux 및 musl 기반 배포판
 </h3>
 
-Alpine 및 기타 musl/uClibc 기반 배포판의 네이티브 설치 프로그램에는 `libgcc`, `libstdc++` 및 `ripgrep`이 필요합니다. 배포판의 패키지 관리자를 사용하여 이들을 설치한 후 `USE_BUILTIN_RIPGREP=0`을 설정하세요.
+Alpine 및 기타 musl/uClibc 기반 배포판에 Claude Code를 설치하려면 설치 명령을 위해 `bash` 및 `curl`이 필요하며, 런타임에는 `libgcc`, `libstdc++` 및 `ripgrep`이 필요합니다. Alpine은 기본적으로 `bash` 또는 `curl`을 포함하지 않으므로 문서화된 설치 명령은 이들을 설치할 때까지 `not found` 오류로 실패합니다. 배포판의 패키지 관리자를 사용하여 이들 패키지를 설치한 후 `USE_BUILTIN_RIPGREP=0`을 설정하세요.
 
 이 예제는 Alpine에 필요한 패키지를 설치합니다:
 
 ```bash theme={null}
-apk add libgcc libstdc++ ripgrep
+apk add bash curl libgcc libstdc++ ripgrep
 ```
 
-그런 다음 [`settings.json`](/docs/ko/settings#available-settings) 파일에서 `USE_BUILTIN_RIPGREP`을 `0`으로 설정하세요:
+Alpine에서 `ripgrep`은 커뮤니티 저장소에 있습니다. `apk`가 패키지가 누락되었다고 보고하면 Alpine 버전을 사용하여 `/etc/apk/repositories`에 커뮤니티 저장소를 추가하세요:
+
+```bash theme={null}
+echo "https://dl-cdn.alpinelinux.org/alpine/v3.22/community" >> /etc/apk/repositories
+```
+
+`apk update`를 실행하여 패키지 인덱스를 새로 고친 후 `apk add` 명령을 다시 시도하세요.
+
+그런 다음 [`settings.json`](/docs/ko/settings-reference#all-settings) 파일에서 `USE_BUILTIN_RIPGREP`을 `0`으로 설정하세요:
 
 ```json theme={null}
 {
@@ -176,6 +186,8 @@ apk add libgcc libstdc++ ripgrep
 claude --version
 ```
 
+작동하는 설치는 `2.1.211 (Claude Code)`와 같은 버전 번호를 출력합니다.
+
 이 명령이 `command not found` 또는 다른 오류로 실패하면 [설치 및 로그인 문제 해결](/docs/ko/troubleshoot-install)을 참조하세요.
 
 설치 및 구성을 더 자세히 확인하려면 [`claude doctor`](/docs/ko/troubleshooting#get-more-help)를 실행하세요:
@@ -184,13 +196,15 @@ claude --version
 claude doctor
 ```
 
+`claude doctor`는 세션을 시작하지 않고 읽기 전용 설치 및 설정 진단을 출력합니다. 여기에는 설치 상태, 설정 파일 검증 오류, 그리고 제안된 수정 사항이 포함된 모든 경고가 포함됩니다.
+
 <h2 id="authenticate">
   인증
 </h2>
 
-Claude Code는 Pro, Max, Team, Enterprise 또는 Console 계정이 필요합니다. 무료 Claude.ai 플랜에는 Claude Code 액세스가 포함되지 않습니다. [Amazon Bedrock](/docs/ko/amazon-bedrock), [Google Cloud의 Agent Platform](/docs/ko/google-vertex-ai) 또는 [Microsoft Foundry](/docs/ko/microsoft-foundry)와 같은 타사 API 제공자와 함께 Claude Code를 사용할 수도 있습니다.
+Claude Code는 Pro, Max, Team, Enterprise 또는 Console 계정이 필요합니다. 무료 claude.ai 플랜에는 Claude Code 액세스가 포함되지 않습니다. [Amazon Bedrock](/docs/ko/amazon-bedrock), [Google Cloud의 Agent Platform](/docs/ko/google-vertex-ai) 또는 [Microsoft Foundry](/docs/ko/microsoft-foundry)와 같은 타사 API 제공자와 함께 Claude Code를 사용할 수도 있습니다.
 
-설치 후 `claude`를 실행하고 브라우저 프롬프트를 따라 로그인하세요. 모든 계정 유형 및 팀 설정 옵션은 [인증](/docs/ko/authentication)을 참조하세요.
+설치 후 `claude`를 실행하고 브라우저 프롬프트를 따라 로그인하세요. `ANTHROPIC_API_KEY` 환경 변수가 설정된 경우, Claude Code는 브라우저를 열지 않고 키를 승인하도록 한 번 프롬프트합니다. 모든 계정 유형 및 팀 설정 옵션은 [인증](/docs/ko/authentication)을 참조하세요.
 
 <h2 id="update-claude-code">
   Claude Code 업데이트
@@ -243,7 +257,7 @@ npm 전역 설치가 npm 전역 디렉터리를 쓸 수 없기 때문에 자동 
 }
 ```
 
-엔터프라이즈 배포의 경우 [관리 설정](/docs/ko/permissions#managed-settings)을 사용하여 조직 전체에서 일관된 릴리스 채널을 적용할 수 있습니다.
+엔터프라이즈 배포의 경우 [관리 설정](/docs/ko/managed-settings)을 사용하여 조직 전체에서 일관된 릴리스 채널을 적용할 수 있습니다.
 
 Homebrew 설치는 이 설정 대신 cask 이름으로 채널을 선택합니다: `claude-code`는 안정적인 버전을 추적하고 `claude-code@latest`는 최신 버전을 추적합니다.
 
@@ -264,15 +278,15 @@ Homebrew 설치는 이 설정 대신 cask 이름으로 채널을 선택합니다
 }
 ```
 
-[관리 설정](/docs/ko/permissions#managed-settings)에서 이는 사용자 및 프로젝트 설정이 재정의할 수 없는 조직 전체 최소값을 적용합니다.
+[관리 설정](/docs/ko/managed-settings)에서 이는 사용자 및 프로젝트 설정이 재정의할 수 없는 조직 전체 최소값을 적용합니다.
 
-`minimumVersion` 핀은 업데이트만 제한합니다. Claude Code가 버전 범위 외에서 시작되지 않도록 하려면 관리 설정 `requiredMinimumVersion` 및 `requiredMaximumVersion`을 대신 사용하세요. 업데이트는 또한 `requiredMaximumVersion` 상한을 준수합니다. [사용 가능한 설정](/docs/ko/settings#available-settings)을 참조하세요.
+`minimumVersion` 핀은 업데이트만 제한합니다. Claude Code가 버전 범위 외에서 시작되지 않도록 하려면 관리 설정 `requiredMinimumVersion` 및 `requiredMaximumVersion`을 대신 사용하세요. 업데이트는 또한 `requiredMaximumVersion` 상한을 준수합니다. [`requiredMinimumVersion`](/docs/ko/settings-reference#requiredminimumversion) 및 [`requiredMaximumVersion`](/docs/ko/settings-reference#requiredmaximumversion)을 참조하세요.
 
 <h3 id="disable-auto-updates">
   자동 업데이트 비활성화
 </h3>
 
-[`settings.json`](/docs/ko/settings#available-settings) 파일의 `env` 키에서 `DISABLE_AUTOUPDATER`를 `"1"`로 설정하세요:
+[`settings.json`](/docs/ko/settings-reference#all-settings) 파일의 `env` 키에서 `DISABLE_AUTOUPDATER`를 `"1"`로 설정하세요:
 
 ```json theme={null}
 {
@@ -281,6 +295,8 @@ Homebrew 설치는 이 설정 대신 cask 이름으로 채널을 선택합니다
   }
 }
 ```
+
+네이티브 또는 npm 설치에서 `claude doctor`를 실행하고 `Auto-updates` 줄이 `enabled` 대신 `disabled (set by env: DISABLE_AUTOUPDATER)`를 표시하는지 확인하여 변경 사항이 적용되었는지 확인하세요.
 
 `DISABLE_AUTOUPDATER`는 백그라운드 확인만 중지합니다. `claude update` 및 `claude install`은 계속 작동합니다. 수동 업데이트를 포함한 모든 업데이트 경로를 차단하려면 [`DISABLE_UPDATES`](/docs/ko/env-vars)를 대신 설정하세요. Claude Code를 자신의 채널을 통해 배포하고 사용자가 제공하는 버전에 머물러야 할 때 이를 사용하세요.
 
@@ -293,6 +309,8 @@ Homebrew 설치는 이 설정 대신 cask 이름으로 채널을 선택합니다
 ```bash theme={null}
 claude update
 ```
+
+업데이트가 설치되면 명령은 `Successfully updated from <old version> to version <new version>`을 보고합니다. 이미 최신 버전을 사용 중인 경우 `Claude Code is up to date (<version>)`을 보고합니다. Homebrew, WinGet 또는 apk로 관리되는 설치는 `Claude is up to date!`를 대신 보고합니다.
 
 <h2 id="advanced-installation-options">
   고급 설치 옵션
@@ -372,6 +390,8 @@ claude update
   </Tab>
 </Tabs>
 
+설치된 버전을 확인하려면 `claude --version`을 실행하세요. 이 명령은 전달한 정확한 버전(예: `2.1.89 (Claude Code)`)을 출력합니다.
+
 <h3 id="install-with-linux-package-managers">
   Linux 패키지 관리자로 설치
 </h3>
@@ -382,18 +402,31 @@ Claude Code는 서명된 apt, dnf 및 apk 저장소를 게시합니다. 각 저�
 
 <Tabs>
   <Tab title="apt">
-    Debian 및 Ubuntu용입니다. 설치 명령은 아래에서 `curl`로 서명 키를 다운로드합니다. 새로운 Debian 및 Ubuntu 설치에는 `curl`이 포함되지 않을 수 있습니다. 다운로드가 `sudo: curl: command not found`로 실패하면 먼저 curl을 설치하세요:
+    Debian 및 Ubuntu용입니다. 아래의 설치 명령은 `curl`로 서명 키를 다운로드하고 `gpg`로 확인합니다. 새로운 Debian 및 Ubuntu 설치에는 이 중 하나가 포함되지 않을 수 있습니다. 명령이 `command not found`를 보고하면 먼저 둘 다 설치하세요:
 
     ```bash theme={null}
-    sudo apt install curl
+    sudo apt install curl gnupg
     ```
 
-    다음 명령은 `stable` 채널을 구성합니다:
+    서명 키를 다운로드합니다:
 
     ```bash theme={null}
     sudo install -d -m 0755 /etc/apt/keyrings
     sudo curl -fsSL https://downloads.claude.ai/keys/claude-code.asc \
       -o /etc/apt/keyrings/claude-code.asc
+    ```
+
+    이 다운로드가 실패하면 나중에 `apt update`가 `NO_PUBKEY BAA929FF1A7ECACE`로 실패합니다. 키가 다운로드되었고 계속하기 전에 Anthropic에 속하는지 확인하세요:
+
+    ```bash theme={null}
+    gpg --show-keys /etc/apt/keyrings/claude-code.asc
+    ```
+
+    gpg가 인쇄하는 지문은 `31DDDE24DDFAB679F42D7BD2BAA929FF1A7ECACE`여야 합니다. gpg가 파일을 열 수 없거나 유효한 OpenPGP 데이터가 없다고 보고하면 다운로드가 실패했거나 잘못된 콘텐츠를 반환했습니다. 네트워크가 `downloads.claude.ai`에 도달할 수 있는지 확인한 후 다운로드 명령을 다시 실행하세요.
+
+    `stable` 채널에 저장소를 등록하고 설치합니다:
+
+    ```bash theme={null}
     echo "deb [signed-by=/etc/apt/keyrings/claude-code.asc] https://downloads.claude.ai/claude-code/apt/stable stable main" \
       | sudo tee /etc/apt/sources.list.d/claude-code.list
     sudo apt update
@@ -406,8 +439,6 @@ Claude Code는 서명된 apt, dnf 및 apk 저장소를 게시합니다. 각 저�
     echo "deb [signed-by=/etc/apt/keyrings/claude-code.asc] https://downloads.claude.ai/claude-code/apt/latest latest main" \
       | sudo tee /etc/apt/sources.list.d/claude-code.list
     ```
-
-    신뢰하기 전에 GPG 키 지문을 확인하세요: `gpg --show-keys /etc/apt/keyrings/claude-code.asc`는 `31DD DE24 DDFA B679 F42D 7BD2 BAA9 29FF 1A7E CACE`를 보고해야 합니다.
 
     나중에 업그레이드하려면 `sudo apt update && sudo apt upgrade claude-code`를 실행하세요.
   </Tab>

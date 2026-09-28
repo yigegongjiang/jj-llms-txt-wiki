@@ -89,7 +89,7 @@ Microsoft Foundry로 Claude Code를 구성하기 전에 다음을 확인하세�
 * Azure CLI 설치 및 구성(선택 사항 - 자격 증명을 얻을 다른 메커니즘이 없는 경우에만 필요)
 
 <Note>
-  Claude Code를 여러 사용자에게 배포하는 경우 [모델 버전을 고정](#4-pin-model-versions)하기 전에 롤아웃하세요.
+  Claude Code를 여러 사용자에게 배포하는 경우 롤아웃하기 전에 [모델 버전을 고정](#4-pin-model-versions)하세요.
 </Note>
 
 <h2 id="setup">
@@ -105,9 +105,12 @@ Microsoft Foundry로 Claude Code를 구성하기 전에 다음을 확인하세�
 1. [Microsoft Foundry 포털](https://ai.azure.com/)로 이동합니다
 2. 새 리소스를 만들고 리소스 이름을 기록합니다
 3. Claude 모델에 대한 배포를 만들고 각 배포에 지정한 배포 이름을 기록합니다. 4단계에서 이 이름들을 모델 변수로 설정합니다:
+
    * Claude Opus
    * Claude Sonnet
    * Claude Haiku
+
+   배포를 구성할 때 [호스팅 옵션](https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry#hosting-options)도 선택합니다. 이는 추론이 Azure에서 실행되는지 아니면 Anthropic 인프라에서 실행되는지를 결정합니다.
 
 <h3 id="2-configure-azure-credentials">
   2) Azure 자격 증명 구성
@@ -179,7 +182,7 @@ export ANTHROPIC_FOUNDRY_RESOURCE={resource}
 
 모델 변수를 1단계에서 만든 배포 이름과 일치하도록 설정합니다.
 
-`ANTHROPIC_DEFAULT_OPUS_MODEL`이 없으면 Microsoft Foundry의 `opus` 별칭은 Opus 4.6으로 확인됩니다. 최신 모델을 사용하려면 Opus 4.8 ID로 설정합니다:
+`ANTHROPIC_DEFAULT_OPUS_MODEL`이 없으면 Microsoft Foundry의 `opus` 별칭은 Opus 4.6으로 확인됩니다. 최신 Opus 모델(예: Opus 4.8)의 ID로 설정합니다:
 
 ```bash theme={null}
 export ANTHROPIC_DEFAULT_OPUS_MODEL='claude-opus-4-8'
@@ -196,6 +199,8 @@ export ANTHROPIC_DEFAULT_HAIKU_MODEL='claude-haiku-4-5'
 ```bash theme={null}
 export ENABLE_PROMPT_CACHING_1H=1
 ```
+
+주 대화와 Claude Code가 외부에서 수행하는 요청에 대해 다른 TTL을 설정하려면 [TTL을 직접 선택](/docs/ko/prompt-caching#choose-the-ttl-yourself)하세요.
 
 <h3 id="5-run-claude-code">
   5. Claude Code 실행

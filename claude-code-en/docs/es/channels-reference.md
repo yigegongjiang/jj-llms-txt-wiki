@@ -36,7 +36,9 @@ Un canal es un servidor [MCP](https://modelcontextprotocol.io) que se ejecuta en
 * **Plataformas de chat** (Telegram, Discord): tu complemento se ejecuta localmente y sondea la API de la plataforma en busca de nuevos mensajes. Cuando alguien envía un mensaje directo a tu bot, el complemento recibe el mensaje y lo reenvía a Claude. Sin URL que exponer.
 * **Webhooks** (CI, monitoreo): tu servidor escucha en un puerto HTTP local. Los sistemas externos envían POST a ese puerto, y tu servidor envía la carga útil a Claude.
 
-<img src="https://mintcdn.com/claude-code/9FG0ZKj9uKYiHmbi/images/channel-architecture.svg?fit=max&auto=format&n=9FG0ZKj9uKYiHmbi&q=85&s=9a037b7da80184ae49015c0256b21a1f" alt="Diagrama de arquitectura que muestra sistemas externos conectándose a tu servidor de canal local, que se comunica con Claude Code a través de stdio" width="600" height="220" data-path="images/channel-architecture.svg" />
+<img src="https://mintcdn.com/claude-code/9FG0ZKj9uKYiHmbi/images/channel-architecture.svg?fit=max&auto=format&n=9FG0ZKj9uKYiHmbi&q=85&s=9a037b7da80184ae49015c0256b21a1f" className="dark:hidden" alt="Diagrama de arquitectura que muestra sistemas externos conectándose a tu servidor de canal local, que se comunica con Claude Code a través de stdio" width="600" height="220" data-path="images/channel-architecture.svg" />
+
+<img src="https://mintcdn.com/claude-code/_xqph1dUOslCOwsj/images/channel-architecture-dark.svg?fit=max&auto=format&n=_xqph1dUOslCOwsj&q=85&s=ae1e494440806a6a5d74a1279e22e162" className="hidden dark:block" alt="Diagrama de arquitectura que muestra sistemas externos conectándose a tu servidor de canal local, que se comunica con Claude Code a través de stdio" width="600" height="220" data-path="images/channel-architecture-dark.svg" />
 
 <h2 id="what-you-need">
   Lo que necesitas
@@ -48,7 +50,7 @@ Tu servidor necesita:
 
 1. Declarar la capacidad `claude/channel` para que Claude Code registre un oyente de notificación
 2. Emitir eventos `notifications/claude/channel` cuando algo suceda
-3. Conectarse a través del [transporte stdio](https://modelcontextprotocol.io/docs/concepts/transports#standard-io) (Claude Code genera tu servidor como un subproceso)
+3. Conectarse a través del [transporte stdio](https://modelcontextprotocol.io/docs/concepts/transports#standard-io)
 
 Las secciones [Opciones del servidor](#server-options) y [Formato de notificación](#notification-format) cubren cada una de estas en detalle. Consulta [Ejemplo: construir un receptor de webhook](#example-build-a-webhook-receiver) para un tutorial completo.
 
@@ -64,11 +66,11 @@ Este ejemplo usa [Bun](https://bun.sh) como tiempo de ejecución por su servidor
 
 <Steps>
   <Step title="Crear el proyecto">
-    Crea un nuevo directorio e instala el SDK de MCP:
+    Los ejemplos de [relé de permisos](#relay-permission-prompts) importan `zod` directamente, por lo que se instala junto con el SDK de MCP. Crea un nuevo directorio e instala ambos:
 
     ```bash theme={null}
     mkdir webhook-channel && cd webhook-channel
-    bun add @modelcontextprotocol/sdk
+    bun add @modelcontextprotocol/sdk zod
     ```
   </Step>
 
@@ -86,7 +88,7 @@ Este ejemplo usa [Bun](https://bun.sh) como tiempo de ejecución por su servidor
       {
         // esta clave es lo que lo hace un canal — Claude Code registra un oyente para ella
         capabilities: { experimental: { 'claude/channel': {} } },
-        // agregado al mensaje del sistema de Claude para que sepa cómo manejar estos eventos
+        // Claude Code entrega esto a Claude como contexto cuando el servidor se conecta, para que sepa cómo manejar estos eventos
         instructions: 'Los eventos del canal webhook llegan como <channel source="webhook" ...>. Son unidireccionales: léelos y actúa, no se espera respuesta.',
       },
     )
@@ -114,10 +116,10 @@ Este ejemplo usa [Bun](https://bun.sh) como tiempo de ejecución por su servidor
     })
     ```
 
-    El archivo hace tres cosas en orden:
+    El archivo configura el servidor, se conecta a través de stdio e inicia un oyente HTTP, en ese orden:
 
-    * **Configuración del servidor**: crea el servidor MCP con `claude/channel` en sus capacidades, que es lo que le dice a Claude Code que esto es un canal. La cadena [`instructions`](#server-options) va al mensaje del sistema de Claude: dile a Claude qué eventos esperar, si debe responder y cómo enrutar las respuestas si debe hacerlo.
-    * **Conexión stdio**: se conecta a Claude Code a través de stdin/stdout. Esto es estándar para cualquier [servidor MCP](https://modelcontextprotocol.io/docs/concepts/transports#standard-io): Claude Code lo genera como un subproceso.
+    * **Configuración del servidor**: crea el servidor MCP con `claude/channel` en sus capacidades, que es lo que le dice a Claude Code que esto es un canal. Claude Code entrega la cadena [`instructions`](#server-options) a Claude como contexto cuando el servidor se conecta: dile a Claude qué eventos esperar, si debe responder y cómo enrutar las respuestas si debe hacerlo.
+    * **Conexión stdio**: se conecta a Claude Code a través de stdin/stdout. Esto es estándar para cualquier [servidor MCP](https://modelcontextprotocol.io/docs/concepts/transports#standard-io).
     * **Oyente HTTP**: inicia un servidor web local en el puerto 8788. Cada cuerpo POST se reenvía a Claude como un evento de canal a través de `mcp.notification()`. El `content` se convierte en el cuerpo del evento, y cada entrada `meta` se convierte en un atributo en la etiqueta `<channel>`. El oyente necesita acceso a la instancia `mcp`, por lo que se ejecuta en el mismo proceso. Podrías dividirlo en módulos separados para un proyecto más grande.
   </Step>
 
@@ -142,9 +144,11 @@ Este ejemplo usa [Bun](https://bun.sh) como tiempo de ejecución por su servidor
     claude --dangerously-load-development-channels server:webhook
     ```
 
-    La primera vez que inicies una sesión en este proyecto, Claude Code solicita consentimiento antes de usar el nuevo servidor de `.mcp.json`. El diálogo informa "Nuevo servidor MCP encontrado en este proyecto: webhook". Selecciona **Usar este servidor MCP** para continuar.
+    Claude Code primero muestra un diálogo de advertencia a pantalla completa que enumera los canales de desarrollo que estás cargando. Selecciona **Estoy usando esto para desarrollo local** para continuar, o **Salir** para abandonar.
 
-    Cuando Claude Code se inicia, lee tu configuración de MCP, genera tu `webhook.ts` como un subproceso, y el oyente HTTP se inicia automáticamente en el puerto que configuraste (8788 en este ejemplo). No necesitas ejecutar el servidor tú mismo.
+    La primera vez que inicies una sesión en este proyecto, Claude Code también solicita consentimiento antes de usar el nuevo servidor de `.mcp.json`. El diálogo informa "Nuevo servidor MCP encontrado en este proyecto: webhook". Selecciona **Usar este servidor MCP** para continuar.
+
+    Después de que aceptes, Claude Code genera tu `webhook.ts` como un subproceso, y el oyente HTTP se inicia automáticamente en el puerto que configuraste, 8788 en este ejemplo. No necesitas ejecutar el servidor tú mismo.
 
     Un aviso tenue debajo del banner de inicio confirma que el canal está registrado: `Channels (experimental) messages from server:webhook inject directly in this session · restart without --dangerously-load-development-channels to stop`.
 
@@ -156,17 +160,17 @@ Este ejemplo usa [Bun](https://bun.sh) como tiempo de ejecución por su servidor
     curl -X POST localhost:8788 -d "build failed on main: https://ci.example.com/run/1234"
     ```
 
-    La carga útil llega a tu sesión de Claude Code como una etiqueta `<channel>`:
+    La carga útil llega al contexto de Claude como una etiqueta `<channel>`:
 
     ```text theme={null}
     <channel source="webhook" path="/" method="POST">build failed on main: https://ci.example.com/run/1234</channel>
     ```
 
-    En tu terminal de Claude Code, verás que Claude recibe el mensaje y comienza a responder: leyendo archivos, ejecutando comandos o lo que sea que el mensaje requiera. Este es un canal unidireccional, por lo que Claude actúa en tu sesión pero no envía nada de vuelta a través del webhook. Para agregar respuestas, consulta [Exponer una herramienta de respuesta](#expose-a-reply-tool).
+    Tu terminal renderiza el evento como un resumen de una línea, `← webhook: build failed on main: https://ci.example.com/run/1234`, en lugar de la etiqueta sin procesar. Luego verás que Claude comienza a responder: leyendo archivos, ejecutando comandos, o lo que sea que el mensaje requiera. Este es un canal unidireccional, por lo que Claude actúa en tu sesión pero no envía nada de vuelta a través del webhook. Para agregar respuestas, consulta [Exponer una herramienta de respuesta](#expose-a-reply-tool).
 
     Si el evento no llega, el diagnóstico depende de lo que `curl` devolvió:
 
-    * **`curl` tiene éxito pero nada llega a Claude**: ejecuta `/mcp` en tu sesión para verificar el estado del servidor. "Falló al conectar" generalmente significa un error de dependencia o importación en tu archivo de servidor; consulta el registro de depuración en `~/.claude/debug/<session-id>.txt` para el seguimiento de stderr.
+    * **`curl` tiene éxito pero nada llega a Claude**: ejecuta `/mcp` en tu sesión para verificar el estado del servidor. Un estado `failed` generalmente significa un error de dependencia o importación en tu archivo de servidor. Para ver el seguimiento de stderr, reinicia con `claude --debug --dangerously-load-development-channels server:webhook` y verifica el registro de depuración en `~/.claude/debug/<session-id>.txt`.
     * **`curl` falla con "conexión rechazada"**: el puerto no está vinculado aún o un proceso antiguo de una ejecución anterior lo está manteniendo. `lsof -i :<port>` muestra qué está escuchando; `kill` el proceso antiguo antes de reiniciar tu sesión.
   </Step>
 </Steps>
@@ -187,7 +191,7 @@ claude --dangerously-load-development-channels plugin:yourplugin@yourmarketplace
 claude --dangerously-load-development-channels server:webhook
 ```
 
-El bypass es por entrada. Combinar esta bandera con `--channels` no extiende el bypass a las entradas `--channels`. Durante la vista previa de investigación, la lista de aprobación es curada por Anthropic, por lo que tu canal permanece en la bandera de desarrollo mientras lo construyes y pruebas.
+El bypass es por entrada. Combinar esta bandera con `--channels` no extiende el bypass a las entradas `--channels`. Durante la vista previa de investigación, tu canal no está en la lista de aprobación, por lo que permanece en la bandera de desarrollo mientras lo construyes y pruebas.
 
 <Note>
   Esta bandera omite solo la lista de aprobación. La política de organización `channelsEnabled` aún se aplica. No la uses para ejecutar canales de fuentes no confiables.
@@ -197,14 +201,14 @@ El bypass es por entrada. Combinar esta bandera con `--channels` no extiende el 
   Opciones del servidor
 </h2>
 
-Un canal establece estas opciones en el constructor [`Server`](https://modelcontextprotocol.io/docs/concepts/servers). Los campos `instructions` y `capabilities.tools` son [MCP estándar](https://modelcontextprotocol.io/docs/concepts/servers); `capabilities.experimental['claude/channel']` y `capabilities.experimental['claude/channel/permission']` son las adiciones específicas del canal:
+Un canal establece estas opciones en el constructor [`Server`](https://modelcontextprotocol.io/docs/learn/server-concepts). Los campos `instructions` y `capabilities.tools` son [MCP estándar](https://modelcontextprotocol.io/docs/learn/server-concepts); `capabilities.experimental['claude/channel']` y `capabilities.experimental['claude/channel/permission']` son las adiciones específicas del canal:
 
-| Campo                                                    | Tipo     | Descripción                                                                                                                                                                                                                                                                                                                      |
-| :------------------------------------------------------- | :------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `capabilities.experimental['claude/channel']`            | `object` | Requerido. Siempre `{}`. La presencia registra el oyente de notificación.                                                                                                                                                                                                                                                        |
-| `capabilities.experimental['claude/channel/permission']` | `object` | Opcional. Siempre `{}`. Declara que este canal puede recibir solicitudes de retransmisión de permisos. Cuando se declara, Claude Code reenvía solicitudes de aprobación de herramientas a tu canal para que puedas aprobar o denegar de forma remota. Consulta [Retransmitir solicitudes de permiso](#relay-permission-prompts). |
-| `capabilities.tools`                                     | `object` | Solo bidireccional. Siempre `{}`. Capacidad de herramienta MCP estándar. Consulta [Exponer una herramienta de respuesta](#expose-a-reply-tool).                                                                                                                                                                                  |
-| `instructions`                                           | `string` | Recomendado. Agregado al mensaje del sistema de Claude. Dile a Claude qué eventos esperar, qué significan los atributos de la etiqueta `<channel>`, si debe responder y, si es así, qué herramienta usar y qué atributo pasar de vuelta (como `chat_id`).                                                                        |
+| Campo                                                    | Tipo               | Descripción                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| :------------------------------------------------------- | :----------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `capabilities.experimental['claude/channel']`            | `object`           | Requerido. Siempre `{}`. La presencia registra el oyente de notificación.                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `capabilities.experimental['claude/channel/permission']` | `object` o `false` | Opcional. Establécelo en `{}` para declarar que este canal puede recibir solicitudes de retransmisión de permisos. Cuando se declara, Claude Code reenvía solicitudes de aprobación de herramientas a su canal para que pueda aprobar o denegar de forma remota. Para optar por no participar, omita la clave o establézcala en `false`. Antes de v2.1.234, Claude Code trataba `false` como declarado. Consulte [Retransmitir solicitudes de permiso](#relay-permission-prompts). |
+| `capabilities.tools`                                     | `object`           | Solo bidireccional. Siempre `{}`. Capacidad de herramienta MCP estándar. Consulta [Exponer una herramienta de respuesta](#expose-a-reply-tool).                                                                                                                                                                                                                                                                                                                                    |
+| `instructions`                                           | `string`           | Recomendado. Claude Code lo entrega a Claude como contexto cuando el servidor se conecta. Dígale a Claude qué eventos esperar, qué significan los atributos de la etiqueta `<channel>`, si debe responder y, si es así, qué herramienta usar y qué atributo pasar de vuelta (como `chat_id`).                                                                                                                                                                                      |
 
 Para crear un canal unidireccional, omite `capabilities.tools`. Este ejemplo muestra una configuración bidireccional con la capacidad de canal, herramientas e instrucciones establecidas:
 
@@ -218,13 +222,11 @@ const mcp = new Server(
       experimental: { 'claude/channel': {} },  // registra el oyente de canal
       tools: {},  // omite para canales unidireccionales
     },
-    // agregado al mensaje del sistema de Claude para que sepa cómo manejar tus eventos
-    instructions: 'Los mensajes llegan como <channel source="your-channel" ...>. Responde con la herramienta de respuesta.',
+    // Claude Code lo entrega a Claude como contexto cuando el servidor se conecta, para que sepa cómo manejar sus eventos
+    instructions: 'Los mensajes llegan como <channel source="your-channel" ...>. Responda con la herramienta de respuesta.',
   },
 )
 ```
-
-Para enviar un evento, llama a `mcp.notification()` con el método `notifications/claude/channel`. Los parámetros están en la siguiente sección.
 
 <h2 id="notification-format">
   Formato de notificación
@@ -257,7 +259,7 @@ build failed on main: https://ci.example.com/run/1234
 </channel>
 ```
 
-Las notificaciones no se reconocen. El `await` en `mcp.notification()` se resuelve cuando el mensaje se escribe en el transporte, no cuando Claude lo ha procesado. Si la sesión no ha cargado tu servidor como un canal, o la política de la organización lo bloquea, los eventos se descartan silenciosamente sin error devuelto a tu servidor.
+Claude Code no reconoce las notificaciones. El `await` en `mcp.notification()` se resuelve cuando el mensaje se escribe en el transporte, no cuando Claude lo ha procesado. Si la sesión no ha cargado tu servidor como un canal, o la política de la organización lo bloquea, Claude Code descarta los eventos silenciosamente y no devuelve ningún error a tu servidor.
 
 Si necesitas confirmación de entrega, rastrea el estado del evento en tu servidor y expón una [herramienta de respuesta](#expose-a-reply-tool) que Claude pueda llamar para reportar el estado de vuelta.
 
@@ -447,7 +449,7 @@ await mcp.notification({ ... })
 
 Compuerta en la identidad del remitente, no en la identidad del chat o sala: `message.from.id` en el ejemplo, no `message.chat.id`. En chats grupales, estos difieren, y la compuerta en la sala permitiría que cualquiera en un grupo permitido inyecte mensajes en la sesión.
 
-Los canales [Telegram](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/telegram) y [Discord](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/discord) se compuertan en una lista de permitidos de remitente de la misma manera. Inician la lista por emparejamiento: el usuario envía un mensaje directo al bot, el bot responde con un código de emparejamiento, el usuario lo aprueba en su sesión de Claude Code, y su ID de plataforma se agrega. Consulta cualquiera de las implementaciones para el flujo de emparejamiento completo. El canal [iMessage](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/imessage) toma un enfoque diferente: detecta las propias direcciones del usuario desde la base de datos de Mensajes al iniciar y las deja pasar automáticamente, con otros remitentes agregados por identificador.
+Los canales [Telegram](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/telegram) y [Discord](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/discord) se compuertan en una lista de permitidos de remitente de la misma manera. Inician la lista por [emparejamiento](/docs/es/channels#security). Consulta cualquiera de las implementaciones para el flujo de emparejamiento completo. El canal [iMessage](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/imessage) toma un enfoque diferente: detecta las propias direcciones del usuario desde la base de datos de Mensajes al iniciar y las deja pasar automáticamente, con otros remitentes agregados por identificador.
 
 <h2 id="relay-permission-prompts">
   Retransmitir solicitudes de permiso
@@ -456,6 +458,8 @@ Los canales [Telegram](https://github.com/anthropics/claude-plugins-official/tre
 Cuando Claude llama a una herramienta que necesita aprobación, se abre el diálogo del terminal local y la sesión espera. Un canal bidireccional puede optar por recibir la misma solicitud en paralelo y retransmitirla a ti en otro dispositivo. Ambos permanecen activos: puedes responder en la terminal o en tu teléfono, y Claude Code aplica cualquiera que sea la respuesta que llegue primero y cierra la otra.
 
 La retransmisión cubre aprobaciones de uso de herramientas como `Bash`, `Write` y `Edit`. Los diálogos de confianza del proyecto y consentimiento del servidor MCP no se retransmiten; esos solo aparecen en la terminal local.
+
+Claude Code v2.1.234 y posteriores envían solicitudes de permiso solo a servidores que registró como canales para la sesión, por lo que la retransmisión se encuentra detrás de los mismos [controles de sesión opt-in y organización](/docs/es/channels#security) que la entrega de mensajes. La retransmisión también requiere que optes por el servidor con `--channels` o la bandera de desarrollo, y requiere que el servidor declare la capacidad de permiso.
 
 <h3 id="how-relay-works">
   Cómo funciona la retransmisión
@@ -470,7 +474,9 @@ Cuando se abre una solicitud de permiso, el bucle de retransmisión tiene cuatro
 
 El diálogo del terminal local permanece abierto durante todo esto. Si alguien en la terminal responde antes de que llegue el veredicto remoto, esa respuesta se aplica en su lugar y la solicitud remota pendiente se descarta.
 
-<img src="https://mintcdn.com/claude-code/9FG0ZKj9uKYiHmbi/images/channel-permission-relay.svg?fit=max&auto=format&n=9FG0ZKj9uKYiHmbi&q=85&s=97d57f128f0da55f105ab1e3a7e10240" alt="Diagrama de secuencia: Claude Code envía una notificación permission_request al servidor de canal, el servidor formatea y envía la solicitud a la aplicación de chat, el humano responde con un veredicto, y el servidor analiza esa respuesta en una notificación de permiso de vuelta a Claude Code" width="600" height="230" data-path="images/channel-permission-relay.svg" />
+<img src="https://mintcdn.com/claude-code/9FG0ZKj9uKYiHmbi/images/channel-permission-relay.svg?fit=max&auto=format&n=9FG0ZKj9uKYiHmbi&q=85&s=97d57f128f0da55f105ab1e3a7e10240" className="dark:hidden" alt="Diagrama de secuencia: Claude Code envía una notificación permission_request al servidor de canal, el servidor formatea y envía la solicitud a la aplicación de chat, el humano responde con un veredicto, y el servidor analiza esa respuesta en una notificación de permiso de vuelta a Claude Code" width="600" height="230" data-path="images/channel-permission-relay.svg" />
+
+<img src="https://mintcdn.com/claude-code/_xqph1dUOslCOwsj/images/channel-permission-relay-dark.svg?fit=max&auto=format&n=_xqph1dUOslCOwsj&q=85&s=368c8d9119a9a9cff5d826d806724842" className="hidden dark:block" alt="Diagrama de secuencia: Claude Code envía una notificación permission_request al servidor de canal, el servidor formatea y envía la solicitud a la aplicación de chat, el humano responde con un veredicto, y el servidor analiza esa respuesta en una notificación de permiso de vuelta a Claude Code" width="600" height="230" data-path="images/channel-permission-relay-dark.svg" />
 
 <h3 id="permission-request-fields">
   Campos de solicitud de permiso
@@ -482,10 +488,28 @@ La notificación saliente de Claude Code es `notifications/claude/channel/permis
 | --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `request_id`    | Cinco letras minúsculas extraídas de `a`-`z` sin `l`, por lo que nunca se lee como `1` o `I` cuando se escribe en un teléfono. Inclúyelo en tu solicitud saliente para que pueda ser repetido en la respuesta. Claude Code solo acepta un veredicto que lleve un ID que emitió. El diálogo del terminal local no muestra este ID, por lo que tu manejador saliente es la única forma de aprenderlo. |
 | `tool_name`     | Nombre de la herramienta que Claude quiere usar, por ejemplo `Bash` o `Write`.                                                                                                                                                                                                                                                                                                                      |
-| `description`   | Resumen legible por humanos de lo que hace esta llamada de herramienta específica, el mismo texto que muestra el diálogo del terminal local. Para una llamada Bash esto es la descripción de Claude del comando, o el comando en sí si no se dio ninguno.                                                                                                                                           |
-| `input_preview` | Los argumentos de la herramienta como una cadena JSON, truncada a 200 caracteres. Para Bash esto es el comando; para Write es la ruta del archivo y un prefijo del contenido. Omítelo de tu solicitud si solo tienes espacio para un mensaje de una línea. Tu servidor decide qué mostrar.                                                                                                          |
+| `description`   | Resumen legible por humanos de lo que hace esta llamada de herramienta específica, nunca el comando en sí. Para una llamada Bash esto es la descripción de Claude del comando; cuando el modelo no da ninguna descripción, el campo es la constante `Run shell command` y no lleva ningún detalle del comando. Renderiza `input_preview` cuando tengas espacio.                                     |
+| `input_preview` | Los argumentos de la herramienta como texto con forma JSON, con clave por campo de nivel superior. Para Bash esto es el comando; para Write, la ruta del archivo y el contenido. Omítelo de tu solicitud si solo tienes espacio para un mensaje de una línea. Tu servidor decide qué mostrar.                                                                                                       |
 
-El veredicto que tu servidor envía de vuelta es `notifications/claude/channel/permission` con dos campos: `request_id` repitiendo el ID anterior, y `behavior` establecido en `'allow'` o `'deny'`. Permitir deja que la llamada de herramienta continúe; denegar la rechaza, lo mismo que responder No en el diálogo local. Ningún veredicto afecta llamadas futuras.
+Los clientes en Claude Code v2.1.211 o posteriores sanitizan `description` e `input_preview` antes de retransmitirlos. Espera tres cambios en el texto que recibas:
+
+* Claude Code neutraliza caracteres de anulación de dirección, caracteres invisibles, y comillas y corchetes angulares similares.
+* Claude Code pliega cada ejecución de espacios en blanco a un único espacio.
+* Claude Code retransmite texto completo hasta 3.500 puntos de código. Para un valor más largo, recibes su inicio y su fin alrededor de un marcador contado `⋯ N code points elided ⋯`. El final de un comando largo aún llega al aprobador.
+
+Para `input_preview`, Claude Code aplica el límite de 3.500 a cada campo de nivel superior de los argumentos por separado y mantiene las comillas estructurales propias del JSON. Los clientes anteriores a v2.1.211 retransmiten `description` sin procesar y cortan `input_preview` a 200 unidades UTF-16 con puntos suspensivos finales.
+
+Los clientes en Claude Code v2.1.234 o posteriores retransmiten el marcador `(value unserializable)` en lugar de un valor de campo `input_preview` que no pueden serializar de forma segura, como una estructura circular o un arreglo extremadamente grande. Aún recibes la clave del campo, y los otros campos de la vista previa no cambian.
+
+Los clientes en Claude Code v2.1.234 o posteriores también enmascaran credenciales en `description` e `input_preview`. Recibes `[REDACTED]` en lugar de un token de credencial de proveedor reconocible, como una clave API o un token de acceso personal. Espera tres efectos del enmascaramiento cuando renderices los campos:
+
+* Claude Code enmascara nombres de clave dentro de `input_preview` así como sus valores. Un nombre de clave que muestres puede no coincidir con el nombre de clave en la entrada.
+* Claude Code nunca enmascara un tramo que contenga sintaxis de shell, caracteres de ruta o caracteres de URL. Una máscara no puede ocultar el comando, ruta de archivo o destino que se está aprobando.
+* Claude Code no enmascara un secreto que carece de un prefijo reconocible, o un secreto que abarca espacios en blanco, como un bloque de clave privada. Ambos llegan a tu servidor sin enmascarar.
+
+El enmascaramiento no cambia quién recibe los campos. Lo que permanece sin enmascarar va solo a servidores que optaste por con `--channels` o la bandera de desarrollo. Trata ambos campos como no confiables a menos que controles la flota de clientes.
+
+El veredicto que tu servidor envía de vuelta es `notifications/claude/channel/permission` con dos campos: `request_id` repitiendo el ID anterior, y `behavior` establecido en `'allow'` o `'deny'`. Permitir deja que la llamada de herramienta continúe; denegar la rechaza. Ningún veredicto afecta llamadas futuras.
 
 <h3 id="add-relay-to-a-chat-bridge">
   Agregar retransmisión a un puente de chat
@@ -529,8 +553,8 @@ Para agregar estos a un puente de chat bidireccional como el ensamblado en [Expo
       params: z.object({
         request_id: z.string(),     // cinco letras minúsculas, incluir verbatim en tu solicitud
         tool_name: z.string(),      // p. ej. "Bash", "Write"
-        description: z.string(),    // resumen legible por humanos de esta llamada
-        input_preview: z.string(),  // argumentos de herramienta como JSON, truncado a ~200 caracteres
+        description: z.string(),    // resumen de esta llamada. Trata como no confiable.
+        input_preview: z.string(),  // argumentos de herramienta como texto con forma JSON. Trata como no confiable.
       }),
     })
 
@@ -538,7 +562,11 @@ Para agregar estos a un puente de chat bidireccional como el ensamblado en [Expo
       // send() es tu salida: POST a tu plataforma de chat, o para
       // pruebas locales la transmisión SSE mostrada en el ejemplo completo a continuación.
       send(
-        `Claude wants to run ${params.tool_name}: ${params.description}\n\n` +
+        `Claude wants to run ${params.tool_name}: ${params.description}\n` +
+        // input_preview lleva los argumentos reales; renderízalo cuando
+        // tengas espacio: para Bash la descripción sola puede ser solo
+        // "Run shell command" sin ningún detalle del comando
+        `${params.input_preview}\n\n` +
         // el ID en la instrucción es lo que tu manejador entrante analiza en el Paso 3
         `Reply "yes ${params.request_id}" or "no ${params.request_id}"`,
       )
@@ -584,7 +612,7 @@ Para agregar estos a un puente de chat bidireccional como el ensamblado en [Expo
   </Step>
 </Steps>
 
-Claude Code también mantiene abierto el diálogo del terminal local, por lo que puedes responder en cualquier lugar, y la primera respuesta que llegue se aplica. Una respuesta remota que no coincida exactamente con el formato esperado falla de una de dos maneras, y en ambos casos el diálogo permanece abierto:
+Una respuesta remota que no coincida exactamente con el formato esperado falla de una de dos maneras, y en ambos casos el diálogo del terminal local permanece abierto:
 
 * **Formato diferente**: la expresión regular de tu manejador entrante no coincide, por lo que texto como `approve it` o `yes` sin un ID cae a través como un mensaje normal a Claude.
 * **Formato correcto, ID incorrecto**: tu servidor emite un veredicto, pero Claude Code no encuentra ninguna solicitud abierta con ese ID y lo descarta silenciosamente.
@@ -600,7 +628,7 @@ Para hacer ambas direcciones comprobables desde curl, el oyente HTTP sirve dos r
 * **`GET /events`**: mantiene abierto un flujo SSE y envía cada mensaje saliente como una línea `data:`, por lo que `curl -N` puede ver las respuestas de Claude y cualquier solicitud de permiso llegar en vivo.
 * **`POST /`**: el lado entrante, el mismo manejador que antes, ahora con la comprobación de formato de veredicto insertada antes de la rama de reenvío de chat.
 
-```ts title="webhook.ts completo con retransmisión de permisos' expandable theme={null}
+```ts title="webhook.ts completo con retransmisión de permisos" expandable theme={null}
 #!/usr/bin/env bun
 import { Server } from '@modelcontextprotocol/sdk/server/index.js'
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
@@ -673,7 +701,8 @@ const PermissionRequestSchema = z.object({
 
 mcp.setNotificationHandler(PermissionRequestSchema, async ({ params }) => {
   send(
-    `Claude wants to run ${params.tool_name}: ${params.description}\n\n` +
+    `Claude wants to run ${params.tool_name}: ${params.description}\n` +
+    `${params.input_preview}\n\n` +
     `Reply "yes ${params.request_id}" or "no ${params.request_id}"`,
   )
 })
@@ -741,6 +770,8 @@ Prueba la ruta de veredicto en tres terminales. La primera es tu sesión de Clau
 claude --dangerously-load-development-channels server:webhook
 ```
 
+Este tutorial prueba el diálogo de permiso en sí, así que una vez que la sesión esté abierta, presiona `Shift+Tab` hasta que la barra de estado muestre `⏸ manual mode on`. En modo automático el clasificador decidiría la llamada `reply` en su lugar, y ningún diálogo se abriría para que el lado remoto responda.
+
 En la segunda, transmite el lado saliente para que puedas ver las respuestas de Claude y cualquier solicitud de permiso llegar en vivo:
 
 ```bash theme={null}
@@ -771,9 +802,9 @@ Las tres piezas específicas del canal en este archivo:
   Empaquetar como un complemento
 </h2>
 
-Para hacer tu canal instalable y compartible, envuélvelo en un [complemento](/docs/es/plugins) y publícalo en un [mercado](/docs/es/plugin-marketplaces). Los usuarios lo instalan con `/plugin install`, luego lo habilitan por sesión con `--channels plugin:<name>@<marketplace>`.
+Para hacer tu canal instalable y compartible, envuélvelo en un [complemento](/docs/es/plugins/overview) y publícalo en un [mercado](/docs/es/plugins/overview). Los usuarios lo instalan con `/plugin install`, luego lo habilitan por sesión con `--channels plugin:<name>@<marketplace>`.
 
-Un canal publicado en tu propio mercado aún necesita `--dangerously-load-development-channels` para ejecutarse, ya que no está en la [lista de aprobación](/docs/es/channels#supported-channels). La lista de aprobación predeterminada es los complementos de canal en `claude-plugins-official`, que Anthropic cura a su discreción. Los [formularios de envío en la aplicación](/docs/es/plugins#submit-your-plugin-to-the-community-marketplace) agregan complementos al mercado comunitario, que no está en la lista de aprobación de canales.
+Un canal publicado en tu propio mercado aún necesita `--dangerously-load-development-channels` para ejecutarse, ya que no está en la [lista de aprobación](/docs/es/channels#supported-channels). La lista de aprobación predeterminada es los complementos de canal en `claude-plugins-official`. Los [formularios de envío en la aplicación](/docs/es/plugins/publish#submit-to-the-community-marketplace) agregan complementos al mercado comunitario, que no está en la lista de aprobación de canales.
 
 Si estás trabajando con un contacto de socio de Anthropic, comunícate con ellos para coordinar una lista de mercado oficial. En planes de equipo y empresa, un administrador puede incluir tu complemento en la lista [`allowedChannelPlugins`](/docs/es/channels#restrict-which-channel-plugins-can-run) de la organización, que reemplaza la lista de aprobación predeterminada de Anthropic.
 
@@ -784,4 +815,4 @@ Si estás trabajando con un contacto de socio de Anthropic, comunícate con ello
 * [Canales](/docs/es/channels) para instalar y usar Telegram, Discord, iMessage o la demostración fakechat, y para habilitar canales para una organización de equipo o empresa
 * [Implementaciones de canal de trabajo](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins) para código de servidor completo con flujos de emparejamiento, herramientas de respuesta y archivos adjuntos
 * [MCP](/docs/es/mcp) para el protocolo subyacente que implementan los servidores de canal
-* [Plugins](/docs/es/plugins) para empaquetar su canal para que los usuarios puedan instalarlo con `/plugin install`
+* [Plugins](/docs/es/plugins/overview) para empaquetar su canal para que los usuarios puedan instalarlo con `/plugin install`

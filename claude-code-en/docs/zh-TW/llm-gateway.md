@@ -2,19 +2,19 @@
 > Fetch the complete documentation index at: https://code.claude.com/docs/llms.txt
 > Use this file to discover all available pages before exploring further.
 
-# 其他 LLM gateway
+# 其他 LLM 閘道
 
-> 透過您的組織已運行的 LLM gateway 路由 Claude Code。涵蓋將 Claude Code 連接到 gateway、為您的組織推出 gateway，以及 Claude Code 發送到 gateway 的內容。
+> 透過貴組織已執行的 LLM 閘道路由 Claude Code。涵蓋將 Claude Code 連接到閘道、為貴組織推出閘道，以及 Claude Code 傳送到閘道的內容。
 
-本節涵蓋使用您的組織已運行的 gateway 產品，而不是 [Claude apps gateway](/docs/zh-TW/claude-apps-gateway)。有關 gateway 是什麼、它如何位於 Claude Code 和您的提供商之間，以及如何在 Claude apps gateway 和其他產品之間進行選擇，請參閱 [gateway 概述](/docs/zh-TW/gateways)。
+本節涵蓋使用貴組織已執行的閘道產品，而非 [Claude 應用程式閘道](/docs/zh-TW/claude-apps-gateway)。如需了解什麼是閘道、它如何位於 Claude Code 和您的提供者之間，以及如何在 Claude 應用程式閘道和其他產品之間進行選擇，請參閱 [閘道概述](/docs/zh-TW/gateways)。
 
 <Note>
-  * 如果您是連接到現有 gateway 的開發人員：[將 Claude Code 連接到您的 gateway](/docs/zh-TW/llm-gateway-connect)
-  * 如果您是為組織推出 gateway 的管理員：[部署和分發 gateway](/docs/zh-TW/llm-gateway-rollout)
-  * 如果您正在配置 gateway 產品：[gateway 協議參考](/docs/zh-TW/llm-gateway-protocol)
+  * 如果您是連接到現有閘道的開發人員：[將 Claude Code 連接到您的閘道](/docs/zh-TW/llm-gateway-connect)
+  * 如果您是為貴組織推出閘道的管理員：[部署和分發閘道](/docs/zh-TW/llm-gateway-rollout)
+  * 如果您正在配置閘道產品：[閘道相容性指南](/docs/zh-TW/llm-gateway-protocol)
 </Note>
 
-任何公開[支持的 API 格式](/docs/zh-TW/llm-gateway-protocol#api-formats)的 gateway 都可以運作。Anthropic 不認可、維護或審計第三方 gateway 產品，也不支持透過任何 gateway 將 Claude Code 路由到非 Claude 模型。按照 gateway 自己的文檔部署它，然後使用下面的[推出步驟](#roll-out-a-gateway)完成 Claude Code 端的配置。
+任何公開 [支援的 API 格式](/docs/zh-TW/llm-gateway-protocol#api-formats) 的閘道都可以運作。Anthropic 不認可、維護或審計第三方閘道產品，也不支援透過任何閘道將 Claude Code 路由到非 Claude 模型。按照其自身文件部署閘道，然後使用下方的 [推出步驟](#roll-out-a-gateway) 完成 Claude Code 端的設定。
 
 <h2 id="what-a-gateway-provides">
   gateway 提供的功能
@@ -28,9 +28,9 @@ gateway 為您的組織提供一個地方來管理：
 * **審計日誌**：記錄每個模型請求以進行合規性檢查
 * **提供商切換**：在 gateway 配置中更改提供商，無需觸及開發人員機器
 
-除了提供商切換外，所有這些都適用於上游是 Anthropic API 還是[雲提供商](/docs/zh-TW/third-party-integrations)。提供商切換而無需重新配置開發人員機器也取決於 gateway 公開單一 [Anthropic 格式端點](/docs/zh-TW/llm-gateway-protocol#api-formats)，無論上游如何；公開提供商自己格式的 gateway 將客戶端配置與該提供商綁定。
+除了提供商切換外，所有這些都適用於上游是 Anthropic API 還是[雲提供商](/docs/zh-TW/third-party-integrations)。提供商切換而無需重新配置開發人員機器也取決於 gateway 公開單一 [Anthropic 格式端點](/docs/zh-TW/llm-gateway-protocol#api-formats)，無論上游如何；公開提供商自己格式的 gateway 將客戶端配置與該提供商綁定，並改變 [Claude Code 傳送的內容以及它應用的預設值](/docs/zh-TW/llm-gateway-protocol#how-the-connection-method-changes-client-behavior)。
 
-權衡是 gateway 成為您的組織運營的基礎設施。Claude Code 在每個版本中添加功能，不轉發這些功能的 gateway 會破壞相應的功能，因此 gateway 產品需要隨著 Claude Code 的發展而保持更新。[gateway 協議參考](/docs/zh-TW/llm-gateway-protocol)涵蓋要轉發的內容。
+權衡是 gateway 成為您的組織運營的基礎設施。Claude Code 在每個版本中添加功能，不轉發這些功能的 gateway 會破壞相應的功能，因此 gateway 產品需要隨著 Claude Code 的發展而保持更新。[gateway 相容性指南](/docs/zh-TW/llm-gateway-protocol)涵蓋要轉發的內容。
 
 <h2 id="roll-out-a-gateway">
   推出 gateway
@@ -40,7 +40,7 @@ gateway 為您的組織提供一個地方來管理：
 
 1. 部署 gateway 並給予它您的提供商憑證，以便它可以對它轉發的請求進行身份驗證。
 2. 為每個開發人員發行 gateway 憑證，以便使用情況歸屬於開發人員，離職時撤銷一個憑證。
-3. 透過[受管設定檔](/docs/zh-TW/settings#settings-files)和您的機密工具分發配置，以便每台機器都接收基本 URL 和憑證。當兩者都分發時，開發人員無需配置任何內容。如果您沒有設定分發，開發人員按照[連接頁面](/docs/zh-TW/llm-gateway-connect)自己設置變數。
+3. 透過[受管設定檔](/docs/zh-TW/managed-settings#delivery-mechanisms)和您的機密工具分發配置，以便每台機器都接收基本 URL 和憑證。當兩者都分發時，開發人員無需配置任何內容。如果您沒有設定分發，開發人員按照[連接頁面](/docs/zh-TW/llm-gateway-connect)自己設置變數。
 4. 讓每個開發人員[檢查 Claude Code 中的配置](/docs/zh-TW/llm-gateway-connect#check-for-an-existing-configuration)，以便分發問題在他們依賴 gateway 之前浮出水面。
 
 [為您的組織推出 LLM gateway](/docs/zh-TW/llm-gateway-rollout)逐步介紹每個步驟，並顯示在每個步驟分發的配置檔案。gateway 是組織設置的一部分；有關政策強制執行、使用情況可見性和資料處理決策，請參閱[為您的組織設置 Claude Code](/docs/zh-TW/admin-setup)。
@@ -61,4 +61,4 @@ gateway 為您的組織提供一個地方來管理：
 * [Claude apps gateway](/docs/zh-TW/claude-apps-gateway)：Anthropic 的自託管 gateway，具有 SSO 登錄和 OTLP 遙測
 * [將 Claude Code 連接到 LLM gateway](/docs/zh-TW/llm-gateway-connect)：在您自己的機器上設置基本 URL 和憑證，具有每個表面的配置和故障排除表
 * [為您的組織推出 LLM gateway](/docs/zh-TW/llm-gateway-rollout)：部署 gateway、發行開發人員憑證和分發受管設定的管理員檢查清單
-* [Gateway 協議參考](/docs/zh-TW/llm-gateway-protocol)：Claude Code 發送到 gateway 的內容，供配置 gateway 的操作人員使用，涵蓋端點、要轉發的標頭和功能傳遞
+* [Gateway 相容性指南](/docs/zh-TW/llm-gateway-protocol)：Claude Code 發送到 gateway 的內容，供配置 gateway 的操作人員使用，涵蓋端點、要轉發的標頭和功能傳遞

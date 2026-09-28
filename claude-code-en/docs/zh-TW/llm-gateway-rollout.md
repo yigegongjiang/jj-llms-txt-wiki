@@ -10,7 +10,7 @@
 
 <Note>
   * 若要將您自己機器上的 Claude Code 連接到現有閘道，請參閱[將 Claude Code 連接到 LLM 閘道](/docs/zh-TW/llm-gateway-connect)
-  * 若要了解 Claude Code 發送到閘道的內容以及要轉發的內容，請參閱[閘道協議參考](/docs/zh-TW/llm-gateway-protocol)
+  * 若要了解 Claude Code 發送到閘道的內容以及要轉發的內容，請參閱[閘道相容性指南](/docs/zh-TW/llm-gateway-protocol)
 </Note>
 
 <h2 id="prerequisites">
@@ -33,10 +33,10 @@
 無論哪個產品提供閘道，它必須：
 
 * **接受支援的 API 格式**：[API 格式表](/docs/zh-TW/llm-gateway-protocol#api-formats)中的格式之一。下面的推出步驟假設 Anthropic Messages API 位於 `POST /v1/messages`，大多數閘道都提供此格式
-* **串流回應**：按到達時傳遞伺服器發送的事件，而不是緩衝整個回應
+* **串流回應**：按到達時傳遞伺服器發送的事件，包括保活 ping，而不是緩衝整個回應；[串流](/docs/zh-TW/llm-gateway-protocol#streaming)涵蓋了什麼緩衝或剝離的 ping 會破壞
 * **路由 Claude 模型名稱**：將開發者使用的每個名稱對應到上游模型。Claude Code 在每個請求中發送模型名稱，例如 `claude-sonnet-4-6`；在大多數閘道產品中，對應是閘道自己配置中的模型清單或路由表
 * **轉發標頭和正文不變**：在兩個方向上傳遞 `anthropic-beta`、`anthropic-version` 和請求正文；[功能傳遞表](/docs/zh-TW/llm-gateway-protocol#feature-pass-through)將每個對應到沒有它就會中斷的功能
-* **返回未修改的上游錯誤**：Claude Code 的自動恢復與錯誤措辭相符，因此在閘道自己的信封中包裝錯誤會破壞它
+* **返回未修改的上游錯誤**：Claude Code 的自動恢復與錯誤措辭相符，因此在閘道自己的信封中包裝錯誤會破壞它，除非信封的訊息包含 [Claude 應用程式閘道為雲端提供者的錯誤措辭替換](/docs/zh-TW/claude-apps-gateway-config#upstream-error-messages)的 `capability_rejected:` 權杖之一
 * **豁免路徑免受請求正文 WAF 檢查**：Claude Code 提示包含原始程式碼和 XML 樣式標籤，與跨網站指令碼正文規則相符；閘道前面的 WAF 在真實工作階段上返回 `403`，而短測試請求通過
 
 可選地，提供 `GET /v1/models` 以便 Claude Code 可以使用[模型發現](/docs/zh-TW/llm-gateway-protocol#model-discovery)從您的閘道填充模型選擇器。
@@ -171,7 +171,7 @@ claude -p "Reply with one word: connected"
   分發配置
 </h3>
 
-每個開發者機器都需要閘道位址和認證。您可以透過[受管設定](/docs/zh-TW/settings#settings-files)集中分發它們，因此開發者無需配置任何內容，或者將值交給開發者自己設定。
+每個開發者機器都需要閘道位址和認證。您可以透過[受管設定](/docs/zh-TW/managed-settings#delivery-mechanisms)集中分發它們，因此開發者無需配置任何內容，或者將值交給開發者自己設定。
 
 <h4 id="what-to-distribute">
   要分發的內容
@@ -179,21 +179,23 @@ claude -p "Reply with one word: connected"
 
 無論您選擇哪條路徑，相同的變數集都適用。大多數推出只需要 `ANTHROPIC_BASE_URL` 和認證；當您的閘道設定需要時，包括條件列。
 
-| 變數或設定                                                                                                                                                                                                | 它的作用                                                                                              | 包括時機                                                                                                                                                                                    |
-| :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------ | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ANTHROPIC_BASE_URL`                                                                                                                                                                                 | 將 Claude Code 的 API 請求發送到閘道，而不是 `api.anthropic.com`                                               | 總是                                                                                                                                                                                      |
-| `apiKeyHelper`，或 `ANTHROPIC_AUTH_TOKEN` 或 `ANTHROPIC_API_KEY` 中的認證                                                                                                                                   | 驗證對閘道的每個請求。幫助程式執行命令以擷取金鑰；變數持有靜態金鑰，分別作為 `Authorization: Bearer` 和 `x-api-key` 發送                   | 總是；三者之一                                                                                                                                                                                 |
-| `ANTHROPIC_CUSTOM_HEADERS`                                                                                                                                                                           | 將額外的 HTTP 標頭新增到每個 API 請求                                                                          | 您的閘道在每個請求上需要租戶或路由標頭                                                                                                                                                                     |
-| `CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY`                                                                                                                                                         | 在啟動時查詢閘道的 `/v1/models` 並將返回的名稱新增到 `/model` 選擇器                                                    | 您的閘道提供 `/v1/models` 並且您希望開發者的選擇器從中填充                                                                                                                                                    |
-| `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS`                                                                                                                                                             | 停止 Claude Code 發送預發行功能標頭和正文欄位                                                                     | 您的閘道轉發到拒絕測試版欄位的 Amazon Bedrock 或 Google Cloud 的 Agent Platform 上游；請參閱[閘道要求](#gateway-requirements)                                                                                      |
-| `ANTHROPIC_MODEL` 或 [`ANTHROPIC_DEFAULT_HAIKU_MODEL`](/docs/zh-TW/model-config)                                                                                                                           | 設定 Claude Code 為主工作階段和背景流量請求的模型名稱                                                                 | 您的閘道路由與 Claude Code 預設值不符的模型名稱，或您將[背景功能](/docs/zh-TW/costs#background-token-usage)路由到不同的模型。在閘道上路由覆蓋名稱和 Claude Code 的預設名稱，因為某些子呼叫可以請求預設名稱，無論覆蓋如何；[模型配置](/docs/zh-TW/model-config)涵蓋工作階段的每個部分使用哪個模型 |
-| `ANTHROPIC_BEDROCK_BASE_URL`、`ANTHROPIC_VERTEX_BASE_URL`、`ANTHROPIC_FOUNDRY_BASE_URL` 或 `ANTHROPIC_AWS_BASE_URL` 以及[該提供者的變數](/docs/zh-TW/llm-gateway-connect#route-to-a-cloud-provider-through-a-gateway) | 透過提供者特定的基本 URL 將 Claude Code 指向閘道。Amazon Bedrock 和 Google Cloud 的 Agent Platform 也切換到這些提供者的原生請求格式 | 您的閘道前置 Amazon Bedrock、Google Cloud 的 Agent Platform、Microsoft Foundry 或 AWS 上的 Claude 平台；請參閱 [API 格式](/docs/zh-TW/llm-gateway-protocol#api-formats)                                          |
+| 變數或設定                                                                                                                                                                                                | 它的作用                                                                                                                | 包括時機                                                                                                                                                                                                                                      |
+| :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------ | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ANTHROPIC_BASE_URL`                                                                                                                                                                                 | 將 Claude Code 的 API 請求發送到閘道，而不是 `api.anthropic.com`                                                                 | 總是                                                                                                                                                                                                                                        |
+| `apiKeyHelper`，或 `ANTHROPIC_AUTH_TOKEN` 或 `ANTHROPIC_API_KEY` 中的認證                                                                                                                                   | 驗證對閘道的每個請求。幫助程式執行命令以擷取金鑰；變數持有靜態金鑰，分別作為 `Authorization: Bearer` 和 `x-api-key` 發送                                     | 總是；三者之一                                                                                                                                                                                                                                   |
+| `ANTHROPIC_CUSTOM_HEADERS`                                                                                                                                                                           | 將額外的 HTTP 標頭新增到每個 API 請求                                                                                            | 您的閘道在每個請求上需要租戶或路由標頭                                                                                                                                                                                                                       |
+| `CLAUDE_CODE_GATEWAY_HINT_HEADERS`                                                                                                                                                                   | 發送[閘道提示標頭](/docs/zh-TW/llm-gateway-protocol#gateway-hint-headers)，它們為閘道的路由和排程決策分類每個請求。需要 Claude Code v2.1.273 或更新版本      | 您的閘道讀取提示標頭                                                                                                                                                                                                                                |
+| `CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY`                                                                                                                                                         | 在啟動時查詢閘道的 `/v1/models` 並將返回的名稱新增到 `/model` 選擇器                                                                      | 您的閘道提供 `/v1/models` 並且您希望開發者的選擇器從中填充                                                                                                                                                                                                      |
+| `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS`                                                                                                                                                             | 停止 Claude Code 發送預發行功能標頭和正文欄位。[停用預發行功能](/docs/zh-TW/llm-gateway-protocol#disable-pre-release-capabilities)涵蓋確切的範圍        | 您的閘道轉發到拒絕測試版欄位的 Amazon Bedrock 或 Google Cloud 的 Agent Platform 上游。請參閱[閘道要求](#gateway-requirements)                                                                                                                                        |
+| `CLAUDE_CODE_SKIP_FAST_MODE_NETWORK_ERRORS` 或 `CLAUDE_CODE_SKIP_FAST_MODE_ORG_CHECK`                                                                                                                 | 當其可用性檢查（直接呼叫 `api.anthropic.com` 而不是遵循 `ANTHROPIC_BASE_URL`）失敗、被攔截或因缺少 Anthropic 認證而被跳過時，恢復[快速模式](/docs/zh-TW/fast-mode) | 您的組織使用快速模式，開發者僅使用 `ANTHROPIC_AUTH_TOKEN` 進行身份驗證，在 `ANTHROPIC_API_KEY` 中有閘道發放的金鑰或來自 `apiKeyHelper`，或您的網路阻止或攔截對 `api.anthropic.com` 的直接請求；[在代理和 LLM 閘道後面使用快速模式](/docs/zh-TW/fast-mode#use-fast-mode-behind-proxies-and-llm-gateways)涵蓋哪個變數符合您的配置 |
+| `ANTHROPIC_MODEL` 或 [`ANTHROPIC_DEFAULT_HAIKU_MODEL`](/docs/zh-TW/model-config)                                                                                                                           | 設定 Claude Code 為主工作階段和背景流量請求的模型名稱                                                                                   | 您的閘道路由與 Claude Code 預設值不符的模型名稱，或您將[背景功能](/docs/zh-TW/costs#background-token-usage)路由到不同的模型。在閘道上路由覆蓋名稱和 Claude Code 的預設名稱，因為某些背景子呼叫可以請求預設名稱，無論覆蓋如何；[模型配置](/docs/zh-TW/model-config)涵蓋工作階段的每個部分使用哪個模型                                                 |
+| `ANTHROPIC_BEDROCK_BASE_URL`、`ANTHROPIC_VERTEX_BASE_URL`、`ANTHROPIC_FOUNDRY_BASE_URL` 或 `ANTHROPIC_AWS_BASE_URL` 以及[該提供者的變數](/docs/zh-TW/llm-gateway-connect#route-to-a-cloud-provider-through-a-gateway) | 透過提供者特定的基本 URL 將 Claude Code 指向閘道。Amazon Bedrock 和 Google Cloud 的 Agent Platform 也切換到這些提供者的原生請求格式                   | 您的閘道前置 Amazon Bedrock、Google Cloud 的 Agent Platform、Microsoft Foundry 或 AWS 上的 Claude 平台；請參閱 [API 格式](/docs/zh-TW/llm-gateway-protocol#api-formats)                                                                                            |
 
 <h4 id="distribute-through-managed-settings">
   透過受管設定分發
 </h4>
 
-透過由 MDM、登錄原則或配置管理推送的[受管設定檔案](/docs/zh-TW/settings#settings-files)的 `env` 區塊傳遞變數：
+透過由 MDM、登錄原則或配置管理推送的[受管設定檔案](/docs/zh-TW/managed-settings#delivery-mechanisms)的 `env` 區塊傳遞變數：
 
 ```json theme={null}
 {
@@ -206,7 +208,7 @@ claude -p "Reply with one word: connected"
 
 將表中的條件變數新增到相同的 `env` 區塊。受管 `ANTHROPIC_BASE_URL` 被強制執行，無法被開發者的殼層匯出覆蓋，因為 Claude Code 在程序環境和較低優先順序設定上應用它。
 
-不要在受管設定中包括 `forceLoginMethod` 或 `forceLoginOrgUUID` 以及閘道認證。在 Claude Code v2.1.146 及更新版本上，任一金鑰在啟動時阻止 `ANTHROPIC_API_KEY`、`ANTHROPIC_AUTH_TOKEN` 和 `apiKeyHelper`，因此開發者看到 `This machine's managed settings require a first-party login` 並無法繼續。
+不要在受管設定中包括 `forceLoginMethod` 或 `forceLoginOrgUUID` 以及閘道認證。任一金鑰在啟動時阻止 `ANTHROPIC_API_KEY`、`ANTHROPIC_AUTH_TOKEN` 和 `apiKeyHelper`，開發者無法繼續。他們看到 `This machine's managed settings require a first-party login`，或在 `"gateway"` 值下看到 [`Administrator policy requires a Cloud gateway sign-in`](/docs/zh-TW/errors#administrator-policy-requires-a-cloud-gateway-sign-in)。
 
 [伺服器受管設定](/docs/zh-TW/server-managed-settings#platform-availability)傳遞需要直接連接到 `api.anthropic.com`，因此無法到達閘道路由的工作階段。閘道部署使用此檔案型受管設定路徑，它強制執行相同的金鑰。
 
@@ -214,9 +216,9 @@ claude -p "Reply with one word: connected"
 
 某些環境需要單獨的傳遞：
 
-* 桌面應用程式僅從其 MDM 傳遞的第三方推理配置讀取閘道路由；部署該檔案以及受管設定，以便桌面工作階段也透過閘道路由。請參閱[桌面第三方配置文件](https://claude.com/docs/third-party/claude-desktop/configuration)和[桌面閘道文件](https://claude.com/docs/third-party/claude-desktop/gateway)
+* 桌面應用程式從其第三方推理配置讀取閘道路由，而不是從受管設定；透過 MDM 部署該檔案以及受管設定，以便桌面工作階段也透過閘道路由。請參閱[桌面第三方配置文件](https://claude.com/docs/third-party/claude-desktop/configuration)和[桌面閘道文件](https://claude.com/docs/third-party/claude-desktop/gateway)
 * CI 執行器需要在[執行器的環境](/docs/zh-TW/llm-gateway-connect#configure-each-surface)中設定 `ANTHROPIC_BASE_URL` 和認證
-* 受管 Windows 機器上的 WSL 僅在 [`wslInheritsWindowsSettings`](/docs/zh-TW/settings#available-settings) 為 `true` 時讀取 Windows 受管設定
+* 受管 Windows 機器上的 WSL 僅在 [`wslInheritsWindowsSettings`](/docs/zh-TW/settings-reference#wslinheritswindowssettings) 為 `true` 時讀取 Windows 受管設定
 
 <h4 id="hand-developers-the-values-to-set-themselves">
   將值交給開發者自己設定
@@ -270,6 +272,8 @@ claude -p "Reply with one word: connected"
 * `Failed to authenticate` 錯誤表示閘道拒絕請求；其日誌說明哪個認證失敗。閘道自己記錄的拒絕命名開發者金鑰，而來自 `api.anthropic.com` 或您的提供者端點的 `401` 表示閘道持有的提供者認證被拒絕
 * 當閘道期望金鑰在 `x-api-key` 標頭中時，首次使用時的一次性核准提示是預期的，設定為 `ANTHROPIC_API_KEY`。使用 `ANTHROPIC_AUTH_TOKEN`，不會出現提示，變數會無聲地接管；先前保存的 claude.ai 登入對該工作階段無效
 
+如果您的組織使用[快速模式](/docs/zh-TW/fast-mode)，請在此處也執行 `/fast`：可用性檢查直接呼叫 `api.anthropic.com` 而不是遵循閘道基本 URL，因此閘道路由的工作階段可以報告快速模式為不可用或已停用，即使推理有效。[在代理和 LLM 閘道後面使用快速模式](/docs/zh-TW/fast-mode#use-fast-mode-behind-proxies-and-llm-gateways)將每個訊息對應到恢復它的變數，與[配置的其餘部分](#distribute-the-configuration)一起分發。
+
 最後，檢查閘道的日誌以查看您發送的訊息：認證識別開發者，[`x-claude-code-session-id` 標頭](/docs/zh-TW/llm-gateway-protocol#request-headers)按工作階段分組請求。如果功能因[故障排除症狀](/docs/zh-TW/llm-gateway-connect#troubleshoot-gateway-errors)而失敗，閘道正在去除標頭或重寫錯誤；請參閱上面的[閘道要求](#gateway-requirements)。
 
 <h2 id="maintain-the-gateway">
@@ -280,17 +284,32 @@ claude -p "Reply with one word: connected"
 
 | 變更                                            | 當閘道未跟上時的症狀                                                                                        | 行動                                                                                                                                   |
 | :-------------------------------------------- | :------------------------------------------------------------------------------------------------ | :----------------------------------------------------------------------------------------------------------------------------------- |
-| 新的 Claude Code 版本新增 `anthropic-beta` 值和請求正文欄位 | 開發者在更新 Claude Code 後報告 `400` 錯誤，命名新欄位；請參閱[功能傳遞](/docs/zh-TW/llm-gateway-protocol#feature-pass-through) | 逐字轉發 `anthropic-*` 標頭和請求正文，而不是允許清單；在新 Claude Code 版本到達開發者之前針對閘道測試它們                                                                  |
-| 新的 Claude 模型變得可用                              | 開發者選擇新模型名稱時得到 `404`；`/model` 選擇器未列出它                                                              | 將模型名稱新增到閘道的路由配置，然後重新執行[路由檢查](#confirm-the-gateway-routes-your-models)。如果您分發 `ANTHROPIC_MODEL` 或預設模型變數，請更新受管設定                        |
+| 新的 Claude Code 版本新增 `anthropic-beta` 值和請求正文欄位 | 開發者在更新 Claude Code 後報告 `400` 錯誤，命名新欄位；請參閱[功能傳遞](/docs/zh-TW/llm-gateway-protocol#feature-pass-through) | 逐字轉發 `anthropic-*` 標頭和請求正文，而不是允許清單；在新 Claude Code 版本到達開發者之前針對閘道測試它們，檢查[規劃 Claude Code 版本升級](#plan-claude-code-version-upgrades)中的區域  |
+| 新的 Claude 模型變得可用                              | 開發者選擇新模型名稱時得到 `404`；`/model` 選擇器未列出它                                                              | 將模型名稱新增到閘道的路由設定，然後重新執行[路由檢查](#confirm-the-gateway-routes-your-models)。如果您分發 `ANTHROPIC_MODEL` 或預設模型變數，請更新受管設定                        |
 | 認證過期或需要輪換                                     | 所有開發者請求開始因來自上游的 `401` 而失敗                                                                         | 按照自己的時間表輪換閘道的提供者認證；開發者金鑰在閘道上輪換，[`apiKeyHelper`](/docs/zh-TW/llm-gateway-connect#rotate-credentials-with-apikeyhelper) 處理每個開發者的輪換，無需重新分發設定 |
 
-在調整每個金鑰的速率限制時，考慮用戶端[重試暫時性失敗](/docs/zh-TW/errors#automatic-retries)，包括 `429` 回應，最多 10 次，帶有退避，尊重 `Retry-After`。將[協議參考](/docs/zh-TW/llm-gateway-protocol)保持為每個 Claude Code 版本發送內容的合約。
+在調整每個金鑰的速率限制時，考慮用戶端[重試暫時性失敗](/docs/zh-TW/errors#automatic-retries)，包括 `429` 回應，最多 10 次，帶有退避，尊重 `Retry-After`。將[相容性指南](/docs/zh-TW/llm-gateway-protocol)保持為每個 Claude Code 版本發送內容的參考。
+
+<h3 id="plan-claude-code-version-upgrades">
+  規劃 Claude Code 版本升級
+</h3>
+
+某些 Claude Code 行為內建於已安裝的版本中，而不是在您的閘道設定，因此將開發者移至新版本可以在閘道設定未變更的情況下改變整個部署的行為。若要控制何時發生這種情況，請使用 [`requiredMaximumVersion`](/docs/zh-TW/settings-reference#requiredmaximumversion) 將開發者釘選到已測試的版本，或如果您透過自己的通道分發 Claude Code，請使用 [`DISABLE_UPDATES`](/docs/zh-TW/setup#disable-auto-updates)。在您提高釘選之前，請閱讀新版本的[變更日誌](/docs/en/changelog)項目並[針對閘道測試它](#test-claude-code-against-the-gateway)。
+
+當您測試版本時，閘道拒絕的新標頭或請求欄位會顯示為[維護閘道](#maintain-the-gateway)中描述的 `400` 錯誤。下表涵蓋不會產生錯誤的版本相依變更，以及保持每個變更在升級期間保持不變的設定。
+
+| 區域      | 開發者升級時可能變更的內容                                                                                                                                                                                                                      | 保持其不變的設定                                                                                                                                                                                                                                                                                 |
+| :------ | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 功能旗標預設值 | [不從 Anthropic 擷取功能旗標](/docs/zh-TW/env-vars#features-that-need-feature-flag-fetching)的工作階段，例如雲端提供者上的工作階段或關閉遙測的工作階段，使用內建於已安裝版本中的旗標預設值。當版本變更其中一個預設值時，這些開發者的行為會在他們升級時立即變更                                                                   | 版本釘選本身，`requiredMaximumVersion` 或 `DISABLE_UPDATES`                                                                                                                                                                                                                                      |
+| 模型功能假設  | 已安裝版本無法識別的模型 ID，例如閘道別名 `prod-opus`，會根據[自適應推理](/docs/zh-TW/model-config#adaptive-reasoning-and-fixed-thinking-budgets)、努力參數和[內容視窗](/docs/zh-TW/model-config#correct-the-window-for-a-gateway-or-custom-model-id)的預設假設執行，直到更新版本識別該 ID 或您對其進行對應 | 在閘道路由 Anthropic 模型 ID，或新增 [`modelOverrides`](/docs/zh-TW/model-config#override-model-ids-per-version) 項目，將 Anthropic 模型 ID 對應到您的別名。在雲端提供者連線上，您可以改為[宣告釘選模型的功能](/docs/zh-TW/model-config#customize-pinned-model-display-and-capabilities)                                                            |
+| 預設模型和別名 | 新工作階段預設啟動的模型，以及別名（例如 `opus` 和 `sonnet`）解析為的模型，[內建於每個版本](/docs/zh-TW/model-config#pin-models-for-third-party-deployments)中，開發者升級時可能變更                                                                                                    | [`ANTHROPIC_DEFAULT_MODEL`](/docs/zh-TW/model-config#set-a-default-model-for-new-sessions) 用於新工作階段啟動的模型，以及 [`ANTHROPIC_DEFAULT_*_MODEL` 變數](/docs/zh-TW/model-config#environment-variables)（例如 `ANTHROPIC_DEFAULT_OPUS_MODEL`）用於每個別名解析為的內容。`ANTHROPIC_DEFAULT_MODEL` 需要 Claude Code v2.1.236 或更新版本 |
 
 <h2 id="related-resources">
   相關資源
 </h2>
 
 * [將 Claude Code 連接到 LLM 閘道](/docs/zh-TW/llm-gateway-connect)：開發者面向的設定步驟，具有每個表面的配置和故障排除表，您可以交給開發者
-* [閘道協議參考](/docs/zh-TW/llm-gateway-protocol)：閘道操作員的有線合約，涵蓋端點、要轉發的標頭和功能傳遞表
-* [設定檔案和優先順序](/docs/zh-TW/settings#settings-files)：受管、專案和使用者設定如何組合，以及受管檔案在每個平台上的位置
+* [閘道相容性指南](/docs/zh-TW/llm-gateway-protocol)：閘道操作員的參考資料，涵蓋端點、要轉發的標頭和功能傳遞表
+* [Claude Code 使用的值](/docs/zh-TW/settings#which-value-claude-code-uses)：受管、專案和使用者設定如何組合
+* [傳遞機制](/docs/zh-TW/managed-settings#delivery-mechanisms)：受管檔案在每個平台上的位置
 * [為您的組織設定 Claude Code](/docs/zh-TW/admin-setup)：此閘道是其中一部分的更廣泛推出，包括原則強制執行、使用可見性和資料處理

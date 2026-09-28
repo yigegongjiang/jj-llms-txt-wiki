@@ -9,10 +9,10 @@
 Claude Code verfolgt automatisch Claudes Dateibearbeitungen während Sie arbeiten, sodass Sie Änderungen schnell rückgängig machen und zu vorherigen Zuständen zurückspulen können, falls etwas schiefgeht.
 
 <h2 id="how-checkpoints-work">
-  Wie Checkpointing funktioniert
+  Wie Checkpoints funktionieren
 </h2>
 
-Während Sie mit Claude arbeiten, erfasst Checkpointing automatisch den Zustand Ihres Codes vor jeder Benutzereingabe. Dieses Sicherheitsnetz ermöglicht es Ihnen, ehrgeizige, großflächige Aufgaben zu verfolgen, da Sie immer zu einem vorherigen Code-Zustand zurückkehren können.
+Während Sie mit Claude arbeiten, erfasst Checkpointing automatisch den Zustand Ihres Codes vor jedem Prompt, den Sie senden und der einen Turn startet.
 
 <h3 id="automatic-tracking">
   Automatische Verfolgung
@@ -20,53 +20,50 @@ Während Sie mit Claude arbeiten, erfasst Checkpointing automatisch den Zustand 
 
 Claude Code verfolgt alle Änderungen, die von seinen Datei-Bearbeitungswerkzeugen vorgenommen werden:
 
-* Jede Benutzereingabe erstellt einen neuen Checkpoint
-* Claude Code behält Datei-Snapshots für die 100 neuesten Checkpoints in einer Sitzung. Das Verwerfen eines älteren Checkpoints löscht die Snapshot-Dateien, auf die kein verbleibender Checkpoint verweist, mit Ausnahme des ersten Snapshots jeder Datei, den die VS Code-Erweiterung als Grundlage für ihre Sitzungs-Diffs verwendet. Vor v2.1.208 blieben diese ersetzten Snapshot-Dateien auf der Festplatte, bis die Sitzung bereinigt wurde.
-* Checkpoints werden mit der Konversation gespeichert, sodass eine fortgesetzte Sitzung immer noch zu ihnen `/rewind` kann
-* Werden automatisch zusammen mit Sitzungen nach 30 Tagen bereinigt (konfigurierbar)
+* Jeder Prompt, den Sie senden und der einen Turn startet, erstellt einen neuen Checkpoint
+* Claude Code speichert Datei-Snapshots für die 100 neuesten Checkpoints in einer Sitzung. Das Verwerfen eines älteren Checkpoints löscht die Snapshot-Dateien, auf die kein verbleibender Checkpoint verweist, außer dem ersten Snapshot jeder Datei, den die VS Code-Erweiterung als Baseline für ihre Sitzungs-Diffs verwendet.
+* Claude Code speichert Checkpoints mit der Konversation, sodass Sie `/rewind` auch nach dem Fortsetzen einer Sitzung noch ausführen können
+* Claude Code löscht die Datei-Snapshots einer Sitzung im [Aufbewahrungsdurchlauf](/docs/de/claude-directory#cleaned-up-automatically), standardmäßig etwa 30 Tage, nachdem die Sitzung zuletzt einen gespeichert hat. Das Zurückspulen zu einem Checkpoint, dessen Snapshots weg sind, kann mit [`No files were restored`](/docs/de/errors#no-files-were-restored) fehlschlagen. Um Snapshots länger zu behalten, setzen Sie [`cleanupPeriodDays`](/docs/de/settings-reference#cleanupperioddays).
 
 <h3 id="rewind-and-summarize">
-  Zurückspulen und zusammenfassen
+  Rewind und Zusammenfassung
 </h3>
 
-Führen Sie `/rewind` aus, oder drücken Sie `Esc` zweimal, wenn das Eingabefeld leer ist, um das Zurückspul-Menü zu öffnen.
+Führen Sie `/rewind` aus, oder drücken Sie `Esc` zweimal, wenn das Prompt-Eingabefeld leer ist, um das Rewind-Menü zu öffnen.
 
 <Note>
-  Wenn das Eingabefeld Text enthält, löscht doppeltes `Esc` diesen stattdessen, anstatt das Menü zu öffnen. Der gelöschte Text wird in Ihrem Eingabeverlauf gespeichert, sodass Sie `Oben` drücken können, um ihn abzurufen, nachdem Sie das Zurückspul-Menü verlassen haben.
+  Wenn das Prompt-Eingabefeld Text enthält, löscht doppeltes `Esc` diesen stattdessen, anstatt das Menü zu öffnen. Der gelöschte Text wird in Ihrem Eingabeverlauf gespeichert, sodass Sie `Up` drücken können, um ihn abzurufen, nachdem Sie im Rewind-Menü fertig sind.
 </Note>
 
-Das Zurückspul-Menü listet jede Eingabe auf, die Sie während der Sitzung gesendet haben. Wählen Sie den Punkt aus, auf den Sie einwirken möchten, und wählen Sie dann eine Aktion:
+Das Rewind-Menü listet jeden Prompt auf, den Sie während der Sitzung gesendet haben, außer [Nachrichten, die sich einem laufenden Turn angeschlossen haben](#messages-sent-mid-turn-not-checkpointed). Wählen Sie den Punkt aus, auf den Sie einwirken möchten, und wählen Sie dann eine Aktion:
 
-* **Code und Konversation wiederherstellen**: Setzt sowohl Code als auch Konversation auf diesen Punkt zurück
+* **Code und Konversation wiederherstellen**: Revert sowohl Code als auch Konversation zu diesem Punkt
 * **Konversation wiederherstellen**: Zurückspulen zu dieser Nachricht, während der aktuelle Code beibehalten wird
 * **Code wiederherstellen**: Dateiänderungen rückgängig machen, während die Konversation beibehalten wird
 * **Von hier aus zusammenfassen**: Komprimieren Sie die Konversation von diesem Punkt an in eine Zusammenfassung und geben Sie Kontextfensterplatz frei
-* **Bis hier zusammenfassen**: Komprimieren Sie die Konversation vor diesem Punkt in eine Zusammenfassung und behalten Sie spätere Nachrichten intakt
-* **Nie Sinn**: Kehren Sie zur Nachrichtenliste zurück, ohne Änderungen vorzunehmen
+* **Bis hier zusammenfassen**: Komprimieren Sie die Konversation vor diesem Punkt in eine Zusammenfassung und behalten Sie spätere Nachrichten bei
+* **Abbrechen**: Kehren Sie zur Nachrichtenliste zurück, ohne Änderungen vorzunehmen
 
-Nach dem Wiederherstellen der Konversation oder dem Auswählen von „Von hier aus zusammenfassen" wird die ursprüngliche Eingabe aus der ausgewählten Nachricht in das Eingabefeld wiederhergestellt, sodass Sie sie erneut senden oder bearbeiten können.
+Die beiden Code-Wiederherstellungsoptionen werden nur angezeigt, wenn der ausgewählte Checkpoint nachverfolgbare Dateiänderungen zum Rückgängigmachen hat. Wenn nach diesem Punkt keine Dateibearbeitungen erfasst wurden, bietet das Menü nur **Konversation wiederherstellen**, die Zusammenfassungsoptionen und **Abbrechen**.
 
-Das Auswählen von „Bis hier zusammenfassen" hinterlässt Sie am Ende der Konversation mit leerem Eingabefeld.
+Nach dem Wiederherstellen der Konversation oder nach Auswahl von „Von hier aus zusammenfassen" wird der ursprüngliche Prompt aus der ausgewählten Nachricht in das Eingabefeld wiederhergestellt, sodass Sie ihn erneut senden oder bearbeiten können.
+
+Die Auswahl von „Bis hier zusammenfassen" lässt Sie am Ende der Konversation mit leerem Eingabefeld zurück. Bei beiden Zusammenfassungsoptionen wird ein **Zusammengefasste Konversation**-Marker in der Konversation angezeigt, wo die komprimierten Nachrichten waren.
 
 <h4 id="rewind-past-a-cleared-conversation">
-  Zurückspulen über eine gelöschte Konversation hinaus
+  Rewind über eine gelöschte Konversation hinweg
 </h4>
 
-Wenn Sie `/clear` früher im selben Claude Code-Prozess ausgeführt haben, zeigt das Zurückspul-Menü einen zusätzlichen Eintrag oben in der Liste mit der Bezeichnung `/resume <session-id> (vorherige Sitzung)` an. Wählen Sie ihn aus, um die Konversation fortzusetzen, die vor dem Ausführen von `/clear` aktiv war. Der Eintrag ist verfügbar, bis Sie Claude Code beenden oder eine andere Sitzung fortsetzen, und erfordert Claude Code v2.1.191 oder später. In früheren Versionen führen Sie `/resume` aus und wählen die vorherige Sitzung aus der Liste aus.
+Wenn Sie `/clear` früher im selben Claude Code-Prozess ausgeführt haben, zeigt das Rewind-Menü einen zusätzlichen Eintrag oben in der Liste mit der Bezeichnung `/resume <session-id> (previous session)`. Wählen Sie ihn aus, um die Konversation fortzusetzen, die vor dem Ausführen von `/clear` aktiv war. Der Eintrag ist verfügbar, bis Sie Claude Code beenden oder eine andere Sitzung fortsetzen.
 
-<h4 id="restore-vs-summarize">
-  Wiederherstellen vs. zusammenfassen
+<h4 id="guide-a-summary">
+  Eine Zusammenfassung leiten
 </h4>
 
-Die Wiederherstellungsoptionen setzen den Zustand zurück: Sie machen Code-Änderungen, Konversationsverlauf oder beides rückgängig. Die Zusammenfassungsoptionen komprimieren einen Teil der Konversation in eine KI-generierte Zusammenfassung, ohne Dateien auf der Festplatte zu ändern:
-
-* **Von hier aus zusammenfassen**: Nachrichten vor der ausgewählten Nachricht bleiben intakt. Die ausgewählte Nachricht und alles danach werden durch eine Zusammenfassung ersetzt. Verwenden Sie dies, um eine Nebendiskussion zu verwerfen, während Sie frühen Kontext in vollem Detail behalten.
-* **Bis hier zusammenfassen**: Nachrichten vor der ausgewählten Nachricht werden durch eine Zusammenfassung ersetzt. Die ausgewählte Nachricht und alles danach bleiben intakt, und Sie bleiben am Ende der Konversation. Verwenden Sie dies, um frühe Setup-Diskussionen zu komprimieren, während Sie aktuelle Arbeit in vollem Detail behalten.
-
-In beiden Fällen werden die ursprünglichen Nachrichten im Sitzungstranskript beibehalten, sodass Claude die Details bei Bedarf referenzieren kann. Sie können optionale Anweisungen eingeben, um zu lenken, worauf sich die Zusammenfassung konzentriert. Dies ähnelt `/compact`, ist aber gezielt: Anstatt die gesamte Konversation zusammenzufassen, wählen Sie, welche Seite der ausgewählten Nachricht komprimiert werden soll.
+Das Zusammenfassen ändert keine Dateien auf der Festplatte, und die ursprünglichen Nachrichten bleiben im Sitzungstranskript, sodass Claude die Details immer noch referenzieren kann. Um zu lenken, worauf sich die Zusammenfassung konzentriert, markieren Sie eine **Zusammenfassen**-Option mit den Pfeiltasten und geben Sie Anweisungen ein, wo die Zeile **add context (optional)** liest, und drücken Sie dann `Enter`. Die Auswahl der Option mit ihrer Zahlentaste fasst sofort ohne Anweisungen zusammen.
 
 <Note>
-  Zusammenfassen hält Sie in derselben Sitzung und komprimiert Kontext. Wenn Sie abzweigen und einen anderen Ansatz versuchen möchten, während Sie die ursprüngliche Sitzung intakt bewahren, verwenden Sie stattdessen [fork](/docs/de/sessions#branch-a-session) (`claude --continue --fork-session`).
+  Zusammenfassen hält Sie in derselben Sitzung und komprimiert den Kontext, ähnlich wie ein gezieltes `/compact`. Um abzuzweigen und einen anderen Ansatz zu versuchen, während die ursprüngliche Sitzung intakt bleibt, verwenden Sie stattdessen [`/branch`](/docs/de/sessions#branch-a-session) oder `claude --continue --fork-session`.
 </Note>
 
 <h2 id="common-use-cases">
@@ -98,21 +95,42 @@ cp source.txt dest.txt
 
 Diese Dateiänderungen können nicht durch Zurückspulen rückgängig gemacht werden. Nur direkte Dateibearbeitungen, die durch Claudes Datei-Bearbeitungswerkzeuge vorgenommen werden, werden verfolgt.
 
+<h3 id="subagent-edits-not-restored">
+  Subagent-Bearbeitungen werden nicht wiederhergestellt
+</h3>
+
+Ein [Subagent](/docs/de/sub-agents) führt Bearbeitungen mit Claudes Datei-Bearbeitungswerkzeugen durch, aber Claude Code erfasst diese Bearbeitungen normalerweise nicht in den Checkpoints Ihrer Sitzung. Ob das Zurückspulen sie wiederherstellt, hängt davon ab, wie der Subagent ausgeführt wird:
+
+* **Foreground-Forked-Skill**: ein [Skill mit `context: fork`](/docs/de/skills#run-skills-in-a-subagent), der im Vordergrund ausgeführt wird, bearbeitet Ihren Arbeitsbaum während Ihres eigenen Zuges, sodass das Zurückspulen seine Bearbeitungen wie gewohnt wiederherstellt. Setzen Sie `background: false`, um einen Fork im Vordergrund auszuführen; einige Situationen, [aufgelistet auf der Skills-Seite](/docs/de/skills#run-skills-in-a-subagent), führen ihn dort unabhängig von der Einstellung aus.
+* **Jeder andere Subagent**: Das Zurückspulen stellt die Bearbeitungen nicht wieder her. Verwenden Sie Git, um sie rückgängig zu machen. Dies umfasst einen Forked-Skill, der im Hintergrund ausgeführt wird (Standard), und einen Hintergrund-[`/code-review --fix`](/docs/de/code-review)-Lauf.
+
 <h3 id="external-changes-not-tracked">
   Externe Änderungen werden nicht verfolgt
 </h3>
 
 Checkpointing verfolgt nur Dateien, die in der aktuellen Sitzung bearbeitet wurden. Manuelle Änderungen, die Sie an Dateien außerhalb von Claude Code vornehmen, und Bearbeitungen aus anderen gleichzeitigen Sitzungen werden normalerweise nicht erfasst, es sei denn, sie ändern zufällig dieselben Dateien wie die aktuelle Sitzung.
 
+<h3 id="messages-sent-mid-turn-not-checkpointed">
+  Nachrichten, die während eines Zuges gesendet werden, werden nicht als Checkpoint erstellt
+</h3>
+
+Wenn eine Nachricht, die Sie [in die Warteschlange einreihen, während Claude arbeitet](/docs/de/interactive-mode#queue-messages-while-claude-works), Claude innerhalb des laufenden Zuges erreicht, wird sie in diesen Zug integriert, anstatt einen neuen zu starten. Die Nachricht wird in der Unterhaltung angezeigt, aber Claude Code erstellt keinen Checkpoint dafür, und das Zurückspulen-Menü listet sie nicht auf. Eine in die Warteschlange eingereihte Nachricht, die Claude Code als eigenen Zug sendet, erhält wie gewohnt einen Checkpoint.
+
+Um eine solche Nachricht zu entfernen oder die Bearbeitungen rückgängig zu machen, die Claude nach ihr vorgenommen hat, spulen Sie zu dem Prompt zurück, der den Zug gestartet hat. Dies spult den gesamten Zug zurück, einschließlich der Arbeit, die Claude vor dem Eintreffen Ihrer Nachricht geleistet hat.
+
+<h3 id="symlinked-and-hard-linked-paths-not-restored">
+  Symverlinkte und hart verlinkte Pfade werden nicht wiederhergestellt
+</h3>
+
+Checkpointing stellt symverlinkte oder hart verlinkte Dateien nicht wieder her. Wenn Sie **Code wiederherstellen** oder **Code und Unterhaltung wiederherstellen** aus dem `/rewind`-Menü auswählen, überspringt Claude Code jeden verfolgten Pfad, der ein Symlink oder Hard Link ist, und zeigt eine Warnung `Restored the code, but skipped N files` an. Die übersprungenen Dateien behalten ihren aktuellen Inhalt. Um die Änderungen der Sitzung an einer von ihnen rückgängig zu machen, bitten Sie Claude, die Bearbeitung rückgängig zu machen, oder bearbeiten Sie die Datei selbst. Konfigurationsdateien, die ein Dotfile-Manager in Ihr Projekt symlinkt, und Dateien, die pnpm hart verlinkt, fallen beide in diese Kategorie.
+
+Um zu sehen, welche Pfade eine Wiederherstellung überspringt, aktivieren Sie Debug-Protokollierung mit `/debug`, bevor Sie wiederherstellen: das Debug-Protokoll unter `~/.claude/debug/<session-id>.txt` nennt jeden übersprungenen Pfad. Für jeden Grund zum Überspringen und die Wiederherstellungsschritte siehe [den Eintrag „skipped-files" in der Fehlerreferenz](/docs/de/errors#restored-the-code-but-skipped-files).
+
 <h3 id="not-a-replacement-for-version-control">
   Kein Ersatz für Versionskontrolle
 </h3>
 
-Checkpoints sind für schnelle, sitzungsebene Wiederherstellung konzipiert. Für permanente Versionshistorie und Zusammenarbeit:
-
-* Verwenden Sie weiterhin Versionskontrolle (z. B. Git) für Commits, Branches und langfristige Historie
-* Checkpoints ergänzen, ersetzen aber nicht ordnungsgemäße Versionskontrolle
-* Denken Sie an Checkpoints als „lokales Rückgängigmachen" und Git als „permanente Historie"
+Checkpoints sind für schnelle, sitzungsebene Wiederherstellung konzipiert. Für permanente Versionshistorie und Zusammenarbeit verwenden Sie weiterhin Versionskontrolle wie Git für Commits, Branches und langfristige Historie.
 
 <h2 id="see-also">
   Siehe auch

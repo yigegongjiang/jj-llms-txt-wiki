@@ -18,17 +18,13 @@ source .venv/bin/activate
 pip install claude-agent-sdk
 ```
 
-uv、Windows PowerShell、API キーのセットアップについては、[Agent SDK 概要の「Get started」セクション](/docs/ja/agent-sdk/overview#get-started)を参照してください。
+uv、Windows PowerShell、API キーのセットアップについては、[Agent SDK クイックスタートの「Setup」セクション](/docs/ja/agent-sdk/quickstart#setup)を参照してください。
 
 <h2 id="choosing-between-query-and-claudesdkclient">
   `query()` と `ClaudeSDKClient` の選択
 </h2>
 
 Python SDK は Claude Code と対話するための 2 つの方法を提供します。
-
-<h3 id="quick-comparison">
-  クイック比較
-</h3>
 
 | 機能            | `query()`                                  | `ClaudeSDKClient` |
 | :------------ | :----------------------------------------- | :---------------- |
@@ -42,38 +38,19 @@ Python SDK は Claude Code と対話するための 2 つの方法を提供し�
 | **会話を続ける**    | `continue_conversation` または `resume` で手動実行 | ✅ 自動              |
 | **ユースケース**    | 1 回限りのタスク                                  | 継続的な会話            |
 
-<h3 id="when-to-use-query-one-off-tasks">
-  `query()` を使用する場合（1 回限りのタスク）
-</h3>
-
-**最適な用途：**
-
-* 会話履歴が不要な 1 回限りの質問
-* 前の交換からのコンテキストが不要な独立したタスク
-* シンプルな自動化スクリプト
-* 毎回新しく開始したい場合
-
-<h3 id="when-to-use-claudesdkclient-continuous-conversation">
-  `ClaudeSDKClient` を使用する場合（継続的な会話）
-</h3>
-
-**最適な用途：**
-
-* **会話を続ける** - Claude がコンテキストを記憶する必要がある場合
-* **フォローアップ質問** - 前の回答に基づいて構築する
-* **インタラクティブなアプリケーション** - チャットインターフェース、REPL
-* **応答駆動ロジック** - 次のアクションが Claude の応答に依存する場合
-* **セッション制御** - 会話ライフサイクルを明示的に管理する
+インタラクティブなアプリケーション（チャットインターフェースなど）や、次のアクションが Claude の応答に依存する場合は、`ClaudeSDKClient` を使用してください。
 
 <h2 id="functions">
   関数
 </h2>
 
+<Note>このページの署名ブロックと裸の `async for` / `async with` フラグメントは説明用です。実行するには、本体を `async def main(): ...` でラップして `asyncio.run(main())` を呼び出してください。</Note>
+
 <h3 id="query">
   `query()`
 </h3>
 
-Claude Code との各インタラクションのために新しいセッションを作成します。デフォルトでは、メッセージが到着するにつれて生成される非同期イテレータを返します。`query()` への各呼び出しは、`continue_conversation=True` または [`ClaudeAgentOptions`](#claudeagentoptions) の `resume` を渡さない限り、前のインタラクションのメモリなしで新しく開始します。[セッション](/docs/ja/agent-sdk/sessions) を参照してください。
+デフォルトでは、Claude Code との各インタラクションのために新しいセッションを作成します。メッセージが到着するにつれて生成される非同期イテレータを返します。`query()` への各呼び出しは、`continue_conversation=True` または [`ClaudeAgentOptions`](#claudeagentoptions) の `resume` を渡さない限り、前のインタラクションのメモリなしで新しく開始します。[セッション](/docs/ja/agent-sdk/sessions) を参照してください。
 
 ```python theme={null}
 async def query(
@@ -113,7 +90,6 @@ async def main():
     options = ClaudeAgentOptions(
         system_prompt="You are an expert Python developer",
         permission_mode="acceptEdits",
-        cwd="/home/user/project",
     )
 
     async for message in query(prompt="Create a Python web server", options=options):
@@ -142,12 +118,12 @@ def tool(
   パラメータ
 </h4>
 
-| パラメータ          | 型                                               | 説明                                     |
-| :------------- | :---------------------------------------------- | :------------------------------------- |
-| `name`         | `str`                                           | ツールの一意の識別子                             |
-| `description`  | `str`                                           | ツールが何をするかの人間が読める説明                     |
-| `input_schema` | `type \| dict[str, Any]`                        | ツールの入力パラメータを定義するスキーマ（以下を参照）            |
-| `annotations`  | [`ToolAnnotations`](#toolannotations)` \| None` | クライアントに動作ヒントを提供するオプションの MCP ツールアノテーション |
+| パラメータ          | 型                                               | 説明                                                                  |
+| :------------- | :---------------------------------------------- | :------------------------------------------------------------------ |
+| `name`         | `str`                                           | ツールの一意の識別子                                                          |
+| `description`  | `str`                                           | ツールが何をするかの人間が読める説明                                                  |
+| `input_schema` | `type \| dict[str, Any]`                        | ツールの入力パラメータを定義するスキーマ。[入力スキーマオプション](#input-schema-options) を参照してください |
+| `annotations`  | [`ToolAnnotations`](#toolannotations)` \| None` | クライアントに動作ヒントを提供するオプションの MCP ツールアノテーション                              |
 
 <h4 id="input-schema-options">
   入力スキーマオプション
@@ -195,15 +171,20 @@ async def greet(args: dict[str, Any]) -> dict[str, Any]:
   `ToolAnnotations`
 </h4>
 
-`mcp.types` から再エクスポート（`from claude_agent_sdk import ToolAnnotations` としても利用可能）。すべてのフィールドはオプションのヒントです。クライアントはセキュリティ決定のためにこれらに依存すべきではありません。
+ツールの動作ヒント。[`tool()`](#tool) の `annotations` 引数として渡されます。`ToolAnnotations` は MCP SDK の `mcp.types.ToolAnnotations` を `maxResultSizeChars` フィールドで拡張し、各ヒントを camelCase または snake\_case で記述できます：`ToolAnnotations(readOnlyHint=True)` と `ToolAnnotations(read_only_hint=True)` は同等です。SDK がアノテーションを受け入れる場所であればどこでも、プレーンな `mcp.types.ToolAnnotations` を渡すこともできます。
 
-| フィールド             | 型              | デフォルト   | 説明                                                                            |
-| :---------------- | :------------- | :------ | :---------------------------------------------------------------------------- |
-| `title`           | `str \| None`  | `None`  | ツールの人間が読める題名                                                                  |
-| `readOnlyHint`    | `bool \| None` | `False` | `True` の場合、ツールはその環境を変更しません                                                    |
-| `destructiveHint` | `bool \| None` | `True`  | `True` の場合、ツールは破壊的な更新を実行する可能性があります（`readOnlyHint` が `False` の場合のみ意味があります）     |
-| `idempotentHint`  | `bool \| None` | `False` | `True` の場合、同じ引数での繰り返し呼び出しは追加の効果がありません（`readOnlyHint` が `False` の場合のみ意味があります）  |
-| `openWorldHint`   | `bool \| None` | `True`  | `True` の場合、ツールは外部エンティティと対話します（例：Web 検索）。`False` の場合、ツールのドメインは閉じています（例：メモリツール） |
+snake\_case 名と型付き `maxResultSizeChars` フィールドには Python Agent SDK 0.2.140 以降が必要です。バージョン 0.1.31 から 0.2.139 は `mcp.types.ToolAnnotations` を変更なしで再エクスポートします。バージョン 0.1.55 から 0.2.139 では、`maxResultSizeChars` をキーワード引数として渡すことができます：MCP クラスは追加フィールドを受け入れ、SDK は値を Claude Code に転送します。
+
+すべてのフィールドはオプションです。クライアントはセキュリティ決定のためにこれらのヒントに依存すべきではありません。
+
+| フィールド                | 型              | デフォルト   | 説明                                                                                                                                                                                                                                                    |
+| :------------------- | :------------- | :------ | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `title`              | `str \| None`  | `None`  | ツールの人間が読める題名                                                                                                                                                                                                                                          |
+| `readOnlyHint`       | `bool \| None` | `False` | `True` の場合、ツールはその環境を変更しません                                                                                                                                                                                                                            |
+| `destructiveHint`    | `bool \| None` | `True`  | `True` の場合、ツールは破壊的な更新を実行する可能性があります（`readOnlyHint` が `False` の場合のみ意味があります）                                                                                                                                                                             |
+| `idempotentHint`     | `bool \| None` | `False` | `True` の場合、同じ引数での繰り返し呼び出しは追加の効果がありません（`readOnlyHint` が `False` の場合のみ意味があります）                                                                                                                                                                          |
+| `openWorldHint`      | `bool \| None` | `True`  | `True` の場合、ツールは外部エンティティと対話します（例：Web 検索）。`False` の場合、ツールのドメインは閉じています（例：メモリツール）                                                                                                                                                                         |
+| `maxResultSizeChars` | `int \| None`  | `None`  | Claude Code がこのツールのテキスト結果をファイルに保存する代わりに会話内にインラインで保持する文字数（最大 500,000）。画像を含む結果は影響を受けません。MCP ヒントではなく Claude Code 設定：SDK はツールの `_meta` に `anthropic/maxResultSizeChars` として送信します。[特定のツールの制限を引き上げる](/docs/ja/mcp#raise-the-limit-for-a-specific-tool) を参照してください |
 
 ```python theme={null}
 from claude_agent_sdk import tool, ToolAnnotations
@@ -255,7 +236,7 @@ def create_sdk_mcp_server(
 </h4>
 
 ```python theme={null}
-from claude_agent_sdk import tool, create_sdk_mcp_server
+from claude_agent_sdk import tool, create_sdk_mcp_server, ClaudeAgentOptions
 
 
 @tool("add", "Add two numbers", {"a": float, "b": float})
@@ -367,13 +348,14 @@ def get_session_messages(
   戻り値の型：`SessionMessage`
 </h4>
 
-| プロパティ                | 型                              | 説明            |
-| :------------------- | :----------------------------- | :------------ |
-| `type`               | `Literal["user", "assistant"]` | メッセージロール      |
-| `uuid`               | `str`                          | 一意のメッセージ識別子   |
-| `session_id`         | `str`                          | セッション識別子      |
-| `message`            | `Any`                          | 生のメッセージコンテンツ  |
-| `parent_tool_use_id` | `None`                         | 将来の使用のために予約済み |
+| プロパティ                | 型                              | 説明                                                                                                                                                                                                 |
+| :------------------- | :----------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `type`               | `Literal["user", "assistant"]` | メッセージロール                                                                                                                                                                                           |
+| `uuid`               | `str`                          | 一意のメッセージ識別子                                                                                                                                                                                        |
+| `session_id`         | `str`                          | セッション識別子                                                                                                                                                                                           |
+| `message`            | `Any`                          | 生のメッセージコンテンツ                                                                                                                                                                                       |
+| `parent_tool_use_id` | `str \| None`                  | サブエージェントメッセージの場合、スポーニング `Agent` ツール使用ブロックの ID。メインセッションメッセージと古いセッションの場合は `None`                                                                                                                     |
+| `parent_agent_id`    | `str \| None`                  | [ネストされたサブエージェント](/docs/ja/sub-agents#let-subagents-spawn-their-own-subagents) からのメッセージの場合、親サブエージェントのエージェント ID。メインセッションメッセージ、トップレベルのサブエージェントメッセージ、および古いセッションの場合は `None`。Python Agent SDK 0.2.140 以降が必要です |
 
 <h4 id="example-4">
   例
@@ -502,8 +484,10 @@ def tag_session(
 ```python theme={null}
 from claude_agent_sdk import list_sessions, tag_session
 
-# Tag a session
-tag_session("550e8400-e29b-41d4-a716-446655440000", "needs-review")
+# Tag the most recent session
+sessions = list_sessions(directory="/path/to/project", limit=1)
+if sessions:
+    tag_session(sessions[0].session_id, "needs-review")
 
 # Later: find all sessions with that tag
 for session in list_sessions(directory="/path/to/project"):
@@ -519,18 +503,7 @@ for session in list_sessions(directory="/path/to/project"):
   `ClaudeSDKClient`
 </h3>
 
-**複数の交換にわたってセッションを維持します。** これは TypeScript SDK の `query()` 関数が内部的にどのように機能するかの Python 同等物です。会話を続けることができるクライアントオブジェクトを作成します。
-
-<h4 id="key-features">
-  主な機能
-</h4>
-
-* **セッション継続性**：複数の `query()` 呼び出しにわたって会話コンテキストを維持します
-* **同じ会話**：セッションは前のメッセージを保持します
-* **割り込みサポート**：タスク途中で実行を停止できます
-* **明示的なライフサイクル**：セッションの開始と終了を制御します
-* **応答駆動フロー**：応答に反応してフォローアップを送信できます
-* **カスタムツールと hooks**：カスタムツール（`@tool` デコレータで作成）と hooks をサポートします
+**複数の交換にわたってセッションを維持します。** これは TypeScript SDK の `query()` 関数が内部的にどのように機能するかの Python 同等物です。会話を続けることができるクライアントオブジェクトを作成します。[`query()` との比較](#choosing-between-query-and-claudesdkclient) を参照してください。
 
 ```python theme={null}
 class ClaudeSDKClient:
@@ -540,7 +513,7 @@ class ClaudeSDKClient:
     async def receive_messages(self) -> AsyncIterator[Message]
     async def receive_response(self) -> AsyncIterator[Message]
     async def interrupt(self) -> None
-    async def set_permission_mode(self, mode: str) -> None
+    async def set_permission_mode(self, mode: PermissionMode) -> None
     async def set_model(self, model: str | None = None) -> None
     async def rewind_files(self, user_message_id: str) -> None
     async def get_mcp_status(self) -> McpStatusResponse
@@ -564,13 +537,13 @@ class ClaudeSDKClient:
 | `receive_response()`                      | ResultMessage を含むまでのメッセージを受け取ります                                                                                         |
 | `interrupt()`                             | 割り込み信号を送信します（ストリーミングモードでのみ機能）                                                                                            |
 | `set_permission_mode(mode)`               | 現在のセッションのパーミッションモードを変更します                                                                                                |
-| `set_model(model)`                        | 現在のセッションのモデルを変更します。デフォルトにリセットするには `None` を渡します                                                                           |
+| `set_model(model)`                        | 現在のセッションのモデルを変更します。[Claude Code のデフォルトモデル](/docs/ja/model-config) にリセットするには `None` を渡します                                      |
 | `rewind_files(user_message_id)`           | ファイルを指定されたユーザーメッセージの状態に復元します。`enable_file_checkpointing=True` が必要です。[ファイルチェックポイント](/docs/ja/agent-sdk/file-checkpointing) を参照 |
 | `get_mcp_status()`                        | すべての設定済み MCP サーバーのステータスを取得します。[`McpStatusResponse`](#mcpstatusresponse) を返します                                            |
 | `reconnect_mcp_server(server_name)`       | 失敗したか切断された MCP サーバーへの再接続を試みます                                                                                            |
 | `toggle_mcp_server(server_name, enabled)` | セッション中に MCP サーバーを有効または無効にします。無効にするとそのツールが削除されます                                                                          |
 | `stop_task(task_id)`                      | 実行中のバックグラウンドタスクを停止します。ステータス `"stopped"` の [`TaskNotificationMessage`](#tasknotificationmessage) がメッセージストリームに続きます         |
-| `get_server_info()`                       | セッション ID と機能を含むサーバー情報を取得します                                                                                              |
+| `get_server_info()`                       | サーバーの初期化情報（利用可能なコマンドと出力スタイルを含む）を取得します                                                                                    |
 | `disconnect()`                            | Claude から切断します                                                                                                           |
 
 <h4 id="context-manager-support">
@@ -580,10 +553,18 @@ class ClaudeSDKClient:
 クライアントは自動接続管理のための非同期コンテキストマネージャーとして使用できます：
 
 ```python theme={null}
-async with ClaudeSDKClient() as client:
-    await client.query("Hello Claude")
-    async for message in client.receive_response():
-        print(message)
+import asyncio
+from claude_agent_sdk import ClaudeSDKClient
+
+
+async def main():
+    async with ClaudeSDKClient() as client:
+        await client.query("Hello Claude")
+        async for message in client.receive_response():
+            print(message)
+
+
+asyncio.run(main())
 ```
 
 > **重要：** メッセージを反復処理する場合、早期に終了するために `break` を使用することは避けてください。これは asyncio クリーンアップの問題を引き起こす可能性があります。代わりに、反復を自然に完了させるか、フラグを使用して必要なものを見つけたときを追跡してください。
@@ -703,8 +684,9 @@ async def interruptible_task():
         # Drain the interrupted task's messages (including its ResultMessage)
         async for message in client.receive_response():
             if isinstance(message, ResultMessage):
-                print(f"Interrupted task finished with subtype={message.subtype!r}")
-                # subtype is "error_during_execution" for interrupted tasks
+                print(f"Interrupted task: terminal_reason={message.terminal_reason!r}")
+                # terminal_reason is "aborted_streaming" or "aborted_tools"
+                # for interrupted turns
 
         # Send a new command
         await client.query("Just say hello instead")
@@ -719,7 +701,7 @@ asyncio.run(interruptible_task())
 ```
 
 <Note>
-  **割り込み後のバッファ動作：** `interrupt()` は停止信号を送信しますが、メッセージバッファをクリアしません。割り込まれたタスクによって既に生成されたメッセージ（`subtype="error_during_execution"` の `ResultMessage` を含む）はストリームに残ります。新しいクエリの応答を読む前に、`receive_response()` でそれらをドレインする必要があります。`interrupt()` の直後に新しいクエリを送信し、`receive_response()` を 1 回だけ呼び出すと、割り込まれたタスクのメッセージが受け取られ、新しいクエリの応答ではありません。
+  **割り込み後のバッファ動作：** `interrupt()` は停止信号を送信しますが、メッセージバッファをクリアしません。割り込まれたタスクによって既に生成されたメッセージ（その `ResultMessage` を含む）はストリームに残ります。新しいクエリの応答を読む前に、`receive_response()` でそれらをドレインする必要があります。`interrupt()` の直後に新しいクエリを送信し、`receive_response()` を 1 回だけ呼び出すと、割り込まれたタスクのメッセージが受け取られ、新しいクエリの応答ではありません。
 </Note>
 
 <h4 id="example-advanced-permission-control">
@@ -727,6 +709,7 @@ asyncio.run(interruptible_task())
 </h4>
 
 ```python theme={null}
+import asyncio
 from claude_agent_sdk import ClaudeSDKClient, ClaudeAgentOptions
 from claude_agent_sdk.types import (
     PermissionResultAllow,
@@ -777,14 +760,14 @@ asyncio.run(main())
 </h2>
 
 <Note>
-  **`@dataclass` vs `TypedDict`：** この SDK は 2 種類の型を使用します。`@dataclass` で装飾されたクラス（`ResultMessage`、`AgentDefinition`、`TextBlock` など）は実行時にオブジェクトインスタンスであり、属性アクセスをサポートします：`msg.result`。`TypedDict` で定義されたクラス（`ThinkingConfigEnabled`、`McpStdioServerConfig`、`SyncHookJSONOutput` など）は**実行時にプレーンな dict** であり、キーアクセスが必要です：`config["budget_tokens"]`、`config.budget_tokens` ではなく。`ClassName(field=value)` 呼び出し構文は両方で機能しますが、dataclass のみが属性を持つオブジェクトを生成します。
+  **`@dataclass` vs `TypedDict`：** このSDKは2種類の型を使用します。`@dataclass`で装飾されたクラス（`ResultMessage`、`AgentDefinition`、`TextBlock`など）は実行時にオブジェクトインスタンスであり、属性アクセスをサポートします：`msg.result`。`TypedDict`で定義されたクラス（`ThinkingConfigEnabled`、`McpStdioServerConfig`、`SyncHookJSONOutput`など）は**実行時にプレーンな辞書**であり、キーアクセスが必要です：`config["budget_tokens"]`であり、`config.budget_tokens`ではありません。`ClassName(field=value)`呼び出し構文は両方で機能しますが、dataclassのみが属性を持つオブジェクトを生成します。
 </Note>
 
 <h3 id="sdkmcptool">
   `SdkMcpTool`
 </h3>
 
-`@tool` デコレータで作成された SDK MCP ツールの定義。
+`@tool`デコレータで作成されたSDK MCPツールの定義。
 
 ```python theme={null}
 @dataclass
@@ -796,22 +779,22 @@ class SdkMcpTool(Generic[T]):
     annotations: ToolAnnotations | None = None
 ```
 
-| プロパティ          | 型                                          | 説明                                                                                       |
-| :------------- | :----------------------------------------- | :--------------------------------------------------------------------------------------- |
-| `name`         | `str`                                      | ツールの一意の識別子                                                                               |
-| `description`  | `str`                                      | 人間が読める説明                                                                                 |
-| `input_schema` | `type[T] \| dict[str, Any]`                | 入力検証用のスキーマ                                                                               |
-| `handler`      | `Callable[[T], Awaitable[dict[str, Any]]]` | ツール実行を処理する非同期関数                                                                          |
-| `annotations`  | `ToolAnnotations \| None`                  | オプションの MCP ツールアノテーション（例：`readOnlyHint`、`destructiveHint`、`openWorldHint`）。`mcp.types` から |
+| プロパティ          | 型                                               | 説明                                                                                    |
+| :------------- | :---------------------------------------------- | :------------------------------------------------------------------------------------ |
+| `name`         | `str`                                           | ツールの一意の識別子                                                                            |
+| `description`  | `str`                                           | 人間が読める説明                                                                              |
+| `input_schema` | `type[T] \| dict[str, Any]`                     | 入力検証用のスキーマ                                                                            |
+| `handler`      | `Callable[[T], Awaitable[dict[str, Any]]]`      | ツール実行を処理する非同期関数                                                                       |
+| `annotations`  | [`ToolAnnotations`](#toolannotations)` \| None` | オプションのツール注釈（例えば`readOnlyHint`、`destructiveHint`、`openWorldHint`、`maxResultSizeChars`） |
 
 <h3 id="transport">
   `Transport`
 </h3>
 
-カスタムトランスポート実装の抽象基本クラス。これを使用して、カスタムチャネル（例：ローカルサブプロセスの代わりにリモート接続）を介して Claude プロセスと通信します。
+カスタムトランスポート実装用の抽象基底クラス。カスタムチャネル（例えば、ローカルサブプロセスの代わりにリモート接続）を介してClaudeプロセスと通信するために使用します。
 
 <Warning>
-  これは低レベルの内部 API です。インターフェースは将来のリリースで変更される可能性があります。カスタム実装は、インターフェースの変更に合わせて更新する必要があります。
+  これは低レベルの内部API です。インターフェースは将来のリリースで変更される可能性があります。カスタム実装はインターフェースの変更に合わせて更新する必要があります。
 </Warning>
 
 ```python theme={null}
@@ -840,14 +823,14 @@ class Transport(ABC):
     async def end_input(self) -> None: ...
 ```
 
-| メソッド              | 説明                                        |
-| :---------------- | :---------------------------------------- |
-| `connect()`       | トランスポートを接続し、通信の準備をします                     |
-| `write(data)`     | 生データ（JSON + 改行）をトランスポートに書き込みます            |
-| `read_messages()` | 解析された JSON メッセージを生成する非同期イテレータ             |
-| `close()`         | 接続を閉じてリソースをクリーンアップします                     |
-| `is_ready()`      | トランスポートが送受信できる場合は `True` を返します            |
-| `end_input()`     | 入力ストリームを閉じます（例：サブプロセストランスポートの stdin を閉じる） |
+| メソッド              | 説明                                         |
+| :---------------- | :----------------------------------------- |
+| `connect()`       | トランスポートを接続し、通信の準備をします                      |
+| `write(data)`     | 生データ（JSON + 改行）をトランスポートに書き込みます             |
+| `read_messages()` | 解析されたJSONメッセージを生成する非同期イテレータ                |
+| `close()`         | 接続を閉じてリソースをクリーンアップします                      |
+| `is_ready()`      | トランスポートが送受信できる場合は`True`を返します               |
+| `end_input()`     | 入力ストリームを閉じます（例えば、サブプロセストランスポートのstdinを閉じます） |
 
 インポート：`from claude_agent_sdk import Transport`
 
@@ -855,19 +838,20 @@ class Transport(ABC):
   `ClaudeAgentOptions`
 </h3>
 
-Claude Code クエリの設定 dataclass。
+Claude Codeクエリの設定dataclass。
 
 ```python theme={null}
 @dataclass
 class ClaudeAgentOptions:
     tools: list[str] | ToolsPreset | None = None
     allowed_tools: list[str] = field(default_factory=list)
-    system_prompt: str | SystemPromptPreset | SystemPromptFile | None = None
+    system_prompt: str | SystemPromptPreset | SystemPromptCustom | SystemPromptFile | None = None
     mcp_servers: dict[str, McpServerConfig] | str | Path = field(default_factory=dict)
     strict_mcp_config: bool = False
     permission_mode: PermissionMode | None = None
     continue_conversation: bool = False
     resume: str | None = None
+    session_id: str | None = None
     max_turns: int | None = None
     max_budget_usd: float | None = None
     disallowed_tools: list[str] = field(default_factory=list)
@@ -890,7 +874,10 @@ class ClaudeAgentOptions:
     user: str | None = None
     include_partial_messages: bool = False
     include_hook_events: bool = False
+    forward_subagent_text: bool = False
     fork_session: bool = False
+    resume_session_at: str | None = None
+    resume_drops_turn: str | None = None
     agents: dict[str, AgentDefinition] | None = None
     setting_sources: list[SettingSource] | None = None
     skills: list[str] | Literal["all"] | None = None
@@ -902,60 +889,70 @@ class ClaudeAgentOptions:
     enable_file_checkpointing: bool = False
     session_store: SessionStore | None = None
     session_store_flush: SessionStoreFlushMode = "batched"
+    load_timeout_ms: int = 60_000
+    task_budget: TaskBudget | None = None
 ```
 
-| プロパティ                         | 型                                                                                     | デフォルト                     | 説明                                                                                                                                                                                                                                                                                                             |
-| :---------------------------- | :------------------------------------------------------------------------------------ | :------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `tools`                       | `list[str] \| ToolsPreset \| None`                                                    | `None`                    | ツール設定。Claude Code のデフォルトツールには `{"type": "preset", "preset": "claude_code"}` を使用します                                                                                                                                                                                                                             |
-| `allowed_tools`               | `list[str]`                                                                           | `[]`                      | プロンプトなしで自動承認するツール。これは Claude をこれらのツールのみに制限しません。リストされていないツールは `permission_mode` と `can_use_tool` にフォールスルーします。`disallowed_tools` を使用してツールをブロックします。[パーミッション](/docs/ja/agent-sdk/permissions#allow-and-deny-rules) を参照                                                                                                  |
-| `system_prompt`               | `str \| SystemPromptPreset \| SystemPromptFile \| None`                               | `None`                    | システムプロンプト設定。カスタムプロンプトの場合は文字列を渡すか、Claude Code のシステムプロンプトの場合は `{"type": "preset", "preset": "claude_code"}` を使用します。オプションの `"append"` を含めるか、`{"type": "file", "path": "..."}` を使用してディスクから大きなプロンプトを読み込みます。[`SystemPromptPreset`](#systempromptpreset) と [`SystemPromptFile`](#systempromptfile) を参照                |
-| `mcp_servers`                 | `dict[str, McpServerConfig] \| str \| Path`                                           | `{}`                      | MCP サーバー設定または設定ファイルへのパス                                                                                                                                                                                                                                                                                        |
-| `strict_mcp_config`           | `bool`                                                                                | `False`                   | `True` の場合、`mcp_servers` で渡されたサーバーのみを使用し、プロジェクト `.mcp.json`、ユーザー設定、プラグイン提供の MCP サーバー、および [claude.ai コネクタ](/docs/ja/mcp#use-mcp-servers-from-claude-ai) を無視します。CLI `--strict-mcp-config` フラグにマップされます                                                                                                                 |
-| `permission_mode`             | `PermissionMode \| None`                                                              | `None`                    | ツール使用のパーミッションモード                                                                                                                                                                                                                                                                                               |
-| `continue_conversation`       | `bool`                                                                                | `False`                   | 最新の会話を続ける                                                                                                                                                                                                                                                                                                      |
-| `resume`                      | `str \| None`                                                                         | `None`                    | 再開するセッション ID                                                                                                                                                                                                                                                                                                   |
-| `max_turns`                   | `int \| None`                                                                         | `None`                    | 最大 agentic ターン数（ツール使用ラウンドトリップ）                                                                                                                                                                                                                                                                                 |
-| `max_budget_usd`              | `float \| None`                                                                       | `None`                    | クライアント側のコスト推定がこの USD 値に達したときにクエリを停止します。`total_cost_usd` と同じ推定と比較されます。[コストと使用状況を追跡](/docs/ja/agent-sdk/cost-tracking) で精度の注意事項を参照                                                                                                                                                                                    |
-| `disallowed_tools`            | `list[str]`                                                                           | `[]`                      | 拒否するツール。`Bash` などの単純な名前はツールを Claude のコンテキストから削除します。`Bash(rm *)` などのスコープ付きルールはツールを利用可能なままにし、`bypassPermissions` を含むすべてのパーミッションモードで一致する呼び出しを拒否します。[パーミッション](/docs/ja/agent-sdk/permissions#allow-and-deny-rules) を参照                                                                                                  |
-| `enable_file_checkpointing`   | `bool`                                                                                | `False`                   | ファイル変更追跡を有効にして巻き戻しを可能にします。[ファイルチェックポイント](/docs/ja/agent-sdk/file-checkpointing) を参照                                                                                                                                                                                                                                 |
-| `model`                       | `str \| None`                                                                         | `None`                    | Claude モデルエイリアスまたは完全なモデル名。[受け入れられた値とプロバイダー固有の ID](/docs/ja/model-config#available-models) を参照                                                                                                                                                                                                                       |
-| `fallback_model`              | `str \| None`                                                                         | `None`                    | プライマリモデルが失敗した場合に使用するフォールバックモデル                                                                                                                                                                                                                                                                                 |
-| `betas`                       | `list[SdkBeta]`                                                                       | `[]`                      | 有効にするベータ機能。利用可能なオプションについては [`SdkBeta`](#sdkbeta) を参照                                                                                                                                                                                                                                                           |
-| `output_format`               | `dict[str, Any] \| None`                                                              | `None`                    | 構造化応答の出力形式（例：`{"type": "json_schema", "schema": {...}}`）。詳細については [構造化出力](/docs/ja/agent-sdk/structured-outputs) を参照                                                                                                                                                                                                 |
-| `permission_prompt_tool_name` | `str \| None`                                                                         | `None`                    | パーミッションプロンプト用の MCP ツール名                                                                                                                                                                                                                                                                                        |
-| `cwd`                         | `str \| Path \| None`                                                                 | `None`                    | 現在の作業ディレクトリ                                                                                                                                                                                                                                                                                                    |
-| `cli_path`                    | `str \| Path \| None`                                                                 | `None`                    | Claude Code CLI 実行可能ファイルへのカスタムパス                                                                                                                                                                                                                                                                               |
-| `settings`                    | `str \| None`                                                                         | `None`                    | 設定ファイルへのパス                                                                                                                                                                                                                                                                                                     |
-| `add_dirs`                    | `list[str \| Path]`                                                                   | `[]`                      | Claude がアクセスできる追加ディレクトリ                                                                                                                                                                                                                                                                                        |
-| `env`                         | `dict[str, str]`                                                                      | `{}`                      | 継承されたプロセス環境の上にマージされた環境変数。[環境変数](/docs/ja/env-vars) で、基盤となる CLI が読み込む変数を参照し、[遅いまたは停止した API レスポンスを処理](#handle-slow-or-stalled-api-responses) でタイムアウト関連の変数を参照してください                                                                                                                                                    |
-| `extra_args`                  | `dict[str, str \| None]`                                                              | `{}`                      | CLI に直接渡す追加 CLI 引数                                                                                                                                                                                                                                                                                             |
-| `max_buffer_size`             | `int \| None`                                                                         | `None`                    | CLI stdout をバッファリングする場合の最大バイト数                                                                                                                                                                                                                                                                                 |
-| `debug_stderr`                | `Any`                                                                                 | `sys.stderr`              | *非推奨* - デバッグ出力用のファイルのようなオブジェクト。代わりに `stderr` コールバックを使用してください                                                                                                                                                                                                                                                   |
-| `stderr`                      | `Callable[[str], None] \| None`                                                       | `None`                    | CLI からの stderr 出力用のコールバック関数                                                                                                                                                                                                                                                                                    |
-| `can_use_tool`                | [`CanUseTool`](#canusetool) ` \| None`                                                | `None`                    | ツールパーミッションコールバック関数。[パーミッション評価フロー](/docs/ja/agent-sdk/permissions#how-permissions-are-evaluated) がプロンプトに解決される場合にのみ呼び出されます。`allowed_tools` エントリ、設定許可ルール、または `permission_mode` によって事前承認されたツール呼び出しは呼び出されません。すべてのツール呼び出しをゲートするには、代わりに [`PreToolUse` hook](/docs/ja/agent-sdk/hooks) を使用してください。[`CanUseTool`](#canusetool) を参照 |
-| `hooks`                       | `dict[HookEvent, list[HookMatcher]] \| None`                                          | `None`                    | イベントをインターセプトするための hook 設定                                                                                                                                                                                                                                                                                      |
-| `user`                        | `str \| None`                                                                         | `None`                    | ユーザー識別子                                                                                                                                                                                                                                                                                                        |
-| `include_partial_messages`    | `bool`                                                                                | `False`                   | 部分的なメッセージストリーミングイベントを含めます。有効にすると、[`StreamEvent`](#streamevent) メッセージが生成されます                                                                                                                                                                                                                                    |
-| `include_hook_events`         | `bool`                                                                                | `False`                   | hook ライフサイクルイベントをメッセージストリームに `HookEventMessage` オブジェクトとして含めます                                                                                                                                                                                                                                                  |
-| `fork_session`                | `bool`                                                                                | `False`                   | `resume` で再開する場合、元のセッションを続ける代わりに新しいセッション ID にフォークします                                                                                                                                                                                                                                                           |
-| `agents`                      | `dict[str, AgentDefinition] \| None`                                                  | `None`                    | プログラムで定義されたサブエージェント                                                                                                                                                                                                                                                                                            |
-| `plugins`                     | `list[SdkPluginConfig]`                                                               | `[]`                      | ローカルパスからカスタムプラグインを読み込みます。詳細については [プラグイン](/docs/ja/agent-sdk/plugins) を参照                                                                                                                                                                                                                                            |
-| `sandbox`                     | [`SandboxSettings`](#sandboxsettings) ` \| None`                                      | `None`                    | プログラムでサンドボックス動作を設定します。詳細については [サンドボックス設定](#sandboxsettings) を参照                                                                                                                                                                                                                                                |
-| `setting_sources`             | `list[SettingSource] \| None`                                                         | `None`（CLI デフォルト：すべてのソース） | 読み込むファイルシステム設定を制御します。`[]` を渡してユーザー、プロジェクト、ローカル設定を無効にします。管理ポリシー設定は常に読み込まれます。[Claude Code 機能を使用](/docs/ja/agent-sdk/claude-code-features#what-settingsources-does-not-control) を参照                                                                                                                                    |
-| `skills`                      | `list[str] \| Literal["all"] \| None`                                                 | `None`                    | セッションで利用可能なスキル。すべての検出されたスキルを有効にするには `"all"` を渡すか、スキル名のリストを渡します。設定すると、SDK は `allowed_tools` にリストしなくても Skill ツールを自動的に有効にします。[スキル](/docs/ja/agent-sdk/skills) を参照                                                                                                                                                      |
-| `max_thinking_tokens`         | `int \| None`                                                                         | `None`                    | *非推奨* - 思考ブロックの最大トークン数。代わりに `thinking` を使用してください                                                                                                                                                                                                                                                               |
-| `thinking`                    | [`ThinkingConfig`](#thinkingconfig) ` \| None`                                        | `None`                    | 拡張思考動作を制御します。`max_thinking_tokens` より優先されます                                                                                                                                                                                                                                                                    |
-| `effort`                      | [`EffortLevel`](#effortlevel) ` \| None`                                              | `None`                    | 思考の深さの努力レベル。[努力レベルを調整](/docs/ja/model-config#adjust-effort-level) を参照                                                                                                                                                                                                                                               |
-| `session_store`               | [`SessionStore`](/docs/ja/agent-sdk/session-storage#the-sessionstore-interface) ` \| None` | `None`                    | セッショントランスクリプトを外部バックエンドにミラーリングして、任意のホストがそれらを再開できるようにします。[セッションを外部ストレージに永続化](/docs/ja/agent-sdk/session-storage) を参照                                                                                                                                                                                                  |
-| `session_store_flush`         | `Literal["batched", "eager"]`                                                         | `"batched"`               | ミラーリングされたトランスクリプトエントリを `session_store` にフラッシュするタイミング。`"batched"` はターンごと、またはバッファが満杯になったときにフラッシュします。`"eager"` はすべてのフレームの後にバックグラウンドフラッシュをトリガーします。`session_store` が `None` の場合は無視されます                                                                                                                              |
+| プロパティ                         | 型                                                                                     | デフォルト                    | 説明                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| :---------------------------- | :------------------------------------------------------------------------------------ | :----------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `tools`                       | `list[str] \| ToolsPreset \| None`                                                    | `None`                   | ツール設定。Claude Codeのデフォルトツールには`{"type": "preset", "preset": "claude_code"}`を使用します                                                                                                                                                                                                                                                                                                                                            |
+| `allowed_tools`               | `list[str]`                                                                           | `[]`                     | プロンプトなしで自動承認するツール。これはClaudeをこれらのツールのみに制限しません。ここで[タスク追跡ツール](/docs/ja/agent-sdk/todo-tracking#model-availability)の1つに名前を付けた場合、Claude Codeもセッションをオプトインします。その他のリストされていないツールは`permission_mode`と`can_use_tool`を通じて処理されます。`disallowed_tools`を使用してツールをブロックします。[権限](/docs/ja/agent-sdk/permissions#allow-and-deny-rules)を参照してください                                                                                                             |
+| `system_prompt`               | `str \| SystemPromptPreset \| SystemPromptCustom \| SystemPromptFile \| None`         | `None`                   | システムプロンプト設定。カスタムプロンプトの場合は文字列を渡し、Claude Codeのシステムプロンプトの場合は`{"type": "preset", "preset": "claude_code"}`をオプションの`"append"`で渡すか、カスタムプロンプトの場合は`{"type": "custom", "prompt": "..."}`を渡して`"snapshot"`も設定するか、`{"type": "file", "path": "..."}`でディスクから大きなプロンプトを読み込みます。[`SystemPromptPreset`](#systempromptpreset)、[`SystemPromptCustom`](#systempromptcustom)、[`SystemPromptFile`](#systempromptfile)を参照してください                      |
+| `mcp_servers`                 | `dict[str, McpServerConfig] \| str \| Path`                                           | `{}`                     | MCPサーバー設定または設定ファイルへのパス                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `strict_mcp_config`           | `bool`                                                                                | `False`                  | `True`の場合、`mcp_servers`で渡されたサーバーのみを使用し、プロジェクト`.mcp.json`、ユーザー設定、プラグイン提供のMCPサーバー、および[claude.aiコネクタ](/docs/ja/mcp#use-mcp-servers-from-claude-ai)を無視します。CLI`--strict-mcp-config`フラグにマップされます                                                                                                                                                                                                                                       |
+| `permission_mode`             | `PermissionMode \| None`                                                              | `None`                   | ツール使用の権限モード                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `continue_conversation`       | `bool`                                                                                | `False`                  | 最新の会話を続行します                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `resume`                      | `str \| None`                                                                         | `None`                   | 再開するセッションID                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `session_id`                  | `str \| None`                                                                         | `None`                   | 自動生成されたIDの代わりに特定のセッションIDを使用します。有効なUUIDである必要があります。`fork_session`も設定されていない限り、`continue_conversation`または`resume`と組み合わせることはできません                                                                                                                                                                                                                                                                                               |
+| `max_turns`                   | `int \| None`                                                                         | `None`                   | 最大agentic ターン（ツール使用ラウンドトリップ）                                                                                                                                                                                                                                                                                                                                                                                               |
+| `max_budget_usd`              | `float \| None`                                                                       | `None`                   | クライアント側のコスト推定がこのUSD値に達したときにクエリを停止します。呼び出し自体の支出のみをカウントします。再開されたセッションから復元された合計はカウントされません。精度の注意事項とリセット動作については、[コストと使用状況を追跡](/docs/ja/agent-sdk/cost-tracking)を参照してください                                                                                                                                                                                                                                                             |
+| `disallowed_tools`            | `list[str]`                                                                           | `[]`                     | 拒否するツール。`"Bash"`のような単純な名前はClaudeのコンテキストからツールを削除します。`"Bash(rm *)"`のようなスコープ付きルールはツールを利用可能なままにし、`bypassPermissions`を含むすべての権限モードで、[書かれたとおりの](/docs/ja/permissions#bash-rule-limits)コマンドの一致する呼び出しを拒否します。[権限](/docs/ja/agent-sdk/permissions#allow-and-deny-rules)を参照してください                                                                                                                                                                |
+| `enable_file_checkpointing`   | `bool`                                                                                | `False`                  | 巻き戻しのためのファイル変更追跡を有効にします。[ファイルチェックポイント](/docs/ja/agent-sdk/file-checkpointing)を参照してください                                                                                                                                                                                                                                                                                                                                          |
+| `model`                       | `str \| None`                                                                         | `None`                   | Claudeモデルエイリアスまたは完全なモデル名。[受け入れられた値とプロバイダー固有のID](/docs/ja/model-config#available-models)を参照してください                                                                                                                                                                                                                                                                                                                                |
+| `fallback_model`              | `str \| None`                                                                         | `None`                   | プライマリモデルが失敗した場合に使用するフォールバックモデル。カンマ区切りリストを受け入れます。ガイダンスについては、[モデルを選択](/docs/ja/agent-sdk/configuration#choose-a-model)を参照してください                                                                                                                                                                                                                                                                                                   |
+| `betas`                       | `list[SdkBeta]`                                                                       | `[]`                     | 有効にするベータ機能。利用可能なオプションについては[`SdkBeta`](#sdkbeta)を参照してください                                                                                                                                                                                                                                                                                                                                                                   |
+| `output_format`               | `dict[str, Any] \| None`                                                              | `None`                   | 構造化応答の出力形式（例：`{"type": "json_schema", "schema": {...}}`）。詳細については[構造化出力](/docs/ja/agent-sdk/structured-outputs)を参照してください                                                                                                                                                                                                                                                                                                         |
+| `permission_prompt_tool_name` | `str \| None`                                                                         | `None`                   | 権限プロンプト用のMCPツール名                                                                                                                                                                                                                                                                                                                                                                                                           |
+| `cwd`                         | `str \| Path \| None`                                                                 | `None`                   | 現在の作業ディレクトリ                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `cli_path`                    | `str \| Path \| None`                                                                 | `None`                   | Claude Code CLIの実行可能ファイルへのカスタムパス                                                                                                                                                                                                                                                                                                                                                                                           |
+| `settings`                    | `str \| None`                                                                         | `None`                   | 設定ファイルへのパスまたはインラインJSON文字列                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `add_dirs`                    | `list[str \| Path]`                                                                   | `[]`                     | Claudeがアクセスできる追加ディレクトリ。SDKは各エントリをClaude Codeに`--add-dir`として渡すため、`project`設定ソースを使用するとClaude Codeは[ディレクトリのスキル、コマンド、およびサブエージェントも読み込みます](/docs/ja/permissions#additional-directories-grant-file-access-not-configuration)                                                                                                                                                                                                           |
+| `env`                         | `dict[str, str]`                                                                      | `{}`                     | 継承されたプロセス環境の上にマージされた環境変数。基盤となるCLIが読み込む変数については[環境変数](/docs/ja/env-vars)を参照し、タイムアウト関連の変数については[遅いまたは停止したAPI応答を処理](#handle-slow-or-stalled-api-responses)を参照してください。`CLAUDE_AGENT_SDK_CLIENT_APP`を設定して、User-Agentヘッダーでアプリを識別します                                                                                                                                                                                                      |
+| `extra_args`                  | `dict[str, str \| None]`                                                              | `{}`                     | CLIに直接渡す追加CLIの引数                                                                                                                                                                                                                                                                                                                                                                                                           |
+| `max_buffer_size`             | `int \| None`                                                                         | `None`                   | CLI stdoutをバッファリングするときの最大バイト数                                                                                                                                                                                                                                                                                                                                                                                              |
+| `debug_stderr`                | `Any`                                                                                 | `sys.stderr`             | *非推奨* - SDKはこの値を無視します。CLI stderr出力には`stderr`コールバックを使用してください                                                                                                                                                                                                                                                                                                                                                                |
+| `stderr`                      | `Callable[[str], None] \| None`                                                       | `None`                   | CLIからのstderr出力用のコールバック関数                                                                                                                                                                                                                                                                                                                                                                                                   |
+| `can_use_tool`                | [`CanUseTool`](#canusetool) ` \| None`                                                | `None`                   | ツール権限コールバック。[権限フロー](/docs/ja/agent-sdk/permissions#how-permissions-are-evaluated)がプロンプトに落ちるときのみ呼び出されます。`allowed_tools`、許可ルール、または`permission_mode`によって自動承認された呼び出しには呼び出されません。許可ルールは[モードが自動承認しないアクション](/docs/ja/permission-modes#actions-no-mode-auto-approves)を事前承認しません。詳細については[`CanUseTool`](#canusetool)を参照してください                                                                                                                    |
+| `hooks`                       | `dict[HookEvent, list[HookMatcher]] \| None`                                          | `None`                   | イベント傍受用のフック設定                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `user`                        | `str \| None`                                                                         | `None`                   | POSIXプラットフォームでは、Claude Codeサブプロセスが実行されるOSユーザーアカウント。Claude Codeは親プロセスの環境（`HOME`を含む）を保持し、`cwd`で実行されます                                                                                                                                                                                                                                                                                                                        |
+| `include_partial_messages`    | `bool`                                                                                | `False`                  | 部分的なメッセージストリーミングイベントを含めます。有効にすると、[`StreamEvent`](#streamevent)メッセージが生成されます                                                                                                                                                                                                                                                                                                                                                 |
+| `include_hook_events`         | `bool`                                                                                | `False`                  | メッセージストリームに`HookEventMessage`オブジェクトとしてフックライフサイクルイベントを含めます                                                                                                                                                                                                                                                                                                                                                                  |
+| `forward_subagent_text`       | `bool`                                                                                | `False`                  | メッセージストリームでサブエージェントのテキストと思考ブロックを転送します。このオプションがない場合、Claude Codeはサブエージェント`tool_use`と`tool_result`ブロックを出力しますが、テキストや思考は出力しません。Python Agent SDK 0.2.140以降が必要です                                                                                                                                                                                                                                                                  |
+| `fork_session`                | `bool`                                                                                | `False`                  | `resume`で再開するときに、元のセッションを続行する代わりに新しいセッションIDにフォークします                                                                                                                                                                                                                                                                                                                                                                        |
+| `resume_session_at`           | `str \| None`                                                                         | `None`                   | 再開するときに、このUUIDを持つメッセージまでを含めて会話を読み込みます。`resume`を使用し、通常は`fork_session`を使用して、以前のポイントから分岐します。Python Agent SDK 0.2.137以降が必要です                                                                                                                                                                                                                                                                                                   |
+| `resume_drops_turn`           | `str \| None`                                                                         | `None`                   | ユーザープロンプトのUUID。`resume_session_at`切り詰めが破棄するターン。設定すると、CLIは破棄された範囲がそのターンに帰属しないエントリを保持する場合、再開を拒否します。Python Agent SDK 0.2.137以降およびClaude Code v2.1.223以降が必要です。これらのSDKバージョンにバンドルされているCLIはClaude Code要件を満たします                                                                                                                                                                                                                    |
+| `agents`                      | `dict[str, AgentDefinition] \| None`                                                  | `None`                   | プログラムで定義されたサブエージェント                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `plugins`                     | `list[SdkPluginConfig]`                                                               | `[]`                     | ローカルパスからカスタムプラグインを読み込みます。詳細については[プラグイン](/docs/ja/agent-sdk/plugins)を参照してください                                                                                                                                                                                                                                                                                                                                                    |
+| `sandbox`                     | [`SandboxSettings`](#sandboxsettings) ` \| None`                                      | `None`                   | サンドボックス動作をプログラムで設定します。詳細については[サンドボックス設定](#sandboxsettings)を参照してください                                                                                                                                                                                                                                                                                                                                                        |
+| `setting_sources`             | `list[SettingSource] \| None`                                                         | `None`（CLIデフォルト：すべてのソース） | 読み込むファイルシステム設定を制御します。ユーザー、プロジェクト、ローカル設定を無効にするには`[]`を渡します。`skills`が設定され、このフィールドが設定されていない場合、ユーザーとプロジェクトソースのみが読み込まれます。ローカル設定を保持するには`setting_sources`を明示的に設定します。エンドポイント管理ポリシーは関係なく読み込まれます。サーバー管理設定は、セッションが[適格な設定](/docs/ja/server-managed-settings#platform-availability)の組織認証情報で認証するときに取得されます。このオプションに関係なく読み込まれる入力については、[settingSourcesが制御しないもの](/docs/ja/agent-sdk/claude-code-features#what-settingsources-does-not-control)を参照してください |
+| `skills`                      | `list[str] \| Literal["all"] \| None`                                                 | `None`                   | セッションで利用可能なスキル。すべての発見されたスキルを有効にするには`"all"`を渡すか、スキル名のリストを渡します。正確な名前のみを渡します。SDKは形式が正しくないワイルドカード形式の名前を`ValueError`で拒否してからClaude Codeプロセスを開始します。このチェックにはPython Agent SDK 0.2.129以降が必要です。設定すると、SDKはSkillツールを`allowed_tools`に自動的に追加します。`tools`も渡す場合は、そのリストに`"Skill"`を含めます。[スキル](/docs/ja/agent-sdk/skills)を参照してください                                                                                                                   |
+| `max_thinking_tokens`         | `int \| None`                                                                         | `None`                   | *非推奨* - 思考ブロックの最大トークン数。代わりに`thinking`を使用してください                                                                                                                                                                                                                                                                                                                                                                             |
+| `thinking`                    | [`ThinkingConfig`](#thinkingconfig) ` \| None`                                        | `None`                   | 拡張思考動作を制御します。`max_thinking_tokens`より優先されます                                                                                                                                                                                                                                                                                                                                                                                 |
+| `effort`                      | [`EffortLevel`](#effortlevel) ` \| None`                                              | `None`                   | 思考の深さの努力レベル。[努力レベルを調整](/docs/ja/model-config#adjust-effort-level)を参照してください                                                                                                                                                                                                                                                                                                                                                      |
+| `session_store`               | [`SessionStore`](/docs/ja/agent-sdk/session-storage#the-sessionstore-interface) ` \| None` | `None`                   | セッショントランスクリプトを外部バックエンドにミラーリングして、別のホストがそれらを再開できるようにします。[セッションを外部ストレージに永続化](/docs/ja/agent-sdk/session-storage)を参照してください                                                                                                                                                                                                                                                                                                          |
+| `session_store_flush`         | `Literal["batched", "eager"]`                                                         | `"batched"`              | ミラーリングされたトランスクリプトエントリを`session_store`にフラッシュするタイミング。`"batched"`はターンごと、またはバッファが満杯になったときにフラッシュします。`"eager"`はすべてのフレームの後にバックグラウンドフラッシュをトリガーします。`session_store`が`None`の場合は無視されます                                                                                                                                                                                                                                                 |
+| `load_timeout_ms`             | `int`                                                                                 | `60000`                  | 再開の具体化中に`session_store.load()`と`list_subkeys()`のコール単位のタイムアウト（ミリ秒）                                                                                                                                                                                                                                                                                                                                                          |
+| `task_budget`                 | `TaskBudget \| None`                                                                  | `None`                   | API側のトークン予算。`task-budgets-2026-03-13`ベータヘッダーで`output_config.task_budget`として送信されます。`{"total": <int>}`を渡します。                                                                                                                                                                                                                                                                                                                 |
 
 <h4 id="handle-slow-or-stalled-api-responses">
-  遅いまたは停止した API レスポンスを処理
+  遅いまたは停止したAPI応答を処理
 </h4>
 
-CLI サブプロセスは、API タイムアウトと停止検出を制御するいくつかの環境変数を読み込みます。`ClaudeAgentOptions.env` を通じてそれらを渡します：
+CLIサブプロセスはAPI タイムアウトと停止検出を制御するいくつかの環境変数を読み込みます。`ClaudeAgentOptions.env`を通じてそれらを渡します：
 
 ```python theme={null}
+from claude_agent_sdk import ClaudeAgentOptions
+
 options = ClaudeAgentOptions(
     env={
         "API_TIMEOUT_MS": "120000",
@@ -965,35 +962,39 @@ options = ClaudeAgentOptions(
 )
 ```
 
-* `API_TIMEOUT_MS`：Anthropic クライアントのリクエストごとのタイムアウト（ミリ秒単位）。デフォルト `600000`。メインループとすべてのサブエージェントに適用されます。
-* `CLAUDE_CODE_MAX_RETRIES`：最大 API リトライ数。デフォルト `10`、上限 `15`。各リトライは独自の `API_TIMEOUT_MS` ウィンドウを取得するため、最悪の場合の実時間はおおよそ `API_TIMEOUT_MS × (CLAUDE_CODE_MAX_RETRIES + 1)` にバックオフを加えたものです。無人実行で長時間の停止を待つ必要がある場合は、`CLAUDE_CODE_RETRY_WATCHDOG=1` を設定します：容量エラーを無限に再試行し、Claude Code v2.1.199 以降は他の一時的なエラーのデフォルトを `300` に引き上げ、この変数の上限を削除します。
-* `CLAUDE_ASYNC_AGENT_STALL_TIMEOUT_MS`：`run_in_background` で起動されたサブエージェント用の停止ウォッチドッグ。デフォルト `600000`。各ストリームイベントでリセットされます。停止時にサブエージェントを中止し、タスクを失敗とマークし、部分的な結果を含むエラーを親に表示します。同期サブエージェントには適用されません。
-* `CLAUDE_ENABLE_STREAM_WATCHDOG` と `CLAUDE_STREAM_IDLE_TIMEOUT_MS`：ヘッダーが到着したがレスポンスボディがストリーミングを停止したときにリクエストを中止します。ウォッチドッグはすべてのプロバイダーでデフォルトで有効です。`CLAUDE_ENABLE_STREAM_WATCHDOG=0` を設定して無効にします。`CLAUDE_STREAM_IDLE_TIMEOUT_MS` はデフォルト `300000` で、その最小値にクランプされます。中止されたリクエストは通常のリトライパスを通ります。
+* `API_TIMEOUT_MS`：Anthropicクライアントのリクエスト単位のタイムアウト（ミリ秒）。デフォルト`600000`。メインループとすべてのサブエージェントに適用されます。
+* `CLAUDE_CODE_MAX_RETRIES`：最大APIリトライ。デフォルト`10`、上限`15`。各リトライは独自の`API_TIMEOUT_MS`ウィンドウを取得するため、最悪の場合の実時間はおおよそ`API_TIMEOUT_MS × (CLAUDE_CODE_MAX_RETRIES + 1)`プラスバックオフです。無人実行で長い停止を待つ必要がある場合は、[`CLAUDE_CODE_RETRY_WATCHDOG=1`](/docs/ja/errors#tune-retry-behavior)を設定します：一時的な容量エラーを無限に再試行し、Claude Code v2.1.199以降では、他の一時的なエラーのデフォルトを`300`に引き上げ、この変数の上限を削除します。
+* `CLAUDE_ASYNC_AGENT_STALL_TIMEOUT_MS`：サブエージェント用の停止ウォッチドッグ。ストリームウォッチドッグがオンの間、デフォルトは`CLAUDE_STREAM_IDLE_TIMEOUT_MS`プラス5分で、その変数を引き上げない限り`600000`になります。ストリームウォッチドッグがオフの場合、デフォルトは`600000`です。v2.1.257より前は、デフォルトは常に`600000`でした。
+
+  タイマーは各ストリームイベントでリセットされます。停止時、Claude Codeはサブエージェントを中止し、停止を親に報告します。バックグラウンドサブエージェントの場合、タスクも失敗とマークし、部分的な結果を添付します。
+* `CLAUDE_ENABLE_STREAM_WATCHDOG`と`CLAUDE_STREAM_IDLE_TIMEOUT_MS`：ヘッダーが到着したがレスポンスボディがストリーミングを停止したときにリクエストを中止するストリームウォッチドッグ。ウォッチドッグはすべてのプロバイダーでデフォルトでオンです。無効にするには`CLAUDE_ENABLE_STREAM_WATCHDOG=0`を設定します。`CLAUDE_STREAM_IDLE_TIMEOUT_MS`はデフォルト`300000`で、その最小値にクランプされます。中止後、[自動リトライ](/docs/ja/errors#automatic-retries)はレスポンスがどこまで進んだかに基づいて、Claude Codeが何をするかをカバーします。
+
+  ウォッチドッグが`ANTHROPIC_BASE_URL`の背後にあるゲートウェイが保持するレスポンスをキープアライブピングで待機している間、`include_partial_messages`を設定するホストは`ping` [`StreamEvent`](#streamevent)メッセージを受け取り続けます。これらのフレームを最後の実際のストリームイベント後の5分ではなく、生存性として読み取ります。v2.1.257より前は、フレームは停止しました。
 
 <h3 id="outputformat">
   `OutputFormat`
 </h3>
 
-構造化出力検証の設定。これを `ClaudeAgentOptions` の `output_format` フィールドに dict として渡します：
+構造化出力検証の設定。これを`dict`として`ClaudeAgentOptions`の`output_format`フィールドに渡します：
 
 ```python theme={null}
-# Expected dict shape for output_format
+# output_format用の予想される辞書形状
 {
     "type": "json_schema",
-    "schema": {...},  # Your JSON Schema definition
+    "schema": {...},  # JSON スキーマ定義
 }
 ```
 
-| フィールド    | 必須 | 説明                                            |
-| :------- | :- | :-------------------------------------------- |
-| `type`   | はい | JSON Schema 検証の場合は `"json_schema"` である必要があります |
-| `schema` | はい | 出力検証用の JSON Schema 定義                         |
+| フィールド    | 必須 | 説明                                       |
+| :------- | :- | :--------------------------------------- |
+| `type`   | はい | JSON スキーマ検証の場合は`"json_schema"`である必要があります |
+| `schema` | はい | 出力検証用のJSON スキーマ定義                        |
 
 <h3 id="systempromptpreset">
   `SystemPromptPreset`
 </h3>
 
-オプションの追加を含む Claude Code のプリセットシステムプロンプトを使用するための設定。
+オプションの追加を含むClaude Codeのプリセットシステムプロンプトを使用するための設定。
 
 ```python theme={null}
 class SystemPromptPreset(TypedDict):
@@ -1001,20 +1002,41 @@ class SystemPromptPreset(TypedDict):
     preset: Literal["claude_code"]
     append: NotRequired[str]
     exclude_dynamic_sections: NotRequired[bool]
+    snapshot: NotRequired[bool]
 ```
 
-| フィールド                      | 必須  | 説明                                                                                                                                                                                                                        |
-| :------------------------- | :-- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `type`                     | はい  | プリセットシステムプロンプトを使用するには `"preset"` である必要があります                                                                                                                                                                               |
-| `preset`                   | はい  | Claude Code のシステムプロンプトを使用するには `"claude_code"` である必要があります                                                                                                                                                                  |
-| `append`                   | いいえ | プリセットシステムプロンプトに追加する追加の指示                                                                                                                                                                                                  |
-| `exclude_dynamic_sections` | いいえ | 作業ディレクトリ、git リポジトリフラグ、自動メモリパスなどのセッションごとのコンテキストをシステムプロンプトから最初のユーザーメッセージに移動します。ユーザーとマシン全体でのプロンプトキャッシュの再利用を改善します。[システムプロンプトを変更](/docs/ja/agent-sdk/modifying-system-prompts#improve-prompt-caching-across-users-and-machines) を参照 |
+| フィールド                      | 必須  | 説明                                                                                                                                                                                                                       |
+| :------------------------- | :-- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `type`                     | はい  | プリセットシステムプロンプトを使用するには`"preset"`である必要があります                                                                                                                                                                                |
+| `preset`                   | はい  | Claude Codeのシステムプロンプトを使用するには`"claude_code"`である必要があります                                                                                                                                                                    |
+| `append`                   | いいえ | プリセットシステムプロンプトに追加する追加の指示                                                                                                                                                                                                 |
+| `exclude_dynamic_sections` | いいえ | 作業ディレクトリ、gitリポフラグ、自動メモリパスなどのセッション単位のコンテキストをシステムプロンプトから最初のユーザーメッセージに移動します。ユーザーとマシン間のプロンプトキャッシュの再利用を改善します。[システムプロンプトを変更](/docs/ja/agent-sdk/modifying-system-prompts#improve-prompt-caching-across-users-and-machines)を参照してください |
+| `snapshot`                 | いいえ | `False`に設定して、[セッションが最初のリクエストで記録したプロンプトを再利用する](/docs/ja/agent-sdk/modifying-system-prompts#change-the-prompt-of-an-existing-session)代わりに、すべてのリクエストでシステムプロンプトを再構築します。Python Agent SDK 0.2.153以降が必要です                            |
+
+<h3 id="systempromptcustom">
+  `SystemPromptCustom`
+</h3>
+
+文字列として`system_prompt`を渡すのと同等のオブジェクト形式のカスタムシステムプロンプト。`snapshot`も設定できます。Python Agent SDK 0.2.153以降が必要です。
+
+```python theme={null}
+class SystemPromptCustom(TypedDict):
+    type: Literal["custom"]
+    prompt: str
+    snapshot: NotRequired[bool]
+```
+
+| フィールド      | 必須  | 説明                                                                          |
+| :--------- | :-- | :-------------------------------------------------------------------------- |
+| `type`     | はい  | `"custom"`である必要があります                                                        |
+| `prompt`   | はい  | システムプロンプトテキスト。CLIにコマンドライン引数として渡されるため、[コマンドライン長制限](#systempromptfile)が適用されます |
+| `snapshot` | いいえ | [`SystemPromptPreset.snapshot`](#systempromptpreset)と同じ。`prompt`に適用されます     |
 
 <h3 id="systempromptfile">
   `SystemPromptFile`
 </h3>
 
-ファイルからカスタムシステムプロンプトを読み込むための設定。文字列として渡す代わりに、ファイル形式を使用します。SDK はこれを CLI [`--system-prompt-file`](/docs/ja/cli-reference#system-prompt-flags) フラグにマップします。プロンプトが大きい場合はファイル形式を使用します：SDK は文字列 `system_prompt` を CLI サブプロセス argv に渡します。これは OS コマンドライン長制限の対象となり、SDK が API リクエストを送信する前に失敗します。Linux では、単一の引数が約 128 KB より長い場合、`Argument list too long` でプロセス生成に失敗します。Windows では、コマンドライン全体が約 32 KB に制限されているため、文字列形式はより低いしきい値で失敗します。
+文字列として渡す代わりにファイルからカスタムシステムプロンプトを読み込むための設定。SDKはこれをCLI [`--system-prompt-file`](/docs/ja/cli-reference#system-prompt-flags)フラグにマップします。プロンプトが大きい場合はファイル形式を使用します：SDKはCLIサブプロセスargvで文字列`system_prompt`を渡し、これはSDKがAPIリクエストを送信する前にOSコマンドライン長制限の対象になります。Linuxでは単一の引数が約128 KBより長い場合、`Argument list too long`でプロセス生成に失敗します。Windowsではコマンドライン全体が約32 KBに制限されているため、文字列形式はより低いしきい値で失敗します。
 
 ```python theme={null}
 class SystemPromptFile(TypedDict):
@@ -1022,143 +1044,125 @@ class SystemPromptFile(TypedDict):
     path: str
 ```
 
-| フィールド  | 必須 | 説明                                     |
-| :----- | :- | :------------------------------------- |
-| `type` | はい | プロンプトをディスクから読み込むには `"file"` である必要があります |
-| `path` | はい | システムプロンプトを含むファイルへのパス                   |
+| フィールド  | 必須 | 説明                                   |
+| :----- | :- | :----------------------------------- |
+| `type` | はい | ディスクからプロンプトを読み込むには`"file"`である必要があります |
+| `path` | はい | システムプロンプトを含むファイルへのパス                 |
 
 <h3 id="settingsource">
   `SettingSource`
 </h3>
 
-SDK が設定を読み込むファイルシステムベースの設定ソースを制御します。
+SDKが設定を読み込むファイルシステムベースの設定ソースを制御します。
 
 ```python theme={null}
 SettingSource = Literal["user", "project", "local"]
 ```
 
-| 値           | 説明                       | 場所                            |
-| :---------- | :----------------------- | :---------------------------- |
-| `"user"`    | グローバルユーザー設定              | `~/.claude/settings.json`     |
-| `"project"` | 共有プロジェクト設定（バージョン管理）      | `.claude/settings.json`       |
-| `"local"`   | ローカルプロジェクト設定（gitignored） | `.claude/settings.local.json` |
+| 値           | 説明                                           | 場所                            |
+| :---------- | :------------------------------------------- | :---------------------------- |
+| `"user"`    | グローバルユーザー設定                                  | `~/.claude/settings.json`     |
+| `"project"` | 共有プロジェクト設定（バージョン管理）                          | `.claude/settings.json`       |
+| `"local"`   | ローカルプロジェクト設定、Claude Codeが設定を保存するときにgitignore | `.claude/settings.local.json` |
 
 <h4 id="default-behavior">
   デフォルト動作
 </h4>
 
-`setting_sources` が省略されるか `None` の場合、`query()` は Claude Code CLI と同じファイルシステム設定を読み込みます：ユーザー、プロジェクト、ローカル。管理ポリシー設定はすべての場合に読み込まれます。サーバー管理設定は、セッションが [適格な設定](/docs/ja/server-managed-settings#platform-availability) 上の組織認証情報で認証されるときに取得されます。[Claude Code 機能を使用](/docs/ja/agent-sdk/claude-code-features#what-settingsources-does-not-control) を参照して、このオプションに関係なく読み込まれる入力と、それらを無効にする方法を確認してください。
+`setting_sources`が省略されるか`None`で、`skills`が設定されていない場合、`query()`はClaude Code CLIと同じファイルシステム設定を読み込みます：ユーザー、プロジェクト、ローカル。`skills`が設定されている場合、[`setting_sources`](#claudeagentoptions)行は現在のデフォルトを説明します。エンドポイント管理ポリシーはすべての場合に読み込まれます。サーバー管理設定は、セッションが[適格な設定](/docs/ja/server-managed-settings#platform-availability)の組織認証情報で認証するときに取得されます。詳細については、[settingSourcesが制御しないもの](/docs/ja/agent-sdk/claude-code-features#what-settingsources-does-not-control)を参照してください。
 
 <h4 id="why-use-setting_sources">
-  setting\_sources を使用する理由
+  setting\_sourcesを使用する理由
 </h4>
 
-**ファイルシステム設定を無効にする：**
+**ファイルシステム設定を無効にします：**
 
 ```python theme={null}
-# Do not load user, project, or local settings from disk
+# ディスクからユーザー、プロジェクト、またはローカル設定を読み込まない
+import asyncio
 from claude_agent_sdk import query, ClaudeAgentOptions
 
-async for message in query(
-    prompt="Analyze this code",
-    options=ClaudeAgentOptions(
-        setting_sources=[]
-    ),
-):
-    print(message)
+
+async def main():
+    async for message in query(
+        prompt="Analyze this code",
+        options=ClaudeAgentOptions(
+            setting_sources=[]
+        ),
+    ):
+        print(message)
+
+
+asyncio.run(main())
 ```
 
 <Note>
-  Python SDK 0.1.59 以前では、空のリストはオプションを省略するのと同じように扱われていたため、`setting_sources=[]` はファイルシステム設定を無効にしませんでした。空のリストが有効になる必要がある場合は、新しいリリースにアップグレードしてください。TypeScript SDK は影響を受けません。
+  Python SDK 0.1.59以前では、空のリストはオプションを省略するのと同じように扱われたため、`setting_sources=[]`はファイルシステム設定を無効にしませんでした。新しいリリースにアップグレードして、空のリストが有効になるようにしてください。TypeScript SDKは影響を受けません。
 </Note>
 
-**すべてのファイルシステム設定を明示的に読み込む：**
+**特定の設定ソースのみを読み込みます：**
 
 ```python theme={null}
+# プロジェクト設定のみを読み込み、ユーザーとローカルを無視
+import asyncio
 from claude_agent_sdk import query, ClaudeAgentOptions
 
-async for message in query(
-    prompt="Analyze this code",
-    options=ClaudeAgentOptions(
-        setting_sources=["user", "project", "local"]
-    ),
-):
-    print(message)
+
+async def main():
+    async for message in query(
+        prompt="Run CI checks",
+        options=ClaudeAgentOptions(
+            setting_sources=["project"]  # .claude/settings.jsonのみ
+        ),
+    ):
+        print(message)
+
+
+asyncio.run(main())
 ```
 
-**特定の設定ソースのみを読み込む：**
+**SDK専用アプリケーション：**
 
 ```python theme={null}
-# Load only project settings, ignore user and local
-async for message in query(
-    prompt="Run CI checks",
-    options=ClaudeAgentOptions(
-        setting_sources=["project"]  # Only .claude/settings.json
-    ),
-):
-    print(message)
+# すべてをプログラムで定義します。
+# ファイルシステム設定ソースをオプトアウトするには[]を渡します。
+import asyncio
+from claude_agent_sdk import AgentDefinition, ClaudeAgentOptions, query
+
+
+async def main():
+    async for message in query(
+        prompt="Review this PR",
+        options=ClaudeAgentOptions(
+            setting_sources=[],
+            agents={
+                "code-reviewer": AgentDefinition(
+                    description="Reviews code changes",
+                    prompt="You are a code reviewer. Report issues in the diff.",
+                ),
+            },
+            allowed_tools=["Read", "Grep", "Glob"],
+        ),
+    ):
+        print(message)
+
+
+asyncio.run(main())
 ```
 
-**テストと CI 環境：**
-
-```python theme={null}
-# Ensure consistent behavior in CI by excluding local settings
-async for message in query(
-    prompt="Run tests",
-    options=ClaudeAgentOptions(
-        setting_sources=["project"],  # Only team-shared settings
-        permission_mode="bypassPermissions",
-    ),
-):
-    print(message)
-```
-
-**SDK のみのアプリケーション：**
-
-```python theme={null}
-# Define everything programmatically.
-# Pass [] to opt out of filesystem setting sources.
-async for message in query(
-    prompt="Review this PR",
-    options=ClaudeAgentOptions(
-        setting_sources=[],
-        agents={...},
-        mcp_servers={...},
-        allowed_tools=["Read", "Grep", "Glob"],
-    ),
-):
-    print(message)
-```
-
-**CLAUDE.md プロジェクト指示を読み込む：**
-
-```python theme={null}
-# Load project settings to include CLAUDE.md files
-async for message in query(
-    prompt="Add a new feature following project conventions",
-    options=ClaudeAgentOptions(
-        system_prompt={
-            "type": "preset",
-            "preset": "claude_code",  # Use Claude Code's system prompt
-        },
-        setting_sources=["project"],  # Loads CLAUDE.md from project
-        allowed_tools=["Read", "Write", "Edit"],
-    ),
-):
-    print(message)
-```
+CLAUDE.mdプロジェクト指示を読み込むには、`setting_sources`に`"project"`を含めます。CLAUDE.mdの読み込みがシステムプロンプトオプションとどのように相互作用するかについては、[システムプロンプトを変更](/docs/ja/agent-sdk/modifying-system-prompts#claude-md-files-for-project-level-instructions)を参照してください。
 
 <h4 id="settings-precedence">
   設定の優先順位
 </h4>
 
-複数のソースが読み込まれる場合、設定はこの優先順位（最高から最低）でマージされます：
+複数のソースが読み込まれる場合、設定は次の優先順位（最高から最低）でマージされます：
 
 1. ローカル設定（`.claude/settings.local.json`）
 2. プロジェクト設定（`.claude/settings.json`）
 3. ユーザー設定（`~/.claude/settings.json`）
 
-`agents` と `allowed_tools` などのプログラム的なオプションは、ユーザー、プロジェクト、ローカルのファイルシステム設定をオーバーライドします。管理ポリシー設定はプログラム的なオプションより優先されます。
+`agents`、`allowed_tools`、`settings`などのプログラム的なオプションは、ユーザー、プロジェクト、ローカルのファイルシステム設定をオーバーライドします。管理ポリシー設定はプログラム的なオプションより優先されます。
 
 <h3 id="agentdefinition">
   `AgentDefinition`
@@ -1184,40 +1188,40 @@ class AgentDefinition:
     permissionMode: PermissionMode | None = None
 ```
 
-| フィールド             | 必須  | 説明                                                                                                                                                  |
-| :---------------- | :-- | :-------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `description`     | はい  | このエージェントを使用する場合の自然言語説明                                                                                                                              |
-| `prompt`          | はい  | エージェントのシステムプロンプト                                                                                                                                    |
-| `tools`           | いいえ | 許可されたツール名の配列。省略した場合、すべてのツールを継承します                                                                                                                   |
-| `disallowedTools` | いいえ | エージェントのツールセットから削除するツール名の配列。MCP サーバーレベルのパターンも受け入れられます：`mcp__server` または `mcp__server__*` はそのサーバーからすべてのツールを削除し、`mcp__*` はすべてのサーバーからすべての MCP ツールを削除します |
-| `model`           | いいえ | このエージェントのモデルオーバーライド。`"sonnet"`、`"opus"`、`"haiku"`、`"inherit"` などのエイリアス、または完全なモデル ID を受け入れます。省略した場合、メインモデルを使用します                                     |
-| `skills`          | いいえ | このエージェントが起動時にコンテキストにプリロードするスキル名のリスト。リストされていないスキルは Skill ツールを通じて呼び出し可能なままです                                                                          |
-| `memory`          | いいえ | このエージェントのメモリソース：`"user"`、`"project"`、または `"local"`                                                                                                  |
-| `mcpServers`      | いいえ | このエージェントが利用可能な MCP サーバー。各エントリはサーバー名またはインライン `{name: config}` dict です                                                                                |
-| `initialPrompt`   | いいえ | このエージェントがメインスレッドエージェントとして実行される場合、最初のユーザーターンとして自動送信されます                                                                                              |
-| `maxTurns`        | いいえ | エージェントが停止する前の最大 agentic ターン数                                                                                                                        |
-| `background`      | いいえ | 呼び出されたときにこのエージェントをブロッキングされないバックグラウンドタスクとして実行します                                                                                                     |
-| `effort`          | いいえ | このエージェントの推論努力レベル。名前付きレベルまたは整数を受け入れます。[`EffortLevel`](#effortlevel) を参照                                                                              |
-| `permissionMode`  | いいえ | このエージェント内のツール実行のパーミッションモード。[`PermissionMode`](#permissionmode) を参照                                                                                  |
+| フィールド             | 必須  | 説明                                                                                                                                                                  |
+| :---------------- | :-- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `description`     | はい  | このエージェントをいつ使用するかの自然言語説明                                                                                                                                             |
+| `prompt`          | はい  | エージェントのシステムプロンプト                                                                                                                                                    |
+| `tools`           | いいえ | 許可されたツール名の配列。省略した場合、[サブエージェントで利用可能なすべてのツール](/docs/ja/sub-agents#available-tools)を継承します                                                                                   |
+| `disallowedTools` | いいえ | エージェントのツールセットから削除するツール名の配列。MCPサーバーレベルのパターンも受け入れられます：`mcp__server`または`mcp__server__*`はそのサーバーからすべてのツールを削除し、`mcp__*`は任意のサーバーからすべてのMCPツールを削除します                         |
+| `model`           | いいえ | このエージェントのモデルオーバーライド。`"sonnet"`、`"opus"`、`"haiku"`、`"inherit"`などのエイリアス、または完全なモデルIDを受け入れます。省略すると、Claude Codeは[サブエージェントモデル順序](/docs/ja/sub-agents#choose-a-model)でモデルを選択します |
+| `skills`          | いいえ | 起動時にエージェントのコンテキストにプリロードするスキル名のリスト。リストされていないスキルはSkillツールを通じて呼び出し可能なままです                                                                                              |
+| `memory`          | いいえ | このエージェントのメモリソース：`"user"`、`"project"`、または`"local"`                                                                                                                   |
+| `mcpServers`      | いいえ | このエージェントで利用可能なMCPサーバー。各エントリはサーバー名またはインライン`{name: config}`辞書です                                                                                                       |
+| `initialPrompt`   | いいえ | このエージェントがメインスレッドエージェントとして実行されるときに最初のユーザーターンとして自動送信されます                                                                                                              |
+| `maxTurns`        | いいえ | エージェントが停止する前のagentic ターンの最大数                                                                                                                                        |
+| `background`      | いいえ | 呼び出されたときにこのエージェントをブロッキングなしのバックグラウンドタスクとして実行します                                                                                                                      |
+| `effort`          | いいえ | このエージェントの推論努力レベル。名前付きレベルまたは整数を受け入れます。[`EffortLevel`](#effortlevel)を参照してください                                                                                         |
+| `permissionMode`  | いいえ | このエージェント内のツール実行の権限モード。[サブエージェント継承ルール](/docs/ja/agent-sdk/permissions#available-modes)はいつそれが適用されるかを決定します。[`PermissionMode`](#permissionmode)を参照してください                     |
 
 <Note>
-  `AgentDefinition` フィールド名は `disallowedTools`、`permissionMode`、`maxTurns` などの camelCase を使用します。これらの名前は TypeScript SDK と共有される wire 形式に直接マップされます。これは `disallowed_tools` と `permission_mode` などの同等のトップレベルフィールドに Python snake\_case を使用する `ClaudeAgentOptions` とは異なります。`AgentDefinition` は dataclass であるため、snake\_case キーワードを渡すと構築時に `TypeError` が発生します。
+  `AgentDefinition`フィールド名は`disallowedTools`、`permissionMode`、`maxTurns`などのcamelCaseを使用します。これらの名前はTypeScript SDKと共有されるワイヤー形式に直接マップされます。これは`disallowed_tools`と`permission_mode`などの同等のトップレベルフィールドにPython snake\_caseを使用する`ClaudeAgentOptions`とは異なります。`AgentDefinition`はdataclassであるため、snake\_caseキーワードを渡すと構築時に`TypeError`が発生します。
 </Note>
 
 <h3 id="permissionmode">
   `PermissionMode`
 </h3>
 
-ツール実行を制御するためのパーミッションモード。
+ツール実行を制御するための権限モード。
 
 ```python theme={null}
 PermissionMode = Literal[
-    "default",  # Standard permission behavior
-    "acceptEdits",  # Auto-accept file edits
-    "plan",  # Planning mode - explore without editing
-    "dontAsk",  # Deny anything not pre-approved instead of prompting
-    "bypassPermissions",  # Bypass permission checks; explicit ask rules still prompt (use with caution)
-    "auto",  # A model classifier approves or denies each tool call
+    "default",  # 標準的な権限動作
+    "acceptEdits",  # ファイル編集を自動受け入れ
+    "plan",  # 計画モード - 編集なしで探索
+    "dontAsk",  # 事前承認されていないものを拒否する代わりにプロンプト
+    "bypassPermissions",  # 権限チェックをバイパス。明示的な質問ルールはまだプロンプト（注意して使用）
+    "auto",  # モデル分類器が権限プロンプトを承認または拒否
 ]
 ```
 
@@ -1225,15 +1229,15 @@ PermissionMode = Literal[
   `EffortLevel`
 </h3>
 
-思考の深さを導くための努力レベル。
+思考の深さをガイドするための努力レベル。
 
 ```python theme={null}
 EffortLevel = Literal[
-    "low",  # Minimal thinking, fastest responses
-    "medium",  # Moderate thinking
-    "high",  # Deep reasoning
-    "xhigh",  # Extended reasoning; falls back to "high" on models that don't support it
-    "max",  # Maximum effort
+    "low",  # 最小限の思考、最速の応答
+    "medium",  # 適度な思考
+    "high",  # 深い推論
+    "xhigh",  # 拡張推論。それをサポートしないモデルでは「高」にフォールバック
+    "max",  # 最大努力
 ]
 ```
 
@@ -1241,7 +1245,7 @@ EffortLevel = Literal[
   `CanUseTool`
 </h3>
 
-ツールパーミッションコールバック関数の型エイリアス。
+ツール権限コールバック関数の型エイリアス。
 
 ```python theme={null}
 CanUseTool = Callable[
@@ -1253,25 +1257,27 @@ CanUseTool = Callable[
 
 * `tool_name`：呼び出されるツールの名前
 * `input_data`：ツールの入力パラメータ
-* `context`：追加情報を含む `ToolPermissionContext`
+* `context`：追加情報を含む`ToolPermissionContext`
 
-`PermissionResult`（`PermissionResultAllow` または `PermissionResultDeny`）を返します。
+`PermissionResult`（`PermissionResultAllow`または`PermissionResultDeny`）を返します。
 
-コールバックは対話的なパーミッションプロンプトの SDK 置き換えです：[パーミッション評価フロー](/docs/ja/agent-sdk/permissions#how-permissions-are-evaluated) がプロンプトに解決される場合にのみ呼び出されます。`allowed_tools` エントリ、設定許可ルール、または `acceptEdits` や `bypassPermissions` などのパーミッションモードによって事前承認されたツール呼び出しは呼び出されません。すべてのツール呼び出しをゲートするには、代わりに [`PreToolUse` hook](/docs/ja/agent-sdk/hooks) を使用してください。
+コールバックはインタラクティブな権限プロンプトのSDK置き換えです：[権限評価フロー](/docs/ja/agent-sdk/permissions#how-permissions-are-evaluated)がプロンプトに解決するときのみ呼び出されます。`allowed_tools`エントリ、設定許可ルール、または`acceptEdits`や`bypassPermissions`などの権限モードによって既に承認されたツール呼び出しは、それを呼び出しません。すべてのツール呼び出しをゲートするには、代わりに[`PreToolUse`フック](/docs/ja/agent-sdk/hooks)を使用します。
 
-`AskUserQuestion`、[`requiresUserInteraction`](/docs/ja/mcp#require-approval-for-a-specific-tool) とマークされた MCP ツール、および [組織が `ask` に設定したコネクタツール](/docs/ja/mcp#organization-controls-on-connector-tools) は、許可ルールが一致する場合でもコールバックに到達します。`dontAsk` モードではこれらの呼び出しは代わりに拒否され、コールバックを呼び出しません。
+許可ルールは[モードが自動承認しないアクション](/docs/ja/permission-modes#actions-no-mode-auto-approves)を事前承認しません。[権限がどのように評価されるか](/docs/ja/agent-sdk/permissions#how-permissions-are-evaluated)を参照して、どれがコールバックに到達し、`dontAsk`と`auto`モードで何が起こるかを確認してください。
 
 <h3 id="toolpermissioncontext">
   `ToolPermissionContext`
 </h3>
 
-ツールパーミッションコールバックに渡されるコンテキスト情報。
+ツール権限コールバックに渡されるコンテキスト情報。
 
 ```python theme={null}
 @dataclass
 class ToolPermissionContext:
-    signal: Any | None = None  # Future: abort signal support
+    signal: Any | None = None  # 将来：中止シグナルサポート
     suggestions: list[PermissionUpdate] = field(default_factory=list)
+    tool_use_id: str | None = None
+    agent_id: str | None = None
     blocked_path: str | None = None
     decision_reason: str | None = None
     title: str | None = None
@@ -1279,21 +1285,23 @@ class ToolPermissionContext:
     description: str | None = None
 ```
 
-| フィールド             | 型                        | 説明                                                                                                                                                 |
-| :---------------- | :----------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `signal`          | `Any \| None`            | 将来の中止信号サポート用に予約済み                                                                                                                                  |
-| `suggestions`     | `list[PermissionUpdate]` | CLI からのパーミッション更新提案。Bash プロンプトには `localSettings` 宛先の提案が含まれているため、`updated_permissions` で返すと、ルールを `.claude/settings.local.json` に書き込み、セッション全体で永続化します。 |
-| `blocked_path`    | `str \| None`            | パーミッションリクエストをトリガーしたファイルパス（該当する場合）。例えば、Bash コマンドが許可されたディレクトリ外のパスにアクセスしようとした場合                                                                       |
-| `decision_reason` | `str \| None`            | このパーミッションリクエストがトリガーされた理由。PreToolUse hook が `"ask"` を返したときに hook の `permissionDecisionReason` から転送されます                                              |
-| `title`           | `str \| None`            | 完全なパーミッションプロンプト文。例えば、`Claude wants to read foo.txt`。存在する場合は、プライマリプロンプトテキストとして使用します                                                                 |
-| `display_name`    | `str \| None`            | ツールアクション用の短い名詞句。例えば、`Read file`。ボタンラベルに適しています                                                                                                      |
-| `description`     | `str \| None`            | パーミッション UI 用の人間が読める字幕                                                                                                                              |
+| フィールド             | 型                        | 説明                                                                                                                                  |
+| :---------------- | :----------------------- | :---------------------------------------------------------------------------------------------------------------------------------- |
+| `signal`          | `Any \| None`            | 将来の中止シグナルサポート用に予約済み                                                                                                                 |
+| `suggestions`     | `list[PermissionUpdate]` | CLIからの権限更新提案。Bashプロンプトには`localSettings`宛先の提案が含まれるため、`updated_permissions`で返すと、ルールを`.claude/settings.local.json`に書き込み、セッション間で永続化します。 |
+| `tool_use_id`     | `str \| None`            | このプロンプトが対象とする特定のツール呼び出しの識別子。`can_use_tool`に配信されるときは常に入力されます                                                                         |
+| `agent_id`        | `str \| None`            | 呼び出しがサブエージェントから発生する場合のサブエージェントID。メインエージェントの場合は`None`                                                                                |
+| `blocked_path`    | `str \| None`            | 権限リクエストをトリガーしたファイルパス（該当する場合）。例えば、Bashコマンドが許可されたディレクトリの外のパスにアクセスしようとする場合                                                             |
+| `decision_reason` | `str \| None`            | この権限リクエストがトリガーされた理由。PreToolUseフックが`"ask"`を返したときにフックから転送されます                                                                         |
+| `title`           | `str \| None`            | 完全な権限プロンプト文（例：`Claude wants to read foo.txt`）。存在する場合は、プライマリプロンプトテキストとして使用します                                                        |
+| `display_name`    | `str \| None`            | ツールアクション用の短い名詞句（例：`Read file`）。ボタンラベルに適しています                                                                                        |
+| `description`     | `str \| None`            | 権限UIの人間が読める字幕                                                                                                                       |
 
 <h3 id="permissionresult">
   `PermissionResult`
 </h3>
 
-パーミッションコールバック結果の Union 型。
+権限コールバック結果の共用体型。
 
 ```python theme={null}
 PermissionResult = PermissionResultAllow | PermissionResultDeny
@@ -1303,7 +1311,7 @@ PermissionResult = PermissionResultAllow | PermissionResultDeny
   `PermissionResultAllow`
 </h3>
 
-ツール呼び出しを許可すべきことを示す結果。
+ツール呼び出しを許可する必要があることを示す結果。
 
 ```python theme={null}
 @dataclass
@@ -1313,17 +1321,17 @@ class PermissionResultAllow:
     updated_permissions: list[PermissionUpdate] | None = None
 ```
 
-| フィールド                 | 型                                | デフォルト     | 説明                 |
-| :-------------------- | :------------------------------- | :-------- | :----------------- |
-| `behavior`            | `Literal["allow"]`               | `"allow"` | "allow" である必要があります |
-| `updated_input`       | `dict[str, Any] \| None`         | `None`    | 元の代わりに使用する変更された入力  |
-| `updated_permissions` | `list[PermissionUpdate] \| None` | `None`    | 適用するパーミッション更新      |
+| フィールド                 | 型                                | デフォルト     | 説明                |
+| :-------------------- | :------------------------------- | :-------- | :---------------- |
+| `behavior`            | `Literal["allow"]`               | `"allow"` | 「allow」である必要があります |
+| `updated_input`       | `dict[str, Any] \| None`         | `None`    | 元の代わりに使用する変更された入力 |
+| `updated_permissions` | `list[PermissionUpdate] \| None` | `None`    | 適用する権限更新          |
 
 <h3 id="permissionresultdeny">
   `PermissionResultDeny`
 </h3>
 
-ツール呼び出しを拒否すべきことを示す結果。
+ツール呼び出しを拒否する必要があることを示す結果。
 
 ```python theme={null}
 @dataclass
@@ -1335,15 +1343,15 @@ class PermissionResultDeny:
 
 | フィールド       | 型                 | デフォルト    | 説明                    |
 | :---------- | :---------------- | :------- | :-------------------- |
-| `behavior`  | `Literal["deny"]` | `"deny"` | "deny" である必要があります     |
+| `behavior`  | `Literal["deny"]` | `"deny"` | 「deny」である必要があります      |
 | `message`   | `str`             | `""`     | ツールが拒否された理由を説明するメッセージ |
-| `interrupt` | `bool`            | `False`  | 現在の実行を割り込むかどうか        |
+| `interrupt` | `bool`            | `False`  | 現在の実行を中断するかどうか        |
 
 <h3 id="permissionupdate">
   `PermissionUpdate`
 </h3>
 
-プログラムでパーミッションを更新するための設定。
+権限をプログラムで更新するための設定。
 
 ```python theme={null}
 @dataclass
@@ -1365,20 +1373,20 @@ class PermissionUpdate:
     ) = None
 ```
 
-| フィールド         | 型                                         | 説明                    |
-| :------------ | :---------------------------------------- | :-------------------- |
-| `type`        | `Literal[...]`                            | パーミッション更新操作のタイプ       |
-| `rules`       | `list[PermissionRuleValue] \| None`       | 追加/置換/削除操作用のルール       |
-| `behavior`    | `Literal["allow", "deny", "ask"] \| None` | ルールベースの操作の動作          |
-| `mode`        | `PermissionMode \| None`                  | setMode 操作のモード        |
-| `directories` | `list[str] \| None`                       | ディレクトリ追加/削除操作用のディレクトリ |
-| `destination` | `Literal[...] \| None`                    | パーミッション更新を適用する場所      |
+| フィールド         | 型                                         | 説明                     |
+| :------------ | :---------------------------------------- | :--------------------- |
+| `type`        | `Literal[...]`                            | 権限更新操作のタイプ             |
+| `rules`       | `list[PermissionRuleValue] \| None`       | 追加/置換/削除操作用のルール        |
+| `behavior`    | `Literal["allow", "deny", "ask"] \| None` | ルールベースの操作の動作           |
+| `mode`        | `PermissionMode \| None`                  | setMode操作のモード          |
+| `directories` | `list[str] \| None`                       | ディレクトリの追加/削除操作用のディレクトリ |
+| `destination` | `Literal[...] \| None`                    | 権限更新を適用する場所            |
 
 <h3 id="permissionrulevalue">
   `PermissionRuleValue`
 </h3>
 
-パーミッション更新で追加、置換、または削除するルール。
+権限更新で追加、置換、または削除するルール。
 
 ```python theme={null}
 @dataclass
@@ -1391,7 +1399,7 @@ class PermissionRuleValue:
   `ToolsPreset`
 </h3>
 
-Claude Code のデフォルトツールセットを使用するためのプリセットツール設定。
+Claude Codeのデフォルトツールセットを使用するためのプリセットツール設定。
 
 ```python theme={null}
 class ToolsPreset(TypedDict):
@@ -1403,7 +1411,7 @@ class ToolsPreset(TypedDict):
   `ThinkingConfig`
 </h3>
 
-拡張思考動作を制御します。3 つの設定の Union：
+拡張思考動作を制御します。3つの設定の共用体：
 
 ```python theme={null}
 ThinkingDisplay = Literal["summarized", "omitted"]
@@ -1427,62 +1435,79 @@ class ThinkingConfigDisabled(TypedDict):
 ThinkingConfig = ThinkingConfigAdaptive | ThinkingConfigEnabled | ThinkingConfigDisabled
 ```
 
-| バリアント      | フィールド                            | 説明                          |
-| :--------- | :------------------------------- | :-------------------------- |
-| `adaptive` | `type`、`display`                 | Claude は適応的に思考するタイミングを決定します |
-| `enabled`  | `type`、`budget_tokens`、`display` | 特定のトークン予算で思考を有効にします         |
-| `disabled` | `type`                           | 思考を無効にします                   |
+| バリアント      | フィールド                            | 説明                        |
+| :--------- | :------------------------------- | :------------------------ |
+| `adaptive` | `type`、`display`                 | Claudeが適応的に思考するかどうかを決定します |
+| `enabled`  | `type`、`budget_tokens`、`display` | 特定のトークン予算で思考を有効にします       |
+| `disabled` | `type`                           | 思考を無効にします                 |
 
-オプションの `display` フィールドは、思考テキストが `"summarized"` または `"omitted"` で返されるかどうかを制御します。Claude Opus 4.7 以降では、API デフォルトは `"omitted"` であるため、[`ThinkingBlock`](#thinkingblock) 出力で思考コンテンツを受け取るには `"summarized"` を設定します。
+オプションの`display`フィールドは、思考テキストが`"summarized"`または`"omitted"`で返されるかどうかを制御します。Claude Opus 4.7以降では、APIデフォルトは`"omitted"`であるため、[`ThinkingBlock`](#thinkingblock)出力で思考コンテンツを受け取るには`"summarized"`を設定します。Claude Codeは`ANTHROPIC_BASE_URL`の背後にあるAmazon BedrockまたはGoogle Cloudのエージェントプラットフォームに`display`を送信しないため、これらのプロバイダーではOpus 4.7以降は`display`を`"summarized"`に設定した場合でも空の`ThinkingBlock`出力を返します。
 
-これらは `TypedDict` クラスであるため、実行時にはプレーンな dict です。dict リテラルとして構築するか、クラスをコンストラクタのように呼び出します。どちらも `dict` を生成します。`config["budget_tokens"]` でフィールドにアクセスし、`config.budget_tokens` ではなく：
+これらは`TypedDict`クラスであるため、実行時にはプレーンな辞書です。辞書リテラルとして構築するか、クラスをコンストラクタのように呼び出します。どちらも`dict`を生成します。`config.budget_tokens`ではなく`config["budget_tokens"]`でフィールドにアクセスします：
 
 ```python theme={null}
 from claude_agent_sdk import ClaudeAgentOptions, ThinkingConfigEnabled
 
-# Option 1: dict literal (recommended, no import needed)
+# オプション1：辞書リテラル（推奨、インポート不要）
 options = ClaudeAgentOptions(thinking={"type": "enabled", "budget_tokens": 20000})
 
-# Option 2: constructor-style (returns a plain dict)
+# オプション2：コンストラクタスタイル（プレーンな辞書を返す）
 config = ThinkingConfigEnabled(type="enabled", budget_tokens=20000)
 print(config["budget_tokens"])  # 20000
-# config.budget_tokens would raise AttributeError
+# config.budget_tokens は AttributeError を発生させます
 ```
+
+<h3 id="taskbudget">
+  `TaskBudget`
+</h3>
+
+`ClaudeAgentOptions`の`task_budget`フィールドで使用されるトークン内のAPI側のタスク予算。
+
+```python theme={null}
+class TaskBudget(TypedDict):
+    total: int
+```
+
+| フィールド   | 型     | 説明           |
+| :------ | :---- | :----------- |
+| `total` | `int` | タスクの合計トークン予算 |
+
+これは`TypedDict`であるため、`ClaudeAgentOptions(task_budget={"total": 50000})`などのプレーンな辞書として渡します。
 
 <h3 id="sdkbeta">
   `SdkBeta`
 </h3>
 
-SDK ベータ機能の Literal 型。
+SDKベータ機能のリテラル型。
 
 ```python theme={null}
 SdkBeta = Literal["context-1m-2025-08-07"]
 ```
 
-`ClaudeAgentOptions` の `betas` フィールドで使用してベータ機能を有効にします。
+`ClaudeAgentOptions`の`betas`フィールドで使用して、ベータ機能を有効にします。
 
 <Warning>
-  `context-1m-2025-08-07` ベータは 2026 年 4 月 30 日時点で廃止されました。このヘッダーを Claude Sonnet 4.5 または Sonnet 4 で渡すと効果がなく、標準の 200k トークンコンテキストウィンドウを超えるリクエストはエラーを返します。1M トークンコンテキストウィンドウを使用するには、[Claude Sonnet 5、Claude Sonnet 4.6、Claude Opus 4.6、Claude Opus 4.7、または Claude Opus 4.8](https://platform.claude.com/docs/en/about-claude/models/overview) に移行してください。これらには、ベータヘッダーなしで標準価格で 1M コンテキストが含まれます。
+  `context-1m-2025-08-07`ベータは2026年4月30日の時点で廃止されました。このヘッダーをClaude Sonnet 4.5またはSonnet 4で渡すと効果がなく、標準200kトークンコンテキストウィンドウを超えるリクエストはエラーを返します。1Mトークンコンテキストウィンドウを使用するには、[Claude Opus 5.5、Claude Opus 5、Claude Sonnet 5、Claude Sonnet 4.6、Claude Opus 4.6、Claude Opus 4.7、またはClaude Opus 4.8](https://platform.claude.com/docs/en/about-claude/models/overview)に移行してください。これらには、ベータヘッダーなしで標準価格で1Mコンテキストが含まれます。
 </Warning>
 
 <h3 id="mcpsdkserverconfig">
   `McpSdkServerConfig`
 </h3>
 
-`create_sdk_mcp_server()` で作成された SDK MCP サーバーの設定。
+`create_sdk_mcp_server()`で作成されたSDK MCPサーバーの設定。
 
 ```python theme={null}
 class McpSdkServerConfig(TypedDict):
     type: Literal["sdk"]
     name: str
-    instance: Any  # MCP Server instance
+    instance: Any  # MCPサーバーインスタンス
 ```
 
 <h3 id="mcpserverconfig">
   `McpServerConfig`
 </h3>
 
-MCP サーバー設定の Union 型。
+MCPサーバー設定の共用体型。
 
 ```python theme={null}
 McpServerConfig = (
@@ -1496,7 +1521,7 @@ McpServerConfig = (
 
 ```python theme={null}
 class McpStdioServerConfig(TypedDict):
-    type: NotRequired[Literal["stdio"]]  # Optional for backwards compatibility
+    type: NotRequired[Literal["stdio"]]  # 後方互換性のためオプション
     command: str
     args: NotRequired[list[str]]
     env: NotRequired[dict[str, str]]
@@ -1528,7 +1553,7 @@ class McpHttpServerConfig(TypedDict):
   `McpServerStatusConfig`
 </h3>
 
-[`get_mcp_status()`](#methods) によって報告される MCP サーバーの設定。これは、すべての [`McpServerConfig`](#mcpserverconfig) トランスポートバリアント、および claude.ai を通じてプロキシされるサーバー用の出力のみの `claudeai-proxy` バリアントの Union です。
+[`get_mcp_status()`](#methods)によって報告されるMCPサーバーの設定。これはすべての[`McpServerConfig`](#mcpserverconfig)トランスポートバリアントの共用体プラス、claude.ai経由でプロキシされるサーバー用の出力のみの`claudeai-proxy`バリアントです。
 
 ```python theme={null}
 McpServerStatusConfig = (
@@ -1540,13 +1565,13 @@ McpServerStatusConfig = (
 )
 ```
 
-`McpSdkServerConfigStatus` は [`McpSdkServerConfig`](#mcpsdkserverconfig) のシリアライズ可能な形式で、`type`（`"sdk"`）と `name`（`str`）フィールドのみです。インプロセス `instance` は省略されます。`McpClaudeAIProxyServerConfig` には `type`（`"claudeai-proxy"`）、`url`（`str`）、`id`（`str`）フィールドがあります。
+`McpSdkServerConfigStatus`は[`McpSdkServerConfig`](#mcpsdkserverconfig)のシリアライズ可能な形式で、`type`（`"sdk"`）と`name`（`str`）フィールドのみです。プロセス内の`instance`は省略されます。`McpClaudeAIProxyServerConfig`には`type`（`"claudeai-proxy"`）、`url`（`str`）、`id`（`str`）フィールドがあります。
 
 <h3 id="mcpstatusresponse">
   `McpStatusResponse`
 </h3>
 
-[`ClaudeSDKClient.get_mcp_status()`](#methods) からの応答。サーバーステータスのリストを `mcpServers` キーの下にラップします。
+[`ClaudeSDKClient.get_mcp_status()`](#methods)からの応答。`mcpServers`キーの下のサーバーステータスのリストをラップします。
 
 ```python theme={null}
 class McpStatusResponse(TypedDict):
@@ -1557,7 +1582,7 @@ class McpStatusResponse(TypedDict):
   `McpServerStatus`
 </h3>
 
-接続された MCP サーバーのステータス。[`McpStatusResponse`](#mcpstatusresponse) に含まれます。
+[`McpStatusResponse`](#mcpstatusresponse)に含まれる接続されたMCPサーバーのステータス。
 
 ```python theme={null}
 class McpServerStatus(TypedDict):
@@ -1570,21 +1595,21 @@ class McpServerStatus(TypedDict):
     tools: NotRequired[list[McpToolInfo]]
 ```
 
-| フィールド        | 型                                                        | 説明                                                                                                                              |
-| :----------- | :------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------ |
-| `name`       | `str`                                                    | サーバー名                                                                                                                           |
-| `status`     | `str`                                                    | `"connected"`、`"failed"`、`"needs-auth"`、`"pending"`、または `"disabled"` のいずれか                                                      |
-| `serverInfo` | `dict`（オプション）                                            | サーバー名とバージョン（`{"name": str, "version": str}`）                                                                                    |
-| `error`      | `str`（オプション）                                             | サーバーが接続に失敗した場合のエラーメッセージ                                                                                                         |
-| `config`     | [`McpServerStatusConfig`](#mcpserverstatusconfig)（オプション） | サーバー設定。[`McpServerConfig`](#mcpserverconfig) と同じ形状（stdio、SSE、HTTP、または SDK）、および claude.ai を通じて接続されたサーバー用の `claudeai-proxy` バリアント |
-| `scope`      | `str`（オプション）                                             | 設定スコープ                                                                                                                          |
-| `tools`      | `list`（オプション）                                            | このサーバーが提供するツール。各ツールには `name`、`description`、`annotations` フィールドがあります                                                             |
+| フィールド        | 型                                                        | 説明                                                                                                                       |
+| :----------- | :------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------- |
+| `name`       | `str`                                                    | サーバー名                                                                                                                    |
+| `status`     | `str`                                                    | `"connected"`、`"failed"`、`"needs-auth"`、`"pending"`、`"disabled"`のいずれか                                                    |
+| `serverInfo` | `dict`（オプション）                                            | サーバー名とバージョン（`{"name": str, "version": str}`）                                                                             |
+| `error`      | `str`（オプション）                                             | サーバーが接続に失敗した場合のエラーメッセージ                                                                                                  |
+| `config`     | [`McpServerStatusConfig`](#mcpserverstatusconfig)（オプション） | サーバー設定。[`McpServerConfig`](#mcpserverconfig)（stdio、SSE、HTTP、またはSDK）と同じ形状、プラスclaude.ai経由で接続されたサーバー用の`claudeai-proxy`バリアント |
+| `scope`      | `str`（オプション）                                             | 設定スコープ                                                                                                                   |
+| `tools`      | `list`（オプション）                                            | このサーバーが提供するツール。各ツールには`name`、`description`、`annotations`フィールドがあります                                                        |
 
 <h3 id="sdkpluginconfig">
   `SdkPluginConfig`
 </h3>
 
-SDK でプラグインを読み込むための設定。
+SDKでプラグインを読み込むための設定。
 
 ```python theme={null}
 class SdkPluginConfig(TypedDict):
@@ -1592,10 +1617,10 @@ class SdkPluginConfig(TypedDict):
     path: str
 ```
 
-| フィールド  | 型                  | 説明                                      |
-| :----- | :----------------- | :-------------------------------------- |
-| `type` | `Literal["local"]` | `"local"` である必要があります（現在ローカルプラグインのみサポート） |
-| `path` | `str`              | プラグインディレクトリへの絶対パスまたは相対パス                |
+| フィールド  | 型                  | 説明                                     |
+| :----- | :----------------- | :------------------------------------- |
+| `type` | `Literal["local"]` | `"local"`である必要があります（現在ローカルプラグインのみサポート） |
+| `path` | `str`              | プラグインディレクトリへの絶対パスまたは相対パス               |
 
 **例：**
 
@@ -1606,7 +1631,7 @@ plugins = [
 ]
 ```
 
-プラグインの作成と使用に関する完全な情報については、[プラグイン](/docs/ja/agent-sdk/plugins) を参照してください。
+プラグインの作成と使用に関する完全な情報については、[プラグイン](/docs/ja/agent-sdk/plugins)を参照してください。
 
 <h2 id="message-types">
   メッセージ型
@@ -1626,6 +1651,7 @@ Message = (
     | ResultMessage
     | StreamEvent
     | RateLimitEvent
+    | ConversationResetMessage
 )
 ```
 
@@ -1642,14 +1668,20 @@ class UserMessage:
     uuid: str | None = None
     parent_tool_use_id: str | None = None
     tool_use_result: dict[str, Any] | None = None
+    origin: MessageOrigin | None = None
 ```
 
-| フィールド                | 型                           | 説明                             |
-| :------------------- | :-------------------------- | :----------------------------- |
-| `content`            | `str \| list[ContentBlock]` | テキストまたはコンテンツブロックとしてのメッセージコンテンツ |
-| `uuid`               | `str \| None`               | 一意のメッセージ識別子                    |
-| `parent_tool_use_id` | `str \| None`               | このメッセージがツール結果応答の場合のツール使用 ID    |
-| `tool_use_result`    | `dict[str, Any] \| None`    | 該当する場合のツール結果データ                |
+| フィールド                | 型                           | 説明                                                                                                      |
+| :------------------- | :-------------------------- | :------------------------------------------------------------------------------------------------------ |
+| `content`            | `str \| list[ContentBlock]` | テキストまたはコンテンツブロックとしてのメッセージコンテンツ                                                                          |
+| `uuid`               | `str \| None`               | 一意のメッセージ識別子                                                                                             |
+| `parent_tool_use_id` | `str \| None`               | このメッセージがツール結果応答の場合のツール使用 ID                                                                             |
+| `tool_use_result`    | `dict[str, Any] \| None`    | 該当する場合のツール結果データ                                                                                         |
+| `origin`             | `MessageOrigin \| None`     | このメッセージの出所。タスク通知やピアメッセージなどの注入されたターンで入力されます。CLI がそれを属性付けしなかった場合は `None`。Python Agent SDK 0.2.137 以降が必要です |
+
+SDK は `tool_use_result` を CLI から変更されずに渡します。結果に `resource_link` ブロックを含む外部 MCP サーバー上のツールの場合、dict は TypeScript [`SDKMcpResourceLink`](/docs/ja/agent-sdk/typescript#sdkmcpresourcelink) 型のキーを持つ dict のリストを保持する `resourceLinks` キーを持ちます。Claude は各リンクをツール結果内のテキスト行として受け取ります。サーバーが返したファイルをレンダリングするには、そのテキストを解析する代わりに `resourceLinks` を読み取ってください。`resourceLinks` キーには Python Agent SDK 0.2.150 以降と Claude Code v2.1.257 以降が必要です。そのバージョンの SDK にバンドルされている CLI は Claude Code の要件を満たしています。
+
+CLI は結果にリンクがない場合と、サブエージェントからの結果の場合、キーを省略します。CLI は結果ごとに最大 50 個のリンクを保持し、リストがシリアル化された JSON の 64 KiB に達するとリンクの追加を停止します。[`tool()`](#tool) で定義したプロセス内ツールは、SDK がその `resource_link` ブロックを CLI が結果を見る前にテキストにフラット化するため、キーを生成しません。
 
 <h3 id="assistantmessage">
   `AssistantMessage`
@@ -1666,6 +1698,9 @@ class AssistantMessage:
     error: AssistantMessageError | None = None
     usage: dict[str, Any] | None = None
     message_id: str | None = None
+    stop_reason: str | None = None
+    session_id: str | None = None
+    uuid: str | None = None
 ```
 
 | フィールド                | 型                                                            | 説明                                                              |
@@ -1676,6 +1711,9 @@ class AssistantMessage:
 | `error`              | [`AssistantMessageError`](#assistantmessageerror) ` \| None` | 応答がエラーに遭遇した場合のエラー型                                              |
 | `usage`              | `dict[str, Any] \| None`                                     | メッセージごとのトークン使用状況（[`ResultMessage.usage`](#resultmessage) と同じキー） |
 | `message_id`         | `str \| None`                                                | API メッセージ ID。1 つのターンからの複数のメッセージは同じ ID を共有します                    |
+| `stop_reason`        | `str \| None`                                                | API からの停止理由（例：`end_turn`、`tool_use`）                            |
+| `session_id`         | `str \| None`                                                | このメッセージが属するセッションの ID                                            |
+| `uuid`               | `str \| None`                                                | セッショントランスクリプト内の一意のメッセージ識別子                                      |
 
 <h3 id="assistantmessageerror">
   `AssistantMessageError`
@@ -1690,10 +1728,11 @@ AssistantMessageError = Literal[
     "rate_limit",
     "invalid_request",
     "server_error",
-    "max_output_tokens",
     "unknown",
 ]
 ```
+
+基になる CLI プロセスは、`max_output_tokens` などの Literal にリストされていないエラータイプを発行できます。SDK は値を変更されずに渡すため、このリストの外の文字列を `unknown` と同じ方法で扱ってください。TypeScript [`SDKAssistantMessageError`](/docs/ja/agent-sdk/typescript#sdkassistantmessage) 型は、CLI が発行できる値の完全なセットをリストしています。
 
 <h3 id="systemmessage">
   `SystemMessage`
@@ -1728,24 +1767,28 @@ class ResultMessage:
     usage: dict[str, Any] | None = None
     result: str | None = None
     structured_output: Any = None
-    model_usage: dict[str, Any] | None = None
+    model_usage: dict[str, ModelUsage] | None = None
     permission_denials: list[Any] | None = None
     deferred_tool_use: DeferredToolUse | None = None
     errors: list[str] | None = None
     api_error_status: int | None = None
     uuid: str | None = None
+    terminal_reason: str | None = None
+    origin: MessageOrigin | None = None
 ```
 
 `subtype` フィールドは、他のどのフィールドが入力されるかを決定します。これは `"success"`、`"error_during_execution"`、`"error_max_turns"`、`"error_max_budget_usd"`、または `"error_max_structured_output_retries"` のいずれかです。Python データクラスはすべてのバリアントを 1 つの形状にフラット化するため、返された subtype に適用されないフィールドは `None` です。
 
-会話がエラーで終了する場合、いくつかのフィールドは診断の詳細を含みます：
+会話がどのように終了したかについての診断詳細を含むいくつかのフィールド：
 
 * `is_error`：会話がエラー状態で終了した場合は `True`。`error_*` サブタイプでは常に `True`。`subtype="success"` では、最終モデルリクエストが失敗した場合は `True`。つまり、エージェントループが完了しましたが、最後の API 呼び出しがエラーを返しました。
 * `api_error_status`：終了する API エラーの HTTP ステータスコード。ターンがエラーなしで終了した場合は `None`。`subtype="success"` でのみ入力されます。
 * `result`：`subtype="success"` での最終アシスタントメッセージのテキスト、または `error_*` サブタイプでは `None`。`subtype="success"` で `is_error=True` の場合、これは利用可能な場合は API エラー文字列を保持しますが、空の場合もあるため、`api_error_status` と前の `AssistantMessage` コンテンツで詳細を確認してください。
 * `errors`：最大ターンメッセージなどのループレベルのエラー文字列。`error_*` サブタイプでのみ入力されます。
+* `terminal_reason`：クエリループが終了した理由。例：`"completed"`、`"max_turns"`、`"api_error"`、`"aborted_streaming"`、または `"aborted_tools"`。`"aborted_streaming"` または `"aborted_tools"` の値は、ターンが完了する前に中止されたことを意味します。一般的な原因は [`interrupt()`](#claudesdkclient) と、`interrupt=True` で [`PermissionResultDeny`](#permissionresultdeny) を返すパーミッション コールバックです。CLI バージョンがフィールドより前の場合、`/voice` や `/usage` などのローカルコマンドの結果（クエリループをバイパス）、またはセッションが致命的に失敗したときに発行される合成エラー結果の場合は `None`。TypeScript SDK の [`SDKResultMessage.terminal_reason`](/docs/ja/agent-sdk/typescript#sdkresultmessage) を反映しており、値の完全なセットをリストしています。
+* `origin`：このターンをトリガーしたユーザーメッセージの出所。[ストリーミング入力モード](/docs/ja/agent-sdk/streaming-vs-single-mode) では、これをチェックして、`origin` が `None` または `{"kind": "human"}` である独自のプロンプトの結果と、バックグラウンドタスク通知などの注入されたターンの結果を区別します。Python Agent SDK 0.2.137 以降が必要です。
 
-`usage` dict には、存在する場合、以下のキーが含まれます：
+`usage` dict はメインエージェントループのみをカバーし、サブエージェントおよび他のネストされた、または補助的なモデル呼び出しを除外します。[ストリーミング入力モード](/docs/ja/agent-sdk/streaming-vs-single-mode) では、値はターンごとです。トークンとコストのアカウンティングについては `model_usage` を優先してください。`usage` dict は、存在する場合、以下のキーを含みます：
 
 | キー                            | 型     | 説明                                                                                                                                                     |
 | ----------------------------- | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -1754,18 +1797,25 @@ class ResultMessage:
 | `cache_creation_input_tokens` | `int` | 新しいキャッシュエントリを作成するために使用されたトークン。                                                                                                                         |
 | `cache_read_input_tokens`     | `int` | 既存のキャッシュエントリから読み取られたトークン。                                                                                                                              |
 
-`model_usage` dict はモデル名をモデルごとの使用状況にマップします。内部 dict キーは camelCase を使用します。これは、基になる CLI プロセスから変更されずに渡される値であり、TypeScript [`ModelUsage`](/docs/ja/agent-sdk/typescript#modelusage) 型と一致するためです：
+`model_usage` dict はモデル名をモデルごとの使用状況にマップします。クエリパイプラインを通じて行われたすべてのモデル呼び出しをカバーします：メインループ、サブエージェント、および圧縮と Workflow エージェントなどの内部呼び出し。パーミッション分類器とトークンカウントリクエストなどのそのパイプラインの外のヘルパー呼び出しは、`model_usage` から除外されます。`model_usage` を推定値として扱い、請求書ではなく。
 
-| キー                         | 型       | 説明                                                                                            |
-| -------------------------- | ------- | --------------------------------------------------------------------------------------------- |
-| `inputTokens`              | `int`   | このモデルの入力トークン。                                                                                 |
-| `outputTokens`             | `int`   | このモデルの出力トークン。                                                                                 |
-| `cacheReadInputTokens`     | `int`   | このモデルのキャッシュ読み取りトークン。                                                                          |
-| `cacheCreationInputTokens` | `int`   | このモデルのキャッシュ作成トークン。                                                                            |
-| `webSearchRequests`        | `int`   | このモデルが行った Web 検索リクエスト。                                                                        |
-| `costUSD`                  | `float` | このモデルの推定 USD コスト。クライアント側で計算されます。[コストと使用状況を追跡](/docs/ja/agent-sdk/cost-tracking) で請求の注意事項を参照してください。 |
-| `contextWindow`            | `int`   | このモデルのコンテキストウィンドウサイズ。                                                                         |
-| `maxOutputTokens`          | `int`   | このモデルの最大出力トークン制限。                                                                             |
+[ストリーミング入力モード](/docs/ja/agent-sdk/streaming-vs-single-mode) では、`model_usage` と `total_cost_usd` はターン全体で累積されるため、結果全体で合計するのではなく、最新の結果を読み取ってください。セッションの以前の呼び出しから復元された [合計を蓄積](/docs/ja/agent-sdk/cost-tracking#accumulate-costs-across-multiple-calls) も、呼び出しがセッションを再開する場合にカウントされます。リセットについては [ストリーミング入力モードでコストを追跡](/docs/ja/agent-sdk/cost-tracking#track-costs-in-streaming-input-mode) を、ゼロ化された結果については [セッションクラッシュ後に合計を復旧](/docs/ja/agent-sdk/cost-tracking#recover-totals-after-a-session-crash) を参照してください。
+
+`model_usage` の各値は `ModelUsage` TypedDict で、`from claude_agent_sdk.types import ModelUsage` でインポートされます。そのキーは camelCase を使用します。これは、基になる CLI プロセスから変更されずに渡される値であり、TypeScript [`ModelUsage`](/docs/ja/agent-sdk/typescript#modelusage) 型と一致するためです：
+
+| キー                         | 型       | 説明                                                                                                                                                                                    |
+| -------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `inputTokens`              | `int`   | このモデルの入力トークン。                                                                                                                                                                         |
+| `outputTokens`             | `int`   | このモデルの出力トークン。                                                                                                                                                                         |
+| `cacheReadInputTokens`     | `int`   | このモデルのキャッシュ読み取りトークン。                                                                                                                                                                  |
+| `cacheCreationInputTokens` | `int`   | このモデルのキャッシュ作成トークン。                                                                                                                                                                    |
+| `webSearchRequests`        | `int`   | このモデルが行った Web 検索リクエスト。                                                                                                                                                                |
+| `thinkingTokens`           | `int`   | このモデルで生成された思考トークン。既に `outputTokens` に含まれています。Claude Code バージョンがそれを記録するターンまで存在しません。TypedDict で宣言されていないため、`.get()` で読み取ってください。Python Agent SDK 0.2.150 以降が必要です。そのバンドルされた CLI がそれを記録します。 |
+| `costUSD`                  | `float` | このモデルの推定 USD コスト。クライアント側で計算されます。[コストと使用状況を追跡](/docs/ja/agent-sdk/cost-tracking) で請求の注意事項を参照してください。                                                                                         |
+| `contextWindow`            | `int`   | このモデルのコンテキストウィンドウサイズ。                                                                                                                                                                 |
+| `maxOutputTokens`          | `int`   | このモデルの最大出力トークン制限。                                                                                                                                                                     |
+| `canonicalModel`           | `str`   | 価格ルックアップに使用される正規モデル ID。エントリがキーとなっている生のモデル文字列（プロバイダー固有の ID またはエイリアスなど）と異なる場合があります。常に存在するわけではありません。                                                                                     |
+| `provider`                 | `str`   | このモデルを提供した API プロバイダー。例：`firstParty`、`bedrock`、`vertex`、`foundry`、`anthropicAws`、`mantle`、または `gateway`。常に存在するわけではありません。                                                              |
 
 <h3 id="streamevent">
   `StreamEvent`
@@ -1844,6 +1894,26 @@ class RateLimitInfo:
 | `overage_resets_at`       | `int \| None`             | 超過ウィンドウがリセットされる Unix タイムスタンプ                                                 |
 | `overage_disabled_reason` | `str \| None`             | ステータスが `"rejected"` の場合、超過が利用できない理由                                          |
 | `raw`                     | `dict[str, Any]`          | 上記でモデル化されていないフィールドを含む、CLI からの完全な生 dict                                       |
+
+<h3 id="conversationresetmessage">
+  `ConversationResetMessage`
+</h3>
+
+会話が接続を終了せずに置き換えられたときに発行されます。例：`/clear` の後。リセットが後の `ResultMessage` オブジェクトの実行中の合計にどのように影響するかについては、[ストリーミング入力モードでコストを追跡](/docs/ja/agent-sdk/cost-tracking#track-costs-in-streaming-input-mode) を参照してください。Python Agent SDK 0.2.137 以降が必要です。
+
+```python theme={null}
+@dataclass
+class ConversationResetMessage:
+    new_conversation_id: str
+    uuid: str
+    session_id: str
+```
+
+| フィールド                 | 型     | 説明                                                                 |
+| :-------------------- | :---- | :----------------------------------------------------------------- |
+| `new_conversation_id` | `str` | 新しい会話の不透明な識別子。後続のメッセージの `session_id` ではありません。次のメッセージからそれを読み取ってください |
+| `uuid`                | `str` | 一意のメッセージ識別子                                                        |
+| `session_id`          | `str` | リセットされたセッションの ID。リセット後のメッセージは新しい `session_id` を持ちます                |
 
 <h3 id="taskstartedmessage">
   `TaskStartedMessage`
@@ -1942,6 +2012,10 @@ class TaskNotificationMessage(SystemMessage):
 | `tool_use_id` | `str \| None`            | 関連するツール使用 ID                                   |
 | `usage`       | `TaskUsage \| None`      | タスクの最終トークン使用状況                                 |
 
+CLI が [長い MCP ツール呼び出しをバックグラウンドに移動](/docs/ja/mcp#automatic-backgrounding-of-long-tool-calls) する場合、その呼び出しのツール結果はプレースホルダーのみを保持し、呼び出しの実際の結果はこのメッセージに到着します。そのような呼び出しの `"completed"` 通知では、CLI は、ツールが参照によって返したファイルをリストする `resource_links` キーを追加します。[`UserMessage.tool_use_result`](#usermessage) の `resourceLinks` キーと同じエントリと制限があります。`resource_links` キーには Python Agent SDK 0.2.150 以降と Claude Code v2.1.257 以降が必要です。そのバージョンの SDK にバンドルされている CLI は Claude Code の要件を満たしています。
+
+データクラスには `resource_links` のフィールドがありません。メッセージが [`SystemMessage`](#systemmessage) から継承する `data` dict から読み取ってください：`message.data.get("resource_links")`。通知を `tool_use_id` で呼び出しと一致させてください。CLI は結果にリンクがない場合と、MCP ツール呼び出しではないタスクの通知の場合、キーを省略します。
+
 <h2 id="content-block-types">
   コンテンツブロック型
 </h2>
@@ -1953,7 +2027,14 @@ class TaskNotificationMessage(SystemMessage):
 すべてのコンテンツブロックの Union 型。
 
 ```python theme={null}
-ContentBlock = TextBlock | ThinkingBlock | ToolUseBlock | ToolResultBlock
+ContentBlock = (
+    TextBlock
+    | ThinkingBlock
+    | ToolUseBlock
+    | ToolResultBlock
+    | ServerToolUseBlock
+    | ServerToolResultBlock
+)
 ```
 
 <h3 id="textblock">
@@ -2013,6 +2094,8 @@ class ToolResultBlock:
   エラー型
 </h2>
 
+以下の型は、コードがキャッチするものを定義します。これらの型が発生させるエラーメッセージ、原因、および各々の修正方法については、[トラブルシューティング](/docs/ja/agent-sdk/troubleshooting)を参照してください。
+
 <h3 id="claudesdkerror">
   `ClaudeSDKError`
 </h3>
@@ -2023,6 +2106,8 @@ class ToolResultBlock:
 class ClaudeSDKError(Exception):
     """Base error for Claude SDK."""
 ```
+
+単一ショットの `query()` がエラー結果で終了する場合（例えば、ターン制限エラー）、SDK は最終結果メッセージを生成した後に [`ResultError`](#resulterror) を発生させます。Python Agent SDK バージョン 0.2.140 より前は、`ClaudeSDKError` サブクラスではない通常の `Exception` を発生させていました。
 
 <h3 id="clinotfounderror">
   `CLINotFoundError`
@@ -2067,6 +2152,25 @@ class ProcessError(ClaudeSDKError):
         self.exit_code = exit_code
         self.stderr = stderr
 ```
+
+<h3 id="resulterror">
+  `ResultError`
+</h3>
+
+Claude Code プロセスが実行を終了し、ターン制限エラーや API エラーなどのエラー結果で実行が終了した場合、最終的な [`ResultMessage`](#resultmessage) の後に発生します。`ResultError` は `ProcessError` のサブクラスであるため、既存の `except ProcessError` ハンドラーもこれをキャッチします。その属性は結果メッセージのフィールドを保持しているため、メッセージテキストを解析することなく、実行が失敗した理由に基づいて分岐できます。Python Agent SDK 0.2.140 以降が必要です。
+
+```python theme={null}
+class ResultError(ProcessError):
+    subtype: str | None  # "error_max_turns", "error_during_execution", ...; "success" when the run ended on a failed request
+    errors: list[str]  # an empty list when the result message reported none
+    result: str | None
+    api_error_status: int | None
+    terminal_reason: str | None  # "max_turns", "api_error", ...; check this before subtype
+    session_id: str | None
+    data: dict[str, Any]  # the raw result message payload
+```
+
+失敗を区別するには、`subtype` の前に `terminal_reason` を確認してください。最終リクエストが失敗した場合（例えば API エラー）、Claude Code は `subtype` `"success"` を報告し、原因を `terminal_reason` に記載します（例えば `"api_error"`）。設定した制限が実行を終了する場合（例えば `max_turns` または `max_budget_usd`）、`error_*` サブタイプを報告します。
 
 <h3 id="clijsondecodeerror">
   `CLIJSONDecodeError`
@@ -2114,7 +2218,7 @@ HookEvent = Literal[
 ```
 
 <Note>
-  TypeScript SDK は、Python ではまだ利用できない追加の hook イベントをサポートしています：`SessionStart`、`SessionEnd`、`Setup`、`TeammateIdle`、`TaskCompleted`、`ConfigChange`、`WorktreeCreate`、`WorktreeRemove`、`PostToolBatch`、および `MessageDisplay`。
+  TypeScript SDK は、Python ではまだ利用できない追加の hook イベントをサポートしています。SDK ごとのサポートについては、[hook 利用可能性テーブル](/docs/ja/agent-sdk/hooks#available-hooks) を参照してください。
 </Note>
 
 <h3 id="hookcallback">
@@ -2133,11 +2237,7 @@ HookCallback = Callable[[HookInput, str | None, HookContext], Awaitable[HookJSON
 * `tool_use_id`：オプションのツール使用識別子（ツール関連の hook 用）
 * `context`：追加情報を含む hook コンテキスト
 
-以下を含む可能性のある [`HookJSONOutput`](#hookjsonoutput) を返します：
-
-* `decision`：アクションをブロックするには `"block"`
-* `systemMessage`：ユーザーに表示される警告メッセージ
-* `hookSpecificOutput`：hook 固有の出力データ
+[`HookJSONOutput`](#hookjsonoutput) を返します。
 
 <h3 id="hookcontext">
   `HookContext`
@@ -2166,7 +2266,8 @@ class HookMatcher:
         default_factory=list
     )  # List of callbacks to execute
     timeout: float | None = (
-        None  # Timeout in seconds for all hooks in this matcher (default: 60)
+        None  # Timeout in seconds. When omitted, the per-event default applies:
+        # 600 for most events, 30 for UserPromptSubmit
     )
 ```
 
@@ -2210,7 +2311,7 @@ class BaseHookInput(TypedDict):
 | `session_id`      | `str`        | 現在のセッション識別子           |
 | `transcript_path` | `str`        | セッショントランスクリプトファイルへのパス |
 | `cwd`             | `str`        | 現在の作業ディレクトリ           |
-| `permission_mode` | `str`（オプション） | 現在のパーミッションモード         |
+| `permission_mode` | `str`（オプション） | 現在の権限モード              |
 
 <h3 id="pretoolusehookinput">
   `PreToolUseHookInput`
@@ -2282,16 +2383,16 @@ class PostToolUseFailureHookInput(BaseHookInput):
     agent_type: NotRequired[str]
 ```
 
-| フィールド             | 型                               | 説明                                    |
-| :---------------- | :------------------------------ | :------------------------------------ |
-| `hook_event_name` | `Literal["PostToolUseFailure"]` | 常に "PostToolUseFailure"               |
-| `tool_name`       | `str`                           | 失敗したツールの名前                            |
-| `tool_input`      | `dict[str, Any]`                | 使用された入力パラメータ                          |
-| `tool_use_id`     | `str`                           | このツール使用の一意の識別子                        |
-| `error`           | `str`                           | 失敗した実行からのエラーメッセージ                     |
-| `is_interrupt`    | `bool`（オプション）                   | 失敗が割り込みによって引き起こされたかどうか                |
-| `agent_id`        | `str`（オプション）                    | サブエージェント識別子。hook がサブエージェント内で発火する場合に存在 |
-| `agent_type`      | `str`（オプション）                    | サブエージェント型。hook がサブエージェント内で発火する場合に存在   |
+| フィールド             | 型                               | 説明                                                                                                                       |
+| :---------------- | :------------------------------ | :----------------------------------------------------------------------------------------------------------------------- |
+| `hook_event_name` | `Literal["PostToolUseFailure"]` | 常に "PostToolUseFailure"                                                                                                  |
+| `tool_name`       | `str`                           | 失敗したツールの名前                                                                                                               |
+| `tool_input`      | `dict[str, Any]`                | 使用された入力パラメータ                                                                                                             |
+| `tool_use_id`     | `str`                           | このツール使用の一意の識別子                                                                                                           |
+| `error`           | `str`                           | 失敗した実行からのエラーメッセージ                                                                                                        |
+| `is_interrupt`    | `bool`（オプション）                   | 失敗が Claude Code に中止として到達した場合は True。ツールが報告したエラーではなく、`interrupt()` で実行中のツールをキャンセルしてもこの hook は発火しません。ツール結果は代わりに中止メッセージを含みます |
+| `agent_id`        | `str`（オプション）                    | サブエージェント識別子。hook がサブエージェント内で発火する場合に存在                                                                                    |
+| `agent_type`      | `str`（オプション）                    | サブエージェント型。hook がサブエージェント内で発火する場合に存在                                                                                      |
 
 <h3 id="userpromptsubmithookinput">
   `UserPromptSubmitHookInput`
@@ -2474,9 +2575,7 @@ class SyncHookJSONOutput(TypedDict):
   `HookSpecificOutput`
 </h4>
 
-hook イベント名とイベント固有のフィールドを含む `TypedDict`。形状は `hookEventName` 値に依存します。hook イベントごとに利用可能なフィールドの詳細については、[hooks で実行を制御](/docs/ja/agent-sdk/hooks#outputs) を参照してください。
-
-イベント固有の出力型の判別 union。`hookEventName` フィールドはどのフィールドが有効かを決定します。
+イベント固有の出力型の判別 union。`hookEventName` フィールドはどのフィールドが有効かを決定します。hook イベントごとに利用可能なフィールドの詳細については、[hooks で実行を制御](/docs/ja/agent-sdk/hooks#outputs) を参照してください。
 
 ```python theme={null}
 class PreToolUseHookSpecificOutput(TypedDict):
@@ -2553,6 +2652,7 @@ class AsyncHookJSONOutput(TypedDict):
 この例は 2 つの hook を登録します：1 つは `rm -rf /` のような危険な bash コマンドをブロックし、もう 1 つは監査のためにすべてのツール使用をログします。セキュリティ hook は `matcher` を介して Bash コマンドでのみ実行され、ログ hook はすべてのツールで実行されます。
 
 ```python theme={null}
+import asyncio
 from claude_agent_sdk import query, ClaudeAgentOptions, HookMatcher, HookContext
 from typing import Any
 
@@ -2590,14 +2690,18 @@ options = ClaudeAgentOptions(
             ),  # 2 min for validation
             HookMatcher(
                 hooks=[log_tool_use]
-            ),  # Applies to all tools (default 60s timeout)
+            ),  # Applies to all tools (per-event default timeout)
         ],
         "PostToolUse": [HookMatcher(hooks=[log_tool_use])],
     }
 )
 
-async for message in query(prompt="Analyze this codebase", options=options):
-    print(message)
+async def main():
+    async for message in query(prompt="Analyze this codebase", options=options):
+        print(message)
+
+
+asyncio.run(main())
 ```
 
 <h2 id="tool-input/output-types">
@@ -2610,7 +2714,7 @@ async for message in query(prompt="Analyze this codebase", options=options):
   Agent
 </h3>
 
-**ツール名：** `Agent`（以前は `Task`。これはまだエイリアスとして受け入れられます）
+**ツール名：** `Agent`。以前の名前 `Task` はまだエイリアスとして受け入れられており、初期化時の [`SystemMessage`](#systemmessage) 内の `tools` リストは、後方互換性のためこのツールを `Task` として報告します。
 
 **入力：**
 
@@ -2618,20 +2722,100 @@ async for message in query(prompt="Analyze this codebase", options=options):
 {
     "description": str,  # タスクの短い説明（3～5 語）
     "prompt": str,  # エージェントが実行するタスク
-    "subagent_type": str,  # 使用する特化したエージェントのタイプ
+    "subagent_type": str | None,  # 使用する特化したエージェントのタイプ
+    "model": "sonnet" | "opus" | "haiku" | "fable" | None,  # このエージェントのモデルオーバーライド
+    "run_in_background": bool | None,  # エージェントはデフォルトでバックグラウンドで実行されます。同期実行する場合は False に設定
+    "name": str | None,  # スポーンされたエージェントの名前
+    "team_name": str | None,  # 非推奨。無視されます
+    "mode": "acceptEdits" | "auto" | "bypassPermissions" | "default" | "dontAsk" | "plan" | None,  # 非推奨。無視されます。サブエージェントは親セッションの権限モードを継承します。エージェント定義フロントマターがこれをオーバーライドする場合があります
+    "isolation": "worktree" | "remote" | None,  # エージェントの変更の分離モード
 }
 ```
 
-**出力：**
+複雑なマルチステップタスクを自律的に処理するための新しいエージェントを起動します。
+
+**出力（ステータス：`"completed"`）：**
 
 ```python theme={null}
 {
-    "result": str,  # サブエージェントからの最終結果
-    "usage": dict | None,  # トークン使用統計
-    "total_cost_usd": float | None,  # 推定総コスト（USD）
-    "duration_ms": int | None,  # 実行時間（ミリ秒）
+    "status": "completed",
+    "agentId": str,  # 実行されたエージェントの ID
+    "agentType": str | None,  # タスクを処理したサブエージェントタイプ
+    "content": [  # 結果コンテンツブロック
+        {
+            "type": "text",
+            "text": str,
+            "citations": list | None,
+        }
+    ],
+    "resolvedModel": str | None,  # サブエージェントが開始したモデル
+    "modelsUsed": list[str] | None,  # 使用されたモデルの順序。連続する繰り返しは折りたたまれます
+    "totalToolUseCount": int,  # エージェントが実行したツール呼び出しの数
+    "totalDurationMs": int,  # 実行時間（ミリ秒）
+    "totalTokens": int,  # 最終 API リクエストからのトークン数。実行全体ではありません
+    "usage": {  # トークン使用統計
+        "input_tokens": int,
+        "output_tokens": int,
+        "cache_creation_input_tokens": int | None,
+        "cache_read_input_tokens": int | None,
+        "server_tool_use": {"web_search_requests": int, "web_fetch_requests": int} | None,
+        "service_tier": str | None,
+        "cache_creation": {"ephemeral_1h_input_tokens": int, "ephemeral_5m_input_tokens": int} | None,
+        "inference_geo": str | None,
+        "speed": str | None,
+        "iterations": Any | None,
+        "output_tokens_details": {"thinking_tokens": int | None} | None,
+    },
+    "toolStats": {  # 実行のための集計ツール活動
+        "readCount": int,
+        "searchCount": int,
+        "bashCount": int,
+        "editFileCount": int,
+        "linesAdded": int,
+        "linesRemoved": int,
+        "otherToolCount": int,
+        "frameCount": int | None,
+    } | None,
+    "prompt": str,  # エージェントが実行したプロンプト
+    "worktreePath": str | None,  # Claude Code がサブエージェントの worktree を保持した場合に存在
+    "worktreeBranch": str | None,  # Claude Code がその worktree を git で作成した場合に存在
 }
 ```
+
+**出力（ステータス：`"async_launched"`）：**
+
+```python theme={null}
+{
+    "status": "async_launched",
+    "isAsync": bool | None,  # バックグラウンド起動時は True
+    "agentId": str,  # 起動されたエージェントの ID
+    "description": str,  # タスクの説明
+    "resolvedModel": str | None,  # バックグラウンド化の遷移時に使用中のモデル
+    "modelsUsed": list[str] | None,  # バックグラウンド化前に使用されたモデル。順序で、連続する繰り返しは折りたたまれます
+    "prompt": str,  # エージェントが実行するプロンプト
+    "outputFile": str,  # エージェントの出力が書き込まれるファイルパス
+    "canReadOutputFile": bool | None,  # 出力ファイルを直接読み込めるかどうか
+}
+```
+
+**出力（ステータス：`"remote_launched"`）：**
+
+```python theme={null}
+{
+    "status": "remote_launched",
+    "taskId": str,  # ディスパッチされたタスクの ID
+    "sessionUrl": str,  # クラウドセッションへのリンク
+    "description": str,  # タスクの説明
+    "prompt": str,  # エージェントが実行するプロンプト
+    "outputFile": str,  # エージェントの出力が書き込まれるファイルパス
+}
+```
+
+サブエージェントからの結果を返します。出力は `status` フィールドで判別されます。完了したタスクの場合は `"completed"`、バックグラウンドタスクの場合は `"async_launched"`、Claude Code がクラウドセッションにディスパッチしたタスクの場合は `"remote_launched"`。`sessionUrl` はそのセッションにリンクし、`taskId` がそれを識別します。Claude Code が [サブエージェントの分離 worktree を保持した](/docs/ja/worktrees#isolate-subagents-with-worktrees) 場合、`completed` バリアントの `worktreePath` はそれを見つける場所であり、`worktreeBranch` は Claude Code が git で worktree を作成した場合のそのブランチです。
+
+`completed` バリアントでは、`resolvedModel` はサブエージェントが開始したモデルを名付けます。これは [`availableModels`](/docs/ja/model-config#restrict-model-selection) または別のオーバーライドが適用される場合、リクエストされた `model` 入力と異なる場合があります。このフィールドには Claude Code v2.1.174 以降が必要です。`async_launched` バリアントでは、`resolvedModel` はエージェントがバックグラウンドに移動したときに使用中のモデルを名付けるため、バックグラウンド化前に発生したスワップがそこに反映されます。両方のバリアントの `modelsUsed` フィールドは、使用されたモデルを順序で列挙し、連続する繰り返しは折りたたまれます。モデルが実行中にスワップされた場合にのみ設定されます。`modelsUsed` とバックグラウンド化時の `resolvedModel` 動作には Claude Code v2.1.212 以降が必要です。
+
+Claude Code は `usage` と `totalTokens` をサブエージェントの最終 API リクエストから入力します。実行全体からではありません。存在する場合、`usage` 内の `output_tokens_details` の下の `thinking_tokens` はそのリクエストの出力トークンのうち思考トークンであった数です。`output_tokens_details` キーには Python SDK v0.2.136 以降が必要です。これは Claude Code v2.1.228 をバンドルしています。
 
 <h3 id="askuserquestion">
   AskUserQuestion
@@ -2653,14 +2837,20 @@ async for message in query(prompt="Analyze this codebase", options=options):
                 {
                     "label": str,  # このオプションの表示テキスト（1～5 語）
                     "description": str,  # このオプションが何を意味するかの説明
+                    "preview": str | None,  # オプションがフォーカスされたときにレンダリングされるプレビューコンテンツ
                 }
             ],
             "multiSelect": bool,  # 複数選択を許可する場合は true に設定
         }
     ],
-    "answers": dict[str, str | list[str]] | None,
+    "answers": dict[str, str] | None,
     # パーミッションシステムによって入力されたユーザーの回答。マルチセレクト
-    # 回答はラベルのリストまたはカンマ区切り文字列の場合があります
+    # 回答は選択されたラベルのカンマ区切り文字列です。入力時はラベルのリストが受け入れられ、その形式に強制されます
+    "annotations": dict[str, dict] | None,
+    # 質問テキストでキーされたユーザーからの質問ごとのアノテーション。
+    # 各値は「preview」（選択されたオプションのプレビュー
+    # コンテンツ）と「notes」（選択に関する自由形式のメモ）を含むことができます
+    "metadata": dict | None,  # {"source": "remember"} などの分析メタデータ。ユーザーには表示されません
 }
 ```
 
@@ -2672,12 +2862,17 @@ async for message in query(prompt="Analyze this codebase", options=options):
         {
             "question": str,
             "header": str,
-            "options": [{"label": str, "description": str}],
+            "options": [{"label": str, "description": str, "preview": str | None}],
             "multiSelect": bool,
         }
     ],
     "answers": dict[str, str],  # 質問テキストを回答文字列にマップ
     # マルチセレクト回答はカンマ区切り
+    "response": str | None,
+    # 質問に答える代わりに入力された自由形式の返信。設定されている場合、
+    # Claude は回答リストの代わりに「ユーザーが応答しました：...」を受け取ります
+    "annotations": dict[str, dict] | None,  # ユーザーの選択からの質問ごとの「preview」と「notes」
+    "afkTimeoutMs": int | None,  # ユーザーの非アクティブ状態がこれだけミリ秒続いた後にダイアログが自動解決されたときに設定。ユーザーが回答したときは存在しません
 }
 ```
 
@@ -2702,10 +2897,11 @@ async for message in query(prompt="Analyze this codebase", options=options):
 
 ```python theme={null}
 {
-    "output": str,  # 標準出力と標準エラーの結合出力
-    "exitCode": int,  # コマンドの終了コード
-    "killed": bool | None,  # タイムアウトによってコマンドが強制終了されたかどうか
-    "shellId": str | None,  # バックグラウンドプロセスのシェル ID
+    "stdout": str,  # コマンドの出力。stdout と stderr はこの 1 つのインターリーブされたストリームにマージされて到着
+    "stderr": str,  # ツール自体が追加する通知。コマンドの stderr ではありません
+    "interrupted": bool,  # コマンドが中断されたかどうか
+    "isImage": bool | None,  # stdout に画像データが含まれているかどうか
+    "backgroundTaskId": str | None,  # コマンドがバックグラウンドで実行されている場合のバックグラウンドタスクの ID
 }
 ```
 
@@ -2717,7 +2913,7 @@ async for message in query(prompt="Analyze this codebase", options=options):
 
 バックグラウンドソースを実行し、各イベントを Claude に配信して、ポーリングなしで反応できるようにします。`command` はスクリプトを実行し、stdout 行ごとに 1 つのイベントを発行し、`ws` は WebSocket を開き、テキストフレームごとに 1 つのイベントを発行します。`command` または `ws` のいずれか 1 つを正確に指定してください。
 
-Monitor がコマンドを実行する場合、Bash と同じパーミッションルールに従います。WebSocket ウォッチは別途承認を求めます。`ws` ソースには Claude Code v2.1.195 以降が必要です。動作とプロバイダーの可用性については、[Monitor ツールリファレンス](/docs/ja/tools-reference#monitor-tool) を参照してください。
+Monitor がコマンドを実行する場合、Bash と同じパーミッション規則に従います。WebSocket ウォッチは別途承認を求めます。`ws` ソースには Claude Code v2.1.195 以降が必要です。動作とプロバイダーの可用性については、[Monitor ツールリファレンス](/docs/ja/tools-reference#monitor-tool) を参照してください。
 
 **入力：**
 
@@ -2726,8 +2922,7 @@ Monitor がコマンドを実行する場合、Bash と同じパーミッショ�
     "command": str | None,  # シェルスクリプト。各 stdout 行はイベント、終了はウォッチを終了
     "ws": dict | None,  # WebSocket ソース：{"url": str, "protocols": list[str] | None}。各テキストフレームはイベント
     "description": str,  # 通知に表示される短い説明
-    "timeout_ms": int | None,  # この期限後に強制終了（デフォルト 300000、最大 3600000）
-    "persistent": bool | None,  # セッションの期間中実行。TaskStop で停止
+    "timeout_ms": int | None,  # この期限後に強制終了（デフォルト 300000、最大 3600000。有効な期限は最大 1800000）
 }
 ```
 
@@ -2736,8 +2931,8 @@ Monitor がコマンドを実行する場合、Bash と同じパーミッショ�
 ```python theme={null}
 {
     "taskId": str,  # バックグラウンド監視タスクの ID
-    "timeoutMs": int,  # タイムアウト期限（ミリ秒）（persistent の場合は 0）
-    "persistent": bool | None,  # TaskStop またはセッション終了まで実行する場合は True
+    "timeoutMs": int,  # ウォッチの有効な期限（ミリ秒）
+    "persistent": bool | None,  # False：すべてのウォッチに期限があります
 }
 ```
 
@@ -2995,7 +3190,19 @@ Monitor がコマンドを実行する場合、Bash と同じパーミッショ�
 **ツール名：** `TodoWrite`
 
 <Note>
-  Claude Code v2.1.142 以降、`TodoWrite` はデフォルトで無効になっています。代わりに `TaskCreate`、`TaskGet`、`TaskUpdate`、および `TaskList` を使用してください。[Task ツールへの移行](/docs/ja/agent-sdk/todo-tracking#migrate-to-task-tools) を参照して監視コードを更新するか、`CLAUDE_CODE_ENABLE_TASKS=0` を設定して `TodoWrite` に戻してください。
+  The following tools are available by default only on Claude 3.x models, Opus 4 through 4.7, Sonnet 4 through 4.6, and Haiku 4.5. On every other model, including model IDs Claude Code doesn't recognize, they aren't available unless you opt in:
+
+  * `TodoWrite`
+  * `TaskCreate`
+  * `TaskGet`
+  * `TaskUpdate`
+  * `TaskList`
+
+  Wherever the tools are available, Claude Code provides the four Task tools, or `TodoWrite` instead when you set `CLAUDE_CODE_ENABLE_TASKS=0`.
+
+  This default set applies in Claude Code v2.1.268 and later, which the TypeScript Agent SDK bundles from v0.3.268.
+
+  [モデルの可用性](/docs/ja/agent-sdk/todo-tracking#model-availability) を参照してオプトインしてください。
 </Note>
 
 **入力：**
@@ -3137,18 +3344,26 @@ Monitor がコマンドを実行する場合、Bash と同じパーミッショ�
 }
 ```
 
-<h3 id="bashoutput">
-  BashOutput
+<h3 id="taskoutput">
+  TaskOutput
 </h3>
 
-**ツール名：** `BashOutput`
+Claude Code v2.1.277 で削除されました。以前は実行中または完了したバックグラウンドタスクから出力を取得し、`BashOutput` はエイリアスとして受け入れられていました。Claude はバックグラウンドタスクの出力ファイルを `Read` で読み込みます。
+
+`disallowed_tools` エントリまたはいずれかの名前をまだ名付けている拒否ルールは、警告なしに無視されます。
+
+<h3 id="taskstop">
+  TaskStop
+</h3>
+
+**ツール名：** `TaskStop`。以前の名前 `KillShell` と `KillBash` はまだエイリアスとして受け入れられています。
 
 **入力：**
 
 ```python theme={null}
 {
-    "bash_id": str,  # バックグラウンドシェルの ID
-    "filter": str | None,  # 出力行をフィルタリングするオプションの正規表現
+    "task_id": str | None,  # 停止するバックグラウンドタスクの ID
+    "shell_id": str | None,  # 非推奨：代わりに task_id を使用してください
 }
 ```
 
@@ -3156,32 +3371,10 @@ Monitor がコマンドを実行する場合、Bash と同じパーミッショ�
 
 ```python theme={null}
 {
-    "output": str,  # 最後のチェック以降の新しい出力
-    "status": "running" | "completed" | "failed",  # 現在のシェルステータス
-    "exitCode": int | None,  # 完了時の終了コード
-}
-```
-
-<h3 id="killbash">
-  KillBash
-</h3>
-
-**ツール名：** `KillBash`
-
-**入力：**
-
-```python theme={null}
-{
-    "shell_id": str  # 強制終了するバックグラウンドシェルの ID
-}
-```
-
-**出力：**
-
-```python theme={null}
-{
-    "message": str,  # 成功メッセージ
-    "shell_id": str,  # 強制終了されたシェルの ID
+    "message": str,  # 操作に関するステータスメッセージ
+    "task_id": str,  # 停止されたタスクの ID
+    "task_type": str,  # 停止されたタスクのタイプ
+    "command": str | None,  # 停止されたタスクのコマンドまたは説明
 }
 ```
 
@@ -3265,13 +3458,11 @@ Monitor がコマンドを実行する場合、Bash と同じパーミッショ�
 }
 ```
 
-<h2 id="advanced-features-with-claudesdkclient">
-  ClaudeSDKClient を使用した高度な機能
+<h2 id="build-a-continuous-conversation-interface">
+  継続的な会話インターフェースの構築
 </h2>
 
-<h3 id="building-a-continuous-conversation-interface">
-  継続的な会話インターフェースの構築
-</h3>
+以下の例では、1 つの `ClaudeSDKClient` をターン全体で接続したままにするため、Claude は以前のメッセージを覚えています。`new` と入力して切断して再接続し、新しいセッションを開始するか、`exit` と入力して会話を終了します。
 
 ```python theme={null}
 from claude_agent_sdk import (
@@ -3350,285 +3541,46 @@ async def main():
 asyncio.run(main())
 ```
 
-<h3 id="using-hooks-for-behavior-modification">
-  動作修正のための hooks の使用
-</h3>
-
-```python theme={null}
-from claude_agent_sdk import (
-    ClaudeSDKClient,
-    ClaudeAgentOptions,
-    HookMatcher,
-    HookContext,
-)
-import asyncio
-from typing import Any
-
-
-async def pre_tool_logger(
-    input_data: dict[str, Any], tool_use_id: str | None, context: HookContext
-) -> dict[str, Any]:
-    """Log all tool usage before execution."""
-    tool_name = input_data.get("tool_name", "unknown")
-    print(f"[PRE-TOOL] About to use: {tool_name}")
-
-    # You can modify or block the tool execution here
-    if tool_name == "Bash" and "rm -rf" in str(input_data.get("tool_input", {})):
-        return {
-            "hookSpecificOutput": {
-                "hookEventName": "PreToolUse",
-                "permissionDecision": "deny",
-                "permissionDecisionReason": "Dangerous command blocked",
-            }
-        }
-    return {}
-
-
-async def post_tool_logger(
-    input_data: dict[str, Any], tool_use_id: str | None, context: HookContext
-) -> dict[str, Any]:
-    """Log results after tool execution."""
-    tool_name = input_data.get("tool_name", "unknown")
-    print(f"[POST-TOOL] Completed: {tool_name}")
-    return {}
-
-
-async def user_prompt_modifier(
-    input_data: dict[str, Any], tool_use_id: str | None, context: HookContext
-) -> dict[str, Any]:
-    """Add context to user prompts."""
-    original_prompt = input_data.get("prompt", "")
-
-    # Add a timestamp as additional context for Claude to see
-    from datetime import datetime
-
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-    return {
-        "hookSpecificOutput": {
-            "hookEventName": "UserPromptSubmit",
-            "additionalContext": f"[Submitted at {timestamp}] Original prompt: {original_prompt}",
-        }
-    }
-
-
-async def main():
-    options = ClaudeAgentOptions(
-        hooks={
-            "PreToolUse": [
-                HookMatcher(hooks=[pre_tool_logger]),
-                HookMatcher(matcher="Bash", hooks=[pre_tool_logger]),
-            ],
-            "PostToolUse": [HookMatcher(hooks=[post_tool_logger])],
-            "UserPromptSubmit": [HookMatcher(hooks=[user_prompt_modifier])],
-        },
-        allowed_tools=["Read", "Write", "Bash"],
-    )
-
-    async with ClaudeSDKClient(options=options) as client:
-        await client.query("List files in current directory")
-
-        async for message in client.receive_response():
-            # Hooks will automatically log tool usage
-            pass
-
-
-asyncio.run(main())
-```
-
-<h3 id="real-time-progress-monitoring">
-  リアルタイム進捗監視
-</h3>
-
-```python theme={null}
-from claude_agent_sdk import (
-    ClaudeSDKClient,
-    ClaudeAgentOptions,
-    AssistantMessage,
-    ToolUseBlock,
-    ToolResultBlock,
-    TextBlock,
-)
-import asyncio
-
-
-async def monitor_progress():
-    options = ClaudeAgentOptions(
-        allowed_tools=["Write", "Bash"], permission_mode="acceptEdits"
-    )
-
-    async with ClaudeSDKClient(options=options) as client:
-        await client.query("Create 5 Python files with different sorting algorithms")
-
-        # Monitor progress in real-time
-        async for message in client.receive_response():
-            if isinstance(message, AssistantMessage):
-                for block in message.content:
-                    if isinstance(block, ToolUseBlock):
-                        if block.name == "Write":
-                            file_path = block.input.get("file_path", "")
-                            print(f"Creating: {file_path}")
-                    elif isinstance(block, ToolResultBlock):
-                        print("Completed tool execution")
-                    elif isinstance(block, TextBlock):
-                        print(f"Claude says: {block.text[:100]}...")
-
-        print("Task completed!")
-
-
-asyncio.run(monitor_progress())
-```
-
-<h2 id="example-usage">
-  使用例
+<h2 id="error-handling">
+  エラー処理
 </h2>
 
-<h3 id="basic-file-operations-using-query">
-  基本的なファイル操作（query を使用）
-</h3>
+以下の例は、`query()` 呼び出しを SDK が発生させる [エラータイプ](#error-types) の 4 つのハンドラーでラップしています。
+
+この例は [`ResultError`](#resulterror) をキャッチします。これには Python Agent SDK 0.2.140 以降が必要です。
 
 ```python theme={null}
-from claude_agent_sdk import query, ClaudeAgentOptions, AssistantMessage, ToolUseBlock
 import asyncio
 
-
-async def create_project():
-    options = ClaudeAgentOptions(
-        allowed_tools=["Read", "Write", "Bash"],
-        permission_mode="acceptEdits",
-        cwd="/home/user/project",
-    )
-
-    async for message in query(
-        prompt="Create a Python project structure with setup.py", options=options
-    ):
-        if isinstance(message, AssistantMessage):
-            for block in message.content:
-                if isinstance(block, ToolUseBlock):
-                    print(f"Using tool: {block.name}")
-
-
-asyncio.run(create_project())
-```
-
-<h3 id="error-handling">
-  エラー処理
-</h3>
-
-```python theme={null}
-from claude_agent_sdk import query, CLINotFoundError, ProcessError, CLIJSONDecodeError
-
-try:
-    async for message in query(prompt="Hello"):
-        print(message)
-except CLINotFoundError:
-    print(
-        "Claude Code CLI not found. Try reinstalling: pip install --force-reinstall claude-agent-sdk"
-    )
-except ProcessError as e:
-    print(f"Process failed with exit code: {e.exit_code}")
-except CLIJSONDecodeError as e:
-    print(f"Failed to parse response: {e}")
-```
-
-<h3 id="streaming-mode-with-client">
-  クライアントでのストリーミングモード
-</h3>
-
-```python theme={null}
-from claude_agent_sdk import ClaudeSDKClient
-import asyncio
-
-
-async def interactive_session():
-    async with ClaudeSDKClient() as client:
-        # Send initial message
-        await client.query("What's the weather like?")
-
-        # Process responses
-        async for msg in client.receive_response():
-            print(msg)
-
-        # Send follow-up
-        await client.query("Tell me more about that")
-
-        # Process follow-up response
-        async for msg in client.receive_response():
-            print(msg)
-
-
-asyncio.run(interactive_session())
-```
-
-<h3 id="using-custom-tools-with-claudesdkclient">
-  ClaudeSDKClient でカスタムツールを使用する
-</h3>
-
-```python theme={null}
 from claude_agent_sdk import (
-    ClaudeSDKClient,
-    ClaudeAgentOptions,
-    tool,
-    create_sdk_mcp_server,
-    AssistantMessage,
-    TextBlock,
+    query,
+    CLINotFoundError,
+    ProcessError,
+    ResultError,
+    CLIJSONDecodeError,
 )
-import asyncio
-from typing import Any
-
-
-# Define custom tools with @tool decorator
-@tool("calculate", "Perform mathematical calculations", {"expression": str})
-async def calculate(args: dict[str, Any]) -> dict[str, Any]:
-    try:
-        result = eval(args["expression"], {"__builtins__": {}})
-        return {"content": [{"type": "text", "text": f"Result: {result}"}]}
-    except Exception as e:
-        return {
-            "content": [{"type": "text", "text": f"Error: {str(e)}"}],
-            "is_error": True,
-        }
-
-
-@tool("get_time", "Get current time", {})
-async def get_time(args: dict[str, Any]) -> dict[str, Any]:
-    from datetime import datetime
-
-    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    return {"content": [{"type": "text", "text": f"Current time: {current_time}"}]}
 
 
 async def main():
-    # Create SDK MCP server with custom tools
-    my_server = create_sdk_mcp_server(
-        name="utilities", version="1.0.0", tools=[calculate, get_time]
-    )
-
-    # Configure options with the server
-    options = ClaudeAgentOptions(
-        mcp_servers={"utils": my_server},
-        allowed_tools=["mcp__utils__calculate", "mcp__utils__get_time"],
-    )
-
-    # Use ClaudeSDKClient for interactive tool usage
-    async with ClaudeSDKClient(options=options) as client:
-        await client.query("What's 123 * 456?")
-
-        # Process calculation response
-        async for message in client.receive_response():
-            if isinstance(message, AssistantMessage):
-                for block in message.content:
-                    if isinstance(block, TextBlock):
-                        print(f"Calculation: {block.text}")
-
-        # Follow up with time query
-        await client.query("What time is it now?")
-
-        async for message in client.receive_response():
-            if isinstance(message, AssistantMessage):
-                for block in message.content:
-                    if isinstance(block, TextBlock):
-                        print(f"Time: {block.text}")
+    try:
+        async for message in query(prompt="Hello"):
+            print(message)
+    except CLINotFoundError:
+        print(
+            "Claude Code CLI not found. Try reinstalling: pip install --force-reinstall claude-agent-sdk"
+        )
+    # Catch ResultError before ProcessError, which it subclasses. Its message
+    # carries the error text. A failed final request, such as an API error,
+    # arrives with subtype "success", so branch on terminal_reason first.
+    except ResultError as e:
+        if e.terminal_reason == "api_error":
+            print(f"API request failed: {e}")
+        else:
+            print(f"Query ended with an error result ({e.terminal_reason or e.subtype}): {e}")
+    except ProcessError as e:
+        print(f"Process failed with exit code: {e.exit_code}")
+    except CLIJSONDecodeError as e:
+        print(f"Failed to parse response: {e}")
 
 
 asyncio.run(main())
@@ -3655,44 +3607,57 @@ class SandboxSettings(TypedDict, total=False):
     enableWeakerNestedSandbox: bool
 ```
 
-| プロパティ                       | 型                                                     | デフォルト   | 説明                                                                                                                                                                          |
-| :-------------------------- | :---------------------------------------------------- | :------ | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `enabled`                   | `bool`                                                | `False` | コマンド実行のサンドボックスモードを有効にします                                                                                                                                                    |
-| `autoAllowBashIfSandboxed`  | `bool`                                                | `True`  | サンドボックスが有効な場合、bash コマンドを自動承認します                                                                                                                                             |
-| `excludedCommands`          | `list[str]`                                           | `[]`    | 常にサンドボックス制限をバイパスするコマンド（例：`["docker"]`）。これらはモデルの関与なしに自動的にサンドボックスなしで実行されます                                                                                                    |
-| `allowUnsandboxedCommands`  | `bool`                                                | `True`  | モデルがサンドボックスの外でコマンドを実行するようにリクエストすることを許可します。`True` の場合、モデルはツール入力で `dangerouslyDisableSandbox` を設定でき、[パーミッションシステム](#permissions-fallback-for-unsandboxed-commands) にフォールバックします |
-| `network`                   | [`SandboxNetworkConfig`](#sandboxnetworkconfig)       | `None`  | ネットワーク固有のサンドボックス設定                                                                                                                                                          |
-| `ignoreViolations`          | [`SandboxIgnoreViolations`](#sandboxignoreviolations) | `None`  | 無視するサンドボックス違反を設定します                                                                                                                                                         |
-| `enableWeakerNestedSandbox` | `bool`                                                | `False` | 互換性のためにより弱いネストされたサンドボックスを有効にします                                                                                                                                             |
+| プロパティ                       | 型                                                     | デフォルト   | 説明                                                                                                                                                                             |
+| :-------------------------- | :---------------------------------------------------- | :------ | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `enabled`                   | `bool`                                                | `False` | コマンド実行のサンドボックスモードを有効にします                                                                                                                                                       |
+| `autoAllowBashIfSandboxed`  | `bool`                                                | `True`  | サンドボックスが有効な場合、bash コマンドを自動承認します                                                                                                                                                |
+| `excludedCommands`          | `list[str]`                                           | `[]`    | サンドボックス制限をバイパスするコマンド（例：`["docker *"]`）。これらはモデルの関与なしに自動的にサンドボックスなしで実行されます。[`sandbox.excludedCommands`](/docs/ja/settings-reference#sandbox-excludedcommands) は、エントリが適用される場合をカバーしています |
+| `allowUnsandboxedCommands`  | `bool`                                                | `True`  | モデルがサンドボックスの外でコマンドを実行するようにリクエストすることを許可します。`True` の場合、モデルはツール入力で `dangerouslyDisableSandbox` を設定でき、[パーミッションシステム](#permissions-fallback-for-unsandboxed-commands) にフォールバックします    |
+| `network`                   | [`SandboxNetworkConfig`](#sandboxnetworkconfig)       | `None`  | ネットワーク固有のサンドボックス設定                                                                                                                                                             |
+| `ignoreViolations`          | [`SandboxIgnoreViolations`](#sandboxignoreviolations) | `None`  | 無視するサンドボックス違反を設定します                                                                                                                                                            |
+| `enableWeakerNestedSandbox` | `bool`                                                | `False` | 互換性のためにより弱いネストされたサンドボックスを有効にします                                                                                                                                                |
 
 <Note>
   サンドボックスはプラットフォームサポートに依存し、Linux では `bubblewrap` や `socat` などのツールが必要です。デフォルトでは、`enabled` が `True` でもサンドボックスが起動できない場合、コマンドはサンドボックスなしで実行され、stderr に警告が表示されます。このデフォルト動作は TypeScript SDK とは異なり、TypeScript SDK では `failIfUnavailable` がデフォルトで `true` です。
 
-  サンドボックス設定で `"failIfUnavailable": True` を設定して、代わりに停止するようにしてください。このキーはまだ `SandboxSettings` で宣言されていませんが、SDK は Claude Code に転送し、Claude Code がこれを尊重します。その後、`query()` は `subtype="error_during_execution"` の `ResultMessage` を報告し、理由は `errors` に含まれます。`query()` がメッセージを生成する前に例外を発生させることを期待するのではなく、そのサブタイプを監視してください。
+  サンドボックス設定で `"failIfUnavailable": True` を設定して、代わりに停止するようにしてください。このキーはまだ `SandboxSettings` で宣言されていませんが、SDK は Claude Code に転送し、Claude Code がこれを尊重します。その後、`query()` は `subtype="error_during_execution"` の `ResultMessage` を報告し、理由は `errors` に含まれます。これは単一ショットの `query()` 呼び出しであるため、SDK はそのエラー結果を生成した後に発生させるため、ループを try ブロックでラップして、それを超えて続行してください。詳細は [結果を処理する](/docs/ja/agent-sdk/agent-loop#handle-the-result) を参照してください。
 </Note>
 
-<h4 id="example-usage-2">
+<h4 id="example-usage">
   使用例
 </h4>
 
 ```python theme={null}
-from claude_agent_sdk import query, ClaudeAgentOptions, SandboxSettings
+import asyncio
 
-sandbox_settings: SandboxSettings = {
+from claude_agent_sdk import query, ClaudeAgentOptions
+
+sandbox_settings = {
     "enabled": True,
     "autoAllowBashIfSandboxed": True,
+    "failIfUnavailable": True,
     "network": {"allowLocalBinding": True},
 }
 
-async for message in query(
-    prompt="Build and test my project",
-    options=ClaudeAgentOptions(sandbox=sandbox_settings),
-):
-    print(message)
+
+async def main():
+    try:
+        async for message in query(
+            prompt="Build and test my project",
+            options=ClaudeAgentOptions(sandbox=sandbox_settings),
+        ):
+            print(message)
+    except Exception as error:
+        # A single-shot query() raises after yielding an error result,
+        # such as when failIfUnavailable is set and the sandbox can't start.
+        print(f"Session ended with an error: {error}")
+
+
+asyncio.run(main())
 ```
 
 <Warning>
-  **Unix ソケットセキュリティ**：`allowUnixSockets` オプションは強力なシステムサービスへのアクセスを許可できます。例えば、`/var/run/docker.sock` を許可すると、Docker API を通じてホストシステムへの完全なアクセスが効果的に許可され、サンドボックス分離がバイパスされます。厳密に必要な Unix ソケットのみを許可し、各ソケットのセキュリティへの影響を理解してください。
+  **Unix ソケットセキュリティ**：`allowUnixSockets` オプションは、サンドボックスの外に到達するシステムサービスへのアクセスを許可できます。例えば、`/var/run/docker.sock` を許可すると、Docker API を通じてホストシステムへの完全なアクセスが効果的に許可され、サンドボックス分離がバイパスされます。厳密に必要な Unix ソケットのみを許可し、各ソケットのセキュリティへの影響を理解してください。
 </Warning>
 
 <h3 id="sandboxnetworkconfig">
@@ -3714,17 +3679,17 @@ class SandboxNetworkConfig(TypedDict, total=False):
     socksProxyPort: int
 ```
 
-| プロパティ                     | 型           | デフォルト   | 説明                                                                                            |
-| :------------------------ | :---------- | :------ | :-------------------------------------------------------------------------------------------- |
-| `allowedDomains`          | `list[str]` | `[]`    | サンドボックス化されたプロセスがアクセスできるドメイン名                                                                  |
-| `deniedDomains`           | `list[str]` | `[]`    | サンドボックス化されたプロセスがアクセスできないドメイン名。`allowedDomains` より優先されます                                       |
-| `allowManagedDomainsOnly` | `bool`      | `False` | マネージド設定のみ：マネージド設定で設定されている場合、非マネージド設定ソースからの `allowedDomains` を無視します。SDK オプションで設定された場合は効果がありません |
-| `allowUnixSockets`        | `list[str]` | `[]`    | プロセスがアクセスできる Unix ソケットパス（例：Docker ソケット）                                                       |
-| `allowAllUnixSockets`     | `bool`      | `False` | すべての Unix ソケットへのアクセスを許可します                                                                    |
-| `allowLocalBinding`       | `bool`      | `False` | プロセスがローカルポートにバインドすることを許可します（例：dev サーバー用）                                                      |
-| `allowMachLookup`         | `list[str]` | `[]`    | macOS のみ：許可する XPC/Mach サービス名。末尾のワイルドカードをサポートします                                               |
-| `httpProxyPort`           | `int`       | `None`  | ネットワークリクエスト用の HTTP プロキシポート                                                                    |
-| `socksProxyPort`          | `int`       | `None`  | ネットワークリクエスト用の SOCKS プロキシポート                                                                   |
+| プロパティ                     | 型           | デフォルト   | 説明                                                                                                                         |
+| :------------------------ | :---------- | :------ | :------------------------------------------------------------------------------------------------------------------------- |
+| `allowedDomains`          | `list[str]` | `[]`    | サンドボックス化されたプロセスがアクセスできるドメイン名                                                                                               |
+| `deniedDomains`           | `list[str]` | `[]`    | サンドボックス化されたプロセスがアクセスできないドメイン名。`allowedDomains` より優先されます                                                                    |
+| `allowManagedDomainsOnly` | `bool`      | `False` | マネージド設定のみ：マネージド設定で設定されている場合、`allowedDomains` と非マネージド設定ソースからの `WebFetch(domain:...)` 許可ルールを無視します。SDK オプションで設定された場合は効果がありません |
+| `allowUnixSockets`        | `list[str]` | `[]`    | macOS のみ：プロセスがアクセスできる Unix ソケットパス（例：Docker ソケット）。Linux では無視されます                                                            |
+| `allowAllUnixSockets`     | `bool`      | `False` | すべての Unix ソケットへのアクセスを許可します                                                                                                 |
+| `allowLocalBinding`       | `bool`      | `False` | プロセスがローカルポートにバインドすることを許可します（例：dev サーバー用）                                                                                   |
+| `allowMachLookup`         | `list[str]` | `[]`    | macOS のみ：許可する XPC/Mach サービス名。末尾のワイルドカードをサポートします                                                                            |
+| `httpProxyPort`           | `int`       | `None`  | ネットワークリクエスト用の HTTP プロキシポート                                                                                                 |
+| `socksProxyPort`          | `int`       | `None`  | ネットワークリクエスト用の SOCKS プロキシポート                                                                                                |
 
 <Note>
   組み込みサンドボックスプロキシは、リクエストされたホスト名に基づいてネットワーク許可リストを強制し、TLS トラフィックを終了または検査しないため、[ドメインフロンティング](https://en.wikipedia.org/wiki/Domain_fronting) などの技術がそれをバイパスする可能性があります。詳細は [サンドボックスセキュリティの制限事項](/docs/ja/sandboxing#security-limitations) を参照し、TLS 終了プロキシの設定については [セキュアなデプロイ](/docs/ja/agent-sdk/secure-deployment#traffic-forwarding) を参照してください。
@@ -3753,14 +3718,12 @@ class SandboxIgnoreViolations(TypedDict, total=False):
 
 `allowUnsandboxedCommands` が有効な場合、モデルはツール入力で `dangerouslyDisableSandbox: True` を設定することでサンドボックスの外でコマンドを実行するようにリクエストできます。これらのリクエストは既存のパーミッションシステムにフォールバックします。つまり、`can_use_tool` ハンドラーが呼び出され、カスタム認可ロジックを実装できます。
 
-<Note>
-  **`excludedCommands` vs `allowUnsandboxedCommands`：**
+`excludedCommands` エントリは代わりにサンドボックスを自動的にバイパスし、モデルの関与がありません。[`sandbox.excludedCommands`](/docs/ja/settings-reference#sandbox-excludedcommands) は、エントリが適用される場合をカバーしています。
 
-  * `excludedCommands`：常にサンドボックスを自動的にバイパスするコマンドの静的リスト（例：`["docker"]`）。モデルはこれを制御できません。
-  * `allowUnsandboxedCommands`：モデルが実行時にツール入力で `dangerouslyDisableSandbox: True` を設定することでサンドボックスなし実行をリクエストすることを許可します。
-</Note>
+次の例は、各サンドボックスなしリクエストをログし、独自の認可ロジックが許可しない限りそれを拒否します：
 
 ```python theme={null}
+import asyncio
 from claude_agent_sdk import (
     query,
     ClaudeAgentOptions,
@@ -3769,6 +3732,12 @@ from claude_agent_sdk import (
     PermissionResultDeny,
     ToolPermissionContext,
 )
+
+
+def is_command_authorized(command: str | None) -> bool:
+    # Replace with your own authorization logic
+    return False
+
 
 
 async def can_use_tool(
@@ -3813,18 +3782,15 @@ async def main():
         ),
     ):
         print(message)
+
+
+asyncio.run(main())
 ```
-
-このパターンにより、以下が可能になります：
-
-* **モデルリクエストを監査する**：モデルがサンドボックスなし実行をリクエストするときをログします
-* **許可リストを実装する**：特定のコマンドのみがサンドボックスなしで実行されることを許可します
-* **承認ワークフローを追加する**：特権操作に明示的な認可を要求します
 
 <Warning>
   `dangerouslyDisableSandbox: True` で実行されるコマンドはシステムへの完全なアクセスを持ちます。`can_use_tool` ハンドラーがこれらのリクエストを慎重に検証することを確認してください。
 
-  `permission_mode` が `bypassPermissions` に設定され、`allow_unsandboxed_commands` が有効な場合、モデルは承認プロンプトなしにサンドボックスの外でコマンドを自律的に実行できます。この組み合わせは、モデルがサンドボックス分離をサイレントに逃れることを効果的に許可します。
+  `permission_mode` が `bypassPermissions` に設定され、`allow_unsandboxed_commands` が有効な場合、モデルは [アクションなしモードが自動承認しないアクション](/docs/ja/permission-modes#actions-no-mode-auto-approves) を除き、承認プロンプトなしにサンドボックスの外でコマンドを自律的に実行できます。この組み合わせは、モデルがサンドボックス分離をサイレントに逃れることを効果的に許可します。
 </Warning>
 
 <h2 id="see-also">
@@ -3833,5 +3799,6 @@ async def main():
 
 * [SDK 概要](/docs/ja/agent-sdk/overview) - 一般的な SDK 概念
 * [TypeScript SDK リファレンス](/docs/ja/agent-sdk/typescript) - TypeScript SDK ドキュメント
+* [カスタムツール](/docs/ja/agent-sdk/custom-tools) - Claude が呼び出すためのインプロセス MCP ツールを定義する
 * [CLI リファレンス](/docs/ja/cli-reference) - コマンドラインインターフェース
 * [一般的なワークフロー](/docs/ja/common-workflows) - ステップバイステップガイド

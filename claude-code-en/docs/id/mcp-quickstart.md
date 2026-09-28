@@ -48,7 +48,7 @@ Langkah-langkahnya sama untuk server apa pun: tambahkan, periksa status koneksi,
     * `claude-code-docs`: nama yang Anda buat. Memanggil server yang sama `docs` akan berfungsi identik. Claude Code menggunakan nama apa pun yang Anda pilih untuk memberi label alat server di output Claude dan untuk merujuk ke server dalam perintah seperti `claude mcp remove`.
     * `https://code.claude.com/docs/mcp`: URL tempat server dihosting.
 
-    Perintah mencetak konfirmasi seperti `Added HTTP MCP server claude-code-docs with URL: https://code.claude.com/docs/mcp to local config`. Bagian `local config` berarti server terdaftar untuk Anda, dalam proyek ini: jika Anda memulai Claude Code di proyek yang berbeda, server ini tidak aktif di sana. Untuk mendaftarkan server sekali untuk semua proyek Anda, tambahkan di cakupan pengguna, tercakup dalam [Ubah cakupan server](#change-server-scope).
+    Perintah mencetak konfirmasi seperti `Added HTTP MCP server claude-code-docs with URL: https://code.claude.com/docs/mcp to local config`, diikuti oleh baris `File modified:` yang menunjukkan file konfigurasi yang ditulisnya. Bagian `local config` berarti server terdaftar untuk Anda, dalam proyek ini: jika Anda memulai Claude Code di proyek yang berbeda, server ini tidak aktif di sana. Untuk mendaftarkan server sekali untuk semua proyek Anda, tambahkan di cakupan pengguna, tercakup dalam [Ubah cakupan server](#change-server-scope).
   </Step>
 
   <Step title="Periksa status koneksi">
@@ -60,14 +60,17 @@ Langkah-langkahnya sama untuk server apa pun: tambahkan, periksa status koneksi,
 
     Server muncul dengan indikator status:
 
-    | Status                             | Arti                                                                                                                                                                                             |
-    | :--------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-    | `✓ Connected`                      | Siap digunakan. Ini adalah apa yang seharusnya Anda lihat untuk `claude-code-docs`                                                                                                               |
-    | `! Connected · tools fetch failed` | Server terhubung tetapi tidak dapat membuat daftar alatnya. Jalankan `claude mcp get <name>` untuk detail kesalahan                                                                              |
-    | `! Needs authentication`           | Server dapat dijangkau tetapi memerlukan masuk browser, atau token yang diteruskan dengan `--header`. Lihat [Terhubung ke server yang memerlukan masuk](#connect-a-server-that-requires-sign-in) |
-    | `✗ Failed to connect`              | Server tidak merespons. Lihat [Troubleshooting](#troubleshooting)                                                                                                                                |
-    | `✗ Connection error`               | Upaya koneksi melempar kesalahan. Lihat [Troubleshooting](#troubleshooting)                                                                                                                      |
-    | `⏸ Pending approval`               | Server yang dibatasi proyek yang belum Anda setujui. Lihat [Edit .mcp.json secara langsung](#edit-mcp-json-directly)                                                                             |
+    | Status                                             | Arti                                                                                                                                                                                             |
+    | :------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | `✔ Connected`                                      | Siap digunakan. Ini adalah apa yang seharusnya Anda lihat untuk `claude-code-docs`                                                                                                               |
+    | `! Connected · tools fetch failed`                 | Server terhubung tetapi tidak dapat membuat daftar alatnya. Jalankan `claude mcp get <name>` untuk detail kesalahan                                                                              |
+    | `! Needs authentication`                           | Server dapat dijangkau tetapi memerlukan masuk browser, atau token yang diteruskan dengan `--header`. Lihat [Terhubung ke server yang memerlukan masuk](#connect-a-server-that-requires-sign-in) |
+    | `✘ Failed to connect`                              | Server tidak merespons. Lihat [Troubleshooting](#troubleshooting)                                                                                                                                |
+    | `✘ Connection error`                               | Upaya koneksi melempar kesalahan. Lihat [Troubleshooting](#troubleshooting)                                                                                                                      |
+    | ``⏸ Pending approval (run `claude` to approve)``   | Server yang dibatasi proyek yang belum Anda setujui. Lihat [Edit .mcp.json secara langsung](#edit-mcp-json-directly)                                                                             |
+    | `⊘ Disabled for this project (re-enable via /mcp)` | Server yang dimatikan untuk proyek ini oleh daftar `disabledMcpServers` proyek. Lihat [Nonaktifkan server tanpa menghapusnya](/docs/id/mcp#disable-a-server-without-removing-it)                      |
+
+    Beberapa konsol Windows warisan, seperti konsol default di Windows 10, tidak mendukung merek Unicode ini dan menampilkan `√` dan `×` sebagai pengganti `✔` dan `✘`.
   </Step>
 
   <Step title="Gunakan server">
@@ -77,7 +80,7 @@ Langkah-langkahnya sama untuk server apa pun: tambahkan, periksa status koneksi,
     claude
     ```
 
-    ```text theme={null}
+    ```text wrap theme={null}
     Use the claude-code-docs server to look up what MCP_TIMEOUT does
     ```
 
@@ -85,7 +88,7 @@ Langkah-langkahnya sama untuk server apa pun: tambahkan, periksa status koneksi,
       Anda biasanya tidak perlu menyebutkan server dalam prompt Anda, karena Claude memilih alat yang relevan dengan sendirinya. Menyebutkannya di sini menjamin demonstrasi melalui server baru daripada alat lain, seperti web fetch, yang dapat menjawab pertanyaan yang sama.
     </Info>
 
-    Pertama kali Claude memanggil server, ia meminta izin untuk menggunakan alat baru. Setujui untuk melanjutkan. Panggilan alat dalam output Claude diberi label dengan nama server, yang merupakan cara Anda mengonfirmasi jawaban berasal dari server MCP daripada pengetahuan bawaan Claude.
+    Jika Claude Code meminta izin pertama kali Claude memanggil server, setujui. Panggilan alat dalam output Claude diberi label dengan nama server, yang merupakan cara Anda mengonfirmasi jawaban berasal dari server MCP daripada pengetahuan bawaan Claude.
   </Step>
 
   <Step title="Hapus server">
@@ -94,6 +97,8 @@ Langkah-langkahnya sama untuk server apa pun: tambahkan, periksa status koneksi,
     ```bash theme={null}
     claude mcp remove claude-code-docs
     ```
+
+    Perintah mengonfirmasi dengan `Removed MCP server "claude-code-docs" from local config` dan baris `File modified:` yang menunjukkan file yang diperbarui.
 
     <Note>
       Setiap server yang terhubung membutuhkan beberapa ruang di [jendela konteks Claude](/docs/id/how-claude-code-works#the-context-window) karena nama alat dan instruksi server dimuat ke dalam setiap sesi. Menghapus server yang tidak lagi Anda gunakan membuat ruang itu tetap bebas.
@@ -105,33 +110,33 @@ Langkah-langkahnya sama untuk server apa pun: tambahkan, periksa status koneksi,
   Tempat server disimpan
 </h2>
 
-Perintah `claude mcp add` menulis detail server ke file konfigurasi. Secara default, ia mendaftarkan server di cakupan `local`: pribadi untuk Anda, aktif hanya dalam proyek saat ini. Teruskan `--scope user` untuk mendaftarkannya sekali untuk semua proyek Anda, atau `--scope project` untuk membagikannya dengan rekan tim. [Ubah cakupan server](#change-server-scope) memandu keduanya.
+Perintah `claude mcp add` menulis detail server ke file konfigurasi. Secara default, perintah ini mendaftarkan server pada cakupan `local`: pribadi untuk Anda, aktif hanya di proyek saat ini. Berikan `--scope user` untuk mendaftarkannya sekali untuk semua proyek Anda, atau `--scope project` untuk membagikannya dengan rekan kerja. [Ubah cakupan server](#change-server-scope) menjelaskan keduanya.
 
 <Note>
   `claude mcp add` bekerja sama di setiap shell, termasuk PowerShell dan Command Prompt. Di dalam sesi `claude`, gunakan perintah `/mcp` untuk memeriksa dan mengelola server yang telah Anda tambahkan.
 </Note>
 
-Ada cara lain untuk menambahkan server, masing-masing tercakup nanti di halaman ini:
+Ada cara lain untuk menambahkan server, masing-masing dengan bagiannya sendiri:
 
-* [Tambahkan server lokal](#add-a-local-server): jalankan program di mesin Anda daripada terhubung ke URL.
-* [Edit `.mcp.json` secara langsung](#edit-mcp-json-directly): tulis entri JSON sendiri daripada menggunakan perintah.
-* [Terhubung ke server yang memerlukan masuk](#connect-a-server-that-requires-sign-in): tambahkan server yang dihosting yang memerlukan masuk browser sebelum alatnya berfungsi.
+* [Tambahkan server lokal](#add-a-local-server): jalankan program di mesin Anda alih-alih terhubung ke URL.
+* [Edit `.mcp.json` secara langsung](#edit-mcp-json-directly): tulis entri JSON sendiri alih-alih menggunakan perintah.
+* [Hubungkan server yang memerlukan sign-in](#connect-a-server-that-requires-sign-in): tambahkan server yang dihosting yang memerlukan sign-in browser sebelum alatnya berfungsi.
 
 <h3 id="find-your-configuration-on-disk">
   Temukan konfigurasi Anda di disk
 </h3>
 
-Perintah `claude mcp add` menulis server ke salah satu dari tiga cakupan, disimpan di dua file, tergantung pada flag `--scope`. Anda tidak perlu mengedit file ini secara langsung, tetapi mengetahui di mana mereka berada membantu dengan debugging dan kontrol versi.
+Perintah `claude mcp add` menulis server ke salah satu dari tiga cakupan, disimpan di dua file, tergantung pada flag `--scope`. Anda tidak perlu mengedit file ini secara langsung, tetapi mengetahui di mana file ini berada membantu dengan debugging dan kontrol versi.
 
 | Cakupan   | File                                                       | Tersedia untuk                        |
 | :-------- | :--------------------------------------------------------- | :------------------------------------ |
 | `local`   | `~/.claude.json`, di bawah entri untuk proyek ini          | Hanya Anda, hanya proyek ini. Default |
-| `project` | `.mcp.json` di akar proyek Anda                            | Semua orang yang mengkloning proyek   |
+| `project` | `.mcp.json` di root proyek Anda                            | Semua orang yang mengkloning proyek   |
 | `user`    | `~/.claude.json`, di bawah kunci `mcpServers` tingkat atas | Hanya Anda, semua proyek              |
 
-Di Windows, `~/.claude.json` diselesaikan ke `%USERPROFILE%\.claude.json`, biasanya `C:\Users\YourName\.claude.json`. Jika Anda telah menetapkan [`CLAUDE_CONFIG_DIR`](/docs/id/env-vars), Claude Code membaca `.claude.json` dari dalam direktori itu.
+Di Windows, `~/.claude.json` diselesaikan menjadi `%USERPROFILE%\.claude.json`, biasanya `C:\Users\YourName\.claude.json`. Jika Anda telah menetapkan [`CLAUDE_CONFIG_DIR`](/docs/id/env-vars), Claude Code membaca `.claude.json` dari dalam direktori tersebut sebagai gantinya.
 
-Jalankan `claude mcp get claude-code-docs` untuk melihat cakupan mana yang menyimpan definisi server. Untuk cara cakupan berinteraksi ketika server yang sama didefinisikan di lebih dari satu, lihat [cakupan instalasi MCP](/docs/id/mcp#mcp-installation-scopes).
+Jalankan `claude mcp get claude-code-docs` untuk melihat cakupan mana yang menyimpan definisi server. Untuk cara cakupan berinteraksi ketika server yang sama didefinisikan di lebih dari satu, lihat [MCP installation scopes](/docs/id/mcp#mcp-installation-scopes).
 
 <h2 id="change-server-scope">
   Ubah cakupan server
@@ -193,6 +198,8 @@ Server stdio lokal adalah program yang Claude Code mulai sebagai subprocess di m
     * Semuanya setelah pemisah `--` adalah perintah yang Claude Code jalankan untuk memulai server.
     * `-y` memberitahu `npx` untuk menginstal paket tanpa meminta.
 
+    Perintah ini mencetak konfirmasi seperti `Added stdio MCP server playwright with command: npx -y @playwright/mcp@latest to local config`, diikuti oleh baris `File modified:` yang menunjukkan file konfigurasi yang ditulisnya.
+
     Playwright mendorong Chrome apa pun yang sudah terinstal di mesin Anda. Untuk menggunakan browser yang berbeda, tambahkan `--browser` dengan nama browser, misalnya `--browser firefox`, setelah `@playwright/mcp@latest`.
   </Step>
 
@@ -203,13 +210,13 @@ Server stdio lokal adalah program yang Claude Code mulai sebagai subprocess di m
     claude mcp list
     ```
 
-    Pemeriksaan pertama dapat menunjukkan `✗ Failed to connect` sementara `npx` mengunduh paket, jadi tunggu sebentar dan jalankan lagi.
+    Pemeriksaan pertama dapat menunjukkan `✘ Failed to connect` sementara `npx` mengunduh paket, jadi tunggu sebentar dan jalankan lagi. Setelah unduhan selesai, status berubah menjadi `✔ Connected`. Jika masih menunjukkan `✘ Failed to connect` setelah beberapa kali mencoba ulang, lihat [Troubleshooting](#troubleshooting).
   </Step>
 
   <Step title="Gunakan browser">
     Berikan Claude tugas yang memerlukan browser:
 
-    ```text theme={null}
+    ```text wrap theme={null}
     Use playwright to open https://example.com and tell me the page title
     ```
 
@@ -241,7 +248,7 @@ Langkah-langkah di bawah menggunakan Sentry sebagai contoh. Untuk terhubung ke l
   <Step title="Autentikasi di browser Anda">
     Mulai sesi Claude Code dan buka panel MCP:
 
-    ```text theme={null}
+    ```text wrap theme={null}
     /mcp
     ```
 
@@ -301,7 +308,7 @@ Panduan ini menggunakan perintah CLI `claude mcp`, tetapi setiap permukaan Claud
 * **Aplikasi desktop Claude Code**: tambahkan server melalui [UI Connectors](/docs/id/desktop#connect-external-tools).
 * **Aplikasi chat Claude Desktop**: aplikasi terpisah dari Claude Code. Untuk menyalin server dari `claude_desktop_config.json`-nya ke CLI, jalankan `claude mcp add-from-claude-desktop` di macOS atau WSL.
 * **VS Code**: lihat [Terhubung ke alat eksternal dengan MCP](/docs/id/vs-code#connect-to-external-tools-with-mcp).
-* **Claude Code di web**: membaca `.mcp.json` dari repositori Anda. Lihat [Edit .mcp.json secara langsung](#edit-mcp-json-directly).
+* **Cloud sessions**: komit `.mcp.json` ke repositori Anda; sesi dengan satu repositori memuatnya. Lihat [Edit .mcp.json secara langsung](#edit-mcp-json-directly) dan [Apa yang terbawa dari pengaturan Anda](/docs/id/cloud-environments#what-carries-over-from-your-setup).
 * **Claude.ai**: konektor yang Anda tambahkan di [claude.ai/customize/connectors](https://claude.ai/customize/connectors) dimuat secara otomatis di CLI ketika Anda masuk dengan akun itu. Lihat [Gunakan server MCP dari Claude.ai](/docs/id/mcp#use-mcp-servers-from-claude-ai).
 
 <h2 id="troubleshooting">
@@ -316,12 +323,20 @@ Jika server tidak terhubung, periksa statusnya dengan `/mcp` di dalam sesi atau 
 
     * Anda menjalankan `claude mcp add` dari proyek yang berbeda. Server yang dibatasi lokal terikat pada proyek tempat Anda menambahkannya: akar repositori, atau direktori yang tepat jika Anda tidak berada di repositori git. Tambahkan kembali server dari proyek yang Anda gunakan sekarang, atau tambahkan dengan `--scope user` sehingga tidak terikat pada proyek.
     * Anda mengedit file konfigurasi di jalur yang salah. File yang benar adalah `~/.claude.json` dan `<project>/.mcp.json`. Claude Code tidak membaca jalur seperti `~/.claude/.mcp.json`, `~/.claude/config/mcp.json`, `~/.claude/mcp.json`, atau `%APPDATA%\Claude\mcp.json`. Untuk server yang dibatasi pengguna, jalankan `claude mcp add --scope user`, yang menulis ke kunci `mcpServers` di `~/.claude.json`; untuk server yang dibatasi proyek, edit `.mcp.json` di akar proyek.
+    * Anda menulis entri yang salah bentuk di `.mcp.json`. Claude Code melewati entri itu dan masih memuat yang lain. Jalankan `claude mcp list` dari shell Anda dan cari peringatan parse, yang menyebutkan nama bidang yang menyinggung.
   </Accordion>
 
   <Accordion title="Status shows Failed to connect or Connection error">
-    Kedua status berarti server tidak dimulai atau URL tidak merespons. Mereka juga dapat muncul untuk server HTTP yang mengharapkan token daripada masuk browser yang tercakup dalam [Terhubung ke server yang memerlukan masuk](#connect-a-server-that-requires-sign-in).
+    Kedua status berarti server tidak dimulai atau URL tidak merespons. Mereka juga dapat muncul untuk server HTTP yang menolak token yang Anda konfigurasi di `headers.Authorization`; server yang menginginkan token yang belum Anda konfigurasi menampilkan `! Needs authentication` sebagai gantinya, tercakup dalam [Terhubung ke server yang memerlukan masuk](#connect-a-server-that-requires-sign-in).
 
-    Mulai dari v2.1.191, server HTTP yang mengembalikan `404 Not Found` menampilkan `MCP endpoint not found at <url>. Check the URL in your MCP config.` ketika Anda memilih server di `/mcp`, dengan URL yang dicoba Claude Code. Versi sebelumnya menampilkan pesan generik `Error POSTing to endpoint` tanpa URL. Bandingkan URL dengan jalur titik akhir MCP yang didokumentasikan server, kemudian jalankan `claude mcp remove <name>` dan tambahkan kembali dengan URL yang benar.
+    Langkah pertama Anda tergantung pada status mana yang Anda lihat:
+
+    * `Failed to connect`: mulai dengan detail kegagalan pada status itu sendiri. `claude mcp list` dan `claude mcp get <name>` menampilkan status HTTP atau kode kesalahan dan teks kesalahan apa pun yang dikembalikan server, yang sering kali menyebutkan masalah secara langsung, seperti header yang hilang atau token yang ditolak. Sebelum v2.1.219, `Failed to connect` hanya menampilkan status telanjang, dan Anda memerlukan pemeriksaan curl dan perintah nanti di bagian ini untuk menemukan penyebabnya.
+    * `Connection error`: Claude Code tidak menambahkan detail ke status ini pada versi apa pun, jadi langsung ke pemeriksaan curl dan perintah nanti di bagian ini.
+
+    Jika detail menunjuk ke kredensial atau URL, juga periksa peringatan dalam output `claude mcp list`. Claude Code menandai nilai konfigurasi dengan spasi putih terkemuka atau tertinggal yang tersembunyi, penyebab umum kegagalan autentikasi setelah menempel token.
+
+    Jika server HTTP mengembalikan `404 Not Found`, Claude Code menampilkan `MCP endpoint not found at <origin>. Check the URL in your MCP config.` ketika Anda memilih server di `/mcp`. Pesan menyebutkan asal URL, seperti `https://mcp.example.com`, tanpa jalurnya, jadi jalankan `claude mcp get <name>` untuk melihat URL lengkap yang Anda konfigurasi. Bandingkan jalurnya dengan jalur titik akhir MCP yang didokumentasikan server, kemudian jalankan `claude mcp remove <name>` dan tambahkan kembali dengan URL yang benar. Sebelum v2.1.219, pesan menyertakan jalur URL juga, dan sebelum v2.1.191, `404` menampilkan pesan generik `Error POSTing to endpoint` tanpa URL.
 
     Untuk server HTTP, konfirmasi URL dapat dijangkau dari mesin Anda:
 
@@ -382,7 +397,7 @@ Jika server tidak terhubung, periksa statusnya dengan `/mcp` di dalam sesi atau 
   <Accordion title="Changes to .mcp.json don't take effect">
     Claude Code membaca `.mcp.json` saat startup sesi. Keluar dan mulai ulang sesi setelah mengedit file.
 
-    Jika server Anda masih tidak muncul, jalankan `/mcp` dan cari peringatan parse. Claude Code melewati entri yang salah bentuk dan menunjukkan bidang yang menyinggung di sana.
+    Jika server Anda masih tidak muncul, jalankan `claude mcp list` dan cari peringatan parse. Claude Code melewati entri yang salah bentuk dan menunjukkan bidang yang menyinggung di sana.
 
     Jika Anda sebelumnya menolak server saat diminta, atur ulang persetujuan proyek:
 

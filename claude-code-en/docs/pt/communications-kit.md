@@ -102,7 +102,7 @@ Use isto como sua mensagem padrão de lançamento em toda a organização. Ele c
     📚 Guia de início rápido · VS Code · Curso gratuito de 1 hora
        https://code.claude.com/docs/pt/quickstart
        https://code.claude.com/docs/pt/vs-code
-       https://anthropic.skilljar.com/claude-code-in-action
+       https://academy.claude.com/courses/claude-code-in-action
 
     Perguntas → esta thread. [Proprietário] está na ponta.
     ```
@@ -209,8 +209,6 @@ time da Anthropic. Posso compartilhar um playbook curto se você estiver dentro.
 
 Mensagens prontas para colar no Slack ou Teams projetadas para impulsionar a ativação de recursos após o lançamento. Cada uma segue o mesmo padrão: um gancho, o resultado, um prompt "tente agora" e um link de documentação. Distribua uma ou duas por semana em `#claude-code`, ou escolha o punhado que corresponde às lacunas do seu time. Elas funcionam independentemente sem ordem necessária.
 
-Copie o corpo da mensagem de cada bloco diretamente no Slack ou Teams. Substitua `[espaços reservados entre colchetes]` antes de enviar.
-
 <h3 id="get-started">
   Comece
 </h3>
@@ -227,10 +225,14 @@ Claude Code funciona nos mesmos modelos que o aplicativo Claude, e você pode al
 no meio da sessão. *Sonnet* é o padrão de trabalho para trabalho de recursos cotidianos,
 bugs, testes e revisões. Recorra a *Opus* em refatorações grandes, depuração complicada,
 ou qualquer coisa de alto risco. Desça para *Haiku* para perguntas rápidas,
-formatação e edições mecânicas onde a velocidade vence. *Fable 5* é o modelo mais
+formatação e edições mecânicas onde a velocidade vence.
+
+*Fable* é o modelo mais
 capaz para suas tarefas mais difíceis e de longa duração; não é o
 padrão, então selecione-o com `/model fable`, e observe que conteúdo de cibersegurança e
-biologia volta automaticamente para Opus.
+biologia volta automaticamente para Opus. Opus 5.5 e Opus 5 executam
+suas próprias verificações também: conteúdo sinalizado muda para um Opus anterior, exceto
+que conteúdo de biologia sinalizado no Opus 5 é recusado.
 
 *Tente agora:* digite `/model` e escolha Sonnet se você ainda não o fez. É
 o padrão certo para a maioria das tarefas.
@@ -238,12 +240,12 @@ o padrão certo para a maioria das tarefas.
 📖 Configuração de modelo → https://code.claude.com/docs/pt/model-config
 ```
 
-| Modelo  | Melhor para                                                                                                                                                                                       |
-| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Fable 5 | As tarefas mais difíceis e de longa duração. Apenas com opt-in: selecione com `/model fable`. Conteúdo de cibersegurança ou biologia [volta para Opus](/docs/pt/model-config#automatic-model-fallback) |
-| Opus    | Refatorações em larga escala, depuração complexa, decisões de arquitetura, mudanças de alto risco                                                                                                 |
-| Sonnet  | Trabalho de recursos cotidianos, correções de bugs, testes, documentação, revisão de código. Padrão recomendado.                                                                                  |
-| Haiku   | Perguntas rápidas, formatação, edições mecânicas, iteração rápida                                                                                                                                 |
+| Modelo | Melhor para                                                                                                                                                                                                                                                      |
+| ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Fable  | As tarefas mais difíceis e de longa duração. Apenas com opt-in: selecione com `/model fable`. Conteúdo de cibersegurança ou biologia dispara [fallback automático de modelo para Opus](/docs/pt/model-config#automatic-model-fallback)                                |
+| Opus   | Refatorações em larga escala, depuração complexa, decisões de arquitetura, mudanças de alto risco. No Opus 5.5 e Opus 5, conteúdo de cibersegurança ou biologia dispara [fallback automático de modelo ou uma recusa](/docs/pt/model-config#automatic-model-fallback) |
+| Sonnet | Trabalho de recursos cotidianos, correções de bugs, testes, documentação, revisão de código. Padrão recomendado.                                                                                                                                                 |
+| Haiku  | Perguntas rápidas, formatação, edições mecânicas, iteração rápida                                                                                                                                                                                                |
 
 **Vitórias rápidas para tentar primeiro**
 
@@ -319,8 +321,8 @@ Funciona para diretórios inteiros também.
 Às vezes você quer que Claude peça antes de cada edição. Às vezes você apenas quer
 que ele envie. Você não deveria ter que escolher um para sempre.
 
-*Shift+Tab* alterna quanto de liberdade Claude recebe: *Manual* (a
-configuração padrão `default`) pede antes de cada ação, *acceptEdits* deixa edições de arquivo e comandos comuns do sistema de arquivos
+*Shift+Tab* alterna quanto Claude pode fazer sem perguntar: *Manual* (a
+configuração padrão `default`) pede antes de edições de arquivo e a maioria dos comandos shell, *acceptEdits* deixa edições de arquivo e comandos comuns do sistema de arquivos
 fluirem enquanto ainda verifica antes de outros comandos shell, e *plan*
 propõe mudanças para sua aprovação antes de qualquer coisa ser tocada. Plan mode é
 o construtor de confiança, então comece lá para qualquer coisa tocando múltiplos arquivos.
@@ -426,7 +428,7 @@ Digitando "há uma caixa vermelha que diz algo sobre uma referência nula
 e está apontando para a linha 47-ish"? Faça uma screenshot.
 
 Arraste uma screenshot diretamente para o terminal e Claude a vê: diálogos de erro, mockups de UI,
-fotos de quadro branco, exportações do Figma. *Ctrl+V* cola da área de transferência (use Ctrl+V no macOS também, não Cmd+V).
+fotos de quadro branco, exportações do Figma. *Ctrl+V* cola da área de transferência, ou *Alt+V* no Windows e WSL.
 
 *Tente agora:* na próxima vez que algo visual quebrar, faça uma screenshot e cole
 diretamente no prompt. Depois apenas digite "o que está errado aqui?"

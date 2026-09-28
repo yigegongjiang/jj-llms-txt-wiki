@@ -13,7 +13,7 @@ Ketika Anda menjalankan agents di production, Anda memerlukan visibilitas ke dal
 * berapa banyak tokens yang dihabiskan
 * di mana kegagalan terjadi
 
-Agent SDK dapat mengekspor data ini sebagai OpenTelemetry traces, metrics, dan log events ke backend apa pun yang menerima OpenTelemetry Protocol (OTLP), seperti Honeycomb, Datadog, Grafana, Langfuse, atau collector yang di-host sendiri.
+Agent SDK dapat mengekspor data ini sebagai OpenTelemetry traces, metrics, dan log events ke backend apa pun yang menerima OpenTelemetry Protocol (OTLP), baik platform observability yang di-host atau collector yang di-host sendiri.
 
 Panduan ini menjelaskan bagaimana SDK memancarkan telemetry, cara mengonfigurasi ekspor, dan cara menandai dan memfilter data setelah mencapai backend Anda. Untuk membaca penggunaan token dan biaya langsung dari aliran respons SDK alih-alih mengekspor ke backend, lihat [Track cost and usage](/docs/id/agent-sdk/cost-tracking).
 
@@ -107,8 +107,10 @@ Contoh berikut mengatur variables dalam dictionary dan meneruskannya melalui `op
 
 Karena child process mewarisi environment aplikasi Anda secara default, Anda dapat mencapai hasil yang sama dengan mengekspor variables ini dalam Dockerfile, Kubernetes manifest, atau shell profile dan menghilangkan `options.env` sepenuhnya.
 
+Untuk mengonfirmasi bahwa ekspor berfungsi, periksa log collector Anda untuk incoming spans, metrics, dan log events setelah task selesai. CLI gagal diam-diam pada export errors secara default: jika endpoint tidak dapat dijangkau atau menolak data, agent masih berjalan normal dan CLI menghapus telemetry tanpa menampilkan error di aplikasi Anda. Untuk menampilkan exporter errors, atur [`CLAUDE_CODE_OTEL_DIAG_STDERR=1`](/docs/id/env-vars) bersama dengan exporter variables dan baca diagnostics melalui callback `stderr` SDK (Python) atau opsi `stderr` (TypeScript). Memerlukan Claude Code v2.1.179 atau lebih baru.
+
 <Note>
-  Exporter `console` menulis telemetry ke standard output, yang digunakan SDK sebagai message channel-nya. Jangan atur `console` sebagai nilai exporter saat menjalankan melalui SDK. Untuk menginspeksi telemetry secara lokal, arahkan `OTEL_EXPORTER_OTLP_ENDPOINT` ke collector lokal atau container Jaeger all-in-one sebagai gantinya.
+  Exporter `console` menulis telemetry ke standard output, yang digunakan SDK sebagai message channel-nya. Jangan atur `console` sebagai nilai exporter saat menjalankan melalui SDK. Untuk menginspeksi telemetry secara lokal, arahkan `OTEL_EXPORTER_OTLP_ENDPOINT` ke local OpenTelemetry Collector sebagai gantinya.
 </Note>
 
 <h3 id="flush-telemetry-from-short-lived-calls">
@@ -148,11 +150,11 @@ Traces memberikan Anda tampilan paling detail dari agent run. Dengan `CLAUDE_COD
 * **`claude_code.interaction`:** membungkus satu turn dari agent loop, dari menerima prompt hingga menghasilkan response.
 * **`claude_code.llm_request`:** membungkus setiap panggilan ke Claude API, dengan model name, latency, dan token counts sebagai attributes.
 * **`claude_code.tool`:** membungkus setiap tool invocation, dengan child spans untuk permission wait (`claude_code.tool.blocked_on_user`) dan execution itu sendiri (`claude_code.tool.execution`).
-* **`claude_code.hook`:** membungkus setiap eksekusi [hook](/docs/id/agent-sdk/hooks). Memerlukan detailed beta tracing (`ENABLE_BETA_TRACING_DETAILED=1` dan `BETA_TRACING_ENDPOINT`) sebagai tambahan untuk variables di atas.
+* **`claude_code.hook`:** membungkus setiap eksekusi [hook](/docs/id/agent-sdk/hooks). Memerlukan detailed beta tracing (`ENABLE_BETA_TRACING_DETAILED=1` dan `BETA_TRACING_ENDPOINT`), sepasang yang juga [mengubah ke mana logs dan traces Anda pergi](/docs/id/env-vars#variables).
 
-Spans `llm_request`, `tool`, dan `hook` adalah children dari enclosing `claude_code.interaction` span. Ketika agent menghasilkan subagent melalui Task tool, spans `llm_request` dan `tool` subagent bersarang di bawah `claude_code.tool` span parent agent, jadi full delegation chain muncul sebagai satu trace.
+Spans `llm_request`, `tool`, dan `hook` adalah children dari enclosing `claude_code.interaction` span. Ketika agent menghasilkan subagent melalui Agent tool, spans `llm_request` dan `tool` subagent bersarang di bawah `claude_code.tool` span parent agent, jadi full delegation chain muncul sebagai satu trace.
 
-Spans membawa atribut `session.id` secara default. Ketika Anda membuat beberapa panggilan `query()` terhadap [session](/docs/id/agent-sdk/sessions) yang sama, filter pada `session.id` di backend Anda untuk melihatnya sebagai satu timeline. Atribut dihilangkan jika `OTEL_METRICS_INCLUDE_SESSION_ID` diatur ke falsy value.
+Spans membawa atribut `session.id` secara default. Ketika Anda membuat beberapa panggilan `query()` terhadap [session](/docs/id/agent-sdk/sessions) yang sama, filter pada `session.id` di backend Anda untuk melihatnya sebagai satu timeline. Claude Code menghilangkan atribut jika Anda mengatur `OTEL_METRICS_INCLUDE_SESSION_ID` ke falsy value.
 
 <Note>
   Tracing dalam beta. Nama span dan attributes dapat berubah antar releases. Lihat
@@ -165,6 +167,8 @@ Spans membawa atribut `session.id` secara default. Ketika Anda membuat beberapa 
 </h2>
 
 SDK secara otomatis menyebarkan W3C trace context ke CLI subprocess. Ketika Anda memanggil `query()` sementara OpenTelemetry span aktif di aplikasi Anda, SDK menyuntikkan `TRACEPARENT` dan `TRACESTATE` ke environment child process, dan CLI membacanya sehingga span `claude_code.interaction`-nya menjadi child dari span Anda. Agent run kemudian muncul di dalam trace aplikasi Anda alih-alih sebagai root yang terputus.
+
+Catatan log event OTLP yang dipancarkan selama run membawa konteks trace yang sama: dengan `TRACEPARENT` diatur, `trace_id` dan `span_id` setiap record cocok dengan trace aplikasi Anda, sehingga Anda dapat menggabungkan [events](/docs/id/monitoring-usage#events) ke spans di backend Anda. Sebelum v2.1.212, catatan event yang dipancarkan di luar span aktif tidak membawa `trace_id` atau `span_id`.
 
 Ketika trace-context propagation diaktifkan, CLI juga meneruskan `TRACEPARENT` ke setiap command Bash dan PowerShell yang dijalankannya. Jika command yang diluncurkan melalui Bash tool memancarkan spans OpenTelemetry-nya sendiri, spans tersebut bersarang di bawah span `claude_code.tool.execution` yang membungkus command.
 
@@ -182,7 +186,7 @@ Contoh berikut mengganti nama service dan melampirkan deployment metadata. Nilai
   ```python Python theme={null}
   options = ClaudeAgentOptions(
       env={
-          # ... exporter configuration ...
+          # ... exporter configuration from the Enable telemetry export example ...
           "OTEL_SERVICE_NAME": "support-triage-agent",
           "OTEL_RESOURCE_ATTRIBUTES": "service.version=1.4.0,deployment.environment=production",
       },
@@ -193,9 +197,9 @@ Contoh berikut mengganti nama service dan melampirkan deployment metadata. Nilai
   const options = {
     env: {
       ...process.env,
-      // ... exporter configuration ...
+      // ... exporter configuration from the Enable telemetry export example ...
       OTEL_SERVICE_NAME: "support-triage-agent",
-      OTEL_RESOURCE_ATTRIBUTES":
+      OTEL_RESOURCE_ATTRIBUTES:
         "service.version=1.4.0,deployment.environment=production",
     },
   };
@@ -216,7 +220,8 @@ Untuk membuat tool calls dan MCP activity dapat diatribusikan ke end users aplik
 
   options = ClaudeAgentOptions(
       env={
-          # ... exporter configuration ...
+          # ... exporter configuration from the Enable telemetry export example ...
+          # request is the incoming request object from your web framework.
           "OTEL_RESOURCE_ATTRIBUTES": f"enduser.id={quote(request.user_id)},tenant.id={quote(request.tenant_id)}",
       },
   )
@@ -226,7 +231,8 @@ Untuk membuat tool calls dan MCP activity dapat diatribusikan ke end users aplik
   const options = {
     env: {
       ...process.env,
-      // ... exporter configuration ...
+      // ... exporter configuration from the Enable telemetry export example ...
+      // request is the incoming request object from your web framework.
       OTEL_RESOURCE_ATTRIBUTES: `enduser.id=${encodeURIComponent(request.userId)},tenant.id=${encodeURIComponent(request.tenantId)}`,
     },
   };
@@ -241,12 +247,12 @@ Dengan end-user identity terlampir, events `tool_decision`, `tool_result`, `mcp_
 
 Telemetry bersifat structural secara default. Durations, model names, dan tool names dicatat pada setiap span; token counts dicatat ketika underlying API request mengembalikan usage data, jadi spans untuk failed atau aborted requests dapat menghilangkannya. Konten yang dibaca dan ditulis agent Anda tidak dicatat secara default. Variables opt-in ini menambahkan konten ke exported data:
 
-| Variable                  | Menambahkan                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `OTEL_LOG_USER_PROMPTS=1` | Prompt text pada events `claude_code.user_prompt` dan pada span `claude_code.interaction`                                                                                                                                                                                                                                                                                                                                                                                              |
-| `OTEL_LOG_TOOL_DETAILS=1` | Tool input arguments (file paths, shell commands, search patterns) pada events `claude_code.tool_result`                                                                                                                                                                                                                                                                                                                                                                               |
-| `OTEL_LOG_TOOL_CONTENT=1` | Full tool input dan output bodies sebagai span events pada `claude_code.tool`, truncated pada 60 KB. Memerlukan [tracing](#read-agent-traces) untuk diaktifkan                                                                                                                                                                                                                                                                                                                         |
-| `OTEL_LOG_RAW_API_BODIES` | Full Anthropic Messages API request dan response JSON sebagai log events `claude_code.api_request_body` dan `claude_code.api_response_body`. Atur ke `1` untuk inline bodies truncated pada 60 KB, atau `file:<dir>` untuk untruncated bodies di disk dengan path `body_ref` dalam event. Bodies mencakup entire conversation history dan memiliki extended-thinking content redacted. Mengaktifkan ini menyiratkan consent ke semua yang akan diungkapkan oleh tiga variables di atas |
+| Variable                  | Menambahkan                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `OTEL_LOG_USER_PROMPTS=1` | Prompt text pada events `claude_code.user_prompt` dan pada span `claude_code.interaction`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `OTEL_LOG_TOOL_DETAILS=1` | Tool input arguments (file paths, shell commands, search patterns) pada events `claude_code.tool_result`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `OTEL_LOG_TOOL_CONTENT=1` | Sebuah [`tool.output` span event](/docs/id/monitoring-usage#tool-output-span-event) pada `claude_code.tool` dengan file contents dan Bash output, truncated pada 60 KB secara default, dapat dikonfigurasi melalui `CLAUDE_CODE_OTEL_CONTENT_MAX_LENGTH`, yang memerlukan Claude Code v2.1.214 atau lebih baru. Memerlukan [tracing](#read-agent-traces) untuk diaktifkan. Span attributes membawa tool content di bawah [gates mereka sendiri](/docs/id/monitoring-usage#new-context-gates)                                                                                                                                                       |
+| `OTEL_LOG_RAW_API_BODIES` | Full Anthropic Messages API request dan response JSON sebagai log events `claude_code.api_request_body` dan `claude_code.api_response_body`. Atur ke `1` untuk inline bodies truncated pada 60 KB secara default, atau `file:<dir>` untuk untruncated bodies di disk dengan path `body_ref` dalam event. `CLAUDE_CODE_OTEL_CONTENT_MAX_LENGTH` mengonfigurasi inline truncation limit, dan memerlukan Claude Code v2.1.214 atau lebih baru. Bodies mencakup entire conversation history dan memiliki extended-thinking content redacted. Mengaktifkan ini menyiratkan consent ke semua yang akan diungkapkan oleh tiga variables di atas |
 
 Biarkan unset kecuali pipeline observability Anda disetujui untuk menyimpan data yang ditangani agent Anda. Lihat [Security and privacy](/docs/id/monitoring-usage#security-and-privacy) dalam referensi Monitoring untuk daftar lengkap attributes dan redaction behavior.
 

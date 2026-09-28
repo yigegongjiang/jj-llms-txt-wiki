@@ -8,7 +8,7 @@
 
 Questa pagina è per i singoli ingegneri che stanno già utilizzando Claude Code e vogliono aiutare il loro team ad adottarlo. Copre cosa condividere, come rispondere alle domande che riceverai, una guida di trenta giorni e risposte alle preoccupazioni comuni.
 
-L'adozione di uno strumento per sviluppatori raramente avviene a causa di un annuncio di rollout. Avviene perché qualcuno nel team inizia a utilizzare lo strumento bene, ne parla apertamente e rende facile per gli altri seguire. Il lavoro che svolgi come champion ha un effetto sproporzionato: ogni esempio che condividi accorcia la curva di apprendimento per gli ingegneri che verranno dopo di te, e ogni domanda che rispondi pubblicamente trasforma l'esperienza di una persona in qualcosa su cui l'intero team può costruire. Stai agendo come un moltiplicatore per il tuo team, non come un help desk, e questa guida è strutturata per mantenere il ruolo sostenibile su questi termini.
+L'adozione di uno strumento per sviluppatori raramente avviene a causa di un annuncio di rollout. Avviene perché qualcuno nel team inizia a utilizzare lo strumento bene, ne parla apertamente e rende facile per gli altri seguire. Il lavoro che svolgi come champion ha un effetto sproporzionato: ogni esempio che condividi accorcia la curva di apprendimento per gli ingegneri che verranno dopo di te, e ogni domanda che rispondi pubblicamente trasforma l'esperienza di una persona in qualcosa su cui l'intero team può costruire.
 
 <h2 id="the-champion-role">
   Il ruolo di champion
@@ -21,8 +21,6 @@ Il ruolo consiste in tre comportamenti che si rafforzano a vicenda.
 | Condividi quello che scopri            | Pubblica i prompt, gli screenshot e le piccole vittorie dal tuo lavoro nei luoghi che il tuo team già legge, come un canale di ingegneria, un thread di standup o una descrizione di pull request. | Gli esempi tratti dal tuo codebase sono più persuasivi di qualsiasi documentazione esterna, perché i colleghi possono vedere esattamente come lo strumento si applica ai problemi che condividono con te. |
 | Sii la persona che le persone chiedono | Quando un collega ti chiede come hai realizzato qualcosa, rispondi con il prompt effettivo che hai utilizzato in modo che possano applicarlo direttamente al loro compito.                         | Un esempio concreto e eseguibile rimuove il divario tra la curiosità e un primo utilizzo riuscito, che è dove la maggior parte degli sforzi di adozione si blocca.                                        |
 | Fai crescere il cerchio                | Stabilisci un piccolo numero di abitudini ricorrenti leggere, come un canale dedicato o un thread settimanale, in modo che lo slancio continui anche quando la tua attenzione è altrove.           | L'adozione che dipende da una sola persona è fragile. L'adozione che è portata da abitudini condivise continua a crescere da sola.                                                                        |
-
-La maggior parte di questo si adatta naturalmente al lavoro che stai già facendo. La differenza è una piccola quantità di intenzione aggiuntiva su dove vengono pubblicate le tue scoperte e come i tuoi insegnamenti si diffondono.
 
 <h3 id="what-this-should-cost-you">
   Quanto dovrebbe costarti
@@ -139,7 +137,7 @@ Una risposta come "Prova plan mode, premi `Shift+Tab` finché non lo vedi" è pi
   Fai crescere il cerchio
 </h2>
 
-L'obiettivo non è costruire un programma o possedere un rollout. È stabilire un piccolo numero di abitudini leggere che consentono allo slancio di continuare dopo che hai smesso di guidarlo attivamente. Quando le domande nel canale vengono risposte da persone diverse da te, il ruolo ha fatto il suo lavoro.
+L'obiettivo è stabilire un piccolo numero di abitudini leggere che consentono allo slancio di continuare dopo che hai smesso di guidarlo attivamente. Non è necessario costruire un programma o possedere un rollout. Quando le domande nel canale vengono risposte da persone diverse da te, il ruolo ha fatto il suo lavoro.
 
 <h3 id="patterns-that-tend-to-work">
   Modelli che tendono a funzionare

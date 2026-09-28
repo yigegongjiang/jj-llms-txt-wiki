@@ -18,17 +18,13 @@ source .venv/bin/activate
 pip install claude-agent-sdk
 ```
 
-Pour uv, Windows PowerShell et la configuration de la clé API, consultez [Démarrer dans la vue d'ensemble du Agent SDK](/docs/fr/agent-sdk/overview#get-started).
+Pour uv, Windows PowerShell et la configuration de la clé API, consultez [Démarrer dans la vue d'ensemble du Agent SDK](/docs/fr/agent-sdk/quickstart#setup).
 
 <h2 id="choosing-between-query-and-claudesdkclient">
   Choisir entre `query()` et `ClaudeSDKClient`
 </h2>
 
 Le SDK Python offre deux façons d'interagir avec Claude Code :
-
-<h3 id="quick-comparison">
-  Comparaison rapide
-</h3>
 
 | Fonctionnalité                | `query()`                                      | `ClaudeSDKClient`                        |
 | :---------------------------- | :--------------------------------------------- | :--------------------------------------- |
@@ -42,32 +38,13 @@ Le SDK Python offre deux façons d'interagir avec Claude Code :
 | **Continuer la conversation** | Manuel via `continue_conversation` ou `resume` | ✅ Automatique                            |
 | **Cas d'usage**               | Tâches ponctuelles                             | Conversations continues                  |
 
-<h3 id="when-to-use-query-one-off-tasks">
-  Quand utiliser `query()` (tâches ponctuelles)
-</h3>
-
-**Idéal pour :**
-
-* Les questions ponctuelles où vous n'avez pas besoin d'historique de conversation
-* Les tâches indépendantes qui ne nécessitent pas de contexte des échanges précédents
-* Les scripts d'automatisation simples
-* Quand vous voulez un nouveau départ à chaque fois
-
-<h3 id="when-to-use-claudesdkclient-continuous-conversation">
-  Quand utiliser `ClaudeSDKClient` (conversation continue)
-</h3>
-
-**Idéal pour :**
-
-* **Continuer les conversations** - Quand vous avez besoin que Claude se souvienne du contexte
-* **Questions de suivi** - S'appuyer sur les réponses précédentes
-* **Applications interactives** - Interfaces de chat, REPLs
-* **Logique basée sur les réponses** - Quand l'action suivante dépend de la réponse de Claude
-* **Contrôle de session** - Gérer explicitement le cycle de vie de la conversation
+Utilisez `ClaudeSDKClient` pour les applications interactives telles que les interfaces de chat, ou quand l'action suivante dépend de la réponse de Claude.
 
 <h2 id="functions">
   Fonctions
 </h2>
+
+<Note>Les blocs de signature et les fragments `async for` / `async with` nus sur cette page sont illustratifs. Pour les exécuter, enveloppez le corps dans `async def main(): ...` et appelez `asyncio.run(main())`.</Note>
 
 <h3 id="query">
   `query()`
@@ -113,7 +90,6 @@ async def main():
     options = ClaudeAgentOptions(
         system_prompt="You are an expert Python developer",
         permission_mode="acceptEdits",
-        cwd="/home/user/project",
     )
 
     async for message in query(prompt="Create a Python web server", options=options):
@@ -142,12 +118,12 @@ def tool(
   Paramètres
 </h4>
 
-| Paramètre      | Type                                            | Description                                                                      |
-| :------------- | :---------------------------------------------- | :------------------------------------------------------------------------------- |
-| `name`         | `str`                                           | Identifiant unique pour l'outil                                                  |
-| `description`  | `str`                                           | Description lisible de ce que fait l'outil                                       |
-| `input_schema` | `type \| dict[str, Any]`                        | Schéma définissant les paramètres d'entrée de l'outil (voir ci-dessous)          |
-| `annotations`  | [`ToolAnnotations`](#toolannotations)` \| None` | Annotations MCP optionnelles fournissant des indices comportementaux aux clients |
+| Paramètre      | Type                                            | Description                                                                                                     |
+| :------------- | :---------------------------------------------- | :-------------------------------------------------------------------------------------------------------------- |
+| `name`         | `str`                                           | Identifiant unique pour l'outil                                                                                 |
+| `description`  | `str`                                           | Description lisible de ce que fait l'outil                                                                      |
+| `input_schema` | `type \| dict[str, Any]`                        | Schéma définissant les paramètres d'entrée de l'outil. Voir [Options de schéma d'entrée](#input-schema-options) |
+| `annotations`  | [`ToolAnnotations`](#toolannotations)` \| None` | Annotations MCP optionnelles fournissant des indices comportementaux aux clients                                |
 
 <h4 id="input-schema-options">
   Options de schéma d'entrée
@@ -195,15 +171,20 @@ async def greet(args: dict[str, Any]) -> dict[str, Any]:
   `ToolAnnotations`
 </h4>
 
-Réexportée depuis `mcp.types` (également disponible via `from claude_agent_sdk import ToolAnnotations`). Tous les champs sont des indices optionnels ; les clients ne doivent pas s'y fier pour les décisions de sécurité.
+Indices comportementaux pour un outil, passés comme argument `annotations` de [`tool()`](#tool). `ToolAnnotations` étend `mcp.types.ToolAnnotations` du SDK MCP avec un champ `maxResultSizeChars`, et vous pouvez écrire chaque indice en camelCase ou snake\_case : `ToolAnnotations(readOnlyHint=True)` et `ToolAnnotations(read_only_hint=True)` sont équivalents. Vous pouvez également passer un `mcp.types.ToolAnnotations` simple partout où le SDK accepte des annotations.
 
-| Champ             | Type           | Par défaut | Description                                                                                                                                                         |
-| :---------------- | :------------- | :--------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `title`           | `str \| None`  | `None`     | Titre lisible pour l'outil                                                                                                                                          |
-| `readOnlyHint`    | `bool \| None` | `False`    | Si `True`, l'outil ne modifie pas son environnement                                                                                                                 |
-| `destructiveHint` | `bool \| None` | `True`     | Si `True`, l'outil peut effectuer des mises à jour destructrices (uniquement significatif quand `readOnlyHint` est `False`)                                         |
-| `idempotentHint`  | `bool \| None` | `False`    | Si `True`, les appels répétés avec les mêmes arguments n'ont pas d'effet supplémentaire (uniquement significatif quand `readOnlyHint` est `False`)                  |
-| `openWorldHint`   | `bool \| None` | `True`     | Si `True`, l'outil interagit avec des entités externes (par exemple, recherche web). Si `False`, le domaine de l'outil est fermé (par exemple, un outil de mémoire) |
+Les noms snake\_case et le champ typé `maxResultSizeChars` nécessitent Python Agent SDK 0.2.140 ou ultérieur. Les versions 0.1.31 à 0.2.139 réexportent `mcp.types.ToolAnnotations` inchangé. Sur les versions 0.1.55 à 0.2.139, vous pouvez toujours passer `maxResultSizeChars` comme argument de mot-clé : la classe MCP accepte les champs supplémentaires, et le SDK transmet la valeur à Claude Code.
+
+Tous les champs sont optionnels. Les clients ne doivent pas s'y fier pour les décisions de sécurité.
+
+| Champ                | Type           | Par défaut | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| :------------------- | :------------- | :--------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `title`              | `str \| None`  | `None`     | Titre lisible pour l'outil                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `readOnlyHint`       | `bool \| None` | `False`    | Si `True`, l'outil ne modifie pas son environnement                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| `destructiveHint`    | `bool \| None` | `True`     | Si `True`, l'outil peut effectuer des mises à jour destructrices (uniquement significatif quand `readOnlyHint` est `False`)                                                                                                                                                                                                                                                                                                                                                       |
+| `idempotentHint`     | `bool \| None` | `False`    | Si `True`, les appels répétés avec les mêmes arguments n'ont pas d'effet supplémentaire (uniquement significatif quand `readOnlyHint` est `False`)                                                                                                                                                                                                                                                                                                                                |
+| `openWorldHint`      | `bool \| None` | `True`     | Si `True`, l'outil interagit avec des entités externes (par exemple, recherche web). Si `False`, le domaine de l'outil est fermé (par exemple, un outil de mémoire)                                                                                                                                                                                                                                                                                                               |
+| `maxResultSizeChars` | `int \| None`  | `None`     | Nombre de caractères jusqu'auquel Claude Code conserve le résultat textuel de cet outil en ligne dans la conversation au lieu de l'enregistrer dans un fichier, jusqu'à 500 000. Les résultats contenant des images ne sont pas affectés. Un paramètre Claude Code plutôt qu'un indice MCP : le SDK l'envoie dans `_meta` de l'outil en tant que `anthropic/maxResultSizeChars`. Voir [Augmenter la limite pour un outil spécifique](/docs/fr/mcp#raise-the-limit-for-a-specific-tool) |
 
 ```python theme={null}
 from claude_agent_sdk import tool, ToolAnnotations
@@ -255,7 +236,7 @@ Retourne un objet `McpSdkServerConfig` qui peut être passé à `ClaudeAgentOpti
 </h4>
 
 ```python theme={null}
-from claude_agent_sdk import tool, create_sdk_mcp_server
+from claude_agent_sdk import tool, create_sdk_mcp_server, ClaudeAgentOptions
 
 
 @tool("add", "Add two numbers", {"a": float, "b": float})
@@ -367,13 +348,14 @@ def get_session_messages(
   Type de retour : `SessionMessage`
 </h4>
 
-| Propriété            | Type                           | Description                   |
-| :------------------- | :----------------------------- | :---------------------------- |
-| `type`               | `Literal["user", "assistant"]` | Rôle du message               |
-| `uuid`               | `str`                          | Identifiant de message unique |
-| `session_id`         | `str`                          | Identifiant de session        |
-| `message`            | `Any`                          | Contenu du message brut       |
-| `parent_tool_use_id` | `None`                         | Réservé pour un usage futur   |
+| Propriété            | Type                           | Description                                                                                                                                                                                                                                                                                                              |
+| :------------------- | :----------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `type`               | `Literal["user", "assistant"]` | Rôle du message                                                                                                                                                                                                                                                                                                          |
+| `uuid`               | `str`                          | Identifiant de message unique                                                                                                                                                                                                                                                                                            |
+| `session_id`         | `str`                          | Identifiant de session                                                                                                                                                                                                                                                                                                   |
+| `message`            | `Any`                          | Contenu du message brut                                                                                                                                                                                                                                                                                                  |
+| `parent_tool_use_id` | `str \| None`                  | Pour les messages de sous-agent, l'id du bloc `Agent` tool-use qui l'a généré. `None` pour les messages de session principale et les sessions plus anciennes                                                                                                                                                             |
+| `parent_agent_id`    | `str \| None`                  | Pour les messages d'un [sous-agent imbriqué](/docs/fr/sub-agents#let-subagents-spawn-their-own-subagents), l'id d'agent du sous-agent parent. `None` pour les messages de session principale, les messages de sous-agent de niveau supérieur, et les sessions plus anciennes. Nécessite Python Agent SDK 0.2.140 ou ultérieur |
 
 <h4 id="example-4">
   Exemple
@@ -502,8 +484,10 @@ Lève `ValueError` si `session_id` n'est pas un UUID valide ou si `tag` est vide
 ```python theme={null}
 from claude_agent_sdk import list_sessions, tag_session
 
-# Tag a session
-tag_session("550e8400-e29b-41d4-a716-446655440000", "needs-review")
+# Tag the most recent session
+sessions = list_sessions(directory="/path/to/project", limit=1)
+if sessions:
+    tag_session(sessions[0].session_id, "needs-review")
 
 # Later: find all sessions with that tag
 for session in list_sessions(directory="/path/to/project"):
@@ -519,18 +503,7 @@ for session in list_sessions(directory="/path/to/project"):
   `ClaudeSDKClient`
 </h3>
 
-**Maintient une session de conversation sur plusieurs échanges.** C'est l'équivalent Python de la façon dont la fonction `query()` du SDK TypeScript fonctionne en interne - elle crée un objet client qui peut continuer les conversations.
-
-<h4 id="key-features">
-  Fonctionnalités clés
-</h4>
-
-* **Continuité de session** : Maintient le contexte de conversation sur plusieurs appels `query()`
-* **Même conversation** : La session conserve les messages précédents
-* **Support des interruptions** : Peut arrêter l'exécution en cours de tâche
-* **Cycle de vie explicite** : Vous contrôlez quand la session commence et se termine
-* **Flux basé sur les réponses** : Peut réagir aux réponses et envoyer des suivis
-* **Outils personnalisés et hooks** : Supporte les outils personnalisés (créés avec le décorateur `@tool`) et les hooks
+**Maintient une session de conversation sur plusieurs échanges.** C'est l'équivalent Python de la façon dont la fonction `query()` du SDK TypeScript fonctionne en interne - elle crée un objet client qui peut continuer les conversations. Voir la [comparaison avec `query()`](#choosing-between-query-and-claudesdkclient).
 
 ```python theme={null}
 class ClaudeSDKClient:
@@ -540,7 +513,7 @@ class ClaudeSDKClient:
     async def receive_messages(self) -> AsyncIterator[Message]
     async def receive_response(self) -> AsyncIterator[Message]
     async def interrupt(self) -> None
-    async def set_permission_mode(self, mode: str) -> None
+    async def set_permission_mode(self, mode: PermissionMode) -> None
     async def set_model(self, model: str | None = None) -> None
     async def rewind_files(self, user_message_id: str) -> None
     async def get_mcp_status(self) -> McpStatusResponse
@@ -564,13 +537,13 @@ class ClaudeSDKClient:
 | `receive_response()`                      | Reçoit les messages jusqu'à et incluant un ResultMessage                                                                                                                   |
 | `interrupt()`                             | Envoie un signal d'interruption (fonctionne uniquement en mode streaming)                                                                                                  |
 | `set_permission_mode(mode)`               | Change le mode de permission pour la session actuelle                                                                                                                      |
-| `set_model(model)`                        | Change le modèle pour la session actuelle. Passez `None` pour réinitialiser à la valeur par défaut                                                                         |
+| `set_model(model)`                        | Change le modèle pour la session actuelle. Passez `None` pour réinitialiser au [modèle par défaut de Claude Code](/docs/fr/model-config)                                        |
 | `rewind_files(user_message_id)`           | Restaure les fichiers à leur état au message utilisateur spécifié. Nécessite `enable_file_checkpointing=True`. Voir [File checkpointing](/docs/fr/agent-sdk/file-checkpointing) |
 | `get_mcp_status()`                        | Obtient le statut de tous les serveurs MCP configurés. Retourne [`McpStatusResponse`](#mcpstatusresponse)                                                                  |
 | `reconnect_mcp_server(server_name)`       | Réessaye de se connecter à un serveur MCP qui a échoué ou a été déconnecté                                                                                                 |
 | `toggle_mcp_server(server_name, enabled)` | Active ou désactive un serveur MCP en cours de session. La désactivation supprime ses outils                                                                               |
 | `stop_task(task_id)`                      | Arrête une tâche de fond en cours d'exécution. Un [`TaskNotificationMessage`](#tasknotificationmessage) avec le statut `"stopped"` suit dans le flux de messages           |
-| `get_server_info()`                       | Obtient les informations du serveur incluant l'ID de session et les capacités                                                                                              |
+| `get_server_info()`                       | Obtient les informations d'initialisation du serveur, incluant les commandes disponibles et les styles de sortie                                                           |
 | `disconnect()`                            | Se déconnecte de Claude                                                                                                                                                    |
 
 <h4 id="context-manager-support">
@@ -580,10 +553,18 @@ class ClaudeSDKClient:
 Le client peut être utilisé comme un gestionnaire de contexte asynchrone pour la gestion automatique de la connexion :
 
 ```python theme={null}
-async with ClaudeSDKClient() as client:
-    await client.query("Hello Claude")
-    async for message in client.receive_response():
-        print(message)
+import asyncio
+from claude_agent_sdk import ClaudeSDKClient
+
+
+async def main():
+    async with ClaudeSDKClient() as client:
+        await client.query("Hello Claude")
+        async for message in client.receive_response():
+            print(message)
+
+
+asyncio.run(main())
 ```
 
 > **Important :** Lors de l'itération sur les messages, évitez d'utiliser `break` pour quitter tôt car cela peut causer des problèmes de nettoyage asyncio. À la place, laissez l'itération se terminer naturellement ou utilisez des drapeaux pour suivre quand vous avez trouvé ce que vous cherchiez.
@@ -703,8 +684,9 @@ async def interruptible_task():
         # Drain the interrupted task's messages (including its ResultMessage)
         async for message in client.receive_response():
             if isinstance(message, ResultMessage):
-                print(f"Interrupted task finished with subtype={message.subtype!r}")
-                # subtype is "error_during_execution" for interrupted tasks
+                print(f"Interrupted task: terminal_reason={message.terminal_reason!r}")
+                # terminal_reason is "aborted_streaming" or "aborted_tools"
+                # for interrupted turns
 
         # Send a new command
         await client.query("Just say hello instead")
@@ -719,7 +701,7 @@ asyncio.run(interruptible_task())
 ```
 
 <Note>
-  **Comportement du buffer après interruption :** `interrupt()` envoie un signal d'arrêt mais ne vide pas le buffer de messages. Les messages déjà produits par la tâche interrompue, incluant son `ResultMessage` (avec `subtype="error_during_execution"`), restent dans le flux. Vous devez les vider avec `receive_response()` avant de lire la réponse à une nouvelle requête. Si vous envoyez une nouvelle requête immédiatement après `interrupt()` et appelez `receive_response()` une seule fois, vous recevrez les messages de la tâche interrompue, pas la réponse de la nouvelle requête.
+  **Comportement du buffer après interruption :** `interrupt()` envoie un signal d'arrêt mais ne vide pas le buffer de messages. Les messages déjà produits par la tâche interrompue, incluant son `ResultMessage`, restent dans le flux. Vous devez les vider avec `receive_response()` avant de lire la réponse à une nouvelle requête. Si vous envoyez une nouvelle requête immédiatement après `interrupt()` et appelez `receive_response()` une seule fois, vous recevrez les messages de la tâche interrompue, pas la réponse de la nouvelle requête.
 </Note>
 
 <h4 id="example-advanced-permission-control">
@@ -727,6 +709,7 @@ asyncio.run(interruptible_task())
 </h4>
 
 ```python theme={null}
+import asyncio
 from claude_agent_sdk import ClaudeSDKClient, ClaudeAgentOptions
 from claude_agent_sdk.types import (
     PermissionResultAllow,
@@ -796,13 +779,13 @@ class SdkMcpTool(Generic[T]):
     annotations: ToolAnnotations | None = None
 ```
 
-| Propriété      | Type                                       | Description                                                                                                    |
-| :------------- | :----------------------------------------- | :------------------------------------------------------------------------------------------------------------- |
-| `name`         | `str`                                      | Identifiant unique pour l'outil                                                                                |
-| `description`  | `str`                                      | Description lisible                                                                                            |
-| `input_schema` | `type[T] \| dict[str, Any]`                | Schéma pour la validation d'entrée                                                                             |
-| `handler`      | `Callable[[T], Awaitable[dict[str, Any]]]` | Fonction asynchrone qui gère l'exécution de l'outil                                                            |
-| `annotations`  | `ToolAnnotations \| None`                  | Annotations MCP optionnelles (par exemple, `readOnlyHint`, `destructiveHint`, `openWorldHint`). De `mcp.types` |
+| Propriété      | Type                                            | Description                                                                                                             |
+| :------------- | :---------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------- |
+| `name`         | `str`                                           | Identifiant unique pour l'outil                                                                                         |
+| `description`  | `str`                                           | Description lisible                                                                                                     |
+| `input_schema` | `type[T] \| dict[str, Any]`                     | Schéma pour la validation d'entrée                                                                                      |
+| `handler`      | `Callable[[T], Awaitable[dict[str, Any]]]`      | Fonction asynchrone qui gère l'exécution de l'outil                                                                     |
+| `annotations`  | [`ToolAnnotations`](#toolannotations)` \| None` | Annotations d'outil optionnelles (par exemple `readOnlyHint`, `destructiveHint`, `openWorldHint`, `maxResultSizeChars`) |
 
 <h3 id="transport">
   `Transport`
@@ -862,12 +845,13 @@ Dataclass de configuration pour les requêtes Claude Code.
 class ClaudeAgentOptions:
     tools: list[str] | ToolsPreset | None = None
     allowed_tools: list[str] = field(default_factory=list)
-    system_prompt: str | SystemPromptPreset | SystemPromptFile | None = None
+    system_prompt: str | SystemPromptPreset | SystemPromptCustom | SystemPromptFile | None = None
     mcp_servers: dict[str, McpServerConfig] | str | Path = field(default_factory=dict)
     strict_mcp_config: bool = False
     permission_mode: PermissionMode | None = None
     continue_conversation: bool = False
     resume: str | None = None
+    session_id: str | None = None
     max_turns: int | None = None
     max_budget_usd: float | None = None
     disallowed_tools: list[str] = field(default_factory=list)
@@ -890,7 +874,10 @@ class ClaudeAgentOptions:
     user: str | None = None
     include_partial_messages: bool = False
     include_hook_events: bool = False
+    forward_subagent_text: bool = False
     fork_session: bool = False
+    resume_session_at: str | None = None
+    resume_drops_turn: str | None = None
     agents: dict[str, AgentDefinition] | None = None
     setting_sources: list[SettingSource] | None = None
     skills: list[str] | Literal["all"] | None = None
@@ -902,52 +889,60 @@ class ClaudeAgentOptions:
     enable_file_checkpointing: bool = False
     session_store: SessionStore | None = None
     session_store_flush: SessionStoreFlushMode = "batched"
+    load_timeout_ms: int = 60_000
+    task_budget: TaskBudget | None = None
 ```
 
-| Propriété                     | Type                                                                                  | Par défaut                         | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| :---------------------------- | :------------------------------------------------------------------------------------ | :--------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `tools`                       | `list[str] \| ToolsPreset \| None`                                                    | `None`                             | Configuration des outils. Utilisez `{"type": "preset", "preset": "claude_code"}` pour les outils par défaut de Claude Code                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| `allowed_tools`               | `list[str]`                                                                           | `[]`                               | Outils à approuver automatiquement sans demander. Ceci ne restreint pas Claude à seulement ces outils ; les outils non listés passent par `permission_mode` et `can_use_tool`. Utilisez `disallowed_tools` pour bloquer les outils. Voir [Permissions](/docs/fr/agent-sdk/permissions#allow-and-deny-rules)                                                                                                                                                                                                                                                                                                                                                                                          |
-| `system_prompt`               | `str \| SystemPromptPreset \| SystemPromptFile \| None`                               | `None`                             | Configuration du prompt système. Passez une chaîne pour un prompt personnalisé, `{"type": "preset", "preset": "claude_code"}` pour le prompt système de Claude Code avec `"append"` optionnel, ou `{"type": "file", "path": "..."}` pour charger un grand prompt depuis le disque. Voir [`SystemPromptPreset`](#systempromptpreset) et [`SystemPromptFile`](#systempromptfile)                                                                                                                                                                                                                                                                                                                  |
-| `mcp_servers`                 | `dict[str, McpServerConfig] \| str \| Path`                                           | `{}`                               | Configurations de serveur MCP ou chemin vers le fichier de configuration                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| `strict_mcp_config`           | `bool`                                                                                | `False`                            | Quand `True`, utilisez uniquement les serveurs passés dans `mcp_servers` et ignorez le projet `.mcp.json`, les paramètres utilisateur, les serveurs MCP fournis par les plugins, et les [connecteurs claude.ai](/docs/fr/mcp#use-mcp-servers-from-claude-ai). Correspond à l'indicateur CLI `--strict-mcp-config`                                                                                                                                                                                                                                                                                                                                                                                    |
-| `permission_mode`             | `PermissionMode \| None`                                                              | `None`                             | Mode de permission pour l'utilisation des outils                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| `continue_conversation`       | `bool`                                                                                | `False`                            | Continuer la conversation la plus récente                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| `resume`                      | `str \| None`                                                                         | `None`                             | ID de session à reprendre                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| `max_turns`                   | `int \| None`                                                                         | `None`                             | Nombre maximum de tours agentiques (allers-retours d'utilisation d'outils)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| `max_budget_usd`              | `float \| None`                                                                       | `None`                             | Arrêtez la requête quand l'estimation du coût côté client atteint cette valeur USD. Comparé à la même estimation que `total_cost_usd` ; voir [Suivi du coût et de l'utilisation](/docs/fr/agent-sdk/cost-tracking) pour les avertissements de précision                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| `disallowed_tools`            | `list[str]`                                                                           | `[]`                               | Outils à refuser. Un nom simple tel que `"Bash"` supprime l'outil du contexte de Claude. Une règle délimitée telle que `"Bash(rm *)"` laisse l'outil disponible et refuse les appels correspondants dans chaque mode de permission, y compris `bypassPermissions`. Voir [Permissions](/docs/fr/agent-sdk/permissions#allow-and-deny-rules)                                                                                                                                                                                                                                                                                                                                                           |
-| `enable_file_checkpointing`   | `bool`                                                                                | `False`                            | Activez le suivi des modifications de fichiers pour le rembobinage. Voir [Sauvegarde de points de contrôle de fichiers](/docs/fr/agent-sdk/file-checkpointing)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| `model`                       | `str \| None`                                                                         | `None`                             | Alias de modèle Claude ou nom de modèle complet. Voir [valeurs acceptées et identifiants spécifiques au fournisseur](/docs/fr/model-config#available-models)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| `fallback_model`              | `str \| None`                                                                         | `None`                             | Modèle de secours à utiliser si le modèle principal échoue                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| `betas`                       | `list[SdkBeta]`                                                                       | `[]`                               | Fonctionnalités bêta à activer. Voir [`SdkBeta`](#sdkbeta) pour les options disponibles                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| `output_format`               | `dict[str, Any] \| None`                                                              | `None`                             | Format de sortie pour les réponses structurées (par exemple, `{"type": "json_schema", "schema": {...}}`). Voir [Sorties structurées](/docs/fr/agent-sdk/structured-outputs) pour les détails                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| `permission_prompt_tool_name` | `str \| None`                                                                         | `None`                             | Nom de l'outil MCP pour les prompts de permission                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| `cwd`                         | `str \| Path \| None`                                                                 | `None`                             | Répertoire de travail actuel                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| `cli_path`                    | `str \| Path \| None`                                                                 | `None`                             | Chemin personnalisé vers l'exécutable CLI de Claude Code                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| `settings`                    | `str \| None`                                                                         | `None`                             | Chemin vers le fichier de paramètres                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| `add_dirs`                    | `list[str \| Path]`                                                                   | `[]`                               | Répertoires supplémentaires auxquels Claude peut accéder                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| `env`                         | `dict[str, str]`                                                                      | `{}`                               | Variables d'environnement fusionnées au-dessus de l'environnement de processus hérité. Voir [Variables d'environnement](/docs/fr/env-vars) pour les variables que le CLI sous-jacent lit, et [Gérer les réponses API lentes ou bloquées](#handle-slow-or-stalled-api-responses) pour les variables liées aux délais d'expiration                                                                                                                                                                                                                                                                                                                                                                     |
-| `extra_args`                  | `dict[str, str \| None]`                                                              | `{}`                               | Arguments CLI supplémentaires à passer directement au CLI                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| `max_buffer_size`             | `int \| None`                                                                         | `None`                             | Octets maximum lors de la mise en buffer de la sortie standard du CLI                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| `debug_stderr`                | `Any`                                                                                 | `sys.stderr`                       | *Déprécié* - Objet de type fichier pour la sortie de débogage. Utilisez plutôt le callback `stderr`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| `stderr`                      | `Callable[[str], None] \| None`                                                       | `None`                             | Fonction de callback pour la sortie stderr du CLI                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| `can_use_tool`                | [`CanUseTool`](#canusetool) ` \| None`                                                | `None`                             | Fonction de callback de permission d'outil, invoquée uniquement quand le [flux de permission](/docs/fr/agent-sdk/permissions#how-permissions-are-evaluated) aboutit à un prompt. Non invoquée pour les appels pré-approuvés par `allowed_tools`, les règles d'autorisation, ou `permission_mode`. `AskUserQuestion`, les outils connecteur [que votre organisation a défini sur `ask`](/docs/fr/mcp#organization-controls-on-connector-tools), et les outils MCP marqués [`requiresUserInteraction`](/docs/fr/mcp#require-approval-for-a-specific-tool) l'atteignent même si vous les avez autorisés ; en mode `dontAsk` ces appels sont refusés à la place. Voir [`CanUseTool`](#canusetool) pour les détails |
-| `hooks`                       | `dict[HookEvent, list[HookMatcher]] \| None`                                          | `None`                             | Configurations de hook pour intercepter les événements                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| `user`                        | `str \| None`                                                                         | `None`                             | Identifiant utilisateur                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| `include_partial_messages`    | `bool`                                                                                | `False`                            | Inclure les événements de streaming de messages partiels. Quand activé, les messages [`StreamEvent`](#streamevent) sont produits                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| `include_hook_events`         | `bool`                                                                                | `False`                            | Inclure les événements du cycle de vie des hooks dans le flux de messages en tant qu'objets `HookEventMessage`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| `fork_session`                | `bool`                                                                                | `False`                            | Quand reprendre avec `resume`, bifurquer vers un nouvel ID de session au lieu de continuer la session originale                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| `agents`                      | `dict[str, AgentDefinition] \| None`                                                  | `None`                             | Sous-agents définis programmatiquement                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| `plugins`                     | `list[SdkPluginConfig]`                                                               | `[]`                               | Charger les plugins personnalisés à partir de chemins locaux. Voir [Plugins](/docs/fr/agent-sdk/plugins) pour les détails                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| `sandbox`                     | [`SandboxSettings`](#sandboxsettings) ` \| None`                                      | `None`                             | Configurez le comportement du sandbox programmatiquement. Voir [Paramètres du sandbox](#sandboxsettings) pour les détails                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| `setting_sources`             | `list[SettingSource] \| None`                                                         | `None` (CLI defaults: all sources) | Contrôlez quels paramètres du système de fichiers charger. Passez `[]` pour désactiver les paramètres utilisateur, projet et locaux. Les paramètres de politique gérée se chargent indépendamment ; les paramètres gérés par le serveur sont récupérés quand la session s'authentifie avec une credential d'organisation sur une [configuration éligible](/docs/fr/server-managed-settings#platform-availability). Voir [Utiliser les fonctionnalités de Claude Code](/docs/fr/agent-sdk/claude-code-features#what-settingsources-does-not-control) pour les entrées qui sont lues indépendamment de cette option, et comment les désactiver                                                              |
-| `skills`                      | `list[str] \| Literal["all"] \| None`                                                 | `None`                             | Compétences disponibles pour la session. Passez `"all"` pour activer chaque compétence découverte, ou une liste de noms de compétences. Quand défini, le SDK ajoute l'outil Skill à `allowed_tools` automatiquement. Si vous passez aussi `tools`, incluez `"Skill"` dans cette liste. Voir [Compétences](/docs/fr/agent-sdk/skills)                                                                                                                                                                                                                                                                                                                                                                 |
-| `max_thinking_tokens`         | `int \| None`                                                                         | `None`                             | *Déprécié* - Tokens maximum pour les blocs de réflexion. Utilisez `thinking` à la place                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| `thinking`                    | [`ThinkingConfig`](#thinkingconfig) ` \| None`                                        | `None`                             | Contrôle le comportement de la réflexion étendue. Prend la priorité sur `max_thinking_tokens`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| `effort`                      | [`EffortLevel`](#effortlevel) ` \| None`                                              | `None`                             | Niveau d'effort pour la profondeur de réflexion. Voir [ajuster le niveau d'effort](/docs/fr/model-config#adjust-effort-level)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| `session_store`               | [`SessionStore`](/docs/fr/agent-sdk/session-storage#the-sessionstore-interface) ` \| None` | `None`                             | Miroir les transcriptions de session vers un backend externe pour que n'importe quel hôte puisse les reprendre. Voir [Persister les sessions vers un stockage externe](/docs/fr/agent-sdk/session-storage)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| `session_store_flush`         | `Literal["batched", "eager"]`                                                         | `"batched"`                        | Quand vider les entrées de transcription en miroir vers `session_store`. `"batched"` vide une fois par tour ou quand le buffer se remplit ; `"eager"` déclenche un vidage en arrière-plan après chaque frame. Ignoré quand `session_store` est `None`                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| Propriété                     | Type                                                                                  | Par défaut                         | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| :---------------------------- | :------------------------------------------------------------------------------------ | :--------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `tools`                       | `list[str] \| ToolsPreset \| None`                                                    | `None`                             | Configuration des outils. Utilisez `{"type": "preset", "preset": "claude_code"}` pour les outils par défaut de Claude Code                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| `allowed_tools`               | `list[str]`                                                                           | `[]`                               | Outils à approuver automatiquement sans demander. Ceci ne restreint pas Claude à seulement ces outils. Si vous nommez l'un des [outils de suivi des tâches](/docs/fr/agent-sdk/todo-tracking#model-availability) ici, Claude Code opte également la session. Les autres outils non listés passent par `permission_mode` et `can_use_tool`. Utilisez `disallowed_tools` pour bloquer les outils. Voir [Permissions](/docs/fr/agent-sdk/permissions#allow-and-deny-rules)                                                                                                                                                                                                                                                                                                                            |
+| `system_prompt`               | `str \| SystemPromptPreset \| SystemPromptCustom \| SystemPromptFile \| None`         | `None`                             | Configuration du prompt système. Passez une chaîne pour un prompt personnalisé, `{"type": "preset", "preset": "claude_code"}` pour le prompt système de Claude Code avec `"append"` optionnel, `{"type": "custom", "prompt": "..."}` pour un prompt personnalisé qui peut également définir `"snapshot"`, ou `{"type": "file", "path": "..."}` pour charger un grand prompt depuis le disque. Voir [`SystemPromptPreset`](#systempromptpreset), [`SystemPromptCustom`](#systempromptcustom), et [`SystemPromptFile`](#systempromptfile)                                                                                                                                                                                                                                                  |
+| `mcp_servers`                 | `dict[str, McpServerConfig] \| str \| Path`                                           | `{}`                               | Configurations de serveur MCP ou chemin vers le fichier de configuration                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `strict_mcp_config`           | `bool`                                                                                | `False`                            | Quand `True`, utilisez uniquement les serveurs passés dans `mcp_servers` et ignorez le projet `.mcp.json`, les paramètres utilisateur, les serveurs MCP fournis par les plugins, et les [connecteurs claude.ai](/docs/fr/mcp#use-mcp-servers-from-claude-ai). Correspond à l'indicateur CLI `--strict-mcp-config`                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `permission_mode`             | `PermissionMode \| None`                                                              | `None`                             | Mode de permission pour l'utilisation des outils                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `continue_conversation`       | `bool`                                                                                | `False`                            | Continuer la conversation la plus récente                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `resume`                      | `str \| None`                                                                         | `None`                             | ID de session à reprendre                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `session_id`                  | `str \| None`                                                                         | `None`                             | Utilisez un ID de session spécifique au lieu d'un généré automatiquement. Doit être un UUID valide. Ne peut pas être combiné avec `continue_conversation` ou `resume` sauf si `fork_session` est également défini                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `max_turns`                   | `int \| None`                                                                         | `None`                             | Nombre maximum de tours agentiques (allers-retours d'utilisation d'outils)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| `max_budget_usd`              | `float \| None`                                                                       | `None`                             | Arrêtez la requête quand l'estimation du coût côté client atteint cette valeur USD. Compte uniquement la dépense de l'appel lui-même ; les totaux restaurés à partir d'une session reprise ne comptent pas. Pour les avertissements de précision et le comportement de réinitialisation, voir [Suivi du coût et de l'utilisation](/docs/fr/agent-sdk/cost-tracking)                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| `disallowed_tools`            | `list[str]`                                                                           | `[]`                               | Outils à refuser. Un nom simple tel que `"Bash"` supprime l'outil du contexte de Claude. Une règle délimitée telle que `"Bash(rm *)"` laisse l'outil disponible et refuse les appels correspondants dans chaque mode de permission, y compris `bypassPermissions`, pour la commande [telle qu'écrite](/docs/fr/permissions#bash-rule-limits). Voir [Permissions](/docs/fr/agent-sdk/permissions#allow-and-deny-rules)                                                                                                                                                                                                                                                                                                                                                                              |
+| `enable_file_checkpointing`   | `bool`                                                                                | `False`                            | Activez le suivi des modifications de fichiers pour le rembobinage. Voir [Sauvegarde de points de contrôle de fichiers](/docs/fr/agent-sdk/file-checkpointing)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `model`                       | `str \| None`                                                                         | `None`                             | Alias de modèle Claude ou nom de modèle complet. Voir [valeurs acceptées et identifiants spécifiques au fournisseur](/docs/fr/model-config#available-models)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `fallback_model`              | `str \| None`                                                                         | `None`                             | Modèle de secours à utiliser si le modèle principal échoue. Accepte une liste séparée par des virgules. Pour des conseils, voir [Choisir un modèle](/docs/fr/agent-sdk/configuration#choose-a-model)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `betas`                       | `list[SdkBeta]`                                                                       | `[]`                               | Fonctionnalités bêta à activer. Voir [`SdkBeta`](#sdkbeta) pour les options disponibles                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `output_format`               | `dict[str, Any] \| None`                                                              | `None`                             | Format de sortie pour les réponses structurées (par exemple, `{"type": "json_schema", "schema": {...}}`). Voir [Sorties structurées](/docs/fr/agent-sdk/structured-outputs) pour les détails                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `permission_prompt_tool_name` | `str \| None`                                                                         | `None`                             | Nom de l'outil MCP pour les prompts de permission                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `cwd`                         | `str \| Path \| None`                                                                 | `None`                             | Répertoire de travail actuel                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `cli_path`                    | `str \| Path \| None`                                                                 | `None`                             | Chemin personnalisé vers l'exécutable CLI de Claude Code                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `settings`                    | `str \| None`                                                                         | `None`                             | Chemin vers un fichier de paramètres ou une chaîne JSON en ligne                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `add_dirs`                    | `list[str \| Path]`                                                                   | `[]`                               | Répertoires supplémentaires auxquels Claude peut accéder. Le SDK passe chaque entrée à Claude Code comme `--add-dir`, donc avec la source de paramètre `project` Claude Code [charge également les compétences, commandes et sous-agents du répertoire](/docs/fr/permissions#additional-directories-grant-file-access-not-configuration)                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `env`                         | `dict[str, str]`                                                                      | `{}`                               | Variables d'environnement fusionnées au-dessus de l'environnement de processus hérité. Voir [Variables d'environnement](/docs/fr/env-vars) pour les variables que le CLI sous-jacent lit, et [Gérer les réponses API lentes ou bloquées](#handle-slow-or-stalled-api-responses) pour les variables liées aux délais d'expiration. Définissez `CLAUDE_AGENT_SDK_CLIENT_APP` pour identifier votre application dans l'en-tête User-Agent                                                                                                                                                                                                                                                                                                                                                        |
+| `extra_args`                  | `dict[str, str \| None]`                                                              | `{}`                               | Arguments CLI supplémentaires à passer directement au CLI                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `max_buffer_size`             | `int \| None`                                                                         | `None`                             | Octets maximum lors de la mise en buffer de la sortie standard du CLI                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `debug_stderr`                | `Any`                                                                                 | `sys.stderr`                       | *Déprécié* - Le SDK ignore cette valeur. Utilisez le callback `stderr` pour la sortie stderr du CLI                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `stderr`                      | `Callable[[str], None] \| None`                                                       | `None`                             | Fonction de callback pour la sortie stderr du CLI                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `can_use_tool`                | [`CanUseTool`](#canusetool) ` \| None`                                                | `None`                             | Fonction de callback de permission d'outil, invoquée uniquement quand le [flux de permission](/docs/fr/agent-sdk/permissions#how-permissions-are-evaluated) aboutit à un prompt. Non invoquée pour les appels pré-approuvés par `allowed_tools`, les règles d'autorisation, ou `permission_mode`. Une règle d'autorisation ne pré-approuve pas les [actions qu'aucun mode n'approuve automatiquement](/docs/fr/permission-modes#actions-no-mode-auto-approves). Voir [`CanUseTool`](#canusetool) pour les détails                                                                                                                                                                                                                                                                                  |
+| `hooks`                       | `dict[HookEvent, list[HookMatcher]] \| None`                                          | `None`                             | Configurations de hook pour intercepter les événements                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| `user`                        | `str \| None`                                                                         | `None`                             | Sur les plateformes POSIX, le compte utilisateur du système d'exploitation sous lequel le sous-processus Claude Code s'exécute. Claude Code conserve l'environnement du processus parent, y compris `HOME`, et s'exécute dans `cwd`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `include_partial_messages`    | `bool`                                                                                | `False`                            | Inclure les événements de streaming de messages partiels. Quand activé, les messages [`StreamEvent`](#streamevent) sont produits                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `include_hook_events`         | `bool`                                                                                | `False`                            | Inclure les événements du cycle de vie des hooks dans le flux de messages en tant qu'objets `HookEventMessage`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| `forward_subagent_text`       | `bool`                                                                                | `False`                            | Transférez les blocs de texte et de réflexion des sous-agents dans le flux de messages. Sans cette option, Claude Code émet les blocs `tool_use` et `tool_result` des sous-agents mais pas le texte ou la réflexion. Nécessite Python Agent SDK 0.2.140 ou ultérieur                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `fork_session`                | `bool`                                                                                | `False`                            | Quand reprendre avec `resume`, bifurquer vers un nouvel ID de session au lieu de continuer la session originale                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `resume_session_at`           | `str \| None`                                                                         | `None`                             | Quand reprendre, charger la conversation uniquement jusqu'à et y compris le message avec cet UUID. Utilisez avec `resume`, et généralement `fork_session`, pour brancher à partir d'un point antérieur. Nécessite Python Agent SDK 0.2.137 ou ultérieur                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `resume_drops_turn`           | `str \| None`                                                                         | `None`                             | UUID du prompt utilisateur dont le tour une troncature `resume_session_at` rejette. Quand défini, le CLI refuse la reprise si la plage rejetée contient des entrées non attribuables à ce tour. Nécessite Python Agent SDK 0.2.137 ou ultérieur et Claude Code v2.1.223 ou ultérieur ; le CLI fourni avec ces versions du SDK satisfait l'exigence de Claude Code                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `agents`                      | `dict[str, AgentDefinition] \| None`                                                  | `None`                             | Sous-agents définis programmatiquement                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| `plugins`                     | `list[SdkPluginConfig]`                                                               | `[]`                               | Charger les plugins personnalisés à partir de chemins locaux. Voir [Plugins](/docs/fr/agent-sdk/plugins) pour les détails                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `sandbox`                     | [`SandboxSettings`](#sandboxsettings) ` \| None`                                      | `None`                             | Configurez le comportement du sandbox programmatiquement. Voir [Paramètres du sandbox](#sandboxsettings) pour les détails                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `setting_sources`             | `list[SettingSource] \| None`                                                         | `None` (CLI defaults: all sources) | Contrôlez quels paramètres du système de fichiers charger. Passez `[]` pour désactiver les paramètres utilisateur, projet et locaux. Avec `skills` défini et ce champ non défini, seules les sources utilisateur et projet se chargent. Définissez `setting_sources` explicitement pour conserver les paramètres locaux. La politique gérée par le point de terminaison se charge indépendamment ; les paramètres gérés par le serveur sont récupérés quand la session s'authentifie avec une credential d'organisation sur une [configuration éligible](/docs/fr/server-managed-settings#platform-availability). Pour les entrées lues indépendamment de cette option, voir [Ce que settingSources ne contrôle pas](/docs/fr/agent-sdk/claude-code-features#what-settingsources-does-not-control) |
+| `skills`                      | `list[str] \| Literal["all"] \| None`                                                 | `None`                             | Compétences disponibles pour la session. Passez `"all"` pour activer chaque compétence découverte, ou une liste de noms de compétences. Passez uniquement les noms exacts. Le SDK rejette les noms mal formés et de forme wildcard avec une `ValueError` avant de démarrer le processus Claude Code ; cette vérification nécessite Python Agent SDK 0.2.129 ou ultérieur. Quand défini, le SDK ajoute l'outil Skill à `allowed_tools` automatiquement. Si vous passez aussi `tools`, incluez `"Skill"` dans cette liste. Voir [Compétences](/docs/fr/agent-sdk/skills)                                                                                                                                                                                                                        |
+| `max_thinking_tokens`         | `int \| None`                                                                         | `None`                             | *Déprécié* - Tokens maximum pour les blocs de réflexion. Utilisez `thinking` à la place                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `thinking`                    | [`ThinkingConfig`](#thinkingconfig) ` \| None`                                        | `None`                             | Contrôle le comportement de la réflexion étendue. Prend la priorité sur `max_thinking_tokens`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| `effort`                      | [`EffortLevel`](#effortlevel) ` \| None`                                              | `None`                             | Niveau d'effort pour la profondeur de réflexion. Voir [ajuster le niveau d'effort](/docs/fr/model-config#adjust-effort-level)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `session_store`               | [`SessionStore`](/docs/fr/agent-sdk/session-storage#the-sessionstore-interface) ` \| None` | `None`                             | Miroir les transcriptions de session vers un backend externe pour que n'importe quel hôte puisse les reprendre. Voir [Persister les sessions vers un stockage externe](/docs/fr/agent-sdk/session-storage)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `session_store_flush`         | `Literal["batched", "eager"]`                                                         | `"batched"`                        | Quand vider les entrées de transcription en miroir vers `session_store`. `"batched"` vide une fois par tour ou quand le buffer se remplit ; `"eager"` déclenche un vidage en arrière-plan après chaque frame. Ignoré quand `session_store` est `None`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `load_timeout_ms`             | `int`                                                                                 | `60000`                            | Délai d'expiration par appel pour `session_store.load()` et `list_subkeys()` lors de la matérialisation de la reprise, en millisecondes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `task_budget`                 | `TaskBudget \| None`                                                                  | `None`                             | Budget de tokens côté API. Envoyé comme `output_config.task_budget` avec l'en-tête bêta `task-budgets-2026-03-13`. Passez `{"total": <int>}`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 
 <h4 id="handle-slow-or-stalled-api-responses">
   Gérer les réponses API lentes ou bloquées
@@ -956,6 +951,8 @@ class ClaudeAgentOptions:
 Le sous-processus CLI lit plusieurs variables d'environnement qui contrôlent les délais d'expiration de l'API et la détection de blocage. Passez-les via `ClaudeAgentOptions.env` :
 
 ```python theme={null}
+from claude_agent_sdk import ClaudeAgentOptions
+
 options = ClaudeAgentOptions(
     env={
         "API_TIMEOUT_MS": "120000",
@@ -966,9 +963,13 @@ options = ClaudeAgentOptions(
 ```
 
 * `API_TIMEOUT_MS` : délai d'expiration par requête sur le client Anthropic, en millisecondes. Par défaut `600000`. S'applique à la boucle principale et à tous les sous-agents.
-* `CLAUDE_CODE_MAX_RETRIES` : nombre maximum de tentatives API. Par défaut `10`, limité à `15`. Chaque tentative obtient sa propre fenêtre `API_TIMEOUT_MS`, donc le pire temps mural est approximativement `API_TIMEOUT_MS × (CLAUDE_CODE_MAX_RETRIES + 1)` plus le backoff. Pour les exécutions sans surveillance qui doivent attendre des pannes plus longues, définissez `CLAUDE_CODE_RETRY_WATCHDOG=1` : il réessaye les erreurs de capacité indéfiniment, et à partir de Claude Code v2.1.199 augmente la valeur par défaut pour les autres erreurs transitoires à `300` et supprime le plafond sur cette variable.
-* `CLAUDE_ASYNC_AGENT_STALL_TIMEOUT_MS` : chien de garde de blocage pour les sous-agents lancés avec `run_in_background`. Par défaut `600000`. Réinitialise à chaque événement de flux ; en cas de blocage, il abandonne le sous-agent, marque la tâche comme échouée et expose l'erreur au parent avec tout résultat partiel. Ne s'applique pas aux sous-agents synchrones.
-* `CLAUDE_ENABLE_STREAM_WATCHDOG` avec `CLAUDE_STREAM_IDLE_TIMEOUT_MS` : abandonne la requête quand les en-têtes sont arrivés mais le corps de la réponse cesse de faire du streaming. Le chien de garde est activé par défaut pour tous les fournisseurs ; définissez `CLAUDE_ENABLE_STREAM_WATCHDOG=0` pour le désactiver. `CLAUDE_STREAM_IDLE_TIMEOUT_MS` par défaut à `300000` et est limité à ce minimum. La requête abandonnée passe par le chemin de tentative normal.
+* `CLAUDE_CODE_MAX_RETRIES` : nombre maximum de tentatives API. Par défaut `10`, limité à `15`. Chaque tentative obtient sa propre fenêtre `API_TIMEOUT_MS`, donc le pire temps mural est approximativement `API_TIMEOUT_MS × (CLAUDE_CODE_MAX_RETRIES + 1)` plus le backoff. Pour les exécutions sans surveillance qui doivent attendre des pannes plus longues, définissez [`CLAUDE_CODE_RETRY_WATCHDOG=1`](/docs/fr/errors#tune-retry-behavior) : il réessaye les erreurs de capacité transitoires indéfiniment et, à partir de Claude Code v2.1.199, augmente la valeur par défaut pour les autres erreurs transitoires à `300` et supprime le plafond sur cette variable.
+* `CLAUDE_ASYNC_AGENT_STALL_TIMEOUT_MS` : chien de garde de blocage pour les sous-agents. Pendant que le chien de garde de flux est activé, la valeur par défaut est `CLAUDE_STREAM_IDLE_TIMEOUT_MS` plus 5 minutes, ce qui donne `600000` sauf si vous augmentez cette variable. Avec le chien de garde de flux désactivé, la valeur par défaut est `600000`. Avant v2.1.257, la valeur par défaut était toujours `600000`.
+
+  Le minuteur se réinitialise à chaque événement de flux. En cas de blocage, Claude Code abandonne le sous-agent et signale le blocage au parent. Pour un sous-agent en arrière-plan, il marque également la tâche comme échouée et attache tout résultat partiel.
+* `CLAUDE_ENABLE_STREAM_WATCHDOG` avec `CLAUDE_STREAM_IDLE_TIMEOUT_MS` : chien de garde de flux qui abandonne la requête quand les en-têtes sont arrivés mais le corps de la réponse cesse de faire du streaming. Le chien de garde est activé par défaut pour tous les fournisseurs ; définissez `CLAUDE_ENABLE_STREAM_WATCHDOG=0` pour le désactiver. `CLAUDE_STREAM_IDLE_TIMEOUT_MS` par défaut à `300000` et est limité à ce minimum. Après l'abandon, [Les tentatives automatiques](/docs/fr/errors#automatic-retries) couvre ce que Claude Code fait, en fonction de la progression de la réponse.
+
+  Pendant que le chien de garde attend une réponse qu'une passerelle derrière `ANTHROPIC_BASE_URL` maintient ouverte avec des pings de maintien de connexion, un hôte qui définit `include_partial_messages` continue de recevoir des messages [`StreamEvent`](#streamevent) de `ping`. Lisez ces frames comme une vivacité plutôt que de chronométrer la session sur le silence. Avant v2.1.257, les frames s'arrêtaient 5 minutes après le dernier événement de flux réel.
 
 <h3 id="outputformat">
   `OutputFormat`
@@ -1001,6 +1002,7 @@ class SystemPromptPreset(TypedDict):
     preset: Literal["claude_code"]
     append: NotRequired[str]
     exclude_dynamic_sections: NotRequired[bool]
+    snapshot: NotRequired[bool]
 ```
 
 | Champ                      | Requis | Description                                                                                                                                                                                                                                                                                                                                                                       |
@@ -1009,6 +1011,26 @@ class SystemPromptPreset(TypedDict):
 | `preset`                   | Oui    | Doit être `"claude_code"` pour utiliser le prompt système de Claude Code                                                                                                                                                                                                                                                                                                          |
 | `append`                   | Non    | Instructions supplémentaires à ajouter au preset de prompt système                                                                                                                                                                                                                                                                                                                |
 | `exclude_dynamic_sections` | Non    | Déplacez le contexte par session comme le répertoire de travail, le statut git et les chemins de mémoire du prompt système vers le premier message utilisateur. Améliore la réutilisation du cache de prompt entre les utilisateurs et les machines. Voir [Modifier les prompts système](/docs/fr/agent-sdk/modifying-system-prompts#improve-prompt-caching-across-users-and-machines) |
+| `snapshot`                 | Non    | Définissez à `False` pour reconstruire le prompt système à chaque requête au lieu de [réutiliser le prompt que la session a enregistré à sa première requête](/docs/fr/agent-sdk/modifying-system-prompts#change-the-prompt-of-an-existing-session). Nécessite `claude-agent-sdk` v0.2.153 ou ultérieur                                                                                |
+
+<h3 id="systempromptcustom">
+  `SystemPromptCustom`
+</h3>
+
+Un prompt système personnalisé sous forme d'objet, équivalent à passer une chaîne comme `system_prompt`, qui peut également définir `snapshot`. Nécessite `claude-agent-sdk` v0.2.153 ou ultérieur.
+
+```python theme={null}
+class SystemPromptCustom(TypedDict):
+    type: Literal["custom"]
+    prompt: str
+    snapshot: NotRequired[bool]
+```
+
+| Champ      | Requis | Description                                                                                                                                                       |
+| :--------- | :----- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `type`     | Oui    | Doit être `"custom"`                                                                                                                                              |
+| `prompt`   | Oui    | Le texte du prompt système. Passé au CLI comme argument de ligne de commande, donc les [limites de longueur de ligne de commande](#systempromptfile) s'appliquent |
+| `snapshot` | Non    | Identique à [`SystemPromptPreset.snapshot`](#systempromptpreset), appliqué à `prompt`                                                                             |
 
 <h3 id="systempromptfile">
   `SystemPromptFile`
@@ -1037,17 +1059,17 @@ Contrôle quelles sources de configuration basées sur le système de fichiers l
 SettingSource = Literal["user", "project", "local"]
 ```
 
-| Valeur      | Description                                             | Emplacement                   |
-| :---------- | :------------------------------------------------------ | :---------------------------- |
-| `"user"`    | Paramètres utilisateur globaux                          | `~/.claude/settings.json`     |
-| `"project"` | Paramètres de projet partagés (contrôle de version)     | `.claude/settings.json`       |
-| `"local"`   | Paramètres de projet locaux (non contrôlés par version) | `.claude/settings.local.json` |
+| Valeur      | Description                                                                              | Emplacement                   |
+| :---------- | :--------------------------------------------------------------------------------------- | :---------------------------- |
+| `"user"`    | Paramètres utilisateur globaux                                                           | `~/.claude/settings.json`     |
+| `"project"` | Paramètres de projet partagés (contrôle de version)                                      | `.claude/settings.json`       |
+| `"local"`   | Paramètres de projet locaux, gitignorés quand Claude Code enregistre un paramètre dedans | `.claude/settings.local.json` |
 
 <h4 id="default-behavior">
   Comportement par défaut
 </h4>
 
-Quand `setting_sources` est omis ou `None`, `query()` charge les mêmes paramètres du système de fichiers que le CLI Claude Code : utilisateur, projet et local. Les paramètres de politique gérée sont chargés dans tous les cas ; les paramètres gérés par le serveur sont récupérés quand la session s'authentifie avec une credential d'organisation sur une [configuration éligible](/docs/fr/server-managed-settings#platform-availability). Voir [Ce que settingSources ne contrôle pas](/docs/fr/agent-sdk/claude-code-features#what-settingsources-does-not-control) pour les entrées qui sont lues indépendamment de cette option, et comment les désactiver.
+Quand `setting_sources` est omis ou `None` et `skills` n'est pas défini, `query()` charge les mêmes paramètres du système de fichiers que le CLI Claude Code : utilisateur, projet et local. Avec `skills` défini, la ligne [`setting_sources`](#claudeagentoptions) décrit la valeur par défaut actuelle. Seules les sources utilisateur et projet se chargent. Définissez `setting_sources` explicitement pour conserver les paramètres locaux. La politique gérée par le point de terminaison se charge indépendamment ; les paramètres gérés par le serveur sont récupérés quand la session s'authentifie avec une credential d'organisation sur une [configuration éligible](/docs/fr/server-managed-settings#platform-availability). Pour plus d'informations, voir [Ce que settingSources ne contrôle pas](/docs/fr/agent-sdk/claude-code-features#what-settingsources-does-not-control).
 
 <h4 id="why-use-setting_sources">
   Pourquoi utiliser setting\_sources
@@ -1057,60 +1079,46 @@ Quand `setting_sources` est omis ou `None`, `query()` charge les mêmes paramèt
 
 ```python theme={null}
 # Do not load user, project, or local settings from disk
+import asyncio
 from claude_agent_sdk import query, ClaudeAgentOptions
 
-async for message in query(
-    prompt="Analyze this code",
-    options=ClaudeAgentOptions(
-        setting_sources=[]
-    ),
-):
-    print(message)
+
+async def main():
+    async for message in query(
+        prompt="Analyze this code",
+        options=ClaudeAgentOptions(
+            setting_sources=[]
+        ),
+    ):
+        print(message)
+
+
+asyncio.run(main())
 ```
 
 <Note>
   Dans le SDK Python 0.1.59 et antérieur, une liste vide était traitée de la même manière que l'omission de l'option, donc `setting_sources=[]` n'a pas désactivé les paramètres du système de fichiers. Mettez à niveau vers une version plus récente si vous avez besoin qu'une liste vide prenne effet. Le SDK TypeScript n'est pas affecté.
 </Note>
 
-**Charger tous les paramètres du système de fichiers explicitement :**
-
-```python theme={null}
-from claude_agent_sdk import query, ClaudeAgentOptions
-
-async for message in query(
-    prompt="Analyze this code",
-    options=ClaudeAgentOptions(
-        setting_sources=["user", "project", "local"]
-    ),
-):
-    print(message)
-```
-
 **Charger uniquement des sources de paramètres spécifiques :**
 
 ```python theme={null}
 # Load only project settings, ignore user and local
-async for message in query(
-    prompt="Run CI checks",
-    options=ClaudeAgentOptions(
-        setting_sources=["project"]  # Only .claude/settings.json
-    ),
-):
-    print(message)
-```
+import asyncio
+from claude_agent_sdk import query, ClaudeAgentOptions
 
-**Environnements de test et CI :**
 
-```python theme={null}
-# Ensure consistent behavior in CI by excluding local settings
-async for message in query(
-    prompt="Run tests",
-    options=ClaudeAgentOptions(
-        setting_sources=["project"],  # Only team-shared settings
-        permission_mode="bypassPermissions",
-    ),
-):
-    print(message)
+async def main():
+    async for message in query(
+        prompt="Run CI checks",
+        options=ClaudeAgentOptions(
+            setting_sources=["project"]  # Only .claude/settings.json
+        ),
+    ):
+        print(message)
+
+
+asyncio.run(main())
 ```
 
 **Applications SDK uniquement :**
@@ -1118,35 +1126,31 @@ async for message in query(
 ```python theme={null}
 # Define everything programmatically.
 # Pass [] to opt out of filesystem setting sources.
-async for message in query(
-    prompt="Review this PR",
-    options=ClaudeAgentOptions(
-        setting_sources=[],
-        agents={...},
-        mcp_servers={...},
-        allowed_tools=["Read", "Grep", "Glob"],
-    ),
-):
-    print(message)
+import asyncio
+from claude_agent_sdk import AgentDefinition, ClaudeAgentOptions, query
+
+
+async def main():
+    async for message in query(
+        prompt="Review this PR",
+        options=ClaudeAgentOptions(
+            setting_sources=[],
+            agents={
+                "code-reviewer": AgentDefinition(
+                    description="Reviews code changes",
+                    prompt="You are a code reviewer. Report issues in the diff.",
+                ),
+            },
+            allowed_tools=["Read", "Grep", "Glob"],
+        ),
+    ):
+        print(message)
+
+
+asyncio.run(main())
 ```
 
-**Chargement des instructions de projet CLAUDE.md :**
-
-```python theme={null}
-# Load project settings to include CLAUDE.md files
-async for message in query(
-    prompt="Add a new feature following project conventions",
-    options=ClaudeAgentOptions(
-        system_prompt={
-            "type": "preset",
-            "preset": "claude_code",  # Use Claude Code's system prompt
-        },
-        setting_sources=["project"],  # Loads CLAUDE.md from project
-        allowed_tools=["Read", "Write", "Edit"],
-    ),
-):
-    print(message)
-```
+Pour charger les instructions de projet CLAUDE.md, incluez `"project"` dans `setting_sources`. Voir [Modifier les prompts système](/docs/fr/agent-sdk/modifying-system-prompts#claude-md-files-for-project-level-instructions) pour comment le chargement de CLAUDE.md interagit avec les options de prompt système.
 
 <h4 id="settings-precedence">
   Précédence des paramètres
@@ -1158,7 +1162,7 @@ Quand plusieurs sources sont chargées, les paramètres sont fusionnés avec cet
 2. Paramètres de projet (`.claude/settings.json`)
 3. Paramètres utilisateur (`~/.claude/settings.json`)
 
-Les options programmatiques telles que `agents` et `allowed_tools` remplacent les paramètres du système de fichiers utilisateur, projet et local. Les paramètres de politique gérée prennent la priorité sur les options programmatiques.
+Les options programmatiques telles que `agents`, `allowed_tools`, et `settings` remplacent les paramètres du système de fichiers utilisateur, projet et local. Les paramètres de politique gérée prennent la priorité sur les options programmatiques.
 
 <h3 id="agentdefinition">
   `AgentDefinition`
@@ -1188,9 +1192,9 @@ class AgentDefinition:
 | :---------------- | :----- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `description`     | Oui    | Description en langage naturel de quand utiliser cet agent                                                                                                                                                                                                                    |
 | `prompt`          | Oui    | Le prompt système de l'agent                                                                                                                                                                                                                                                  |
-| `tools`           | Non    | Tableau des noms d'outils autorisés. Si omis, hérite de tous les outils                                                                                                                                                                                                       |
+| `tools`           | Non    | Tableau des noms d'outils autorisés. Si omis, hérite de tous les [outils disponibles pour les sous-agents](/docs/fr/sub-agents#available-tools)                                                                                                                                    |
 | `disallowedTools` | Non    | Tableau des noms d'outils à supprimer de l'ensemble d'outils de l'agent. Les motifs au niveau du serveur MCP sont également acceptés : `mcp__server` ou `mcp__server__*` supprime chaque outil de ce serveur, et `mcp__*` supprime chaque outil MCP de n'importe quel serveur |
-| `model`           | Non    | Remplacement de modèle pour cet agent. Accepte un alias tel que `"sonnet"`, `"opus"`, `"haiku"`, ou `"inherit"`, ou un ID de modèle complet. Si omis, utilise le modèle principal                                                                                             |
+| `model`           | Non    | Remplacement de modèle pour cet agent. Accepte un alias tel que `"sonnet"`, `"opus"`, `"haiku"`, ou `"inherit"`, ou un ID de modèle complet. Quand vous l'omettez, Claude Code choisit le modèle dans l'[ordre de modèle des sous-agents](/docs/fr/sub-agents#choose-a-model)      |
 | `skills`          | Non    | Liste des noms de compétences à précharger dans le contexte de l'agent au démarrage. Les compétences non listées restent invocables via l'outil Skill                                                                                                                         |
 | `memory`          | Non    | Source de mémoire pour cet agent : `"user"`, `"project"`, ou `"local"`                                                                                                                                                                                                        |
 | `mcpServers`      | Non    | Serveurs MCP disponibles pour cet agent. Chaque entrée est un nom de serveur ou un dict `{name: config}` en ligne                                                                                                                                                             |
@@ -1198,7 +1202,7 @@ class AgentDefinition:
 | `maxTurns`        | Non    | Nombre maximum de tours agentiques avant que l'agent s'arrête                                                                                                                                                                                                                 |
 | `background`      | Non    | Exécutez cet agent comme une tâche de fond non-bloquante quand invoqué                                                                                                                                                                                                        |
 | `effort`          | Non    | Niveau d'effort de raisonnement pour cet agent. Accepte un niveau nommé ou un entier. Voir [`EffortLevel`](#effortlevel)                                                                                                                                                      |
-| `permissionMode`  | Non    | Mode de permission pour l'exécution des outils dans cet agent. Voir [`PermissionMode`](#permissionmode)                                                                                                                                                                       |
+| `permissionMode`  | Non    | Mode de permission pour l'exécution des outils dans cet agent. Les [règles d'héritage des sous-agents](/docs/fr/agent-sdk/permissions#available-modes) décident quand il s'applique. Voir [`PermissionMode`](#permissionmode)                                                      |
 
 <Note>
   Les noms de champs `AgentDefinition` utilisent camelCase, tels que `disallowedTools`, `permissionMode`, et `maxTurns`. Ces noms correspondent directement au format de fil partagé avec le SDK TypeScript. Ceci diffère de `ClaudeAgentOptions`, qui utilise Python snake\_case pour les champs de niveau supérieur équivalents tels que `disallowed_tools` et `permission_mode`. Parce que `AgentDefinition` est une dataclass, passer un mot-clé snake\_case lève une `TypeError` au moment de la construction.
@@ -1217,7 +1221,7 @@ PermissionMode = Literal[
     "plan",  # Planning mode - explore without editing
     "dontAsk",  # Deny anything not pre-approved instead of prompting
     "bypassPermissions",  # Bypass permission checks; explicit ask rules still prompt (use with caution)
-    "auto",  # A model classifier approves or denies each tool call
+    "auto",  # Model classifier approves or denies permission prompts
 ]
 ```
 
@@ -1259,7 +1263,7 @@ Retourne un `PermissionResult` (soit `PermissionResultAllow` soit `PermissionRes
 
 Le callback est le remplacement SDK pour le prompt de permission interactif : il est invoqué uniquement quand le [flux d'évaluation de permission](/docs/fr/agent-sdk/permissions#how-permissions-are-evaluated) aboutit à un prompt. Les appels d'outil déjà approuvés par une entrée `allowed_tools`, une règle d'autorisation des paramètres, ou le mode de permission, tel que `acceptEdits` ou `bypassPermissions`, ne l'invoquent jamais. Pour contrôler chaque appel d'outil, utilisez un [hook `PreToolUse`](/docs/fr/agent-sdk/hooks) à la place.
 
-`AskUserQuestion`, les outils MCP marqués [`requiresUserInteraction`](/docs/fr/mcp#require-approval-for-a-specific-tool), et les outils connecteur [que votre organisation a défini sur `ask`](/docs/fr/mcp#organization-controls-on-connector-tools) l'atteignent même quand une règle d'autorisation correspond. En mode `dontAsk` ces appels sont refusés à la place, sans invoquer le callback.
+Une règle d'autorisation ne pré-approuve pas les [actions qu'aucun mode n'approuve automatiquement](/docs/fr/permission-modes#actions-no-mode-auto-approves) ; voir [Comment les permissions sont évaluées](/docs/fr/agent-sdk/permissions#how-permissions-are-evaluated) pour lesquelles les atteignent et ce qui se passe en mode `dontAsk` et `auto`.
 
 <h3 id="toolpermissioncontext">
   `ToolPermissionContext`
@@ -1272,6 +1276,8 @@ Informations de contexte passées aux callbacks de permission d'outil.
 class ToolPermissionContext:
     signal: Any | None = None  # Future: abort signal support
     suggestions: list[PermissionUpdate] = field(default_factory=list)
+    tool_use_id: str | None = None
+    agent_id: str | None = None
     blocked_path: str | None = None
     decision_reason: str | None = None
     title: str | None = None
@@ -1283,6 +1289,8 @@ class ToolPermissionContext:
 | :---------------- | :----------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `signal`          | `Any \| None`            | Réservé pour le support futur du signal d'abandon                                                                                                                                                                                                             |
 | `suggestions`     | `list[PermissionUpdate]` | Suggestions de mise à jour de permission du CLI. Les prompts Bash incluent une suggestion avec la destination `localSettings`, donc la retourner dans `updated_permissions` écrit la règle dans `.claude/settings.local.json` et persiste entre les sessions. |
+| `tool_use_id`     | `str \| None`            | Identifiant de l'appel d'outil spécifique pour lequel ce prompt est destiné. Toujours rempli quand livré à `can_use_tool`                                                                                                                                     |
+| `agent_id`        | `str \| None`            | ID du sous-agent quand l'appel provient d'un sous-agent ; `None` pour l'agent principal                                                                                                                                                                       |
 | `blocked_path`    | `str \| None`            | Chemin de fichier qui a déclenché la demande de permission, le cas échéant. Par exemple, quand une commande Bash essaie d'accéder à un chemin en dehors des répertoires autorisés                                                                             |
 | `decision_reason` | `str \| None`            | Raison pour laquelle cette demande de permission a été déclenchée. Transférée depuis le `permissionDecisionReason` d'un hook PreToolUse quand le hook a retourné `"ask"`                                                                                      |
 | `title`           | `str \| None`            | Phrase complète du prompt de permission, telle que `Claude wants to read foo.txt`. Utilisez comme texte du prompt principal quand présent                                                                                                                     |
@@ -1433,7 +1441,7 @@ ThinkingConfig = ThinkingConfigAdaptive | ThinkingConfigEnabled | ThinkingConfig
 | `enabled`  | `type`, `budget_tokens`, `display` | Activez la réflexion avec un budget de tokens spécifique |
 | `disabled` | `type`                             | Désactivez la réflexion                                  |
 
-Le champ optionnel `display` contrôle si le texte de réflexion est retourné `"summarized"` ou `"omitted"`. Sur Claude Opus 4.7 et ultérieur, la valeur par défaut de l'API est `"omitted"`, donc définissez `"summarized"` pour recevoir le contenu de réflexion dans les sorties [`ThinkingBlock`](#thinkingblock).
+Le champ optionnel `display` contrôle si le texte de réflexion est retourné `"summarized"` ou `"omitted"`. Sur Claude Opus 4.7 et ultérieur, la valeur par défaut de l'API est `"omitted"`, donc définissez `"summarized"` pour recevoir le contenu de réflexion dans les sorties [`ThinkingBlock`](#thinkingblock). Claude Code n'envoie pas `display` à Amazon Bedrock ou à la plateforme Agent de Google Cloud, donc sur ces fournisseurs Opus 4.7 et ultérieur retournent des sorties `ThinkingBlock` vides même quand vous définissez `display` à `"summarized"`.
 
 Parce que ce sont des classes `TypedDict`, ce sont des dicts simples à l'exécution. Construisez-les soit comme des littéraux dict soit appelez la classe comme un constructeur ; les deux produisent un `dict`. Accédez aux champs avec `config["budget_tokens"]`, pas `config.budget_tokens` :
 
@@ -1449,6 +1457,23 @@ print(config["budget_tokens"])  # 20000
 # config.budget_tokens would raise AttributeError
 ```
 
+<h3 id="taskbudget">
+  `TaskBudget`
+</h3>
+
+Budget de tâche côté API en tokens, utilisé avec le champ `task_budget` dans `ClaudeAgentOptions`.
+
+```python theme={null}
+class TaskBudget(TypedDict):
+    total: int
+```
+
+| Champ   | Type  | Description                          |
+| :------ | :---- | :----------------------------------- |
+| `total` | `int` | Budget de tokens total pour la tâche |
+
+Parce que c'est une `TypedDict`, passez-la comme un dict simple, tel que `ClaudeAgentOptions(task_budget={"total": 50000})`.
+
 <h3 id="sdkbeta">
   `SdkBeta`
 </h3>
@@ -1462,7 +1487,7 @@ SdkBeta = Literal["context-1m-2025-08-07"]
 Utilisez avec le champ `betas` dans `ClaudeAgentOptions` pour activer les fonctionnalités bêta.
 
 <Warning>
-  La bêta `context-1m-2025-08-07` est retirée à partir du 30 avril 2026. Passer cet en-tête avec Claude Sonnet 4.5 ou Sonnet 4 n'a aucun effet, et les requêtes qui dépassent la fenêtre de contexte standard de 200 000 tokens retournent une erreur. Pour utiliser une fenêtre de contexte de 1 million de tokens, migrez vers [Claude Sonnet 5, Claude Sonnet 4.6, Claude Opus 4.6, Claude Opus 4.7, ou Claude Opus 4.8](https://platform.claude.com/docs/en/about-claude/models/overview), qui incluent 1 million de contexte à prix standard sans en-tête bêta requis.
+  La bêta `context-1m-2025-08-07` est retirée à partir du 30 avril 2026. Passer cet en-tête avec Claude Sonnet 4.5 ou Sonnet 4 n'a aucun effet, et les requêtes qui dépassent la fenêtre de contexte standard de 200 000 tokens retournent une erreur. Pour utiliser une fenêtre de contexte de 1 million de tokens, migrez vers [Claude Opus 5.5, Claude Opus 5, Claude Sonnet 5, Claude Sonnet 4.6, Claude Opus 4.6, Claude Opus 4.7, ou Claude Opus 4.8](https://platform.claude.com/docs/en/about-claude/models/overview), qui incluent 1 million de contexte à prix standard sans en-tête bêta requis.
 </Warning>
 
 <h3 id="mcpsdkserverconfig">
@@ -1626,6 +1651,7 @@ Message = (
     | ResultMessage
     | StreamEvent
     | RateLimitEvent
+    | ConversationResetMessage
 )
 ```
 
@@ -1642,14 +1668,20 @@ class UserMessage:
     uuid: str | None = None
     parent_tool_use_id: str | None = None
     tool_use_result: dict[str, Any] | None = None
+    origin: MessageOrigin | None = None
 ```
 
-| Champ                | Type                        | Description                                                                |
-| :------------------- | :-------------------------- | :------------------------------------------------------------------------- |
-| `content`            | `str \| list[ContentBlock]` | Contenu du message sous forme de texte ou de blocs de contenu              |
-| `uuid`               | `str \| None`               | Identifiant de message unique                                              |
-| `parent_tool_use_id` | `str \| None`               | ID d'utilisation d'outil si ce message est une réponse de résultat d'outil |
-| `tool_use_result`    | `dict[str, Any] \| None`    | Données de résultat d'outil si applicable                                  |
+| Champ                | Type                        | Description                                                                                                                                                                                                     |
+| :------------------- | :-------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `content`            | `str \| list[ContentBlock]` | Contenu du message sous forme de texte ou de blocs de contenu                                                                                                                                                   |
+| `uuid`               | `str \| None`               | Identifiant de message unique                                                                                                                                                                                   |
+| `parent_tool_use_id` | `str \| None`               | ID d'utilisation d'outil si ce message est une réponse de résultat d'outil                                                                                                                                      |
+| `tool_use_result`    | `dict[str, Any] \| None`    | Données de résultat d'outil si applicable                                                                                                                                                                       |
+| `origin`             | `MessageOrigin \| None`     | Provenance de ce message, remplie sur les tours injectés tels que les notifications de tâche et les messages de pairs. `None` quand le CLI ne l'a pas attribué. Nécessite Python Agent SDK 0.2.137 ou ultérieur |
+
+Le SDK transmet `tool_use_result` inchangé depuis le CLI. Pour un outil sur un serveur MCP externe dont le résultat contient des blocs `resource_link`, le dict a une clé `resourceLinks` contenant une liste de dicts avec les clés du type TypeScript [`SDKMcpResourceLink`](/docs/fr/agent-sdk/typescript#sdkmcpresourcelink). Claude reçoit chaque lien sous forme de ligne de texte dans le résultat de l'outil. Pour afficher les fichiers que le serveur a retournés, lisez `resourceLinks` au lieu d'analyser ce texte. La clé `resourceLinks` nécessite Python Agent SDK 0.2.150 ou ultérieur et Claude Code v2.1.257 ou ultérieur ; le CLI fourni avec cette version du SDK satisfait l'exigence de Claude Code.
+
+Le CLI omet la clé quand le résultat n'a pas de liens et sur les résultats des sous-agents. Le CLI conserve au maximum 50 liens par résultat et arrête d'ajouter des liens une fois que la liste atteint 64 KiB de JSON sérialisé. Un outil que vous définissez en processus avec [`tool()`](#tool) ne produit jamais la clé, car le SDK aplatit ses blocs `resource_link` en texte avant que le CLI ne voie le résultat.
 
 <h3 id="assistantmessage">
   `AssistantMessage`
@@ -1666,6 +1698,9 @@ class AssistantMessage:
     error: AssistantMessageError | None = None
     usage: dict[str, Any] | None = None
     message_id: str | None = None
+    stop_reason: str | None = None
+    session_id: str | None = None
+    uuid: str | None = None
 ```
 
 | Champ                | Type                                                         | Description                                                                                |
@@ -1676,6 +1711,9 @@ class AssistantMessage:
 | `error`              | [`AssistantMessageError`](#assistantmessageerror) ` \| None` | Type d'erreur si la réponse a rencontré une erreur                                         |
 | `usage`              | `dict[str, Any] \| None`                                     | Utilisation de tokens par message (mêmes clés que [`ResultMessage.usage`](#resultmessage)) |
 | `message_id`         | `str \| None`                                                | ID de message API. Plusieurs messages d'un tour partagent le même ID                       |
+| `stop_reason`        | `str \| None`                                                | Raison d'arrêt de l'API (par exemple `end_turn`, `tool_use`)                               |
+| `session_id`         | `str \| None`                                                | ID de la session à laquelle ce message appartient                                          |
+| `uuid`               | `str \| None`                                                | Identifiant de message unique dans la transcription de session                             |
 
 <h3 id="assistantmessageerror">
   `AssistantMessageError`
@@ -1690,10 +1728,11 @@ AssistantMessageError = Literal[
     "rate_limit",
     "invalid_request",
     "server_error",
-    "max_output_tokens",
     "unknown",
 ]
 ```
+
+Le processus CLI sous-jacent peut émettre des types d'erreur que ce Literal ne liste pas, tels que `max_output_tokens`. Le SDK transmet la valeur inchangée, donc traitez les chaînes en dehors de cette liste de la même manière que vous traitez `unknown`. Le type TypeScript [`SDKAssistantMessageError`](/docs/fr/agent-sdk/typescript#sdkassistantmessage) liste l'ensemble complet des valeurs que le CLI peut émettre.
 
 <h3 id="systemmessage">
   `SystemMessage`
@@ -1728,24 +1767,28 @@ class ResultMessage:
     usage: dict[str, Any] | None = None
     result: str | None = None
     structured_output: Any = None
-    model_usage: dict[str, Any] | None = None
+    model_usage: dict[str, ModelUsage] | None = None
     permission_denials: list[Any] | None = None
     deferred_tool_use: DeferredToolUse | None = None
     errors: list[str] | None = None
     api_error_status: int | None = None
     uuid: str | None = None
+    terminal_reason: str | None = None
+    origin: MessageOrigin | None = None
 ```
 
 Le champ `subtype` détermine quels autres champs sont remplis. C'est l'un de `"success"`, `"error_during_execution"`, `"error_max_turns"`, `"error_max_budget_usd"`, ou `"error_max_structured_output_retries"`. La dataclass Python aplatit toutes les variantes en une seule forme, donc les champs qui ne s'appliquent pas au sous-type retourné sont `None`.
 
-Plusieurs champs portent des détails de diagnostic quand la conversation se termine sur une erreur :
+Plusieurs champs portent des détails de diagnostic sur la façon dont la conversation s'est terminée :
 
 * `is_error` : `True` quand la conversation s'est terminée dans un état d'erreur. Toujours `True` sur les sous-types `error_*`. Sur `subtype="success"` c'est `True` quand la dernière demande de modèle a échoué, ce qui signifie que la boucle d'agent s'est terminée mais le dernier appel API a retourné une erreur.
 * `api_error_status` : le code de statut HTTP de l'erreur API terminale. `None` quand le tour s'est terminé sans une. Rempli uniquement sur `subtype="success"`.
 * `result` : texte du message d'assistant final sur `subtype="success"`, ou `None` sur les sous-types `error_*`. Quand `subtype="success"` et `is_error=True`, ceci contient la chaîne d'erreur API si une est disponible mais peut être vide, donc vérifiez `api_error_status` et le contenu `AssistantMessage` précédent pour plus de détails.
 * `errors` : chaînes d'erreur au niveau de la boucle telles que le message max-turns. Rempli uniquement sur les sous-types `error_*`.
+* `terminal_reason` : pourquoi la boucle de requête s'est terminée, telle que `"completed"`, `"max_turns"`, `"api_error"`, `"aborted_streaming"`, ou `"aborted_tools"`. Une valeur de `"aborted_streaming"` ou `"aborted_tools"` signifie que le tour a été interrompu avant de se terminer. Les causes courantes sont [`interrupt()`](#claudesdkclient) et un rappel de permission retournant [`PermissionResultDeny`](#permissionresultdeny) avec `interrupt=True`. `None` sur les versions CLI qui précèdent le champ, sur les résultats des commandes locales telles que `/voice` ou `/usage`, qui contournent la boucle de requête, ou sur les résultats d'erreur synthétisés émis quand la session échoue fatalement. Reflète le [`SDKResultMessage.terminal_reason`](/docs/fr/agent-sdk/typescript#sdkresultmessage) du SDK TypeScript, qui liste l'ensemble complet des valeurs.
+* `origin` : origine du message utilisateur qui a déclenché ce tour. En [mode d'entrée en streaming](/docs/fr/agent-sdk/streaming-vs-single-mode), vérifiez ceci pour distinguer le résultat de votre propre invite, où `origin` est `None` ou `{"kind": "human"}`, du résultat d'un tour injecté tel qu'une notification de tâche de fond. Nécessite Python Agent SDK 0.2.137 ou ultérieur.
 
-Le dict `usage` contient les clés suivantes quand présentes :
+Le dict `usage` couvre uniquement la boucle d'agent principal et exclut les sous-agents et autres appels de modèle imbriqués ou auxiliaires. En [mode d'entrée en streaming](/docs/fr/agent-sdk/streaming-vs-single-mode), les valeurs sont par tour. Préférez `model_usage` pour la comptabilité des tokens et des coûts. Le dict `usage` contient les clés suivantes quand présentes :
 
 | Clé                           | Type  | Description                                                                                                                                                                                                                                        |
 | ----------------------------- | ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -1754,18 +1797,25 @@ Le dict `usage` contient les clés suivantes quand présentes :
 | `cache_creation_input_tokens` | `int` | Tokens utilisés pour créer de nouvelles entrées de cache.                                                                                                                                                                                          |
 | `cache_read_input_tokens`     | `int` | Tokens lus à partir des entrées de cache existantes.                                                                                                                                                                                               |
 
-Le dict `model_usage` mappe les noms de modèles à l'utilisation par modèle. Les clés du dict interne utilisent camelCase parce que la valeur est passée inchangée du processus CLI sous-jacent, correspondant au type TypeScript [`ModelUsage`](/docs/fr/agent-sdk/typescript#modelusage) :
+Le dict `model_usage` mappe les noms de modèles à l'utilisation par modèle. Il couvre chaque appel de modèle effectué via le pipeline de requête : la boucle principale, les sous-agents, et les appels internes tels que la compaction et les agents Workflow. Les appels d'assistance en dehors de ce pipeline, tels que le classificateur de permission et les demandes de comptage de tokens, sont exclus de `model_usage`. Traitez `model_usage` comme une estimation, pas une déclaration de facturation.
 
-| Clé                        | Type    | Description                                                                                                                                                         |
-| -------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `inputTokens`              | `int`   | Tokens d'entrée pour ce modèle.                                                                                                                                     |
-| `outputTokens`             | `int`   | Tokens de sortie pour ce modèle.                                                                                                                                    |
-| `cacheReadInputTokens`     | `int`   | Tokens de lecture de cache pour ce modèle.                                                                                                                          |
-| `cacheCreationInputTokens` | `int`   | Tokens de création de cache pour ce modèle.                                                                                                                         |
-| `webSearchRequests`        | `int`   | Requêtes de recherche web effectuées par ce modèle.                                                                                                                 |
-| `costUSD`                  | `float` | Coût estimé en USD pour ce modèle, calculé côté client. Voir [Suivre le coût et l'utilisation](/docs/fr/agent-sdk/cost-tracking) pour les avertissements de facturation. |
-| `contextWindow`            | `int`   | Taille de la fenêtre de contexte pour ce modèle.                                                                                                                    |
-| `maxOutputTokens`          | `int`   | Limite de tokens de sortie maximum pour ce modèle.                                                                                                                  |
+En [mode d'entrée en streaming](/docs/fr/agent-sdk/streaming-vs-single-mode), `model_usage` et `total_cost_usd` sont cumulatifs entre les tours, donc lisez le dernier résultat plutôt que de faire la somme entre les résultats. Un appel qui reprend une session compte également les [totaux restaurés à partir des appels antérieurs de la session](/docs/fr/agent-sdk/cost-tracking#accumulate-costs-across-multiple-calls). Voir [Suivre les coûts en mode d'entrée en streaming](/docs/fr/agent-sdk/cost-tracking#track-costs-in-streaming-input-mode) pour les réinitialisations et [Récupérer les totaux après un crash de session](/docs/fr/agent-sdk/cost-tracking#recover-totals-after-a-session-crash) pour les résultats remis à zéro.
+
+Chaque valeur dans `model_usage` est un TypedDict `ModelUsage`, importé via `from claude_agent_sdk.types import ModelUsage`. Ses clés utilisent camelCase car le SDK transmet la valeur inchangée du processus CLI sous-jacent, correspondant au type TypeScript [`ModelUsage`](/docs/fr/agent-sdk/typescript#modelusage) :
+
+| Clé                        | Type    | Description                                                                                                                                                                                                                                                                                                          |
+| -------------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `inputTokens`              | `int`   | Tokens d'entrée pour ce modèle.                                                                                                                                                                                                                                                                                      |
+| `outputTokens`             | `int`   | Tokens de sortie pour ce modèle.                                                                                                                                                                                                                                                                                     |
+| `cacheReadInputTokens`     | `int`   | Tokens de lecture de cache pour ce modèle.                                                                                                                                                                                                                                                                           |
+| `cacheCreationInputTokens` | `int`   | Tokens de création de cache pour ce modèle.                                                                                                                                                                                                                                                                          |
+| `webSearchRequests`        | `int`   | Requêtes de recherche web effectuées par ce modèle.                                                                                                                                                                                                                                                                  |
+| `thinkingTokens`           | `int`   | Tokens de réflexion générés par ce modèle, déjà comptés dans `outputTokens`. Absent jusqu'à ce qu'un tour s'exécute sur une version de Claude Code qui l'enregistre, et non déclaré sur le TypedDict, donc lisez-le avec `.get()`. Nécessite Python Agent SDK 0.2.150 ou ultérieur, dont le CLI fourni l'enregistre. |
+| `costUSD`                  | `float` | Coût estimé en USD pour ce modèle, calculé côté client. Voir [Suivre le coût et l'utilisation](/docs/fr/agent-sdk/cost-tracking) pour les avertissements de facturation.                                                                                                                                                  |
+| `contextWindow`            | `int`   | Taille de la fenêtre de contexte pour ce modèle.                                                                                                                                                                                                                                                                     |
+| `maxOutputTokens`          | `int`   | Limite de tokens de sortie maximum pour ce modèle.                                                                                                                                                                                                                                                                   |
+| `canonicalModel`           | `str`   | ID de modèle canonique utilisé pour la recherche de tarification. Peut différer de la chaîne de modèle brute par laquelle l'entrée est indexée, telle qu'un ID spécifique au fournisseur ou un alias. Pas toujours présent.                                                                                          |
+| `provider`                 | `str`   | Fournisseur d'API qui a servi ce modèle, tel que `firstParty`, `bedrock`, `vertex`, `foundry`, `anthropicAws`, `mantle`, ou `gateway`. Pas toujours présent.                                                                                                                                                         |
 
 <h3 id="streamevent">
   `StreamEvent`
@@ -1844,6 +1894,26 @@ class RateLimitInfo:
 | `overage_resets_at`       | `int \| None`             | Timestamp Unix quand la fenêtre de dépassement se réinitialise                                                       |
 | `overage_disabled_reason` | `str \| None`             | Pourquoi le dépassement est indisponible, si le statut est `"rejected"`                                              |
 | `raw`                     | `dict[str, Any]`          | Dict brut complet du CLI, incluant les champs non modélisés ci-dessus                                                |
+
+<h3 id="conversationresetmessage">
+  `ConversationResetMessage`
+</h3>
+
+Émis quand la conversation est remplacée sans terminer la connexion, par exemple après `/clear`. Voir [Suivre les coûts en mode d'entrée en streaming](/docs/fr/agent-sdk/cost-tracking#track-costs-in-streaming-input-mode) pour la façon dont une réinitialisation affecte les totaux en cours d'exécution sur les objets `ResultMessage` ultérieurs. Nécessite Python Agent SDK 0.2.137 ou ultérieur.
+
+```python theme={null}
+@dataclass
+class ConversationResetMessage:
+    new_conversation_id: str
+    uuid: str
+    session_id: str
+```
+
+| Champ                 | Type  | Description                                                                                                                         |
+| :-------------------- | :---- | :---------------------------------------------------------------------------------------------------------------------------------- |
+| `new_conversation_id` | `str` | Identifiant opaque pour la conversation fraîche. Pas le `session_id` des messages ultérieurs ; lisez-le à partir du message suivant |
+| `uuid`                | `str` | Identifiant de message unique                                                                                                       |
+| `session_id`          | `str` | ID de la session qui a été réinitialisée. Les messages après la réinitialisation portent un nouveau `session_id`                    |
 
 <h3 id="taskstartedmessage">
   `TaskStartedMessage`
@@ -1942,6 +2012,10 @@ class TaskNotificationMessage(SystemMessage):
 | `tool_use_id` | `str \| None`            | ID d'utilisation d'outil associé                  |
 | `usage`       | `TaskUsage \| None`      | Utilisation de tokens finale pour la tâche        |
 
+Quand le CLI [déplace un long appel d'outil MCP en arrière-plan](/docs/fr/mcp#automatic-backgrounding-of-long-tool-calls), le résultat de l'outil pour cet appel ne contient qu'un espace réservé et le résultat réel de l'appel arrive dans ce message. Sur une notification `"completed"` pour un tel appel, le CLI ajoute une clé `resource_links` listant les fichiers que l'outil a retournés par référence, avec les mêmes entrées et limites que la clé `resourceLinks` sur [`UserMessage.tool_use_result`](#usermessage). La clé `resource_links` nécessite Python Agent SDK 0.2.150 ou ultérieur et Claude Code v2.1.257 ou ultérieur ; le CLI fourni avec cette version du SDK satisfait l'exigence de Claude Code.
+
+La dataclass n'a pas de champ pour `resource_links`. Lisez-le à partir du dict `data` que le message hérite de [`SystemMessage`](#systemmessage) : `message.data.get("resource_links")`. Faites correspondre la notification à l'appel avec `tool_use_id`. Le CLI omet la clé quand le résultat n'avait pas de liens et sur les notifications pour les tâches qui ne sont pas des appels d'outil MCP.
+
 <h2 id="content-block-types">
   Types de blocs de contenu
 </h2>
@@ -1953,7 +2027,14 @@ class TaskNotificationMessage(SystemMessage):
 Type union de tous les blocs de contenu.
 
 ```python theme={null}
-ContentBlock = TextBlock | ThinkingBlock | ToolUseBlock | ToolResultBlock
+ContentBlock = (
+    TextBlock
+    | ThinkingBlock
+    | ToolUseBlock
+    | ToolResultBlock
+    | ServerToolUseBlock
+    | ServerToolResultBlock
+)
 ```
 
 <h3 id="textblock">
@@ -2013,6 +2094,8 @@ class ToolResultBlock:
   Types d'erreur
 </h2>
 
+Les types ci-dessous définissent ce que votre code capture. Pour les entrées associées aux messages d'erreur que ces types lèvent, avec la cause et la correction pour chacun, consultez [Dépannage](/docs/fr/agent-sdk/troubleshooting).
+
 <h3 id="claudesdkerror">
   `ClaudeSDKError`
 </h3>
@@ -2023,6 +2106,8 @@ Classe d'exception de base pour toutes les erreurs du SDK.
 class ClaudeSDKError(Exception):
     """Base error for Claude SDK."""
 ```
+
+Quand une requête `query()` unique se termine par un résultat d'erreur, par exemple une erreur de limite de tours, le SDK lève une [`ResultError`](#resulterror) après avoir cédé le message de résultat final. Les versions du Python Agent SDK antérieures à 0.2.140 levaient une `Exception` simple qui n'était pas une sous-classe de `ClaudeSDKError`.
 
 <h3 id="clinotfounderror">
   `CLINotFoundError`
@@ -2067,6 +2152,25 @@ class ProcessError(ClaudeSDKError):
         self.exit_code = exit_code
         self.stderr = stderr
 ```
+
+<h3 id="resulterror">
+  `ResultError`
+</h3>
+
+Levée après le [`ResultMessage`](#resultmessage) final quand le processus Claude Code se termine parce que l'exécution s'est terminée par un résultat d'erreur, comme une erreur de limite de tours ou une erreur API. `ResultError` est une sous-classe de `ProcessError`, donc un gestionnaire `except ProcessError` existant la capture également. Ses attributs portent les champs de ce message de résultat, vous pouvez donc vous brancher sur la raison de l'échec de l'exécution sans analyser le texte du message. Nécessite Python Agent SDK 0.2.140 ou version ultérieure.
+
+```python theme={null}
+class ResultError(ProcessError):
+    subtype: str | None  # "error_max_turns", "error_during_execution", ...; "success" when the run ended on a failed request
+    errors: list[str]  # an empty list when the result message reported none
+    result: str | None
+    api_error_status: int | None
+    terminal_reason: str | None  # "max_turns", "api_error", ...; check this before subtype
+    session_id: str | None
+    data: dict[str, Any]  # the raw result message payload
+```
+
+Pour distinguer les échecs, vérifiez `terminal_reason` avant `subtype`. Quand la requête finale échoue, par exemple sur une erreur API, Claude Code rapporte `subtype` `"success"` avec la cause dans `terminal_reason`, par exemple `"api_error"` ; quand une limite que vous avez définie termine l'exécution, comme `max_turns` ou `max_budget_usd`, il rapporte un sous-type `error_*`.
 
 <h3 id="clijsondecodeerror">
   `CLIJSONDecodeError`
@@ -2114,7 +2218,7 @@ HookEvent = Literal[
 ```
 
 <Note>
-  Le SDK TypeScript supporte des événements de hook supplémentaires non encore disponibles en Python : `SessionStart`, `SessionEnd`, `Setup`, `TeammateIdle`, `TaskCompleted`, `ConfigChange`, `WorktreeCreate`, `WorktreeRemove`, `PostToolBatch` et `MessageDisplay`.
+  Le SDK TypeScript supporte des événements de hook supplémentaires non encore disponibles en Python. Voir le [tableau de disponibilité des hooks](/docs/fr/agent-sdk/hooks#available-hooks) pour le support par SDK.
 </Note>
 
 <h3 id="hookcallback">
@@ -2133,11 +2237,7 @@ Paramètres :
 * `tool_use_id` : Identifiant d'utilisation d'outil optionnel (pour les hooks liés aux outils)
 * `context` : Contexte de hook avec des informations supplémentaires
 
-Retourne un [`HookJSONOutput`](#hookjsonoutput) qui peut contenir :
-
-* `decision` : `"block"` pour bloquer l'action
-* `systemMessage` : Message d'avertissement affiché à l'utilisateur
-* `hookSpecificOutput` : Données de sortie spécifiques au hook
+Retourne un [`HookJSONOutput`](#hookjsonoutput).
 
 <h3 id="hookcontext">
   `HookContext`
@@ -2166,7 +2266,8 @@ class HookMatcher:
         default_factory=list
     )  # List of callbacks to execute
     timeout: float | None = (
-        None  # Timeout in seconds for all hooks in this matcher (default: 60)
+        None  # Timeout in seconds. When omitted, the per-event default applies:
+        # 600 for most events, 30 for UserPromptSubmit
     )
 ```
 
@@ -2282,16 +2383,16 @@ class PostToolUseFailureHookInput(BaseHookInput):
     agent_type: NotRequired[str]
 ```
 
-| Champ             | Type                            | Description                                                                                 |
-| :---------------- | :------------------------------ | :------------------------------------------------------------------------------------------ |
-| `hook_event_name` | `Literal["PostToolUseFailure"]` | Toujours « PostToolUseFailure »                                                             |
-| `tool_name`       | `str`                           | Nom de l'outil qui a échoué                                                                 |
-| `tool_input`      | `dict[str, Any]`                | Paramètres d'entrée qui ont été utilisés                                                    |
-| `tool_use_id`     | `str`                           | Identifiant unique pour cette utilisation d'outil                                           |
-| `error`           | `str`                           | Message d'erreur de l'exécution échouée                                                     |
-| `is_interrupt`    | `bool` (optionnel)              | Si l'échec a été causé par une interruption                                                 |
-| `agent_id`        | `str` (optionnel)               | Identifiant de sous-agent, présent quand le hook se déclenche à l'intérieur d'un sous-agent |
-| `agent_type`      | `str` (optionnel)               | Type de sous-agent, présent quand le hook se déclenche à l'intérieur d'un sous-agent        |
+| Champ             | Type                            | Description                                                                                                                                                                                                                                                                    |
+| :---------------- | :------------------------------ | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `hook_event_name` | `Literal["PostToolUseFailure"]` | Toujours « PostToolUseFailure »                                                                                                                                                                                                                                                |
+| `tool_name`       | `str`                           | Nom de l'outil qui a échoué                                                                                                                                                                                                                                                    |
+| `tool_input`      | `dict[str, Any]`                | Paramètres d'entrée qui ont été utilisés                                                                                                                                                                                                                                       |
+| `tool_use_id`     | `str`                           | Identifiant unique pour cette utilisation d'outil                                                                                                                                                                                                                              |
+| `error`           | `str`                           | Message d'erreur de l'exécution échouée                                                                                                                                                                                                                                        |
+| `is_interrupt`    | `bool` (optionnel)              | Vrai quand l'échec a atteint Claude Code comme une interruption plutôt que comme une erreur signalée par l'outil. L'annulation d'un outil en cours d'exécution avec `interrupt()` ne déclenche pas ce hook ; le résultat de l'outil porte le message d'interruption à la place |
+| `agent_id`        | `str` (optionnel)               | Identifiant de sous-agent, présent quand le hook se déclenche à l'intérieur d'un sous-agent                                                                                                                                                                                    |
+| `agent_type`      | `str` (optionnel)               | Type de sous-agent, présent quand le hook se déclenche à l'intérieur d'un sous-agent                                                                                                                                                                                           |
 
 <h3 id="userpromptsubmithookinput">
   `UserPromptSubmitHookInput`
@@ -2474,9 +2575,7 @@ class SyncHookJSONOutput(TypedDict):
   `HookSpecificOutput`
 </h4>
 
-Un `TypedDict` contenant le nom d'événement de hook et les champs spécifiques à l'événement. La forme dépend de la valeur `hookEventName`. Pour les détails complets sur les champs disponibles par événement de hook, voir [Contrôler l'exécution avec les hooks](/docs/fr/agent-sdk/hooks#outputs).
-
-Une union discriminée de types de sortie spécifiques à l'événement. Le champ `hookEventName` détermine quels champs sont valides.
+Une union discriminée de types de sortie spécifiques à l'événement `TypedDict`. Le champ `hookEventName` détermine quels champs sont valides. Pour les détails complets sur les champs disponibles par événement de hook, voir [Contrôler l'exécution avec les hooks](/docs/fr/agent-sdk/hooks#outputs).
 
 ```python theme={null}
 class PreToolUseHookSpecificOutput(TypedDict):
@@ -2553,6 +2652,7 @@ class AsyncHookJSONOutput(TypedDict):
 Cet exemple enregistre deux hooks : l'un qui bloque les commandes bash dangereuses comme `rm -rf /`, et un autre qui enregistre toute l'utilisation d'outils pour l'audit. Le hook de sécurité s'exécute uniquement sur les commandes Bash (via le `matcher`), tandis que le hook de journalisation s'exécute sur tous les outils.
 
 ```python theme={null}
+import asyncio
 from claude_agent_sdk import query, ClaudeAgentOptions, HookMatcher, HookContext
 from typing import Any
 
@@ -2590,14 +2690,18 @@ options = ClaudeAgentOptions(
             ),  # 2 min for validation
             HookMatcher(
                 hooks=[log_tool_use]
-            ),  # Applies to all tools (default 60s timeout)
+            ),  # Applies to all tools (per-event default timeout)
         ],
         "PostToolUse": [HookMatcher(hooks=[log_tool_use])],
     }
 )
 
-async for message in query(prompt="Analyze this codebase", options=options):
-    print(message)
+async def main():
+    async for message in query(prompt="Analyze this codebase", options=options):
+        print(message)
+
+
+asyncio.run(main())
 ```
 
 <h2 id="tool-input/output-types">
@@ -2610,7 +2714,7 @@ Documentation des schémas d'entrée/sortie pour tous les outils Claude Code int
   Agent
 </h3>
 
-**Nom de l'outil :** `Agent` (précédemment `Task`, qui est toujours accepté comme alias)
+**Nom de l'outil :** `Agent`. Le nom précédent `Task` est toujours accepté comme alias, et la liste `tools` dans le [`SystemMessage`](#systemmessage) d'initialisation rapporte cet outil comme `Task` pour la compatibilité rétroactive.
 
 **Entrée :**
 
@@ -2618,20 +2722,100 @@ Documentation des schémas d'entrée/sortie pour tous les outils Claude Code int
 {
     "description": str,  # A short (3-5 word) description of the task
     "prompt": str,  # The task for the agent to perform
-    "subagent_type": str,  # The type of specialized agent to use
+    "subagent_type": str | None,  # The type of specialized agent to use
+    "model": "sonnet" | "opus" | "haiku" | "fable" | None,  # Model override for this agent
+    "run_in_background": bool | None,  # Agents run in the background by default; set to False to run synchronously
+    "name": str | None,  # Name for the spawned agent
+    "team_name": str | None,  # Deprecated; ignored
+    "mode": "acceptEdits" | "auto" | "bypassPermissions" | "default" | "dontAsk" | "plan" | None,  # Deprecated; ignored. The subagent inheritance rules decide a subagent's permission mode
+    "isolation": "worktree" | "remote" | None,  # Isolation mode for the agent's changes
 }
 ```
 
-**Sortie :**
+Lance un nouvel agent pour gérer des tâches complexes et multi-étapes de manière autonome.
+
+**Sortie (statut : `"completed"`) :**
 
 ```python theme={null}
 {
-    "result": str,  # Final result from the subagent
-    "usage": dict | None,  # Token usage statistics
-    "total_cost_usd": float | None,  # Estimated total cost in USD
-    "duration_ms": int | None,  # Execution duration in milliseconds
+    "status": "completed",
+    "agentId": str,  # ID of the agent that ran
+    "agentType": str | None,  # The subagent type that handled the task
+    "content": [  # Result content blocks
+        {
+            "type": "text",
+            "text": str,
+            "citations": list | None,
+        }
+    ],
+    "resolvedModel": str | None,  # Model the subagent started on
+    "modelsUsed": list[str] | None,  # Models used in order, with consecutive repeats collapsed
+    "totalToolUseCount": int,  # Number of tool calls the agent made
+    "totalDurationMs": int,  # Execution duration in milliseconds
+    "totalTokens": int,  # Token count from the final API request, not the whole run
+    "usage": {  # Token usage statistics
+        "input_tokens": int,
+        "output_tokens": int,
+        "cache_creation_input_tokens": int | None,
+        "cache_read_input_tokens": int | None,
+        "server_tool_use": {"web_search_requests": int, "web_fetch_requests": int} | None,
+        "service_tier": str | None,
+        "cache_creation": {"ephemeral_1h_input_tokens": int, "ephemeral_5m_input_tokens": int} | None,
+        "inference_geo": str | None,
+        "speed": str | None,
+        "iterations": Any | None,
+        "output_tokens_details": {"thinking_tokens": int | None} | None,
+    },
+    "toolStats": {  # Aggregate tool activity for the run
+        "readCount": int,
+        "searchCount": int,
+        "bashCount": int,
+        "editFileCount": int,
+        "linesAdded": int,
+        "linesRemoved": int,
+        "otherToolCount": int,
+        "frameCount": int | None,
+    } | None,
+    "prompt": str,  # The prompt the agent ran
+    "worktreePath": str | None,  # Present when Claude Code kept the subagent's worktree
+    "worktreeBranch": str | None,  # Present when Claude Code created that worktree with git
 }
 ```
+
+**Sortie (statut : `"async_launched"`) :**
+
+```python theme={null}
+{
+    "status": "async_launched",
+    "isAsync": bool | None,  # True on background launches
+    "agentId": str,  # ID of the launched agent
+    "description": str,  # The task description
+    "resolvedModel": str | None,  # Model in use at the backgrounding transition
+    "modelsUsed": list[str] | None,  # Models used before backgrounding, in order, with consecutive repeats collapsed
+    "prompt": str,  # The prompt the agent runs
+    "outputFile": str,  # File path where the agent's output is written
+    "canReadOutputFile": bool | None,  # Whether the output file can be read directly
+}
+```
+
+**Sortie (statut : `"remote_launched"`) :**
+
+```python theme={null}
+{
+    "status": "remote_launched",
+    "taskId": str,  # ID of the dispatched task
+    "sessionUrl": str,  # Link to the cloud session
+    "description": str,  # The task description
+    "prompt": str,  # The prompt the agent runs
+    "outputFile": str,  # File path where the agent's output is written
+}
+```
+
+Retourne le résultat du sous-agent. La sortie est discriminée sur le champ `status` : `"completed"` pour les tâches terminées, `"async_launched"` pour les tâches en arrière-plan, et `"remote_launched"` pour les tâches que Claude Code a envoyées à une session cloud, où `sessionUrl` renvoie à cette session et `taskId` l'identifie. Si Claude Code [a conservé la worktree isolée du sous-agent](/docs/fr/worktrees#isolate-subagents-with-worktrees), `worktreePath` sur la variante `completed` est l'endroit où la trouver, et `worktreeBranch` est sa branche lorsque Claude Code a créé la worktree avec git.
+
+Sur la variante `completed`, `resolvedModel` nomme le modèle sur lequel le sous-agent a démarré, qui peut différer du `model` d'entrée demandé lorsque [`availableModels`](/docs/fr/model-config#restrict-model-selection) ou une autre substitution s'applique. Ce champ nécessite Claude Code v2.1.174 ou ultérieur. Sur la variante `async_launched`, `resolvedModel` nomme le modèle en cours d'utilisation lorsque l'agent s'est déplacé en arrière-plan, donc un échange qui s'est produit avant la mise en arrière-plan est reflété là. Le champ `modelsUsed` sur les deux variantes répertorie les modèles utilisés dans l'ordre, avec les répétitions consécutives réduites ; il est défini uniquement lorsque le modèle a été échangé en cours d'exécution. `modelsUsed` et le comportement `resolvedModel` au moment de la mise en arrière-plan nécessitent Claude Code v2.1.212 ou ultérieur.
+
+Claude Code remplit `usage` et `totalTokens` à partir de la dernière demande API du sous-agent, pas de l'ensemble de l'exécution. Lorsqu'il est présent, `thinking_tokens` sous `output_tokens_details` dans `usage` est le nombre de jetons de sortie de cette demande qui étaient des jetons de réflexion. La clé `output_tokens_details` nécessite le SDK Python v0.2.136 ou ultérieur, qui regroupe Claude Code v2.1.228.
 
 <h3 id="askuserquestion">
   AskUserQuestion
@@ -2653,14 +2837,21 @@ Pose des questions de clarification à l'utilisateur pendant l'exécution. Voir 
                 {
                     "label": str,  # Display text for this option (1-5 words)
                     "description": str,  # Explanation of what this option means
+                    "preview": str | None,  # Preview content rendered when the option is focused
                 }
             ],
             "multiSelect": bool,  # Set to true to allow multiple selections
         }
     ],
-    "answers": dict[str, str | list[str]] | None,
+    "answers": dict[str, str] | None,
     # User answers populated by the permission system. Multi-select
-    # answers may be a list of labels or a comma-joined string
+    # answers are a comma-joined string of the selected labels; a
+    # list of labels is accepted on input and coerced to that form
+    "annotations": dict[str, dict] | None,
+    # Per-question annotations from the user, keyed by question text.
+    # Each value can carry "preview" (the selected option's preview
+    # content) and "notes" (free-text notes on the selection)
+    "metadata": dict | None,  # Analytics metadata, such as {"source": "remember"}; not displayed to the user
 }
 ```
 
@@ -2672,12 +2863,17 @@ Pose des questions de clarification à l'utilisateur pendant l'exécution. Voir 
         {
             "question": str,
             "header": str,
-            "options": [{"label": str, "description": str}],
+            "options": [{"label": str, "description": str, "preview": str | None}],
             "multiSelect": bool,
         }
     ],
     "answers": dict[str, str],  # Maps question text to answer string
     # Multi-select answers are comma-separated
+    "response": str | None,
+    # Freeform reply typed instead of answering the questions; when set,
+    # Claude receives "The user responded: ..." in place of the answer list
+    "annotations": dict[str, dict] | None,  # Per-question "preview" and "notes" from the user's selections
+    "afkTimeoutMs": int | None,  # Set when the dialog auto-resolved after this many milliseconds of user inactivity; absent when the user answered
 }
 ```
 
@@ -2702,10 +2898,11 @@ Pose des questions de clarification à l'utilisateur pendant l'exécution. Voir 
 
 ```python theme={null}
 {
-    "output": str,  # Combined stdout and stderr output
-    "exitCode": int,  # Exit code of the command
-    "killed": bool | None,  # Whether command was killed due to timeout
-    "shellId": str | None,  # Shell ID for background processes
+    "stdout": str,  # The command's output; stdout and stderr arrive merged into this one interleaved stream
+    "stderr": str,  # Notices the tool itself adds, not the command's stderr
+    "interrupted": bool,  # Whether the command was interrupted
+    "isImage": bool | None,  # Whether stdout contains image data
+    "backgroundTaskId": str | None,  # ID of the background task if command is running in background
 }
 ```
 
@@ -2726,8 +2923,7 @@ Lorsque Monitor exécute une commande, il suit les mêmes règles de permission 
     "command": str | None,  # Shell script; each stdout line is an event, exit ends the watch
     "ws": dict | None,  # WebSocket source: {"url": str, "protocols": list[str] | None}; each text frame is an event
     "description": str,  # Short description shown in notifications
-    "timeout_ms": int | None,  # Kill after this deadline (default 300000, max 3600000)
-    "persistent": bool | None,  # Run for the lifetime of the session; stop with TaskStop
+    "timeout_ms": int | None,  # Deadline in milliseconds (default 300000, max 3600000; the effective deadline is at most 1800000)
 }
 ```
 
@@ -2736,8 +2932,8 @@ Lorsque Monitor exécute une commande, il suit les mêmes règles de permission 
 ```python theme={null}
 {
     "taskId": str,  # ID of the background monitor task
-    "timeoutMs": int,  # Timeout deadline in milliseconds (0 when persistent)
-    "persistent": bool | None,  # True when running until TaskStop or session end
+    "timeoutMs": int,  # The watch's effective deadline in milliseconds
+    "persistent": bool | None,  # False: every watch has a deadline
 }
 ```
 
@@ -2995,7 +3191,19 @@ Lorsque Monitor exécute une commande, il suit les mêmes règles de permission 
 **Nom de l'outil :** `TodoWrite`
 
 <Note>
-  À partir de Claude Code v2.1.142, `TodoWrite` est désactivé par défaut. Utilisez `TaskCreate`, `TaskGet`, `TaskUpdate` et `TaskList` à la place. Voir [Migrer vers les outils Task](/docs/fr/agent-sdk/todo-tracking#migrate-to-task-tools) pour mettre à jour votre code de surveillance, ou définissez `CLAUDE_CODE_ENABLE_TASKS=0` pour revenir à `TodoWrite`.
+  The following tools are available by default only on Claude 3.x models, Opus 4 through 4.7, Sonnet 4 through 4.6, and Haiku 4.5. On every other model, including model IDs Claude Code doesn't recognize, they aren't available unless you opt in:
+
+  * `TodoWrite`
+  * `TaskCreate`
+  * `TaskGet`
+  * `TaskUpdate`
+  * `TaskList`
+
+  Wherever the tools are available, Claude Code provides the four Task tools, or `TodoWrite` instead when you set `CLAUDE_CODE_ENABLE_TASKS=0`.
+
+  This default set applies in Claude Code v2.1.268 and later, which the TypeScript Agent SDK bundles from v0.3.268.
+
+  Voir [Disponibilité du modèle](/docs/fr/agent-sdk/todo-tracking#model-availability) pour vous inscrire.
 </Note>
 
 **Entrée :**
@@ -3137,18 +3345,26 @@ Lorsque Monitor exécute une commande, il suit les mêmes règles de permission 
 }
 ```
 
-<h3 id="bashoutput">
-  BashOutput
+<h3 id="taskoutput">
+  TaskOutput
 </h3>
 
-**Nom de l'outil :** `BashOutput`
+Supprimé dans Claude Code v2.1.277. Précédemment récupéré la sortie d'une tâche de fond en cours d'exécution ou terminée, avec `BashOutput` accepté comme alias ; Claude lit le fichier de sortie d'une tâche de fond avec `Read` à la place.
+
+Une entrée `disallowed_tools` ou une règle de refus qui nomme toujours l'un ou l'autre nom est ignorée sans avertissement.
+
+<h3 id="taskstop">
+  TaskStop
+</h3>
+
+**Nom de l'outil :** `TaskStop`. Les noms précédents `KillShell` et `KillBash` sont toujours acceptés comme alias.
 
 **Entrée :**
 
 ```python theme={null}
 {
-    "bash_id": str,  # The ID of the background shell
-    "filter": str | None,  # Optional regex to filter output lines
+    "task_id": str | None,  # The ID of the background task to stop
+    "shell_id": str | None,  # Deprecated: use task_id instead
 }
 ```
 
@@ -3156,32 +3372,10 @@ Lorsque Monitor exécute une commande, il suit les mêmes règles de permission 
 
 ```python theme={null}
 {
-    "output": str,  # New output since last check
-    "status": "running" | "completed" | "failed",  # Current shell status
-    "exitCode": int | None,  # Exit code when completed
-}
-```
-
-<h3 id="killbash">
-  KillBash
-</h3>
-
-**Nom de l'outil :** `KillBash`
-
-**Entrée :**
-
-```python theme={null}
-{
-    "shell_id": str  # The ID of the background shell to kill
-}
-```
-
-**Sortie :**
-
-```python theme={null}
-{
-    "message": str,  # Success message
-    "shell_id": str,  # ID of the killed shell
+    "message": str,  # Status message about the operation
+    "task_id": str,  # The ID of the task that was stopped
+    "task_type": str,  # The type of the task that was stopped
+    "command": str | None,  # The command or description of the stopped task
 }
 ```
 
@@ -3265,13 +3459,11 @@ Lorsque Monitor exécute une commande, il suit les mêmes règles de permission 
 }
 ```
 
-<h2 id="advanced-features-with-claudesdkclient">
-  Fonctionnalités avancées avec ClaudeSDKClient
+<h2 id="build-a-continuous-conversation-interface">
+  Construire une interface de conversation continue
 </h2>
 
-<h3 id="building-a-continuous-conversation-interface">
-  Construire une interface de conversation continue
-</h3>
+L'exemple suivant maintient un seul `ClaudeSDKClient` connecté à travers les tours, afin que Claude se souvienne des messages antérieurs. Tapez `new` pour vous déconnecter et vous reconnecter pour une nouvelle session, ou `exit` pour terminer la conversation.
 
 ```python theme={null}
 from claude_agent_sdk import (
@@ -3350,285 +3542,46 @@ async def main():
 asyncio.run(main())
 ```
 
-<h3 id="using-hooks-for-behavior-modification">
-  Utiliser les hooks pour la modification du comportement
-</h3>
-
-```python theme={null}
-from claude_agent_sdk import (
-    ClaudeSDKClient,
-    ClaudeAgentOptions,
-    HookMatcher,
-    HookContext,
-)
-import asyncio
-from typing import Any
-
-
-async def pre_tool_logger(
-    input_data: dict[str, Any], tool_use_id: str | None, context: HookContext
-) -> dict[str, Any]:
-    """Log all tool usage before execution."""
-    tool_name = input_data.get("tool_name", "unknown")
-    print(f"[PRE-TOOL] About to use: {tool_name}")
-
-    # You can modify or block the tool execution here
-    if tool_name == "Bash" and "rm -rf" in str(input_data.get("tool_input", {})):
-        return {
-            "hookSpecificOutput": {
-                "hookEventName": "PreToolUse",
-                "permissionDecision": "deny",
-                "permissionDecisionReason": "Dangerous command blocked",
-            }
-        }
-    return {}
-
-
-async def post_tool_logger(
-    input_data: dict[str, Any], tool_use_id: str | None, context: HookContext
-) -> dict[str, Any]:
-    """Log results after tool execution."""
-    tool_name = input_data.get("tool_name", "unknown")
-    print(f"[POST-TOOL] Completed: {tool_name}")
-    return {}
-
-
-async def user_prompt_modifier(
-    input_data: dict[str, Any], tool_use_id: str | None, context: HookContext
-) -> dict[str, Any]:
-    """Add context to user prompts."""
-    original_prompt = input_data.get("prompt", "")
-
-    # Add a timestamp as additional context for Claude to see
-    from datetime import datetime
-
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-    return {
-        "hookSpecificOutput": {
-            "hookEventName": "UserPromptSubmit",
-            "additionalContext": f"[Submitted at {timestamp}] Original prompt: {original_prompt}",
-        }
-    }
-
-
-async def main():
-    options = ClaudeAgentOptions(
-        hooks={
-            "PreToolUse": [
-                HookMatcher(hooks=[pre_tool_logger]),
-                HookMatcher(matcher="Bash", hooks=[pre_tool_logger]),
-            ],
-            "PostToolUse": [HookMatcher(hooks=[post_tool_logger])],
-            "UserPromptSubmit": [HookMatcher(hooks=[user_prompt_modifier])],
-        },
-        allowed_tools=["Read", "Write", "Bash"],
-    )
-
-    async with ClaudeSDKClient(options=options) as client:
-        await client.query("List files in current directory")
-
-        async for message in client.receive_response():
-            # Hooks will automatically log tool usage
-            pass
-
-
-asyncio.run(main())
-```
-
-<h3 id="real-time-progress-monitoring">
-  Surveillance de la progression en temps réel
-</h3>
-
-```python theme={null}
-from claude_agent_sdk import (
-    ClaudeSDKClient,
-    ClaudeAgentOptions,
-    AssistantMessage,
-    ToolUseBlock,
-    ToolResultBlock,
-    TextBlock,
-)
-import asyncio
-
-
-async def monitor_progress():
-    options = ClaudeAgentOptions(
-        allowed_tools=["Write", "Bash"], permission_mode="acceptEdits"
-    )
-
-    async with ClaudeSDKClient(options=options) as client:
-        await client.query("Create 5 Python files with different sorting algorithms")
-
-        # Monitor progress in real-time
-        async for message in client.receive_response():
-            if isinstance(message, AssistantMessage):
-                for block in message.content:
-                    if isinstance(block, ToolUseBlock):
-                        if block.name == "Write":
-                            file_path = block.input.get("file_path", "")
-                            print(f"Creating: {file_path}")
-                    elif isinstance(block, ToolResultBlock):
-                        print("Completed tool execution")
-                    elif isinstance(block, TextBlock):
-                        print(f"Claude says: {block.text[:100]}...")
-
-        print("Task completed!")
-
-
-asyncio.run(monitor_progress())
-```
-
-<h2 id="example-usage">
-  Exemple d'utilisation
+<h2 id="error-handling">
+  Gestion des erreurs
 </h2>
 
-<h3 id="basic-file-operations-using-query">
-  Opérations de fichiers de base (utilisant query)
-</h3>
+L'exemple suivant encapsule un appel `query()` dans des gestionnaires pour quatre des [types d'erreurs](#error-types) que le SDK lève.
+
+Cet exemple capture [`ResultError`](#resulterror), qui nécessite Python Agent SDK 0.2.140 ou version ultérieure.
 
 ```python theme={null}
-from claude_agent_sdk import query, ClaudeAgentOptions, AssistantMessage, ToolUseBlock
 import asyncio
 
-
-async def create_project():
-    options = ClaudeAgentOptions(
-        allowed_tools=["Read", "Write", "Bash"],
-        permission_mode="acceptEdits",
-        cwd="/home/user/project",
-    )
-
-    async for message in query(
-        prompt="Create a Python project structure with setup.py", options=options
-    ):
-        if isinstance(message, AssistantMessage):
-            for block in message.content:
-                if isinstance(block, ToolUseBlock):
-                    print(f"Using tool: {block.name}")
-
-
-asyncio.run(create_project())
-```
-
-<h3 id="error-handling">
-  Gestion des erreurs
-</h3>
-
-```python theme={null}
-from claude_agent_sdk import query, CLINotFoundError, ProcessError, CLIJSONDecodeError
-
-try:
-    async for message in query(prompt="Hello"):
-        print(message)
-except CLINotFoundError:
-    print(
-        "Claude Code CLI not found. Try reinstalling: pip install --force-reinstall claude-agent-sdk"
-    )
-except ProcessError as e:
-    print(f"Process failed with exit code: {e.exit_code}")
-except CLIJSONDecodeError as e:
-    print(f"Failed to parse response: {e}")
-```
-
-<h3 id="streaming-mode-with-client">
-  Mode streaming avec client
-</h3>
-
-```python theme={null}
-from claude_agent_sdk import ClaudeSDKClient
-import asyncio
-
-
-async def interactive_session():
-    async with ClaudeSDKClient() as client:
-        # Send initial message
-        await client.query("What's the weather like?")
-
-        # Process responses
-        async for msg in client.receive_response():
-            print(msg)
-
-        # Send follow-up
-        await client.query("Tell me more about that")
-
-        # Process follow-up response
-        async for msg in client.receive_response():
-            print(msg)
-
-
-asyncio.run(interactive_session())
-```
-
-<h3 id="using-custom-tools-with-claudesdkclient">
-  Utiliser les outils personnalisés avec ClaudeSDKClient
-</h3>
-
-```python theme={null}
 from claude_agent_sdk import (
-    ClaudeSDKClient,
-    ClaudeAgentOptions,
-    tool,
-    create_sdk_mcp_server,
-    AssistantMessage,
-    TextBlock,
+    query,
+    CLINotFoundError,
+    ProcessError,
+    ResultError,
+    CLIJSONDecodeError,
 )
-import asyncio
-from typing import Any
-
-
-# Define custom tools with @tool decorator
-@tool("calculate", "Perform mathematical calculations", {"expression": str})
-async def calculate(args: dict[str, Any]) -> dict[str, Any]:
-    try:
-        result = eval(args["expression"], {"__builtins__": {}})
-        return {"content": [{"type": "text", "text": f"Result: {result}"}]}
-    except Exception as e:
-        return {
-            "content": [{"type": "text", "text": f"Error: {str(e)}"}],
-            "is_error": True,
-        }
-
-
-@tool("get_time", "Get current time", {})
-async def get_time(args: dict[str, Any]) -> dict[str, Any]:
-    from datetime import datetime
-
-    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    return {"content": [{"type": "text", "text": f"Current time: {current_time}"}]}
 
 
 async def main():
-    # Create SDK MCP server with custom tools
-    my_server = create_sdk_mcp_server(
-        name="utilities", version="1.0.0", tools=[calculate, get_time]
-    )
-
-    # Configure options with the server
-    options = ClaudeAgentOptions(
-        mcp_servers={"utils": my_server},
-        allowed_tools=["mcp__utils__calculate", "mcp__utils__get_time"],
-    )
-
-    # Use ClaudeSDKClient for interactive tool usage
-    async with ClaudeSDKClient(options=options) as client:
-        await client.query("What's 123 * 456?")
-
-        # Process calculation response
-        async for message in client.receive_response():
-            if isinstance(message, AssistantMessage):
-                for block in message.content:
-                    if isinstance(block, TextBlock):
-                        print(f"Calculation: {block.text}")
-
-        # Follow up with time query
-        await client.query("What time is it now?")
-
-        async for message in client.receive_response():
-            if isinstance(message, AssistantMessage):
-                for block in message.content:
-                    if isinstance(block, TextBlock):
-                        print(f"Time: {block.text}")
+    try:
+        async for message in query(prompt="Hello"):
+            print(message)
+    except CLINotFoundError:
+        print(
+            "Claude Code CLI not found. Try reinstalling: pip install --force-reinstall claude-agent-sdk"
+        )
+    # Catch ResultError before ProcessError, which it subclasses. Its message
+    # carries the error text. A failed final request, such as an API error,
+    # arrives with subtype "success", so branch on terminal_reason first.
+    except ResultError as e:
+        if e.terminal_reason == "api_error":
+            print(f"API request failed: {e}")
+        else:
+            print(f"Query ended with an error result ({e.terminal_reason or e.subtype}): {e}")
+    except ProcessError as e:
+        print(f"Process failed with exit code: {e.exit_code}")
+    except CLIJSONDecodeError as e:
+        print(f"Failed to parse response: {e}")
 
 
 asyncio.run(main())
@@ -3655,44 +3608,57 @@ class SandboxSettings(TypedDict, total=False):
     enableWeakerNestedSandbox: bool
 ```
 
-| Propriété                   | Type                                                  | Par défaut | Description                                                                                                                                                                                                                                                    |
-| :-------------------------- | :---------------------------------------------------- | :--------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `enabled`                   | `bool`                                                | `False`    | Activez le mode sandbox pour l'exécution des commandes                                                                                                                                                                                                         |
-| `autoAllowBashIfSandboxed`  | `bool`                                                | `True`     | Approuvez automatiquement les commandes bash quand le sandbox est activé                                                                                                                                                                                       |
-| `excludedCommands`          | `list[str]`                                           | `[]`       | Commandes qui contournent toujours les restrictions du sandbox (par exemple, `["docker"]`). Celles-ci s'exécutent sans sandbox automatiquement sans implication du modèle                                                                                      |
-| `allowUnsandboxedCommands`  | `bool`                                                | `True`     | Permettez au modèle de demander l'exécution de commandes en dehors du sandbox. Quand `True`, le modèle peut définir `dangerouslyDisableSandbox` dans l'entrée d'outil, qui revient au [système de permissions](#permissions-fallback-for-unsandboxed-commands) |
-| `network`                   | [`SandboxNetworkConfig`](#sandboxnetworkconfig)       | `None`     | Configuration de sandbox spécifique au réseau                                                                                                                                                                                                                  |
-| `ignoreViolations`          | [`SandboxIgnoreViolations`](#sandboxignoreviolations) | `None`     | Configurez quelles violations de sandbox ignorer                                                                                                                                                                                                               |
-| `enableWeakerNestedSandbox` | `bool`                                                | `False`    | Activez un sandbox imbriqué plus faible pour la compatibilité                                                                                                                                                                                                  |
+| Propriété                   | Type                                                  | Par défaut | Description                                                                                                                                                                                                                                                                        |
+| :-------------------------- | :---------------------------------------------------- | :--------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `enabled`                   | `bool`                                                | `False`    | Activez le mode sandbox pour l'exécution des commandes                                                                                                                                                                                                                             |
+| `autoAllowBashIfSandboxed`  | `bool`                                                | `True`     | Approuvez automatiquement les commandes bash quand le sandbox est activé                                                                                                                                                                                                           |
+| `excludedCommands`          | `list[str]`                                           | `[]`       | Commandes qui contournent les restrictions du sandbox, telles que `["docker *"]`. Celles-ci s'exécutent sans sandbox automatiquement sans implication du modèle ; [`sandbox.excludedCommands`](/docs/fr/settings-reference#sandbox-excludedcommands) couvre quand une entrée s'applique |
+| `allowUnsandboxedCommands`  | `bool`                                                | `True`     | Permettez au modèle de demander l'exécution de commandes en dehors du sandbox. Quand `True`, le modèle peut définir `dangerouslyDisableSandbox` dans l'entrée d'outil, qui revient au [système de permissions](#permissions-fallback-for-unsandboxed-commands)                     |
+| `network`                   | [`SandboxNetworkConfig`](#sandboxnetworkconfig)       | `None`     | Configuration de sandbox spécifique au réseau                                                                                                                                                                                                                                      |
+| `ignoreViolations`          | [`SandboxIgnoreViolations`](#sandboxignoreviolations) | `None`     | Configurez quelles violations de sandbox ignorer                                                                                                                                                                                                                                   |
+| `enableWeakerNestedSandbox` | `bool`                                                | `False`    | Activez un sandbox imbriqué plus faible pour la compatibilité                                                                                                                                                                                                                      |
 
 <Note>
   Le sandbox dépend du support de la plateforme et, sur Linux, d'outils comme `bubblewrap` et `socat`. Par défaut, quand `enabled` est `True` mais que le sandbox ne peut pas démarrer, les commandes s'exécutent sans sandbox avec un avertissement sur stderr. Ce comportement par défaut diffère du SDK TypeScript, où `failIfUnavailable` est par défaut `true`.
 
-  Définissez `"failIfUnavailable": True` dans vos paramètres de sandbox pour arrêter à la place. La clé n'est pas encore déclarée sur `SandboxSettings`, mais le SDK la transmet à Claude Code, qui la respecte. `query()` rapporte alors un `ResultMessage` avec `subtype="error_during_execution"` et la raison dans `errors`. Surveillez ce sous-type plutôt que de vous attendre à ce que `query()` lève une exception avant de produire des messages.
+  Définissez `"failIfUnavailable": True` dans vos paramètres de sandbox pour arrêter à la place. La clé n'est pas encore déclarée sur `SandboxSettings`, mais le SDK la transmet à Claude Code, qui la respecte. `query()` rapporte alors un `ResultMessage` avec `subtype="error_during_execution"` et la raison dans `errors`. Comme il s'agit d'un appel `query()` unique, le SDK lève une exception après avoir produit ce résultat d'erreur, donc enveloppez la boucle dans un bloc try pour continuer au-delà. Voir [Gérer le résultat](/docs/fr/agent-sdk/agent-loop#handle-the-result) pour le contrat d'erreur.
 </Note>
 
-<h4 id="example-usage-2">
+<h4 id="example-usage">
   Exemple d'utilisation
 </h4>
 
 ```python theme={null}
-from claude_agent_sdk import query, ClaudeAgentOptions, SandboxSettings
+import asyncio
 
-sandbox_settings: SandboxSettings = {
+from claude_agent_sdk import query, ClaudeAgentOptions
+
+sandbox_settings = {
     "enabled": True,
     "autoAllowBashIfSandboxed": True,
+    "failIfUnavailable": True,
     "network": {"allowLocalBinding": True},
 }
 
-async for message in query(
-    prompt="Build and test my project",
-    options=ClaudeAgentOptions(sandbox=sandbox_settings),
-):
-    print(message)
+
+async def main():
+    try:
+        async for message in query(
+            prompt="Build and test my project",
+            options=ClaudeAgentOptions(sandbox=sandbox_settings),
+        ):
+            print(message)
+    except Exception as error:
+        # A single-shot query() raises after yielding an error result,
+        # such as when failIfUnavailable is set and the sandbox can't start.
+        print(f"Session ended with an error: {error}")
+
+
+asyncio.run(main())
 ```
 
 <Warning>
-  **Sécurité des sockets Unix** : L'option `allowUnixSockets` peut accorder l'accès à des services système puissants. Par exemple, permettre `/var/run/docker.sock` accorde effectivement un accès complet au système hôte via l'API Docker, contournant l'isolation du sandbox. Autorisez uniquement les sockets Unix strictement nécessaires et comprenez les implications de sécurité de chacun.
+  **Sécurité des sockets Unix** : L'option `allowUnixSockets` peut accorder l'accès à des services système qui s'étendent en dehors du sandbox. Par exemple, permettre `/var/run/docker.sock` accorde effectivement un accès complet au système hôte via l'API Docker, contournant l'isolation du sandbox. Autorisez uniquement les sockets Unix strictement nécessaires et comprenez les implications de sécurité de chacun.
 </Warning>
 
 <h3 id="sandboxnetworkconfig">
@@ -3714,17 +3680,17 @@ class SandboxNetworkConfig(TypedDict, total=False):
     socksProxyPort: int
 ```
 
-| Propriété                 | Type        | Par défaut | Description                                                                                                                                                                           |
-| :------------------------ | :---------- | :--------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `allowedDomains`          | `list[str]` | `[]`       | Noms de domaine auxquels les processus en sandbox peuvent accéder                                                                                                                     |
-| `deniedDomains`           | `list[str]` | `[]`       | Noms de domaine auxquels les processus en sandbox ne peuvent pas accéder. Prend la priorité sur `allowedDomains`                                                                      |
-| `allowManagedDomainsOnly` | `bool`      | `False`    | Paramètres gérés uniquement : quand défini dans les paramètres gérés, ignorez `allowedDomains` des sources de paramètres non gérées. N'a aucun effet quand défini via les options SDK |
-| `allowUnixSockets`        | `list[str]` | `[]`       | Chemins de socket Unix auxquels les processus peuvent accéder (par exemple, socket Docker)                                                                                            |
-| `allowAllUnixSockets`     | `bool`      | `False`    | Permettez l'accès à tous les sockets Unix                                                                                                                                             |
-| `allowLocalBinding`       | `bool`      | `False`    | Permettez aux processus de se lier aux ports locaux (par exemple, pour les serveurs de développement)                                                                                 |
-| `allowMachLookup`         | `list[str]` | `[]`       | macOS uniquement : noms de services XPC/Mach à autoriser. Supporte un caractère générique à la fin                                                                                    |
-| `httpProxyPort`           | `int`       | `None`     | Port du proxy HTTP pour les requêtes réseau                                                                                                                                           |
-| `socksProxyPort`          | `int`       | `None`     | Port du proxy SOCKS pour les requêtes réseau                                                                                                                                          |
+| Propriété                 | Type        | Par défaut | Description                                                                                                                                                                                                                               |
+| :------------------------ | :---------- | :--------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `allowedDomains`          | `list[str]` | `[]`       | Noms de domaine auxquels les processus en sandbox peuvent accéder                                                                                                                                                                         |
+| `deniedDomains`           | `list[str]` | `[]`       | Noms de domaine auxquels les processus en sandbox ne peuvent pas accéder. Prend la priorité sur `allowedDomains`                                                                                                                          |
+| `allowManagedDomainsOnly` | `bool`      | `False`    | Paramètres gérés uniquement : quand défini dans les paramètres gérés, ignorez `allowedDomains` et les règles d'autorisation `WebFetch(domain:...)` des sources de paramètres non gérées. N'a aucun effet quand défini via les options SDK |
+| `allowUnixSockets`        | `list[str]` | `[]`       | Chemins de socket Unix auxquels les processus peuvent accéder, tels que le socket Docker. Ignoré sur Linux                                                                                                                                |
+| `allowAllUnixSockets`     | `bool`      | `False`    | Permettez l'accès à tous les sockets Unix                                                                                                                                                                                                 |
+| `allowLocalBinding`       | `bool`      | `False`    | Permettez aux processus de se lier aux ports locaux (par exemple, pour les serveurs de développement)                                                                                                                                     |
+| `allowMachLookup`         | `list[str]` | `[]`       | macOS uniquement : noms de services XPC/Mach à autoriser. Supporte un caractère générique à la fin                                                                                                                                        |
+| `httpProxyPort`           | `int`       | `None`     | Port du proxy HTTP pour les requêtes réseau                                                                                                                                                                                               |
+| `socksProxyPort`          | `int`       | `None`     | Port du proxy SOCKS pour les requêtes réseau                                                                                                                                                                                              |
 
 <Note>
   Le proxy sandbox intégré applique la liste blanche réseau en fonction du nom d'hôte demandé et ne termine pas ou n'inspecte pas le trafic TLS, donc des techniques telles que le [domain fronting](https://en.wikipedia.org/wiki/Domain_fronting) peuvent potentiellement le contourner. Voir [Limitations de sécurité du sandboxing](/docs/fr/sandboxing#security-limitations) pour les détails et [Déploiement sécurisé](/docs/fr/agent-sdk/secure-deployment#traffic-forwarding) pour configurer un proxy qui termine TLS.
@@ -3753,14 +3719,12 @@ class SandboxIgnoreViolations(TypedDict, total=False):
 
 Quand `allowUnsandboxedCommands` est activé, le modèle peut demander l'exécution de commandes en dehors du sandbox en définissant `dangerouslyDisableSandbox: True` dans l'entrée d'outil. Ces requêtes reviennent au système de permissions existant, ce qui signifie que votre gestionnaire `can_use_tool` sera invoqué, vous permettant d'implémenter une logique d'autorisation personnalisée.
 
-<Note>
-  **`excludedCommands` vs `allowUnsandboxedCommands` :**
+Vos entrées `excludedCommands` prennent à la place une sortie du sandbox sans implication du modèle ; [`sandbox.excludedCommands`](/docs/fr/settings-reference#sandbox-excludedcommands) couvre quand une entrée s'applique.
 
-  * `excludedCommands` : Une liste statique de commandes qui contournent toujours le sandbox automatiquement (par exemple, `["docker"]`). Le modèle n'a aucun contrôle sur ceci.
-  * `allowUnsandboxedCommands` : Permet au modèle de décider à l'exécution s'il faut demander l'exécution sans sandbox en définissant `dangerouslyDisableSandbox: True` dans l'entrée d'outil.
-</Note>
+L'exemple suivant enregistre chaque requête sans sandbox et la refuse sauf si votre propre logique d'autorisation l'autorise :
 
 ```python theme={null}
+import asyncio
 from claude_agent_sdk import (
     query,
     ClaudeAgentOptions,
@@ -3769,6 +3733,12 @@ from claude_agent_sdk import (
     PermissionResultDeny,
     ToolPermissionContext,
 )
+
+
+def is_command_authorized(command: str | None) -> bool:
+    # Replace with your own authorization logic
+    return False
+
 
 
 async def can_use_tool(
@@ -3813,18 +3783,15 @@ async def main():
         ),
     ):
         print(message)
+
+
+asyncio.run(main())
 ```
-
-Ce modèle vous permet de :
-
-* **Auditer les requêtes du modèle** : Enregistrez quand le modèle demande l'exécution sans sandbox
-* **Implémenter des listes blanches** : Autorisez uniquement des commandes spécifiques à s'exécuter sans sandbox
-* **Ajouter des flux d'approbation** : Nécessitez une autorisation explicite pour les opérations privilégiées
 
 <Warning>
   Les commandes s'exécutant avec `dangerouslyDisableSandbox: True` ont un accès complet au système. Assurez-vous que votre gestionnaire `can_use_tool` valide ces requêtes avec soin.
 
-  Si `permission_mode` est défini sur `bypassPermissions` et `allow_unsandboxed_commands` est activé, le modèle peut exécuter de manière autonome des commandes en dehors du sandbox sans aucun prompt d'approbation. Cette combinaison permet effectivement au modèle d'échapper à l'isolation du sandbox silencieusement.
+  Si `permission_mode` est défini sur `bypassPermissions` et `allow_unsandboxed_commands` est activé, le modèle peut exécuter de manière autonome des commandes en dehors du sandbox sans aucun prompt d'approbation, à part les [actions qu'aucun mode n'approuve automatiquement](/docs/fr/permission-modes#actions-no-mode-auto-approves). Cette combinaison permet effectivement au modèle d'échapper à l'isolation du sandbox silencieusement.
 </Warning>
 
 <h2 id="see-also">
@@ -3833,5 +3800,6 @@ Ce modèle vous permet de :
 
 * [Vue d'ensemble du SDK](/docs/fr/agent-sdk/overview) - Concepts généraux du SDK
 * [Référence du SDK TypeScript](/docs/fr/agent-sdk/typescript) - Documentation du SDK TypeScript
+* [Outils personnalisés](/docs/fr/agent-sdk/custom-tools) - Définir des outils MCP en processus pour que Claude appelle
 * [Référence CLI](/docs/fr/cli-reference) - Interface de ligne de commande
 * [Flux de travail courants](/docs/fr/common-workflows) - Guides étape par étape

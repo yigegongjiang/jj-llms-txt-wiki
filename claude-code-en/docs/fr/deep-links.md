@@ -19,11 +19,11 @@ Parce qu'un lien profond est une URL, vous pouvez le placer n'importe où où un
 
 Cette page explique comment [créer un lien](#build-a-link), [l'intégrer dans un runbook ou le déclencher à partir du shell](#examples), et [gérer ou désactiver l'enregistrement du gestionnaire](#registration-and-supported-platforms) sur chaque plateforme.
 
-<h2 id="how-it-works">
-  Fonctionnement
+<h2 id="how-deep-links-work">
+  Fonctionnement des liens profonds
 </h2>
 
-Le préfixe `claude-cli://` est un schéma d'URL personnalisé que Claude Code enregistre auprès de votre système d'exploitation, similaire à la façon dont les liens `mailto:` ouvrent votre client de messagerie. Le lien peut se trouver sur une page web, dans un wiki, dans un message Slack ou dans n'importe quelle application qui affiche des liens. Lorsque vous cliquez dessus :
+Le préfixe `claude-cli://` est un schéma d'URL personnalisé que Claude Code enregistre auprès de votre système d'exploitation, similaire à la façon dont les liens `mailto:` ouvrent votre client de messagerie. Lorsque vous cliquez sur un lien profond :
 
 1. Le navigateur ou l'application transmet l'URL à votre système d'exploitation.
 2. Le système d'exploitation reconnaît le préfixe `claude-cli://` et démarre Claude Code sur votre machine.
@@ -32,9 +32,7 @@ Le préfixe `claude-cli://` est un schéma d'URL personnalisé que Claude Code e
 
 Le lien lui-même peut être hébergé n'importe où, mais la session s'ouvre toujours localement sur l'ordinateur où vous avez cliqué. Consultez [Enregistrement et plateformes prises en charge](#registration-and-supported-platforms) pour savoir quel émulateur de terminal s'ouvre sur chaque système d'exploitation.
 
-<Note>
-  La plateforme qui affiche le lien doit autoriser les schémas d'URL personnalisés. Le Markdown rendu par GitHub autorise `http` et `https` mais supprime les schémas comme `claude-cli://` dans les README, les problèmes, les demandes de tirage et les wikis. Seul le texte du lien s'affiche, sans lien derrière et l'URL masquée. Consultez [Dépannage](#the-link-renders-as-plain-text-instead-of-being-clickable) pour une solution de contournement.
-</Note>
+La plateforme qui affiche le lien doit autoriser les schémas d'URL personnalisés. Pour savoir ce que GitHub en fait et la solution de contournement, consultez [Le lien s'affiche sous forme de texte brut au lieu d'être cliquable](#the-link-renders-as-plain-text-instead-of-being-clickable).
 
 <h3 id="what-a-launched-session-shows">
   Ce qu'une session lancée affiche
@@ -54,12 +52,14 @@ Chaque lien profond commence par `claude-cli://open`, qui est le seul chemin que
 claude-cli://open
 ```
 
+Pour essayer un lien sans le mettre sur une page, collez-le dans la barre d'adresse de votre navigateur ou [ouvrez-le depuis le shell](#open-a-link-from-the-shell).
+
 Ajoutez des paramètres pour contrôler où la session démarre et ce que contient la zone d'invite :
 
 | Paramètre | Description                                                                                                                                                                                                                                                                 |
 | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `q`       | Texte à pré-remplir dans la zone d'invite. [Encodez en URL](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent) la valeur. Utilisez `%0A` pour les sauts de ligne dans les invites multi-lignes. Maximum 5 000 caractères. |
-| `cwd`     | Chemin absolu à utiliser comme répertoire de travail. Les chemins réseau et UNC sont rejetés, tout comme les chemins qui contiennent des caractères de contrôle invisibles ou bidirectionnels.                                                                              |
+| `cwd`     | Chemin absolu à utiliser comme répertoire de travail. Les chemins réseau et UNC sont rejetés, tout comme les chemins qui contiennent des segments `..` ou des caractères de contrôle invisibles ou bidirectionnels.                                                         |
 | `repo`    | Un slug GitHub `owner/name`. Claude Code le résout en un clone local qu'il a déjà vu et démarre là. Si vous n'avez pas de clone correspondant, la session s'ouvre dans votre répertoire personnel à la place.                                                               |
 
 `cwd` et `repo` sont [deux façons de définir le répertoire de travail](#choose-between-cwd-and-repo). Si vous passez les deux, `cwd` a la priorité et `repo` est ignoré, même si le chemin `cwd` n'existe pas.
@@ -77,7 +77,7 @@ Investigate the failed deploy of payments-api.
 Check recent commits to main and the last successful build.
 ```
 
-Vous pouvez modifier l'invite avant d'appuyer sur Entrée pour l'envoyer. Si vous n'avez pas de clone local du dépôt, la session s'ouvre dans votre répertoire personnel à la place. Consultez [Choisir entre `cwd` et `repo`](#choose-between-cwd-and-repo) pour savoir comment le chemin local est sélectionné lorsque vous avez plusieurs clones ou worktrees.
+Vous pouvez modifier l'invite avant d'appuyer sur Entrée pour l'envoyer. Consultez [Choisir entre `cwd` et `repo`](#choose-between-cwd-and-repo) pour savoir comment le chemin local est sélectionné lorsque vous avez plusieurs clones ou worktrees.
 
 <h3 id="choose-between-cwd-and-repo">
   Choisir entre `cwd` et `repo`
@@ -87,9 +87,7 @@ Utilisez `cwd` lorsque tous ceux qui cliquent sur le lien ont le projet au même
 
 Utilisez `repo` lorsque le lien est partagé et que chaque personne clone à un emplacement différent. Claude Code résout le slug en chemin local comme suit :
 
-* Chaque fois que vous exécutez `claude` dans un dépôt Git, le chemin du système de fichiers de ce répertoire est enregistré par rapport au slug GitHub `owner/name` du dépôt.
-* Lorsqu'un lien profond arrive, `repo` ouvre le chemin correspondant que vous avez utilisé le plus récemment. Les clones multiples et les worktrees sont suivis séparément, donc il choisit celui dans lequel vous avez travaillé en dernier.
-* La recherche ne trouve que les chemins où vous avez déjà exécuté Claude Code au moins une fois.
+* `repo` ouvre le clone ou worktree du dépôt lié où vous avez exécuté `claude` le plus récemment. Chaque fois que vous exécutez `claude` dans un dépôt Git, Claude Code enregistre le chemin de ce répertoire par rapport au slug GitHub `owner/name` du dépôt. Claude Code suit les clones et les worktrees séparément.
 * Le lien ne change pas la branche qui est extraite. La session s'ouvre dans l'état actuel de ce répertoire.
 
 L'en-tête de bienvenue affiche le chemin qu'il a choisi afin que vous puissiez confirmer que le bon clone s'est ouvert.
@@ -124,7 +122,7 @@ Pour utiliser ceci dans votre propre runbook, remplacez `acme/web-gateway` par l
   Ouvrir un lien à partir du shell
 </h3>
 
-Vous pouvez également ouvrir un lien profond à partir d'un script shell, d'un alias ou d'une automatisation plutôt que de cliquer dessus. Appelez la commande d'ouverture d'URL de votre système d'exploitation avec le lien comme argument.
+Vous pouvez également ouvrir un lien profond à partir d'un script shell, d'un alias ou d'une automatisation plutôt que de cliquer dessus. Appelez la commande d'ouverture d'URL de votre système d'exploitation avec le lien comme argument. Ces commandes s'appuient sur le gestionnaire que Claude Code [enregistre lorsque vous envoyez votre première invite d'une session interactive](#registration-and-supported-platforms) sur la machine.
 
 <Tabs>
   <Tab title="macOS">
@@ -133,6 +131,8 @@ Vous pouvez également ouvrir un lien profond à partir d'un script shell, d'un 
     ```bash theme={null}
     open "claude-cli://open?repo=acme/payments&q=review%20open%20PRs"
     ```
+
+    En cas de succès, une nouvelle fenêtre de terminal s'ouvre avec Claude Code en cours d'exécution et l'invite pré-remplie.
   </Tab>
 
   <Tab title="Linux">
@@ -141,6 +141,8 @@ Vous pouvez également ouvrir un lien profond à partir d'un script shell, d'un 
     ```bash theme={null}
     xdg-open "claude-cli://open?repo=acme/payments&q=review%20open%20PRs"
     ```
+
+    En cas de succès, une nouvelle fenêtre de terminal s'ouvre avec Claude Code en cours d'exécution et l'invite pré-remplie. Si le shell signale que `xdg-open` n'est pas trouvé, consultez [Dépannage](#xdg-open-is-not-found-on-linux).
   </Tab>
 
   <Tab title="Windows">
@@ -155,6 +157,8 @@ Vous pouvez également ouvrir un lien profond à partir d'un script shell, d'un 
     ```cmd theme={null}
     start "" "claude-cli://open?repo=acme/payments&q=review%20open%20PRs"
     ```
+
+    En cas de succès, une nouvelle fenêtre de terminal s'ouvre avec Claude Code en cours d'exécution et l'invite pré-remplie.
   </Tab>
 </Tabs>
 
@@ -162,7 +166,7 @@ Vous pouvez également ouvrir un lien profond à partir d'un script shell, d'un 
   Enregistrement et plateformes prises en charge
 </h2>
 
-Claude Code enregistre le gestionnaire `claude-cli://` auprès de votre système d'exploitation la première fois que vous démarrez une session interactive sur macOS, Linux et Windows. Vous n'exécutez pas de commande d'installation séparée. L'enregistrement écrit uniquement dans des emplacements au niveau de l'utilisateur :
+Claude Code enregistre le gestionnaire `claude-cli://` auprès de votre système d'exploitation sur macOS, Linux et Windows lorsque vous envoyez votre premier message d'une session interactive. Démarrer `claude` et quitter sans envoyer de message n'enregistre pas le gestionnaire. Vous n'exécutez pas de commande d'installation séparée. L'enregistrement écrit uniquement dans des emplacements au niveau de l'utilisateur :
 
 | Plateforme | Emplacement du gestionnaire                                                                                    |
 | ---------- | -------------------------------------------------------------------------------------------------------------- |
@@ -172,7 +176,7 @@ Claude Code enregistre le gestionnaire `claude-cli://` auprès de votre système
 
 Le gestionnaire lance Claude Code dans un émulateur de terminal détecté. Sur macOS, Claude Code se souvient du terminal de votre session interactive la plus récente et le réutilise, en prenant en charge iTerm2, Ghostty, kitty, Alacritty, WezTerm et Terminal.app. Sur Linux, il honore la variable d'environnement `$TERMINAL`, puis `x-terminal-emulator`, puis une liste d'émulateurs courants. Sur Windows, il préfère Windows Terminal, puis PowerShell, puis `cmd.exe`.
 
-Pour empêcher complètement l'enregistrement, définissez [`disableDeepLinkRegistration`](/docs/fr/settings) sur `"disable"` dans `settings.json`. Pour appliquer ceci dans toute une organisation afin que les utilisateurs ne puissent pas le réactiver, définissez-le dans [les paramètres gérés](/docs/fr/server-managed-settings) à la place.
+Pour empêcher complètement l'enregistrement, définissez [`disableDeepLinkRegistration`](/docs/fr/settings-reference#disabledeeplinkregistration) sur `"disable"` dans `settings.json`. Pour appliquer ceci dans toute une organisation afin que les utilisateurs ne puissent pas le réactiver, définissez-le dans [les paramètres gérés](/docs/fr/server-managed-settings) à la place.
 
 <h2 id="open-a-vs-code-tab-instead-of-a-terminal">
   Ouvrir un onglet VS Code au lieu d'un terminal
@@ -188,7 +192,13 @@ L'extension VS Code enregistre son propre gestionnaire à `vscode://anthropic.cl
   Cliquer sur le lien ne fait rien
 </h3>
 
-Le gestionnaire n'est probablement pas encore enregistré. Démarrez une session `claude` interactive une fois sur cette machine, quittez, et réessayez le lien. Si vous êtes sur Linux sans environnement de bureau, `xdg-open` n'a peut-être rien à dispatcher.
+Le gestionnaire n'est probablement pas encore enregistré. L'enregistrement se produit lorsque vous envoyez votre première invite d'une session interactive, non pas au démarrage de la session. Démarrez une session `claude` interactive sur cette machine, envoyez une invite quelconque, quittez, et réessayez le lien. Si vous êtes sur Linux sans environnement de bureau, `xdg-open` n'a peut-être rien à dispatcher.
+
+<h3 id="xdg-open-is-not-found-on-linux">
+  xdg-open n'est pas trouvé sur Linux
+</h3>
+
+La commande `xdg-open` fait partie du paquet `xdg-utils`, que les images serveur minimales, les conteneurs et les distributions WSL omettent souvent. Installez `xdg-utils` avec le gestionnaire de paquets de votre distribution, par exemple `sudo apt install xdg-utils`, puis exécutez la commande à nouveau. Si la commande s'exécute ensuite mais que rien ne s'ouvre, `xdg-open` n'a peut-être pas d'environnement de bureau pour dispatcher ; voir [Cliquer sur le lien ne fait rien](#clicking-the-link-does-nothing).
 
 <h3 id="the-link-renders-as-plain-text-instead-of-being-clickable">
   Le lien s'affiche en tant que texte brut au lieu d'être cliquable
@@ -200,7 +210,7 @@ Certains moteurs de rendu Markdown n'autorisent que les liens `http` et `https` 
   La session s'ouvre dans mon répertoire personnel au lieu du dépôt
 </h3>
 
-Le paramètre `repo` ne résout que les clones que Claude Code a déjà vus. Exécutez `claude` à l'intérieur du clone une fois pour que son chemin soit enregistré, ou basculez le lien pour utiliser `cwd` avec un chemin absolu.
+Le paramètre `repo` ne résout que les clones que Claude Code a déjà vus. Exécutez `claude` à l'intérieur du clone une fois pour que Claude Code enregistre son chemin, ou basculez le lien pour utiliser `cwd` avec un chemin absolu.
 
 <h3 id="the-link-opens-the-wrong-terminal">
   Le lien ouvre le mauvais terminal

@@ -10,8 +10,6 @@ Agent SDK는 Claude Code와 동일한 기반 위에 구축되어 있으므로, S
 
 `settingSources`를 생략하면 `query()`는 Claude Code CLI와 동일한 파일시스템 설정을 읽습니다: 사용자, 프로젝트 및 로컬 설정, CLAUDE.md 파일, `.claude/` 스킬, 에이전트 및 명령입니다. 이 없이 실행하려면 `settingSources: []`를 전달하면 에이전트가 프로그래밍 방식으로 구성한 것으로만 제한됩니다. 관리형 정책 설정 및 전역 `~/.claude.json` 구성은 이 옵션과 관계없이 읽혀집니다. [settingSources가 제어하지 않는 것](#what-settingsources-does-not-control)을 참조하세요.
 
-각 기능이 수행하는 작업과 사용 시기에 대한 개념적 개요는 [Claude Code 확장](/docs/ko/features-overview)을 참조하세요.
-
 <h2 id="control-filesystem-settings-with-settingsources">
   settingSources로 파일시스템 설정 제어하기
 </h2>
@@ -23,23 +21,29 @@ Agent SDK는 Claude Code와 동일한 기반 위에 구축되어 있으므로, S
 <CodeGroup>
   ```python Python theme={null}
   from claude_agent_sdk import query, ClaudeAgentOptions, AssistantMessage, ResultMessage
+  import asyncio
 
-  async for message in query(
-      prompt="Help me refactor the auth module",
-      options=ClaudeAgentOptions(
-          # "user" loads from ~/.claude/, "project" loads from ./.claude/ in cwd.
-          # Together they give the agent access to CLAUDE.md, skills, hooks, and
-          # permissions from both locations.
-          setting_sources=["user", "project"],
-          allowed_tools=["Read", "Edit", "Bash"],
-      ),
-  ):
-      if isinstance(message, AssistantMessage):
-          for block in message.content:
-              if hasattr(block, "text"):
-                  print(block.text)
-      if isinstance(message, ResultMessage) and message.subtype == "success":
-          print(f"\nResult: {message.result}")
+
+  async def main():
+      async for message in query(
+          prompt="Help me refactor the auth module",
+          options=ClaudeAgentOptions(
+              # "user" loads from ~/.claude/, "project" loads from ./.claude/ in cwd.
+              # Together they give the agent access to CLAUDE.md, skills, hooks, and
+              # permissions from both locations.
+              setting_sources=["user", "project"],
+              allowed_tools=["Read", "Edit", "Bash"],
+          ),
+      ):
+          if isinstance(message, AssistantMessage):
+              for block in message.content:
+                  if hasattr(block, "text"):
+                      print(block.text)
+          if isinstance(message, ResultMessage) and message.subtype == "success":
+              print(f"\nResult: {message.result}")
+
+
+  asyncio.run(main())
   ```
 
   ```typescript TypeScript theme={null}
@@ -67,17 +71,19 @@ Agent SDK는 Claude Code와 동일한 기반 위에 구축되어 있으므로, S
   ```
 </CodeGroup>
 
+이 코드가 실행되면 어시스턴트의 응답이 stdout으로 출력되고, 실행이 완료되면 최종 결과 줄이 출력됩니다.
+
 각 소스는 특정 위치에서 설정을 로드합니다. 여기서 `<cwd>`는 `cwd` 옵션을 통해 전달하는 작업 디렉토리이거나, 설정되지 않은 경우 프로세스의 현재 디렉토리입니다. 전체 타입 정의는 [`SettingSource`](/docs/ko/agent-sdk/typescript#settingsource)(TypeScript) 또는 [`SettingSource`](/docs/ko/agent-sdk/python#settingsource)(Python)을 참조하세요.
 
-| 소스          | 로드되는 항목                                                                     | 위치                                                                                                                           |
-| :---------- | :-------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------- |
-| `"project"` | 프로젝트 CLAUDE.md, `.claude/rules/*.md`, 프로젝트 스킬, 프로젝트 훅, 프로젝트 `settings.json` | `<cwd>/.claude/` (`settings.json` 및 훅의 경우); `<cwd>` 및 모든 상위 디렉토리(CLAUDE.md 및 규칙의 경우); `<cwd>` 및 저장소 루트까지의 모든 상위 디렉토리(스킬의 경우) |
-| `"user"`    | 사용자 CLAUDE.md, `~/.claude/rules/*.md`, 사용자 스킬, 사용자 설정                       | `~/.claude/`                                                                                                                 |
-| `"local"`   | CLAUDE.local.md, `.claude/settings.local.json`                              | `<cwd>/.claude/` (`settings.local.json`의 경우); `<cwd>` 및 모든 상위 디렉토리(CLAUDE.local.md의 경우)                                      |
+| 소스          | 로드되는 항목                                                                               | 위치                                                                                                                                                                                                                                                                                                                                                                                       |
+| :---------- | :------------------------------------------------------------------------------------ | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `"project"` | 프로젝트 `settings.json` 및 훅; 프로젝트 CLAUDE.md 및 `.claude/rules/*.md`; 프로젝트 스킬, 명령 및 서브에이전트 | `<cwd>/.claude/` (`settings.json` 및 훅의 경우); `<cwd>` 및 모든 상위 디렉토리(CLAUDE.md 및 규칙의 경우); `<cwd>` 및 저장소 루트까지의 모든 상위 디렉토리(스킬, 명령 및 서브에이전트의 경우), 그리고 `additionalDirectories` 또는 `add_dirs` 옵션을 통해 전달하는 각 디렉토리의 `.claude/skills/`, `.claude/commands/` 및 `.claude/agents/` 폴더(SDK가 Claude Code에 [`--add-dir`](/docs/ko/permissions#additional-directories-grant-file-access-not-configuration)로 전달함) |
+| `"user"`    | 사용자 `settings.json`; 사용자 CLAUDE.md 및 `~/.claude/rules/*.md`; 사용자 스킬, 명령 및 서브에이전트      | `~/.claude/` (`settings.json`, CLAUDE.md 및 규칙의 경우); `~/.claude/skills/`, `~/.claude/commands/` 및 `~/.claude/agents/` (스킬, 명령 및 서브에이전트의 경우)                                                                                                                                                                                                                                               |
+| `"local"`   | CLAUDE.local.md, `.claude/settings.local.json`                                        | `<cwd>/.claude/` (`settings.local.json`의 경우); `<cwd>` 및 모든 상위 디렉토리(CLAUDE.local.md의 경우)                                                                                                                                                                                                                                                                                                  |
 
 `settingSources`를 생략하는 것은 `["user", "project", "local"]`과 동일합니다.
 
-`cwd` 옵션은 SDK가 프로젝트 수준 입력을 찾는 위치를 결정합니다. CLAUDE.md와 규칙은 `<cwd>`와 모든 상위 디렉토리에서 로드됩니다. 스킬은 `<cwd>`와 저장소 루트까지의 모든 상위 디렉토리에서 로드됩니다. 프로젝트 `settings.json`과 훅은 `<cwd>/.claude/`에서만 로드되며 상위 디렉토리 폴백이 없습니다.
+`cwd` 옵션은 SDK가 프로젝트 수준 입력을 찾는 위치를 결정합니다. 프로젝트 `settings.json` 및 훅은 `<cwd>/.claude/`에서만 로드되며 상위 디렉토리 폴백이 없습니다.
 
 <h3 id="what-settingsources-does-not-control">
   settingSources가 제어하지 않는 것
@@ -85,12 +91,13 @@ Agent SDK는 Claude Code와 동일한 기반 위에 구축되어 있으므로, S
 
 `settingSources`는 사용자, 프로젝트 및 로컬 설정을 다룹니다. 몇 가지 입력은 해당 값과 관계없이 읽혀집니다:
 
-| 입력                                                          | 동작                                                                                                                                                                                                                | 비활성화하려면                                                                                                                                                    |
-| :---------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 관리형 정책 설정                                                   | 엔드포인트 관리형 정책(MDM plist, 레지스트리 정책 또는 관리형 설정 파일)은 호스트에서 로드되며, [서버 관리형 설정](/docs/ko/server-managed-settings)은 조직 OAuth 로그인 또는 직접 구성된 API 키로 세션이 인증될 때 [적격 구성](/docs/ko/server-managed-settings#platform-availability)에서 가져와집니다 | 엔드포인트 정책: 호스트에서 관리형 설정 파일, plist 또는 레지스트리 정책을 제거합니다. 서버 관리형 설정: 조직 관리자가 제어하며, SDK에서 비활성화할 수 없습니다                                                           |
-| `~/.claude.json` 전역 구성                                      | 항상 읽음                                                                                                                                                                                                             | `env`의 `CLAUDE_CONFIG_DIR`로 재배치                                                                                                                            |
-| `~/.claude/projects/<project>/memory/`의 자동 메모리              | 세션 시작 시 시스템 프롬프트에 로드됩니다. 에이전트는 전용 메모리 도구가 아닌 표준 `Write` 및 `Edit` 도구를 사용하여 새 메모리를 작성하므로, 에이전트가 메모리를 저장하려면 이러한 도구를 활성화해야 합니다                                                                                        | 설정에서 `autoMemoryEnabled: false`를 설정하거나, `env`에서 `CLAUDE_CODE_DISABLE_AUTO_MEMORY=1`을 설정합니다                                                                 |
-| [claude.ai MCP 커넥터](/docs/ko/mcp#use-mcp-servers-from-claude-ai) | 활성 인증 방법이 claude.ai 구독일 때 로드됨. `mcpServers: {}`를 전달해도 이들을 억제하지 않음                                                                                                                                                 | `strictMcpConfig: true` 설정, [`disableClaudeAiConnectors: true`](/docs/ko/mcp#disable-claude-ai-connectors) 설정 또는 `env`에서 `ENABLE_CLAUDEAI_MCP_SERVERS=false` 설정 |
+| 입력                                                                                                              | 동작                                                                                                                                                                                                                                                                                                                                  | 비활성화하려면                                                                                                                                                            |
+| :-------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 관리형 정책 설정                                                                                                       | 엔드포인트 관리형 정책(예: MDM plist, 레지스트리 정책 또는 관리형 설정 파일)은 호스트에서 로드됩니다. [서버 관리형 설정](/docs/ko/server-managed-settings)은 조직 OAuth 로그인, 직접 구성된 API 키 또는 `user_oauth` [Anthropic 프로필](/docs/ko/authentication#anthropic-profiles-and-federation-credentials)과 같은 적격 자격 증명으로 세션이 인증될 때 [적격 구성](/docs/ko/server-managed-settings#platform-availability)에서 가져와집니다 | 엔드포인트 정책: 호스트에서 관리형 설정 파일, plist 또는 레지스트리 정책을 제거합니다. 서버 관리형 설정: Claude 조직의 [소유자](/docs/ko/server-managed-settings#access-control)가 제어하며, SDK에서 비활성화할 수 없습니다             |
+| `~/.claude.json` 전역 구성                                                                                          | 항상 읽음                                                                                                                                                                                                                                                                                                                               | `env`의 `CLAUDE_CONFIG_DIR`로 재배치                                                                                                                                    |
+| `~/.claude/projects/<project>/memory/`의 자동 메모리                                                                  | 세션 시작 시 시스템 프롬프트에 로드됩니다. 에이전트는 전용 메모리 도구가 아닌 표준 `Write` 및 `Edit` 도구를 사용하여 새 메모리를 작성하므로, 에이전트가 메모리를 저장하려면 이러한 도구를 활성화해야 합니다                                                                                                                                                                                                          | 설정에서 `autoMemoryEnabled: false`를 설정하거나, `env`에서 `CLAUDE_CODE_DISABLE_AUTO_MEMORY=1`을 설정합니다                                                                         |
+| [claude.ai MCP 커넥터](/docs/ko/mcp#use-mcp-servers-from-claude-ai)                                                     | 세션이 claude.ai 로그인으로 인증될 때 로드됩니다. `CLAUDE_CODE_OAUTH_TOKEN`이 [`claude setup-token`](/docs/ko/authentication#generate-a-long-lived-token)의 토큰을 보유할 때는 로드되지 않으며, 이는 모델 요청만 수행할 수 있습니다. `mcpServers: {}`를 전달해도 커넥터를 억제하지 않습니다                                                                                                                | `strictMcpConfig: true`, [`disableClaudeAiConnectors: true`](/docs/ko/mcp#disable-claude-ai-connectors)를 설정에서 설정하거나, `env`에서 `ENABLE_CLAUDEAI_MCP_SERVERS=false`를 설정합니다 |
+| [`sandbox.credentials`](/docs/ko/sandboxing#protect-credentials) `deny` 항목 및 `~/.claude/settings.json`의 파일 `mask` 항목 | [명령 샌드박스](/docs/ko/sandboxing)가 실행될 때, Claude Code는 `settingSources`가 사용자 설정을 제외하더라도 `deny` 항목을 적용하고 `credentials.files` `mask` 항목을 제한으로 유지합니다. Claude Code는 이러한 항목을 사용하여 샌드박스된 명령이 액세스할 수 있는 항목만 좁힙니다                                                                                                                                   | `~/.claude/settings.json`에서 항목을 제거합니다                                                                                                                              |
 
 <Warning>
   다중 테넌트 격리를 위해 기본 `query()` 옵션에 의존하지 마세요. 위의 입력이 `settingSources`와 관계없이 읽혀지므로, SDK 프로세스는 호스트 수준 구성 및 디렉토리별 메모리를 선택할 수 있습니다. 다중 테넌트 배포의 경우 각 테넌트를 자체 파일시스템에서 실행하고 `settingSources: []` 및 `env`에서 `CLAUDE_CODE_DISABLE_AUTO_MEMORY=1`을 설정합니다. [서버 관리형 설정](/docs/ko/server-managed-settings)은 프로세스가 조직 자격 증명으로 인증될 때 가져와집니다. 파일시스템 격리는 이들을 제거하지 않습니다. [안전한 배포](/docs/ko/agent-sdk/secure-deployment)를 참조하세요.
@@ -100,7 +107,7 @@ Agent SDK는 Claude Code와 동일한 기반 위에 구축되어 있으므로, S
   프로젝트 지침(CLAUDE.md 및 규칙)
 </h2>
 
-`CLAUDE.md` 파일 및 `.claude/rules/*.md` 파일은 에이전트에 프로젝트에 대한 지속적인 컨텍스트를 제공합니다: 코딩 규칙, 빌드 명령, 아키텍처 결정 및 지침입니다. `settingSources`에 `"project"`가 포함되면(위의 예제처럼), SDK는 세션 시작 시 이 파일들을 컨텍스트에 로드합니다. 그러면 에이전트는 모든 프롬프트에서 반복하지 않고도 프로젝트 규칙을 따릅니다.
+`CLAUDE.md` 파일 및 `.claude/rules/*.md` 파일은 에이전트에 프로젝트에 대한 지속적인 컨텍스트를 제공합니다: 코딩 규칙, 빌드 명령, 아키텍처 결정 및 지침입니다. `settingSources`에 `"project"`가 포함되면([`settingSources` 예제](#control-filesystem-settings-with-settingsources)처럼), SDK는 세션 시작 시 이 파일들을 컨텍스트에 로드합니다. 그러면 에이전트는 모든 프롬프트에서 반복하지 않고도 프로젝트 규칙을 따릅니다.
 
 <h3 id="claude-md-load-locations">
   CLAUDE.md 로드 위치
@@ -135,19 +142,25 @@ CLAUDE.md 콘텐츠를 구조화하고 구성하는 방법은 [Claude의 메모�
 <CodeGroup>
   ```python Python theme={null}
   from claude_agent_sdk import query, ClaudeAgentOptions, ResultMessage
+  import asyncio
+
 
   # Skills in .claude/skills/ are discovered automatically
   # when settingSources includes "project"
-  async for message in query(
-      prompt="Review this PR using our code review checklist",
-      options=ClaudeAgentOptions(
-          setting_sources=["user", "project"],
-          skills="all",
-          allowed_tools=["Read", "Grep", "Glob"],
-      ),
-  ):
-      if isinstance(message, ResultMessage) and message.subtype == "success":
-          print(message.result)
+  async def main():
+      async for message in query(
+          prompt="Review this PR using our code review checklist",
+          options=ClaudeAgentOptions(
+              setting_sources=["user", "project"],
+              skills="all",
+              allowed_tools=["Read", "Grep", "Glob"],
+          ),
+      ):
+          if isinstance(message, ResultMessage) and message.subtype == "success":
+              print(message.result)
+
+
+  asyncio.run(main())
   ```
 
   ```typescript TypeScript theme={null}
@@ -174,8 +187,6 @@ CLAUDE.md 콘텐츠를 구조화하고 구성하는 방법은 [Claude의 메모�
   스킬은 파일시스템 아티팩트(`.claude/skills/<name>/SKILL.md`)로 생성되어야 합니다. SDK에는 스킬을 등록하기 위한 프로그래밍 방식 API가 없습니다. 전체 세부 정보는 [SDK의 에이전트 스킬](/docs/ko/agent-sdk/skills)을 참조하세요.
 </Note>
 
-스킬 생성 및 사용에 대한 자세한 내용은 [SDK의 에이전트 스킬](/docs/ko/agent-sdk/skills)을 참조하세요.
-
 <h2 id="hooks">
   훅
 </h2>
@@ -185,19 +196,18 @@ SDK는 훅을 정의하는 두 가지 방법을 지원하며, 이들은 나란�
 * **파일시스템 훅:** `settings.json`에 정의된 셸 명령, `settingSources`에 관련 소스가 포함될 때 로드됩니다. 이는 [대화형 Claude Code 세션](/docs/ko/hooks-guide)에 대해 구성하는 것과 동일한 훅입니다.
 * **프로그래밍 방식 훅:** `query()`에 직접 전달되는 콜백 함수입니다. 이들은 애플리케이션 프로세스에서 실행되며 구조화된 결정을 반환할 수 있습니다. [훅으로 실행 제어](/docs/ko/agent-sdk/hooks)를 참조하세요.
 
-두 유형 모두 동일한 훅 수명 주기 동안 실행됩니다. 프로젝트의 `.claude/settings.json`에 이미 훅이 있고 `settingSources: ["project"]`를 설정하면 추가 구성 없이 SDK에서 해당 훅이 자동으로 실행됩니다.
-
-훅 콜백은 도구 입력을 받고 결정 딕셔너리를 반환합니다. `{}`를 반환하면 도구가 진행되도록 허용합니다. 실행을 차단하려면 `permissionDecision: "deny"`와 `permissionDecisionReason`을 포함하는 `hookSpecificOutput` 객체를 반환합니다. 이유는 도구 결과로 Claude에 전송됩니다. 최상위 `decision` 및 `reason` 필드는 `PreToolUse`에 대해 더 이상 사용되지 않습니다. 전체 콜백 서명 및 반환 유형은 [훅 가이드](/docs/ko/agent-sdk/hooks)를 참조하세요.
+훅 콜백은 도구 입력을 받고 결정 딕셔너리를 반환합니다. `{}`를 반환하면 도구가 진행되도록 허용합니다. 실행을 차단하려면 `permissionDecision: "deny"`와 `permissionDecisionReason`을 포함하는 `hookSpecificOutput` 객체를 반환합니다. 이유는 도구 결과로 Claude에 전송됩니다. 전체 콜백 서명 및 반환 유형은 [훅 가이드](/docs/ko/agent-sdk/hooks)를 참조하세요.
 
 <CodeGroup>
   ```python Python theme={null}
   from claude_agent_sdk import query, ClaudeAgentOptions, HookMatcher, ResultMessage
+  import asyncio
 
 
   # PreToolUse hook callback. Positional args:
   #   input_data: HookInput dict with tool_name, tool_input, hook_event_name
   #   tool_use_id: str | None, the ID of the tool call being intercepted
-  #   context: HookContext, carries session metadata
+  #   context: HookContext, reserved for future abort-signal support
   async def audit_bash(input_data, tool_use_id, context):
       command = input_data.get("tool_input", {}).get("command", "")
       if "rm -rf" in command:
@@ -213,19 +223,23 @@ SDK는 훅을 정의하는 두 가지 방법을 지원하며, 이들은 나란�
 
   # Filesystem hooks from .claude/settings.json run automatically
   # when settingSources loads them. You can also add programmatic hooks:
-  async for message in query(
-      prompt="Refactor the auth module",
-      options=ClaudeAgentOptions(
-          setting_sources=["project"],  # Loads hooks from .claude/settings.json
-          hooks={
-              "PreToolUse": [
-                  HookMatcher(matcher="Bash", hooks=[audit_bash]),
-              ]
-          },
-      ),
-  ):
-      if isinstance(message, ResultMessage) and message.subtype == "success":
-          print(message.result)
+  async def main():
+      async for message in query(
+          prompt="Refactor the auth module",
+          options=ClaudeAgentOptions(
+              setting_sources=["project"],  # Loads hooks from .claude/settings.json
+              hooks={
+                  "PreToolUse": [
+                      HookMatcher(matcher="Bash", hooks=[audit_bash]),
+                  ]
+              },
+          ),
+      ):
+          if isinstance(message, ResultMessage) and message.subtype == "success":
+              print(message.result)
+
+
+  asyncio.run(main())
   ```
 
   ```typescript TypeScript theme={null}
@@ -274,7 +288,7 @@ SDK는 훅을 정의하는 두 가지 방법을 지원하며, 이들은 나란�
 | 훅 유형                         | 최적 사용                                                                                                                                                                                            |
 | :--------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **파일시스템** (`settings.json`)  | CLI와 SDK 세션 간에 훅 공유. `"command"`(셸 스크립트), `"http"`(엔드포인트에 POST), `"mcp_tool"`(연결된 MCP 서버의 도구 호출), `"prompt"`(LLM이 프롬프트 평가), `"agent"`(검증자 에이전트 생성)를 지원합니다. 이들은 주 에이전트 및 생성하는 모든 하위 에이전트에서 실행됩니다. |
-| **프로그래밍 방식** (`query()`의 콜백) | 애플리케이션 특정 로직, 구조화된 결정, 프로세스 내 통합. 이들은 하위 에이전트 내에서도 실행됩니다. 콜백은 `agent_id` 및 `agent_type`을 수신하여 구분합니다.                                                                                             |
+| **프로그래밍 방식** (`query()`의 콜백) | 애플리케이션 특정 로직, 구조화된 결정, 프로세스 내 통합. 이들은 하위 에이전트 내에서도 실행됩니다. 훅 입력은 `agent_id` 및 `agent_type` 필드를 포함하여 어느 에이전트가 훅을 실행했는지 식별합니다.                                                                      |
 
 <Note>
   TypeScript SDK는 Python을 넘어 `SessionStart`, `SessionEnd`, `TeammateIdle` 및 `TaskCompleted`를 포함한 추가 훅 이벤트를 지원합니다. 전체 이벤트 호환성 표는 [훅 가이드](/docs/ko/agent-sdk/hooks)를 참조하세요.
@@ -297,10 +311,6 @@ Agent SDK는 에이전트의 동작을 확장하는 여러 방법에 접근할 �
 | 공유 작업 목록 및 직접 에이전트 간 메시징으로 여러 Claude Code 인스턴스 조정 | [Agent teams](/docs/ko/agent-teams)                | SDK 옵션을 통해 직접 구성되지 않습니다. 에이전트 팀은 한 세션이 팀 리더로 작동하여 독립적인 팀원 간의 작업을 조정하는 CLI 기능입니다 |
 | 도구 호출에서 결정론적 로직 실행(감사, 차단, 변환)                    | [Hooks](/docs/ko/agent-sdk/hooks)                  | 콜백이 있는 `hooks` 매개변수 또는 `settingSources`를 통해 로드된 셸 스크립트                          |
 | Claude에 외부 서비스에 대한 구조화된 도구 접근 제공                  | [MCP](/docs/ko/agent-sdk/mcp)                      | `mcpServers` 매개변수                                                               |
-
-<Tip>
-  **Subagents 대 agent teams:** Subagents는 임시적이고 격리됩니다: 새로운 대화, 한 가지 작업, 부모에게 반환된 요약. Agent teams는 공유 작업 목록을 공유하고 직접 메시지를 주고받는 여러 독립적인 Claude Code 인스턴스를 조정합니다. Agent teams는 CLI 기능입니다. [What subagents inherit](/docs/ko/agent-sdk/subagents#what-subagents-inherit) 및 [agent teams 비교](/docs/ko/agent-teams#compare-with-subagents)를 참조하세요.
-</Tip>
 
 활성화하는 모든 기능은 에이전트의 컨텍스트 윈도우에 추가됩니다. 기능별 비용 및 이 기능들이 함께 계층화되는 방식은 [Extend Claude Code](/docs/ko/features-overview#understand-context-costs)를 참조하세요.
 

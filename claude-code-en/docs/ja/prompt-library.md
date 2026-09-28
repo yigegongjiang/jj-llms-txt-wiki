@@ -626,13 +626,14 @@ export const PromptLibrary = ({text = {}, labels = {}, tagLabels = {}, phaseLabe
       return base + (href.startsWith('/en/') ? '/' + locale + href.slice(3) : href);
     };
   }, []);
+  const SAFE_HREF = /^(\/(?![\/\\\s])|#|https?:\/\/)/;
   const linkify = s => {
     const out = [];
     let last = 0;
     const re = /\[([^\]]+)\]\(([^)]+)\)/g;
     for (let m; m = re.exec(s); ) {
       if (m.index > last) out.push(s.slice(last, m.index));
-      out.push(<a key={m.index} href={doc(m[2])}>{m[1]}</a>);
+      out.push(SAFE_HREF.test(m[2]) ? <a key={m.index} href={doc(m[2])}>{m[1]}</a> : m[1]);
       last = re.lastIndex;
     }
     if (last < s.length) out.push(s.slice(last));
@@ -776,7 +777,7 @@ export const PromptLibrary = ({text = {}, labels = {}, tagLabels = {}, phaseLabe
             </div>
             <div className="pl-label">{L.whyWorks}</div>
             <div className="pl-teaches">{linkify(p.teaches)}</div>
-            {p.nextHref && p.next && <div className="pl-next">
+            {p.nextHref && p.next && SAFE_HREF.test(p.nextHref) && <div className="pl-next">
                 <span className="pl-next-label">{L.makeItStick}</span>
                 <a href={doc(p.nextHref)}>{codeify(p.next)} →</a>
               </div>}
@@ -1202,7 +1203,7 @@ export const text = {
   },
   "migrate-a-pattern-across": {
     title: "コードベース全体でパターンを移行する",
-    teaches: "古いパターンと新しいパターンを説明してください。Claude に最初にすべての場所を識別するよう依頼すると、呼び出しサイトが応答にリストアップされるため、何も見落とされていないことを確認できます。"
+    teaches: "古いパターンと新しいパターンを説明してください。Claude に最初にすべての場所を識別するよう依頼すると、呼び出しサイトが応答にリストアップされるため、何も見落とされていないことを確認できます。多くのファイルにわたる移行の場合は、[/batch](/docs/ja/commands)を実行してください。Claude は作業を承認用のユニットに分割し、バックグラウンドサブエージェントが変更を加えます。"
   },
   "optimize-against-a-measurable": {
     title: "測定可能なターゲットに対して最適化する",
@@ -1337,37 +1338,37 @@ export const text = {
 
 **ステップではなく結果を説明してください。** 何をしたいかを言い、Claude にファイルを見つけさせてください。以下のプロンプトは、単一のファイルパスを名前付けなくても機能します。
 
-```text theme={null}
+```text wrap theme={null}
 add rate limiting to the public API and make sure existing tests still pass
 ```
 
-**自分の作業をチェックする方法を与えてください。** 同じプロンプトで実行、テスト、比較、または検証を依頼して、Claude が 1 回の試行後に停止する代わりに反復するようにしてください。
+**自分の作業をチェックする方法を与えてください。** 同じプロンプトで実行、テスト、比較、または検証を依頼して、Claude が 1 回の試行後に停止する代わりに反復するようにしてください。完成した変更を実行中のアプリに対してチェックするには、[`/verify`](/docs/ja/skills#run-and-verify-your-app)を実行してください。
 
-```text theme={null}
+```text wrap theme={null}
 write the migration, run it against the dev database, and confirm the schema matches
 ```
 
 **参照を指してください。** 既存のファイル、テスト、またはパターンに名前を付けて、新しいコードが既に持っているものと一致するようにしてください。
 
-```text theme={null}
+```text wrap theme={null}
 add a settings page that follows the same layout as the profile page
 ```
 
 **測定可能なターゲットを述べてください。** 目標がパフォーマンスまたはカバレッジの場合、メトリックとしきい値を指定して、完了が明確になるようにしてください。
 
-```text theme={null}
+```text wrap theme={null}
 get the bundle size under 200KB and show me what you removed
 ```
 
 **アーティファクトを与えてください。** エラー、ログ、スクリーンショット、プラン出力をプロンプトに直接ペーストするか、`@` を入力してファイルを参照してください。Claude はあなたの説明ではなくソースを読みます。
 
-```text theme={null}
+```text wrap theme={null}
 why is the build failing? @build.log
 ```
 
 **答えてほしい方法を言ってください。** 形式、長さ、または対象者に名前を付けて、説明がどのように使用するかに適合するようにしてください。すべての応答のデフォルトとして形式を作成するには、[出力スタイル](/docs/ja/output-styles)を設定してください。
 
-```text theme={null}
+```text wrap theme={null}
 explain how the payment retry logic works as an HTML page with a diagram, then open it in my browser
 ```
 
@@ -1384,7 +1385,7 @@ explain how the payment retry logic works as an HTML page with a diagram, then o
 * [Anthropic チームが Claude Code をどのように使用しているか](https://claude.com/blog/how-anthropic-teams-use-claude-code): エンジニアリング、プロダクト、デザイン、データチームからの実際のワークフロー。[法務](https://claude.com/blog/how-anthropic-uses-claude-legal)、[マーケティング](https://claude.com/blog/how-anthropic-uses-claude-marketing)、[サイバーセキュリティ](https://claude.com/blog/how-anthropic-uses-claude-cybersecurity)の詳細なダイブ
 * [agentic coding スケーリングガイド](https://resources.anthropic.com/hubfs/Scaling%20agentic%20coding%20across%20your%20organization.pdf): エンタープライズ採用ガイド
 
-これらのパターンのビデオウォークスルーについては、Anthropic Academy の無料 [Claude Code in Action](https://anthropic.skilljar.com/claude-code-in-action)コースを参照してください。
+これらのパターンのビデオウォークスルーについては、[Claude Academy](https://academy.claude.com/) の無料 [Claude Code in Action](https://academy.claude.com/courses/claude-code-in-action) コースを参照してください。
 
 <h2 id="related-resources">
   関連リソース

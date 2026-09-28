@@ -21,53 +21,58 @@ Claude Code menggabungkan model yang bernalar tentang kode Anda dengan [alat baw
 Ekstensi terhubung ke bagian berbeda dari loop agentic:
 
 * **[CLAUDE.md](/docs/id/memory)** menambahkan konteks persisten yang Claude lihat setiap sesi
+* **[Output styles](/docs/id/output-styles)** menetapkan peran, nada, dan format respons Claude untuk setiap respons dalam sesi
 * **[Skills](/docs/id/skills)** menambahkan pengetahuan yang dapat digunakan kembali dan alur kerja yang dapat dipanggil
 * **[Code intelligence](/docs/id/tools-reference#lsp-tool-behavior)** menghubungkan Claude ke language server untuk navigasi tingkat simbol dan kesalahan tipe langsung
 * **[MCP](/docs/id/mcp)** menghubungkan Claude ke layanan dan alat eksternal
 * **[Subagents](/docs/id/sub-agents)** menjalankan loop mereka sendiri dalam konteks terisolasi, mengembalikan ringkasan
-* **[Agent teams](/docs/id/agent-teams)** mengoordinasikan beberapa sesi independen dengan tugas bersama dan pesan peer-to-peer
-* **[Hooks](/docs/id/hooks-guide)** berjalan pada acara siklus hidup dan dapat menjalankan skrip, permintaan HTTP, prompt, atau subagent
-* **[Plugins](/docs/id/plugins)** dan **[marketplaces](/docs/id/plugin-marketplaces)** mengemas dan mendistribusikan fitur-fitur ini
+* **[Dynamic workflows](/docs/id/workflows)** menjalankan banyak subagents dari skrip yang Claude tulis, mengembalikan satu hasil
+* **[Cross-session messaging](/docs/id/cross-session-messaging)** memungkinkan Claude melewatkan pesan dari salah satu sesi Anda ke sesi lain
+* **[Hooks](/docs/id/hooks-guide)** menjalankan skrip, permintaan HTTP, panggilan alat MCP, prompt, atau subagent Anda ketika Claude Code mencapai acara siklus hidup
+* **[Plugins](/docs/id/plugins/overview)** dan **[marketplaces](/docs/id/plugins/overview)** mengemas dan mendistribusikan fitur-fitur ini
 
 [Skills](/docs/id/skills) adalah ekstensi paling fleksibel. Skill adalah file markdown yang berisi pengetahuan, alur kerja, atau instruksi. Anda dapat memanggil skills dengan perintah seperti `/deploy`, atau Claude dapat memuatnya secara otomatis ketika relevan. Skills dapat berjalan dalam percakapan Anda saat ini atau dalam konteks terisolasi melalui subagents.
 
 <h2 id="match-features-to-your-goal">
-  Cocokkan fitur dengan tujuan Anda
+  Sesuaikan fitur dengan tujuan Anda
 </h2>
 
 Fitur berkisar dari konteks yang selalu aktif yang Claude lihat setiap sesi, hingga kemampuan on-demand yang dapat Anda atau Claude panggil, hingga otomasi latar belakang yang berjalan pada acara tertentu. Tabel di bawah menunjukkan apa yang tersedia dan kapan masing-masing masuk akal.
 
-| Fitur                                                          | Apa yang dilakukannya                                                | Kapan menggunakannya                                                                   | Contoh                                                                                       |
-| -------------------------------------------------------------- | -------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| **CLAUDE.md**                                                  | Konteks persisten dimuat setiap percakapan                           | Konvensi proyek, aturan "selalu lakukan X"                                             | "Gunakan pnpm, bukan npm. Jalankan tes sebelum commit."                                      |
-| **Skill**                                                      | Instruksi, pengetahuan, dan alur kerja yang dapat digunakan Claude   | Konten yang dapat digunakan kembali, dokumen referensi, tugas yang dapat diulang       | `/deploy` menjalankan daftar periksa deployment Anda; skill dokumen API dengan pola endpoint |
-| **Subagent**                                                   | Konteks eksekusi terisolasi yang mengembalikan hasil ringkasan       | Isolasi konteks, tugas paralel, pekerja khusus                                         | Tugas penelitian yang membaca banyak file tetapi hanya mengembalikan temuan kunci            |
-| **[Agent teams](/docs/id/agent-teams)**                             | Mengoordinasikan beberapa sesi Claude Code independen                | Penelitian paralel, pengembangan fitur baru, debugging dengan hipotesis bersaing       | Spawn reviewer untuk memeriksa keamanan, performa, dan tes secara bersamaan                  |
-| **[Code intelligence](/docs/id/tools-reference#lsp-tool-behavior)** | Navigasi language-server dan diagnostik                              | Bahasa yang diketik, basis kode besar di mana grep lambat atau tidak presisi           | Lompat ke definisi simbol daripada membaca seluruh file                                      |
-| **MCP**                                                        | Terhubung ke layanan eksternal                                       | Data atau tindakan eksternal                                                           | Kueri database Anda, posting ke Slack, kontrol browser                                       |
-| **Hook**                                                       | Skrip, permintaan HTTP, prompt, atau subagent yang dipicu oleh acara | Otomasi yang harus berjalan pada setiap acara yang cocok                               | Jalankan ESLint setelah setiap edit file                                                     |
-| **[Artifact](/docs/id/artifacts)**                                  | Publikasikan output sesi sebagai halaman web pribadi yang interaktif | Output yang ingin Anda lihat atau bagikan secara visual daripada sebagai teks terminal | Garis waktu insiden yang diperbarui saat Claude menyelidiki                                  |
+| Fitur                                                          | Apa yang dilakukannya                                                                    | Kapan menggunakannya                                                                                                                  | Contoh                                                                                                                          |
+| -------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| **CLAUDE.md**                                                  | Konteks persisten dimuat setiap percakapan                                               | Konvensi proyek, aturan "selalu lakukan X"                                                                                            | "Gunakan pnpm, bukan npm. Jalankan tes sebelum melakukan commit."                                                               |
+| **[Output style](/docs/id/output-styles)**                          | Instruksi yang menetapkan peran, nada, dan format respons Claude untuk seluruh sesi      | Suara, panjang, atau format yang Anda inginkan di setiap respons, atau Claude bekerja sebagai sesuatu selain insinyur perangkat lunak | Gaya Concise bawaan untuk respons yang lebih pendek; gaya kustom yang menjawab setiap pertanyaan dengan diagram terlebih dahulu |
+| **Skill**                                                      | Instruksi, pengetahuan, dan alur kerja yang dapat digunakan Claude                       | Konten yang dapat digunakan kembali, dokumen referensi, tugas yang dapat diulang                                                      | `/deploy` menjalankan daftar periksa penyebaran Anda; skill dokumen API dengan pola endpoint                                    |
+| **Subagent**                                                   | Konteks eksekusi terisolasi yang mengembalikan hasil ringkasan                           | Isolasi konteks, tugas paralel, pekerja khusus                                                                                        | Tugas penelitian yang membaca banyak file tetapi hanya mengembalikan temuan kunci                                               |
+| **[Dynamic workflow](/docs/id/workflows)**                          | Skrip yang ditulis Claude yang menjalankan banyak subagent di latar belakang             | Pekerjaan yang melampaui segelintir subagent, atau temuan yang ingin Anda verifikasi silang                                           | Audit seluruh basis kode, dengan set agen kedua memverifikasi setiap temuan                                                     |
+| **[Cross-session messaging](/docs/id/cross-session-messaging)**     | Claude mengirimkan pesan dari salah satu sesi Anda ke sesi lain                          | Sesi yang Anda jalankan sendiri yang membutuhkan temuan satu sama lain di tengah tugas                                                | Satu sesi memperingatkan sesi lain bahwa perubahan yang dilakukannya merusak apa yang sedang dibangun oleh sesi lain            |
+| **[Code intelligence](/docs/id/tools-reference#lsp-tool-behavior)** | Navigasi language-server dan diagnostik                                                  | Bahasa yang diketik, basis kode besar di mana grep lambat atau tidak presisi                                                          | Lompat ke definisi simbol alih-alih membaca seluruh file                                                                        |
+| **MCP**                                                        | Terhubung ke layanan eksternal                                                           | Data atau tindakan eksternal                                                                                                          | Kueri basis data Anda, posting ke Slack, kontrol browser                                                                        |
+| **Hook**                                                       | Skrip, permintaan HTTP, panggilan alat MCP, prompt, atau subagent yang dipicu oleh acara | Otomasi yang harus berjalan pada setiap acara yang cocok                                                                              | Jalankan ESLint setelah setiap pengeditan file                                                                                  |
+| **[Artifact](/docs/id/artifacts)**                                  | Publikasikan output sesi sebagai halaman web pribadi yang interaktif                     | Output yang ingin Anda lihat atau bagikan secara visual daripada sebagai teks terminal                                                | Garis waktu insiden yang diperbarui saat Claude menyelidiki                                                                     |
 
-**[Plugins](/docs/id/plugins)** adalah lapisan pengemasan. Plugin menggabungkan skills, hooks, subagents, dan MCP servers menjadi satu unit yang dapat diinstal. Plugin skills memiliki namespace (seperti `/my-plugin:review`) sehingga beberapa plugin dapat hidup berdampingan. Gunakan plugins ketika Anda ingin menggunakan kembali setup yang sama di beberapa repositori atau mendistribusikan ke orang lain melalui **[marketplace](/docs/id/plugin-marketplaces)**.
+**[Plugins](/docs/id/plugins/overview)** adalah lapisan pengemasan. Plugin menggabungkan skill, hook, subagent, dan server MCP ke dalam satu unit yang dapat diinstal. Skill plugin memiliki namespace (seperti `/my-plugin:review`) sehingga beberapa plugin dapat hidup berdampingan. Gunakan plugin ketika Anda ingin menggunakan kembali pengaturan yang sama di beberapa repositori atau mendistribusikan ke orang lain melalui **[marketplace](/docs/id/plugins/overview)**.
 
 <h3 id="build-your-setup-over-time">
-  Bangun setup Anda seiring waktu
+  Bangun pengaturan Anda seiring waktu
 </h3>
 
-Anda tidak perlu mengonfigurasi semuanya di awal. Setiap fitur memiliki pemicu yang dapat dikenali, dan sebagian besar tim menambahkannya dalam urutan yang kira-kira seperti ini:
+Anda tidak perlu mengonfigurasi semuanya di muka. Setiap fitur memiliki pemicu yang dapat dikenali, dan sebagian besar tim menambahkannya dalam urutan yang kurang lebih seperti ini:
 
-| Pemicu                                                                                          | Tambahkan                                                                                   |
-| :---------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------ |
-| Claude mendapatkan konvensi atau perintah yang salah dua kali                                   | Tambahkan ke [CLAUDE.md](/docs/id/memory)                                                        |
-| Anda terus mengetik prompt yang sama untuk memulai tugas                                        | Simpan sebagai [skill](/docs/id/skills) yang dapat dipanggil pengguna                            |
-| Anda menempel playbook yang sama atau prosedur multi-langkah ke chat untuk ketiga kalinya       | Tangkap sebagai [skill](/docs/id/skills)                                                         |
-| Anda terus menyalin data dari tab browser yang Claude tidak bisa lihat                          | Hubungkan sistem itu sebagai [server MCP](/docs/id/mcp)                                          |
-| Claude membaca banyak file untuk menemukan di mana simbol didefinisikan atau digunakan          | Instal [plugin code intelligence](/docs/id/discover-plugins#code-intelligence) untuk bahasa Anda |
-| Tugas sampingan membanjiri percakapan Anda dengan output yang tidak akan Anda referensikan lagi | Arahkan melalui [subagent](/docs/id/sub-agents)                                                  |
-| Anda ingin sesuatu terjadi setiap kali tanpa bertanya                                           | Tulis [hook](/docs/id/hooks-guide)                                                               |
-| Repositori kedua membutuhkan setup yang sama                                                    | Paket sebagai [plugin](/docs/id/plugins)                                                         |
+| Pemicu                                                                                                       | Tambahkan                                                                          |
+| :----------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------- |
+| Claude mendapatkan konvensi atau perintah yang salah dua kali                                                | Tambahkan ke [CLAUDE.md](/docs/id/memory)                                               |
+| Anda terus meminta Claude untuk lebih pendek, menjelaskan lebih banyak, atau menjawab dalam format yang sama | Atur [output style](/docs/id/output-styles)                                             |
+| Anda terus mengetik prompt yang sama untuk memulai tugas                                                     | Simpan sebagai [skill](/docs/id/skills) yang dapat dipanggil pengguna                   |
+| Anda menempel playbook yang sama atau prosedur multi-langkah ke dalam chat untuk ketiga kalinya              | Tangkap sebagai [skill](/docs/id/skills)                                                |
+| Anda terus menyalin data dari tab browser yang Claude tidak bisa lihat                                       | Hubungkan sistem itu sebagai [server MCP](/docs/id/mcp)                                 |
+| Claude membaca banyak file untuk menemukan di mana simbol didefinisikan atau digunakan                       | Instal [plugin code intelligence](/docs/id/plugins/code-intelligence) untuk bahasa Anda |
+| Tugas sampingan membanjiri percakapan Anda dengan output yang tidak akan Anda referensikan lagi              | Arahkan melalui [subagent](/docs/id/sub-agents)                                         |
+| Anda ingin sesuatu terjadi setiap kali tanpa bertanya                                                        | Tulis [hook](/docs/id/hooks-guide)                                                      |
+| Repositori kedua membutuhkan pengaturan yang sama                                                            | Paket sebagai [plugin](/docs/id/plugins/overview)                                       |
 
-Pemicu yang sama memberi tahu Anda kapan harus memperbarui apa yang sudah Anda miliki. Kesalahan berulang atau komentar tinjauan berulang adalah edit CLAUDE.md, bukan koreksi satu kali dalam chat. Alur kerja yang terus Anda sesuaikan dengan tangan adalah skill yang memerlukan revisi lain.
+Pemicu yang sama memberi tahu Anda kapan harus memperbarui apa yang sudah Anda miliki. Kesalahan berulang atau komentar tinjauan berulang adalah pengeditan CLAUDE.md, bukan koreksi sekali jadi dalam chat. Alur kerja yang terus Anda sesuaikan dengan tangan adalah skill yang membutuhkan revisi lain.
 
 <h3 id="compare-similar-features">
   Bandingkan fitur serupa
@@ -77,23 +82,23 @@ Beberapa fitur dapat terlihat serupa. Untuk panduan yang lebih mendalam tentang 
 
 <Tabs>
   <Tab title="Skill vs Subagent">
-    Skills dan subagents menyelesaikan masalah yang berbeda:
+    Skill dan subagent menyelesaikan masalah yang berbeda:
 
-    * **Skills** adalah konten yang dapat digunakan kembali yang dapat Anda muat ke konteks apa pun
+    * **Skills** adalah konten yang dapat digunakan kembali yang dapat Anda muat ke dalam konteks apa pun
     * **Subagents** adalah pekerja terisolasi yang berjalan terpisah dari percakapan utama Anda
 
     | Aspek                                           | Skill                                                                | Subagent                                                                         |
     | ----------------------------------------------- | -------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
     | **Apa itu**                                     | Instruksi, pengetahuan, atau alur kerja yang dapat digunakan kembali | Pekerja terisolasi dengan konteksnya sendiri                                     |
     | **Manfaat utama**                               | Bagikan konten di seluruh konteks                                    | Isolasi konteks. Pekerjaan terjadi secara terpisah, hanya ringkasan yang kembali |
-    | **Dampak [context window](/docs/id/context-window)** | Menambah jendela utama Anda                                          | Menggunakan jendela terpisah dengan token input dan output sendiri               |
+    | **Dampak [context window](/docs/id/context-window)** | Menambah jendela utama Anda                                          | Menggunakan jendela terpisah dengan token input dan output-nya sendiri           |
     | **Terbaik untuk**                               | Materi referensi, alur kerja yang dapat dipanggil                    | Tugas yang membaca banyak file, pekerjaan paralel, pekerja khusus                |
 
-    **Skills dapat berupa referensi atau tindakan.** Skills referensi memberikan pengetahuan yang Claude gunakan sepanjang sesi Anda (seperti panduan gaya API Anda). Skills tindakan memberi tahu Claude untuk melakukan sesuatu yang spesifik (seperti `/deploy` yang menjalankan alur kerja deployment Anda).
+    **Skills dapat berupa referensi atau tindakan.** Skill referensi memberikan pengetahuan yang Claude gunakan di seluruh sesi Anda (seperti panduan gaya API Anda). Skill tindakan memberi tahu Claude untuk melakukan sesuatu yang spesifik (seperti `/deploy` yang menjalankan alur kerja penyebaran Anda).
 
-    **Gunakan subagent** ketika Anda membutuhkan isolasi konteks atau ketika jendela konteks Anda penuh. Subagent mungkin membaca puluhan file atau menjalankan pencarian ekstensif, tetapi percakapan utama Anda hanya menerima ringkasan. Karena pekerjaan subagent tidak mengonsumsi konteks utama Anda, ini juga berguna ketika Anda tidak memerlukan pekerjaan perantara untuk tetap terlihat. Subagents kustom dapat memiliki instruksi mereka sendiri dan dapat memuat skills sebelumnya.
+    **Gunakan subagent** ketika Anda membutuhkan isolasi konteks atau ketika jendela konteks Anda penuh. Subagent mungkin membaca puluhan file atau menjalankan pencarian ekstensif, tetapi percakapan utama Anda hanya menerima ringkasan. Karena pekerjaan subagent tidak mengonsumsi konteks utama Anda, ini juga berguna ketika Anda tidak memerlukan pekerjaan perantara untuk tetap terlihat. Subagent kustom dapat memiliki instruksi mereka sendiri dan dapat memuat skill sebelumnya.
 
-    **Mereka dapat digabungkan.** Subagent dapat memuat skills tertentu sebelumnya (field `skills:`). Skill dapat berjalan dalam konteks terisolasi menggunakan `context: fork`. Lihat [Skills](/docs/id/skills) untuk detail.
+    **Mereka dapat menggabungkan.** Subagent dapat memuat skill tertentu (field `skills:`). Skill dapat berjalan dalam konteks terisolasi menggunakan `context: fork`. Lihat [Skills](/docs/id/skills) untuk detail.
   </Tab>
 
   <Tab title="CLAUDE.md vs Skill">
@@ -110,11 +115,27 @@ Beberapa fitur dapat terlihat serupa. Untuk panduan yang lebih mendalam tentang 
 
     **Letakkan di skill** jika itu materi referensi yang Claude butuhkan kadang-kadang (dokumen API, panduan gaya) atau alur kerja yang Anda picu dengan `/<name>` (deploy, review, release).
 
-    **Aturan praktis:** Jaga CLAUDE.md di bawah 200 baris. Jika berkembang, pindahkan konten referensi ke skills atau pisahkan ke file [`.claude/rules/`](/docs/id/memory#organize-rules-with-claude%2Frules%2F).
+    **Aturan praktis:** Jaga CLAUDE.md di bawah 200 baris. Jika berkembang, pindahkan konten referensi ke skill atau pisahkan ke file [`.claude/rules/`](/docs/id/memory#organize-rules-with-claude/rules/).
+  </Tab>
+
+  <Tab title="CLAUDE.md vs Output style">
+    Keduanya memberikan instruksi berdiri kepada Claude. CLAUDE.md membawa apa yang harus diketahui Claude, dan gaya output menetapkan cara Claude merespons.
+
+    | Aspek             | CLAUDE.md                                                  | Output style                                                                                               |
+    | ----------------- | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+    | **Memegang**      | Fakta dan aturan tentang proyek Anda                       | Peran, nada, dan format respons                                                                            |
+    | **Beralih**       | Selalu dimuat                                              | Satu aktif pada satu waktu; [beralih gaya](/docs/id/output-styles#change-your-output-style) kapan saja Anda mau |
+    | **Terbaik untuk** | Perintah build, konvensi, aturan "jangan pernah lakukan X" | Respons yang lebih pendek, penjelasan bersama kode, peran non-teknik                                       |
+
+    **Letakkan di CLAUDE.md** jika itu benar dari proyek apa pun gaya yang Anda gunakan: konvensi pengkodean, perintah build, struktur proyek.
+
+    **Gunakan output style** jika itu tentang respons itu sendiri dan Anda mungkin ingin mematikannya lagi: panjang, format, berapa banyak Claude menjelaskan, atau peran yang berbeda seperti asisten penulisan. Claude Code mencakup [gaya bawaan](/docs/id/output-styles#built-in-output-styles), dan Anda dapat menulis gaya Anda sendiri.
+
+    **Mereka menggabungkan.** CLAUDE.md tetap dimuat gaya mana pun yang Anda pilih. Claude mengikuti keduanya sebagai instruksi, jadi tidak ada yang ditegakkan. Untuk apa pun yang harus terjadi setiap kali, gunakan [hook](/docs/id/hooks-guide).
   </Tab>
 
   <Tab title="CLAUDE.md vs Rules vs Skills">
-    Ketiganya menyimpan instruksi, tetapi mereka dimuat secara berbeda:
+    Ketiga-tiganya menyimpan instruksi, tetapi mereka dimuat secara berbeda:
 
     | Aspek             | CLAUDE.md                        | `.claude/rules/`                                | Skill                                           |
     | ----------------- | -------------------------------- | ----------------------------------------------- | ----------------------------------------------- |
@@ -124,70 +145,56 @@ Beberapa fitur dapat terlihat serupa. Untuk panduan yang lebih mendalam tentang 
 
     **Gunakan CLAUDE.md** untuk instruksi yang setiap sesi butuhkan: perintah build, konvensi tes, arsitektur proyek.
 
-    **Gunakan rules** untuk menjaga CLAUDE.md tetap fokus. Rules dengan [`paths` frontmatter](/docs/id/memory#path-specific-rules) hanya dimuat ketika Claude bekerja dengan file yang cocok, menghemat konteks.
+    **Gunakan rules** untuk menjaga CLAUDE.md tetap fokus. Rules dengan [frontmatter `paths`](/docs/id/memory#path-specific-rules) hanya dimuat ketika Claude bekerja dengan file yang cocok, menghemat konteks.
 
-    **Gunakan skills** untuk konten yang Claude hanya butuhkan kadang-kadang, seperti dokumentasi API atau daftar periksa deployment yang Anda picu dengan `/<name>`.
+    **Gunakan skills** untuk konten yang Claude hanya butuhkan kadang-kadang, seperti dokumentasi API atau daftar periksa penyebaran yang Anda picu dengan `/<name>`.
   </Tab>
 
-  <Tab title="Subagent vs Agent team">
-    Keduanya melakukan paralelisasi pekerjaan, tetapi mereka secara arsitektur berbeda:
+  <Tab title="Subagent vs Dynamic workflow">
+    Keduanya melakukan pekerjaan di luar percakapan utama Anda. Dengan subagent, Claude memutuskan giliran demi giliran apa yang berjalan selanjutnya. Dalam alur kerja, skrip memutuskan:
 
-    * **Subagents** berjalan di dalam sesi Anda dan melaporkan hasil kembali ke konteks utama Anda
-    * **Agent teams** adalah sesi Claude Code independen yang berkomunikasi satu sama lain
+    * **Subagents** adalah pekerja yang Claude spawn, masing-masing mengembalikan ringkasan ke percakapan yang memunculkannya
+    * **[Dynamic workflows](/docs/id/workflows)** adalah skrip yang ditulis Claude yang menjalankan banyak subagent di latar belakang dan mengembalikan satu hasil
 
-    | Aspek             | Subagent                                               | Agent team                                                      |
-    | ----------------- | ------------------------------------------------------ | --------------------------------------------------------------- |
-    | **Konteks**       | Jendela konteks sendiri; hasil kembali ke pemanggil    | Jendela konteks sendiri; sepenuhnya independen                  |
-    | **Komunikasi**    | Melaporkan hasil kembali ke agen utama saja            | Rekan kerja saling mengirim pesan secara langsung               |
-    | **Koordinasi**    | Agen utama mengelola semua pekerjaan                   | Daftar tugas bersama dengan koordinasi diri                     |
-    | **Terbaik untuk** | Tugas terfokus di mana hanya hasil yang penting        | Pekerjaan kompleks yang memerlukan diskusi dan kolaborasi       |
-    | **Biaya token**   | Lebih rendah: hasil diringkas kembali ke konteks utama | Lebih tinggi: setiap rekan kerja adalah instans Claude terpisah |
+    **Gunakan subagent** ketika Anda membutuhkan pekerja yang cepat dan terfokus: teliti pertanyaan, verifikasi klaim, tinjau file. Subagent melakukan pekerjaan dan mengembalikan ringkasan, jadi percakapan utama Anda tetap bersih. Subagent yang Claude beri nama ketika memunculkannya juga dapat [saling berkirim pesan](/docs/id/sub-agents#what-loads-at-startup).
 
-    **Gunakan subagent** ketika Anda membutuhkan pekerja cepat dan terfokus: teliti pertanyaan, verifikasi klaim, tinjau file. Subagent melakukan pekerjaan dan mengembalikan ringkasan. Percakapan utama Anda tetap bersih.
+    **Gunakan dynamic workflow** ketika pekerjaan [melampaui segelintir subagent](/docs/id/workflows#when-to-use-a-workflow), atau ketika Anda ingin temuan diverifikasi silang sebelum Anda melihatnya, seperti audit berbasis kode, migrasi besar, atau rencana yang disusun dari beberapa sudut. Untuk memulai satu, [minta alur kerja dalam prompt Anda](/docs/id/workflows#ask-for-a-workflow-in-your-prompt).
 
-    **Gunakan agent team** ketika rekan kerja perlu berbagi temuan, menantang satu sama lain, dan berkoordinasi secara independen. Agent teams terbaik untuk penelitian dengan hipotesis bersaing, tinjauan kode paralel, dan pengembangan fitur baru di mana setiap rekan kerja memiliki bagian terpisah.
-
-    **Titik transisi:** Jika Anda menjalankan subagents paralel tetapi mencapai batas konteks, atau jika subagents Anda perlu berkomunikasi satu sama lain, agent teams adalah langkah alami berikutnya.
-
-    <Note>
-      Agent teams bersifat eksperimental dan dinonaktifkan secara default. Lihat [agent teams](/docs/id/agent-teams) untuk setup dan batasan saat ini.
-    </Note>
+    **Untuk meneruskan temuan dari salah satu sesi Anda ke sesi lain**, minta Claude sesi pertama untuk mengirimkannya. Claude mengirimkannya dengan [cross-session messaging](/docs/id/cross-session-messaging). [Run agents in parallel](/docs/id/agents) membandingkan cara lain untuk menjalankan lebih dari satu Claude sekaligus, termasuk sesi yang Anda serahkan dan periksa kembali nanti.
   </Tab>
 
   <Tab title="MCP vs Skill">
     MCP menghubungkan Claude ke layanan eksternal. Skills memperluas apa yang Claude ketahui, termasuk cara menggunakan layanan tersebut secara efektif.
 
-    | Aspek           | MCP                                              | Skill                                                             |
-    | --------------- | ------------------------------------------------ | ----------------------------------------------------------------- |
-    | **Apa itu**     | Protokol untuk terhubung ke layanan eksternal    | Pengetahuan, alur kerja, dan materi referensi                     |
-    | **Menyediakan** | Akses alat dan data                              | Pengetahuan, alur kerja, materi referensi                         |
-    | **Contoh**      | Integrasi Slack, kueri database, kontrol browser | Daftar periksa tinjauan kode, alur kerja deploy, panduan gaya API |
+    | Aspek           | MCP                                                | Skill                                                                 |
+    | --------------- | -------------------------------------------------- | --------------------------------------------------------------------- |
+    | **Apa itu**     | Protokol untuk terhubung ke layanan eksternal      | Pengetahuan, alur kerja, dan materi referensi                         |
+    | **Menyediakan** | Alat dan akses data                                | Pengetahuan, alur kerja, materi referensi                             |
+    | **Contoh**      | Integrasi Slack, kueri basis data, kontrol browser | Daftar periksa tinjauan kode, alur kerja penyebaran, panduan gaya API |
 
     Ini menyelesaikan masalah yang berbeda dan bekerja dengan baik bersama:
 
-    **MCP** memberi Claude alat yang dirancang khusus untuk sistem eksternal, dengan koneksi dan autentikasi ditangani oleh server.
+    **MCP** memberikan Claude alat yang dirancang khusus untuk sistem eksternal, dengan koneksi dan autentikasi ditangani oleh server.
 
-    **Skills** memberi Claude pengetahuan tentang cara menggunakan alat tersebut secara efektif, ditambah alur kerja yang dapat Anda picu dengan `/<name>`. Skill mungkin menyertakan skema database tim Anda dan pola kueri, atau alur kerja `/post-to-slack` dengan aturan pemformatan pesan tim Anda.
-
-    Contoh: Server MCP menghubungkan Claude ke database Anda. Skill mengajarkan Claude model data Anda, pola kueri umum, dan tabel mana yang digunakan untuk tugas berbeda.
+    **Skills** memberikan Claude pengetahuan tentang cara menggunakan alat tersebut secara efektif, ditambah alur kerja yang dapat Anda picu dengan `/<name>`. Skill mungkin menyertakan skema basis data tim Anda dan pola kueri, atau alur kerja `/post-to-slack` dengan aturan pemformatan pesan tim Anda.
   </Tab>
 
   <Tab title="Hook vs Skill">
-    Hook berjalan pada acara siklus hidup; skill dimuat ke dalam konteks untuk Claude terapkan.
+    Claude Code menjalankan hook pada acara siklus hidup; itu memuat skill ke dalam konteks untuk Claude terapkan.
 
-    | Aspek             | Hook                                                                                  | Skill                                                                        |
-    | ----------------- | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-    | **Berjalan**      | Perintah shell, permintaan HTTP, prompt LLM, atau subagent                            | Instruksi yang Claude baca dan ikuti                                         |
-    | **Dipicu oleh**   | [Acara siklus hidup](/docs/id/hooks#hook-events) seperti `PostToolUse` atau `SessionStart` | Anda mengetik `/<name>`, atau Claude mencocokkan deskripsi dengan tugas Anda |
-    | **Determinisme**  | Selalu berjalan pada acaranya; pemicu dijamin                                         | Claude menginterpretasikan instruksi; hasil dapat bervariasi                 |
-    | **Biaya konteks** | Nol kecuali hook mengembalikan output                                                 | Deskripsi dimuat setiap sesi; konten penuh dimuat saat digunakan             |
-    | **Terbaik untuk** | Linting setelah edit, memblokir perintah yang tidak aman, logging, notifikasi         | Alur kerja yang memerlukan penalaran, materi referensi, tugas multi-langkah  |
+    | Aspek             | Hook                                                                                | Skill                                                                        |
+    | ----------------- | ----------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+    | **Berjalan**      | Perintah shell, permintaan HTTP, panggilan alat MCP, prompt LLM, atau subagent      | Instruksi yang Claude baca dan ikuti                                         |
+    | **Dipicu oleh**   | [Acara siklus hidup](/docs/id/hooks-guide) seperti `PostToolUse` atau `SessionStart`     | Anda mengetik `/<name>`, atau Claude mencocokkan deskripsi dengan tugas Anda |
+    | **Determinisme**  | Selalu menyala pada acaranya; pemicu dijamin                                        | Claude menginterpretasikan instruksi; hasilnya dapat bervariasi              |
+    | **Biaya konteks** | Nol kecuali hook mengembalikan output                                               | Deskripsi dimuat setiap sesi; konten penuh dimuat saat digunakan             |
+    | **Terbaik untuk** | Linting setelah pengeditan, memblokir perintah yang tidak aman, logging, notifikasi | Alur kerja yang membutuhkan penalaran, materi referensi, tugas multi-langkah |
 
-    **Gunakan hook** ketika tindakan harus terjadi dengan cara yang sama setiap kali dan tidak perlu Claude berpikir. Misalnya: format saat simpan, tolak `rm -rf /`, posting pesan Slack ketika sesi berakhir.
+    **Gunakan hook** ketika tindakan harus terjadi dengan cara yang sama setiap kali dan tidak memerlukan Claude untuk berpikir. Misalnya: format saat menyimpan, tolak `rm -rf /`, posting pesan Slack ketika sesi berakhir.
 
-    **Gunakan skill** ketika Claude harus memutuskan cara menerapkan langkah-langkahnya, atau ketika kontennya adalah pengetahuan daripada skrip. Misalnya: daftar periksa `/release`, panduan gaya API Anda, playbook debugging.
+    **Gunakan skill** ketika Claude harus memutuskan cara menerapkan langkah-langkah, atau ketika kontennya adalah pengetahuan daripada skrip. Misalnya: daftar periksa `/release`, panduan gaya API Anda, playbook debugging.
 
-    **Letakkan guardrails di hooks.** Instruksi seperti "jangan pernah edit `.env`" di CLAUDE.md atau skill adalah permintaan, bukan jaminan. Hook `PreToolUse` yang memblokir edit adalah penegakan. Jika aturan harus berlaku setiap kali, buat hook daripada instruksi prompt.
+    **Letakkan guardrail di hook.** Instruksi seperti "jangan pernah edit `.env`" di CLAUDE.md atau skill adalah permintaan, bukan jaminan. Hook `PreToolUse` yang memblokir pengeditan adalah penegakan. Jika aturan harus berlaku setiap kali, buat hook daripada instruksi prompt.
 
     **Output hook mendarat di konteks.** Hook `PostToolUse` yang menjalankan linter Anda memberi umpan balik hasil sebagai teks yang Claude baca; skill `/fix-lint` memberi tahu Claude cara menyelesaikannya.
   </Tab>
@@ -197,27 +204,27 @@ Beberapa fitur dapat terlihat serupa. Untuk panduan yang lebih mendalam tentang 
   Pahami bagaimana fitur berlapis
 </h3>
 
-Fitur dapat didefinisikan di beberapa tingkat: seluruh pengguna, per-proyek, melalui plugins, atau melalui kebijakan terkelola. Anda juga dapat menyarangkan file CLAUDE.md di subdirektori atau menempatkan skills di paket tertentu dari monorepo. Ketika fitur yang sama ada di beberapa tingkat, berikut cara mereka berlapis:
+Fitur dapat didefinisikan di berbagai tingkat: seluruh pengguna, per-proyek, melalui plugin, atau melalui kebijakan yang dikelola. Anda juga dapat menyarangkan file CLAUDE.md di subdirektori atau menempatkan skill di paket tertentu dari monorepo. Ketika fitur yang sama ada di berbagai tingkat, berikut cara mereka berlapis:
 
-* **File CLAUDE.md** bersifat aditif: semua tingkat berkontribusi konten ke konteks Claude secara bersamaan. File dari direktori kerja Anda dan di atas dimuat saat peluncuran; subdirektori dimuat saat Anda bekerja di dalamnya. Ketika instruksi bertentangan, Claude menggunakan penilaian untuk merekonsiliasi mereka, dengan instruksi yang lebih spesifik biasanya mengambil alih. Lihat [bagaimana file CLAUDE.md dimuat](/docs/id/memory#how-claude-md-files-load).
-* **Skills dan subagents** menimpa berdasarkan nama: ketika nama yang sama ada di beberapa tingkat, satu definisi menang berdasarkan prioritas (terkelola > pengguna > proyek untuk skills; terkelola > bendera CLI > proyek > pengguna > plugin untuk subagents). Plugin skills adalah [namespaced](/docs/id/plugins#add-skills-to-your-plugin) untuk menghindari konflik. Lihat [penemuan skill](/docs/id/skills#where-skills-live) dan [cakupan subagent](/docs/id/sub-agents#choose-the-subagent-scope).
+* **File CLAUDE.md** bersifat aditif: semua tingkat berkontribusi konten ke konteks Claude secara bersamaan. File dari direktori kerja Anda dan di atas dimuat saat peluncuran; subdirektori dimuat saat Anda bekerja di dalamnya. Ketika instruksi bertentangan, Claude menggunakan penilaian untuk merekonsiliasi mereka. Lihat [bagaimana file CLAUDE.md dimuat](/docs/id/memory#how-claude-md-files-load).
+* **Skills dan subagents** menimpa berdasarkan nama: ketika nama yang sama ada di berbagai tingkat, satu definisi menang berdasarkan prioritas (managed > user > project untuk skill; managed > CLI flag > project > user > plugin untuk subagent). Skill plugin [memiliki namespace](/docs/id/plugins/components#skills) untuk menghindari konflik. Lihat [penemuan skill](/docs/id/skills#resolve-skills-that-share-a-name) dan [cakupan subagent](/docs/id/sub-agents#choose-the-subagent-scope).
 * **Server MCP** menimpa berdasarkan nama: lokal > proyek > pengguna. Lihat [cakupan MCP](/docs/id/mcp#scope-hierarchy-and-precedence).
-* **Hooks** bergabung: semua hook terdaftar berjalan untuk acara pencocokan mereka terlepas dari sumber. Lihat [hooks](/docs/id/hooks-guide).
+* **Hooks** menggabung: semua hook terdaftar menyala untuk acara yang cocok mereka terlepas dari sumber. Lihat [hooks](/docs/id/hooks-guide).
 
 <h3 id="combine-features">
   Gabungkan fitur
 </h3>
 
-Setiap ekstensi menyelesaikan masalah yang berbeda: CLAUDE.md menangani konteks yang selalu aktif, skills menangani pengetahuan dan alur kerja on-demand, MCP menangani koneksi eksternal, subagents menangani isolasi, dan hooks menangani otomasi. Setup nyata menggabungkan mereka berdasarkan alur kerja Anda.
+Setiap ekstensi menyelesaikan masalah yang berbeda: CLAUDE.md menangani konteks yang selalu aktif, skill menangani pengetahuan on-demand dan alur kerja, MCP menangani koneksi eksternal, subagent menangani isolasi, dan hook menangani otomasi. Pengaturan nyata menggabungkannya berdasarkan alur kerja Anda.
 
-Misalnya, Anda mungkin menggunakan CLAUDE.md untuk konvensi proyek, skill untuk alur kerja deployment Anda, MCP untuk terhubung ke database Anda, dan hook untuk menjalankan linting setelah setiap edit. Setiap fitur menangani apa yang terbaik.
+Misalnya, Anda mungkin menggunakan CLAUDE.md untuk konvensi proyek, skill untuk alur kerja penyebaran Anda, MCP untuk terhubung ke basis data Anda, dan hook untuk menjalankan linting setelah setiap pengeditan. Setiap fitur menangani apa yang terbaik.
 
-| Pola                   | Cara kerjanya                                                                                         | Contoh                                                                                              |
-| ---------------------- | ----------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
-| **Skill + MCP**        | MCP menyediakan koneksi; skill mengajarkan Claude cara menggunakannya dengan baik                     | MCP terhubung ke database Anda, skill mendokumentasikan skema dan pola kueri Anda                   |
-| **Skill + Subagent**   | Skill menspawn subagents untuk pekerjaan paralel                                                      | Skill `/audit` memulai subagents keamanan, performa, dan gaya yang bekerja dalam konteks terisolasi |
-| **CLAUDE.md + Skills** | CLAUDE.md menyimpan aturan yang selalu aktif; skills menyimpan materi referensi yang dimuat on-demand | CLAUDE.md mengatakan "ikuti konvensi API kami," skill berisi panduan gaya API lengkap               |
-| **Hook + MCP**         | Hook memicu tindakan eksternal melalui MCP                                                            | Hook pasca-edit mengirim notifikasi Slack ketika Claude memodifikasi file kritis                    |
+| Pola                   | Cara kerjanya                                                                                      | Contoh                                                                                            |
+| ---------------------- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| **Skill + MCP**        | MCP menyediakan koneksi; skill mengajarkan Claude cara menggunakannya dengan baik                  | MCP terhubung ke basis data Anda, skill mendokumentasikan skema dan pola kueri Anda               |
+| **Skill + Subagent**   | Skill memunculkan subagent untuk pekerjaan paralel                                                 | Skill `/audit` memulai subagent keamanan, kinerja, dan gaya yang bekerja dalam konteks terisolasi |
+| **CLAUDE.md + Skills** | CLAUDE.md memegang aturan yang selalu aktif; skill memegang materi referensi yang dimuat on-demand | CLAUDE.md mengatakan "ikuti konvensi API kami," skill berisi panduan gaya API lengkap             |
+| **Hook + MCP**         | Hook memicu tindakan eksternal melalui MCP                                                         | Hook pasca-edit mengirim notifikasi Slack ketika Claude memodifikasi file kritis                  |
 
 <h2 id="understand-context-costs">
   Pahami biaya konteks
@@ -231,16 +238,17 @@ Setiap fitur yang Anda tambahkan mengonsumsi beberapa konteks Claude. Terlalu ba
 
 Setiap fitur memiliki strategi pemuatan dan biaya konteks yang berbeda:
 
-| Fitur                 | Kapan dimuat                          | Apa yang dimuat                                             | Biaya konteks                                    |
-| --------------------- | ------------------------------------- | ----------------------------------------------------------- | ------------------------------------------------ |
-| **CLAUDE.md**         | Awal sesi                             | Konten penuh                                                | Setiap permintaan                                |
-| **Skills**            | Awal sesi + ketika digunakan          | Deskripsi di awal, konten penuh ketika digunakan            | Rendah (deskripsi setiap permintaan)\*           |
-| **Server MCP**        | Awal sesi                             | Nama alat; skema penuh on demand                            | Rendah sampai alat digunakan                     |
-| **Code intelligence** | Setelah pengeditan file dan on demand | Diagnostik setelah pengeditan; lokasi simbol saat pencarian | Rendah; mengurangi pembacaan file di tempat lain |
-| **Subagents**         | Ketika dispawn                        | Konteks segar dengan skills yang ditentukan                 | Terisolasi dari sesi utama                       |
-| **Hooks**             | Saat dipicu                           | Tidak ada (berjalan secara eksternal)                       | Nol, kecuali hook mengembalikan konteks tambahan |
+| Fitur                 | Kapan dimuat                                 | Apa yang dimuat                                                                                                               | Biaya konteks                                    |
+| --------------------- | -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| **CLAUDE.md**         | Awal sesi                                    | Konten penuh                                                                                                                  | Setiap permintaan                                |
+| **Output styles**     | Awal sesi, dan lagi ketika Anda beralih gaya | Instruksi lengkap gaya aktif; tidak ada untuk gaya Default                                                                    | Setiap permintaan                                |
+| **Skills**            | Awal sesi + ketika digunakan                 | Deskripsi di awal, konten penuh ketika digunakan                                                                              | Rendah (deskripsi setiap permintaan)\*           |
+| **Server MCP**        | Awal sesi                                    | Nama alat; skema penuh on demand                                                                                              | Rendah sampai alat digunakan                     |
+| **Code intelligence** | Setelah pengeditan file dan on demand        | Diagnostik setelah pengeditan; lokasi simbol saat pencarian                                                                   | Rendah; mengurangi pembacaan file di tempat lain |
+| **Subagents**         | Ketika dispawn                               | Konteks segar dengan skills yang ditentukan, atau percakapan induk untuk [fork](/docs/id/sub-agents#fork-the-current-conversation) | Terisolasi dari sesi utama                       |
+| **Hooks**             | Saat dipicu                                  | Tidak ada (berjalan secara eksternal)                                                                                         | Nol, kecuali hook mengembalikan konteks tambahan |
 
-\*Secara default, deskripsi skill dimuat saat awal sesi sehingga Claude dapat memutuskan kapan menggunakannya. Atur `disable-model-invocation: true` di frontmatter skill untuk menyembunyikannya dari Claude sepenuhnya sampai Anda memanggilnya secara manual. Ini mengurangi biaya konteks menjadi nol untuk skills yang hanya Anda picu sendiri. Untuk skill yang tidak Anda tulis, atur [`skillOverrides`](/docs/id/skills#override-skill-visibility-from-settings) di settings untuk melakukan hal yang sama tanpa mengedit filenya.
+\*Secara default, deskripsi skill dimuat saat awal sesi sehingga Claude dapat memutuskan kapan menggunakannya. Atur `disable-model-invocation: true` di frontmatter skill untuk menyembunyikannya dari Claude sepenuhnya sampai Anda memanggilnya secara manual. Untuk skill yang tidak Anda tulis, atur [`skillOverrides`](/docs/id/skills#override-skill-visibility-from-settings) di settings untuk melakukan hal yang sama tanpa mengedit filenya.
 
 <h3 id="understand-how-features-load">
   Pahami bagaimana fitur dimuat
@@ -248,7 +256,9 @@ Setiap fitur memiliki strategi pemuatan dan biaya konteks yang berbeda:
 
 Setiap fitur dimuat pada titik berbeda dalam sesi Anda. Tab di bawah menjelaskan kapan masing-masing dimuat dan apa yang masuk ke konteks.
 
-<img src="https://mintcdn.com/claude-code/ikqp3_70mqIahteV/images/context-loading.svg?fit=max&auto=format&n=ikqp3_70mqIahteV&q=85&s=aab139e750494a237ae2e0c8f9139b0a" alt="Pemuatan konteks: CLAUDE.md dimuat saat awal sesi dan tetap di setiap permintaan. Nama alat MCP dimuat saat awal dengan skema penuh ditunda sampai digunakan. Skills memuat deskripsi saat awal, konten penuh saat invokasi. Subagents mendapat konteks terisolasi. Hooks berjalan secara eksternal." width="720" height="382" data-path="images/context-loading.svg" />
+<img src="https://mintcdn.com/claude-code/ikqp3_70mqIahteV/images/context-loading.svg?fit=max&auto=format&n=ikqp3_70mqIahteV&q=85&s=aab139e750494a237ae2e0c8f9139b0a" className="dark:hidden" alt="Pemuatan konteks: CLAUDE.md dimuat saat awal sesi dan tetap di setiap permintaan. Nama alat MCP dimuat saat awal dengan skema penuh ditunda sampai digunakan. Skills memuat deskripsi saat awal, konten penuh saat invokasi. Subagents mendapat konteks terisolasi. Hooks berjalan secara eksternal." width="720" height="382" data-path="images/context-loading.svg" />
+
+<img src="https://mintcdn.com/claude-code/_xqph1dUOslCOwsj/images/context-loading-dark.svg?fit=max&auto=format&n=_xqph1dUOslCOwsj&q=85&s=b274089ef9612d9c760bca9838557626" className="hidden dark:block" alt="Pemuatan konteks: CLAUDE.md dimuat saat awal sesi dan tetap di setiap permintaan. Nama alat MCP dimuat saat awal dengan skema penuh ditunda sampai digunakan. Skills memuat deskripsi saat awal, konten penuh saat invokasi. Subagents mendapat konteks terisolasi. Hooks berjalan secara eksternal." width="720" height="382" data-path="images/context-loading-dark.svg" />
 
 <Tabs>
   <Tab title="CLAUDE.md">
@@ -258,11 +268,11 @@ Setiap fitur dimuat pada titik berbeda dalam sesi Anda. Tab di bawah menjelaskan
 
     **Warisan:** Claude membaca file CLAUDE.md dari direktori kerja Anda hingga ke root, dan menemukan yang tersarang di subdirektori saat mengakses file tersebut. Lihat [Bagaimana file CLAUDE.md dimuat](/docs/id/memory#how-claude-md-files-load) untuk detail.
 
-    <Tip>Jaga CLAUDE.md di bawah 200 baris. Pindahkan materi referensi ke skills, yang dimuat on-demand.</Tip>
+    <Tip>Jaga CLAUDE.md di bawah 200 baris. Pindahkan materi referensi ke skills, yang dimuat on demand. Untuk mendapatkan [proposal trim untuk CLAUDE.md yang diperiksa](/docs/id/memory#my-claude-md-is-too-large), jalankan `/doctor`.</Tip>
   </Tab>
 
   <Tab title="Skills">
-    Skills adalah kemampuan tambahan dalam toolkit Claude. Mereka dapat berupa materi referensi (seperti panduan gaya API) atau alur kerja yang dapat dipanggil yang Anda picu dengan `/<name>` (seperti `/deploy`). Claude Code dilengkapi dengan [skills bundel](/docs/id/commands) seperti `/code-review`, `/batch`, dan `/debug` yang bekerja langsung. Anda juga dapat membuat yang Anda sendiri. Claude menggunakan skills ketika sesuai, atau Anda dapat memanggil satu secara langsung.
+    Skills adalah kemampuan tambahan dalam toolkit Claude. Mereka dapat berupa materi referensi (seperti panduan gaya API) atau alur kerja yang dapat dipanggil yang Anda picu dengan `/<name>` (seperti `/deploy`). Claude Code dilengkapi dengan [skills bundel](/docs/id/commands) seperti `/code-review`, `/batch`, dan `/debug` yang bekerja langsung. Anda juga dapat membuat yang Anda sendiri.
 
     **Kapan:** Tergantung pada konfigurasi skill. Secara default, deskripsi dimuat saat awal sesi dan konten penuh dimuat ketika digunakan. Untuk skills hanya pengguna (`disable-model-invocation: true`), tidak ada yang dimuat sampai Anda memanggilnya.
 
@@ -280,11 +290,11 @@ Setiap fitur dimuat pada titik berbeda dalam sesi Anda. Tab di bawah menjelaskan
   <Tab title="Server MCP">
     **Kapan:** Awal sesi.
 
-    **Apa yang dimuat:** Nama alat dari server yang terhubung. Skema JSON penuh tetap ditunda sampai Claude memerlukan alat tertentu.
+    **Apa yang dimuat:** Nama alat dan instruksi server dari server yang terhubung. Skema JSON penuh tetap ditunda sampai Claude memerlukan alat tertentu.
 
     **Biaya konteks:** [Pencarian alat](/docs/id/mcp#scale-with-mcp-tool-search) diaktifkan secara default, jadi alat MCP idle mengonsumsi konteks minimal.
 
-    <Tip>Jalankan `/mcp` untuk melihat status koneksi dan biaya token per server. Claude Code [terhubung kembali ke server jarak jauh secara otomatis](/docs/id/mcp#automatic-reconnection) jika mereka terputus, dan Anda dapat memutuskan server yang tidak Anda gunakan secara aktif.</Tip>
+    <Tip>Jalankan `/mcp` untuk melihat status koneksi setiap server. Jalankan `/context all` untuk melihat berapa banyak token yang digunakan setiap alat MCP yang dimuat. Claude Code [terhubung kembali ke server jarak jauh secara otomatis](/docs/id/mcp#automatic-reconnection) jika mereka terputus, dan Anda dapat memutuskan server yang tidak Anda gunakan secara aktif.</Tip>
   </Tab>
 
   <Tab title="Code intelligence">
@@ -294,7 +304,7 @@ Setiap fitur dimuat pada titik berbeda dalam sesi Anda. Tab di bawah menjelaskan
 
     **Biaya konteks:** Rendah. Pencarian simbol sering menggantikan pembacaan file yang luas, jadi penggunaan konteks bersih dapat turun.
 
-    <Tip>Alat LSP tidak aktif sampai Anda memasang [plugin code intelligence](/docs/id/discover-plugins#code-intelligence) untuk bahasa Anda.</Tip>
+    <Tip>Alat LSP tidak aktif sampai Anda memasang [plugin code intelligence](/docs/id/plugins/code-intelligence) untuk bahasa Anda.</Tip>
   </Tab>
 
   <Tab title="Subagents">
@@ -302,18 +312,20 @@ Setiap fitur dimuat pada titik berbeda dalam sesi Anda. Tab di bawah menjelaskan
 
     **Apa yang dimuat:** Konteks segar dan terisolasi yang berisi:
 
-    * Prompt sistem agen, bukan prompt sistem Claude Code lengkap
+    * Prompt sistem agen, bukan prompt sistem Claude Code
     * Konten penuh skills yang tercantum di field `skills:` agen
-    * CLAUDE.md dan status git, kecuali agen Explore dan Plan bawaan [menghilangkan keduanya](/docs/id/sub-agents#what-loads-at-startup)
+    * CLAUDE.md dan status git, kecuali agen Explore dan Plan bawaan [menghilangkan keduanya](/docs/id/sub-agents#what-loads-at-startup), dan agen yang definisinya menetapkan [`omitClaudeMd`](/docs/id/sub-agents#supported-frontmatter-fields) melewati file CLAUDE.md pengguna, proyek, dan lokal
     * Apa pun konteks yang agen utama lewatkan dalam prompt
 
-    **Biaya konteks:** Terisolasi dari sesi utama. Subagents tidak mewarisi riwayat percakapan Anda atau skills yang dipanggil.
+    Untuk [fork](/docs/id/sub-agents#fork-the-current-conversation), Claude Code memuat percakapan induk sejauh ini, prompt sistem, dan alat sebagai gantinya.
+
+    **Biaya konteks:** Terisolasi dari sesi utama.
 
     <Tip>Gunakan subagents untuk pekerjaan yang tidak memerlukan konteks percakapan penuh Anda. Isolasi mereka mencegah mengembang sesi utama Anda.</Tip>
   </Tab>
 
   <Tab title="Hooks">
-    **Kapan:** Saat dipicu. Hooks berjalan pada acara siklus hidup tertentu seperti eksekusi alat, batas sesi, pengajuan prompt, permintaan izin, dan pemadatan. Lihat [Hooks](/docs/id/hooks) untuk daftar lengkap.
+    **Kapan:** Saat dipicu. Claude Code menjalankan hooks pada acara siklus hidup tertentu seperti eksekusi alat, batas sesi, pengajuan prompt, permintaan izin, dan pemadatan. Lihat [Hooks](/docs/id/hooks) untuk daftar lengkap.
 
     **Apa yang dimuat:** Tidak ada secara default. Hooks berjalan di luar percakapan utama.
 
@@ -342,8 +354,12 @@ Setiap fitur memiliki panduan sendiri dengan instruksi setup, contoh, dan opsi k
     Alihkan pekerjaan ke konteks terisolasi
   </Card>
 
-  <Card title="Agent teams" icon="network" href="/docs/id/agent-teams">
-    Koordinasikan beberapa sesi yang bekerja secara paralel
+  <Card title="Dynamic workflows" icon="network" href="/docs/id/workflows">
+    Jalankan banyak subagents dari satu skrip
+  </Card>
+
+  <Card title="Cross-session messaging" icon="terminal" href="/docs/id/cross-session-messaging">
+    Biarkan Claude mengirim pesan ke sesi lain Anda
   </Card>
 
   <Card title="MCP" icon="plug" href="/docs/id/mcp">
@@ -351,14 +367,14 @@ Setiap fitur memiliki panduan sendiri dengan instruksi setup, contoh, dan opsi k
   </Card>
 
   <Card title="Hooks" icon="bolt" href="/docs/id/hooks-guide">
-    Otomatisasi alur kerja dengan hooks
+    Otomatisasi tindakan dengan hooks
   </Card>
 
-  <Card title="Plugins" icon="puzzle-piece" href="/docs/id/plugins">
+  <Card title="Plugins" icon="puzzle-piece" href="/docs/id/plugins/overview">
     Bundel dan bagikan set fitur
   </Card>
 
-  <Card title="Marketplaces" icon="store" href="/docs/id/plugin-marketplaces">
+  <Card title="Marketplaces" icon="store" href="/docs/id/plugins/create-marketplace">
     Host dan distribusikan koleksi plugin
   </Card>
 </CardGroup>

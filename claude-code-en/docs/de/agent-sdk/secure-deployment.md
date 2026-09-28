@@ -6,11 +6,9 @@
 
 > Ein Leitfaden zur Sicherung von Claude Code und Agent SDK-Bereitstellungen mit Isolation, Verwaltung von Anmeldedaten und Netzwerkkontrollen
 
-Claude Code und das Agent SDK sind leistungsstarke Tools, die Code ausführen, auf Dateien zugreifen und externe Dienste in Ihrem Namen nutzen können. Wie bei jedem Tool mit diesen Funktionen stellt eine durchdachte Bereitstellung sicher, dass Sie die Vorteile nutzen und gleichzeitig angemessene Kontrollen beibehalten.
+Claude Code und das Agent SDK können Code ausführen, auf Dateien zugreifen und externe Dienste in Ihrem Namen nutzen.
 
 Im Gegensatz zu traditioneller Software, die vordefinierten Code-Pfaden folgt, generieren diese Tools ihre Aktionen dynamisch basierend auf Kontext und Zielen. Diese Flexibilität macht sie nützlich, aber es bedeutet auch, dass ihr Verhalten durch den Inhalt beeinflusst werden kann, den sie verarbeiten: Dateien, Webseiten oder Benutzereingaben. Dies wird manchmal als Prompt-Injection bezeichnet. Wenn beispielsweise die README eines Repositorys ungewöhnliche Anweisungen enthält, könnte Claude Code diese auf Weise in seine Aktionen einbeziehen, die der Operator nicht erwartet hat. Dieser Leitfaden behandelt praktische Wege, um dieses Risiko zu verringern.
-
-Die gute Nachricht ist, dass die Sicherung einer Agent-Bereitstellung keine exotische Infrastruktur erfordert. Die gleichen Prinzipien, die für die Ausführung von halbvertrautem Code gelten, gelten auch hier: Isolation, Prinzip der geringsten Berechtigung und Verteidigungstiefe. Claude Code enthält mehrere Sicherheitsfunktionen, die bei häufigen Bedenken helfen, und dieser Leitfaden behandelt diese zusammen mit zusätzlichen Härtungsoptionen für diejenigen, die sie benötigen.
 
 Nicht jede Bereitstellung benötigt maximale Sicherheit. Ein Entwickler, der Claude Code auf seinem Laptop ausführt, hat andere Anforderungen als ein Unternehmen, das Kundendaten in einer Multi-Tenant-Umgebung verarbeitet. Dieser Leitfaden präsentiert Optionen, die von Claude Codes integrierten Sicherheitsfunktionen bis zu gehärteten Produktionsarchitekturen reichen, damit Sie wählen können, was zu Ihrer Situation passt.
 
@@ -29,7 +27,7 @@ Verteidigungstiefe ist dennoch eine gute Praxis. Wenn beispielsweise ein Agent e
 Claude Code enthält mehrere Sicherheitsfunktionen, die häufige Bedenken adressieren. Siehe die [Sicherheitsdokumentation](/docs/de/security) für vollständige Details.
 
 * **Berechtigungssystem**: Jedes Tool und jeder Bash-Befehl kann so konfiguriert werden, dass er erlaubt, blockiert oder der Benutzer zur Genehmigung aufgefordert wird. Verwenden Sie Glob-Muster, um Regeln wie „alle npm-Befehle erlauben" oder „jeden Befehl mit sudo blockieren" zu erstellen. Organisationen können Richtlinien festlegen, die für alle Benutzer gelten. Siehe [Berechtigungen](/docs/de/permissions).
-* **Befehlsanalyse für Berechtigungen**: Vor der Ausführung von Bash-Befehlen analysiert Claude Code diese in einen AST und gleicht das Ergebnis mit Ihren Berechtigungsregeln ab. Befehle, die nicht sauber analysiert werden können oder die keine Erlaubnisregel erfüllen, erfordern explizite Genehmigung. Eine kleine Reihe von Konstrukten wie `eval` erfordern immer Genehmigung, unabhängig von Erlaubnisregeln. Dies ist ein Berechtigungsgate, kein Sandbox; es leitet nicht ab, ob ein Befehl basierend auf seinem Zielpfad oder seinen Auswirkungen gefährlich ist.
+* **Befehlsanalyse für Berechtigungen**: Vor der Ausführung von Bash-Befehlen analysiert Claude Code diese in einen AST und gleicht das Ergebnis mit Ihren Berechtigungsregeln ab. Befehle, die nicht sauber analysiert werden können oder die keine Erlaubnisregel erfüllen, erfordern explizite Genehmigung. Eine kleine Reihe von Konstrukten wie `eval` erfordern immer Genehmigung, unabhängig von Erlaubnisregeln. Dies ist ein Berechtigungsgate, kein Sandbox; abgesehen von integrierten Sicherheitsprüfungen wie der [kritischen Pfadprüfung](/docs/de/permission-modes#critical-paths) auf `rm` und `rmdir` und der [geschützten Pfade](/docs/de/permission-modes#protected-paths)-Liste leitet es nicht ab, ob ein Befehl basierend auf seinem Zielpfad oder seinen Auswirkungen gefährlich ist.
 * **Web-Suche-Zusammenfassung**: Suchergebnisse werden zusammengefasst, anstatt rohe Inhalte direkt in den Kontext zu übergeben, was das Risiko von Prompt-Injection aus bösartigen Webinhalten verringert.
 * **Sandbox-Modus**: Bash-Befehle können in einer Sandbox-Umgebung ausgeführt werden, die Dateisystem- und Netzwerkzugriff einschränkt. Siehe die [Sandboxing-Dokumentation](/docs/de/sandboxing) für Details.
 
@@ -96,7 +94,7 @@ Verschiedene Isolationstechnologien bieten unterschiedliche Kompromisse zwischen
 
 Für leichte Isolation ohne Container erzwingt [sandbox-runtime](https://github.com/anthropic-experimental/sandbox-runtime) Dateisystem- und Netzwerkbeschränkungen auf OS-Ebene.
 
-Der Hauptvorteil ist Einfachheit: keine Docker-Konfiguration, Container-Images oder Netzwerk-Setup erforderlich. Der Proxy und die Dateisystembeschränkungen sind integriert. Sie stellen eine Einstellungsdatei bereit, die zulässige Domänen und Pfade angibt.
+Der Hauptvorteil ist Einfachheit: keine Docker-Konfiguration, Container-Images oder Netzwerk-Setup erforderlich. Der Proxy und die Dateisystembeschränkungen sind integriert.
 
 **Funktionsweise:**
 
@@ -185,8 +183,7 @@ Wenn ein Agent bösartigen Code ausführt (möglicherweise aufgrund von Prompt-I
 
 Um gVisor mit Docker zu verwenden, installieren Sie die `runsc`-Laufzeit und konfigurieren Sie den Daemon:
 
-```json theme={null}
-// /etc/docker/daemon.json
+```json /etc/docker/daemon.json theme={null}
 {
   "runtimes": {
     "runsc": {

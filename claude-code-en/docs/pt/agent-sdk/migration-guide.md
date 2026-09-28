@@ -12,19 +12,17 @@
 
 O Claude Code SDK foi renomeado para o **Claude Agent SDK** e sua documentação foi reorganizada. Esta mudança reflete as capacidades mais amplas do SDK para construir agentes de IA além de apenas tarefas de codificação.
 
+Migrando do OpenAI Agents SDK? A [receita de migração do OpenAI Agents SDK](https://platform.claude.com/cookbook/claude-agent-sdk-04-migrating-from-openai-agents-sdk) mapeia cada primitivo para o Claude Agent SDK através de um único exemplo prático.
+
 <h2 id="what’s-changed">
   O Que Mudou
 </h2>
 
-| Aspecto                    | Antigo                      | Novo                             |
-| :------------------------- | :-------------------------- | :------------------------------- |
-| **Nome do Pacote (TS/JS)** | `@anthropic-ai/claude-code` | `@anthropic-ai/claude-agent-sdk` |
-| **Pacote Python**          | `claude-code-sdk`           | `claude-agent-sdk`               |
-| **Local da Documentação**  | Documentação do Claude Code | API Guide → Seção Agent SDK      |
-
-<Note>
-  **Mudanças na Documentação:** A documentação do Agent SDK foi movida da documentação do Claude Code para o API Guide em uma seção dedicada [Agent SDK](/docs/pt/agent-sdk/overview). A documentação do Claude Code agora se concentra na ferramenta CLI e recursos de automação.
-</Note>
+| Aspecto                    | Antigo                      | Novo                                                                  |
+| :------------------------- | :-------------------------- | :-------------------------------------------------------------------- |
+| **Nome do Pacote (TS/JS)** | `@anthropic-ai/claude-code` | `@anthropic-ai/claude-agent-sdk`                                      |
+| **Pacote Python**          | `claude-code-sdk`           | `claude-agent-sdk`                                                    |
+| **Local da Documentação**  | Claude Code docs            | Claude Code docs → seção dedicada [Agent SDK](/docs/pt/agent-sdk/overview) |
 
 <h2 id="migration-steps">
   Etapas de Migração
@@ -58,29 +56,9 @@ import { query, tool, createSdkMcpServer } from "@anthropic-ai/claude-code";
 import { query, tool, createSdkMcpServer } from "@anthropic-ai/claude-agent-sdk";
 ```
 
-**4. Atualize as dependências do package.json:**
+**4. Atualize package.json:**
 
-Se você tiver o pacote listado em seu `package.json`, atualize-o:
-
-Antes:
-
-```json theme={null}
-{
-  "dependencies": {
-    "@anthropic-ai/claude-code": "^0.0.42"
-  }
-}
-```
-
-Depois:
-
-```json theme={null}
-{
-  "dependencies": {
-    "@anthropic-ai/claude-agent-sdk": "^0.2.0"
-  }
-}
-```
+Se `@anthropic-ai/claude-code` ainda estiver listado em seu `package.json`, substitua-o por `@anthropic-ai/claude-agent-sdk` e atualize também o intervalo de versão, por exemplo de `"^0.0.42"` para `"^0.3.0"`.
 
 **5. Revise [mudanças significativas](#breaking-changes)**
 
@@ -93,14 +71,18 @@ Faça as alterações de código necessárias para concluir a migração.
 **1. Desinstale o pacote antigo:**
 
 ```bash theme={null}
-pip uninstall claude-code-sdk
+pip uninstall -y claude-code-sdk
 ```
+
+Se o pacote antigo não estiver instalado, pip imprime `WARNING: Skipping claude-code-sdk as it is not installed.` Isso é esperado e você pode continuar para a próxima etapa.
 
 **2. Instale o novo pacote:**
 
 ```bash theme={null}
 pip install claude-agent-sdk
 ```
+
+Se `claude-code-sdk` estiver listado em seu `requirements.txt` ou `pyproject.toml`, substitua-o por `claude-agent-sdk`.
 
 **3. Atualize suas importações:**
 
@@ -114,23 +96,7 @@ from claude_code_sdk import query, ClaudeCodeOptions
 from claude_agent_sdk import query, ClaudeAgentOptions
 ```
 
-**4. Atualize os nomes dos tipos:**
-
-Altere `ClaudeCodeOptions` para `ClaudeAgentOptions`:
-
-```python theme={null}
-# Antes
-from claude_code_sdk import query, ClaudeCodeOptions
-
-options = ClaudeCodeOptions(model="claude-opus-4-7")
-
-# Depois
-from claude_agent_sdk import query, ClaudeAgentOptions
-
-options = ClaudeAgentOptions(model="claude-opus-4-7")
-```
-
-**5. Revise [mudanças significativas](#breaking-changes)**
+**4. Revise [mudanças significativas](#breaking-changes)**
 
 Faça as alterações de código necessárias para concluir a migração.
 
@@ -139,7 +105,7 @@ Faça as alterações de código necessárias para concluir a migração.
 </h2>
 
 <Warning>
-  Para melhorar o isolamento e a configuração explícita, o Claude Agent SDK v0.1.0 introduz mudanças significativas para usuários que migram do Claude Code SDK. Revise esta seção cuidadosamente antes de migrar.
+  Para melhorar o isolamento e a configuração explícita, Claude Agent SDK v0.1.0 introduz mudanças significativas para usuários que migram do Claude Code SDK.
 </Warning>
 
 <h3 id="python-claudecodeoptions-renamed-to-claudeagentoptions">
@@ -162,13 +128,11 @@ from claude_agent_sdk import query, ClaudeAgentOptions
 options = ClaudeAgentOptions(model="claude-opus-4-7", permission_mode="acceptEdits")
 ```
 
-**Por que isso mudou:** O nome do tipo agora corresponde à marca "Claude Agent SDK" e fornece consistência nas convenções de nomenclatura do SDK.
-
 <h3 id="system-prompt-no-longer-default">
-  Prompt do sistema não é mais padrão
+  System prompt não é mais padrão
 </h3>
 
-**O que mudou:** O SDK não usa mais o prompt do sistema do Claude Code por padrão.
+**O que mudou:** O SDK não usa mais o system prompt do Claude Code por padrão.
 
 **Migração:**
 
@@ -176,11 +140,11 @@ options = ClaudeAgentOptions(model="claude-opus-4-7", permission_mode="acceptEdi
   ```typescript TypeScript theme={null}
   import { query } from "@anthropic-ai/claude-agent-sdk";
 
-  // ANTES (v0.0.x) - Usava o prompt do sistema do Claude Code por padrão
+  // ANTES (v0.0.x) - Usava o system prompt do Claude Code por padrão
   const before = query({ prompt: "Hello" });
 
-  // DEPOIS (v0.1.0) - Usa prompt do sistema mínimo por padrão
-  // Para obter o comportamento antigo, solicite explicitamente a predefinição do Claude Code:
+  // DEPOIS (v0.1.0) - Usa um system prompt mínimo por padrão
+  // Para obter o comportamento anterior, solicite explicitamente a predefinição do Claude Code:
   const presetResult = query({
     prompt: "Hello",
     options: {
@@ -188,7 +152,7 @@ options = ClaudeAgentOptions(model="claude-opus-4-7", permission_mode="acceptEdi
     }
   });
 
-  // Ou use um prompt do sistema personalizado:
+  // Ou use um system prompt personalizado:
   const customResult = query({
     prompt: "Hello",
     options: {
@@ -198,116 +162,52 @@ options = ClaudeAgentOptions(model="claude-opus-4-7", permission_mode="acceptEdi
   ```
 
   ```python Python theme={null}
-  # ANTES (v0.0.x) - Usava o prompt do sistema do Claude Code por padrão
-  async for message in query(prompt="Hello"):
-      print(message)
-
-  # DEPOIS (v0.1.0) - Usa prompt do sistema mínimo por padrão
-  # Para obter o comportamento antigo, solicite explicitamente a predefinição do Claude Code:
   from claude_agent_sdk import query, ClaudeAgentOptions
+  import asyncio
 
-  async for message in query(
-      prompt="Hello",
-      options=ClaudeAgentOptions(
-          system_prompt={"type": "preset", "preset": "claude_code"}  # Use a predefinição
-      ),
-  ):
-      print(message)
 
-  # Ou use um prompt do sistema personalizado:
-  async for message in query(
-      prompt="Hello",
-      options=ClaudeAgentOptions(system_prompt="You are a helpful coding assistant"),
-  ):
-      print(message)
+  async def main():
+      # ANTES (v0.0.x) - Usava o system prompt do Claude Code por padrão
+      async for message in query(prompt="Hello"):
+          print(message)
+
+      # DEPOIS (v0.1.0) - Usa um system prompt mínimo por padrão
+      # Para obter o comportamento anterior, solicite explicitamente a predefinição do Claude Code:
+      async for message in query(
+          prompt="Hello",
+          options=ClaudeAgentOptions(
+              system_prompt={"type": "preset", "preset": "claude_code"}  # Use a predefinição
+          ),
+      ):
+          print(message)
+
+      # Ou use um system prompt personalizado:
+      async for message in query(
+          prompt="Hello",
+          options=ClaudeAgentOptions(system_prompt="You are a helpful coding assistant"),
+      ):
+          print(message)
+
+
+  asyncio.run(main())
   ```
 </CodeGroup>
-
-**Por que isso mudou:** Fornece melhor controle e isolamento para aplicações SDK. Você agora pode construir agentes com comportamento personalizado sem herdar as instruções focadas em CLI do Claude Code.
 
 <h3 id="settings-sources-default">
   Padrão de fontes de configurações
 </h3>
 
-Este padrão foi brevemente alterado em v0.1.0 e depois revertido, portanto nenhuma ação de migração é necessária.
+Este padrão foi brevemente alterado em v0.1.0 para não carregar configurações do sistema de arquivos e depois foi revertido, portanto nenhuma ação de migração é necessária.
 
-**Comportamento atual:** Omitir `settingSources` em `query()` carrega configurações de usuário, projeto e sistema de arquivos local, correspondendo ao CLI. Isso inclui `~/.claude/settings.json`, `.claude/settings.json`, `.claude/settings.local.json`, arquivos CLAUDE.md e comandos personalizados.
+**Comportamento atual:** Omitir `settingSources` em `query()` carrega as configurações do usuário, projeto e sistema de arquivos local, correspondendo à CLI. Isso inclui `~/.claude/settings.json`, `.claude/settings.json`, `.claude/settings.local.json`, arquivos CLAUDE.md e comandos personalizados.
 
-Para executar isolado das configurações do sistema de arquivos, passe uma matriz vazia:
+Para executar isolado das configurações do sistema de arquivos, passe `settingSources: []`, ou `setting_sources=[]` em Python. Consulte [Control filesystem settings with settingSources](/docs/pt/agent-sdk/claude-code-features#control-filesystem-settings-with-settingsources) para saber o que cada fonte carrega.
 
-<CodeGroup>
-  ```typescript TypeScript theme={null}
-  import { query } from "@anthropic-ai/claude-agent-sdk";
-
-  const isolatedResult = query({
-    prompt: "Hello",
-    options: {
-      settingSources: [] // Nenhuma configuração do sistema de arquivos carregada
-    }
-  });
-
-  // Ou carregue apenas fontes específicas:
-  const projectOnlyResult = query({
-    prompt: "Hello",
-    options: {
-      settingSources: ["project"] // Apenas configurações do projeto
-    }
-  });
-  ```
-
-  ```python Python theme={null}
-  from claude_agent_sdk import query, ClaudeAgentOptions
-
-  async for message in query(
-      prompt="Hello",
-      options=ClaudeAgentOptions(setting_sources=[]),  # Nenhuma configuração do sistema de arquivos carregada
-  ):
-      print(message)
-
-  # Ou carregue apenas fontes específicas:
-  async for message in query(
-      prompt="Hello",
-      options=ClaudeAgentOptions(
-          setting_sources=["project"]  # Apenas configurações do projeto
-      ),
-  ):
-      print(message)
-  ```
-</CodeGroup>
-
-O isolamento é especialmente importante para pipelines CI/CD, aplicações implantadas, ambientes de teste e sistemas multi-tenant onde personalizações locais não devem vazar.
+O isolamento é especialmente importante para pipelines de CI/CD, aplicações implantadas, ambientes de teste e sistemas multi-tenant, onde as personalizações locais não devem vazar.
 
 <Note>
-  O SDK v0.1.0 brevemente padronizou para nenhuma configuração carregada; isso foi revertido em versões subsequentes. Python SDK 0.1.59 e anteriores tratavam uma lista vazia da mesma forma que omitir a opção, portanto atualize antes de confiar em `setting_sources=[]`. Veja [O que settingSources não controla](/docs/pt/agent-sdk/claude-code-features#what-settingsources-does-not-control) para entradas que são lidas mesmo quando `settingSources` é `[]`.
+  Python SDK 0.1.59 e anteriores tratavam uma lista vazia da mesma forma que omitir a opção, portanto atualize antes de confiar em `setting_sources=[]`. Consulte [What settingSources does not control](/docs/pt/agent-sdk/claude-code-features#what-settingsources-does-not-control) para entradas que são lidas mesmo quando `settingSources` é `[]`.
 </Note>
-
-<h2 id="why-the-rename">
-  Por Que a Renomeação?
-</h2>
-
-O Claude Code SDK foi originalmente projetado para tarefas de codificação, mas evoluiu para um framework poderoso para construir todos os tipos de agentes de IA. O novo nome "Claude Agent SDK" reflete melhor suas capacidades:
-
-* Construir agentes de negócios (assistentes jurídicos, consultores financeiros, suporte ao cliente)
-* Criar agentes de codificação especializados (bots SRE, revisores de segurança, agentes de revisão de código)
-* Desenvolver agentes personalizados para qualquer domínio com uso de ferramentas, integração MCP e muito mais
-
-<h2 id="getting-help">
-  Obtendo Ajuda
-</h2>
-
-Se você encontrar algum problema durante a migração:
-
-**Para TypeScript/JavaScript:**
-
-1. Verifique se todas as importações foram atualizadas para usar `@anthropic-ai/claude-agent-sdk`
-2. Verifique se seu package.json tem o novo nome do pacote
-3. Execute `npm install` para garantir que as dependências sejam atualizadas
-
-**Para Python:**
-
-1. Verifique se todas as importações foram atualizadas para usar `claude_agent_sdk`
-2. Verifique se seu requirements.txt ou pyproject.toml tem o novo nome do pacote
-3. Execute `pip install claude-agent-sdk` para garantir que o pacote seja instalado
 
 <h2 id="next-steps">
   Próximas Etapas

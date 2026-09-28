@@ -4,7 +4,7 @@
 
 # 기업 런처 뒤에서 Claude Code 실행
 
-> CLAUDE_CODE_PROCESS_WRAPPER를 사용하여 Claude Code가 자체 바이너리에서 시작하는 프로세스(백그라운드 서비스 및 모든 에이전트 뷰 세션 포함)를 필수 런처를 통해 라우팅합니다.
+> CLAUDE_CODE_PROCESS_WRAPPER 또는 processWrapper 설정을 사용하여 Claude Code가 자체 바이너리에서 시작하는 프로세스(백그라운드 서비스 및 모든 에이전트 뷰 세션 포함)를 필수 런처를 통해 라우팅합니다.
 
 일부 조직에서는 워크스테이션의 모든 프로세스가 필수 런처를 통해 시작되도록 요구합니다. 런처는 회사의 보안 태세가 의존하는 샌드박스, 네트워크 제어 또는 자격 증명 주입을 적용하며, 이를 거치지 않고 시작되는 바이너리는 정책 위반입니다.
 
@@ -13,37 +13,43 @@
 `PATH`에서 `claude` 명령을 래핑하는 런처는 이러한 프로세스에 도달할 수 없습니다. 왜냐하면 이들은 `PATH` 조회 없이 바이너리의 직접 경로에서 시작되기 때문입니다.
 
 <Note>
-  `CLAUDE_CODE_PROCESS_WRAPPER`는 Claude Code v2.1.208 이상이 필요합니다. 이전 버전은 변수를 무시하고 모든 프로세스를 래핑 없이 시작합니다.
+  `CLAUDE_CODE_PROCESS_WRAPPER`는 Claude Code v2.1.208 이상이 필요합니다. 이전 버전은 변수를 무시하고 모든 프로세스를 래핑 없이 시작합니다. 동등한 [`processWrapper` 설정](/docs/ko/settings-reference#processwrapper)은 v2.1.210 이상이 필요합니다. 이전 버전은 이를 알 수 없는 키로 무시하고 런처를 적용하지 않으며 오류를 보고하지 않습니다.
+
+  두 형식 중 하나를 배포한 후 [검증 단계](#set-up-the-launcher)를 사용하여 실행 중인 버전이 이를 적용하는지 확인합니다.
 </Note>
 
 <h2 id="what-the-launcher-covers">
-  런처가 포함하는 것
+  런처가 포함하는 범위
 </h2>
 
-`CLAUDE_CODE_PROCESS_WRAPPER`가 설정되면 Claude Code는 다음 각 프로세스를 런처를 통해 시작합니다:
+`CLAUDE_CODE_PROCESS_WRAPPER`가 설정되면 Claude Code는 다음의 각 프로세스를 런처를 통해 시작합니다:
 
 * `claude agents`와 백그라운드 세션이 필요에 따라 시작하는 백그라운드 서비스입니다.
-* 모든 에이전트 뷰 행 내의 터미널 호스트 및 Claude Code 세션(서비스가 준비해 두는 웜 스탠바이 세션 포함).
-* 업데이트 또는 충돌 후 서비스가 다시 생성하는 세션입니다.
-* 업데이트 설치를 완료하기 위해 Claude Code가 자신을 재시작하는 것(에이전트 뷰의 업데이트를 위한 재시작 작업 포함).
+* 에이전트 뷰 행의 모든 Claude Code 세션 내에서 터미널 호스트와 Claude Code 세션입니다. 여기에는 서비스가 준비해 두는 웜 스탠바이 세션이 포함됩니다.
+* 업데이트 또는 충돌 후 서비스가 다시 시작하는 세션입니다.
+* 업데이트 설치를 완료하기 위해 Claude Code가 자신을 다시 시작하는 경우입니다. 여기에는 에이전트 뷰의 업데이트를 위한 재시작 작업이 포함됩니다.
+* [원격 제어](/docs/ko/remote-control)가 시작하는 세션 프로세스입니다. Claude Code v2.1.210 이상이 필요합니다.
+* [에이전트 팀](/docs/ko/agent-teams)이 tmux 또는 iTerm2에서 시작하는 분할 창 팀원 세션입니다. 팀원 창은 백그라운드 프로세스가 아닌 대화형이지만, Claude Code가 자신의 바이너리에서 시작하므로 런처가 이들을 포함합니다. Claude Code v2.1.210 이상이 필요합니다.
 
-Windows에서는 변수가 무시됩니다: 런처 계약은 `exec`에 따라 달라지는데, Windows는 이를 지원하지 않습니다. 변수가 설정된 Windows 머신은 모든 프로세스를 래핑 없이 실행하며 계속 작동하며, 유일한 신호는 [디버그 로그](/docs/ko/troubleshooting)의 경고입니다. 런처 정책이 Windows를 포함하는 경우, 변수는 거기서 이를 만족하지 않습니다: 롤아웃을 계획할 때 Windows 머신을 래핑되지 않은 것으로 계산합니다.
+Windows에서는 변수가 무시됩니다. 런처 계약은 `exec`에 따라 달라지는데, Windows는 이를 지원하지 않습니다. 변수가 설정된 Windows 머신은 모든 프로세스를 래핑되지 않은 상태로 실행하며 계속 작동하고, 유일한 신호는 [디버그 로그](/docs/ko/troubleshooting)의 경고입니다. 런처 정책이 Windows를 포함하는 경우, 변수는 거기서 정책을 만족하지 않습니다. 롤아웃을 계획할 때 Windows 머신을 래핑되지 않은 것으로 계산하십시오.
 
 <h3 id="processes-that-start-outside-the-launcher">
-  런처 외부에서 시작되는 프로세스
+  런처 외부에서 시작하는 프로세스
 </h3>
 
-세 가지 프로세스는 절대 런처를 통해 시작되지 않습니다:
+다음 프로세스는 런처를 통해 시작하지 않습니다:
 
-* [설치된 백그라운드 서비스](/docs/ko/agent-view#the-supervisor-process): `launchd` 또는 `systemd`가 해당 프로세스를 단위 파일에서 시작합니다. `/status`와 `claude daemon status`는 이것이 적용될 때 경고하며, 서비스가 변수를 설정한 상태로 재시작되면 서비스가 생성하는 세션은 여전히 런처를 통해 시작됩니다.
-* 터미널에서 직접 시작하는 세션으로, 호출한 방식대로 실행됩니다. 이러한 세션을 포함하려면 `PATH`의 이전 디렉토리에 `claude`라는 스크립트를 배치하여 실제 바이너리로 런처를 실행합니다. 관리되는 심볼릭 링크를 교체하지 마십시오. 자체 생성은 `PATH`를 참조하지 않으므로 두 런처는 절대 스택되지 않습니다.
-* `claude-cli://` 딥 링크의 첫 번째 프로세스로, 운영 체제의 프로토콜 핸들러가 직접 시작합니다. 해당 세션이 백그라운드에서 시작하는 모든 것은 런처를 통해 실행됩니다. 이 경로를 완전히 닫으려면 `disableDeepLinkRegistration` 설정으로 [핸들러 등록을 방지](/docs/ko/deep-links#registration-and-supported-platforms)합니다.
+* 런처가 구성되기 전에 작성된 단위를 가진 [설치된 백그라운드 서비스](/docs/ko/agent-view#the-supervisor-process): `launchd` 또는 `systemd`가 해당 단위 파일에서 해당 프로세스를 시작합니다. `/status`와 `claude daemon status`는 실행 중인 서비스와 구성된 런처가 일치하지 않을 때 경고하며, 서비스가 설정에서 변수를 사용하여 다시 시작하면 서비스가 생성하는 세션은 여전히 런처를 통해 시작합니다.
+* 터미널에서 직접 시작하는 세션으로, 호출한 방식대로 실행됩니다. 이러한 세션을 포함하려면 `PATH`의 이전 디렉터리에 `claude`라는 이름의 스크립트를 배치하여 실제 바이너리로 런처를 실행하십시오. 관리되는 심볼릭 링크를 교체하지 마십시오. 백그라운드 서비스와 해당 세션은 `PATH` 조회 없이 시작되므로 두 런처는 거기서 스택되지 않습니다.
+* `claude-cli://` 딥 링크의 첫 번째 프로세스로, 운영 체제의 프로토콜 핸들러가 직접 시작합니다. 해당 세션이 백그라운드에서 시작하는 모든 것은 런처를 통해 실행됩니다. 이 경로를 완전히 닫으려면 `disableDeepLinkRegistration` 설정으로 [핸들러 등록을 방지](/docs/ko/deep-links#registration-and-supported-platforms)하십시오.
+* `--worktree`와 `--tmux`를 함께 수행하는 재시작으로, 터미널 멀티플렉서가 해당 창을 시작하며, Claude Code의 바이너리가 아닙니다.
+* [Chrome의 Claude](/docs/ko/chrome)가 등록하는 네이티브 메시징 호스트로, 브라우저가 시작하며, Claude Code의 바이너리가 아닙니다.
 
 <h3 id="helper-process-names-in-process-monitors">
   프로세스 모니터의 헬퍼 프로세스 이름
 </h3>
 
-런처가 구성되면 `ps`와 Activity Monitor는 런처의 `exec`가 인수 목록을 재구성하기 때문에 Claude Code의 `claude bg-pty-host` 및 `claude bg-spare` 레이블 대신 백그라운드 헬퍼 프로세스의 버전이 지정된 바이너리 이름을 표시합니다. 이름 변경은 은폐가 아닌 부작용입니다: 프로세스는 그 외에는 변경되지 않으며, Claude Code는 표시 이름이 아닌 바이너리 경로로 자신의 프로세스를 식별합니다.
+런처가 구성되면 `ps`와 Activity Monitor는 더 이상 백그라운드 헬퍼 프로세스에 대해 Claude Code의 `claude bg-pty-host`와 `claude bg-spare` 레이블을 표시하지 않습니다. 런처의 `exec`가 인수 목록을 다시 빌드하기 때문입니다. 레이블을 잃는 것은 은폐가 아닌 부작용입니다. 프로세스는 그 외에는 변경되지 않으며, Claude Code는 표시 이름이 아닌 바이너리 경로로 자신의 프로세스를 식별합니다.
 
 <h2 id="set-up-the-launcher">
   런처 설정
@@ -70,7 +76,7 @@ Windows에서는 변수가 무시됩니다: 런처 계약은 `exec`에 따라 �
   <Step title="설정에서 CLAUDE_CODE_PROCESS_WRAPPER 설정">
     백그라운드 서비스가 이를 상속하도록 설정 파일의 `env` 블록에서 변수를 설정합니다. 셸 `export`는 충분하지 않습니다: 백그라운드 서비스는 필요에 따라 시작되고, 셸보다 오래 지속되며, 셸 프로필을 다시 읽지 않습니다.
 
-    한 대의 머신의 경우 `~/.claude/settings.json`에 추가합니다. 조직의 모든 머신에 배포하려면 [관리되는 설정](/docs/ko/permissions#managed-settings)에 같은 블록을 배치합니다:
+    한 대의 머신의 경우 `~/.claude/settings.json`에 추가합니다. 조직의 모든 머신에 배포하려면 [관리되는 설정](/docs/ko/managed-settings)에 같은 블록을 배치합니다:
 
     ```json theme={null}
     {
@@ -82,7 +88,19 @@ Windows에서는 변수가 무시됩니다: 런처 계약은 `exec`에 따라 �
 
     둘 이상의 소스가 변수를 설정하면 관리되는 설정 값이 `~/.claude/settings.json`과 셸에서 내보낸 값을 모두 재정의하므로 사용자는 자체 생성을 다른 런처로 지정할 수 없습니다.
 
-    프로젝트 및 로컬 설정은 이 변수를 설정할 수 없습니다. 저장소에 커밋된 파일은 머신의 모든 Claude Code 프로세스 앞에 바이너리를 배치할 수 없으므로 `.claude/settings.json` 또는 `.claude/settings.local.json`의 `CLAUDE_CODE_PROCESS_WRAPPER`는 무시되며 [디버그 로그](/docs/ko/troubleshooting)에 경고가 표시됩니다.
+    [`processWrapper` 설정](/docs/ko/settings-reference#processwrapper)은 명명된 최상위 설정 키와 같은 값을 전달합니다. 조직이 `env` 블록이 아닌 개별 키로 설정을 푸시할 때 설정합니다. `processWrapper` 설정은 Claude Code v2.1.210 이상이 필요합니다. 다음 설정 파일은 키를 통해 같은 런처를 설정합니다:
+
+    ```json theme={null}
+    {
+      "processWrapper": "/opt/corp/launcher"
+    }
+    ```
+
+    둘 다 설정되면 `CLAUDE_CODE_PROCESS_WRAPPER`가 우선합니다.
+
+    `processWrapper`는 명명된 설정이므로 [원격 관리되는 설정](/docs/ko/managed-settings#delivery-mechanisms)을 통해 전달하는 조직은 [보안 승인 대화](/docs/ko/server-managed-settings#security-approval-dialogs)에 관리자가 제공한 실행 파일을 실행하는 다른 설정과 함께 나열된 것을 봅니다.
+
+    프로젝트 및 로컬 설정은 런처를 구성할 수 없습니다. 저장소에 커밋된 파일은 머신의 모든 Claude Code 프로세스 앞에 바이너리를 배치할 수 없으므로 Claude Code는 `.claude/settings.json` 또는 `.claude/settings.local.json`의 `CLAUDE_CODE_PROCESS_WRAPPER`를 무시하고 [디버그 로그](/docs/ko/troubleshooting)에 경고를 표시하며, 해당 파일에서 `processWrapper` 키를 읽지 않습니다.
   </Step>
 
   <Step title="백그라운드 서비스 및 세션 재시작">
@@ -108,15 +126,14 @@ Windows에서는 변수가 무시됩니다: 런처 계약은 `exec`에 따라 �
   * 세션별 인증 토큰, 모델 및 공급자 선택, 그리고 `CLAUDE_CODE_PROCESS_WRAPPER` 자체는 모두 상속된 환경에서 이동하므로 허용 목록에서 재구성하는 런처는 시작하는 세션을 중단하며, `/status`는 런처 불일치를 보고합니다.
   * 런처가 환경을 재설정하는 네임스페이스 또는 샌드박스에 들어가야 하는 경우, 상속된 환경을 그 안에서 그대로 다시 내보냅니다.
 * **런처가 실행될 때마다 약 3초 이내에 `exec`에 도달합니다.** 콜드 백그라운드 디스패치는 첫 번째 출력 바이트 전에 런처를 두 번 연속으로 실행하므로 단일 사인온 교환과 같은 느린 작업을 게으르게 또는 캐시에서 수행합니다.
-  * 예산을 훨씬 초과하여 실행되는 런처는 정지된 시작으로 취급되고 재시작됩니다.
 * **자신 내부에서 호출되는 것을 허용합니다.** Claude Code는 모든 중첩된 자체 생성에 런처를 적용하므로 배타적 리소스를 획득하는 런처는 이미 보유하고 있음을 감지해야 합니다.
 * **Claude Code가 시작되기 전에 터미널에 쓰지 마십시오.** `exec` 전에 인쇄된 모든 것은 세션이 초기화 전에 종료되면 충돌 원인으로 보고됩니다.
 
-<h3 id="format-of-the-claude_code_process_wrapper-value">
-  `CLAUDE_CODE_PROCESS_WRAPPER` 값의 형식
+<h3 id="format-of-the-launcher-value">
+  런처 값의 형식
 </h3>
 
-대부분의 런처의 경우 값은 `/opt/corp/launcher`와 같은 스크립트의 절대 경로입니다.
+`CLAUDE_CODE_PROCESS_WRAPPER` 및 `processWrapper` 설정은 동일한 형식을 사용합니다. 대부분의 런처의 경우 값은 `/opt/corp/launcher`와 같은 스크립트의 절대 경로입니다.
 
 런처에 자신의 인수를 전달하려면 경로 뒤에 작성합니다. Claude Code는 값을 셸 명령이 아닌 인수 목록으로 구문 분석합니다:
 

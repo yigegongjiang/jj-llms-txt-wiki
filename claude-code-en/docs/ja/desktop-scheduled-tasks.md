@@ -8,28 +8,28 @@
 
 スケジュール設定されたタスクは、選択した時刻と頻度で新しいセッションを自動的に開始します。毎日のコードレビュー、依存関係の更新チェック、またはカレンダーとインボックスから情報を取得する朝のブリーフィングなど、定期的な作業に使用します。
 
-Desktop アプリの **Routines** ページでは、ローカルスケジュール設定されたタスクとリモート [routines](/docs/ja/routines) の両方を作成できます。ローカルタスクはマシン上で実行され、ファイルとツールに直接アクセスできますが、アプリが開いていてコンピュータが起動している場合にのみ実行されます。リモートルーチンは Anthropic が管理するクラウドインフラストラクチャで実行され、コンピュータがオフの場合でも実行でき、API 呼び出しや GitHub イベントでも実行できます。このページではローカルスケジュール設定されたタスクについて説明します。リモートルーチンとそのトリガーオプションについては、[Routines](/docs/ja/routines) を参照してください。
+Desktop アプリの **Routines** ページでは、ローカルスケジュール設定されたタスクとリモート [routines](/docs/ja/routines) の両方を作成できます。ローカルタスクはマシン上で実行され、ファイルとツールに直接アクセスできますが、アプリが開いていてコンピュータが起動している場合にのみ実行されます。リモートルーチンはクラウドで実行され、コンピュータがオフの場合でも実行でき、API 呼び出しや GitHub イベントでも実行できます。このページではローカルスケジュール設定されたタスクについて説明します。リモートルーチンとそのトリガーオプションについては、[Routines](/docs/ja/routines) を参照してください。
 
 <h2 id="compare-scheduling-options">
   スケジュール設定オプションの比較
 </h2>
 
-Claude Code offers three ways to schedule recurring or one-off work:
+Claude Code は、定期的または 1 回限りの作業をスケジュールするための 3 つの方法を提供します。
 
-|                            | [Cloud](/docs/en/routines)               | [Desktop](/docs/en/desktop-scheduled-tasks) | [`/loop`](/docs/en/scheduled-tasks)      |
-| :------------------------- | :---------------------------------- | :------------------------------------- | :---------------------------------- |
-| Runs on                    | Cloud, Anthropic-managed by default | Your machine                           | Your machine                        |
-| Requires machine on        | No                                  | Yes                                    | Yes                                 |
-| Requires open session      | No                                  | No                                     | Yes                                 |
-| Persistent across restarts | Yes                                 | Yes                                    | Restored on `--resume` if unexpired |
-| Access to local files      | No (fresh clone)                    | Yes                                    | Yes                                 |
-| MCP servers                | Connectors configured per task      | [Config files](/docs/en/mcp) and connectors | Inherits from session               |
-| Permission prompts         | No (runs autonomously)              | Configurable per task                  | Inherits from session               |
-| Customizable schedule      | Via `/schedule` in the CLI          | Yes                                    | Yes                                 |
-| Minimum interval           | 1 hour                              | 1 minute                               | 1 minute                            |
+|                 | [Cloud](/docs/ja/routines)      | [Desktop](/docs/ja/desktop-scheduled-tasks) | [`/loop`](/docs/ja/scheduled-tasks)                         |
+| :-------------- | :------------------------- | :------------------------------------- | :----------------------------------------------------- |
+| 実行場所            | Cloud、デフォルトでは Anthropic 管理 | お客様のマシン                                | お客様のマシン                                                |
+| マシンの起動が必要       | いいえ                        | はい                                     | はい                                                     |
+| オープンセッションが必要    | いいえ                        | いいえ                                    | はい                                                     |
+| 再起動後も永続         | はい                         | はい                                     | `--resume` で復元、[例外](/docs/ja/scheduled-tasks#limitations)あり |
+| ローカルファイルへのアクセス  | いいえ（新規クローン）                | はい                                     | はい                                                     |
+| MCP サーバー        | タスクごとに設定されたコネクタ            | [設定ファイル](/docs/ja/mcp)とコネクタ                 | セッションから継承                                              |
+| 権限プロンプト         | いいえ（自律的に実行）                | タスクごとに設定可能                             | セッションから継承                                              |
+| カスタマイズ可能なスケジュール | CLI の `/schedule` 経由       | はい                                     | はい                                                     |
+| 最小間隔            | 1 時間                       | 1 分                                    | 1 分                                                    |
 
 <Tip>
-  Use **cloud tasks** for work that should run reliably without your machine. Use **Desktop tasks** when you need access to local files and tools. Use **`/loop`** for quick polling during a session.
+  マシンなしで確実に実行する必要がある作業には**クラウドタスク**を使用します。ローカルファイルとツールへのアクセスが必要な場合は**デスクトップタスク**を使用します。セッション中の迅速なポーリングには\*\*`/loop`\*\*を使用します。
 </Tip>
 
 <Note>
@@ -40,7 +40,7 @@ Claude Code offers three ways to schedule recurring or one-off work:
   スケジュール設定されたタスクを作成する
 </h2>
 
-サイドバーで **Routines** をクリックし、**New routine** をクリックして **Local** を選択します。これらのフィールドを設定します。
+Claude Desktop 1.1.5368 より前では、ローカルスケジュール設定されたタスクは利用できません。[**Code** タブ](/docs/ja/desktop)で、サイドバーまたはサイドバーの **More** メニューで **Routines** をクリックし、**New routine** をクリックして **Local** を選択します。これらのフィールドを設定します。
 
 | フィールド        | 説明                                                                                                                                                     |
 | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -73,7 +73,7 @@ Schedule コントロールからプリセットを選択します。
 
 スケジュール設定されたタスクはマシン上で実行されます。Desktop はアプリが開いている間、毎分スケジュールをチェックし、開いている手動セッションとは独立して、タスクが期限を迎えたときに新しいセッションを開始します。各タスクは、スケジュール設定された時刻の後に数分の小さな遅延を取得して、API トラフィックを分散させます。遅延は決定的です。同じタスクは常に同じオフセットで開始されます。
 
-タスクが実行されると、デスクトップ通知が表示され、新しいセッションがサイドバーの **Scheduled** セクションの下に表示されます。それを開いて、Claude が何をしたかを確認し、変更をレビューするか、権限プロンプトに応答します。セッションは他のセッションと同じように機能します。Claude はファイルを編集し、コマンドを実行し、コミットを作成し、プルリクエストを開くことができます。
+タスクが実行されると、デスクトップ通知が表示され、新しいセッションがサイドバーの **Scheduled** セクションの下に表示されます。それを開いて、Claude が何をしたかを確認し、変更をレビューするか、権限プロンプトに応答します。Claude はファイルを編集し、コマンドを実行し、コミットを作成し、プルリクエストを開くことができます。これはセッションを自分で開始する場合と同じですが、Desktop アプリのセッション表面を通じて [デスクトップセッション間でメッセージを送受信](/docs/ja/desktop#work-across-sessions) することはできません。
 
 タスクは Desktop アプリが実行されていて、コンピュータが起動している場合にのみ実行されます。コンピュータがスケジュール設定された時刻を通じてスリープ状態になった場合、実行はスキップされます。アイドルスリープを防ぐには、Settings の **Desktop app → General** で **Keep computer awake** を有効にします。ラップトップのふたを閉じるとスリープ状態になります。コンピュータがオフの場合でも実行する必要があるタスク、または API 呼び出しや GitHub イベントでトリガーする必要があるタスクの場合は、代わりにリモート [routine](/docs/ja/routines) を作成します。
 
@@ -89,17 +89,17 @@ Schedule コントロールからプリセットを選択します。
   スケジュール設定されたタスクの権限
 </h2>
 
-各タスクには独自の権限モードがあり、タスクを作成または編集するときに設定します。`~/.claude/settings.json` からの許可ルールもスケジュール設定されたタスクセッションに適用されます。タスクが Ask モードで実行され、権限がないツールを実行する必要がある場合、実行は承認されるまで停止します。セッションはサイドバーに開いたままなので、後で応答できます。
+各タスクには独自の権限モードがあり、タスクを作成または編集するときに設定します。`~/.claude/settings.json` からの許可ルールもスケジュール設定されたタスクセッションに適用されます。タスクが [Manual モード](/docs/ja/desktop#choose-a-permission-mode) で実行され、権限がないツールを実行する必要がある場合、実行は承認されるまで停止します。セッションはサイドバーに開いたままなので、後で応答できます。
 
 停止を避けるには、タスクを作成した後に **Run now** をクリックし、権限プロンプトを監視し、各プロンプトに対して「常に許可」を選択します。そのタスクの将来の実行は、プロンプトなしで同じツールを自動承認します。タスクの詳細ページからこれらの承認をレビューして取り消すことができます。
 
-Connector ツール [組織が `ask` に設定](/docs/ja/mcp#organization-controls-on-connector-tools) および [`requiresUserInteraction`](/docs/ja/mcp#require-approval-for-a-specific-tool) とマークされた MCP ツールは、毎回呼び出しのたびにプロンプトが表示され、常に許可オプションは提供されません。これらのツールを呼び出す実行は毎回停止します。
+[`requiresUserInteraction`](/docs/ja/mcp#require-approval-for-a-specific-tool) とマークされた MCP ツールは、毎回呼び出しのたびにプロンプトが表示され、常に許可オプションは提供されません。これらのツールを呼び出す実行は毎回停止します。
 
 <h2 id="manage-scheduled-tasks">
   スケジュール設定されたタスクを管理する
 </h2>
 
-**Routines** リストのタスクをクリックして、その詳細ページを開きます。ここから以下を実行できます。
+**Code** タブで、**Routines** リストのタスクをクリックして、その詳細ページを開きます。ここから以下を実行できます。
 
 * **Run now**: 次のスケジュール設定された時刻を待たずに、タスクを直ちに開始します
 * **Status**: Active と Paused の間を切り替えて、タスクを削除せずにスケジュール設定された実行を一時停止または再開します
@@ -118,7 +118,7 @@ Connector ツール [組織が `ask` に設定](/docs/ja/mcp#organization-contro
   関連リソース
 </h2>
 
-* [Routines](/docs/ja/routines): Anthropic が管理するインフラストラクチャでタスクを実行し、スケジュール、API 呼び出し、または GitHub イベントに応答して実行します。コンピュータがオフの場合でも実行できます
+* [Routines](/docs/ja/routines): クラウドでタスクを実行し、スケジュール、API 呼び出し、または GitHub イベントに応答して実行します。コンピュータがオフの場合でも実行できます
 * [Run prompts on a schedule](/docs/ja/scheduled-tasks): CLI で `/loop` を使用したセッションスコープのスケジュール設定
 * [Claude Code GitHub Actions](/docs/ja/github-actions): マシン上ではなく CI でスケジュール設定に従って Claude を実行します
 * [Use Claude Code Desktop](/docs/ja/desktop): 完全な Desktop アプリガイド

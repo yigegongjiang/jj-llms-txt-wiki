@@ -12,16 +12,16 @@ Claude Code — это AI-помощник по кодированию, кото
   Начало работы
 </h2>
 
-Claude Code работает на нескольких платформах: в терминале, расширениях IDE, настольном приложении и в веб-версии. Выберите одну из вкладок ниже, чтобы начать. Большинство платформ требуют [подписку Claude](https://claude.com/pricing?utm_source=claude_code\&utm_medium=docs\&utm_content=overview_pricing) или учетную запись [Anthropic Console](https://console.anthropic.com/). Terminal CLI и VS Code также поддерживают [сторонних поставщиков](/docs/ru/third-party-integrations).
+Claude Code работает на нескольких платформах: в терминале, расширениях IDE, настольном приложении и в веб-версии. Выберите одну из вкладок ниже, чтобы начать. Большинство платформ требуют [подписку Claude](https://claude.com/pricing?utm_source=claude_code\&utm_medium=docs\&utm_content=overview_pricing) или учетную запись [Anthropic Console](https://platform.claude.com/). Terminal CLI, VS Code и JetBrains также поддерживают [сторонних поставщиков](/docs/ru/third-party-integrations).
 
 <Tabs>
   <Tab title="Terminal">
     Полнофункциональный CLI для работы с Claude Code прямо в вашем терминале. Редактируйте файлы, выполняйте команды и управляйте всем проектом из командной строки.
 
-    To install Claude Code, use one of the following methods:
+    Для установки Claude Code используйте один из следующих методов:
 
     <Tabs>
-      <Tab title="Native Install (Recommended)">
+      <Tab title="Встроенная установка (рекомендуется)">
         **macOS, Linux, WSL:**
 
         ```bash theme={null}
@@ -40,14 +40,14 @@ Claude Code работает на нескольких платформах: в 
         curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del install.cmd
         ```
 
-        If you see `The token '&&' is not a valid statement separator`, you're in PowerShell, not CMD. If you see `'irm' is not recognized as an internal or external command`, you're in CMD, not PowerShell. Your prompt shows `PS C:\` when you're in PowerShell and `C:\` without the `PS` when you're in CMD.
+        Если вы видите `The token '&&' is not a valid statement separator`, вы находитесь в PowerShell, а не в CMD. Если вы видите `'irm' is not recognized as an internal or external command`, вы находитесь в CMD, а не в PowerShell. Ваша подсказка показывает `PS C:\` когда вы находитесь в PowerShell и `C:\` без `PS` когда вы находитесь в CMD.
 
-        If the install command fails with `syntax error near unexpected token '<'`, a `403`, or another curl error, see [Troubleshoot installation](/docs/en/troubleshoot-install#find-your-error) to match the error to a fix and for alternative install methods.
+        Если команда установки завершается с ошибкой `syntax error near unexpected token '<'`, `403` или другой ошибкой curl, см. [Устранение неполадок при установке](/docs/ru/troubleshoot-install#find-your-error) чтобы сопоставить ошибку с исправлением и для альтернативных методов установки.
 
-        [Git for Windows](https://git-scm.com/downloads/win) is recommended on native Windows so Claude Code can use the Bash tool. If Git for Windows is not installed, Claude Code uses PowerShell as the shell tool instead. WSL setups do not need Git for Windows.
+        [Git for Windows](https://git-scm.com/downloads/win) рекомендуется на встроенной Windows, чтобы Claude Code мог использовать инструмент Bash. Если Git for Windows не установлен, Claude Code использует PowerShell в качестве инструмента оболочки. Установки WSL не требуют Git for Windows.
 
         <Info>
-          Native installations automatically update in the background to keep you on the latest version.
+          Встроенные установки автоматически обновляются в фоновом режиме, чтобы вы всегда использовали последнюю версию.
         </Info>
       </Tab>
 
@@ -56,10 +56,10 @@ Claude Code работает на нескольких платформах: в 
         brew install --cask claude-code
         ```
 
-        Homebrew offers two casks. `claude-code` tracks the stable release channel, which is typically about a week behind and skips releases with major regressions. `claude-code@latest` tracks the latest channel and receives new versions as soon as they ship.
+        Homebrew предлагает два пакета. `claude-code` отслеживает канал стабильного выпуска, который обычно отстает примерно на неделю и пропускает выпуски с серьезными регрессиями. `claude-code@latest` отслеживает последний канал и получает новые версии сразу после их выпуска.
 
         <Info>
-          Homebrew installations do not auto-update. Run `brew upgrade claude-code` or `brew upgrade claude-code@latest`, depending on which cask you installed, to get the latest features and security fixes.
+          Установки Homebrew не обновляются автоматически. Запустите `brew upgrade claude-code` или `brew upgrade claude-code@latest`, в зависимости от того, какой пакет вы установили, чтобы получить последние функции и исправления безопасности.
         </Info>
       </Tab>
 
@@ -69,21 +69,21 @@ Claude Code работает на нескольких платформах: в 
         ```
 
         <Info>
-          WinGet installations do not auto-update. Run `winget upgrade Anthropic.ClaudeCode` periodically to get the latest features and security fixes.
+          Установки WinGet не обновляются автоматически. Периодически запускайте `winget upgrade Anthropic.ClaudeCode` чтобы получить последние функции и исправления безопасности.
         </Info>
       </Tab>
     </Tabs>
 
-    You can also install with [apt, dnf, or apk](/docs/en/setup#install-with-linux-package-managers) on Debian, Fedora, RHEL, and Alpine.
+    Вы также можете установить с помощью [apt, dnf или apk](/docs/ru/setup#install-with-linux-package-managers) на Debian, Fedora, RHEL и Alpine.
 
-    Затем запустите Claude Code в любом проекте:
+    Затем запустите Claude Code в любом проекте. Замените `your-project` на путь к каталогу проекта на вашей машине:
 
     ```bash theme={null}
     cd your-project
     claude
     ```
 
-    При первом использовании вам будет предложено войти. Вот и все! [Продолжите с Quickstart →](/docs/ru/quickstart)
+    При первом использовании вам будет предложено войти. Если вы установили переменную окружения `ANTHROPIC_API_KEY`, Claude Code пропустит приглашение входа и попросит вас одобрить ключ вместо этого. Вот и все! [Продолжите с Quickstart →](/docs/ru/quickstart)
 
     <Tip>
       Смотрите [расширенную настройку](/docs/ru/setup) для опций установки, ручных обновлений или инструкций по удалению. Посетите [troubleshooting установки](/docs/ru/troubleshoot-install), если у вас возникли проблемы.
@@ -109,18 +109,19 @@ Claude Code работает на нескольких платформах: в 
     * [macOS](https://claude.ai/api/desktop/darwin/universal/dmg/latest/redirect?utm_source=claude_code\&utm_medium=docs) (Intel и Apple Silicon)
     * [Windows](https://claude.ai/api/desktop/win32/x64/setup/latest/redirect?utm_source=claude_code\&utm_medium=docs) (x64)
     * [Windows ARM64](https://claude.ai/api/desktop/win32/arm64/setup/latest/redirect?utm_source=claude_code\&utm_medium=docs)
+    * На Ubuntu или Debian, где приложение находится в бета-версии, установите его с помощью apt, следуя [инструкциям по установке Linux](/docs/ru/desktop-linux)
 
-    После установки запустите Claude, войдите и нажмите вкладку **Code** для начала кодирования. Требуется [платная подписка](https://claude.com/pricing?utm_source=claude_code\&utm_medium=docs\&utm_content=overview_desktop_pricing).
+    После установки запустите Claude, войдите и нажмите вкладку **Code** для начала кодирования. Приложение включает Claude Code, поэтому вам не нужно устанавливать CLI отдельно. Требуется [платная подписка](https://claude.com/pricing?utm_source=claude_code\&utm_medium=docs\&utm_content=overview_desktop_pricing).
 
     [Узнайте больше о приложении для рабочего стола →](/docs/ru/desktop-quickstart)
   </Tab>
 
   <Tab title="Web">
-    Запустите Claude Code в вашем браузере без локальной настройки. Запускайте долгоживущие задачи и возвращайтесь, когда они будут готовы, работайте с репозиториями, которые у вас нет локально, или запускайте несколько задач параллельно. Доступно на настольных браузерах и приложении Claude iOS.
+    Запустите Claude Code в вашем браузере без локальной настройки. Запускайте долгоживущие задачи и возвращайтесь, когда они будут готовы, работайте с репозиториями, которые у вас нет локально, или запускайте несколько задач параллельно. Для более длительной работы создайте [проект](/docs/ru/claude-projects) и позвольте Claude координировать параллельные сеансы для вас. Доступно на настольных браузерах и [приложении Claude для iOS и Android](/docs/ru/mobile).
 
     Начните кодирование на [claude.ai/code](https://claude.ai/code).
 
-    [Начните работу в веб-версии →](/docs/ru/web-quickstart)
+    [Начните работу →](/docs/ru/web-quickstart)
   </Tab>
 
   <Tab title="JetBrains">
@@ -168,14 +169,14 @@ Claude Code работает на нескольких платформах: в 
   </Accordion>
 
   <Accordion title="Настройте с помощью инструкций, skills и hooks" icon="sliders">
-    [`CLAUDE.md`](/docs/ru/memory) — это файл markdown, который вы добавляете в корень вашего проекта, и Claude Code читает его в начале каждого сеанса. Используйте его для установки стандартов кодирования, архитектурных решений, предпочитаемых библиотек и контрольных списков проверки. Claude также создает [auto memory](/docs/ru/memory#auto-memory) по мере работы, сохраняя знания, такие как команды сборки и идеи отладки, в разных сеансах без необходимости что-либо писать.
+    [`CLAUDE.md`](/docs/ru/memory) — это файл markdown, который вы добавляете в корень вашего проекта, и Claude Code читает его в начале каждого сеанса. Используйте его для установки стандартов кодирования, архитектурных решений, предпочитаемых библиотек и контрольных списков проверки. Если ваш репозиторий уже имеет `AGENTS.md` для других агентов кодирования, Claude Code [может читать это](/docs/ru/memory#agents-md) самостоятельно или вместе с `CLAUDE.md`. Claude также создает [auto memory](/docs/ru/memory#auto-memory) по мере работы, сохраняя знания в разных сеансах без необходимости что-либо писать.
 
     Создавайте [skills](/docs/ru/skills) для упаковки повторяемых рабочих процессов, которые ваша команда может использовать, например `/review-pr` или `/deploy-staging`.
 
     [Hooks](/docs/ru/hooks) позволяют вам запускать команды shell до или после действий Claude Code, например автоматическое форматирование после каждого редактирования файла или запуск lint перед коммитом.
   </Accordion>
 
-  <Accordion title="Запустите команды агентов и создавайте пользовательских агентов" icon="users">
+  <Accordion title="Запустите агентов параллельно и создавайте пользовательских агентов" icon="users">
     Запустите [несколько агентов Claude Code](/docs/ru/sub-agents), которые работают над разными частями задачи одновременно. Главный агент координирует работу, назначает подзадачи и объединяет результаты.
 
     Для запуска нескольких полных сеансов параллельно и наблюдения за ними с одного экрана используйте [background agents](/docs/ru/agent-view). Для полностью пользовательских рабочих процессов [Agent SDK](/docs/ru/agent-sdk/overview) позволяет вам создавать собственных агентов, работающих на инструментах и возможностях Claude Code, с полным контролем над оркестровкой, доступом к инструментам и разрешениями.
@@ -201,18 +202,18 @@ Claude Code работает на нескольких платформах: в 
   <Accordion title="Планируйте повторяющиеся задачи" icon="clock">
     Запускайте Claude по расписанию для автоматизации работы, которая повторяется: утренние проверки PR, анализ сбоев CI в ночное время, еженедельные аудиты зависимостей или синхронизация документов после слияния PR.
 
-    * [Routines](/docs/ru/routines) работают на инфраструктуре, управляемой Anthropic, поэтому они продолжают работать даже когда ваш компьютер выключен. Они также могут срабатывать при вызовах API или событиях GitHub. Создавайте их из веб-версии, приложения Desktop или запустив `/schedule` в CLI.
+    * [Routines](/docs/ru/routines) работают в облаке, поэтому они продолжают работать даже когда ваш компьютер выключен. Они также могут срабатывать при вызовах API или событиях GitHub. Создавайте их из веб-версии, приложения Desktop или запустив `/schedule` в CLI.
     * [Запланированные задачи Desktop](/docs/ru/desktop-scheduled-tasks) работают на вашей машине с прямым доступом к вашим локальным файлам и инструментам
     * [`/loop`](/docs/ru/scheduled-tasks) повторяет подсказку в сеансе CLI для быстрого опроса
   </Accordion>
 
   <Accordion title="Работайте откуда угодно" icon="globe">
-    Сеансы не привязаны к одной поверхности. Перемещайте работу между средами по мере изменения вашего контекста:
+    Сеансы не привязаны к одной поверхности. Перемещайте работу между ними по мере изменения вашего контекста:
 
     * Отойдите от своего стола и продолжайте работать со своего телефона или любого браузера с помощью [Remote Control](/docs/ru/remote-control)
     * Отправьте сообщение [Dispatch](/docs/ru/desktop#sessions-from-dispatch) с задачей со своего телефона и откройте сеанс Desktop, который он создает
-    * Запустите долгоживущую задачу в [веб-версии](/docs/ru/claude-code-on-the-web) или [приложении iOS](https://apps.apple.com/app/claude-by-anthropic/id6473753684), затем перенесите ее в свой терминал с помощью `claude --teleport`. Teleport требует подписку claude.ai.
-    * Передайте сеанс терминала в [приложение Desktop](/docs/ru/desktop) с помощью `/desktop` для визуального просмотра различий
+    * Запустите долгоживущую задачу в [веб-версии](/docs/ru/claude-code-on-the-web) или [приложении Claude для мобильных устройств](/docs/ru/mobile), затем перенесите ее в свой терминал с помощью `claude --teleport`. Teleport требует подписку claude.ai.
+    * Запустите `/desktop` для продолжения вашего текущего сеанса терминала в [приложении Desktop](/docs/ru/desktop), где вы можете просмотреть различия визуально. Передача `/desktop` требует подписку claude.ai. Доступно на macOS и x64 Windows.
     * Маршрутизируйте задачи из командного чата: упомяните `@Claude` в [Slack](/docs/ru/slack) с отчетом об ошибке и получите pull request обратно
   </Accordion>
 </AccordionGroup>
@@ -225,17 +226,17 @@ Claude Code работает на нескольких платформах: в 
 
 Помимо сред [Terminal](/docs/ru/quickstart), [VS Code](/docs/ru/vs-code), [JetBrains](/docs/ru/jetbrains), [Desktop](/docs/ru/desktop) и [Web](/docs/ru/claude-code-on-the-web) выше, Claude Code интегрируется с CI/CD, чатом и рабочими процессами браузера:
 
-| Я хочу...                                                                              | Лучший вариант                                                                                                             |
-| -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| Продолжить локальный сеанс со своего телефона или другого устройства                   | [Remote Control](/docs/ru/remote-control)                                                                                       |
-| Отправить события из Telegram, Discord, iMessage или моих собственных webhooks в сеанс | [Channels](/docs/ru/channels)                                                                                                   |
-| Начать задачу локально, продолжить на мобильном                                        | [Web](/docs/ru/claude-code-on-the-web) или [приложение Claude iOS](https://apps.apple.com/app/claude-by-anthropic/id6473753684) |
-| Запустить Claude по расписанию                                                         | [Routines](/docs/ru/routines) или [Запланированные задачи Desktop](/docs/ru/desktop-scheduled-tasks)                                 |
-| Автоматизировать проверки PR и сортировку проблем                                      | [GitHub Actions](/docs/ru/github-actions) или [GitLab CI/CD](/docs/ru/gitlab-ci-cd)                                                  |
-| Получить автоматическую проверку кода на каждый PR                                     | [GitHub Code Review](/docs/ru/code-review)                                                                                      |
-| Маршрутизировать отчеты об ошибках из Slack в pull requests                            | [Slack](/docs/ru/slack)                                                                                                         |
-| Отладить живые веб-приложения                                                          | [Chrome](/docs/ru/chrome)                                                                                                       |
-| Создавайте пользовательских агентов для ваших собственных рабочих процессов            | [Agent SDK](/docs/ru/agent-sdk/overview)                                                                                        |
+| Что я хочу сделать                                                                     | Лучший вариант                                                                                                         |
+| -------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| Продолжить локальный сеанс со своего телефона или другого устройства                   | [Remote Control](/docs/ru/remote-control)                                                                                   |
+| Отправить события из Telegram, Discord, iMessage или моих собственных webhooks в сеанс | [Channels](/docs/ru/channels)                                                                                               |
+| Начать задачу локально, продолжить на мобильном                                        | [`claude --cloud`](/docs/ru/claude-code-on-the-web#from-terminal-to-cloud), затем [мобильное приложение Claude](/docs/ru/mobile) |
+| Запустить Claude по расписанию                                                         | [Routines](/docs/ru/routines) или [Запланированные задачи Desktop](/docs/ru/desktop-scheduled-tasks)                             |
+| Автоматизировать проверки PR и сортировку проблем                                      | [GitHub Actions](/docs/ru/github-actions) или [GitLab CI/CD](/docs/ru/gitlab-ci-cd)                                              |
+| Получить автоматическую проверку кода на каждый PR                                     | [GitHub Code Review](/docs/ru/code-review)                                                                                  |
+| Маршрутизировать отчеты об ошибках из Slack в pull requests                            | [Slack](/docs/ru/slack)                                                                                                     |
+| Отладить живые веб-приложения                                                          | [Chrome](/docs/ru/chrome)                                                                                                   |
+| Создавайте пользовательских агентов для ваших собственных рабочих процессов            | [Agent SDK](/docs/ru/agent-sdk/overview)                                                                                    |
 
 <h2 id="next-steps">
   Следующие шаги
@@ -246,6 +247,7 @@ Claude Code работает на нескольких платформах: в 
 * [Quickstart](/docs/ru/quickstart): пройдите через вашу первую реальную задачу, от изучения кодовой базы до коммита исправления
 * [Сохраняйте инструкции и воспоминания](/docs/ru/memory): дайте Claude постоянные инструкции с файлами CLAUDE.md и auto memory
 * [Common workflows](/docs/ru/common-workflows) и [best practices](/docs/ru/best-practices): шаблоны для получения максимума от Claude Code
+* [Claude Academy](https://academy.claude.com/): бесплатные самостоятельные курсы, включая [Claude Code 101](https://academy.claude.com/courses/claude-code-101) и [Claude Code in Action](https://academy.claude.com/courses/claude-code-in-action)
 * [A harness for every task](https://claude.com/blog/a-harness-for-every-task-dynamic-workflows-in-claude-code): как команда Claude Code использует [dynamic workflows](/docs/ru/workflows) для организации подагентов в масштабе
 * [Settings](/docs/ru/settings): настройте Claude Code для вашего рабочего процесса
 * [Troubleshooting](/docs/ru/troubleshooting): решения для распространенных проблем

@@ -6,7 +6,9 @@
 
 > メッセージライフサイクル、ツール実行、コンテキストウィンドウ、および SDK エージェントを支えるアーキテクチャを理解します。
 
-Agent SDK を使用すると、Claude Code の自律型エージェントループを独自のアプリケーションに組み込むことができます。SDK はスタンドアロンパッケージで、ツール、権限、コスト制限、および出力をプログラムで制御できます。これを使用するために Claude Code CLI をインストールする必要はありません。
+Agent SDK を使用すると、Claude Code の自律型エージェントループを独自のアプリケーションに組み込むことができます。SDK はスタンドアロンパッケージで、ツール、権限、コスト制限、および出力をプログラムで制御できます。
+
+TypeScript と Python の両方の SDK には、ネイティブな Claude Code バイナリがバンドルされているため、ほとんどのインストールでは別途 Claude Code をインストールする必要がありません。インストールが必要な場合については、[クイックスタートのインストール注記](/docs/ja/agent-sdk/quickstart)を参照してください。
 
 エージェントを開始すると、SDK は Claude Code を支える[実行ループ](/docs/ja/how-claude-code-works#the-agentic-loop)と同じものを実行します。Claude はプロンプトを評価し、ツールを呼び出してアクションを実行し、結果を受け取り、タスクが完了するまで繰り返します。このページでは、そのループ内で何が起こるかを説明し、エージェントを効果的に構築、デバッグ、最適化できるようにします。
 
@@ -16,10 +18,12 @@ Agent SDK を使用すると、Claude Code の自律型エージェントルー�
 
 すべてのエージェントセッションは同じサイクルに従います。
 
-<img src="https://mintcdn.com/claude-code/ikqp3_70mqIahteV/images/agent-loop-diagram.svg?fit=max&auto=format&n=ikqp3_70mqIahteV&q=85&s=1c6e8f28d80dba14a7287419656f1237" alt="エージェントループの図：プロンプトが agentic ループに入り、Claude が評価して、ツール呼び出しをリクエストするか最終回答を返すか、またはツール呼び出しの結果が別の評価にフィードバックされます" width="720" height="212" data-path="images/agent-loop-diagram.svg" />
+<img src="https://mintcdn.com/claude-code/ikqp3_70mqIahteV/images/agent-loop-diagram.svg?fit=max&auto=format&n=ikqp3_70mqIahteV&q=85&s=1c6e8f28d80dba14a7287419656f1237" className="dark:hidden" alt="エージェントループの図：プロンプトが agentic ループに入り、Claude が評価してツール呼び出しをリクエストするか最終回答を返すか、またはツール呼び出しの結果が別の評価にフィードバックされます" width="720" height="212" data-path="images/agent-loop-diagram.svg" />
+
+<img src="https://mintcdn.com/claude-code/_xqph1dUOslCOwsj/images/agent-loop-diagram-dark.svg?fit=max&auto=format&n=_xqph1dUOslCOwsj&q=85&s=afe723c52a324d3c61fa72fb02432ab6" className="hidden dark:block" alt="エージェントループの図：プロンプトが agentic ループに入り、Claude が評価してツール呼び出しをリクエストするか最終回答を返すか、またはツール呼び出しの結果が別の評価にフィードバックされます" width="720" height="212" data-path="images/agent-loop-diagram-dark.svg" />
 
 1. **プロンプトを受け取る。** Claude はプロンプト、システムプロンプト、ツール定義、および会話履歴とともにプロンプトを受け取ります。SDK はセッションメタデータを含むサブタイプ `"init"` の[`SystemMessage`](#message-types)を生成します。
-2. **評価して応答する。** Claude は現在の状態を評価し、どのように進めるかを決定します。テキストで応答したり、1 つ以上のツール呼び出しをリクエストしたり、その両方を行ったりできます。SDK はテキストとツール呼び出しリクエストを含む[`AssistantMessage`](#message-types)を生成します。
+2. **評価して応答する。** Claude は現在の状態を評価し、どのように進めるかを決定します。テキストで応答したり、1 つ以上のツール呼び出しをリクエストしたり、その両方を行ったりできます。SDK はテキストブロックやツール呼び出しリクエストなどのコンテンツブロックごとに 1 つずつ、1 つ以上の[`AssistantMessage`](#message-types)オブジェクトを生成します。
 3. **ツールを実行する。** SDK は要求された各ツールを実行し、結果を収集します。ツール結果の各セットは次の決定のために Claude にフィードバックされます。[hooks](/docs/ja/agent-sdk/hooks)を使用して、ツール呼び出しを実行前に傍受、変更、またはブロックできます。
 4. **繰り返す。** ステップ 2 と 3 がサイクルとして繰り返されます。各完全なサイクルは 1 ターンです。Claude はツール呼び出しと結果の処理を続け、ツール呼び出しのない応答を生成するまで続きます。
 5. **結果を返す。** SDK は最終的な[`AssistantMessage`](#message-types)（テキスト応答、ツール呼び出しなし）を生成し、その後に最終テキスト、トークン使用量、コスト、およびセッション ID を含む[`ResultMessage`](#message-types)を生成します。
@@ -37,15 +41,15 @@ Agent SDK を使用すると、Claude Code の自律型エージェントルー�
 まず、SDK はプロンプトを Claude に送信し、セッションメタデータを含む[`SystemMessage`](#message-types)を生成します。その後、ループが開始されます。
 
 1. **ターン 1：** Claude は `Bash` を呼び出して `npm test` を実行します。SDK は[`AssistantMessage`](#message-types)とツール呼び出しを生成し、コマンドを実行し、出力（3 つの失敗）を含む[`UserMessage`](#message-types)を生成します。
-2. **ターン 2：** Claude は `Read` を呼び出して `auth.ts` と `auth.test.ts` を読み取ります。SDK はファイルの内容を返し、`AssistantMessage` を生成します。
-3. **ターン 3：** Claude は `Edit` を呼び出して `auth.ts` を修正し、`Bash` を呼び出して `npm test` を再実行します。3 つのテストすべてが成功します。SDK は `AssistantMessage` を生成します。
-4. **最終ターン：** Claude はツール呼び出しのないテキストのみの応答を生成します。「認証バグを修正し、3 つのテストすべてが成功しました。」SDK はこのテキストを含む最終 `AssistantMessage` を生成し、その後、同じテキストとコストおよび使用量を含む[`ResultMessage`](#message-types)を生成します。
+2. **ターン 2：** Claude は `Read` を呼び出して `auth.ts` と `auth.test.ts` を読み取ります。SDK は各呼び出しに対して `AssistantMessage` を生成し、ファイルの内容を返します。
+3. **ターン 3：** Claude は `Edit` を呼び出して `auth.ts` を修正し、`Bash` を呼び出して `npm test` を再実行します。3 つのテストすべてが成功します。SDK は各呼び出しに対して `AssistantMessage` を生成します。
+4. **最終ターン：** Claude はツール呼び出しのないテキストのみの応答を生成します。「Fixed the auth bug, all three tests pass now.」SDK はこのテキストを含む最終 `AssistantMessage` を生成し、その後、同じテキストとコストおよび使用量を含む[`ResultMessage`](#message-types)を生成します。
 
 これは 4 ターンでした。3 つはツール呼び出し、1 つは最終テキストのみの応答です。
 
 `max_turns` / `maxTurns` でループをキャップできます。これはツール使用ターンのみをカウントします。たとえば、上記のループで `max_turns=2` は編集ステップの前に停止していたでしょう。`max_budget_usd` / `maxBudgetUsd` を使用して、支出しきい値に基づいてターンをキャップすることもできます。
 
-制限がない場合、ループは Claude が独自に終了するまで実行されます。これは適切にスコープされたタスクには問題ありませんが、オープンエンドのプロンプト（「このコードベースを改善する」）では長時間実行される可能性があります。予算を設定することは、本番エージェントの良いデフォルトです。以下の[ターンと予算](#turns-and-budget)でオプションリファレンスを参照してください。
+制限がない場合、ループは Claude が独自に終了するまで実行されます。これは適切にスコープされたタスクには問題ありませんが、オープンエンドのプロンプト（「improve this codebase」）では長時間実行される可能性があります。予算を設定することは、本番エージェントの良いデフォルトです。以下の[ターンと予算](#turns-and-budget)でオプションリファレンスを参照してください。
 
 <h2 id="message-types">
   メッセージタイプ
@@ -58,15 +62,15 @@ Agent SDK を使用すると、Claude Code の自律型エージェントルー�
   * `"init"`：実行のセッションメタデータ。セッション起動中に `SessionStart` または `Setup` フックが実行される場合、その[フックライフサイクルメッセージ](/docs/ja/agent-sdk/typescript#sdkhookstartedmessage)は `init` メッセージの前に到着します
   * `"compact_boundary"`：[圧縮](#automatic-compaction)後に発火します
   * `"informational"`：ループからのプレーンテキストステータスバナー
-  * `"worker_shutting_down"`：ホストが終了しているか Remote Control が切断されたため、現在のターン後にループが終了します
+  * `"worker_shutting_down"`：ホストが終了しているか Remote Control が切断されました
 
   TypeScript では、`"init"` 以外の各サブタイプは `SDKSystemMessage` のサブタイプではなく、[`SDKMessage` ユニオン](/docs/ja/agent-sdk/typescript#sdkmessage)内の独自のタイプです。
-* **`AssistantMessage`：** 最終テキストのみの応答を含む、各 Claude 応答の後に生成されます。そのターンからのテキストコンテンツブロックとツール呼び出しブロックを含みます。
+* **`AssistantMessage`：** 最終テキストのみの応答を含む、Claude の各応答のコンテンツブロックごとに生成されます。各メッセージは、テキストやツール呼び出しなどの単一のコンテンツブロックを持ち、1 つの応答からのメッセージは同じメッセージ ID を共有します。
 * **`UserMessage`：** 各ツール実行後、Claude に送り返されるツール結果コンテンツとともに生成されます。ループ中盤でストリーミングするユーザー入力に対しても生成されます。
 * **`StreamEvent`：** 部分メッセージが有効な場合のみ生成されます。生の API ストリーミングイベント（テキストデルタ、ツール入力チャンク）を含みます。[ストリーム応答](/docs/ja/agent-sdk/streaming-output)を参照してください。
 * **`ResultMessage`：** エージェントループの終了をマークします。最終テキスト結果、トークン使用量、コスト、およびセッション ID を含みます。`subtype` フィールドをチェックして、タスクが成功したか制限に達したかを判断します。`prompt_suggestion` などの少数の末尾システムイベントはその後に到着する可能性があるため、結果で中断するのではなく、ストリームを完了まで反復処理します。[結果を処理する](#handle-the-result)を参照してください。
 
-これら 5 つのタイプは、両方の SDK でエージェントループライフサイクル全体をカバーしています。TypeScript SDK は、追加の観測可能性イベント（フックイベント、ツール進捗、レート制限、タスク通知）も生成し、追加の詳細を提供しますが、ループを駆動するために必須ではありません。完全なリストについては、[Python メッセージタイプリファレンス](/docs/ja/agent-sdk/python#message-types)と [TypeScript メッセージタイプリファレンス](/docs/ja/agent-sdk/typescript#message-types)を参照してください。
+これら 5 つのタイプは、エージェントループライフサイクル全体をカバーしています。両方の SDK は、レート制限ステータスやタスク通知などの観測可能性イベントも生成し、ループを駆動するために必須ではありません。完全なリストについては、[Python メッセージタイプリファレンス](/docs/ja/agent-sdk/python#message-types)と [TypeScript メッセージタイプリファレンス](/docs/ja/agent-sdk/typescript#message-types)を参照してください。
 
 <h3 id="handle-messages">
   メッセージを処理する
@@ -87,14 +91,19 @@ Agent SDK を使用すると、Claude Code の自律型エージェントルー�
   <CodeGroup>
     ```python Python theme={null}
     import asyncio
-    from claude_agent_sdk import query, AssistantMessage, ResultMessage
+    from claude_agent_sdk import query, AssistantMessage, ResultMessage, TextBlock, ToolUseBlock
 
 
     async def main():
         try:
             async for message in query(prompt="Summarize this project"):
                 if isinstance(message, AssistantMessage):
-                    print(f"Turn completed: {len(message.content)} content blocks")
+                    # Each AssistantMessage carries one content block
+                    for block in message.content:
+                        if isinstance(block, TextBlock):
+                            print(f"Claude: {block.text}")
+                        elif isinstance(block, ToolUseBlock):
+                            print(f"Tool call: {block.name}")
                 if isinstance(message, ResultMessage):
                     if message.subtype == "success":
                         print(message.result)
@@ -116,7 +125,14 @@ Agent SDK を使用すると、Claude Code の自律型エージェントルー�
     try {
       for await (const message of query({ prompt: "Summarize this project" })) {
         if (message.type === "assistant") {
-          console.log(`Turn completed: ${message.message.content.length} content blocks`);
+          // Each assistant message carries one content block
+          for (const block of message.message.content) {
+            if (block.type === "text") {
+              console.log(`Claude: ${block.text}`);
+            } else if (block.type === "tool_use") {
+              console.log(`Tool call: ${block.name}`);
+            }
+          }
         }
         if (message.type === "result") {
           if (message.subtype === "success") {
@@ -157,6 +173,8 @@ SDK には Claude Code を支えるのと同じツールが含まれています
 | **検出**         | `ToolSearch`                                                | すべてをプリロードする代わりに、オンデマンドでツールを動的に検索してロード |
 | **オーケストレーション** | `Agent`、`Skill`、`AskUserQuestion`、`TaskCreate`、`TaskUpdate` | サブエージェントを生成、スキルを呼び出し、ユーザーに質問、タスクを追跡   |
 
+[モデルがタスク追跡ツールを取得しない](/docs/ja/agent-sdk/todo-tracking#model-availability)場合、Claude Code は `TaskCreate` と `TaskUpdate` をオプトインした場合にのみ提供します。
+
 組み込みツール以外に、以下を実行できます。
 
 * **外部サービスを接続する** [MCP サーバー](/docs/ja/agent-sdk/mcp)（データベース、ブラウザ、API）
@@ -169,9 +187,9 @@ SDK には Claude Code を支えるのと同じツールが含まれています
 
 Claude はタスクに基づいてどのツールを呼び出すかを決定しますが、それらの呼び出しの実行を許可するかどうかを制御します。特定のツールを自動承認したり、他のツールを完全にブロックしたり、すべてに対して承認を要求したりできます。3 つのオプションが連携して、何が実行されるかを決定します。
 
-* **`allowed_tools` / `allowedTools`** リストされたツールを自動承認します。許可されたツールリストに `["Read", "Glob", "Grep"]` がある読み取り専用エージェントは、プロンプトなしでそれらのツールを実行します。リストされていないツールは引き続き利用可能ですが、権限が必要です。
+* **`allowed_tools` / `allowedTools`** リストされたツールを自動承認します。許可されたツールリストに `["Read", "Glob", "Grep"]` がある読み取り専用エージェントは、プロンプトなしでそれらのツールを実行します。リストされていないツールは引き続き利用可能ですが、それらへの呼び出しで承認が必要な場合は、権限モードと `canUseTool` にフォールスルーします。
 * **`disallowed_tools` / `disallowedTools`** リストされたツールをブロックします。他の設定に関係なく。ツールが実行される前にルールがチェックされる順序については、[権限](/docs/ja/agent-sdk/permissions)を参照してください。
-* **`permission_mode` / `permissionMode`** 許可または拒否ルールでカバーされていないツールに何が起こるかを制御します。利用可能なモードについては、[権限モード](#permission-mode)を参照してください。
+* **`permission_mode` / `permissionMode`** 必要な人間の監視の量を制御します。SDK は有効なモードと許可および拒否ルールを固定順序で評価します。詳細については、[権限がどのように評価されるか](/docs/ja/agent-sdk/permissions#how-permissions-are-evaluated)を参照してください。利用可能なモードについては、[権限モード](#permission-mode)を参照してください。
 
 `"Bash(npm *)"` のようなルールで個別のツールをスコープすることもできます。これにより、特定のコマンドのみを許可できます。完全なルール構文については、[権限](/docs/ja/agent-sdk/permissions)を参照してください。
 
@@ -202,7 +220,9 @@ Claude が単一のターンで複数のツール呼び出しをリクエスト�
 
 どちらかの制限に達すると、SDK は対応するエラーサブタイプ（`error_max_turns` または `error_max_budget_usd`）を含む `ResultMessage` を返します。これらのサブタイプをチェックする方法については[結果を処理する](#handle-the-result)を、構文については[`ClaudeAgentOptions`](/docs/ja/agent-sdk/python#claudeagentoptions) / [`Options`](/docs/ja/agent-sdk/typescript#options)を参照してください。
 
-[ストリーミング入力](/docs/ja/agent-sdk/streaming-vs-single-mode)を使用する場合、ターンがまだ実行中に送信したメッセージは、そのターンが最大ターン制限で終了するときにキューに入ったままになり、独自の最大ターン制限を持つ独自のターンを開始します。v2.1.205 より前では、ターンの最終イテレーションに到着したメッセージは終了ターンに消費され、モデルに到達することなく失われる可能性がありました。
+予算上限は[サブエージェント](/docs/ja/agent-sdk/subagents)をカバーしています。それらの支出は合計に計上されます。支出が上限に達すると、別のサブエージェントを生成することは `Budget limit reached` で失敗し、Claude Code は実行中のバックグラウンドサブエージェントを停止します。上限実施の動作には Claude Code v2.1.217 以降が必要です。
+
+[ストリーミング入力](/docs/ja/agent-sdk/streaming-vs-single-mode)を使用する場合、ターンが最大ターン制限で終了するときにまだキューに入っているメッセージは、キューに入ったままになります。Claude Code はそれをそのターンの最後のモデル呼び出しに追加しません。メッセージの新しいターンを開始し、そのターンの最大ターン数がリセットされます。予算合計はメッセージ全体で累積し続け、支出が `maxBudgetUsd` に達すると、同じ会話内の後続メッセージは `error_max_budget_usd` 結果で終了します。[`/clear`](/docs/ja/agent-sdk/cost-tracking)は予算をリセットします。
 
 <h3 id="effort-level">
   努力レベル
@@ -210,18 +230,18 @@ Claude が単一のターンで複数のツール呼び出しをリクエスト�
 
 `effort` オプションは Claude が適用する推論の量を制御します。低い努力レベルはターンあたりのトークンが少なく、コストが削減されます。すべてのモデルが努力パラメータをサポートしているわけではありません。どのモデルがサポートしているかについては、[努力](https://platform.claude.com/docs/ja/build-with-claude/effort)を参照してください。
 
-| レベル        | 動作          | 適している用途                                                     |
-| :--------- | :---------- | :---------------------------------------------------------- |
-| `"low"`    | 最小限の推論、高速応答 | ファイル検索、ディレクトリのリスト                                           |
-| `"medium"` | バランスの取れた推論  | ルーチン編集、標準タスク                                                |
-| `"high"`   | 徹底的な分析      | リファクタリング、デバッグ                                               |
-| `"xhigh"`  | 拡張推論深度      | コーディングと agentic coding タスク。Fable 5、Opus 4.7 以上、Sonnet 5 で推奨 |
-| `"max"`    | 最大推論深度      | 深い分析が必要な複数ステップの問題                                           |
+| レベル        | 動作          | 適している用途                                                                         |
+| :--------- | :---------- | :------------------------------------------------------------------------------ |
+| `"low"`    | 最小限の推論、高速応答 | ファイル検索、ディレクトリのリスト                                                               |
+| `"medium"` | バランスの取れた推論  | ルーチン編集、標準タスク                                                                    |
+| `"high"`   | 徹底的な分析      | リファクタリング、デバッグ                                                                   |
+| `"xhigh"`  | 拡張推論深度      | [サポートしているモデル](/docs/ja/model-config#adjust-effort-level)でのコーディングと agentic coding タスク |
+| `"max"`    | 最大推論深度      | 深い分析が必要な複数ステップの問題                                                               |
 
-`effort` を設定しない場合、両方の SDK はパラメータを設定したままにして、モデルのデフォルト動作に委譲します。
+`effort` を設定しない場合、Claude Code は努力レベルを自身で解決します。その順序は[努力レベルを調整する](/docs/ja/model-config#adjust-effort-level)で説明されています。
 
 <Note>
-  `effort` は各応答内の推論深度のレイテンシとトークンコストをトレードオフします。[拡張思考](https://platform.claude.com/docs/ja/build-with-claude/extended-thinking)は、出力に表示される思考の連鎖ブロックを生成する別の機能です。これらは独立しています。`effort: "low"` を拡張思考有効で設定することも、`effort: "max"` を有効にしないで設定することもできます。
+  `effort` は各応答内の推論深度のレイテンシとトークンコストをトレードオフします。[Extended thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking)は、出力に `thinking` ブロックを生成する別の機能であり、[Python](/docs/ja/agent-sdk/python#thinkingconfig)または[TypeScript](/docs/ja/agent-sdk/typescript#thinkingconfig)の `ThinkingConfig` の `display` フィールドは、テキストを受け取るかどうかを制御します。これらは独立しています。`effort: "low"` を extended thinking 有効で設定することも、`effort: "max"` を有効にしないで設定することもできます。
 </Note>
 
 単純でスコープが明確なタスク（ファイルのリストや単一の grep の実行など）を実行するエージェントの場合は、低い努力を使用してコストとレイテンシを削減します。トップレベルの `query()` オプションでセッション全体に `effort` を設定するか、[`AgentDefinition`](/docs/ja/agent-sdk/subagents#agentdefinition-configuration)の `effort` フィールドでサブエージェントごとにセッションレベルをオーバーライドします。
@@ -232,14 +252,14 @@ Claude が単一のターンで複数のツール呼び出しをリクエスト�
 
 権限モードオプション（Python では `permission_mode`、TypeScript では `permissionMode`）は、エージェントがツールを使用する前に承認を求めるかどうかを制御します。
 
-| モード                   | 動作                                                                                                                                                                                                                                                                                                                                                          |
-| :-------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `"default"`           | 許可ルールでカバーされていないツールは承認コールバックをトリガーします。コールバックがない場合は拒否                                                                                                                                                                                                                                                                                                          |
-| `"acceptEdits"`       | ファイル編集と一般的なファイルシステムコマンド（`mkdir`、`touch`、`mv`、`cp` など）を自動承認します。他の Bash コマンドはデフォルトルールに従います                                                                                                                                                                                                                                                                    |
-| `"plan"`              | Claude はソースファイルを編集せずに探索して計画を作成します。ファイル編集は自動承認されず、`canUseTool` コールバックを通じてプロンプトされます                                                                                                                                                                                                                                                                           |
-| `"dontAsk"`           | プロンプトしません。[権限ルール](/docs/ja/settings#permission-settings)によって事前承認されたツールが実行され、その他はすべて拒否されます。`AskUserQuestion`、組織が[`ask` に設定](/docs/ja/mcp#organization-controls-on-connector-tools)したコネクタツール、および[`requiresUserInteraction`](/docs/ja/mcp#require-approval-for-a-specific-tool)とマークされた MCP ツールは、許可していても拒否されます                                                                 |
-| `"auto"`              | モデル分類器を使用して各ツール呼び出しを承認または拒否します。利用可能性と動作については、[自動モード](/docs/ja/permission-modes#eliminate-prompts-with-auto-mode)を参照してください                                                                                                                                                                                                                                        |
-| `"bypassPermissions"` | 明示的な[`ask` ルール](/docs/ja/settings#permission-settings)に一致するツール、組織が[`ask` に設定](/docs/ja/mcp#organization-controls-on-connector-tools)したコネクタツール、およびユーザーインタラクションが必要なツールを除き、尋ねずにすべての許可されたツールを実行します。権限がどのように評価されるかについては、[権限の評価方法](/docs/ja/agent-sdk/permissions#how-permissions-are-evaluated)を参照してください。Unix でルートとして実行する場合は使用できません。エージェントのアクションが気にするシステムに影響を与えられない隔離環境でのみ使用します |
+| モード                   | 動作                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | ユースケース                                                                  |
+| :-------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------- |
+| `"default"`           | 許可ルールでカバーされていないツール呼び出しは `canUseTool` コールバックをトリガーします。コールバックがない場合は拒否                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | カスタム承認コールバックを備えたインタラクティブアプリケーション                                        |
+| `"acceptEdits"`       | ファイル編集と一般的なファイルシステムコマンド（`mkdir`、`touch`、`mv`、`cp` など）を自動承認します。他の Bash コマンドはデフォルトルールに従います                                                                                                                                                                                                                                                                                                                                                                                                                                                               | Claude の編集を信頼し、プロトタイピング中や隔離されたディレクトリで作業する場合など、より高速な反復を望む                |
+| `"plan"`              | Claude はソースファイルを編集せずに探索して計画を作成します。ファイル編集は自動承認されず、`canUseTool` コールバックを通じてプロンプトされます                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Claude が変更を提案するが実行しないようにしたい場合、例えばコードレビュー中または変更を実行する前に承認する必要がある場合        |
+| `"dontAsk"`           | プロンプトしません。[権限ルール](/docs/ja/settings-reference#permission-settings)によって事前承認されたツールが実行され、`default` モードで承認が不要な呼び出し（作業ディレクトリ内のファイル読み取りなど）も実行されます。それ以外のプロンプトが表示される呼び出しはすべて拒否されます。`AskUserQuestion`、組織が[`ask` に設定](/docs/ja/mcp#organization-controls-on-connector-tools)したコネクタツール、および[`requiresUserInteraction`](/docs/ja/mcp#require-approval-for-a-specific-tool)とマークされた MCP ツールは、許可していても拒否されます                                                                                                                                                                           | ヘッドレスエージェント用に固定で明示的なツール表面を望み、`canUseTool` が存在しないことへの暗黙的な依存よりもハード拒否を優先する |
+| `"auto"`              | モデル分類器を使用して権限プロンプトを承認または拒否します。利用可能性と動作については、[Auto mode](/docs/ja/permission-modes#eliminate-prompts-with-auto-mode)を参照してください                                                                                                                                                                                                                                                                                                                                                                                                                                | ツール使用に対する安全ガードレールを望む自律型エージェント                                           |
+| `"bypassPermissions"` | 明示的な[`ask` ルール](/docs/ja/settings-reference#permission-settings)に一致するツール、組織が[`ask` に設定](/docs/ja/mcp#organization-controls-on-connector-tools)したコネクタツール、およびユーザーインタラクションが必要なツールを除き、尋ねずにすべての許可されたツールを実行します。[クロスセッションメッセージングセーフガード](/docs/ja/permission-modes#skip-all-checks-with-bypasspermissions-mode)は引き続き適用されます。権限がどのように評価されるかについては、[権限の評価方法](/docs/ja/agent-sdk/permissions#how-permissions-are-evaluated)を参照してください。TypeScript SDK では、`options` で `allowDangerouslySkipPermissions: true` も必要です。Unix でルートとして実行する場合は使用できません。エージェントのアクションが気にするシステムに影響を与えられない隔離環境でのみ使用します | CI、コンテナ、またはその他の隔離環境                                                     |
 
 インタラクティブアプリケーションの場合は、ツール承認コールバックで `"default"` を使用して承認プロンプトを表示します。開発マシン上の自律型エージェントの場合は、`"acceptEdits"` を使用してファイル編集と一般的なファイルシステムコマンド（`mkdir`、`touch`、`mv`、`cp` など）を自動承認しながら、他の `Bash` コマンドを許可ルールの背後にゲートします。CI、コンテナ、またはその他の隔離環境に対して `"bypassPermissions"` を予約します。詳細については、[権限](/docs/ja/agent-sdk/permissions)を参照してください。
 
@@ -247,13 +267,13 @@ Claude が単一のターンで複数のツール呼び出しをリクエスト�
   モデル
 </h3>
 
-`model` を設定しない場合、SDK は Claude Code のデフォルトを使用します。これは認証方法とサブスクリプションによって異なります。特定のモデルをピン留めするか、より高速で安価なエージェント用に小さいモデルを使用するために明示的に設定します（たとえば、`model="claude-sonnet-5"`）。利用可能な ID については、[モデル](https://platform.claude.com/docs/ja/about-claude/models)を参照してください。
+`model` オプションを設定して、セッションを実行するモデルを選択します。詳細については、[モデルを選択する](/docs/ja/agent-sdk/configuration#choose-a-model)を参照してください。
 
 <h2 id="the-context-window">
   コンテキストウィンドウ
 </h2>
 
-コンテキストウィンドウは、セッション中に Claude が利用できる情報の総量です。セッション内のターン間でリセットされません。すべてが蓄積されます。システムプロンプト、ツール定義、会話履歴、ツール入力、およびツール出力です。ターン間で同じままのコンテンツ（システムプロンプト、ツール定義、CLAUDE.md）は自動的に[プロンプトキャッシュ](https://platform.claude.com/docs/ja/build-with-claude/prompt-caching)され、繰り返されるプリフィックスのコストとレイテンシが削減されます。
+コンテキストウィンドウは、セッション中に Claude が利用できる情報の総量です。セッション内のターン間でリセットされません。すべてが蓄積されます。システムプロンプト、ツール定義、会話履歴、ツール入力、およびツール出力です。ターン間で同じままのコンテンツ（システムプロンプト、ツール定義、CLAUDE.md）は自動的に[プロンプトキャッシュ](https://platform.claude.com/docs/ja/build-with-claude/prompt-caching)され、繰り返されるプリフィックスのコストとレイテンシが削減されます。カスタムシステムプロンプトまたは `append` テキストがセッション間でキャッシュ再利用にどのように影響するかについては、[システムプロンプトの変更](/docs/ja/agent-sdk/modifying-system-prompts#improve-prompt-caching-across-users-and-machines)を参照してください。
 
 <h3 id="what-consumes-context">
   コンテキストを消費するもの
@@ -261,13 +281,13 @@ Claude が単一のターンで複数のツール呼び出しをリクエスト�
 
 SDK でのコンテキストへの各コンポーネントの影響は次のとおりです。
 
-| ソース                | ロード時期                                                             | 影響                                                                                                                                                                                                                                                                             |
-| :----------------- | :---------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **システムプロンプト**      | すべてのリクエスト                                                         | 小さい固定コスト、常に存在                                                                                                                                                                                                                                                                  |
-| **CLAUDE.md ファイル** | セッション開始時、[`settingSources`](/docs/ja/agent-sdk/claude-code-features)経由 | すべてのリクエストで完全なコンテンツ（ただしプロンプトキャッシュされるため、最初のリクエストのみが完全なコストを支払う）                                                                                                                                                                                                                   |
-| **ツール定義**          | すべてのリクエスト。MCP スキーマはデフォルトで遅延                                       | 組み込みツールスキーマはすべてのリクエストをロードします。[ツール検索](/docs/ja/agent-sdk/mcp#mcp-tool-search)は、デフォルトで MCP ツールスキーマを遅延させ、Google Cloud の Agent Platform または非ファーストパーティの `ANTHROPIC_BASE_URL` でのアップフロントロードにフォールバックします。完全なマトリックスについては、[ツール検索を構成](/docs/ja/agent-sdk/tool-search#configure-tool-search)を参照してください |
-| **会話履歴**           | ターン間で蓄積                                                           | 各ターンで増加。プロンプト、応答、ツール入力、ツール出力                                                                                                                                                                                                                                                   |
-| **スキル説明**          | セッション開始時、設定ソース経由                                                  | 短い要約。完全なコンテンツは呼び出し時のみロード                                                                                                                                                                                                                                                       |
+| ソース                | ロード時期                                                             | 影響                                                                                                                                                                                                                                  |
+| :----------------- | :---------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **システムプロンプト**      | すべてのリクエスト                                                         | 小さい固定コスト、常に存在                                                                                                                                                                                                                       |
+| **CLAUDE.md ファイル** | セッション開始時、[`settingSources`](/docs/ja/agent-sdk/claude-code-features)経由 | すべてのリクエストで完全なコンテンツ（ただしプロンプトキャッシュされるため、最初のリクエストのみが完全なコストを支払う）                                                                                                                                                                        |
+| **ツール定義**          | すべてのリクエスト。MCP スキーマはデフォルトで遅延                                       | 組み込みツールスキーマはすべてのリクエストをロードします。[ツール検索](/docs/ja/agent-sdk/mcp#mcp-tool-search)はデフォルトで MCP ツールスキーマを遅延させ、サポートされていないモデルと特定のプラットフォームでアップフロントロードにフォールバックします。完全なマトリックスについては、[ツール検索を構成](/docs/ja/agent-sdk/tool-search#configure-tool-search)を参照してください |
+| **会話履歴**           | ターン間で蓄積                                                           | 各ターンで増加。プロンプト、応答、ツール入力、ツール出力                                                                                                                                                                                                        |
+| **スキル説明**          | セッション開始時、設定ソース経由                                                  | 短い要約。完全なコンテンツは呼び出し時のみロード                                                                                                                                                                                                            |
 
 大きなツール出力は大量のコンテキストを消費します。大きなファイルを読み取るか、詳細な出力を含むコマンドを実行すると、単一のターンで数千のトークンを使用できます。コンテキストはターン間で蓄積されるため、多くのツール呼び出しを含む長いセッションは、短いセッションよりもはるかに多くのコンテキストを構築します。
 
@@ -281,9 +301,9 @@ SDK でのコンテキストへの各コンポーネントの影響は次のと�
 
 圧縮動作をいくつかの方法でカスタマイズできます。
 
-* **CLAUDE.md の要約指示：** 圧縮機は他のコンテキストと同様に CLAUDE.md を読むため、要約時に保持する内容を指示するセクションを含めることができます。セクションヘッダーは自由形式です（マジック文字列ではありません）。圧縮機は意図に基づいて一致します。
+* **CLAUDE.md の要約指示：** 圧縮機は他のコンテキストと同様に CLAUDE.md を読むため、要約時に保持する内容を指示するセクションを含めることができます。圧縮機は意図に基づいて一致するため、セクションヘッダーは自由形式です。
 * **`PreCompact` フック：** 圧縮が発生する前にカスタムロジックを実行します。たとえば、完全なトランスクリプトをアーカイブします。フックは `trigger` フィールド（`manual` または `auto`）を受け取ります。[hooks](/docs/ja/agent-sdk/hooks)を参照してください。
-* **手動圧縮：** `/compact` をプロンプト文字列として送信して、オンデマンドで圧縮をトリガーします。この方法で送信されるコマンドは SDK 入力であり、CLI のみのショートカットではありません。[SDK のコマンド](/docs/ja/agent-sdk/slash-commands)を参照してください。
+* **手動圧縮：** `/compact` をプロンプト文字列として送信して、オンデマンドで圧縮をトリガーします。この方法で送信されるコマンドは SDK 入力です。[名前でコマンドをディスパッチ](/docs/ja/agent-sdk/skills#dispatch-commands-by-name)を参照してください。
 
 <Accordion title="例：CLAUDE.md の要約指示">
   プロジェクトの CLAUDE.md にセクションを追加して、圧縮機に保持する内容を指示します。ヘッダー名は特別ではありません。明確なラベルを使用してください。
@@ -307,7 +327,7 @@ SDK でのコンテキストへの各コンポーネントの影響は次のと�
 
 * **サブタスク用にサブエージェントを使用します。** 各サブエージェントは新しい会話で開始されます（以前のメッセージ履歴はありませんが、独自のシステムプロンプトとプロジェクトレベルのコンテキスト（CLAUDE.md など）をロードします）。親のターンは表示されず、最終応答のみが親にツール結果として返されます。メインエージェントのコンテキストは完全なサブタスクトランスクリプトではなく、その要約で増加します。詳細については、[サブエージェントが継承するもの](/docs/ja/agent-sdk/subagents#what-subagents-inherit)を参照してください。
 * **ツールを選別します。** すべてのツール定義はコンテキストスペースを取ります。[`AgentDefinition`](/docs/ja/agent-sdk/subagents#agentdefinition-configuration)の `tools` フィールドを使用してサブエージェントを必要な最小セットにスコープします。
-* **MCP サーバーコストを監視します。** [MCP ツール検索](/docs/ja/agent-sdk/mcp#mcp-tool-search)はデフォルトで MCP ツールスキーマを遅延させ、オンデマンドでロードします。ツール検索がオフの場合、Google Cloud の Agent Platform 上の場合、または非ファーストパーティの `ANTHROPIC_BASE_URL` の背後にある場合、各 MCP サーバーはすべてのツールスキーマをすべてのリクエストに追加するため、多くのツールを持つ少数のサーバーは、エージェントが何か作業を行う前に大量のコンテキストを消費できます。
+* **MCP サーバーコストを監視します。** [MCP ツール検索](/docs/ja/agent-sdk/mcp#mcp-tool-search)はデフォルトで MCP ツールスキーマを遅延させ、オンデマンドでロードします。ツール検索がオフの場合またはサポートされていないモデルと特定のプラットフォームでアップフロントロードにフォールバックした場合、各 MCP サーバーはすべてのツールスキーマをすべてのリクエストに追加するため、多くのツールを持つ少数のサーバーは、エージェントが何か作業を行う前に大量のコンテキストを消費できます。完全な構成については、[ツール検索を構成](/docs/ja/agent-sdk/tool-search#configure-tool-search)を参照してください。
 * **ルーチンタスクに低い努力を使用します。** ファイルを読み取るか、ディレクトリをリストするだけで済むエージェント用に[努力](#effort-level)を `"low"` に設定します。これはトークン使用量とコストを削減します。
 
 機能ごとのコンテキストコストの詳細な内訳については、[コンテキストコストを理解する](/docs/ja/features-overview#understand-context-costs)を参照してください。
@@ -320,7 +340,7 @@ SDK との各インタラクションはセッションを作成または継続�
 
 再開すると、以前のターンからの完全なコンテキストが復元されます。読み取られたファイル、実行された分析、および実行されたアクション。セッションをフォークして、元のセッションを変更せずに別のアプローチに分岐することもできます。
 
-セッション再開、継続、フォークパターンの完全なガイドについては、[セッション管理](/docs/ja/agent-sdk/sessions)を参照してください。
+セッション再開、継続、フォークパターンの完全なガイドについては、[セッション管理](/docs/ja/agent-sdk/sessions)を参照してください。ステートレスコンテナまたはサーバーレスホスト全体でセッションを再開するには、[`session_store` / `sessionStore` アダプター](/docs/ja/agent-sdk/session-storage)を渡して、SDK がトランスクリプトを独自のバックエンドにミラーリングし、別のホストがそれらを再開できるようにします。Claude Code サブプロセスは引き続きローカルディスクに最初に書き込みます。[デュアルライトアーキテクチャ](/docs/ja/agent-sdk/session-storage#dual-write-architecture)を参照して、新しいセッションと比較してストアから再開された実行のどちらのコピーが存続するか、およびローカルコピーを一時的に保つ方法を確認してください。
 
 <Note>
   Python では、`ClaudeSDKClient` は複数の呼び出し間でセッション ID を自動的に処理します。詳細については、[Python SDK リファレンス](/docs/ja/agent-sdk/python#choosing-between-query-and-claudesdkclient)を参照してください。
@@ -337,19 +357,28 @@ SDK との各インタラクションはセッションを作成または継続�
 | `success`                             | Claude は通常、タスクを完了しました                                                               |           はい          |
 | `error_max_turns`                     | 完了前に `maxTurns` 制限に達しました                                                            |          いいえ          |
 | `error_max_budget_usd`                | 完了前に `maxBudgetUsd` 制限に達しました                                                        |          いいえ          |
-| `error_during_execution`              | エラーがループを中断しました（たとえば、API 障害またはキャンセルされたリクエスト）                                         |          いいえ          |
+| `error_during_execution`              | エラーがループを中断しました（たとえば、キャンセルされたリクエスト）                                                  |          いいえ          |
 | `error_max_structured_output_retries` | 設定された再試行制限内で有効な構造化出力が生成されませんでした。すべての試行が検証に失敗したか、モデルフォールバックが成功した再試行なしで完了した出力を取り消しました |          いいえ          |
 
-`result` フィールド（最終テキスト出力）は `success` バリアントにのみ存在するため、読み取る前に常にサブタイプをチェックしてください。すべての結果サブタイプは `total_cost_usd`、`usage`、`num_turns`、および `session_id` を持つため、コストを追跡し、エラー後でも再開できます。Python では、`total_cost_usd` と `usage` はオプションとして型付けされ、一部のエラーパスで `None` である可能性があるため、フォーマットする前にガードしてください。[コストと使用量の追跡](/docs/ja/agent-sdk/cost-tracking)を参照して、`usage` フィールドの解釈の詳細を確認してください。
+`result` フィールドは最終テキスト出力を保持し、`success` バリアントにのみ存在するため、読み取る前に常にサブタイプをチェックしてください。
+
+すべての結果サブタイプは `total_cost_usd`、`usage`、`num_turns`、および `session_id` を持つため、コストを追跡し、エラー後でも再開できます。守るべき 2 つのことがあります：
+
+* セッションクラッシュ後、最終結果は `error_during_execution` であり、そのコストフィールドはゼロになる可能性があり、その `stop_reason` は `null` です。プロセスはそれを発行した後に終了します。[セッションクラッシュ後に合計を復旧する](/docs/ja/agent-sdk/cost-tracking#recover-totals-after-a-session-crash)を参照してください。
+* Python では、`total_cost_usd`、`usage`、および `model_usage` はオプションとして型付けされているため、読み取る前に `None` でないことを確認してください。
+
+`usage` フィールドはメインエージェントループのみをカバーします。ツリー全体のトークンとコスト会計には、Python で `modelUsage` または `model_usage` を使用してください。`usage` フィールドの解釈の詳細については、[コストと使用量の追跡](/docs/ja/agent-sdk/cost-tracking)を参照してください。
 
 <Note>
   クエリがエラー結果で終了する場合：
 
   * 単一ショットの `query()` 呼び出しは最終結果メッセージを生成し、その後 `Reached maximum number of turns` などの失敗テキストを含むエラーを発生させます。発生は意図的です。コードがそれを超えて続行する必要がある場合は、ループを try ブロックでラップしてください。基盤となる Claude Code プロセスも 0 以外のコードで終了します。
-  * ストリーミング入力セッションは生きたままで、メッセージを送信し続けることができます。
+  * ストリーミング入力セッションは生きたままで、メッセージを送信し続けることができます。ただし、セッションクラッシュ後は除きます。セッションクラッシュは最終 `error_during_execution` 結果を発行し、プロセスを終了します。
 </Note>
 
-結果には、モデルが最終ターンで生成を停止した理由を示す `stop_reason` フィールド（TypeScript では `string | null`、Python では `str | None`）も含まれます。一般的な値は `end_turn`（モデルが通常終了）、`max_tokens`（出力トークン制限に達した）、および `refusal`（モデルがリクエストを拒否）です。エラー結果サブタイプでは、`stop_reason` はループが終了する前の最後のアシスタント応答からの値を持ちます。拒否を検出するには、`stop_reason === "refusal"`（TypeScript）または `stop_reason == "refusal"`（Python）をチェックしてください。完全なタイプについては、[`SDKResultMessage`](/docs/ja/agent-sdk/typescript#sdkresultmessage)（TypeScript）または [`ResultMessage`](/docs/ja/agent-sdk/python#resultmessage)（Python）を参照してください。
+結果には、モデルが最終ターンで生成を停止した理由を示す `stop_reason` フィールド（TypeScript では `string | null`、Python では `str | None`）も含まれます。一般的な値は `end_turn`（モデルが通常終了）、`max_tokens`（出力トークン制限に達した）、および `refusal`（モデルがリクエストを拒否）です。ループが生成したエラー結果では、`stop_reason` はループが終了する前の最後のアシスタント応答からの値を持ちます。セッションクラッシュ後に Claude Code が合成する結果は `null` を持ちます。
+
+拒否を検出するには、`stop_reason === "refusal"`（TypeScript）または `stop_reason == "refusal"`（Python）をチェックしてください。完全なタイプについては、[`SDKResultMessage`](/docs/ja/agent-sdk/typescript#sdkresultmessage)（TypeScript）または [`ResultMessage`](/docs/ja/agent-sdk/python#resultmessage)（Python）を参照してください。
 
 <h2 id="hooks">
   Hooks
@@ -474,6 +503,8 @@ SDK との各インタラクションはセッションを作成または継続�
   ```
 </CodeGroup>
 
+エージェントが正常に完了すると、この例は `Done:` 行にエージェントの修正の概要を出力し、その後 `Cost: $0.0312` のような行を出力します。
+
 <h2 id="next-steps">
   次のステップ
 </h2>
@@ -485,5 +516,6 @@ SDK との各インタラクションはセッションを作成または継続�
 * **インタラクティブ UI を構築していますか？** [ストリーミング](/docs/ja/agent-sdk/streaming-output)を有効にして、ループが実行されるときにライブテキストとツール呼び出しを表示します。
 * **エージェントが何をできるかについてより厳密な制御が必要ですか？** [権限](/docs/ja/agent-sdk/permissions)でツールアクセスをロックダウンし、[フック](/docs/ja/agent-sdk/hooks)を使用して、実行前にツール呼び出しを監査、ブロック、または変換します。
 * **長時間または高コストのタスクを実行していますか？** 隔離された作業を[サブエージェント](/docs/ja/agent-sdk/subagents)にオフロードして、メインコンテキストをリーンに保ちます。
+* **サービスとしてデプロイしていますか？** コンテナおよびサーバーレスガイダンスについては[Agent SDK のホスティング](/docs/ja/agent-sdk/hosting)を参照し、セッションを独自のバックエンドに永続化するには[セッションストレージ](/docs/ja/agent-sdk/session-storage)を参照してください。
 
-agentic ループのより広い概念的な図（SDK 固有ではない）については、[Claude Code の仕組み](/docs/ja/how-claude-code-works)を参照してください。Claude Code でループを設計するための実践的なガイド（ターンベースループからゴールベースループおよびプロアクティブループまで）については、ブログの[ループエンジニアリング：ループの開始](/docs/ja/blog/getting-started-with-loops)を参照してください。
+agentic ループのより広い概念的な図（SDK 固有ではない）については、[Claude Code の仕組み](/docs/ja/how-claude-code-works)を参照してください。Claude Code でループを設計するための実践的なガイド（ターンベースループからゴールベースループおよびプロアクティブループまで）については、ブログの[ループエンジニアリング：ループの開始](https://claude.com/blog/getting-started-with-loops)を参照してください。

@@ -71,7 +71,7 @@ monorepo/
 | 儲存庫根目錄 | 每個檔案           | 僅根檔案；當 Claude 在該處讀取時，子目錄檔案按需載入 | 任務跨越多個套件或子系統   |
 | 子目錄    | 僅該子樹，直到您授予更多權限 | 該目錄的加上每個祖先的                    | 工作範圍限於一個套件或子系統 |
 
-`.claude/settings.json` 中的專案設定只從您的啟動目錄載入，不像 CLAUDE.md 檔案那樣從父目錄繼承：儲存庫根目錄的 `.claude/settings.json` 僅在您從根目錄啟動時適用。
+`.claude/settings.json` 中的專案設定不像 CLAUDE.md 檔案那樣從父目錄繼承。如需瞭解工作階段讀取哪個目錄的 `.claude/settings.json`，請參閱 [Claude Code 在何處查找各個檔案](/docs/zh-TW/settings#where-claude-code-looks-for-each-file)。
 
 下方的每個部分都說明其設定檔案應位於儲存庫根目錄還是您啟動的子目錄中，以及它是提交還是保持本地。
 
@@ -85,39 +85,28 @@ Claude Code 在啟動時從您的工作目錄和每個父目錄載入每個 [CLA
 
 常見的分割是兩個級別：
 
-* **根 `CLAUDE.md`**：適用於任何地方的指令，例如編碼標準、提交約定和儲存庫佈局
+* **根 `CLAUDE.md`**：適用於任何地方的指令，例如編碼標準和提交約定
 * **按子目錄 `CLAUDE.md`**：特定於該區域堆疊的約定。在 monorepo 中，這是每個套件一個。在大型單樹中，它是每個子系統一個，例如 `src/db/` 或 `src/api/`
 
 將這些檔案提交到儲存庫，以便隊友繼承它們。每個目錄的所有者通常維護其檔案。
 
-根 `CLAUDE.md` 將 Claude 定向到儲存庫結構：
+若要修剪已簽入的檔案，請執行 [`/doctor` 檢查](/docs/zh-TW/memory#my-claude-md-is-too-large)。根 `CLAUDE.md` 保存適用於每個套件的規則：
 
 ```markdown CLAUDE.md theme={null}
-這是一個 monorepo，在 packages/ 下有三個套件：
-
-- packages/api：使用 Express、TypeScript 和 PostgreSQL 的 Node.js REST API
-- packages/web：使用 Vite、TypeScript 和 TailwindCSS 的 React 前端
-- packages/shared：由 api 和 web 都使用的共享 TypeScript 實用程式
-
-從套件目錄而不是 monorepo 根目錄執行命令。
-每個套件都有自己的 tsconfig.json、package.json 和測試套件。
+從套件目錄而不是 monorepo 根目錄執行套件指令碼。
+提交主題前綴為套件名稱，例如 `api: add rate limiting`。
+永遠不要編輯 packages/*/generated/ 下的檔案。改為在套件中執行 `npm run codegen`。
 ```
 
-每個子目錄的 `CLAUDE.md`，這裡是 `packages/api/CLAUDE.md`，添加特定於該區域堆疊的上下文：
+每個子目錄的 `CLAUDE.md`，這裡是 `packages/api/CLAUDE.md`，添加特定於該區域的約定：
 
 ```markdown packages/api/CLAUDE.md theme={null}
-此套件是 REST API 伺服器。
-
-- 執行測試：`npm test`（使用 Vitest）
-- 執行開發伺服器：`npm run dev`（埠 3001）
-- 資料庫遷移：`npm run migrate`
-- 環境變數：將 `.env.example` 複製到 `.env`
-
-API 路由在 src/routes/ 中。每個路由檔案匯出一個 Express 路由器。
-資料庫查詢在 src/db/ 中使用 Knex。永遠不要在路由處理程式中寫入原始 SQL 字串。
+執行任何操作之前，將 `.env.example` 複製到 `.env`。沒有它，測試和開發伺服器會失敗。
+使用 Knex 查詢建構器編寫資料庫查詢。永遠不要在路由處理程式中放入原始 SQL 字串。
+遷移合併後永遠不要編輯它。改為添加新的遷移。
 ```
 
-當您從 `packages/api/` 啟動 Claude 時，它會載入 `packages/api/CLAUDE.md` 和根 `CLAUDE.md`。Claude 看到本地指令以及儲存庫範圍的規則，上下文中沒有來自 `packages/web/` 的指令。非 monorepo 樹中的任何子目錄也是如此。
+當您從 `packages/api/` 啟動 Claude 時，它會載入 `packages/api/CLAUDE.md` 和根 `CLAUDE.md`。Claude 看到本地指令以及儲存庫範圍的規則，上下文中沒有來自 `packages/web/` 的指令。非 monorepo 樹中的任何子目錄也是如此。若要確認載入了哪些檔案，請執行 `/context` 並檢查 **Memory files** 下的清單。
 
 保持檔案在程式碼庫和模型變化時最新的幾種方法：
 
@@ -148,26 +137,25 @@ API 路由在 src/routes/ 中。每個路由檔案匯出一個 Express 路由器
 
 將此用於您從不使用的目錄，例如其他團隊的套件、舊程式碼或供應商子樹。排除清單是靜態的，不是按任務的開關。若要今天專注於一個套件，明天專注於另一個套件，請[從該套件的目錄啟動 Claude](#choose-where-to-start-claude)，而不是編輯排除項。
 
-如果您只想為自己進行這些排除，請將設定放在 `.claude/settings.local.json` 中。Claude Code 在建立該檔案時會將其 gitignore；由於您在此手動建立它，請將其添加到您的 gitignore。模式使用針對絕對檔案路徑匹配的 glob 語法，因此以 `**/` 開始相對樣式的模式以在樹中的任何地方匹配。下面的範例排除由其他團隊擁有的套件：
+如果您只想為自己進行這些排除，請將設定放在 `.claude/settings.local.json` 中。Claude Code 在建立該檔案時會將其添加到您的全域 gitignore。由於您在此手動建立它，請將其添加到您的 gitignore。模式使用針對絕對檔案路徑匹配的 glob 語法，因此以 `**/` 開始相對樣式的模式以在樹中的任何地方匹配。下面的範例排除由其他團隊擁有的套件：
 
 ```json .claude/settings.local.json theme={null}
 {
   "claudeMdExcludes": [
-    "**/packages/admin-dashboard/**",
-    "**/packages/legacy-*/**"
+    "**/packages/web/**"
   ]
 }
 ```
 
-這會跳過這些套件下的每個 CLAUDE.md 和規則檔案。根 CLAUDE.md 和您確實使用的套件仍然正常載入。
+這會跳過該套件下的每個 CLAUDE.md 和規則檔案。根 CLAUDE.md 和您確實使用的套件仍然正常載入。
 
 這些模式涵蓋其他常見情況：
 
 * `"**/packages/*/CLAUDE.md"`：排除每個套件的 CLAUDE.md，同時保留根目錄
-* `"**/packages/web/**"`：排除 web 套件下的所有內容，包括規則
+* `"**/packages/legacy-*/**"`：排除每個名稱與 glob 匹配的套件，包括規則
 * `"/home/user/monorepo/legacy/CLAUDE.md"`：按絕對路徑排除一個特定檔案
 
-受管理的原則 CLAUDE.md 檔案無法排除，因此組織範圍的指令始終適用。您可以在任何[設定範圍](/docs/zh-TW/settings#configuration-scopes)設定 `claudeMdExcludes`：使用者、專案、本地或受管理。陣列在範圍內合併，因此團隊可以設定專案級別的預設值，而個人添加本地覆蓋。
+受管理的原則 CLAUDE.md 檔案無法排除，因此組織範圍的指令始終適用。您可以在任何[設定範圍](/docs/zh-TW/settings#where-settings-live)設定 `claudeMdExcludes`：使用者、專案、本地或受管理。陣列在範圍內合併，因此團隊可以設定專案級別的預設值，而個人添加本地覆蓋。
 
 有關完整的排除文件，請參閱[排除特定 CLAUDE.md 檔案](/docs/zh-TW/memory#exclude-specific-claude-md-files)。
 
@@ -183,42 +171,53 @@ API 路由在 src/routes/ 中。每個路由檔案匯出一個 Express 路由器
 
 Claude 的內容搜尋預設尊重 `.gitignore`，因此已列在其中的路徑（例如 `node_modules/`、`dist/` 和 `build/`）無需額外設定即可保持在搜尋結果之外。
 
-對於已簽入的路徑，例如供應商 SDK 或提交的生成程式碼，在 `permissions.deny` 中添加 `Read` 拒絕規則以阻止 Claude 開啟這些檔案，即使搜尋列出它們。
+對於已簽入的路徑，例如供應商 SDK 或提交的生成程式碼，在 `permissions.deny` 中添加 `Read` 拒絕規則以阻止 Claude 開啟這些檔案。
 
-若要為在儲存庫中工作的每個人應用這些排除，請將它們提交到 `.claude/settings.json`。若要保持個人，請改用 `.claude/settings.local.json`。與本頁面上的其他專案設定一樣，這些檔案只從您的啟動目錄載入。如果您從根目錄啟動 Claude，請將它們放在儲存庫根目錄，或如果您從子目錄啟動，請放在每個套件的 `.claude/` 中。若要在無論啟動目錄如何的每個工作階段中強制執行相同的拒絕規則，請在[受管理設定](/docs/zh-TW/settings#settings-files)中設定它們，使用者和專案設定無法覆蓋。
+拒絕規則可以涵蓋在儲存庫中工作的每個人、只有您，或機器上的每個工作階段，取決於您將它們放在哪個設定檔中：
 
-下面的範例阻止建置工件和供應商 SDK：
+* **在儲存庫中工作的每個人**：將規則提交到 `.claude/settings.json`，位於儲存庫根目錄（如果您從那裡啟動 Claude），或位於每個套件的 `.claude/`（如果您從子目錄啟動）。與本頁面上的其他專案設定一樣，該檔案不會從父目錄繼承。
+* **僅您自己**：在儲存庫根目錄使用 `.claude/settings.local.json`，它會在儲存庫內的每個 CLI 工作階段中載入，無論啟動目錄如何，除了 Claude Code [不使用儲存庫根目錄](/docs/zh-TW/settings#where-claude-code-looks-for-each-file)的情況，例如在 Windows 上。相對模式（如範例的 `Read(./**/vendor/**/*)` ）仍然[錨定在工作階段的目前工作目錄](/docs/zh-TW/permissions#read-and-edit)而不是儲存庫根目錄，因此如果您從子目錄啟動工作階段，請在此檔案中將規則寫為 `//` 絕對路徑，例如 `Read(//absolute/path/to/repo/**/vendor/**/*)` 。在 v2.1.211 之前，`.claude/settings.local.json` 也只從啟動目錄載入。
+* **每個人，在每個工作階段中強制執行**：在[受管理設定](/docs/zh-TW/managed-settings)中設定規則，使用者和專案設定無法覆蓋。
+
+下面的範例阻止建置工件和供應商 SDK。其目錄模式以 `/**/*` 結尾而不是 `/**`，以便每個規則涵蓋目錄內的所有內容，但不涵蓋目錄本身。Claude 仍然可以列出這些目錄或進入它們，例如使用 `ls dist` 或 `cd build`。
 
 ```json .claude/settings.json theme={null}
 {
   "permissions": {
     "deny": [
-      "Read(./**/dist/**)",
-      "Read(./**/build/**)",
+      "Read(./**/dist/**/*)",
+      "Read(./**/build/**/*)",
       "Read(./**/*.generated.*)",
-      "Read(./vendor/**)"
+      "Read(./**/vendor/**/*)"
     ]
   }
 }
 ```
 
-拒絕規則涵蓋 Claude 的內建檔案工具和公認的 Bash 檔案命令，包括 `cat`、`head`、`grep` 和 `find`，當拒絕的路徑作為引數傳遞時。它們不會從遞迴搜尋的輸出中篩選出拒絕的路徑，也不涵蓋自己開啟檔案的任意子程序。有關完整的模式語法，請參閱[讀取和編輯權限規則](/docs/zh-TW/permissions#read-and-edit)。
+拒絕規則涵蓋 Claude 的內建檔案工具。在 Bash 中，它們涵蓋 Claude Code 識別的檔案命令，例如 `cat`、`head`、`grep` 和 `find`，當拒絕的路徑作為引數出現時，以及[重新導向](/docs/zh-TW/permissions#redirections)的目標，例如 `< file`。Claude Code 也會盡力嘗試將拒絕的路徑排除在內建 Grep 和 Glob 工具的結果之外。Bash 搜尋（例如 `grep -r` 或 `find`）在包含拒絕檔案的目錄上仍然會在其輸出中包含它們。
+
+拒絕規則不涵蓋自己開啟檔案的子程序。有關完整的模式語法，請參閱[讀取和編輯權限規則](/docs/zh-TW/permissions#read-and-edit)。
 
 <h3 id="reduce-file-reads-with-code-intelligence">
   使用程式碼智能減少檔案讀取
 </h3>
 
-在大型程式碼庫中，尋找符號的定義或使用位置可能會花費許多檔案讀取和 grep 呼叫。[程式碼智能外掛](/docs/zh-TW/discover-plugins#code-intelligence)將 Claude 連接到語言伺服器，以便它可以跳轉到定義、尋找參考和直接顯示類型錯誤，而不是掃描樹。
+在大型程式碼庫中，尋找符號的定義或使用位置可能會花費許多檔案讀取和 grep 呼叫。[程式碼智能外掛](/docs/zh-TW/plugins/code-intelligence)將 Claude 連接到語言伺服器，以便它可以跳轉到定義、尋找參考和直接顯示類型錯誤，而不是掃描樹。
 
-官方市場有 TypeScript、Python、Go、Rust 和其他常見語言的外掛。下面的範例安裝 TypeScript 外掛：
+官方市場有 TypeScript、Python、Go、Rust 和其他常見語言的外掛。在 Claude Code 工作階段內執行下方命令以安裝 TypeScript 外掛：
 
 ```shell theme={null}
 /plugin install typescript-lsp@claude-plugins-official
 ```
 
-若要為儲存庫中的每個人啟用外掛而不是自己安裝，請將其添加到 [`enabledPlugins` 專案設定](/docs/zh-TW/settings#plugin-settings)。
+如果安裝失敗，請符合 Claude Code 報告的訊息：
 
-程式碼智能外掛需要每個開發人員機器上的語言的語言伺服器二進位檔案。請參閱[每種語言需要哪個二進位檔案](/docs/zh-TW/discover-plugins#code-intelligence)。從官方市場安裝需要網路存取 GitHub，市場在那裡託管。在受限網路上，[改為從內部 Git 主機或本地路徑添加市場](/docs/zh-TW/discover-plugins#add-from-other-git-hosts)。
+* `Marketplace "claude-plugins-official" not found`：使用 `/plugin marketplace add anthropics/claude-plugins-official` 添加市場，然後重試安裝。
+* 外掛[在市場中找不到](/docs/zh-TW/plugins/install#install-a-plugin)：檢查外掛名稱。
+
+若要為儲存庫中的每個人啟用外掛而不是自己安裝，請將其添加到 [`enabledPlugins` 專案設定](/docs/zh-TW/settings-reference#plugin-settings)。
+
+程式碼智能外掛需要每個開發人員機器上的語言的語言伺服器二進位檔案。請參閱[每種語言需要哪個二進位檔案](/docs/zh-TW/plugins/code-intelligence)。從官方市場安裝需要網路存取 GitHub，市場在那裡託管。在受限網路上，[改為從內部 Git 主機或本地路徑添加市場](/docs/zh-TW/plugins/install#add-a-marketplace)。
 
 這與上面的 `claudeMdExcludes` 和 `Read` 拒絕規則配對良好。這些將無關的內容保持在上下文之外，程式碼智能防止 Claude 通過讀取剩餘內容來定位定義。
 
@@ -234,7 +233,11 @@ Claude 的內容搜尋預設尊重 `.gitignore`，因此已列在其中的路徑
 
 `--worktree` 旗標在新的 git worktree 中啟動工作階段，以便變更與您的主簽出隔離。預設情況下，它簽出整個儲存庫。在大型儲存庫中，`worktree.sparsePaths` 設定使用 git sparse-checkout 只將列出的目錄加上根級檔案寫入磁碟，以便 worktrees 啟動更快並使用更少空間。
 
-如果在此目錄中工作的每個人都需要相同的路徑，請將設定提交到 `.claude/settings.json`。若要為自己添加路徑，請使用 `.claude/settings.local.json`：列表在範圍內合併，因此本地檔案可以添加到提交的清單中但不能刪除它們。下面的範例顯示提交的檔案：
+如果在此目錄中工作的每個人都需要相同的路徑，請將設定提交到 `.claude/settings.json`。若要為自己添加路徑，請使用 `.claude/settings.local.json`：列表在範圍內合併，因此本地檔案可以添加到提交的清單中但不能刪除它們。
+
+此頁面上的 JSON 範例一次只顯示一個設定。如果您的 `.claude/settings.json` 已經包含其他鍵，例如上面的 `permissions.deny` 規則，請在它們旁邊添加 `worktree` 鍵，而不是替換檔案。[將其整合在一起](#put-it-together)顯示合併的結果。
+
+下面的範例顯示提交的檔案：
 
 ```json .claude/settings.json theme={null}
 {
@@ -252,7 +255,7 @@ Claude 的內容搜尋預設尊重 `.gitignore`，因此已列在其中的路徑
 
 這對於[子代理 worktree 隔離](/docs/zh-TW/worktrees#isolate-subagents-with-worktrees)特別有用。子代理是為子任務生成的平行 Claude 實例，每個在 worktree 中執行的都會獲得輕量級簽出而不是完整樹。工作階段中的所有 worktrees 共享相同的 `sparsePaths`，因此如果一個子代理需要 `packages/api/` 而另一個需要 `packages/web/`，請列出兩者。
 
-在 `sparsePaths` 中列出目錄，而不是個別檔案。根級檔案（如 `package.json`、`tsconfig.base.json` 和鎖定檔案）始終與您列出的目錄一起簽出。根級目錄不是，因此如果您想要儲存庫根目錄的 `.claude/settings.json`、`.claude/rules/` 或 `.claude/skills/` 在 worktree 內可用，請在清單中包含 `.claude`。
+在 `sparsePaths` 中列出目錄，而不是個別檔案。根級檔案（如 `package.json`、`tsconfig.base.json` 和鎖定檔案）始終與您列出的目錄一起簽出。根級目錄不是，因此如果您想要儲存庫根目錄的 `.claude/settings.json`、`.claude/rules/` 或 `.claude/skills/` 在 worktree 內可用，請在清單中包含 `.claude`。對於專案技能、代理和命令，請參閱[worktrees 與主簽出共享的內容](/docs/zh-TW/worktrees#what-worktrees-share-with-the-main-checkout)。
 
 Sparse checkout 需要 git 在儲存庫的共享 `.git/config` 中啟用 `extensions.worktreeConfig`，同時存在 sparse worktree。Claude Code 在移除最後一個 worktree 後會移除該項目，但僅當 Claude Code 添加了它時。它永遠不會移除您自己設定的值。在 v2.1.207 之前，該項目在移除最後一個 worktree 後仍然存在，並且基於 go-git 的工具（例如 `tea`）無法開啟儲存庫，直到您執行 `git config --unset extensions.worktreeConfig`。
 
@@ -279,7 +282,7 @@ Sparse checkout 需要 git 在儲存庫的共享 `.git/config` 中啟用 `extens
   `sparsePaths` 和 `symlinkDirectories` 設定在建立 worktree 之前從您的啟動目錄讀取。建立後，工作階段的工作目錄是 worktree 根目錄，而不是您啟動的子目錄。因此，worktree 內的專案設定從 worktree 根目錄的 `.claude/settings.json`（儲存庫根目錄檔案的簽出副本）載入。將您在 worktrees 內需要的任何其他設定（例如權限規則或 hooks）放在儲存庫根目錄的 `.claude/settings.json` 中。
 </Note>
 
-有關完整的 worktree 設定參考，請參閱 [Worktree 設定](/docs/zh-TW/settings#worktree-settings)。
+有關完整的 worktree 設定參考，請參閱 [Worktree 設定](/docs/zh-TW/settings-reference#worktree)。
 
 <h3 id="grant-access-across-packages-or-repositories">
   授予跨套件或儲存庫的存取權限
@@ -291,7 +294,7 @@ Sparse checkout 需要 git 在儲存庫的共享 `.git/config` 中啟用 `extens
 
 `.claude/settings.json` 中的 `additionalDirectories` 設定給予 Claude 對工作目錄外目錄的存取權限。下面的範例授予對兩個同級套件的存取權限：
 
-```json .claude/settings.json theme={null}
+```json packages/api/.claude/settings.json theme={null}
 {
   "permissions": {
     "additionalDirectories": [
@@ -328,14 +331,14 @@ CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1 claude --add-dir ../shared
 對於此區域中的每個人都需要的同級目錄，請將 `additionalDirectories` 提交到 `.claude/settings.json`。對於個人選擇或一次性存取，請使用 `.claude/settings.local.json` 或在啟動時傳遞 `--add-dir`。
 
 <h2 id="add-per-directory-skills">
-  添加按目錄技能
+  新增各目錄範圍的 skills
 </h2>
 
-任何子目錄都可以定義[技能](/docs/zh-TW/skills)範圍限於其自己的堆疊。技能在 Claude 確定其相關時按需載入，因此 API 特定的工具在前端工作期間不會消耗上下文。
+任何子目錄都可以定義[skills](/docs/zh-TW/skills)，其範圍限於該目錄自己的堆疊。當 Claude 判斷 skill 相關時，它會按需載入，因此 API 特定的工具在前端工作期間不會消耗上下文。
 
-技能位於目錄內的 `.claude/skills/` 下。將它們與該區域的程式碼一起提交，以便克隆儲存庫的任何人都能獲得它們。在 monorepo 中，這可以是每個套件一組技能。在大型單樹程式碼庫中，它是每個子系統一組，例如 `src/db/.claude/skills/`。
+Skills 位於目錄內的 `.claude/skills/` 下。將它們與該區域的程式碼一起提交，這樣任何複製儲存庫的人都能取得它們。在 monorepo 中，每個套件可以有一組 skills。在大型單一樹狀程式碼庫中，每個子系統（例如 `src/db/.claude/skills/`）有一組。
 
-在子目錄內建立技能目錄：
+在子目錄內建立 skill 目錄：
 
 ```bash theme={null}
 mkdir -p packages/api/.claude/skills/api-testing
@@ -346,55 +349,55 @@ mkdir -p packages/api/.claude/skills/api-testing
 ```markdown packages/api/.claude/skills/api-testing/SKILL.md theme={null}
 ---
 name: api-testing
-description: API 套件的測試模式。在 packages/api/ 中編寫或修改測試時使用。
+description: Testing patterns for the API package. Use when writing or modifying tests in packages/api/.
 ---
 
-## 測試結構
+## Test structure
 
-測試在 `src/__tests__/` 中，鏡像 `src/` 目錄結構。
-每個路由檔案都有對應的 `.test.ts` 檔案。
+Tests are in `src/__tests__/` mirroring the `src/` directory structure.
+Each route file has a corresponding `.test.ts` file.
 
-## 執行測試
+## Running tests
 
-- 所有測試：`npm test`
-- 單個檔案：`npm test -- src/__tests__/routes/users.test.ts`
-- 監視模式：`npm test -- --watch`
+- All tests: `npm test`
+- Single file: `npm test -- src/__tests__/routes/users.test.ts`
+- Watch mode: `npm test -- --watch`
 
-## 測試實用程式
+## Test utilities
 
-- `src/__tests__/helpers/db.ts`：提供 `setupTestDb()` 和 `teardownTestDb()` 用於資料庫測試
-- `src/__tests__/helpers/auth.ts`：提供 `createTestUser()` 和 `getAuthToken()` 用於已驗證的端點
+- `src/__tests__/helpers/db.ts`: provides `setupTestDb()` and `teardownTestDb()` for database tests
+- `src/__tests__/helpers/auth.ts`: provides `createTestUser()` and `getAuthToken()` for authenticated endpoints
 
-## 模式
+## Patterns
 
-- 使用 `supertest` 進行 HTTP 斷言，而不是原始 fetch
-- 始終將資料庫測試包裝在回滾的交易中
-- 在 `src/__tests__/mocks/` 中模擬外部服務
+- Use `supertest` for HTTP assertions, not raw fetch
+- Always wrap database tests in a transaction that rolls back
+- Mock external services in `src/__tests__/mocks/`
 ```
 
-不同的子目錄以相同的方式保存不同的技能：`packages/web/.claude/skills/component-patterns/` 描述前端的元件約定，而不是測試。當 Claude 在 `packages/api/` 中的檔案上工作時，它載入 api-testing 技能。當它在 `packages/web/` 中工作時，它載入 component-patterns 代替。在另一個的任務期間，兩個目錄的技能都不會載入。
+不同的子目錄以相同方式保存不同的 skills：`packages/web/.claude/skills/component-patterns/` 描述前端的元件慣例，而不是測試。當 Claude 在 `packages/api/` 中的檔案上工作時，它會載入 api-testing skill。當它在 `packages/web/` 中工作時，它會改為載入 component-patterns。在另一個目錄的任務期間，每個目錄的 skills 都不會載入。
 
-您也可以按檔案模式而不是按位置範圍技能。[`paths` frontmatter 欄位](/docs/zh-TW/skills#frontmatter-reference)採用 glob 模式，Claude 僅在使用匹配檔案時自動載入技能。將此用於位於儲存庫根目錄的 `.claude/skills/` 中但僅適用於某些檔案（無論它們出現在何處）的技能，例如範圍限於 `**/migrations/**` 的資料庫遷移技能。
+您也可以按檔案模式而不是按位置來限定 skill 的範圍。[`paths` frontmatter 欄位](/docs/zh-TW/skills#frontmatter-reference)採用 glob 模式，當 Claude 使用符合的檔案時，它會自動載入 skill。使用此方法可以讓 skill 位於儲存庫根目錄的 `.claude/skills/` 中，但僅適用於特定檔案（無論它們出現在何處），例如限定於 `**/migrations/**` 的資料庫遷移 skill。
 
-有關建立和組織技能的更多資訊，請參閱[技能](/docs/zh-TW/skills)。
+如需更多關於建立和組織 skills 的資訊，請參閱 [Skills](/docs/zh-TW/skills)。
 
 <h3 id="keep-skills-discoverable">
-  保持技能可發現
+  保持 skills 可發現
 </h3>
 
-隨著技能分散在許多目錄中，Claude 選擇的清單可能會增長很大。Claude 通過讀取每個發現的技能的名稱和描述來選擇技能，只有選定技能的完整內容載入上下文。本部分涵蓋如何保持該清單較小並編寫在縮短時倖存的描述。
+隨著 skills 分散在許多目錄中，Claude 可選擇的清單可能會變得很大。Claude 透過讀取每個已發現 skill 的名稱和描述來選擇 skill，只有選定 skill 的完整內容才會載入上下文。本節涵蓋如何保持該清單較小。
 
-哪些技能在範圍內取決於您從何處啟動 Claude：
+哪些 skills 在範圍內取決於您從何處啟動 Claude：
 
-* **從子目錄（如 `packages/api/`）**：來自該目錄、每個父目錄直到儲存庫根目錄以及使用者和企業級別的技能
-* **從儲存庫根目錄**：來自 Claude 在工作階段期間接觸的每個子目錄的技能，可能累積到數百個
-* **在使用 [`--add-dir`](#grant-access-across-packages-or-repositories) 添加同級後**：該同級的技能也會載入。`additionalDirectories` 設定僅授予檔案存取權限，不載入技能
+* **從子目錄（例如 `packages/api/`）**：該目錄的 skills、每個父目錄直到儲存庫根目錄，以及使用者和企業級別的 skills
+* **從儲存庫根目錄**：根目錄 skills，加上 Claude 在工作階段期間接觸的每個子目錄的 skills，這可能會累積成數百個
+* **在使用 [`--add-dir`](#grant-access-across-packages-or-repositories) 新增同層目錄後**：該同層目錄的 skills 也會載入。`additionalDirectories` 設定僅授予檔案存取權限，不會載入 skills
 
-名稱始終載入，但[當有許多時描述會被縮短](/docs/zh-TW/skills#skill-descriptions-are-cut-short)，這可能會剝離 Claude 用來決定技能是否適用的關鍵字。保持描述簡短並以請求會包含的詞語開頭，例如「在 `packages/api/` 中編寫或修改測試」。
+名稱總是會載入，但[當有許多時，某些 skills 會完全失去其描述](/docs/zh-TW/skills#skill-descriptions-are-cut-short)，這可能會移除 Claude 用來決定 skill 是否適用的關鍵字。保持描述簡短，並以請求會包含的詞語開頭，例如「在 `packages/api/` 中寫入或修改測試」。
 
-對於許多目錄共享的技能，例如 PR 約定或部署檢查清單，請將它們放在儲存庫根目錄的 `.claude/skills/` 中，以便從任何啟動目錄載入。當共享技能需要自己的版本歷史或必須跨儲存庫工作時，請改為將它們打包為[外掛](/docs/zh-TW/plugins)。外掛技能使用 `plugin-name:skill-name` 命名空間，因此它們永遠不會與按目錄的技能衝突。平台團隊可以在一個地方對其進行版本化和更新。
+對於許多目錄共享的 skills，例如 PR 慣例或部署檢查清單，將它們放在儲存庫根目錄的 `.claude/skills/` 中，以便從任何啟動目錄載入。當共享 skills 需要自己的版本歷史或必須跨儲存庫工作時，改為將它們打包為[plugin](/docs/zh-TW/plugins/overview)。Plugin skills 使用 `plugin-name:skill-name` 命名空間，因此它們永遠不會與各目錄 skills 衝突。平台團隊可以在一個地方進行版本控制和更新。
 
-若要找到哪些技能未被使用，請啟用 OpenTelemetry [日誌匯出器](/docs/zh-TW/monitoring-usage)並設定 `OTEL_LOG_TOOL_DETAILS=1`，以便技能名稱逐字記錄而不是編輯。[`skill_activated` 事件](/docs/zh-TW/monitoring-usage#skill-activated-event)在其 `skill.name` 屬性中記錄每次呼叫，`invocation_trigger` 記錄命令、Claude 或巢狀技能是否呼叫它，這告訴您要整合或停用什麼。
+若要找出哪些 skills 未被使用，請啟用 OpenTelemetry [logs exporter](/docs/zh-TW/monitoring-usage)，並設定 `OTEL_LOG_TOOL_DETAILS=1`，以便 skill 名稱按字面記錄而不是被編輯。[`skill_activated` 事件](/docs/zh-TW/monitoring-usage#skill-activated-event)在其 `skill.name` 屬性中記錄每次調用，`invocation_trigger` 記錄命令、Claude 或巢狀 skill 是否調用了它，這告訴您要整合或淘汰什麼。
 
 <h2 id="centralize-conventions-when-layering-stops-scaling">
   當分層停止擴展時集中約定
@@ -405,7 +408,7 @@ description: API 套件的測試模式。在 packages/api/ 中編寫或修改測
 將約定和參考內容從始終載入的 CLAUDE.md 移出到按需載入的機制中：
 
 * [技能](/docs/zh-TW/skills)：Claude 僅在與任務相關時載入的參考資料
-* [外掛](/docs/zh-TW/plugins)：平台團隊集中擁有的技能、hooks 和命令的版本化捆綁
+* [外掛](/docs/zh-TW/plugins/overview)：平台團隊集中擁有的技能、hooks 和命令的版本化捆綁
 * [MCP 伺服器](/docs/zh-TW/mcp)：如果您的組織已經在儲存庫上執行程式碼搜尋或 RAG 索引，請將其公開為 MCP 工具，以便 Claude 查詢它而不是直接讀取檔案
 
 有關平台團隊如何集中強制執行這些的資訊，請參閱[伺服器管理或端點管理設定](/docs/zh-TW/server-managed-settings#choose-between-server-managed-and-endpoint-managed-settings)。
@@ -414,7 +417,7 @@ description: API 套件的測試模式。在 packages/api/ 中編寫或修改測
   在工作階段啟動時推薦正確的外掛
 </h3>
 
-一旦約定位於外掛中，在樹的陌生部分啟動 Claude 的隊友就沒有信號表明該區域的所有者維護哪個外掛。[`SessionStart` hook](/docs/zh-TW/hooks#sessionstart) 可以彌補這一差距，因為 hook 列印到 stdout 的任何內容都會在第一個提示之前添加到 Claude 的上下文中。
+一旦約定位於外掛中，在樹的陌生部分啟動 Claude 的隊友就沒有信號表明該區域的所有者維護哪個外掛。[`SessionStart` hook](/docs/zh-TW/hooks#sessionstart) 可以彌補這一差距，因為 Claude Code 會在第一個提示之前將 hook 列印到 stdout 的純文字添加到 Claude 的上下文中。
 
 例如，您可以編寫一個指令碼，從[hook 輸入](/docs/zh-TW/hooks#common-input-fields)讀取啟動目錄，在提交到儲存庫的路徑到外掛對應中查詢它，並列印建議供 Claude 在其第一個回覆中中繼。請參閱[使用 hooks 自動化操作](/docs/zh-TW/hooks-guide)來編寫和註冊 hook。
 
@@ -422,7 +425,7 @@ description: API 套件的測試模式。在 packages/api/ 中編寫或修改測
   將其整合在一起
 </h2>
 
-下面的組合設定使用 monorepo 佈局。相同的檔案適用於大型單樹中的任何子目錄。專案設定只從您啟動 Claude 的目錄載入，因此每個子目錄的 `.claude/settings.json` 必須是自包含的，而不是分層在根檔案上。
+下面的組合設定使用 monorepo 佈局。相同的檔案適用於大型單樹中的任何子目錄。每個子目錄的 `.claude/settings.json` 必須是自包含的，而不是分層在根檔案上。
 
 該範例在 `.claude/settings.json` 中提交 `worktree`、`additionalDirectories` 和 `Read` 拒絕規則，以便 `packages/api/` 中的每個開發人員都獲得相同的同級存取、稀疏路徑和排除。下面的檔案是 `packages/api/` 的提交按區域設定：
 
@@ -443,8 +446,8 @@ description: API 套件的測試模式。在 packages/api/ 中編寫或修改測
       "../shared"
     ],
     "deny": [
-      "Read(./**/dist/**)",
-      "Read(./**/build/**)"
+      "Read(./**/dist/**/*)",
+      "Read(./**/build/**/*)"
     ]
   }
 }
@@ -458,8 +461,8 @@ description: API 套件的測試模式。在 packages/api/ 中編寫或修改測
 {
   "permissions": {
     "deny": [
-      "Read(./**/dist/**)",
-      "Read(./**/build/**)"
+      "Read(./**/dist/**/*)",
+      "Read(./**/build/**/*)"
     ]
   }
 }
@@ -500,7 +503,7 @@ monorepo/
 兩種技術有助於保持跨套件變更的一致性：
 
 * **在一個工作階段中給 Claude 整個變更**：將共享編輯及其呼叫位置一起交付可以保持每個編輯背後的決策一致，而不是按套件重新推導它們
-* **在編輯前將計劃保存到檔案**：[先計劃](/docs/zh-TW/best-practices#explore-first-then-plan-then-code)並要求 Claude 將計劃寫入儲存庫中的 markdown 檔案。長跨套件工作階段在進行中[壓縮其上下文](/docs/zh-TW/context-window#what-survives-compaction)，保存的計劃在對話歷史可能不會的地方倖存
+* **在編輯前計劃**：[先計劃](/docs/zh-TW/best-practices#explore-first-then-plan-then-code)在 [Plan Mode](/docs/zh-TW/permission-modes#analyze-before-you-edit-with-plan-mode) 中，Claude 將計劃寫入檔案。長跨套件工作階段在進行中[壓縮其上下文](/docs/zh-TW/context-window#what-survives-compaction)。Claude Code 在每次壓縮後重新注入計劃檔案，因此計劃在對話歷史可能不會的地方倖存
 
 <h2 id="next-steps">
   後續步驟

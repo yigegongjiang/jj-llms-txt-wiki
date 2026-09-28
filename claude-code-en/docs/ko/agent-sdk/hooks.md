@@ -14,8 +14,6 @@
 * **인간 승인 요구** 데이터베이스 쓰기 또는 API 호출 같은 민감한 작업에 대해 승인을 요구합니다
 * **세션 수명 주기 추적** 상태를 관리하거나 리소스를 정리하거나 알림을 보냅니다
 
-이 가이드에서는 훅이 어떻게 작동하는지, 훅을 구성하는 방법, 그리고 도구 차단, 입력 수정, 알림 전달 같은 일반적인 패턴의 예제를 제공합니다.
-
 <h2 id="how-hooks-work">
   훅이 작동하는 방식
 </h2>
@@ -86,7 +84,7 @@
       )
 
       async with ClaudeSDKClient(options=options) as client:
-          await client.query("Update the database configuration")
+          await client.query("Create a .env file with the standard local development database configuration")
           async for message in client.receive_response():
               # 어시스턴트 및 결과 메시지를 필터링합니다
               if isinstance(message, (AssistantMessage, ResultMessage)):
@@ -125,7 +123,7 @@
   };
 
   for await (const message of query({
-    prompt: "Update the database configuration",
+    prompt: "Create a .env file with the standard local development database configuration",
     options: {
       hooks: {
         // PreToolUse 이벤트에 대한 훅을 등록합니다
@@ -142,41 +140,55 @@
   ```
 </CodeGroup>
 
+스크립트를 실행하면 Claude가 `.env` 파일을 생성하려고 시도하고, 훅이 도구 호출을 거부하며, Claude의 최종 응답은 `.env` 파일을 생성할 수 없다고 설명합니다.
+
 <h2 id="available-hooks">
   사용 가능한 훅
 </h2>
 
 SDK는 에이전트 실행의 다양한 단계에 대한 훅을 제공합니다. 일부 훅은 두 SDK 모두에서 사용 가능하지만 다른 훅은 TypeScript 전용입니다.
 
-| 훅 이벤트                                                  | Python SDK | TypeScript SDK | 트리거되는 조건                                          | 사용 사례 예                                |
-| ------------------------------------------------------ | ---------- | -------------- | ------------------------------------------------- | -------------------------------------- |
-| `PreToolUse`                                           | 예          | 예              | 도구 호출 요청(차단 또는 수정 가능)                             | 위험한 셸 명령 차단                            |
-| `PostToolUse`                                          | 예          | 예              | 도구 실행 결과                                          | 모든 파일 변경 사항을 감사 추적에 기록                 |
-| `PostToolUseFailure`                                   | 예          | 예              | 도구 실행 실패                                          | 도구 오류 처리 또는 기록                         |
-| `PostToolBatch`                                        | 아니오        | 예              | 전체 도구 호출 배치가 해결되며, 다음 모델 호출 전에 배치당 한 번            | 전체 배치에 대해 한 번 규칙 주입                    |
-| `UserPromptSubmit`                                     | 예          | 예              | 사용자 프롬프트 제출                                       | 프롬프트에 추가 컨텍스트 주입                       |
-| [`UserPromptExpansion`](/docs/ko/hooks#userpromptexpansion) | 아니오        | 예              | 사용자가 입력한 명령이 Claude에 도달하기 전에 프롬프트로 확장됨            | 명령이 직접 호출되는 것을 차단하거나 스킬이 입력될 때 컨텍스트 추가 |
-| `MessageDisplay`                                       | 아니오        | 예              | 텍스트가 포함된 어시스턴트 메시지가 완료되며, 전체 메시지 텍스트와 함께 메시지당 한 번 | 기록을 변경하지 않고 표시된 텍스트를 수정하거나 재포맷         |
-| `Stop`                                                 | 예          | 예              | 에이전트 실행 중지                                        | 종료 전 세션 상태 저장                          |
-| `SubagentStart`                                        | 예          | 예              | 서브에이전트 초기화                                        | 병렬 작업 생성 추적                            |
-| `SubagentStop`                                         | 예          | 예              | 서브에이전트 완료                                         | 병렬 작업의 결과 집계                           |
-| `PreCompact`                                           | 예          | 예              | 대화 압축 요청                                          | 요약 전에 전체 기록 보관                         |
-| `PermissionRequest`                                    | 예          | 예              | 권한 대화가 표시될 예정                                     | 사용자 정의 권한 처리                           |
-| `SessionStart`                                         | 아니오        | 예              | 세션 초기화                                            | 로깅 및 원격 측정 초기화                         |
-| `SessionEnd`                                           | 아니오        | 예              | 세션 종료                                             | 임시 리소스 정리                              |
-| `Notification`                                         | 예          | 예              | 에이전트 상태 메시지                                       | 에이전트 상태 업데이트를 Slack 또는 PagerDuty로 전송   |
-| `Setup`                                                | 아니오        | 예              | 세션 설정/유지 관리                                       | 초기화 작업 실행                              |
-| `TeammateIdle`                                         | 아니오        | 예              | 팀원이 유휴 상태가 됨                                      | 작업 재할당 또는 알림                           |
-| `TaskCompleted`                                        | 아니오        | 예              | 백그라운드 작업 완료                                       | 병렬 작업의 결과 집계                           |
-| `ConfigChange`                                         | 아니오        | 예              | 구성 파일 변경                                          | 동적으로 설정 다시 로드                          |
-| `WorktreeCreate`                                       | 아니오        | 예              | Git worktree 생성                                   | 격리된 작업 공간 추적                           |
-| `WorktreeRemove`                                       | 아니오        | 예              | Git worktree 제거                                   | 작업 공간 리소스 정리                           |
+| 훅 이벤트                                                  | Python SDK | TypeScript SDK | 트리거되는 조건                                                                              | 사용 사례 예                                                                                                                      |
+| ------------------------------------------------------ | ---------- | -------------- | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `PreToolUse`                                           | 예          | 예              | 도구 호출 요청(차단 또는 수정 가능)                                                                 | 위험한 셸 명령 차단                                                                                                                  |
+| `PostToolUse`                                          | 예          | 예              | 도구 실행 결과                                                                              | 모든 파일 변경 사항을 감사 추적에 기록                                                                                                       |
+| `PostToolUseFailure`                                   | 예          | 예              | 도구 실행 실패                                                                              | 도구 오류 처리 또는 기록                                                                                                               |
+| `PostToolBatch`                                        | 아니오        | 예              | 전체 도구 호출 배치가 해결되며, 다음 모델 호출 전에 배치당 한 번                                                | 전체 배치에 대해 한 번 규칙 주입                                                                                                          |
+| `UserPromptSubmit`                                     | 예          | 예              | 사용자 프롬프트 제출                                                                           | 프롬프트에 추가 컨텍스트 주입                                                                                                             |
+| [`UserPromptExpansion`](/docs/ko/hooks#userpromptexpansion) | 아니오        | 예              | 사용자가 입력한 명령 또는 MCP 프롬프트가 Claude에 도달하기 전에 프롬프트로 확장됩니다. Claude가 스킬 자체를 호출할 때는 실행되지 않습니다 | 명령이 직접 호출되는 것을 차단하거나 스킬이 입력될 때 컨텍스트 추가                                                                                       |
+| `MessageDisplay`                                       | 아니오        | 예              | 텍스트가 포함된 어시스턴트 메시지가 완료되며, 전체 메시지 텍스트와 함께 메시지당 한 번                                     | 기록을 변경하지 않고 표시된 텍스트를 수정하거나 재포맷                                                                                               |
+| `Stop`                                                 | 예          | 예              | 에이전트 실행 중지                                                                            | 종료 전 세션 상태 저장                                                                                                                |
+| `StopFailure`                                          | 아니오        | 예              | 턴이 정상 중지 대신 API 오류로 끝남                                                                | 실패를 기록하거나 알림 전송                                                                                                              |
+| `SubagentStart`                                        | 예          | 예              | 서브에이전트 초기화                                                                            | 병렬 작업 생성 추적                                                                                                                  |
+| `SubagentStop`                                         | 예          | 예              | 서브에이전트 완료                                                                             | 병렬 작업의 결과 집계                                                                                                                 |
+| `PreCompact`                                           | 예          | 예              | 대화 압축 요청                                                                              | 요약 전에 전체 기록 보관                                                                                                               |
+| `PostCompact`                                          | 아니오        | 예              | 대화 압축 완료                                                                              | 생성된 요약 기록                                                                                                                    |
+| [`PreModelSwitch`](/docs/ko/hooks#premodelswitch)           | 아니오        | 예              | 요청된 모델 전환, 발생 전(차단 가능)                                                                | 특정 모델로의 전환 차단                                                                                                                |
+| [`PostModelSwitch`](/docs/ko/hooks#postmodelswitch)         | 아니오        | 예              | 세션의 모델이 변경됨, 자동 폴백 포함                                                                 | Claude에 새 모델에 대한 모델별 지침 제공                                                                                                   |
+| `PermissionRequest`                                    | 예          | 예              | 도구 호출이 권한 결정이 필요함                                                                     | 사용자 정의 권한 처리                                                                                                                 |
+| `PermissionDenied`                                     | 아니오        | 예              | 자동 모드가 도구 호출을 거부함, 분류기 판정 없이 거부된 경우 포함                                                | 거부를 기록하거나 모델에 재시도 가능함을 알림; Claude Code는 판정 없는 거부에 대해 `retry: true`를 무시합니다. [PermissionDenied](/docs/ko/hooks#permissiondenied) 참조 |
+| `SessionStart`                                         | 아니오        | 예              | 세션 초기화                                                                                | 로깅 및 원격 측정 초기화                                                                                                               |
+| `SessionEnd`                                           | 아니오        | 예              | 세션 종료                                                                                 | 임시 리소스 정리                                                                                                                    |
+| `Notification`                                         | 예          | 예              | 에이전트 상태 메시지                                                                           | 에이전트 상태 업데이트를 Slack 또는 PagerDuty로 전송                                                                                         |
+| `Setup`                                                | 아니오        | 예              | 세션 설정/유지 관리                                                                           | 초기화 작업 실행                                                                                                                    |
+| `TeammateIdle`                                         | 아니오        | 예              | 팀원이 유휴 상태가 됨                                                                          | 작업 재할당 또는 알림                                                                                                                 |
+| `TaskCreated`                                          | 아니오        | 예              | `TaskCreate` 도구를 통해 작업이 생성됨                                                           | 작업 명명 규칙 적용                                                                                                                  |
+| [`TaskCompleted`](/docs/ko/hooks#taskcompleted)             | 아니오        | 예              | 작업이 완료됨으로 표시됨                                                                         | 작업이 종료되기 전에 테스트 통과 필요                                                                                                        |
+| `Elicitation`                                          | 아니오        | 예              | MCP 서버가 작업 중 사용자 입력을 요청함                                                              | MCP 입력 요청에 프로그래밍 방식으로 응답                                                                                                     |
+| `ElicitationResult`                                    | 아니오        | 예              | 사용자가 MCP 유도에 응답함                                                                      | 서버로 반환되기 전에 응답 수정 또는 차단                                                                                                      |
+| `ConfigChange`                                         | 아니오        | 예              | 구성 파일 변경                                                                              | 동적으로 설정 다시 로드                                                                                                                |
+| `InstructionsLoaded`                                   | 아니오        | 예              | `CLAUDE.md` 또는 규칙 파일이 컨텍스트에 로드됨                                                       | 어떤 명령 파일이 로드되는지 감사                                                                                                           |
+| `WorktreeCreate`                                       | 아니오        | 예              | Git worktree 생성                                                                       | 격리된 작업 공간 추적                                                                                                                 |
+| `WorktreeRemove`                                       | 아니오        | 예              | Git worktree 제거                                                                       | 작업 공간 리소스 정리                                                                                                                 |
+| `CwdChanged`                                           | 아니오        | 예              | 세션 중 작업 디렉토리가 변경됨                                                                     | 디렉토리별 환경 변수 다시 로드                                                                                                            |
+| `FileChanged`                                          | 아니오        | 예              | 감시 중인 파일이 수정, 생성 또는 삭제됨                                                               | 프로젝트 파일이 변경될 때 구성 다시 로드                                                                                                      |
+| `DirectoryAdded`                                       | 아니오        | 예              | 세션 중 작업 디렉토리가 추가됨                                                                     | 세션 중 추가된 저장소에 대한 종속성 설치                                                                                                      |
 
 <h2 id="configure-hooks">
   훅 구성
 </h2>
 
-훅을 구성하려면 에이전트 옵션의 `hooks` 필드에 전달합니다(Python의 `ClaudeAgentOptions`, TypeScript의 `options` 객체):
+훅을 구성하려면 에이전트 옵션의 `hooks` 필드에 전달합니다(Python의 `ClaudeAgentOptions`, TypeScript의 `options` 객체). 이 코드 조각은 위의 예제에서 Python의 `protect_env_files` 또는 TypeScript의 `protectEnvFiles`와 같은 훅 콜백을 이미 정의했다고 가정합니다:
 
 <CodeGroup>
   ```python Python theme={null}
@@ -213,31 +225,17 @@ SDK는 에이전트 실행의 다양한 단계에 대한 훅을 제공합니다.
   매처
 </h3>
 
-매처를 사용하여 콜백이 발생할 때를 필터링합니다. `matcher` 필드는 훅 이벤트 유형에 따라 다른 값과 일치합니다. 예를 들어 도구 기반 훅은 도구 이름과 일치하고, `Notification` 훅은 알림 유형과 일치합니다. 각 이벤트 유형에 대한 매처 값의 전체 목록은 [Claude Code 훅 참조](/docs/ko/hooks#matcher-patterns)를 참조하세요.
+매처를 사용하여 콜백이 발생할 때를 필터링합니다. `matcher` 필드는 훅 이벤트 유형에 따라 다른 값과 일치합니다. 예를 들어 도구 기반 훅은 도구 이름과 일치하고, `Notification` 훅은 알림 유형과 일치합니다.
 
-SDK 매처는 [설정 파일의 매처](/docs/ko/hooks#matcher-patterns)와 동일한 규칙을 따릅니다. 문자, 숫자, `_`, `-`, 공백, `,`, `|`만 포함하는 매처는 정확한 문자열로 비교되며, `|` 또는 `,`로 구분된 대안이 있고 선택적 주변 공백이 있으므로 `Write|Edit`와 `Write, Edit`는 각각 정확히 이 두 도구와 일치하고 `code-reviewer`는 해당 에이전트 유형만 일치합니다. `*` 매처, 빈 문자열, 또는 매처를 완전히 생략하면 이벤트의 모든 발생과 일치합니다.
+SDK 매처는 [설정 파일의 매처](/docs/ko/hooks#matcher-patterns)와 동일한 규칙을 따릅니다. 해당 섹션에서는 정확한 문자열 및 정규식 평가 경로, 버전 요구 사항, 각 이벤트 유형에 대한 매처 값을 문서화합니다.
 
-다른 문자를 포함하는 매처는 앵커되지 않은 정규식으로 평가되므로 `^mcp__`는 모든 MCP 도구와 일치하고 `Edit.*`는 `Edit`과 `NotebookEdit` 모두와 일치합니다. 전체 문자열 일치가 필요할 때는 정규식을 `^`와 `$`로 감싸세요.
+| 옵션        | 타입               | 기본값         | 설명                                                                                                                                                                                                                                                                                                                                               |
+| --------- | ---------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `matcher` | `string`         | `undefined` | [설정 파일의 매처 규칙](/docs/ko/hooks#matcher-patterns)을 따르는 이벤트의 필터 필드와 일치하는 패턴입니다. 도구 훅의 경우 도구 이름입니다. 기본 제공 도구에는 `Bash`, `Read`, `Write`, `Edit`, `Glob`, `Grep`, `WebFetch`, `Agent` 등이 포함됩니다([도구 입력 타입](/docs/ko/agent-sdk/typescript#tool-input-types)에서 전체 목록 참조). MCP 도구는 `mcp__<server>__<action>` 패턴을 사용합니다. 여기서 `<server>`는 `mcpServers` 구성에서 사용하는 키입니다. |
+| `hooks`   | `HookCallback[]` | -           | 필수입니다. 패턴이 일치할 때 실행할 콜백 함수의 배열                                                                                                                                                                                                                                                                                                                   |
+| `timeout` | `number`         | `undefined` | 초 단위의 타임아웃입니다. 생략하면 Claude Code는 [이벤트의 기본 타임아웃](#hook-timeout)을 적용합니다. SDK 콜백은 `command` 훅 기본값을 따릅니다.                                                                                                                                                                                                                                            |
 
-`mcp__memory` 또는 `mcp__brave-search`와 같은 매처는 정확한 일치 문자만 포함하므로 정확한 문자열로 비교되며 도구와 일치하지 않습니다. 해당 서버의 모든 도구와 일치하려면 `mcp__memory__.*`를 사용합니다.
-
-매처의 정확한 일치 집합에 있는 하이픈은 Claude Code 런타임 v2.1.195 이상이 필요합니다. 이전 버전에서는 `code-reviewer`와 같은 하이픈이 있는 이름이 앵커되지 않은 정규식으로 평가되며 정확히 일치하려면 `^code-reviewer$`로 앵커되어야 합니다.
-
-| 옵션        | 타입               | 기본값         | 설명                                                                                                                                                                                                                                                                |
-| --------- | ---------------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `matcher` | `string`         | `undefined` | 위의 비교 규칙을 따르는 이벤트의 필터 필드와 일치하는 패턴입니다. 도구 훅의 경우 도구 이름입니다. 기본 제공 도구에는 `Bash`, `Read`, `Write`, `Edit`, `Glob`, `Grep`, `WebFetch`, `Agent` 등이 포함됩니다([도구 입력 타입](/docs/ko/agent-sdk/typescript#tool-input-types)에서 전체 목록 참조). MCP 도구는 `mcp__<server>__<action>` 패턴을 사용합니다. |
-| `hooks`   | `HookCallback[]` | -           | 필수입니다. 패턴이 일치할 때 실행할 콜백 함수의 배열                                                                                                                                                                                                                                    |
-| `timeout` | `number`         | `60`        | 초 단위의 타임아웃                                                                                                                                                                                                                                                        |
-
-가능할 때마다 `matcher` 패턴을 사용하여 특정 도구를 대상으로 합니다. `'Bash'` 매처는 Bash 명령에만 실행되지만 패턴을 생략하면 콜백이 이벤트의 모든 발생에 대해 실행됩니다.
-
-도구 기반 훅의 경우 매처는 도구 이름으로만 필터링하며, 파일 경로나 다른 인수로는 필터링하지 않습니다. 파일 경로로 필터링하려면 콜백 내에서 `tool_input.file_path`를 확인합니다.
-
-<Tip>
-  **도구 이름 발견:** [도구 입력 타입](/docs/ko/agent-sdk/typescript#tool-input-types)에서 기본 제공 도구 이름의 전체 목록을 참조하거나, 매처 없이 훅을 추가하여 세션이 수행하는 모든 도구 호출을 기록합니다.
-
-  **MCP 도구 이름 지정:** MCP 도구는 항상 `mcp__`로 시작하고 그 뒤에 서버 이름과 작업이 옵니다: `mcp__<server>__<action>`. 예를 들어 `playwright`라는 서버를 구성하면 해당 도구는 `mcp__playwright__browser_screenshot`, `mcp__playwright__browser_click` 등으로 이름이 지정됩니다. 서버 이름은 `mcpServers` 구성에서 사용하는 키에서 나옵니다.
-</Tip>
+가능할 때마다 `matcher` 패턴을 사용하여 특정 도구를 대상으로 합니다. `'Bash'` 매처는 Bash 명령에만 실행되지만 패턴을 생략하면 콜백이 이벤트의 모든 발생에 대해 실행됩니다. 의도적으로 생략하여 세션이 수행하는 모든 도구 호출을 기록합니다.
 
 <h3 id="callback-functions">
   콜백 함수
@@ -261,8 +259,11 @@ SDK 매처는 [설정 파일의 매처](/docs/ko/hooks#matcher-patterns)와 동�
 
 콜백은 두 가지 필드 범주를 포함하는 객체를 반환합니다:
 
-* **최상위 필드**는 모든 이벤트에서 동일하게 작동합니다: `systemMessage`는 사용자에게 메시지를 표시하고, `continue`(Python에서는 `continue_`)는 이 훅 후에 에이전트가 계속 실행되는지 여부를 결정합니다.
-* \*\*`hookSpecificOutput`\*\*은 현재 작업을 제어합니다. 내부의 필드는 훅 이벤트 유형에 따라 다릅니다. `PreToolUse` 훅의 경우 `permissionDecision`(`"allow"`, `"deny"`, `"ask"`, 또는 `"defer"`), `permissionDecisionReason`, `updatedInput`을 설정하는 곳입니다. `"defer"`를 반환하면 쿼리가 종료되어 [나중에 재개](/docs/ko/hooks#defer-a-tool-call-for-later)할 수 있습니다. `PostToolUse` 훅의 경우 `additionalContext`를 설정하여 도구 결과에 정보를 추가할 수 있습니다. 도구의 출력을 Claude가 보기 전에 바꾸려면 `updatedToolOutput`을 설정합니다. 이는 두 SDK 모두에서 모든 도구에 대해 작동합니다. 더 오래된 `updatedMCPToolOutput` 필드는 MCP 도구 출력만 바꾸며 더 이상 사용되지 않습니다.
+* **최상위 필드**는 모든 이벤트에서 동일하게 작동합니다: `systemMessage`는 사용자에게 메시지를 표시하고, `continue`(Python에서는 `continue_`)는 이 훅 후에 에이전트가 계속 실행되는지 여부를 결정합니다. 일부 이벤트는 이들을 버리거나 다른 곳에 전달합니다. 각 [이벤트의 섹션](/docs/ko/hooks#hook-events)에서 훅 페이지에 이들이 어디에 도착하는지 설명합니다.
+* \*\*`hookSpecificOutput`\*\*은 현재 작업을 제어합니다. 내부의 필드는 훅 이벤트 유형에 따라 다릅니다:
+  * `PreToolUse` 훅의 경우 `permissionDecision`(`"allow"`, `"deny"`, `"ask"`, 또는 `"defer"`), `permissionDecisionReason`, `updatedInput`을 설정하는 곳입니다. `"defer"`를 반환하면 쿼리가 종료되어 [나중에 재개](/docs/ko/hooks#defer-a-tool-call-for-later)할 수 있습니다.
+  * `PostToolUse` 훅의 경우 `additionalContext`를 설정하여 도구 결과에 정보를 추가할 수 있습니다. 도구의 출력을 Claude가 보기 전에 바꾸려면 `updatedToolOutput`을 설정합니다. 이는 두 SDK 모두에서 모든 도구에 대해 작동합니다. 더 오래된 `updatedMCPToolOutput` 필드는 MCP 도구 출력만 바꾸며 더 이상 사용되지 않습니다.
+  * TypeScript SDK에서 `PostToolUse` 콜백은 또한 `classifierContext`를 반환할 수 있습니다. 이는 [자동 모드](/docs/ko/permission-modes#eliminate-prompts-with-auto-mode) 권한 분류기를 위한 도구 호출 결과에 대한 짧은 메모입니다. 콜백이 애플리케이션의 자체 프로세스에서 실행되므로 분류기는 메모에서 전달하는 사용자 진술을 사용자 의도로 가중치를 둘 수 있습니다. 이 필드는 TypeScript Agent SDK v0.3.236 이상이 필요합니다. [자동 모드 분류기를 위한 결과 주석 달기](/docs/ko/hooks#annotate-a-result-for-the-auto-mode-classifier)에서 길이 제한, 동기 전용 규칙, 메모에 포함하지 말아야 할 내용을 다룹니다.
 
 변경 없이 작업을 허용하려면 `{}`를 반환합니다. SDK 콜백 훅은 [Claude Code 셸 명령 훅](/docs/ko/hooks#json-output)과 동일한 JSON 출력 형식을 사용하며, 이는 모든 필드와 이벤트별 옵션을 문서화합니다. SDK 타입 정의는 [TypeScript](/docs/ko/agent-sdk/typescript#synchookjsonoutput) 및 [Python](/docs/ko/agent-sdk/python#synchookjsonoutput) SDK 참조를 참조하세요.
 
@@ -274,7 +275,7 @@ SDK 매처는 [설정 파일의 매처](/docs/ko/hooks#matcher-patterns)와 동�
   비동기 출력
 </h4>
 
-기본적으로 에이전트는 훅이 반환될 때까지 기다립니다. 훅이 부작용(로깅, 웹훅 전송)을 수행하고 에이전트의 동작에 영향을 미칠 필요가 없으면 대신 비동기 출력을 반환할 수 있습니다. 이는 에이전트에게 훅이 완료될 때까지 기다리지 않고 즉시 계속하도록 알립니다:
+기본적으로 에이전트는 훅이 반환될 때까지 기다립니다. 훅이 부작용(로깅, 웹훅 전송)을 수행하고 에이전트의 동작에 영향을 미칠 필요가 없으면 대신 비동기 출력을 반환할 수 있습니다. 이는 에이전트에게 훅이 완료될 때까지 기다리지 않고 즉시 계속하도록 알립니다. 이 코드 조각에서 Python의 `send_to_logging_service`와 TypeScript의 `sendToLoggingService`는 정의하는 모든 로깅 함수를 나타냅니다:
 
 <CodeGroup>
   ```python Python theme={null}
@@ -305,6 +306,8 @@ SDK 매처는 [설정 파일의 매처](/docs/ko/hooks#matcher-patterns)와 동�
 <h2 id="examples">
   예제
 </h2>
+
+이 섹션의 여러 예제는 콜백 함수만 보여줍니다. 실행하려면 [훅 구성](#configure-hooks)에 표시된 대로 옵션의 `hooks` 필드에서 일치하는 이벤트 아래에 콜백을 등록합니다.
 
 <h3 id="modify-tool-input">
   도구 입력 수정
@@ -358,8 +361,10 @@ SDK 매처는 [설정 파일의 매처](/docs/ko/hooks#matcher-patterns)와 동�
 </CodeGroup>
 
 <Note>
-  `updatedInput`을 사용할 때는 수정된 입력을 자동 승인하기 위해 `permissionDecision: 'allow'`를 포함하거나 사용자에게 표시하기 위해 `permissionDecision: 'ask'`를 포함해야 합니다. `'defer'`를 사용하면 `updatedInput`은 무시됩니다. 항상 원본 `tool_input`을 변경하지 않고 새 객체를 반환합니다.
+  `updatedInput`을 `permissionDecision: 'allow'`와 함께 사용하여 수정된 입력을 자동 승인하거나, `permissionDecision: 'ask'`와 함께 사용하여 사용자에게 표시합니다. `permissionDecision`을 생략하면 수정된 입력이 여전히 적용되고 일반 권한 평가를 통해 흐릅니다. `'defer'`를 사용하면 `updatedInput`은 무시됩니다. 항상 원본 `tool_input`을 변경하지 않고 새 객체를 반환합니다.
 </Note>
+
+리디렉션을 확인하려면 접두사를 `./sandbox` 또는 `/tmp/sandbox`와 같이 쓸 수 있는 경로로 설정합니다(macOS는 루트 수준의 `/sandbox` 디렉토리 생성을 허용하지 않음). 그런 다음 에이전트에 파일을 쓰도록 요청합니다. 메시지 스트림의 Write 도구 결과는 Claude가 요청한 경로가 아닌 샌드박스 접두사가 있는 경로를 표시합니다.
 
 <h3 id="add-context-and-block-a-tool">
   컨텍스트 추가 및 도구 차단
@@ -497,7 +502,7 @@ SDK 매처는 [설정 파일의 매처](/docs/ko/hooks#matcher-patterns)와 동�
 
 다중 도구 매처를 사용하여 관련 도구 간에 하나의 콜백을 공유합니다. 이 예제는 서로 다른 범위의 세 가지 매처를 등록합니다:
 
-* 파이프로 구분된 정확한 목록(`Write|Edit|Delete`)은 파일 수정 도구에만 `file_security_hook`을 트리거합니다.
+* 파이프로 구분된 정확한 목록(`Write|Edit|NotebookEdit`)은 파일 수정 도구에만 `file_security_hook`을 트리거합니다.
 * 정규식(`^mcp__`)은 이름이 `mcp__`로 시작하는 모든 MCP 도구에 대해 `mcp_audit_hook`을 트리거합니다.
 * 생략된 매처는 이름에 관계없이 모든 도구 호출에 대해 `global_logger`를 트리거합니다.
 
@@ -507,7 +512,7 @@ SDK 매처는 [설정 파일의 매처](/docs/ko/hooks#matcher-patterns)와 동�
       hooks={
           "PreToolUse": [
               # 파일 수정 도구 일치
-              HookMatcher(matcher="Write|Edit|Delete", hooks=[file_security_hook]),
+              HookMatcher(matcher="Write|Edit|NotebookEdit", hooks=[file_security_hook]),
               # 모든 MCP 도구 일치
               HookMatcher(matcher="^mcp__", hooks=[mcp_audit_hook]),
               # 모든 것 일치(매처 없음)
@@ -522,7 +527,7 @@ SDK 매처는 [설정 파일의 매처](/docs/ko/hooks#matcher-patterns)와 동�
     hooks: {
       PreToolUse: [
         // 파일 수정 도구 일치
-        { matcher: "Write|Edit|Delete", hooks: [fileSecurityHook] },
+        { matcher: "Write|Edit|NotebookEdit", hooks: [fileSecurityHook] },
 
         // 모든 MCP 도구 일치
         { matcher: "^mcp__", hooks: [mcpAuditHook] },
@@ -584,7 +589,7 @@ SDK 매처는 [설정 파일의 매처](/docs/ko/hooks#matcher-patterns)와 동�
   훅에서 HTTP 요청 만들기
 </h3>
 
-훅은 HTTP 요청 같은 비동기 작업을 수행할 수 있습니다. 처리되지 않은 예외가 에이전트를 중단할 수 있으므로 훅 내에서 오류를 포착하고 전파하지 않습니다.
+훅은 HTTP 요청 같은 비동기 작업을 수행할 수 있습니다. 훅 내에서 오류를 포착하고 전파하지 않습니다.
 
 이 예제는 각 도구가 완료된 후 웹훅을 전송하여 어떤 도구가 실행되었는지와 언제 실행되었는지를 기록합니다. 훅은 실패한 웹훅이 에이전트를 중단하지 않도록 오류를 포착합니다:
 
@@ -622,7 +627,7 @@ SDK 매처는 [설정 파일의 매처](/docs/ko/hooks#matcher-patterns)와 동�
           # 이벤트 루프를 차단하지 않도록 스레드에서 차단 HTTP 호출을 실행합니다
           await asyncio.to_thread(_send_webhook, input_data["tool_name"])
       except Exception as e:
-          # 오류를 기록하지만 발생시키지 않습니다. 실패한 웹훅이 에이전트를 중단해서는 안 됩니다
+          # 오류를 기록하지만 발생시키지 않습니다
           print(f"Webhook request failed: {e}")
 
       return {}
@@ -651,7 +656,7 @@ SDK 매처는 [설정 파일의 매처](/docs/ko/hooks#matcher-patterns)와 동�
       if (error instanceof Error && error.name === "AbortError") {
         console.log("Webhook request cancelled");
       }
-      // 다시 발생시키지 않습니다. 실패한 웹훅이 에이전트를 중단해서는 안 됩니다
+      // 다시 발생시키지 않습니다
     }
 
     return {};
@@ -671,20 +676,22 @@ SDK 매처는 [설정 파일의 매처](/docs/ko/hooks#matcher-patterns)와 동�
   ```
 </CodeGroup>
 
+웹훅이 발생하는지 확인하려면 웹훅 URL을 감시할 수 있는 엔드포인트로 지정하고 도구를 사용하는 프롬프트를 전송합니다. 훅은 각 도구가 완료된 후 도구 이름과 타임스탬프가 포함된 POST를 전송합니다.
+
 <h3 id="forward-notifications-to-slack">
   Slack으로 알림 전달
 </h3>
 
-`Notification` 훅을 사용하여 에이전트에서 시스템 알림을 받고 외부 서비스로 전달합니다. 알림은 다음과 같은 이벤트 유형에 대해 발생합니다:
+`Notification` 훅을 사용하여 에이전트에서 시스템 알림을 받고 외부 서비스로 전달합니다. SDK 세션에서 Claude Code는 다음 알림 유형에 대해 이 훅을 실행합니다:
 
-* `permission_prompt` Claude가 권한이 필요할 때
-* `idle_prompt` Claude가 입력을 기다리고 있을 때
-* `auth_success` 인증이 완료될 때
-* `elicitation_dialog`, `elicitation_complete`, `elicitation_response` 사용자 프롬프트 유도 흐름의 경우
+* [`permission_prompt`](/docs/ko/hooks#notification) 권한 요청이 [`canUseTool` 콜백](/docs/ko/agent-sdk/user-input)에서 약 6초 동안 대기한 후. TypeScript Agent SDK v0.3.233 이상 또는 Python Agent SDK v0.2.139 이상이 필요합니다
+* `elicitation_complete` 및 `elicitation_response` 사용자 프롬프트 유도 흐름의 경우
+
+Claude Code는 `idle_prompt`, `auth_success`, `elicitation_dialog` 같은 다른 유형을 SDK 세션이 실행하지 않는 대화형 UI에서 내보냅니다.
 
 각 알림에는 인간이 읽을 수 있는 설명이 있는 `message` 필드와 선택적으로 `title`이 포함됩니다.
 
-이 예제는 모든 알림을 Slack 채널로 전달합니다. [Slack 수신 웹훅 URL](https://api.slack.com/messaging/webhooks)이 필요하며, 이는 Slack 작업 공간에 앱을 추가하고 수신 웹훅을 활성화하여 생성합니다:
+이 예제는 모든 알림을 Slack 채널로 전달합니다. [Slack 수신 웹훅 URL](https://docs.slack.dev/messaging/sending-messages-using-incoming-webhooks/)이 필요하며, 이는 Slack 작업 공간에 앱을 추가하고 수신 웹훅을 활성화하여 생성합니다:
 
 <CodeGroup>
   ```python Python theme={null}
@@ -780,6 +787,8 @@ SDK 매처는 [설정 파일의 매처](/docs/ko/hooks#matcher-patterns)와 동�
   ```
 </CodeGroup>
 
+`Notification` 이벤트가 발생하면 훅은 알림의 `message`를 `Agent status:` 접두사와 함께 웹훅이 대상으로 하는 채널에 게시합니다.
+
 <h2 id="fix-common-issues">
   일반적인 문제 해결
 </h2>
@@ -815,10 +824,23 @@ const myHook: HookCallback = async (input, toolUseID, { signal }) => {
   훅 타임아웃
 </h3>
 
-* `HookMatcher` 구성에서 `timeout` 값을 증가시킵니다.
-* TypeScript에서 세 번째 콜백 인수의 `AbortSignal`을 사용하여 취소를 정상적으로 처리합니다.
+Claude Code는 각 콜백을 타임아웃으로 실행하며, `HookMatcher`의 `timeout` 필드에서 초 단위로 설정합니다. 설정하지 않으면 Claude Code는 이벤트의 기본값을 사용합니다: 대부분의 이벤트는 600초, `UserPromptSubmit`, `PreModelSwitch`, `PostModelSwitch`는 30초, `MessageDisplay`는 10초입니다. Claude Code는 `SessionEnd` 콜백을 더 짧은 [SessionEnd 타임아웃 예산](/docs/ko/hooks#sessionend-input)으로 종료 중에 실행합니다(기본값 1.5초).
 
-타임아웃을 초과하는 `UserPromptSubmit` 또는 [`UserPromptExpansion`](/docs/ko/hooks#userpromptexpansion) 콜백은 해당 프롬프트를 타임아웃 메시지로 차단하고 세션은 계속됩니다. 콜백이 대기 중인 동안 쿼리를 중단하면 대기 중인 도구 호출이 취소됩니다. v2.1.208 이전에는 이러한 이벤트에 대한 콜백 타임아웃이 `error_during_execution`으로 쿼리를 종료했으며, 대기 중인 `PreToolUse` 콜백 중에 중단하면 도구 호출이 진행될 수 있었습니다.
+콜백이 타임아웃을 초과하면 Claude Code는 이를 취소하고 출력을 버리며, 세션은 중단되지 않고 계속됩니다. 다음에 일어나는 일은 이벤트에 따라 다릅니다:
+
+* `PreToolUse`: Claude Code는 도구 호출을 실행하지 않으며, Claude는 훅이 타임아웃 전에 응답하지 않았다는 도구 결과를 받고 턴이 계속됩니다. 다른 `PreToolUse` 훅이 명시적 거부를 반환한 경우 Claude는 타임아웃 오류 대신 그 거부를 받습니다. v2.1.210 이전에는 Claude Code가 타임아웃을 Claude에 사용자 거부로 보고했으며, 이는 무인 세션을 중지하고 입력을 기다리게 했습니다.
+* `PostToolUse` 및 `PostToolUseFailure`: Claude Code는 도구 결과를 유지하고 턴이 계속됩니다.
+* `UserPromptSubmit` 및 [`UserPromptExpansion`](/docs/ko/hooks#userpromptexpansion): Claude Code는 훅과 타임아웃을 명시하는 메시지로 프롬프트를 차단하고 세션은 계속됩니다. 이러한 이벤트의 콜백이 정책 게이트로 작동할 수 있으므로 Claude Code는 타임아웃된 프롬프트를 검사 없이 통과시키지 않습니다. v2.1.208 이전에는 Claude Code가 이러한 이벤트의 콜백 타임아웃 시 `error_during_execution`으로 쿼리를 종료했습니다.
+* `Stop` 및 `SubagentStop`: 타임아웃된 콜백은 결정을 반환하지 않은 것으로 계산됩니다. 에이전트 또는 서브에이전트는 해당 콜백이 이를 허용한 것처럼 중지되며, 이벤트의 다른 훅의 결정은 여전히 적용됩니다. Claude Code v2.1.273 이전에는 타임아웃된 `Stop` 또는 `SubagentStop` 콜백이 실패한 훅 실행으로 계산되었으며, Claude Code는 이벤트의 다른 훅의 결정을 버렸습니다.
+* `SessionStart`: 타임아웃된 콜백은 출력을 반환하지 않은 것으로 계산되며, 세션은 다른 `SessionStart` 훅의 출력으로 계속됩니다.
+* `PreModelSwitch`: Claude Code는 모델 전환을 차단합니다. 응답하지 않는 훅은 전환을 승인하지 않았습니다.
+* `Notification`, `PreCompact`, `PostModelSwitch` 같은 다른 이벤트: Claude Code는 실패를 기록하고 계속됩니다.
+
+주 세션에서 `Stop` 또는 `SessionStart` 콜백이 처음 타임아웃되면 Claude Code는 또한 앱이 세션을 구동하는 것이 응답하지 않았다고 말하는 [`SDKInformationalMessage`](/docs/ko/agent-sdk/typescript#sdkinformationalmessage)를 메시지 스트림에 추가합니다. 앱이 응답하지 않은 상태로 유지되는 동안 이후 타임아웃은 해당 메시지를 반복하지 않습니다.
+
+콜백이 대기 중인 동안 쿼리를 중단하면 Claude Code는 대기 중인 도구 호출을 취소합니다. v2.1.208 이전에는 대기 중인 `PreToolUse` 콜백 중에 중단하면 도구 호출이 진행될 수 있었습니다.
+
+콜백에 더 많은 시간이 필요하면 `HookMatcher`에서 더 높은 `timeout`을 설정합니다. TypeScript에서는 세 번째 콜백 인수의 `AbortSignal`을 사용하여 타임아웃이 발생할 때 취소를 정상적으로 처리합니다.
 
 <h3 id="tool-blocked-unexpectedly">
   도구가 예기치 않게 차단됨
@@ -844,7 +866,7 @@ const myHook: HookCallback = async (input, toolUseID, { signal }) => {
   };
   ```
 
-* 수정된 입력을 자동 승인하려면 `permissionDecision: 'allow'`를 반환하거나, 사용자 승인을 위해 표시하려면 `'ask'`를 반환합니다.
+* `updatedInput`을 `permissionDecision: 'defer'`와 쌍으로 사용하지 마세요. 이는 수정된 입력을 버립니다. `permissionDecision`을 생략하는 것은 괜찮습니다: 수정된 입력은 여전히 정상적인 권한 평가를 통해 적용됩니다. 수정된 입력을 자동 승인하려면 `'allow'`를 반환하거나, 사용자 승인을 위해 표시하려면 `'ask'`를 반환할 수도 있습니다.
 
 * `hookSpecificOutput`에 `hookEventName`을 포함하여 출력이 어떤 훅 유형에 대한 것인지 식별합니다.
 
@@ -852,7 +874,7 @@ const myHook: HookCallback = async (input, toolUseID, { signal }) => {
   Python에서 세션 훅을 사용할 수 없음
 </h3>
 
-`SessionStart` 및 `SessionEnd`는 TypeScript에서 SDK 콜백 훅으로 등록할 수 있지만 Python SDK에서는 사용할 수 없습니다(`HookEvent`는 이를 생략합니다). Python에서는 설정 파일(예: `.claude/settings.json`)에 정의된 [셸 명령 훅](/docs/ko/hooks#hook-events)으로만 사용 가능합니다. SDK 애플리케이션에서 셸 명령 훅을 로드하려면 [`setting_sources`](/docs/ko/agent-sdk/python#settingsource) 또는 [`settingSources`](/docs/ko/agent-sdk/typescript#settingsource)를 사용하여 적절한 설정 소스를 포함합니다:
+`SessionStart` 및 `SessionEnd`는 TypeScript에서 SDK 콜백 훅으로 등록할 수 있지만 Python SDK에서는 사용할 수 없습니다(`HookEvent` 유형이 이를 생략합니다). Python에서는 설정 파일(예: `.claude/settings.json`)에 정의된 [셸 명령 훅](/docs/ko/hooks#hook-events)으로만 사용 가능합니다. SDK 애플리케이션에서 셸 명령 훅을 로드하려면 [`setting_sources`](/docs/ko/agent-sdk/python#settingsource) 또는 [`settingSources`](/docs/ko/agent-sdk/typescript#settingsource)를 사용하여 적절한 설정 소스를 포함합니다:
 
 <CodeGroup>
   ```python Python theme={null}
@@ -874,7 +896,7 @@ Python SDK 콜백으로 초기화 로직을 실행하려면 `client.receive_resp
   서브에이전트 권한 프롬프트 증가
 </h3>
 
-여러 서브에이전트를 생성할 때 각각 별도로 권한을 요청할 수 있습니다. 서브에이전트는 부모 에이전트 권한을 자동으로 상속하지 않습니다. 반복된 프롬프트를 피하려면 `PreToolUse` 훅을 사용하여 특정 도구를 자동 승인하거나 서브에이전트 세션에 적용되는 권한 규칙을 구성합니다.
+여러 서브에이전트를 생성할 때 각각 자신의 도구 호출에 대해 별도로 권한을 요청할 수 있습니다. 반복된 프롬프트를 피하려면 `PreToolUse` 훅을 사용하여 특정 도구를 자동 승인하거나 권한 규칙을 구성합니다. 서브에이전트는 [부모 대화에서 권한 규칙을 상속](/docs/ko/sub-agents#permission-modes)합니다.
 
 <h3 id="recursive-hook-loops-with-subagents">
   서브에이전트를 사용한 재귀 훅 루프
@@ -882,7 +904,6 @@ Python SDK 콜백으로 초기화 로직을 실행하려면 `client.receive_resp
 
 서브에이전트를 생성하는 `UserPromptSubmit` 훅은 해당 서브에이전트가 동일한 훅을 트리거하면 무한 루프를 만들 수 있습니다. 이를 방지하려면:
 
-* 훅 입력에서 서브에이전트 표시기를 확인한 후 생성합니다.
 * 공유 변수 또는 세션 상태를 사용하여 이미 서브에이전트 내부에 있는지 추적합니다.
 * 훅을 최상위 에이전트 세션에만 실행되도록 범위를 지정합니다.
 
@@ -890,7 +911,9 @@ Python SDK 콜백으로 초기화 로직을 실행하려면 `client.receive_resp
   systemMessage가 출력에 나타나지 않음
 </h3>
 
-`systemMessage` 필드는 사용자에게 메시지를 표시합니다. 기본적으로 SDK는 메시지 스트림에서 훅 출력을 `SessionStart` 및 `Setup` 훅에만 표시하므로 `includeHookEvents`(`Python에서는 include_hook_events`)를 설정하지 않으면 다른 훅 이벤트의 메시지가 나타나지 않습니다. 대신 모델에 컨텍스트를 전달하려면 [`additionalContext`](/docs/ko/hooks#add-context-for-claude)를 반환합니다.
+`systemMessage` 필드는 사용자에게 메시지를 표시합니다. Claude Code v2.1.227 이상에서는 훅의 `systemMessage`가 메시지 스트림에 [`SDKInformationalMessage`](/docs/ko/agent-sdk/typescript#sdkinformationalmessage)로 표시될 수 있습니다. 표시 여부는 이벤트에 따라 다릅니다. 훅 페이지의 각 [이벤트 섹션](/docs/ko/hooks#hook-events)에서 출력이 어떻게 표시되는지 설명합니다. 대신 모델에 컨텍스트를 전달하려면 [`additionalContext`](/docs/ko/hooks#add-context-for-claude)를 반환합니다.
+
+v2.1.227 이전에는 SDK가 메시지 스트림에서 훅 출력을 `SessionStart` 및 `Setup` 훅에만 표시했습니다. 다른 이벤트의 경우 출력은 [`includeHookEvents`](/docs/ko/agent-sdk/typescript#options)(`Python에서는 include_hook_events`)가 추가하는 라이프사이클 이벤트에만 나타났습니다. 해당 옵션의 항목은 각 훅 이벤트가 생성하는 라이프사이클 이벤트를 다룹니다.
 
 훅 결정을 애플리케이션에 안정적으로 표시해야 하면 별도로 기록하거나 전용 출력 채널을 사용합니다.
 

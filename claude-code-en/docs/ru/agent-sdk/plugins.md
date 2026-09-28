@@ -6,30 +6,22 @@
 
 > Загружайте пользовательские plugins для расширения Claude Code с помощью skills, agents, hooks и MCP серверов через Agent SDK
 
-Plugins позволяют расширить Claude Code пользовательской функциональностью, которая может быть общей для нескольких проектов. Через Agent SDK вы можете программно загружать plugins из локальных директорий, чтобы добавить skills, agents, hooks и MCP серверы к сеансам вашего agent.
+Plugins позволяют расширить Claude Code пользовательской функциональностью, которая может быть общей для нескольких проектов. Через Agent SDK вы можете программно загружать plugins из локальных директорий, чтобы добавить возможности к сеансам вашего agent. Plugin может включать:
 
-<h2 id="what-are-plugins">
-  Что такое plugins?
-</h2>
+* **Skills**: возможности, которые Claude вызывает автономно, когда это уместно. Вы также можете вызвать skill plugin напрямую с помощью `/plugin-name:skill-name`.
+* **Agents**: специализированные подагенты для конкретных задач
+* **Hooks**: обработчики событий, которые реагируют на использование инструментов и другие события
+* **MCP серверы**: интеграции внешних инструментов через Model Context Protocol
 
-Plugins — это пакеты расширений Claude Code, которые могут включать:
-
-* **Skills**: Возможности, вызываемые моделью, которые Claude использует автономно (также могут быть вызваны с помощью `/skill-name`)
-* **Agents**: Специализированные подагенты для конкретных задач
-* **Hooks**: Обработчики событий, которые реагируют на использование инструментов и другие события
-* **MCP серверы**: Интеграции внешних инструментов через Model Context Protocol
-
-<Note>
-  Директория `commands/` — это устаревший формат. Используйте `skills/` для новых plugins. Claude Code продолжает поддерживать оба формата для обратной совместимости.
-</Note>
-
-Для полной информации о структуре plugin и способах создания plugins см. [Plugins](/docs/ru/plugins).
+Для полной информации о структуре plugin и способах создания plugins см. [Plugins](/docs/ru/plugins/overview).
 
 <h2 id="loading-plugins">
   Загрузка plugins
 </h2>
 
-Загружайте plugins, предоставляя пути их локальной файловой системы в конфигурации параметров. Поле `type` должно быть `"local"`, это единственное значение, которое принимает SDK. Чтобы использовать plugin, распространяемый через [marketplace](/docs/ru/plugin-marketplaces) или удаленный репозиторий, сначала загрузите его и предоставьте путь локальной директории. SDK поддерживает загрузку нескольких plugins из разных мест.
+Загружайте plugins, предоставляя пути их локальной файловой системы в конфигурации параметров. Поле `type` должно быть `"local"`, это единственное значение, которое принимает SDK. SDK поддерживает загрузку нескольких plugins из разных мест.
+
+Чтобы использовать plugin, распространяемый через [marketplace](/docs/ru/plugins/overview) или удаленный репозиторий, сначала загрузите его и предоставьте путь локальной директории. Для структуры директории, которая требуется plugin, см. [справочник структуры plugin](#plugin-structure-reference) ниже.
 
 <CodeGroup>
   ```typescript TypeScript theme={null}
@@ -77,11 +69,11 @@ Plugins — это пакеты расширений Claude Code, которые
 
 Пути plugins могут быть:
 
-* **Относительные пути**: Разрешаются относительно вашей текущей рабочей директории (например, `"./plugins/my-plugin"`)
-* **Абсолютные пути**: Полные пути файловой системы (например, `"/home/user/plugins/my-plugin"`)
+* **Относительные пути**: разрешаются относительно опции `cwd` (например, `"./plugins/my-plugin"`)
+* **Абсолютные пути**: полные пути файловой системы (например, `"/home/user/plugins/my-plugin"`)
 
 <Note>
-  Путь должен указывать на корневую директорию plugin: родительскую директорию `skills/`, `agents/`, `hooks/`, `commands/` (устаревший), или `.claude-plugin/`, а не на поддиректорию.
+  Путь должен указывать на корневую директорию plugin: родительскую директорию `skills/`, `agents/`, `hooks/`, `commands/` или `.claude-plugin/`.
 </Note>
 
 <h2 id="verifying-plugin-installation">
@@ -101,17 +93,17 @@ Plugins — это пакеты расширений Claude Code, которые
     }
   })) {
     if (message.type === "system" && message.subtype === "init") {
-      // Проверка загруженных plugins
+      // Check loaded plugins
       console.log("Plugins:", message.plugins);
-      // Пример: [{ name: "my-plugin", path: "./my-plugin" }]
+      // Example: [{ name: "my-plugin", path: "/absolute/path/to/my-plugin" }]
 
-      // Plugin skills появляются с именем plugin в качестве префикса
+      // Plugin skills appear with the plugin name as a prefix
       console.log("Skills:", message.skills);
-      // Пример: ["my-plugin:greet"]
+      // Example: ["my-plugin:greet"]
 
-      // Plugin команды используют тот же префикс, и skills также появляются здесь
+      // Plugin commands use the same prefix, and skills appear here too
       console.log("Commands:", message.slash_commands);
-      // Пример: ["compact", "context", "my-plugin:custom-command", "my-plugin:greet"]
+      // Example: ["compact", "context", "my-plugin:custom-command", "my-plugin:greet"]
     }
   }
   ```
@@ -129,24 +121,24 @@ Plugins — это пакеты расширений Claude Code, которые
           ),
       ):
           if isinstance(message, SystemMessage) and message.subtype == "init":
-              # Проверка загруженных plugins
+              # Check loaded plugins
               print("Plugins:", message.data.get("plugins"))
-              # Пример: [{"name": "my-plugin", "path": "./my-plugin"}]
+              # Example: [{"name": "my-plugin", "path": "/absolute/path/to/my-plugin"}]
 
-              # Plugin skills появляются с именем plugin в качестве префикса
+              # Plugin skills appear with the plugin name as a prefix
               print("Skills:", message.data.get("skills"))
-              # Пример: ["my-plugin:greet"]
+              # Example: ["my-plugin:greet"]
 
-              # Plugin команды используют тот же префикс, и skills также появляются здесь
+              # Plugin commands use the same prefix, and skills appear here too
               print("Commands:", message.data.get("slash_commands"))
-              # Пример: ["compact", "context", "my-plugin:custom-command", "my-plugin:greet"]
+              # Example: ["compact", "context", "my-plugin:custom-command", "my-plugin:greet"]
 
 
   asyncio.run(main())
   ```
 </CodeGroup>
 
-<h2 id="using-plugin-skills">
+<h2 id="use-plugin-skills">
   Использование plugin skills
 </h2>
 
@@ -178,9 +170,9 @@ Skills из plugins автоматически получают простран
   async def main():
       # Load a plugin with a custom /greet skill
       async for message in query(
-          prompt="/demo-plugin:greet",  # Use plugin skill with namespace
+          prompt="/my-plugin:greet",  # Use plugin skill with namespace
           options=ClaudeAgentOptions(
-              plugins=[{"type": "local", "path": "./plugins/demo-plugin"}]
+              plugins=[{"type": "local", "path": "./my-plugin"}]
           ),
       ):
           # Claude executes the custom greeting skill from the plugin
@@ -207,10 +199,10 @@ Skills из plugins автоматически получают простран
 <CodeGroup>
   ```typescript TypeScript theme={null}
   import { query } from "@anthropic-ai/claude-agent-sdk";
-  import * as path from "path";
+  import { fileURLToPath } from "node:url";
 
   async function runWithPlugin() {
-    const pluginPath = path.join(__dirname, "plugins", "my-plugin");
+    const pluginPath = fileURLToPath(new URL("./plugins/my-plugin", import.meta.url));
 
     console.log("Loading plugin from:", pluginPath);
 
@@ -240,8 +232,9 @@ Skills из plugins автоматически получают простран
   #!/usr/bin/env python3
   """Example demonstrating how to use plugins with the Agent SDK."""
 
+  import asyncio
   from pathlib import Path
-  import anyio
+
   from claude_agent_sdk import (
       AssistantMessage,
       ClaudeAgentOptions,
@@ -253,7 +246,7 @@ Skills из plugins автоматически получают простран
 
   async def run_with_plugin():
       """Example using a custom plugin."""
-      plugin_path = Path(__file__).parent / "plugins" / "demo-plugin"
+      plugin_path = Path(__file__).parent / "plugins" / "my-plugin"
 
       print(f"Loading plugin from: {plugin_path}")
 
@@ -277,7 +270,7 @@ Skills из plugins автоматически получают простран
 
 
   if __name__ == "__main__":
-      anyio.run(run_with_plugin)
+      asyncio.run(run_with_plugin())
   ```
 </CodeGroup>
 
@@ -290,60 +283,45 @@ Skills из plugins автоматически получают простран
 ```text theme={null}
 my-plugin/
 ├── .claude-plugin/
-│   └── plugin.json          # Манифест plugin (опциональный, компоненты автоматически обнаруживаются без него)
-├── skills/                   # Agent Skills (вызываются автономно или через /skill-name)
+│   └── plugin.json          # Plugin manifest (optional, components auto-discovered without it)
+├── skills/                   # Agent Skills (invoked autonomously or via /plugin-name:skill-name)
 │   └── my-skill/
 │       └── SKILL.md
-├── commands/                 # Legacy: используйте skills/ вместо этого
+├── commands/                 # Skills as flat .md files
 │   └── custom-cmd.md
-├── agents/                   # Пользовательские агенты
+├── agents/                   # Custom agents
 │   └── specialist.md
-├── hooks/                    # Обработчики событий
+├── hooks/                    # Event handlers
 │   └── hooks.json
-└── .mcp.json                # Определения MCP server
+└── .mcp.json                # MCP server definitions
 ```
 
-Для подробной информации о создании plugins см.:
+<Note>
+  Директория `commands/` содержит skills как плоские файлы Markdown. Используйте `skills/` для новых plugins. Claude Code поддерживает оба расположения.
+</Note>
 
-* [Plugins](/docs/ru/plugins) — Полное руководство по разработке plugin
-* [Plugins reference](/docs/ru/plugins-reference) — Технические спецификации и схемы
-
-<h2 id="common-use-cases">
-  Распространенные варианты использования
+<h2 id="multiple-plugin-sources">
+  Несколько источников plugin
 </h2>
-
-<h3 id="development-and-testing">
-  Разработка и тестирование
-</h3>
-
-Загружайте plugins во время разработки без их глобальной установки:
-
-```typescript theme={null}
-plugins: [{ type: "local", path: "./dev-plugins/my-plugin" }];
-```
-
-<h3 id="project-specific-extensions">
-  Расширения, специфичные для проекта
-</h3>
-
-Включайте plugins в репозиторий вашего проекта для согласованности в команде:
-
-```typescript theme={null}
-plugins: [{ type: "local", path: "./project-plugins/team-workflows" }];
-```
-
-<h3 id="multiple-plugin-sources">
-  Несколько источников plugins
-</h3>
 
 Объединяйте plugins из разных мест:
 
 ```typescript theme={null}
+import * as os from "node:os";
+import * as path from "node:path";
+
 plugins: [
   { type: "local", path: "./local-plugin" },
-  { type: "local", path: "~/.claude/custom-plugins/shared-plugin" }
+  {
+    type: "local",
+    path: path.join(os.homedir(), ".claude", "custom-plugins", "shared-plugin")
+  }
 ];
 ```
+
+<Note>
+  SDK не расширяет пути с тильдой, такие как `~/plugins`. Если путь plugin не существует, SDK пропускает этот plugin и сеанс продолжается, поэтому проверьте список `plugins` в сообщении инициализации, чтобы подтвердить, что каждый plugin загрузился.
+</Note>
 
 <h2 id="troubleshooting">
   Troubleshooting
@@ -355,9 +333,10 @@ plugins: [
 
 Если ваш plugin не появляется в сообщении инициализации:
 
-1. **Проверьте путь**: убедитесь, что путь указывает на корневую директорию plugin, родительскую директорию для `skills/`, `agents/`, `hooks/`, `commands/` (устаревшее), или `.claude-plugin/`
+1. **Проверьте путь**: убедитесь, что путь указывает на корневую директорию plugin, родительскую директорию `skills/`, `agents/`, `hooks/`, `commands/` или `.claude-plugin/`
 2. **Проверьте plugin.json**: если ваш plugin включает манифест, убедитесь, что он имеет корректный синтаксис JSON
 3. **Проверьте разрешения файлов**: убедитесь, что директория plugin доступна для чтения
+4. **Подтвердите существование директории**: SDK пропускает несуществующий путь, и plugin не появляется в списке `plugins` сообщения инициализации
 
 <h3 id="skills-not-appearing">
   Skills не появляются
@@ -369,22 +348,12 @@ plugins: [
 2. **Проверьте сообщение инициализации**: убедитесь, что skill появляется в списке `skills` с правильным пространством имен
 3. **Проверьте файлы skill**: убедитесь, что каждый skill имеет файл `SKILL.md` в собственной поддиректории под `skills/`, например `skills/my-skill/SKILL.md`
 
-<h3 id="path-resolution-issues">
-  Проблемы с разрешением пути
-</h3>
-
-Если относительные пути не работают:
-
-1. **Проверьте рабочую директорию**: относительные пути разрешаются из вашей текущей рабочей директории
-2. **Используйте абсолютные пути**: для надежности рассмотрите использование абсолютных путей
-3. **Нормализуйте пути**: используйте утилиты пути для правильного построения путей
-
 <h2 id="see-also">
   См. также
 </h2>
 
-* [Plugins](/docs/ru/plugins) — Полное руководство по разработке plugin
-* [Plugins reference](/docs/ru/plugins-reference) — Технические спецификации
-* [Commands](/docs/ru/agent-sdk/slash-commands) — Использование команд в SDK
-* [Subagents](/docs/ru/agent-sdk/subagents) — Работа со специализированными agents
-* [Skills](/docs/ru/agent-sdk/skills) — Использование Agent Skills
+* [Plugins](/docs/ru/plugins/overview) - Полное руководство по разработке plugin
+* [Plugins reference](/docs/ru/plugins/manifest-reference) - Технические спецификации
+* [Commands](/docs/ru/agent-sdk/skills#dispatch-commands-by-name) - Отправка команд в SDK
+* [Subagents](/docs/ru/agent-sdk/subagents) - Работа со специализированными agents
+* [Skills](/docs/ru/agent-sdk/skills) - Использование Agent Skills

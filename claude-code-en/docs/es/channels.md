@@ -42,9 +42,12 @@ Cada canal compatible es un plugin que requiere [Bun](https://bun.sh). Para una 
         /plugin install telegram@claude-plugins-official
         ```
 
-        Si Claude Code informa que el plugin no se encuentra en ningún marketplace, su marketplace falta o está desactualizado. Ejecute `/plugin marketplace update claude-plugins-official` para actualizarlo, o `/plugin marketplace add anthropics/claude-plugins-official` si no lo ha agregado antes. Luego reintente la instalación.
+        Si la instalación falla, haga coincidir el mensaje que Claude Code reporta:
 
-        Después de instalar, ejecute `/reload-plugins` para activar el comando de configuración del plugin.
+        * `Marketplace "claude-plugins-official" not found`: agregue el marketplace con `/plugin marketplace add anthropics/claude-plugins-official`, luego reintente la instalación.
+        * El plugin [no se encuentra en el marketplace](/docs/es/plugins/install#install-a-plugin): verifique el nombre del plugin.
+
+        Cuando la instalación solicite un alcance de instalación, elija la opción de alcance de usuario para que el plugin esté disponible en todos sus proyectos. Verifique el resumen de instalación: si reporta `Run /reload-plugins to activate.`, consulte [Aplicar cambios de plugin sin reiniciar](/docs/es/plugins/cli-reference#reload-plugins) para que el comando de configuración del plugin esté disponible.
       </Step>
 
       <Step title="Configurar su token">
@@ -117,9 +120,12 @@ Cada canal compatible es un plugin que requiere [Bun](https://bun.sh). Para una 
         /plugin install discord@claude-plugins-official
         ```
 
-        Si Claude Code informa que el plugin no se encuentra en ningún marketplace, su marketplace falta o está desactualizado. Ejecute `/plugin marketplace update claude-plugins-official` para actualizarlo, o `/plugin marketplace add anthropics/claude-plugins-official` si no lo ha agregado antes. Luego reintente la instalación.
+        Si la instalación falla, haga coincidir el mensaje que Claude Code reporta:
 
-        Después de instalar, ejecute `/reload-plugins` para activar el comando de configuración del plugin.
+        * `Marketplace "claude-plugins-official" not found`: agregue el marketplace con `/plugin marketplace add anthropics/claude-plugins-official`, luego reintente la instalación.
+        * El plugin [no se encuentra en el marketplace](/docs/es/plugins/install#install-a-plugin): verifique el nombre del plugin.
+
+        Cuando la instalación solicite un alcance de instalación, elija la opción de alcance de usuario para que el plugin esté disponible en todos sus proyectos. Verifique el resumen de instalación: si reporta `Run /reload-plugins to activate.`, consulte [Aplicar cambios de plugin sin reiniciar](/docs/es/plugins/cli-reference#reload-plugins) para que el comando de configuración del plugin esté disponible.
       </Step>
 
       <Step title="Configurar su token">
@@ -179,7 +185,14 @@ Cada canal compatible es un plugin que requiere [Bun](https://bun.sh). Para una 
         /plugin install imessage@claude-plugins-official
         ```
 
-        Si Claude Code informa que el plugin no se encuentra en ningún marketplace, su marketplace falta o está desactualizado. Ejecute `/plugin marketplace update claude-plugins-official` para actualizarlo, o `/plugin marketplace add anthropics/claude-plugins-official` si no lo ha agregado antes. Luego reintente la instalación.
+        Si la instalación falla, haga coincidir el mensaje que Claude Code reporta:
+
+        * `Marketplace "claude-plugins-official" not found`: agregue el marketplace con `/plugin marketplace add anthropics/claude-plugins-official`, luego reintente la instalación.
+        * El plugin [no se encuentra en el marketplace](/docs/es/plugins/install#install-a-plugin): verifique el nombre del plugin.
+
+        Cuando la instalación solicite un alcance de instalación, elija la opción de alcance de usuario para que el plugin esté disponible en todos sus proyectos.
+
+        Si el resumen de instalación reporta `Run /reload-plugins to activate.`, no necesita actuar al respecto aquí, porque reiniciar en el siguiente paso recoge el plugin.
       </Step>
 
       <Step title="Reiniciar con canales habilitados">
@@ -209,8 +222,6 @@ Cada canal compatible es un plugin que requiere [Bun](https://bun.sh). Para una 
   </Tab>
 </Tabs>
 
-También puede [crear su propio canal](/docs/es/channels-reference) para sistemas que aún no tienen un plugin.
-
 <h2 id="quickstart">
   Inicio rápido
 </h2>
@@ -233,7 +244,14 @@ Para probar la demostración de fakechat, necesitará:
     /plugin install fakechat@claude-plugins-official
     ```
 
-    Si Claude Code informa que el plugin no se encuentra en ningún marketplace, su marketplace falta o está desactualizado. Ejecute `/plugin marketplace update claude-plugins-official` para actualizarlo, o `/plugin marketplace add anthropics/claude-plugins-official` si no lo ha agregado antes. Luego reintente la instalación.
+    Si la instalación falla, haga coincidir el mensaje que Claude Code reporta:
+
+    * `Marketplace "claude-plugins-official" not found`: agregue el marketplace con `/plugin marketplace add anthropics/claude-plugins-official`, luego reintente la instalación.
+    * El plugin [no se encuentra en el marketplace](/docs/es/plugins/install#install-a-plugin): verifique el nombre del plugin.
+
+    Cuando la instalación solicite un alcance de instalación, elija la opción de alcance de usuario para que el plugin esté disponible en todos sus proyectos.
+
+    Si el resumen de instalación reporta `Run /reload-plugins to activate.`, no necesita actuar sobre ello aquí, porque reiniciar en el siguiente paso recoge el plugin.
   </Step>
 
   <Step title="Reiniciar con el channel habilitado">
@@ -243,7 +261,7 @@ Para probar la demostración de fakechat, necesitará:
     claude --channels plugin:fakechat@claude-plugins-official
     ```
 
-    El servidor fakechat se inicia automáticamente.
+    El servidor fakechat se inicia automáticamente. La pantalla de inicio muestra un aviso de channels indicando que los mensajes de `plugin:fakechat@claude-plugins-official` se inyectan directamente en esta sesión. Si el plugin no está instalado o no está en la lista de permitidos aprobada, una línea de advertencia que nombra el problema aparece debajo de ese aviso.
 
     <Tip>
       Puede pasar varios plugins a `--channels`, separados por espacios.
@@ -254,14 +272,14 @@ Para probar la demostración de fakechat, necesitará:
     Abra la interfaz de fakechat en [http://localhost:8787](http://localhost:8787) y escriba un mensaje:
 
     ```text theme={null}
-    hey, what's in my working directory?
+    what's in my working directory?
     ```
 
-    El mensaje llega a su sesión de Claude Code como un evento `<channel source="fakechat">`. Claude lo lee, hace el trabajo y llama a la herramienta `reply` de fakechat. La respuesta aparece en la interfaz de chat.
+    El mensaje llega a su sesión de Claude Code. La terminal lo muestra como una línea de channel entrante como `← fakechat · web: what's in my working directory?`, mientras que el modelo lo recibe como un evento `<channel source="plugin:fakechat:fakechat">`, utilizando el nombre del servidor con alcance del plugin. Claude lo lee, hace el trabajo y llama a la herramienta `reply` de fakechat. Si Claude Code solicita permiso para la primera respuesta, apruébalo. La respuesta aparece en la interfaz de chat.
   </Step>
 </Steps>
 
-Si Claude encuentra un mensaje de permiso mientras está fuera de la terminal, la sesión se pausa hasta que responda. Los servidores de channel que declaran la [capacidad de retransmisión de permisos](/docs/es/channels-reference#relay-permission-prompts) pueden reenviarle estos mensajes para que pueda aprobar o denegar de forma remota. Para uso desatendido, [`--dangerously-skip-permissions`](/docs/es/permission-modes#skip-all-checks-with-bypasspermissions-mode) evita la mayoría de los mensajes, pero solo úselo en entornos en los que confíe. Las reglas de solicitud explícita, las herramientas de conector [que su organización configuró como `ask`](/docs/es/mcp#organization-controls-on-connector-tools) y las herramientas MCP marcadas como [`requiresUserInteraction`](/docs/es/mcp#require-approval-for-a-specific-tool) aún generan mensajes.
+Si Claude encuentra un mensaje de permiso mientras está fuera de la terminal, la sesión se pausa hasta que responda. Los servidores de channel que declaran la [capacidad de retransmisión de permisos](/docs/es/channels-reference#relay-permission-prompts) pueden reenviarle estos mensajes para que pueda aprobar o denegar de forma remota. Para uso desatendido, [`--dangerously-skip-permissions`](/docs/es/permission-modes#skip-all-checks-with-bypasspermissions-mode) evita la mayoría de los mensajes, pero solo úselo en entornos en los que confíe. Incluso entonces, los [actions no mode auto-approves](/docs/es/permission-modes#actions-no-mode-auto-approves) aún se aplican.
 
 Cuando ejecuta channels en modo no interactivo con `-p`, las herramientas que necesitan entrada de terminal, como preguntas de opción múltiple y aprobación de plan mode, se deshabilitan para que la sesión nunca se quede esperando entrada.
 
@@ -292,15 +310,15 @@ La lista de permitidos también controla la [retransmisión de permisos](/docs/e
 
 Los administradores controlan la disponibilidad a través de dos [configuraciones administradas](/docs/es/settings) que los usuarios no pueden anular. El valor predeterminado depende de cómo se autentique:
 
-* **claude.ai Team y Enterprise**: los channels se bloquean hasta que un administrador los habilita.
+* **claude.ai Team y Enterprise**: los channels se bloquean hasta que un administrador los [habilita](#enable-channels-for-your-organization).
 * **Anthropic Console con autenticación de clave API**: los channels se permiten de forma predeterminada. Solo necesita esta configuración si su organización implementa configuración administrada.
 
 En todos los casos, ningún channel se ejecuta hasta que un usuario lo opte por la sesión con `--channels`.
 
-| Configuración           | Propósito                                                                                                                                                                                                                                                                                                                                                            | Cuando no está configurado                                                                                                                                                                                                 |
-| :---------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `channelsEnabled`       | Interruptor maestro. Debe ser `true` para que cualquier channel entregue mensajes. Establézcalo a través del botón de alternancia de la [consola de administrador de claude.ai](https://claude.ai/admin-settings/claude-code) o directamente en la configuración administrada. Bloquea todos los channels incluida la bandera de desarrollo cuando está desactivado. | claude.ai Team y Enterprise: channels bloqueados. Console: channels permitidos a menos que su organización implemente configuración administrada, en cuyo caso los channels se bloquean hasta que se establezca esta clave |
-| `allowedChannelPlugins` | Qué plugins pueden registrarse una vez que los channels están habilitados. Reemplaza la lista mantenida por Anthropic cuando se establece. Solo se aplica cuando `channelsEnabled` es `true`.                                                                                                                                                                        | Se aplica la lista predeterminada de Anthropic                                                                                                                                                                             |
+| Configuración           | Propósito                                                                                                                                                                                                                                                            | Cuando no está configurado                                                                                                                                                                                                 |
+| :---------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `channelsEnabled`       | Interruptor maestro. Debe ser `true` para que cualquier channel entregue mensajes. Bloquea todos los channels incluida la bandera de desarrollo cuando está desactivado. Consulte [Habilitar channels para su organización](#enable-channels-for-your-organization). | claude.ai Team y Enterprise: channels bloqueados. Console: channels permitidos a menos que su organización implemente configuración administrada, en cuyo caso los channels se bloquean hasta que se establezca esta clave |
+| `allowedChannelPlugins` | Qué plugins pueden registrarse una vez que los channels están habilitados. Reemplaza la lista mantenida por Anthropic cuando se establece.                                                                                                                           | Se aplica la lista predeterminada de Anthropic                                                                                                                                                                             |
 
 Los usuarios de Pro y Max sin una organización omiten estas comprobaciones por completo: los channels están disponibles y los usuarios optan por participar por sesión con `--channels`.
 
@@ -308,7 +326,7 @@ Los usuarios de Pro y Max sin una organización omiten estas comprobaciones por 
   Habilitar channels para su organización
 </h3>
 
-Habilite channels para su organización desde [**claude.ai → Configuración de administrador → Claude Code → Channels**](https://claude.ai/admin-settings/claude-code), que requiere el rol de administrador, o estableciendo `channelsEnabled` en `true` en la configuración administrada.
+Habilite channels para su organización desde [**claude.ai → Configuración de administrador → Claude Code → Channels**](https://claude.ai/admin-settings/claude-code), que requiere el rol de Propietario, o estableciendo `channelsEnabled` en `true` en la configuración administrada.
 
 Una vez habilitado, los usuarios de su organización pueden usar `--channels` para optar por servidores de channel en sesiones individuales. Si la configuración está deshabilitada o no está establecida, el servidor MCP aún se conecta y sus herramientas funcionan, pero los mensajes de channel no llegarán. Un mensaje de advertencia de inicio le dice al usuario que un administrador habilite la configuración.
 
@@ -329,15 +347,17 @@ De forma predeterminada, cualquier plugin en la lista de permitidos mantenida po
 }
 ```
 
-Cuando `allowedChannelPlugins` está establecido, reemplaza completamente la lista de permitidos de Anthropic: solo los plugins listados pueden registrarse. Déjelo sin establecer para volver a la lista de permitidos predeterminada de Anthropic. Si establece una matriz vacía, bloquea todos los plugins de channel de la lista de permitidos, pero `--dangerously-load-development-channels` aún puede omitirlo para pruebas locales. Para bloquear channels completamente incluida la bandera de desarrollo, déjelo sin establecer en su lugar.
+Si establece una matriz vacía, bloquea todos los plugins de channel de la lista de permitidos, pero `--dangerously-load-development-channels` aún puede omitirlo para pruebas locales. Para bloquear channels completamente incluida la bandera de desarrollo, deje `channelsEnabled` sin establecer en su lugar.
 
-Esta configuración requiere `channelsEnabled: true`. Si un usuario pasa un plugin a `--channels` que no está en su lista, Claude Code se inicia normalmente pero el channel no se registra, y el aviso de inicio explica que el plugin no está en la lista aprobada de la organización.
+Esta configuración requiere `channelsEnabled: true`. Si un usuario pasa un plugin a `--channels` que no está en su lista, Claude Code se inicia normalmente pero el channel no se registra, y el aviso de inicio explica que el plugin no está en la lista aprobada de la organización. Si establece `MCP_PROTOCOL_NEGOTIATION` en `auto` en el runtime del cliente MCP v2, un channel también puede no registrarse porque Claude Code [no registra un servidor de channel que negocia la revisión de protocolo 2026-07-28](/docs/es/mcp#push-messages-with-channels).
 
 <h2 id="research-preview">
   Vista previa de investigación
 </h2>
 
 Los channels son una característica de vista previa de investigación. La disponibilidad se está implementando gradualmente, y la sintaxis de la bandera `--channels` y el contrato de protocolo pueden cambiar según los comentarios.
+
+Ni `--channels` ni `--dangerously-load-development-channels` aparecen en `claude --help` mientras la característica está en vista previa. Las banderas funcionan aunque no estén listadas.
 
 Durante la vista previa, `--channels` solo acepta plugins de una lista de permitidos mantenida por Anthropic, o de la lista de permitidos de su organización si un administrador ha establecido [`allowedChannelPlugins`](#restrict-which-channel-plugins-can-run). Los plugins de channel en [claude-plugins-official](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins) son el conjunto aprobado predeterminado. Si pasa algo que no está en la lista de permitidos efectiva, Claude Code se inicia normalmente pero el channel no se registra, y el aviso de inicio le dice por qué.
 

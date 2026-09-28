@@ -7,46 +7,122 @@
 > 使用 /code-review ultra 在雲端執行深度多代理程式碼審查，在合併前尋找並驗證錯誤。
 
 <Note>
-  Ultrareview 是研究預覽功能。該功能、定價和可用性可能會根據反饋而變更。該命令現在以 `/code-review ultra` 的方式調用，而 `/ultrareview` 仍保留為別名。
+  Ultrareview 是研究預覽功能。該功能、定價和可用性可能會根據反饋而變更。該命令是 `/code-review ultra`。當 ultrareview 可用於您的帳戶時，`/ultrareview` 是別名。
 </Note>
 
-Ultrareview 是在 Claude Code 網路基礎設施上執行的深度程式碼審查。當您執行 `/code-review ultra` 時，Claude Code 會在遠端沙箱中啟動一群審查代理程式，以尋找您分支或拉取請求中的錯誤。
+Ultrareview 是在 [雲端工作階段](/docs/zh-TW/claude-code-on-the-web)上執行的深度程式碼審查，運行於 Anthropic 的基礎設施上。當您執行 `/code-review ultra` 時，Claude Code 會在雲端沙箱中啟動一群審查代理程式，以尋找您分支或拉取請求中的錯誤。
 
-與本地 `/code-review` 或 `/review` 相比，ultrareview 提供：
+與本地 `/code-review` 相比，ultrareview 提供：
 
 * **更高的信號品質**：每個報告的發現都經過獨立重現和驗證，因此結果專注於真實錯誤而非風格建議
 * **更廣泛的覆蓋範圍**：許多審查代理程式並行探索變更，這會發現本地審查可能遺漏的問題
-* **無本地資源使用**：審查完全在遠端沙箱中執行，因此您的終端在執行期間保持空閒，可用於其他工作
+* **無本地資源使用**：審查完全在雲端沙箱中執行，因此您的終端在執行期間保持空閒，可用於其他工作
 
-Ultrareview 需要使用 Claude.ai 帳戶進行身份驗證，因為它在 Claude Code 網路基礎設施上執行。如果您僅使用 API 金鑰登入，請先執行 `/login` 並使用 Claude.ai 進行身份驗證。使用 Amazon Bedrock、Google Cloud 的 Agent Platform 或 Microsoft Foundry 的 Claude Code 時，Ultrareview 不可用，對於已啟用零資料保留的組織也不可用。
+Ultrareview 需要使用 claude.ai 帳戶進行身份驗證，因為它在 Anthropic 的基礎設施上作為雲端工作階段執行。如果您僅使用 API 金鑰登入，請先執行 `/login` 並使用 claude.ai 進行身份驗證。使用 Amazon Bedrock、Google Cloud 的 Agent Platform 或 Microsoft Foundry 的 Claude Code 時，Ultrareview 不可用，對於已啟用零資料保留的組織也不可用。當 ultrareview 不可用時，`/code-review ultra` 會改為在您的工作階段中執行本地審查。
 
 <h2 id="run-ultrareview-from-the-cli">
   從 CLI 執行 ultrareview
 </h2>
 
-從 Claude Code CLI 中的任何 git 儲存庫啟動審查。
+從任何 git 儲存庫啟動審查：
 
 ```text theme={null}
 /code-review ultra
 ```
 
-不帶引數時，ultrareview 審查您目前分支與預設分支之間的差異，包括工作樹中任何未提交和暫存的變更。Claude Code 會將儲存庫狀態打包並上傳到遠端沙箱進行審查。
+不帶引數時，ultrareview 會審查您目前分支與預設分支之間的差異，包括未提交和已暫存的變更。對於名稱類似認證或金鑰的檔案（例如 `.env` 和 `*.tfvars` 檔案）的未提交變更，Claude Code 遵循[將本機儲存庫上傳到雲端工作階段](/docs/zh-TW/claude-code-on-the-web#send-local-repositories-without-github)的規則。
 
-若要改為審查 GitHub 拉取請求，請傳遞 PR 編號。
+對於分支審查，Claude Code 會組合儲存庫狀態並將其上傳到雲端沙箱；當您[審查提取請求](#review-a-pull-request)時，Claude Code 不會從您的機器上傳任何內容。
+
+啟動前，Claude Code 會顯示確認對話方塊，其中包含審查範圍、您剩餘的免費執行次數和估計成本；對於分支審查，範圍包括檔案和行數。確認後，審查會在背景中繼續進行，同時您可以繼續使用您的工作階段。
+
+該命令僅在您使用 `/code-review ultra` 叫用時執行；Claude 不會自行啟動 ultrareview。
+
+<h3 id="review-against-a-different-base">
+  針對不同的基礎進行審查
+</h3>
+
+若要與預設分支以外的基礎進行比較，請傳遞分支名稱。此範例會針對 `develop` 而不是預設分支審查您的目前分支：
+
+```text theme={null}
+/code-review ultra develop
+```
+
+基礎分支不需要存在於您的本機複製中；Claude Code 會從 `origin` 擷取它。如果名稱有拼寫錯誤，Claude Code 會在錯誤中建議最接近的分支名稱。
+
+提交 ID 或標籤也可以作為基礎，審查則涵蓋您的分支自該提交以來的變更。
+
+<h3 id="review-a-pull-request">
+  審查提取請求
+</h3>
+
+若要審查 GitHub 提取請求而不是本機分支，請傳遞 PR 編號：
 
 ```text theme={null}
 /code-review ultra 1234
 ```
 
-在 PR 模式中，遠端沙箱直接從主機複製拉取請求，而不是打包您的本地工作樹。PR 模式適用於 `github.com` 上的儲存庫以及管理員已連接到 Claude Code 的 [GitHub Enterprise Server](/docs/zh-TW/github-enterprise-server) 實例。
+該命令也接受 `#1234`、`PR 1234` 和貼上的 PR URL；貼上的 URL 必須指向您目前目錄中的儲存庫。
+
+在 PR 模式中，雲端沙箱直接從主機複製提取請求，而不是組合您的本機工作樹。PR 模式適用於 `github.com` 上的儲存庫和[GitHub Enterprise Server](/docs/zh-TW/github-enterprise-server) 執行個體上的儲存庫，這些執行個體已由擁有者連接到 Claude Code。
+
+對於 `github.com` 上的儲存庫，沙箱使用連接到您 Claude 帳戶的 GitHub 帳戶進行複製，因此該帳戶必須能夠讀取 PR 的儲存庫。Claude Code 在建立雲端工作階段前檢查此項，除非您已設定 [`CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`](/docs/zh-TW/env-vars#variables)，並在[未連接帳戶](/docs/zh-TW/errors#no-github-account-is-connected-to-your-claude-account)或[帳戶無法看到儲存庫](/docs/zh-TW/errors#your-connected-github-account-cant-see-the-repository)時拒絕啟動；拒絕會命名修正方式。在 v2.1.248 之前，Claude Code 在啟動前不檢查此項。
+
+執行 [`/web-setup`](/docs/zh-TW/web-quickstart#connect-from-your-terminal) 以將您的 GitHub CLI 登入連接到您的 Claude 帳戶。
+
+<h3 id="post-findings-to-the-pull-request">
+  將發現結果發佈到提取請求
+</h3>
+
+在 Claude Code v2.1.227 或更新版本上，當您在 `github.com` 上審查提取請求時，您可以讓 Claude 將完成的發現結果作為來自您自己 GitHub 帳戶的單一純文字評論發佈到 PR。該評論不是審查或核准，並以「由 Claude Code 生成」的備註結尾。當您審查分支或 GitHub Enterprise Server 提取請求時，Claude Code 只會在您的工作階段中顯示發現結果。
+
+Claude Code 絕不會發佈，除非您在該執行中選擇發佈，且 `--no-post` 是預設值。發佈是您為每次執行所做的選擇：
+
+* **互動式**：在啟動對話方塊中，選取**執行並將發現結果作為我發佈到 PR**。如果您將 `--post` 新增到命令中，如 `/code-review ultra 1234 --post`，Claude Code 會預先選取該選擇，但仍會在啟動前詢問。
+* **非互動式**：使用 `--post` 執行 [`claude ultrareview` 子命令](#run-ultrareview-non-interactively)。您透過使用該旗標執行子命令來同意發佈，因此 Claude Code 會發佈而不詢問。在 `claude -p '/code-review ultra'` 執行中，Claude Code 在發現結果到達前退出，因此不會發佈任何內容；請改用子命令。
+
+Claude Code 不會從您的機器發佈。它會將審查的工作階段 ID 傳送到 Anthropic API，該 API 會透過您連接到 Claude 的 GitHub 帳戶將審查的儲存發現結果作為評論發佈。發佈需要與審查本身相同的 claude.ai 登入，且在第三方提供者上或當您設定 [`CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`](/docs/zh-TW/env-vars) 時不可用。
+
+在互動式工作階段中，Claude Code 會在發現結果到達時啟動發佈，因此請保持工作階段開啟，直到審查完成。Claude Code 只在該工作階段中保留發佈選擇。如果工作階段在審查完成前結束，Claude Code 不會發佈任何內容，即使您稍後繼續對話。
+
+發佈完成後，Claude 會告訴您結果：
+
+* **已發佈**：Claude 會提供評論的連結。
+* **已發佈**：同一審查的較早發佈已將評論放在 PR 上，因此 Claude 會連結您到提取請求，而不是再次發佈。
+* **失敗**：Claude 會告訴您原因，發現結果會保留在您的終端中，以便您可以手動發佈。
+
+<h3 id="pass-a-request-in-plain-words">
+  用純文字傳遞請求
+</h3>
+
+在 Claude Code v2.1.218 或更新版本上，您也可以用純文字描述您正在進行的工作：
+
+```text theme={null}
+/code-review ultra check my auth changes
+```
+
+審查仍涵蓋您的目前分支，與不帶引數執行的範圍相同。Claude 會將您的文字保留為備註，在啟動對話方塊中顯示，並在發現結果到達時將其與發現結果相關聯。
+
+Claude Code 只有在文字超過一個單字且不是分支名稱或 PR 參考時，才會將其視為備註。它將單一單字讀取為分支名稱或 PR 參考，因此拼寫錯誤的分支名稱會從[針對不同的基礎進行審查](#review-against-a-different-base)獲得最接近分支的錯誤，而不是使用備註啟動。如果您的文字結合 PR 參考與其他單字（例如 `check PR 123 again`），Claude Code 也不會啟動；它會要求您重新執行，僅使用 PR 編號來審查該 PR，或不使用參考來審查您的目前分支。
 
 <Tip>
-  如果您的儲存庫太大而無法打包，Claude Code 會提示您改用 PR 模式。推送您的分支並開啟草稿 PR，然後執行 `/code-review ultra <PR-number>`。
-
-  如果拉取請求的差異太大，Claude Code 會在任何審查工作執行前以範圍提示拒絕審查。
+  如果您的儲存庫太大而無法組合，Claude Code 會提示您改用 PR 模式。推送您的分支並開啟草稿 PR，然後執行 `/code-review ultra <PR-number>`。
 </Tip>
 
-啟動前，Claude Code 會顯示確認對話框，其中包含審查範圍（審查分支時包括檔案和行數）、您剩餘的免費執行次數和估計成本。確認後，審查會在背景中繼續進行，您可以繼續使用您的工作階段。該命令僅在您使用 `/code-review ultra` 叫用時執行；Claude 不會自動啟動 ultrareview。
+<h3 id="diff-limits-and-fallbacks">
+  差異限制和備用方案
+</h3>
+
+Ultrareview 在任何審查工作執行前檢查差異，並在無法按原樣審查時告訴您：
+
+* **差異過大**：分支審查預設最多可包含 500 個變更檔案和 8,000 個變更行。確切值可能會變更，[拒絕](/docs/zh-TW/errors#diff-is-too-large-for-ultrareview)會命名生效的值、您的差異大小和變更行數最多的檔案。Claude Code 以相同方式拒絕過大的提取請求，命名其檔案和行數，但不命名每個檔案的明細
+* **沒有要審查的內容**：當針對基礎的差異為空時，ultrareview 會拒絕並命名它比較的分支或提交，以及您所在的情況，例如在基礎分支本身上且沒有未提交的內容，或其提交全部已是基礎一部分的分支。它也會為該情況建議解決方式，例如切換到您有工作的分支、暫存或提交本機編輯，或傳遞不同的基礎
+* **首次提交**：儲存庫的首次提交沒有更早的內容可比較，因此在您在啟動對話方塊中確認後，ultrareview 會審查其中的每個檔案。如果您有未追蹤的檔案，它會改為拒絕並告訴您 `git add` 您想審查的檔案。相同的大小限制適用。
+
+  首次提交只有在該確認後才會整體審查，因此 `claude ultrareview` 子命令和 `claude -p` 會拒絕它並指向互動式工作階段。需要 Claude Code v2.1.277 或更新版本
+* **沒有合併基礎**：當您的分支與基礎分支沒有共享歷史記錄時，或儲存庫沒有基礎分支可比較時，ultrareview 會改為審查儲存庫中的每個追蹤檔案。備用方案需要完整複製並套用相同的大小限制。它只有在您在啟動對話方塊中確認或自行執行 `claude ultrareview` 子命令時才會啟動。在 `claude -p` 和任何其他都不會發生的地方，ultrareview 會拒絕，說審查會涵蓋每個檔案，並指向互動式工作階段。
+
+  在沒有分支或其他參考的簽出上（例如透過在擷取 URL 後簽出 `FETCH_HEAD` 建立的分離 HEAD），Claude Code [拒絕審查](/docs/zh-TW/errors#your-checkout-has-no-branches)並建議先建立分支
 
 <h2 id="pricing-and-free-runs">
   定價和免費執行次數
@@ -60,23 +136,40 @@ Ultrareview 是一項高級功能，按額外使用量而非您計畫的包含�
 | Max               | 3 次免費執行   | 按 [額外使用量](https://support.claude.com/zh-TW/articles/12429409-extra-usage-for-paid-claude-plans) 計費 |
 | Team 和 Enterprise | 無         | 按 [額外使用量](https://support.claude.com/zh-TW/articles/12429409-extra-usage-for-paid-claude-plans) 計費 |
 
-Pro 和 Max 訂閱者獲得三次免費 ultrareview 執行以試用該功能。這三次執行是每個帳戶的一次性配額，不會刷新。使用完全部三次後，或在免費執行期結束後，每次審查都會計入額外使用量，通常成本為 $5 至 $20，具體取決於變更的大小。一次執行在遠端工作階段開始時計算，因此您提前停止或未能完成的審查仍會使用一次免費執行。對於付費審查，額外使用量僅針對執行的部分計費。
+* **免費執行次數**：Pro 和 Max 的三次執行是每個帳戶的一次性配額，不會刷新。
+* **每次審查的成本**：使用完免費執行次數後，通常需要 $5 至 $25 的使用量額度，具體取決於變更的大小，與啟動對話框在每次執行前顯示的估計相符。
+* **何時計算執行次數**：一旦雲端工作階段開始。您提前停止或未能完成的審查仍會使用一次免費執行；付費審查僅針對執行的部分計費。
 
-由於 ultrareview 在免費執行次數外始終按額外使用量計費，您的帳戶或組織必須在啟動付費審查前啟用額外使用量。如果未啟用額外使用量，Claude Code 會阻止啟動並將您連結到計費設定，您可以在那裡開啟它。您也可以執行 `/usage-credits` 來檢查或變更您目前的設定。
+由於 ultrareview 在免費執行次數外始終按使用量額度計費，您的帳戶或組織必須在啟動付費審查前啟用使用量額度。如果未啟用使用量額度，Claude Code 會阻止啟動，啟用方式取決於您的計費存取權限：
+
+* 如果您可以管理帳戶的計費，Claude Code 會將您連結到計費設定，您可以在那裡開啟使用量額度。
+* 在 Team 和 Enterprise 計畫上，沒有計費存取權限的成員可以從 CLI 傳送請求，要求其管理員開啟使用量額度。
+
+您也可以執行 `/usage-credits` 來檢查或變更您的使用量額度設定。
+
+Claude Code 在每次對話中要求您確認一次使用量額度計費：例如當您使用 `/clear` 啟動新對話時，Claude Code 會在下一次付費審查時再次顯示確認。
 
 <h2 id="track-a-running-review">
   追蹤執行中的審查
 </h2>
 
-審查通常需要 5 到 10 分鐘。審查作為背景工作執行，因此您可以繼續在工作階段中工作、啟動其他命令或完全關閉終端。
+審查通常需要 5 到 10 分鐘。審查作為背景工作執行，因此您可以繼續在工作階段中工作、啟動其他命令或完全關閉終端。如果您選擇[將發現結果發佈到提取請求](#post-findings-to-the-pull-request)，請保持工作階段開啟，直到審查完成；如果工作階段先結束，Claude Code 將不會發佈任何內容。
 
-使用 `/tasks` 查看執行中和已完成的審查、開啟審查的詳細檢視，或停止進行中的審查。停止審查會封存雲端工作階段，部分發現不會返回。審查完成後，已驗證的發現會在您的工作階段中顯示為通知。每個發現都包括檔案位置和問題說明，以便您可以直接要求 Claude 修復它。
+使用 `/tasks` 查看執行中和已完成的審查、開啟審查的詳細檢視，或停止進行中的審查。如果您停止審查，Claude Code 會封存雲端工作階段，且不會返回部分發現。
+
+Claude 也可以告訴您審查已停止或其工作階段未找到：
+
+* 如果審查的雲端工作階段在審查完成前在 claude.ai 上停止或[封存](/docs/zh-TW/claude-code-on-the-web#archive-sessions)，Claude 會告訴您它已停止。
+* 如果審查的雲端工作階段已刪除，或您自啟動它以來已登入不同的 Claude 帳戶或組織，Claude 會告訴您工作階段未找到。
+* 如果您切換帳戶，審查可能仍會在啟動它的帳戶下完成。如果審查仍在執行中，請以該帳戶重新登入，並使用 `claude --resume` 繼續對話以重新附加它。
+
+審查完成後，Claude Code 會在您的工作階段中將已驗證的發現顯示為通知。每個發現都包括檔案位置和問題說明，以便您可以直接要求 Claude 修復它。
 
 <h2 id="run-ultrareview-non-interactively">
   非互動方式執行 ultrareview
 </h2>
 
-使用 `claude ultrareview` 子命令從 CI 或指令碼啟動 ultrareview，無需互動工作階段。該子命令啟動與 `/code-review ultra` 相同的審查，阻止直到遠端審查完成，將發現列印到 stdout，並在成功時以代碼 0 或失敗時以代碼 1 退出。
+使用 `claude ultrareview` 子命令從 CI 或指令碼啟動 ultrareview，無需互動工作階段。該子命令會啟動與 `/code-review ultra` 相同的審查，阻塞直到遠端審查完成，並將發現結果列印到 stdout。
 
 ```bash theme={null}
 claude ultrareview
@@ -84,40 +177,58 @@ claude ultrareview 1234
 claude ultrareview origin/main
 ```
 
-不帶引數時，該子命令審查您目前分支與預設分支之間的差異。傳遞 PR 編號以審查拉取請求，或傳遞基礎分支以改為審查與該分支的差異。叫用該子命令視為同意互動命令顯示的計費和條款提示。
+不帶引數的情況下，該子命令會審查您目前分支與預設分支之間的差異，當不存在合併基礎時，使用與 `/code-review ultra` 相同的[整個儲存庫回退](#diff-limits-and-fallbacks)。傳遞 PR 編號以審查提取請求，或傳遞基礎分支以針對它進行審查；[基礎分支處理](#review-against-a-different-base)與互動命令相符。
 
-進度訊息和即時工作階段 URL 會進入 stderr，以便 stdout 保持可解析。使用這些旗標來控制輸出和逾時：
+當您執行該子命令時，您同意整個儲存庫回退以及帳單和條款提示，因此執行會在不等待輸入的情況下開始。您自己執行它才算是同意。當 Claude 改為為您執行該子命令時（例如透過 Bash 工具），Claude Code 會拒絕整個儲存庫審查。
 
-| 旗標                    | 說明                           |
-| --------------------- | ---------------------------- |
-| `--json`              | 列印原始 `bugs.json` 承載而不是格式化的發現 |
-| `--timeout <minutes>` | 等待審查完成的最大分鐘數。預設為 30          |
+在 Claude Code v2.1.218 或更新版本上，您也可以透過在非互動工作階段中執行 `/code-review ultra` 來啟動雲端審查，例如 `claude -p '/code-review ultra'`。Claude Code 會啟動審查並列印追蹤連結，無需等待發現結果，這與 `claude ultrareview` 不同，後者會阻塞直到發現結果到達。當審查會計費使用額度時，Claude Code 會在啟動前停止並指向 `claude ultrareview`，因為帳單確認需要互動工作階段。在 v2.1.218 之前，非互動工作階段中的 `/code-review ultra` 執行本機審查。
 
-執行 `claude ultrareview` 需要與 `/code-review ultra` 相同的身份驗證和使用量配額配置。當審查完成時（無論是否有發現），該子命令以代碼 0 退出；當審查無法啟動、遠端工作階段出錯或逾時時，以代碼 1 退出；當使用 Ctrl-C 中斷時，以代碼 130 退出。如果您中斷該子命令，遠端審查會繼續執行；請按照列印到 stderr 的工作階段 URL 在瀏覽器中觀看它。
+進度訊息和即時工作階段 URL 會進入 stderr，以便 stdout 保持可解析。使用這些旗標來控制輸出、逾時和是否發佈發現結果：
 
-如需在 GitHub 拉取請求上進行自動審查，[Code Review](/docs/zh-TW/code-review) 直接與您的儲存庫整合，並將發現作為內嵌 PR 評論發佈，無需 CLI 步驟。
+| 旗標                    | 說明                                                                                                                                                              |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--json`              | 列印原始 `bugs.json` 承載而不是格式化的發現結果                                                                                                                                  |
+| `--timeout <minutes>` | 等待審查完成的最大分鐘數。預設為 45                                                                                                                                             |
+| `--post`              | [將完成的發現結果發佈](#post-findings-to-the-pull-request)到提取請求作為來自您 GitHub 帳戶的一個純文字評論。適用於 `github.com` 提取請求目標；在其他目標上，Claude Code 會忽略該旗標並說明。需要 Claude Code v2.1.227 或更新版本 |
+| `--no-post`           | 不發佈發現結果。這是預設值，如果您同時傳遞兩個旗標，Claude Code 不會發佈。需要 Claude Code v2.1.227 或更新版本                                                                                        |
 
-<h2 id="how-ultrareview-compares-to-/code-review-and-/review">
-  ultrareview 與 `/code-review` 和 `/review` 的比較
+執行 `claude ultrareview` 需要與 `/code-review ultra` 相同的驗證和使用額度設定。
+
+該子命令會以以下三個代碼之一結束：
+
+* **0**：審查已完成，無論是否有發現結果
+* **1**：審查未能啟動或在完成前被停止、雲端工作階段出錯，或逾時已過
+* **130**：您使用 Ctrl-C 中斷了該子命令
+
+如果您中斷該子命令，遠端審查會繼續執行；請遵循列印到 stderr 的工作階段 URL 在瀏覽器中觀看它。
+
+使用 `--post` 時，該子命令會在列印發現結果後立即開始發佈，並將連結列印到 stderr。
+
+* 如果執行失敗、被停止、逾時，或如果您中斷它，該子命令不會發佈任何內容。
+* 如果審查完成但評論未被發佈，Claude Code 會將原因列印到 stderr，發現結果會保留在 stdout 上，以便您可以手動發佈它們。
+
+對於 GitHub 提取請求上的自動審查，[Code Review](/docs/zh-TW/code-review) 直接與您的儲存庫整合，並將發現結果作為內嵌 PR 評論發佈，無需 CLI 步驟。
+
+<h2 id="how-ultrareview-compares-to-/code-review">
+  ultrareview 與 `/code-review` 的比較
 </h2>
 
-這三個命令都審查程式碼，但它們針對工作流程的不同階段。
+兩個審查都檢查程式碼，但您在工作流程的不同階段使用它們。
 
-|      | `/code-review` | `/review <pr>` | `/code-review ultra`            |
-| ---- | -------------- | -------------- | ------------------------------- |
-| 目標   | 您的工作差異         | GitHub 拉取請求    | 您的工作差異或拉取請求                     |
-| 執行位置 | 在您的工作階段中本地執行   | 在您的工作階段中本地執行   | 在雲端沙箱中遠端執行                      |
-| 深度   | 隨著努力引數調整       | 工作階段努力程度的單次審查  | 具有獨立驗證的多代理程式艦隊                  |
-| 持續時間 | 幾秒到幾分鐘         | 幾秒到幾分鐘         | 大約 5 到 10 分鐘                    |
-| 成本   | 計入正常使用量        | 計入正常使用量        | 免費執行次數，然後大約 $5 至 $20 每次審查作為使用額度 |
-| 最適合  | 迭代時的快速反饋       | 在批准前審查隊友的拉取請求  | 在合併實質性變更前時的信心                   |
+|      | `/code-review`    | `/code-review ultra`            |
+| ---- | ----------------- | ------------------------------- |
+| 目標   | 您的工作差異、拉取請求、分支或路徑 | 您的工作差異或拉取請求                     |
+| 執行位置 | 在您的工作階段中本地執行      | 在雲端沙箱中遠端執行                      |
+| 深度   | 隨著努力引數調整          | 具有獨立驗證的多代理程式艦隊                  |
+| 持續時間 | 幾秒到幾分鐘            | 大約 5 到 10 分鐘                    |
+| 成本   | 計入正常使用量           | 免費執行次數，然後大約 $5 至 $25 每次審查作為使用額度 |
+| 最適合  | 迭代時的快速反饋          | 合併前對實質性變更的信心                    |
 
-使用 `/code-review` 在工作時獲得快速反饋。使用 `/review <pr>` 審查拉取請求，就像您在批准前會做的那樣。在合併實質性變更前使用 `/code-review ultra`，當您想要更深入的審查以捕捉本地審查可能遺漏的問題時。
+使用 `/code-review` 在工作時獲得快速反饋，或傳遞 PR 編號以在批准前審查隊友的拉取請求。在合併實質性變更前使用 `/code-review ultra`，當您想要更深入的審查以捕捉本地審查可能遺漏的問題時。
 
 <h2 id="related-resources">
   相關資源
 </h2>
 
-* [Claude Code 網路版](/docs/zh-TW/claude-code-on-the-web)：了解遠端工作階段和雲端沙箱的工作原理
-* [使用 ultraplan 規劃複雜變更](/docs/zh-TW/ultraplan)：ultrareview 的規劃對應項，用於前期設計工作
+* [在雲端使用 Claude Code](/docs/zh-TW/claude-code-on-the-web)：了解雲端工作階段和雲端沙箱的工作原理
 * [有效管理成本](/docs/zh-TW/costs)：追蹤使用量並設定支出限制

@@ -55,23 +55,51 @@ curl -sS https://claude-gateway.internal.example.com/v1/organizations/spend_limi
   適用方法
 </h2>
 
-各 `/v1/messages` リクエストで、gateway は開発者の上限と期間から現在までの支出を 1 つの Postgres クエリで解決します。いずれかの上限を超えている場合、リクエストは `429` を返し、`error.type: billing_error` と `x-should-retry: false` ヘッダーが付きます。メッセージは `spend limit reached` で、その後に [`admin.blocked_message`](/docs/ja/claude-apps-gateway-config#admin) が設定されている場合はそれが続きます。
+各 `/v1/messages` リクエストで、gateway は開発者の上限と期間から現在までの支出を 1 つの Postgres クエリで解決します。いずれかの上限を超えている開発者は `429` を返し、`error.type: billing_error` と `x-should-retry: false` ヘッダーが付きます。
 
-`/v1/messages/count_tokens` は除外されます。トークンカウントは無料なので、上限状態に関係なく実行されます。
+メッセージは期間とリセット時刻を示します。例えば `spend limit reached (daily; resets 2026-08-08 00:00 UTC)` のような形式で、その後に [`admin.blocked_message`](/docs/ja/claude-apps-gateway-config#admin) が設定されている場合はそれが続きます。開発者が複数の上限を同時に超えた場合、メッセージは最後にリセットされる上限を示します。レスポンスには `retry-after` ヘッダーも含まれ、そのリセットまでの残り秒数が記載されます。gateway サーバーの v2.1.225 より前では、メッセージは `spend limit reached` で、期間、リセット時刻、`retry-after` ヘッダーはありませんでした。
 
-各レスポンスの後、使用量メーターはレスポンスからトークンカウントを読み取り、クライアントにストリーミングされ、USD リスト価格で価格設定され、3 つの期間バケットすべての Postgres カウンターをインクリメントします。メーターはストリーム上の単一リーダーなので、クライアントのバイトは変更されず、メーリング障害はレスポンスを破壊しません。
+v2.1.227 以降では、`<public_url>/protocol` のプロトコルリファレンスに、正確な使用制限レスポンスヘッダーと `429` ボディが記載されています。
 
-支出制限は USD リスト価格のトークンカウントから支出を推定します。これはサーキットブレーカーであり、請求書ではありません。権限のある請求については、Anthropic Usage & Cost Admin API、Amazon Bedrock の呼び出しログ、または Google Cloud の Cloud Monitoring など、プロバイダー独自の使用状況レポートに対して調整してください。
+上限は UTC カレンダー境界でリセットされます。毎日 00:00 UTC、毎週月曜日、毎月 1 日です。gateway は `/v1/messages/count_tokens` をブロックしません。トークンカウントは無料だからです。
 
-価格設定は Claude Code CLI が独自のコスト表示に使用するのと同じテーブルを使用し、Anthropic、Amazon Bedrock（`us.anthropic.…-v1:0`）、Google Cloud の Agent Platform（`claude-…@date`）、および Microsoft Foundry ID フォーム全体で同じモデル ID 正規化を使用します。テーブルが配置できないモデル ID（Microsoft Foundry デプロイメント名または推論プロファイル ARN など）は、ゼロではなく、不明なモデルのデフォルトティアである 100 万入力/出力トークンあたり 5 ドル/25 ドルで価格設定されるため、認識されない ID は計測されないことで上限をバイパスできません。gateway はブート時と実行時に ID ごとに 1 回、フォールバックを通じて価格設定されるモデルについて警告します。
+<h3 id="how-requests-are-priced">
+  リクエストの価格設定方法
+</h3>
 
-クライアント中止も請求されます。アップストリームはストリームの終端フレームでのみ出力トークンを報告するため、中止されたストリームはそれらを持ちません。メーターはストリーミングされたコンテンツサイズから保守的なフロア推定値（トークンあたり約 4 文字）を保持し、終端使用量フレームが欠落している場合にのみそれを請求します。完全なストリームは常にアップストリーム報告カウントを請求します。これがない場合、上限のある開発者は出力をストリーミングし、終了直前に各リクエストを中止して、カウントされることなく支出できます。
+各レスポンスの後、使用量メーターはトークンカウントを読み取り、日次、週次、月次のカウンターにコストを追加します。クライアントに送信されたバイトには触れないため、メーリング障害はレスポンスを破壊できません。金額は USD の推定値で、請求書ではなくサーキットブレーカーです。請求については、プロバイダーの使用状況レポートに対して調整してください。
+
+メーターは各リクエストの料金を以下の順序で選択します。
+
+1. リクエストを処理したアップストリームに対する一致する [`pricing.overrides`](/docs/ja/claude-apps-gateway-config#pricing) 行。v2.1.227 以降が必要です。
+2. アップストリームモデル ID のリスト価格。gateway がプロバイダーに送信する文字列で、Claude Code コスト表が認識する場合です。表は Anthropic、Amazon Bedrock、Google Cloud の Agent Platform、Microsoft Foundry ID フォームを受け入れます。
+3. そのアップストリーム ID にマップした [`models[].id`](/docs/ja/claude-apps-gateway-config#models) のリスト価格。Amazon Bedrock アプリケーション推論プロファイル ARN や Microsoft Foundry デプロイメント名など、モデル名を含まないアップストリーム文字列の場合です。v2.1.218 以降が必要です。
+4. 不明なモデルティアの 100 万入力/出力トークンあたり $5/$25。メーターが配置できない ID は決して無料ではありません。gateway はブート時と実行時に ID ごとに 1 回、このティアを使用する場合に警告します。
+
+どの料金が適用されても、メーターは金額に [`pricing.multiplier`](/docs/ja/claude-apps-gateway-config#pricing) を乗算します。デフォルトは `1` です。
+
+クライアント中止も請求されます。アップストリームの最終使用量フレームなしでストリームが終了した場合、メーターはクライアントに既に送信されたテキストについて、出力トークンあたり約 4 文字のフロア推定値を請求します。そのため、リクエストを早期に中止しても上限を回避できません。
 
 <h3 id="postgres-availability">
   Postgres の可用性
 </h3>
 
-事前チェッククエリは 2 秒のタイムアウトで Postgres にクエリします。ストアに到達できない場合またはタイムアウトする場合、デフォルトでは適用は開いた状態で失敗します。リクエストは進行し、gateway は警告をログに記録します。[`enforcement.fail_closed_on_error: true`](/docs/ja/claude-apps-gateway-config#enforcement) を設定して、代わりに閉じた状態で失敗させます。これは同じ `429 billing_error` を返し、メッセージは `spend limit unavailable` です。フェイルオープンはストア停止が推論停止になるのを防ぎます。フェイルクローズは計測されていない支出がないことを保証します。
+事前チェッククエリは 2 秒のタイムアウトで Postgres にクエリします。ストアに到達できない場合またはタイムアウトする場合、デフォルトでは適用は開いた状態で失敗します。リクエストは進行し、gateway は警告をログに記録し、レスポンスは `anthropic-ratelimit-unified-*` ヘッダーを含みません。[`enforcement.fail_closed_on_error: true`](/docs/ja/claude-apps-gateway-config#enforcement) を設定して、代わりに閉じた状態で失敗させます。これは同じ `429 billing_error` を返しますが、メッセージは `spend limit unavailable` で、期間、リセット時刻、`retry-after` ヘッダーはありません。フェイルオープンはストア停止が推論停止になるのを防ぎます。フェイルクローズは計測されていない支出がないことを保証します。
+
+<h3 id="usage-warnings-in-claude-code">
+  Claude Code での使用警告
+</h3>
+
+Claude Code は開発者が上限に近づくと警告します。使用率が 75% を超えた時点で 1 回、最も消費されている上限の 95% を超えた時点で再度警告します。gateway がリクエストをブロックすると、Claude Code は gateway の `429` メッセージをそのまま表示します。`admin.blocked_message` を含めて表示されます。
+
+警告は応答ヘッダーから機能します。
+
+* gateway サーバーで v2.1.225 以降の場合、上限を持つ開発者に対する各成功した `/v1/messages` レスポンスは、`anthropic-ratelimit-unified-*` ヘッダーに開発者自身の上限使用率とリセット時刻を含みます。
+* 開発者のマシンでも v2.1.225 以降の場合、Claude Code はヘッダーを読み取り、警告を表示します。
+
+ヘッダーは常に開発者自身の上限を説明します。gateway は共有クォータを説明するアップストリームプロバイダーのレート制限ヘッダーを削除し、決して転送しません。
+
+開発者のマシンで v2.1.251 以降の場合、Claude Code は同じヘッダーを読み取り、`/usage` に **Spend limit** バーを表示します。上限の使用率とリセット時刻をパーセンテージで表示し、[ステータスライン](/docs/ja/statusline#rate-limit-usage) 入力に `rate_limits.spend_limit` オブジェクトを追加します。Claude Code は両方をドル金額ではなくパーセンテージとして表示し、gateway サーバーで v2.1.225 より新しいものは必要ありません。
 
 <h2 id="admin-api-reference">
   管理 API リファレンス
@@ -79,14 +107,14 @@ curl -sS https://claude-gateway.internal.example.com/v1/organizations/spend_limi
 
 以下のエンドポイントは `/v1/organizations/spend_limits` の下で提供されます。
 
-| メソッドとパス                                        | 説明                                                      |
-| ---------------------------------------------- | ------------------------------------------------------- |
-| `GET /v1/organizations/spend_limits`           | 設定された上限をリストします。クエリ：`?limit=&after_id=&before_id=`。      |
-| `POST /v1/organizations/spend_limits`          | `{scope, period}` の上限を作成または置き換えます。                      |
-| `GET /v1/organizations/spend_limits/{id}`      | `spl_` プレフィックス付き ID で 1 つの上限を取得します。                     |
-| `DELETE /v1/organizations/spend_limits/{id}`   | 1 つの上限を削除します。`{type: "spend_limit_deleted", id}` を返します。 |
-| `GET /v1/organizations/spend_limits/effective` | プリンシパルごと、期間ごとの解決された上限と期間から現在までの支出。                      |
-| `GET /v1/organizations/spend_limits/audit`     | 管理者の変更トレイル、最新順。クエリ：`?limit=`。                           |
+| メソッドとパス                                        | 説明                                                                                                                                     |
+| ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `GET /v1/organizations/spend_limits`           | 設定された上限をリストします。オプションで `organization`、`rbac_group`、または `user` の `scope_type` にフィルターできます。クエリ：`?limit=&after_id=&before_id=&scope_type=`。 |
+| `POST /v1/organizations/spend_limits`          | `{scope, period}` の上限を作成または置き換えます。                                                                                                     |
+| `GET /v1/organizations/spend_limits/{id}`      | `spl_` プレフィックス付き ID で 1 つの上限を取得します。                                                                                                    |
+| `DELETE /v1/organizations/spend_limits/{id}`   | 1 つの上限を削除します。`{type: "spend_limit_deleted", id}` を返します。                                                                                |
+| `GET /v1/organizations/spend_limits/effective` | プリンシパルごと、期間ごとの解決された上限と期間から現在までの支出。                                                                                                     |
+| `GET /v1/organizations/spend_limits/audit`     | 管理者の変更トレイル、最新順。クエリ：`?limit=&after_id=`。                                                                                                |
 
 規約は Anthropic の Admin API をミラーリングします。
 
@@ -94,7 +122,7 @@ curl -sS https://claude-gateway.internal.example.com/v1/organizations/spend_limi
 * `spl_` プレフィックス付き ID
 * USD セントの整数文字列としての金額。`POST` は他の `currency` を `400` で拒否します
 * `{type: "error", error: {type, message}, request_id}` エラーエンベロープ
-* すべての管理レスポンス（成功またはエラー）の `request-id` レスポンスヘッダー、本文の `request_id` と一致
+* すべての管理レスポンス（成功またはエラー）の `request-id` レスポンスヘッダー、エラー本文の `request_id` と一致
 
 すべての変更は同じトランザクション内で `admin_audit` に前後の行を書き込み、`admin-key:<id>` または `oidc:<sub>` に属性付けされます。
 
@@ -129,13 +157,13 @@ curl -sS https://claude-gateway.internal.example.com/v1/organizations/spend_limi
   `/audit`
 </h3>
 
-支出制限の変更トレイルを返します。誰がどの上限を変更したか、前後のスナップショット、およびオプションの理由、最新順。`has_more` は正確です。このエンドポイントは最初のパーティワイヤー形状ではなく、ローカル Admin API 規約に従います。
+支出制限の変更トレイルを返します。誰がどの上限を変更したか、前後のスナップショット、最新順。`has_more` は正確です。このエンドポイントは最初のパーティワイヤー形状ではなく、ローカル Admin API 規約に従います。
 
 <h3 id="pagination">
   ページネーション
 </h3>
 
-生のリストは `after_id` と `before_id` でページングされます。これらは相互に排他的な `spl_…` ID です。結果は作成順に並べられ、`has_more` はトラバーサル方向を反映します。`/effective` は、前のレスポンスの `next_page` トークンとして渡される不透明な `?page=` でページングされ、プリンシパルは昇順に並べられるため、支出が記録されている間もページは安定したままです。`limit` は両方で 1～1000、デフォルト 20 です。
+生のリストは `after_id` と `before_id` でページングされます。これらは相互に排他的な `spl_…` ID です。結果は作成順に並べられ、`has_more` はトラバーサル方向を反映します。`/effective` は、前のレスポンスの `next_page` トークンとして渡される不透明な `?page=` でページングされ、プリンシパルは昇順に並べられるため、支出が記録されている間もページは安定したままです。`limit` は両方で 1～1000、デフォルト 20 です。`/audit` は `after_id`（前のページの最後のイベントの数値 `id`）でページングされ、その `limit` はデフォルト 100 です。
 
 <h2 id="data-lifecycle">
   データライフサイクル
@@ -149,8 +177,6 @@ gateway は 4 つの支出関連テーブルを保持します。時間ごとの
 | `spend_limits`     | 設定された上限                                        | API 経由で削除されるまで                                                                                |
 | `admin_audit`      | 変更トレイル                                         | [`admin.audit_retention_days`](/docs/ja/claude-apps-gateway-config#admin)、デフォルト 365                |
 | `principal_emails` | 各プリンシパルの最後に見られたメール、表示名、および IdP グループ。PII を含みます。 | [`admin.identity_retention_days`](/docs/ja/claude-apps-gateway-config#admin) 最後のアクティビティ以降、デフォルト 90 |
-
-`identity_retention_days` は意図的に `spend_retention_months` より短いです。プロビジョニング解除されたアイデンティティは更新を停止して期限切れになり、その匿名支出カウンターは年間比較レポート用に残ります。
 
 開発者が去る場合、`DELETE /v1/organizations/spend_limits/{id}` 経由でユーザーごとの上限を削除します。その支出とアイデンティティ行は上記の保持期間で期限切れになります。1 人を即座に削除するには、オフボーディングまたはデータサブジェクトアクセスリクエスト（DSAR）の場合、gateway データベースに対して直接 `DELETE FROM principal_emails WHERE principal = '<sub>'` を実行します。これにより、メール、名前、およびグループを保持する唯一のテーブルが削除されます。`spend` と `admin_audit` 行は疑似匿名 OIDC `sub` のみを参照し、独自のウィンドウで期限切れになります。
 

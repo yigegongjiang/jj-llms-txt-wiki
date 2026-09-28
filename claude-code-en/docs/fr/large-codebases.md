@@ -71,7 +71,7 @@ L'endroit où vous lancez `claude` détermine quels fichiers Claude peut lire et
 | Racine du référentiel | Chaque fichier                                               | Racine uniquement ; les fichiers de sous-répertoire se chargent à la demande lorsque Claude lit là | Les tâches s'étendent sur plusieurs packages ou sous-systèmes |
 | Un sous-répertoire    | Ce sous-arbre uniquement, jusqu'à ce que vous accordiez plus | Celui de ce répertoire plus chaque ancêtre                                                         | Le travail est limité à un package ou un sous-système         |
 
-Les paramètres de projet dans `.claude/settings.json` se chargent uniquement à partir de votre répertoire de démarrage et ne sont pas hérités des répertoires parents de la même manière que les fichiers CLAUDE.md : un `.claude/settings.json` à la racine du référentiel s'applique uniquement lorsque vous démarrez à partir de la racine.
+Les paramètres de projet dans `.claude/settings.json` ne sont pas hérités des répertoires parents de la même manière que les fichiers CLAUDE.md. Pour savoir quel répertoire `.claude/settings.json` une session lit, consultez [où Claude Code recherche chaque fichier](/docs/fr/settings#where-claude-code-looks-for-each-file).
 
 Chaque section ci-dessous indique si son fichier de paramètres appartient à la racine du référentiel ou au sous-répertoire à partir duquel vous démarrez, et s'il est validé ou conservé localement.
 
@@ -85,39 +85,28 @@ Claude Code charge chaque fichier [CLAUDE.md](/docs/fr/memory) à partir de votr
 
 Une division courante est deux niveaux :
 
-* **CLAUDE.md racine** : instructions qui s'appliquent partout, comme les normes de codage, les conventions de commit et la disposition du référentiel
+* **CLAUDE.md racine** : instructions qui s'appliquent partout, comme les normes de codage et les conventions de commit
 * **CLAUDE.md par sous-répertoire** : conventions spécifiques à la pile de cette zone. Dans un monorepo, c'est un par package. Dans un grand arbre unique, c'est un par sous-système tel que `src/db/` ou `src/api/`
 
 Validez ces fichiers dans le référentiel afin que les coéquipiers les héritent. Le propriétaire de chaque répertoire maintient généralement son fichier.
 
-Le CLAUDE.md racine oriente Claude vers la structure du référentiel :
+Pour réduire un fichier qui est déjà enregistré, exécutez la [vérification `/doctor`](/docs/fr/memory#my-claude-md-is-too-large). Le CLAUDE.md racine contient les règles qui s'appliquent dans chaque package :
 
 ```markdown CLAUDE.md theme={null}
-Ceci est un monorepo avec trois packages sous packages/ :
-
-- packages/api : API REST Node.js avec Express, TypeScript et PostgreSQL
-- packages/web : frontend React avec Vite, TypeScript et TailwindCSS
-- packages/shared : utilitaires TypeScript partagés utilisés par api et web
-
-Exécutez les commandes à partir du répertoire du package, pas de la racine du monorepo.
-Chaque package a son propre tsconfig.json, package.json et suite de tests.
+Exécutez les scripts de package à partir du répertoire du package, pas de la racine du monorepo.
+Préfixez les sujets de commit avec le nom du package, par exemple `api: add rate limiting`.
+Ne modifiez jamais les fichiers sous packages/*/generated/. Exécutez `npm run codegen` dans le package à la place.
 ```
 
-Le CLAUDE.md de chaque sous-répertoire, ici `packages/api/CLAUDE.md`, ajoute du contexte spécifique à la pile de cette zone :
+Le CLAUDE.md de chaque sous-répertoire, ici `packages/api/CLAUDE.md`, ajoute les conventions spécifiques à cette zone :
 
 ```markdown packages/api/CLAUDE.md theme={null}
-Ce package est le serveur API REST.
-
-- Exécuter les tests : `npm test` (utilise Vitest)
-- Exécuter le serveur de développement : `npm run dev` (port 3001)
-- Migrations de base de données : `npm run migrate`
-- Variables d'environnement : copiez `.env.example` en `.env`
-
-Les routes API sont dans src/routes/. Chaque fichier de route exporte un routeur Express.
-Les requêtes de base de données utilisent Knex dans src/db/. N'écrivez jamais de chaînes SQL brutes dans les gestionnaires de routes.
+Copiez `.env.example` en `.env` avant d'exécuter quoi que ce soit. Les tests et le serveur de développement échouent sans cela.
+Écrivez les requêtes de base de données avec le générateur de requêtes Knex. Ne mettez jamais de chaînes SQL brutes dans les gestionnaires de routes.
+Ne modifiez jamais une migration après qu'elle ait fusionné. Ajoutez une nouvelle migration à la place.
 ```
 
-Lorsque vous démarrez Claude à partir de `packages/api/`, il charge à la fois `packages/api/CLAUDE.md` et le CLAUDE.md racine. Claude voit les instructions locales aux côtés des règles à l'échelle du référentiel, sans instructions de `packages/web/` dans le contexte. La même chose s'applique à n'importe quel sous-répertoire dans un arbre non-monorepo.
+Lorsque vous démarrez Claude à partir de `packages/api/`, il charge à la fois `packages/api/CLAUDE.md` et le CLAUDE.md racine. Claude voit les instructions locales aux côtés des règles à l'échelle du référentiel, sans instructions de `packages/web/` dans le contexte. La même chose s'applique à n'importe quel sous-répertoire dans un arbre non-monorepo. Pour confirmer quels fichiers se sont chargés, exécutez `/context` et vérifiez la liste sous **Fichiers de mémoire**.
 
 Quelques façons de garder les fichiers à jour à mesure que le dépôt de code et les modèles changent :
 
@@ -148,26 +137,25 @@ Lorsque vous démarrez Claude à partir de la racine du référentiel, le CLAUDE
 
 Utilisez ceci pour les répertoires dans lesquels vous ne travaillez jamais, comme les packages d'autres équipes, le code hérité ou les sous-arbres vendus. La liste d'exclusion est statique, pas un commutateur par tâche. Pour vous concentrer sur un package aujourd'hui et un autre demain, [démarrez Claude à partir du répertoire de ce package](#choose-where-to-start-claude) au lieu de modifier les exclusions.
 
-Si vous ne voulez que ces exclusions pour vous-même, mettez le paramètre dans `.claude/settings.local.json`. Claude Code gitignore ce fichier lorsqu'il le crée ; puisque vous le créez à la main ici, ajoutez-le à votre gitignore. Les modèles utilisent la syntaxe glob correspondant aux chemins de fichiers absolus, donc commencez les modèles de style relatif avec `**/` pour correspondre n'importe où dans l'arbre. L'exemple ci-dessous exclut les packages appartenant à d'autres équipes :
+Si vous ne voulez que ces exclusions pour vous-même, mettez le paramètre dans `.claude/settings.local.json`. Claude Code ajoute ce fichier à votre gitignore global lorsqu'il enregistre un paramètre là. Puisque vous le créez à la main ici, ajoutez-le à votre gitignore vous-même. Les modèles utilisent la syntaxe glob correspondant aux chemins de fichiers absolus, donc commencez les modèles de style relatif avec `**/` pour correspondre n'importe où dans l'arbre. L'exemple ci-dessous exclut un package appartenant à une autre équipe :
 
 ```json .claude/settings.local.json theme={null}
 {
   "claudeMdExcludes": [
-    "**/packages/admin-dashboard/**",
-    "**/packages/legacy-*/**"
+    "**/packages/web/**"
   ]
 }
 ```
 
-Cela ignore chaque CLAUDE.md et fichier de règles sous ces packages. Le CLAUDE.md racine et les packages dans lesquels vous travaillez se chargent toujours normalement.
+Cela ignore chaque CLAUDE.md et fichier de règles sous ce package. Le CLAUDE.md racine et les packages dans lesquels vous travaillez se chargent toujours normalement.
 
 Ces modèles couvrent d'autres cas courants :
 
 * `"**/packages/*/CLAUDE.md"` : exclut le CLAUDE.md de chaque package tout en gardant la racine
-* `"**/packages/web/**"` : exclut tout sous le package web, y compris les règles
+* `"**/packages/legacy-*/**"` : exclut chaque package dont le nom correspond au glob, y compris les règles
 * `"/home/user/monorepo/legacy/CLAUDE.md"` : exclut un fichier spécifique par chemin absolu
 
-Les fichiers CLAUDE.md de politique gérée ne peuvent pas être exclus, donc les instructions à l'échelle de l'organisation s'appliquent toujours. Vous pouvez définir `claudeMdExcludes` à n'importe quel [scope de paramètres](/docs/fr/settings#configuration-scopes) : utilisateur, projet, local ou géré. Les tableaux fusionnent entre les scopes, donc une équipe peut définir les valeurs par défaut au niveau du projet tandis que les individus ajoutent des remplacements locaux.
+Les fichiers CLAUDE.md de politique gérée ne peuvent pas être exclus, donc les instructions à l'échelle de l'organisation s'appliquent toujours. Vous pouvez définir `claudeMdExcludes` à n'importe quel [scope de paramètres](/docs/fr/settings#where-settings-live) : utilisateur, projet, local ou géré. Les tableaux fusionnent entre les scopes, donc une équipe peut définir les valeurs par défaut au niveau du projet tandis que les individus ajoutent des remplacements locaux.
 
 Pour la documentation complète d'exclusion, voir [Exclure les fichiers CLAUDE.md spécifiques](/docs/fr/memory#exclude-specific-claude-md-files).
 
@@ -183,42 +171,53 @@ Les instructions ne sont qu'une partie de ce qui se retrouve dans le contexte de
 
 Les recherches de contenu de Claude respectent `.gitignore` par défaut, donc les chemins déjà listés là, comme `node_modules/`, `dist/` et `build/`, restent en dehors des résultats de recherche sans configuration supplémentaire.
 
-Pour les chemins qui sont validés, comme un SDK vendu ou du code généré validé, ajoutez des règles de refus `Read` dans `permissions.deny` pour empêcher Claude d'ouvrir ces fichiers même lorsqu'une recherche les liste.
+Pour les chemins qui sont validés, comme un SDK vendu ou du code généré validé, ajoutez des règles de refus `Read` dans `permissions.deny` pour empêcher Claude d'ouvrir ces fichiers.
 
-Pour appliquer ces exclusions à tous ceux qui travaillent dans le référentiel, validez-les dans `.claude/settings.json`. Pour les garder personnelles, utilisez `.claude/settings.local.json` à la place. Comme d'autres paramètres de projet sur cette page, ces fichiers se chargent uniquement à partir de votre répertoire de démarrage. Placez-les à la racine du référentiel si vous démarrez Claude là, ou dans le `.claude/` de chaque package si vous démarrez à partir de sous-répertoires. Pour appliquer les mêmes règles de refus dans chaque session indépendamment du répertoire de démarrage, définissez-les dans [paramètres gérés](/docs/fr/settings#settings-files), que les paramètres utilisateur et projet ne peuvent pas remplacer.
+Les règles de refus peuvent couvrir tous ceux qui travaillent dans le référentiel, vous seul, ou chaque session sur la machine, selon le fichier de paramètres dans lequel vous les mettez :
 
-L'exemple ci-dessous bloque les artefacts de compilation et un SDK vendu :
+* **Tous ceux qui travaillent dans le référentiel** : validez les règles dans `.claude/settings.json`, à la racine du référentiel si vous démarrez Claude là, ou dans le `.claude/` de chaque package si vous démarrez à partir de sous-répertoires. Comme d'autres paramètres de projet sur cette page, ce fichier n'est pas hérité des répertoires parents.
+* **Vous seul** : utilisez `.claude/settings.local.json` à la racine du référentiel, qui se charge dans chaque session CLI à l'intérieur du référentiel quel que soit le répertoire de démarrage, sauf dans les cas où Claude Code [n'utilise pas la racine du référentiel](/docs/fr/settings#where-claude-code-looks-for-each-file), comme sur Windows. Les modèles relatifs comme l'exemple `Read(./**/vendor/**/*)` s'[ancrent toujours au répertoire de travail actuel de la session](/docs/fr/permissions#read-and-edit) plutôt qu'à la racine du référentiel, donc si vous démarrez des sessions à partir de sous-répertoires, écrivez les règles dans ce fichier comme des chemins absolus `//`, comme `Read(//absolute/path/to/repo/**/vendor/**/*)`. Avant v2.1.211, `.claude/settings.local.json` se chargeait également uniquement à partir du répertoire de démarrage.
+* **Tous, appliqué dans chaque session** : définissez les règles dans [paramètres gérés](/docs/fr/managed-settings), que les paramètres utilisateur et projet ne peuvent pas remplacer.
+
+L'exemple ci-dessous bloque les artefacts de compilation et un SDK vendu. Ses modèles de répertoire se terminent par `/**/*` plutôt que `/**` afin que chaque règle couvre tout ce qui se trouve à l'intérieur du répertoire mais pas le répertoire lui-même. Claude peut alors toujours lister ces répertoires ou y accéder, par exemple avec `ls dist` ou `cd build`.
 
 ```json .claude/settings.json theme={null}
 {
   "permissions": {
     "deny": [
-      "Read(./**/dist/**)",
-      "Read(./**/build/**)",
+      "Read(./**/dist/**/*)",
+      "Read(./**/build/**/*)",
       "Read(./**/*.generated.*)",
-      "Read(./vendor/**)"
+      "Read(./**/vendor/**/*)"
     ]
   }
 }
 ```
 
-Les règles de refus couvrent les outils de fichiers intégrés de Claude et les commandes Bash reconnues, y compris `cat`, `head`, `grep` et `find`, lorsqu'un chemin refusé est passé comme argument. Elles ne filtrent pas les chemins refusés de la sortie d'une recherche récursive, et elles ne couvrent pas les sous-processus arbitraires qui ouvrent les fichiers eux-mêmes. Pour la syntaxe de modèle complète, voir [Règles de permission Read et Edit](/docs/fr/permissions#read-and-edit).
+Les règles de refus couvrent les outils de fichiers intégrés de Claude. Dans Bash, elles couvrent les commandes de fichiers que Claude Code reconnaît, comme `cat`, `head`, `grep` et `find`, lorsqu'un chemin refusé apparaît comme argument, et la cible d'une [redirection](/docs/fr/permissions#redirections) comme `< file`. Claude Code fait également un effort raisonnable pour laisser les chemins refusés en dehors des résultats des outils Grep et Glob intégrés. Une recherche Bash comme `grep -r` ou `find` sur un répertoire qui contient des fichiers refusés les inclut toujours dans sa sortie.
+
+Les règles de refus ne couvrent pas les sous-processus qui ouvrent les fichiers eux-mêmes. Pour la syntaxe de modèle complète, voir [Règles de permission Read et Edit](/docs/fr/permissions#read-and-edit).
 
 <h3 id="reduce-file-reads-with-code-intelligence">
   Réduire les lectures de fichiers avec l'intelligence du code
 </h3>
 
-Dans un grand dépôt de code, trouver où un symbole est défini ou utilisé peut coûter de nombreuses lectures de fichiers et appels grep. Les [plugins d'intelligence du code](/docs/fr/discover-plugins#code-intelligence) connectent Claude à un serveur de langage afin qu'il puisse sauter aux définitions, trouver des références et afficher les erreurs de type directement au lieu de scanner l'arbre.
+Dans un grand dépôt de code, trouver où un symbole est défini ou utilisé peut coûter de nombreuses lectures de fichiers et appels grep. Les [plugins d'intelligence du code](/docs/fr/plugins/code-intelligence) connectent Claude à un serveur de langage afin qu'il puisse sauter aux définitions, trouver des références et afficher les erreurs de type directement au lieu de scanner l'arbre.
 
-La marketplace officielle a des plugins pour TypeScript, Python, Go, Rust et d'autres langages courants. L'exemple ci-dessous installe le plugin TypeScript :
+La marketplace officielle a des plugins pour TypeScript, Python, Go, Rust et d'autres langages courants. Exécutez la commande ci-dessous à l'intérieur d'une session Claude Code pour installer le plugin TypeScript :
 
 ```shell theme={null}
 /plugin install typescript-lsp@claude-plugins-official
 ```
 
-Pour activer un plugin pour tout le monde dans le référentiel plutôt que de l'installer vous-même, ajoutez-le au paramètre de projet [`enabledPlugins`](/docs/fr/settings#plugin-settings).
+Si l'installation échoue, faites correspondre le message que Claude Code rapporte :
 
-Les plugins d'intelligence du code nécessitent le binaire du serveur de langage de la langue sur la machine de chaque développeur. Voir [quel binaire chaque langue nécessite](/docs/fr/discover-plugins#code-intelligence). L'installation à partir de la marketplace officielle nécessite un accès réseau à GitHub, où la marketplace est hébergée. Sur un réseau restreint, [ajoutez la marketplace à partir d'un hôte Git interne ou d'un chemin local](/docs/fr/discover-plugins#add-from-other-git-hosts) à la place.
+* `Marketplace "claude-plugins-official" not found` : ajoutez la marketplace avec `/plugin marketplace add anthropics/claude-plugins-official`, puis réessayez l'installation.
+* Le plugin [n'est pas trouvé dans la marketplace](/docs/fr/plugins/install#install-a-plugin) : vérifiez le nom du plugin.
+
+Pour activer un plugin pour tous ceux du référentiel plutôt que de l'installer vous-même, ajoutez-le au paramètre de projet [`enabledPlugins`](/docs/fr/settings-reference#plugin-settings).
+
+Les plugins d'intelligence du code nécessitent le binaire du serveur de langage de la langue sur la machine de chaque développeur. Voir [quel binaire chaque langue nécessite](/docs/fr/plugins/code-intelligence). L'installation à partir de la marketplace officielle nécessite un accès réseau à GitHub, où la marketplace est hébergée. Sur un réseau restreint, [ajoutez la marketplace à partir d'un hôte Git interne ou d'un chemin local](/docs/fr/plugins/install#add-a-marketplace) à la place.
 
 Cela s'associe bien avec `claudeMdExcludes` et les règles `Read` deny ci-dessus. Ceux-ci gardent le contenu non pertinent en dehors du contexte, et l'intelligence du code empêche Claude de lire ce qui reste pour localiser une définition.
 
@@ -234,7 +233,11 @@ Ces paramètres contrôlent ce qui est sur le disque dans les worktrees et quels
 
 Le flag `--worktree` démarre une session dans un nouveau git worktree afin que les modifications restent isolées de votre checkout principal. Par défaut, il vérifie l'ensemble du référentiel. Dans un grand référentiel, le paramètre `worktree.sparsePaths` utilise git sparse-checkout pour écrire uniquement les répertoires listés plus les fichiers au niveau racine sur le disque, afin que les worktrees démarrent plus rapidement et utilisent moins d'espace.
 
-Si tout le monde travaillant dans ce répertoire a besoin des mêmes chemins, validez le paramètre dans `.claude/settings.json`. Pour ajouter des chemins pour vous-même, utilisez `.claude/settings.local.json` : les listes fusionnent entre les scopes, donc un fichier local peut ajouter des chemins à la liste validée mais pas les supprimer. L'exemple ci-dessous montre le fichier validé :
+Si tout le monde travaillant dans ce répertoire a besoin des mêmes chemins, validez le paramètre dans `.claude/settings.json`. Pour ajouter des chemins pour vous-même, utilisez `.claude/settings.local.json` : les listes fusionnent entre les scopes, donc un fichier local peut ajouter des chemins à la liste validée mais pas les supprimer.
+
+Les exemples JSON sur cette page montrent un paramètre à la fois. Si votre `.claude/settings.json` contient déjà d'autres clés, comme les règles `permissions.deny` ci-dessus, ajoutez la clé `worktree` à côté d'elles plutôt que de remplacer le fichier. [Assemblez-le](#put-it-together) montre le résultat combiné.
+
+L'exemple ci-dessous montre le fichier validé :
 
 ```json .claude/settings.json theme={null}
 {
@@ -252,7 +255,7 @@ Lorsque Claude crée un worktree, il vérifie uniquement `.claude/`, `packages/a
 
 Ceci est particulièrement utile pour [l'isolation des worktrees de sous-agent](/docs/fr/worktrees#isolate-subagents-with-worktrees). Les sous-agents sont des instances Claude parallèles générées pour les sous-tâches, et chacun qui s'exécute dans un worktree obtient un checkout léger au lieu de l'arbre complet. Tous les worktrees dans une session partagent le même `sparsePaths`, donc si un sous-agent a besoin de `packages/api/` et un autre de `packages/web/`, listez les deux.
 
-Listez les répertoires dans `sparsePaths`, pas les fichiers individuels. Les fichiers au niveau racine comme `package.json`, `tsconfig.base.json` et les fichiers de verrouillage sont toujours vérifiés aux côtés des répertoires que vous listez. Les répertoires au niveau racine ne le sont pas, donc incluez `.claude` dans la liste si vous voulez que le `.claude/settings.json`, `.claude/rules/` ou `.claude/skills/` de la racine du référentiel soit disponible à l'intérieur du worktree.
+Listez les répertoires dans `sparsePaths`, pas les fichiers individuels. Les fichiers au niveau racine comme `package.json`, `tsconfig.base.json` et les fichiers de verrouillage sont toujours vérifiés aux côtés des répertoires que vous listez. Les répertoires au niveau racine ne le sont pas, donc incluez `.claude` dans la liste si vous voulez que le `.claude/settings.json` de la racine du référentiel ou les fichiers `.claude/rules/` soient disponibles à l'intérieur du worktree. Pour les skills de projet, les agents et les commandes, voir [Ce que les worktrees partagent avec le checkout principal](/docs/fr/worktrees#what-worktrees-share-with-the-main-checkout).
 
 Le sparse checkout nécessite que git active `extensions.worktreeConfig` dans le `.git/config` partagé du référentiel tandis qu'un worktree sparse existe. Claude Code supprime cette entrée après la suppression du dernier worktree, mais uniquement si Claude Code l'a ajoutée. Il ne supprime jamais une valeur que vous avez définie vous-même. Avant la v2.1.207, l'entrée restait après la suppression du dernier worktree, et les outils basés sur go-git comme `tea` ne pouvaient pas ouvrir le référentiel jusqu'à ce que vous exécutiez `git config --unset extensions.worktreeConfig`.
 
@@ -279,7 +282,7 @@ Cela crée un symlink du `node_modules/` de chaque worktree vers la copie du ré
   Les paramètres `sparsePaths` et `symlinkDirectories` sont lus à partir de votre répertoire de démarrage avant la création du worktree. Après la création, le répertoire de travail de la session est la racine du worktree, pas le sous-répertoire à partir duquel vous avez lancé. Les paramètres de projet à l'intérieur du worktree se chargent donc à partir du `.claude/settings.json` de la racine du worktree, la copie validée du fichier de la racine du référentiel. Mettez tous les autres paramètres dont vous avez besoin à l'intérieur des worktrees, comme les règles de permission ou les hooks, dans le `.claude/settings.json` de la racine du référentiel.
 </Note>
 
-Pour la référence complète des paramètres de worktree, voir [Paramètres de worktree](/docs/fr/settings#worktree-settings).
+Pour la référence complète des paramètres de worktree, voir [Paramètres de worktree](/docs/fr/settings-reference#worktree).
 
 <h3 id="grant-access-across-packages-or-repositories">
   Accorder l'accès entre les packages ou les référentiels
@@ -291,7 +294,7 @@ Lorsque vous démarrez Claude à partir de `packages/api/`, il peut lire et écr
 
 Le paramètre `additionalDirectories` dans `.claude/settings.json` donne à Claude l'accès aux répertoires en dehors du répertoire de travail. L'exemple ci-dessous accorde l'accès à deux packages frères :
 
-```json .claude/settings.json theme={null}
+```json packages/api/.claude/settings.json theme={null}
 {
   "permissions": {
     "additionalDirectories": [
@@ -382,17 +385,17 @@ Pour plus d'informations sur la création et l'organisation des skills, voir [Sk
   Garder les skills découvrables
 </h3>
 
-Avec les skills dispersés dans de nombreux répertoires, la liste parmi laquelle Claude choisit peut devenir grande. Claude choisit un skill en lisant le nom et la description de chaque skill découvert, et seul le contenu complet du skill choisi se charge dans le contexte. Cette section couvre comment garder cette liste petite et écrire des descriptions qui survivent au raccourcissement.
+Avec les skills dispersés dans de nombreux répertoires, la liste parmi laquelle Claude choisit peut devenir grande. Claude choisit un skill en lisant le nom et la description de chaque skill découvert, et seul le contenu complet du skill choisi se charge dans le contexte. Cette section couvre comment garder cette liste petite.
 
 Quels skills sont en scope dépend de l'endroit où vous démarrez Claude :
 
 * **À partir d'un sous-répertoire tel que `packages/api/`** : skills de ce répertoire, chaque parent jusqu'à la racine du référentiel, et les niveaux utilisateur et entreprise
-* **À partir de la racine du référentiel** : skills de chaque sous-répertoire que Claude touche pendant la session, ce qui peut s'accumuler en centaines
+* **À partir de la racine du référentiel** : skills de la racine, plus les skills de chaque sous-répertoire que Claude touche pendant la session, ce qui peut s'accumuler en centaines
 * **Après avoir ajouté un frère avec [`--add-dir`](#grant-access-across-packages-or-repositories)** : les skills de ce frère se chargent aussi. Le paramètre `additionalDirectories` accorde uniquement l'accès aux fichiers et ne charge pas les skills
 
-Les noms se chargent toujours, mais [les descriptions sont raccourcies lorsqu'il y en a beaucoup](/docs/fr/skills#skill-descriptions-are-cut-short), ce qui peut supprimer les mots-clés que Claude utilise pour décider si un skill s'applique. Gardez les descriptions courtes et commencez par les mots qu'une demande contiendrait, comme « écrire ou modifier les tests dans `packages/api/` ».
+Les noms se chargent toujours, mais [lorsqu'il y en a beaucoup, certains skills perdent entièrement leurs descriptions](/docs/fr/skills#skill-descriptions-are-cut-short), ce qui peut supprimer les mots-clés que Claude utilise pour décider si un skill s'applique. Gardez les descriptions courtes et commencez par les mots qu'une demande contiendrait, comme « écrire ou modifier les tests dans `packages/api/` ».
 
-Pour les skills que de nombreux répertoires partagent, comme les conventions PR ou une liste de contrôle de déploiement, placez-les dans le `.claude/skills/` de la racine du référentiel afin qu'ils se chargent à partir de n'importe quel répertoire de démarrage. Lorsque les skills partagés ont besoin de leur propre historique de version ou doivent fonctionner entre les référentiels, empaquetez-les en tant que [plugin](/docs/fr/plugins) à la place. Les skills de plugin utilisent un espace de noms `plugin-name:skill-name`, donc ils ne collisionnent jamais avec les skills par répertoire. Une équipe de plateforme peut les versionner et les mettre à jour au même endroit.
+Pour les skills que de nombreux répertoires partagent, comme les conventions PR ou une liste de contrôle de déploiement, placez-les dans le `.claude/skills/` de la racine du référentiel afin qu'ils se chargent à partir de n'importe quel répertoire de démarrage. Lorsque les skills partagés ont besoin de leur propre historique de version ou doivent fonctionner entre les référentiels, empaquetez-les en tant que [plugin](/docs/fr/plugins/overview) à la place. Les skills de plugin utilisent un espace de noms `plugin-name:skill-name`, donc ils ne collisionnent jamais avec les skills par répertoire. Une équipe de plateforme peut les versionner et les mettre à jour au même endroit.
 
 Pour trouver quels skills restent inutilisés, activez l'exportateur OpenTelemetry [logs](/docs/fr/monitoring-usage) et définissez `OTEL_LOG_TOOL_DETAILS=1` afin que les noms de skills soient enregistrés textuellement au lieu d'être masqués. L'événement [`skill_activated`](/docs/fr/monitoring-usage#skill-activated-event) enregistre chaque invocation dans son attribut `skill.name`, et `invocation_trigger` enregistre si une commande, Claude ou un skill imbriqué l'a invoqué, ce qui vous dit quoi consolider ou retirer.
 
@@ -405,7 +408,7 @@ Les fichiers CLAUDE.md par répertoire peuvent devenir difficiles à gouverner �
 Déplacez les conventions et le contenu de référence en dehors du CLAUDE.md toujours chargé et dans les mécanismes qui se chargent à la demande :
 
 * [Skills](/docs/fr/skills) : matériel de référence que Claude charge uniquement lorsqu'il est pertinent pour la tâche
-* [Plugins](/docs/fr/plugins) : bundles versionnés de skills, hooks et commandes qu'une équipe de plateforme possède centralement
+* [Plugins](/docs/fr/plugins/overview) : bundles versionnés de skills, hooks et commandes qu'une équipe de plateforme possède centralement
 * [Serveurs MCP](/docs/fr/mcp) : si votre organisation exécute déjà une recherche de code ou un index RAG sur le référentiel, exposez-le en tant qu'outil MCP afin que Claude l'interroge au lieu de lire les fichiers directement
 
 Voir [paramètres gérés par serveur ou gérés par endpoint](/docs/fr/server-managed-settings#choose-between-server-managed-and-endpoint-managed-settings) pour la façon dont les équipes de plateforme peuvent les appliquer centralement.
@@ -414,7 +417,7 @@ Voir [paramètres gérés par serveur ou gérés par endpoint](/docs/fr/server-m
   Recommander le bon plugin au démarrage de la session
 </h3>
 
-Une fois que les conventions vivent dans les plugins, un coéquipier démarrant Claude dans une partie inconnue de l'arbre n'a aucun signal sur quel plugin les propriétaires de cette zone maintiennent. Un [hook `SessionStart`](/docs/fr/hooks#sessionstart) peut combler cet écart, puisque tout ce que le hook imprime sur stdout est ajouté au contexte de Claude avant la première invite.
+Une fois que les conventions vivent dans les plugins, un coéquipier démarrant Claude dans une partie inconnue de l'arbre n'a aucun signal sur quel plugin les propriétaires de cette zone maintiennent. Un [hook `SessionStart`](/docs/fr/hooks#sessionstart) peut combler cet écart, puisque Claude Code ajoute le texte brut que le hook imprime sur stdout au contexte de Claude avant la première invite.
 
 Par exemple, vous pouvez écrire un script qui lit le répertoire de lancement à partir de [l'entrée du hook](/docs/fr/hooks#common-input-fields), le recherche dans une carte chemin-vers-plugin validée dans le référentiel, et imprime la recommandation pour que Claude la relaye dans sa première réponse. Voir [Automatiser les actions avec les hooks](/docs/fr/hooks-guide) pour écrire et enregistrer le hook.
 
@@ -422,7 +425,7 @@ Par exemple, vous pouvez écrire un script qui lit le répertoire de lancement �
   Assembler le tout
 </h2>
 
-La configuration combinée ci-dessous utilise la disposition du monorepo. Les mêmes fichiers fonctionnent pour n'importe quel sous-répertoire dans un grand arbre unique. Les paramètres de projet se chargent uniquement à partir du répertoire à partir duquel vous démarrez Claude, donc le `.claude/settings.json` de chaque sous-répertoire doit être autonome plutôt que superposé sur un fichier racine.
+La configuration combinée ci-dessous utilise la disposition du monorepo. Les mêmes fichiers fonctionnent pour n'importe quel sous-répertoire dans un grand arbre unique. Le fichier `.claude/settings.json` de chaque sous-répertoire doit être autonome plutôt que superposé sur un fichier racine.
 
 L'exemple valide `worktree`, `additionalDirectories` et les règles `Read` deny dans `.claude/settings.json` afin que chaque développeur dans `packages/api/` obtienne le même accès aux frères, les chemins clairsemés et les exclusions. Le fichier ci-dessous est les paramètres validés par zone pour `packages/api/` :
 
@@ -443,8 +446,8 @@ L'exemple valide `worktree`, `additionalDirectories` et les règles `Read` deny 
       "../shared"
     ],
     "deny": [
-      "Read(./**/dist/**)",
-      "Read(./**/build/**)"
+      "Read(./**/dist/**/*)",
+      "Read(./**/build/**/*)"
     ]
   }
 }
@@ -458,8 +461,8 @@ L'entrée `additionalDirectories` s'applique lorsque vous démarrez Claude à pa
 {
   "permissions": {
     "deny": [
-      "Read(./**/dist/**)",
-      "Read(./**/build/**)"
+      "Read(./**/dist/**/*)",
+      "Read(./**/build/**/*)"
     ]
   }
 }
@@ -500,7 +503,7 @@ La configuration ci-dessus contrôle ce que Claude voit. Lorsqu'une seule modifi
 Deux techniques aident à garder une modification entre packages cohérente :
 
 * **Donner à Claude le changement entier dans une session** : remettre l'édition partagée et ses sites d'appel ensemble garde les décisions derrière chaque édition cohérentes, plutôt que de les redériver par package
-* **Enregistrer le plan dans un fichier avant d'éditer** : [planifiez d'abord](/docs/fr/best-practices#explore-first-then-plan-then-code) et demandez à Claude d'écrire le plan dans un fichier markdown dans le référentiel. Une longue session entre packages [compacte son contexte](/docs/fr/context-window#what-survives-compaction) en cours de route, et le plan enregistré survit où l'historique de conversation peut ne pas le faire
+* **Planifier avant d'éditer** : [planifiez d'abord](/docs/fr/best-practices#explore-first-then-plan-then-code) en [mode plan](/docs/fr/permission-modes#analyze-before-you-edit-with-plan-mode), et Claude écrit le plan dans un fichier. Une longue session entre packages [compacte son contexte](/docs/fr/context-window#what-survives-compaction) en cours de route. Claude Code réinjecte le fichier de plan après chaque compaction, donc le plan survit là où l'historique de conversation peut ne pas le faire
 
 <h2 id="next-steps">
   Prochaines étapes

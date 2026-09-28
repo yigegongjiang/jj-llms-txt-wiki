@@ -4,7 +4,7 @@
 
 # Biblioteca de prompts
 
-> Copie y pegue prompts para Claude Code, etiquetados por tarea y rol.
+> Prompts para copiar y pegar en Claude Code, etiquetados por tarea y rol.
 
 export const PromptLibrary = ({text = {}, labels = {}, tagLabels = {}, phaseLabels = {}, sourceLabels = {}, catLabels = {}}) => {
   const RAW = useMemo(() => [{
@@ -626,13 +626,14 @@ export const PromptLibrary = ({text = {}, labels = {}, tagLabels = {}, phaseLabe
       return base + (href.startsWith('/en/') ? '/' + locale + href.slice(3) : href);
     };
   }, []);
+  const SAFE_HREF = /^(\/(?![\/\\\s])|#|https?:\/\/)/;
   const linkify = s => {
     const out = [];
     let last = 0;
     const re = /\[([^\]]+)\]\(([^)]+)\)/g;
     for (let m; m = re.exec(s); ) {
       if (m.index > last) out.push(s.slice(last, m.index));
-      out.push(<a key={m.index} href={doc(m[2])}>{m[1]}</a>);
+      out.push(SAFE_HREF.test(m[2]) ? <a key={m.index} href={doc(m[2])}>{m[1]}</a> : m[1]);
       last = re.lastIndex;
     }
     if (last < s.length) out.push(s.slice(last));
@@ -776,7 +777,7 @@ export const PromptLibrary = ({text = {}, labels = {}, tagLabels = {}, phaseLabe
             </div>
             <div className="pl-label">{L.whyWorks}</div>
             <div className="pl-teaches">{linkify(p.teaches)}</div>
-            {p.nextHref && p.next && <div className="pl-next">
+            {p.nextHref && p.next && SAFE_HREF.test(p.nextHref) && <div className="pl-next">
                 <span className="pl-next-label">{L.makeItStick}</span>
                 <a href={doc(p.nextHref)}>{codeify(p.next)} →</a>
               </div>}
@@ -996,7 +997,7 @@ export const PromptLibrary = ({text = {}, labels = {}, tagLabels = {}, phaseLabe
     </div>;
 };
 
-Esta es una biblioteca de prompts para copiar en Claude Code. Úsela para explorar formas de trabajo que no ha probado, o cuando no está seguro de dónde comenzar.
+Esta es una biblioteca de prompts para copiar en Claude Code. Úsela para explorar formas de trabajo que no ha probado, o cuando no esté seguro de dónde empezar.
 
 Los prompts se recopilan de varias guías de Anthropic, incluyendo [Flujos de trabajo comunes](/docs/es/common-workflows), [Mejores prácticas](/docs/es/best-practices), y [Cómo los equipos de Anthropic usan Claude Code](https://claude.com/blog/how-anthropic-teams-use-claude-code). Son puntos de partida en lugar de scripts. Abra **Por qué funciona esto** bajo cualquier prompt para ver el patrón detrás de él para que pueda escribir el suyo propio.
 
@@ -1011,9 +1012,9 @@ export const labels = {
   noMatch: "Ningún prompt coincide",
   fillAndCopy: "Rellenar y copiar",
   copyThis: "Copiar este prompt",
-  hintBefore: "Escriba en el",
-  hintChip: "resaltado",
-  hintAfter: "campos para personalizar, luego copie.",
+  hintBefore: "Escriba en los",
+  hintChip: "campos destacados",
+  hintAfter: "para personalizar, luego copie.",
   copy: "Copiar",
   copied: "Copiado",
   whyWorks: "Por qué funciona esto",
@@ -1030,8 +1031,8 @@ export const labels = {
   needsLabel: "Necesita",
   needs: {
     tracker: "su rastreador de problemas agregado como un [conector de claude.ai](/docs/es/mcp#use-mcp-servers-from-claude-ai) o [servidor MCP](/docs/es/mcp).",
-    gh: "el [CLI de gh](https://cli.github.com) autenticado, o GitHub agregado como un [conector de claude.ai](/docs/es/mcp#use-mcp-servers-from-claude-ai).",
-    browser: "una forma para que Claude renderice y capture una captura de pantalla del resultado. La [aplicación de escritorio](/docs/es/desktop#preview-your-app) tiene esto integrado. En la terminal, instale la [extensión de Chrome](/docs/es/chrome) o un servidor MCP de [Playwright](/docs/es/mcp).",
+    gh: "la [CLI gh](https://cli.github.com) autenticada, o GitHub agregado como un [conector de claude.ai](/docs/es/mcp#use-mcp-servers-from-claude-ai).",
+    browser: "una forma para que Claude renderice y capture una captura de pantalla del resultado. La [aplicación de escritorio](/docs/es/desktop#preview-your-app) tiene esto integrado. En la terminal, instale la [extensión de Chrome](/docs/es/chrome) o un servidor [MCP](/docs/es/mcp) de Playwright.",
     db: "su almacén de datos o almacén de registros agregado como un [conector de claude.ai](/docs/es/mcp#use-mcp-servers-from-claude-ai) o [servidor MCP](/docs/es/mcp)."
   }
 };
@@ -1060,7 +1061,7 @@ export const tagLabels = {
 
 export const phaseLabels = {
   discover: "Descubrir",
-  design: "Diseñar",
+  design: "Diseño",
   build: "Construir",
   ship: "Enviar",
   operate: "Operar"
@@ -1096,7 +1097,7 @@ export const catLabels = {
 export const text = {
   "get-oriented-in-a": {
     title: "Orientarse en un repositorio nuevo",
-    teaches: "Describa lo que desea saber, no qué archivos leer. Claude explora el proyecto por su cuenta y devuelve un resumen de cómo encaja todo.",
+    teaches: "Describa lo que desea saber, no qué archivos leer. Claude explora el proyecto por su cuenta y devuelve un resumen de cómo encaja.",
     next: "Ejecute `/init` para configurar `CLAUDE.md` para que Claude recuerde esto en cada sesión"
   },
   "explain-unfamiliar-code": {
@@ -1122,12 +1123,12 @@ export const text = {
   },
   "ask-the-codebase-a": {
     title: "Hacer una pregunta de producto a la base de código",
-    teaches: "Indique su rol para que la respuesta esté al nivel correcto. Claude explica qué hace realmente el producto desde el código fuente, sin que necesite leerlo.",
+    teaches: "Indique su rol para que la respuesta esté al nivel correcto. Claude explica qué hace realmente el producto desde el código fuente, sin que usted necesite leerlo.",
     next: "Establezca un estilo de salida para que Claude siempre presente respuestas a este nivel"
   },
   "plan-a-multi-file": {
-    title: "Planificar un cambio de varios archivos antes de tocar código",
-    teaches: "Agregar \"no editar aún\" separa la exploración de los cambios, para que vea el enfoque antes de que se mueva cualquier código. Para hacer que el modo plan sea el predeterminado en cada prompt, presione Shift+Tab para [plan mode](/docs/es/permission-modes#analyze-before-you-edit-with-plan-mode)."
+    title: "Planificar un cambio de múltiples archivos antes de tocar código",
+    teaches: "Agregar \"no editar aún\" separa la exploración de los cambios, para que vea el enfoque antes de que se mueva código. Para hacer que el modo plan sea el predeterminado en cada prompt, presione Shift+Tab para [modo plan](/docs/es/permission-modes#analyze-before-you-edit-with-plan-mode)."
   },
   "draft-a-spec-by": {
     title: "Redactar una especificación por entrevista",
@@ -1150,7 +1151,7 @@ export const text = {
   "implement-from-a-screenshot": {
     title: "Implementar desde una captura de pantalla y auto-verificar",
     teaches: "Esto le da a Claude un bucle de verificación: renderiza, compara contra la imagen de origen, e itera sin que usted señale cada brecha.",
-    next: "Use `/goal` para mantener a Claude iterando hasta que las capturas de pantalla coincidan"
+    next: "Use `/goal` para mantener a Claude iterando hacia capturas de pantalla coincidentes"
   },
   "follow-an-existing-pattern": {
     title: "Seguir un patrón existente",
@@ -1162,7 +1163,7 @@ export const text = {
     teaches: "Indique las entradas y salidas, no cómo construirla. Claude encuentra dónde vive código similar y agrega el suyo junto a él."
   },
   "build-a-small-internal": {
-    title: "Construir una pequeña herramienta interna desde cero",
+    title: "Construir una herramienta interna pequeña desde cero",
     teaches: "No necesita un proyecto, un marco o un paso de compilación. Describa la herramienta y pida a Claude que la abra para que la vea funcionando inmediatamente."
   },
   "work-an-issue-end": {
@@ -1175,7 +1176,7 @@ export const text = {
   },
   "draft-from-past-examples": {
     title: "Redactar un documento a partir de ejemplos anteriores",
-    teaches: "Señale una carpeta de trabajo terminado en lugar de describir su estilo. Claude aprende la estructura y la voz de lo que ya ha enviado, para que el primer borrador se lea como uno de los suyos.",
+    teaches: "Señale una carpeta de trabajo terminado en lugar de describir su estilo. Claude aprende la estructura y voz de lo que ya ha enviado, para que el primer borrador se lea como uno de los suyos.",
     next: "Guarde la voz como una habilidad para que cada borrador comience allí"
   },
   "write-tests-run-them": {
@@ -1190,11 +1191,11 @@ export const text = {
   "fill-gaps-from-a": {
     title: "Llenar brechas de un informe de cobertura",
     teaches: "Señale el informe de cobertura en lugar de adivinar qué no se prueba. Claude lee los números reales y escribe pruebas para los archivos que más los necesitan.",
-    next: "Establezca esto como un `/goal` para que Claude siga escribiendo pruebas hasta que la cobertura alcance el objetivo"
+    next: "Establezca esto como un `/goal` para que Claude siga escribiendo pruebas hacia el objetivo de cobertura"
   },
   "port-code-between-languages": {
     title: "Portar código a otro idioma",
-    teaches: "Diga qué preservar, no solo el idioma de destino. Nombrar la API o el comportamiento que debe permanecer igual le da a Claude un contrato para verificar el puerto."
+    teaches: "Diga qué preservar, no solo el idioma de destino. Nombrar la API o comportamiento que debe permanecer igual le da a Claude un contrato para verificar el puerto."
   },
   "generate-docs-for-code": {
     title: "Generar documentación para código sin documentar",
@@ -1202,12 +1203,12 @@ export const text = {
   },
   "migrate-a-pattern-across": {
     title: "Migrar un patrón en toda la base de código",
-    teaches: "Describa el patrón antiguo y el nuevo. Pedir a Claude que identifique primero cada lugar significa que los sitios de llamada se enumeran en la respuesta, para que pueda verificar que ninguno se perdió."
+    teaches: "Describa el patrón antiguo y el nuevo. Pedir a Claude que identifique primero cada lugar significa que los sitios de llamada se enumeran en la respuesta, para que pueda verificar que ninguno se perdió. Para una migración en muchos archivos, ejecute [/batch](/docs/es/commands). Claude divide el trabajo en unidades para que usted apruebe, luego los subagentes en segundo plano hacen los cambios."
   },
   "optimize-against-a-measurable": {
     title: "Optimizar contra un objetivo medible",
     teaches: "Indicar la métrica y el objetivo le da a Claude una definición clara de cuándo está hecho.",
-    next: "Establezca esto como un `/goal` para que Claude siga midiendo e iterando hasta que alcance el número"
+    next: "Establezca esto como un `/goal` para que Claude siga midiendo e iterando hacia el número"
   },
   "fix-a-precise-visual": {
     title: "Corregir un error visual preciso",
@@ -1222,7 +1223,7 @@ export const text = {
   "review-a-pull-request": {
     title: "Revisar una solicitud de extracción",
     teaches: "Claude revisa con toda la base de código en contexto, no solo la diferencia. Lee el código modificado y lo que llama, para que detecte problemas que una revisión solo de diferencia perdería.",
-    next: "Active esto para cada PR con Code Review"
+    next: "Ejecute `/code-review <pr#>` en un comando, o active Code Review para cada PR"
   },
   "review-infrastructure-changes-before": {
     title: "Revisar cambios de infraestructura antes de aplicar",
@@ -1245,7 +1246,7 @@ export const text = {
   },
   "narrow-the-scope-of": {
     title: "Reducir el alcance de un cambio",
-    teaches: "Cuando la dirección es correcta pero el cambio fue demasiado amplio, pida a Claude que mantenga parte de él en lugar de rebobinar todo. Un límite establecido evita que una pequeña corrección se convierta en una refactorización."
+    teaches: "Cuando la dirección es correcta pero el cambio fue demasiado amplio, pida a Claude que mantenga parte de él en lugar de rebobinar todo. Un límite establecido mantiene una corrección pequeña de convertirse en una refactorización."
   },
   "turn-a-correction-into": {
     title: "Convertir una corrección en una regla",
@@ -1262,7 +1263,7 @@ export const text = {
   },
   "open-a-pull-request": {
     title: "Abrir una solicitud de extracción desde un ticket",
-    teaches: "Omita el cambio de contexto entre rastreador, editor y GitHub. Un prompt lee la especificación, realiza el cambio y abre el PR."
+    teaches: "Omita el cambio de contexto entre rastreador, editor y GitHub. Un prompt lee la especificación, hace el cambio y abre la PR."
   },
   "draft-release-notes-from": {
     title: "Redactar notas de lanzamiento del historial de git",
@@ -1280,11 +1281,11 @@ export const text = {
   "investigate-a-reported-error": {
     title: "Investigar un error reportado",
     teaches: "Describa el síntoma y la ubicación; Claude lee la ruta de código relevante y rastrea las causas probables. Pegue seguimientos de pila o registros si los tiene.",
-    next: "Ponga un enlace profundo en su runbook que abra Claude con este prompt rellenado previamente"
+    next: "Ponga un enlace profundo en su runbook que abra Claude con este prompt pre-rellenado"
   },
   "fix-a-build-error": {
     title: "Corregir un error de compilación en la raíz",
-    teaches: "Pedir la causa raíz y la verificación evita parches de nivel superficial que suprimen el error sin corregirlo."
+    teaches: "Pedir causa raíz y verificación previene parches de nivel superficial que suprimen el error sin corregirlo."
   },
   "investigate-a-production-incident": {
     title: "Investigar un incidente de producción",
@@ -1301,7 +1302,7 @@ export const text = {
   },
   "analyze-a-data-file": {
     title: "Analizar un archivo de datos",
-    teaches: "Una pregunta única no necesita un script único. Señale un archivo en su carpeta de proyecto y Claude lo lee directamente, encuentra los patrones y escribe la salida donde le pida.",
+    teaches: "Una pregunta única no necesita un script único. Señale un archivo en su carpeta de proyecto y Claude lo lee directamente, encuentra los patrones y escribe la salida donde usted pida.",
     next: "Conecte la fuente de datos a través de MCP en lugar de exportar archivos"
   },
   "generate-variations-from-performance": {
@@ -1311,7 +1312,7 @@ export const text = {
   },
   "turn-a-recurring-task": {
     title: "Convertir una tarea recurrente en una habilidad",
-    teaches: "Nombre los pasos una vez; reutilícelos como un comando. Claude escribe una [habilidad](/docs/es/skills) que cualquiera en su equipo pueda ejecutar."
+    teaches: "Nombre los pasos una vez; reutilícelos como un comando. Claude escribe una [habilidad](/docs/es/skills) que cualquiera en su equipo puede ejecutar."
   },
   "add-a-hook-for": {
     title: "Agregar un hook para comportamiento repetido",
@@ -1319,7 +1320,7 @@ export const text = {
   },
   "connect-a-tool-with": {
     title: "Conectar una herramienta con MCP",
-    teaches: "Conecte la fuente una vez en lugar de pegar datos en cada sesión. Después de la configuración de [MCP](/docs/es/mcp), Claude lee de la herramienta directamente cuando pregunta sobre ella."
+    teaches: "Conecte la fuente una vez en lugar de pegar datos en cada sesión. Después de la configuración de [MCP](/docs/es/mcp), Claude lee de la herramienta directamente cuando usted pregunta sobre ella."
   },
   "capture-what-to-remember": {
     title: "Capturar qué recordar para la próxima vez",
@@ -1337,37 +1338,37 @@ Los prompts anteriores comparten algunos patrones. Reconocerlos le ayuda a adapt
 
 **Describa el resultado, no los pasos.** Diga qué desea y deje que Claude encuentre los archivos. El prompt a continuación funciona sin nombrar una sola ruta de archivo.
 
-```text theme={null}
+```text wrap theme={null}
 agregar limitación de velocidad a la API pública y asegurarse de que las pruebas existentes aún pasen
 ```
 
-**Déle una forma de verificar su propio trabajo.** Pida ejecutar, probar, comparar o verificar en el mismo prompt para que Claude itere en lugar de detenerse después de un intento.
+**Déle una forma de verificar su propio trabajo.** Pida ejecutar, probar, comparar o verificar en el mismo prompt para que Claude itere en lugar de detenerse después de un intento. Para verificar el cambio terminado contra la aplicación en ejecución, ejecute [`/verify`](/docs/es/skills#run-and-verify-your-app).
 
-```text theme={null}
+```text wrap theme={null}
 escribir la migración, ejecutarla contra la base de datos de desarrollo y confirmar que el esquema coincida
 ```
 
 **Señale una referencia.** Nombre un archivo, prueba o patrón existente para que coincida para que el nuevo código sea consistente con lo que ya tiene.
 
-```text theme={null}
+```text wrap theme={null}
 agregar una página de configuración que siga el mismo diseño que la página de perfil
 ```
 
 **Indique el objetivo medible.** Cuando el objetivo es rendimiento o cobertura, dé la métrica y el umbral para que la finalización sea inequívoca.
 
-```text theme={null}
+```text wrap theme={null}
 obtener el tamaño del paquete por debajo de 200KB y mostrarme qué eliminó
 ```
 
 **Déle el artefacto.** Pegue errores, registros, capturas de pantalla y salida de plan directamente en el prompt, o escriba `@` para hacer referencia a un archivo. Claude lee la fuente en lugar de su descripción de ella.
 
-```text theme={null}
+```text wrap theme={null}
 ¿por qué falla la compilación? @build.log
 ```
 
 **Diga cómo desea la respuesta.** Nombre el formato, la longitud o la audiencia para que la explicación se ajuste a cómo la usará. Para hacer que un formato sea el predeterminado para cada respuesta, establezca un [estilo de salida](/docs/es/output-styles).
 
-```text theme={null}
+```text wrap theme={null}
 explicar cómo funciona la lógica de reintento de pago como una página HTML con un diagrama, luego abrirla en mi navegador
 ```
 
@@ -1384,7 +1385,7 @@ Estos prompts se basan en patrones de recursos publicados de Anthropic. Cada tar
 * [Cómo los equipos de Anthropic usan Claude Code](https://claude.com/blog/how-anthropic-teams-use-claude-code): flujos de trabajo reales de equipos de ingeniería, producto, diseño y datos, con análisis profundos sobre [legal](https://claude.com/blog/how-anthropic-uses-claude-legal), [marketing](https://claude.com/blog/how-anthropic-uses-claude-marketing), y [ciberseguridad](https://claude.com/blog/how-anthropic-uses-claude-cybersecurity)
 * [Guía de codificación agéntica escalable](https://resources.anthropic.com/hubfs/Scaling%20agentic%20coding%20across%20your%20organization.pdf): la guía de adopción empresarial
 
-Para tutoriales en video de estos patrones, consulte el curso gratuito [Claude Code in Action](https://anthropic.skilljar.com/claude-code-in-action) en Anthropic Academy.
+Para tutoriales en video de estos patrones, consulte el curso gratuito [Claude Code in Action](https://academy.claude.com/courses/claude-code-in-action) en [Claude Academy](https://academy.claude.com/).
 
 <h2 id="related-resources">
   Recursos relacionados

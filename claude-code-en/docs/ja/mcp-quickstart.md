@@ -48,7 +48,7 @@ Claude Code で MCP サーバーを接続および設定するすべての方法
     * `claude-code-docs`：自分で作成する名前。同じサーバーを `docs` と呼ぶことも同じように機能します。Claude Code は選択した名前を使用して、Claude の出力でサーバーのツールにラベルを付け、`claude mcp remove` などのコマンドでサーバーを参照します。
     * `https://code.claude.com/docs/mcp`：サーバーがホストされている URL。
 
-    コマンドは `Added HTTP MCP server claude-code-docs with URL: https://code.claude.com/docs/mcp to local config` のような確認を出力します。`local config` の部分は、サーバーがあなたに登録されていることを意味します。このプロジェクトでは、別のプロジェクトで Claude Code を開始した場合、このサーバーはそこでアクティブではありません。すべてのプロジェクトに対して一度サーバーを登録するには、ユーザースコープで追加します。これは[サーバースコープを変更する](#change-server-scope)で説明されています。
+    コマンドは `Added HTTP MCP server claude-code-docs with URL: https://code.claude.com/docs/mcp to local config` のような確認を出力します。その後に `File modified:` 行が続き、書き込まれた設定ファイルが表示されます。`local config` の部分は、サーバーがあなたに登録されていることを意味します。このプロジェクトでは、別のプロジェクトで Claude Code を開始した場合、このサーバーはそこでアクティブではありません。すべてのプロジェクトに対して一度サーバーを登録するには、ユーザースコープで追加します。これは[サーバースコープを変更する](#change-server-scope)で説明されています。
   </Step>
 
   <Step title="接続ステータスを確認する">
@@ -60,14 +60,17 @@ Claude Code で MCP サーバーを接続および設定するすべての方法
 
     サーバーはステータスインジケーター付きで表示されます。
 
-    | ステータス                              | 意味                                                                                                                               |
-    | :--------------------------------- | :------------------------------------------------------------------------------------------------------------------------------- |
-    | `✓ Connected`                      | 使用可能です。これは `claude-code-docs` で表示されるはずです                                                                                         |
-    | `! Connected · tools fetch failed` | サーバーは接続されましたが、ツールをリストできませんでした。エラーの詳細については `claude mcp get <name>` を実行してください                                                      |
-    | `! Needs authentication`           | サーバーに到達可能ですが、ブラウザサインインが必要です。または `--header` で渡されたトークンが必要です。[サインインが必要なサーバーに接続する](#connect-a-server-that-requires-sign-in)を参照してください |
-    | `✗ Failed to connect`              | サーバーが応答しませんでした。[トラブルシューティング](#troubleshooting)を参照してください                                                                          |
-    | `✗ Connection error`               | 接続試行がエラーをスローしました。[トラブルシューティング](#troubleshooting)を参照してください                                                                        |
-    | `⏸ Pending approval`               | まだ承認していないプロジェクトスコープのサーバー。[.mcp.json を直接編集する](#edit-mcp-json-directly)を参照してください                                                   |
+    | ステータス                                              | 意味                                                                                                                                           |
+    | :------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------- |
+    | `✔ Connected`                                      | 使用可能です。これは `claude-code-docs` で表示されるはずです                                                                                                     |
+    | `! Connected · tools fetch failed`                 | サーバーは接続されましたが、ツールをリストできませんでした。エラーの詳細については `claude mcp get <name>` を実行してください                                                                  |
+    | `! Needs authentication`                           | サーバーに到達可能ですが、ブラウザサインインが必要です。または `--header` で渡されたトークンが必要です。[サインインが必要なサーバーに接続する](#connect-a-server-that-requires-sign-in)を参照してください             |
+    | `✘ Failed to connect`                              | サーバーが応答しませんでした。[トラブルシューティング](#troubleshooting)を参照してください                                                                                      |
+    | `✘ Connection error`                               | 接続試行がエラーをスローしました。[トラブルシューティング](#troubleshooting)を参照してください                                                                                    |
+    | `⏸ Pending approval (run `claude` to approve)`     | まだ承認していないプロジェクトスコープのサーバー。[.mcp.json を直接編集する](#edit-mcp-json-directly)を参照してください                                                               |
+    | `⊘ Disabled for this project (re-enable via /mcp)` | このプロジェクトのプロジェクトの `disabledMcpServers` リストによってこのプロジェクトに対してオフにされたサーバー。[サーバーを削除せずに無効にする](/docs/ja/mcp#disable-a-server-without-removing-it)を参照してください |
+
+    Windows 10 のデフォルトコンソールなど、一部のレガシー Windows コンソールはこれらの Unicode グリフをサポートしておらず、`✔` と `✘` の代わりに `√` と `×` を表示します。
   </Step>
 
   <Step title="サーバーを使用する">
@@ -77,7 +80,7 @@ Claude Code で MCP サーバーを接続および設定するすべての方法
     claude
     ```
 
-    ```text theme={null}
+    ```text wrap theme={null}
     Use the claude-code-docs server to look up what MCP_TIMEOUT does
     ```
 
@@ -85,7 +88,7 @@ Claude Code で MCP サーバーを接続および設定するすべての方法
       Claude は関連するツールを自動的に選択するため、通常はプロンプトでサーバーに名前を付ける必要はありません。ここで名前を付けることで、Web フェッチなど同じ質問に答えることができる別のツールではなく、新しいサーバーを通じてデモンストレーションが進むことを保証します。
     </Info>
 
-    Claude が初めてサーバーを呼び出すとき、新しいツールを使用する許可を求めます。続行するには承認してください。Claude の出力のツール呼び出しはサーバー名でラベル付けされており、これにより答えが Claude の組み込み知識ではなく MCP サーバーから来たことを確認できます。
+    Claude Code が初めてサーバーを呼び出すときに許可を求めた場合は、それを承認してください。Claude の出力のツール呼び出しはサーバー名でラベル付けされており、これにより答えが Claude の組み込み知識ではなく MCP サーバーから来たことを確認できます。
   </Step>
 
   <Step title="サーバーを削除する">
@@ -94,6 +97,8 @@ Claude Code で MCP サーバーを接続および設定するすべての方法
     ```bash theme={null}
     claude mcp remove claude-code-docs
     ```
+
+    コマンドは `Removed MCP server "claude-code-docs" from local config` で確認し、更新されたファイルを示す `File modified:` 行が続きます。
 
     <Note>
       接続されたサーバーはそれぞれ、ツール名とサーバー命令がすべてのセッションに読み込まれるため、[Claude のコンテキストウィンドウ](/docs/ja/how-claude-code-works#the-context-window)にスペースを取ります。使用しなくなったサーバーを削除すると、そのスペースが解放されます。
@@ -193,6 +198,8 @@ claude mcp add --scope project --transport http claude-code-docs https://code.cl
     * `--` セパレーターの後のすべてはサーバーを開始するために Claude Code が実行するコマンドです。
     * `-y` は、`npx` にプロンプトなしでパッケージをインストールするよう指示します。
 
+    コマンドは `Added stdio MCP server playwright with command: npx -y @playwright/mcp@latest to local config` のような確認を出力し、その後に書き込まれた設定ファイルを示す `File modified:` 行が続きます。
+
     Playwright はマシンに既にインストールされている Chrome を駆動します。別のブラウザを使用するには、`@playwright/mcp@latest` の後に `--browser` を追加します。例えば `--browser firefox`。
   </Step>
 
@@ -203,13 +210,13 @@ claude mcp add --scope project --transport http claude-code-docs https://code.cl
     claude mcp list
     ```
 
-    最初のチェックは `npx` がパッケージをダウンロードしている間に `✗ Failed to connect` を表示できるため、少し待ってから再度実行してください。
+    最初のチェックは `npx` がパッケージをダウンロードしている間に `✔ Failed to connect` を表示できるため、少し待ってから再度実行してください。ダウンロードが完了すると、ステータスは `✔ Connected` に変わります。数回の再試行後も `✘ Failed to connect` が表示される場合は、[トラブルシューティング](#troubleshooting)を参照してください。
   </Step>
 
   <Step title="ブラウザを使用する">
     Claude にブラウザが必要なタスクを与えます。
 
-    ```text theme={null}
+    ```text wrap theme={null}
     Use playwright to open https://example.com and tell me the page title
     ```
 
@@ -241,7 +248,7 @@ Sentry、Linear、Notion などのホストされたサービスは、MCP サー
   <Step title="ブラウザで認証する">
     Claude Code セッションを開始し、MCP パネルを開きます。
 
-    ```text theme={null}
+    ```text wrap theme={null}
     /mcp
     ```
 
@@ -301,8 +308,8 @@ Claude Code がプロジェクトスコープのサーバーを初めて見る�
 * **Claude Code デスクトップアプリ**：[Connectors UI](/docs/ja/desktop#connect-external-tools)を通じてサーバーを追加します。
 * **Claude Desktop チャットアプリ**：Claude Code とは別のアプリです。`claude_desktop_config.json` からサーバーを CLI にコピーするには、macOS または WSL で `claude mcp add-from-claude-desktop` を実行します。
 * **VS Code**：[MCP で外部ツールに接続する](/docs/ja/vs-code#connect-to-external-tools-with-mcp)を参照してください。
-* **Web 上の Claude Code**：リポジトリから `.mcp.json` を読み込みます。[.mcp.json を直接編集する](#edit-mcp-json-directly)を参照してください。
-* **Claude.ai**：[claude.ai/customize/connectors](https://claude.ai/customize/connectors) で追加したコネクタは、そのアカウントでサインインするとき CLI に自動的に読み込まれます。[Claude.ai から MCP サーバーを使用する](/docs/ja/mcp#use-mcp-servers-from-claude-ai)を参照してください。
+* **クラウドセッション**：リポジトリに `.mcp.json` をコミットします。1 つのリポジトリを持つセッションはそれを読み込みます。[.mcp.json を直接編集する](#edit-mcp-json-directly)と[セットアップから引き継がれるもの](/docs/ja/cloud-environments#what-carries-over-from-your-setup)を参照してください。
+* **Claude.ai**：[claude.ai/customize/connectors](https://claude.ai/customize/connectors)で追加したコネクタは、そのアカウントでサインインするとき CLI に自動的に読み込まれます。[Claude.ai から MCP サーバーを使用する](/docs/ja/mcp#use-mcp-servers-from-claude-ai)を参照してください。
 
 <h2 id="troubleshooting">
   トラブルシューティング
@@ -311,17 +318,25 @@ Claude Code がプロジェクトスコープのサーバーを初めて見る�
 サーバーが接続しない場合は、セッション内の `/mcp` またはシェルから `claude mcp list` でそのステータスを確認し、以下の症状と照合してください。`/mcp` パネルでは、セッションを離れずに再接続または認証することもできます。
 
 <AccordionGroup>
-  <Accordion title="/mcp は'No MCP servers configured'を表示します">
+  <Accordion title="/mcp は「No MCP servers configured」を表示します">
     Claude Code は現在のディレクトリのサーバーを見つけませんでした。最も一般的な原因：
 
     * 別のプロジェクトから `claude mcp add` を実行しました。ローカルスコープのサーバーは追加したプロジェクトに関連付けられています。リポジトリルート、または git リポジトリにいなかった場合は正確なディレクトリ。現在いるプロジェクトからサーバーを再度追加するか、`--scope user` で追加してプロジェクトに関連付けられないようにします。
     * 設定ファイルを間違ったパスで編集しました。正しいファイルは `~/.claude.json` と `<project>/.mcp.json` です。Claude Code は `~/.claude/.mcp.json`、`~/.claude/config/mcp.json`、`~/.claude/mcp.json`、`%APPDATA%\Claude\mcp.json` などのパスを読み込みません。ユーザースコープのサーバーの場合は、`claude mcp add --scope user` を実行します。これは `~/.claude.json` の `mcpServers` キーに書き込みます。プロジェクトスコープのサーバーの場合は、プロジェクトルートの `.mcp.json` を編集します。
+    * `.mcp.json` に不正な形式のエントリを書き込みました。Claude Code はそのエントリをスキップして他のエントリを読み込みます。シェルから `claude mcp list` を実行し、解析警告を探します。これは問題のあるフィールドに名前を付けます。
   </Accordion>
 
   <Accordion title="ステータスは「Failed to connect」または「Connection error」を表示します">
-    両方のステータスはサーバーが開始しなかったか、URL が応答しなかったことを意味します。[サインインが必要なサーバーに接続する](#connect-a-server-that-requires-sign-in)で説明されているブラウザサインインではなく、トークンを期待する HTTP サーバーにも表示される可能性があります。
+    両方のステータスはサーバーが開始しなかったか、URL が応答しなかったことを意味します。また、`headers.Authorization` で設定したトークンを拒否する HTTP サーバーにも表示される可能性があります。トークンが必要だが設定していないサーバーは、代わりに `! Needs authentication` を表示します。これは [サインインが必要なサーバーに接続する](#connect-a-server-that-requires-sign-in)で説明されています。
 
-    v2.1.191 以降、HTTP サーバーが `404 Not Found` を返す場合、`/mcp` でサーバーを選択すると、Claude Code が試した URL を含む `MCP endpoint not found at <url>. Check the URL in your MCP config.` が表示されます。以前のバージョンでは、URL なしで汎用的な `Error POSTing to endpoint` メッセージが表示されます。URL をサーバーのドキュメント化された MCP エンドポイントパスと比較してから、`claude mcp remove <name>` を実行し、正しい URL で再度追加します。
+    最初のステップは、表示されるステータスによって異なります。
+
+    * 「`Failed to connect`」：ステータス自体の失敗の詳細から始めます。`claude mcp list` と `claude mcp get <name>` は HTTP ステータスまたはエラーコード、およびサーバーが返したエラーテキストを表示します。これは多くの場合、不足しているヘッダーや拒否されたトークンなど、問題を直接名前で示します。v2.1.219 より前は、「`Failed to connect`」は単なるステータスのみを表示し、このセクションの後の curl とコマンドチェックで原因を見つける必要がありました。
+    * 「`Connection error`」：Claude Code はこのステータスにどのバージョンでも詳細を追加しないため、このセクションの後の curl とコマンドチェックに直接進みます。
+
+    詳細が認証情報または URL を指している場合は、`claude mcp list` 出力の警告も確認してください。Claude Code は、トークンを貼り付けた後の認証失敗の一般的な原因である、隠れた先頭または末尾の空白を持つ設定値にフラグを立てます。
+
+    HTTP サーバーが `404 Not Found` を返す場合、`/mcp` でサーバーを選択すると、Claude Code は「`MCP endpoint not found at <origin>. Check the URL in your MCP config.`」を表示します。メッセージは URL のオリジン（例：`https://mcp.example.com`）をパスなしで名前を付けるため、`claude mcp get <name>` を実行して設定した完全な URL を確認します。そのパスをサーバーのドキュメント化された MCP エンドポイントパスと比較してから、`claude mcp remove <name>` を実行し、正しい URL で再度追加します。v2.1.219 より前は、メッセージに URL のパスも含まれていました。v2.1.191 より前は、`404` は URL なしで汎用的な「`Error POSTing to endpoint`」メッセージを表示していました。
 
     HTTP サーバーの場合、URL がマシンから到達可能であることを確認します。
 
@@ -370,7 +385,7 @@ Claude Code がプロジェクトスコープのサーバーを初めて見る�
     claude mcp remove claude-code-docs
     ```
 
-    名前が複数のスコープに存在する場合、`remove` は `exists in multiple scopes` を報告します。削除するコピーを選択するために `--scope` を渡します。例えば `claude mcp remove claude-code-docs --scope local`。
+    名前が複数のスコープに存在する場合、`remove` は「`exists in multiple scopes`」を報告します。削除するコピーを選択するために `--scope` を渡します。例えば `claude mcp remove claude-code-docs --scope local`。
   </Accordion>
 
   <Accordion title="サーバーは接続しますが、ツールが表示されません">
@@ -382,9 +397,9 @@ Claude Code がプロジェクトスコープのサーバーを初めて見る�
   <Accordion title=".mcp.json への変更が有効になりません">
     Claude Code はセッション開始時に `.mcp.json` を読み込みます。ファイルを編集した後、セッションを終了して再開します。
 
-    サーバーがまだ表示されない場合は、`/mcp` を実行し、解析警告を探します。Claude Code は不正な形式のエントリをスキップし、そこに問題のあるフィールドを表示します。
+    サーバーがまだ表示されない場合は、`claude mcp list` を実行し、解析警告を探します。Claude Code は不正な形式のエントリをスキップし、そこに問題のあるフィールドを表示します。
 
-    以前にプロンプトを拒否した場合は、プロジェクト承認をリセットします。
+    以前にプロンプトでサーバーを拒否した場合は、プロジェクト承認をリセットします。
 
     ```bash theme={null}
     claude mcp reset-project-choices
@@ -392,7 +407,7 @@ Claude Code がプロジェクトスコープのサーバーを初めて見る�
   </Accordion>
 
   <Accordion title="OAuth サインインが失敗するか、ブラウザが開きません">
-    `/mcp` を実行し、サーバーを選択して、再度 `Authenticate` を選択します。ブラウザが自動的に開かない場合は、ターミナルに表示される URL をコピーして手動で開きます。固定コールバックポートと事前設定された認証情報については、[リモート MCP サーバーで認証する](/docs/ja/mcp#authenticate-with-remote-mcp-servers)を参照してください。
+    `/mcp` を実行し、サーバーを選択して、再度「`Authenticate`」を選択します。ブラウザが自動的に開かない場合は、ターミナルに表示される URL をコピーして手動で開きます。固定コールバックポートと事前設定された認証情報については、[リモート MCP サーバーで認証する](/docs/ja/mcp#authenticate-with-remote-mcp-servers)を参照してください。
   </Accordion>
 </AccordionGroup>
 
@@ -402,9 +417,9 @@ Claude Code がプロジェクトスコープのサーバーを初めて見る�
 
 1 つのサーバーが接続されたら、MCP が有効にする残りを探索します。
 
-* [Anthropic Directory](/docs/ja/mcp#find-and-build-mcp-servers) で[より多くの MCP サーバーを見つける](/docs/ja/mcp#find-and-build-mcp-servers)
-* インストールスコープを使用して[チームとサーバーを共有する](/docs/ja/mcp#mcp-installation-scopes)
-* [組織の MCP アクセスを管理する](/docs/ja/managed-mcp)（管理設定とポリシーコントロール）
-* [プロンプトで MCP リソースを参照する](/docs/ja/mcp#use-mcp-resources)（@ メンション付き）
+* [Anthropic Directory で MCP サーバーを見つける](/docs/ja/mcp#find-and-build-mcp-servers)
+* [インストールスコープを使用してチームとサーバーを共有する](/docs/ja/mcp#mcp-installation-scopes)
+* [管理設定とポリシーコントロールで組織の MCP アクセスを管理する](/docs/ja/managed-mcp)
+* [@ メンション付きでプロンプトで MCP リソースを参照する](/docs/ja/mcp#use-mcp-resources)
 * [`/` メニューから MCP プロンプトをコマンドとして実行する](/docs/ja/mcp#use-mcp-prompts-as-commands)
 * [MCP SDK を使用して独自のサーバーを構築する](https://modelcontextprotocol.io/quickstart/server)

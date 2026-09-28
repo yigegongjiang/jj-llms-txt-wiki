@@ -139,12 +139,6 @@ Haga clic en **Export all users** para descargar datos de contribución completo
 
 Cuando las métricas de contribución están habilitadas, Claude Code analiza las solicitudes de extracción fusionadas para determinar qué código fue escrito con asistencia de Claude Code. Esto se hace haciendo coincidir la actividad de sesión de Claude Code con el código en cada PR.
 
-<h4 id="tagging-criteria">
-  Criterios de etiquetado
-</h4>
-
-Los PRs se etiquetan como "with Claude Code" si contienen al menos una línea de código escrita durante una sesión de Claude Code. El sistema utiliza coincidencia conservadora: solo el código donde hay alta confianza en la participación de Claude Code se cuenta como asistido.
-
 <h4 id="attribution-process">
   Proceso de atribución
 </h4>

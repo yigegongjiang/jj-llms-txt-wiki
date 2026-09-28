@@ -8,7 +8,7 @@
 
 Halaman ini untuk insinyur individual yang sudah menggunakan Claude Code dan ingin membantu tim mereka mengadopsinya. Ini mencakup apa yang harus dibagikan, cara menjawab pertanyaan yang akan Anda terima, playbook tiga puluh hari, dan respons terhadap kekhawatiran umum.
 
-Adopsi alat pengembang jarang terjadi karena pengumuman peluncuran. Ini terjadi karena seseorang di tim mulai menggunakan alat dengan baik, membicarakannya secara terbuka, dan memudahkan orang lain untuk mengikuti. Pekerjaan yang Anda lakukan sebagai champion memiliki efek yang tidak sebanding: setiap contoh yang Anda bagikan mempersingkat kurva pembelajaran bagi insinyur yang datang setelah Anda, dan setiap pertanyaan yang Anda jawab secara publik mengubah pengalaman satu orang menjadi sesuatu yang dapat dibangun oleh seluruh tim. Anda bertindak sebagai pengganda untuk tim Anda, bukan help desk, dan panduan ini dirancang untuk menjaga peran tetap berkelanjutan berdasarkan istilah-istilah tersebut.
+Adopsi alat pengembang jarang terjadi karena pengumuman peluncuran. Ini terjadi karena seseorang di tim mulai menggunakan alat dengan baik, membicarakannya secara terbuka, dan memudahkan orang lain untuk mengikuti. Pekerjaan yang Anda lakukan sebagai champion memiliki efek yang tidak sebanding: setiap contoh yang Anda bagikan mempersingkat kurva pembelajaran bagi insinyur yang datang setelah Anda, dan setiap pertanyaan yang Anda jawab secara publik mengubah pengalaman satu orang menjadi sesuatu yang dapat dibangun oleh seluruh tim.
 
 <h2 id="the-champion-role">
   Peran champion
@@ -21,8 +21,6 @@ Peran ini terdiri dari tiga perilaku yang saling memperkuat.
 | Bagikan apa yang Anda temukan    | Posting prompt, screenshot, dan kemenangan kecil dari pekerjaan Anda sendiri di tempat yang sudah dibaca tim Anda, seperti saluran teknik, thread standup, atau deskripsi pull-request.    | Contoh yang diambil dari codebase Anda sendiri lebih persuasif daripada dokumentasi eksternal apa pun, karena rekan kerja dapat melihat dengan tepat bagaimana alat ini berlaku pada masalah yang mereka bagikan dengan Anda. |
 | Jadilah orang yang ditanya orang | Ketika rekan kerja bertanya bagaimana Anda mencapai sesuatu, berikan prompt sebenarnya yang Anda gunakan sehingga mereka dapat menerapkannya langsung ke tugas mereka sendiri.             | Contoh konkret yang dapat dijalankan menghilangkan kesenjangan antara rasa ingin tahu dan penggunaan pertama yang berhasil, yang merupakan tempat sebagian besar upaya adopsi terhenti.                                       |
 | Perluas lingkaran                | Tetapkan sejumlah kecil kebiasaan berulang yang ringan, seperti saluran khusus atau thread mingguan, sehingga momentum terus berlanjut bahkan ketika perhatian Anda berada di tempat lain. | Adopsi yang bergantung pada satu orang rapuh. Adopsi yang dibawa oleh kebiasaan bersama terus berkembang dengan sendirinya.                                                                                                   |
-
-Sebagian besar dari ini cocok secara alami dalam pekerjaan yang sudah Anda lakukan. Perbedaannya adalah sejumlah kecil niat tambahan tentang di mana penemuan Anda diposting dan bagaimana jawaban Anda menyebar.
 
 <h3 id="what-this-should-cost-you">
   Apa yang seharusnya ini biayai Anda
@@ -139,7 +137,7 @@ Respons seperti "Coba plan mode, tekan `Shift+Tab` sampai Anda melihatnya" lebih
   Perluas lingkaran
 </h2>
 
-Tujuannya bukan untuk membangun program atau memiliki peluncuran. Ini adalah untuk membangun sejumlah kecil kebiasaan ringan yang memungkinkan momentum terus berlanjut setelah Anda berhenti secara aktif mendorong. Ketika pertanyaan di saluran dijawab oleh orang selain Anda, peran telah melakukan tugasnya.
+Tujuannya adalah untuk membangun sejumlah kecil kebiasaan ringan yang memungkinkan momentum terus berlanjut setelah Anda berhenti secara aktif mendorong. Anda tidak perlu membangun program atau memiliki peluncuran. Ketika pertanyaan di saluran dijawab oleh orang selain Anda, peran telah melakukan tugasnya.
 
 <h3 id="patterns-that-tend-to-work">
   Pola yang cenderung berfungsi
@@ -200,7 +198,7 @@ Skeptisisme yang sehat diharapkan; insinyur harus berhati-hati tentang alat yang
 
 | Kekhawatiran                                               | Respons yang disarankan                                                                                                                                                                                                                     | Bukti untuk ditawarkan                                             |
 | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
-| "Saya lebih cepat tanpanya."                               | Itu mungkin benar untuk kode yang biasanya ditulis orang. Sarankan mencobanya pada pekerjaan yang mereka cenderung hindari: file legacy, layanan yang tidak dikenal, atau test scaffolding, di mana leverage tertinggi.                     | Waktu satu tugas membosankan kedua cara dan bandingkan.            |
+| "Saya lebih cepat tanpanya."                               | Itu mungkin benar untuk kode yang biasanya ditulis orang. Sarankan mencobanya pada pekerjaan yang mereka cenderung hindari: file legacy, layanan yang tidak dikenal, atau test scaffolding, di mana itu membantu paling banyak.             | Waktu satu tugas membosankan kedua cara dan bandingkan.            |
 | "Saya tidak mempercayai AI untuk menyentuh kode produksi." | Setuju bahwa tidak ada perubahan yang harus mendarat tanpa dibaca. Plan mode dikombinasikan dengan review diff normal berarti tidak ada yang diterapkan yang belum diperiksa oleh insinyur, standar yang sama seperti pull request apa pun. | Demonstrasikan plan mode pada file nyata.                          |
 | "Itu akan membuat insinyur junior lebih lemah."            | Digunakan dengan baik, itu adalah penjelasan yang efektif. Dorong insinyur junior untuk meminta Claude menjelaskan file dan situs panggilannya sebelum meminta untuk mengubah apa pun.                                                      | Jalankan "Jelaskan @file dan di mana itu dipanggil dari" bersama.  |
 | "Saya mencobanya sekali dan itu mengalami halusinasi."     | Ini biasanya masalah konteks daripada masalah model. @-mentioning file yang relevan, menjalankan `/init`, dan memberikan output kesalahan aktual biasanya menyelesaikannya.                                                                 | Jalankan kembali prompt asli mereka dengan konteks `@` yang tepat. |

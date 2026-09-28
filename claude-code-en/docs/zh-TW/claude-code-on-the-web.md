@@ -2,31 +2,49 @@
 > Fetch the complete documentation index at: https://code.claude.com/docs/llms.txt
 > Use this file to discover all available pages before exploring further.
 
-# 在網頁上使用 Claude Code
+# 在雲端使用 Claude Code
 
-> 配置雲端環境、設定指令碼、網路存取和 Docker 在 Anthropic 的沙箱中。使用 `--cloud` 和 `--teleport` 在網頁和終端之間移動工作階段。
+> 從您的瀏覽器、手機、桌面應用程式或終端在雲端執行 Claude Code 工作階段，使用 --cloud 和 --teleport 移動工作階段，以及自動修復拉取請求。
 
 <Note>
-  Claude Code 網頁版目前處於研究預覽階段，適用於 Pro、Max 和 Team 使用者，以及具有高級席位或 Chat + Claude Code 席位的 Enterprise 使用者。
+  雲端工作階段適用於 Pro、Max 和 Team 方案，以及具有高級席位或 Chat + Claude Code 席位的 Enterprise 使用者。
 </Note>
 
-Claude Code 網頁版在 [claude.ai/code](https://claude.ai/code) 上的 Anthropic 管理的雲端基礎設施上執行任務。工作階段即使在您關閉瀏覽器後仍會保留，您可以從 Claude 行動應用程式監控它們。
+雲端工作階段是在雲端基礎設施上執行的 Claude Code 工作階段，而不是在您的機器上執行。預設情況下，它在 Anthropic 管理的基礎設施上執行，或在您的組織的[自託管環境](/docs/zh-TW/self-hosted-environments)上執行（如果路由到那裡）。工作階段在您關閉筆記型電腦後仍會繼續執行，您可以從任何裝置檢查或控制它。
+
+您可以從以下任何介面啟動雲端工作階段：
+
+* **瀏覽器**：[claude.ai/code](https://claude.ai/code)，也稱為網頁版 Claude Code
+* **行動裝置**：[Claude 應用程式](/docs/zh-TW/mobile)中的 **Code** 標籤
+* **桌面應用程式**：當您[啟動工作階段](/docs/zh-TW/desktop#run-long-running-tasks-in-the-cloud)時，選擇 **Cloud** 而不是 **Local**
+* **終端**：[`claude --cloud`](#from-terminal-to-cloud)
+* **例行工作**：[排程和觸發的執行](/docs/zh-TW/routines)每次都作為雲端工作階段執行
+
+若要讓 Claude 為一項工作啟動並追蹤許多雲端工作階段，請使用[專案](/docs/zh-TW/claude-projects)。在您的終端、IDE 或選擇了 **Local** 的桌面應用程式中的工作階段在您自己的機器上執行。若要從您的手機或瀏覽器控制其中一個本機工作階段，請使用[遠端控制](/docs/zh-TW/remote-control)。
 
 <Tip>
-  初次使用 Claude Code 網頁版？從[開始使用](/docs/zh-TW/web-quickstart)開始，連接您的 GitHub 帳戶並提交您的第一個任務。
+  初次使用雲端工作階段？從[開始使用](/docs/zh-TW/web-quickstart)開始，連接您的 GitHub 帳戶並提交您的第一個任務。
 </Tip>
 
 本頁涵蓋：
 
+* [雲端環境](#cloud-environments)：工作階段執行的位置，以及如何配置該位置
 * [GitHub 驗證選項](#github-authentication-options)：連接 GitHub 的兩種方式
-* [雲端環境](#the-cloud-environment)：哪些配置會保留、安裝了哪些工具以及如何配置環境
-* [設定指令碼](#setup-scripts)和依賴管理
-* [網路存取](#network-access)：級別、代理和預設允許清單
-* [在網頁和終端之間移動任務](#move-tasks-between-web-and-terminal)，使用 `--cloud` 和 `--teleport`
-* [使用工作階段](#work-with-sessions)：檢查、共享、封存、刪除
+* [在終端和雲端之間移動任務](#move-tasks-between-terminal-and-cloud)，使用 `--cloud` 和 `--teleport`
+* [使用工作階段](#work-with-sessions)：權限模式、檢查、共享、封存、刪除
 * [自動修復拉取請求](#auto-fix-pull-requests)：自動回應 CI 失敗和審查評論
 * [安全性和隔離](#security-and-isolation)：工作階段如何隔離
 * [限制](#limitations)：速率限制和平台限制
+
+<h2 id="cloud-environments">
+  雲端環境
+</h2>
+
+每個雲端工作階段都在一個[雲端環境](/docs/zh-TW/cloud-environments)中執行，這是一個已保存的設定，控制網路存取、環境變數和設定指令碼。如果您還沒有環境，上線會設定一個**預設**環境，具有[**信任**網路存取](/docs/zh-TW/cloud-environments#access-levels)，要麼為您建立它，要麼要求您建立它。請參閱[預設環境](/docs/zh-TW/cloud-environments#the-default-environment)，了解在您的計畫上會發生哪種情況，以及當您有多個環境時工作階段如何選擇環境。
+
+相同的環境適用於您啟動雲端工作階段的任何地方：網頁、終端、[Claude Tag](https://claude.com/docs/claude-tag/overview)、[例行工作](/docs/zh-TW/routines)，以及行動和 Desktop 應用程式。Claude Tag 頻道工作階段僅使用組織級別環境，要麼是[共享環境](/docs/zh-TW/cloud-environments#organization-shared-environments)，要麼是[自託管環境](/docs/zh-TW/self-hosted-environments)。
+
+請參閱[設定雲端環境](/docs/zh-TW/cloud-environments)以變更環境允許的內容、設定變數或新增設定指令碼，以及[已安裝的工具](/docs/zh-TW/cloud-environments#installed-tools)以了解工作階段在沒有任何設定的情況下包含的內容。
 
 <h2 id="github-authentication-options">
   GitHub 驗證選項
@@ -34,631 +52,35 @@ Claude Code 網頁版在 [claude.ai/code](https://claude.ai/code) 上的 Anthrop
 
 雲端工作階段需要存取您的 GitHub 儲存庫以複製程式碼和推送分支。您可以通過兩種方式授予存取權限：
 
-| 方法               | 運作方式                                                     | 最適合                                        |
-| :--------------- | :------------------------------------------------------- | :----------------------------------------- |
-| **GitHub App**   | 在[網頁上線](/docs/zh-TW/web-quickstart)期間授權 Claude GitHub App。    | 瀏覽器上線；想要[自動修復](#auto-fix-pull-requests)的團隊 |
-| **`/web-setup`** | 在您的終端中執行 `/web-setup` 以將您的本機 `gh` CLI 令牌同步到您的 Claude 帳戶。 | 已經使用 `gh` 的個人開發者                           |
+| 方法               | 運作方式                                                    | 工作階段可以存取的儲存庫                                   | 最適合                                        |
+| :--------------- | :------------------------------------------------------ | :--------------------------------------------- | :----------------------------------------- |
+| **GitHub App**   | 在[網頁上線](/docs/zh-TW/web-quickstart)期間授權 Claude GitHub App    | 任何公開儲存庫，以及安裝了 Claude GitHub App 的私人儲存庫         | 瀏覽器上線；想要[自動修復](#auto-fix-pull-requests)的團隊 |
+| **`/web-setup`** | 在您的終端中執行 `/web-setup` 以將您的本機 `gh` CLI 令牌傳送到您的 Claude 帳戶 | 您的 `gh` 令牌可以存取的任何儲存庫，無論是否安裝了 Claude GitHub App | 已經使用 `gh` 的個人開發者                           |
 
-<Note>
-  使用任一方法，雲端工作階段都可以存取連接的 GitHub 帳戶可以看到的任何儲存庫，而不僅僅是安裝了 Claude GitHub App 的儲存庫。App 安裝啟用 PR webhooks 以進行[自動修復](#auto-fix-pull-requests)；它不是工作階段級別的存取控制。若要限制您的團隊可以從雲端工作階段存取的儲存庫，請在 GitHub 本身上限制存取，例如通過限制連接的 GitHub 帳戶的團隊或儲存庫成員資格。
-</Note>
+在儲存庫上安裝 Claude GitHub App 也會為其中的提取請求啟用[自動修復](#auto-fix-pull-requests)。
 
-任一方法都可以。[`/schedule`](/docs/zh-TW/routines)檢查任一形式的存取，如果都未配置，會提示您執行 `/web-setup`。有關 `/web-setup` 的逐步說明，請參閱[從您的終端連接](/docs/zh-TW/web-quickstart#connect-from-your-terminal)。
+[專案](/docs/zh-TW/claude-projects)中的執行緒需要在它們複製的每個儲存庫上安裝 Claude GitHub App，無論您使用哪種方法連接。請參閱[設定 GitHub 存取](/docs/zh-TW/claude-projects#set-up-github-access)。
 
-GitHub App 是[自動修復](#auto-fix-pull-requests)所必需的，它使用該應用程式接收 PR webhooks。如果您使用 `/web-setup` 連接，稍後想要自動修復，請在這些儲存庫上安裝該應用程式。
+有關 `/schedule` 如何在建立例行工作之前檢查儲存庫存取，請參閱[儲存庫和分支權限](/docs/zh-TW/routines#repositories-and-branch-permissions)。有關 `/web-setup` 的逐步說明，請參閱[從您的終端連接](/docs/zh-TW/web-quickstart#connect-from-your-terminal)，包括 `/web-setup` 儲存的內容以及如何移除它。
 
-Team 和 Enterprise 管理員可以在 [claude.ai/admin-settings/claude-code](https://claude.ai/admin-settings/claude-code) 使用快速網頁設定切換來禁用 `/web-setup`。
+快速網頁設定是一個組織設定，讓成員使用 `/web-setup` 連接 GitHub，在瀏覽器上線期間跳過 Claude GitHub App 安裝提示，並讓瀏覽器上線為他們建立[**預設**環境](/docs/zh-TW/cloud-environments#the-default-environment)，而不是顯示環境表單。在 Team 和 Enterprise 計畫上，預設情況下它是關閉的，這會隱藏 `/web-setup`。[擁有者](/docs/zh-TW/server-managed-settings#access-control)可以在 [**管理設定 > Claude Code**](https://claude.ai/admin-settings/claude-code) 使用**快速網頁設定**切換來開啟它。
 
 <Note>
   啟用[零資料保留](/docs/zh-TW/zero-data-retention)的組織無法使用 `/web-setup` 或其他雲端工作階段功能。
 </Note>
 
-<h2 id="the-cloud-environment">
-  雲端環境
-</h2>
-
-每個工作階段在一個新的 Anthropic 管理的 VM 中執行，其中您的儲存庫已複製。本節涵蓋工作階段啟動時可用的內容以及如何自訂它。
-
-<h3 id="what’s-available-in-cloud-sessions">
-  雲端工作階段中可用的內容
-</h3>
-
-雲端工作階段從您的儲存庫的新複製開始。任何提交到儲存庫的內容都可用。您只在自己的機器上安裝或配置的任何內容都不可用。您的組織的政策通過[伺服器管理的設定](/docs/zh-TW/server-managed-settings)單獨到達。
-
-|                                                                     | 在雲端工作階段中可用 | 原因                                                                                                                                                                        |
-| :------------------------------------------------------------------ | :--------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 您的儲存庫的 `CLAUDE.md`                                                  | 是          | 複製的一部分                                                                                                                                                                    |
-| 您的儲存庫的 `.claude/settings.json` hooks                                | 是          | 複製的一部分                                                                                                                                                                    |
-| 您的儲存庫的 `.mcp.json` MCP 伺服器                                          | 是          | 複製的一部分                                                                                                                                                                    |
-| 您的儲存庫的 `.claude/rules/`                                             | 是          | 複製的一部分                                                                                                                                                                    |
-| 您的儲存庫的 `.claude/skills/`、`.claude/agents/`、`.claude/commands/`      | 是          | 複製的一部分                                                                                                                                                                    |
-| 在 `.claude/settings.json` 中聲明的 Plugins                              | 是          | 在工作階段啟動時從您聲明的[市場](/docs/zh-TW/plugin-marketplaces)安裝。需要網路存取才能到達市場來源                                                                                                            |
-| 您的組織的[伺服器管理的設定](/docs/zh-TW/server-managed-settings)                     | 是          | 在工作階段啟動時從 Anthropic 的伺服器取得。請參閱[表面涵蓋範圍](/docs/zh-TW/model-config#surface-coverage)以了解 `availableModels` 如何在雲端工作階段中強制執行。通過 MDM 或管理設定檔案部署到您的裝置的設定不適用，因為工作階段在 Anthropic 管理的 VM 上執行 |
-| 您的使用者 `~/.claude/CLAUDE.md`                                         | 否          | 位於您的機器上，不在儲存庫中                                                                                                                                                            |
-| 您的使用者 `~/.claude/skills/`、`~/.claude/agents/`、`~/.claude/commands/` | 否          | 位於您的機器上，不在儲存庫中。改為將它們提交到儲存庫的 `.claude/` 目錄。您在 claude.ai 上啟用的技能會自動載入到雲端工作階段中                                                                                                |
-| 僅在您的使用者設定中啟用的 Plugins                                               | 否          | 使用者範圍的 `enabledPlugins` 位於 `~/.claude/settings.json`。改為在儲存庫的 `.claude/settings.json` 中聲明它們                                                                                |
-| 您使用 `claude mcp add` 新增的 MCP 伺服器                                    | 否          | 這些寫入您的本機使用者配置，不是儲存庫。改為在[`.mcp.json`](/docs/zh-TW/mcp#project-scope)中聲明伺服器                                                                                                      |
-| 靜態 API 令牌和認證                                                        | 否          | 尚不存在專用的秘密存儲。請參閱下文                                                                                                                                                         |
-| 互動式驗證，如 AWS SSO                                                     | 否          | 不支援。SSO 需要無法在雲端工作階段中執行的基於瀏覽器的登入                                                                                                                                           |
-
-若要在雲端工作階段中提供您自己的配置，請將其提交到儲存庫；組織政策通過[伺服器管理的設定](/docs/zh-TW/server-managed-settings)單獨到達。
-
-尚不可用專用的秘密存儲。環境變數和設定指令碼都存儲在環境配置中，對任何可以編輯該環境的人可見。如果您需要雲端工作階段中的秘密，請將它們新增為環境變數，並考慮該可見性。
-
-<h3 id="installed-tools">
-  已安裝的工具
-</h3>
-
-雲端工作階段預先安裝了常見的語言執行時、建置工具和資料庫。下表按類別總結了包含的內容。
-
-| 類別            | 包含                                                                    |
-| :------------ | :-------------------------------------------------------------------- |
-| **Python**    | Python 3.x，包含 pip、poetry、uv、black、mypy、pytest、ruff                    |
-| **Node.js**   | 20、21 和 22（通過 nvm），包含 npm、yarn、pnpm、bun¹、eslint、prettier、chromedriver |
-| **Ruby**      | 3.1、3.2、3.3，包含 gem、bundler、rbenv                                      |
-| **PHP**       | 8.4，包含 Composer                                                       |
-| **Java**      | OpenJDK 21，包含 Maven 和 Gradle                                          |
-| **Go**        | 最新穩定版本，包含模組支援                                                         |
-| **Rust**      | rustc 和 cargo                                                         |
-| **C/C++**     | GCC、Clang、cmake、ninja、conan                                           |
-| **Docker**    | docker、dockerd、docker compose                                         |
-| **Databases** | PostgreSQL 16、Redis 7.0                                               |
-| **Utilities** | git、jq、yq、ripgrep、tmux、vim、nano                                       |
-
-¹ Bun 已安裝，但在套件取得時有已知的[代理相容性問題](#install-dependencies-with-a-sessionstart-hook)。
-
-如需確切版本，請要求 Claude 在雲端工作階段中執行 `check-tools`。此命令僅存在於雲端工作階段中。
-
-<h3 id="work-with-github-issues-and-pull-requests">
-  使用 GitHub 問題和拉取請求
-</h3>
-
-雲端工作階段包含內建的 GitHub 工具，讓 Claude 可以讀取問題、列出拉取請求、取得差異和發佈評論，無需任何設定。這些工具通過 [GitHub 代理](#github-proxy)進行驗證，使用您在 [GitHub 驗證選項](#github-authentication-options)下配置的任何方法，因此您的令牌永遠不會進入容器。
-
-您可以在[環境設定](#configure-your-environment)中自行設定 `GH_TOKEN` 或 `GITHUB_TOKEN`，或者兩者都不設定，讓 [GitHub 代理](#github-proxy)為您驗證：
-
-* 如果您設定了令牌，它會原封不動地傳遞到容器，因此 `gh` 和您的指令碼直接使用它。
-* 如果您都不設定，容器會將兩個變數都設定為佔位符字串 `proxy-injected`，代理會在出站 GitHub 請求上替換您的真實認證。`gh` 無需您自己的令牌即可工作，但直接讀取 `GITHUB_TOKEN` 的指令碼會獲得佔位符，而不是可用的令牌。
-
-若要檢查哪種情況適用於您的工作階段，請要求 Claude 執行 `echo $GH_TOKEN`。
-
-`gh` CLI 未預先安裝。如果您需要內建工具不涵蓋的 `gh` 命令，例如 `gh release` 或 `gh workflow run`，請自行安裝和驗證：
-
-<Steps>
-  <Step title="在您的設定指令碼中安裝 gh">
-    將 `apt update && apt install -y gh` 新增到您的[設定指令碼](#setup-scripts)。
-  </Step>
-
-  <Step title="如果代理未處理驗證，請提供令牌">
-    如果 `echo $GH_TOKEN` 列印 `proxy-injected`，[GitHub 代理](#github-proxy)為您驗證 `gh`，此步驟不必要。否則，將 `GH_TOKEN` 環境變數新增到您的[環境設定](#configure-your-environment)，其中包含 GitHub 個人存取令牌。`gh` 會自動讀取 `GH_TOKEN`，因此不需要 `gh auth login` 步驟。
-  </Step>
-</Steps>
-
-<h3 id="link-output-back-to-the-session">
-  將輸出連結回工作階段
-</h3>
-
-每個雲端工作階段在 claude.ai 上都有一個成績單 URL，工作階段可以從 `CLAUDE_CODE_REMOTE_SESSION_ID` 環境變數讀取自己的 ID。使用此在 PR 正文、提交訊息、Slack 貼文或生成的報告中放置可追蹤的連結，以便審查者可以開啟產生它們的執行。
-
-自 v2.1.179 起，Claude 在網頁工作階段中建立的提交包括 `Claude-Session: <url>` git 預告片，PR 正文包括工作階段 URL 在其自己的行上。從 v2.1.182 起，設定 [`attribution.sessionUrl`](/docs/zh-TW/settings#attribution-settings) 為 `false` 以省略預告片和 PR 正文連結。
-
-若要在提交或 PR 以外的其他內容中包括工作階段連結，例如 Claude 發佈的 Slack 訊息或它寫入的報告檔案，請讓 Claude 執行以下命令並使用其輸出。該命令將環境變數值中的 `cse_` 前綴轉換為成績單 URL 期望的 `session_` 前綴：
-
-```bash theme={null}
-echo "https://claude.ai/code/${CLAUDE_CODE_REMOTE_SESSION_ID/#cse_/session_}"
-```
-
-<h3 id="run-tests-start-services-and-add-packages">
-  執行測試、啟動服務和新增套件
-</h3>
-
-Claude 執行測試作為處理任務的一部分。在您的提示中要求它，例如「修復 `tests/` 中的失敗測試」或「在每次變更後執行 pytest」。測試執行器（如 pytest、jest 和 cargo test）開箱即用，因為它們已預先安裝。
-
-PostgreSQL 和 Redis 已預先安裝，但預設不執行。在工作階段期間要求 Claude 啟動每一個：
-
-```bash theme={null}
-service postgresql start
-```
-
-```bash theme={null}
-service redis-server start
-```
-
-Docker 可用於執行容器化服務。要求 Claude 執行 `docker compose up` 以啟動您的專案服務。拉取映像的網路存取遵循您的環境的[存取級別](#access-levels)，[信任預設值](#default-allowed-domains)包括 Docker Hub 和其他常見登錄。
-
-如果您的映像很大或拉取速度很慢，請將 `docker compose pull` 或 `docker compose build` 新增到您的[設定指令碼](#setup-scripts)。拉取的映像會保存在[快取環境](#environment-caching)中，因此每個新工作階段都已在磁碟上有它們。快取僅存儲檔案，不存儲執行中的程序，因此 Claude 仍然在每個工作階段啟動容器。
-
-若要新增未預先安裝的套件，請使用[設定指令碼](#setup-scripts)。指令碼的輸出會被[快取](#environment-caching)，因此您在那裡安裝的套件在每個工作階段開始時都可用，無需每次重新安裝。您也可以要求 Claude 在工作階段期間安裝套件，但這些安裝不會在工作階段之間保留。
-
-<h3 id="resource-limits">
-  資源限制
-</h3>
-
-雲端工作階段執行時具有可能隨時間變化的近似資源上限：
-
-* 4 vCPU
-* 16 GB RAM
-* 30 GB 磁碟
-
-需要明顯更多記憶體的任務，例如大型建置工作或記憶體密集型測試，可能會失敗或被終止。對於超出這些限制的工作負載，請使用[遠端控制](/docs/zh-TW/remote-control)在您自己的硬體上執行 Claude Code。
-
-<h3 id="configure-your-environment">
-  配置您的環境
-</h3>
-
-環境控制[網路存取](#network-access)、環境變數和在工作階段啟動前執行的[設定指令碼](#setup-scripts)。有關不需要任何配置即可使用的內容，請參閱[已安裝的工具](#installed-tools)。您可以從網頁介面或終端管理環境：
-
-| 操作                 | 方式                                                                                |
-| :----------------- | :-------------------------------------------------------------------------------- |
-| 新增環境               | 選擇目前環境以開啟選擇器，然後選擇**新增環境**。對話框包括名稱、網路存取級別、環境變數和設定指令碼。                              |
-| 編輯環境               | 選擇顯示目前環境名稱的雲端圖示以開啟選擇器，將滑鼠懸停在環境上，然後按一下右側出現的設定圖示。                                   |
-| 封存環境               | 開啟環境進行編輯並選擇**封存**。封存的環境隱藏在選擇器中，但現有工作階段繼續執行。                                       |
-| 為 CLI 雲端工作階段設定預設環境 | 在您的終端中執行 `/remote-env`。如果您有單一環境，此命令顯示您目前的配置。`/remote-env` 僅選擇預設值；從網頁介面新增、編輯和封存環境。 |
-
-環境變數使用 `.env` 格式，每行一個 `KEY=value` 對。不要用引號包裝值，因為引號會存儲為值的一部分。此範例定義三個變數：
-
-```text theme={null}
-NODE_ENV=development
-LOG_LEVEL=debug
-DATABASE_URL=postgres://localhost:5432/myapp
-```
-
-<h3 id="organization-shared-environments">
-  組織共享環境
-</h3>
-
-Team 和 Enterprise 計畫上的擁有者和管理員可以建立與組織的每個成員共享的雲端環境。共享環境在每個成員的環境選擇器中與他們的個人環境一起出現，因此團隊可以標準化一個配置，而不是每個成員重新建立它。
-
-從[管理設定](https://claude.ai/admin-settings)中的**雲端環境**頁面管理共享環境。從那裡您可以：
-
-* 建立、編輯和封存共享環境。每個環境都有與個人環境相同的欄位：名稱、[網路存取級別](#access-levels)、`.env` 格式的[環境變數](#configure-your-environment)和[設定指令碼](#setup-scripts)。
-* 為組織設定預設環境。
-
-共享環境中的值到達該環境中每個成員的工作階段。與個人環境一樣，共享環境沒有專用的秘密存儲，因此不要包括秘密。
-
-<h2 id="setup-scripts">
-  設定指令碼
-</h2>
-
-設定指令碼是一個 Bash 指令碼，在新的雲端工作階段啟動時執行，在 Claude Code 啟動之前。使用設定指令碼來安裝依賴項、配置工具或取得工作階段需要但未預先安裝的任何內容。
-
-指令碼在 Ubuntu 24.04 上以 root 身份執行，因此 `apt install` 和大多數語言套件管理器都可以工作。
-
-若要新增設定指令碼，請開啟環境設定對話框並在**設定指令碼**欄位中輸入您的指令碼。
-
-此範例安裝 `gh` CLI，它未預先安裝：
-
-```bash theme={null}
-#!/bin/bash
-apt update && apt install -y gh
-```
-
-如果指令碼以非零值退出，工作階段將無法啟動。將 `|| true` 附加到非關鍵命令以避免在不穩定的安裝失敗時阻止工作階段。
-
-保持指令碼的總執行時間在大約五分鐘以下，以便[環境快取](#environment-caching)可以建置。使用 `&` 和 `wait` 並行執行獨立安裝。如果單一下載無法在五分鐘限制內完成，請將其移動到在背景啟動它的 [SessionStart hook](#setup-scripts-vs-sessionstart-hooks)。
-
-<Note>
-  安裝套件的設定指令碼需要網路存取才能到達登錄。預設**信任**網路存取允許連接到[常見套件登錄](#default-allowed-domains)，包括 npm、PyPI、RubyGems 和 crates.io。如果您的環境使用**無**網路存取，指令碼將無法安裝套件。
-</Note>
-
-<h3 id="environment-caching">
-  環境快取
-</h3>
-
-設定指令碼在您第一次在環境中啟動工作階段時執行。完成後，Anthropic 會快照檔案系統並將該快照重新用作後續工作階段的起點。新工作階段以您的依賴項、工具和 Docker 映像已在磁碟上開始，設定指令碼步驟被跳過。這即使在指令碼安裝大型工具鏈或拉取容器映像時也能保持啟動速度快。
-
-快取捕獲檔案，不捕獲執行中的程序。設定指令碼寫入磁碟的任何內容都會保留。它啟動的服務或容器不會，因此通過要求 Claude 或使用 [SessionStart hook](#setup-scripts-vs-sessionstart-hooks) 按工作階段啟動這些。
-
-當您更改環境的設定指令碼或允許的網路主機時，以及當快取在大約七天後達到其過期時間時，設定指令碼會再次執行以重建快取。恢復現有工作階段永遠不會重新執行設定指令碼。
-
-您不需要自行啟用快取或管理快照。
-
-<h3 id="setup-scripts-vs-sessionstart-hooks">
-  設定指令碼與 SessionStart hooks
-</h3>
-
-使用設定指令碼來安裝雲端需要但您的筆記型電腦已有的東西，例如語言執行時或 CLI 工具。使用 [SessionStart hook](/docs/zh-TW/hooks#sessionstart) 進行應在任何地方執行的專案設定，雲端和本機，例如 `npm install`。
-
-兩者都在工作階段開始時執行，但它們屬於不同的位置：
-
-|     | 設定指令碼                                               | SessionStart hooks                 |
-| --- | --------------------------------------------------- | ---------------------------------- |
-| 附加到 | 雲端環境                                                | 您的儲存庫                              |
-| 配置在 | 雲端環境 UI                                             | 您的儲存庫中的 `.claude/settings.json`    |
-| 執行  | 在 Claude Code 啟動之前，當沒有[快取環境](#environment-caching)時 | 在 Claude Code 啟動之後，在每個工作階段上，包括已恢復的 |
-| 範圍  | 僅雲端環境                                               | 本機和雲端                              |
-
-SessionStart hooks 也可以在本機使用者級別 `~/.claude/settings.json` 中定義，但使用者級別設定不會轉移到雲端工作階段。在雲端中，hooks 來自儲存庫和您組織的[伺服器管理設定](/docs/zh-TW/server-managed-settings)。
-
-<h3 id="install-dependencies-with-a-sessionstart-hook">
-  使用 SessionStart hook 安裝依賴項
-</h3>
-
-若要僅在雲端工作階段中安裝依賴項，請將 SessionStart hook 新增到您的儲存庫的 `.claude/settings.json`：
-
-```json theme={null}
-{
-  "hooks": {
-    "SessionStart": [
-      {
-        "matcher": "startup|resume",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/scripts/install_pkgs.sh"
-          }
-        ]
-      }
-    ]
-  }
-}
-```
-
-在 `scripts/install_pkgs.sh` 建立指令碼並使用 `chmod +x` 使其可執行。`CLAUDE_CODE_REMOTE` 環境變數在雲端工作階段中設定為 `true`，因此您可以使用它來跳過本機執行：
-
-```bash theme={null}
-#!/bin/bash
-
-if [ "$CLAUDE_CODE_REMOTE" != "true" ]; then
-  exit 0
-fi
-
-npm install
-pip install -r requirements.txt
-exit 0
-```
-
-SessionStart hooks 在雲端工作階段中有一些限制：
-
-* **無雲端專用範圍**：hooks 在本機和雲端工作階段中執行。若要跳過本機執行，請檢查上面所示的 `CLAUDE_CODE_REMOTE` 環境變數。
-* **需要網路存取**：安裝命令需要到達套件登錄。如果您的環境使用**無**網路存取，這些 hooks 會失敗。[**信任**下的預設允許清單](#default-allowed-domains)涵蓋 npm、PyPI、RubyGems 和 crates.io。
-* **代理相容性**：所有出站流量都通過[安全代理](#security-proxy)。某些套件管理器無法與此代理正確配合使用。Bun 是一個已知的例子。
-* **新增啟動延遲**：hooks 在每次工作階段啟動或恢復時執行，不像設定指令碼受益於[環境快取](#environment-caching)。通過在重新安裝之前檢查依賴項是否已存在來保持安裝指令碼快速。
-
-若要為後續 Bash 命令保留環境變數，請寫入 `$CLAUDE_ENV_FILE` 處的檔案。有關詳細資訊，請參閱 [SessionStart hooks](/docs/zh-TW/hooks#sessionstart)。
-
-尚不支援使用您自己的 Docker 映像替換基礎映像。使用設定指令碼在[提供的映像](#installed-tools)上安裝您需要的內容，或使用 `docker compose` 將您的映像作為容器與 Claude 一起執行。
-
-<h2 id="network-access">
-  網路存取
-</h2>
-
-網路存取控制來自雲端環境的出站連接。每個環境指定一個存取級別，您可以使用自訂允許的域擴展它。預設值為**信任**，允許套件登錄和其他[允許清單域](#default-allowed-domains)。
-
-若要更改環境的網路存取，請[開啟它進行編輯](#configure-your-environment)並在對話框中使用**網路存取**選擇器。沒有單獨的環境頁面。雲端圖示出現在您啟動雲端工作階段或配置[例行工作](/docs/zh-TW/routines#environments-and-network-access)的任何地方。
-
-<Note>
-  MCP 連接器流量通過 Anthropic 的伺服器路由，因此您在工作階段或例行工作上啟用的連接器無需將其主機新增到**允許的域**即可工作。連接器按工作階段或按例行工作配置；移除您不需要的任何連接器以限制 Claude 可以到達的工具。這依賴於[安全性和隔離](#security-and-isolation)下提到的相同 Anthropic 綁定通道。
-</Note>
-
-<h3 id="access-levels">
-  存取級別
-</h3>
-
-在建立或編輯環境時選擇存取級別：
-
-| 級別     | 出站連接                                                  |
-| :----- | :---------------------------------------------------- |
-| **無**  | 無出站網路存取                                               |
-| **信任** | [允許清單域](#default-allowed-domains)僅：套件登錄、GitHub、雲端 SDK |
-| **完全** | 任何域                                                   |
-| **自訂** | 您自己的允許清單，可選地包括預設值                                     |
-
-GitHub 操作使用[單獨的代理](#github-proxy)，獨立於此設定。
-
-<h3 id="allow-specific-domains">
-  允許特定域
-</h3>
-
-若要允許不在信任清單中的域，請在環境的網路存取設定中選擇**自訂**。出現**允許的域**欄位。每行輸入一個域：
-
-```text theme={null}
-api.example.com
-*.internal.example.com
-registry.example.com
-```
-
-使用 `*.` 進行萬用字元子域匹配。檢查**也包括常見套件管理器的預設清單**以將[信任域](#default-allowed-domains)與您的自訂項目一起保留，或將其取消選中以僅允許您列出的內容。
-
-允許的域按環境配置。沒有組織級別的允許清單，擁有者可以推送給所有使用者的環境；[伺服器管理的設定](/docs/zh-TW/server-managed-settings)可以限制雲端工作階段，但無法新增允許的域。
-
-<h3 id="github-proxy">
-  GitHub 代理
-</h3>
-
-為了安全起見，所有 GitHub 操作都通過專用代理服務進行，該服務將您的真實 GitHub 認證保留在沙箱外。代理驗證兩種流量：
-
-* Git 互動：沙箱內的 git 用戶端使用自訂建置的限定認證，代理驗證並將其轉換為您的實際 GitHub 驗證令牌
-* GitHub API 請求：代理在來自內建 GitHub 工具的請求上替換您的真實認證，以及來自 `gh` 的請求（當您的工作階段設定[使用 GitHub 問題和提取請求](#work-with-github-issues-and-pull-requests)中描述的 `proxy-injected` 預留位置時）
-
-代理還限制 git push 操作到目前工作分支以確保安全，並啟用複製、取得和 PR 操作，同時維護安全邊界。
-
-代理限制 GitHub API 和發行資產請求到附加到工作階段的儲存庫，無論環境的[存取級別](#access-levels)如何。下載來自未附加儲存庫的發行資產的設定指令碼會傳回 403。來自公開儲存庫的已提交檔案通過 `raw.githubusercontent.com` 取得，[安全代理](#security-proxy)會處理該檔案。該域在預設[信任清單](#default-allowed-domains)中，因此除非環境的[存取級別](#access-levels)排除它，否則檔案保持可達。
-
-<h3 id="security-proxy">
-  安全代理
-</h3>
-
-環境在 HTTP/HTTPS 網路代理後面執行，用於安全和濫用防止目的。所有出站網際網路流量都通過此代理，該代理提供：
-
-* 防止惡意請求
-* 速率限制和濫用防止
-* 增強安全性的內容篩選
-* 所請求主機名稱的 DNS 級別稽核軌跡
-
-<h3 id="default-allowed-domains">
-  預設允許的域
-</h3>
-
-使用**信任**網路存取時，預設允許以下域。標記為 `*` 的域表示萬用字元子域匹配，因此 `*.gcr.io` 允許 `gcr.io` 的任何子域。
-
-<AccordionGroup>
-  <Accordion title="Anthropic 服務">
-    * api.anthropic.com
-    * statsig.anthropic.com
-    * docs.claude.com
-    * platform.claude.com
-    * code.claude.com
-    * claude.ai
-  </Accordion>
-
-  <Accordion title="版本控制">
-    * github.com
-    * [www.github.com](http://www.github.com)
-    * api.github.com
-    * npm.pkg.github.com
-    * raw\.githubusercontent.com
-    * pkg-npm.githubusercontent.com
-    * objects.githubusercontent.com
-    * release-assets.githubusercontent.com
-    * codeload.github.com
-    * avatars.githubusercontent.com
-    * camo.githubusercontent.com
-    * gist.github.com
-    * gitlab.com
-    * [www.gitlab.com](http://www.gitlab.com)
-    * registry.gitlab.com
-    * bitbucket.org
-    * [www.bitbucket.org](http://www.bitbucket.org)
-    * api.bitbucket.org
-  </Accordion>
-
-  <Accordion title="容器登錄">
-    * registry-1.docker.io
-    * auth.docker.io
-    * index.docker.io
-    * hub.docker.com
-    * [www.docker.com](http://www.docker.com)
-    * production.cloudflare.docker.com
-    * download.docker.com
-    * gcr.io
-    * \*.gcr.io
-    * ghcr.io
-    * mcr.microsoft.com
-    * \*.data.mcr.microsoft.com
-    * public.ecr.aws
-  </Accordion>
-
-  <Accordion title="雲端平台">
-    * cloud.google.com
-    * accounts.google.com
-    * gcloud.google.com
-    * \*.googleapis.com
-    * storage.googleapis.com
-    * compute.googleapis.com
-    * container.googleapis.com
-    * azure.com
-    * portal.azure.com
-    * microsoft.com
-    * [www.microsoft.com](http://www.microsoft.com)
-    * \*.microsoftonline.com
-    * packages.microsoft.com
-    * dotnet.microsoft.com
-    * dot.net
-    * visualstudio.com
-    * dev.azure.com
-    * \*.amazonaws.com
-    * \*.api.aws
-    * oracle.com
-    * [www.oracle.com](http://www.oracle.com)
-    * java.com
-    * [www.java.com](http://www.java.com)
-    * java.net
-    * [www.java.net](http://www.java.net)
-    * download.oracle.com
-    * yum.oracle.com
-  </Accordion>
-
-  <Accordion title="JavaScript 和 Node 套件管理器">
-    * registry.npmjs.org
-    * [www.npmjs.com](http://www.npmjs.com)
-    * [www.npmjs.org](http://www.npmjs.org)
-    * npmjs.com
-    * npmjs.org
-    * yarnpkg.com
-    * registry.yarnpkg.com
-  </Accordion>
-
-  <Accordion title="Python 套件管理器">
-    * pypi.org
-    * [www.pypi.org](http://www.pypi.org)
-    * files.pythonhosted.org
-    * pythonhosted.org
-    * test.pypi.org
-    * pypi.python.org
-    * pypa.io
-    * [www.pypa.io](http://www.pypa.io)
-  </Accordion>
-
-  <Accordion title="Ruby 套件管理器">
-    * rubygems.org
-    * [www.rubygems.org](http://www.rubygems.org)
-    * api.rubygems.org
-    * index.rubygems.org
-    * ruby-lang.org
-    * [www.ruby-lang.org](http://www.ruby-lang.org)
-    * rubyforge.org
-    * [www.rubyforge.org](http://www.rubyforge.org)
-    * rubyonrails.org
-    * [www.rubyonrails.org](http://www.rubyonrails.org)
-    * rvm.io
-    * get.rvm.io
-  </Accordion>
-
-  <Accordion title="Rust 套件管理器">
-    * crates.io
-    * [www.crates.io](http://www.crates.io)
-    * index.crates.io
-    * static.crates.io
-    * rustup.rs
-    * static.rust-lang.org
-    * [www.rust-lang.org](http://www.rust-lang.org)
-  </Accordion>
-
-  <Accordion title="Go 套件管理器">
-    * proxy.golang.org
-    * sum.golang.org
-    * index.golang.org
-    * golang.org
-    * [www.golang.org](http://www.golang.org)
-    * goproxy.io
-    * pkg.go.dev
-  </Accordion>
-
-  <Accordion title="JVM 套件管理器">
-    * maven.org
-    * repo.maven.org
-    * central.maven.org
-    * repo1.maven.org
-    * repo.maven.apache.org
-    * jcenter.bintray.com
-    * gradle.org
-    * [www.gradle.org](http://www.gradle.org)
-    * services.gradle.org
-    * plugins.gradle.org
-    * kotlinlang.org
-    * [www.kotlinlang.org](http://www.kotlinlang.org)
-    * spring.io
-    * repo.spring.io
-  </Accordion>
-
-  <Accordion title="其他套件管理器">
-    * packagist.org (PHP Composer)
-    * [www.packagist.org](http://www.packagist.org)
-    * repo.packagist.org
-    * nuget.org (.NET NuGet)
-    * [www.nuget.org](http://www.nuget.org)
-    * api.nuget.org
-    * pub.dev (Dart/Flutter)
-    * api.pub.dev
-    * hex.pm (Elixir/Erlang)
-    * [www.hex.pm](http://www.hex.pm)
-    * cpan.org (Perl CPAN)
-    * [www.cpan.org](http://www.cpan.org)
-    * metacpan.org
-    * [www.metacpan.org](http://www.metacpan.org)
-    * api.metacpan.org
-    * cocoapods.org (iOS/macOS)
-    * [www.cocoapods.org](http://www.cocoapods.org)
-    * cdn.cocoapods.org
-    * haskell.org
-    * [www.haskell.org](http://www.haskell.org)
-    * hackage.haskell.org
-    * swift.org
-    * [www.swift.org](http://www.swift.org)
-  </Accordion>
-
-  <Accordion title="Linux 發行版">
-    * archive.ubuntu.com
-    * security.ubuntu.com
-    * ubuntu.com
-    * [www.ubuntu.com](http://www.ubuntu.com)
-    * \*.ubuntu.com
-    * ppa.launchpad.net
-    * launchpad.net
-    * [www.launchpad.net](http://www.launchpad.net)
-    * \*.nixos.org
-  </Accordion>
-
-  <Accordion title="開發工具和平台">
-    * dl.k8s.io (Kubernetes)
-    * pkgs.k8s.io
-    * k8s.io
-    * [www.k8s.io](http://www.k8s.io)
-    * releases.hashicorp.com (HashiCorp)
-    * apt.releases.hashicorp.com
-    * rpm.releases.hashicorp.com
-    * archive.releases.hashicorp.com
-    * hashicorp.com
-    * [www.hashicorp.com](http://www.hashicorp.com)
-    * repo.anaconda.com (Anaconda/Conda)
-    * conda.anaconda.org
-    * anaconda.org
-    * [www.anaconda.com](http://www.anaconda.com)
-    * anaconda.com
-    * continuum.io
-    * apache.org (Apache)
-    * [www.apache.org](http://www.apache.org)
-    * archive.apache.org
-    * downloads.apache.org
-    * eclipse.org (Eclipse)
-    * [www.eclipse.org](http://www.eclipse.org)
-    * download.eclipse.org
-    * nodejs.org (Node.js)
-    * [www.nodejs.org](http://www.nodejs.org)
-    * developer.apple.com
-    * developer.android.com
-    * pkg.stainless.com
-    * binaries.prisma.sh
-  </Accordion>
-
-  <Accordion title="雲端服務和監控">
-    * statsig.com
-    * [www.statsig.com](http://www.statsig.com)
-    * api.statsig.com
-    * sentry.io
-    * \*.sentry.io
-    * downloads.sentry-cdn.com
-    * http-intake.logs.datadoghq.com
-    * browser-intake-us5-datadoghq.com
-    * \*.datadoghq.com
-    * \*.datadoghq.eu
-    * api.honeycomb.io
-  </Accordion>
-
-  <Accordion title="內容傳遞和鏡像">
-    * sourceforge.net
-    * \*.sourceforge.net
-    * packagecloud.io
-    * \*.packagecloud.io
-    * fonts.googleapis.com
-    * fonts.gstatic.com
-  </Accordion>
-
-  <Accordion title="架構和配置">
-    * json-schema.org
-    * [www.json-schema.org](http://www.json-schema.org)
-    * json.schemastore.org
-    * [www.schemastore.org](http://www.schemastore.org)
-  </Accordion>
-
-  <Accordion title="Model Context Protocol">
-    * \*.modelcontextprotocol.io
-  </Accordion>
-</AccordionGroup>
-
-<h2 id="move-tasks-between-web-and-terminal">
-  在網頁和終端之間移動任務
+<h2 id="move-tasks-between-terminal-and-cloud">
+  在終端和雲端之間移動任務
 </h2>
 
 這些工作流程需要[Claude Code CLI](/docs/zh-TW/quickstart)登入到相同的 claude.ai 帳戶。您可以從終端啟動新的雲端工作階段，或將雲端工作階段拉入終端以在本機繼續。雲端工作階段即使在您關閉筆記型電腦後仍會保留，您可以從任何地方（包括 Claude 行動應用程式）監控它們。
 
 <Note>
-  從 CLI，工作階段交接是單向的：您可以使用 `--teleport` 將雲端工作階段拉入終端，但無法將現有終端工作階段推送到網頁。`--cloud` 旗標為您目前的儲存庫建立新的雲端工作階段。[Desktop 應用程式](/docs/zh-TW/desktop#continue-in-another-surface)提供可將本機工作階段發送到網頁的「在另一個表面繼續」功能表。
+  從 CLI，工作階段交接是單向的：您可以使用 `--teleport` 將雲端工作階段拉入終端，但無法將現有終端工作階段推送到雲端。`--cloud` 旗標搭配任務描述會為您目前的儲存庫建立新的雲端工作階段；搭配 `-p` 和工作階段 ID 或 claude.ai/code URL 時，它會改為[將訊息排隊到該現有工作階段](/docs/zh-TW/claude-code-on-the-web#send-follow-ups-from-the-cli)。[Desktop 應用程式](/docs/zh-TW/desktop#continue-in-another-surface)提供可將本機工作階段發送到雲端的**在另一個表面繼續**功能表。
 </Note>
 
-<h3 id="from-terminal-to-web">
-  從終端到網頁
+<h3 id="from-terminal-to-cloud">
+  從終端到雲端
 </h3>
 
 使用 `--cloud` 旗標從命令列啟動雲端工作階段：
@@ -667,21 +89,25 @@ registry.example.com
 claude --cloud "Fix the authentication bug in src/auth/login.ts"
 ```
 
-這會在 claude.ai 上建立新的雲端工作階段。工作階段複製您目前目錄的 GitHub 遠端，位於您目前的分支，因此如果您有本機提交，請先推送，因為 VM 從 GitHub 而不是您的機器複製。`--cloud` 一次適用於單一儲存庫。任務在雲端執行，而您繼續在本機工作。較舊的 `--remote` 拼寫仍然可作為 `--cloud` 的已棄用別名。
+這會在 claude.ai 上建立新的雲端工作階段。雲端 VM 複製您目前目錄的 GitHub 遠端，位於您目前的分支，而不是您的本機簽出，因此如果您有本機提交，請先推送。請參閱[不使用 GitHub 發送本機儲存庫](#send-local-repositories-without-github)以了解 Claude Code 上傳您的本機儲存庫而不是複製的情況。
 
-自 v2.1.195 起，CLI 會顯示設定步驟的即時檢查清單，例如複製儲存庫和執行您的[設定指令碼](#setup-scripts)，同時雲端容器啟動。您在容器佈建時輸入的訊息會排隊，並在工作階段準備好後發送。
+`--cloud` 一次適用於單一儲存庫。任務在雲端執行，而您繼續在本機工作。較舊的 `--remote` 拼寫仍然可作為 `--cloud` 的已棄用別名。
+
+當雲端容器啟動時，CLI 會顯示設定步驟的即時檢查清單，例如複製儲存庫和執行您的[設定指令碼](/docs/zh-TW/cloud-environments#setup-scripts)。它會排隊您在佈建期間輸入的訊息，並在工作階段準備好後發送它們。
 
 <Note>
-  `--cloud` 建立雲端工作階段。`--remote-control` 無關：它公開本機 CLI 工作階段以從網頁進行監控。請參閱[遠端控制](/docs/zh-TW/remote-control)。
+  `--cloud` 建立雲端工作階段。`--remote-control` 無關：它讓您從 claude.ai 或 Claude 應用程式監控和引導本機 CLI 工作階段。請參閱[遠端控制](/docs/zh-TW/remote-control)。
 </Note>
 
-在 Claude Code CLI 中使用 `/tasks` 檢查進度，或在 claude.ai 或 Claude 行動應用程式上開啟工作階段以直接互動。從那裡，您可以引導 Claude、提供反饋或回答問題，就像任何其他對話一樣。
+在 claude.ai 或 Claude 行動應用程式上開啟工作階段以檢查進度或直接互動。從那裡，您可以引導 Claude、提供反饋或回答問題，就像任何其他對話一樣。
+
+如果 Claude 提出問題且工作階段閒置，您仍然可以在回來時回答，直到[環境過期](#environment-expired)，工作階段會從您的回答繼續。
 
 <h4 id="tips-for-cloud-tasks">
   雲端任務的提示
 </h4>
 
-**在本機規劃，在遠端執行**：對於複雜任務，在規劃模式下啟動 Claude 以協作制定方法，然後將工作發送到雲端：
+**在本機規劃，在雲端執行**：對於複雜任務，在規劃模式下啟動 Claude 以協作制定方法，然後將工作發送到雲端：
 
 ```bash theme={null}
 claude --permission-mode plan
@@ -693,10 +119,6 @@ claude --permission-mode plan
 claude --cloud "Execute the migration plan in docs/migration-plan.md"
 ```
 
-此模式讓您可以控制策略，同時讓 Claude 在雲端自主執行。
-
-**使用 ultraplan 在雲端規劃**：若要在網頁工作階段中起草和檢查計畫本身，請使用 [ultraplan](/docs/zh-TW/ultraplan)。Claude 在 Claude Code 網頁版上生成計畫，同時您繼續工作，然後您在瀏覽器中對部分進行評論並選擇遠端執行或將計畫發送回終端。
-
 **並行執行任務**：每個 `--cloud` 命令建立自己的雲端工作階段，獨立執行。您可以啟動多個任務，它們都會在單獨的工作階段中同時執行：
 
 ```bash theme={null}
@@ -705,15 +127,17 @@ claude --cloud "Update the API documentation"
 claude --cloud "Refactor the logger to use structured output"
 ```
 
-使用 Claude Code CLI 中的 `/tasks` 監控所有工作階段。當工作階段完成時，您可以從網頁介面建立 PR，或[傳送](#from-web-to-terminal)工作階段到終端以繼續工作。
+當工作階段完成時，您可以從 claude.ai/code 建立 PR，或[傳送](#from-cloud-to-terminal)工作階段到終端以繼續工作。
 
 <h4 id="send-local-repositories-without-github">
   發送沒有 GitHub 的本機儲存庫
 </h4>
 
-當您從未連接到 GitHub 的儲存庫執行 `claude --cloud` 時，Claude Code 會捆綁您的本機儲存庫並直接上傳到雲端工作階段。捆綁包括您的完整儲存庫歷史記錄，跨所有分支，加上任何未提交的對追蹤檔案的變更。
+當您從未連接到 GitHub 的儲存庫執行 `claude --cloud` 時，或從 Claude GitHub App 未安裝的 github.com 儲存庫執行時，Claude Code 會捆綁您的本機儲存庫並直接上傳到雲端工作階段。即使您使用 `/web-setup` 連接了 GitHub，這也適用。捆綁包括您的完整儲存庫歷史記錄，跨所有分支，加上對追蹤檔案的未提交變更。
 
-當 GitHub 存取不可用時，此回退會自動啟動。若要即使在 GitHub 已連接時也強制它，請設定 `CCR_FORCE_BUNDLE=1`：
+在 macOS、Linux 和 WSL 上，Claude Code 會將名稱類似認證或金鑰的檔案的未提交變更排除在上傳之外，並列出它排除的檔案名稱。這涵蓋 `.env` 檔案、Terraform `*.tfvars` 檔案和金鑰檔案，例如 `id_rsa` 和 `*.pem`。工作階段會以每個檔案的已提交版本啟動，或如果沒有已提交的檔案，則不使用該檔案。在連結的 worktree、子模組或類似配置中，Claude Code 會上傳這些變更與其餘部分一起，並列出它上傳的檔案名稱。
+
+若要即使在 Claude Code 會以其他方式從遠端複製時也強制上傳捆綁，請設定 `CCR_FORCE_BUNDLE=1`：
 
 ```bash theme={null}
 CCR_FORCE_BUNDLE=1 claude --cloud "Run the test suite and fix any failures"
@@ -724,10 +148,55 @@ CCR_FORCE_BUNDLE=1 claude --cloud "Run the test suite and fix any failures"
 * 目錄必須是至少有一個提交的 git 儲存庫
 * 捆綁的儲存庫必須在 100 MB 以下。較大的儲存庫回退到僅捆綁目前分支，然後回退到工作樹的單一壓縮快照，並且僅在快照仍然太大時失敗
 * 未追蹤的檔案不包括；在您希望雲端工作階段看到的檔案上執行 `git add`
-* 從捆綁建立的工作階段無法推送回遠端，除非您也配置了 [GitHub 驗證](#github-authentication-options)
+* 從捆綁建立的工作階段只有在您的 [GitHub 連接](#github-authentication-options)對該儲存庫具有推送存取權時，才能推送回 GitHub 遠端
 
-<h3 id="from-web-to-terminal">
-  從網頁到終端
+<h3 id="send-follow-ups-from-the-cli">
+  從 CLI 發送後續訊息
+</h3>
+
+一旦雲端工作階段執行，無論它在何處執行，都可以從任何您使用 `claude auth login` 登入的機器上的 `claude` CLI 向它發送後續訊息。CLI 使用您的 Anthropic 帳戶認證進行驗證，並且不發送本機工作階段狀態，因此命令不需要從啟動工作階段的機器執行，並且在每個 shell 中都相同，包括 PowerShell。
+
+該命令發佈一條訊息並退出：
+
+```bash theme={null}
+claude -p "your message" --cloud <session-id>
+```
+
+CLI 將訊息排隊到工作階段並退出，不等待回覆。使用它來引導長時間執行的工作階段、在目前工作階段仍在完成時排隊下一步，或從 [CI 指令碼](/docs/zh-TW/self-hosted-environments-testing#run-the-test-loop)發送後續訊息。您也可以在 stdin 上管道訊息，而不是作為引數傳遞：`echo "your message" | claude -p --cloud <session-id>`。
+
+對於 `<session-id>`，傳遞裸 ID，例如 `session_...` 或 `cse_...`，或工作階段的 `claude.ai/code/<id>` URL，帶或不帶方案或查詢字串。在 claude.ai/code 的工作階段清單中找到 ID。
+
+<Note>
+  `--cloud` 需要 Anthropic 帳戶。當 Claude Code 配置為 Amazon Bedrock、Google Cloud 的 Agent Platform 或其他第三方提供者時，它不可用。僅通過 `ANTHROPIC_BASE_URL` 配置的 [LLM 閘道](/docs/zh-TW/llm-gateway)不算作第三方提供者進行此檢查，但您仍然需要使用 `claude auth login` 登入。您的組織的 `allow_remote_sessions` 政策也必須啟用。擁有者可以在 claude.ai/admin-settings/claude-code 的 Claude Code 管理設定中開啟它。
+</Note>
+
+<h4 id="output-and-errors">
+  輸出和錯誤
+</h4>
+
+成功時，命令會列印工作階段 ID 和檢視工作階段的連結：
+
+```
+Sent to cloud session.
+Session ID: session_01DiUkqY2kzbUbDmW1w96rfi
+View: https://claude.ai/code/session_01DiUkqY2kzbUbDmW1w96rfi?from=cli&m=0
+```
+
+傳遞 `--output-format json` 以獲得機器可讀的結果：成功時為 `{ok, session_id, url}`，或當發送失敗時為 `{ok: false, session_id, error}`，例如當工作階段遺失或已封存時。配置錯誤（例如不支援的提供者或禁用的組織政策）會列印到 stderr，不使用 JSON。`--output-format stream-json` 不支援 `--cloud <session-id>`。
+
+CLI 會在錯誤前加上 `Error: `。失敗的傳遞會包裝為 `failed to send message to cloud session <id>: <reason>`。
+
+| 訊息                                                                                                                          | 它的意思                                                                                                                                                                     |
+| --------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `Cloud sessions aren't available with <provider>. They run on Anthropic's infrastructure and require an Anthropic account.` | Claude Code 配置為第三方提供者。訊息會使用您的配置使用的標籤命名提供者，例如 `Amazon Bedrock` 或 `Google Vertex AI`。移除該提供者的配置，例如通過取消設定 `CLAUDE_CODE_USE_BEDROCK`，並使用 Anthropic 帳戶登入（`claude auth login`）。 |
+| `Cloud sessions are disabled by your organization's policy. Contact your organization admin to enable them.`                | `allow_remote_sessions` 組織政策已關閉。                                                                                                                                         |
+| `Couldn't verify your organization's policy for cloud sessions. Check your network connection and try again.`               | Claude Code 無法取得您的組織政策，因此它拒絕發送，而不是假設雲端工作階段被允許。檢查您的網路連接並重試。                                                                                                               |
+| `Attaching to an existing cloud session is not enabled for your account.`                                                   | 您執行了 `--cloud <session-id>` 而沒有 `-p`。使用 `claude -p "your message" --cloud <session-id>` 發送訊息。                                                                            |
+| `Session not found: <id>`                                                                                                   | ID 或 URL 不符合您可以存取的工作階段。根據工作階段的 claude.ai/code URL 檢查它。                                                                                                                   |
+| `cloud session <id> is archived and cannot accept new messages`                                                             | 工作階段已被封存。改為啟動新工作階段。                                                                                                                                                      |
+
+<h3 id="from-cloud-to-terminal">
+  從雲端到終端
 </h3>
 
 使用以下任何方式將雲端工作階段拉入終端：
@@ -735,9 +204,10 @@ CCR_FORCE_BUNDLE=1 claude --cloud "Run the test suite and fix any failures"
 * **使用 `--teleport`**：從命令列，執行 `claude --teleport` 以進行互動式工作階段選擇器，或執行 `claude --teleport <session-id>` 以直接恢復特定工作階段。如果您有未提交的變更，系統會提示您先隱藏它們。
 * **使用 `/teleport`**：在現有 CLI 工作階段內，執行 `/teleport` 或 `/tp` 以開啟相同的工作階段選擇器，而無需重新啟動 Claude Code。
 * **從 `/tasks`**：執行 `/tasks` 以查看您的背景工作階段，然後按 `t` 傳送到其中一個。
-* **從網頁介面**：選擇**在 CLI 中開啟**以複製可貼到終端的命令。
+* **從 claude.ai/code**：從工作階段功能表選擇**在終端中開啟**以複製可貼到終端的命令。
+* **從雲端工作階段內**：輸入 `/teleport`，Claude Code 會回覆該工作階段的確切 `claude --teleport <session-id>` 命令，準備好從儲存庫的簽出執行。需要工作階段環境中的 Claude Code v2.1.223 或更新版本。
 
-當您傳送工作階段時，Claude 驗證您在正確的儲存庫中，從雲端工作階段取得並簽出分支，並將完整的對話歷史記錄載入到終端。
+當您傳送工作階段時，Claude 驗證您在正確的儲存庫中，從雲端工作階段取得並簽出分支，並將完整的對話歷史記錄載入到終端。終端會取得工作階段的自己的副本：那裡的新工作保持本機，不會出現在 claude.ai 上的雲端工作階段或 Claude 行動應用程式中。若要在傳送後繼續從您的電話引導，請在本機工作階段中啟動 [`/remote-control`](/docs/zh-TW/remote-control)。
 
 `--teleport` 與 `--resume` 不同。`--resume` 從此機器的本機歷史記錄重新開啟對話，不列出雲端工作階段；`--teleport` 拉取雲端工作階段及其分支。
 
@@ -747,18 +217,18 @@ CCR_FORCE_BUNDLE=1 claude --cloud "Run the test suite and fix any failures"
 
 傳送在恢復工作階段之前檢查這些要求。如果任何要求未滿足，您會看到錯誤或被提示解決問題。
 
-| 要求         | 詳細資訊                                                                                                                                                                                 |
-| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 乾淨的 git 狀態 | 您的工作目錄必須沒有未提交的變更。如果需要，傳送會提示您隱藏變更。                                                                                                                                                    |
-| 正確的儲存庫     | 您必須從同一儲存庫的簽出執行 `--teleport`，而不是分支。自 v2.1.199 起，Claude Code 接受簽出，即使它無法將遠端解析為主機名稱，例如 SSH 主機別名（如 `git@work:owner/repo.git`）或 `insteadOf` 重寫的短形式。它首先顯示確認提示，並且僅當遠端的擁有者和儲存庫名稱與工作階段的儲存庫相符時。 |
-| 分支可用       | 雲端工作階段中的分支必須已推送到遠端。傳送會自動取得並簽出它。                                                                                                                                                      |
-| 相同帳戶       | 您必須驗證到雲端工作階段中使用的相同 claude.ai 帳戶。                                                                                                                                                     |
+| 要求         | 詳細資訊                                                                                                                                                                                                                                     |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 乾淨的 git 狀態 | 您的工作目錄必須沒有未提交的變更。如果需要，傳送會提示您隱藏變更。                                                                                                                                                                                                        |
+| 正確的儲存庫     | 您必須從同一儲存庫的簽出執行 `--teleport`，而不是從 fork。如果您從不同儲存庫的簽出執行它，Claude Code 會顯示一個錯誤，命名工作階段的儲存庫和您的簽出的儲存庫。在 v2.1.219 之前，錯誤沒有命名您的簽出的儲存庫。如果 Claude Code 無法將您的遠端解析為主機名稱，例如 SSH 主機別名（如 `git@work:owner/repo.git`），它會要求您確認，並在遠端的擁有者和儲存庫名稱符合工作階段的儲存庫時接受簽出。 |
+| 分支可用       | 雲端工作階段中的分支必須已推送到遠端。傳送會自動取得並簽出它。                                                                                                                                                                                                          |
+| 相同帳戶       | 您必須驗證到雲端工作階段中使用的相同 claude.ai 帳戶。                                                                                                                                                                                                         |
 
 <h4 id="teleport-is-unavailable">
   `--teleport` 不可用
 </h4>
 
-傳送需要 claude.ai 訂閱驗證。如果您通過 API 金鑰、Amazon Bedrock、Google Cloud 的 Agent Platform 或 Microsoft Foundry 進行驗證，請執行 `/login` 以改為使用您的 claude.ai 帳戶登入。如果您已通過 claude.ai 登入，`--teleport` 仍不可用，您的組織可能已禁用雲端工作階段。
+傳送需要 claude.ai 訂閱驗證。如果您通過 API 金鑰進行驗證，請執行 `/login` 以改為使用您的 claude.ai 帳戶登入。如果錯誤命名您的提供者，雲端工作階段無法通過第三方提供者使用；請參閱[錯誤表](#output-and-errors)。如果您已通過 claude.ai 登入且 `--teleport` 仍不可用，您的組織可能已禁用雲端工作階段。
 
 <h2 id="work-with-sessions">
   使用工作階段
@@ -766,14 +236,23 @@ CCR_FORCE_BUNDLE=1 claude --cloud "Run the test suite and fix any failures"
 
 工作階段出現在 claude.ai/code 的側邊欄中。從那裡，您可以檢查變更、與隊友共享、封存完成的工作或永久刪除工作階段。
 
+<h3 id="take-back-a-queued-message">
+  取回已排隊的訊息
+</h3>
+
+如果您在 Claude 工作時發送訊息，該訊息會排隊，直到 Claude 讀取它。若要取回已排隊的訊息，請點擊它上面的 ✕。文字會返回到訊息框，以便您可以編輯它或發送其他內容。
+
+如果 Claude 已經讀取訊息，它會保留在對話中。
+
 <h3 id="manage-context">
   管理上下文
 </h3>
 
 雲端工作階段支援產生文字輸出的[內建命令](/docs/zh-TW/commands)。只在終端介面中執行的命令，例如 `/plugin` 或 `/resume`，無法使用。在雲端工作階段中開啟選擇器或面板的命令行為不同：
 
-* **`/model`、`/effort`、`/fast`、`/color` 和 `/rename`**：將值作為引數傳遞，例如 `/model sonnet`，而不是開啟終端選擇器或滑塊。引數形式需要工作階段環境中的 Claude Code v2.1.205 或更新版本，並遵循每個命令的[可用性說明](/docs/zh-TW/commands#all-commands)：當模型的[啟動預設努力保持](/docs/zh-TW/model-config#adjust-effort-level)生效時，`/effort` 會報告 `Not applied`，而 `/fast` 僅在以快速模式啟動的工作階段中有效。
-* **`/config`**：在網路上，開啟您設定的 Claude Code 部分，而不是設定值，命令後的文字（包括 `key=value`）會被忽略。若要變更雲端工作階段的設定，請使用[環境變數](#configure-your-environment)或將[設定檔案](/docs/zh-TW/settings)提交到儲存庫。
+* **`/model`、`/effort`、`/color` 和 `/rename`**：將值作為引數傳遞，例如 `/model sonnet`，而不是開啟終端選擇器或滑塊。引數形式需要工作階段環境中的 Claude Code v2.1.205 或更新版本，並遵循每個命令的[可用性說明](/docs/zh-TW/commands#all-commands)。
+* **`/fast`**：當快速模式在[您的帳戶上可用](/docs/zh-TW/fast-mode#requirements)時，為工作階段切換[快速模式](/docs/zh-TW/fast-mode#use-fast-mode-in-cloud-sessions)。需要工作階段環境中的 Claude Code v2.1.271 或更新版本。
+* **`/config`**：在您的瀏覽器上的 claude.ai/code，開啟您設定的 Claude Code 部分，而不是設定值，命令後的文字（包括 `key=value`）會被忽略。若要變更雲端工作階段的設定，請設定環境上的[環境變數](/docs/zh-TW/cloud-environments#set-environment-variables)，或在具有一個儲存庫的工作階段中，將金鑰提交到該儲存庫的 `.claude/settings.json`。[雲端工作階段中的設定](/docs/zh-TW/settings#settings-in-cloud-sessions)列出每個工作階段讀取的內容。
 
 對於上下文管理特別：
 
@@ -783,17 +262,31 @@ CCR_FORCE_BUNDLE=1 claude --cloud "Run the test suite and fix any failures"
 | `/context` | 是          | 顯示目前在上下文視窗中的內容                                         |
 | `/clear`   | 否          | 改為從側邊欄啟動新工作階段                                          |
 
-自動壓縮在上下文視窗接近容量時自動執行。若要更早觸發它，請在您的[環境變數](#configure-your-environment)中設定 [`CLAUDE_AUTOCOMPACT_PCT_OVERRIDE`](/docs/zh-TW/env-vars)。例如，`CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=70` 在 70% 容量而不是等待視窗幾乎滿時壓縮。若要更改壓縮計算的有效視窗大小，請使用 [`CLAUDE_CODE_AUTO_COMPACT_WINDOW`](/docs/zh-TW/env-vars)。
+自動壓縮在上下文視窗接近容量時自動執行。雲端工作階段自行設定 [`CLAUDE_AUTOCOMPACT_PCT_OVERRIDE`](/docs/zh-TW/env-vars)，因此壓縮會在[自動壓縮視窗](/docs/zh-TW/model-config#set-the-auto-compact-window)的中途觸發，而不是在視窗填滿時。該值會覆蓋您在[環境變數](/docs/zh-TW/cloud-environments#set-environment-variables)中新增的值，因此在那裡新增變數不會變更壓縮觸發的時間。
 
-[Subagents](/docs/zh-TW/sub-agents) 的運作方式與本機相同。Claude 可以使用 Task 工具生成它們，以將研究或並行工作卸載到單獨的上下文視窗中，保持主對話更輕。在您的儲存庫的 `.claude/agents/` 中定義的 Subagents 會自動選擇。
+若要改為變更自動壓縮視窗，請在您的環境變數中設定 [`CLAUDE_CODE_AUTO_COMPACT_WINDOW`](/docs/zh-TW/env-vars)，或在未設定變數的工作階段中執行 [`/autocompact`](/docs/zh-TW/commands#all-commands)，搭配令牌計數。
 
-[Agent teams](/docs/zh-TW/agent-teams) 預設關閉，但可以通過將 `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` 新增到您的[環境變數](#configure-your-environment)來啟用。
+[Subagents](/docs/zh-TW/sub-agents) 的運作方式與本機相同。Claude 可以使用 Agent 工具生成它們，以將研究或並行工作卸載到單獨的上下文視窗中，保持主對話更輕。在您的儲存庫的 `.claude/agents/` 中定義的 Subagents 會自動選擇。
+
+[Agent teams](/docs/zh-TW/agent-teams) 預設關閉，但可以通過將 `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` 新增到您的[環境變數](/docs/zh-TW/cloud-environments#set-environment-variables)來啟用。
+
+<h3 id="permission-modes-in-cloud-sessions">
+  雲端工作階段中的權限模式
+</h3>
+
+您可以從[模式下拉式功能表](/docs/zh-TW/permission-modes#switch-permission-modes)選擇雲端工作階段的[權限模式](/docs/zh-TW/permission-modes)，無論是在您建立任務時還是在工作階段執行時。當您重新開啟其 Anthropic 託管[環境已過期](#environment-expired)的工作階段，或向工作階段發送訊息時，該工作階段的自託管執行器[在閒置時釋放](/docs/zh-TW/self-hosted-environments-reference#runner-cli-flags)，Claude Code 會在它所在的權限模式中恢復工作階段。
 
 <h3 id="review-changes">
   檢查變更
 </h3>
 
-每個工作階段顯示一個差異指示器，其中包含新增和移除的行數，例如 `+42 -18`。選擇它以開啟差異檢視，在特定行上留下內聯評論，並使用您的下一條訊息將它們發送給 Claude。有關完整逐步說明（包括 PR 建立），請參閱[檢查和迭代](/docs/zh-TW/web-quickstart#review-and-iterate)。若要讓 Claude 自動監控 PR 以查找 CI 失敗和審查評論，請參閱[自動修復拉取請求](#auto-fix-pull-requests)。
+每個工作階段顯示一個差異指示器，其中包含新增和移除的行數，例如 `+42 -18`。選擇它以開啟差異檢視、在特定行上留下內聯評論，並使用您的下一條訊息將它們發送給 Claude。
+
+差異檢視預設會將工作階段的變更與其基礎分支進行比較。若要與儲存庫中的任何其他分支進行比較，請選擇**比較對象**並選擇一個。
+
+Claude Code 從原始 git blob 內容計算這些差異，包括 Claude 編輯時顯示的每個檔案差異，因此儲存庫中配置的差異驅動器和 `textconv` 篩選器不適用。對於不是工作階段自己簽出之一的儲存庫中的檔案，例如在工作階段期間在工作區內複製的檔案，每個檔案差異會顯示 Claude 的編輯本身，而不是 git 比較。
+
+請參閱[檢查和迭代](/docs/zh-TW/web-quickstart#review-and-iterate)以了解完整逐步說明，包括 PR 建立。若要讓 Claude 自動監控 PR 以查找 CI 失敗和審查評論，請參閱[自動修復拉取請求](#auto-fix-pull-requests)。
 
 <h3 id="share-sessions">
   共享工作階段
@@ -817,7 +310,7 @@ CCR_FORCE_BUNDLE=1 claude --cloud "Run the test suite and fix any failures"
 
 在共享之前檢查您的工作階段是否包含敏感內容。工作階段可能包含來自私人 GitHub 儲存庫的程式碼和認證。儲存庫存取驗證預設未啟用。
 
-若要要求收件者具有儲存庫存取權限，或從共享工作階段中隱藏您的名稱，請前往「設定」>「Claude Code」>「共享設定」。
+若要要求收件者具有儲存庫存取權限，或從共享工作階段中隱藏您的名稱，請前往 [**設定 > Claude Code > 共享設定**](https://claude.ai/settings/claude-code)。
 
 <h3 id="archive-sessions">
   封存工作階段
@@ -845,17 +338,17 @@ CCR_FORCE_BUNDLE=1 claude --cloud "Run the test suite and fix any failures"
 Claude 可以監視拉取請求並自動回應 CI 失敗和審查評論。Claude 訂閱 PR 上的 GitHub 活動，當檢查失敗或審查者留下評論時，Claude 會調查並推送修復（如果有明確的修復）。
 
 <Note>
-  自動修復需要在您的儲存庫上安裝 Claude GitHub App。如果您還沒有，請從 [GitHub App 頁面](https://github.com/apps/claude)安裝它，或在[設定](/docs/zh-TW/web-quickstart#connect-github-and-create-an-environment)期間出現提示時安裝。
+  自動修復需要在您的儲存庫上安裝 Claude GitHub App。如果您還沒有，請從 [GitHub App 頁面](https://github.com/apps/claude)安裝它。
 </Note>
 
 根據 PR 來自何處以及您使用的設備，有幾種方式可以開啟自動修復：
 
-* **在 Claude Code 網頁版中建立的 PR**：開啟 CI 狀態欄並選擇**自動修復**
+* **在 Claude Code 網頁版中建立的 PR**：開啟工作階段於 claude.ai/code，開啟 CI 狀態欄，並選擇**自動修復**
 * **從您的終端**：在 PR 的分支上執行 [`/autofix-pr`](/docs/zh-TW/commands)。Claude Code 使用 `gh` 偵測開啟的 PR，生成網頁工作階段，並在一個步驟中開啟自動修復
 * **從行動應用程式**：告訴 Claude 自動修復 PR，例如「監視此 PR 並修復任何 CI 失敗或審查評論」
 * **任何現有 PR**：將 PR URL 貼到工作階段中並告訴 Claude 自動修復它
 
-自動修復是每個 PR 的切換開關。若要停止監視，請在網頁工作階段中開啟 CI 狀態欄並清除**自動修復**切換，或告訴 Claude 停止監視 PR。
+自動修復是每個 PR 的切換開關。若要停止監視，請在 claude.ai/code 的工作階段中開啟 CI 狀態欄並清除**自動修復**切換，或告訴 Claude 停止監視 PR。
 
 <h3 id="how-claude-responds-to-pr-activity">
   Claude 如何回應 PR 活動
@@ -881,10 +374,11 @@ Claude 可能會在 GitHub 上回覆審查評論執行緒作為解決它們的�
 
 每個雲端工作階段通過多個層與您的機器和其他工作階段分離：
 
-* **隔離的虛擬機器**：每個工作階段在隔離的 Anthropic 管理的 VM 中執行
-* **網路存取控制**：網路存取預設受限，可以禁用。在禁用網路存取的情況下執行時，Claude Code 仍然可以與 Anthropic API 通訊，這可能允許資料離開 VM。
-* **認證保護**：敏感認證（如 git 認證或簽署金鑰）永遠不在沙箱內與 Claude Code 一起。驗證通過使用限定認證的安全代理進行處理。
-* **安全分析**：程式碼在隔離的 VM 內進行分析和修改，然後建立 PR
+* **隔離的虛擬機器**：每個工作階段在隔離的 Anthropic 管理的 VM 中執行。您的組織路由到[自託管環境](/docs/zh-TW/self-hosted-environments)的工作階段改為在您自己的基礎設施上執行，其中隔離是您的部署的責任
+* <span id="default-allowed-domains" />**網路存取控制**：在 Anthropic 託管的環境中，網路存取預設受限，可以禁用。請參閱[網路存取](/docs/zh-TW/cloud-environments#network-access)以了解存取層級、[預設允許的網域](/docs/zh-TW/cloud-environments#default-allowed-domains)，以及不通過允許清單的流量。在自託管環境中，您在自己的網路邊界限制工作階段出口。當以禁用的網路存取執行時，Claude Code 仍然可以與 Anthropic API 通訊，這可能允許資料離開 VM。
+* **認證保護**：在 Anthropic 託管的環境中，git 認證和簽署金鑰保持在沙箱外，代理使用限定認證代表工作階段進行驗證。在自託管環境中，您的部署提供 git 認證；請參閱[配置 git](/docs/zh-TW/self-hosted-environments-deploy#configure-git)
+* **API 認證**：在 Pro 和 Max 計畫的 Anthropic 託管環境中，您[新增到雲端環境](/docs/zh-TW/cloud-environments#add-api-credentials)的金鑰保持在沙箱外，以相同的方式附加到匹配的請求，在它們離開工作階段後。自託管環境沒有 API 認證，Team 和 Enterprise 計畫還沒有
+* **安全分析**：程式碼在隔離的工作階段環境內進行分析和修改，然後建立 PR
 
 <h2 id="troubleshooting">
   故障排除
@@ -896,11 +390,19 @@ Claude 可能會在 GitHub 上回覆審查評論執行緒作為解決它們的�
   工作階段建立失敗
 </h3>
 
-如果新工作階段無法啟動，出現 `Session creation failed` 或在佈建時停滯，Claude Code 無法分配雲端環境。
+如果新工作階段無法啟動，出現 `Session creation failed` 或在佈建時停滯，Claude Code 無法為工作階段分配 VM。
 
 * 檢查 [status.claude.com](https://status.claude.com) 以查找雲端工作階段事件
 * 一分鐘後重試，因為容量是按需佈建的
-* 確認您的儲存庫可到達。連接的 GitHub 帳戶必須能夠存取 GitHub 上的儲存庫，可以透過 Claude GitHub App 授權或透過 `/web-setup` 同步的 `gh` 令牌進行存取。不需要在儲存庫上安裝 App。請參閱 [GitHub 驗證選項](#github-authentication-options)。
+* 確認您的 GitHub 連線可以到達儲存庫，請遵循[連接 GitHub 後沒有儲存庫出現](/docs/zh-TW/web-quickstart#no-repositories-appear-after-connecting-github)
+
+<h3 id="unable-to-get-organization-uuid">
+  無法取得組織 UUID
+</h3>
+
+`claude --cloud` 和 `claude --teleport` 需要使用 claude.ai 帳戶登入。如果您使用 API 金鑰進行驗證，或您的儲存帳戶詳細資訊已過期，這些命令會失敗，出現 `Unable to get organization UUID` 或訊息表示 API 金鑰驗證不足。使用 API 金鑰驗證或過期的帳戶詳細資訊，執行 `claude --teleport` 而不使用工作階段 ID 會在工作階段選擇器中顯示 `Error loading Claude Code sessions`，而不是任一訊息，相同的修復適用。
+
+執行 `/login` 以使用您的 claude.ai 帳戶登入，然後重試命令。如果錯誤命名您的提供者，請參閱[錯誤表](#output-and-errors)：雲端工作階段無法通過第三方提供者使用。
 
 <h3 id="remote-control-session-expired-or-access-denied">
   遠端控制工作階段已過期或存取被拒絕
@@ -910,15 +412,15 @@ Claude 可能會在 GitHub 上回覆審查評論執行緒作為解決它們的�
 
 * 在本機執行 `/login` 以刷新您的認證，然後重新連接
 * 確認您登入到擁有工作階段的相同帳戶
-* 如果您看到 `Remote Control may not be available for this organization`，組織的擁有者尚未為您的組織啟用雲端工作階段
+* 如果您看到 `Remote Control may not be available for this organization`，擁有者尚未為您的組織啟用雲端工作階段
 
 <h3 id="environment-expired">
   環境已過期
 </h3>
 
-雲端工作階段在不活動一段時間後停止，基礎環境被回收。從本機終端，這會顯示為 `Could not resume session ... its environment has expired. Creating a fresh session instead.` 在網頁上，工作階段在工作階段清單中標記為已過期。
+雲端工作階段在不活動一段時間後停止，工作階段的 VM 被回收。工作階段在等待您批准 [MCP 連接器](/docs/zh-TW/cloud-environments#network-access)工具呼叫或登入 MCP 伺服器時計為不活動，並且可以在該等待期間過期。
 
-從 [claude.ai/code](https://claude.ai/code) 重新開啟工作階段以佈建新環境，並恢復您的對話歷史記錄。
+從 [claude.ai/code](https://claude.ai/code) 重新開啟工作階段以佈建新 VM，並恢復您的對話歷史記錄。在 VM 被回收時仍在執行的背景工作，例如 subagents 和 shell 命令，不會被恢復。
 
 <h2 id="limitations">
   限制
@@ -926,20 +428,21 @@ Claude 可能會在 GitHub 上回覆審查評論執行緒作為解決它們的�
 
 在依賴雲端工作階段進行工作流程之前，請考慮這些限制：
 
-* **速率限制**：Claude Code 網頁版與您帳戶內所有其他 Claude 和 Claude Code 使用共享速率限制。並行執行多個任務會按比例消耗更多速率限制。雲端 VM 沒有單獨的計算費用。
-* **儲存庫驗證**：您只能在驗證到相同帳戶時將工作階段從網頁移動到本機
-* **平台限制**：儲存庫複製和拉取請求建立需要 GitHub。自託管[GitHub Enterprise Server](/docs/zh-TW/github-enterprise-server) 執行個體支援 Team 和 Enterprise 計畫。GitLab、Bitbucket 和其他非 GitHub 儲存庫可以作為[本機捆綁](#send-local-repositories-without-github)發送到雲端工作階段，但工作階段無法將結果推送回遠端
-* **組織 IP 允許清單**：雲端工作階段從 Anthropic 管理的基礎設施而不是您的網路呼叫 Anthropic API。如果您的組織啟用了 [IP 允許清單](https://support.claude.com/en/articles/13200993-restrict-access-to-claude-with-ip-allowlisting)，每個雲端工作階段都會失敗，出現驗證錯誤。這同樣適用於[程式碼審查](/docs/zh-TW/code-review)和[例行工作](/docs/zh-TW/routines)。聯絡 [Anthropic 支援](https://support.claude.com/)以從您的組織的 IP 允許清單中豁免 Anthropic 託管的服務。
+* **速率限制**：雲端工作階段與您帳戶內所有其他 Claude 和 Claude Code 使用共享速率限制。並行執行多個任務會按比例消耗更多速率限制。雲端 VM 沒有單獨的計算費用。
+* **儲存庫驗證**：您只能在驗證到相同帳戶時將雲端工作階段拉入您的終端機
+* **平台限制**：儲存庫複製和拉取請求建立需要 GitHub。自託管 [GitHub Enterprise Server](/docs/zh-TW/github-enterprise-server) 執行個體支援 Team 和 Enterprise 計畫。您可以透過設定 `CCR_FORCE_BUNDLE=1`，將 GitLab、Bitbucket 或其他非 GitHub 儲存庫作為[本機捆綁](#send-local-repositories-without-github)發送到雲端工作階段，但工作階段無法將結果推送回該遠端
+* **組織 IP 允許清單**：雲端工作階段從 Anthropic 管理的基礎設施而不是您的網路呼叫 Anthropic API，而[自託管環境](/docs/zh-TW/self-hosted-environments)中的工作階段從您自己的網路呼叫它。如果您的組織啟用了 [IP 允許清單](https://support.claude.com/en/articles/13200993-restrict-access-to-claude-with-ip-allowlisting)，每個 Anthropic 託管的雲端工作階段都會失敗，出現驗證錯誤。這同樣適用於[程式碼審查](/docs/zh-TW/code-review)和[例行工作](/docs/zh-TW/routines)，在 Anthropic 託管的環境中執行；路由到自託管環境的例行工作從您自己的網路呼叫 API。聯絡 [Anthropic 支援](https://support.claude.com/)以從您的組織的 IP 允許清單中豁免 Anthropic 託管的服務。
 
 <h2 id="related-resources">
   相關資源
 </h2>
 
-* [Ultraplan](/docs/zh-TW/ultraplan)：在雲端工作階段中起草計畫並在瀏覽器中檢查它
+* [雲端環境](/docs/zh-TW/cloud-environments)：為雲端工作階段配置網路存取、環境變數和設定指令碼
+* [專案](/docs/zh-TW/claude-projects)：一個對話，Claude 在其中協調您存放庫上的平行雲端工作階段並回報結果
 * [Ultrareview](/docs/zh-TW/ultrareview)：在雲端沙箱中執行深度多代理程式碼審查
-* [Routines](/docs/zh-TW/routines)：自動化按排程、通過 API 呼叫或回應 GitHub 事件的工作
+* [例行工作](/docs/zh-TW/routines)：自動化按排程、通過 API 呼叫或回應 GitHub 事件的工作
 * [Hooks 配置](/docs/zh-TW/hooks)：在工作階段生命週期事件執行指令碼
-* [設定參考](/docs/zh-TW/settings)：所有配置選項
+* [所有設定](/docs/zh-TW/settings-reference)：所有配置選項
 * [安全性](/docs/zh-TW/security)：隔離保證和資料處理
 * [資料使用](/docs/zh-TW/data-usage)：Anthropic 從雲端工作階段保留的內容
-* [Claude Tag](https://claude.com/docs/claude-tag/overview)：在 Slack 中由組織管理的 @Claude，在相同的雲端環境中執行
+* [Claude Tag](https://claude.com/docs/claude-tag/overview)：在 Slack 中由組織管理的 @Claude，在相同的雲端基礎設施上執行

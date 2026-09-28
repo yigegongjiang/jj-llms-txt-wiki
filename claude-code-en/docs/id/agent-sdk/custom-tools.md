@@ -8,13 +8,11 @@
 
 Alat kustom memperluas SDK Agent dengan memungkinkan Anda menentukan fungsi Anda sendiri yang dapat dipanggil Claude selama percakapan. Menggunakan server MCP dalam proses SDK, Anda dapat memberikan Claude akses ke database, API eksternal, logika khusus domain, atau kemampuan lain yang dibutuhkan aplikasi Anda.
 
-Panduan ini mencakup cara menentukan alat dengan skema input dan penangan, membundel mereka ke dalam server MCP, meneruskannya ke `query`, dan mengontrol alat mana yang dapat diakses Claude. Ini juga mencakup penanganan kesalahan, anotasi alat, dan mengembalikan konten non-teks seperti gambar.
-
 <h2 id="quick-reference">
   Referensi cepat
 </h2>
 
-| Jika Anda ingin...                            | Lakukan ini                                                                                                                                                                                                     |
+| Apa yang ingin Anda lakukan                   | Lakukan ini                                                                                                                                                                                                     |
 | :-------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Menentukan alat                               | Gunakan [`@tool`](/docs/id/agent-sdk/python#tool) (Python) atau [`tool()`](/docs/id/agent-sdk/typescript#tool) (TypeScript) dengan nama, deskripsi, skema, dan penangan. Lihat [Buat alat kustom](#create-a-custom-tool). |
 | Mendaftarkan alat dengan Claude               | Bungkus dalam `create_sdk_mcp_server` / `createSdkMcpServer` dan teruskan ke `mcpServers` dalam `query()`. Lihat [Panggil alat kustom](#call-a-custom-tool).                                                    |
@@ -30,23 +28,23 @@ Panduan ini mencakup cara menentukan alat dengan skema input dan penangan, membu
   Buat alat kustom
 </h2>
 
-Alat didefinisikan oleh empat bagian, diteruskan sebagai argumen ke pembantu [`tool()`](/docs/id/agent-sdk/typescript#tool) di TypeScript atau dekorator [`@tool`](/docs/id/agent-sdk/python#tool) di Python:
+Alat didefinisikan oleh empat bagian, dilewatkan sebagai argumen ke helper [`tool()`](/docs/id/agent-sdk/typescript#tool) di TypeScript atau dekorator [`@tool`](/docs/id/agent-sdk/python#tool) di Python:
 
 * **Nama:** pengidentifikasi unik yang digunakan Claude untuk memanggil alat.
 * **Deskripsi:** apa yang dilakukan alat. Claude membaca ini untuk memutuskan kapan memanggilnya.
-* **Skema input:** argumen yang harus disediakan Claude. Di TypeScript ini selalu [skema Zod](https://zod.dev/), dan `args` penangan diketik darinya secara otomatis. Di Python ini adalah dict yang memetakan nama ke tipe, seperti `{"latitude": float}`, yang dikonversi SDK ke JSON Schema untuk Anda. Dekorator Python juga menerima dict [JSON Schema](https://json-schema.org/understanding-json-schema/about) lengkap secara langsung ketika Anda membutuhkan enum, rentang, bidang opsional, atau objek bersarang.
-* **Penangan:** fungsi async yang berjalan ketika Claude memanggil alat. Ini menerima argumen yang divalidasi dan harus mengembalikan objek dengan:
-  * `content` (diperlukan): array blok hasil, masing-masing dengan `type` dari `"text"`, `"image"`, `"audio"`, `"resource"`, atau `"resource_link"`. Lihat [Kembalikan gambar dan sumber daya](#return-images-and-resources) untuk blok non-teks.
-  * `structuredContent` (opsional): objek JSON yang menyimpan hasil sebagai data yang dapat dibaca mesin, dikembalikan bersama `content`. Lihat [Kembalikan data terstruktur](#return-structured-data).
-  * `isError` (opsional): atur ke `true` untuk menandakan kegagalan alat sehingga Claude dapat bereaksi terhadapnya. Lihat [Tangani kesalahan](#handle-errors).
+* **Skema input:** argumen yang harus disediakan Claude. Di TypeScript ini selalu [skema Zod](https://zod.dev/), dan `args` handler diketik darinya secara otomatis. Di Python ini adalah dict yang memetakan nama ke tipe, seperti `{"latitude": float}`, yang dikonversi SDK ke JSON Schema untuk Anda. Dekorator Python juga menerima dict [JSON Schema](https://json-schema.org/understanding-json-schema/about) lengkap secara langsung ketika Anda membutuhkan enums, rentang, bidang opsional, atau objek bersarang.
+* **Handler:** fungsi async yang berjalan ketika Claude memanggil alat. Ini menerima argumen yang divalidasi dan harus mengembalikan objek dengan:
+  * `content` (diperlukan): array blok hasil, masing-masing dengan `type` dari `"text"`, `"image"`, `"audio"`, `"resource"`, atau `"resource_link"`. Lihat [Return images and resources](#return-images-and-resources) untuk blok non-teks.
+  * `structuredContent` (opsional): objek JSON yang menyimpan hasil sebagai data yang dapat dibaca mesin, dikembalikan bersama `content`. Lihat [Return structured data](#return-structured-data).
+  * `isError` (opsional): atur ke `true` untuk menandakan kegagalan alat sehingga Claude dapat bereaksi terhadapnya. Lihat [Handle errors](#handle-errors).
 
-Setelah menentukan alat, bungkus dalam server dengan [`createSdkMcpServer`](/docs/id/agent-sdk/typescript#createsdkmcpserver) (TypeScript) atau [`create_sdk_mcp_server`](/docs/id/agent-sdk/python#create_sdk_mcp_server) (Python). Server berjalan dalam proses di dalam aplikasi Anda, bukan sebagai proses terpisah.
+Setelah mendefinisikan alat, bungkus dalam server dengan [`createSdkMcpServer`](/docs/id/agent-sdk/typescript#createsdkmcpserver) (TypeScript) atau [`create_sdk_mcp_server`](/docs/id/agent-sdk/python#create_sdk_mcp_server) (Python). Server berjalan in-process di dalam aplikasi Anda, bukan sebagai proses terpisah.
 
 <h3 id="weather-tool-example">
   Contoh alat cuaca
 </h3>
 
-Contoh ini menentukan alat `get_temperature` dan membungkusnya dalam server MCP. Ini hanya menyiapkan alat; untuk meneruskannya ke `query` dan menjalankannya, lihat [Panggil alat kustom](#call-a-custom-tool) di bawah.
+Contoh ini mendefinisikan alat `get_temperature` dan membungkusnya dalam server MCP. Ini hanya mengatur alat; untuk meneruskannya ke `query` dan menjalankannya, lihat [Call a custom tool](#call-a-custom-tool) di bawah.
 
 <CodeGroup>
   ```python Python theme={null}
@@ -131,16 +129,16 @@ Contoh ini menentukan alat `get_temperature` dan membungkusnya dalam server MCP.
 Lihat referensi TypeScript [`tool()`](/docs/id/agent-sdk/typescript#tool) atau referensi Python [`@tool`](/docs/id/agent-sdk/python#tool) untuk detail parameter lengkap, termasuk format input JSON Schema dan struktur nilai pengembalian.
 
 <Tip>
-  Untuk membuat parameter opsional: di TypeScript, tambahkan `.default()` ke bidang Zod. Di Python, skema dict memperlakukan setiap kunci sebagai wajib, jadi tinggalkan parameter dari skema, sebutkan dalam string deskripsi, dan baca dengan `args.get()` dalam penangan. Alat [`get_precipitation_chance` di bawah](#add-more-tools) menunjukkan kedua pola.
+  Untuk membuat parameter opsional: di TypeScript, tambahkan `.default()` ke bidang Zod. Di Python, skema dict memperlakukan setiap kunci sebagai diperlukan, jadi tinggalkan parameter dari skema, sebutkan dalam string deskripsi, dan baca dengan `args.get()` di handler. Alat [`get_precipitation_chance` di bawah](#add-more-tools) menunjukkan kedua pola.
 </Tip>
 
 <h3 id="call-a-custom-tool">
   Panggil alat kustom
 </h3>
 
-Teruskan server MCP yang Anda buat ke `query` melalui opsi `mcpServers`. Kunci dalam `mcpServers` menjadi segmen `{server_name}` dalam nama lengkap setiap alat: `mcp__{server_name}__{tool_name}`. Cantumkan nama itu dalam `allowedTools` sehingga alat berjalan tanpa prompt izin.
+Teruskan server MCP yang Anda buat ke `query` melalui opsi `mcpServers`. Kunci dalam `mcpServers` menjadi segmen `{server_name}` dalam nama lengkap setiap alat: `mcp__{server_name}__{tool_name}`. Daftarkan nama itu dalam `allowedTools` sehingga alat berjalan tanpa prompt izin.
 
-Cuplikan ini menggunakan kembali `weatherServer` dari [contoh di atas](#weather-tool-example) untuk menanyakan Claude tentang cuaca di lokasi tertentu.
+Potongan ini menggunakan kembali `weatherServer` dari [contoh alat cuaca](#weather-tool-example) untuk menanyakan Claude tentang cuaca di lokasi tertentu.
 
 <CodeGroup>
   ```python Python theme={null}
@@ -184,13 +182,15 @@ Cuplikan ini menggunakan kembali `weatherServer` dari [contoh di atas](#weather-
   ```
 </CodeGroup>
 
+Gabungkan potongan ini dengan definisi alat dan server dari [contoh alat cuaca](#weather-tool-example) dalam satu file, kemudian jalankan dengan `python weather.py` untuk Python atau `npx tsx weather.ts` untuk TypeScript. Claude memanggil `get_temperature` dan skrip mencetak jawaban satu baris dengan suhu saat ini di San Francisco.
+
 <h3 id="add-more-tools">
   Tambahkan lebih banyak alat
 </h3>
 
-Server menyimpan sebanyak alat yang Anda cantumkan dalam array `tools` nya. Dengan lebih dari satu alat di server, Anda dapat mencantumkan masing-masing dalam `allowedTools` secara individual atau menggunakan wildcard `mcp__weather__*` untuk mencakup setiap alat yang diekspos server.
+Server menampung sebanyak alat yang Anda daftarkan dalam array `tools`-nya. Dengan lebih dari satu alat di server, Anda dapat mendaftarkan masing-masing dalam `allowedTools` secara individual atau menggunakan wildcard `mcp__weather__*` untuk mencakup setiap alat yang diekspos server.
 
-Contoh di bawah menambahkan alat kedua, `get_precipitation_chance`, ke `weatherServer` dari [contoh alat cuaca](#weather-tool-example) dan membangunnya kembali dengan kedua alat dalam array.
+Contoh di bawah mendefinisikan alat kedua, `get_precipitation_chance`, dan mengganti definisi `weatherServer` dari [contoh alat cuaca](#weather-tool-example) dengan yang mencantumkan kedua alat dalam array.
 
 <CodeGroup>
   ```python Python theme={null}
@@ -273,13 +273,13 @@ Contoh di bawah menambahkan alat kedua, `get_precipitation_chance`, ke `weatherS
   ```
 </CodeGroup>
 
-Setiap alat dalam array ini mengonsumsi ruang jendela konteks pada setiap giliran. Jika Anda menentukan puluhan alat, lihat [pencarian alat](/docs/id/agent-sdk/tool-search) untuk memuat mereka sesuai permintaan.
+[Tool search](/docs/id/agent-sdk/tool-search) aktif secara default dan menunda alat SDK MCP: Claude melihat nama setiap alat dalam daftar kompak dan memuat skema lengkapnya sesuai permintaan. Dengan pencarian alat dinonaktifkan, setiap alat dalam array ini mengonsumsi ruang jendela konteks pada setiap giliran. Di TypeScript, teruskan `alwaysLoad: true` dalam argumen `extras` dari [`tool()`](/docs/id/agent-sdk/typescript#tool) atau dalam opsi [`createSdkMcpServer()`](/docs/id/agent-sdk/typescript#createsdkmcpserver) untuk menjaga skema lengkap alat dalam prompt awal.
 
 <h3 id="add-tool-annotations">
   Tambahkan anotasi alat
 </h3>
 
-[Anotasi alat](https://modelcontextprotocol.io/docs/concepts/tools#tool-annotations) adalah metadata opsional yang menggambarkan perilaku alat. Teruskan sebagai argumen kelima ke pembantu `tool()` di TypeScript atau melalui argumen kata kunci `annotations` untuk dekorator `@tool` di Python. Semua bidang hint adalah Boolean.
+[Anotasi alat](https://modelcontextprotocol.io/docs/concepts/tools#tool-annotations) adalah metadata opsional yang menjelaskan bagaimana alat berperilaku. Teruskan sebagai argumen kelima ke helper `tool()` di TypeScript atau melalui argumen kata kunci `annotations` untuk dekorator `@tool` di Python. Semua bidang petunjuk adalah Boolean.
 
 | Bidang            | Default | Arti                                                                                                                        |
 | :---------------- | :------ | :-------------------------------------------------------------------------------------------------------------------------- |
@@ -288,7 +288,7 @@ Setiap alat dalam array ini mengonsumsi ruang jendela konteks pada setiap gilira
 | `idempotentHint`  | `false` | Panggilan berulang dengan argumen yang sama tidak memiliki efek tambahan. Hanya informatif.                                 |
 | `openWorldHint`   | `true`  | Alat menjangkau sistem di luar proses Anda. Hanya informatif.                                                               |
 
-Anotasi adalah metadata, bukan penegakan. Alat yang ditandai `readOnlyHint: true` masih dapat menulis ke disk jika itulah yang dilakukan penangan. Jaga anotasi akurat dengan penangan.
+Anotasi adalah metadata, bukan penegakan. Alat yang ditandai `readOnlyHint: true` masih dapat menulis ke disk jika itulah yang dilakukan handler. Jaga anotasi tetap akurat dengan handler.
 
 Contoh ini menambahkan `readOnlyHint` ke alat `get_temperature` dari [contoh alat cuaca](#weather-tool-example).
 
@@ -310,6 +310,9 @@ Contoh ini menambahkan `readOnlyHint` ke alat `get_temperature` dari [contoh ala
   ```
 
   ```typescript TypeScript theme={null}
+  import { tool } from "@anthropic-ai/claude-agent-sdk";
+  import { z } from "zod";
+
   tool(
     "get_temperature",
     "Get the current temperature at a location",
@@ -323,55 +326,47 @@ Contoh ini menambahkan `readOnlyHint` ke alat `get_temperature` dari [contoh ala
 Lihat `ToolAnnotations` dalam referensi [TypeScript](/docs/id/agent-sdk/typescript#toolannotations) atau [Python](/docs/id/agent-sdk/python#toolannotations).
 
 <h2 id="control-tool-access">
-  Kontrol akses alat
+  Kontrol akses tool
 </h2>
 
-Contoh [alat cuaca](#weather-tool-example) mendaftarkan server dan mencantumkan alat dalam `allowedTools`. Bagian ini mencakup cara nama alat dibangun dan cara membatasi akses ketika Anda memiliki beberapa alat atau ingin membatasi bawaan.
-
-<h3 id="tool-name-format">
-  Format nama alat
-</h3>
-
-Ketika alat MCP diekspos ke Claude, nama mereka mengikuti format tertentu:
-
-* Pola: `mcp__{server_name}__{tool_name}`
-* Contoh: Alat bernama `get_temperature` di server `weather` menjadi `mcp__weather__get_temperature`
+Contoh [weather tool](#weather-tool-example) mendaftarkan server dan mencantumkan tools dalam `allowedTools`. Bagian ini mencakup cara membatasi akses ketika Anda memiliki beberapa tools atau ingin membatasi built-ins. Untuk cara nama tool dibangun, lihat [Call a custom tool](#call-a-custom-tool).
 
 <h3 id="configure-allowed-tools">
-  Konfigurasi alat yang diizinkan
+  Konfigurasi tools yang diizinkan
 </h3>
 
-Opsi `tools` dan daftar izin/larangan yang diizinkan mempengaruhi dua lapisan: ketersediaan, yang mengontrol apakah alat muncul dalam konteks Claude, dan izin, yang mengontrol apakah panggilan disetujui setelah Claude mencobanya. `tools` dan entri `disallowedTools` dengan nama biasa mengubah ketersediaan. `allowedTools` dan aturan `disallowedTools` yang dibatasi ruang lingkup mengubah izin saja.
+Opsi `tools` dan daftar allowed/disallowed mempengaruhi dua lapisan: availability, yang mengontrol apakah tool muncul dalam konteks Claude, dan permission, yang mengontrol apakah panggilan disetujui setelah Claude mencobanya. `tools` dan entri `disallowedTools` dengan nama bare mengubah availability. `allowedTools` dan aturan `disallowedTools` yang scoped mengubah permission. Jika Anda menyebutkan salah satu dari [task-tracking tools](/docs/id/agent-sdk/todo-tracking#model-availability) dalam `allowedTools`, Claude Code juga memilih sesi masuk.
 
-| Opsi                      | Lapisan      | Efek                                                                                                                                                                                                                                             |
-| :------------------------ | :----------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `tools: ["Read", "Grep"]` | Ketersediaan | Hanya bawaan yang tercantum ada dalam konteks Claude. Bawaan yang tidak tercantum dihapus. Alat MCP tidak terpengaruh.                                                                                                                           |
-| `tools: []`               | Ketersediaan | Semua bawaan dihapus. Claude hanya dapat menggunakan alat MCP Anda.                                                                                                                                                                              |
-| alat yang diizinkan       | Izin         | Alat yang tercantum berjalan tanpa prompt izin. Alat yang tidak tercantum tetap tersedia; panggilan melalui [alur izin](/docs/id/agent-sdk/permissions).                                                                                              |
-| alat yang dilarang        | Keduanya     | Nama alat biasa seperti `"Bash"` menghapus alat dari konteks Claude, sama seperti menghilangkannya dari `tools`. Aturan yang dibatasi ruang lingkup seperti `"Bash(rm *)"` membiarkan alat dalam konteks dan hanya menolak panggilan yang cocok. |
+| Opsi                      | Lapisan      | Efek                                                                                                                                                                                                                                                                                |
+| :------------------------ | :----------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `tools: ["Read", "Grep"]` | Availability | Hanya built-ins yang tercantum berada dalam konteks Claude. Built-ins yang tidak tercantum dihapus. Tools MCP tidak terpengaruh.                                                                                                                                                    |
+| `tools: []`               | Availability | Semua built-ins dihapus. Claude hanya dapat menggunakan tools MCP Anda.                                                                                                                                                                                                             |
+| allowed tools             | Permission   | Tools yang tercantum berjalan tanpa prompt permission. Tools lain yang tidak tercantum tetap tersedia; panggilan melalui [permission flow](/docs/id/agent-sdk/permissions).                                                                                                              |
+| disallowed tools          | Keduanya     | Nama tool bare seperti `"Bash"` menghapus tool dari konteks Claude, sama seperti menghilangkannya dari `tools`. Aturan scoped seperti `"Bash(rm *)"` membiarkan tool dalam konteks dan menolak hanya panggilan yang cocok [seperti yang ditulis](/docs/id/permissions#bash-rule-limits). |
 
-Untuk menghapus bawaan sepenuhnya, hilangkan dari `tools` atau cantumkan nama biasanya dalam `disallowedTools` (Python: `disallowed_tools`); keduanya membuat alat tetap keluar dari konteks sehingga Claude tidak pernah mencobanya. Aturan `disallowedTools` yang dibatasi ruang lingkup memblokir panggilan yang cocok tetapi membiarkan alat terlihat, jadi Claude mungkin membuang giliran mencobanya. Lihat [Konfigurasi izin](/docs/id/agent-sdk/permissions) untuk urutan evaluasi lengkap.
+Untuk menghapus built-in sepenuhnya, hilangkan dari `tools` atau cantumkan nama barenya dalam `disallowedTools` (Python: `disallowed_tools`); keduanya membuat tool tetap keluar dari konteks sehingga Claude tidak pernah mencobanya. Aturan `disallowedTools` yang scoped memblokir panggilan yang cocok tetapi membiarkan tool tetap terlihat, jadi Claude mungkin membuang giliran mencobanya. Lihat [Configure permissions](/docs/id/agent-sdk/permissions) untuk urutan evaluasi lengkap.
 
 <h2 id="handle-errors">
-  Tangani kesalahan
+  Menangani kesalahan
 </h2>
 
-Kesalahan penangan tidak menghentikan loop agen. Server MCP dalam proses SDK menangkap pengecualian yang tidak tertangkap dan mengembalikannya sebagai hasil kesalahan, jadi cara Anda melaporkan kesalahan menentukan apa yang Claude baca, bukan apakah kueri gagal:
+Kesalahan handler tidak menghentikan loop agen. Server MCP in-process SDK menangkap pengecualian yang tidak tertangani dan mengembalikannya sebagai hasil kesalahan, jadi cara Anda melaporkan kesalahan menentukan apa yang Claude baca, bukan apakah kueri gagal:
 
-| Apa yang terjadi                                                                                  | Hasil                                                                                                                                                                                      |
-| :------------------------------------------------------------------------------------------------ | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Penangan melempar pengecualian yang tidak tertangkap                                              | Server MCP mengonversinya menjadi hasil kesalahan yang membawa pesan pengecualian mentah. Claude melihat pesan itu, dan loop agen berlanjut.                                               |
-| Penangan menangkap kesalahan dan mengembalikan `isError: true` (TS) / `"is_error": True` (Python) | Claude melihat pesan yang Anda susun. Anda dapat menambahkan konteks yang kurang dari pengecualian mentah, seperti permintaan mana yang gagal atau apa yang harus dicoba sebagai gantinya. |
+| Apa yang terjadi                                                                                 | Hasil                                                                                                                                                                                      |
+| :----------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Handler melempar pengecualian yang tidak tertangani                                              | Server MCP mengonversinya menjadi hasil kesalahan yang membawa pesan pengecualian mentah. Claude melihat pesan itu, dan loop agen berlanjut.                                               |
+| Handler menangkap kesalahan dan mengembalikan `isError: true` (TS) / `"is_error": True` (Python) | Claude melihat pesan yang Anda susun. Anda dapat menambahkan konteks yang kurang dari pengecualian mentah, seperti permintaan mana yang gagal atau apa yang harus dicoba sebagai gantinya. |
 
-Dalam kedua kasus Claude dapat mencoba lagi, mencoba alat berbeda, atau menjelaskan kegagalan. Tangani kesalahan sendiri ketika pesan pengecualian mentah tidak cukup bagi Claude untuk bertindak.
+Dalam kedua kasus Claude dapat mencoba kembali, mencoba alat yang berbeda, atau menjelaskan kegagalan. Tangkap kesalahan sendiri ketika pesan pengecualian mentah tidak cukup bagi Claude untuk bertindak.
 
-Contoh di bawah menangkap dua jenis kegagalan di dalam penangan dan menyusun pesan kesalahan yang Claude baca. Status HTTP non-200 ditangkap dari respons dan dikembalikan sebagai hasil kesalahan. Kesalahan jaringan atau JSON yang tidak valid ditangkap oleh `try/except` (Python) atau `try/catch` (TypeScript) sekitarnya dan juga dikembalikan sebagai hasil kesalahan. Dalam kedua kasus Claude menerima pesan yang menjelaskan kegagalan alih-alih string pengecualian telanjang.
+Contoh di bawah ini menangkap dua jenis kegagalan di dalam handler dan menyusun pesan kesalahan yang Claude baca. Status HTTP non-200 ditangkap dari respons dan dikembalikan sebagai hasil kesalahan. Kesalahan jaringan atau JSON yang tidak valid ditangkap oleh `try/except` (Python) atau `try/catch` (TypeScript) di sekitarnya dan juga dikembalikan sebagai hasil kesalahan. Dalam kedua kasus Claude menerima pesan yang menjelaskan kegagalan alih-alih string pengecualian kosong.
 
 <CodeGroup>
   ```python Python theme={null}
   import json
   import httpx
   from typing import Any
+  from claude_agent_sdk import tool
 
 
   @tool(
@@ -408,6 +403,9 @@ Contoh di bawah menangkap dua jenis kegagalan di dalam penangan dan menyusun pes
   ```
 
   ```typescript TypeScript theme={null}
+  import { tool } from "@anthropic-ai/claude-agent-sdk";
+  import { z } from "zod";
+
   tool(
     "fetch_data",
     "Fetch data from an API",
@@ -460,27 +458,30 @@ Contoh di bawah menangkap dua jenis kegagalan di dalam penangan dan menyusun pes
 </CodeGroup>
 
 <h2 id="return-images-and-resources">
-  Kembalikan gambar dan sumber daya
+  Mengembalikan gambar dan sumber daya
 </h2>
 
-Array `content` dalam hasil alat menerima blok `text`, `image`, `audio`, `resource`, dan `resource_link`. Anda dapat mencampurnya dalam respons yang sama. Dalam TypeScript, blok audio disimpan ke disk dan Claude menerima blok teks dengan jalur file yang disimpan; dalam Python, SDK menghapus blok audio dari hasil alat dan mencatat peringatan. Blok tautan sumber daya dikonversi menjadi blok teks yang berisi nama tautan, URI, dan deskripsi.
+Array `content` dalam hasil tool menerima blok `text`, `image`, `audio`, `resource`, dan `resource_link`. Anda dapat mencampurnya dalam respons yang sama. Di TypeScript, SDK menyimpan blok audio ke disk dan Claude menerima blok teks dengan jalur file yang disimpan; di Python, SDK menghapus blok audio dari hasil tool dan mencatat peringatan.
+
+Claude menerima setiap blok tautan sumber daya sebagai blok teks yang berisi nama tautan, URI, dan deskripsi. Di TypeScript, aplikasi Anda juga menerima tautan itu sendiri sebagai [`resourceLinks`](/docs/id/agent-sdk/typescript#sdkmcpresourcelink) pada `tool_use_result` pesan pengguna; di Python, SDK meratakan mereka ke teks sebelum CLI melihat hasilnya, jadi kunci Python [`resourceLinks`](/docs/id/agent-sdk/python#usermessage) tidak pernah diproduksi untuk tool dalam proses.
 
 <h3 id="images">
   Gambar
 </h3>
 
-Blok gambar membawa byte gambar secara inline, dikodekan sebagai base64. Tidak ada bidang URL. Untuk mengembalikan gambar yang berada di URL, ambil dalam penangan, baca byte respons, dan kodekan base64 sebelum mengembalikan. Hasilnya diproses sebagai input visual.
+Blok gambar membawa byte gambar secara inline, dikodekan sebagai base64. Tidak ada bidang URL. Untuk mengembalikan gambar yang berada di URL, ambil dalam handler, baca byte respons, dan kodekan base64 sebelum mengembalikan. Hasilnya diproses sebagai input visual.
 
-| Bidang     | Tipe      | Catatan                                                                                |
-| :--------- | :-------- | :------------------------------------------------------------------------------------- |
-| `type`     | `"image"` |                                                                                        |
-| `data`     | `string`  | Byte yang dikodekan Base64. Hanya base64 mentah, tanpa awalan `data:image/...;base64,` |
-| `mimeType` | `string`  | Diperlukan. Misalnya `image/png`, `image/jpeg`, `image/webp`, `image/gif`              |
+| Field      | Type      | Notes                                                                                 |
+| :--------- | :-------- | :------------------------------------------------------------------------------------ |
+| `type`     | `"image"` |                                                                                       |
+| `data`     | `string`  | Byte yang dikodekan Base64. Base64 mentah saja, tanpa awalan `data:image/...;base64,` |
+| `mimeType` | `string`  | Diperlukan. Misalnya `image/png`, `image/jpeg`, `image/webp`, `image/gif`             |
 
 <CodeGroup>
   ```python Python theme={null}
   import base64
   import httpx
+  from claude_agent_sdk import tool
 
 
   # Define a tool that fetches an image from a URL and returns it to Claude
@@ -505,6 +506,9 @@ Blok gambar membawa byte gambar secara inline, dikodekan sebagai base64. Tidak a
   ```
 
   ```typescript TypeScript theme={null}
+  import { tool } from "@anthropic-ai/claude-agent-sdk";
+  import { z } from "zod";
+
   tool(
     "fetch_image",
     "Fetch an image from a URL and return it to Claude",
@@ -531,20 +535,20 @@ Blok gambar membawa byte gambar secara inline, dikodekan sebagai base64. Tidak a
 </CodeGroup>
 
 <h3 id="resources">
-  Sumber daya
+  Sumber Daya
 </h3>
 
-Blok sumber daya menyematkan sepotong konten yang diidentifikasi oleh URI. URI adalah label untuk Claude referensikan; konten aktual berada dalam bidang `text` atau `blob` blok. Gunakan ini ketika alat Anda menghasilkan sesuatu yang masuk akal untuk ditangani berdasarkan nama nanti, seperti file yang dihasilkan atau catatan dari sistem eksternal.
+Blok sumber daya menyematkan sepotong konten yang diidentifikasi oleh URI. URI adalah label untuk Claude untuk referensi; konten aktual berada di bidang `text` atau `blob` blok. Gunakan ini ketika tool Anda menghasilkan sesuatu yang masuk akal untuk ditangani berdasarkan nama nanti, seperti file yang dihasilkan atau catatan dari sistem eksternal.
 
-| Bidang              | Tipe         | Catatan                                                                                                                                    |
+| Field               | Type         | Notes                                                                                                                                      |
 | :------------------ | :----------- | :----------------------------------------------------------------------------------------------------------------------------------------- |
 | `type`              | `"resource"` |                                                                                                                                            |
-| `resource.uri`      | `string`     | Pengidentifikasi untuk konten. Skema URI apa pun                                                                                           |
-| `resource.text`     | `string`     | Konten, jika teks. Sediakan ini atau `blob`, bukan keduanya                                                                                |
-| `resource.blob`     | `string`     | Konten yang dikodekan base64, jika biner. Hanya TypeScript: SDK Python menghapus sumber daya biner dari hasil alat dan mencatat peringatan |
+| `resource.uri`      | `string`     | Pengenal untuk konten. Skema URI apa pun                                                                                                   |
+| `resource.text`     | `string`     | Konten, jika berupa teks. Berikan ini atau `blob`, bukan keduanya                                                                          |
+| `resource.blob`     | `string`     | Konten yang dikodekan base64, jika biner. Hanya TypeScript: SDK Python menghapus sumber daya biner dari hasil tool dan mencatat peringatan |
 | `resource.mimeType` | `string`     | Opsional                                                                                                                                   |
 
-Contoh ini menunjukkan blok sumber daya yang dikembalikan dari dalam penangan alat. URI `file:///tmp/report.md` adalah label yang dapat direferensikan Claude nanti; SDK tidak membaca dari jalur itu.
+Contoh ini menunjukkan blok sumber daya yang dikembalikan dari dalam handler tool. URI `file:///tmp/report.md` adalah label yang dapat direferensikan Claude nanti; SDK tidak membaca dari jalur tersebut.
 
 <CodeGroup>
   ```typescript TypeScript theme={null}
@@ -578,15 +582,15 @@ Contoh ini menunjukkan blok sumber daya yang dikembalikan dari dalam penangan al
   ```
 </CodeGroup>
 
-Bentuk blok ini berasal dari tipe MCP `CallToolResult`. Lihat [spesifikasi MCP](https://modelcontextprotocol.io/specification/2025-06-18/server/tools#tool-result) untuk definisi lengkap.
+Bentuk blok ini berasal dari tipe MCP `CallToolResult`. Lihat [spesifikasi MCP](https://modelcontextprotocol.io/specification/2025-06-18/server/tools#tool-result) untuk definisi lengkapnya.
 
 <h2 id="return-structured-data">
-  Kembalikan data terstruktur
+  Mengembalikan data terstruktur
 </h2>
 
-`structuredContent` adalah objek JSON opsional pada hasil, terpisah dari array `content`. Gunakan untuk mengembalikan nilai mentah yang dapat dibaca Claude sebagai bidang tepat alih-alih menguraikannya dari string teks atau gambar.
+`structuredContent` adalah objek JSON opsional pada hasil, terpisah dari array `content`. Gunakan untuk mengembalikan nilai mentah yang dapat dibaca Claude sebagai bidang yang tepat daripada menguraikannya dari string teks atau gambar.
 
-Ketika `structuredContent` diatur, Claude menerima JSON plus blok gambar atau sumber daya apa pun dari `content`. Blok teks dalam `content` tidak diteruskan, karena diasumsikan menduplikasi data terstruktur. Contoh di bawah merender bagan sebagai blok gambar dan mengembalikan titik data di baliknya dalam `structuredContent` dari penangan yang sama.
+Ketika `structuredContent` diatur, Claude menerima JSON ditambah blok gambar atau sumber daya apa pun dari `content`. Blok teks dalam `content` tidak diteruskan, karena diasumsikan menduplikasi data terstruktur. Contoh di bawah merender bagan sebagai blok gambar dan mengembalikan titik data di baliknya dalam `structuredContent` dari penangan yang sama. Dalam cuplikan, `chartPngBuffer` adalah `Buffer` yang menyimpan byte PNG yang dirender.
 
 ```typescript TypeScript theme={null}
 return {
@@ -606,19 +610,19 @@ return {
 ```
 
 <Note>
-  Dekorator Python `@tool` hanya meneruskan `content` dan `is_error` dari dict pengembalian penangan. Untuk mengembalikan `structuredContent` dari Python, jalankan [server MCP mandiri](/docs/id/agent-sdk/mcp) alih-alih server SDK dalam proses.
+  Dekorator Python `@tool` hanya meneruskan `content` dan `is_error` dari dict pengembalian penangan. Untuk mengembalikan `structuredContent` dari Python, jalankan [server MCP mandiri](/docs/id/agent-sdk/mcp) daripada server SDK dalam proses.
 </Note>
 
 <h2 id="example-unit-converter">
-  Contoh: konverter unit
+  Contoh: konverter satuan
 </h2>
 
-Alat ini mengonversi nilai antara unit panjang, suhu, dan berat. Pengguna dapat menanyakan "konversi 100 kilometer ke mil" atau "berapa 72°F dalam Celsius," dan Claude memilih tipe unit dan unit yang tepat dari permintaan.
+Alat ini mengonversi nilai antara satuan panjang, suhu, dan berat. Pengguna dapat bertanya "konversi 100 kilometer ke mil" atau "berapa 72°F dalam Celsius," dan Claude memilih jenis satuan dan satuan yang tepat dari permintaan.
 
-Ini menunjukkan dua pola:
+Ini mendemonstrasikan dua pola:
 
-* **Skema enum:** `unit_type` dibatasi pada set nilai tetap. Di TypeScript, gunakan `z.enum()`. Di Python, skema dict tidak mendukung enum, jadi dict JSON Schema lengkap diperlukan.
-* **Penanganan input yang tidak didukung:** ketika pasangan konversi tidak ditemukan, penangan mengembalikan `isError: true` sehingga Claude dapat memberi tahu pengguna apa yang salah alih-alih memperlakukan kegagalan sebagai hasil normal.
+* **Enum schemas:** `unit_type` dibatasi pada sekumpulan nilai tetap. Di TypeScript, gunakan `z.enum()`. Di Python, dict schema tidak mendukung enums, jadi JSON Schema dict lengkap diperlukan.
+* **Unsupported input handling:** ketika pasangan konversi tidak ditemukan, handler mengembalikan `isError: true` sehingga Claude dapat memberitahu pengguna apa yang salah daripada memperlakukan kegagalan sebagai hasil normal.
 
 <CodeGroup>
   ```python Python theme={null}
@@ -777,7 +781,9 @@ Ini menunjukkan dua pola:
   ```
 </CodeGroup>
 
-Setelah server didefinisikan, teruskan ke `query` dengan cara yang sama seperti contoh cuaca. Contoh ini mengirim tiga prompt berbeda dalam loop untuk menunjukkan alat yang sama menangani tipe unit berbeda. Untuk setiap respons, ia memeriksa objek `AssistantMessage` (yang berisi panggilan alat yang dibuat Claude selama giliran itu) dan mencetak setiap `ToolUseBlock` sebelum mencetak teks `ResultMessage` akhir. Ini memungkinkan Anda melihat kapan Claude menggunakan alat versus menjawab dari pengetahuannya sendiri.
+Setelah server didefinisikan, teruskan ke `query` dengan cara yang sama seperti contoh cuaca. Contoh ini mengirimkan tiga prompt berbeda dalam loop untuk menunjukkan alat yang sama menangani jenis satuan yang berbeda. Untuk setiap respons, ia memeriksa objek `AssistantMessage` (yang berisi panggilan alat yang dibuat Claude selama giliran itu) dan mencetak setiap `ToolUseBlock` sebelum mencetak teks `ResultMessage` akhir. Ini memungkinkan Anda melihat kapan Claude menggunakan alat versus menjawab dari pengetahuannya sendiri.
+
+Karena [tool search](/docs/id/agent-sdk/tool-search) aktif secara default, output juga dapat mencakup panggilan `ToolSearch` saat Claude memuat skema alat yang ditunda.
 
 <CodeGroup>
   ```python Python theme={null}
@@ -804,13 +810,19 @@ Setelah server didefinisikan, teruskan ke `query` dengan cara yang sama seperti 
       ]
 
       for prompt in prompts:
-          async for message in query(prompt=prompt, options=options):
-              if isinstance(message, AssistantMessage):
-                  for block in message.content:
-                      if isinstance(block, ToolUseBlock):
-                          print(f"[tool call] {block.name}({block.input})")
-              elif isinstance(message, ResultMessage) and message.subtype == "success":
-                  print(f"Q: {prompt}\nA: {message.result}\n")
+          try:
+              async for message in query(prompt=prompt, options=options):
+                  if isinstance(message, AssistantMessage):
+                      for block in message.content:
+                          if isinstance(block, ToolUseBlock):
+                              print(f"[tool call] {block.name}({block.input})")
+                  elif isinstance(message, ResultMessage) and message.subtype == "success":
+                      print(f"Q: {prompt}\nA: {message.result}\n")
+          except Exception as error:
+              # A single-shot query() raises after yielding an error result. Only success
+              # results are printed above, so handle the failure here and continue with
+              # the next prompt.
+              print(f"Call failed: {error}")
 
 
   asyncio.run(main())
@@ -826,44 +838,42 @@ Setelah server didefinisikan, teruskan ke `query` dengan cara yang sama seperti 
   ];
 
   for (const prompt of prompts) {
-    for await (const message of query({
-      prompt,
-      options: {
-        mcpServers: { converter: converterServer },
-        allowedTools: ["mcp__converter__convert_units"]
-      }
-    })) {
-      if (message.type === "assistant") {
-        for (const block of message.message.content) {
-          if (block.type === "tool_use") {
-            console.log(`[tool call] ${block.name}`, block.input);
-          }
+    try {
+      for await (const message of query({
+        prompt,
+        options: {
+          mcpServers: { converter: converterServer },
+          allowedTools: ["mcp__converter__convert_units"]
         }
-      } else if (message.type === "result" && message.subtype === "success") {
-        console.log(`Q: ${prompt}\nA: ${message.result}\n`);
+      })) {
+        if (message.type === "assistant") {
+          for (const block of message.message.content) {
+            if (block.type === "tool_use") {
+              console.log(`[tool call] ${block.name}`, block.input);
+            }
+          }
+        } else if (message.type === "result" && message.subtype === "success") {
+          console.log(`Q: ${prompt}\nA: ${message.result}\n`);
+        }
       }
+    } catch (error) {
+      // A single-shot query() throws after yielding an error result. Only success
+      // results are logged above, so handle the failure here and continue with
+      // the next prompt.
+      console.error(`Call failed: ${error}`);
     }
   }
   ```
 </CodeGroup>
 
 <h2 id="next-steps">
-  Langkah berikutnya
+  Langkah Berikutnya
 </h2>
 
-Alat kustom membungkus fungsi async dalam antarmuka standar. Anda dapat mencampur pola di halaman ini di server yang sama: server tunggal dapat menyimpan alat database, alat gateway API, dan renderer gambar bersama-sama.
+Anda dapat menggabungkan pola-pola di halaman ini dalam server yang sama: satu server dapat menampung alat database, alat gateway API, dan renderer gambar bersama-sama.
 
 Dari sini:
 
-* Jika server Anda tumbuh menjadi puluhan alat, lihat [pencarian alat](/docs/id/agent-sdk/tool-search) untuk menunda pemuatan mereka sampai Claude membutuhkannya.
-* Untuk terhubung ke server MCP eksternal (sistem file, GitHub, Slack) alih-alih membangun milik Anda sendiri, lihat [Hubungkan server MCP](/docs/id/agent-sdk/mcp).
+* Jika server Anda berkembang menjadi puluhan alat, lihat [pencarian alat](/docs/id/agent-sdk/tool-search) untuk menunda pemuatan hingga Claude membutuhkannya.
+* Untuk terhubung ke server MCP eksternal (filesystem, GitHub, Slack) alih-alih membangun server Anda sendiri, lihat [Hubungkan server MCP](/docs/id/agent-sdk/mcp).
 * Untuk mengontrol alat mana yang berjalan secara otomatis versus memerlukan persetujuan, lihat [Konfigurasi izin](/docs/id/agent-sdk/permissions).
-
-<h2 id="related-documentation">
-  Dokumentasi terkait
-</h2>
-
-* [Referensi SDK TypeScript](/docs/id/agent-sdk/typescript)
-* [Referensi SDK Python](/docs/id/agent-sdk/python)
-* [Dokumentasi MCP](https://modelcontextprotocol.io)
-* [Ikhtisar SDK](/docs/id/agent-sdk/overview)

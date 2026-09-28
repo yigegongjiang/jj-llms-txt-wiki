@@ -36,7 +36,7 @@ Claude hat mehrere Möglichkeiten, mit einer App oder einem Service zu interagie
 * Wenn die Aufgabe Browser-Arbeit ist und Sie [Claude in Chrome](/docs/de/chrome) eingerichtet haben, verwendet Claude das.
 * Wenn keine dieser Optionen zutrifft, verwendet Claude die Computernutzung.
 
-Die Bildschirmsteuerung ist für Dinge reserviert, die nichts anderes erreichen kann: native Apps, Simulatoren und Tools ohne API.
+Die Bildschirmsteuerung ist für Dinge reserviert, die nichts anderes erreichen kann: native Apps, Simulatoren wie der iOS Simulator und Tools ohne API.
 
 <h2 id="enable-computer-use">
   Computernutzung aktivieren
@@ -98,6 +98,8 @@ Apps mit großer Reichweite zeigen eine zusätzliche Warnung in der Aufforderung
 
 Diese Apps sind nicht blockiert. Die Warnung hilft Ihnen zu entscheiden, ob die Aufgabe dieses Zugriffsniveau rechtfertigt.
 
+Genehmigen Sie Finder, um Claude das Klicken auf den Desktop, das Dock oder ein Finder-Fenster zu ermöglichen.
+
 Claudes Kontrollebene variiert auch je nach App-Kategorie: Browser und Handelsplattformen sind nur zum Anschauen, Terminals und IDEs sind nur zum Klicken und alles andere erhält vollständige Kontrolle. Siehe [App-Berechtigungen in Desktop](/docs/de/desktop#app-permissions) für die vollständige Tier-Aufschlüsselung.
 
 <h2 id="how-claude-works-on-your-screen">
@@ -110,7 +112,7 @@ Das Verständnis des Ablaufs hilft Ihnen zu antizipieren, was Claude tun wird un
   Eine Sitzung auf einmal
 </h3>
 
-Die Computernutzung hält eine maschinenweite Sperre vom ersten Computernutzungs-Aktion bis die Sitzung, die sie erworben hat, beendet wird. Ab v2.1.195 gibt das Beenden der Aufgabe die Sperre nicht frei; nur das Beenden der Sitzung tut dies. Wenn eine andere Claude Code-Sitzung bereits Ihren Computer nutzt, schlagen neue Versuche mit einer Nachricht fehl, die Ihnen mitteilt, welche Sitzung die Sperre hält. Beenden Sie diese Sitzung zuerst.
+Nur eine Sitzung auf einmal kann Ihren Computer nutzen. Eine Sitzung erhält eine maschinenweite Sperre bei ihrer ersten Computernutzungs-Aktion und gibt sie frei, wenn die Sitzung beendet wird, nicht wenn die Aufgabe abgeschlossen ist. Eine zweite Sitzung schlägt bei der Computernutzung mit einem Fehler fehl, der die Sitzung benennt, die die Sperre hält. Beenden Sie diese Sitzung zuerst.
 
 <h3 id="apps-are-hidden-while-claude-works">
   Apps werden ausgeblendet, während Claude arbeitet
@@ -132,7 +134,7 @@ Es gibt keine Einstellung zum Ändern der Zielgröße. Wenn Text oder Steuerelem
   Jederzeit stoppen
 </h3>
 
-Wenn Claude die Sperre erhält, erscheint eine macOS-Benachrichtigung: 'Claude nutzt Ihren Computer · drücken Sie Esc zum Stoppen." Drücken Sie `Esc` überall, um die aktuelle Aktion sofort abzubrechen, oder drücken Sie `Ctrl+C` im Terminal. In beiden Fällen stoppt Claude, blendet Ihre Apps wieder ein und gibt Ihnen die Kontrolle zurück. Die Sitzung behält die [Computernutzungssperre](#one-session-at-a-time) bis sie beendet wird.
+Das erste Mal, wenn Claude Ihren Computer in jeder Runde nutzt, erscheint eine macOS-Benachrichtigung: „Claude nutzt Ihren Computer · drücken Sie Esc zum Stoppen." Drücken Sie `Esc` überall, um die aktuelle Aktion sofort abzubrechen, oder drücken Sie `Ctrl+C` im Terminal. In beiden Fällen stoppt Claude, blendet Ihre Apps wieder ein und gibt Ihnen die Kontrolle zurück. Die Sitzung behält die [Computernutzungssperre](#one-session-at-a-time) bis sie beendet wird.
 
 Eine zweite Benachrichtigung erscheint, wenn Claude fertig ist.
 
@@ -197,7 +199,7 @@ Steuern Sie den iOS Simulator, ohne XCTest zu schreiben:
 und sagen Sie mir, ob ein Bildschirm länger als eine Sekunde zum Laden braucht.
 ```
 
-Claude steuert den Simulator auf die gleiche Weise wie Sie mit einer Maus.
+Claude steuert den Simulator auf die gleiche Weise wie Sie mit einer Maus. Dieser Flow gilt für die CLI; in der Desktop-App öffnet die gleiche Anfrage stattdessen den [iOS Simulator-Bereich](/docs/de/desktop-ios-simulator).
 
 <h2 id="differences-from-the-desktop-app">
   Unterschiede zur Desktop-App

@@ -19,11 +19,11 @@ Debido a que un enlace profundo es una URL, puede colocarlo en cualquier lugar d
 
 Esta página cubre cómo [construir un enlace](#build-a-link), [incrustar uno en un runbook o activarlo desde el shell](#examples), y [administrar o deshabilitar el registro del controlador](#registration-and-supported-platforms) en cada plataforma.
 
-<h2 id="how-it-works">
-  Cómo funciona
+<h2 id="how-deep-links-work">
+  Cómo funcionan los enlaces profundos
 </h2>
 
-El prefijo `claude-cli://` es un esquema de URL personalizado que Claude Code registra con su sistema operativo, similar a cómo los enlaces `mailto:` abren su cliente de correo electrónico. El enlace puede estar en una página web, en una wiki, en un mensaje de Slack o en cualquier aplicación que represente enlaces. Cuando hace clic en uno:
+El prefijo `claude-cli://` es un esquema de URL personalizado que Claude Code registra con su sistema operativo, similar a cómo los enlaces `mailto:` abren su cliente de correo electrónico. Cuando hace clic en un enlace profundo:
 
 1. El navegador o la aplicación entrega la URL a su sistema operativo.
 2. El sistema operativo reconoce el prefijo `claude-cli://` e inicia Claude Code en su máquina.
@@ -32,9 +32,7 @@ El prefijo `claude-cli://` es un esquema de URL personalizado que Claude Code re
 
 El enlace en sí puede estar alojado en cualquier lugar, pero la sesión siempre se abre localmente en la computadora donde hizo clic. Consulte [Registro y plataformas compatibles](#registration-and-supported-platforms) para ver qué emulador de terminal se abre en cada sistema operativo.
 
-<Note>
-  La plataforma que muestra el enlace debe permitir esquemas de URL personalizados. El Markdown representado por GitHub permite `http` y `https` pero elimina esquemas como `claude-cli://` en READMEs, problemas, solicitudes de extracción y wikis. Solo se muestra el texto del enlace, sin enlace detrás y la URL oculta. Consulte [Solución de problemas](#the-link-renders-as-plain-text-instead-of-being-clickable) para obtener una solución alternativa.
-</Note>
+La plataforma que muestra el enlace debe permitir esquemas de URL personalizados. Para saber qué hace GitHub con ellos y la solución alternativa, consulte [El enlace se representa como texto sin formato en lugar de ser clickeable](#the-link-renders-as-plain-text-instead-of-being-clickable).
 
 <h3 id="what-a-launched-session-shows">
   Qué muestra una sesión iniciada
@@ -54,12 +52,14 @@ Cada enlace profundo comienza con `claude-cli://open`, que es la única ruta que
 claude-cli://open
 ```
 
+Para probar un enlace sin colocarlo en una página, péguelo en la barra de direcciones de su navegador o [ábralo desde el shell](#open-a-link-from-the-shell).
+
 Agregue parámetros para controlar dónde comienza la sesión y qué contiene el cuadro de mensaje:
 
 | Parámetro | Descripción                                                                                                                                                                                                                                                                      |
 | --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `q`       | Texto para rellenar previamente en el cuadro de mensaje. [Codifique en URL](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent) el valor. Use `%0A` para saltos de línea en mensajes de varias líneas. Máximo 5.000 caracteres. |
-| `cwd`     | Ruta absoluta para usar como directorio de trabajo. Las rutas de red y UNC se rechazan, al igual que las rutas que contienen caracteres de control invisibles o bidireccionales.                                                                                                 |
+| `cwd`     | Ruta absoluta para usar como directorio de trabajo. Las rutas de red y UNC se rechazan, al igual que las rutas que contienen segmentos `..` o caracteres de control invisibles o bidireccionales.                                                                                |
 | `repo`    | Un slug `owner/name` de GitHub. Claude Code lo resuelve a un clon local que ha visto antes e inicia allí. Si no tiene un clon coincidente, la sesión se abre en su directorio de inicio.                                                                                         |
 
 `cwd` y `repo` son [dos formas de establecer el directorio de trabajo](#choose-between-cwd-and-repo). Si pasa ambos, `cwd` tiene prioridad e `repo` se ignora, incluso si la ruta `cwd` no existe.
@@ -77,7 +77,7 @@ Investigate the failed deploy of payments-api.
 Check recent commits to main and the last successful build.
 ```
 
-Puede editar el mensaje antes de presionar Intro para enviarlo. Si no tiene un clon local del repositorio, la sesión se abre en su directorio de inicio. Consulte [Elegir entre `cwd` y `repo`](#choose-between-cwd-and-repo) para saber cómo se selecciona la ruta local cuando tiene múltiples clones o worktrees.
+Puede editar el mensaje antes de presionar Intro para enviarlo. Consulte [Elegir entre `cwd` y `repo`](#choose-between-cwd-and-repo) para saber cómo se selecciona la ruta local cuando tiene múltiples clones o worktrees.
 
 <h3 id="choose-between-cwd-and-repo">
   Elegir entre `cwd` y `repo`
@@ -87,9 +87,7 @@ Use `cwd` cuando todos los que hagan clic en el enlace tengan el proyecto en la 
 
 Use `repo` cuando el enlace se comparte y cada persona clona en una ubicación diferente. Claude Code resuelve el slug a una ruta local de la siguiente manera:
 
-* Cada vez que ejecuta `claude` en un repositorio de Git, la ruta del sistema de archivos de ese directorio se registra contra el slug `owner/name` de GitHub del repositorio.
-* Cuando llega un enlace profundo, `repo` abre cualquier ruta coincidente que haya usado más recientemente. Los múltiples clones y worktrees se rastrean por separado, por lo que elige el que usó por última vez.
-* La búsqueda solo encuentra rutas donde ya ha ejecutado Claude Code al menos una vez.
+* `repo` abre el clon o worktree del repositorio vinculado donde ejecutó `claude` más recientemente. Cada vez que ejecuta `claude` en un repositorio de Git, Claude Code registra la ruta de ese directorio contra el slug `owner/name` de GitHub del repositorio. Claude Code rastrea clones y worktrees por separado.
 * El enlace no cambia qué rama está desprotegida. La sesión se abre en el estado actual de ese directorio.
 
 El encabezado de bienvenida muestra qué ruta eligió para que pueda confirmar que se abrió el clon correcto.
@@ -124,7 +122,7 @@ Para usar esto en su propio runbook, reemplace `acme/web-gateway` con el slug de
   Abrir un enlace desde el shell
 </h3>
 
-También puede abrir un enlace profundo desde un script de shell, alias o automatización en lugar de hacer clic en él. Llame al comando de apertura de URL de su sistema operativo con el enlace como argumento.
+También puede abrir un enlace profundo desde un script de shell, alias o automatización en lugar de hacer clic en él. Llame al comando de apertura de URL de su sistema operativo con el enlace como argumento. Estos comandos se basan en el controlador que Claude Code [registra cuando envía su primer mensaje de una sesión interactiva](#registration-and-supported-platforms) en la máquina.
 
 <Tabs>
   <Tab title="macOS">
@@ -133,6 +131,8 @@ También puede abrir un enlace profundo desde un script de shell, alias o automa
     ```bash theme={null}
     open "claude-cli://open?repo=acme/payments&q=review%20open%20PRs"
     ```
+
+    Si tiene éxito, se abre una nueva ventana de terminal con Claude Code ejecutándose y el mensaje rellenado previamente.
   </Tab>
 
   <Tab title="Linux">
@@ -141,6 +141,8 @@ También puede abrir un enlace profundo desde un script de shell, alias o automa
     ```bash theme={null}
     xdg-open "claude-cli://open?repo=acme/payments&q=review%20open%20PRs"
     ```
+
+    Si tiene éxito, se abre una nueva ventana de terminal con Claude Code ejecutándose y el mensaje rellenado previamente. Si el shell informa que `xdg-open` no se encuentra, consulte [Solución de problemas](#xdg-open-is-not-found-on-linux).
   </Tab>
 
   <Tab title="Windows">
@@ -155,6 +157,8 @@ También puede abrir un enlace profundo desde un script de shell, alias o automa
     ```cmd theme={null}
     start "" "claude-cli://open?repo=acme/payments&q=review%20open%20PRs"
     ```
+
+    Si tiene éxito, se abre una nueva ventana de terminal con Claude Code ejecutándose y el mensaje rellenado previamente.
   </Tab>
 </Tabs>
 
@@ -162,7 +166,7 @@ También puede abrir un enlace profundo desde un script de shell, alias o automa
   Registro y plataformas compatibles
 </h2>
 
-Claude Code registra el controlador `claude-cli://` con su sistema operativo la primera vez que inicia una sesión interactiva en macOS, Linux y Windows. No ejecuta un comando de instalación separado. El registro escribe solo en ubicaciones a nivel de usuario:
+Claude Code registra el controlador `claude-cli://` con su sistema operativo en macOS, Linux y Windows cuando envía su primer mensaje de una sesión interactiva. Iniciar `claude` y salir sin enviar un mensaje no registra el controlador. No ejecuta un comando de instalación separado. El registro escribe solo en ubicaciones a nivel de usuario:
 
 | Plataforma | Ubicación del controlador                                                                                       |
 | ---------- | --------------------------------------------------------------------------------------------------------------- |
@@ -172,7 +176,7 @@ Claude Code registra el controlador `claude-cli://` con su sistema operativo la 
 
 El controlador inicia Claude Code en un emulador de terminal detectado. En macOS, Claude Code recuerda la terminal de su sesión interactiva más reciente y la reutiliza, compatible con iTerm2, Ghostty, kitty, Alacritty, WezTerm y Terminal.app. En Linux, respeta la variable de entorno `$TERMINAL`, luego `x-terminal-emulator`, luego una lista de emuladores comunes. En Windows, prefiere Windows Terminal, luego PowerShell, luego `cmd.exe`.
 
-Para evitar el registro por completo, establezca [`disableDeepLinkRegistration`](/docs/es/settings) en `"disable"` en `settings.json`. Para aplicar esto en toda una organización para que los usuarios no puedan volver a habilitarlo, establézcalo en [configuración administrada](/docs/es/server-managed-settings) en su lugar.
+Para evitar el registro por completo, establezca [`disableDeepLinkRegistration`](/docs/es/settings-reference#disabledeeplinkregistration) en `"disable"` en `settings.json`. Para aplicar esto en toda una organización para que los usuarios no puedan volver a habilitarlo, establézcalo en [configuración administrada](/docs/es/server-managed-settings) en su lugar.
 
 <h2 id="open-a-vs-code-tab-instead-of-a-terminal">
   Abrir una pestaña de VS Code en lugar de una terminal
@@ -188,7 +192,13 @@ La extensión de VS Code registra su propio controlador en `vscode://anthropic.c
   Hacer clic en el enlace no hace nada
 </h3>
 
-El controlador probablemente aún no está registrado. Inicie una sesión `claude` interactiva una vez en esa máquina, salga e intente el enlace nuevamente. Si está en Linux sin un entorno de escritorio, `xdg-open` puede no tener nada a lo que enviar.
+El controlador probablemente aún no está registrado. El registro ocurre cuando envía su primer mensaje de una sesión interactiva, no cuando la sesión comienza. Inicie una sesión `claude` interactiva en esa máquina, envíe cualquier mensaje, salga e intente el enlace nuevamente. Si está en Linux sin un entorno de escritorio, `xdg-open` puede no tener nada a lo que enviar.
+
+<h3 id="xdg-open-is-not-found-on-linux">
+  xdg-open no se encuentra en Linux
+</h3>
+
+El comando `xdg-open` es parte del paquete `xdg-utils`, que las imágenes de servidor mínimas, contenedores y distribuciones de WSL a menudo omiten. Instale `xdg-utils` con el gestor de paquetes de su distribución, por ejemplo `sudo apt install xdg-utils`, luego ejecute el comando nuevamente. Si el comando se ejecuta pero no se abre nada, `xdg-open` puede no tener un entorno de escritorio al que enviar; consulte [Hacer clic en el enlace no hace nada](#clicking-the-link-does-nothing).
 
 <h3 id="the-link-renders-as-plain-text-instead-of-being-clickable">
   El enlace se representa como texto sin formato en lugar de ser clickeable
@@ -200,7 +210,7 @@ Algunos representadores de Markdown solo permiten enlaces `http` y `https` y eli
   La sesión se abre en mi directorio de inicio en lugar del repositorio
 </h3>
 
-El parámetro `repo` solo se resuelve a clones que Claude Code ya ha visto. Ejecute `claude` dentro del clon una vez para que su ruta se registre, o cambie el enlace para usar `cwd` con una ruta absoluta.
+El parámetro `repo` solo se resuelve a clones que Claude Code ya ha visto. Ejecute `claude` dentro del clon una vez para que Claude Code registre su ruta, o cambie el enlace para usar `cwd` con una ruta absoluta.
 
 <h3 id="the-link-opens-the-wrong-terminal">
   El enlace abre la terminal incorrecta

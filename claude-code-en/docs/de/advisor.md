@@ -34,11 +34,9 @@ Sie können das Advisor-Modell auf drei Arten festlegen:
 * **`advisorModel` Einstellung**: Konfigurieren Sie einen persistenten Standard in Ihrer [Einstellungsdatei](/docs/de/settings)
 * **`--advisor` Flag**: Legen Sie den Advisor für eine einzelne Sitzung beim Start fest
 
-Wenn eine dieser Optionen ein Advisor-Modell festlegt, ist der Advisor für Sitzungen aktiviert, deren Hauptmodell [es unterstützt](#choose-an-advisor-model). Um die Verwendung zu beenden, siehe [Schalten Sie den Advisor aus](#turn-the-advisor-off).
+Jede dieser Optionen aktiviert den Advisor für Sitzungen, deren Hauptmodell [es unterstützt](#choose-an-advisor-model). Nach dem Start der Sitzung zeigt Claude Code eine `Advisor Tool (experimental) is on and may use more tokens · /advisor` Benachrichtigung an. Um die Verwendung des Advisors zu beenden, siehe [Schalten Sie den Advisor aus](#turn-the-advisor-off).
 
-<Note>
-  Um Fable 5 als Advisor zu verwenden, benötigen Sie Claude Code v2.1.170 oder später und [Fable 5 Zugriff](/docs/de/model-config#work-with-fable-5) für Ihre Organisation.
-</Note>
+Bei einigen Plänen benötigt Fable als Advisor auch Ihre einmalige [Zustimmung zur Abrechnung der Fable-Nutzung auf Nutzungsguthaben](/docs/de/model-config#fable-and-usage-credits). Informationen dazu, was vor Ihrer Zustimmung geschieht, finden Sie unter [Fable Advisor und Nutzungsguthaben](#fable-advisor-and-usage-credits).
 
 <h3 id="use-the-/advisor-command">
   Verwenden Sie den `/advisor` Befehl
@@ -50,7 +48,17 @@ Führen Sie `/advisor` ohne Argumente aus, um eine Auswahl mit den verfügbaren 
 /advisor opus
 ```
 
-Ihre Auswahl wird in `advisorModel` in Ihren Benutzereinstellungen gespeichert und bleibt über Sitzungen hinweg erhalten. Wenn die [`availableModels`](/docs/de/model-config#restrict-model-selection) Allowlist Ihrer Organisation das gespeicherte Advisor-Modell ausschließt, wird der Advisor nicht aufgerufen, bis Sie ein zulässiges Modell mit `/advisor` auswählen. Wenn Ihr aktuelles Hauptmodell den Advisor nicht unterstützt, wird die Auswahl trotzdem gespeichert und aktiviert sich, wenn Sie zu einem [kompatiblen Hauptmodell](#choose-an-advisor-model) mit [`/model`](/docs/de/model-config#setting-your-model) wechseln.
+Der Befehl bestätigt mit `Advisor set to` gefolgt vom Namen des Advisor-Modells. Ihre Auswahl wird in `advisorModel` in Ihren Benutzereinstellungen gespeichert und bleibt über Sitzungen hinweg erhalten, außer in den Fällen, die der [`advisorModel` Eintrag](/docs/de/settings-reference#advisormodel) als nur für die aktuelle Sitzung geltend auflistet.
+
+Der Befehl funktioniert auch dort, wo es keine Terminal-Auswahl gibt: im [nicht-interaktiven Modus](/docs/de/headless) mit `-p`, im Agent SDK, in der Desktop-App und über [Remote Control](/docs/de/remote-control). Dies erfordert Claude Code v2.1.260 oder später. Auf diesen Oberflächen:
+
+* Führen Sie `/advisor` ohne Argument aus, um das aktuelle Advisor-Modell und die Aliase, die es akzeptiert, auszudrucken.
+* Führen Sie `/advisor` mit einem Modell aus, wie `/advisor opus`, um es festzulegen.
+* Führen Sie `/advisor off` aus, um es auszuschalten.
+
+Claude Code ruft einen gespeicherten Advisor nicht auf, den die [`availableModels`](/docs/de/model-config#restrict-model-selection) Allowlist Ihrer Organisation ausschließt. Um den Advisor zu verwenden, wählen Sie ein zulässiges Modell mit `/advisor`. Claude Code speichert trotzdem einen Advisor, den Ihr aktuelles Hauptmodell nicht unterstützt. Dieser Advisor wird aktiviert, nachdem Sie zu einem [kompatiblen Hauptmodell](#choose-an-advisor-model) mit [`/model`](/docs/de/model-config#setting-your-model) wechseln. Wenn die API den gespeicherten Advisor bereits in der aktuellen Konversation abgelehnt hat, bleibt er ausgeschaltet, bis Sie `/clear` oder `/compact` ausführen, auch nachdem Sie die Modelle wechseln.
+
+Bei einigen Plänen benötigt Fable als Advisor auch Ihre einmalige [Zustimmung zur Abrechnung der Fable-Nutzung auf Nutzungsguthaben](/docs/de/model-config#fable-and-usage-credits). Informationen dazu, was `/advisor fable` vor Ihrer Zustimmung tut, finden Sie unter [Fable Advisor und Nutzungsguthaben](#fable-advisor-and-usage-credits).
 
 <h3 id="set-advisormodel-in-settings">
   Legen Sie `advisorModel` in den Einstellungen fest
@@ -74,7 +82,14 @@ Um den Advisor für eine einzelne Sitzung festzulegen, ohne Ihre gespeicherte Ei
 claude --advisor opus
 ```
 
-Das Flag hat Vorrang vor der `advisorModel` Einstellung für diese Sitzung. Es beendet sich mit einem Fehler, wenn das Hauptmodell der Sitzung den Advisor nicht unterstützt, oder wenn das angeforderte Advisor-Modell durch die [`availableModels`](/docs/de/model-config#restrict-model-selection) Allowlist Ihrer Organisation ausgeschlossen ist.
+Claude Code verwendet das Flag statt der `advisorModel` Einstellung für diese Sitzung. Es listet `--advisor` nicht in `claude --help` auf. Claude Code beendet sich mit einem Fehler beim Start, wenn:
+
+* Das Hauptmodell der Sitzung den Advisor nicht unterstützt
+* Das angeforderte Modell, wie Haiku, nicht als Advisor fungieren kann
+* Die [`availableModels`](/docs/de/model-config#restrict-model-selection) Allowlist Ihrer Organisation das angeforderte Modell ausschließt
+* Sie Fable angefordert haben und Ihr Konto erfordert noch die [Zustimmung zu Nutzungsguthaben](#fable-advisor-and-usage-credits)
+
+Wenn Sie eine [Hintergrund-Sitzung](/docs/de/agent-view) mit `--advisor` starten und eine dieser Bedingungen zutrifft, startet Claude Code die Sitzung ohne den Advisor, anstatt zu beenden.
 
 <h2 id="choose-an-advisor-model">
   Wählen Sie ein Advisor-Modell
@@ -82,25 +97,38 @@ Das Flag hat Vorrang vor der `advisorModel` Einstellung für diese Sitzung. Es b
 
 Der Advisor muss mindestens so leistungsfähig sein wie das Hauptmodell. Die akzeptierten Advisors für jedes Hauptmodell sind:
 
-| Hauptmodell          | Akzeptierte Advisors      | Hinweise                                                                                                                                                                                           |
-| -------------------- | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Haiku 4.5            | Fable, Opus, Sonnet       | Haiku kann den Advisor aufrufen, kann aber nicht als einer fungieren                                                                                                                               |
-| Sonnet 4.6           | Fable, Opus, Sonnet       |                                                                                                                                                                                                    |
-| Sonnet 5             | Fable, Opus, Sonnet 5     | Ein Sonnet 4.6 Advisor wird abgelehnt                                                                                                                                                              |
-| Opus 4.6             | Fable, Opus, Sonnet 5     | Sonnet 5 und Opus 4.6 werden als gleich leistungsfähig eingestuft, daher akzeptiert ein Opus 4.6 Hauptmodell einen Sonnet 5 Advisor                                                                |
-| Opus 4.7 oder später | Fable, Opus 4.7, Opus 4.8 | Opus 4.7 und Opus 4.8 werden als gleich leistungsfähig eingestuft, daher akzeptiert jedes das andere als Advisor. Ein Opus 4.7 Hauptmodell mit einem Opus 4.6 oder Sonnet 5 Advisor wird abgelehnt |
-| Fable 5 (v2.1.170+)  | Fable                     | Ein Opus oder Sonnet Advisor wird abgelehnt                                                                                                                                                        |
+| Hauptmodell            | Akzeptierte Advisors                  | Hinweise                                                                                                   |
+| ---------------------- | ------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| Haiku 4.5              | Fable, Opus, Sonnet                   | Haiku kann den Advisor aufrufen, kann aber nicht als einer fungieren                                       |
+| Sonnet 4.6             | Fable, Opus, Sonnet                   |                                                                                                            |
+| Sonnet 5               | Fable, Opus 4.7 oder später, Sonnet 5 | Ein Sonnet 4.6 Advisor wird abgelehnt, und die API lehnt einen Opus 4.6 Advisor ab                         |
+| Opus 4.6               | Fable, Opus, Sonnet 5                 | Ein Sonnet 4.6 Advisor wird abgelehnt                                                                      |
+| Opus 4.7 oder Opus 4.8 | Fable und Opus 4.7 oder später        | Ein Opus 4.6 oder Sonnet Advisor wird abgelehnt                                                            |
+| Opus 5.5 oder Opus 5   | Fable und Opus 5 oder später          | Ein Opus 4.6 oder Sonnet Advisor wird abgelehnt, und die API lehnt einen Opus 4.7 oder Opus 4.8 Advisor ab |
+| Fable 5                | Fable 5.1 oder Fable 5                | Ein Opus oder Sonnet Advisor wird abgelehnt                                                                |
+| Fable 5.1              | Fable 5.1                             | Ein Opus oder Sonnet Advisor wird abgelehnt, und die API lehnt einen Fable 5 Advisor ab                    |
 
-Fable 5 erfordert Claude Code v2.1.170 oder später und Fable 5 Zugriff, unabhängig davon, ob es als Hauptmodell oder als Advisor fungiert.
+Fable 5.1 erfordert Claude Code v2.1.257 oder später. Beide Fable-Modelle erfordern [Fable-Zugriff](/docs/de/model-config#work-with-fable).
 
-Legen Sie den Advisor als `opus`, `sonnet` oder `fable` fest. Diese Aliase werden in die neueste Version jedes Modells aufgelöst. Sie können auch eine vollständige Modell-ID wie `claude-opus-4-8` übergeben.
+Legen Sie den Advisor als `fable`, `opus` oder `sonnet` fest. Diese Aliase werden in die in Claude Code integrierte Standardversion für jede Modellfamilie aufgelöst, die sich mit neuen Claude Code-Versionen weiterentwickelt. Sie können auch eine vollständige Modell-ID wie `claude-opus-5-5` übergeben.
 
 Subagenten erben den konfigurierten Advisor und wenden die gleiche Kopplungsprüfung gegen ihr eigenes Modell an.
 
-Claude Code validiert die Kopplung vor dem Senden einer Anfrage:
+Claude Code validiert die Kopplung vor dem Senden einer Anfrage, und die API validiert sie erneut:
 
-* Wenn der Advisor weniger leistungsfähig ist als das Hauptmodell, wird der Advisor nicht an die Anfragen des Hauptmodells angehängt. Die `/advisor` Befehlsausgabe und eine Benachrichtigung zeigen dies an. Subagenten, deren eigenes Modell die Kopplung erfüllt, können den Advisor möglicherweise trotzdem verwenden.
+* Für einen Advisor, den die Tabelle als abgelehnt auflistet, hängt Claude Code ihn nicht an die Anfragen des Hauptmodells an. Die `/advisor` Befehlsausgabe und eine Benachrichtigung zeigen dies an. Subagenten, deren eigenes Modell die Kopplung erfüllt, können den Advisor möglicherweise trotzdem verwenden.
+* Für einen Advisor, den die Tabelle als von der API abgelehnt auflistet, hängt Claude Code ihn an und die API lehnt ihn ab. Claude Code sendet diese Anfrage dann ohne den Advisor erneut, und der Rest der Konversation läuft ohne einen, sodass Sie keinen Fehler sehen und keine Advisor-Aufrufe erhalten. Wählen Sie einen akzeptierten Advisor mit `/advisor`; die Änderung wird nach `/clear` oder `/compact` und in neuen Sitzungen wirksam.
 * Wenn das Hauptmodell oder der Advisor ein Modell ist, das Claude Code nicht erkennt, wird der Advisor nicht angehängt.
+
+<h3 id="fable-advisor-and-usage-credits">
+  Fable Advisor und Nutzungsguthaben
+</h3>
+
+Bei einigen Plänen wird die Fable-Nutzung auf Nutzungsguthaben abgerechnet, und Fable als Advisor wird auf die gleiche Weise abgerechnet. Wenn Ihr Konto die [einmalige Zustimmung zur Abrechnung der Fable-Nutzung auf Nutzungsguthaben](/docs/de/model-config#fable-and-usage-credits) erfordert, fragt Claude Code danach, wenn Sie ein Fable-Modell mit `/model` auswählen, und wendet Fable nicht als Advisor an, bis Sie dieser Zustimmung zugestimmt haben.
+
+Bevor Sie zugestimmt haben, speichert Claude Code Fable nicht als Advisor, wenn Sie `/advisor fable` eingeben oder Fable in der `/advisor` Auswahl wählen. Stattdessen verweist es Sie auf `/model fable`. Mit `claude --advisor fable` beendet Claude Code den Start mit einer Nachricht, die auf `/model fable` verweist. In einer [Hintergrundsitzung](#use-the-advisor-flag) wird die Sitzung ohne den Advisor gestartet, anstatt zu beenden. Mit Fable, das bereits als Ihr `advisorModel` gespeichert ist, sendet Claude Code Anfragen ohne den Advisor. In einer interaktiven Sitzung, deren Hauptmodell den Advisor unterstützt, wird auch eine Benachrichtigung angezeigt, die auf `/model fable` verweist.
+
+Um der Zustimmung zuzustimmen, führen Sie `/model fable` aus und wählen Sie, um mit Fable fortzufahren. Claude Code zeichnet die Zustimmung auf und [speichert Fable als Ihr ausgewähltes Modell](/docs/de/model-config#default-model-setting). Wählen Sie dann Fable als Advisor.
 
 <h3 id="common-model-pairings">
   Häufige Modellkombinationen
@@ -108,14 +136,14 @@ Claude Code validiert die Kopplung vor dem Senden einer Anfrage:
 
 Jede akzeptierte Kopplung funktioniert. Diese Kombinationen gleichen Kosten gegen Leistung auf verschiedene Weise aus:
 
-| Kopplung                            | Wann zu verwenden                                                                                                                                                                          |
-| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Sonnet Hauptmodell + Opus Advisor   | Sonnet verarbeitet Routineaufgaben und eskaliert Planung, mehrdeutige Fehler und Abschlussüberprüfungen an Opus                                                                            |
-| Sonnet Hauptmodell + Fable Advisor  | Fable 5 Anleitung an Entscheidungspunkten ohne Fable 5 durchgehend auszuführen. Erfordert v2.1.170 oder später und Fable 5 Zugriff                                                         |
-| Haiku Hauptmodell + Opus Advisor    | Kostengünstigstes Hauptmodell mit starker Planung. Erwarten Sie höhere Kosten als Haiku allein, aber niedriger als das Wechseln des Hauptmodells zu Sonnet oder Opus                       |
-| Opus Hauptmodell + Opus Advisor     | Ein zweiter Opus überprüft den ersten. Nützlich für hochriskante Aufgaben, bei denen eine unabhängige Überprüfung wichtiger ist als Kosten                                                 |
-| Fable Hauptmodell + Fable Advisor   | Höchste Leistungskopplung, wenn Fable 5 verfügbar ist (v2.1.170+). Fable ist eine höhere Stufe als Opus und Sonnet, daher ist es der einzige akzeptierte Advisor für ein Fable Hauptmodell |
-| Sonnet Hauptmodell + Sonnet Advisor | Eine kostengünstigere zweite Meinung zum Erkennen von Routineversäumnissen                                                                                                                 |
+| Kopplung                            | Wann zu verwenden                                                                                                                                                    |
+| ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Sonnet Hauptmodell + Opus Advisor   | Sonnet verarbeitet Routineaufgaben und eskaliert Planung, mehrdeutige Fehler und Abschlussüberprüfungen an Opus                                                      |
+| Sonnet Hauptmodell + Fable Advisor  | Fable-Anleitung an Entscheidungspunkten ohne Fable durchgehend auszuführen. Erfordert Fable-Zugriff                                                                  |
+| Haiku Hauptmodell + Opus Advisor    | Kostengünstigstes Hauptmodell mit starker Planung. Erwarten Sie höhere Kosten als Haiku allein, aber niedriger als das Wechseln des Hauptmodells zu Sonnet oder Opus |
+| Opus Hauptmodell + Opus Advisor     | Ein zweiter Opus überprüft den ersten. Nützlich für hochriskante Aufgaben, bei denen eine unabhängige Überprüfung wichtiger ist als Kosten                           |
+| Fable Hauptmodell + Fable Advisor   | Höchste Leistungskopplung, wenn Fable verfügbar ist. Claude Code wendet keinen Opus oder Sonnet Advisor auf ein Fable Hauptmodell an                                 |
+| Sonnet Hauptmodell + Sonnet Advisor | Eine kostengünstigere zweite Meinung zum Erkennen von Routineversäumnissen                                                                                           |
 
 <h2 id="when-claude-consults-the-advisor">
   Wann Claude den Advisor konsultiert
@@ -129,7 +157,10 @@ Sie können in Ihrem Prompt eine Konsultation anfordern, genauso wie Sie jedes a
   Was Sie während einer Sitzung sehen
 </h2>
 
-Wenn Claude den Advisor aufruft, zeigt das Transkript eine `Advising` Zeile mit dem Namen des Advisor-Modells, während der Aufruf läuft. Wenn das Ergebnis zurückkommt, bestätigt die Zeile, dass der Advisor das Gespräch überprüft hat. Drücken Sie `Ctrl+O`, um es zu erweitern und die vollständige Anleitung des Advisors zu lesen.
+Wenn Claude den Advisor aufruft, zeigt das Transkript eine `Advising` Zeile mit dem Namen des Advisor-Modells, während der Aufruf läuft. Wenn das Ergebnis zurückkommt, bestätigt die Zeile, ob der Advisor eine Anleitung gegeben hat:
+
+* **Reviewed**: Die Zeile bestätigt, dass der Advisor das Gespräch überprüft hat. Wenn der Advisor lesbare Anleitung gegeben hat, drücken Sie `Ctrl+O`, um sie zu lesen.
+* **Declined**: Die Zeile lautet `Advisor declined to advise on this request`. Wenn der Advisor einen Grund angegeben hat, drücken Sie `Ctrl+O`, um ihn zu lesen.
 
 Claude folgt im Allgemeinen der Anleitung des Advisors, passt sich aber an, wenn seine eigenen Erkenntnisse einer spezifischen Aussage widersprechen: Wenn ein empfohlener Schritt beim Versuch fehlschlägt oder der Dateiinhalt der Anleitung widerspricht, zeigt Claude den Konflikt auf, anstatt die Anleitung bedingungslos zu befolgen.
 
@@ -139,7 +170,12 @@ Der Advisor erhält immer das gesamte Gespräch, und Claude kontrolliert den Zei
   Kosten
 </h2>
 
-Jeder Advisor-Aufruf sendet das Gespräch an das Advisor-Modell, daher verbraucht es Token zu den Sätzen des Advisor-Modells zusätzlich zu Ihrer Hauptmodellnutzung. Bei API-Abrechnung werden Advisor-Token zu den Input- und Output-Sätzen des Advisor-Modells berechnet. Bei Abonnementplänen zählt die Advisor-Nutzung zu den Nutzungsgrenzen Ihres Plans.
+Wenn Claude den Advisor aufruft, liest das Advisor-Modell das Gespräch, daher verbraucht jeder Aufruf Token zu den Sätzen des Advisor-Modells zusätzlich zu Ihrer Hauptmodellnutzung. Wie diese Advisor-Token abgerechnet werden, hängt davon ab, wie Sie bezahlen:
+
+* **API-Abrechnung**: Sie zahlen die Input- und Output-Sätze des Advisor-Modells für Advisor-Token
+* **Abonnementpläne**: Die Advisor-Nutzung zählt zu den Nutzungsgrenzen Ihres Plans, mit Ausnahme, dass ein Fable-Advisor zu [Nutzungsguthaben](/docs/de/model-config#fable-and-usage-credits) bei Plänen abgerechnet wird, bei denen die Fable-Nutzung dies tut
+
+Wenn Ihr Konto die Zustimmung zu Nutzungsguthaben erfordert, wird ein Fable-Advisor vor der Zustimmung nicht abgerechnet, da Claude Code [die Auswahl nicht anwendet](#fable-advisor-and-usage-credits), bis Sie dies tun.
 
 Claude ruft den Advisor an Entscheidungspunkten auf, nicht bei jedem Schritt, daher kostet die Kopplung eines schnelleren Hauptmodells mit einem stärkeren Advisor typischerweise weniger als das durchgehende Ausführen des stärkeren Modells. Die Advisor-Nutzung zählt zu den Sitzungssummen, die von [`/usage`](/docs/de/costs#track-your-costs) angezeigt werden.
 
@@ -149,7 +185,7 @@ Für die Berichterstattung von Advisor-Token in API-Antworten siehe [Nutzung und
   Auswirkung auf Prompt-Caching
 </h2>
 
-Das Aktivieren oder Deaktivieren des Advisors während einer Sitzung invalidiert nicht den [Prompt-Cache](/docs/de/prompt-caching) Ihres Hauptmodells. Im Gegensatz zum [Ändern von Modell oder Aufwandsstufe](/docs/de/prompt-caching#actions-that-invalidate-the-cache) behält das Umschalten von `/advisor` das zwischengespeicherte Präfix bei, und die vom Advisor zurückgegebene Anleitung wird als Teil des Transkripts bei späteren Schritten zwischengespeichert.
+Das Aktivieren oder Deaktivieren des Advisors während einer Sitzung invalidiert nicht den [Prompt-Cache](/docs/de/prompt-caching) Ihres Hauptmodells. Im Gegensatz zum [Wechsel von Modellen](/docs/de/prompt-caching#switching-models) behält das Umschalten von `/advisor` das zwischengespeicherte Präfix bei, und die vom Advisor zurückgegebene Anleitung wird als Teil des Transkripts bei späteren Schritten zwischengespeichert.
 
 Das eigene Lesen des Advisor-Modells des Gesprächs wird nicht zwischengespeichert. Jeder Advisor-Aufruf verarbeitet das gesamte Transkript neu, ohne Wiederverwendung zwischen Aufrufen.
 
@@ -159,20 +195,21 @@ Das eigene Lesen des Advisor-Modells des Gesprächs wird nicht zwischengespeiche
 
 Das Advisor-Tool erfordert alle folgenden Voraussetzungen:
 
-* **Nur Anthropic API**: Der Advisor ist ein serverseitig ausgeführtes Tool. Er ist nicht auf Amazon Bedrock, Claude Platform on AWS, Google Cloud's Agent Platform oder Microsoft Foundry verfügbar. Über ein [LLM-Gateway](/docs/de/llm-gateway), das mit `ANTHROPIC_BASE_URL` konfiguriert ist, hängt die Verfügbarkeit davon ab, ob das Gateway die Anfrage intakt an die Anthropic API weiterleitet.
-* **Unterstütztes Hauptmodell**: Opus 4.6 oder später, Sonnet 4.6 oder später oder Haiku 4.5. Fable 5 qualifiziert sich auch auf Claude Code v2.1.170 oder später.
+* **Nur Anthropic API**: Der Advisor ist ein serverseitig ausgeführtes Tool. Er ist nicht auf Amazon Bedrock, Claude Platform on AWS, Google Cloud's Agent Platform oder Microsoft Foundry verfügbar. Über ein [LLM-Gateway](/docs/de/llm-gateway), das mit `ANTHROPIC_BASE_URL` konfiguriert ist, hängt die Verfügbarkeit davon ab, ob das Gateway die Anfrage intakt an die Anthropic API weiterleitet. Wenn das Gateway oder sein Upstream das Advisor-Tool nicht erkennt, siehe [Automatische Wiederholung und Fehlerweiterleitung](/docs/de/llm-gateway-protocol#automatic-retry-and-error-forwarding), um zu erfahren, wie Claude Code reagiert.
+* **Unterstütztes Hauptmodell**: Fable, Opus 4.6 oder später, Sonnet 4.6 oder später oder Haiku 4.5. Siehe [Wählen Sie ein Advisor-Modell](#choose-an-advisor-model), um zu erfahren, welche Advisors jedes akzeptiert.
+* **Feature-Flag-Abruf**: Claude Code aktiviert den Advisor über ein Feature-Flag, das er von Anthropic abruft. In einer Sitzung, in der eine Variable, die den Flag-Abruf deaktiviert, gesetzt ist, wie z. B. `DISABLE_TELEMETRY`, bleibt der Advisor deaktiviert. Siehe [Features, die Feature-Flag-Abruf benötigen](/docs/de/env-vars#features-that-need-feature-flag-fetching).
 
 <h2 id="turn-the-advisor-off">
   Schalten Sie den Advisor aus
 </h2>
 
-Um die Verwendung des Advisors zu beenden und Ihren gespeicherten `advisorModel` zu löschen, führen Sie `/advisor off` aus oder wählen Sie **No advisor** in der `/advisor` Auswahl:
+Um die Verwendung des Advisors zu beenden, führen Sie `/advisor off` aus oder wählen Sie **No advisor** in der `/advisor` Auswahl:
 
 ```
 /advisor off
 ```
 
-Um das Advisor-Tool vollständig zu deaktivieren, setzen Sie `CLAUDE_CODE_DISABLE_ADVISOR_TOOL=1`. Der `/advisor` Befehl wird nicht verfügbar und jedes konfigurierte `advisorModel` wird ignoriert. Das `--advisor` Flag wird akzeptiert, hat aber keine Auswirkung; vorhandene Skripte, die es übergeben, funktionieren weiterhin ohne Fehler. Siehe [Umgebungsvariablen](/docs/de/env-vars).
+Um das Advisor-Tool vollständig zu deaktivieren, setzen Sie `CLAUDE_CODE_DISABLE_ADVISOR_TOOL=1`. Der `/advisor` Befehl wird nicht verfügbar und jedes konfigurierte `advisorModel` wird ignoriert. Das `--advisor` Flag wird akzeptiert, hat aber keine Auswirkung. Siehe [Umgebungsvariablen](/docs/de/env-vars).
 
 <h2 id="compare-with-related-features">
   Vergleich mit verwandten Funktionen

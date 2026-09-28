@@ -14,22 +14,22 @@ La pagina **Routines** dell'app Desktop ti consente di creare sia attività pian
   Confronta le opzioni di pianificazione
 </h2>
 
-Claude Code offers three ways to schedule recurring or one-off work:
+Claude Code offre tre modi per pianificare lavori ricorrenti o una tantum:
 
-|                            | [Cloud](/docs/en/routines)               | [Desktop](/docs/en/desktop-scheduled-tasks) | [`/loop`](/docs/en/scheduled-tasks)      |
-| :------------------------- | :---------------------------------- | :------------------------------------- | :---------------------------------- |
-| Runs on                    | Cloud, Anthropic-managed by default | Your machine                           | Your machine                        |
-| Requires machine on        | No                                  | Yes                                    | Yes                                 |
-| Requires open session      | No                                  | No                                     | Yes                                 |
-| Persistent across restarts | Yes                                 | Yes                                    | Restored on `--resume` if unexpired |
-| Access to local files      | No (fresh clone)                    | Yes                                    | Yes                                 |
-| MCP servers                | Connectors configured per task      | [Config files](/docs/en/mcp) and connectors | Inherits from session               |
-| Permission prompts         | No (runs autonomously)              | Configurable per task                  | Inherits from session               |
-| Customizable schedule      | Via `/schedule` in the CLI          | Yes                                    | Yes                                 |
-| Minimum interval           | 1 hour                              | 1 minute                               | 1 minute                            |
+|                                 | [Cloud](/docs/it/routines)                                    | [Desktop](/docs/it/desktop-scheduled-tasks)         | [`/loop`](/docs/it/scheduled-tasks)                                               |
+| :------------------------------ | :------------------------------------------------------- | :--------------------------------------------- | :--------------------------------------------------------------------------- |
+| Esecuzione su                   | Cloud, gestito da Anthropic per impostazione predefinita | La vostra macchina                             | La vostra macchina                                                           |
+| Richiede macchina accesa        | No                                                       | Sì                                             | Sì                                                                           |
+| Richiede sessione aperta        | No                                                       | No                                             | Sì                                                                           |
+| Persistente tra i riavvii       | Sì                                                       | Sì                                             | Ripristinato su `--resume`, con [eccezioni](/docs/it/scheduled-tasks#limitations) |
+| Accesso ai file locali          | No (clone fresco)                                        | Sì                                             | Sì                                                                           |
+| MCP servers                     | Connettori configurati per attività                      | [File di configurazione](/docs/it/mcp) e connettori | Eredita dalla sessione                                                       |
+| Prompt di autorizzazione        | No (esecuzione autonoma)                                 | Configurabile per attività                     | Eredita dalla sessione                                                       |
+| Pianificazione personalizzabile | Via `/schedule` nella CLI                                | Sì                                             | Sì                                                                           |
+| Intervallo minimo               | 1 ora                                                    | 1 minuto                                       | 1 minuto                                                                     |
 
 <Tip>
-  Use **cloud tasks** for work that should run reliably without your machine. Use **Desktop tasks** when you need access to local files and tools. Use **`/loop`** for quick polling during a session.
+  Utilizzate **attività cloud** per lavori che devono essere eseguiti in modo affidabile senza la vostra macchina. Utilizzate **attività Desktop** quando avete bisogno di accesso ai file e agli strumenti locali. Utilizzate **`/loop`** per il polling rapido durante una sessione.
 </Tip>
 
 <Note>
@@ -40,7 +40,7 @@ Claude Code offers three ways to schedule recurring or one-off work:
   Crea un'attività pianificata
 </h2>
 
-Fai clic su **Routines** nella barra laterale, quindi fai clic su **New routine** e scegli **Local**. Configura questi campi:
+Su Claude Desktop prima della versione 1.1.5368, le attività pianificate locali non sono disponibili. Nella [**scheda Code**](/docs/it/desktop), fai clic su **Routines** nella barra laterale o nel menu **More** della barra laterale, quindi fai clic su **New routine** e scegli **Local**. Configura questi campi:
 
 | Campo        | Descrizione                                                                                                                                                                                                                                                                                                                                   |
 | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -73,7 +73,7 @@ Per intervalli che il selettore non offre, come ogni 15 minuti, il primo di ogni
 
 Le attività pianificate vengono eseguite sulla tua macchina. Desktop controlla la pianificazione ogni minuto mentre l'app è aperta e avvia una sessione nuova quando un'attività è dovuta, indipendentemente da qualsiasi sessione manuale che hai aperta. Ogni attività riceve un piccolo ritardo di pochi minuti dopo l'ora pianificata per scaglionare il traffico API. Il ritardo è deterministico: la stessa attività inizia sempre allo stesso offset.
 
-Quando un'attività si attiva, ricevi una notifica desktop e una nuova sessione appare sotto una sezione **Scheduled** nella barra laterale. Aprila per vedere cosa ha fatto Claude, rivedere le modifiche o rispondere ai prompt di autorizzazione. La sessione funziona come qualsiasi altra: Claude può modificare file, eseguire comandi, creare commit e aprire pull request.
+Quando un'attività si attiva, ricevi una notifica desktop e una nuova sessione appare sotto una sezione **Scheduled** nella barra laterale. Aprila per vedere cosa ha fatto Claude, rivedere le modifiche o rispondere ai prompt di autorizzazione. Claude può modificare file, eseguire comandi, creare commit e aprire pull request, come in una sessione che avvii tu stesso, ma non può inviare o ricevere [messaggi tra le tue sessioni desktop](/docs/it/desktop#work-across-sessions) attraverso la superficie dell'app desktop.
 
 Le attività vengono eseguite solo mentre l'app desktop è in esecuzione e il tuo computer è sveglio. Se il tuo computer dorme durante un'ora pianificata, l'esecuzione viene saltata. Per impedire il sonno inattivo, abilita **Keep computer awake** in Impostazioni sotto **Desktop app → General**. Chiudere il coperchio del laptop lo mette comunque in modalità sospensione. Per attività che devono essere eseguite anche quando il tuo computer è spento, o che dovrebbero attivarsi su una chiamata API o un evento GitHub, crea invece una [routine](/docs/it/routines) remota.
 
@@ -89,17 +89,17 @@ Tieni questo in mente quando scrivi i prompt. Un'attività pianificata per le 9 
   Autorizzazioni per le attività pianificate
 </h2>
 
-Ogni attività ha la sua propria modalità di autorizzazione, che imposti quando crei o modifichi l'attività. Le regole di autorizzazione da `~/.claude/settings.json` si applicano anche alle sessioni di attività pianificate. Se un'attività viene eseguita in modalità Ask e ha bisogno di eseguire uno strumento per il quale non ha autorizzazione, l'esecuzione si blocca fino a quando non la approvi. La sessione rimane aperta nella barra laterale in modo da poter rispondere in seguito.
+Ogni attività ha la sua propria modalità di autorizzazione, che imposti quando crei o modifichi l'attività. Le regole di autorizzazione da `~/.claude/settings.json` si applicano anche alle sessioni di attività pianificate. Se un'attività viene eseguita in [modalità manuale](/docs/it/desktop#choose-a-permission-mode) e ha bisogno di eseguire uno strumento per il quale non ha autorizzazione, l'esecuzione si blocca fino a quando non la approvi. La sessione rimane aperta nella barra laterale in modo da poter rispondere in seguito.
 
 Per evitare blocchi, fai clic su **Run now** dopo aver creato un'attività, guarda i prompt di autorizzazione e seleziona "always allow" per ognuno. Le esecuzioni future di quell'attività approvano automaticamente gli stessi strumenti senza chiedere. Puoi rivedere e revocare queste approvazioni dalla pagina dei dettagli dell'attività.
 
-Gli strumenti Connector [che la tua organizzazione ha impostato su `ask`](/docs/it/mcp#organization-controls-on-connector-tools) e gli strumenti MCP contrassegnati [`requiresUserInteraction`](/docs/it/mcp#require-approval-for-a-specific-tool) richiedono un prompt ad ogni chiamata e non offrono un'opzione "always allow". Le esecuzioni che chiamano questi strumenti si bloccano ogni volta.
+Gli strumenti MCP contrassegnati [`requiresUserInteraction`](/docs/it/mcp#require-approval-for-a-specific-tool) richiedono un prompt ad ogni chiamata e non offrono un'opzione "always allow". Le esecuzioni che chiamano questi strumenti si bloccano ogni volta.
 
 <h2 id="manage-scheduled-tasks">
   Gestisci le attività pianificate
 </h2>
 
-Fai clic su un'attività nell'elenco **Routines** per aprire la sua pagina di dettaglio. Da qui puoi:
+Nella scheda **Code**, fai clic su un'attività nell'elenco **Routines** per aprire la sua pagina di dettaglio. Da qui puoi:
 
 * **Run now**: avvia l'attività immediatamente senza aspettare l'ora pianificata successiva
 * **Status**: attiva/disattiva tra Active e Paused per mettere in pausa o riprendere le esecuzioni pianificate senza eliminare l'attività

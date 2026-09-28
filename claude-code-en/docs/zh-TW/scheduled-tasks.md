@@ -8,28 +8,28 @@
 
 排程任務讓 Claude 按間隔自動重新執行提示。使用它們來輪詢部署、監督 PR、檢查長時間執行的建置，或在工作階段稍後提醒自己執行某些操作。若要改為對事件發生時做出反應而不是輪詢，請參閱 [Channels](/docs/zh-TW/channels)：您的 CI 可以直接將失敗推送到工作階段中。若要保持工作階段逐輪執行直到符合條件而不是按間隔執行，請參閱 [`/goal`](/docs/zh-TW/goal)。
 
-任務的範圍限於工作階段：它們存在於目前的對話中，當您啟動新的對話時就會停止。使用 `--resume` 或 `--continue` 繼續會恢復任何尚未[過期](#seven-day-expiry)的任務：在過去 7 天內建立的重複執行任務，或排程時間尚未到達的一次性任務。對於獨立於任何工作階段而存在的排程，請使用 [Routines](/docs/zh-TW/routines) 在 Anthropic 管理的基礎設施上建立例行程序、設定 [Desktop 排程任務](/docs/zh-TW/desktop-scheduled-tasks)，或使用 [GitHub Actions](/docs/zh-TW/github-actions)。
+任務的範圍限於工作階段：它們存在於目前的對話中，當您啟動新的對話時就會停止。使用 `--resume` 或 `--continue` 繼續會恢復任何尚未[過期](#seven-day-expiry)的任務，除了[限制](#limitations)下列出的任務。對於獨立於任何工作階段而存在的排程，請使用 [Routines](/docs/zh-TW/routines) 在雲端建立例行程序、設定 [Desktop 排程任務](/docs/zh-TW/desktop-scheduled-tasks)，或使用 [GitHub Actions](/docs/zh-TW/github-actions)。
 
 <h2 id="compare-scheduling-options">
   比較排程選項
 </h2>
 
-Claude Code offers three ways to schedule recurring or one-off work:
+Claude Code 提供三種方式來排程定期或一次性的工作：
 
-|                            | [Cloud](/docs/en/routines)               | [Desktop](/docs/en/desktop-scheduled-tasks) | [`/loop`](/docs/en/scheduled-tasks)      |
-| :------------------------- | :---------------------------------- | :------------------------------------- | :---------------------------------- |
-| Runs on                    | Cloud, Anthropic-managed by default | Your machine                           | Your machine                        |
-| Requires machine on        | No                                  | Yes                                    | Yes                                 |
-| Requires open session      | No                                  | No                                     | Yes                                 |
-| Persistent across restarts | Yes                                 | Yes                                    | Restored on `--resume` if unexpired |
-| Access to local files      | No (fresh clone)                    | Yes                                    | Yes                                 |
-| MCP servers                | Connectors configured per task      | [Config files](/docs/en/mcp) and connectors | Inherits from session               |
-| Permission prompts         | No (runs autonomously)              | Configurable per task                  | Inherits from session               |
-| Customizable schedule      | Via `/schedule` in the CLI          | Yes                                    | Yes                                 |
-| Minimum interval           | 1 hour                              | 1 minute                               | 1 minute                            |
+|           | [Cloud](/docs/zh-TW/routines) | [Desktop](/docs/zh-TW/desktop-scheduled-tasks) | [`/loop`](/docs/zh-TW/scheduled-tasks)                          |
+| :-------- | :----------------------- | :---------------------------------------- | :--------------------------------------------------------- |
+| 執行位置      | Cloud，預設由 Anthropic 管理   | 您的機器                                      | 您的機器                                                       |
+| 需要機器開啟    | 否                        | 是                                         | 是                                                          |
+| 需要開啟的工作階段 | 否                        | 否                                         | 是                                                          |
+| 跨重新啟動持續存在 | 是                        | 是                                         | 在 `--resume` 上復原，有[例外](/docs/zh-TW/scheduled-tasks#limitations) |
+| 存取本機檔案    | 否（全新複製）                  | 是                                         | 是                                                          |
+| MCP 伺服器   | 每個工作配置的連接器               | [設定檔](/docs/zh-TW/mcp)和連接器                     | 繼承自工作階段                                                    |
+| 權限提示      | 否（自主執行）                  | 每個工作可設定                                   | 繼承自工作階段                                                    |
+| 可自訂排程     | 透過 CLI 中的 `/schedule`    | 是                                         | 是                                                          |
+| 最小間隔      | 1 小時                     | 1 分鐘                                      | 1 分鐘                                                       |
 
 <Tip>
-  Use **cloud tasks** for work that should run reliably without your machine. Use **Desktop tasks** when you need access to local files and tools. Use **`/loop`** for quick polling during a session.
+  使用**雲端工作**來執行應該在沒有您的機器的情況下可靠執行的工作。當您需要存取本機檔案和工具時，使用**Desktop 工作**。使用 **`/loop`** 進行工作階段期間的快速輪詢。
 </Tip>
 
 <h2 id="run-a-prompt-repeatedly-with-/loop">
@@ -44,12 +44,12 @@ Claude Code offers three ways to schedule recurring or one-off work:
 | 僅提示    | `/loop check the deploy`    | 您的提示在 [Claude 選擇的間隔](#let-claude-choose-the-interval)上執行，每次迭代        |
 | 僅間隔或無  | `/loop`                     | [內建維護提示](#run-the-built-in-maintenance-prompt)執行，或您的 `loop.md`（如果存在） |
 
-您也可以傳遞一個 skill 作為提示，例如 `/loop 20m /review-pr 1234`，以在每次迭代時重新執行該 skill。自 v2.1.196 起，排程的執行只會執行 Claude [允許自行叫用](/docs/zh-TW/skills#control-who-invokes-a-skill)的 skill。以下內容會以純文字形式傳達給 Claude，而不是執行：
+您也可以傳遞一個 skill 作為提示，例如 `/loop 20m /review-pr 1234`，以在每次迭代時重新執行該 skill。排程的執行只會執行 Claude [允許自行叫用](/docs/zh-TW/skills#control-who-invokes-a-skill)的 skill。以下內容會以純文字形式傳達給 Claude，而不是執行：
 
 * 內建命令，例如 `/permissions`、`/model` 或 `/clear`
-* 標記為 [`disable-model-invocation: true`](/docs/zh-TW/skills#frontmatter-reference) 的 skill
-* 由 [`skillOverrides`](/docs/zh-TW/skills#override-skill-visibility-from-settings) 設定或 `Skill` [deny rule](/docs/zh-TW/skills#restrict-claude’s-skill-access) 從 Claude 隱藏的 skill
-* [MCP prompts](/docs/zh-TW/mcp#use-mcp-prompts-as-commands)，例如 `/mcp__github__list_prs`；MCP 伺服器公開的 skill 仍會執行
+* 標記為 [`disable-model-invocation: true`](/docs/zh-TW/skills#frontmatter-reference) 的 skill，包括 bundled `/verify` skill
+* 由 [`skillOverrides`](/docs/zh-TW/skills#override-skill-visibility-from-settings) 設定或 `Skill` [deny rule](/docs/zh-TW/skills#restrict-claude%E2%80%99s-skill-access) 從 Claude 隱藏的 skill
+* [MCP prompts](/docs/zh-TW/mcp#use-mcp-prompts-as-commands)，例如 `/mcp__github__list_prs`
 
 <h3 id="run-on-a-fixed-interval">
   在固定間隔上執行
@@ -77,12 +77,14 @@ Claude Code offers three ways to schedule recurring or one-off work:
 /loop check whether CI passed and address any review comments
 ```
 
-當您要求動態 `/loop` 排程時，Claude 可能會直接使用 [Monitor tool](/docs/zh-TW/tools-reference#monitor-tool)。Monitor 執行背景指令碼並串流回每個輸出行，這完全避免了輪詢，通常比在間隔上重新執行提示更具令牌效率和回應性。
+在[提供 Monitor 工具](/docs/zh-TW/tools-reference#monitor-tool)的工作階段中，當您要求動態 `/loop` 排程時，Claude 可能會直接使用它。Monitor 執行背景指令碼並串流回每個輸出行，這完全避免了輪詢，通常比在間隔上重新執行提示更具令牌效率和回應性。
 
-動態排程的迴圈會像任何其他任務一樣出現在您的[排程任務清單](#manage-scheduled-tasks)中，因此您可以以相同的方式列出或取消它。[抖動規則](#jitter)不適用於它，但[七天過期](#seven-day-expiry)適用：迴圈在您啟動它七天後自動結束。
+動態排程的迴圈會像任何其他任務一樣出現在您的[排程任務清單](#manage-scheduled-tasks)中，因此您可以以相同的方式列出或取消它。[抖動規則](#jitter)不適用於它，但[七天過期](#seven-day-expiry)適用。
+
+<span id="loop-provider-differences" />
 
 <Note>
-  在 Amazon Bedrock、Claude Platform on AWS、Google Cloud 的 Agent Platform 和 Microsoft Foundry 上，沒有間隔的提示會改為在固定的 10 分鐘排程上執行。
+  動態選擇的間隔和[內建維護提示](#run-the-built-in-maintenance-prompt)在每個提供者上都有效，並且[功能旗標擷取](/docs/zh-TW/env-vars#features-that-need-feature-flag-fetching)已關閉。在 Amazon Bedrock、Claude Platform on AWS、Google Cloud 的 Agent Platform 和 Microsoft Foundry 上，或擷取已關閉時，兩者都需要 Claude Code v2.1.248 或更新版本。在這些情況下，在較早版本上，沒有間隔的提示會在固定的 10 分鐘排程上執行，沒有提示的 `/loop` 會列印使用訊息。
 </Note>
 
 <h3 id="run-the-built-in-maintenance-prompt">
@@ -103,15 +105,11 @@ Claude 不會在該範圍之外啟動新的計畫，不可逆的操作（例如�
 
 裸 `/loop` 在[動態選擇的間隔](#let-claude-choose-the-interval)上執行此提示。新增間隔（例如 `/loop 15m`）以改為在固定排程上執行它。若要用您自己的預設值替換內建提示，請參閱[使用 loop.md 自訂預設提示](#customize-the-default-prompt-with-loop-md)。
 
-<Note>
-  在 Amazon Bedrock、Claude Platform on AWS、Google Cloud 的 Agent Platform 和 Microsoft Foundry 上，沒有提示的 `/loop` 會列印使用訊息而不是執行維護提示。
-</Note>
-
 <h3 id="customize-the-default-prompt-with-loop-md">
   使用 loop.md 自訂預設提示
 </h3>
 
-`loop.md` 檔案用您自己的指示替換內建維護提示。它為裸 `/loop` 定義單一預設提示，而不是單獨排程任務的清單，並且每當您在命令行上提供提示時都會被忽略。若要在其旁邊排程其他提示，請使用 `/loop <prompt>` 或[直接要求 Claude](#manage-scheduled-tasks)。
+建立 `loop.md` 檔案以用您自己的指示替換[內建維護提示](#run-the-built-in-maintenance-prompt)。它為裸 `/loop` 定義單一預設提示，而不是單獨排程任務的清單，並且每當您在命令行上提供提示時 Claude Code 都會忽略它。若要在其旁邊排程其他提示，請使用 `/loop <prompt>` 或[直接要求 Claude](#manage-scheduled-tasks)。
 
 Claude 在兩個位置尋找檔案，並使用它找到的第一個。
 
@@ -131,19 +129,15 @@ quiet, say so in one line.
 
 對 `loop.md` 的編輯在下次迭代時生效，因此您可以在迴圈執行時精煉指示。當任一位置都不存在 `loop.md` 時，迴圈會回退到內建維護提示。保持檔案簡潔：超過 25,000 位元組的內容會被截斷。
 
-<Note>
-  在 Amazon Bedrock、Claude Platform on AWS、Google Cloud 的 Agent Platform 和 Microsoft Foundry 上，`loop.md` 不會被讀取，沒有提示的 `/loop` 會列印使用訊息。
-</Note>
-
 <h3 id="stop-a-loop">
   停止迴圈
 </h3>
 
-若要在 `/loop` 等待下一次迭代時停止它，請按 `Esc`。這會清除待處理的喚醒，使迴圈不會再次執行。您透過[直接要求 Claude](#manage-scheduled-tasks) 排程的任務不受 `Esc` 影響，會保留在原位，直到您刪除它們。
+若要在[自我調整 `/loop`](#let-claude-choose-the-interval) 等待下一次迭代時停止它，請按 `Esc`。這會清除待處理的喚醒，使迴圈不會再次執行。您透過[直接要求 Claude](#manage-scheduled-tasks) 排程的任務不受 `Esc` 影響，會保留在原位，直到您刪除它們。
 
-在[自我調整模式](#let-claude-choose-the-interval)中，Claude 也可以在任務完成後自行結束迴圈。Claude 呼叫 [`ScheduleWakeup` tool](/docs/zh-TW/tools-reference)，其中 `stop: true`，這會立即取消待處理的喚醒。如果迭代結束時既未重新排程也未停止，Claude Code 會排程一個大約 20 分鐘後的備用喚醒，並在該迭代也不重新排程時結束迴圈。在 v2.1.202 之前，不重新排程是 Claude 自行結束迴圈的唯一方式。
+在[自我調整模式](#let-claude-choose-the-interval)中，Claude 也可以在任務完成後自行結束迴圈。Claude 呼叫 [`ScheduleWakeup` tool](/docs/zh-TW/tools-reference)，其中 `stop: true`，這會立即取消待處理的喚醒。如果迭代結束時既未重新排程也未停止，Claude Code 會排程一個大約 20 分鐘後的備用喚醒，並在該迭代也不重新排程時結束迴圈。
 
-固定間隔上的迴圈會持續執行，直到您停止它們或[七天過去](#seven-day-expiry)。
+固定間隔上的迴圈會持續執行，直到您[像任何其他排程任務一樣取消它們](#manage-scheduled-tasks)或[七天過去](#seven-day-expiry)。
 
 <h2 id="set-a-one-time-reminder">
   設定一次性提醒
@@ -175,7 +169,7 @@ what scheduled tasks do I have?
 cancel the deploy check job
 ```
 
-在幕後，Claude 使用這些工具：
+這些是 Claude 使用的基礎工具：
 
 | 工具           | 用途                                         |
 | :----------- | :----------------------------------------- |
@@ -243,10 +237,11 @@ cancel the deploy check job
 
 * 任務只在 Claude Code 執行且閒置時執行。關閉終端或讓工作階段退出會停止它們執行。[將工作階段放在背景執行](/docs/zh-TW/agent-view#from-inside-a-session)會將 `/loop` 任務帶到背景工作階段，該工作階段會持續執行而無需終端。
 * 沒有錯過執行的追趕。如果任務的排程時間在 Claude 忙於長時間執行的請求時經過，它會在 Claude 變為閒置時執行一次，而不是每個錯過的間隔執行一次。
-* 啟動新的對話會清除所有工作階段範圍的任務。使用 `claude --resume` 或 `claude --continue` 繼續會恢復尚未過期的任務：建立後七天內的重複執行任務，以及排程時間尚未到達的一次性任務。背景 Bash 和監視任務在繼續時永遠不會被恢復。
+* 啟動新的對話會清除所有工作階段範圍的任務。當您使用 `claude --resume` 或 `claude --continue` 繼續工作階段時，Claude Code 會復原使用 `CronCreate` 排程的任務，除了已[過期](#seven-day-expiry)的重複執行任務和排程時間已經過去的一次性任務。自我調整的 `/loop`（[不會被復原](#let-claude-choose-the-interval)），因此請再次執行 `/loop` 以重新啟動它。背景 Bash 和監視任務在繼續時永遠不會被復原。
+* 當[功能旗標擷取關閉](/docs/zh-TW/env-vars#features-that-need-feature-flag-fetching)時，Claude Code 會將您要求跨工作階段保留的任務儲存在專案的 `.claude/scheduled_tasks.json` 檔案中。當 `.claude` 目錄或該檔案是符號連結時，Claude Code 會傳回錯誤，而不是排程任務。已儲存的任務只在您建立它的專案資料夾中執行。如果您將檔案複製到另一個資料夾（例如新的 worktree），該處的工作階段會列出複製的任務，但不會執行它們，因此請在該資料夾中再次建立任務。
 
 對於需要無人值守執行的 cron 驅動自動化：
 
-* [Routines](/docs/zh-TW/routines)：在 Anthropic 管理的基礎設施上按排程執行、透過 API 呼叫或在 GitHub 事件上執行
+* [Routines](/docs/zh-TW/routines)：在雲端按排程執行、透過 API 呼叫或在 GitHub 事件上執行
 * [GitHub Actions](/docs/zh-TW/github-actions)：在 CI 中使用 `schedule` 觸發器
 * [Desktop 排程任務](/docs/zh-TW/desktop-scheduled-tasks)：在您的機器上本地執行

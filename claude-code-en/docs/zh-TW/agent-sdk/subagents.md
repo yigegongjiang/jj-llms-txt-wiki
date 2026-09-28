@@ -4,76 +4,47 @@
 
 # SDK 中的子代理
 
-> 定義和調用子代理以隔離上下文、並行運行任務，以及在 Claude Agent SDK 應用程式中應用專門化指令。
+> 定義並調用子代理以隔離上下文、並行運行任務，以及在 Claude Agent SDK 應用程式中應用專門指令。
 
 子代理是您的主代理可以生成的獨立代理實例，用於處理專注的子任務。
-使用子代理來隔離專注子任務的上下文、並行運行多個分析，以及應用專門化指令，而不會使主代理的提示詞變得臃腫。
-
-本指南說明如何使用 `agents` 參數在 SDK 中定義和使用子代理。
+使用它們來隔離上下文、並行運行多個分析，以及應用專門指令，而無需添加到主代理的提示中。
 
 <h2 id="overview">
   概述
 </h2>
 
-您可以通過三種方式建立子代理：
+您可以透過三種方式建立子代理：
 
-* **以程式方式**：在您的 `query()` 選項中使用 `agents` 參數。請參閱 [TypeScript](/docs/zh-TW/agent-sdk/typescript#agentdefinition) 和 [Python](/docs/zh-TW/agent-sdk/python#agentdefinition) 參考資料
+* **以程式設計方式**：在您的 `query()` 選項中使用 `agents` 參數。請參閱 [TypeScript](/docs/zh-TW/agent-sdk/typescript#agentdefinition) 和 [Python](/docs/zh-TW/agent-sdk/python#agentdefinition) 參考資料
 * **基於檔案系統**：在 `.claude/agents/` 目錄中將代理定義為 markdown 檔案。請參閱[將子代理定義為檔案](/docs/zh-TW/sub-agents)
-* **內置通用代理**：Claude 可以隨時通過 Agent 工具呼叫內置的 `general-purpose` 子代理，無需您定義任何內容
+* **內建通用型**：Claude 可以隨時透過 Agent 工具叫用內建的 `general-purpose` 子代理，無需您定義任何內容
 
-本指南重點介紹程式化方法，這是 SDK 應用程式的推薦方法。
-
-定義子代理時，Claude 根據每個子代理的 `description` 欄位確定是否呼叫它。編寫清晰的描述，說明何時應使用子代理，Claude 將自動委派適當的任務。您也可以在提示詞中按名稱明確請求子代理，例如「使用代碼審查員代理來...」。
+本指南著重於以程式設計方式，這是 SDK 應用程式的建議做法。
 
 <h2 id="benefits-of-using-subagents">
   使用子代理的好處
 </h2>
 
-<h3 id="context-isolation">
-  上下文隔離
-</h3>
+因為子代理是獨立的代理實例，將工作委派給它們可以帶來四個好處：
 
-每個子代理在其自己的新對話中運行。中間工具調用和結果保留在子代理內；只有其最終消息返回到父代理。請參閱[子代理繼承的內容](#what-subagents-inherit)以了解子代理上下文中的確切內容。
-
-**示例：** `research-assistant` 子代理可以探索數十個檔案，而無需任何該內容在主對話中累積。父代理接收簡潔的摘要，而不是子代理讀取的每個檔案。
-
-<h3 id="parallelization">
-  並行化
-</h3>
-
-多個子代理可以並發運行，因此獨立的子任務在最慢的一個的時間內完成，而不是所有任務時間的總和。
-
-**示例：** 在代碼審查期間，您可以同時運行 `style-checker`、`security-scanner` 和 `test-coverage` 子代理，而不是按順序運行。
-
-<h3 id="specialized-instructions-and-knowledge">
-  專門化指令和知識
-</h3>
-
-每個子代理可以有具有特定專業知識、最佳實踐和約束的定製系統提示詞。
-
-**示例：** `database-migration` 子代理可以具有有關 SQL 最佳實踐、回滾策略和資料完整性檢查的詳細知識，這些在主代理的指令中將是不必要的噪音。
-
-<h3 id="tool-restrictions">
-  工具限制
-</h3>
-
-子代理可以限制為特定工具，降低意外操作的風險。
-
-**示例：** `doc-reviewer` 子代理可能只能訪問 Read 和 Grep 工具，確保它可以分析但永遠不會意外修改您的文檔檔案。
+* **上下文隔離**：每個子代理在自己的對話中執行，除非子代理是[分支](/docs/zh-TW/sub-agents#fork-the-current-conversation)，否則會從頭開始。無論哪種方式，中間工具呼叫和結果都保留在子代理內；只有其最終訊息返回到父代理。`research-assistant` 子代理可以探索數十個檔案，而不會有任何內容累積在主對話中。父代理會收到簡潔的摘要，而不是子代理讀取的每個檔案。請參閱[子代理繼承的內容](#what-subagents-inherit)以了解子代理上下文中的確切內容。
+* **平行化**：多個子代理可以並行執行，因此獨立的子任務在最慢的時間內完成，而不是所有任務的總和。在程式碼審查期間，您可以同時執行 `style-checker`、`security-scanner` 和 `test-coverage` 子代理，而不是依序執行。
+* **專門的指示和知識**：每個子代理可以有量身訂製的系統提示，具有特定的專業知識、最佳實踐和限制。`database-migration` 子代理可以具有有關 SQL 最佳實踐、回滾策略和資料完整性檢查的詳細知識，這些在主代理的指示中將是不必要的雜訊。
+* **工具限制**：子代理可以限制為特定工具，降低意外操作的風險。`doc-reviewer` 子代理可能只能存取 Read 和 Grep 工具，確保它可以分析但永遠不會意外修改您的文件檔案。
 
 <h2 id="create-subagents">
-  創建子代理
+  建立子代理
 </h2>
 
 <h3 id="programmatic-definition-recommended">
   程式化定義（推薦）
 </h3>
 
-使用 `agents` 參數直接在代碼中定義子代理。Claude 通過 `Agent` 工具調用子代理，因此請在 `allowedTools` 中包含 `Agent` 以自動批准子代理調用，無需權限提示。
+使用 `agents` 參數直接在程式碼中定義子代理。Claude 透過 `Agent` 工具叫用子代理。
 
-本頁面上的大多數示例僅列印最終結果。若要確認 Claude 委派給子代理而不是直接回答，請參閱[檢測子代理調用](#detect-subagent-invocation)。
+本頁面上的大多數範例只會列印最終結果。若要確認 Claude 已委派給子代理而非直接回答，請參閱[偵測子代理叫用](#detect-subagent-invocation)。
 
-此示例創建兩個子代理：一個具有唯讀訪問權限的代碼審查員和一個可以執行命令的測試運行器。
+此範例建立兩個子代理：一個具有唯讀存取權限的程式碼審查員，以及一個可以執行命令的測試執行器。
 
 <CodeGroup>
   ```python Python theme={null}
@@ -85,7 +56,7 @@
       async for message in query(
           prompt="Review the authentication module for security issues",
           options=ClaudeAgentOptions(
-              # Auto-approve these tools, including Agent for subagent invocation
+              # Auto-approve these tools
               allowed_tools=["Read", "Grep", "Glob", "Agent"],
               agents={
                   "code-reviewer": AgentDefinition(
@@ -134,7 +105,7 @@
   for await (const message of query({
     prompt: "Review the authentication module for security issues",
     options: {
-      // Auto-approve these tools, including Agent for subagent invocation
+      // Auto-approve these tools
       allowedTools: ["Read", "Grep", "Glob", "Agent"],
       agents: {
         "code-reviewer": {
@@ -178,97 +149,103 @@
 </CodeGroup>
 
 <h3 id="agentdefinition-configuration">
-  AgentDefinition 配置
+  AgentDefinition 設定
 </h3>
 
-| 欄位                | 類型                                                          | 必需 | 描述                                                                                                          |
-| :---------------- | :---------------------------------------------------------- | :- | :---------------------------------------------------------------------------------------------------------- |
-| `description`     | `string`                                                    | 是  | 何時使用此代理的自然語言描述                                                                                              |
-| `prompt`          | `string`                                                    | 是  | 代理的系統提示詞，定義其角色和行為                                                                                           |
-| `tools`           | `string[]`                                                  | 否  | 允許的工具名稱陣列。如果省略，繼承所有工具                                                                                       |
-| `disallowedTools` | `string[]`                                                  | 否  | 要從代理的工具集中移除的工具名稱陣列。MCP 伺服器級別的模式也被接受：`mcp__server` 或 `mcp__server__*` 移除該伺服器的每個工具，`mcp__*` 移除任何伺服器的每個 MCP 工具 |
-| `model`           | `string`                                                    | 否  | 此代理的模型覆蓋。接受別名，例如 `'fable'`、`'opus'`、`'sonnet'`、`'haiku'`、`'inherit'`，或完整模型 ID。如果省略，預設為主模型                   |
-| `skills`          | `string[]`                                                  | 否  | 在啟動時預加載到代理上下文中的 skills 名稱列表。未列出的 skills 仍可通過 Skill 工具調用                                                     |
-| `memory`          | `'user' \| 'project' \| 'local'`                            | 否  | 此代理的記憶體來源                                                                                                   |
-| `mcpServers`      | `(string \| object)[]`                                      | 否  | 此代理可用的 MCP 伺服器，按名稱或內聯配置                                                                                     |
-| `initialPrompt`   | `string`                                                    | 否  | 當此代理作為主執行緒代理運行時，自動提交為第一個使用者回合。當代理作為子代理調用時忽略                                                                 |
-| `maxTurns`        | `number`                                                    | 否  | 代理停止前的最大代理轉數                                                                                                |
-| `background`      | `boolean`                                                   | 否  | 調用時將此代理作為非阻塞背景任務運行                                                                                          |
-| `effort`          | `'low' \| 'medium' \| 'high' \| 'xhigh' \| 'max' \| number` | 否  | 此代理的推理努力級別                                                                                                  |
-| `permissionMode`  | `PermissionMode`                                            | 否  | 此代理內工具執行的權限模式                                                                                               |
+| 欄位                | 類型                                                          | 必需 | 說明                                                                                                                                                                                                   |
+| :---------------- | :---------------------------------------------------------- | :- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `description`     | `string`                                                    | 是  | 何時使用此代理的自然語言說明                                                                                                                                                                                       |
+| `prompt`          | `string`                                                    | 是  | 代理的系統提示，定義其角色和行為                                                                                                                                                                                     |
+| `tools`           | `string[]`                                                  | 否  | 允許的工具名稱陣列。如果省略，會繼承[子代理可用的每個工具](/docs/zh-TW/sub-agents#available-tools)                                                                                                                                    |
+| `disallowedTools` | `string[]`                                                  | 否  | 要從代理工具集中移除的工具名稱陣列。也接受 MCP 伺服器層級的模式：`mcp__server` 或 `mcp__server__*` 會移除該伺服器的每個工具，而 `mcp__*` 會移除任何伺服器的每個 MCP 工具                                                                                       |
+| `model`           | `string`                                                    | 否  | 此代理的模型覆寫。接受別名，例如 `'fable'`、`'opus'`、`'sonnet'`、`'haiku'`、`'inherit'`，或完整的模型 ID。`'inherit'` 使用主要模型。當您省略它時，Claude Code 會選擇[子代理模型順序](/docs/zh-TW/sub-agents#choose-a-model)中的模型                              |
+| `skills`          | `string[]`                                                  | 否  | 在啟動時預先載入代理上下文的技能名稱清單。未列出的技能仍可透過 Skill 工具叫用                                                                                                                                                           |
+| `memory`          | `'user' \| 'project' \| 'local'`                            | 否  | 此代理的記憶來源                                                                                                                                                                                             |
+| `mcpServers`      | `(string \| object)[]`                                      | 否  | 此代理可用的 MCP 伺服器，按名稱或內嵌設定                                                                                                                                                                              |
+| `initialPrompt`   | `string`                                                    | 否  | 當此代理作為主執行緒代理執行時，自動提交為第一個使用者回合。當代理作為子代理叫用時忽略                                                                                                                                                          |
+| `maxTurns`        | `number`                                                    | 否  | 代理停止前的最大代理回合數。當代理達到限制時，Claude Code 會傳回標記為部分的輸出，您可以[繼續代理](#resume-subagents)以繼續。部分標記需要 Claude Code v2.1.246 或更新版本                                                                                     |
+| `background`      | `boolean`                                                   | 否  | 叫用時以非阻塞背景工作執行此代理                                                                                                                                                                                     |
+| `omitClaudeMd`    | `boolean`                                                   | 否  | 當此代理作為子代理執行時，在不含使用者、專案和本機 CLAUDE.md 檔案的情況下執行此代理；受管理的原則檔案仍會載入。當代理作為主執行緒代理執行時忽略。需要 TypeScript Agent SDK v0.3.271 或更新版本。Python SDK 的 [`AgentDefinition`](/docs/zh-TW/agent-sdk/python#agentdefinition) 沒有此欄位 |
+| `effort`          | `'low' \| 'medium' \| 'high' \| 'xhigh' \| 'max' \| number` | 否  | 此代理的推理工作量等級                                                                                                                                                                                          |
+| `permissionMode`  | `PermissionMode`                                            | 否  | 此代理內工具執行的權限模式。[子代理繼承規則](/docs/zh-TW/agent-sdk/permissions#available-modes)決定何時適用                                                                                                                          |
 
-在 Python SDK 中，多字欄位名稱（例如 `disallowedTools` 和 `mcpServers`）保持其 camelCase 拼寫以匹配線路格式，而不是遵循 Python 的 snake\_case 慣例。有關詳細信息，請參閱 [`AgentDefinition` 參考](/docs/zh-TW/agent-sdk/python#agentdefinition)。
+在 Python SDK 中，多字欄位名稱（例如 `disallowedTools` 和 `mcpServers`）保持其 camelCase 拼寫以符合線路格式，而不是遵循 Python 的 snake\_case 慣例。如需詳細資訊，請參閱[`AgentDefinition` 參考](/docs/zh-TW/agent-sdk/python#agentdefinition)。
 
-Claude Code v2.1.198 中的兩個子代理行為已更改：
+子代理預設在背景執行。省略 [`run_in_background`](/docs/zh-TW/sub-agents#run-subagents-in-foreground-or-background) 輸入的 Agent 工具呼叫會啟動背景子代理，而當 Claude 需要結果才能繼續時，它會設定 `run_in_background: false`。將 `background` 欄位設定為 `true` 以強制特定代理的背景執行，無論 Claude 要求什麼。在 Claude Code v2.1.198 之前，背景預設值正在逐步推出，省略 `run_in_background` 的 Agent 工具呼叫可能會同步執行子代理。
 
-* 子代理預設在背景中運行。省略 [`run_in_background`](/docs/zh-TW/agent-sdk/typescript) 輸入的 Agent 工具調用會啟動背景子代理，當 Claude 需要結果才能繼續時，它會設定 `run_in_background: false`。在 v2.1.198 之前，省略 `run_in_background` 會同步運行子代理。設定 `background` 欄位為 `true` 以強制特定代理進行背景執行，無論 Claude 請求什麼。
-* 子代理繼承主會話的擴展思考配置。在較早的版本中，無論主會話的設定如何，擴展思考在子代理內被禁用。
-
-<Note>
-  自 Claude Code v2.1.172 起，子代理可以生成自己的子代理。位於主代理下方五個級別的子代理無法生成進一步的子代理，無論其是否在前景或背景中運行。若要防止子代理生成其他子代理，請從其 `tools` 陣列中省略 `Agent` 或將其添加到 `disallowedTools`。有關完整的深度規則，請參閱[嵌套子代理](/docs/zh-TW/sub-agents#spawn-nested-subagents)。
-</Note>
+子代理也可以產生自己的子代理。若要限制該巢狀結構的深度、同時執行多少個子代理，以及查詢花費多少，請參閱[限制子代理深度、並行性和支出](#cap-subagent-depth-concurrency-and-spend)。
 
 <h3 id="filesystem-based-definition-alternative">
-  基於檔案系統的定義（替代方案）
+  檔案系統型定義（替代方案）
 </h3>
 
-您也可以在 `.claude/agents/` 目錄中將子代理定義為 markdown 檔案。有關此方法的詳細信息，請參閱 [Claude Code 子代理文檔](/docs/zh-TW/sub-agents)。以程式方式定義的代理優先於具有相同名稱的基於檔案系統的代理。
+您也可以在 `.claude/agents/` 目錄中將子代理定義為 markdown 檔案。如需此方法的詳細資訊，請參閱 [Claude Code 子代理文件](/docs/zh-TW/sub-agents)。程式化定義的代理優先於具有相同名稱的檔案系統型代理。
 
 <Note>
-  即使不定義自訂子代理，Claude 也可以生成內置的 `general-purpose` 子代理。這對於委派研究或探索任務而無需創建專門代理很有用。請在 `allowedTools` 中包含 `Agent`，以便這些調用自動批准，無需權限提示。
+  當 Claude 呼叫不含 `subagent_type` 的 Agent 工具時，它會取得內建的 `general-purpose` 子代理，即使您未定義任何自己的代理，Claude 也可以產生。設定 [`CLAUDE_AGENT_SDK_DISABLE_BUILTIN_AGENTS=1`](/docs/zh-TW/env-vars) 會移除該預設值，而此類呼叫會失敗並顯示 [`subagent_type is required`](/docs/zh-TW/errors#subagent-type-is-required)。
 </Note>
 
 <h2 id="what-subagents-inherit">
   子代理繼承的內容
 </h2>
 
-子代理的上下文窗口從新開始（無父對話），但並非空的。從父代理到子代理的唯一通道是 Agent 工具的提示詞字符串，因此請直接在該提示詞中包含子代理需要的任何檔案路徑、錯誤消息或決策。
+除非子代理是[分支](/docs/zh-TW/sub-agents#fork-the-current-conversation)，否則其上下文視窗會重新開始，沒有父對話，但也不是空的。您從父代理傳遞到子代理的唯一內容是 Agent 工具的提示字串，因此請直接在該提示中包含子代理需要的任何檔案路徑、錯誤訊息或決策。
 
-具有 [`SendMessage`](/docs/zh-TW/tools-reference) 工具的子代理會在開始時獲得在該會話中運行的其他命名代理的列表，因此它知道可以向哪些名稱發送消息。Claude Code 會自動在子代理的第一輪中添加該列表。[分叉](/docs/zh-TW/sub-agents#fork-the-current-conversation)不會獲得該列表，因為它繼承了父對話。該列表需要 Claude Code v2.1.206 或更高版本。
+具有 [`SendMessage`](/docs/zh-TW/tools-reference) 工具的子代理會以工作階段中執行的其他具名代理清單開始，因此它知道可以向哪些名稱傳送訊息。Claude Code 會在子代理的第一個回合自動將清單新增到子代理。[分支](/docs/zh-TW/sub-agents#fork-the-current-conversation)不會取得清單，因為它繼承的是父對話。
 
-| 子代理接收                                                                                                                         | 子代理不接收                                    |
-| :---------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------- |
-| 其自己的系統提示詞（`AgentDefinition.prompt`）和 Agent 工具的提示詞                                                                             | 父代理的對話歷史或工具結果                             |
-| 項目 CLAUDE.md（通過 [`settingSources`](/docs/zh-TW/agent-sdk/claude-code-features#control-filesystem-settings-with-settingsources) 加載） | 預加載的技能內容，除非在 `AgentDefinition.skills` 中列出 |
-| 工具定義（從父代理繼承，或 `tools` 中的子集）                                                                                                   | 父代理的系統提示詞                                 |
+子代理也會繼承主工作階段的擴展思考設定。
+
+下表列出非分支子代理的上下文包含的內容以及它遺漏的內容。
+
+| 子代理接收                                                                                                                                                                                 | 子代理不接收                                   |
+| :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :--------------------------------------- |
+| 其自身的系統提示 (`AgentDefinition.prompt`) 和 Agent 工具的提示                                                                                                                                     | 父代理的對話歷史或工具結果                            |
+| 專案 CLAUDE.md（透過 [`settingSources`](/docs/zh-TW/agent-sdk/claude-code-features#control-filesystem-settings-with-settingsources) 載入），除非代理設定 [`omitClaudeMd`](#agentdefinition-configuration) | 預載入的技能內容，除非列在 `AgentDefinition.skills` 中 |
+| 工具定義（繼承自父代理或 `tools` 中的子集，[針對背景執行進行篩選](/docs/zh-TW/sub-agents#available-tools)）                                                                                                            | 父代理的系統提示                                 |
 
 <Note>
-  父代理逐字接收子代理的最終消息作為 Agent 工具結果，但可能在其自己的回應中進行摘要。要在面向用戶的回應中逐字保留子代理輸出，請在您傳遞給主 `query()` 調用的提示詞或 `systemPrompt` 選項中包含執行此操作的指令。
+  父代理會將子代理的最終訊息作為 Agent 工具結果接收，但可能會在其自身回應中進行摘要。若要在面向使用者的回應中逐字保留子代理輸出，請在您傳遞給主 `query()` 呼叫的提示或 `systemPrompt` 選項中包含執行此操作的指示。
+
+  在 v2.1.210 及更新版本中，Claude Code [在父代理讀取最終訊息之前掃描它以尋找指示形狀的模式](/docs/zh-TW/sub-agents#subagent-output-scanning)。掃描以三種不同的方式處理三種模式：
+
+  * **控制標籤模仿**：Claude Code 會中立化只有工具組發出的標籤，例如 `<system-reminder>` 區塊，就地進行。它在開始角括號後插入反斜線，不刪除任何內容。
+  * **權限設定提及**：Claude Code 會保留對權限設定的參考，例如 `.claude/settings.json`、`bypassPermissions` 或 `--dangerously-skip-permissions`，如同撰寫的方式。
+  * **回合標記**：以 `Human:` 或 `Assistant:` 開頭的行在冒號前取得反斜線，因此訊息無法模仿對話回合邊界。
+
+  對於控制標籤或權限設定匹配，Claude Code 會在前面加上 `[harness: ...]` 標記行，命名匹配的模式；回合標記匹配不會新增標記行。這些是掃描進行的唯一修改：它永遠不會移除或改寫子代理的文字。
 </Note>
 
-結束子代理早期的 API 錯誤（例如速率限制）永遠不會作為其結果傳遞。如果速率限制、過載或伺服器錯誤中斷已經產生文本輸出的前景子代理，Agent 工具會返回該部分輸出並附註子代理未完成。未產生任何內容的子代理，或其唯一輸出是沒有文本的工具調用，會失敗並顯示錯誤消息 `Agent terminated early due to an API error`，後跟錯誤詳情。請參閱[子代理中的 API 錯誤](/docs/zh-TW/sub-agents#api-errors-in-subagents)以了解前景和背景行為。
-
-此部分輸出處理需要 Claude Code v2.1.199 或更高版本。在 v2.1.199 中，速率限制、過載或伺服器錯誤使僅工具調用的形狀保留為空的部分結果，僅包含截斷注釋。
+結束子代理早期的 API 錯誤，例如速率限制，永遠不會作為其結果傳遞。請參閱[子代理中的 API 錯誤](/docs/zh-TW/sub-agents#api-errors-in-subagents)以了解前景和背景行為。
 
 <h2 id="invoke-subagents">
-  調用子代理
+  呼叫子代理
 </h2>
 
 <h3 id="automatic-invocation">
-  自動調用
+  自動呼叫
 </h3>
 
-Claude 根據任務和每個子代理的 `description` 自動決定何時調用子代理。例如，如果您定義了一個 `performance-optimizer` 子代理，其描述為「查詢調優的性能優化專家」，當您的提示詞提到優化查詢時，Claude 將調用它。
+Claude 會根據任務和每個子代理的 `description` 自動決定何時呼叫子代理。例如，如果您定義了一個 `performance-optimizer` 子代理，其描述為「查詢調整的效能最佳化專家」，當您的提示詞提到最佳化查詢時，Claude 將呼叫它。
 
-編寫清晰、具體的描述，以便 Claude 可以將任務匹配到正確的子代理。
+撰寫清晰、具體的描述，以便 Claude 能將任務與正確的子代理相匹配。
 
 <h3 id="explicit-invocation">
-  明確調用
+  明確呼叫
 </h3>
 
-要保證 Claude 使用特定的子代理，請在提示詞中按名稱提及它：
+若要保證 Claude 使用特定的子代理，請在您的提示詞中按名稱提及它：
 
 ```text theme={null}
 "Use the code-reviewer agent to check the authentication module"
 ```
 
-這繞過自動匹配並直接調用命名的子代理。
+這會略過自動匹配，直接呼叫指定的子代理。
 
 <h3 id="dynamic-agent-configuration">
-  動態代理配置
+  動態代理設定
 </h3>
 
-您可以根據運行時條件動態創建代理定義。此示例創建一個安全審查員，具有不同的嚴格級別，對嚴格審查使用更強大的模型。
+您可以根據執行時條件動態建立代理定義。此範例建立了一個安全審查者，具有不同的嚴格程度，對於嚴格審查使用更強大的模型。
 
 <CodeGroup>
   ```python Python theme={null}
@@ -343,18 +320,18 @@ Claude 根據任務和每個子代理的 `description` 自動決定何時調用�
 </CodeGroup>
 
 <h2 id="detect-subagent-invocation">
-  檢測子代理調用
+  偵測子代理程式叫用
 </h2>
 
-Claude 通過 Agent 工具調用子代理。要檢測何時調用子代理，請檢查 `tool_use` 塊，其中 `name` 是 `"Agent"`。來自子代理上下文內的訊息包括 `parent_tool_use_id` 欄位。
+Claude 透過 Agent 工具叫用子代理程式。若要偵測何時叫用子代理程式，請檢查 `tool_use` 區塊，其中 `name` 為 `"Agent"`。來自子代理程式內容中的訊息包含 `parent_tool_use_id` 欄位。
 
 <Note>
-  工具名稱在 Claude Code v2.1.63 中從 `"Task"` 重新命名為 `"Agent"`。目前 SDK 版本在 `tool_use` 塊中發出 `"Agent"`，但在 `system:init` 工具清單和 `result.permission_denials[].tool_name` 中仍使用 `"Task"`。檢查 `block.name` 中的兩個值可確保跨 SDK 版本的相容性。
+  該工具在 `tool_use` 區塊中顯示為 `"Agent"`，但在 `system:init` 工具清單中顯示為 `"Task"`。在 Claude Code v2.1.63 之前，`tool_use` 區塊也將其命名為 `"Task"`。為了保持偵測在各個 SDK 版本中正常運作，請在 `block.name` 中同時符合兩個值。
 </Note>
 
-訊息結構在 SDK 之間有所不同。在 Python 中，內容塊直接通過 `message.content` 存取。在 TypeScript 中，`SDKAssistantMessage` 包裝 Claude API 訊息，因此內容通過 `message.message.content` 存取。
+訊息結構在 SDK 之間有所不同。在 Python 中，您可以透過 `message.content` 直接存取內容區塊。在 TypeScript 中，`SDKAssistantMessage` 包裝 Claude API 訊息，因此您透過 `message.message.content` 存取內容。
 
-此範例遍歷串流訊息，記錄何時調用子代理以及後續訊息何時源自該子代理的執行上下文。
+此範例會逐一查看串流訊息，在叫用子代理程式時以及後續訊息源自該子代理程式執行內容時進行記錄。
 
 <CodeGroup>
   ```python Python theme={null}
@@ -436,24 +413,24 @@ Claude 通過 Agent 工具調用子代理。要檢測何時調用子代理，請
 </CodeGroup>
 
 <h2 id="resume-subagents">
-  恢復子代理
+  繼續執行子代理
 </h2>
 
-您可以恢復子代理以繼續中斷的地方，而不是從頭開始。恢復的子代理保留其完整的對話歷史，包括所有先前的工具調用、結果和推理。
+您可以繼續執行子代理以從中斷處繼續，而不是重新開始。繼續執行的子代理會保留其完整的對話歷史記錄，包括所有先前的工具呼叫、結果和推理。
 
-當子代理完成時，Agent 工具結果包含一個文字區塊，其中包含 `agentId: <id>`。內置的 [`Explore` 和 `Plan` 代理](/docs/zh-TW/sub-agents#built-in-subagents) 是一次性的，不會返回 `agentId`，因此當您需要恢復時，請使用自訂代理或 `general-purpose`。要以程式方式恢復子代理：
+當子代理在其 [`maxTurns`](#agentdefinition-configuration) 限制處停止時，Claude Code 會在 Agent 工具結果中將輸出標記為部分，以便 Claude 知道執行未完成。
 
-1. **捕獲會話 ID**：在第一個查詢期間從訊息中提取 `session_id`
+當子代理完成時，Agent 工具結果包含一個包含 `agentId: <id>` 的文字區塊。內建的 [`Explore` 和 `Plan` 代理](/docs/zh-TW/sub-agents#built-in-subagents) 是一次性的，不會傳回 `agentId`，因此當您需要繼續執行時，請使用自訂代理或 `general-purpose`。若要以程式設計方式繼續執行子代理：
+
+1. **擷取工作階段 ID**：從第一個查詢期間的訊息中提取 `session_id`
 2. **提取代理 ID**：從 Agent 工具結果文字中解析 `agentId`
-3. **恢復會話**：在第二個查詢的選項中傳遞 `resume: sessionId`，並在提示詞中包含代理 ID
+3. **繼續執行工作階段**：在第二個查詢的選項中傳遞 `resume: sessionId`，並在您的提示中包含代理 ID。每個 `query()` 呼叫預設會啟動新的工作階段，您必須繼續執行相同的工作階段以存取子代理的文字記錄。
 
 <Note>
-  您必須恢復相同的會話以訪問子代理的記錄。默認情況下，每個 `query()` 調用都會啟動一個新會話，因此傳遞 `resume: sessionId` 以在相同會話中繼續。
-
   使用自訂代理時，在兩個查詢的 `agents` 參數中傳遞相同的代理定義。
 </Note>
 
-下面的示例定義了一個自訂的 `endpoint-finder` 代理。第一個查詢運行它並從 Agent 工具結果中捕獲會話 ID 和代理 ID，然後第二個查詢恢復會話以提出需要來自第一個分析的上下文的後續問題。
+下面的範例定義了一個自訂的 `endpoint-finder` 代理。第一個查詢執行它並從 Agent 工具結果中擷取工作階段 ID 和代理 ID，然後第二個查詢繼續執行工作階段以提出需要第一次分析內容的後續問題。
 
 <CodeGroup>
   ```python Python theme={null}
@@ -577,22 +554,20 @@ Claude 通過 Agent 工具調用子代理。要檢測何時調用子代理，請
   ```
 </CodeGroup>
 
-子代理記錄獨立於主對話而持續存在：
+子代理文字記錄儲存在單獨的檔案中，並獨立於主對話之外持續存在。請參閱 [Claude Code 中的繼續執行子代理](/docs/zh-TW/sub-agents#resume-subagents) 以了解壓縮行為和 `cleanupPeriodDays` 清理期間。
 
-* **主對話壓縮**：當主對話壓縮時，子代理記錄不受影響。它們存儲在單獨的檔案中。
-* **會話持久性**：子代理記錄在其會話內持續存在。您可以通過恢復相同會話在重新啟動 Claude Code 後恢復子代理。
-* **自動清理**：記錄根據 `cleanupPeriodDays` 設定進行清理，預設為 30 天。
-
-<h2 id="tool-restrictions-2">
+<h2 id="tool-restrictions">
   工具限制
 </h2>
 
-子代理可以通過 `tools` 欄位具有受限的工具訪問：
+使用 `tools` 欄位來限制子代理可以執行的操作：
 
-* **省略欄位**：代理繼承所有可用工具（預設）
-* **指定工具**：代理只能使用列出的工具
+* **省略 `tools`**：子代理會獲得[所有可用於子代理的工具](/docs/zh-TW/sub-agents#available-tools)
+* **列出工具**：子代理只會獲得這些工具。例如，不應編輯檔案的程式碼審查員會獲得 `["Read", "Grep", "Glob"]`
 
-此示例創建一個唯讀分析代理，可以檢查代碼但無法修改檔案或運行命令。
+您省略的工具根本不會出現在子代理的工作階段中：Claude 會在沒有該工具的情況下工作，不會出現權限提示或錯誤。
+
+此範例建立了一個唯讀分析代理，可以檢查程式碼但無法修改檔案或執行命令。
 
 <CodeGroup>
   ```python Python theme={null}
@@ -650,12 +625,109 @@ Claude 通過 Agent 工具調用子代理。要檢測何時調用子代理，請
   常見工具組合
 </h3>
 
-| 使用案例 | 工具                                  | 描述                        |
-| :--- | :---------------------------------- | :------------------------ |
-| 唯讀分析 | `Read`、`Grep`、`Glob`                | 可以檢查代碼但不能修改或執行            |
-| 測試執行 | `Bash`、`Read`、`Grep`                | 可以運行命令並分析輸出               |
-| 代碼修改 | `Read`、`Edit`、`Write`、`Grep`、`Glob` | 完整的讀/寫訪問，無需命令執行           |
-| 完全訪問 | 所有工具                                | 從父代理繼承所有工具（省略 `tools` 欄位） |
+| 使用案例  | 工具                                  | 說明                         |
+| :---- | :---------------------------------- | :------------------------- |
+| 唯讀分析  | `Read`、`Grep`、`Glob`                | 可以檢查程式碼但無法修改或執行            |
+| 測試執行  | `Bash`、`Read`、`Grep`                | 可以執行命令並分析輸出                |
+| 程式碼修改 | `Read`、`Edit`、`Write`、`Grep`、`Glob` | 完整的讀寫存取權限，無命令執行            |
+| 完整存取  | 所有工具                                | 繼承可用於子代理的工具（省略 `tools` 欄位） |
+
+<h2 id="cap-subagent-depth-concurrency-and-spend">
+  限制子代理的深度、並行性和支出
+</h2>
+
+<Note>
+  本節描述 TypeScript SDK v0.3.219 和 Python SDK v0.2.127 及更新版本，這些版本包含 Claude Code v2.1.219 或更新版本。在較早的版本中，某些限制可能缺失或預設值不同，因此在依賴它們來限制執行之前，請先升級。[環境變數參考](/docs/zh-TW/env-vars)和[輪次和預算](/docs/zh-TW/agent-sdk/agent-loop#turns-and-budget)記錄了添加每個變數的 Claude Code 版本以及支出上限的子代理強制執行。
+</Note>
+
+Claude 會自行決定何時生成子代理以及生成多少個子代理。每個子代理都會發出自己的 API 請求，這些請求計入查詢的 `total_cost_usd`，而子代理可以生成自己的子代理，因此一個提示可以發展成代理樹。
+
+您可以通過三種方式限制這種增長：子代理的嵌套深度、同時運行的數量以及整個查詢的支出。通過 [`env`](/docs/zh-TW/agent-sdk/typescript#options) 選項將深度和並行性限制設定為環境變數，並將支出限制設定為查詢選項：
+
+| 限制  | 設定方式                                                      | 預設值                                         | Claude Code 在達到限制時的行為                                                                                                                                                                  |
+| :-- | :-------------------------------------------------------- | :------------------------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 深度  | [`CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH`](/docs/zh-TW/env-vars) | 主代理下方的 `3` 層子代理。`1` 會阻止您的子代理生成任何自己的子代理      | 使底層的子代理無法生成，因此它會自己完成委派的工作。請參閱[嵌套子代理](/docs/zh-TW/sub-agents#let-subagents-spawn-their-own-subagents)                                                                                        |
+| 並行性 | [`CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`](/docs/zh-TW/env-vars) | `20` 個子代理同時運行，計算 Claude 使用 Agent 工具生成的每個子代理 | 拒絕生成另一個子代理，返回 `Concurrent subagent limit reached`，直到運行計數降至限制以下。啟用[超級代碼](/docs/zh-TW/model-config#adjust-effort-level)的工作階段永遠不會被拒絕。請參閱[並行子代理限制](/docs/zh-TW/sub-agents#concurrent-subagent-limit) |
+| 支出  | TypeScript 中的 `maxBudgetUsd`，Python 中的 `max_budget_usd`   | 無限制。計算呼叫自身的支出，包括子代理請求                       | 通過三種方式強制執行上限：拒絕生成更多子代理，返回 `Budget limit reached`，停止仍在運行的背景子代理，並以 `error_max_budget_usd` 結果子類型結束查詢。如需了解上限在工作階段中的行為方式，請參閱[輪次和預算](/docs/zh-TW/agent-sdk/agent-loop#turns-and-budget)           |
+
+兩個 SDK 對 `env` 選項的處理方式不同：TypeScript SDK 用它替換子程序環境，因此將 `process.env` 展開到其中以保留 `PATH` 等變數，而 Python SDK 將其合併到繼承的環境中。此範例關閉嵌套，最多允許五個子代理同時運行，並在估計支出達到 \$5 時停止查詢：
+
+<CodeGroup>
+  ```python Python theme={null}
+  import asyncio
+  from claude_agent_sdk import query, ClaudeAgentOptions, ResultMessage
+
+
+  async def main():
+      try:
+          async for message in query(
+              prompt="Audit every service in this repo for unhandled promise rejections",
+              options=ClaudeAgentOptions(
+                  allowed_tools=["Read", "Grep", "Glob", "Agent"],
+                  # env is merged on top of the inherited environment
+                  env={
+                      "CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH": "1",
+                      "CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS": "5",
+                  },
+                  max_budget_usd=5.0,
+              ),
+          ):
+              if isinstance(message, ResultMessage):
+                  print(f"{message.subtype}: ${message.total_cost_usd}")
+      except Exception as error:
+          # A single-shot query() raises after yielding an error result,
+          # so the budget-capped result has already been printed above.
+          print(f"Session ended with an error: {error}")
+
+
+  asyncio.run(main())
+  ```
+
+  ```typescript TypeScript theme={null}
+  import { query } from "@anthropic-ai/claude-agent-sdk";
+
+  try {
+    for await (const message of query({
+      prompt: "Audit every service in this repo for unhandled promise rejections",
+      options: {
+        allowedTools: ["Read", "Grep", "Glob", "Agent"],
+        // env replaces the subprocess environment, so spread process.env to keep PATH
+        env: {
+          ...process.env,
+          CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH: "1",
+          CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS: "5",
+        },
+        maxBudgetUsd: 5,
+      },
+    })) {
+      if (message.type === "result") {
+        console.log(`${message.subtype}: $${message.total_cost_usd}`);
+      }
+    }
+  } catch (error) {
+    // A single-shot query() throws after yielding an error result,
+    // so the budget-capped result has already been logged above.
+    console.error(`Session ended with an error: ${error}`);
+  }
+  ```
+</CodeGroup>
+
+您看到的內容取決於查詢達到的限制（如果有的話）：
+
+* **在支出上限以下**：您會看到 `success` 和估計成本。
+* **達到支出上限**：您會看到 `error_max_budget_usd`，成本為 `5` 或以上，然後您的錯誤處理程式會運行。
+* **達到並行性限制**：您會在訊息流中看到一個 `tool_result` 區塊，其中包含 `Concurrent subagent limit reached`。Claude 會收到與 Agent 工具結果相同的區塊。
+
+<h3 id="run-opus-5-with-subagents">
+  使用子代理執行 Opus 5
+</h3>
+
+Claude Opus 5 比早期模型更容易委派給子代理，因此[深度、並行性和支出限制](#cap-subagent-depth-concurrency-and-spend)在執行 Opus 5 的查詢中最為重要。[Opus 5 提示指南](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5#controlling-subagent-spawning)提供了一個委派指令，您可以將其添加到任何提示中。Claude Code 是否添加自己的指令取決於您使用的[系統提示](/docs/zh-TW/agent-sdk/modifying-system-prompts#how-system-prompts-work)：
+
+* **`claude_code` 預設值**：當模型是 Opus 5 時，Claude Code 會在其系統提示中添加一行，告訴 Claude 除非被要求，否則不要呼叫 Agent 工具。Agent 工具保持可用。
+* **自訂提示或無 `systemPrompt`**：Claude Code 不會建立其系統提示，因此該行不存在。將提示指南的委派指令添加到您自己的提示中。
+
+任一指令只會引導 Claude，因此也要設定限制。Claude Code 會根據 Claude 決定的委派方式強制執行它們。
 
 <h2 id="scale-up-with-dynamic-workflows">
   使用動態工作流程進行擴展
@@ -675,8 +747,7 @@ Claude 通過 Agent 工具調用子代理。要檢測何時調用子代理，請
 
 如果 Claude 直接完成任務而不是委派給您的子代理：
 
-* **檢查 Agent 調用已獲批准**：在 `allowedTools` 中包含 `Agent` 以自動批准子代理調用。沒有它，Agent 調用會轉到您的 `canUseTool` 回調，或在 `dontAsk` 模式下被拒絕
-* **使用明確提示**：在您的提示詞中按名稱提及子代理，例如「使用代碼審查員代理來...」
+* **使用明確提示**：在您的提示詞中按名稱提及子代理，例如「使用代碼審查員代理來檢查身份驗證模組」
 * **編寫清晰的描述**：準確解釋何時應使用子代理，以便 Claude 可以適當地匹配任務
 
 <h3 id="filesystem-based-agents-not-loading">
@@ -688,20 +759,15 @@ Claude Code 監視 `~/.claude/agents/` 和 `.claude/agents/`，並在幾秒內�
 * **新的 `agents` 目錄**：監視程式僅涵蓋會話啟動時存在的目錄，因此新目錄中的第一個檔案需要會話重新啟動。這是最常見的原因。
 * **無效的 frontmatter 或重複的 `name`**：檢查檔案的 YAML，以及現有代理是否已使用該 `name`。
 * **`--disable-slash-commands`**：使用此旗標啟動的會話不監視這些目錄，並且始終需要重新啟動以加載新檔案。
+* **已新增目錄下的檔案**：Claude Code 從使用 `add_dirs` (Python) 或 `additionalDirectories` (TypeScript) 選項或 CLI 的 `--add-dir` 或 `/add-dir` 新增的目錄中加載 `.claude/agents/`，但不監視它們，因此那裡的新檔案或編輯檔案需要會話重新啟動。
 * **具有相同名稱的程式化代理**：傳遞給 `query()` 的 `agents` 會覆蓋具有相同名稱的檔案系統代理。
 
 有關檔案格式，請參閱[如何編寫子代理檔案](/docs/zh-TW/sub-agents#write-subagent-files)。
 
-<h3 id="long-prompt-failures-on-windows">
-  Windows 上的長提示詞失敗
-</h3>
-
-在 Windows 上，具有非常長提示詞的子代理可能因命令行長度限制（8191 個字符）而失敗。保持提示詞簡潔或使用基於檔案系統的代理來處理複雜指令。
-
 <h2 id="related-documentation">
-  相關文檔
+  相關文件
 </h2>
 
-* [Claude Code 子代理](/docs/zh-TW/sub-agents)：包括基於檔案系統定義的全面子代理文檔
-* [動態工作流程](/docs/zh-TW/workflows)：從腳本協調許多子代理，用於對話太大的工作
-* [SDK 概述](/docs/zh-TW/agent-sdk/overview)：Claude Agent SDK 入門
+* [Claude Code 子代理](/docs/zh-TW/sub-agents)：包括基於檔案系統定義的完整子代理文件
+* [動態工作流程](/docs/zh-TW/workflows)：從指令碼協調許多子代理，用於超出單一對話範圍的大型工作
+* [SDK 概述](/docs/zh-TW/agent-sdk/overview)：開始使用 Claude Agent SDK

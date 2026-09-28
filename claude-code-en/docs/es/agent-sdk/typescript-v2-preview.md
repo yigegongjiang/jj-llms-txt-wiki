@@ -12,7 +12,7 @@
   Para migrar, use la [API `query()`](/docs/es/agent-sdk/typescript) y las [opciones de sesión](/docs/es/agent-sdk/sessions) que acepta. Pase un `AsyncIterable<SDKUserMessage>` para conversaciones de múltiples turnos, u `options.resume` para continuar una sesión guardada. Esta página se mantiene como referencia si mantiene código en Agent SDK 0.2.x o anterior.
 </Warning>
 
-V2 fue una API de sesión experimental que eliminó la necesidad de generadores asincronos y coordinación de rendimiento. En lugar de gestionar el estado del generador entre turnos, cada turno era un ciclo `send()`/`stream()` separado. La superficie de la API se redujo a tres conceptos:
+V2 fue una API de sesión experimental que eliminó la necesidad de generadores asincronos y coordinación de rendimiento. En lugar de gestionar el estado del generador entre turnos, cada turno era un ciclo `send()`/`stream()` separado. La superficie de la API se redujo a crear una sesión, enviar un mensaje y transmitir la respuesta:
 
 * `createSession()` / `resumeSession()`: Iniciar o continuar una conversación
 * `session.send()`: Enviar un mensaje
@@ -29,7 +29,7 @@ npm install @anthropic-ai/claude-agent-sdk@0.2
 ```
 
 <Note>
-  El SDK incluye un binario nativo de Claude Code para su plataforma como una dependencia opcional, por lo que no necesita instalar Claude Code por separado.
+  El SDK incluye un binario nativo de Claude Code para su plataforma como una dependencia opcional, por lo que la mayoría de las instalaciones no necesitan una instalación separada de Claude Code. Consulte la [nota de instalación del inicio rápido](/docs/es/agent-sdk/quickstart) para las instalaciones que necesitan una.
 </Note>
 
 <h2 id="quick-start">
@@ -318,6 +318,8 @@ for await (const msg of resumedSession.stream()) {
 </h3>
 
 Las sesiones se pueden cerrar manualmente o automáticamente usando [`await using`](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-2.html#using-declarations-and-explicit-resource-management), una característica de TypeScript 5.2+ para la limpieza automática de recursos. Si está utilizando una versión anterior de TypeScript o encuentra problemas de compatibilidad, use la limpieza manual en su lugar.
+
+Los ejemplos a continuación muestran solo el patrón de limpieza y no envían ningún mensaje, por lo que ejecutarlos no produce ninguna salida.
 
 **Limpieza automática (TypeScript 5.2+):**
 

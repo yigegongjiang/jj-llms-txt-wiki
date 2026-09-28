@@ -86,11 +86,13 @@ export const ContactSalesCard = ({surface}) => {
 
 ほとんどの組織では、Claude for Teams または Claude for Enterprise が最適なエクスペリエンスを提供します。チームメンバーは、単一のサブスクリプション、一元化された請求、インフラストラクチャセットアップが不要で、Claude Code と Web 上の Claude の両方にアクセスできます。
 
-**Claude for Teams** はセルフサービスで、コラボレーション機能、管理ツール、請求管理が含まれています。迅速に開始する必要がある小規模なチームに最適です。
+**Claude for Teams** はセルフサービスで、コラボレーション機能、管理ツール、SSO、請求管理、および[サーバー管理設定](/docs/ja/server-managed-settings)（組織全体の Claude Code 構成用）が含まれています。迅速に開始する必要がある小規模なチームに最適です。
 
-**Claude for Enterprise** は SSO とドメインキャプチャ、ロールベースの権限、コンプライアンス API アクセス、および組織全体の Claude Code 構成をデプロイするための管理ポリシー設定を追加します。セキュリティとコンプライアンス要件がある大規模な組織に最適です。
+**Claude for Enterprise** はドメインキャプチャ、ロールベースの権限、およびコンプライアンス API アクセスを追加します。セキュリティとコンプライアンス要件がある大規模な組織に最適です。
 
 [Team プラン](https://support.claude.com/en/articles/9266767-what-is-the-team-plan)と[Enterprise プラン](https://support.claude.com/en/articles/9797531-what-is-the-enterprise-plan)の詳細をご覧ください。
+
+以下で比較されるデプロイメントオプションは、モデル推論が実行される場所をカバーしています。組織が運用するコンピュート上で [Claude Code on the web](/docs/ja/claude-code-on-the-web) セッションを実行するには、[セルフホスト環境](/docs/ja/self-hosted-environments)を参照してください。
 
 組織に特定のインフラストラクチャ要件がある場合は、以下のオプションを比較してください。
 
@@ -150,8 +152,8 @@ export const ContactSalesCard = ({surface}) => {
 
     <tr>
       <td>認証</td>
-      <td>Claude.ai SSO またはメール</td>
-      <td>API キー</td>
+      <td>claude.ai SSO またはメール</td>
+      <td>API キーまたは [API キーなしのコンソールサインイン](/docs/ja/authentication#sign-in-without-an-api-key)</td>
       <td>API キーまたは AWS 認証情報</td>
       <td>API キーまたは AWS 認証情報</td>
       <td>GCP 認証情報</td>
@@ -213,120 +215,9 @@ Amazon Bedrock と Google Vertex AI の場合、ログインプロンプトで `
 * **企業プロキシ**: HTTP/HTTPS プロキシを通じてトラフィックをルーティングします。組織がセキュリティ監視、コンプライアンス、またはネットワークポリシー実装のためにすべての送信トラフィックをプロキシサーバーを通じて渡す必要がある場合に使用します。`HTTPS_PROXY` または `HTTP_PROXY` 環境変数で構成します。[エンタープライズネットワーク構成](/docs/ja/network-config)で詳細をご覧ください。
 * **LLM ゲートウェイ**: Claude Code とクラウドプロバイダーの間に位置して、認証とルーティングを処理するサービスです。チーム全体の一元化された使用状況追跡、カスタムレート制限または予算、または一元化された認証管理が必要な場合に使用します。`ANTHROPIC_BASE_URL`、`ANTHROPIC_BEDROCK_BASE_URL`、`ANTHROPIC_AWS_BASE_URL`、`ANTHROPIC_VERTEX_BASE_URL`、または `ANTHROPIC_FOUNDRY_BASE_URL` 環境変数で構成します。[LLM ゲートウェイ](/docs/ja/llm-gateway)で詳細をご覧ください。
 
-以下の例は、シェルまたはシェルプロファイル（`.bashrc`、`.zshrc`）で設定する環境変数を示しています。その他の構成方法については、[設定](/docs/ja/settings)を参照してください。
+プロバイダーごとの環境変数で Amazon Bedrock、Microsoft Foundry、または Google Cloud の Agent Platform を LLM ゲートウェイを通じてルーティングする場合は、[ゲートウェイを通じてクラウドプロバイダーにルーティング](/docs/ja/llm-gateway-connect#route-to-a-cloud-provider-through-a-gateway)を参照してください。Claude Code で `/status` を実行して、セッションが使用しているプロバイダー、ベース URL、およびプロキシを確認します。
 
-<h3 id="amazon-bedrock">
-  Amazon Bedrock
-</h3>
-
-<Tabs>
-  <Tab title="企業プロキシ">
-    以下の[環境変数](/docs/ja/env-vars)を設定して、Amazon Bedrock トラフィックを企業プロキシを通じてルーティングします。
-
-    ```bash theme={null}
-    # Bedrock を有効化
-    export CLAUDE_CODE_USE_BEDROCK=1
-    export AWS_REGION=us-east-1
-
-    # 企業プロキシを構成
-    export HTTPS_PROXY='https://proxy.example.com:8080'
-    ```
-  </Tab>
-
-  <Tab title="LLM ゲートウェイ">
-    以下の[環境変数](/docs/ja/env-vars)を設定して、Amazon Bedrock トラフィックを LLM ゲートウェイを通じてルーティングします。
-
-    ```bash theme={null}
-    # Bedrock を有効化
-    export CLAUDE_CODE_USE_BEDROCK=1
-
-    # LLM ゲートウェイを構成
-    export ANTHROPIC_BEDROCK_BASE_URL='https://your-llm-gateway.com/bedrock'
-    export CLAUDE_CODE_SKIP_BEDROCK_AUTH=1  # ゲートウェイが AWS 認証を処理する場合
-    ```
-  </Tab>
-</Tabs>
-
-<h3 id="microsoft-foundry">
-  Microsoft Foundry
-</h3>
-
-<Tabs>
-  <Tab title="企業プロキシ">
-    以下の[環境変数](/docs/ja/env-vars)を設定して、Microsoft Foundry トラフィックを企業プロキシを通じてルーティングします。
-
-    ```bash theme={null}
-    # Microsoft Foundry を有効化
-    export CLAUDE_CODE_USE_FOUNDRY=1
-    export ANTHROPIC_FOUNDRY_RESOURCE=your-resource
-    export ANTHROPIC_FOUNDRY_API_KEY=your-api-key  # または Entra ID 認証の場合は省略
-
-    # 企業プロキシを構成
-    export HTTPS_PROXY='https://proxy.example.com:8080'
-    ```
-  </Tab>
-
-  <Tab title="LLM ゲートウェイ">
-    以下の[環境変数](/docs/ja/env-vars)を設定して、Microsoft Foundry トラフィックを LLM ゲートウェイを通じてルーティングします。
-
-    ```bash theme={null}
-    # Microsoft Foundry を有効化
-    export CLAUDE_CODE_USE_FOUNDRY=1
-
-    # LLM ゲートウェイを構成
-    export ANTHROPIC_FOUNDRY_BASE_URL='https://your-llm-gateway.com'
-    export ANTHROPIC_FOUNDRY_API_KEY=your-gateway-key  # x-api-key として送信
-    ```
-  </Tab>
-</Tabs>
-
-<h3 id="google-cloud’s-agent-platform">
-  Google Cloud の Agent Platform
-</h3>
-
-<Tabs>
-  <Tab title="企業プロキシ">
-    以下の[環境変数](/docs/ja/env-vars)を設定して、Google Cloud の Agent Platform トラフィックを企業プロキシを通じてルーティングします。
-
-    ```bash theme={null}
-    # Agent Platform を有効化
-    export CLAUDE_CODE_USE_VERTEX=1
-    export CLOUD_ML_REGION=us-east5
-    export ANTHROPIC_VERTEX_PROJECT_ID=your-project-id
-
-    # 企業プロキシを構成
-    export HTTPS_PROXY='https://proxy.example.com:8080'
-    ```
-  </Tab>
-
-  <Tab title="LLM ゲートウェイ">
-    以下の[環境変数](/docs/ja/env-vars)を設定して、Google Cloud の Agent Platform トラフィックを LLM ゲートウェイを通じてルーティングします。
-
-    ```bash theme={null}
-    # Agent Platform を有効化
-    export CLAUDE_CODE_USE_VERTEX=1
-
-    # LLM ゲートウェイを構成
-    export ANTHROPIC_VERTEX_BASE_URL='https://your-llm-gateway.com/vertex'
-    export CLAUDE_CODE_SKIP_VERTEX_AUTH=1  # ゲートウェイが GCP 認証を処理する場合
-    export ANTHROPIC_VERTEX_PROJECT_ID=your-gcp-project-id
-    export CLOUD_ML_REGION=us-east5
-    ```
-  </Tab>
-</Tabs>
-
-<Tip>
-  Claude Code で `/status` を使用して、プロキシとゲートウェイの構成が正しく適用されていることを確認します。例えば、上記の Bedrock ゲートウェイ構成では、出力に以下のような行が含まれます。
-
-  ```
-  API provider: Amazon Bedrock
-  Bedrock base URL: https://your-llm-gateway.com/bedrock
-  AWS region: us-east-1
-  AWS auth skipped
-  ```
-
-  企業プロキシを構成した場合、`/status` はプロキシ URL を含む `Proxy` 行も表示します。
-</Tip>
+組織が[顧客管理暗号化キー](https://platform.claude.com/docs/en/manage-claude/cmek)（CMEK）を使用し、Claude Code を LLM ゲートウェイまたはカスタム `ANTHROPIC_BASE_URL` を通じてルーティングする場合、CMEK はそれらのセッションの Claude Code の運用テレメトリには適用されません。すべての開発者のテレメトリをオフにするには、[組織のテレメトリをオフにする](/docs/ja/managed-settings#turn-telemetry-off-for-your-organization)に示されているように、管理設定を通じて `DISABLE_TELEMETRY` を配信します。
 
 <h2 id="best-practices-for-organizations">
   組織のベストプラクティス
@@ -336,12 +227,7 @@ Amazon Bedrock と Google Vertex AI の場合、ログインプロンプトで `
   ドキュメントとメモリに投資する
 </h3>
 
-Claude Code がコードベースを理解できるようにドキュメントに投資することを強くお勧めします。組織は複数のレベルで CLAUDE.md ファイルをデプロイできます。
-
-* **組織全体**: macOS の `/Library/Application Support/ClaudeCode/CLAUDE.md`、Linux と WSL の `/etc/claude-code/CLAUDE.md`、Windows の `C:\Program Files\ClaudeCode\CLAUDE.md` などのシステムディレクトリにデプロイして、会社全体の標準を設定します
-* **リポジトリレベル**: プロジェクトアーキテクチャ、ビルドコマンド、貢献ガイドラインを含むリポジトリルートに `CLAUDE.md` ファイルを作成します。ソース管理にチェックインして、すべてのユーザーが利益を得られるようにします
-
-[メモリと CLAUDE.md ファイル](/docs/ja/memory)で詳細をご覧ください。
+Claude Code がコードベースを理解できるようにドキュメントに投資することを強くお勧めします。組織は複数のレベルで CLAUDE.md ファイルをデプロイできます。[CLAUDE.md ファイルをどこに配置できるか](/docs/ja/memory#choose-where-to-put-claude-md-files)と[組織全体の CLAUDE.md をデプロイする方法](/docs/ja/memory#deploy-organization-wide-claude-md)をご覧ください。
 
 <h3 id="simplify-deployment">
   デプロイメントを簡素化する
@@ -372,8 +258,6 @@ Claude Code がコードベースを理解できるようにドキュメント�
 </h3>
 
 MCP は Claude Code にチケット管理システムやエラーログへの接続など、より多くの情報を提供する優れた方法です。1 つの中央チームが MCP サーバーを構成し、`.mcp.json` 構成をコードベースにチェックインして、すべてのユーザーが利益を得られるようにすることをお勧めします。[詳細をご覧ください](/docs/ja/mcp)。
-
-Anthropic では、Claude Code を信頼してすべての Anthropic コードベース全体の開発を支援しています。Claude Code を使用することを楽しんでいただけることを願っています。
 
 <h2 id="next-steps">
   次のステップ

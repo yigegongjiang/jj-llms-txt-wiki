@@ -6,11 +6,11 @@
 
 > Führen Sie Shell-Befehle automatisch aus, wenn Claude Code Dateien bearbeitet, Aufgaben abschließt oder Eingaben benötigt. Formatieren Sie Code, senden Sie Benachrichtigungen, validieren Sie Befehle und erzwingen Sie Projektregeln.
 
-Hooks sind benutzerdefinierte Shell-Befehle, die an bestimmten Punkten im Lebenszyklus von Claude Code ausgeführt werden. Sie bieten deterministische Kontrolle über das Verhalten von Claude Code und stellen sicher, dass bestimmte Aktionen immer stattfinden, anstatt sich darauf zu verlassen, dass das LLM sich dafür entscheidet, sie auszuführen. Verwenden Sie Hooks, um Projektregeln durchzusetzen, sich wiederholende Aufgaben zu automatisieren und Claude Code mit Ihren vorhandenen Tools zu integrieren.
+Hooks sind benutzerdefinierte Shell-Befehle. Claude Code führt sie an bestimmten Punkten in seinem Lebenszyklus aus, was Ihnen deterministische Kontrolle gibt: Bestimmte Aktionen finden immer statt, anstatt sich darauf zu verlassen, dass das LLM sich dafür entscheidet, sie auszuführen. Verwenden Sie Hooks, um Projektregeln durchzusetzen, sich wiederholende Aufgaben zu automatisieren und Claude Code mit Ihren vorhandenen Tools zu integrieren.
 
 Für Entscheidungen, die Urteilsvermögen erfordern, anstatt deterministischer Regeln, können Sie auch [Prompt-basierte Hooks](#prompt-based-hooks) oder [Agent-basierte Hooks](#agent-based-hooks) verwenden, die ein Claude-Modell zur Bewertung von Bedingungen nutzen.
 
-Für andere Möglichkeiten, Claude Code zu erweitern, siehe [skills](/docs/de/skills) zum Bereitstellen zusätzlicher Anweisungen und ausführbarer Befehle, [subagents](/docs/de/sub-agents) zum Ausführen von Aufgaben in isolierten Kontexten und [plugins](/docs/de/plugins) zum Verpacken von Erweiterungen, die über Projekte hinweg freigegeben werden können.
+Für andere Möglichkeiten, Claude Code zu erweitern, siehe [skills](/docs/de/skills) zum Bereitstellen zusätzlicher Anweisungen und ausführbarer Befehle, [subagents](/docs/de/sub-agents) zum Ausführen von Aufgaben in isolierten Kontexten und [plugins](/docs/de/plugins/overview) zum Verpacken von Erweiterungen, die über Projekte hinweg freigegeben werden können.
 
 <Tip>
   Dieser Leitfaden behandelt häufige Anwendungsfälle und wie Sie anfangen. Für vollständige Event-Schemas, JSON-Ein-/Ausgabeformate und erweiterte Funktionen wie asynchrone Hooks und MCP-Tool-Hooks siehe die [Hooks-Referenz](/docs/de/hooks).
@@ -24,7 +24,7 @@ Um einen Hook zu erstellen, fügen Sie einen `hooks`-Block zu einer [Einstellung
 
 <Steps>
   <Step title="Fügen Sie den Hook zu Ihren Einstellungen hinzu">
-    Öffnen Sie `~/.claude/settings.json` und fügen Sie einen `Notification`-Hook hinzu. Das Beispiel unten verwendet `osascript` für macOS; siehe [Benachrichtigung erhalten, wenn Claude Eingaben benötigt](#get-notified-when-claude-needs-input) für Linux- und Windows-Befehle.
+    Öffnen Sie `~/.claude/settings.json` und fügen Sie einen `Notification`-Hook hinzu. Wenn die Datei nicht vorhanden ist, erstellen Sie sie. Das Beispiel unten verwendet `osascript` für macOS; siehe [Benachrichtigung erhalten, wenn Claude Eingaben benötigt](#get-notified-when-claude-needs-input) für Linux- und Windows-Befehle.
 
     ```json theme={null}
     {
@@ -73,7 +73,7 @@ Um einen Hook zu erstellen, fügen Sie einen `hooks`-Block zu einer [Einstellung
   </Step>
 
   <Step title="Testen Sie den Hook">
-    Drücken Sie `Esc`, um zur CLI zurückzukehren. Bitten Sie Claude, etwas zu tun, das eine Berechtigung erfordert, und wechseln Sie dann weg vom Terminal. Sie sollten eine Desktop-Benachrichtigung erhalten.
+    Drücken Sie `Esc`, um zur CLI zurückzukehren. Drücken Sie `Shift+Tab`, bis die Statusleiste `⏸ manual mode on` anzeigt, bitten Sie Claude, etwas zu tun, das eine Berechtigung erfordert, und wechseln Sie dann weg vom Terminal. Sie sollten eine Desktop-Benachrichtigung erhalten.
   </Step>
 </Steps>
 
@@ -97,7 +97,7 @@ Ein Produktionsbeispiel von Hooks, die eine separate Modellüberprüfung ausfüh
 
 Erhalten Sie eine Desktop-Benachrichtigung, wenn Claude die Arbeit beendet und Ihre Eingabe benötigt, damit Sie zu anderen Aufgaben wechseln können, ohne das Terminal zu überprüfen.
 
-Dieser Hook verwendet das `Notification`-Event, das ausgelöst wird, wenn Claude auf Eingaben oder Berechtigungen wartet. Jede Registerkarte unten verwendet den nativen Benachrichtigungsbefehl der Plattform. Fügen Sie dies zu `~/.claude/settings.json` hinzu:
+Dieser Hook verwendet das `Notification`-Event, das ausgelöst wird, wenn Claude auf Eingaben oder Berechtigungen wartet. Siehe [wann jeder Benachrichtigungstyp ausgelöst wird](/docs/de/hooks#notification) für den genauen Zeitpunkt. Jede Registerkarte unten verwendet den nativen Benachrichtigungsbefehl der Plattform. Fügen Sie dies zu `~/.claude/settings.json` hinzu:
 
 <Tabs>
   <Tab title="macOS">
@@ -148,6 +148,16 @@ Dieser Hook verwendet das `Notification`-Event, das ausgelöst wird, wenn Claude
       }
     }
     ```
+
+    <Accordion title="Wenn keine Benachrichtigung angezeigt wird">
+      `notify-send` benötigt einen Desktop-Benachrichtigungsdaemon, den Headless-Server, SSH-Sitzungen und die meisten Container nicht haben. Testen Sie den Befehl zunächst direkt:
+
+      ```bash theme={null}
+      notify-send 'Claude Code' 'test'
+      ```
+
+      Wenn der Befehl nicht gefunden wird, installieren Sie das Paket `libnotify-bin` auf Debian und Ubuntu oder das Äquivalent Ihrer Distribution.
+    </Accordion>
   </Tab>
 
   <Tab title="Windows (PowerShell)">
@@ -168,23 +178,39 @@ Dieser Hook verwendet das `Notification`-Event, das ausgelöst wird, wenn Claude
       }
     }
     ```
+
+    <Accordion title="Wenn kein Dialog angezeigt wird">
+      Dieser Befehl öffnet ein Dialogfeld statt einer Benachrichtigung in der Ecke Ihres Bildschirms, sodass das Dialogfeld hinter Ihrem Terminal-Fenster öffnen kann. Testen Sie den Befehl zunächst direkt in PowerShell. Wenn Sie Claude Code in WSL ausführen, muss `powershell.exe` über Windows-Interop auf Ihrem `PATH` verfügbar sein.
+    </Accordion>
   </Tab>
 </Tabs>
 
 Der leere `matcher` wird bei allen Benachrichtigungstypen ausgelöst. Um nur bei bestimmten Events ausgelöst zu werden, setzen Sie ihn auf einen dieser Werte:
 
-| Matcher                | Wird ausgelöst, wenn                                                                                                           |
-| :--------------------- | :----------------------------------------------------------------------------------------------------------------------------- |
-| `permission_prompt`    | Claude benötigt Ihre Genehmigung für einen Tool-Einsatz                                                                        |
-| `idle_prompt`          | Claude ist fertig und wartet auf Ihre nächste Eingabe                                                                          |
-| `auth_success`         | Authentifizierung ist abgeschlossen                                                                                            |
-| `elicitation_dialog`   | Ein MCP-Server öffnet ein Elicitation-Formular                                                                                 |
-| `elicitation_complete` | Ein MCP-Elicitation-Formular wird eingereicht oder verworfen                                                                   |
-| `elicitation_response` | Eine MCP-Elicitation-Antwort wird an den Server zurückgesendet                                                                 |
-| `agent_needs_input`    | Eine Hintergrund-Sitzung wartet auf Ihre Eingabe. Wird nur ausgelöst, während [Agent-Ansicht](/docs/de/agent-view) offen ist        |
-| `agent_completed`      | Eine Hintergrund-Sitzung wird beendet oder schlägt fehl. Wird nur ausgelöst, während [Agent-Ansicht](/docs/de/agent-view) offen ist |
+| Matcher                      | Wird ausgelöst, wenn                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| :--------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `permission_prompt`          | Claude benötigt Ihre Genehmigung für einen Tool-Einsatz oder eine Sandbox-Befehl-[Netzwerkanfrage](/docs/de/sandboxing#network-isolation), und die Aufforderung hat etwa sechs Sekunden gewartet                                                                                                                                                                                                                                                                                                                                                                      |
+| `idle_prompt`                | Claude ist vor etwa 60 Sekunden fertig und Sie haben seitdem nicht getippt                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `auth_success`               | Authentifizierung ist abgeschlossen                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `elicitation_dialog`         | Ein MCP-Server öffnet ein Elicitation-Formular und Sie haben etwa sechs Sekunden nicht getippt                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| `elicitation_url_dialog`     | Ein MCP-Server fordert Sie auf, eine Browser-URL zu öffnen und Sie haben etwa sechs Sekunden nicht getippt                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `elicitation_complete`       | Ein MCP-Server meldet, dass eine [URL-Modus-Elicitation](/docs/de/hooks#elicitation-input) abgeschlossen ist                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `elicitation_response`       | Eine MCP-Elicitation-Antwort wird an den Server zurückgesendet                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| `agent_needs_input`          | Eine Hintergrund-Sitzung wartet auf Ihre Eingabe, während [Agent-Ansicht](/docs/de/agent-view) offen ist, oder die aktuelle Sitzung stellt Ihnen eine [Agent-Team-Teamkollegen-Terminal-Setup-Frage](/docs/de/agent-teams#choose-a-display-mode) und Sie haben etwa sechs Sekunden nicht getippt                                                                                                                                                                                                                                                                           |
+| `agent_completed`            | Eine Hintergrund-Sitzung wird beendet oder schlägt fehl. Wird nur ausgelöst, während [Agent-Ansicht](/docs/de/agent-view) offen ist                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| `quota_auto_resume_fired`    | Claude Code setzt Ihre Aufgabe fort, nachdem ein claude.ai-Nutzungslimit sie unterbrochen hat: beim Zurücksetzen oder früher, wenn etwas, das Sie in Claude Code während des Wartens tun, wie das Hinzufügen von Nutzungsguthaben, das Upgrade Ihres Plans oder das Wechseln von Modellen, die Nutzung wieder verfügbar macht, mit der [Modelleinstellungsausnahme](/docs/de/interactive-mode#wait-for-a-usage-limit-to-reset)                                                                                                                                        |
+| `quota_auto_resume_stale`    | Ein claude.ai-Nutzungslimit wurde zurückgesetzt, während Ihr Computer länger als etwa 30 Minuten geschlafen hat. Claude Code wartet darauf, dass Sie `Enter` drücken, anstatt fortzufahren. Nach einem kürzeren Schlaf wird fortgesetzt und stattdessen `quota_auto_resume_fired` ausgelöst                                                                                                                                                                                                                                                                      |
+| `quota_auto_resume_disabled` | Claude Code beendet sein Warten auf ein claude.ai-Nutzungslimit, ohne Ihre Aufgabe fortzusetzen: [`autoContinueAtUsageLimit`](/docs/de/settings-reference#autocontinueatusagelimit) ist ausgeschaltet oder das Zurücksetzen hat sich während eines Wartens, das Claude Code selbst gestartet hat, um mehr als 24 Stunden verschoben, die fortgesetzte Aufgabe traf weiterhin das Limit, oder die Fortsetzung wurde blockiert, bevor sie das Modell erreichte. Wird nicht ausgelöst, wenn Sie `Esc` oder `Ctrl+C` drücken oder **Nicht automatisch fortfahren** wählen |
+
+Claude Code zeitlich `permission_prompt` unterschiedlich in einem Terminal und in Claude Desktop, der VS Code-Erweiterung und anderen Hosts, die Berechtigungsanfragen über das Agent SDK beantworten. Siehe [wann jeder Benachrichtigungstyp ausgelöst wird](/docs/de/hooks#notification) für beide Zeitpunkte.
 
 Die Matcher `agent_needs_input` und `agent_completed` erfordern Claude Code v2.1.198 oder später.
+
+Die Matcher `quota_auto_resume_fired`, `quota_auto_resume_stale` und `quota_auto_resume_disabled` erfordern Claude Code v2.1.234 oder später.
+
+In Terminal-Sitzungen erfordert `permission_prompt` für eine Sandbox-Befehl-Netzwerkanfrage Claude Code v2.1.246 oder später.
+
+`agent_needs_input` für eine Teamkollegen-Terminal-Setup-Frage erfordert Claude Code v2.1.248 oder später.
 
 Geben Sie `/hooks` ein und wählen Sie `Notification` aus, um zu bestätigen, dass der Hook registriert ist. Für das vollständige Event-Schema siehe die [Notification-Referenz](/docs/de/hooks#notification).
 
@@ -194,7 +220,7 @@ Geben Sie `/hooks` ein und wählen Sie `Notification` aus, um zu bestätigen, da
 
 Führen Sie [Prettier](https://prettier.io/) automatisch auf jeder Datei aus, die Claude bearbeitet, damit die Formatierung konsistent bleibt, ohne manuelle Eingriffe.
 
-Dieser Hook verwendet das `PostToolUse`-Event mit einem `Edit|Write`-Matcher, sodass er nur nach Datei-Bearbeitungs-Tools ausgeführt wird. Der Befehl extrahiert den bearbeiteten Dateipfad mit [`jq`](https://jqlang.github.io/jq/) und übergibt ihn an Prettier. Fügen Sie dies zu `.claude/settings.json` in Ihrem Projektverzeichnis hinzu:
+Dieser Hook verwendet das `PostToolUse`-Event mit einem `Edit|Write`-Matcher, sodass er nur nach Datei-Bearbeitungs-Tools ausgeführt wird. Der Befehl extrahiert den bearbeiteten Dateipfad mit [`jq`](https://jqlang.org/) und übergibt ihn an Prettier. Fügen Sie dies zu `.claude/settings.json` in Ihrem Projektverzeichnis hinzu:
 
 ```json theme={null}
 {
@@ -214,10 +240,14 @@ Dieser Hook verwendet das `PostToolUse`-Event mit einem `Edit|Write`-Matcher, so
 }
 ```
 
-Auf Claude Code v2.1.191 oder später können Sie den Matcher auch als `Edit,Write` schreiben, da `|` und `,` auf diesen Versionen austauschbare Listentrennzeichen für Tool-Name-Matcher sind.
+Um den Hook zu testen, bitten Sie Claude, eine Zeile mit einfach angeführten Strings zu einer JavaScript-Datei hinzuzufügen, und öffnen Sie dann die Datei: Mit den Standardeinstellungen von Prettier schreibt der Hook sie in doppelte Anführungszeichen um.
+
+Wenn der Hook erfolgreich ist, zeigt Claude Code nichts in der Konversation an. Um zu bestätigen, dass der Hook ausgeführt wurde, überprüfen Sie, dass die bearbeitete Datei neu formatiert ist, oder siehe [Debug-Techniken](#debug-techniques).
+
+Um eine bestimmte Datei unabhängig davon, wie sie sich ändert, neu zu formatieren, einschließlich wenn ein `Bash`-Befehl sie umschreibt, verwenden Sie stattdessen einen [FileChanged](/docs/de/hooks#filechanged)-Hook.
 
 <Note>
-  Die Bash-Beispiele auf dieser Seite verwenden `jq` zum Parsen von JSON. Installieren Sie es mit `brew install jq` auf macOS, `apt-get install jq` auf Debian und Ubuntu, oder siehe [`jq`-Downloads](https://jqlang.github.io/jq/download/).
+  Die Bash-Beispiele auf dieser Seite verwenden `jq` zum Parsen von JSON. Installieren Sie es mit `brew install jq` auf macOS, `apt-get install jq` auf Debian und Ubuntu, oder siehe [`jq`-Downloads](https://jqlang.org/download/).
 </Note>
 
 <h3 id="block-edits-to-protected-files">
@@ -238,6 +268,9 @@ Dieses Beispiel verwendet eine separate Skriptdatei, die der Hook aufruft. Das S
 
     INPUT=$(cat)
     FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty')
+
+    # Normalize Windows backslash separators so the patterns below match
+    FILE_PATH="${FILE_PATH//\\//}"
 
     PROTECTED_PATTERNS=(".env" "package-lock.json" ".git/")
 
@@ -281,6 +314,10 @@ Dieses Beispiel verwendet eine separate Skriptdatei, die der Hook aufruft. Das S
     }
     ```
   </Step>
+
+  <Step title="Testen Sie den Hook">
+    Bitten Sie Claude, einen Kommentar zu Ihrer `.env`-Datei hinzuzufügen. Claude Code blockiert die Bearbeitung, bevor sie ausgeführt wird, und übergibt die `Blocked:`-Nachricht des Skripts an Claude als Feedback.
+  </Step>
 </Steps>
 
 <h3 id="re-inject-context-after-compaction">
@@ -289,7 +326,7 @@ Dieses Beispiel verwendet eine separate Skriptdatei, die der Hook aufruft. Das S
 
 Wenn Claudes Kontextfenster voll wird, fasst die Komprimierung das Gespräch zusammen, um Platz freizugeben. Dies kann wichtige Details verlieren. Verwenden Sie einen `SessionStart`-Hook mit einem `compact`-Matcher, um nach jeder Komprimierung kritischen Kontext erneut zu injizieren.
 
-Jeder Text, den Ihr Befehl auf stdout schreibt, wird zu Claudes Kontext hinzugefügt. Dieses Beispiel erinnert Claude an Projektkonventionen und aktuelle Arbeiten. Fügen Sie dies zu `.claude/settings.json` in Ihrem Projektverzeichnis hinzu:
+Claude Code fügt Claudes Kontext den einfachen Text hinzu, den Ihr Befehl auf stdout schreibt. Dieses Beispiel erinnert Claude an Projektkonventionen und aktuelle Arbeiten. Fügen Sie dies zu `.claude/settings.json` in Ihrem Projektverzeichnis hinzu:
 
 ```json theme={null}
 {
@@ -338,6 +375,8 @@ Dieses Beispiel hängt jede Änderung an ein Audit-Protokoll an. Fügen Sie dies
 ```
 
 Der Matcher filtert nach Konfigurationstyp: `user_settings`, `project_settings`, `local_settings`, `policy_settings` oder `skills`. Um eine Änderung zu blockieren, beenden Sie mit Code 2 oder geben Sie `{"decision": "block"}` zurück. Siehe die [ConfigChange-Referenz](/docs/de/hooks#configchange) für das vollständige Eingabe-Schema.
+
+Um zu bestätigen, dass der Hook Änderungen aufzeichnet, bearbeiten Sie eine Einstellungsdatei in einem anderen Editor, während eine Sitzung läuft, und öffnen Sie dann `~/claude-config-audit.log`: Der Hook hängt eine JSON-Zeile pro Änderung mit dem Zeitstempel, der Quelle und dem Dateipfad an.
 
 <h3 id="reload-environment-when-directory-or-files-change">
   Umgebung neu laden, wenn sich Verzeichnis oder Dateien ändern
@@ -404,7 +443,7 @@ Siehe die [CwdChanged](/docs/de/hooks#cwdchanged)- und [FileChanged](/docs/de/ho
 
 Überspringen Sie den Genehmigungsdialog für Tool-Aufrufe, die Sie immer zulassen. Dieses Beispiel genehmigt automatisch `ExitPlanMode`, das Tool, das Claude aufruft, wenn es fertig ist, einen Plan zu präsentieren und fragt, ob es fortfahren soll, sodass Sie nicht jedes Mal aufgefordert werden, wenn ein Plan bereit ist.
 
-Im Gegensatz zu den Exit-Code-Beispielen oben erfordert die automatische Genehmigung, dass Ihr Hook eine JSON-Entscheidung auf stdout schreibt. Ein `PermissionRequest`-Hook wird ausgelöst, wenn Claude Code einen Berechtigungsdialog anzeigen wird, und die Rückgabe von `"behavior": "allow"` beantwortet ihn in Ihrem Namen.
+Im Gegensatz zu den Exit-Code-Beispielen oben erfordert die automatische Genehmigung, dass Ihr Hook eine JSON-Entscheidung auf stdout schreibt. Claude Code führt `PermissionRequest`-Hooks aus, wenn es Sie um Genehmigung fragen wird, und wenn Ihr Hook `"behavior": "allow"` zurückgibt, beantwortet Claude Code die Anfrage in Ihrem Namen.
 
 Der Matcher beschränkt den Hook nur auf `ExitPlanMode`, sodass keine anderen Aufforderungen betroffen sind. Fügen Sie dies zu `~/.claude/settings.json` hinzu:
 
@@ -431,7 +470,9 @@ Wenn der Hook genehmigt, beendet Claude Code den Plan-Modus und stellt den Berec
 Um stattdessen einen bestimmten Berechtigungsmodus festzulegen, kann die Ausgabe Ihres Hooks ein Array `updatedPermissions` mit einem `setMode`-Eintrag enthalten. Der Wert `mode` ist ein beliebiger Berechtigungsmodus wie `default`, `acceptEdits` oder `bypassPermissions`, und `destination: "session"` wendet ihn nur für die aktuelle Sitzung an.
 
 <Note>
-  `bypassPermissions` gilt nur, wenn die Sitzung mit bereits verfügbarem Bypass-Modus gestartet wurde: `--dangerously-skip-permissions`, `--permission-mode bypassPermissions`, `--allow-dangerously-skip-permissions` oder `permissions.defaultMode: "bypassPermissions"` in Einstellungen, und nicht deaktiviert durch [`permissions.disableBypassPermissionsMode`](/docs/de/permissions#managed-settings). Es wird niemals als `defaultMode` beibehalten.
+  `bypassPermissions` gilt nur, wenn die Sitzung mit bereits verfügbarem Bypass-Modus gestartet wurde: `--dangerously-skip-permissions`, `--permission-mode bypassPermissions`, `--allow-dangerously-skip-permissions` oder `permissions.defaultMode: "bypassPermissions"` in [Benutzer-, `--settings`- oder verwalteten Einstellungen](/docs/de/settings-reference#permissions-defaultmode). Es gilt nicht, wenn der Bypass-Modus durch [`permissions.disableBypassPermissionsMode`](/docs/de/permissions#managed-settings) deaktiviert ist, oder wenn Sie die Sitzung im [eingeschränkten Modus](/docs/de/cli-reference#cli-flags) gestartet haben.
+
+  Claude Code speichert es niemals als `defaultMode`.
 </Note>
 
 Um die Sitzung zu `acceptEdits` zu wechseln, schreibt Ihr Hook dieses JSON auf stdout:
@@ -450,49 +491,49 @@ Um die Sitzung zu `acceptEdits` zu wechseln, schreibt Ihr Hook dieses JSON auf s
 }
 ```
 
-Halten Sie den Matcher so eng wie möglich. Das Abgleichen von `.*` oder das Lassen des Matchers leer würde jede Berechtigungsaufforderung automatisch genehmigen, einschließlich Dateischreibvorgänge und Shell-Befehle. Siehe die [PermissionRequest-Referenz](/docs/de/hooks#permissionrequest-decision-control) für den vollständigen Satz von Entscheidungsfeldern.
+Halten Sie den Matcher so eng wie möglich. Das Abgleichen von `.*` oder das Lassen des Matchers leer würde jede Tool-Berechtigungsaufforderung automatisch genehmigen, einschließlich Dateischreibvorgänge und Shell-Befehle. Siehe die [PermissionRequest-Referenz](/docs/de/hooks#permissionrequest-decision-control) für den vollständigen Satz von Entscheidungsfeldern.
 
 <h2 id="how-hooks-work">
   Wie Hooks funktionieren
 </h2>
 
-Hook-Events werden an bestimmten Lebenszykluspunkten in Claude Code ausgelöst. Wenn ein Event ausgelöst wird, werden alle übereinstimmenden Hooks parallel ausgeführt, und identische Hook-Befehle werden automatisch dedupliziert. Die folgende Tabelle zeigt jedes Event und wann es ausgelöst wird:
+Claude Code löst Hook-Events an bestimmten Lebenszykluspunkten aus. Wenn ein Event ausgelöst wird, führt Claude Code alle übereinstimmenden Hooks parallel aus; siehe [Hook-Handler-Felder](/docs/de/hooks#hook-handler-fields) für die Behandlung doppelter Handler. Die folgende Tabelle zeigt jedes Event und wann es ausgelöst wird:
 
-| Event                 | When it fires                                                                                                                                                                                                                                         |
-| :-------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `SessionStart`        | When a session begins or resumes                                                                                                                                                                                                                      |
-| `Setup`               | When you start Claude Code with `--init-only`, or with `--init` or `--maintenance` in `-p` mode. For one-time preparation in CI or scripts                                                                                                            |
-| `UserPromptSubmit`    | When you submit a prompt, before Claude processes it                                                                                                                                                                                                  |
-| `UserPromptExpansion` | When a user-typed command expands into a prompt, before it reaches Claude. Can block the expansion                                                                                                                                                    |
-| `PreToolUse`          | Before a tool call executes. Can block it                                                                                                                                                                                                             |
-| `PermissionRequest`   | When a tool call needs a permission decision                                                                                                                                                                                                          |
-| `PermissionDenied`    | When auto mode denies a tool call, including denials without a classifier verdict. Use JSON `hookSpecificOutput.retry: true` to tell the model it may retry the denied tool call. Claude Code ignores `retry` when the classifier produced no verdict |
-| `PostToolUse`         | After a tool call succeeds                                                                                                                                                                                                                            |
-| `PostToolUseFailure`  | After a tool call fails                                                                                                                                                                                                                               |
-| `PostToolBatch`       | After a full batch of parallel tool calls resolves, before the next model call                                                                                                                                                                        |
-| `Notification`        | When Claude Code sends a notification                                                                                                                                                                                                                 |
-| `MessageDisplay`      | While assistant message text is displayed                                                                                                                                                                                                             |
-| `SubagentStart`       | When a subagent is spawned                                                                                                                                                                                                                            |
-| `SubagentStop`        | When a subagent finishes                                                                                                                                                                                                                              |
-| `TaskCreated`         | When a task is being created via `TaskCreate`                                                                                                                                                                                                         |
-| `TaskCompleted`       | When a task is being marked as completed                                                                                                                                                                                                              |
-| `Stop`                | When Claude finishes responding                                                                                                                                                                                                                       |
-| `StopFailure`         | When the turn ends due to an API error                                                                                                                                                                                                                |
-| `TeammateIdle`        | When an [agent team](/docs/en/agent-teams) teammate is about to go idle                                                                                                                                                                                    |
-| `InstructionsLoaded`  | When a CLAUDE.md or `.claude/rules/*.md` file is loaded into context. Fires at session start and when files are lazily loaded during a session                                                                                                        |
-| `ConfigChange`        | When a configuration file changes during a session                                                                                                                                                                                                    |
-| `CwdChanged`          | When the working directory changes, for example when Claude executes a `cd` command. Useful for reactive environment management with tools like direnv                                                                                                |
-| `DirectoryAdded`      | When a working directory is added mid-session via `/add-dir` or the SDK `register_repo_root` control request                                                                                                                                          |
-| `FileChanged`         | When a watched file changes on disk. The `matcher` field specifies which filenames to watch                                                                                                                                                           |
-| `WorktreeCreate`      | When a worktree is being created via `--worktree`, `isolation: "worktree"`, or for a background session. Replaces default git behavior                                                                                                                |
-| `WorktreeRemove`      | When a worktree is being removed at session exit, when a subagent finishes, or when you delete a background session                                                                                                                                   |
-| `PreCompact`          | Before context compaction                                                                                                                                                                                                                             |
-| `PostCompact`         | After context compaction completes                                                                                                                                                                                                                    |
-| `PreModelSwitch`      | Before Claude Code applies a model switch that you or a client requested. Can block the switch                                                                                                                                                        |
-| `PostModelSwitch`     | After the session's model changes, including changes Claude Code makes on its own, such as restoring the model when you resume a session                                                                                                              |
-| `Elicitation`         | When an MCP server requests user input during a tool call                                                                                                                                                                                             |
-| `ElicitationResult`   | After a user responds to an MCP elicitation, before the response is sent back to the server                                                                                                                                                           |
-| `SessionEnd`          | When a session terminates                                                                                                                                                                                                                             |
+| Ereignis              | Wann es ausgelöst wird                                                                                                                                                                                                                                                                                                                                       |
+| :-------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `SessionStart`        | Wenn eine Sitzung beginnt oder fortgesetzt wird                                                                                                                                                                                                                                                                                                              |
+| `Setup`               | Wenn Sie Claude Code mit `--init-only` starten oder mit `--init` oder `--maintenance` im `-p`-Modus. Für einmalige Vorbereitung in CI oder Skripten                                                                                                                                                                                                          |
+| `UserPromptSubmit`    | Wenn Sie eine Eingabeaufforderung absenden, bevor Claude sie verarbeitet                                                                                                                                                                                                                                                                                     |
+| `UserPromptExpansion` | Wenn ein von Ihnen eingegebener Befehl in eine Eingabeaufforderung erweitert wird, bevor sie Claude erreicht. Kann die Erweiterung blockieren                                                                                                                                                                                                                |
+| `PreToolUse`          | Bevor ein Werkzeugaufruf ausgeführt wird. Kann ihn blockieren                                                                                                                                                                                                                                                                                                |
+| `PermissionRequest`   | Wenn ein Werkzeugaufruf eine Genehmigungsentscheidung benötigt                                                                                                                                                                                                                                                                                               |
+| `PermissionDenied`    | Wenn der automatische Modus einen Werkzeugaufruf ablehnt, einschließlich Ablehnungen ohne Klassifizierer-Urteil. Verwenden Sie JSON `hookSpecificOutput.retry: true`, um dem Modell mitzuteilen, dass es den abgelehnten Werkzeugaufruf möglicherweise erneut versuchen kann. Claude Code ignoriert `retry`, wenn der Klassifizierer kein Urteil gefällt hat |
+| `PostToolUse`         | Nach erfolgreichem Werkzeugaufruf                                                                                                                                                                                                                                                                                                                            |
+| `PostToolUseFailure`  | Nach fehlgeschlagenem Werkzeugaufruf                                                                                                                                                                                                                                                                                                                         |
+| `PostToolBatch`       | Nach Auflösung eines vollständigen Satzes paralleler Werkzeugaufrufe, bevor der nächste Modellaufruf erfolgt                                                                                                                                                                                                                                                 |
+| `Notification`        | Wenn Claude Code eine Benachrichtigung sendet                                                                                                                                                                                                                                                                                                                |
+| `MessageDisplay`      | Während der Text der Assistentnachricht angezeigt wird                                                                                                                                                                                                                                                                                                       |
+| `SubagentStart`       | Wenn ein Subagent erzeugt wird                                                                                                                                                                                                                                                                                                                               |
+| `SubagentStop`        | Wenn ein Subagent beendet wird                                                                                                                                                                                                                                                                                                                               |
+| `TaskCreated`         | Wenn eine Aufgabe über `TaskCreate` erstellt wird                                                                                                                                                                                                                                                                                                            |
+| `TaskCompleted`       | Wenn eine Aufgabe als abgeschlossen markiert wird                                                                                                                                                                                                                                                                                                            |
+| `Stop`                | Wenn Claude die Antwort beendet                                                                                                                                                                                                                                                                                                                              |
+| `StopFailure`         | Wenn die Runde aufgrund eines API-Fehlers endet                                                                                                                                                                                                                                                                                                              |
+| `TeammateIdle`        | Wenn ein [Agent-Team](/docs/de/agent-teams)-Teamkollege im Begriff ist, untätig zu werden                                                                                                                                                                                                                                                                         |
+| `InstructionsLoaded`  | Wenn eine CLAUDE.md- oder `.claude/rules/*.md`-Datei in den Kontext geladen wird. Wird beim Sitzungsstart und beim verzögerten Laden von Dateien während einer Sitzung ausgelöst                                                                                                                                                                             |
+| `ConfigChange`        | Wenn sich eine Konfigurationsdatei während einer Sitzung ändert                                                                                                                                                                                                                                                                                              |
+| `CwdChanged`          | Wenn sich das Arbeitsverzeichnis ändert, z. B. wenn Claude einen `cd`-Befehl ausführt. Nützlich für reaktive Umgebungsverwaltung mit Tools wie direnv                                                                                                                                                                                                        |
+| `DirectoryAdded`      | Wenn ein Arbeitsverzeichnis während einer Sitzung über `/add-dir` oder die SDK-Steueranforderung `register_repo_root` hinzugefügt wird                                                                                                                                                                                                                       |
+| `FileChanged`         | Wenn sich eine überwachte Datei auf der Festplatte ändert. Das Feld `matcher` gibt an, welche Dateinamen überwacht werden sollen                                                                                                                                                                                                                             |
+| `WorktreeCreate`      | Wenn ein Worktree über `--worktree`, `isolation: "worktree"` oder für eine Hintergrundsitzung erstellt wird. Ersetzt das Standard-Git-Verhalten                                                                                                                                                                                                              |
+| `WorktreeRemove`      | Wenn ein Worktree beim Sitzungsende, beim Beenden eines Subagenten oder beim Löschen einer Hintergrundsitzung entfernt wird                                                                                                                                                                                                                                  |
+| `PreCompact`          | Vor Kontextkomprimierung                                                                                                                                                                                                                                                                                                                                     |
+| `PostCompact`         | Nach Abschluss der Kontextkomprimierung                                                                                                                                                                                                                                                                                                                      |
+| `PreModelSwitch`      | Bevor Claude Code einen Modellwechsel anwendet, den Sie oder ein Client angefordert haben. Kann den Wechsel blockieren                                                                                                                                                                                                                                       |
+| `PostModelSwitch`     | Nach Änderung des Modells der Sitzung, einschließlich Änderungen, die Claude Code selbst vornimmt, z. B. Wiederherstellung des Modells beim Fortsetzen einer Sitzung                                                                                                                                                                                         |
+| `Elicitation`         | Wenn ein MCP-Server während eines Werkzeugaufrufs Benutzereingaben anfordert                                                                                                                                                                                                                                                                                 |
+| `ElicitationResult`   | Nachdem ein Benutzer auf eine MCP-Abfrage antwortet, bevor die Antwort an den Server zurückgesendet wird                                                                                                                                                                                                                                                     |
+| `SessionEnd`          | Wenn eine Sitzung beendet wird                                                                                                                                                                                                                                                                                                                               |
 
 Jeder Hook hat einen `type`, der bestimmt, wie er ausgeführt wird. Die meisten Hooks verwenden `"type": "command"`, was einen Shell-Befehl ausführt. Vier weitere Typen sind verfügbar:
 
@@ -545,21 +586,27 @@ Hooks kommunizieren mit Claude Code über stdin, stdout, stderr und Exit-Codes. 
   Hook-Eingabe
 </h4>
 
-Jedes Event enthält gemeinsame Felder wie `session_id` und `cwd`, aber jeder Event-Typ fügt unterschiedliche Daten hinzu. Wenn Claude beispielsweise einen Bash-Befehl ausführt, erhält ein `PreToolUse`-Hook etwa folgendes auf stdin:
+Jedes Event enthält gemeinsame Felder wie `session_id`, eine eindeutige ID für die Sitzung, und `cwd`, das Arbeitsverzeichnis, wenn das Event ausgelöst wurde, aber jeder Event-Typ fügt unterschiedliche Daten hinzu. Wenn Claude einen Bash-Befehl ausführt, erhält ein `PreToolUse`-Hook diese Felder auf stdin:
+
+* `hook_event_name`: das Event, das den Hook ausgelöst hat
+* `tool_name`: das Tool, das Claude verwenden wird
+* `tool_input`: die Argumente, die Claude an das Tool übergeben hat. Für Bash enthält sein `command`-Feld den Shell-Befehl.
+
+Beispielsweise sieht die Hook-Eingabe für einen `npm test`-Befehl so aus:
 
 ```json theme={null}
 {
-  "session_id": "abc123",          // eindeutige ID für diese Sitzung
-  "cwd": "/Users/sarah/myproject", // Arbeitsverzeichnis, wenn das Event ausgelöst wurde
-  "hook_event_name": "PreToolUse", // welches Event diesen Hook ausgelöst hat
-  "tool_name": "Bash",             // das Tool, das Claude verwenden wird
-  "tool_input": {                  // die Argumente, die Claude an das Tool übergeben hat
-    "command": "npm test"          // für Bash ist dies der Shell-Befehl
+  "session_id": "abc123",
+  "cwd": "/Users/sarah/myproject",
+  "hook_event_name": "PreToolUse",
+  "tool_name": "Bash",
+  "tool_input": {
+    "command": "npm test"
   }
 }
 ```
 
-Ihr Skript kann dieses JSON parsen und auf alle diese Felder reagieren. `UserPromptSubmit`-Hooks erhalten stattdessen den `prompt`-Text, `SessionStart`-Hooks erhalten die `source` (startup, resume, clear, compact) und so weiter. Siehe [Gemeinsame Eingabefelder](/docs/de/hooks#common-input-fields) in der Referenz für gemeinsame Felder und jeden Event-Abschnitt für Event-spezifische Schemas.
+Ihr Skript kann dieses JSON parsen und auf alle diese Felder reagieren. `UserPromptSubmit`-Hooks erhalten stattdessen den `prompt`-Text, `SessionStart`-Hooks erhalten eine `source` von `startup`, `resume`, `clear`, `compact` oder `fork`, und so weiter. Siehe [Gemeinsame Eingabefelder](/docs/de/hooks#common-input-fields) in der Referenz für gemeinsame Felder und jeden Event-Abschnitt für Event-spezifische Schemas.
 
 <h4 id="hook-output">
   Hook-Ausgabe
@@ -582,9 +629,14 @@ exit 0  # exit 0 = keine Entscheidung; der normale Berechtigungsfluss gilt
 
 Der Exit-Code bestimmt, was als nächstes passiert:
 
-* **Exit 0**: der Hook meldet keinen Einwand und die Aktion wird normal fortgesetzt. Für einen `PreToolUse`-Hook genehmigt dies nicht den Tool-Aufruf: der normale [Berechtigungsfluss](/docs/de/permissions) gilt weiterhin. Für `UserPromptSubmit`-, `UserPromptExpansion`- und `SessionStart`-Hooks wird alles, was Sie auf stdout schreiben, zu Claudes Kontext hinzugefügt.
-* **Exit 2**: die Aktion wird blockiert. Schreiben Sie einen Grund auf stderr, und Claude erhält ihn als Feedback, sodass er sich anpassen kann. Einige Events können nicht blockiert werden: Für `SessionStart`, `Setup`, `Notification` und andere zeigt exit 2 stderr dem Benutzer an und die Ausführung wird fortgesetzt. Siehe [Exit-Code-2-Verhalten pro Event](/docs/de/hooks#exit-code-2-behavior-per-event) für die vollständige Liste.
-* **Jeder andere Exit-Code**: die Aktion wird fortgesetzt. Das Transkript zeigt eine `<hook name> hook error`-Meldung gefolgt von der ersten Zeile von stderr; das vollständige stderr geht in das [Debug-Protokoll](/docs/de/hooks#debug-hooks).
+* **Exit 0**: Ihr Hook meldet keinen Einwand über seinen Exit-Code.
+  * Für einen `PreToolUse`-Hook genehmigt dies nicht den Tool-Aufruf: der normale [Berechtigungsfluss](/docs/de/permissions) gilt weiterhin.
+  * Für `UserPromptSubmit`-, `UserPromptExpansion`-, `SessionStart`- und `PostModelSwitch`-Hooks fügt Claude Code stdout, das es [als Klartext behandelt](/docs/de/hooks#exit-code-0), zu Claudes Kontext hinzu.
+* **Exit 2**: Claude Code blockiert die Aktion. Schreiben Sie einen Grund auf stderr. Wo er landet, hängt vom Event ab: Einige Events geben ihn an Claude als Feedback, damit es sich anpassen kann, andere zeigen ihn dem Benutzer, und einige, wie `ConfigChange` und `Elicitation`, zeigen keine Meldung. Einige Events können nicht blockiert werden: Für `SessionStart` und andere zeigt exit 2 stderr dem Benutzer an und die Ausführung wird fortgesetzt. Siehe [Exit-Code-2-Verhalten pro Event](/docs/de/hooks#exit-code-2-behavior-per-event) für die vollständige Liste.
+* **Jeder andere Exit-Code**: Für die meisten Events hängt das Ergebnis davon ab, was Ihr Hook auf stdout gedruckt hat:
+  * Ein gepartes Objekt, das die Schema-Validierung besteht: Claude Code ignoriert den Exit-Code, nur das JSON entscheidet das Ergebnis, und der Hook wird nicht als Fehler gemeldet. Die Pro-Event-Ausnahmen, wie `WorktreeCreate`, das bei jedem Nonzero-Exit fehlschlägt, sind im Abschnitt [Exit-Code-Ausgabe](/docs/de/hooks#exit-code-output) der Referenz aufgelistet.
+  * Ein gepartes Objekt, das die Schema-Validierung nicht besteht, oder stdout, das Claude Code [zu parsen versucht als JSON](/docs/de/hooks#exit-code-0), aber das kein gültiges JSON ist: ein nicht blockierender Fehler; die Meldung enthält die Validierungs- oder Parse-Meldung.
+  * Stdout, das Claude Code [als Klartext behandelt](/docs/de/hooks#exit-code-0), oder leeres stdout: die Aktion wird als nicht blockierender Fehler fortgesetzt. Das Transkript zeigt eine `<hook name> hook error`-Meldung, dann die erste Zeile von stderr mit dem Präfix `Failed with non-blocking status code:`. Um das vollständige stderr zu erfassen, aktivieren Sie [Debug-Protokollierung](/docs/de/hooks#debug-hooks) mit `claude --debug` oder durch Ausführung von `/debug` während der Sitzung.
 
 <h4 id="structured-json-output">
   Strukturierte JSON-Ausgabe
@@ -593,7 +645,7 @@ Der Exit-Code bestimmt, was als nächstes passiert:
 Exit-Codes geben Ihnen nur die Möglichkeit, zu blockieren oder zu schweigen. Für mehr Kontrolle beenden Sie mit 0 und geben stattdessen ein JSON-Objekt auf stdout aus.
 
 <Note>
-  Verwenden Sie exit 2, um mit einer stderr-Meldung zu blockieren, oder exit 0 mit JSON für strukturierte Kontrolle. Mischen Sie sie nicht: Claude Code ignoriert JSON, wenn Sie mit 2 beenden.
+  Verwenden Sie exit 2, um mit einer stderr-Meldung zu blockieren, oder exit 0 mit JSON für strukturierte Kontrolle. Wählen Sie einen Ansatz pro Hook. Für das, was passiert, wenn Sie sie mischen, siehe [Exit-Code-Ausgabe](/docs/de/hooks#exit-code-output).
 </Note>
 
 Beispielsweise kann ein `PreToolUse`-Hook einen Tool-Aufruf ablehnen und Claude mitteilen, warum, oder ihn dem Benutzer zur Genehmigung eskalieren:
@@ -608,15 +660,17 @@ Beispielsweise kann ein `PreToolUse`-Hook einen Tool-Aufruf ablehnen und Claude 
 }
 ```
 
-Mit `"deny"` bricht Claude Code den Tool-Aufruf ab und gibt `permissionDecisionReason` an Claude als Feedback zurück. Diese `permissionDecision`-Werte sind spezifisch für `PreToolUse`:
+Mit `"deny"` bricht Claude Code den Tool-Aufruf ab und gibt `permissionDecisionReason` an Claude als Feedback zurück.
 
-* `"allow"`: die interaktive Berechtigungsaufforderung überspringen. Deny- und Ask-Regeln, einschließlich verwalteter Deny-Listen, gelten weiterhin, ebenso wie Aufforderungen für Connector-Tools [die Ihre Organisation auf `ask` gesetzt hat](/docs/de/mcp#organization-controls-on-connector-tools) und MCP-Tools, die mit [`requiresUserInteraction`](/docs/de/mcp#require-approval-for-a-specific-tool) gekennzeichnet sind
+Bei `PreToolUse` behandelt Claude Code jeden `permissionDecision`-Wert wie folgt:
+
+* `"allow"`: die interaktive Berechtigungsaufforderung überspringen. Deny- und Ask-Regeln, einschließlich verwalteter Deny-Listen, gelten weiterhin, ebenso wie Aufforderungen für MCP-Tools, die mit [`requiresUserInteraction`](/docs/de/mcp#require-approval-for-a-specific-tool) gekennzeichnet sind, und für Connector-Tools [die Ihre Organisation auf `ask` gesetzt hat](/docs/de/mcp#organization-controls-on-connector-tools) in Sitzungen, in denen diese Einstellung Claude Code erreicht
 * `"deny"`: Tool-Aufruf abbrechen und den Grund an Claude senden
 * `"ask"`: Berechtigungsaufforderung dem Benutzer wie gewohnt anzeigen
 
 Ein vierter Wert, `"defer"`, ist im [nicht-interaktiven Modus](/docs/de/headless) mit dem Flag `-p` verfügbar. Er beendet den Prozess mit dem beibehaltenen Tool-Aufruf, sodass ein Agent SDK-Wrapper Eingaben sammeln und fortfahren kann. Siehe [Einen Tool-Aufruf für später aufschieben](/docs/de/hooks#defer-a-tool-call-for-later) in der Referenz.
 
-Die Rückgabe von `"allow"` überspringt die interaktive Aufforderung, überschreibt aber nicht [Berechtigungsregeln](/docs/de/permissions#manage-permissions). Wenn eine Deny-Regel dem Tool-Aufruf entspricht, wird der Aufruf blockiert, auch wenn Ihr Hook `"allow"` zurückgibt. Wenn eine Ask-Regel entspricht, wird der Benutzer immer noch aufgefordert, ebenso wie Connector-Tools [die Ihre Organisation auf `ask` gesetzt hat](/docs/de/mcp#organization-controls-on-connector-tools) und MCP-Tools, die mit [`requiresUserInteraction`](/docs/de/mcp#require-approval-for-a-specific-tool) gekennzeichnet sind. Dies bedeutet, dass Deny-Regeln aus jedem Einstellungsbereich, einschließlich [verwalteter Einstellungen](/docs/de/settings#settings-files), immer Vorrang vor Hook-Genehmigungen haben.
+Ein `PreModelSwitch`-Hook gibt das gleiche `permissionDecision`-Feld zurück: `"allow"` lässt einen Modellwechsel fortfahren, und `"deny"` bricht ihn ab. `"ask"` lässt Sie den Wechsel bestätigen, wenn Sie `/model` in einer interaktiven Sitzung ausführen; überall sonst behandelt Claude Code `"ask"` als Verweigerung. Siehe [PreModelSwitch-Entscheidungskontrolle](/docs/de/hooks#premodelswitch-decision-control).
 
 Andere Events verwenden unterschiedliche Entscheidungsmuster. Beispielsweise verwenden `PostToolUse`- und `Stop`-Hooks ein Top-Level-Feld `decision: "block"`, während `PermissionRequest` `hookSpecificOutput.decision.behavior` verwendet. Siehe die [Zusammenfassungstabelle](/docs/de/hooks#decision-control) in der Referenz für eine vollständige Aufschlüsselung nach Event.
 
@@ -656,32 +710,34 @@ Ohne einen Matcher wird ein Hook bei jedem Auftreten seines Events ausgelöst. M
 }
 ```
 
-Der `"Edit|Write"`-Matcher wird ausgelöst, wenn Claude das `Edit`- oder `Write`-Tool verwendet, nicht wenn es `Bash`, `Read` oder ein anderes Tool verwendet. In Claude Code v2.1.191 oder später trennt ein Komma Alternativen auf die gleiche Weise, sodass `"Edit, Write"` gleichwertig ist. Siehe [Matcher-Muster](/docs/de/hooks#matcher-patterns) für die Auswertung von einfachen Namen und regulären Ausdrücken.
+Der `"Edit|Write"`-Matcher wird ausgelöst, wenn Claude das `Edit`- oder `Write`-Tool verwendet, nicht wenn es `Bash`, `Read` oder ein anderes Tool verwendet. Ein Komma trennt Alternativen auf die gleiche Weise, sodass `"Edit, Write"` gleichwertig ist. Siehe [Matcher-Muster](/docs/de/hooks#matcher-patterns) für die Auswertung von einfachen Namen und regulären Ausdrücken.
 
 <Note>
-  Claude kann auch Dateien erstellen oder ändern, indem er Shell-Befehle über das `Bash`-Tool ausführt. Wenn Ihr Hook jede Dateiänderung sehen muss, z. B. für Compliance-Scanning oder Audit-Protokollierung, fügen Sie einen [`Stop`](/docs/de/hooks#stop)-Hook hinzu, der den Arbeitsbaum einmal pro Runde scannt. Für Pro-Aufruf-Abdeckung stattdessen auch `Bash` abgleichen und Ihr Skript geänderte und nicht verfolgte Dateien mit `git status --porcelain` auflisten.
+  Claude kann auch Dateien erstellen oder ändern, indem er Shell-Befehle ausführt. Wenn Ihr Hook jede Dateiänderung sehen muss, z. B. für Compliance-Scanning oder Audit-Protokollierung, fügen Sie einen [`Stop`](/docs/de/hooks#stop)-Hook hinzu, der den Arbeitsbaum einmal pro Runde scannt. Für Pro-Aufruf-Abdeckung stattdessen auch `Bash|PowerShell` abgleichen und Ihr Skript geänderte und nicht verfolgte Dateien mit `git status --porcelain` auflisten. Der Abschnitt [PowerShell-Hook-Eingabe](/docs/de/hooks#powershell) erklärt, warum das Abgleichen von nur `Bash` nicht ausreicht. Um einen Hook auszuführen, wenn sich eine bestimmte Datei auf der Festplatte ändert, unabhängig davon, wer sie geschrieben hat, verwenden Sie einen [FileChanged](/docs/de/hooks#filechanged)-Hook.
 </Note>
 
 Jeder Event-Typ gleicht ein bestimmtes Feld ab:
 
-| Event                                                                                                                                                           | Worauf der Matcher filtert                                             | Beispiel-Matcher-Werte                                                                                                                                                              |
-| :-------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `PreToolUse`, `PostToolUse`, `PostToolUseFailure`, `PermissionRequest`, `PermissionDenied`                                                                      | Tool-Name                                                              | `Bash`, `Edit\|Write`, `mcp__.*`                                                                                                                                                    |
-| `SessionStart`                                                                                                                                                  | wie die Sitzung gestartet wurde                                        | `startup`, `resume`, `clear`, `compact`                                                                                                                                             |
-| `Setup`                                                                                                                                                         | welches CLI-Flag das Setup ausgelöst hat                               | `init`, `maintenance`                                                                                                                                                               |
-| `SessionEnd`                                                                                                                                                    | warum die Sitzung endete                                               | `clear`, `resume`, `logout`, `prompt_input_exit`, `bypass_permissions_disabled`, `other`                                                                                            |
-| `Notification`                                                                                                                                                  | Benachrichtigungstyp                                                   | `permission_prompt`, `idle_prompt`, `auth_success`, `elicitation_dialog`, `elicitation_complete`, `elicitation_response`, `agent_needs_input`, `agent_completed`                    |
-| `SubagentStart`                                                                                                                                                 | Agent-Typ                                                              | `general-purpose`, `Explore`, `Plan` oder benutzerdefinierte Agent-Namen                                                                                                            |
-| `PreCompact`, `PostCompact`                                                                                                                                     | was die Komprimierung ausgelöst hat                                    | `manual`, `auto`                                                                                                                                                                    |
-| `SubagentStop`                                                                                                                                                  | Agent-Typ                                                              | gleiche Werte wie `SubagentStart`                                                                                                                                                   |
-| `ConfigChange`                                                                                                                                                  | Konfigurationsquelle                                                   | `user_settings`, `project_settings`, `local_settings`, `policy_settings`, `skills`                                                                                                  |
-| `StopFailure`                                                                                                                                                   | Fehlertyp                                                              | `rate_limit`, `overloaded`, `authentication_failed`, `oauth_org_not_allowed`, `billing_error`, `invalid_request`, `model_not_found`, `server_error`, `max_output_tokens`, `unknown` |
-| `InstructionsLoaded`                                                                                                                                            | Ladegrund                                                              | `session_start`, `nested_traversal`, `path_glob_match`, `include`, `compact`                                                                                                        |
-| `Elicitation`                                                                                                                                                   | MCP-Servername                                                         | Ihre konfigurierten MCP-Servernamen                                                                                                                                                 |
-| `ElicitationResult`                                                                                                                                             | MCP-Servername                                                         | gleiche Werte wie `Elicitation`                                                                                                                                                     |
-| `FileChanged`                                                                                                                                                   | Dateinamen zum Überwachen (siehe [FileChanged](/docs/de/hooks#filechanged)) | `.envrc\|.env`                                                                                                                                                                      |
-| `UserPromptExpansion`                                                                                                                                           | Befehlsname                                                            | Ihre Skill- oder Befehlsnamen                                                                                                                                                       |
-| `UserPromptSubmit`, `PostToolBatch`, `Stop`, `TeammateIdle`, `TaskCreated`, `TaskCompleted`, `WorktreeCreate`, `WorktreeRemove`, `CwdChanged`, `MessageDisplay` | keine Matcher-Unterstützung                                            | wird immer bei jedem Auftreten ausgelöst                                                                                                                                            |
+| Event                                                                                                                                                           | Worauf der Matcher filtert                                                                                                  | Beispiel-Matcher-Werte                                                                                                                                                                                                                                                         |
+| :-------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `PreToolUse`, `PostToolUse`, `PostToolUseFailure`, `PermissionRequest`, `PermissionDenied`                                                                      | Tool-Name                                                                                                                   | `Bash`, `Edit\|Write`, `mcp__.*`                                                                                                                                                                                                                                               |
+| `SessionStart`                                                                                                                                                  | wie die Sitzung gestartet wurde                                                                                             | `startup`, `resume`, `clear`, `compact`, `fork`                                                                                                                                                                                                                                |
+| `Setup`                                                                                                                                                         | welches CLI-Flag das Setup ausgelöst hat                                                                                    | `init`, `maintenance`                                                                                                                                                                                                                                                          |
+| `SessionEnd`                                                                                                                                                    | warum die Sitzung endete                                                                                                    | `clear`, `resume`, `logout`, `prompt_input_exit`, `other`                                                                                                                                                                                                                      |
+| `Notification`                                                                                                                                                  | Benachrichtigungstyp                                                                                                        | `permission_prompt`, `idle_prompt`, `auth_success`, `elicitation_dialog`, `elicitation_url_dialog`, `elicitation_complete`, `elicitation_response`, `agent_needs_input`, `agent_completed`, `quota_auto_resume_fired`, `quota_auto_resume_stale`, `quota_auto_resume_disabled` |
+| `SubagentStart`                                                                                                                                                 | Agent-Typ                                                                                                                   | `general-purpose`, `Explore`, `Plan` oder benutzerdefinierte Agent-Namen                                                                                                                                                                                                       |
+| `PreCompact`, `PostCompact`                                                                                                                                     | was die Komprimierung ausgelöst hat                                                                                         | `manual`, `auto`                                                                                                                                                                                                                                                               |
+| `PreModelSwitch`, `PostModelSwitch`                                                                                                                             | kanonischer Name des Modells, zu dem die Sitzung wechselt, wie unter [PreModelSwitch](/docs/de/hooks#premodelswitch) beschrieben | `claude-opus-5`, `claude-opus-4-6\|claude-opus-5`, `.*opus.*`                                                                                                                                                                                                                  |
+| `SubagentStop`                                                                                                                                                  | Agent-Typ                                                                                                                   | gleiche Werte wie `SubagentStart`                                                                                                                                                                                                                                              |
+| `ConfigChange`                                                                                                                                                  | Konfigurationsquelle                                                                                                        | `user_settings`, `project_settings`, `local_settings`, `policy_settings`, `skills`                                                                                                                                                                                             |
+| `DirectoryAdded`                                                                                                                                                | wie das Verzeichnis hinzugefügt wurde                                                                                       | `slash_command`, `register_repo_root`                                                                                                                                                                                                                                          |
+| `StopFailure`                                                                                                                                                   | Fehlertyp                                                                                                                   | `rate_limit`, `overloaded`, `authentication_failed`, `oauth_org_not_allowed`, `account_on_hold`, `billing_error`, `invalid_request`, `model_not_found`, `server_error`, `max_output_tokens`, `cloud_credential_error`, `unknown`                                               |
+| `InstructionsLoaded`                                                                                                                                            | Ladegrund                                                                                                                   | `session_start`, `nested_traversal`, `path_glob_match`, `include`, `compact`                                                                                                                                                                                                   |
+| `Elicitation`                                                                                                                                                   | MCP-Servername                                                                                                              | Ihre konfigurierten MCP-Servernamen                                                                                                                                                                                                                                            |
+| `ElicitationResult`                                                                                                                                             | MCP-Servername                                                                                                              | gleiche Werte wie `Elicitation`                                                                                                                                                                                                                                                |
+| `FileChanged`                                                                                                                                                   | Dateinamen zum Überwachen (siehe [FileChanged](/docs/de/hooks#filechanged))                                                      | `.envrc\|.env`                                                                                                                                                                                                                                                                 |
+| `UserPromptExpansion`                                                                                                                                           | Befehlsname                                                                                                                 | Ihre Skill- oder Befehlsnamen                                                                                                                                                                                                                                                  |
+| `UserPromptSubmit`, `PostToolBatch`, `Stop`, `TeammateIdle`, `TaskCreated`, `TaskCompleted`, `WorktreeCreate`, `WorktreeRemove`, `CwdChanged`, `MessageDisplay` | keine Matcher-Unterstützung                                                                                                 | wird immer bei jedem Auftreten ausgelöst                                                                                                                                                                                                                                       |
 
 Die Registerkarten unten zeigen ein paar weitere Matcher auf verschiedene Event-Typen.
 
@@ -755,8 +811,6 @@ Die Registerkarten unten zeigen ein paar weitere Matcher auf verschiedene Event-
   </Tab>
 </Tabs>
 
-Für die vollständige Matcher-Syntax siehe die [Hooks-Referenz](/docs/de/hooks#configuration).
-
 <h4 id="filter-by-tool-name-and-arguments-with-the-if-field">
   Hooks mit dem Feld `if` nach Tool-Name und Argumenten filtern
 </h4>
@@ -794,7 +848,7 @@ Ob Ihr Hook-Befehl ausgeführt wird, hängt von der Form Ihres `if`-Musters und 
 | `Bash(git *)`      | `echo $(date)`         | nein                  | kein Subbefehl stimmt mit `git *` überein                                                                    |
 | `Bash(git push *)` | `echo $(date)`         | ja                    | Muster, die mehr als den Befehlsnamen angeben, führen den Hook trotzdem bei `$()`, Backticks oder `$VAR` aus |
 
-Der Filter schlägt auch offen fehl und führt Ihren Hook unabhängig vom Muster aus, wenn der Bash-Befehl nicht geparst werden kann. Da der Filter Best-Effort ist, verwenden Sie das [Berechtigungssystem](/docs/de/permissions) anstelle eines Hooks, um ein hartes Allow oder Deny durchzusetzen.
+Wenn Claude Code nicht bestimmen kann, welche Befehle die Bash-Eingabe ausführt, führt es Ihren Hook unabhängig vom Muster aus. Die [Bash-Matching-Tabelle](/docs/de/hooks#bash-if-matching) behandelt die Befehlsformen, die Claude Code eingrenzen kann und nicht. Da der Filter Best-Effort ist, verwenden Sie das [Berechtigungssystem](/docs/de/permissions) anstelle eines Hooks, um ein hartes Allow oder Deny durchzusetzen.
 
 Das Feld `if` akzeptiert die gleichen Muster wie Berechtigungsregeln: `"Bash(git *)"`, `"Edit(*.ts)"` und so weiter. Um mehrere Tool-Namen abzugleichen, verwenden Sie separate Handler, jeder mit seinem eigenen `if`-Wert, oder gleichen Sie auf der `matcher`-Ebene ab, wo Pipe-Alternation unterstützt wird.
 
@@ -806,18 +860,19 @@ Das Feld `if` akzeptiert die gleichen Muster wie Berechtigungsregeln: `"Bash(git
 
 Wo Sie einen Hook hinzufügen, bestimmt seinen Bereich:
 
-| Speicherort                                                  | Bereich                                | Freigegeben                                     |
-| :----------------------------------------------------------- | :------------------------------------- | :---------------------------------------------- |
-| `~/.claude/settings.json`                                    | Alle Ihre Projekte                     | Nein, lokal auf Ihrem Computer                  |
-| `.claude/settings.json`                                      | Einzelnes Projekt                      | Ja, kann im Repo committed werden               |
-| `.claude/settings.local.json`                                | Einzelnes Projekt                      | Nein, gitignoriert wenn Claude Code es erstellt |
-| Verwaltete Richtlinieneinstellungen                          | Organisationsweit                      | Ja, von Admin kontrolliert                      |
-| [Plugin](/docs/de/plugins) `hooks/hooks.json`                     | Wenn Plugin aktiviert ist              | Ja, mit dem Plugin gebündelt                    |
-| [Skill](/docs/de/skills) oder [Agent](/docs/de/sub-agents) Frontmatter | Während der Skill oder Agent aktiv ist | Ja, in der Komponentendatei definiert           |
+| Speicherort                                       | Bereich                                                                                                                          | Freigegeben                                                          |
+| :------------------------------------------------ | :------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------- |
+| `~/.claude/settings.json`                         | Alle Ihre Projekte                                                                                                               | Nein, lokal auf Ihrem Computer                                       |
+| `.claude/settings.json`                           | Einzelnes Projekt                                                                                                                | Ja, kann im Repo committed werden                                    |
+| `.claude/settings.local.json`                     | Einzelnes Projekt                                                                                                                | Nein, gitignoriert wenn Claude Code eine Einstellung darin speichert |
+| Verwaltete Richtlinieneinstellungen               | Organisationsweit                                                                                                                | Ja, von Admin kontrolliert                                           |
+| [Plugin](/docs/de/plugins/overview) `hooks/hooks.json` | Wenn Plugin aktiviert ist                                                                                                        | Ja, mit dem Plugin gebündelt                                         |
+| [Skill](/docs/de/skills) Frontmatter                   | Der Rest der Sitzung, sobald der Skill aufgerufen wird. Siehe [Hooks in Skills und Agents](/docs/de/hooks#hooks-in-skills-and-agents) | Ja, in der Skill-Datei definiert                                     |
+| [Subagent](/docs/de/sub-agents) Frontmatter            | Während dieser Subagent läuft                                                                                                    | Ja, in der Subagent-Datei definiert                                  |
 
 Führen Sie [`/hooks`](/docs/de/hooks#the-%2Fhooks-menu) in Claude Code aus, um alle konfigurierten Hooks nach Event gruppiert zu durchsuchen.
 
-Um Hooks zu deaktivieren, setzen Sie `"disableAllHooks": true` in Ihrer Einstellungsdatei. Hooks, die in verwalteten Einstellungen konfiguriert sind, werden weiterhin ausgeführt, es sei denn, `disableAllHooks` ist auch dort gesetzt.
+Um Hooks zu deaktivieren, setzen Sie `"disableAllHooks": true` in Ihrer Einstellungsdatei. Claude Code liest den Wert, der nach [Einstellungspriorität](/docs/de/hooks#disable-or-remove-hooks) angewendet wird, sodass die Einstellungsdatei eines Projekts Ihre überschreiben kann. Hooks, die in verwalteten Einstellungen konfiguriert sind, werden weiterhin ausgeführt, es sei denn, `disableAllHooks` ist auch dort gesetzt. Für die vollständige Reichweite jeder Ebene siehe [`disableAllHooks`](/docs/de/settings-reference#disableallhooks).
 
 Wenn Sie Einstellungsdateien direkt bearbeiten, während Claude Code läuft, werden Hook-Änderungen normalerweise automatisch vom Datei-Watcher aufgegriffen.
 
@@ -827,15 +882,16 @@ Wenn Sie Einstellungsdateien direkt bearbeiten, während Claude Code läuft, wer
 
 Für Entscheidungen, die Urteilsvermögen erfordern, anstatt deterministischer Regeln, verwenden Sie `type: "prompt"`-Hooks. Anstatt einen Shell-Befehl auszuführen, sendet Claude Code Ihren Prompt und die Hook-Eingabedaten an ein Claude-Modell (standardmäßig Haiku), um die Entscheidung zu treffen. Sie können ein anderes Modell mit dem Feld `model` angeben, wenn Sie mehr Leistung benötigen.
 
-Die einzige Aufgabe des Modells ist, eine Ja/Nein-Entscheidung als JSON zurückzugeben:
+Die einzige Aufgabe des Modells ist, seine Entscheidung als JSON zurückzugeben:
 
 * `"ok": true`: die Aktion wird fortgesetzt
 * `"ok": false`: was passiert, hängt vom Ereignis ab:
-  * `Stop` und `SubagentStop`: der `reason` wird an Claude zurückgegeben, sodass es weiterarbeitet
-  * `PreToolUse`: der Tool-Aufruf wird verweigert und der `reason` wird an Claude als Tool-Fehler zurückgegeben, sodass es sich anpassen und fortfahren kann
-  * `PostToolUse`, `PostToolBatch`, `UserPromptSubmit` und `UserPromptExpansion`: der Zug endet und der `reason` erscheint im Chat als Warnzeile
+  * `Stop` und `SubagentStop`: der `reason` wird an Claude zurückgegeben, sodass es weiterarbeitet, es sei denn, die Antwort setzt auch `"impossible": true`, um die Bedingung als eine zu kennzeichnen, die niemals erfüllt werden kann. In diesem Fall erlaubt Claude Code den Stop und der Zug endet
+  * `PreToolUse`: der Tool-Aufruf wird verweigert; standardmäßig endet der Zug und der Ablehnungs-`reason` erscheint im Chat als Warnzeile. Setzen Sie `continueOnBlock: true` auf dem Hook, um stattdessen den `reason` an Claude als Tool-Fehler zurückzugeben, sodass es sich anpassen und fortfahren kann. Vor v2.1.210 wurde der Ablehnungs-`reason` an Claude als Tool-Fehler zurückgegeben und der Zug wurde fortgesetzt
+  * `PostToolUse`: standardmäßig endet der Zug und der `reason` erscheint im Chat als Warnzeile. Setzen Sie `continueOnBlock: true`, um den `reason` an Claude zurückzugeben und den Zug stattdessen fortzusetzen
+  * `PostToolBatch`, `UserPromptSubmit` und `UserPromptExpansion`: der Zug endet und der `reason` erscheint im Chat als Warnzeile
 
-Dieses Beispiel verwendet einen `Stop`-Hook, um das Modell zu fragen, ob alle angeforderten Aufgaben abgeschlossen sind. Wenn das Modell `"ok": false` zurückgibt, arbeitet Claude weiter und verwendet den `reason` als nächste Anweisung:
+Dieses Beispiel verwendet einen `Stop`-Hook, um das Modell zu fragen, ob alle angeforderten Aufgaben abgeschlossen sind. Wenn das Modell `"ok": false` zurückgibt, weil die Bedingung noch nicht erfüllt ist, arbeitet Claude weiter und verwendet den `reason` als nächste Anweisung:
 
 ```json theme={null}
 {
@@ -866,7 +922,7 @@ Für vollständige Konfigurationsoptionen siehe [Prompt-basierte Hooks](/docs/de
 
 Wenn die Verifizierung das Inspizieren von Dateien oder das Ausführen von Befehlen erfordert, verwenden Sie `type: "agent"`-Hooks. Im Gegensatz zu Prompt-Hooks, die einen einzelnen LLM-Aufruf tätigen, spawnen Agent-Hooks einen Subagent, der Dateien lesen, Code durchsuchen und andere Tools verwenden kann, um Bedingungen zu überprüfen, bevor eine Entscheidung zurückgegeben wird.
 
-Agent-Hooks verwenden das gleiche `"ok"` / `"reason"`-Antwortformat wie Prompt-Hooks, aber mit einem längeren Standard-Timeout von 60 Sekunden und bis zu 50 Tool-Use-Turns.
+Agent-Hooks verwenden das `"ok"` / `"reason"`-Antwortformat mit einem längeren Standard-Timeout von 60 Sekunden und bis zu 50 Tool-Use-Turns. Sie unterstützen nicht das `impossible`-Feld von Prompt-Hooks. Bei `ok: false` behandelt Claude Code einen Agent-Hook auf die gleiche Weise wie einen Prompt-Hook mit `continueOnBlock: true` beim gleichen Event, sodass bei `PreToolUse` und `PostToolUse` der Turn fortgesetzt wird; Agent-Hooks haben kein `continueOnBlock`-Feld. Siehe [Agent-Hook-Konfiguration](/docs/de/hooks#agent-hook-configuration) für die Felder, einschließlich des `$ARGUMENTS`-Platzhalters, den Claude Code durch die JSON-Eingabe des Hooks ersetzt.
 
 Dieses Beispiel überprüft, dass Tests bestanden werden, bevor Claude beendet werden darf:
 
@@ -939,23 +995,26 @@ Für vollständige Konfigurationsoptionen und Response-Handling siehe [HTTP-Hook
 
 Beachten Sie diese Einschränkungen beim Entwerfen von Hooks:
 
-* Command-Hooks kommunizieren nur über stdout, stderr und Exit-Codes. Sie können `/`-Befehle oder Tool-Aufrufe nicht auslösen. Text, der über `additionalContext` zurückgegeben wird, wird als Systemerinnerung injiziert, die Claude als Klartext liest. HTTP-Hooks kommunizieren stattdessen über den Response-Body.
+* Command Hooks kommunizieren nur über stdout, stderr und Exit-Codes. Sie können keine `/`-Befehle oder Tool-Aufrufe auslösen. Text, der über `additionalContext` zurückgegeben wird, wird als Systemhinweis eingefügt, den Claude als Klartext liest. HTTP Hooks kommunizieren stattdessen über den Response-Body.
 * Hook-Timeouts variieren je nach Typ. Überschreiben Sie pro Hook mit dem Feld `timeout` in Sekunden.
-  * `command`, `http`, `mcp_tool`: 10 Minuten. `UserPromptSubmit` reduziert diese auf 30 Sekunden, und `MessageDisplay` reduziert sie auf 10 Sekunden.
+  * `command`, `http`, `mcp_tool`: 10 Minuten. Claude Code senkt diesen Standard auf 30 Sekunden für `UserPromptSubmit`-, `PreModelSwitch`- und `PostModelSwitch`-Hooks und auf 10 Sekunden für `MessageDisplay`-Hooks.
   * `prompt`: 30 Sekunden.
   * `agent`: 60 Sekunden.
+  * [`SessionEnd`](/docs/de/hooks#sessionend)-Hooks aller Typen teilen sich ein Budget von 1,5 Sekunden. Wenn Ihre Einstellungen ein längeres `timeout` pro Hook setzen, erhöht Claude Code das Budget entsprechend, bis zu 60 Sekunden.
 * `PostToolUse`-Hooks können Aktionen nicht rückgängig machen, da das Tool bereits ausgeführt wurde.
-* `PermissionRequest`-Hooks werden nicht im [nicht-interaktiven Modus](/docs/de/headless) mit dem Flag `-p` ausgelöst. Verwenden Sie `PreToolUse`-Hooks für automatisierte Berechtigungsentscheidungen.
-* `Stop`-Hooks werden ausgelöst, wenn Claude antwortet, nicht nur bei Aufgabenabschluss. Sie werden nicht bei Benutzerunterbrechungen ausgelöst. API-Fehler lösen stattdessen [StopFailure](/docs/de/hooks#stopfailure) aus.
-* Wenn mehrere `PreToolUse`-Hooks [`updatedInput`](/docs/de/hooks#pretooluse) zurückgeben, um die Argumente eines Tools umzuschreiben, gewinnt der letzte, der fertig wird. Da Hooks parallel ausgeführt werden, ist die Reihenfolge nicht deterministisch. Vermeiden Sie, dass mehr als ein Hook die Eingabe desselben Tools ändert.
+* `PermissionRequest`-Hooks werden ausgelöst, wenn Claude Code Sie um Genehmigung bitten möchte.
+  * Im [nicht-interaktiven Modus](/docs/de/headless) mit dem Flag `-p` existiert diese Eingabeaufforderung nur, wenn der [`canUseTool`-Callback](/docs/de/agent-sdk/permissions) des Agent SDK sie bereitstellt. Bei einfachen `-p`-Läufen oder mit `--permission-prompt-tool` verwenden Sie stattdessen `PreToolUse`-Hooks für automatisierte Genehmigungsentscheidungen.
+  * Hintergrund-Subagenten können im nicht-interaktiven Modus keine Eingabeaufforderung anzeigen. Claude Code führt die Hooks für ihre Tool-Aufrufe weiterhin aus, und wenn kein Hook eine Entscheidung zurückgibt, wird der Aufruf abgelehnt. In einer interaktiven Sitzung werden Eingabeaufforderungen von Hintergrund-Subagenten in Ihrer Hauptsitzung angezeigt und die Hooks werden wie gewohnt ausgelöst.
+* `Stop`-Hooks werden ausgelöst, wenn Claude die Antwort beendet, nicht nur bei Aufgabenvollendung. Sie werden nicht bei Benutzerunterbrechungen ausgelöst. API-Fehler lösen stattdessen [`StopFailure`](/docs/de/hooks#stopfailure) aus.
+* Wenn mehrere `PreToolUse`-Hooks [`updatedInput`](/docs/de/hooks#pretooluse) zurückgeben, um die Argumente eines Tools umzuschreiben, hat der zuletzt fertiggestellte Effekt. Da Hooks parallel ausgeführt werden, ist die Reihenfolge nicht deterministisch. Vermeiden Sie, dass mehr als ein Hook die Eingabe desselben Tools ändert.
 
 <h3 id="hooks-and-permission-modes">
-  Hooks und Berechtigungsmodi
+  Hooks und Genehmigungsmodi
 </h3>
 
-`PreToolUse`-Hooks werden vor jeder Berechtigungsmodus-Überprüfung ausgelöst. Ein Hook, der `permissionDecision: "deny"` zurückgibt, blockiert das Tool auch im `bypassPermissions`-Modus oder mit `--dangerously-skip-permissions`. Dies ermöglicht es Ihnen, Richtlinien durchzusetzen, die Benutzer nicht umgehen können, indem sie ihren Berechtigungsmodus ändern.
+`PreToolUse`-Hooks werden vor jeder Genehmigungsmodus-Prüfung in jedem [Genehmigungsmodus](/docs/de/permission-modes) ausgelöst, einschließlich `dontAsk`. Ein Hook, der `permissionDecision: "deny"` zurückgibt, blockiert das Tool auch im `bypassPermissions`-Modus oder mit `--dangerously-skip-permissions`. Dies ermöglicht es Ihnen, eine Richtlinie durchzusetzen, die Benutzer nicht umgehen können, indem sie ihren Genehmigungsmodus ändern.
 
-Das Gegenteil ist nicht wahr: Ein Hook, der `"allow"` zurückgibt, umgeht keine Deny-Regeln aus Einstellungen, und er kann die Aufforderung für Connector-Tools nicht unterdrücken, [die Ihre Organisation auf `ask` gesetzt hat](/docs/de/mcp#organization-controls-on-connector-tools), oder MCP-Tools, die mit [`requiresUserInteraction`](/docs/de/mcp#require-approval-for-a-specific-tool) gekennzeichnet sind. Hooks können Einschränkungen verschärfen, aber nicht über das hinaus lockern, was Berechtigungsregeln zulassen.
+Das Gegenteil ist nicht wahr: Ein Hook, der `"allow"` zurückgibt, umgeht nicht die Ablehnungsregeln aus den Einstellungen, und er kann die Eingabeaufforderung für MCP-Tools, die als [`requiresUserInteraction`](/docs/de/mcp#require-approval-for-a-specific-tool) gekennzeichnet sind, oder für Connector-Tools, die [Ihre Organisation auf `ask`](/docs/de/mcp#organization-controls-on-connector-tools) gesetzt hat, nicht unterdrücken, in Sitzungen, in denen diese Einstellung Claude Code erreicht. Hooks können Einschränkungen verschärfen, aber nicht lockern, über das hinaus, was Genehmigungsregeln zulassen.
 
 <h3 id="hook-not-firing">
   Hook wird nicht ausgelöst
@@ -963,24 +1022,26 @@ Das Gegenteil ist nicht wahr: Ein Hook, der `"allow"` zurückgibt, umgeht keine 
 
 Der Hook ist konfiguriert, wird aber nie ausgeführt.
 
-* Führen Sie `/hooks` aus und bestätigen Sie, dass der Hook unter dem richtigen Event angezeigt wird
-* Überprüfen Sie, dass das Matcher-Muster den Tool-Namen genau abgleicht. Matcher sind Groß-/Kleinschreibung-empfindlich
-* Überprüfen Sie, dass Sie den richtigen Event-Typ auslösen: `PreToolUse` wird vor der Tool-Ausführung ausgelöst, `PostToolUse` wird danach ausgelöst
-* Wenn Sie `PermissionRequest`-Hooks im nicht-interaktiven Modus mit dem Flag `-p` verwenden, wechseln Sie stattdessen zu `PreToolUse`
+* Führen Sie `/hooks` aus und bestätigen Sie, dass der Hook unter dem richtigen Ereignis angezeigt wird
+* Überprüfen Sie, dass das Matcher-Muster den Tool-Namen genau entspricht. Matcher sind Groß-/Kleinschreibung-empfindlich
+* Überprüfen Sie, dass Sie den richtigen Ereignistyp auslösen: `PreToolUse` wird vor der Tool-Ausführung ausgelöst, `PostToolUse` wird danach ausgelöst. Ein `PermissionRequest`-Hook wird ausgelöst, wenn Claude Code Sie um Genehmigung bitten möchte; siehe die [Einschränkungen](#limitations) für die nicht-interaktiven Fälle
 
 <h3 id="hook-error-in-output">
   Hook-Fehler in der Ausgabe
 </h3>
 
-Sie sehen eine Meldung wie "PreToolUse hook error: ..." im Transkript.
+Sie sehen eine Nachricht wie „PreToolUse hook error: ..." im Transkript.
 
-* Ihr Skript wurde unerwartet mit einem Nicht-Null-Code beendet. Testen Sie es manuell, indem Sie Beispiel-JSON pipen:
+* Ihr Skript wurde unerwartet mit einem Code ungleich Null beendet. Testen Sie es manuell, indem Sie Beispiel-JSON pipen:
   ```bash theme={null}
   echo '{"tool_name":"Bash","tool_input":{"command":"ls"}}' | ./my-hook.sh
-  echo $?  # Überprüfen Sie den Exit-Code
+  echo $?  # Check the exit code
   ```
-* Wenn Sie "command not found" sehen, verwenden Sie absolute Pfade oder `${CLAUDE_PROJECT_DIR}`, um Skripte zu referenzieren. Um Shell-Quoting vollständig zu vermeiden, fügen Sie `"args": []` hinzu, um zur [exec-Form](/docs/de/hooks#exec-form-and-shell-form) zu wechseln, die das Skript direkt ohne eine Shell spawnt
-* Wenn Sie "jq: command not found" sehen, installieren Sie `jq` oder verwenden Sie Python/Node.js zum Parsen von JSON
+* Wenn Sie „command not found" sehen, verwenden Sie absolute Pfade oder `${CLAUDE_PROJECT_DIR}`, um auf Skripte zu verweisen. Um Shell-Quoting ganz zu vermeiden, fügen Sie `"args": []` hinzu, um zur [Exec-Form](/docs/de/hooks#exec-form-and-shell-form) zu wechseln, die das Skript direkt ohne Shell spawnt
+* Wenn Sie „jq: command not found" sehen, installieren Sie `jq` oder verwenden Sie Python/Node.js für JSON-Parsing
+* Wenn die Benachrichtigung eine JSON-Validierungsmeldung anzeigt, wurde die stdout Ihres Hooks als JSON geparst, aber die Schema-Validierung ist fehlgeschlagen. Wenn sie eine JSON-Parse-Meldung anzeigt, sah die stdout wie ein JSON-Objekt aus, war aber kein gültiges JSON. Beides passiert auch bei Exit 0.
+
+  Um einen Parse-Fehler zu beheben, erstellen Sie die Payload mit einem JSON-Encoder wie `jq` statt String-Verkettung, damit Anführungszeichen und Backslashes in Werten escaped werden. Der Abschnitt [Exit code output](/docs/de/hooks#exit-code-output) der Referenz behandelt die Exit-Code- und JSON-Kombinationen
 * Wenn das Skript überhaupt nicht ausgeführt wird, machen Sie es ausführbar: `chmod +x ./my-hook.sh`
 
 <h3 id="/hooks-shows-no-hooks-configured">
@@ -989,60 +1050,72 @@ Sie sehen eine Meldung wie "PreToolUse hook error: ..." im Transkript.
 
 Sie haben eine Einstellungsdatei bearbeitet, aber die Hooks werden nicht im Menü angezeigt.
 
-* Datei-Bearbeitungen werden normalerweise automatisch aufgegriffen. Wenn sie nach ein paar Sekunden nicht angezeigt wurden, hat der Datei-Watcher die Änderung möglicherweise verpasst: Starten Sie Ihre Sitzung neu, um ein Neuladen zu erzwingen.
+* Dateibearbeitungen werden normalerweise automatisch aufgegriffen. Wenn sie nach einigen Sekunden nicht angezeigt werden, hat der Datei-Watcher die Änderung möglicherweise übersehen: Starten Sie Ihre Sitzung neu, um ein Neuladen zu erzwingen.
 * Überprüfen Sie, dass Ihr JSON gültig ist: Nachfolgende Kommas und Kommentare sind nicht zulässig
-* Bestätigen Sie, dass die Einstellungsdatei am richtigen Speicherort ist: `.claude/settings.json` für Projekt-Hooks, `~/.claude/settings.json` für globale Hooks
+* Bestätigen Sie, dass sich die Einstellungsdatei am richtigen Ort befindet: `.claude/settings.json` für Projekt-Hooks, `~/.claude/settings.json` für globale Hooks
 
 <h3 id="stop-hook-hits-the-block-cap">
-  Stop-Hook trifft die Blockierungsgrenze
+  Stop Hook trifft die Block-Obergrenze
 </h3>
 
-Claude arbeitet weiter, anstatt zu stoppen, und beendet dann den Zug mit einer Warnung, dass der Stop-Hook zu viele Male hintereinander blockiert hat.
+Claude arbeitet weiter, anstatt zu stoppen, und beendet dann den Turn mit einer Warnung, dass der Stop Hook zu viele Male hintereinander blockiert hat.
 
-Claude Code setzt einen Stop-Hook außer Kraft, nachdem er acht Mal hintereinander blockiert hat, ohne Fortschritt zu erzielen. Ihr Hook-Skript muss überprüfen, ob es bereits eine Fortsetzung ausgelöst hat. Parsen Sie das Feld `stop_hook_active` aus der JSON-Eingabe und beenden Sie früh, wenn es `true` ist:
+Claude Code überschreibt einen Stop Hook, nachdem er achtmal hintereinander blockiert hat, ohne Fortschritt. Ihr Hook-Skript muss überprüfen, ob es bereits eine Fortsetzung ausgelöst hat. Parsen Sie das Feld `stop_hook_active` aus der JSON-Eingabe und beenden Sie es früh, wenn es `true` ist:
 
 ```bash theme={null}
 #!/bin/bash
 INPUT=$(cat)
 if [ "$(echo "$INPUT" | jq -r '.stop_hook_active')" = "true" ]; then
-  exit 0  # Erlauben Sie Claude zu stoppen
+  exit 0  # Allow Claude to stop
 fi
-# ... Rest Ihrer Hook-Logik
+# ... rest of your hook logic
 ```
 
-Wenn Ihr Hook legitim mehr als acht Iterationen benötigt, um zu konvergieren, erhöhen Sie die Grenze mit [`CLAUDE_CODE_STOP_HOOK_BLOCK_CAP`](/docs/de/env-vars).
+Wenn Ihr Hook legitim mehr als acht Iterationen benötigt, um zu konvergieren, erhöhen Sie die Obergrenze mit [`CLAUDE_CODE_STOP_HOOK_BLOCK_CAP`](/docs/de/env-vars).
 
-<h3 id="json-validation-failed">
-  JSON-Validierung fehlgeschlagen
+<h3 id="hook-json-has-no-effect">
+  Hook JSON hat keine Auswirkung
 </h3>
 
-Claude Code zeigt einen JSON-Parsing-Fehler an, obwohl Ihr Hook-Skript gültiges JSON ausgibt.
+Ihr Hook gibt gültiges JSON aus, aber die Entscheidung hat keine Auswirkung und es wird kein Fehler im Transkript angezeigt. Überprüfen Sie, welche Ursache zutrifft:
 
-Wenn Claude Code einen Shell-Form-Command-Hook ausführt (einen ohne `args`), spawnt es `sh -c` auf macOS und Linux oder Git Bash auf Windows standardmäßig. Diese Shell ist nicht-interaktiv, aber Git Bash und einige Konfigurationen, wie `BASH_ENV`, das auf `~/.bashrc` zeigt, sourcen trotzdem Ihr Profil. Wenn dieses Profil bedingungslose `echo`-Anweisungen enthält, wird die Ausgabe Ihrem Hook-JSON vorangestellt:
+* **Zusätzliche Ausgabe vor dem JSON**: Etwas anderes schreibt zuerst zu stdout, normalerweise ein bedingungsloses `echo` in Ihrem Shell-Profil, sodass die Ausgabe nicht mehr mit `{` beginnt und Claude Code sie nicht als JSON parst. Die Ursache und Lösung folgen dieser Liste.
+* **Ein Feld auf der falschen Ebene**: Vergleichen Sie die Platzierung jedes Feldes mit dem Format [JSON output](/docs/de/hooks#json-output). Zum Beispiel gehört `permissionDecision` in `hookSpecificOutput`, nicht auf der obersten Ebene.
+
+Wenn Claude Code einen Shell-Form-Command Hook ausführt, einen ohne `args`, spawnt es `sh -c` auf macOS und Linux, Git Bash auf Windows oder PowerShell, wenn Git Bash nicht standardmäßig installiert ist. Diese Shell ist nicht-interaktiv, aber Git Bash und einige Konfigurationen, wie `BASH_ENV`, das auf `~/.bashrc` zeigt, sourchen immer noch Ihr Profil. Wenn dieses Profil bedingungslose `echo`-Anweisungen enthält, wird die Ausgabe Ihrem Hook-JSON vorangestellt:
 
 ```text theme={null}
 Shell ready on arm64
 {"decision": "block", "reason": "Not allowed"}
 ```
 
-Claude Code versucht, dies als JSON zu parsen, und schlägt fehl. Um dies zu beheben, wrappen Sie Echo-Anweisungen in Ihrem Shell-Profil, sodass sie nur in interaktiven Shells ausgeführt werden:
+Die kombinierte Ausgabe beginnt nicht mehr mit `{`, daher behandelt Claude Code alle stdout als Klartext und ignoriert das JSON. Bei Exit 0 wird nichts im Transkript gemeldet; der Parse-Versuch wird nur im [Debug-Protokoll](/docs/de/hooks#debug-hooks) aufgezeichnet. Um dies zu beheben, wickeln Sie Echo-Anweisungen in Ihrem Shell-Profil ein, damit sie nur in interaktiven Shells ausgeführt werden:
 
 ```bash theme={null}
-# In ~/.zshrc oder ~/.bashrc
+# In ~/.zshrc or ~/.bashrc
 if [[ $- == *i* ]]; then
   echo "Shell ready"
 fi
 ```
 
-Die Variable `$-` enthält Shell-Flags, und `i` bedeutet interaktiv. Hooks werden in nicht-interaktiven Shells ausgeführt, sodass das Echo übersprungen wird.
+Die Variable `$-` enthält Shell-Flags, und `i` bedeutet interaktiv. Hooks werden in nicht-interaktiven Shells ausgeführt, daher wird das Echo übersprungen.
+
+Wenn Ihr Hook `permissionDecision` oder `additionalContext` auf der obersten Ebene statt in `hookSpecificOutput` zurückgibt, wird das JSON immer noch geparst, und Claude Code ignoriert die falsch platzierten Felder ohne Fehler zu melden. Um zu sehen, welche Felder ignoriert wurden, starten Sie Claude Code mit `claude --debug` und suchen Sie im [Debug-Protokoll](/docs/de/hooks#debug-hooks) nach `Hook JSON output had unrecognized keys`.
 
 <h3 id="debug-techniques">
   Debug-Techniken
 </h3>
 
-Die Transkript-Ansicht, umgeschaltet mit `Ctrl+O`, zeigt eine einzeilige Zusammenfassung für jeden Hook, der ausgelöst wurde: Erfolg ist stumm, Blockierungsfehler zeigen stderr, und Nicht-Blockierungsfehler zeigen eine `<hook name> hook error`-Meldung gefolgt von der ersten Zeile von stderr.
+Drücken Sie `Ctrl+O`, um die Transkript-Ansicht zu öffnen und das Ergebnis einer Hook-Ausführung zu überprüfen:
 
-Für vollständige Ausführungsdetails einschließlich welche Hooks abgeglichen wurden, ihrer Exit-Codes, stdout und stderr, lesen Sie das Debug-Protokoll. Starten Sie Claude Code mit `claude --debug-file /tmp/claude.log`, um in einen bekannten Pfad zu schreiben, dann `tail -f /tmp/claude.log` in einem anderen Terminal. Wenn Sie ohne dieses Flag gestartet haben, führen Sie `/debug` während der Sitzung aus, um Logging zu aktivieren und den Protokollpfad zu finden.
+* **Erfolgreiche Ausführung**: Sie sehen nichts, es sei denn, der Hook-JSON zeigt etwas an, wie `systemMessage` oder Stop Hook-Feedback.
+  * Um zu bestätigen, dass ein Hook ausgeführt wurde, überprüfen Sie auf seine Auswirkung, wie eine umformatierte Datei, oder aktivieren Sie Debug-Protokollierung wie unten beschrieben und lösen Sie den Hook erneut aus
+* **Blockierender Fehler**: Bei den meisten Ereignissen sehen Sie das Feedback des Hooks. Wenn das Hook-JSON eine blockierende Entscheidung getroffen hat, ist das Feedback der Grund aus dieser Entscheidung; andernfalls ist es der stderr des Hooks. Bei einigen Ereignissen, wie `ConfigChange` und `Elicitation`, wird ein Block nicht angezeigt.
+* **Nicht-blockierender Fehler**: Die Aktion wurde fortgesetzt, und Sie sehen eine Benachrichtigung `<hook name> hook error` mit einer kurzen Erklärung, wie die erste Zeile von stderr mit dem Präfix `Failed with non-blocking status code:` oder eine JSON-Validierungs- oder Parse-Meldung.
+
+Welche Exit-Code- und JSON-Kombinationen jedes Ergebnis erzeugen, einschließlich der ereignisspezifischen Ausnahmen, ist im Abschnitt [Exit code output](/docs/de/hooks#exit-code-output) der Referenz definiert.
+
+Für vollständige Ausführungsdetails, einschließlich welche Hooks übereinstimmten, ihre Exit-Codes, stdout und stderr, lesen Sie das Debug-Protokoll. Starten Sie Claude Code mit `claude --debug-file /tmp/claude.log`, um in einen bekannten Pfad zu schreiben, dann `tail -f /tmp/claude.log` in einem anderen Terminal. Wenn Sie ohne dieses Flag gestartet haben, führen Sie `/debug` während der Sitzung aus, um die Protokollierung zu aktivieren und den Protokollpfad zu finden.
 
 <h2 id="learn-more">
   Weitere Informationen

@@ -22,14 +22,14 @@
 
 必要なセッション処理の量は、アプリケーションの形状によって異なります。セッション管理は、コンテキストを共有する必要がある複数のプロンプトを送信する場合に関係します。単一の `query()` 呼び出し内では、エージェントは既に必要なだけのターンを実行し、権限プロンプトと `AskUserQuestion` は[ループ内で処理](/docs/ja/agent-sdk/user-input)されます（呼び出しを終了しません）。
 
-| 構築しているもの                                 | 使用するもの                                                                                                                    |
-| :--------------------------------------- | :------------------------------------------------------------------------------------------------------------------------ |
-| ワンショットタスク：単一プロンプト、フォローアップなし              | 追加は不要です。1 つの `query()` 呼び出しで処理されます。                                                                                       |
-| 1 つのプロセス内のマルチターンチャット                     | [`ClaudeSDKClient`（Python）または `continue: true`（TypeScript）](#automatic-session-management)。SDK はセッションを自動的に追跡し、ID 処理は不要です。 |
-| プロセス再起動後に中断したところから再開                     | `continue_conversation=True`（Python）/ `continue: true`（TypeScript）。ディレクトリ内の最新セッションを再開し、ID は不要です。                          |
-| 特定の過去のセッション（最新ではない）を再開                   | セッション ID をキャプチャして `resume` に渡します。                                                                                         |
-| 元のセッションを失わずに別のアプローチを試す                   | セッションをフォークします。                                                                                                            |
-| ステートレスタスク、ディスクに何も書き込みたくない（TypeScript のみ） | [`persistSession: false`](/docs/ja/agent-sdk/typescript#options)を設定します。セッションは呼び出しの期間中メモリにのみ存在します。Python は常にディスクに保持します。         |
+| 構築しているもの                    | 使用するもの                                                                                                                                                                                                            |
+| :-------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ワンショットタスク：単一プロンプト、フォローアップなし | 追加は不要です。1 つの `query()` 呼び出しで処理されます。                                                                                                                                                                               |
+| 1 つのプロセス内のマルチターンチャット        | [`ClaudeSDKClient`（Python）または `continue: true`（TypeScript）](#automatic-session-management)。SDK はセッションを自動的に追跡し、ID 処理は不要です。                                                                                         |
+| プロセス再起動後に中断したところから再開        | `continue_conversation=True`（Python）/ `continue: true`（TypeScript）。ディレクトリ内の最新セッションを再開し、ID は不要です。                                                                                                                  |
+| 特定の過去のセッション（最新ではない）を再開      | セッション ID をキャプチャして `resume` に渡します。                                                                                                                                                                                 |
+| 元のセッションを失わずに別のアプローチを試す      | セッションをフォークします。                                                                                                                                                                                                    |
+| ステートレスタスク、ディスクに何も書き込みたくない   | [`persistSession: false`](/docs/ja/agent-sdk/typescript#options)（TypeScript のみ）を設定します。セッションは呼び出しの期間中メモリにのみ存在します。Python では、代わりに `env` オプションで [`CLAUDE_CODE_SKIP_PROMPT_HISTORY`](/docs/ja/env-vars) を設定してトランスクリプト書き込みを抑制します。 |
 
 <h3 id="continue-resume-and-fork">
   Continue、resume、および fork
@@ -104,7 +104,9 @@ async def main():
 asyncio.run(main())
 ```
 
-Python SDK リファレンスの [ClaudeSDKClient とスタンドアロン `query()` 関数のどちらを使用するかについて](/docs/ja/agent-sdk/python#choosing-between-query-and-claudesdkclient)の詳細を参照してください。
+各クエリは、エージェントのテキスト応答の後に結果メッセージからのステータス行（例：`[done: success, cost: $0.0042]`）を出力します。
+
+[Python SDK リファレンス](/docs/ja/agent-sdk/python#choosing-between-query-and-claudesdkclient)で `ClaudeSDKClient` とスタンドアロン `query()` 関数のどちらを使用するかについての詳細を参照してください。
 
 <h3 id="typescript-continue-true">
   TypeScript：`continue: true`
@@ -118,13 +120,19 @@ TypeScript SDK には、Python の `ClaudeSDKClient` のようなセッション
 import { query } from "@anthropic-ai/claude-agent-sdk";
 
 // First query: creates a new session
-for await (const message of query({
-  prompt: "Analyze the auth module",
-  options: { allowedTools: ["Read", "Glob", "Grep"] }
-})) {
-  if (message.type === "result" && message.subtype === "success") {
-    console.log(message.result);
+try {
+  for await (const message of query({
+    prompt: "Analyze the auth module",
+    options: { allowedTools: ["Read", "Glob", "Grep"] }
+  })) {
+    if (message.type === "result" && message.subtype === "success") {
+      console.log(message.result);
+    }
   }
+} catch (error) {
+  // A single-shot query() throws after yielding an error result,
+  // so the follow-up query below still runs.
+  console.error(`Session ended with an error: ${error}`);
 }
 
 // Second query: continue: true resumes the most recent session
@@ -164,16 +172,22 @@ Resume と fork にはセッション ID が必要です。結果メッセージ
   async def main():
       session_id = None
 
-      async for message in query(
-          prompt="Analyze the auth module and suggest improvements",
-          options=ClaudeAgentOptions(
-              allowed_tools=["Read", "Glob", "Grep"],
-          ),
-      ):
-          if isinstance(message, ResultMessage):
-              session_id = message.session_id
-              if message.subtype == "success":
-                  print(message.result)
+      try:
+          async for message in query(
+              prompt="Analyze the auth module and suggest improvements",
+              options=ClaudeAgentOptions(
+                  allowed_tools=["Read", "Glob", "Grep"],
+              ),
+          ):
+              if isinstance(message, ResultMessage):
+                  session_id = message.session_id
+                  if message.subtype == "success":
+                      print(message.result)
+      except Exception as error:
+          # A single-shot query() raises after yielding an error result. If the
+          # failure was an error result, the loop above already captured session_id;
+          # connection or process failures yield no result message, so session_id stays None.
+          print(f"Session ended with an error: {error}")
 
       print(f"Session ID: {session_id}")
       return session_id
@@ -187,21 +201,30 @@ Resume と fork にはセッション ID が必要です。結果メッセージ
 
   let sessionId: string | undefined;
 
-  for await (const message of query({
-    prompt: "Analyze the auth module and suggest improvements",
-    options: { allowedTools: ["Read", "Glob", "Grep"] }
-  })) {
-    if (message.type === "result") {
-      sessionId = message.session_id;
-      if (message.subtype === "success") {
-        console.log(message.result);
+  try {
+    for await (const message of query({
+      prompt: "Analyze the auth module and suggest improvements",
+      options: { allowedTools: ["Read", "Glob", "Grep"] }
+    })) {
+      if (message.type === "result") {
+        sessionId = message.session_id;
+        if (message.subtype === "success") {
+          console.log(message.result);
+        }
       }
     }
+  } catch (error) {
+    // A single-shot query() throws after yielding an error result. If the
+    // failure was an error result, the loop above already captured sessionId;
+    // connection or process failures yield no result message, so sessionId stays undefined.
+    console.error(`Session ended with an error: ${error}`);
   }
 
   console.log(`Session ID: ${sessionId}`);
   ```
 </CodeGroup>
+
+クエリが完了すると、スクリプトはエージェントの応答と、`Session ID: 5b3f2c1a-8d4e-4f6b-9a7c-2e1d0f9b8a6c` のような行を出力します。次のセクションでは、この ID を `resume` に渡します。
 
 <h3 id="resume-by-id">
   ID で再開する
@@ -210,23 +233,33 @@ Resume と fork にはセッション ID が必要です。結果メッセージ
 セッション ID を `resume` に渡して、その特定のセッションに戻ります。エージェントはセッションが終了した場所から完全なコンテキストで再開します。再開の一般的な理由：
 
 * **完了したタスクをフォローアップします。** エージェントは既に何かを分析しました。今、ファイルを再度読み込まずにその分析に基づいて行動してほしいです。
-* **制限から回復します。** 最初の実行は `error_max_turns` または `error_max_budget_usd` で終了しました（[結果を処理する](/docs/ja/agent-sdk/agent-loop#handle-the-result)を参照）。より高い制限で再開します。
+* **制限から回復します。** 最初の実行は `error_max_turns` または `error_max_budget_usd` で終了しました（[結果を処理する](/docs/ja/agent-sdk/agent-loop#handle-the-result)を参照）。より高い制限で再開します。単一ショットの `query()` 呼び出しでは、SDK はそのエラー結果を生成した後に発生するため、再開する前にエラーをキャッチします。
 * **プロセスを再起動します。** シャットダウン前に ID をキャプチャし、会話を復元したいです。
 
 この例は、[セッション ID をキャプチャする](#capture-the-session-id)からのセッションをフォローアッププロンプトで再開します。再開しているため、エージェントは既に以前の分析をコンテキストに持っています：
 
 <CodeGroup>
   ```python Python theme={null}
-  # Earlier session analyzed the code; now build on that analysis
-  async for message in query(
-      prompt="Now implement the refactoring you suggested",
-      options=ClaudeAgentOptions(
-          resume=session_id,
-          allowed_tools=["Read", "Edit", "Write", "Glob", "Grep"],
-      ),
-  ):
-      if isinstance(message, ResultMessage) and message.subtype == "success":
-          print(message.result)
+  import asyncio
+  from claude_agent_sdk import query, ClaudeAgentOptions, ResultMessage
+
+  session_id = "..."  # The ID you captured in the previous example
+
+
+  async def main():
+      # Earlier session analyzed the code; now build on that analysis
+      async for message in query(
+          prompt="Now implement the refactoring you suggested",
+          options=ClaudeAgentOptions(
+              resume=session_id,
+              allowed_tools=["Read", "Edit", "Write", "Glob", "Grep"],
+          ),
+      ):
+          if isinstance(message, ResultMessage) and message.subtype == "success":
+              print(message.result)
+
+
+  asyncio.run(main())
   ```
 
   ```typescript TypeScript theme={null}
@@ -252,7 +285,18 @@ Resume と fork にはセッション ID が必要です。結果メッセージ
 以前の分析に基づいて構築された応答が表示されるはずです。これにより、エージェントが以前のコンテキストを保持したままセッションを再開したことが確認されます。
 
 <Tip>
-  `resume` 呼び出しが予期された履歴ではなく新しいセッションを返す場合、最も一般的な原因は `cwd` の不一致です。セッションは `~/.claude/projects/<encoded-cwd>/*.jsonl` に保存されます。または、`CLAUDE_CONFIG_DIR` 環境変数を設定した場合は `$CLAUDE_CONFIG_DIR/projects/<encoded-cwd>/*.jsonl` に保存されます。ここで `<encoded-cwd>` は、すべての英数字以外の文字が `-` に置き換えられた絶対作業ディレクトリです（したがって `/Users/me/proj` は `-Users-me-proj` になります）。resume 呼び出しが別のディレクトリから実行される場合、SDK は間違った場所を探します。セッションファイルも現在のマシンに存在する必要があります。
+  Claude Code はセッションを `~/.claude/projects/<encoded-cwd>/*.jsonl` に保存します。`CLAUDE_CONFIG_DIR` 環境変数を設定した場合は、代わりに `$CLAUDE_CONFIG_DIR/projects/` の下を確認してください。
+
+  セッションのディレクトリを見つけるには、絶対作業ディレクトリ内のすべての英数字以外の文字を `-` に置き換えます。`/Users/me/proj` は `-Users-me-proj` になります。変換された名前が 200 文字を超える作業ディレクトリの場合、Claude Code は[名前を切り詰めてハッシュを追加](/docs/ja/sessions#where-transcripts-are-stored)するため、`projects/` をリストするときに変換された名前の最初の 200 文字と一致させます。
+
+  `CLAUDE_CONFIG_DIR` の横に [`CLAUDE_CODE_PROJECT_DIR_NAME`](/docs/ja/sessions#name-the-project-directory-yourself) を設定した場合は、代わりに `projects/` 内のその名前を確認してください。TypeScript Agent SDK v0.3.234 以降、または Python Agent SDK v0.2.140 以降が必要です。
+
+  任意の作業ディレクトリからセッションを再開できます：
+
+  * **クロスディレクトリルックアップ**：Claude Code は現在のプロジェクトディレクトリを超えて ID を検索します。正確なルックアップ順序と重複コピーの処理方法については、[セッションを再開する](/docs/ja/sessions#resume-a-session)を参照してください。
+  * **同じマシンのみ**：セッションファイルは現在のマシンに存在する必要があります。
+
+  v2.1.223 より前では、ルックアップは現在のプロジェクトディレクトリとその git worktrees にスコープされていました。古い CLI をバンドルする SDK バージョンはこのように動作します。
 </Tip>
 
 マシン間またはサーバーレス環境でセッションを再開するには、[`SessionStore` アダプター](/docs/ja/agent-sdk/session-storage)を使用して共有ストレージにトランスクリプトをミラーリングします。
@@ -271,30 +315,50 @@ Resume と fork にはセッション ID が必要です。結果メッセージ
 
 <CodeGroup>
   ```python Python theme={null}
-  # Fork: branch from session_id into a new session
-  forked_id = None
-  async for message in query(
-      prompt="Instead of JWT, outline how OAuth2 would work for the auth module",
-      options=ClaudeAgentOptions(
-          resume=session_id,
-          fork_session=True,
-          max_turns=5,
-      ),
-  ):
-      if isinstance(message, ResultMessage):
-          forked_id = message.session_id  # The fork's ID, distinct from session_id
-          if message.subtype == "success":
-              print(message.result)
+  import asyncio
+  from claude_agent_sdk import query, ClaudeAgentOptions, ResultMessage
 
-  print(f"Forked session: {forked_id}")
+  session_id = "..."  # The ID you captured in the previous example
 
-  # Original session is untouched; resuming it continues the JWT thread
-  async for message in query(
-      prompt="Continue with the JWT approach",
-      options=ClaudeAgentOptions(resume=session_id),
-  ):
-      if isinstance(message, ResultMessage) and message.subtype == "success":
-          print(message.result)
+
+  async def main():
+      # Fork: branch from session_id into a new session
+      forked_id = None
+      try:
+          async for message in query(
+              prompt="Instead of JWT, outline how OAuth2 would work for the auth module",
+              options=ClaudeAgentOptions(
+                  resume=session_id,
+                  fork_session=True,
+                  max_turns=5,
+              ),
+          ):
+              if isinstance(message, ResultMessage):
+                  forked_id = message.session_id  # The fork's ID, distinct from session_id
+                  if message.subtype == "success":
+                      print(message.result)
+      except Exception as error:
+          # A single-shot query() raises after yielding an error result. If the
+          # failure was an error result, forked_id was already captured by the
+          # loop above; connection or process failures yield no result message.
+          print(f"Session ended with an error: {error}")
+
+      print(f"Forked session: {forked_id}")
+
+      # Original session is untouched; resuming it continues the JWT thread
+      try:
+          async for message in query(
+              prompt="Continue with the JWT approach",
+              options=ClaudeAgentOptions(resume=session_id),
+          ):
+              if isinstance(message, ResultMessage) and message.subtype == "success":
+                  print(message.result)
+      except Exception as error:
+          # A single-shot query() raises after yielding an error result.
+          print(f"Session ended with an error: {error}")
+
+
+  asyncio.run(main())
   ```
 
   ```typescript TypeScript theme={null}
@@ -305,32 +369,44 @@ Resume と fork にはセッション ID が必要です。結果メッセージ
   // Fork: branch from sessionId into a new session
   let forkedId: string | undefined;
 
-  for await (const message of query({
-    prompt: "Instead of JWT, outline how OAuth2 would work for the auth module",
-    options: {
-      resume: sessionId,
-      forkSession: true,
-      maxTurns: 5
+  try {
+    for await (const message of query({
+      prompt: "Instead of JWT, outline how OAuth2 would work for the auth module",
+      options: {
+        resume: sessionId,
+        forkSession: true,
+        maxTurns: 5
+      }
+    })) {
+      if (message.type === "system" && message.subtype === "init") {
+        forkedId = message.session_id; // The fork's ID, distinct from sessionId
+      }
+      if (message.type === "result" && message.subtype === "success") {
+        console.log(message.result);
+      }
     }
-  })) {
-    if (message.type === "system" && message.subtype === "init") {
-      forkedId = message.session_id; // The fork's ID, distinct from sessionId
-    }
-    if (message.type === "result" && message.subtype === "success") {
-      console.log(message.result);
-    }
+  } catch (error) {
+    // A single-shot query() throws after yielding an error result. If the
+    // failure was an error result, forkedId was already captured by the loop
+    // above; connection or process failures yield no result message.
+    console.error(`Session ended with an error: ${error}`);
   }
 
   console.log(`Forked session: ${forkedId}`);
 
   // Original session is untouched; resuming it continues the JWT thread
-  for await (const message of query({
-    prompt: "Continue with the JWT approach",
-    options: { resume: sessionId }
-  })) {
-    if (message.type === "result" && message.subtype === "success") {
-      console.log(message.result);
+  try {
+    for await (const message of query({
+      prompt: "Continue with the JWT approach",
+      options: { resume: sessionId }
+    })) {
+      if (message.type === "result" && message.subtype === "success") {
+        console.log(message.result);
+      }
     }
+  } catch (error) {
+    // A single-shot query() throws after yielding an error result.
+    console.error(`Session ended with an error: ${error}`);
   }
   ```
 </CodeGroup>
@@ -341,9 +417,14 @@ Resume と fork にはセッション ID が必要です。結果メッセージ
   ホスト間で再開する
 </h2>
 
-セッションファイルは、それを作成したマシンに対してローカルです。別のホスト（CI ワーカー、一時的なコンテナ、サーバーレス）でセッションを再開するには、2 つのオプションがあります：
+セッションファイルは、それを作成したマシンに対してローカルです。別のホスト（CI ワーカー、一時的なコンテナ、サーバーレス）でセッションを再開するには、適切なアプローチを選択してください：
 
-* **セッションファイルを移動します。** 最初の実行から `~/.claude/projects/<encoded-cwd>/<session-id>.jsonl` を保持し、`resume` を呼び出す前に新しいホスト上の同じパスに復元します。`cwd` は一致する必要があります。
+* **セッションストアを渡します。** [`sessionStore` / `session_store` アダプター](/docs/ja/agent-sdk/session-storage)を接続して、SDK がトランスクリプトを独自のバックエンドにミラーリングし、別のホストがそれらを再開できるようにします。ストア検索キーは作業ディレクトリから派生するため、元の実行の `cwd` と一致する `cwd` から再開してください。
+
+* **セッションファイルを移動します。** 最初の実行から `~/.claude/projects/<encoded-cwd>/<session-id>.jsonl` を保持し、`resume` を呼び出す前に新しいホスト上の `~/.claude/projects/` の下の任意のディレクトリ内に復元します。
+
+  Claude Code は現在のプロジェクトディレクトリを超えて検索して ID を見つけます。正確な検索順序と重複コピーの処理方法については、[セッションを再開する](/docs/ja/sessions#resume-a-session)を参照してください。v2.1.223 より前では、検索は現在のプロジェクトディレクトリとその git worktrees にスコープされていました。古い CLI をバンドルする SDK バージョンは引き続きこのように動作します。
+
 * **セッション再開に依存しないでください。** 必要な結果（分析出力、決定、ファイル差分）をアプリケーション状態としてキャプチャし、新しいセッションのプロンプトに渡します。これは多くの場合、トランスクリプトファイルを周りに配送するよりも堅牢です。
 
 両方の SDK は、ディスク上のセッションを列挙し、メッセージを読み取るための関数を公開します。TypeScript では [`listSessions()`](/docs/ja/agent-sdk/typescript#listsessions) と [`getSessionMessages()`](/docs/ja/agent-sdk/typescript#getsessionmessages)、Python では [`list_sessions()`](/docs/ja/agent-sdk/python#list_sessions) と [`get_session_messages()`](/docs/ja/agent-sdk/python#get_session_messages)。これらを使用して、カスタムセッションピッカー、クリーンアップロジック、またはトランスクリプトビューアーを構築します。

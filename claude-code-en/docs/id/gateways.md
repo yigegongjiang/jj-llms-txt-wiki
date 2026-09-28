@@ -21,7 +21,7 @@ Halaman ini mencakup:
   How a gateway works
 </h2>
 
-Setiap Claude Code pengembang ditunjukkan ke alamat gateway dan melakukan autentikasi dengan kredensial yang dikeluarkan gateway.
+Setiap Claude Code pengembang mengirimkan permintaannya ke alamat gateway dan melakukan autentikasi dengan kredensial yang dikeluarkan gateway.
 
 Gateway melakukan autentikasi pengembang, menerapkan aturan akses dan anggaran apa pun yang Anda konfigurasikan, dan meneruskan permintaan ke penyedia Anda dengan kredensial organisasi. Penyedia dapat berupa API Anthropic atau [penyedia cloud](/docs/id/third-party-integrations) seperti Amazon Bedrock, Agent Platform Google Cloud, atau Microsoft Foundry; konfigurasi gateway memutuskan. Dengan Claude apps gateway, atau gateway lain yang mengekspos titik akhir format Anthropic tunggal, mengubah penyedia tidak memerlukan menyentuh mesin pengembang.
 
@@ -44,7 +44,7 @@ Claude Code bekerja dengan gateway Anthropic sendiri atau dengan gateway yang su
   Claude apps gateway
 </h3>
 
-Claude apps gateway adalah gateway yang di-host sendiri milik Anthropic, disertakan dalam biner `claude`. Ini merutekan ke Amazon Bedrock, Claude Platform on AWS, Google Cloud, Microsoft Foundry, atau API Anthropic sebagai upstream. Pengembang masuk dengan penyedia identitas perusahaan Anda melalui `/login`, gateway memberlakukan akses model dan [pengaturan terkelola](/docs/id/permissions#managed-settings) berdasarkan grup IdP, dan memancarkan metrik penggunaan [OpenTelemetry Protocol (OTLP)](/docs/id/monitoring-usage) ke tumpukan observabilitas Anda sendiri.
+Claude apps gateway adalah gateway yang di-host sendiri milik Anthropic, disertakan dalam biner `claude`. Ini merutekan ke Amazon Bedrock, Claude Platform on AWS, Google Cloud, Microsoft Foundry, atau API Anthropic sebagai upstream. Pengembang masuk dengan penyedia identitas perusahaan Anda melalui `/login`, gateway memberlakukan akses model dan [pengaturan terkelola](/docs/id/managed-settings) berdasarkan grup IdP, dan memancarkan metrik penggunaan [OpenTelemetry Protocol (OTLP)](/docs/id/monitoring-usage) ke tumpukan observabilitas Anda sendiri.
 
 Karena dibangun dan diuji bersama setiap rilis Claude Code, ia meneruskan header dan bidang permintaan yang dikirim Claude Code. Gateway yang dipertahankan secara terpisah memerlukan [aturan penerusan diperbarui](/docs/id/llm-gateway-protocol#forward-as-open-lists) karena header dan bidang tersebut berubah dengan setiap rilis; Claude apps gateway dirilis dengan CLI, jadi tidak ada daftar untuk tetap terkini. Lihat [Ketersediaan dan keterbatasan](/docs/id/claude-apps-gateway#availability-and-limitations) untuk set kecil fitur yang berperilaku berbeda pada sesi gateway.
 
@@ -73,14 +73,17 @@ Pengecualiannya adalah menetapkan hanya `ANTHROPIC_BASE_URL`, tanpa kredensial g
 Gateway merutekan permintaan API model. Beberapa hal yang mungkin Anda harapkan untuk ditangani dikonfigurasi di tempat lain:
 
 * **Model mana yang menjawab**: pilih model dengan perintah `/model` atau [variabel lingkungan model](/docs/id/model-config#setting-your-model). Gateway memutuskan ke mana permintaan pergi, bukan model mana yang dipilih pengembang. Claude apps gateway dapat membatasi pilihan dengan daftar izin `availableModels` per-grup, tetapi pengembang masih memilih di dalamnya.
-* **Lalu lintas jaringan lainnya**: Claude Code sendiri mengirimkan pemeriksaan versi dan unduhan langsung ke Anthropic, terpisah dari jalur gateway. Apakah aliran telemetri klien opsional juga aktif tergantung pada penyedia Anda; [tabel default telemetri](/docs/id/data-usage#telemetry-services) mencakup setiap kasus. Pada sesi Claude apps gateway yang masuk, kredensial gateway menonaktifkan analitik terikat Anthropic dan, ketika [penerusan telemetri](/docs/id/claude-apps-gateway-config#telemetry) dikonfigurasi, menyematkan ekspor OTLP ke gateway. Jaringan Anda masih memerlukan egress ke [domain yang diperlukan](/docs/id/network-config), atau atur [`CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`](/docs/id/env-vars) untuk mematikan aliran opsional.
+* **Lalu lintas jaringan lainnya**: Claude Code sendiri mengirimkan pemeriksaan versi dan unduhan langsung ke Anthropic, terpisah dari jalur gateway. Jaringan Anda masih memerlukan egress ke [domain yang diperlukan](/docs/id/network-config), atau atur [`CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`](/docs/id/env-vars) untuk mematikan aliran opsional.
+* **Telemetri klien**: Claude Code menonaktifkan analitik klien terikat Anthropic ketika sesi masuk ke Claude apps gateway. Untuk menjaga analitik startup pra-masuk tetap mati juga, berikan [`DISABLE_TELEMETRY`](/docs/id/managed-settings#turn-telemetry-off-for-your-organization) dalam [pengaturan terkelola sisi klien](/docs/id/claude-apps-gateway-config#client-side-managed-settings) di setiap perangkat.
+* **Telemetri klien di gateway lain**: apakah Claude Code mengirimkan aliran telemetri klien opsional tergantung pada penyedia Anda, dan [tabel default telemetri](/docs/id/data-usage#default-behaviors-by-api-provider) mencakup setiap kasus.
+* **Tujuan telemetri**: ke mana Claude Code mengirimkan telemetri sesi gateway tergantung pada cara sesi masuk, dan [What's enforced on developers](/docs/id/claude-apps-gateway#whats-enforced-on-developers) mengatakan ke mana ekspor setiap jenis sesi pergi.
 * **Proxy HTTP perusahaan**: `HTTPS_PROXY` berada di antara Claude Code dan setiap server yang dibicarakannya, termasuk gateway. Jika jaringan Anda memerlukan satu, [konfigurasikan proxy](/docs/id/network-config) selain gateway. Untuk Claude apps gateway yang Anda hosting, [masuk memeriksa bahwa host proxy juga berada di jaringan pribadi](/docs/id/claude-apps-gateway#prerequisites); jika tidak, tambahkan host gateway ke `NO_PROXY` sehingga CLI terhubung langsung ke sana.
 
 <h2 id="next-steps">
   Next steps
 </h2>
 
-Halaman berikutnya tergantung pada siapa yang menjalankan gateway. Gateway Anthropic berjalan dari biner `claude` dan memiliki panduan pengaturannya sendiri; gateway yang sudah dijalankan organisasi Anda memiliki protokol untuk diimplementasikan dan daftar periksa peluncuran admin.
+Halaman berikutnya tergantung pada siapa yang menjalankan gateway. Gateway Anthropic berjalan dari biner `claude` dan memiliki panduan pengaturannya sendiri; gateway yang sudah dijalankan organisasi Anda memiliki panduan kompatibilitas untuk diikuti dan daftar periksa peluncuran admin.
 
 * [Claude apps gateway](/docs/id/claude-apps-gateway) untuk menerapkan gateway yang di-host sendiri Anthropic dengan masuk SSO dan telemetri OTLP
 * [Other LLM gateways](/docs/id/llm-gateway) untuk apa yang harus diimplementasikan gateway yang sudah dijalankan organisasi Anda, dan cara menunjukkan Claude Code ke sana

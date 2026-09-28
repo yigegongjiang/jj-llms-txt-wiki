@@ -188,7 +188,9 @@ export const Experiment = ({flag, treatment, children}) => {
 
 <Experiment flag="docs-contact-sales-cta" treatment={<ContactSalesCard surface="claude_platform_on_aws" />} />
 
-Claude Platform on AWS adalah Claude API yang dioperasikan Anthropic dengan autentikasi AWS, kontrol akses IAM, dan penagihan AWS Marketplace. Permintaan mencapai API Anthropic secara langsung, sehingga Anda mendapatkan model dan fitur API yang sama seperti [Claude API](https://platform.claude.com/docs) dengan jadwal rilis yang sama. Fitur sisi klien yang Claude Code aktifkan melalui layanan feature-flag Anthropic, seperti [`/loop` pacing mandiri](/docs/id/scheduled-tasks#let-claude-choose-the-interval), dimatikan secara default, dan [alat advisor](/docs/id/advisor) tidak tersedia. Lihat [matriks ketersediaan fitur](/docs/id/feature-availability#summary-by-provider) untuk daftar lengkapnya. Anda melakukan autentikasi dengan kredensial AWS atau kunci API workspace, dan Anda membayar melalui AWS Marketplace.
+Claude Platform on AWS adalah Claude API yang dioperasikan Anthropic dengan autentikasi AWS, kontrol akses IAM, dan penagihan AWS Marketplace. Permintaan mencapai API Anthropic secara langsung, sehingga Anda mendapatkan model dan fitur API yang sama seperti [Claude API](https://platform.claude.com/docs) dengan jadwal rilis yang sama. Fitur sisi klien yang Claude Code aktifkan melalui layanan feature-flag Anthropic dimatikan secara default, dan [alat advisor](/docs/id/advisor) tidak tersedia. Lihat [matriks ketersediaan fitur](/docs/id/feature-availability#summary-by-provider) untuk daftar lengkapnya.
+
+Anda melakukan autentikasi dengan kredensial AWS atau kunci API workspace, dan Anda membayar melalui AWS Marketplace.
 
 Gunakan panduan ini untuk mengarahkan Claude Code ke workspace yang telah Anda sediakan melalui Claude Platform on AWS. Untuk langganan AWS dan penyiapan workspace yang dilakukan sebelumnya, lihat [dokumentasi Claude Platform on AWS](https://platform.claude.com/docs/en/build-with-claude/claude-platform-on-aws).
 
@@ -230,7 +232,7 @@ export AWS_PROFILE=my-profile
 
 Untuk CI dan otomasi, berikan runner peran IAM dengan izin untuk memanggil layanan Anthropic dan atur `AWS_REGION`. Rantai kredensial mengambil peran secara otomatis.
 
-Jika kredensial SSO Anda kedaluwarsa di tengah sesi, konfigurasi [`awsAuthRefresh`](/docs/id/amazon-bedrock#advanced-credential-configuration) sehingga Claude Code menjalankan kembali perintah login Anda dan mencoba lagi alih-alih gagal. Penyegaran otomatis pada Claude Platform on AWS memerlukan Claude Code v2.1.198 atau lebih baru; versi sebelumnya berhenti dengan prompt untuk menjalankan `/login`, yang tidak dapat menyegarkan kredensial AWS. Tambahkan perintah ke `settings.json` Anda:
+Jika kredensial SSO Anda kedaluwarsa di tengah sesi, konfigurasi [`awsAuthRefresh`](/docs/id/amazon-bedrock#advanced-credential-configuration) sehingga Claude Code menjalankan kembali perintah login Anda dan mencoba lagi alih-alih gagal. Penyegaran otomatis pada Claude Platform on AWS memerlukan Claude Code v2.1.198 atau lebih baru; versi sebelumnya berhenti dengan prompt untuk menjalankan `/login`, yang tidak dapat menyegarkan kredensial AWS. Tambahkan perintah ke [file pengaturan](/docs/id/settings) Anda, seperti `~/.claude/settings.json`:
 
 ```json theme={null}
 {
@@ -238,7 +240,9 @@ Jika kredensial SSO Anda kedaluwarsa di tengah sesi, konfigurasi [`awsAuthRefres
 }
 ```
 
-Dengan `awsAuthRefresh` dikonfigurasi, `/login` menampilkan opsi **Claude Platform on AWS · refresh credentials** di bawah **Using 3rd-party platforms**. Memilihnya menjalankan perintah yang dikonfigurasi dan membaca ulang kredensial AWS Anda tanpa memulai ulang Claude Code.
+Claude Code juga menjalankan perintah ini saat startup ketika tidak dapat memvalidasi kredensial AWS yang ada, dan menampilkan output perintah di panel `Authentication` hingga login selesai.
+
+Dengan `awsAuthRefresh` dikonfigurasi, jalankan `/login`, pilih **platform pihak ketiga**, kemudian pilih **Claude Platform on AWS · refresh credentials** di bawah **Using 3rd-party platforms**. Claude Code menjalankan perintah yang dikonfigurasi dan membaca ulang kredensial AWS Anda tanpa restart.
 
 **Opsi B: Kunci API Workspace**
 
@@ -253,7 +257,7 @@ Kunci dikirim sebagai `x-api-key` dan mengambil prioritas atas SigV4, sehingga k
 Perlakukan kunci API workspace seperti kredensial produksi lainnya. Blok `env` [file pengaturan pengguna](/docs/id/settings) adalah cara yang nyaman untuk membatasi kunci ke mesin Anda tanpa mengekspornya secara global.
 
 <Note>
-  Perintah `/login` dan `/logout` tidak menandatangani Anda ke langganan Claude.ai untuk Claude Platform on AWS. Autentikasi berjalan melalui kredensial AWS Anda atau kunci API workspace. Pengecualiannya adalah opsi **refresh credentials** yang ditampilkan `/login` ketika `awsAuthRefresh` dikonfigurasi, yang membaca ulang kredensial AWS Anda seperti yang dijelaskan di atas.
+  Perintah `/login` dan `/logout` tidak menandatangani Anda ke langganan Claude.ai untuk Claude Platform on AWS. Autentikasi berjalan melalui kredensial AWS Anda atau kunci API workspace.
 </Note>
 
 <h3 id="2-configure-claude-code">
@@ -268,7 +272,9 @@ export ANTHROPIC_AWS_WORKSPACE_ID=wrkspc_01ABCDEFGHIJKLMN
 export AWS_REGION=us-east-1
 ```
 
-`ANTHROPIC_AWS_WORKSPACE_ID` diperlukan dan dikirim pada setiap permintaan sebagai header `anthropic-workspace-id`. URL dasar dihitung dari `AWS_REGION` sebagai `https://aws-external-anthropic.{region}.api.aws`. Untuk mengganti URL secara langsung, atur `ANTHROPIC_AWS_BASE_URL`.
+`ANTHROPIC_AWS_WORKSPACE_ID` diperlukan. Claude Code mengirimnya pada setiap permintaan sebagai header `anthropic-workspace-id`. Ganti nilai contoh `wrkspc_01ABCDEFGHIJKLMN` dengan ID workspace Anda sendiri dari penyiapan Claude Platform on AWS Anda.
+
+Claude Code menghitung URL dasar sebagai `https://aws-external-anthropic.{region}.api.aws` dari wilayah AWS, yang diselesaikannya dengan [prioritas yang sama seperti Amazon Bedrock](/docs/id/amazon-bedrock#3-configure-claude-code). Untuk mengganti URL secara langsung, atur `ANTHROPIC_AWS_BASE_URL`.
 
 Claude Platform on AWS bersifat opt-in bahkan ketika kredensial AWS ada di lingkungan Anda. Amazon Bedrock dan Microsoft Foundry mengambil prioritas dalam perutean penyedia, jadi batalkan `CLAUDE_CODE_USE_BEDROCK` dan `CLAUDE_CODE_USE_FOUNDRY` jika diatur.
 
@@ -278,7 +284,7 @@ Claude Platform on AWS bersifat opt-in bahkan ketika kredensial AWS ada di lingk
 
 Claude Platform on AWS menggunakan ID model yang sama seperti Claude API langsung.
 
-Alias default `fable`, `opus`, `sonnet`, dan `haiku` diselesaikan ke default bawaan Claude Code untuk Claude Platform on AWS, yang dapat tertinggal dari rilis terbaru. Tanpa `ANTHROPIC_DEFAULT_OPUS_MODEL`, alias `opus` diselesaikan ke Opus 4.8. Sebelum v2.1.207, alias tersebut diselesaikan ke Opus 4.7.
+Alias default `fable`, `opus`, `sonnet`, dan `haiku` diselesaikan ke default bawaan Claude Code untuk Claude Platform on AWS, yang dapat tertinggal dari rilis terbaru. Tanpa `ANTHROPIC_DEFAULT_OPUS_MODEL`, alias `opus` diselesaikan ke Opus 5.5. Sebelum v2.1.280, alias tersebut diselesaikan ke Opus 5 dari v2.1.219, ke Opus 4.8 dari v2.1.207, dan ke Opus 4.7 sebelum itu.
 
 Jika Anda menerapkan Claude Code ke tim, sematkan ID model secara eksplisit sehingga rilis baru tidak memindahkan semua orang sekaligus:
 
@@ -292,6 +298,20 @@ export ANTHROPIC_DEFAULT_HAIKU_MODEL=claude-haiku-4-5
 Untuk daftar lengkap ID model dan alias, lihat [Models overview](https://platform.claude.com/docs/en/about-claude/models/overview). Untuk variabel terkait model lainnya, lihat [Model configuration](/docs/id/model-config).
 
 [Prompt caching](/docs/id/prompt-caching) diaktifkan secara otomatis. Untuk meminta TTL cache 1 jam alih-alih default 5 menit, atur `ENABLE_PROMPT_CACHING_1H=1`. API menagih penulisan cache 1 jam dengan tarif lebih tinggi. Lihat [prompt caching pricing](https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing) untuk tarifnya.
+
+Untuk menetapkan TTL berbeda untuk percakapan utama Anda dan untuk permintaan yang Claude Code buat di luar percakapan tersebut, [pilih TTL sendiri](/docs/id/prompt-caching#choose-the-ttl-yourself).
+
+<h3 id="4-launch-and-verify">
+  4. Luncurkan dan verifikasi
+</h3>
+
+Mulai Claude Code dan konfirmasi perutean:
+
+```bash theme={null}
+claude
+```
+
+Spanduk startup menampilkan `Claude Platform on AWS` ketika penyedia aktif. Jalankan `/status` untuk memeriksa detail: baris `API provider` membaca `Claude Platform on AWS`, dan output mencakup `Workspace ID` Anda, `AWS region`, dan `Claude Platform on AWS base URL` jika Anda menetapkan penggantian.
 
 <h2 id="use-the-agent-sdk">
   Gunakan Agent SDK
@@ -352,7 +372,7 @@ Jika Anda menetapkan `ANTHROPIC_AWS_API_KEY`, kunci mengambil prioritas atas Sig
   Permintaan gagal dengan kesalahan workspace yang hilang
 </h3>
 
-`ANTHROPIC_AWS_WORKSPACE_ID` kemungkinan besar tidak diatur atau kosong. Setiap permintaan Claude Platform on AWS harus menyertakan ID workspace. Ini tidak tersirat oleh kredensial AWS Anda. Temukan ID di bawah **Workspaces** pada halaman layanan AWS Console dan ekspor sebelum memulai Claude Code.
+`ANTHROPIC_AWS_WORKSPACE_ID` kemungkinan besar tidak diatur atau kosong. Setiap permintaan Claude Platform on AWS harus menyertakan ID workspace. Ini tidak tersirat oleh kredensial AWS Anda. Temukan ID di setup Claude Platform on AWS Anda dan ekspor sebelum memulai Claude Code.
 
 <h3 id="requests-still-go-to-api-anthropic-com">
   Permintaan masih pergi ke `api.anthropic.com`

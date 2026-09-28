@@ -6,7 +6,9 @@
 
 > Entenda o ciclo de vida das mensagens, execução de ferramentas, janela de contexto e arquitetura que alimentam seus agentes SDK.
 
-O Agent SDK permite que você incorpore o loop do agente autônomo do Claude Code em suas próprias aplicações. O SDK é um pacote independente que oferece controle programático sobre ferramentas, permissões, limites de custo e saída. Você não precisa ter o CLI do Claude Code instalado para usá-lo.
+O Agent SDK permite que você incorpore o loop do agente autônomo do Claude Code em suas próprias aplicações. O SDK é um pacote independente que oferece controle programático sobre ferramentas, permissões, limites de custo e saída.
+
+Tanto os SDKs TypeScript quanto Python incluem um binário nativo do Claude Code, portanto a maioria das instalações não precisa de uma instalação separada do Claude Code. Consulte a [nota de instalação do quickstart](/docs/pt/agent-sdk/quickstart) para as instalações que precisam.
 
 Quando você inicia um agente, o SDK executa o mesmo [loop de execução que alimenta o Claude Code](/docs/pt/how-claude-code-works#the-agentic-loop): Claude avalia seu prompt, chama ferramentas para agir, recebe os resultados e repete até que a tarefa seja concluída. Esta página explica o que acontece dentro desse loop para que você possa construir, depurar e otimizar seus agentes de forma eficaz.
 
@@ -16,10 +18,12 @@ Quando você inicia um agente, o SDK executa o mesmo [loop de execução que ali
 
 Cada sessão de agente segue o mesmo ciclo:
 
-<img src="https://mintcdn.com/claude-code/ikqp3_70mqIahteV/images/agent-loop-diagram.svg?fit=max&auto=format&n=ikqp3_70mqIahteV&q=85&s=1c6e8f28d80dba14a7287419656f1237" alt="Diagrama do loop do agente: seu prompt entra no loop agentic, onde Claude avalia e solicita chamadas de ferramentas, cujos resultados retornam para outra avaliação, ou retorna a resposta final" width="720" height="212" data-path="images/agent-loop-diagram.svg" />
+<img src="https://mintcdn.com/claude-code/ikqp3_70mqIahteV/images/agent-loop-diagram.svg?fit=max&auto=format&n=ikqp3_70mqIahteV&q=85&s=1c6e8f28d80dba14a7287419656f1237" className="dark:hidden" alt="Diagrama do loop do agente: seu prompt entra no loop agentic, onde Claude avalia e solicita chamadas de ferramentas, cujos resultados retornam para outra avaliação, ou retorna a resposta final" width="720" height="212" data-path="images/agent-loop-diagram.svg" />
+
+<img src="https://mintcdn.com/claude-code/_xqph1dUOslCOwsj/images/agent-loop-diagram-dark.svg?fit=max&auto=format&n=_xqph1dUOslCOwsj&q=85&s=afe723c52a324d3c61fa72fb02432ab6" className="hidden dark:block" alt="Diagrama do loop do agente: seu prompt entra no loop agentic, onde Claude avalia e solicita chamadas de ferramentas, cujos resultados retornam para outra avaliação, ou retorna a resposta final" width="720" height="212" data-path="images/agent-loop-diagram-dark.svg" />
 
 1. **Receber prompt.** Claude recebe seu prompt, junto com o prompt do sistema, definições de ferramentas e histórico de conversa. O SDK produz uma [`SystemMessage`](#message-types) com subtipo `"init"` contendo metadados da sessão.
-2. **Avaliar e responder.** Claude avalia o estado atual e determina como proceder. Pode responder com texto, solicitar uma ou mais chamadas de ferramentas, ou ambos. O SDK produz uma [`AssistantMessage`](#message-types) contendo o texto e quaisquer solicitações de chamadas de ferramentas.
+2. **Avaliar e responder.** Claude avalia o estado atual e determina como proceder. Pode responder com texto, solicitar uma ou mais chamadas de ferramentas, ou ambos. O SDK produz um ou mais objetos [`AssistantMessage`](#message-types), um para cada bloco de conteúdo, como um bloco de texto ou uma solicitação de chamada de ferramenta.
 3. **Executar ferramentas.** O SDK executa cada ferramenta solicitada e coleta os resultados. Cada conjunto de resultados de ferramentas retorna para Claude para a próxima decisão. Você pode usar [hooks](/docs/pt/agent-sdk/hooks) para interceptar, modificar ou bloquear chamadas de ferramentas antes de serem executadas.
 4. **Repetir.** Os passos 2 e 3 se repetem como um ciclo. Cada ciclo completo é uma volta. Claude continua chamando ferramentas e processando resultados até produzir uma resposta sem chamadas de ferramentas.
 5. **Retornar resultado.** O SDK produz uma [`AssistantMessage`](#message-types) final com a resposta de texto (sem chamadas de ferramentas), seguida por uma [`ResultMessage`](#message-types) com o texto final, uso de tokens, custo e ID da sessão.
@@ -37,8 +41,8 @@ Considere como uma sessão completa pode parecer para o prompt "Corrija os teste
 Primeiro, o SDK envia seu prompt para Claude e produz uma [`SystemMessage`](#message-types) com os metadados da sessão. Então o loop começa:
 
 1. **Volta 1:** Claude chama `Bash` para executar `npm test`. O SDK produz uma [`AssistantMessage`](#message-types) com a chamada de ferramenta, executa o comando, então produz uma [`UserMessage`](#message-types) com a saída (três falhas).
-2. **Volta 2:** Claude chama `Read` em `auth.ts` e `auth.test.ts`. O SDK retorna o conteúdo dos arquivos e produz uma `AssistantMessage`.
-3. **Volta 3:** Claude chama `Edit` para corrigir `auth.ts`, então chama `Bash` para executar novamente `npm test`. Todos os três testes passam. O SDK produz uma `AssistantMessage`.
+2. **Volta 2:** Claude chama `Read` em `auth.ts` e `auth.test.ts`. O SDK produz uma `AssistantMessage` para cada chamada e retorna o conteúdo dos arquivos.
+3. **Volta 3:** Claude chama `Edit` para corrigir `auth.ts`, então chama `Bash` para executar novamente `npm test`. Todos os três testes passam. O SDK produz uma `AssistantMessage` para cada chamada.
 4. **Volta final:** Claude produz uma resposta apenas com texto sem chamadas de ferramentas: "Corrigi o bug de autenticação, todos os três testes passam agora." O SDK produz uma `AssistantMessage` final com este texto, então uma [`ResultMessage`](#message-types) com o mesmo texto mais custo e uso.
 
 Foram quatro voltas: três com chamadas de ferramentas, uma resposta final apenas com texto.
@@ -58,15 +62,15 @@ Conforme o loop é executado, o SDK produz um fluxo de mensagens. Cada mensagem 
   * `"init"`: metadados da sessão para a execução. Quando um hook `SessionStart` ou `Setup` é executado durante a inicialização da sessão, suas [mensagens do ciclo de vida do hook](/docs/pt/agent-sdk/typescript#sdkhookstartedmessage) chegam antes da mensagem `init`
   * `"compact_boundary"`: dispara após [compactação](#automatic-compaction)
   * `"informational"`: banners de status em texto simples do loop
-  * `"worker_shutting_down"`: o loop terminará após a volta atual porque o host está saindo ou Remote Control foi desconectado
+  * `"worker_shutting_down"`: o host está saindo ou Remote Control foi desconectado
 
   Em TypeScript, cada subtipo diferente de `"init"` é seu próprio tipo na união [`SDKMessage`](/docs/pt/agent-sdk/typescript#sdkmessage) em vez de um subtipo de `SDKSystemMessage`.
-* **`AssistantMessage`:** emitida após cada resposta do Claude, incluindo a final apenas com texto. Contém blocos de conteúdo de texto e blocos de chamadas de ferramentas dessa volta.
+* **`AssistantMessage`:** emitida para cada bloco de conteúdo nas respostas do Claude, incluindo a final apenas com texto. Cada uma carrega um único bloco de conteúdo, como texto ou uma chamada de ferramenta, e as mensagens de uma resposta compartilham um ID de mensagem.
 * **`UserMessage`:** emitida após cada execução de ferramenta com o conteúdo do resultado da ferramenta enviado de volta para Claude. Também emitida para quaisquer entradas do usuário que você transmita no meio do loop.
 * **`StreamEvent`:** emitida apenas quando mensagens parciais estão habilitadas. Contém eventos brutos de streaming da API (deltas de texto, pedaços de entrada de ferramentas). Veja [Respostas de streaming](/docs/pt/agent-sdk/streaming-output).
 * **`ResultMessage`:** marca o fim do loop do agente. Contém o resultado de texto final, uso de tokens, custo e ID da sessão. Verifique o campo `subtype` para determinar se a tarefa foi bem-sucedida ou atingiu um limite. Um pequeno número de eventos de sistema finais, como `prompt_suggestion`, pode chegar após ele, então itere o fluxo até a conclusão em vez de quebrar no resultado. Veja [Lidar com o resultado](#handle-the-result).
 
-Esses cinco tipos cobrem o ciclo de vida completo do loop do agente em ambos os SDKs. O SDK TypeScript também produz eventos de observabilidade adicionais (eventos de hooks, progresso de ferramentas, limites de taxa, notificações de tarefas) que fornecem detalhes extras, mas não são necessários para conduzir o loop. Veja a [referência de tipos de mensagens Python](/docs/pt/agent-sdk/python#message-types) e [referência de tipos de mensagens TypeScript](/docs/pt/agent-sdk/typescript#message-types) para as listas completas.
+Esses cinco tipos cobrem o ciclo de vida completo do loop do agente. Ambos os SDKs também produzem eventos de observabilidade, como status de limite de taxa e notificações de tarefas, que não são necessários para conduzir o loop. Veja a [referência de tipos de mensagens Python](/docs/pt/agent-sdk/python#message-types) e [referência de tipos de mensagens TypeScript](/docs/pt/agent-sdk/typescript#message-types) para as listas completas.
 
 <h3 id="handle-messages">
   Lidar com mensagens
@@ -87,14 +91,19 @@ Como você verifica tipos de mensagens depende do SDK:
   <CodeGroup>
     ```python Python theme={null}
     import asyncio
-    from claude_agent_sdk import query, AssistantMessage, ResultMessage
+    from claude_agent_sdk import query, AssistantMessage, ResultMessage, TextBlock, ToolUseBlock
 
 
     async def main():
         try:
             async for message in query(prompt="Summarize this project"):
                 if isinstance(message, AssistantMessage):
-                    print(f"Turn completed: {len(message.content)} content blocks")
+                    # Each AssistantMessage carries one content block
+                    for block in message.content:
+                        if isinstance(block, TextBlock):
+                            print(f"Claude: {block.text}")
+                        elif isinstance(block, ToolUseBlock):
+                            print(f"Tool call: {block.name}")
                 if isinstance(message, ResultMessage):
                     if message.subtype == "success":
                         print(message.result)
@@ -116,7 +125,14 @@ Como você verifica tipos de mensagens depende do SDK:
     try {
       for await (const message of query({ prompt: "Summarize this project" })) {
         if (message.type === "assistant") {
-          console.log(`Turn completed: ${message.message.content.length} content blocks`);
+          // Each assistant message carries one content block
+          for (const block of message.message.content) {
+            if (block.type === "text") {
+              console.log(`Claude: ${block.text}`);
+            } else if (block.type === "tool_use") {
+              console.log(`Tool call: ${block.name}`);
+            }
+          }
         }
         if (message.type === "result") {
           if (message.subtype === "success") {
@@ -157,6 +173,8 @@ O SDK inclui as mesmas ferramentas que alimentam o Claude Code:
 | **Descoberta**           | `ToolSearch`                                                    | Encontrar e carregar ferramentas dinamicamente sob demanda em vez de pré-carregar todas elas |
 | **Orquestração**         | `Agent`, `Skill`, `AskUserQuestion`, `TaskCreate`, `TaskUpdate` | Gerar subagentes, invocar skills, perguntar ao usuário, rastrear tarefas                     |
 
+Na [modelos que não recebem as ferramentas de rastreamento de tarefas](/docs/pt/agent-sdk/todo-tracking#model-availability), Claude Code fornece `TaskCreate` e `TaskUpdate` apenas quando você optar por isso.
+
 Além das ferramentas integradas, você pode:
 
 * **Conectar serviços externos** com [servidores MCP](/docs/pt/agent-sdk/mcp) (bancos de dados, navegadores, APIs)
@@ -169,9 +187,9 @@ Além das ferramentas integradas, você pode:
 
 Claude determina quais ferramentas chamar com base na tarefa, mas você controla se essas chamadas podem ser executadas. Você pode aprovar automaticamente ferramentas específicas, bloquear outras completamente ou exigir aprovação para tudo. Três opções funcionam juntas para determinar o que é executado:
 
-* **`allowed_tools` / `allowedTools`** aprova automaticamente ferramentas listadas. Um agente somente leitura com `["Read", "Glob", "Grep"]` em sua lista de ferramentas permitidas executa essas ferramentas sem avisar. Ferramentas não listadas ainda estão disponíveis, mas exigem permissão.
+* **`allowed_tools` / `allowedTools`** aprova automaticamente ferramentas listadas. Um agente somente leitura com `["Read", "Glob", "Grep"]` em sua lista de ferramentas permitidas executa essas ferramentas sem avisar. Ferramentas não listadas ainda estão disponíveis, e chamadas para elas que precisam de aprovação caem através do modo de permissão e `canUseTool`.
 * **`disallowed_tools` / `disallowedTools`** bloqueia ferramentas listadas, independentemente de outras configurações. Veja [Permissões](/docs/pt/agent-sdk/permissions) para a ordem em que as regras são verificadas antes de uma ferramenta ser executada.
-* **`permission_mode` / `permissionMode`** controla o que acontece com ferramentas que não são cobertas por regras de permissão ou negação. Veja [Modo de permissão](#permission-mode) para os modos disponíveis.
+* **`permission_mode` / `permissionMode`** controla quanto de supervisão humana você deseja. O SDK avalia o modo ativo junto com suas regras de permissão e negação em uma ordem fixa, descrita em [Como as permissões são avaliadas](/docs/pt/agent-sdk/permissions#how-permissions-are-evaluated). Veja [Modo de permissão](#permission-mode) para os modos disponíveis.
 
 Você também pode escopo ferramentas individuais com regras como `"Bash(npm *)"` para permitir apenas comandos específicos. Veja [Permissões](/docs/pt/agent-sdk/permissions) para a sintaxe completa de regras.
 
@@ -186,10 +204,10 @@ Quando Claude solicita múltiplas chamadas de ferramentas em uma única volta, a
 Ferramentas personalizadas padrão para execução sequencial. Para habilitar execução paralela para uma ferramenta personalizada, defina `readOnlyHint` em suas anotações. Ambos os SDKs [TypeScript](/docs/pt/agent-sdk/typescript#tool) e [Python](/docs/pt/agent-sdk/python#tool) usam este nome de campo do SDK MCP.
 
 <h2 id="control-how-the-loop-runs">
-  Controlar como o loop é executado
+  Controle como o loop é executado
 </h2>
 
-Você pode limitar quantas voltas o loop leva, quanto custa, quão profundamente Claude raciocina e se as ferramentas exigem aprovação antes de serem executadas. Todas essas são campos em [`ClaudeAgentOptions`](/docs/pt/agent-sdk/python#claudeagentoptions) (Python) / [`Options`](/docs/pt/agent-sdk/typescript#options) (TypeScript).
+Você pode limitar quantas voltas o loop faz, quanto custa, com que profundidade Claude raciocina e se as ferramentas exigem aprovação antes de serem executadas. Todos esses são campos em [`ClaudeAgentOptions`](/docs/pt/agent-sdk/python#claudeagentoptions) (Python) / [`Options`](/docs/pt/agent-sdk/typescript#options) (TypeScript).
 
 <h3 id="turns-and-budget">
   Voltas e orçamento
@@ -200,60 +218,62 @@ Você pode limitar quantas voltas o loop leva, quanto custa, quão profundamente
 | Max turns (`max_turns` / `maxTurns`)           | Máximo de rodadas de uso de ferramentas | Sem limite |
 | Max budget (`max_budget_usd` / `maxBudgetUsd`) | Custo máximo antes de parar             | Sem limite |
 
-Quando qualquer limite é atingido, o SDK retorna uma `ResultMessage` com um subtipo de erro correspondente (`error_max_turns` ou `error_max_budget_usd`). Veja [Lidar com o resultado](#handle-the-result) para como verificar esses subtipos e [`ClaudeAgentOptions`](/docs/pt/agent-sdk/python#claudeagentoptions) / [`Options`](/docs/pt/agent-sdk/typescript#options) para sintaxe.
+Quando qualquer um dos limites é atingido, o SDK retorna uma `ResultMessage` com um subtipo de erro correspondente (`error_max_turns` ou `error_max_budget_usd`). Veja [Handle the result](#handle-the-result) para saber como verificar esses subtipos e [`ClaudeAgentOptions`](/docs/pt/agent-sdk/python#claudeagentoptions) / [`Options`](/docs/pt/agent-sdk/typescript#options) para sintaxe.
 
-Com [entrada em streaming](/docs/pt/agent-sdk/streaming-vs-single-mode), uma mensagem que você envia enquanto uma volta ainda está em execução fica enfileirada quando essa volta termina no limite de máximo de voltas, e ela inicia sua própria volta com seu próprio limite de máximo de voltas. Antes da v2.1.205, uma mensagem que chegava na iteração final da volta poderia ser consumida na volta final e perdida sem nunca chegar ao modelo.
+O limite de orçamento cobre [subagents](/docs/pt/agent-sdk/subagents): seus gastos contam para o total. Quando o gasto atinge o limite, gerar outro subagent falha com `Budget limit reached`, e Claude Code para qualquer subagent em segundo plano ainda em execução. Os comportamentos de aplicação do limite exigem Claude Code v2.1.217 ou posterior.
+
+Com [streaming input](/docs/pt/agent-sdk/streaming-vs-single-mode), uma mensagem que ainda está na fila quando uma volta termina no limite de max-turns permanece na fila. Claude Code não a adiciona à última chamada de modelo dessa volta. Ele inicia uma nova volta para a mensagem, e a contagem de max-turns recomeça para essa volta. O total de orçamento continua acumulando entre mensagens, e uma vez que o gasto atinge `maxBudgetUsd`, mensagens posteriores na mesma conversa terminam com o resultado `error_max_budget_usd`. Um [`/clear`](/docs/pt/agent-sdk/cost-tracking) reinicia o orçamento.
 
 <h3 id="effort-level">
   Nível de esforço
 </h3>
 
-A opção `effort` controla quanto raciocínio Claude aplica. Níveis de esforço mais baixos usam menos tokens por volta e reduzem custo. Nem todos os modelos suportam o parâmetro de esforço. Veja [Effort](https://platform.claude.com/docs/en/build-with-claude/effort) para quais modelos o suportam.
+A opção `effort` controla quanto raciocínio Claude aplica. Níveis de esforço mais baixos usam menos tokens por volta e reduzem o custo. Nem todos os modelos suportam o parâmetro de esforço. Veja [Effort](https://platform.claude.com/docs/en/build-with-claude/effort) para saber quais modelos o suportam.
 
-| Nível      | Comportamento                        | Bom para                                                                       |
-| :--------- | :----------------------------------- | :----------------------------------------------------------------------------- |
-| `"low"`    | Raciocínio mínimo, respostas rápidas | Buscas de arquivo, listagem de diretórios                                      |
-| `"medium"` | Raciocínio equilibrado               | Edições rotineiras, tarefas padrão                                             |
-| `"high"`   | Análise completa                     | Refatorações, depuração                                                        |
-| `"xhigh"`  | Profundidade de raciocínio estendida | Tarefas de codificação e agentes; recomendado em Fable 5, Opus 4.7+ e Sonnet 5 |
-| `"max"`    | Profundidade máxima de raciocínio    | Problemas multi-etapas que exigem análise profunda                             |
+| Nível      | Comportamento                        | Bom para                                                                                            |
+| :--------- | :----------------------------------- | :-------------------------------------------------------------------------------------------------- |
+| `"low"`    | Raciocínio mínimo, respostas rápidas | Buscas de arquivo, listagem de diretórios                                                           |
+| `"medium"` | Raciocínio equilibrado               | Edições rotineiras, tarefas padrão                                                                  |
+| `"high"`   | Análise completa                     | Refatorações, depuração                                                                             |
+| `"xhigh"`  | Profundidade de raciocínio estendida | Tarefas de codificação e agentes nos [modelos que o suportam](/docs/pt/model-config#adjust-effort-level) |
+| `"max"`    | Profundidade máxima de raciocínio    | Problemas com múltiplas etapas que exigem análise profunda                                          |
 
-Se você não definir `effort`, ambos os SDKs deixam o parâmetro indefinido e deferem para o comportamento padrão do modelo.
+Se você não definir `effort`, Claude Code resolve o nível de esforço em si, na ordem que [Adjust effort level](/docs/pt/model-config#adjust-effort-level) descreve.
 
 <Note>
-  `effort` negocia latência e custo de token por profundidade de raciocínio dentro de cada resposta. [Extended thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking) é um recurso separado que produz blocos de cadeia de pensamento visíveis na saída. Eles são independentes: você pode definir `effort: "low"` com extended thinking habilitado, ou `effort: "max"` sem ele.
+  `effort` troca latência e custo de token por profundidade de raciocínio dentro de cada resposta. [Extended thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking) é um recurso separado que produz blocos `thinking` na saída, e o campo `display` em `ThinkingConfig` para [Python](/docs/pt/agent-sdk/python#thinkingconfig) ou [TypeScript](/docs/pt/agent-sdk/typescript#thinkingconfig) controla se você recebe seu texto. Eles são independentes: você pode definir `effort: "low"` com extended thinking habilitado, ou `effort: "max"` sem ele.
 </Note>
 
-Use esforço mais baixo para agentes fazendo tarefas simples e bem definidas (como listar arquivos ou executar um único grep) para reduzir custo e latência. Defina `effort` nas opções de nível superior `query()` para toda a sessão, ou por subagente com o campo `effort` em [`AgentDefinition`](/docs/pt/agent-sdk/subagents#agentdefinition-configuration) para sobrescrever o nível de sessão.
+Use esforço mais baixo para agentes que fazem tarefas simples e bem definidas (como listar arquivos ou executar um único grep) para reduzir custo e latência. Defina `effort` nas opções de nível superior `query()` para toda a sessão, ou por subagent com o campo `effort` em [`AgentDefinition`](/docs/pt/agent-sdk/subagents#agentdefinition-configuration) para substituir o nível de sessão.
 
 <h3 id="permission-mode">
   Modo de permissão
 </h3>
 
-A opção de modo de permissão (`permission_mode` em Python, `permissionMode` em TypeScript) controla se o agente pede aprovação antes de usar ferramentas:
+A opção de modo de permissão (`permission_mode` em Python, `permissionMode` em TypeScript) controla se o agente solicita aprovação antes de usar ferramentas:
 
-| Modo                  | Comportamento                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| :-------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `"default"`           | Ferramentas não cobertas por regras de permissão acionam seu callback de aprovação; sem callback significa negar                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| `"acceptEdits"`       | Aprova automaticamente edições de arquivo e comandos comuns do sistema de arquivos (`mkdir`, `touch`, `mv`, `cp`, etc.); outros comandos Bash seguem regras padrão                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| `"plan"`              | Claude explora e planeja sem editar seus arquivos de origem; edições de arquivo nunca são aprovadas automaticamente e solicitam através de seu callback `canUseTool`                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| `"dontAsk"`           | Nunca avisa. Ferramentas pré-aprovadas por [regras de permissão](/docs/pt/settings#permission-settings) são executadas, tudo mais é negado. `AskUserQuestion`, ferramentas de conector [sua organização definida como `ask`](/docs/pt/mcp#organization-controls-on-connector-tools) e ferramentas MCP marcadas [`requiresUserInteraction`](/docs/pt/mcp#require-approval-for-a-specific-tool) são negadas mesmo se você as permitiu                                                                                                                                                                                           |
-| `"auto"`              | Usa um classificador de modelo para aprovar ou negar cada chamada de ferramenta. Veja [Modo Auto](/docs/pt/permission-modes#eliminate-prompts-with-auto-mode) para disponibilidade e comportamento                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| `"bypassPermissions"` | Executa todas as ferramentas permitidas sem avisar, exceto ferramentas correspondidas por uma regra [`ask`](/docs/pt/settings#permission-settings) explícita, ferramentas de conector [sua organização definida como `ask`](/docs/pt/mcp#organization-controls-on-connector-tools) e ferramentas que exigem interação do usuário; veja [Como as permissões são avaliadas](/docs/pt/agent-sdk/permissions#how-permissions-are-evaluated) para a ordem de precedência. Não pode ser usado ao executar como root em Unix. Use apenas em ambientes isolados onde as ações do agente não podem afetar sistemas que você se importa |
+| Modo                  | Comportamento                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | Caso de uso                                                                                                                                                             |
+| :-------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `"default"`           | Chamadas de ferramentas que precisam de aprovação e não são cobertas por regras de permissão acionam seu callback `canUseTool`; nenhum callback significa negar                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | Aplicações interativas com um callback de aprovação personalizado                                                                                                       |
+| `"acceptEdits"`       | Aprova automaticamente edições de arquivo e comandos comuns do sistema de arquivos (`mkdir`, `touch`, `mv`, `cp`, etc.); outros comandos Bash seguem as regras padrão                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | Você confia nas edições do Claude e quer iteração mais rápida, como durante prototipagem ou ao trabalhar em um diretório isolado                                        |
+| `"plan"`              | Claude explora e planeja sem editar seus arquivos de origem; edições de arquivo nunca são aprovadas automaticamente e solicitam através de seu callback `canUseTool`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | Você quer que Claude proponha mudanças sem executá-las, como durante revisão de código ou quando você precisa aprovar mudanças antes de serem feitas                    |
+| `"dontAsk"`           | Nunca solicita. Ferramentas pré-aprovadas por [regras de permissão](/docs/pt/settings-reference#permission-settings) são executadas, assim como chamadas que não precisam de aprovação no modo `default`, como leituras de arquivo dentro de seus diretórios de trabalho; toda chamada que de outra forma solicitaria é negada. `AskUserQuestion`, ferramentas de conector [que sua organização definiu como `ask`](/docs/pt/mcp#organization-controls-on-connector-tools) e ferramentas MCP marcadas [`requiresUserInteraction`](/docs/pt/mcp#require-approval-for-a-specific-tool) são negadas mesmo que você as tenha permitido                                                                                                                                                                                                                              | Você quer uma superfície de ferramenta fixa e explícita para um agente sem cabeça e prefere uma negação rígida sobre confiança silenciosa em `canUseTool` estar ausente |
+| `"auto"`              | Usa um classificador de modelo para aprovar ou negar solicitações de permissão. Veja [Auto mode](/docs/pt/permission-modes#eliminate-prompts-with-auto-mode) para disponibilidade e comportamento                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | Agentes autônomos que ainda querem proteções de segurança no uso de ferramentas                                                                                         |
+| `"bypassPermissions"` | Executa todas as ferramentas permitidas sem perguntar, exceto ferramentas correspondidas por uma regra [`ask`](/docs/pt/settings-reference#permission-settings) explícita, ferramentas de conector [que sua organização definiu como `ask`](/docs/pt/mcp#organization-controls-on-connector-tools) e ferramentas que exigem interação do usuário. As [proteções de mensagens entre sessões](/docs/pt/permission-modes#skip-all-checks-with-bypasspermissions-mode) ainda se aplicam. Veja [How permissions are evaluated](/docs/pt/agent-sdk/permissions#how-permissions-are-evaluated) para a ordem de precedência. No SDK TypeScript, também requer `allowDangerouslySkipPermissions: true` em `options`. Não pode ser usado ao executar como root no Unix. Use apenas em ambientes isolados onde as ações do agente não podem afetar sistemas que você se importa | CI, contêineres ou outros ambientes isolados                                                                                                                            |
 
-Para aplicações interativas, use `"default"` com um callback de aprovação de ferramenta para exibir avisos de aprovação. Para agentes autônomos em uma máquina de desenvolvimento, `"acceptEdits"` aprova automaticamente edições de arquivo e comandos comuns do sistema de arquivos (`mkdir`, `touch`, `mv`, `cp`, etc.) enquanto ainda controla outros comandos `Bash` atrás de regras de permissão. Reserve `"bypassPermissions"` para CI, contêineres ou outros ambientes isolados. Veja [Permissões](/docs/pt/agent-sdk/permissions) para detalhes completos.
+Para aplicações interativas, use `"default"` com um callback de aprovação de ferramenta para exibir solicitações de aprovação. Para agentes autônomos em uma máquina de desenvolvimento, `"acceptEdits"` aprova automaticamente edições de arquivo e comandos comuns do sistema de arquivos (`mkdir`, `touch`, `mv`, `cp`, etc.) enquanto ainda controla outros comandos `Bash` atrás de regras de permissão. Reserve `"bypassPermissions"` para CI, contêineres ou outros ambientes isolados. Veja [Permissions](/docs/pt/agent-sdk/permissions) para detalhes completos.
 
 <h3 id="model">
   Modelo
 </h3>
 
-Se você não definir `model`, o SDK usa o padrão do Claude Code, que depende do seu método de autenticação e assinatura. Defina explicitamente (por exemplo, `model="claude-sonnet-5"`) para fixar um modelo específico ou usar um modelo menor para agentes mais rápidos e baratos. Veja [modelos](https://platform.claude.com/docs/en/about-claude/models) para IDs disponíveis.
+Defina a opção `model` para escolher qual modelo executa a sessão. Para mais informações, veja [Choose a model](/docs/pt/agent-sdk/configuration#choose-a-model).
 
 <h2 id="the-context-window">
   A janela de contexto
 </h2>
 
-A janela de contexto é a quantidade total de informações disponíveis para Claude durante uma sessão. Ela não é redefinida entre voltas dentro de uma sessão. Tudo se acumula: o prompt do sistema, definições de ferramentas, histórico de conversa, entradas de ferramentas e saídas de ferramentas. Conteúdo que permanece igual entre voltas (prompt do sistema, definições de ferramentas, CLAUDE.md) é automaticamente [prompt cached](https://platform.claude.com/docs/pt/build-with-claude/prompt-caching), o que reduz custo e latência para prefixos repetidos.
+A janela de contexto é a quantidade total de informações disponíveis para Claude durante uma sessão. Ela não é redefinida entre voltas dentro de uma sessão. Tudo se acumula: o prompt do sistema, definições de ferramentas, histórico de conversa, entradas de ferramentas e saídas de ferramentas. Conteúdo que permanece igual entre voltas (prompt do sistema, definições de ferramentas, CLAUDE.md) é automaticamente [prompt cached](https://platform.claude.com/docs/pt/build-with-claude/prompt-caching), o que reduz custo e latência para prefixos repetidos. Para saber como um prompt do sistema personalizado ou texto `append` afeta a reutilização de cache entre sessões, veja [Modificando prompts do sistema](/docs/pt/agent-sdk/modifying-system-prompts#improve-prompt-caching-across-users-and-machines).
 
 <h3 id="what-consumes-context">
   O que consome contexto
@@ -261,13 +281,13 @@ A janela de contexto é a quantidade total de informações disponíveis para Cl
 
 Aqui está como cada componente afeta o contexto no SDK:
 
-| Fonte                         | Quando carrega                                                               | Impacto                                                                                                                                                                                                                                                                                                                                                                           |
-| :---------------------------- | :--------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Prompt do sistema**         | Cada requisição                                                              | Custo fixo pequeno, sempre presente                                                                                                                                                                                                                                                                                                                                               |
-| **Arquivos CLAUDE.md**        | Início da sessão, via [`settingSources`](/docs/pt/agent-sdk/claude-code-features) | Conteúdo completo em cada requisição (mas prompt-cached, então apenas a primeira requisição paga o custo completo)                                                                                                                                                                                                                                                                |
-| **Definições de ferramentas** | Cada requisição; esquemas MCP adiados por padrão                             | Esquemas de ferramentas integradas carregam a cada requisição. [Tool search](/docs/pt/agent-sdk/mcp#mcp-tool-search) adia esquemas de ferramentas MCP por padrão, voltando ao carregamento antecipado no Vertex AI ou em um `ANTHROPIC_BASE_URL` não de primeira parte. Veja [Configurar busca de ferramentas](/docs/pt/agent-sdk/tool-search#configure-tool-search) para a matriz completa |
-| **Histórico de conversa**     | Acumula entre voltas                                                         | Cresce a cada volta: prompts, respostas, entradas de ferramentas, saídas de ferramentas                                                                                                                                                                                                                                                                                           |
-| **Descrições de skills**      | Início da sessão, via fontes de configuração                                 | Resumos curtos; conteúdo completo carrega apenas quando invocado                                                                                                                                                                                                                                                                                                                  |
+| Fonte                         | Quando carrega                                                               | Impacto                                                                                                                                                                                                                                                                                                                                                         |
+| :---------------------------- | :--------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Prompt do sistema**         | Cada requisição                                                              | Custo fixo pequeno, sempre presente                                                                                                                                                                                                                                                                                                                             |
+| **Arquivos CLAUDE.md**        | Início da sessão, via [`settingSources`](/docs/pt/agent-sdk/claude-code-features) | Conteúdo completo em cada requisição (mas prompt-cached, então apenas a primeira requisição paga o custo completo)                                                                                                                                                                                                                                              |
+| **Definições de ferramentas** | Cada requisição; esquemas MCP adiados por padrão                             | Esquemas de ferramentas integradas carregam a cada requisição. [Tool search](/docs/pt/agent-sdk/mcp#mcp-tool-search) adia esquemas de ferramentas MCP por padrão, voltando ao carregamento antecipado em modelos não suportados e certas plataformas. Veja [Configurar busca de ferramentas](/docs/pt/agent-sdk/tool-search#configure-tool-search) para a matriz completa |
+| **Histórico de conversa**     | Acumula entre voltas                                                         | Cresce a cada volta: prompts, respostas, entradas de ferramentas, saídas de ferramentas                                                                                                                                                                                                                                                                         |
+| **Descrições de skills**      | Início da sessão, via fontes de configuração                                 | Resumos curtos; conteúdo completo carrega apenas quando invocado                                                                                                                                                                                                                                                                                                |
 
 Grandes saídas de ferramentas consomem contexto significativo. Ler um arquivo grande ou executar um comando com saída detalhada pode usar milhares de tokens em uma única volta. O contexto se acumula entre voltas, então sessões mais longas com muitas chamadas de ferramentas acumulam significativamente mais contexto do que as curtas.
 
@@ -281,9 +301,9 @@ A compactação substitui mensagens mais antigas por um resumo, então instruç�
 
 Você pode personalizar o comportamento de compactação de várias maneiras:
 
-* **Instruções de sumarização em CLAUDE.md:** O compactador lê seu CLAUDE.md como qualquer outro contexto, então você pode incluir uma seção dizendo a ele o que preservar ao resumir. O cabeçalho da seção é livre (não uma string mágica); o compactador corresponde à intenção.
+* **Instruções de sumarização em CLAUDE.md:** O compactador lê seu CLAUDE.md como qualquer outro contexto, então você pode incluir uma seção dizendo a ele o que preservar ao resumir. O compactador corresponde à intenção, então o cabeçalho da seção é livre.
 * **Hook `PreCompact`:** Execute lógica personalizada antes da compactação ocorrer, por exemplo para arquivar a transcrição completa. O hook recebe um campo `trigger` (`manual` ou `auto`). Veja [hooks](/docs/pt/agent-sdk/hooks).
-* **Compactação manual:** Envie `/compact` como uma string de prompt para acionar compactação sob demanda. Comandos enviados desta forma são entradas SDK, não atalhos apenas CLI. Veja [slash commands no SDK](/docs/pt/agent-sdk/slash-commands).
+* **Compactação manual:** Envie `/compact` como uma string de prompt para acionar compactação sob demanda. Comandos enviados desta forma são entradas SDK ordinárias. Veja [dispatch commands by name](/docs/pt/agent-sdk/skills#dispatch-commands-by-name).
 
 <Accordion title="Exemplo: Instruções de sumarização em CLAUDE.md">
   Adicione uma seção ao CLAUDE.md do seu projeto dizendo ao compactador o que preservar. O nome do cabeçalho não é especial; use qualquer rótulo claro.
@@ -307,7 +327,7 @@ Algumas estratégias para agentes de longa duração:
 
 * **Use subagentes para subtarefas.** Cada subagente começa com uma conversa fresca (sem histórico de mensagens anterior, embora carregue seu próprio prompt do sistema e contexto de nível de projeto como CLAUDE.md). Ele não vê as voltas do pai, e apenas sua resposta final retorna ao pai como resultado de ferramenta. O contexto do agente principal cresce por esse resumo, não pela transcrição completa da subtarefa. Veja [O que subagentes herdam](/docs/pt/agent-sdk/subagents#what-subagents-inherit) para detalhes.
 * **Seja seletivo com ferramentas.** Cada definição de ferramenta ocupa espaço de contexto. Use o campo `tools` em [`AgentDefinition`](/docs/pt/agent-sdk/subagents#agentdefinition-configuration) para escopo subagentes ao conjunto mínimo que precisam.
-* **Observe custos de servidor MCP.** [MCP tool search](/docs/pt/agent-sdk/mcp#mcp-tool-search) adia esquemas de ferramentas MCP por padrão e carrega-os sob demanda. Quando a busca de ferramentas está desativada, no Vertex AI, ou atrás de um `ANTHROPIC_BASE_URL` não de primeira parte, cada servidor MCP adiciona todos os seus esquemas de ferramentas a cada requisição, então alguns servidores com muitas ferramentas podem consumir contexto significativo antes do agente fazer qualquer trabalho.
+* **Observe custos de servidor MCP.** [MCP tool search](/docs/pt/agent-sdk/mcp#mcp-tool-search) adia esquemas de ferramentas MCP por padrão e carrega-os sob demanda. Quando a busca de ferramentas está desativada ou voltou ao carregamento antecipado em modelos não suportados e certas plataformas, cada servidor MCP adiciona todos os seus esquemas de ferramentas a cada requisição, então alguns servidores com muitas ferramentas podem consumir contexto significativo antes do agente fazer qualquer trabalho. Veja [Configurar busca de ferramentas](/docs/pt/agent-sdk/tool-search#configure-tool-search) para as configurações onde o fallback se aplica.
 * **Use esforço mais baixo para tarefas rotineiras.** Defina [esforço](#effort-level) para `"low"` para agentes que apenas precisam ler arquivos ou listar diretórios. Isso reduz uso de tokens e custo.
 
 Para um detalhamento detalhado dos custos de contexto por recurso, veja [Entender custos de contexto](/docs/pt/features-overview#understand-context-costs).
@@ -320,7 +340,7 @@ Cada interação com o SDK cria ou continua uma sessão. Capture o ID da sessão
 
 Quando você retoma, o contexto completo de voltas anteriores é restaurado: arquivos que foram lidos, análise que foi realizada e ações que foram tomadas. Você também pode bifurcar uma sessão para ramificar em uma abordagem diferente sem modificar a original.
 
-Veja [Gerenciamento de sessão](/docs/pt/agent-sdk/sessions) para o guia completo em padrões de retomada, continuação e bifurcação.
+Veja [Gerenciamento de sessão](/docs/pt/agent-sdk/sessions) para o guia completo em padrões de retomada, continuação e bifurcação. Para retomar sessões em contêineres sem estado ou hosts sem servidor, passe um adaptador [`session_store` / `sessionStore`](/docs/pt/agent-sdk/session-storage) para que o SDK espelhe transcrições para seu próprio backend e outro host possa retomá-las. O subprocess Claude Code ainda escreve no disco local primeiro. Veja [Arquitetura de escrita dupla](/docs/pt/agent-sdk/session-storage#dual-write-architecture) para qual cópia sobrevive a uma sessão nova versus uma execução retomada da loja, e como manter a cópia local efêmera.
 
 <Note>
   Em Python, `ClaudeSDKClient` lida com IDs de sessão automaticamente em múltiplas chamadas. Veja a [referência do SDK Python](/docs/pt/agent-sdk/python#choosing-between-query-and-claudesdkclient) para detalhes.
@@ -337,19 +357,28 @@ Quando o loop termina, a `ResultMessage` informa o que aconteceu e fornece a sa�
 | `success`                             | Claude terminou a tarefa normalmente                                                                                                                                                                                         |             Sim            |
 | `error_max_turns`                     | Atingiu o limite de `maxTurns` antes de terminar                                                                                                                                                                             |             Não            |
 | `error_max_budget_usd`                | Atingiu o limite de `maxBudgetUsd` antes de terminar                                                                                                                                                                         |             Não            |
-| `error_during_execution`              | Um erro interrompeu o loop (por exemplo, falha de API ou requisição cancelada)                                                                                                                                               |             Não            |
+| `error_during_execution`              | Um erro interrompeu o loop (por exemplo, uma requisição cancelada)                                                                                                                                                           |             Não            |
 | `error_max_structured_output_retries` | Nenhuma saída estruturada válida foi produzida dentro do limite de tentativas configurado: todas as tentativas falharam na validação, ou um fallback de modelo retratou a saída concluída sem nenhuma tentativa bem-sucedida |             Não            |
 
-O campo `result` (a saída de texto final) está presente apenas na variante `success`, então sempre verifique o subtipo antes de lê-lo. Todos os subtipos de resultado carregam `total_cost_usd`, `usage`, `num_turns` e `session_id` para que você possa rastrear custo e retomar mesmo após erros. Em Python, `total_cost_usd` e `usage` são digitados como opcionais e podem ser `None` em alguns caminhos de erro, então proteja antes de formatá-los. Veja [Rastreamento de custos e uso](/docs/pt/agent-sdk/cost-tracking) para detalhes sobre interpretação dos campos `usage`.
+O campo `result` contém a saída de texto final e está presente apenas na variante `success`, então sempre verifique o subtipo antes de lê-lo.
+
+Todos os subtipos de resultado carregam `total_cost_usd`, `usage`, `num_turns` e `session_id` para que você possa rastrear custo e retomar mesmo após erros. Proteja-se para estes casos:
+
+* Após uma falha de sessão, o resultado final é um `error_during_execution` cujos campos de custo podem ser zerados e cujo `stop_reason` é `null`, e o processo sai após emiti-lo. Veja [Recuperar totais após uma falha de sessão](/docs/pt/agent-sdk/cost-tracking#recover-totals-after-a-session-crash).
+* Em Python, `total_cost_usd`, `usage` e `model_usage` são digitados como opcionais, então verifique se não são `None` antes de lê-los.
+
+O campo `usage` cobre apenas o loop do agente principal. Use `modelUsage`, ou `model_usage` em Python, para contabilidade de tokens e custos de toda a árvore. Veja [Rastreamento de custos e uso](/docs/pt/agent-sdk/cost-tracking) para detalhes sobre interpretação dos campos `usage`.
 
 <Note>
   Quando uma consulta termina em um resultado de erro:
 
-  * Uma chamada `query()` de uma única vez produz a mensagem de resultado final e depois lança um erro que inclui o texto de falha, como `Reached maximum number of turns`. O lançamento é intencional — envolva o loop em um bloco try se seu código precisar continuar após ele. O processo Claude Code subjacente também sai com um código diferente de zero.
-  * Uma sessão de entrada de streaming permanece ativa e você pode continuar enviando mensagens.
+  * Uma chamada `query()` de uma única vez produz a mensagem de resultado final e depois lança um erro que inclui o texto de falha, como `Reached maximum number of turns`. O lançamento é intencional. Envolva o loop em um bloco try se seu código precisar continuar após ele. O processo Claude Code subjacente também sai com um código diferente de zero.
+  * Uma sessão de entrada de streaming permanece ativa, e você pode continuar enviando mensagens, exceto após uma falha de sessão, que emite um resultado final `error_during_execution` e sai do processo.
 </Note>
 
-O resultado também inclui um campo `stop_reason` (`string | null` em TypeScript, `str | None` em Python) indicando por que o modelo parou de gerar em sua volta final. Valores comuns são `end_turn` (modelo terminou normalmente), `max_tokens` (atingiu o limite de token de saída) e `refusal` (o modelo recusou a requisição). Em subtipos de resultado de erro, `stop_reason` carrega o valor da última resposta do assistente antes do loop terminar. Para detectar recusas, verifique `stop_reason === "refusal"` (TypeScript) ou `stop_reason == "refusal"` (Python). Veja [`SDKResultMessage`](/docs/pt/agent-sdk/typescript#sdkresultmessage) (TypeScript) ou [`ResultMessage`](/docs/pt/agent-sdk/python#resultmessage) (Python) para o tipo completo.
+O resultado também inclui um campo `stop_reason` (`string | null` em TypeScript, `str | None` em Python) indicando por que o modelo parou de gerar em sua volta final. Valores comuns são `end_turn` (modelo terminou normalmente), `max_tokens` (atingiu o limite de token de saída) e `refusal` (o modelo recusou a requisição). Em resultados de erro que o loop produziu, `stop_reason` carrega o valor da última resposta do assistente antes do loop terminar; o resultado que Claude Code sintetiza após uma falha de sessão carrega `null`.
+
+Para detectar recusas, verifique `stop_reason === "refusal"` (TypeScript) ou `stop_reason == "refusal"` (Python). Veja [`SDKResultMessage`](/docs/pt/agent-sdk/typescript#sdkresultmessage) (TypeScript) ou [`ResultMessage`](/docs/pt/agent-sdk/python#resultmessage) (Python) para o tipo completo.
 
 <h2 id="hooks">
   Hooks
@@ -474,6 +503,8 @@ Como uma única chamada `query()` levanta uma exceção após produzir um result
   ```
 </CodeGroup>
 
+Quando o agente termina com sucesso, o exemplo imprime uma linha `Done:` com o resumo do agente sobre a correção, seguida por uma linha como `Cost: $0.0312`.
+
 <h2 id="next-steps">
   Próximos passos
 </h2>
@@ -485,5 +516,6 @@ Agora que você entende o loop, aqui está para onde ir dependendo do que você 
 * **Construindo uma UI interativa?** Habilite [streaming](/docs/pt/agent-sdk/streaming-output) para mostrar texto ao vivo e chamadas de ferramentas conforme o loop é executado.
 * **Precisa de controle mais apertado sobre o que o agente pode fazer?** Bloqueie o acesso a ferramentas com [permissões](/docs/pt/agent-sdk/permissions) e use [hooks](/docs/pt/agent-sdk/hooks) para auditar, bloquear ou transformar chamadas de ferramentas antes de serem executadas.
 * **Executando tarefas longas ou caras?** Descarregue trabalho isolado para [subagentes](/docs/pt/agent-sdk/subagents) para manter seu contexto principal enxuto.
+* **Implantando como um serviço?** Veja [Hospedando o Agent SDK](/docs/pt/agent-sdk/hosting) para orientação sobre contêineres e serverless, e [Armazenamento de sessão](/docs/pt/agent-sdk/session-storage) para persistir sessões em seu próprio backend.
 
 Para a imagem conceitual mais ampla do loop agente (não específica do SDK), veja [Como o Claude Code funciona](/docs/pt/how-claude-code-works). Para um guia prático sobre como projetar loops no Claude Code, desde loops baseados em turnos até loops baseados em objetivos e loops proativos, veja [Loop engineering: getting started with loops](https://claude.com/blog/getting-started-with-loops) no blog.

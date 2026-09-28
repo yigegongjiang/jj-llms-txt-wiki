@@ -10,41 +10,47 @@ Plugin security guidance membuat Claude meninjau perubahan kodenya sendiri untuk
 
 Setelah diinstal, plugin berjalan secara otomatis. Tidak ada yang perlu dipanggil dan tidak ada perintah terpisah yang perlu diingat.
 
-Plugin adalah pendamping dalam-sesi untuk [Code Review](/docs/id/code-review), yang berjalan pada pull request. Plugin ini mengurangi apa yang mencapai PR. Code Review menangkap apa yang ada. Untuk bagaimana plugin berlapis dengan review on-demand dan CI scanning, lihat [Bagaimana ini cocok dengan alat keamanan lainnya](#how-this-fits-with-other-security-tools).
+Plugin adalah pendamping dalam-sesi untuk [Code Review](/docs/id/code-review), yang berjalan pada pull request. Plugin ini mengurangi apa yang mencapai PR. Code Review menangkap apa yang ada. Untuk bagaimana plugin berlapis dengan review on-demand dan CI scanning, atau untuk memindai kode yang sudah Anda miliki daripada perubahan yang Claude tulis, lihat [Bagaimana ini cocok dengan alat keamanan lainnya](#how-this-fits-with-other-security-tools).
 
 <h2 id="prerequisites">
   Prasyarat
 </h2>
 
-* Claude Code CLI versi 2.1.144 atau lebih baru
-* Python 3.8 atau lebih baru di `PATH` Anda. Plugin mencoba `python3`, `python`, dan `py -3` dalam urutan itu
+* Python 3.7 atau lebih baru di `PATH` Anda. Review commit agentic memerlukan Python 3.10 atau lebih baru, begitu juga semua review yang didukung model ketika Claude Code menggunakan penyedia pihak ketiga seperti Amazon Bedrock atau Google Cloud's Agent Platform. Plugin lebih memilih interpreter yang diversi `python3.13` hingga `python3.10`, kemudian kembali ke `python3`, `python`, dan `py -3`
 * Repositori git untuk direktori tempat Anda bekerja. Review end-of-turn dan commit melakukan diff terhadap status git dan melewati secara diam-diam di luar repositori. Pemeriksaan pola per-edit berfungsi di mana saja
 
-Pada run pertama, plugin membuat virtual environment di bawah `~/.claude/security/` dan menginstal Claude Agent SDK ke dalamnya, yang memerlukan `pip` dan akses jaringan. Jika instalasi itu gagal, review commit kembali ke review single-shot daripada yang agentic. Di Windows, langkah virtual environment dilewati, jadi review commit agentic hanya berjalan jika `claude-agent-sdk` sudah dapat diimpor dan sebaliknya kembali dengan cara yang sama.
+Pada run pertama, plugin membuat virtual environment di bawah `~/.claude/security/` dan menginstal Claude Agent SDK ke dalamnya, yang memerlukan `pip` dan akses jaringan. Jika instalasi itu gagal, atau Python yang tersedia lebih lama dari 3.10, review commit pada autentikasi pihak pertama kembali ke review single-shot daripada yang agentic; pada penyedia pihak ketiga seperti Amazon Bedrock atau Google Cloud's Agent Platform, review yang didukung model memerlukan SDK itu sendiri, jadi mereka dilewati. Plugin menampilkan pemberitahuan satu kali ketika Python yang lebih lama adalah penyebabnya.
 
 <h2 id="install-the-plugin">
   Instal plugin
 </h2>
 
-Dalam sesi Claude Code, instal dari [marketplace resmi Anthropic](/docs/id/discover-plugins#official-anthropic-marketplace):
+Dalam sesi terminal Claude Code, instal dari [marketplace resmi Anthropic](/docs/id/plugins/anthropic-marketplaces):
 
 ```text theme={null}
 /plugin install security-guidance@claude-plugins-official
 ```
 
-Instalasi meminta scope. Pilih user scope untuk menulis plugin ke pengaturan pengguna Anda, sehingga dimuat di setiap sesi lokal baru yang Anda mulai di mesin ini. Jika Claude Code melaporkan bahwa marketplace tidak ditemukan, jalankan `/plugin marketplace add anthropics/claude-plugins-official` terlebih dahulu, kemudian coba lagi instalnya.
+`/plugin` membuka panel interaktif di CLI terminal. Jika Claude melaporkan bahwa `/plugin` tidak tersedia di lingkungan ini, instal dengan cara lain:
 
-Kemudian aktifkan dalam sesi saat ini dengan `/reload-plugins`, yang menerapkan perubahan plugin yang tertunda tanpa restart:
+* **Aplikasi desktop Claude, sesi lokal atau SSH**: buka [browser plugin](/docs/id/desktop#install-plugins) dengan mengklik tombol **+** di sebelah prompt, kemudian **Plugins**, kemudian **Add plugin**
+* **Ekstensi VS Code**: instal dari [dialog **Manage plugins**](/docs/id/vs-code#manage-plugins)
+* **Sesi cloud**: sesi cloud tidak memuat plugin dari pengaturan pengguna Anda atau dari `.claude/settings.json` repositori, seperti yang dijelaskan dalam [What carries over from your setup](/docs/id/cloud-environments#what-carries-over-from-your-setup). Untuk plugin yang didistribusikan organisasi Anda melalui pengaturan terkelola, lihat [Manage plugins for your organization](/docs/id/plugins/org)
 
-```text theme={null}
-/reload-plugins
-```
+Instalasi terminal meminta scope. Pilih user scope untuk menulis plugin ke pengaturan pengguna Anda, sehingga dimuat di setiap sesi lokal baru yang Anda mulai di mesin ini.
 
-<h3 id="enable-in-cloud-sessions-and-shared-repositories">
-  Aktifkan dalam sesi cloud dan repositori bersama
+Jika instalasi gagal, cocokkan pesan yang dilaporkan Claude Code:
+
+* `Marketplace "claude-plugins-official" not found`: tambahkan marketplace dengan `/plugin marketplace add anthropics/claude-plugins-official`, kemudian coba lagi instalnya.
+* Plugin [tidak ditemukan di marketplace](/docs/id/plugins/install#install-a-plugin): periksa nama plugin.
+
+Periksa ringkasan instalasi. Jika melaporkan `Run /reload-plugins to activate.`, lihat [Apply plugin changes without restarting](/docs/id/plugins/cli-reference#reload-plugins) untuk mengaktifkan plugin dalam sesi Anda saat ini.
+
+<h3 id="enable-for-your-team-in-local-sessions">
+  Aktifkan untuk tim Anda dalam sesi lokal
 </h3>
 
-Plugin yang dibatasi pengguna tidak masuk ke [Claude Code di web](/docs/id/claude-code-on-the-web), karena sesi tersebut berjalan di infrastruktur Anthropic daripada mesin Anda. Untuk mengaktifkan plugin di sana, atau untuk mengaktifkannya bagi semua orang yang mengkloning repositori, deklarasikan dalam pengaturan proyek yang diperiksa:
+Untuk mengaktifkan plugin dalam sesi lokal yang dimulai rekan kerja Anda di repositori, deklarasikan dalam pengaturan proyek yang diperiksa:
 
 ```json .claude/settings.json theme={null}
 {
@@ -54,7 +60,7 @@ Plugin yang dibatasi pengguna tidak masuk ke [Claude Code di web](/docs/id/claud
 }
 ```
 
-Administrator dapat mengaktifkan plugin di seluruh organisasi dengan menetapkan [`enabledPlugins`](/docs/id/settings#plugin-settings) dalam [pengaturan terkelola](/docs/id/admin-setup).
+Administrator dapat mengaktifkan plugin di seluruh organisasi dengan menetapkan [`enabledPlugins`](/docs/id/settings-reference#enabledplugins) dalam [pengaturan terkelola](/docs/id/admin-setup).
 
 <h2 id="what-the-plugin-checks">
   Apa yang diperiksa plugin
@@ -175,11 +181,11 @@ Plugin juga membaca `.claude/security-patterns.yml` dan `.claude/security-patter
 
 Plugin mencari `claude-security-guidance.md` dan `security-patterns.yaml` di lokasi yang sama, terlepas dari bagaimana plugin diaktifkan:
 
-| Scope         | Path                                        | Notes                                    |
-| :------------ | :------------------------------------------ | :--------------------------------------- |
-| User          | `~/.claude/claude-security-guidance.md`     | Applies to every project on your machine |
-| Project       | `.claude/claude-security-guidance.md`       | Checked in with the repository           |
-| Project local | `.claude/claude-security-guidance.local.md` | Gitignored, for personal overrides       |
+| Scope         | Path                                        | Notes                                               |
+| :------------ | :------------------------------------------ | :-------------------------------------------------- |
+| User          | `~/.claude/claude-security-guidance.md`     | Applies to every project on your machine            |
+| Project       | `.claude/claude-security-guidance.md`       | Checked in with the repository                      |
+| Project local | `.claude/claude-security-guidance.local.md` | For personal overrides; add it to your `.gitignore` |
 
 Plugin memuat semua lokasi yang ada dan menggabungkannya, dengan batas gabungan 8 KB untuk file panduan. Administrator dapat mendistribusikan aturan di seluruh organisasi dengan mendorong file lingkup pengguna ke `~/.claude/` melalui manajemen perangkat. Jalur yang sama berlaku untuk `security-patterns.yaml`.
 
@@ -187,7 +193,7 @@ Plugin memuat semua lokasi yang ada dan menggabungkannya, dengan batas gabungan 
   Biaya penggunaan
 </h2>
 
-[Pemeriksaan pola per-edit](#on-each-file-edit) tidak membuat panggilan model dan tidak menambah biaya. Review [end-of-turn](#at-the-end-of-each-turn) dan [commit](#on-each-commit-or-push-claude-makes) masing-masing menghabiskan penggunaan model tambahan yang dihitung terhadap [penggunaan](/docs/id/costs) Anda seperti permintaan Claude lainnya. Review commit bersifat agentic dan mungkin memerlukan beberapa putaran model per commit, dibatasi pada 20 review per jam bergulir. Harapkan kira-kira satu panggilan review per giliran yang mengubah file dan satu review yang lebih dalam per commit, keduanya tunduk pada batas di atas.
+[Pemeriksaan pola per-edit](#on-each-file-edit) tidak membuat panggilan model dan tidak menambah biaya. Review [end-of-turn](#at-the-end-of-each-turn) dan [commit](#on-each-commit-or-push-claude-makes) masing-masing menghabiskan penggunaan model tambahan yang dihitung terhadap [penggunaan](/docs/id/costs) Anda seperti permintaan Claude lainnya. Review commit bersifat agentic dan mungkin memerlukan beberapa putaran model per commit. Harapkan kira-kira satu panggilan review per giliran yang mengubah file dan satu review yang lebih dalam per commit, keduanya tunduk pada batas di atas.
 
 Kedua review yang didukung model menggunakan Claude Opus 4.7 secara default. Atur `SECURITY_REVIEW_MODEL` untuk memilih model berbeda untuk review end-of-turn dan `SG_AGENTIC_MODEL` untuk review commit.
 
@@ -219,7 +225,7 @@ Untuk menghapusnya dari lingkup pengguna Anda:
 /plugin uninstall security-guidance@claude-plugins-official
 ```
 
-Jika plugin diaktifkan melalui `.claude/settings.json` proyek, menonaktifkannya dari `/plugin` menulis override ke `.claude/settings.local.json` Anda daripada mengedit file yang diperiksa, jadi plugin tetap mati untuk Anda sementara rekan kerja tidak terpengaruh. Dialog yang sama juga menawarkan untuk uninstall plugin untuk semua orang dengan menghapusnya dari `.claude/settings.json` bersama; opsi tersebut memerlukan Claude Code v2.1.203 atau lebih baru. Jika diaktifkan melalui [pengaturan terkelola](/docs/id/admin-setup), hanya administrator yang dapat menonaktifkannya.
+Jika plugin diaktifkan melalui `.claude/settings.json` proyek, menonaktifkannya dari `/plugin` menulis override ke `.claude/settings.local.json` Anda daripada mengedit file yang diperiksa, jadi plugin tetap mati untuk Anda sementara rekan kerja tidak terpengaruh. Dialog yang sama juga menawarkan untuk uninstall plugin untuk semua orang dengan menghapusnya dari `.claude/settings.json` bersama. Jika diaktifkan melalui [pengaturan terkelola](/docs/id/admin-setup), hanya administrator yang dapat menonaktifkannya.
 
 <h2 id="how-the-plugin-integrates-with-claude-code">
   Bagaimana plugin terintegrasi dengan Claude Code
@@ -243,14 +249,15 @@ Jika Anda membangun hook Anda sendiri, [sumber plugin](https://github.com/anthro
 
 Plugin adalah satu lapisan dalam pendekatan pertahanan mendalam. Ini menangkap masalah paling awal, saat kode masih dalam editor, tetapi bukan jaminan dan tidak menggantikan pemeriksaan kemudian. Stack tipikal:
 
-| Stage           | Tool                                                      | What it covers                                                                                   |
-| :-------------- | :-------------------------------------------------------- | :----------------------------------------------------------------------------------------------- |
-| In session      | Security guidance plugin                                  | Common vulnerabilities in code Claude writes, fixed in the same session                          |
-| On demand       | [`/security-review`](/docs/id/commands#all-commands)           | One-time security pass on the current branch, run when you ask                                   |
-| On pull request | [Code Review](/docs/id/code-review), Team and Enterprise plans | Multi-agent correctness and security review with full codebase context                           |
-| In CI           | Your existing static analysis and dependency scanners     | Language-specific rules, supply-chain checks, and policy enforcement the plugin does not attempt |
+| Stage                  | Tool                                                      | What it covers                                                                                           |
+| :--------------------- | :-------------------------------------------------------- | :------------------------------------------------------------------------------------------------------- |
+| In session             | Security guidance plugin                                  | Common vulnerabilities in code Claude writes, fixed in the same session                                  |
+| On demand, single pass | [`/security-review`](/docs/id/commands#all-commands)           | One-time security pass on the current branch, run when you ask                                           |
+| On demand, deep scan   | [Claude Security plugin](/docs/id/claude-security)             | Multi-agent vulnerability scan of a repository or diff, with independently reviewed findings and patches |
+| On pull request        | [Code Review](/docs/id/code-review), Team and Enterprise plans | Multi-agent correctness and security review with full codebase context                                   |
+| In CI                  | Your existing static analysis and dependency scanners     | Language-specific rules, supply-chain checks, and policy enforcement the plugin does not attempt         |
 
-Setiap tahap kemudian menangkap apa yang dilewatkan yang sebelumnya. Nilai plugin adalah mengurangi volume yang mencapainya, bukan menghilangkan kebutuhan akan mereka.
+Untuk menemukan masalah keamanan dalam kode yang sudah Anda miliki, daripada dalam perubahan yang sedang ditulis Claude, minta Claude dalam sesi untuk meninjau file atau direktori tertentu untuk kerentanan, atau gunakan [Claude Security plugin](/docs/id/claude-security) untuk pemindaian multi-agen yang lebih dalam dari seluruh repositori; [`/security-review`](/docs/id/commands#all-commands) hanya mencakup perubahan pada cabang Anda saat ini. Bagaimanapun, tinjauan membaca kode sumber dalam checkout Anda, bukan situs yang sedang berjalan atau layanan yang diterapkan.
 
 <h2 id="troubleshooting">
   Troubleshooting
@@ -261,7 +268,7 @@ Plugin menulis diagnostik runtime ke `~/.claude/security/log.txt`. Periksa di sa
 Alasan umum lapisan review melewati tanpa pesan dalam percakapan:
 
 * Direktori bukan repositori git: review end-of-turn dan commit memerlukan status git dan melewati di luar repositori
-* Sesi tidak memiliki autentikasi Anthropic: review yang didukung model melewati dan hanya pemeriksaan pola per-edit yang berjalan
+* Sesi tidak memiliki autentikasi Anthropic dan tidak ada penyedia pihak ketiga yang dikonfigurasi: review yang didukung model melewati dan hanya pemeriksaan pola per-edit yang berjalan
 * File `security-patterns.yaml` ada tetapi PyYAML tidak dapat diimpor: file diabaikan. Gunakan `security-patterns.json` sebagai gantinya
 
 <h2 id="related-resources">
@@ -272,4 +279,4 @@ Untuk mendalami bagian yang halaman ini sentuh:
 
 * [Code Review](/docs/id/code-review): atur review multi-agent waktu PR
 * [Otomatiskan alur kerja dengan hooks](/docs/id/hooks-guide): bangun pemeriksaan Anda sendiri pada titik siklus hidup yang sama
-* [Temukan dan instal plugin](/docs/id/discover-plugins#official-anthropic-marketplace): telusuri plugin resmi lainnya
+* [Temukan plugin di marketplace resmi](/docs/id/plugins/anthropic-marketplaces#find-plugins-in-the-official-marketplace): tempat untuk menelusuri plugin resmi lainnya

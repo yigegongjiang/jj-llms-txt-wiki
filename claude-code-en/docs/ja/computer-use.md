@@ -98,6 +98,8 @@ sure nothing crashes. Screenshot any error states you find.
 
 これらのアプリはブロックされていません。警告により、タスクがそのレベルのアクセスを必要とするかどうかを決定できます。
 
+Finder を承認して、Claude がデスクトップ、Dock、または Finder ウィンドウをクリックできるようにします。
+
 Claude の制御レベルはアプリカテゴリによっても異なります。ブラウザと取引プラットフォームはビューのみ、ターミナルと IDE はクリックのみ、その他すべてはフルコントロールを取得します。完全なティア分類については、[Desktop でのアプリのアクセス許可](/docs/ja/desktop#app-permissions)を参照してください。
 
 <h2 id="how-claude-works-on-your-screen">
@@ -110,7 +112,7 @@ Claude の制御レベルはアプリカテゴリによっても異なります�
   一度に 1 つのセッション
 </h3>
 
-コンピュータ使用は、最初のコンピュータ使用アクションからそれを取得したセッションが終了するまで、マシン全体のロックを保持します。v2.1.195 以降、タスクを完了してもロックは解放されません。セッションを終了するだけです。別の Claude Code セッションが既にコンピュータを使用している場合、新しい試みはロックを保持しているセッションを示すメッセージで失敗します。最初にそのセッションを終了してください。
+一度に 1 つのセッションだけがコンピュータを使用できます。セッションは最初のコンピュータ使用アクションでロックを取得し、タスクが完了したときではなく、セッションが終了したときにそれを解放します。2 番目のセッションのコンピュータ使用は、ロックを保持しているセッションを示すエラーで失敗します。最初にそのセッションを終了してください。
 
 <h3 id="apps-are-hidden-while-claude-works">
   Claude が作業している間、アプリは非表示になります
@@ -132,7 +134,7 @@ Claude Code はモデルに送信する前に、すべてのスクリーンシ�
   いつでも停止
 </h3>
 
-Claude がロックを取得すると、macOS 通知が表示されます。「Claude is using your computer · press Esc to stop」。どこからでも `Esc` を押して現在のアクションを直ちに中止するか、ターミナルで `Ctrl+C` を押します。どちらの方法でも、Claude は停止し、アプリを表示し、制御をあなたに返します。セッションは、[コンピュータ使用ロック](#one-session-at-a-time)を終了するまで保持します。
+Claude がコンピュータを使用する各ターンで最初に、macOS 通知が表示されます。「Claude is using your computer · press Esc to stop」。どこからでも `Esc` を押して現在のアクションを直ちに中止するか、ターミナルで `Ctrl+C` を押します。どちらの方法でも、Claude は停止し、アプリを表示し、制御をあなたに返します。セッションは、[コンピュータ使用ロック](#one-session-at-a-time)を終了するまで保持します。
 
 Claude が完了したときに 2 番目の通知が表示されます。
 
@@ -197,7 +199,7 @@ Open the iOS Simulator, launch the app, tap through the onboarding
 screens, and tell me if any screen takes more than a second to load.
 ```
 
-Claude はマウスを使用するのと同じ方法でシミュレータを制御します。
+Claude はマウスを使用するのと同じ方法でシミュレータを制御します。このフローは CLI に適用されます。Desktop アプリでは、同じリクエストが代わりに [iOS Simulator ペイン](/docs/ja/desktop-ios-simulator) を開きます。
 
 <h2 id="differences-from-the-desktop-app">
   Desktop アプリとの違い

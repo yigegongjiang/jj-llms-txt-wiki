@@ -2,94 +2,99 @@
 > Fetch the complete documentation index at: https://code.claude.com/docs/llms.txt
 > Use this file to discover all available pages before exploring further.
 
-# パーミッションの設定
+# 権限の設定
 
-> パーミッションモード、フック、宣言的な許可/拒否ルールを使用して、エージェントがツールをどのように使用するかを制御します。
+> 権限モード、hooks、および宣言的な許可/拒否ルールを使用して、エージェントがツールをどのように使用するかを制御します。
 
-Claude Agent SDK は、Claude がツールをどのように使用するかを管理するためのパーミッション制御を提供します。パーミッションモードとルールを使用して、自動的に許可されるものを定義し、[`canUseTool` コールバック](/docs/ja/agent-sdk/user-input)を使用して、実行時にそれ以外のすべてを処理します。
-
-<Note>
-  このページはパーミッションモードとルールについて説明しています。ユーザーが実行時にツールリクエストを承認または拒否する対話的な承認フローを構築するには、[承認とユーザー入力の処理](/docs/ja/agent-sdk/user-input)を参照してください。
-</Note>
+Claude Agent SDK は、Claude がツールをどのように使用するかを管理するための権限制御を提供します。権限モードとルールを使用して、自動的に許可されるものを定義し、[`canUseTool` コールバック](/docs/ja/agent-sdk/user-input)を使用して、実行時にそれ以外のすべてを処理します。
 
 <h2 id="how-permissions-are-evaluated">
-  パーミッションの評価方法
+  権限がどのように評価されるか
 </h2>
 
-Claude がツールをリクエストすると、SDK は次の順序でパーミッションをチェックします。
+Claude がツールをリクエストすると、SDK は以下の順序で権限をチェックします。
 
 <Steps>
-  <Step title="フック">
-    最初に[フック](/docs/ja/agent-sdk/hooks)を実行します。フックはコールを直接拒否するか、それを渡すことができます。`allow` を返すフックは、以下の拒否および質問ルールをスキップしません。これらはフックの結果に関係なく評価されます。
+  <Step title="Hooks">
+    最初に [hooks](/docs/ja/agent-sdk/hooks) を実行します。Hook は呼び出しを完全に拒否するか、それを通すことができます。`allow` を返す Hook は、以下の deny および ask ルールをスキップしません。これらは Hook の結果に関係なく評価されます。`PreToolUse` Hook の allow は、[重要なパス](/docs/ja/permission-modes#critical-paths) をターゲットとする `rm` または `rmdir` の削除を承認することもできません。
   </Step>
 
-  <Step title="拒否ルール">
-    `deny` ルール（`disallowed_tools` および[settings.json](/docs/ja/settings#permission-settings)から）をチェックします。拒否ルールが一致する場合、`bypassPermissions` モードでもツールはブロックされます。`Bash` のような裸名の拒否ルールはこの評価が開始される前に Claude のコンテキストからツールを削除するため、このステップでチェックされるのは `Bash(rm *)` のようなスコープ付きルールのみです。
+  <Step title="Deny ルール">
+    `deny` ルール（`disallowed_tools` および [settings.json](/docs/ja/settings-reference#permission-settings) から）をチェックします。Deny ルールがマッチした場合、`bypassPermissions` モードでもツールはブロックされます。`Bash` のような裸名の deny ルールは、この評価が始まる前に Claude のコンテキストからツールを削除するため、`Bash(rm *)` のようなスコープ付きルールのみがこのステップでチェックされます。
   </Step>
 
-  <Step title="質問ルール">
-    [settings.json](/docs/ja/settings#permission-settings)から `ask` ルールをチェックします。質問ルールが一致する場合、`bypassPermissions` モードでも、コールは確認のために[`canUseTool` コールバック](/docs/ja/agent-sdk/user-input)にフォールスルーします。
+  <Step title="Ask ルール">
+    [settings.json](/docs/ja/settings-reference#permission-settings) から `ask` ルールをチェックします。Ask ルールがマッチした場合、呼び出しは確認のために [`canUseTool` コールバック](/docs/ja/agent-sdk/user-input) にフォールスルーします。`bypassPermissions` モードでも同様です。
 
-    ユーザーインタラクションが必要なツールは同じように動作します。`AskUserQuestion` および MCP ツール（サーバーが[`_meta["anthropic/requiresUserInteraction"]`](/docs/ja/mcp#require-approval-for-a-specific-tool)を設定）は、許可ルールが一致する場合でも常にコールバックにフォールスルーします。`dontAsk` モードでは、このモードはプロンプトを表示しないため、両方のケースが代わりに拒否されます。MCP アノテーションには Claude Code v2.1.199 以降が必要です。
+    ユーザーインタラクションが必要なツールは同じように動作します。`AskUserQuestion` および [`_meta["anthropic/requiresUserInteraction"]`](/docs/ja/mcp#require-approval-for-a-specific-tool) を設定する MCP ツールサーバーは、allow ルールがマッチした場合でも常にコールバックにフォールスルーします。`dontAsk` モードでは、このモードは決してプロンプトを表示しないため、両方のケースが拒否されます。MCP アノテーションには Claude Code v2.1.199 以降が必要です。
 
-    [claude.ai コネクタ](/docs/ja/mcp#organization-controls-on-connector-tools)ツール（組織が `ask` に設定したもの）もこのステップでフローを離れます。すべてのコールはコールバックにフォールスルーします。`bypassPermissions` モードでも、許可ルールが一致する場合でもです。コールバックは理由 `Your organization requires approval for this tool` を受け取ります。`dontAsk` モードではコールが拒否される代わりに、このモードはプロンプトを表示しないためです。
+    組織が `ask` に設定した [claude.ai コネクタ](/docs/ja/mcp#organization-controls-on-connector-tools) ツールもこのステップでフローを離れます。`bypassPermissions` モードでも allow ルールがマッチした場合でも、すべての呼び出しはコールバックにフォールスルーします。コールバックは理由 `Your organization requires approval for this tool` を受け取ります。`dontAsk` モードでは、このモードは決してプロンプトを表示しないため、呼び出しは拒否されます。
   </Step>
 
-  <Step title="権限モード">
-    アクティブな[権限モード](#permission-modes)を適用します。`bypassPermissions` はこのステップに到達したすべてを承認します。`acceptEdits` はファイル操作を承認します。`plan` はファイル編集およびシェル書き込みツールを許可ルールに関係なく [`canUseTool` コールバック](/docs/ja/agent-sdk/user-input)にルーティングするため、計画中は書き込み操作を自動承認することはできません。その他のモードはフォールスルーします。
+  <Step title="Permission モード">
+    アクティブな [permission モード](#permission-modes) を適用します。
+
+    * `bypassPermissions` モードでは、Claude Code はこのステップに到達したすべてのものを承認します。ただし、[重要なパス](/docs/ja/permission-modes#critical-paths) をターゲットとする `rm` および `rmdir` の削除は除きます。これらはフォールスルーします。
+    * `acceptEdits` モードでは、Claude Code は [Accept edits モード](#accept-edits-mode-acceptedits) の下にリストされたファイル操作を承認します。
+    * `plan` モードでは、Claude Code は allow ルールに関係なく、ファイル編集およびシェル書き込みツールを `canUseTool` コールバックに送信します。これにより、計画中に書き込み操作を自動承認することはできません。
+    * その他のモードでは、リクエストはフォールスルーします。
   </Step>
 
-  <Step title="許可ルール">
-    `allow` ルール（`allowed_tools` および settings.json から）をチェックします。ルールが一致する場合、ツールは承認されます。
+  <Step title="Allow ルール">
+    `allow` ルール（`allowed_tools` および settings.json から）をチェックします。ルールがマッチした場合、ツールは承認されます。ツール自体が承認する呼び出しもこのステップで解決されます。ルールは不要です。例えば、作業ディレクトリ内のファイル読み取りまたは [読み取り専用 Bash コマンド](/docs/ja/permissions#read-only-commands)。`rm` および `rmdir` の削除で [重要なパス](/docs/ja/permission-modes#critical-paths) をターゲットとするものは、allow ルールによって決して承認されません。プロンプトを表示するモードではコールバックに到達し、Claude Code v2.1.218 以降の `auto` モードでは [分類器](/docs/ja/permission-modes#eliminate-prompts-with-auto-mode) に移動し、`dontAsk` モードでは拒否されます。
   </Step>
 
   <Step title="canUseTool コールバック">
-    上記のいずれでも解決されない場合、決定のために[`canUseTool` コールバック](/docs/ja/agent-sdk/user-input)を呼び出します。`dontAsk` モードでは、このステップはスキップされ、ツールは拒否されます。
+    上記のいずれでも解決されない場合、決定のために [`canUseTool` コールバック](/docs/ja/agent-sdk/user-input) を呼び出します。`dontAsk` モードでは、このステップはスキップされ、ツールは拒否されます。
+
+    TypeScript SDK では、[`permissionPrompts: 'none'`](/docs/ja/agent-sdk/typescript#options) を設定した場合、このステップではコールバックは呼び出されません。[`PermissionRequest` hook](/docs/ja/hooks#permissionrequest) はまだ決定する機会があり、そうしない場合、Claude Code は呼び出しを拒否します。このオプションには Claude Code v2.1.259 以降が必要です。
   </Step>
 </Steps>
 
-<img src="https://mintcdn.com/claude-code/jYgs7qigNjO1Badj/images/agent-sdk/permissions-flow.svg?fit=max&auto=format&n=jYgs7qigNjO1Badj&q=85&s=c771ad9085b1277d3708027a49c744bc" alt="6 ステップのパーミッション評価フロー図。ツールリクエストはフック、拒否ルール、質問ルール、パーミッションモード、許可ルール、canUseTool を通過します。フック、拒否ルール、canUseTool はブロックにルーティングでき、パーミッションモードバイパス、許可ルール、canUseTool は実行にルーティングできます。質問ルールは canUseTool にルーティングします。" width="1180" height="260" data-path="images/agent-sdk/permissions-flow.svg" />
+<img src="https://mintcdn.com/claude-code/jYgs7qigNjO1Badj/images/agent-sdk/permissions-flow.svg?fit=max&auto=format&n=jYgs7qigNjO1Badj&q=85&s=c771ad9085b1277d3708027a49c744bc" className="dark:hidden" alt="上記のステップに対応する 6 ステップの権限評価フロー図。ツールリクエストは hooks、deny ルール、ask ルール、permission モード、allow ルール、canUseTool を通過します。Hooks、deny ルール、canUseTool は Blocked にルーティングでき、permission モード bypass、allow ルール、canUseTool は Execute にルーティングでき、ask ルールは canUseTool にルーティングします。" width="1180" height="260" data-path="images/agent-sdk/permissions-flow.svg" />
 
-v2.1.198 以降、このパーミッション評価順序が到達できない `canUseTool` コールバックを渡す場合、TypeScript SDK はクエリが構築されるときに Node.js プロセス警告を 1 回発行します。警告のコードは `CLAUDE_SDK_CAN_USE_TOOL_SHADOWED` です。2 つの設定がこれをトリガーします。
+<img src="https://mintcdn.com/claude-code/_xqph1dUOslCOwsj/images/agent-sdk/permissions-flow-dark.svg?fit=max&auto=format&n=_xqph1dUOslCOwsj&q=85&s=e53a91e9059cbf51852b7cedb4dd4251" className="hidden dark:block" alt="上記のステップに対応する 6 ステップの権限評価フロー図。ツールリクエストは hooks、deny ルール、ask ルール、permission モード、allow ルール、canUseTool を通過します。Hooks、deny ルール、canUseTool は Blocked にルーティングでき、permission モード bypass、allow ルール、canUseTool は Execute にルーティングでき、ask ルール は canUseTool にルーティングします。" width="1180" height="260" data-path="images/agent-sdk/permissions-flow-dark.svg" />
 
-* `permissionMode: 'bypassPermissions'`。これはパーミッションモードステップに到達するすべてのコールを自動承認します。
-* `"Read"` などの各裸の `allowedTools` エントリ。これはコールバックが相談される前にそのツール全体を自動承認します。
+TypeScript SDK がコールバックが相談される前に呼び出しを自動承認することを期待する設定で `canUseTool` コールバックを渡す場合、SDK はクエリが構築されるときに Node.js プロセス警告を 1 回発行します。警告のコードは `CLAUDE_SDK_CAN_USE_TOOL_SHADOWED` です。2 つの設定がそれをトリガーします。
 
-`Bash(ls *)` などの指定子を持つエントリと `acceptEdits` モードはこれをトリガーしません。また、設定ファイルから来る許可ルールはチェックに表示されません。
+* `permissionMode: 'bypassPermissions'`。これは permission モードステップに到達するすべての呼び出しを自動承認します。ただし、[どのモードも自動承認しないアクション](/docs/ja/permission-modes#actions-no-mode-auto-approves) は除きます。
+* `"Read"` などの各裸の `allowedTools` エントリ。これはコールバックが相談される前にそのツール全体を自動承認します。ただし、[どのモードも自動承認しないアクション](/docs/ja/permission-modes#actions-no-mode-auto-approves) は除きます。
 
-`process.on('warning', ...)` でリッスンしてコードをマッチングしてログに記録するか、それを抑制します。モードとルールに関係なくすべてのツールコールをゲートするには、代わりに[`PreToolUse` フック](/docs/ja/agent-sdk/hooks)を使用します。
+`Bash(ls *)` などの指定子を持つエントリおよび `acceptEdits` モードはそれをトリガーしません。また、設定ファイルから来る allow ルールはチェックに表示されません。
 
-このページは**許可および拒否ルール**と**パーミッションモード**に焦点を当てています。その他のステップについては、以下を参照してください。
+`process.on('warning', ...)` でリッスンし、コードをマッチさせてログまたは抑制します。モードとルールに関係なくすべてのツール呼び出しをゲートするには、代わりに [`PreToolUse` hook](/docs/ja/agent-sdk/hooks) を使用します。
 
-* **フック：** カスタムコードを実行して、ツールリクエストを許可、拒否、または変更します。[フックで実行を制御](/docs/ja/agent-sdk/hooks)を参照してください。
-* **canUseTool コールバック：** 実行時にユーザーに承認を促します。[承認とユーザー入力の処理](/docs/ja/agent-sdk/user-input)を参照してください。
+このページは **allow および deny ルール** および **permission モード** に焦点を当てています。その他のステップについては、以下を参照してください。
+
+* **Hooks：** ツールリクエストを許可、拒否、または変更するカスタムコードを実行します。[実行を Hook で制御する](/docs/ja/agent-sdk/hooks) を参照してください。
+* **canUseTool コールバック：** 前のステップで呼び出しが解決されない場合、実行時にユーザーの承認をプロンプトします。[承認とユーザー入力を処理する](/docs/ja/agent-sdk/user-input) を参照してください。
 
 <h2 id="allow-and-deny-rules">
-  許可および拒否ルール
+  許可ルールと拒否ルール
 </h2>
 
-`allowed_tools` および `disallowed_tools`（TypeScript：`allowedTools` / `disallowedTools`）は、上記の評価フロー内の許可および拒否ルールリストにエントリを追加します。許可ルールは承認のみに影響します。`allowed_tools` にリストされていないツールは引き続き Claude に利用可能であり、パーミッションモードにフォールスルーします。拒否ルールは、ツール全体に名前を付けるか、ツール内のパターンをスコープするかによって異なる動作をします。
+`allowed_tools` と `disallowed_tools`（TypeScript：`allowedTools` / `disallowedTools`）は、上記の評価フロー内の許可ルールと拒否ルールリストにエントリを追加します。`allowed_tools` に[タスク追跡ツール](/docs/ja/agent-sdk/todo-tracking#model-availability)の 1 つを名前で指定すると、Claude Code もセッションをオプトインします。`allowed_tools` にリストされていない他のツールは、Claude でも利用可能であり、承認が必要なそのツールへの呼び出しは権限モードにフォールスルーします。拒否ルールは、ツール名を指定するか、ツール内のパターンをスコープするかによって動作が異なります。
 
-| オプション                             | 効果                                                                                                                       |
-| :-------------------------------- | :----------------------------------------------------------------------------------------------------------------------- |
-| `allowed_tools=["Read", "Grep"]`  | `Read` および `Grep` は自動承認されます。ここにリストされていないツールは引き続き存在し、パーミッションモードおよび `canUseTool` にフォールスルーします。                              |
-| `disallowed_tools=["Bash"]`       | `Bash` ツール定義はリクエストから削除されます。Claude はツールを認識せず、それを試みることはできません。                                                              |
-| `disallowed_tools=["Bash(rm *)"]` | `Bash` は利用可能なままです。`rm *` に一致する呼び出しは、`bypassPermissions` を含むすべてのパーミッションモードで拒否されます。その他の `Bash` 呼び出しはパーミッションモードにフォールスルーします。 |
-| `disallowed_tools=["*"]`          | すべてのツール定義はリクエストから削除されます。拒否ルールではツール名グロブがサポートされています。`"*"` はすべてのツールに一致し、`"mcp__*"` はすべてのサーバー全体のすべての MCP ツールに一致します。          |
+| オプション                             | 効果                                                                                                                                                                        |
+| :-------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `allowed_tools=["Read", "Grep"]`  | `Read` と `Grep` は自動承認されます。ここにリストされていない他のツールは依然として存在し、承認が必要なそれらへの呼び出しは権限モードと `canUseTool` にフォールスルーします。                                                                     |
+| `disallowed_tools=["Bash"]`       | `Bash` ツール定義はリクエストから削除されます。Claude はツールを認識せず、実行を試みることはできません。                                                                                                               |
+| `disallowed_tools=["Bash(rm *)"]` | `Bash` は利用可能なままです。`rm *`[に記載されているとおり](/docs/ja/permissions#bash-rule-limits)にマッチする呼び出しは、`bypassPermissions` を含むすべての権限モードで拒否されます。`/bin/rm` を含む他の `Bash` 呼び出しは、権限モードにフォールスルーします。 |
+| `disallowed_tools=["*"]`          | すべてのツール定義がリクエストから削除されます。拒否ルールではツール名グロブがサポートされています：`"*"` はすべてのツールにマッチし、`"mcp__*"` はすべてのサーバー全体のすべての MCP ツールにマッチします。                                                         |
 
-許可ルールは、リテラル `mcp__<server>__` プレフィックスの後にのみツール名グロブを受け入れます。サーバーセグメントはグロブフリーである必要があり、設定したサーバーに名前を付けます。`mcp__puppeteer__*` は `puppeteer` サーバーからのすべてのツールに一致し、`mcp__github__get_*` はその `get_` ツールに一致します。`allowed_tools=["*"]` または `allowed_tools=["mcp__*"]` のようなアンカーされていないエントリは、スタートアップ警告で無視され、何も自動承認しません。
+許可ルールは、リテラル `mcp__<server>__` プレフィックスの後にのみツール名グロブを受け入れます。サーバーセグメントはグロブフリーである必要があり、設定したサーバーを指定します：`mcp__puppeteer__*` は `puppeteer` サーバーからのすべてのツールにマッチし、`mcp__github__get_*` はその `get_` ツールにマッチします。`allowed_tools=["*"]` や `allowed_tools=["mcp__*"]` のようなアンカーなしエントリは、スタートアップ警告で無視され、何も自動承認しません。
 
-`Read` および `Edit` のスコープ付きルールはパスパターンを取ります。`Edit(path)` ルールは、`Write` および `NotebookEdit` を含む、ファイルを書き込むすべての組み込みツールを管理します。`Write(path)` ルールはファイル権限チェックと一致することはありません。
+`Read` と `Edit` のスコープ付きルールはパスパターンを取ります。`Edit(path)` ルールは、`Write` と `NotebookEdit` を含む、ファイルを書き込むすべての組み込みツールを管理します。`Write(path)` ルールはファイル権限チェックによってマッチすることはありません。
 
-絶対ファイルシステムパスには `//path` を使用します。`Edit(//secrets/**)` の拒否ルールは、ディスク上の `/secrets` の下のどこでも書き込みをブロックします。単一の先頭スラッシュを使用する場合、`Edit(/secrets/**)` はルールのソースでアンカーされます。`allowed_tools` または `disallowed_tools` を通じて渡されるルールの場合、これはセッションの作業ディレクトリを意味するため、ルールはディスク上の `/secrets` をブロックしません。4 つのアンカー形式と設定ファイルからのルール解決方法については、[Read および Edit ルール](/docs/ja/permissions#read-and-edit)を参照してください。
+絶対ファイルシステムパスには `//path` を使用します：`Edit(//secrets/**)` の拒否ルールは、ディスク上の `/secrets` の下のどこでも書き込みをブロックします。単一の先頭スラッシュの場合、`Edit(/secrets/**)` はルールのソースでアンカーします。`allowed_tools` または `disallowed_tools` を通じて渡されるルールの場合、それはセッションの作業ディレクトリを意味するため、ルールはディスク上の `/secrets` をブロックしません。[Read と Edit ルール](/docs/ja/permissions#read-and-edit)で 4 つのアンカー形式と、設定ファイルからのルール解決方法を参照してください。
 
 <Warning>
-  **自動承認されたツールは `canUseTool` に到達しません。** 任意の前のステップで承認されたツール呼び出し（`acceptEdits` または `bypassPermissions` による、または許可ルールによる）は、`canUseTool` コールバックをスキップするため、そこに配置した権限チェックはそのツールに対して静かにバイパスされます。`AskUserQuestion`、MCP ツール（[`_meta["anthropic/requiresUserInteraction"]`](/docs/ja/mcp#require-approval-for-a-specific-tool) でマークされたもの）、およびコネクタツール（[組織が `ask` に設定したもの](/docs/ja/mcp#organization-controls-on-connector-tools)）は、許可ルールが一致する場合でもコールバックに到達します。
+  **自動承認ツールは `canUseTool` に到達しません。** `acceptEdits` または `bypassPermissions` によって、または許可ルールによって、任意の前のステップで承認されたツール呼び出しは、その `canUseTool` コールバックをスキップするため、そこに配置した権限チェックはそのツールに対して静かにバイパスされます。`AskUserQuestion`、MCP ツール（[`_meta["anthropic/requiresUserInteraction"]`](/docs/ja/mcp#require-approval-for-a-specific-tool)でマークされている）、コネクタツール（[組織が `ask` に設定](/docs/ja/mcp#organization-controls-on-connector-tools)）、および[重要なパス](/docs/ja/permission-modes#critical-paths)をターゲットとする `rm` と `rmdir` 削除は、許可ルールがマッチする場合でも、コールバックに到達します。`auto` モードでは、重要なパス削除は[分類器](/docs/ja/permission-modes#eliminate-prompts-with-auto-mode)に移動し、コールバックには移動しません。一方、ここにリストされている他の呼び出しはそれでも到達します。分類器ルーティングには Claude Code v2.1.218 以降が必要です。`dontAsk` モードでは、これらの呼び出しは代わりに拒否され、コールバックを呼び出しません。
 
-  カバレッジはエントリの形式に依存します。`Read` または `mcp__github__get_issue` のような単純な名前は、そのツールへのすべての呼び出しを自動承認しますが、`Bash(ls *)` のようなスコープ付きルールは一致する呼び出しのみを自動承認し、その他の `Bash` 呼び出しはコールバックにフォールスルーします。すべてのツール呼び出しで実行する必要があるチェックについては、[`PreToolUse` フック](/docs/ja/agent-sdk/hooks)を使用してください。フックはすべての他のステップの前に実行され、フック拒否は `bypassPermissions` モードでも適用されます。
+  カバレッジはエントリの形式に依存します：`Read` や `mcp__github__get_issue` のような裸の名前は、上記の例外を除いて、そのツールへのすべての呼び出しを自動承認しますが、`Bash(npm test *)` のようなスコープ付きルールはマッチする呼び出しのみを自動承認し、承認が必要な他の `Bash` 呼び出しはコールバックにフォールスルーします。すべてのツール呼び出しで実行する必要があるチェックの場合は、[`PreToolUse` フック](/docs/ja/agent-sdk/hooks)を使用します：フックはすべての他のステップの前に実行され、フック拒否は `bypassPermissions` モードでも適用されます。
 </Warning>
 
-ロックダウンされたエージェントの場合、`allowedTools` を `permissionMode: "dontAsk"` と組み合わせます。リストされたツールは承認されます。上記の警告の常にプロンプトが表示されるツールを除き、その他のものはプロンプトの代わりに直接拒否されます。
+ロックダウンされたエージェントの場合、`allowedTools` を `permissionMode: "dontAsk"` と組み合わせます：
 
 ```typescript theme={null}
 const options = {
@@ -98,42 +103,46 @@ const options = {
 };
 ```
 
+リストされたツールは承認されます。ただし、[モードが自動承認しないアクション](/docs/ja/permission-modes#actions-no-mode-auto-approves)を除きます。プロンプトを表示する他のすべての呼び出しは代わりに拒否されます。`default` モードで承認が不要な呼び出しは、リストするかどうかに関わらず実行されます。例えば、[読み取り専用 Bash コマンド](/docs/ja/permissions#read-only-commands)、`Agent` のような実行前に尋ねないツール、および作業ディレクトリ内のファイル読み取りなどです。ツールを Claude の到達範囲から完全に外すには、その裸の名前を `disallowedTools` に追加します。
+
 <Warning>
-  **`allowed_tools` は `bypassPermissions` を制限しません。** `allowed_tools` はリストしたツールのみを事前承認します。リストされていないツールは許可ルールと一致せず、パーミッションモードにフォールスルーします。ここで `bypassPermissions` はそれらを承認します。`allowed_tools=["Read"]` を `permission_mode="bypassPermissions"` と一緒に設定すると、`Bash`、`Write`、`Edit` を含むすべてのツールが承認されます。`bypassPermissions` が必要だが特定のツールをブロックしたい場合は、`disallowed_tools` を使用してください。
+  **`allowed_tools` は `bypassPermissions` を制約しません。** `allowed_tools` はリストしたツールを事前承認します。リストされていない他のツールは、許可ルールによってマッチされず、権限モードにフォールスルーします。ここで `bypassPermissions` はそれらを承認します。`allowed_tools=["Read"]` を `permission_mode="bypassPermissions"` と一緒に設定すると、`Bash`、`Write`、`Edit` を含むすべてのツールが承認されます。`bypassPermissions` が必要だが、特定のツールをブロックしたい場合は、`disallowed_tools` を使用します。
 </Warning>
 
-`.claude/settings.json` で許可、拒否、および質問ルールを宣言的に設定することもできます。これらのルールは、`project` 設定ソースが有効な場合に読み込まれます。デフォルトの `query()` オプションではこれが有効です。`setting_sources`（TypeScript：`settingSources`）を明示的に設定する場合は、それらを適用するために `"project"` を含めてください。ルール構文については、[パーミッション設定](/docs/ja/settings#permission-settings)を参照してください。
+`.claude/settings.json` で許可、拒否、および質問ルールを宣言的に設定することもできます。これらのルールは、`project` 設定ソースが有効な場合に読み込まれます。デフォルト `query()` オプションではこれが有効です。`setting_sources`（TypeScript：`settingSources`）を明示的に設定する場合は、それらを適用するために `"project"` を含めます。[権限設定](/docs/ja/settings-reference#permission-settings)でルール構文を参照してください。
 
 <h2 id="permission-modes">
-  パーミッションモード
+  権限モード
 </h2>
 
-パーミッションモードは、Claude がツールをどのように使用するかについてのグローバル制御を提供します。`query()` を呼び出すときにパーミッションモードを設定するか、ストリーミングセッション中に動的に変更できます。
+権限モードは、Claude がツールをどのように使用するかについてグローバルコントロールを提供します。`query()` を呼び出すときに権限モードを設定するか、ストリーミングセッション中に動的に変更できます。
 
 <h3 id="available-modes">
   利用可能なモード
 </h3>
 
-SDK は以下のパーミッションモードをサポートしています。
+SDK は以下の権限モードをサポートしています。
 
-| モード                 | 説明               | ツール動作                                                                                                                                                                                                  |
-| :------------------ | :--------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `default`           | 標準パーミッション動作      | 自動承認なし。一致しないツールは `canUseTool` コールバックをトリガーします                                                                                                                                                           |
-| `dontAsk`           | プロンプトの代わりに拒否     | `allowed_tools` またはルールで事前承認されていないものはすべて拒否されます。コネクタツール[組織が `ask` に設定](/docs/ja/mcp#organization-controls-on-connector-tools)したもの、およびユーザーインタラクションが必要なツールは、事前承認していても拒否されます。`canUseTool` は呼び出されません              |
-| `acceptEdits`       | ファイル編集を自動受け入れ    | ファイル編集および[ファイルシステム操作](#accept-edits-mode-acceptedits)（`mkdir`、`rm`、`mv` など）は自動的に承認されます                                                                                                                 |
-| `bypassPermissions` | パーミッションチェックをバイパス | ツールは明示的な [`ask` ルール](#how-permissions-are-evaluated)が一致する場合、コネクタツール[組織が `ask` に設定](/docs/ja/mcp#organization-controls-on-connector-tools)した場合、およびユーザーインタラクションが必要なツール以外は、パーミッションプロンプトなしで実行されます（注意して使用してください） |
-| `plan`              | 計画モード            | Claude はソースファイルを編集せずにコードベースを探索および計画します。ファイル編集は自動承認されず、`canUseTool` コールバックを通じてプロンプトが表示されます                                                                                                              |
-| `auto`              | モデル分類承認          | モデル分類器が各ツール呼び出しを承認または拒否します。利用可能性については[自動モード](/docs/ja/permission-modes#eliminate-prompts-with-auto-mode)を参照してください                                                                                           |
+| モード                 | 説明           | ツール動作                                                                                                                                                                                                                                                                                                                       |
+| :------------------ | :----------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `default`           | 標準的な権限動作     | モードベースの自動承認なし。承認が必要で許可ルールに一致しないコールは、`canUseTool` コールバックをトリガーします                                                                                                                                                                                                                                                             |
+| `dontAsk`           | プロンプトの代わりに拒否 | それ以外の場合はプロンプトが表示されるコールは拒否されます。`allowed_tools` またはルールで承認されたコール、および `default` モードで承認が不要なコールは実行されます。コネクタツール（[組織が `ask` に設定](/docs/ja/mcp#organization-controls-on-connector-tools)）およびユーザーインタラクションが必要なツール、ならびに [重要なパス](/docs/ja/permission-modes#critical-paths) をターゲットとする `rm` および `rmdir` の削除は、事前に承認していても拒否されます。`canUseTool` は呼び出されません |
+| `acceptEdits`       | ファイル編集を自動承認  | ファイル編集および [ファイルシステム操作](#accept-edits-mode-acceptedits)（`mkdir`、`rm`、`mv` など）は自動的に承認されます                                                                                                                                                                                                                                     |
+| `bypassPermissions` | 権限チェックをバイパス  | [モードが自動承認しないアクション](/docs/ja/permission-modes#actions-no-mode-auto-approves) を除き、ツールは権限プロンプトなしで実行されます。注意して使用してください                                                                                                                                                                                                                |
+| `plan`              | 計画モード        | Claude はソースファイルを編集せずに探索と計画を行います。ファイル編集は自動承認されず、`canUseTool` コールバックを通じてプロンプトが表示されます                                                                                                                                                                                                                                          |
+| `auto`              | モデル分類承認      | モデル分類器が権限プロンプトを承認または拒否します。利用可能性については [自動モード](/docs/ja/permission-modes#eliminate-prompts-with-auto-mode) を参照してください                                                                                                                                                                                                               |
 
 <Warning>
-  **サブエージェント継承：** 親が `bypassPermissions`、`acceptEdits`、または `auto` を使用する場合、すべてのサブエージェントはそのモードを継承し、サブエージェントごとにオーバーライドすることはできません。サブエージェントはシステムプロンプトが異なり、メインエージェントよりも制約が少ない動作をする可能性があるため、`bypassPermissions` を継承すると、完全な自律的なシステムアクセスが付与されます。明示的な [`ask` ルール](#how-permissions-are-evaluated)、コネクタツール[組織が `ask` に設定](/docs/ja/mcp#organization-controls-on-connector-tools)したもの、およびユーザーインタラクションが必要なツールは引き続きプロンプトを強制します。
+  **サブエージェント継承：** サブエージェントは、その [`AgentDefinition`](/docs/ja/agent-sdk/typescript#agentdefinition) で `permissionMode` を設定し、親セッションが `default`、`dontAsk`、または `plan` モードにある場合を除き、親セッションの権限モードで実行されます。その場合でも、Claude Code は `"bypassPermissions"` 値を適用しません。サブエージェントは、親セッション自体が `bypassPermissions` モードにある場合にのみ、`bypassPermissions` モードで実行されます。`bypassPermissions` 例外には Claude Code v2.1.267 以降が必要です。
+
+  サブエージェントは、メインエージェントとは異なるシステムプロンプトを持つ可能性があり、動作がより制約されていないため、`bypassPermissions` を継承すると、完全で自律的なシステムアクセスが付与されます。[モードが自動承認しないアクション](/docs/ja/permission-modes#actions-no-mode-auto-approves) は引き続き適用されます。
 </Warning>
 
 <h3 id="set-permission-mode">
-  パーミッションモードの設定
+  権限モードを設定する
 </h3>
 
-クエリを開始するときにパーミッションモードを一度設定するか、セッションがアクティブな間に動的に変更できます。
+クエリを開始するときに権限モードを一度設定するか、セッションがアクティブな間に動的に変更できます。
 
 <Tabs>
   <Tab title="クエリ時">
@@ -149,7 +158,7 @@ SDK は以下のパーミッションモードをサポートしています。
           async for message in query(
               prompt="Help me refactor this code",
               options=ClaudeAgentOptions(
-                  permission_mode="default",  # ここでモードを設定
+                  permission_mode="default",  # Set the mode here
               ),
           ):
               if hasattr(message, "result"):
@@ -166,7 +175,7 @@ SDK は以下のパーミッションモードをサポートしています。
         for await (const message of query({
           prompt: "Help me refactor this code",
           options: {
-            permissionMode: "default" // ここでモードを設定
+            permissionMode: "default" // Set the mode here
           }
         })) {
           if ("result" in message) {
@@ -181,7 +190,7 @@ SDK は以下のパーミッションモードをサポートしています。
   </Tab>
 
   <Tab title="ストリーミング中">
-    `set_permission_mode()`（Python）または `setPermissionMode()`（TypeScript）を呼び出して、セッション中盤でモードを変更します。新しいモードは、その後のすべてのツールリクエストに対して直ちに有効になります。これにより、制限的に開始し、信頼が構築されるにつれてパーミッションを緩和できます。たとえば、Claude の初期アプローチをレビューした後に `acceptEdits` に切り替えます。
+    `set_permission_mode()`（Python）または `setPermissionMode()`（TypeScript）を呼び出して、セッション中盤でモードを変更します。新しいモードは、その後のすべてのツールリクエストに対して直ちに有効になります。これにより、制限的に開始して、信頼が構築されるにつれて権限を緩和できます。たとえば、Claude の初期アプローチを確認した後に `acceptEdits` に切り替えることができます。
 
     <CodeGroup>
       ```python Python theme={null}
@@ -192,15 +201,15 @@ SDK は以下のパーミッションモードをサポートしています。
       async def main():
           async with ClaudeSDKClient(
               options=ClaudeAgentOptions(
-                  permission_mode="default",  # デフォルトモードで開始
+                  permission_mode="default",  # Start in default mode
               )
           ) as client:
               await client.query("Help me refactor this code")
 
-              # セッション中盤でモードを動的に変更
+              # Change mode dynamically mid-session
               await client.set_permission_mode("acceptEdits")
 
-              # 新しいパーミッションモードでメッセージを処理
+              # Process messages with the new permission mode
               async for message in client.receive_response():
                   if hasattr(message, "result"):
                       print(message.result)
@@ -216,14 +225,14 @@ SDK は以下のパーミッションモードをサポートしています。
         const q = query({
           prompt: "Help me refactor this code",
           options: {
-            permissionMode: "default" // デフォルトモードで開始
+            permissionMode: "default" // Start in default mode
           }
         });
 
-        // セッション中盤でモードを動的に変更
+        // Change mode dynamically mid-session
         await q.setPermissionMode("acceptEdits");
 
-        // 新しいパーミッションモードでメッセージを処理
+        // Process messages with the new permission mode
         for await (const message of q) {
           if ("result" in message) {
             console.log(message.result);
@@ -242,54 +251,68 @@ SDK は以下のパーミッションモードをサポートしています。
 </h3>
 
 <h4 id="accept-edits-mode-acceptedits">
-  ファイル編集モード（`acceptEdits`）
+  編集受け入れモード（`acceptEdits`）
 </h4>
 
-ファイル操作を自動承認し、Claude がプロンプトなしでコードを編集できるようにします。その他のツール（ファイルシステム操作ではない Bash コマンドなど）は引き続き通常のパーミッションが必要です。
+ファイル操作を自動承認して、Claude がプロンプトなしでコードを編集できるようにします。その他のツール（ファイルシステム操作ではない Bash コマンドなど）は通常の権限が必要です。
 
 **自動承認される操作：**
 
 * ファイル編集（Edit、Write ツール）
 * ファイルシステムコマンド：`mkdir`、`touch`、`rm`、`rmdir`、`mv`、`cp`、`sed`
 
-どちらも、作業ディレクトリまたは `additionalDirectories` 内のパスにのみ適用されます。そのスコープ外のパスおよび保護されたパスへの書き込みはプロンプトが表示されます。
+どちらも、作業ディレクトリまたは `additionalDirectories` 内のパスにのみ適用されます。`acceptEdits` モードでは、Claude が以下の場合、Claude Code は要求を自動承認しません。
 
-**使用時期：** Claude の編集を信頼し、プロトタイピング中など、より高速な反復を望む場合、または分離されたディレクトリで作業する場合。
+* そのスコープ外のパスで作業する
+* 保護されたパスに書き込む
+* `rm` または `rmdir` で [重要なパス](/docs/ja/permission-modes#critical-paths) を削除する
+
+**使用時期：** Claude の編集を信頼し、より高速な反復を望む場合。プロトタイピング中や分離されたディレクトリで作業する場合など。
 
 <h4 id="don’t-ask-mode-dontask">
   質問しないモード（`dontAsk`）
 </h4>
 
-パーミッションプロンプトを拒否に変換します。`allowed_tools`、`settings.json` 許可ルール、またはフックで事前承認されたツールは通常どおり実行されます。コネクタツール[組織が `ask` に設定](/docs/ja/mcp#organization-controls-on-connector-tools)したもの、およびユーザーインタラクションが必要なツールは、許可ルールが一致する場合でも拒否されます。その他のすべては `canUseTool` を呼び出さずに拒否されます。
+`canUseTool` を呼び出さずに、権限プロンプトを拒否に変換します。`allowed_tools`、`settings.json` 許可ルール、またはフックで事前承認されたツール、および `default` モードで承認が不要なコール（作業ディレクトリ内のファイル読み取りや `Agent` への呼び出しなど）は通常どおり実行されます。コネクタツール（[組織が `ask` に設定](/docs/ja/mcp#organization-controls-on-connector-tools)）、ユーザーインタラクションが必要なツール、および [重要なパス](/docs/ja/permission-modes#critical-paths) をターゲットとする `rm` および `rmdir` の削除は、許可ルールが一致する場合でも拒否されます。`PreToolUse` フック許可は、重要なパス削除をクリアしません。
 
-**使用時期：** ヘッドレスエージェント用に固定された明示的なツール表面が必要で、`canUseTool` が存在しないことへの暗黙的な依存よりもハード拒否を優先する場合。
+**使用時期：** ヘッドレスエージェント用に固定された明示的なツールサーフェスを望み、`canUseTool` が存在しないことへの暗黙的な依存よりもハード拒否を優先する場合。
 
 <h4 id="bypass-permissions-mode-bypasspermissions">
-  パーミッションバイパスモード（`bypassPermissions`）
+  権限バイパスモード（`bypassPermissions`）
 </h4>
 
-プロンプトなしですべてのツール使用を自動承認します。フックは引き続き実行され、必要に応じて操作をブロックできます。
+以下に示す場合を除き、プロンプトなしでツール使用を自動承認します。フックは引き続き実行され、必要に応じて操作をブロックできます。Linux および macOS では、Claude Code はこのモードで root として、または [認識されたサンドボックス](/docs/ja/permission-modes#skip-all-checks-with-bypasspermissions-mode) 外の `sudo` の下で起動することを拒否し、クエリは最初のターンの前に失敗します。
 
 <Warning>
-  極度の注意を持って使用してください。Claude はこのモードでフルシステムアクセスを持ちます。すべての可能な操作を信頼できる制御された環境でのみ使用してください。
+  極度の注意を持って使用してください。このモードでは Claude はシステムへの完全なアクセスを持ちます。信頼できるすべての操作が可能な制御された環境でのみ使用してください。
 
-  `allowed_tools` はこのモードを制限しません。リストしたツールだけでなく、すべてのツールが承認されます。拒否ルール（`disallowed_tools`）、明示的な `ask` ルール、およびフックはモードチェック前に評価され、ツールをブロックできます。コネクタツール[組織が `ask` に設定](/docs/ja/mcp#organization-controls-on-connector-tools)したもの、およびユーザーインタラクションが必要なツールは引き続き `canUseTool` コールバックにフォールスルーします。
+  `allowed_tools` はこのモードを制約しません。リストしたツールだけでなく、すべてのツールが承認されます。これらのコントロールは引き続き適用されます。
+
+  * 拒否ルール、明示的な `ask` ルール、およびフックはモードチェック前に評価され、ツールをブロックできます。
+  * コネクタツール（[組織が `ask` に設定](/docs/ja/mcp#organization-controls-on-connector-tools)）、ユーザーインタラクションが必要なツール、および [重要なパス](/docs/ja/permission-modes#critical-paths) をターゲットとする `rm` および `rmdir` の削除は、引き続き `canUseTool` コールバックにフォールスルーします。
+  * [クロスセッションメッセージングセーフガード](/docs/ja/permission-modes#skip-all-checks-with-bypasspermissions-mode) は引き続き適用されます。
 </Warning>
 
 <h4 id="plan-mode-plan">
   計画モード（`plan`）
 </h4>
 
-Claude はコードベースを探索および計画を作成し、ソースファイルを編集しません。読み取り専用ツールはデフォルトモードと同じように実行されます。ファイル編集は計画モードで自動承認されることはなく、許可ルールが一致する場合でも、代わりに `canUseTool` コールバックを通じてプロンプトが表示されます。Claude は計画を最終化する前に要件を明確にするために `AskUserQuestion` を使用する場合があります。これらのプロンプトの処理については、[承認とユーザー入力の処理](/docs/ja/agent-sdk/user-input#handle-clarifying-questions)を参照してください。
+Claude はソースファイルを編集せずにコードベースを探索し、計画を作成します。読み取り専用ツールは `default` 権限モードと同じように実行されます。
 
-**使用時期：** Claude に変更を提案させたいが実行させたくない場合、たとえばコードレビュー中または変更を実行する前に承認が必要な場合。
+ファイル編集は計画モードで自動承認されません。許可ルールが一致する場合でも、代わりに `canUseTool` コールバックを通じてプロンプトが表示されます。Claude Code v2.1.212 以降では、`touch` や `rm` などのファイルを変更するシェルコマンドは同じ方法で `canUseTool` コールバックに到達します。
+
+`allowDangerouslySkipPermissions: true` を `permissionMode: 'plan'` と一緒に設定した場合、ファイル編集とファイルを変更するシェルコマンドは引き続き `canUseTool` コールバックに到達します。このオプションにより、後で `setPermissionMode()` で `bypassPermissions` に切り替えることができます。
+
+Claude は計画を最終化する前に、`AskUserQuestion` を使用して要件を明確にする場合があります。これらのプロンプトの処理については、[承認とユーザー入力の処理](/docs/ja/agent-sdk/user-input#handle-clarifying-questions) を参照してください。
+
+**使用時期：** Claude に変更を実行せずに提案させたい場合。コードレビュー中や、変更が行われる前に承認する必要がある場合など。
 
 <h2 id="related-resources">
   関連リソース
 </h2>
 
-パーミッション評価フロー内の他のステップについては、以下を参照してください。
+権限評価フローの他のステップについては、以下をご覧ください。
 
-* [承認とユーザー入力の処理](/docs/ja/agent-sdk/user-input)：対話的な承認プロンプトと明確化の質問
-* [フックガイド](/docs/ja/agent-sdk/hooks)：エージェントライフサイクルの主要なポイントでカスタムコードを実行
-* [パーミッションルール](/docs/ja/settings#permission-settings)：`settings.json` の宣言的な許可/拒否ルール
+* [承認とユーザー入力の処理](/docs/ja/agent-sdk/user-input)：インタラクティブな承認プロンプトと確認質問
+* [Hooks ガイド](/docs/ja/agent-sdk/hooks)：エージェントライフサイクルの重要なポイントでカスタムコードを実行
+* [権限ルール](/docs/ja/settings-reference#permission-settings)：`settings.json` の宣言的な許可/拒否ルール

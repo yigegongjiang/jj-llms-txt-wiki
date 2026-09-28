@@ -626,13 +626,14 @@ export const PromptLibrary = ({text = {}, labels = {}, tagLabels = {}, phaseLabe
       return base + (href.startsWith('/en/') ? '/' + locale + href.slice(3) : href);
     };
   }, []);
+  const SAFE_HREF = /^(\/(?![\/\\\s])|#|https?:\/\/)/;
   const linkify = s => {
     const out = [];
     let last = 0;
     const re = /\[([^\]]+)\]\(([^)]+)\)/g;
     for (let m; m = re.exec(s); ) {
       if (m.index > last) out.push(s.slice(last, m.index));
-      out.push(<a key={m.index} href={doc(m[2])}>{m[1]}</a>);
+      out.push(SAFE_HREF.test(m[2]) ? <a key={m.index} href={doc(m[2])}>{m[1]}</a> : m[1]);
       last = re.lastIndex;
     }
     if (last < s.length) out.push(s.slice(last));
@@ -776,7 +777,7 @@ export const PromptLibrary = ({text = {}, labels = {}, tagLabels = {}, phaseLabe
             </div>
             <div className="pl-label">{L.whyWorks}</div>
             <div className="pl-teaches">{linkify(p.teaches)}</div>
-            {p.nextHref && p.next && <div className="pl-next">
+            {p.nextHref && p.next && SAFE_HREF.test(p.nextHref) && <div className="pl-next">
                 <span className="pl-next-label">{L.makeItStick}</span>
                 <a href={doc(p.nextHref)}>{codeify(p.next)} →</a>
               </div>}
@@ -1202,7 +1203,7 @@ export const text = {
   },
   "migrate-a-pattern-across": {
     title: "Migrar um padrão em toda a base de código",
-    teaches: "Descreva o padrão antigo e o novo. Pedir a Claude para identificar cada lugar primeiro significa que os sites de chamada são listados na resposta, para que você possa verificar se nenhum foi perdido."
+    teaches: "Descreva o padrão antigo e o novo. Pedir a Claude para identificar cada lugar primeiro significa que os sites de chamada são listados na resposta, para que você possa verificar se nenhum foi perdido. Para uma migração em muitos arquivos, execute [/batch](/docs/pt/commands). Claude divide o trabalho em unidades para você aprovar, depois subagentes em background fazem as mudanças."
   },
   "optimize-against-a-measurable": {
     title: "Otimizar contra um alvo mensurável",
@@ -1222,7 +1223,7 @@ export const text = {
   "review-a-pull-request": {
     title: "Revisar um pull request",
     teaches: "Claude revisa com toda a base de código em contexto, não apenas o diff. Ele lê o código alterado e o que ele chama, para que detecte problemas que uma revisão apenas de diff perderia.",
-    next: "Ative isto para cada PR com Code Review"
+    next: "Execute `/code-review <pr#>` em um comando, ou ative Code Review para cada PR"
   },
   "review-infrastructure-changes-before": {
     title: "Revisar mudanças de infraestrutura antes de aplicar",
@@ -1337,37 +1338,37 @@ Os prompts acima compartilham alguns padrões. Reconhecê-los ajuda você a adap
 
 **Descreva o resultado, não os passos.** Diga o que você quer e deixe Claude encontrar os arquivos. O prompt abaixo funciona sem nomear um único caminho de arquivo.
 
-```text theme={null}
+```text wrap theme={null}
 adicionar rate limiting à API pública e certificar-se de que os testes existentes ainda passam
 ```
 
-**Dê a ele uma forma de verificar seu próprio trabalho.** Peça para executar, testar, comparar ou verificar no mesmo prompt para que Claude itere em vez de parar após uma tentativa.
+**Dê a ele uma forma de verificar seu próprio trabalho.** Peça para executar, testar, comparar ou verificar no mesmo prompt para que Claude itere em vez de parar após uma tentativa. Para verificar a mudança concluída contra o aplicativo em execução, execute [`/verify`](/docs/pt/skills#run-and-verify-your-app).
 
-```text theme={null}
+```text wrap theme={null}
 escrever a migração, executá-la contra o banco de dados de desenvolvimento e confirmar que o schema corresponde
 ```
 
 **Aponte para uma referência.** Nomeie um arquivo, teste ou padrão existente para corresponder para que o novo código seja consistente com o que você já tem.
 
-```text theme={null}
+```text wrap theme={null}
 adicionar uma página de configurações que segue o mesmo layout que a página de perfil
 ```
 
 **Declare o alvo mensurável.** Quando o objetivo é desempenho ou cobertura, dê a métrica e limite para que a conclusão seja inequívoca.
 
-```text theme={null}
+```text wrap theme={null}
 obter o tamanho do bundle abaixo de 200KB e mostrar-me o que você removeu
 ```
 
 **Dê a ele o artefato.** Cole erros, logs, capturas de tela e saída de plano diretamente no prompt ou digite `@` para referenciar um arquivo. Claude lê a origem em vez de sua descrição dela.
 
-```text theme={null}
+```text wrap theme={null}
 por que a construção está falhando? @build.log
 ```
 
 **Diga como você quer a resposta.** Nomeie o formato, comprimento ou público para que a explicação se encaixe em como você a usará. Para tornar um formato o padrão para cada resposta, defina um [estilo de saída](/docs/pt/output-styles).
 
-```text theme={null}
+```text wrap theme={null}
 explicar como a lógica de retry de pagamento funciona como uma página HTML com um diagrama e depois abri-la no meu navegador
 ```
 
@@ -1384,7 +1385,7 @@ Esses prompts são baseados em padrões de recursos publicados da Anthropic. Cad
 * [Como os times da Anthropic usam Claude Code](https://claude.com/blog/how-anthropic-teams-use-claude-code): fluxos de trabalho reais de times de engenharia, produto, design e dados, com aprofundamentos em [jurídico](https://claude.com/blog/how-anthropic-uses-claude-legal), [marketing](https://claude.com/blog/how-anthropic-uses-claude-marketing) e [segurança cibernética](https://claude.com/blog/how-anthropic-uses-claude-cybersecurity)
 * [Guia de codificação agentic em escala](https://resources.anthropic.com/hubfs/Scaling%20agentic%20coding%20across%20your%20organization.pdf): o guia de adoção empresarial
 
-Para passo a passo em vídeo desses padrões, veja o curso gratuito [Claude Code in Action](https://anthropic.skilljar.com/claude-code-in-action) na Anthropic Academy.
+Para passo a passo em vídeo desses padrões, veja o curso gratuito [Claude Code in Action](https://academy.claude.com/courses/claude-code-in-action) na [Claude Academy](https://academy.claude.com/).
 
 <h2 id="related-resources">
   Recursos relacionados

@@ -29,7 +29,7 @@ npm install @anthropic-ai/claude-agent-sdk@0.2
 ```
 
 <Note>
-  SDK 為您的平台捆綁了一個原生 Claude Code 二進位檔案作為可選依賴項，因此您無需單獨安裝 Claude Code。
+  SDK 為您的平台捆綁了一個原生 Claude Code 二進位檔案作為可選依賴項，因此大多數安裝無需單獨安裝 Claude Code。請參閱 [快速入門的安裝說明](/docs/zh-TW/agent-sdk/quickstart) 以了解需要單獨安裝的情況。
 </Note>
 
 <h2 id="quick-start">
@@ -318,6 +318,8 @@ for await (const msg of resumedSession.stream()) {
 </h3>
 
 會話可以手動關閉或使用 [`await using`](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-2.html#using-declarations-and-explicit-resource-management)（TypeScript 5.2+ 功能用於自動資源清理）自動關閉。如果您使用的是較舊的 TypeScript 版本或遇到相容性問題，請改用手動清理。
+
+下面的範例僅顯示清理模式，不發送任何訊息，因此運行它們不會產生任何輸出。
 
 **自動清理（TypeScript 5.2+）：**
 

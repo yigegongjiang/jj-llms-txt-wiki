@@ -2,269 +2,83 @@
 > Fetch the complete documentation index at: https://code.claude.com/docs/llms.txt
 > Use this file to discover all available pages before exploring further.
 
-# 待辦事項清單
+# 追蹤待辦事項
 
-> 使用 Claude Agent SDK 追蹤和顯示待辦事項，以實現有組織的任務管理
+> 在 Agent SDK 工作階段中追蹤待辦事項，並從結構化工具呼叫在應用程式中呈現 Claude 的進度
 
-待辦事項追蹤提供了一種結構化的方式來管理任務並向用戶顯示進度。Claude Agent SDK 包含內置的待辦事項功能，可幫助組織複雜的工作流程並讓用戶了解任務進度。
+Claude Code 預設只在[模型可用性](#model-availability)下列出的模型上提供[任務追蹤工具](/docs/zh-TW/tools-reference#task-tool-availability)。較新的模型可以在沒有書面待辦事項清單的情況下追蹤多步驟工作，因此在這些模型上，您不需要本頁面上的任何內容，Claude 就能完成多步驟任務。
+
+在具有任務追蹤工具的工作階段中，Claude 保持書面待辦事項清單，在工作時更新每個項目的狀態。您在訊息流中看到每個變更都是結構化工具呼叫。僅當您的應用程式讀取這些工具呼叫時才選擇加入工作階段，無論是記錄任務活動還是呈現自己的進度顯示。
+
+<h2 id="model-availability">
+  模型可用性
+</h2>
 
 <Note>
-  自 TypeScript Agent SDK 0.3.142 和 Claude Code v2.1.142 起，會話使用結構化的 Task 工具 `TaskCreate`、`TaskUpdate`、`TaskGet` 和 `TaskList`，而不是 `TodoWrite`。Python SDK 從它啟動的 Claude Code CLI 獲得此變更，而不是從 Python 套件版本：一旦該 CLI（pip 套件內捆綁的副本，或您使用 `cli_path` 指向的副本）為 v2.1.142 或更新版本，此切換就會適用。請參閱[遷移到 Task 工具](#migrate-to-task-tools)以了解監控代碼如何變更。此頁面上的範例設置 `CLAUDE_CODE_ENABLE_TASKS=0` 以繼續為尚未遷移的會話顯示 `TodoWrite`。
+  The following tools are available by default only on Claude 3.x models, Opus 4 through 4.7, Sonnet 4 through 4.6, and Haiku 4.5. On every other model, including model IDs Claude Code doesn't recognize, they aren't available unless you opt in:
+
+  * `TodoWrite`
+  * `TaskCreate`
+  * `TaskGet`
+  * `TaskUpdate`
+  * `TaskList`
+
+  Wherever the tools are available, Claude Code provides the four Task tools, or `TodoWrite` instead when you set `CLAUDE_CODE_ENABLE_TASKS=0`.
+
+  This default set applies in Claude Code v2.1.268 and later, which the TypeScript Agent SDK bundles from v0.3.268.
 </Note>
 
-<h3 id="todo-lifecycle">
+在預設情況下沒有工具的模型上，除非您選擇加入工作階段，否則您在訊息流中看不到這些工具的 `tool_use` 區塊。Agent SDK 通過它捆綁的 Claude Code 二進位檔案應用這些預設值。如果您將 `pathToClaudeCodeExecutable`（TypeScript）或 `cli_path`（Python）指向您自己的 Claude Code 安裝，您將獲得該安裝提供的任何工具，在其自己的預設值下。要查看執行中工作階段中的確切集合，請[檢查哪些工具可用](/docs/zh-TW/tools-reference#check-which-tools-are-available)。要選擇加入工作階段，請執行以下操作之一：
+
+* 在 [`allowedTools`](/docs/zh-TW/agent-sdk/permissions#allow-and-deny-rules)（TypeScript）或 `allowed_tools`（Python）選項中命名其中一個工具
+* 在 `tools` 選項中列出工具，這會將工作階段的內置工具限制為它命名的工具。將您想要的工具與您使用的其他內置工具一起包含
+* 在 `env` 選項中設定 `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`，如本頁面上的範例所做的那樣。在 TypeScript 中，`env` 替換子程序環境，因此展開 `...process.env` 以保留繼承的變數。在 Python 中，`env` 合併在繼承的環境之上
+
+<h2 id="todo-lifecycle">
   待辦事項生命週期
-</h3>
+</h2>
 
-待辦事項遵循可預測的生命週期：
+Claude 將每個待辦事項移動通過可預測的生命週期：
 
-1. **建立**為 `pending` 當任務被識別時
-2. **啟動**為 `in_progress` 當工作開始時
-3. **完成**當任務成功完成時
-4. **移除**當群組中的所有任務都完成時
+1. **建立**：Claude 在識別任務時將待辦事項新增為 `pending`
+2. **啟動**：Claude 在開始工作時將待辦事項設定為 `in_progress`
+3. **完成**：Claude 在任務成功完成時將其標記為已完成
+4. **移除**：Claude 通過在 `TaskUpdate` 呼叫中設定 `status: "deleted"` 來刪除不再需要的待辦事項
 
-<h3 id="when-todos-are-used">
-  何時使用待辦事項
-</h3>
+<h2 id="when-claude-creates-todos">
+  Claude 何時建立待辦事項
+</h2>
 
-SDK 會為大多數多步驟工作建立待辦事項，例如：
+在[具有任務追蹤工具的工作階段](#model-availability)中，Claude 為大多數多步驟工作建立待辦事項，例如：
 
-* **複雜的多步驟任務**需要 3 個或更多不同的操作
-* **用戶提供的任務清單**當提及多個項目時
-* **非平凡的操作**受益於進度追蹤
-* **明確的請求**當用戶要求待辦事項組織時
+* **複雜的多步驟任務**需要三個或更多不同的操作
+* **使用者提供的任務清單**當提及多個項目時
+* **較長的操作**受益於進度追蹤
+* **明確的請求**當使用者要求待辦事項組織時
 
-它可能會跳過非常短或單步驟請求的待辦事項。
+Claude 可能會跳過非常短或單步驟請求的待辦事項。
 
 <h2 id="examples">
   範例
 </h2>
 
-在執行這些範例之前，請按照[快速入門](/docs/zh-TW/agent-sdk/quickstart)安裝 Claude Agent SDK。
+在執行這些範例之前，請按照[快速入門](/docs/zh-TW/agent-sdk/quickstart)安裝 Claude Agent SDK。本頁面上的每個範例都共享相同的權限設定和退出行為：
 
-每個範例會執行到代理程式完成並產生其最終結果訊息為止。如果工作階段先達到其輪次限制，該結果訊息會有 `error_max_turns` 子類型。檢查 `subtype` 以偵測該結束。
+* **權限模式**：範例提示要求 Claude 在專案上執行實際工作，因此每個範例都設定 `permissionMode: "acceptEdits"`（TypeScript）或 `permission_mode="acceptEdits"`（Python）以自動批准工作產生的檔案編輯。請參閱[權限模式](/docs/zh-TW/agent-sdk/permissions#permission-modes)以了解替代方案。
+* **輪次限制**：每個範例執行到代理程式完成並產生其最終結果訊息為止。如果工作階段先達到其輪次限制，該結果訊息會有 `error_max_turns` 子類型。檢查 `subtype` 以偵測該結束。
+* **錯誤處理**：這些範例使用單次 `query()` 呼叫。在產生 `error_max_turns` 結果後，`query()` 會拋出包含 `Reached maximum number of turns` 的錯誤。每個範例都將其迴圈包裝在 try 區塊中，以便在發生這種情況時乾淨地退出。請參閱[處理結果](/docs/zh-TW/agent-sdk/agent-loop#handle-the-result)以了解結果子類型。
 
-這些範例使用單次 `query()` 呼叫。在產生 `error_max_turns` 結果後，`query()` 會拋出包含 `Reached maximum number of turns` 的錯誤。每個範例都將其迴圈包裝在 try 區塊中，以便在發生這種情況時乾淨地退出。
+<Note>
+  任務系統訊息，[`SDKTaskNotificationMessage`](/docs/zh-TW/agent-sdk/typescript#sdktasknotificationmessage)（TypeScript）或 [`TaskNotificationMessage`](/docs/zh-TW/agent-sdk/python#tasknotificationmessage)（Python）等，報告背景任務，例如背景命令和子代理程式。在訊息流中，您看到待辦事項活動作為助手訊息中的 `tool_use` 區塊。
+</Note>
 
-請參閱[處理結果](/docs/zh-TW/agent-sdk/agent-loop#handle-the-result)以了解結果子類型。
-
-<h3 id="monitoring-todo-changes">
+<h3 id="monitor-todo-changes">
   監控待辦事項變更
 </h3>
 
-<CodeGroup>
-  ```typescript TypeScript theme={null}
-  import { query } from "@anthropic-ai/claude-agent-sdk";
+以下範例監視助手流中的 `TaskCreate` 和 `TaskUpdate` `tool_use` 區塊，並列印一個 `+` 行，其中包含每個新任務的主題，以及一個更新行，其中包含每個狀態變更的任務 ID 和新狀態。當您想要任務活動的日誌而不是呈現的顯示時，請使用此形狀。`+` 行不包含指派的 ID，因此此日誌無法將更新與其建立相匹配。要保持該相關性，請如[即時顯示進度](#display-progress-in-real-time)所做的那樣捕獲 ID。
 
-  try {
-    for await (const message of query({
-      prompt: "Optimize my React app performance and track progress with todos",
-      // Re-enable TodoWrite, which this example monitors. Without it, the SDK uses
-      // Task tools instead and these tool_use blocks never appear.
-      options: { maxTurns: 15, env: { ...process.env, CLAUDE_CODE_ENABLE_TASKS: "0" } }
-    })) {
-      // Todo updates are reflected in the message stream
-      if (message.type === "assistant") {
-        for (const block of message.message.content) {
-          if (block.type === "tool_use" && block.name === "TodoWrite") {
-            const todos = block.input.todos;
-
-            console.log("Todo Status Update:");
-            todos.forEach((todo, index) => {
-              const status =
-                todo.status === "completed" ? "✅" : todo.status === "in_progress" ? "🔧" : "❌";
-              console.log(`${index + 1}. ${status} ${todo.content}`);
-            });
-          }
-        }
-      }
-    }
-  } catch (error) {
-    // A single-shot query() throws after yielding an error result,
-    // such as when the maxTurns limit is hit.
-    console.log(`Session ended with an error: ${error}`);
-  }
-  ```
-
-  ```python Python theme={null}
-  import asyncio
-
-  from claude_agent_sdk import query, ClaudeAgentOptions, AssistantMessage, ToolUseBlock
-
-
-  async def main():
-      try:
-          async for message in query(
-              prompt="Optimize my React app performance and track progress with todos",
-              # Re-enable TodoWrite, which this example monitors. Without it, the SDK uses
-              # Task tools instead and these tool_use blocks never appear.
-              options=ClaudeAgentOptions(max_turns=15, env={"CLAUDE_CODE_ENABLE_TASKS": "0"}),
-          ):
-              # Todo updates are reflected in the message stream
-              if isinstance(message, AssistantMessage):
-                  for block in message.content:
-                      if isinstance(block, ToolUseBlock) and block.name == "TodoWrite":
-                          todos = block.input["todos"]
-
-                          print("Todo Status Update:")
-                          for i, todo in enumerate(todos):
-                              status = (
-   "✅"
-   if todo["status"] == "completed"
-   else "🔧"
-   if todo["status"] == "in_progress"
-   else "❌"
-                              )
-                              print(f"{i + 1}. {status} {todo['content']}")
-      except Exception as error:
-          # A single-shot query() raises after yielding an error result,
-          # such as when the max_turns limit is hit.
-          print(f"Session ended with an error: {error}")
-
-
-  asyncio.run(main())
-  ```
-</CodeGroup>
-
-<h3 id="real-time-progress-display">
-  實時進度顯示
-</h3>
-
-<CodeGroup>
-  ```typescript TypeScript theme={null}
-  import { query } from "@anthropic-ai/claude-agent-sdk";
-
-  class TodoTracker {
-    private todos: any[] = [];
-
-    displayProgress() {
-      if (this.todos.length === 0) return;
-
-      const completed = this.todos.filter((t) => t.status === "completed").length;
-      const inProgress = this.todos.filter((t) => t.status === "in_progress").length;
-      const total = this.todos.length;
-
-      console.log(`\nProgress: ${completed}/${total} completed`);
-      console.log(`Currently working on: ${inProgress} task(s)\n`);
-
-      this.todos.forEach((todo, index) => {
-        const icon =
-          todo.status === "completed" ? "✅" : todo.status === "in_progress" ? "🔧" : "❌";
-        const text = todo.status === "in_progress" ? todo.activeForm : todo.content;
-        console.log(`${index + 1}. ${icon} ${text}`);
-      });
-    }
-
-    async trackQuery(prompt: string) {
-      try {
-        for await (const message of query({
-          prompt,
-          // Re-enable TodoWrite, which this tracker watches for.
-          options: { maxTurns: 20, env: { ...process.env, CLAUDE_CODE_ENABLE_TASKS: "0" } }
-        })) {
-          if (message.type === "assistant") {
-            for (const block of message.message.content) {
-              if (block.type === "tool_use" && block.name === "TodoWrite") {
-                this.todos = block.input.todos;
-                this.displayProgress();
-              }
-            }
-          }
-        }
-      } catch (error) {
-        // A single-shot query() throws after yielding an error result,
-        // such as when the maxTurns limit is hit.
-        console.log(`Session ended with an error: ${error}`);
-      }
-    }
-  }
-
-  // Usage
-  const tracker = new TodoTracker();
-  await tracker.trackQuery("Build a complete authentication system with todos");
-  ```
-
-  ```python Python theme={null}
-  import asyncio
-
-  from claude_agent_sdk import query, ClaudeAgentOptions, AssistantMessage, ToolUseBlock
-  from typing import List, Dict
-
-
-  class TodoTracker:
-      def __init__(self):
-          self.todos: List[Dict] = []
-
-      def display_progress(self):
-          if not self.todos:
-              return
-
-          completed = len([t for t in self.todos if t["status"] == "completed"])
-          in_progress = len([t for t in self.todos if t["status"] == "in_progress"])
-          total = len(self.todos)
-
-          print(f"\nProgress: {completed}/{total} completed")
-          print(f"Currently working on: {in_progress} task(s)\n")
-
-          for i, todo in enumerate(self.todos):
-              icon = (
-                  "✅"
-                  if todo["status"] == "completed"
-                  else "🔧"
-                  if todo["status"] == "in_progress"
-                  else "❌"
-              )
-              text = (
-                  todo["activeForm"]
-                  if todo["status"] == "in_progress"
-                  else todo["content"]
-              )
-              print(f"{i + 1}. {icon} {text}")
-
-      async def track_query(self, prompt: str):
-          try:
-              async for message in query(
-                  prompt=prompt,
-                  # Re-enable TodoWrite, which this tracker watches for.
-                  options=ClaudeAgentOptions(max_turns=20, env={"CLAUDE_CODE_ENABLE_TASKS": "0"}),
-              ):
-                  if isinstance(message, AssistantMessage):
-                      for block in message.content:
-                          if isinstance(block, ToolUseBlock) and block.name == "TodoWrite":
-                              self.todos = block.input["todos"]
-                              self.display_progress()
-          except Exception as error:
-              # A single-shot query() raises after yielding an error result,
-              # such as when the max_turns limit is hit.
-              print(f"Session ended with an error: {error}")
-
-
-  # Usage
-  async def main():
-      tracker = TodoTracker()
-      await tracker.track_query("Build a complete authentication system with todos")
-
-
-  asyncio.run(main())
-  ```
-</CodeGroup>
-
-<h2 id="migrate-to-task-tools">
-  遷移到 Task 工具
-</h2>
-
-Task 工具將單個 `TodoWrite` 呼叫分割為每個新項目的 `TaskCreate` 和每個狀態變更的 `TaskUpdate`，並提供 `TaskList` 和 `TaskGet` 供模型讀回當前清單。您的監控代碼仍然檢查助手流中的 `tool_use` 區塊，但維護一個由任務 ID 鍵入的映射，而不是在每次呼叫時替換整個清單。Task 工具是 TypeScript Agent SDK 0.3.142 和 Claude Code v2.1.142 起的預設值，因此不需要 `options.env` 變更。
-
-| 使用 `TodoWrite`                         | 使用 Task 工具                                                                                                                                                                                                                                                                    |
-| -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 一個工具呼叫重寫完整的 `todos` 陣列                 | `TaskCreate` 新增一個項目，`TaskUpdate` 按 `taskId` 修補一個項目                                                                                                                                                                                                                            |
-| 匹配 `block.name === "TodoWrite"`        | 匹配 `block.name === "TaskCreate"` 或 `"TaskUpdate"`                                                                                                                                                                                                                             |
-| 項目形狀：`{ content, status, activeForm }` | `TaskCreate` 輸入：`{ subject, description, activeForm?, metadata? }`。`TaskUpdate` 輸入：`{ taskId, status?, subject?, description?, activeForm?, addBlocks?, addBlockedBy?, owner?, metadata? }`。`status` 是 `"pending"`、`"in_progress"` 或 `"completed"`；設置 `status: "deleted"` 以刪除 |
-| 直接呈現 `block.input.todos`               | 跨呼叫累積項目，或從 `TaskList` 工具結果讀取快照                                                                                                                                                                                                                                                |
-
-指派的任務 ID 不在 `TaskCreate` 輸入中。它在匹配的 `tool_result` 中作為 `{ task: { id, subject } }` 返回，因此從結果區塊捕獲它以鍵入您的映射。以下範例顯示了對[監控待辦事項變更](#monitoring-todo-changes)迴圈的最小變更。它僅讀取 `tool_use` 輸入並跳過從 `tool_result` 區塊捕獲 ID。要呈現完整清單，請在流中監視 `TaskList` 工具結果或將 `TaskCreate` 結果和 `TaskUpdate` 輸入累積到映射中。
-
-串流的 `tool_use` 輸入是模型發出的原始形狀。Claude Code 在執行前修復一些接近但不正確的鍵名，將 `id` 或 `task_id` 映射到 `taskId` 和 `active_form` 映射到 `activeForm`，但該修復不會反映在流中。防禦性地讀取 `TaskUpdate` 輸入欄位，如下面的範例所示，而不是假設規範名稱始終存在。
+串流的 `tool_use` 輸入是模型發出的原始形狀。Claude Code 在執行前修復一些接近但不正確的鍵名，將 `id` 或 `task_id` 對應到 `taskId` 和 `active_form` 對應到 `activeForm`，但該修復不會反映在流中。防禦性地讀取 `TaskUpdate` 輸入欄位，如本頁面上的兩個範例所做的那樣，而不是假設規範名稱始終存在。
 
 <CodeGroup>
   ```typescript TypeScript theme={null}
@@ -272,8 +86,9 @@ Task 工具將單個 `TodoWrite` 呼叫分割為每個新項目的 `TaskCreate` 
 
   try {
     for await (const message of query({
-      prompt: "Optimize my React app performance and track progress with todos",
-      options: { maxTurns: 15 },
+      prompt: "Create a static website with a home page, an about page, and a shared stylesheet, and track progress with todos",
+      // Keeps the Task tools on models where Claude Code otherwise doesn't provide them.
+      options: { maxTurns: 15, permissionMode: "acceptEdits", env: { ...process.env, CLAUDE_CODE_ENABLE_TODO_TOOLS: "1" } },
     })) {
       if (message.type !== "assistant") continue;
       for (const block of message.message.content) {
@@ -307,8 +122,9 @@ Task 工具將單個 `TodoWrite` 呼叫分割為每個新項目的 `TaskCreate` 
   async def main():
       try:
           async for message in query(
-              prompt="Optimize my React app performance and track progress with todos",
-              options=ClaudeAgentOptions(max_turns=15),
+              prompt="Create a static website with a home page, an about page, and a shared stylesheet, and track progress with todos",
+              # Keeps the Task tools on models where Claude Code otherwise doesn't provide them.
+              options=ClaudeAgentOptions(max_turns=15, permission_mode="acceptEdits", env={"CLAUDE_CODE_ENABLE_TODO_TOOLS": "1"}),
           ):
               if not isinstance(message, AssistantMessage):
                   continue
@@ -316,7 +132,7 @@ Task 工具將單個 `TodoWrite` 呼叫分割為每個新項目的 `TaskCreate` 
                   if not isinstance(block, ToolUseBlock):
                       continue
                   if block.name == "TaskCreate":
-                      print(f"+ {block.input['subject']}")
+                      print(f"+ {block.input.get('subject', '')}")
                   elif block.name == "TaskUpdate" and block.input.get("status"):
                       task_id = (
                           block.input.get("taskId")
@@ -334,11 +150,244 @@ Task 工具將單個 `TodoWrite` 呼叫分割為每個新項目的 `TaskCreate` 
   ```
 </CodeGroup>
 
+<h3 id="display-progress-in-real-time">
+  即時顯示進度
+</h3>
+
+以下範例監視助手流中的 `TaskCreate` 和 `TaskUpdate` `tool_use` 區塊，並在 `TaskTracker` 類別中保持由任務 ID 鍵入的任務映射，在每次變更時重新呈現進度摘要。摘要計算已完成和進行中的任務，並顯示每個活動項目的 `activeForm` 標籤以代替其 `subject`。當您的應用程式維護進度顯示而不是記錄每個事件時，請使用此形狀。
+
+指派的任務 ID 不在 `TaskCreate` 輸入中。Claude Code 在攜帶其 `tool_result` 區塊的使用者訊息上傳遞每個工具的結構化輸出，在 `tool_use_result` 欄位中。對於 `TaskCreate`，該物件在 TypeScript 中記錄為[工具輸出類型](/docs/zh-TW/agent-sdk/typescript#tool-output-types)下的 `TaskCreateOutput`，在 Python 中該欄位是相同形狀的純字典。追蹤器通過 `tool_use_id` 將每個 `tool_result` 區塊與其 `tool_use` 呼叫配對，並從配對訊息的 `tool_use_result` 讀取 `task.id`。Claude 可以使用 `TaskList` 讀回清單，使用 `TaskGet` 讀回一個任務的完整詳細資訊。
+
+<CodeGroup>
+  ```typescript TypeScript theme={null}
+  import { query } from "@anthropic-ai/claude-agent-sdk";
+
+  type Task = { subject: string; activeForm?: string; status: string };
+
+  class TaskTracker {
+    private tasks = new Map<string, Task>();
+    private pendingCreates = new Map<string, { subject: string; activeForm?: string }>();
+
+    displayProgress() {
+      if (this.tasks.size === 0) {
+        console.log("\nProgress: no open tasks\n");
+        return;
+      }
+
+      const items = [...this.tasks.values()];
+      const completed = items.filter((t) => t.status === "completed").length;
+      const inProgress = items.filter((t) => t.status === "in_progress").length;
+
+      console.log(`\nProgress: ${completed}/${this.tasks.size} completed`);
+      console.log(`Currently working on: ${inProgress} task(s)\n`);
+
+      for (const [id, task] of this.tasks) {
+        const icon =
+          task.status === "completed" ? "✅" : task.status === "in_progress" ? "🔧" : "❌";
+        const text = task.status === "in_progress" && task.activeForm ? task.activeForm : task.subject;
+        console.log(`${id}. ${icon} ${text}`);
+      }
+    }
+
+    handleToolUse(block: { id: string; name: string; input: unknown }) {
+      if (block.name === "TaskCreate") {
+        const input = block.input as { subject: string; activeForm?: string; active_form?: string };
+        this.pendingCreates.set(block.id, {
+          subject: input.subject,
+          activeForm: input.activeForm ?? input.active_form,
+        });
+      } else if (block.name === "TaskUpdate") {
+        const input = block.input as {
+          taskId?: string;
+          id?: string;
+          task_id?: string;
+          status?: string;
+          activeForm?: string;
+          active_form?: string;
+        };
+        const taskId = input.taskId ?? input.id ?? input.task_id;
+        if (!taskId) return;
+        if (input.status === "deleted") {
+          this.tasks.delete(taskId);
+          this.displayProgress();
+          return;
+        }
+        const task = this.tasks.get(taskId);
+        if (!task) return;
+        if (input.status) task.status = input.status;
+        const active = input.activeForm ?? input.active_form;
+        if (active) task.activeForm = active;
+        this.displayProgress();
+      }
+    }
+
+    handleToolResult(block: { tool_use_id: string; is_error?: boolean }, result: unknown) {
+      const create = this.pendingCreates.get(block.tool_use_id);
+      if (!create) return;
+      this.pendingCreates.delete(block.tool_use_id);
+      if (block.is_error) return;
+      // The result's user message carries the tool's structured output as
+      // tool_use_result; for TaskCreate that's TaskCreateOutput,
+      // { task: { id, subject } }.
+      const out = result as { task?: { id: string } };
+      if (!out?.task?.id) return;
+      this.tasks.set(out.task.id, { ...create, status: "pending" });
+      this.displayProgress();
+    }
+
+    async trackQuery(prompt: string) {
+      try {
+        for await (const message of query({
+          prompt,
+          options: { maxTurns: 20, permissionMode: "acceptEdits", env: { ...process.env, CLAUDE_CODE_ENABLE_TODO_TOOLS: "1" } },
+        })) {
+          if (message.type === "assistant") {
+            for (const block of message.message.content) {
+              if (block.type === "tool_use") this.handleToolUse(block);
+            }
+          }
+          if (message.type === "user" && Array.isArray(message.message.content)) {
+            for (const block of message.message.content) {
+              if (block.type === "tool_result") this.handleToolResult(block, message.tool_use_result);
+            }
+          }
+        }
+      } catch (error) {
+        // A single-shot query() throws after yielding an error result,
+        // such as when the maxTurns limit is hit.
+        console.log(`Session ended with an error: ${error}`);
+      }
+    }
+  }
+
+  // Usage
+  const tracker = new TaskTracker();
+  await tracker.trackQuery("Build a complete authentication system with todos");
+  ```
+
+  ```python Python theme={null}
+  import asyncio
+
+  from claude_agent_sdk import (
+      query,
+      ClaudeAgentOptions,
+      AssistantMessage,
+      UserMessage,
+      ToolUseBlock,
+      ToolResultBlock,
+  )
+
+
+  class TaskTracker:
+      def __init__(self):
+          self.tasks: dict[str, dict] = {}
+          self.pending_creates: dict[str, dict] = {}
+
+      def display_progress(self):
+          if not self.tasks:
+              print("\nProgress: no open tasks\n")
+              return
+
+          completed = len([t for t in self.tasks.values() if t["status"] == "completed"])
+          in_progress = len([t for t in self.tasks.values() if t["status"] == "in_progress"])
+
+          print(f"\nProgress: {completed}/{len(self.tasks)} completed")
+          print(f"Currently working on: {in_progress} task(s)\n")
+
+          for task_id, task in self.tasks.items():
+              icon = (
+                  "✅"
+                  if task["status"] == "completed"
+                  else "🔧"
+                  if task["status"] == "in_progress"
+                  else "❌"
+              )
+              text = (
+                  task["activeForm"]
+                  if task["status"] == "in_progress" and task.get("activeForm")
+                  else task["subject"]
+              )
+              print(f"{task_id}. {icon} {text}")
+
+      def handle_tool_use(self, block: ToolUseBlock):
+          if block.name == "TaskCreate":
+              self.pending_creates[block.id] = {
+                  "subject": block.input.get("subject", ""),
+                  "activeForm": block.input.get("activeForm") or block.input.get("active_form"),
+              }
+          elif block.name == "TaskUpdate":
+              task_id = (
+                  block.input.get("taskId")
+                  or block.input.get("id")
+                  or block.input.get("task_id")
+              )
+              if not task_id:
+                  return
+              if block.input.get("status") == "deleted":
+                  self.tasks.pop(task_id, None)
+                  self.display_progress()
+                  return
+              task = self.tasks.get(task_id)
+              if not task:
+                  return
+              if block.input.get("status"):
+                  task["status"] = block.input["status"]
+              active = block.input.get("activeForm") or block.input.get("active_form")
+              if active:
+                  task["activeForm"] = active
+              self.display_progress()
+
+      def handle_tool_result(self, block: ToolResultBlock, tool_use_result):
+          create = self.pending_creates.pop(block.tool_use_id, None)
+          if create is None or block.is_error:
+              return
+          # The result's user message carries the tool's structured output as
+          # tool_use_result; for TaskCreate that's {"task": {"id": ..., "subject": ...}}.
+          task = (tool_use_result or {}).get("task") or {}
+          if not task.get("id"):
+              return
+          self.tasks[task["id"]] = {**create, "status": "pending"}
+          self.display_progress()
+
+      async def track_query(self, prompt: str):
+          try:
+              async for message in query(
+                  prompt=prompt,
+                  options=ClaudeAgentOptions(
+                      max_turns=20,
+                      permission_mode="acceptEdits",
+                      env={"CLAUDE_CODE_ENABLE_TODO_TOOLS": "1"},
+                  ),
+              ):
+                  if isinstance(message, AssistantMessage):
+                      for block in message.content:
+                          if isinstance(block, ToolUseBlock):
+                              self.handle_tool_use(block)
+                  if isinstance(message, UserMessage) and isinstance(message.content, list):
+                      for block in message.content:
+                          if isinstance(block, ToolResultBlock):
+                              self.handle_tool_result(block, message.tool_use_result)
+          except Exception as error:
+              # A single-shot query() raises after yielding an error result,
+              # such as when the max_turns limit is hit.
+              print(f"Session ended with an error: {error}")
+
+
+  # Usage
+  async def main():
+      tracker = TaskTracker()
+      await tracker.track_query("Build a complete authentication system with todos")
+
+
+  asyncio.run(main())
+  ```
+</CodeGroup>
+
 <h2 id="related-documentation">
-  相關文檔
+  相關文件
 </h2>
 
-* [TypeScript SDK 參考](/docs/zh-TW/agent-sdk/typescript)
-* [Python SDK 參考](/docs/zh-TW/agent-sdk/python)
-* [串流與單一模式](/docs/zh-TW/agent-sdk/streaming-vs-single-mode)
-* [自訂工具](/docs/zh-TW/agent-sdk/custom-tools)
+* [Agent SDK 參考 - TypeScript](/docs/zh-TW/agent-sdk/typescript)：TypeScript SDK 的選項、類型和工具架構，包括 Task 工具輸入和輸出類型
+* [Agent SDK 參考 - Python](/docs/zh-TW/agent-sdk/python)：Python SDK 的選項、類型和工具文件
+* [串流輸入](/docs/zh-TW/agent-sdk/streaming-vs-single-mode)：兩種輸入模式，以及何時使用串流輸入而不是這些範例使用的單次呼叫
+* [為 Claude 提供自訂工具](/docs/zh-TW/agent-sdk/custom-tools)：使用 SDK 的進程內 MCP 伺服器定義您自己的工具

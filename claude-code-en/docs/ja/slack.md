@@ -4,15 +4,18 @@
 
 # Slack での Claude Code
 
-> Slack ワークスペースから直接コーディングタスクを委任する
+> Slack ワークスペースから直接コーディングタスクを委任する。Anthropic は Team および Enterprise ワークスペース向けにこの以前のバージョンを Claude Tag に置き換えています。Pro および Max プランではセットアップパスのままです。
 
-<Note>
-  Claude Code in Slack は、Team および Enterprise ワークスペース向けに [Claude Tag](https://claude.com/product/tag) に置き換わります。Claude Tag は、管理者が設定したアクセス権限を持つ組織の共有 ID として @Claude を実行し、同じ Slack アプリの下で動作するため、再インストールする必要がなく、既存のセットアップは移行中も機能し続けます。ワークスペースを切り替えるには、[Claude in Slack の以前のバージョンから移行する](https://claude.com/docs/claude-tag/admins/migrate-from-earlier)を参照してください。
-</Note>
+<Warning>
+  このページは、各セッションが個別ユーザーのアカウントで実行される以前の Claude Code in Slack について説明しています。
 
-Slack での Claude Code は、Claude Code の機能を Slack ワークスペースに直接もたらします。`@Claude` にコーディングタスクをメンションすると、Claude は自動的に意図を検出し、ウェブ上で Claude Code セッションを作成します。これにより、チームの会話を離れることなく開発作業を委任できます。
+  * **Team および Enterprise プラン：** Anthropic は、組織の共有 ID として @Claude を実行し、管理者が設定したアクセス権限を持つ [Claude Tag](https://claude.com/product/tag) に置き換えています。既存の Slack アプリと @Claude ハンドルは変わらず、Anthropic アカウントチームが切り替え日を通知できます。新しいワークスペースの場合は [Claude Tag をセットアップ](https://claude.com/docs/claude-tag/overview)してください。このバージョンを既に使用しているワークスペースを移行する場合は、[以前の Claude in Slack から移行する](https://claude.com/docs/claude-tag/admins/migrate-from-earlier)を参照してください。
+  * **Pro および Max プラン：** Claude Tag は個別プランでは利用できないため、このページがセットアップパスのままです。
+</Warning>
 
-この統合は既存の Claude for Slack アプリに基づいていますが、コーディング関連のリクエストに対して Claude Code ウェブへのインテリジェントなルーティングを追加しています。各セッションは自分の Claude アカウントで実行され、接続されたリポジトリと自分のプラン制限を使用します。
+Slack での Claude Code は、Claude Code の機能を Slack ワークスペースに直接もたらします。`@Claude` にコーディングタスクをメンションすると、Claude は自動的に意図を検出し、Claude Code クラウドセッションを作成します。これにより、チームの会話を離れることなく開発作業を委任できます。
+
+この統合は既存の Claude for Slack アプリに基づいていますが、コーディング関連のリクエストに対して Claude Code クラウドセッションへのインテリジェントなルーティングを追加しています。各セッションは自分の Claude アカウントで実行され、接続されたリポジトリと自分のプラン制限を使用します。
 
 <h2 id="use-cases">
   ユースケース
@@ -29,12 +32,12 @@ Slack での Claude Code は、Claude Code の機能を Slack ワークスペー
 
 Claude Code in Slack を使用する前に、以下を確認してください：
 
-| 要件                | 詳細                                                                                  |
-| :---------------- | :---------------------------------------------------------------------------------- |
-| Claude プラン        | Pro、Max、Team、または Claude Code アクセス付き Enterprise（プレミアムシート、または Chat + Claude Code シート） |
-| ウェブ上の Claude Code | [ウェブ上の Claude Code](/docs/ja/claude-code-on-the-web) へのアクセスが有効になっている必要があります              |
-| GitHub アカウント      | ウェブ上の Claude Code に接続され、少なくとも 1 つのリポジトリが認証されている                                     |
-| Slack 認証          | Slack アカウントが Claude アプリを通じて Claude アカウントにリンクされている                                   |
+| 要件           | 詳細                                                                                  |
+| :----------- | :---------------------------------------------------------------------------------- |
+| Claude プラン   | Pro、Max、Team、または Claude Code アクセス付き Enterprise（プレミアムシート、または Chat + Claude Code シート） |
+| クラウドセッション    | [クラウドセッション](/docs/ja/claude-code-on-the-web) がアカウントで有効になっている                             |
+| GitHub アカウント | [claude.ai/code](https://claude.ai/code) で接続され、少なくとも 1 つのリポジトリが認証されている              |
+| Slack 認証     | Slack アカウントが Claude アプリを通じて Claude アカウントにリンクされている                                   |
 
 <h2 id="setting-up-claude-code-in-slack">
   Slack での Claude Code のセットアップ
@@ -42,20 +45,20 @@ Claude Code in Slack を使用する前に、以下を確認してください�
 
 <Steps>
   <Step title="Slack に Claude アプリをインストールする">
-    ワークスペース管理者は Slack App Marketplace から Claude アプリをインストールする必要があります。[Slack App Marketplace](https://slack.com/marketplace/A08SF47R6P4) にアクセスして'Add to Slack'をクリックしてインストールプロセスを開始します。
+    ワークスペース管理者は Slack App Marketplace から Claude アプリをインストールする必要があります。[Slack App Marketplace](https://slack.com/marketplace/A08SF47R6P4) にアクセスして「Add to Slack」をクリックしてインストールプロセスを開始します。
   </Step>
 
   <Step title="Claude アカウントを接続する">
     アプリがインストールされた後、個別の Claude アカウントを認証します：
 
     1. Apps セクションで「Claude」をクリックして Slack で Claude アプリを開きます
-    2. App Home タブに移動します
+    2. App Home タブを開きます
     3. 「Connect」をクリックして Slack アカウントを Claude アカウントにリンクします
     4. ブラウザで認証フローを完了します
   </Step>
 
-  <Step title="ウェブ上の Claude Code を設定する">
-    ウェブ上の Claude Code が適切に設定されていることを確認します：
+  <Step title="クラウドセッションを設定する">
+    クラウドセッションがアカウント用に適切に設定されていることを確認します：
 
     * [claude.ai/code](https://claude.ai/code) にアクセスして、Slack に接続したのと同じアカウントでサインインします
     * GitHub アカウントがまだ接続されていない場合は接続します
@@ -63,7 +66,7 @@ Claude Code in Slack を使用する前に、以下を確認してください�
   </Step>
 
   <Step title="ルーティングモードを選択する">
-    アカウントを接続した後、Claude が Slack のメッセージをどのように処理するかを設定します。Slack の Claude App Home に移動して、**ルーティングモード**設定を見つけます。
+    アカウントを接続した後、Claude が Slack のメッセージをどのように処理するかを設定します。Slack の Claude App Home を開いて、**ルーティングモード**設定を見つけます。
 
     | モード             | 動作                                                                                                                                          |
     | :-------------- | :------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -88,7 +91,7 @@ Claude Code in Slack を使用する前に、以下を確認してください�
   自動検出
 </h3>
 
-Slack チャネルまたはスレッドで @Claude をメンションすると、Claude は自動的にメッセージを分析してコーディングタスクかどうかを判断します。Claude がコーディング意図を検出した場合、通常のチャットアシスタントとして応答する代わりに、リクエストをウェブ上の Claude Code にルーティングします。
+Code + Chat ルーティングモードでは、Slack チャネルまたはスレッドで @Claude をメンションすると、Claude は自動的にメッセージがコーディングタスクかどうかを検出します。コーディングタスクは Claude Code クラウドセッションに送信されます。その他のものは通常のチャット返信を受け取ります。Code のみモードでは、すべての @mention が Claude Code に送信されます。
 
 また、Claude が自動的に検出しない場合でも、リクエストをコーディングタスクとして処理するよう Claude に明示的に指示することもできます。
 
@@ -119,17 +122,11 @@ Slack チャネルまたはスレッドで @Claude をメンションすると�
 3. **セッション作成**: claude.ai/code で新しい Claude Code セッションが作成されます
 4. **進捗更新**: Claude は作業が進むにつれて Slack スレッドにステータス更新を投稿します
 5. **完了**: 完了時に、Claude は概要とアクションボタンを含めてあなたをメンションします
-6. **レビュー**: 'View Session'をクリックして完全なトランスクリプトを表示するか、'Create PR'をクリックしてプルリクエストを開きます
+6. **レビュー**: 「View Session」をクリックして完全なトランスクリプトを表示するか、「Create PR」をクリックしてプルリクエストを開きます
 
 <h2 id="user-interface-elements">
   ユーザーインターフェース要素
 </h2>
-
-<h3 id="app-home">
-  App Home
-</h3>
-
-App Home タブは接続ステータスを表示し、Claude アカウントを Slack から接続または切断できます。
 
 <h3 id="message-actions">
   メッセージアクション
@@ -177,14 +174,7 @@ Slack ワークスペース管理者は、Claude アプリをワークスペー�
   チャネルベースのアクセス制御
 </h3>
 
-Claude はインストール後、自動的にどのチャネルにも追加されません。ユーザーは Claude を使用したいチャネルに明示的に Claude を招待する必要があります：
-
-* **招待が必要**：任意のチャネルで `/invite @Claude` と入力して Claude をそのチャネルに追加します
-* **チャネルメンバーシップがアクセスを制御**：Claude は追加されたチャネルの @mentions にのみ応答できます
-* **チャネルを通じたアクセスゲーティング**：管理者は Claude が招待されるチャネルと、それらのチャネルへのアクセス権を持つユーザーを管理することで、Claude Code の使用を特定のチャネルに制限できます
-* **プライベートチャネルのサポート**：Claude は公開チャネルと非公開チャネルの両方で機能し、チームに可視性を制御する柔軟性を提供します
-
-このチャネルベースのモデルにより、チームはワークスペースレベルの権限を超えた追加のアクセス制御層を提供して、Claude Code の使用を特定のチャネルに制限できます。
+アプリをインストールしても、Claude は自動的にどのチャネルにも追加されません。Claude は @mentions に応答するのは、追加されたチャネルのみです。`/invite @Claude` で招待してください。公開チャネルと非公開チャネルの両方で機能します。管理者は Claude が招待されるチャネルと、それらのチャネルへのアクセス権を持つユーザーを管理することで、Claude Code の使用を制御できます。これにより、ワークスペースレベルの権限を超えた追加のアクセス制御層が提供されます。
 
 <h2 id="what’s-accessible-where">
   どこでアクセスできるか
@@ -192,9 +182,9 @@ Claude はインストール後、自動的にどのチャネルにも追加さ�
 
 **Slack で**: ステータス更新、完了概要、アクションボタンが表示されます。完全なトランスクリプトは保存され、常にアクセス可能です。
 
-**ウェブで**: 完全な Claude Code セッション、完全な会話履歴、すべてのコード変更、ファイル操作、セッションの継続またはプルリクエストの作成機能があります。
+**claude.ai/code で**: 完全な Claude Code セッション、完全な会話履歴、すべてのコード変更、ファイル操作があります。セッションは [claude.ai/code](https://claude.ai/code) の Claude Code 履歴に保存され、過去のセッションを続行したり、参照したり、プルリクエストを作成したりできます。
 
-Enterprise および Team アカウントの場合、Slack の Claude から作成されたセッションは自動的に組織に表示されます。詳細については、[Claude Code on the Web 共有](/docs/ja/claude-code-on-the-web#share-sessions) を参照してください。
+Enterprise および Team アカウントの場合、Slack の Claude から作成されたセッションは自動的に組織に表示されます。詳細については、[クラウドセッション共有](/docs/ja/claude-code-on-the-web#share-sessions) を参照してください。
 
 <h2 id="best-practices">
   ベストプラクティス
@@ -206,7 +196,7 @@ Enterprise および Team アカウントの場合、Slack の Claude から作�
 
 * **具体的に**: ファイル名、関数名、またはエラーメッセージが関連する場合は含めます。
 * **コンテキストを提供**: 会話から明確でない場合はリポジトリまたはプロジェクトをメンションします。
-* **成功を定義**: '完了'とはどういう意味か説明します。Claude はテストを書くべきですか？ドキュメントを更新しますか？PR を作成しますか？
+* **成功を定義**: 「完了」とはどういう意味か説明します。Claude はテストを書くべきですか？ドキュメントを更新しますか？PR を作成しますか？
 * **スレッドを使用**: バグや機能について議論する場合はスレッドで返信して、Claude が完全なコンテキストを収集できるようにします。
 
 <h3 id="when-to-use-slack-vs-web">
@@ -222,24 +212,39 @@ Enterprise および Team アカウントの場合、Slack の Claude から作�
 </h2>
 
 <h3 id="claude-code-is-not-enabled-for-your-account">
-  'Claude Code がアカウントで有効になっていません'
+  「Claude Code がアカウントで有効になっていません」
 </h3>
 
-このエラーは、Claude アカウントにまだクラウド環境がないことを意味します。管理者が何かを有効にする必要があるわけではありません。Slack に接続したのと同じアカウントで [claude.ai/code](https://claude.ai/code) に 1 回サインインしてください。初回訪問時にデフォルトのクラウド環境が作成され、次回のメンション時にエラーが解消されます。各ユーザーが個別に実行する必要があります。
+このエラーは、Claude アカウントにまだクラウド環境がないことを意味します。Slack に接続したのと同じアカウントで [claude.ai/code](https://claude.ai/code) に 1 回サインインして、[ウェブオンボーディング](/docs/ja/web-quickstart#connect-github)を完了してください。これにより、デフォルトのクラウド環境が作成されるか、作成するよう求められます。エラーは次回のメンション時に解消されます。各ユーザーが個別に実行する必要があります。
 
 <h3 id="sessions-not-starting">
   セッションが開始しない
 </h3>
 
 1. Claude アカウントが Claude App Home で接続されていることを確認します
-2. ウェブ上の Claude Code アクセスが有効になっていることを確認します
+2. クラウドセッションがアカウントで有効になっていることを確認します
 3. Claude Code に接続された GitHub リポジトリが少なくとも 1 つあることを確認します
+
+<h3 id="sessions-from-a-claude-tag-channel-fail-to-start">
+  Claude Tag チャネルからのセッションが開始に失敗する
+</h3>
+
+このエントリは [Claude Tag](https://claude.com/docs/claude-tag/overview) を使用しているワークスペースに適用されます。Claude Tag では、Claude はメンバーのアカウントではなく、組織の共有 ID としてチャネルで機能します。[claude.ai/code](https://claude.ai/code) でチャネルのクラウド環境を作成した場合、それはあなたの個人アカウントに属しており、Claude は個人環境でチャネルセッションを開始できません。Claude Code はセッションを直ちに失敗させ、再試行しても役に立ちません。
+
+Owner の場合で環境があなたのものである場合は、環境セレクターから [組織と共有](/docs/ja/cloud-environments#organization-shared-environments)してください。それ以外の場合は、Owner が [admin settings](https://claude.ai/admin-settings) の **Cloud environments** ページから組織共有環境として再作成します。
+
+次の 2 つの方法で適用できます。
+
+* [claude.ai/admin-settings/claude-code](https://claude.ai/admin-settings/claude-code) で組織のデフォルトとして設定します。
+* Claude Tag admin settings で [チャネルに設定](https://claude.com/docs/claude-tag/admins/troubleshooting#channel-sessions-use-the-wrong-environment-or-can%E2%80%99t-find-one)します。
+
+Owner でない場合は、このエントリを Owner に送信してください。
 
 <h3 id="repository-not-showing">
   リポジトリが表示されない
 </h3>
 
-1. [claude.ai/code](https://claude.ai/code) で Claude Code on the web でリポジトリを接続します
+1. [claude.ai/code](https://claude.ai/code) でリポジトリを接続します
 2. そのリポジトリの GitHub 権限を確認します
 3. GitHub アカウントを切断して再接続してみます
 
@@ -247,7 +252,7 @@ Enterprise および Team アカウントの場合、Slack の Claude から作�
   誤ったリポジトリが選択された
 </h3>
 
-1. 'Change Repo'ボタンをクリックして別のリポジトリを選択します
+1. 「Change Repo」ボタンをクリックして別のリポジトリを選択します
 2. より正確な選択のためにリクエストにリポジトリ名を含めます
 
 <h3 id="authentication-errors">
@@ -258,29 +263,21 @@ Enterprise および Team アカウントの場合、Slack の Claude から作�
 2. ブラウザで正しい Claude アカウントにサインインしていることを確認します
 3. Claude プランに Claude Code アクセスが含まれていることを確認します
 
-<h3 id="session-expiration">
-  セッション有効期限
-</h3>
-
-1. セッションはウェブ上の Claude Code 履歴でアクセス可能なままです
-2. [claude.ai/code](https://claude.ai/code) から過去のセッションを継続または参照できます
-
 <h2 id="current-limitations">
   現在の制限事項
 </h2>
 
-* **GitHub のみ**: 現在、GitHub 上のリポジトリのみをサポートしています。
+* **GitHub のみ**: リポジトリは GitHub 上にある必要があります。
 * **一度に 1 つの PR**: 各セッションは 1 つのプルリクエストを作成できます。
-* **レート制限が適用**: セッションは個別の Claude プランのレート制限を使用します。
-* **ウェブアクセスが必要**: ユーザーは Claude Code on the web アクセスを持つ必要があります。持たないユーザーは標準的な Claude チャット応答のみを取得します。
+* **クラウドセッションアクセスが必要**: ユーザーは [クラウドセッション](/docs/ja/claude-code-on-the-web) へのアクセスが必要です。アクセスがない場合、Claude は標準的なチャット応答で返信します。
 
 <h2 id="related-resources">
   関連リソース
 </h2>
 
 <CardGroup>
-  <Card title="ウェブ上の Claude Code" icon="globe" href="/docs/ja/claude-code-on-the-web">
-    ウェブ上の Claude Code について詳しく学ぶ
+  <Card title="クラウド上の Claude Code" icon="cloud" href="/docs/ja/claude-code-on-the-web">
+    クラウドセッションについて詳しく学ぶ
   </Card>
 
   <Card title="Claude for Slack" icon="slack" href="https://claude.com/claude-and-slack">

@@ -7,16 +7,12 @@
 > Koordinieren Sie mehrere Claude Code-Instanzen, die zusammen als Team arbeiten, mit gemeinsamen Aufgaben, Messaging zwischen Agenten und zentraler Verwaltung.
 
 <Warning>
-  Agent-Teams sind experimentell und standardmäßig deaktiviert. Aktivieren Sie sie, indem Sie `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS` zu Ihrer [settings.json](/docs/de/settings) oder Umgebung hinzufügen. Ohne diese Variable wird kein Team beim Sitzungsstart eingerichtet, keine Team-Verzeichnisse werden geschrieben, und Claude spawnt oder schlägt keine Teammates vor. Agent-Teams haben [bekannte Einschränkungen](#limitations) bezüglich Sitzungswiederaufnahme, Aufgabenkoordination und Abschaltungsverhalten.
+  Agent-Teams sind experimentell und standardmäßig deaktiviert. Aktivieren Sie sie, indem Sie `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` in Ihrer [settings.json](/docs/de/settings) oder Umgebung setzen. Ohne diese Variable wird kein Team beim Sitzungsstart eingerichtet, keine Team-Verzeichnisse werden geschrieben, und Claude spawnt oder schlägt keine Teammates vor. Agent-Teams haben [bekannte Einschränkungen](#limitations) bezüglich Sitzungswiederaufnahme, Aufgabenkoordination und Abschaltungsverhalten.
 </Warning>
 
-Agent-Teams ermöglichen es Ihnen, mehrere Claude Code-Instanzen zu koordinieren, die zusammenarbeiten. Eine Sitzung fungiert als Team-Lead und koordiniert die Arbeit, weist Aufgaben zu und synthetisiert Ergebnisse. Teammates arbeiten unabhängig, jeder in seinem eigenen Kontextfenster, und kommunizieren direkt miteinander.
+Agent-Teams ermöglichen es Ihnen, mehrere Claude Code-Instanzen zu koordinieren, die zusammenarbeiten. Eine Sitzung fungiert als Team-Lead und koordiniert die Arbeit, weist Aufgaben zu und synthetisiert Ergebnisse. Teammates arbeiten unabhängig, jeder in seinem eigenen Kontextfenster, und kommunizieren direkt miteinander. Sie können auch direkt mit jedem Teammate sprechen, ohne den Lead einzubeziehen.
 
-Im Gegensatz zu [subagents](/docs/de/sub-agents), die innerhalb einer einzelnen Sitzung ausgeführt werden und nur an den Hauptagenten berichten können, können Sie auch direkt mit einzelnen Teammates interagieren, ohne den Lead einzubeziehen.
-
-<Note>
-  Diese Seite beschreibt Agent-Teams ab v2.1.178. Mit `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS` gesetzt, benötigt das Spawnen eines Teammates keinen Setup-Schritt mehr, und die Bereinigung erfolgt automatisch, wenn die Sitzung beendet wird. Vor v2.1.178 haben Sie Claude gebeten, ein Team zu erstellen und zu benennen, und Claude hat die Tools `TeamCreate` und `TeamDelete` verwendet, um es einzurichten und zu entfernen. Beide Tools existieren nicht mehr. Die `team_name`-Eingabe im Agent-Tool wird akzeptiert, aber ignoriert, und das `team_name`-Feld in `TaskCreated`, `TaskCompleted` und `TeammateIdle` [Hook-Payloads](/docs/de/hooks#taskcreated) trägt den sitzungsabgeleiteten Namen und ist veraltet.
-</Note>
+Bevor Sie ein Team einrichten, überprüfen Sie, ob eine leichtere Option die Aufgabe erfüllt. [Subagents](/docs/de/sub-agents) arbeiten innerhalb einer einzelnen Sitzung, und mit [sitzungsübergreifendem Messaging](/docs/de/cross-session-messaging) kann Claude Erkenntnisse zwischen den Sitzungen weitergeben, die Sie selbst ausführen.
 
 <h2 id="when-to-use-agent-teams">
   Wann Agent-Teams verwendet werden
@@ -35,21 +31,21 @@ Agent-Teams fügen Koordinationsaufwand hinzu und verwenden deutlich mehr Tokens
   Vergleich mit subagents
 </h3>
 
-Sowohl Agent-Teams als auch [subagents](/docs/de/sub-agents) ermöglichen es Ihnen, Arbeit zu parallelisieren, aber sie funktionieren unterschiedlich. Wählen Sie basierend darauf, ob Ihre Worker miteinander kommunizieren müssen:
+Sowohl Agent-Teams als auch [subagents](/docs/de/sub-agents) ermöglichen es Ihnen, Arbeit zu parallelisieren, aber sie funktionieren unterschiedlich. Für separate Sitzungen, die Nachrichten aneinander weitergeben, ohne ein Team zu bilden, siehe [sitzungsübergreifendes Messaging](/docs/de/cross-session-messaging).
 
-<Frame caption="Subagents berichten Ergebnisse nur an den Hauptagenten zurück und sprechen nie miteinander. Bei Agent-Teams teilen sich Teammates eine Aufgabenliste, beanspruchen Arbeit und kommunizieren direkt miteinander.">
+<Frame caption="Subagents berichten Ergebnisse an den Hauptagenten zurück. Bei Agent-Teams teilen sich Teammates eine Aufgabenliste, beanspruchen Arbeit und kommunizieren direkt miteinander.">
   <img src="https://mintcdn.com/claude-code/nsvRFSDNfpSU5nT7/images/subagents-vs-agent-teams-light.png?fit=max&auto=format&n=nsvRFSDNfpSU5nT7&q=85&s=2f8db9b4f3705dd3ab931fbe2d96e42a" className="dark:hidden" alt="Diagramm zum Vergleich von Subagent- und Agent-Team-Architekturen. Subagents werden vom Hauptagenten erzeugt, führen Arbeit aus und berichten Ergebnisse zurück. Agent-Teams koordinieren sich über eine gemeinsame Aufgabenliste, wobei Teammates direkt miteinander kommunizieren." width="4245" height="1615" data-path="images/subagents-vs-agent-teams-light.png" />
 
   <img src="https://mintcdn.com/claude-code/nsvRFSDNfpSU5nT7/images/subagents-vs-agent-teams-dark.png?fit=max&auto=format&n=nsvRFSDNfpSU5nT7&q=85&s=d573a037540f2ada6a9ae7d8285b46fd" className="hidden dark:block" alt="Diagramm zum Vergleich von Subagent- und Agent-Team-Architekturen. Subagents werden vom Hauptagenten erzeugt, führen Arbeit aus und berichten Ergebnisse zurück. Agent-Teams koordinieren sich über eine gemeinsame Aufgabenliste, wobei Teammates direkt miteinander kommunizieren." width="4245" height="1615" data-path="images/subagents-vs-agent-teams-dark.png" />
 </Frame>
 
-|                   | Subagents                                                     | Agent-Teams                                                  |
-| :---------------- | :------------------------------------------------------------ | :----------------------------------------------------------- |
-| **Kontext**       | Eigenes Kontextfenster; Ergebnisse kehren zum Aufrufer zurück | Eigenes Kontextfenster; vollständig unabhängig               |
-| **Kommunikation** | Berichte Ergebnisse nur an den Hauptagenten zurück            | Teammates senden sich gegenseitig direkt Nachrichten         |
-| **Koordination**  | Hauptagent verwaltet alle Arbeiten                            | Gemeinsame Aufgabenliste mit Selbstkoordination              |
-| **Am besten für** | Fokussierte Aufgaben, bei denen nur das Ergebnis zählt        | Komplexe Arbeit, die Diskussion und Zusammenarbeit erfordert |
-| **Token-Kosten**  | Niedriger: Ergebnisse werden zum Hauptkontext zusammengefasst | Höher: jeder Teammate ist eine separate Claude-Instanz       |
+|                   | Subagents                                                                                                                                                                     | Agent-Teams                                                                                                                                                  |
+| :---------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Kontext**       | Eigenes Kontextfenster; Ergebnisse kehren zum Aufrufer zurück                                                                                                                 | Eigenes Kontextfenster; vollständig unabhängig                                                                                                               |
+| **Kommunikation** | Ergebnis an den Aufrufer zurückgeben. Subagents, die Claude beim Spawnen benannt hat, können sich auch [gegenseitig Nachrichten senden](/docs/de/sub-agents#what-loads-at-startup) | Teammates senden sich gegenseitig direkt Nachrichten                                                                                                         |
+| **Koordination**  | Hauptagent verwaltet alle Arbeiten                                                                                                                                            | Selbstkoordination durch Nachrichten, plus eine gemeinsame Aufgabenliste für [Agenten, die die Task-Tools haben](/docs/de/tools-reference#task-tool-availability) |
+| **Am besten für** | Fokussierte Aufgaben, bei denen nur das Ergebnis zählt                                                                                                                        | Komplexe Arbeit, die Diskussion und Zusammenarbeit erfordert                                                                                                 |
+| **Token-Kosten**  | Niedriger: Ergebnisse werden zum Hauptkontext zusammengefasst                                                                                                                 | Höher: jeder Teammate ist eine separate Claude-Instanz                                                                                                       |
 
 Verwenden Sie subagents, wenn Sie schnelle, fokussierte Worker benötigen, die berichten. Verwenden Sie Agent-Teams, wenn Teammates Erkenntnisse austauschen, sich gegenseitig in Frage stellen und selbst koordinieren müssen.
 
@@ -67,6 +63,10 @@ Agent-Teams sind standardmäßig deaktiviert. Aktivieren Sie sie, indem Sie die 
 }
 ```
 
+Das Aktivieren von Agent-Teams ändert auch die gewöhnliche Delegation. Claude kann [einen Subagenten selbst benennen](/docs/de/sub-agents#subagent-names), und während Agent-Teams aktiviert sind, wird ein Subagent, den Claude benennt, als Teamkollege gestartet, sodass sich Teams auch dann bilden können, wenn Sie nicht um einen gebeten haben. Weitere Informationen finden Sie unter [Wie Claude Agent-Teams startet](#how-claude-starts-agent-teams); um das Verhalten auszuschalten, siehe [Claude startet Teamkollegen statt Subagenten](#claude-spawns-teammates-instead-of-subagents).
+
+Das Starten von Teamkollegen erfordert auch eine interaktive Sitzung. Im [nicht-interaktiven Modus](/docs/de/headless) mit dem Flag `-p`, einschließlich Agent SDK-Sitzungen, startet Claude keine Teamkollegen, und ein Subagent, den Claude benennt, wird als gewöhnlicher [Subagent](/docs/de/sub-agents) ausgeführt, auch wenn Agent-Teams aktiviert sind.
+
 <h2 id="start-your-first-agent-team">
   Starten Sie Ihr erstes Agent-Team
 </h2>
@@ -75,19 +75,21 @@ Nach der Aktivierung von Agent-Teams beschreiben Sie die Aufgabe und die Teammat
 
 Dieses Beispiel funktioniert gut, weil die drei Rollen unabhängig sind und das Problem erkunden können, ohne aufeinander zu warten:
 
-```text theme={null}
+```text wrap theme={null}
 I'm designing a CLI tool that helps developers track TODO comments across
 their codebase. Spawn three teammates to explore this from different angles:
 one on UX, one on technical architecture, one playing devil's advocate.
 ```
 
-Von dort aus füllt Claude eine [gemeinsame Aufgabenliste](/docs/de/interactive-mode#task-list), erzeugt Teammates für jede Perspektive, lässt sie das Problem erkunden und synthetisiert Erkenntnisse, wenn fertig.
+Von dort aus füllt Claude eine [gemeinsame Aufgabenliste](/docs/de/interactive-mode#task-list) in einer [Sitzung, die die Task-Tools hat](/docs/de/tools-reference#task-tool-availability), erzeugt Teammates für jede Perspektive, lässt sie das Problem erkunden und synthetisiert Erkenntnisse, wenn fertig.
+
+Claude kann manchmal [Subagenten](/docs/de/sub-agents) statt eines Teams erstellen. Subagenten erscheinen im gleichen Agent-Panel wie Teammates, daher bestätigt das Panel allein nicht, dass ein Team gebildet wurde. Wenn Claude stattdessen Subagenten erzeugt hat, fragen Sie erneut und fordern Sie explizit ein Agent-Team an.
 
 Das Terminal des Leads listet Teammates im Agent-Panel unterhalb der Prompt-Eingabe auf. Aus dem Panel:
 
 * **Pfeile nach oben und unten**: Wählen Sie einen Teammate aus
 * **Eingabe**: Öffnen Sie das Transkript des ausgewählten Teammates und senden Sie ihm direkt eine Nachricht
-* **Escape**: Unterbrechen Sie den aktuellen Zug des ausgewählten Teammates
+* **Escape**: Löschen Sie die Auswahl. Während Sie das Transkript eines Teammates anschauen, unterbricht Escape den aktuellen Zug dieses Teammates
 
 Ab v2.1.199 bleibt die Zeile eines untätigen Teammates im Panel, während noch ein Teammate oder Subagent arbeitet, sodass Sie sie auswählen können, um sein Transkript zu überprüfen oder ihm mehr Arbeit zu geben. Sobald jeder Agent im Panel untätig ist, werden untätige Zeilen nach 30 Sekunden ausgeblendet und erscheinen beim nächsten Zug des Teammates wieder; der Teammate läuft weiter und ist adressierbar, während er ausgeblendet ist. In v2.1.181 bis v2.1.198 wurde eine untätige Zeile 30 Sekunden nach ihrem eigenen Zug ausgeblendet, auch während andere Teammates noch arbeiteten; untätige Zeilen werden in Versionen vor v2.1.181 nicht ausgeblendet.
 
@@ -114,11 +116,11 @@ Agent-Teams unterstützen zwei Anzeigemodi:
   `tmux` hat bekannte Einschränkungen auf bestimmten Betriebssystemen und funktioniert traditionell am besten auf macOS. Die Verwendung von `tmux -CC` in iTerm2 ist der empfohlene Einstiegspunkt in `tmux`.
 </Note>
 
-Der Standard ist `"in-process"`. Vor v2.1.179 war der Standard `"auto"`, daher öffnen aktualisierte Sitzungen, die zuvor Split Panes öffneten, jetzt ein Terminal, es sei denn, Sie legen den Modus explizit fest. Setzen Sie `"auto"`, um Split Panes zu aktivieren, wenn Sie bereits in einer tmux-Sitzung ausgeführt werden oder Ihr Terminal iTerm2 ist, und fallen Sie ansonsten auf In-Process zurück. Die Einstellung `"tmux"` aktiviert den Split-Pane-Modus und erkennt automatisch, ob tmux oder iTerm2 basierend auf Ihrem Terminal verwendet werden soll.
+Der Standard ist `"in-process"`. Setzen Sie `"auto"`, um Split Panes zu aktivieren, wenn Sie bereits in einer tmux-Sitzung ausgeführt werden oder Ihr Terminal iTerm2 mit der installierten `it2` CLI ist, und fallen Sie ansonsten auf In-Process zurück. Die Einstellung `"tmux"` aktiviert den Split-Pane-Modus und erkennt automatisch, ob tmux oder iTerm2 basierend auf Ihrem Terminal verwendet werden soll.
 
-Ab v2.1.186 setzen Sie `"iterm2"`, um native Split Panes von iTerm2 explizit zu verwenden. Dieser Modus erfordert die [`it2` CLI](https://github.com/mkusaka/it2) und zeigt einen Fehler mit dem Installationsbefehl an, wenn `it2` fehlt. Die Setup-Eingabeaufforderung, die angeboten wird, `it2` zu installieren oder zu tmux zu wechseln, wird unter `"auto"` oder `"tmux"` angezeigt, wenn Ihr Terminal iTerm2 ist und tmux als Fallback verfügbar ist.
+Setzen Sie `"iterm2"`, um native Split Panes von iTerm2 explizit zu verwenden. Dieser Modus erfordert die [`it2` CLI](https://github.com/mkusaka/it2) und zeigt einen Fehler mit dem Installationsbefehl an, wenn `it2` fehlt. Die Setup-Eingabeaufforderung, die angeboten wird, `it2` zu installieren oder zu tmux zu wechseln, wird unter `"auto"` oder `"tmux"` angezeigt, wenn Ihr Terminal iTerm2 ist und tmux als Fallback verfügbar ist.
 
-Um den Standard zu überschreiben, setzen Sie [`teammateMode`](/docs/de/settings#available-settings) in `~/.claude/settings.json`:
+Um den Standard zu überschreiben, setzen Sie [`teammateMode`](/docs/de/settings-reference#teammatemode) in `~/.claude/settings.json`:
 
 ```json theme={null}
 {
@@ -132,6 +134,8 @@ Um den Modus für eine einzelne Sitzung festzulegen, übergeben Sie ihn als Flag
 claude --teammate-mode auto
 ```
 
+Das Flag `--teammate-mode` ist experimentell und wird nicht in `claude --help` angezeigt.
+
 Der Split-Pane-Modus erfordert entweder [tmux](https://github.com/tmux/tmux/wiki) oder iTerm2 mit der [`it2` CLI](https://github.com/mkusaka/it2). Zur manuellen Installation:
 
 * **tmux**: installieren Sie über den Paketmanager Ihres Systems. Siehe das [tmux Wiki](https://github.com/tmux/tmux/wiki/Installing) für plattformspezifische Anweisungen.
@@ -143,29 +147,44 @@ Der Split-Pane-Modus erfordert entweder [tmux](https://github.com/tmux/tmux/wiki
 
 Claude entscheidet die Anzahl der zu erzeugenden Teammates basierend auf Ihrer Aufgabe, oder Sie können genau angeben, was Sie möchten:
 
-```text theme={null}
+```text wrap theme={null}
 Spawn 4 teammates to refactor these modules in parallel. Use Sonnet for
 each teammate.
 ```
 
-Teammates erben standardmäßig nicht die `/model`-Auswahl des Leads. Um das Modell zu ändern, das verwendet wird, wenn der Prompt keines angibt, setzen Sie **Standard-Teammate-Modell** in `/config`. Wählen Sie **Standard (Modell des Leaders)**, damit Teammates dem aktuellen Modell des Leads folgen.
+Claude Code wählt das Modell jedes Teammates aus dem ersten dieser Punkte aus, der zutrifft:
+
+1. Das Modell, das Ihr Spawn-Prompt für diesen Teammate benennt.
+2. Für einen Teammate, der aus einer [Subagent-Definition](#use-subagent-definitions-for-teammates) erzeugt wird, die `model` der Definition, wobei `inherit` das Modell des Leads auswählt.
+3. [`CLAUDE_CODE_SUBAGENT_MODEL`](/docs/de/model-config#environment-variables), wenn es auf etwas anderes als `inherit` gesetzt ist.
+4. Das aktuelle Modell des Leads.
+
+Wenn Sie [`CLAUDE_CODE_SUBAGENT_MODEL_FORCE=1`](/docs/de/sub-agents#run-every-subagent-on-one-model) setzen, gelten die ersten beiden Quellen nicht. Claude Code wählt das Modell jedes Teammates aus `CLAUDE_CODE_SUBAGENT_MODEL`, wenn es auf etwas anderes als `inherit` gesetzt ist, und ansonsten aus dem aktuellen Modell des Leads. Erfordert Claude Code v2.1.257 oder später.
+
+Vor v2.1.251 kam `CLAUDE_CODE_SUBAGENT_MODEL` zuerst in dieser Reihenfolge.
+
+<Note>
+  `teammateDefaultModel` wurde in v2.1.234 entfernt; Claude Code ignoriert einen verbleibenden Wert. Benennen Sie das Modell stattdessen in Ihrem Prompt.
+</Note>
+
+Claude Code überprüft das Modell, das es für einen Teammate auswählt, gegen die [`availableModels`](/docs/de/model-config#restrict-model-selection) Allowlist Ihrer Organisation. Wenn die Allowlist einen Wert blockiert, ersetzt Claude Code ein anderes Modell:
+
+* **Family-Alias wie `opus`**: Auf der Anthropic API und Claude Platform auf AWS führt Claude Code den Teammate auf der neuesten Version dieser Familie aus, die die Allowlist zulässt. Bei Anbietern mit anbieterspezifischen Modell-IDs, bei denen die [Substitution nicht funktioniert](/docs/de/model-config#restrict-model-selection), fällt ein blockierter Alias wie jeder andere blockierte Wert gemäß dem nächsten Punkt zurück
+* **Jeder andere blockierte Wert, einschließlich eines Family-Alias bei Anbietern, bei denen die Substitution nicht funktioniert, oder einer Familie, die keine zulässige Version hat**: Claude Code führt den Teammate auf dem Modell des Leads aus. Wenn Sie `CLAUDE_CODE_SUBAGENT_MODEL` setzen, versucht Claude Code zuerst dieses Modell unter denselben Regeln
 
 Teammates erben die [Anstrengungsstufe](/docs/de/model-config#adjust-effort-level) des Leads. Im Split-Pane-Modus gilt dies ab v2.1.186; frühere Versionen haben die Anstrengungsstufe der Lead-Sitzung nicht an Split-Pane-Teammates weitergegeben.
 
-<h3 id="require-plan-approval-for-teammates">
+<h3 id="have-teammates-plan-before-implementing">
   Genehmigung von Plänen für Teammates erforderlich
 </h3>
 
-Für komplexe oder riskante Aufgaben können Sie verlangen, dass Teammates planen, bevor sie implementieren. Der Teammate arbeitet im schreibgeschützten Plan-Modus, bis der Lead seinen Ansatz genehmigt:
+Für komplexe oder riskante Aufgaben können Sie verlangen, dass Teammates planen, bevor sie implementieren. Ein Teammate, den Claude erzeugt, während der Lead im [Plan-Modus](/docs/de/permission-modes#analyze-before-you-edit-with-plan-mode) ist, arbeitet im schreibgeschützten Plan-Modus, bis sein Plan fertig ist. Schalten Sie den Lead zuerst in den Plan-Modus und fragen Sie dann nach dem Teammate:
 
-```text theme={null}
+```text wrap theme={null}
 Spawn an architect teammate to refactor the authentication module.
-Require plan approval before they make any changes.
 ```
 
-Wenn ein Teammate die Planung abgeschlossen hat, sendet er eine Genehmigungsanfrage an den Lead. Der Lead überprüft den Plan und genehmigt ihn entweder oder lehnt ihn mit Feedback ab. Bei Ablehnung bleibt der Teammate im Plan-Modus, überarbeitet basierend auf dem Feedback und reicht erneut ein. Nach der Genehmigung beendet der Teammate den Plan-Modus und beginnt mit der Implementierung.
-
-Der Lead trifft Genehmigungsentscheidungen autonom. Um das Urteil des Leads zu beeinflussen, geben Sie ihm Kriterien in Ihrem Prompt, wie z. B. „genehmigen Sie nur Pläne, die Testabdeckung enthalten" oder „lehnen Sie Pläne ab, die das Datenbankschema ändern".
+Wenn ein Teammate die Planung abgeschlossen hat, sendet er eine Genehmigungsanfrage an den Lead. Claude Code genehmigt den Plan in der Sitzung des Leads, sobald die Anfrage ankommt, ohne dass der Lead ihn überprüft. Die Änderungen und Befehle des Teammates durchlaufen weiterhin die in [Berechtigungen](#permissions) beschriebenen Genehmigungsaufforderungen. Nach der Genehmigung beendet der Teammate den Plan-Modus und beginnt mit der Implementierung.
 
 <h3 id="talk-to-teammates-directly">
   Sprechen Sie direkt mit Teammates
@@ -186,6 +205,8 @@ Das Modell und der schnelle Modus eines Teammates sind festgelegt, wenn er spawn
 
 Die gemeinsame Aufgabenliste koordiniert die Arbeit im Team. Der Lead erstellt Aufgaben und Teammates arbeiten sie durch. Aufgaben haben drei Zustände: ausstehend, in Bearbeitung und abgeschlossen. Aufgaben können auch von anderen Aufgaben abhängen: eine ausstehende Aufgabe mit ungelösten Abhängigkeiten kann nicht beansprucht werden, bis diese Abhängigkeiten erfüllt sind.
 
+Agents [ohne die Task-Tools](/docs/de/tools-reference#task-tool-availability) koordinieren sich stattdessen durch Nachrichten.
+
 Der Lead kann Aufgaben explizit zuweisen oder Teammates können selbst beanspruchen:
 
 * **Lead weist zu**: teilen Sie dem Lead mit, welche Aufgabe welchem Teammate gegeben werden soll
@@ -199,7 +220,7 @@ Das Beanspruchen von Aufgaben verwendet Dateisperrung, um Race Conditions zu ver
 
 Um die Sitzung eines Teammates ordnungsgemäß zu beenden, beziehen Sie sich auf ihn mit seinem Namen. Zum Beispiel mit einem Teammate namens researcher:
 
-```text theme={null}
+```text wrap theme={null}
 Ask the researcher teammate to shut down
 ```
 
@@ -227,12 +248,9 @@ Dieser Abschnitt behandelt die Architektur und Mechanik hinter Agent-Teams. Wenn
   Wie Claude Agent-Teams startet
 </h3>
 
-Ein Agent-Team entsteht, wenn der erste Teammate erzeugt wird, wobei die Hauptsitzung als Lead fungiert. Es gibt zwei Möglichkeiten, wie Teammates erzeugt werden:
+Um ein Team zu starten, fordern Sie Claude um Teammates an. Claude startet einen Teammate, wenn er das [Agent-Tool](/docs/de/tools-reference) mit einem [`name`](/docs/de/sub-agents#subagent-names) aufruft, während Agent-Teams aktiviert sind, es sei denn, der Aufruf ist ein [Fork](/docs/de/sub-agents#fork-the-current-conversation) oder übergibt `isolation` beim Aufruf selbst. Claude Code fragt Sie nicht um Bestätigung für den Start.
 
-* **Sie fordern Teammates an**: geben Sie Claude eine Aufgabe, die von paralleler Arbeit profitiert, und fordern Sie explizit Teammates an. Claude erzeugt sie basierend auf Ihren Anweisungen.
-* **Claude schlägt Teammates vor**: wenn Claude feststellt, dass Ihre Aufgabe von paralleler Arbeit profitieren würde, kann es die Erzeugung von Teammates vorschlagen. Sie bestätigen, bevor es fortfährt.
-
-In beiden Fällen behalten Sie die Kontrolle. Claude wird keine Teammates ohne Ihre Genehmigung erzeugen.
+Claude benennt auch gewöhnliche Subagenten von selbst, damit es sie später anschreiben kann. Diese Aufrufe folgen der gleichen Regel, sodass Teams sich auch dann bilden können, wenn Sie nicht um einen gebeten haben. Wenn Sie stattdessen Subagenten möchten, [schalten Sie Agent-Teams aus](#claude-spawns-teammates-instead-of-subagents).
 
 <h3 id="architecture">
   Architektur
@@ -247,24 +265,24 @@ Ein Agent-Team besteht aus:
 | **Aufgabenliste** | Gemeinsame Liste von Arbeitselementen, die Teammates beanspruchen und abschließen |
 | **Mailbox**       | Nachrichtensystem für Kommunikation zwischen Agenten                              |
 
-Siehe [Wählen Sie einen Anzeigemodus](#choose-a-display-mode) für Anzeigeoptionen. Teammate-Nachrichten kommen automatisch beim Lead an.
-
 Die Mailbox jedes Agenten ist eine JSON-Datei unter `~/.claude/teams/{team-name}/inboxes/{agent-name}.json`. Claude Code validiert jeden Eintrag, wenn es eine Mailbox-Datei liest. Einträge, die nicht dem Nachrichtenformat entsprechen, werden als Fehler gemeldet und aus der Datei entfernt; die gültigen Nachrichten werden trotzdem zugestellt. Vor v2.1.207 verursachte ein einzelner fehlerhafter Mailbox-Eintrag einen wiederholten Fehler jede Sekunde und blockierte die Zustellung für diese Mailbox, bis Sie die Datei manuell löschten.
 
-Das System verwaltet Aufgabenabhängigkeiten automatisch. Wenn ein Teammate eine Aufgabe abschließt, von der andere Aufgaben abhängen, werden blockierte Aufgaben automatisch entsperrt.
+Claude Code meldet eine Nachricht als gesendet nur, wenn der Schreibvorgang in die Mailbox-Datei des Empfängers erfolgreich ist, ob die Nachricht Klartext oder eine strukturierte Protokollnachricht wie eine Plan-Genehmigung oder Shutdown-Anfrage ist. Wenn der Schreibvorgang fehlschlägt, beispielsweise weil der Speicher voll ist oder das Mailbox-Verzeichnis nicht beschreibbar ist, erhält der sendende Agent einen Fehler und nichts wird gesendet. Siehe [Fehler beim Schreiben in die Mailbox eines Teammates](/docs/de/errors#failed-to-write-to-a-teammate-inbox) für die Fehlermeldungen und Wiederherstellungsschritte.
+
+Claude Code verwaltet Aufgabenabhängigkeiten automatisch: wenn ein Teammate eine Aufgabe abschließt, von der andere Aufgaben abhängen, werden die abhängigen Aufgaben ohne Aktion von Ihnen entsperrt.
 
 Teams und Aufgaben werden lokal unter einem sitzungsabgeleiteten Namen gespeichert. Der Name ist `session-` gefolgt von den ersten acht Zeichen der Sitzungs-ID:
 
 * **Team-Konfiguration**: `~/.claude/teams/{team-name}/config.json`
 * **Aufgabenliste**: `~/.claude/tasks/{team-name}/`
 
-Claude Code generiert beide automatisch beim Sitzungsstart und aktualisiert sie, wenn Teammates beitreten, untätig werden oder gehen. Das Team-Konfigurationsverzeichnis wird entfernt, wenn die Sitzung endet. Das Aufgabenlisten-Verzeichnis bleibt lokal bestehen und wird nie hochgeladen, sodass fortgesetzte Sitzungen ihre Aufgaben behalten. Die Aufbewahrung wird durch die gleiche [`cleanupPeriodDays`](/docs/de/settings#available-settings) gesteuert, die Sie bereits für Sitzungstranskripte kontrollieren.
+Claude Code generiert beide automatisch beim Sitzungsstart und aktualisiert sie, wenn Teammates beitreten, untätig werden oder gehen. Das Team-Konfigurationsverzeichnis wird entfernt, wenn die Sitzung endet. Das Aufgabenlisten-Verzeichnis bleibt lokal bestehen und wird nie hochgeladen, sodass fortgesetzte Sitzungen ihre Aufgaben behalten. Die Aufbewahrung wird durch die gleiche [`cleanupPeriodDays`](/docs/de/settings-reference#cleanupperioddays) gesteuert, die Sie bereits für Sitzungstranskripte kontrollieren, nach den [Aufbewahrungssweep-Regeln](/docs/de/claude-directory#cleaned-up-automatically).
 
 Die Team-Konfiguration enthält Laufzeitzustand wie Sitzungs-IDs und tmux-Pane-IDs, also bearbeiten Sie sie nicht von Hand oder verfassen Sie sie nicht im Voraus: Ihre Änderungen werden beim nächsten Zustandsupdate überschrieben.
 
 Um wiederverwendbare Teammate-Rollen zu definieren, verwenden Sie stattdessen [Subagent-Definitionen](#use-subagent-definitions-for-teammates).
 
-Die Team-Konfiguration enthält ein `members`-Array mit dem Namen, der Agent-ID und dem Agent-Typ jedes Teammates. Teammates können diese Datei lesen, um andere Teammitglieder zu entdecken.
+Die Team-Konfiguration enthält ein `members`-Array mit dem Namen und der Agent-ID jedes Mitglieds. Der Eintrag des Leads trägt immer den Agent-Typ `team-lead`. Der Eintrag eines Teammates trägt den Agent-Typ, den der Lead beim Erzeugen benannt hat, ob ein [integrierter Typ](/docs/de/sub-agents#built-in-subagents) oder eine [Subagent-Definition](#use-subagent-definitions-for-teammates), und lässt das Feld weg, wenn der Lead keinen benannt hat. Teammates können diese Datei lesen, um andere Teammitglieder zu entdecken.
 
 Es gibt kein Projekt-Level-Äquivalent der Team-Konfiguration. Eine Datei wie `.claude/teams/teams.json` in Ihrem Projektverzeichnis wird nicht als Konfiguration erkannt; Claude behandelt sie als gewöhnliche Datei.
 
@@ -272,29 +290,44 @@ Es gibt kein Projekt-Level-Äquivalent der Team-Konfiguration. Eine Datei wie `.
   Verwenden Sie Subagent-Definitionen für Teammates
 </h3>
 
-Beim Erzeugen eines Teammates können Sie einen [Subagent](/docs/de/sub-agents)-Typ aus jedem [Subagent-Bereich](/docs/de/sub-agents#choose-the-subagent-scope) referenzieren: Projekt, Benutzer, Plugin oder CLI-definiert. Dies ermöglicht es Ihnen, eine Rolle einmal zu definieren, wie z. B. einen Security-Reviewer oder Test-Runner, und sie sowohl als delegierter Subagent als auch als Agent-Team-Teammate wiederzuverwenden.
+Beim Erzeugen eines Teammates in beiden Anzeigemodi können Sie einen [Subagent](/docs/de/sub-agents)-Typ aus dem Projekt, Benutzer oder verwalteten [Subagent-Bereich](/docs/de/sub-agents#choose-the-subagent-scope) referenzieren. Dies ermöglicht es Ihnen, eine Rolle einmal zu definieren, wie z. B. einen Security-Reviewer oder Test-Runner, und sie sowohl als delegierter Subagent als auch als Agent-Team-Teammate wiederzuverwenden.
 
-Um eine Subagent-Definition zu verwenden, erwähnen Sie sie nach Name, wenn Sie Claude auffordern, den Teammate zu erzeugen:
+Um eine Subagent-Definition zu verwenden, benennen Sie sie, wenn Sie Claude auffordern, den Teammate zu erzeugen:
 
-```text theme={null}
+```text wrap theme={null}
 Spawn a teammate using the security-reviewer agent type to audit the auth module.
 ```
 
-Der Teammate berücksichtigt die `tools`-Zulassungsliste und das `model` dieser Definition, und der Text der Definition wird an den System-Prompt des Teammates als zusätzliche Anweisungen angehängt, anstatt ihn zu ersetzen. Team-Koordinations-Tools wie `SendMessage` und die Aufgabenverwaltungs-Tools sind immer für einen Teammate verfügbar, auch wenn `tools` andere Tools einschränkt.
+Claude Code liest die Subagent-Definition, die Sie benannt haben, und wendet diese Teile davon auf den Teammate an. Wenn ein Teil vom [Anzeigemodus](#choose-a-display-mode) des Teammates abhängt, sagt der Eintrag dies:
 
-<Note>
-  Die `skills`- und `mcpServers`-Frontmatter-Felder in einer Subagent-Definition werden nicht angewendet, wenn diese Definition als Teammate ausgeführt wird. Teammates laden Skills und MCP-Server aus Ihren Projekt- und Benutzereinstellungen, genauso wie eine reguläre Sitzung.
-</Note>
+* **`tools`**: Claude Code beschränkt den Teammate auf die Tools in der `tools`-Liste der Definition. Für einen In-Process-Teammate fügt Claude Code `SendMessage` zu dieser Liste hinzu, und in einer [Sitzung, die die Task-Tools hat](/docs/de/tools-reference#task-tool-availability), fügt es auch `TaskCreate`, `TaskGet`, `TaskList` und `TaskUpdate` hinzu.
+* **`model`**: Claude Code verwendet das `model` der Definition in beiden Anzeigemodi, wenn Ihr Spawn-Prompt keinen benennt. Siehe [wie Claude Code das Modell eines Teammates auswählt](#specify-teammates-and-models).
+* **Body**: Für einen In-Process-Teammate hängt Claude Code den Body der Definition an seinen Standard-System-Prompt als zusätzliche Anweisungen an. Für einen Split-Pane-Teammate verwendet Claude Code den Body anstelle seines Standard-System-Prompts.
+* **`skills`**: Claude Code wendet die `skills` der Definition nicht auf einen Teammate in beiden Anzeigemodi an. Der Teammate lädt Skills aus Ihren Projekt- und Benutzereinstellungen.
+* **`mcpServers`**: Für einen Split-Pane-Teammate wendet Claude Code das `mcpServers` der Definition unter den [Regeln für dieses Feld](/docs/de/sub-agents#scope-mcp-servers-to-a-subagent) an, die auch eine Sitzung abdecken, die mit `--agent` gestartet wurde. Ein In-Process-Teammate ignoriert das Feld und lädt MCP-Server aus Ihren Projekt- und Benutzereinstellungen.
+
+Wenn Claude einen In-Process-Teammate anschreibt, der nicht mehr läuft, bringt Claude Code ihn in der gleichen Sitzung zurück, stellt alle für ihn gespeicherten Gespräche wieder her und gibt ihm die Nachricht als seinen nächsten Prompt. Nachdem Sie eine Sitzung fortsetzen, werden Teammates auf diese Weise nicht zurückgebracht, gemäß [der Fortsetzen-Einschränkung](#limitations).
+
+Für einen Teammate, den es zurückbringt, wendet Claude Code eine Definition, die aus dem `.claude/agents/`-Verzeichnis eines Projekts oder einem `--add-dir`-Verzeichnis stammt, nur erneut an, wenn Sie [dem Ordner vertraut haben, in dem die Agent-Datei ist](/docs/de/permissions#what-runs-before-you-trust-a-folder). Einem übergeordneten Ordner zu vertrauen zählt nicht. Bis dahin kommt der Teammate zurück, ohne die Tools oder Anweisungen der Definition zu haben, und behält nur die Tools, die Claude Code jedem In-Process-Teammate hinzufügt. Siehe [die Agent-Definition des Teammates wurde nicht wiederhergestellt](/docs/de/errors#teammate-agent-definition-not-restored) für den Benachrichtigungstext.
 
 <h3 id="permissions">
   Berechtigungen
 </h3>
 
-Teammates starten mit den Berechtigungseinstellungen des Leads. Wenn der Lead mit `--dangerously-skip-permissions` ausgeführt wird, tun dies auch alle Teammates. Nach dem Erzeugen können Sie einzelne Teammate-Modi ändern, aber Sie können keine Pro-Teammate-Modi zum Zeitpunkt des Erzeugung setzen.
+Teammates starten mit dem Berechtigungsmodus des Leads, außer dem [`dontAsk`-Modus](/docs/de/permission-modes#allow-only-pre-approved-tools-with-dontask-mode), den sie nicht erben. Wenn der Lead mit `--dangerously-skip-permissions` ausgeführt wird, tun dies auch alle Teammates. Nach dem Erzeugen können Sie den Berechtigungsmodus eines einzelnen Teammates ändern, aber Sie können keine Pro-Teammate-Berechtigungsmodi zum Zeitpunkt des Erzeugung setzen.
 
-Wenn ein Agent einem anderen eine Nachricht über `SendMessage` sendet, wird dem empfangenden Agent mitgeteilt, dass sie von einer anderen Claude-Sitzung stammt, nicht von Ihnen. Ein Teammate kann eine Berechtigungsaufforderung nicht genehmigen oder Zustimmung in Ihrem Namen erteilen, und ein Teammate, dem eine Aktion verweigert wurde, kann sie nicht an einen anderen Teammate weitergeben, um die Überprüfung zu umgehen. Im [Auto-Modus](/docs/de/permission-modes#eliminate-prompts-with-auto-mode) behandelt der Klassifizierer einen Genehmigungsanspruch, der von einem anderen Agenten weitergeleitet wird, als nicht vertrauenswürdige Eingabe statt als Bestätigung von Ihnen.
+Teammate-Berechtigungsaufforderungen werden an die Lead-Sitzung weitergeleitet, also genehmigen Sie sie dort selbst. [Plan-Genehmigung](#have-teammates-plan-before-implementing) ist die konzipierte Ausnahme: die Lead-Sitzung gewährt Teammate-Plan-Genehmigungen ohne eine separate Aufforderung an Sie.
 
-Teammate-Berechtigungsaufforderungen werden an die Lead-Sitzung weitergeleitet, also genehmigen Sie sie dort selbst. [Plan-Genehmigung](#require-plan-approval-for-teammates) ist die konzipierte Ausnahme: die Lead-Sitzung gewährt Teammate-Plan-Genehmigungen ohne eine separate Aufforderung an Sie.
+<h4 id="messages-between-agents">
+  Nachrichten zwischen Agenten
+</h4>
+
+Wenn ein Agent einem anderen eine Nachricht über `SendMessage` sendet, wird dem empfangenden Agent mitgeteilt, dass sie von einer anderen Claude-Sitzung stammt, nicht von Ihnen. Ein Teammate kann eine Berechtigungsaufforderung nicht genehmigen oder Zustimmung in Ihrem Namen erteilen, und ein Teammate, dem eine Aktion verweigert wurde, kann sie nicht an einen anderen Teammate weitergeben, um die Überprüfung zu umgehen. Die gleichen Regeln gelten für eine Nachricht, die von [einer Ihrer anderen Claude Code-Sitzungen](/docs/de/cross-session-messaging#how-a-session-treats-an-incoming-message) ankommt, außerhalb des Teams ganz.
+
+Im [Auto-Modus](/docs/de/permission-modes#eliminate-prompts-with-auto-mode) wendet der Klassifizierer zwei Überprüfungen auf Nachrichten zwischen Agenten an:
+
+* Er behandelt einen Genehmigungsanspruch, der von einem anderen Agenten weitergeleitet wird, als nicht vertrauenswürdige Eingabe statt als Bestätigung von Ihnen.
+* Er überprüft jede Nachricht, bevor Claude Code sie liefert, ob eine einfache Nachricht oder eine strukturierte Protokollnachricht wie eine Shutdown-Anfrage oder Plan-Genehmigungsantwort. Eine Nachricht, die er blockiert, erreicht den Empfänger nie.
 
 <h3 id="context-and-communication">
   Kontext und Kommunikation
@@ -305,8 +338,8 @@ Jeder Teammate hat sein eigenes Kontextfenster. Beim Erzeugen lädt ein Teammate
 **Wie Teammates Informationen teilen:**
 
 * **Automatische Nachrichtenlieferung**: wenn Teammates Nachrichten senden, werden sie automatisch an Empfänger geliefert. Der Lead muss nicht auf Updates abfragen.
-* **Untätigkeitsbenachrichtigungen**: wenn ein Teammate fertig ist und stoppt, benachrichtigt er automatisch den Lead. Ab v2.1.198 benachrichtigt ein Teammate, dessen Zug bei einem API-Fehler endet, den Lead, dass es fehlgeschlagen ist, und enthält den Fehlertext, anstatt normal beendet zu erscheinen.
-* **Gemeinsame Aufgabenliste**: alle Agenten können den Aufgabenstatus sehen und verfügbare Arbeit beanspruchen.
+* **Untätigkeitsbenachrichtigungen**: wenn ein Teammate fertig ist und stoppt, benachrichtigt er automatisch den Lead und enthält seine endgültige Antwort in der Benachrichtigung. Ein Teammate, dessen Zug bei einem API-Fehler endet, benachrichtigt den Lead, dass er fehlgeschlagen ist, und enthält den Fehlertext.
+* **Gemeinsame Aufgabenliste**: [Agenten, die die Task-Tools haben](/docs/de/tools-reference#task-tool-availability), können den Aufgabenstatus sehen und verfügbare Arbeit beanspruchen.
 * **Teammate-Messaging**: senden Sie eine Nachricht an einen bestimmten Teammate nach Name. Um alle zu erreichen, senden Sie eine Nachricht pro Empfänger.
 
 Der Lead weist jedem Teammate einen Namen zu, wenn er ihn erzeugt, und jeder Teammate kann jeden anderen nach diesem Namen anschreiben. Um vorhersehbare Namen zu erhalten, die Sie in späteren Prompts referenzieren können, teilen Sie dem Lead mit, wie er jeden Teammate in Ihrer Spawn-Anweisung nennen soll.
@@ -316,6 +349,8 @@ Der Lead weist jedem Teammate einen Namen zu, wenn er ihn erzeugt, und jeder Tea
 </h3>
 
 Agent-Teams verwenden deutlich mehr Tokens als eine einzelne Sitzung. Jeder Teammate hat sein eigenes Kontextfenster, und die Token-Nutzung skaliert mit der Anzahl der aktiven Teammates. Für Recherche, Überprüfung und neue Feature-Arbeit sind die zusätzlichen Tokens normalerweise lohnenswert. Für Routineaufgaben ist eine einzelne Sitzung kostengünstiger. Siehe [Agent-Team-Token-Kosten](/docs/de/costs#agent-team-token-costs) für Nutzungsleitfäden.
+
+Ein In-Process-Teammate's Anfragen fallen außerhalb des Cache-TTL-Buckets der Hauptkonversation]\(/de/prompt-caching#which-ttl-each-request-gets), sodass sein Cache standardmäßig fünf Minuten hält, auch bei einem Claude-Abonnement. Um es für eine Stunde zu behalten, setzen Sie [`subagentPromptCacheTtl`](/docs/de/settings-reference#subagentpromptcachettl) auf `1h`. Die API berechnet 1-Stunden-Cache-Schreibvorgänge mit einem höheren Satz.
 
 <h2 id="use-case-examples">
   Anwendungsbeispiele
@@ -329,7 +364,7 @@ Diese Beispiele zeigen, wie Agent-Teams Aufgaben handhaben, bei denen parallele 
 
 Ein einzelner Reviewer neigt dazu, sich jeweils auf eine Art von Problem zu konzentrieren. Das Aufteilen von Überprüfungskriterien in unabhängige Domänen bedeutet, dass Sicherheit, Leistung und Testabdeckung alle gleichzeitig gründlich beachtet werden. Der Prompt weist jedem Teammate eine unterschiedliche Perspektive zu, damit sie sich nicht überlappen:
 
-```text theme={null}
+```text wrap theme={null}
 Spawn three teammates to review PR #142:
 - One focused on security implications
 - One checking performance impact
@@ -345,7 +380,7 @@ Jeder Reviewer arbeitet vom selben PR aus, wendet aber einen anderen Filter an. 
 
 Wenn die Grundursache unklar ist, neigt ein einzelner Agent dazu, eine plausible Erklärung zu finden und zu stoppen. Der Prompt bekämpft dies, indem er Teammates explizit gegnerisch macht: die Aufgabe jedes ist nicht nur, seine eigene Theorie zu untersuchen, sondern auch die anderen in Frage zu stellen.
 
-```text theme={null}
+```text wrap theme={null}
 Users report the app exits after one message instead of staying connected.
 Spawn 5 agent teammates to investigate different hypotheses. Have them talk to
 each other to try to disprove each other's theories, like a scientific
@@ -366,7 +401,7 @@ Mit mehreren unabhängigen Ermittlern, die aktiv versuchen, sich gegenseitig zu 
 
 Teammates laden Projektkontext automatisch, einschließlich CLAUDE.md, MCP-Server und Skills, aber sie erben nicht die Gesprächshistorie des Leads. Siehe [Kontext und Kommunikation](#context-and-communication) für Details. Fügen Sie aufgabenspezifische Details in den Spawn-Prompt ein:
 
-```text theme={null}
+```text wrap theme={null}
 Spawn a security reviewer teammate with the prompt: "Review the authentication module
 at src/auth/ for security vulnerabilities. Focus on token handling, session
 management, and input validation. The app uses JWT tokens stored in
@@ -383,9 +418,7 @@ Es gibt keine harte Grenze für die Anzahl der Teammates, aber praktische Einsch
 * **Koordinationsaufwand nimmt zu**: mehr Teammates bedeutet mehr Kommunikation, Aufgabenkoordination und Konfliktpotenzial
 * **Sinkende Erträge**: über einen bestimmten Punkt hinaus beschleunigen zusätzliche Teammates die Arbeit nicht proportional
 
-Beginnen Sie mit 3-5 Teammates für die meisten Workflows. Dies balanciert parallele Arbeit mit verwaltbarer Koordination. Die Beispiele in diesem Leitfaden verwenden 3-5 Teammates, weil dieser Bereich über verschiedene Aufgabentypen hinweg gut funktioniert.
-
-Mit 5-6 [Aufgaben](/docs/de/agent-teams#architecture) pro Teammate bleibt jeder produktiv, ohne übermäßiges Kontextwechsel. Wenn Sie 15 unabhängige Aufgaben haben, sind 3 Teammates ein guter Ausgangspunkt.
+Beginnen Sie mit 3-5 Teammates für die meisten Workflows. Dies balanciert parallele Arbeit mit verwaltbarer Koordination. Wenn Sie 15 unabhängige Aufgaben haben, sind 3 Teammates ein guter Ausgangspunkt.
 
 Skalieren Sie nur auf, wenn die Arbeit wirklich davon profitiert, dass Teammates gleichzeitig arbeiten. Drei fokussierte Teammates übertreffen oft fünf verstreute.
 
@@ -407,7 +440,7 @@ Skalieren Sie nur auf, wenn die Arbeit wirklich davon profitiert, dass Teammates
 
 Manchmal beginnt der Lead, Aufgaben selbst zu implementieren, anstatt auf Teammates zu warten. Wenn Sie dies bemerken:
 
-```text theme={null}
+```text wrap theme={null}
 Wait for your teammates to complete their tasks before proceeding
 ```
 
@@ -448,14 +481,39 @@ Wenn Teammates nicht erscheinen, nachdem Sie Claude aufgefordert haben, sie zu e
   ```
 * Für iTerm2 überprüfen Sie, dass die `it2` CLI installiert ist und die Python-API in iTerm2-Einstellungen aktiviert ist.
 
+<h3 id="claude-spawns-teammates-instead-of-subagents">
+  Claude erzeugt Teammates statt Subagenten
+</h3>
+
+Während Agent-Teams aktiviert sind, wird ein Subagent, den Claude in der Sitzung des Lead benennt, als Teammate gestartet. Claude [kann Subagenten selbstständig benennen](#how-claude-starts-agent-teams), daher kann dies während einer Delegation geschehen, die Sie nie als Teamarbeit formuliert haben.
+
+Um benannte Subagenten wieder als Subagenten zu starten, deaktivieren Sie Agent-Teams, indem Sie `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS` auf `0` setzen:
+
+```json settings.json theme={null}
+{
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "0"
+  }
+}
+```
+
+Sie müssen keine neue Sitzung starten: Claude Code wendet `env`-Werte aus der Einstellungsdatei auf die laufende Sitzung an, wenn Sie speichern, und liest die Variable jedes Mal neu, wenn Claude einen Subagenten erzeugt, sodass der nächste Subagent, den Claude benennt, als Subagent gestartet wird.
+
+Das Setzen der Variable auf `0` in Ihrer Benutzer-`settings.json` überschreibt einen Shell-Export. Andere Einstellungsquellen können Agent-Teams immer noch aktivieren:
+
+* **Einstellungsdateien mit höherer Priorität**: Projekteinstellungen, lokale Einstellungen und eine `--settings`-Nutzlast werden nach Benutzereinstellungen angewendet, daher gewinnt ein `env`-Eintrag, der die Variable auf `1` in einer von ihnen setzt. Siehe [Einstellungspriorität](/docs/de/settings#settings-precedence).
+* **Verwaltete Einstellungen**: [Verwaltete Einstellungen](/docs/de/server-managed-settings) werden nach jeder anderen Quelle angewendet. Wenn Ihre Organisation Agent-Teams dort aktiviert, bitten Sie Ihren Administrator, den verwalteten Wert zu ändern.
+
+Nach der Änderung kann Claude immer noch Subagenten benennen, und der Name funktioniert weiterhin als [`SendMessage`-Adresse](/docs/de/sub-agents#resume-subagents). Claude erhält das Ergebnis jedes Subagenten, wenn dieser abgeschlossen ist.
+
 <h3 id="too-many-permission-prompts">
   Zu viele Berechtigungsaufforderungen
 </h3>
 
 Teammate-Berechtigungsanfragen sprudeln zum Lead auf, was zu Reibung führen kann. Genehmigen Sie häufige Operationen in Ihren [Berechtigungseinstellungen](/docs/de/permissions) vor dem Erzeugen von Teammates, um Unterbrechungen zu reduzieren.
 
-<h3 id="teammates-stopping-on-errors">
-  Teammates stoppen bei Fehlern
+<h3 id="agents-stopping-early">
+  Agents stoppen früh
 </h3>
 
 Teammates können nach Fehlern stoppen, anstatt sich zu erholen. Überprüfen Sie ihre Ausgabe, indem Sie den Teammate im Agent-Panel auswählen und die Eingabetaste im In-Process-Modus drücken, oder indem Sie im Split-Modus auf den Pane klicken, dann entweder:
@@ -463,13 +521,9 @@ Teammates können nach Fehlern stoppen, anstatt sich zu erholen. Überprüfen Si
 * Geben Sie ihnen zusätzliche Anweisungen direkt
 * Erzeugen Sie einen Ersatz-Teammate, um die Arbeit fortzusetzen
 
-Ab v2.1.198 weckt eine Nachricht vom Lead oder einem anderen Teammate einen In-Process-Teammate auf, der darauf wartet, eine fehlgeschlagene API-Anfrage erneut zu versuchen, sodass er sofort erneut versucht wird, anstatt auf die vollständige Wiederholungsverzögerung zu warten.
+Eine Nachricht vom Lead oder einem anderen Teammate weckt einen In-Process-Teammate auf, der darauf wartet, eine fehlgeschlagene API-Anfrage erneut zu versuchen, sodass er sofort erneut versucht wird, anstatt auf die vollständige Wiederholungsverzögerung zu warten.
 
-<h3 id="lead-shuts-down-before-work-is-done">
-  Lead fährt herunter, bevor die Arbeit erledigt ist
-</h3>
-
-Der Lead kann entscheiden, dass das Team fertig ist, bevor alle Aufgaben tatsächlich abgeschlossen sind. Wenn dies geschieht, teilen Sie ihm mit, dass er weitermachen soll. Sie können dem Lead auch mitteilen, auf Teammates zu warten, um zu beenden, bevor er fortfährt, wenn er anfängt, Arbeit zu erledigen, anstatt zu delegieren.
+Der Lead kann auch früh stoppen und entscheiden, dass das Team fertig ist, bevor alle Aufgaben tatsächlich abgeschlossen sind. Wenn das geschieht, teilen Sie ihm mit, dass er weitermachen soll.
 
 <h3 id="orphaned-tmux-sessions">
   Verwaiste tmux-Sitzungen
@@ -493,14 +547,10 @@ Agent-Teams sind experimentell. Aktuelle Einschränkungen, die Sie beachten soll
 * **Abschaltung kann langsam sein**: Teammates beenden ihre aktuelle Anfrage oder ihren Werkzeugaufruf, bevor sie herunterfahren, was Zeit in Anspruch nehmen kann.
 * **Ein Team pro Sitzung**: eine Sitzung hat genau ein Team, das auf diese Sitzung beschränkt ist. Sie können keine zusätzlichen benannten Teams erstellen oder ein Team über Sitzungen hinweg freigeben.
 * **Keine verschachtelten Teams**: Teammates können ihre eigenen Teammates nicht erzeugen. Nur der Lead kann das Team verwalten.
-* **Keine Hintergrund-Subagenten von In-Process-Teammates**: die eigenen Subagenten eines In-Process-Teammates laufen im Vordergrund. Das Anfordern eines Hintergrund-Subagenten, ob mit `run_in_background` oder einer Subagenten-Definition, die `background: true` setzt, gibt einen Fehler zurück, da die Hintergrundarbeit eines Teammates nicht länger als der Prozess des Leads bestehen kann. Subagenten, die aus der Hauptkonversation gestartet werden, folgen dem [Hintergrund-Standard](/docs/de/sub-agents#run-subagents-in-foreground-or-background).
+* **Keine Hintergrund-Subagenten von In-Process-Teammates**: die eigenen Subagenten eines In-Process-Teammates laufen im Vordergrund, da die Hintergrundarbeit eines Teammates nicht länger als der Prozess des Leads bestehen kann. Claude Code gibt einen Fehler zurück, wenn ein Teammate einen Subagenten erzeugt, dessen Definition `background: true` setzt. Eine `run_in_background: true`-Anfrage eines Teammates schlägt ebenfalls fehl, entweder mit einem Fehler oder durch stilles Ausführen im Vordergrund, wie in [wie Claude Code Vordergrund oder Hintergrund auswählt](/docs/de/sub-agents#run-subagents-in-foreground-or-background) beschrieben. Subagenten, die aus der Hauptkonversation gestartet werden, folgen dem [Hintergrund-Standard](/docs/de/sub-agents#run-subagents-in-foreground-or-background).
 * **Lead ist fest**: die Hauptsitzung ist der Lead für seine Lebensdauer. Sie können einen Teammate nicht zum Lead befördern oder die Führung übertragen.
-* **Berechtigungen beim Erzeugen gesetzt**: alle Teammates starten mit dem Berechtigungsmodus des Leads. Sie können einzelne Teammate-Modi nach dem Erzeugen ändern, aber Sie können keine Pro-Teammate-Modi zum Zeitpunkt des Erzeugung setzen.
+* **Berechtigungen beim Erzeugen gesetzt**: Teammates starten mit dem Berechtigungsmodus, der unter [Berechtigungen](#permissions) beschrieben ist. Sie können den Berechtigungsmodus eines einzelnen Teammates nach dem Erzeugen ändern, aber Sie können keine Pro-Teammate-Berechtigungsmodi zum Zeitpunkt des Erzeugung setzen.
 * **Split Panes erfordern tmux oder iTerm2**: der Standard-In-Process-Modus funktioniert in jedem Terminal. Der Split-Pane-Modus wird in VS Code's integriertem Terminal, Windows Terminal oder Ghostty nicht unterstützt.
-
-<Tip>
-  **`CLAUDE.md` funktioniert normal**: Teammates lesen `CLAUDE.md`-Dateien aus ihrem Arbeitsverzeichnis. Verwenden Sie dies, um projektspezifische Anleitung für alle Teammates bereitzustellen.
-</Tip>
 
 <h2 id="next-steps">
   Nächste Schritte
@@ -509,5 +559,5 @@ Agent-Teams sind experimentell. Aktuelle Einschränkungen, die Sie beachten soll
 Erkunden Sie verwandte Ansätze für parallele Arbeit und Delegation:
 
 * **Leichte Delegation**: [subagents](/docs/de/sub-agents) erzeugen Helper-Agenten für Recherche oder Überprüfung innerhalb Ihrer Sitzung, besser für Aufgaben, die keine Inter-Agent-Koordination benötigen
+* **Messaging zwischen Ihren eigenen Sitzungen**: [Cross-Session-Messaging](/docs/de/cross-session-messaging) ermöglicht es Claude, Erkenntnisse zwischen den Sitzungen zu übergeben, die Sie selbst ausführen
 * **Manuelle parallele Sitzungen**: [Git worktrees](/docs/de/worktrees) ermöglichen es Ihnen, mehrere Claude Code-Sitzungen selbst ohne automatisierte Teamkoordination auszuführen
-* **Vergleichen Sie Ansätze**: siehe den [Subagent vs Agent-Team](/docs/de/features-overview#compare-similar-features) Vergleich für eine Seite-an-Seite-Aufschlüsselung

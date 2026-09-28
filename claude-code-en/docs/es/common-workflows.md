@@ -40,6 +40,8 @@ Supongamos que acaba de unirse a un nuevo proyecto y necesita comprender su estr
     ```bash theme={null}
     cd /path/to/project 
     ```
+
+    Reemplace `/path/to/project` con la ruta a su proyecto.
   </Step>
 
   <Step title="Inicie Claude Code">
@@ -49,21 +51,21 @@ Supongamos que acaba de unirse a un nuevo proyecto y necesita comprender su estr
   </Step>
 
   <Step title="Solicite una descripción general de alto nivel">
-    ```text theme={null}
+    ```text wrap theme={null}
     dame una descripción general de esta base de código
     ```
   </Step>
 
   <Step title="Profundice en componentes específicos">
-    ```text theme={null}
+    ```text wrap theme={null}
     explica los patrones de arquitectura principales utilizados aquí
     ```
 
-    ```text theme={null}
+    ```text wrap theme={null}
     ¿cuáles son los modelos de datos clave?
     ```
 
-    ```text theme={null}
+    ```text wrap theme={null}
     ¿cómo se maneja la autenticación?
     ```
   </Step>
@@ -85,19 +87,19 @@ Supongamos que necesita localizar código relacionado con una característica o 
 
 <Steps>
   <Step title="Pida a Claude que encuentre archivos relevantes">
-    ```text theme={null}
+    ```text wrap theme={null}
     encuentra los archivos que manejan la autenticación de usuarios
     ```
   </Step>
 
   <Step title="Obtenga contexto sobre cómo interactúan los componentes">
-    ```text theme={null}
+    ```text wrap theme={null}
     ¿cómo funcionan juntos estos archivos de autenticación?
     ```
   </Step>
 
   <Step title="Comprenda el flujo de ejecución">
-    ```text theme={null}
+    ```text wrap theme={null}
     rastrear el proceso de inicio de sesión de front-end a base de datos
     ```
   </Step>
@@ -108,7 +110,7 @@ Supongamos que necesita localizar código relacionado con una característica o 
 
   * Sea específico sobre lo que está buscando
   * Utilice el lenguaje del dominio del proyecto
-  * Instale un [plugin de inteligencia de código](/docs/es/discover-plugins#code-intelligence) para su lenguaje para dar a Claude una navegación precisa de "ir a definición" y "buscar referencias"
+  * Instale un [plugin de inteligencia de código](/docs/es/plugins/code-intelligence) para su lenguaje para dar a Claude una navegación precisa de "ir a definición" y "buscar referencias"
 </Tip>
 
 ***
@@ -121,19 +123,19 @@ Supongamos que ha encontrado un mensaje de error y necesita encontrar y corregir
 
 <Steps>
   <Step title="Comparta el error con Claude">
-    ```text theme={null}
+    ```text wrap theme={null}
     estoy viendo un error cuando ejecuto npm test
     ```
   </Step>
 
   <Step title="Solicite recomendaciones de corrección">
-    ```text theme={null}
+    ```text wrap theme={null}
     sugiere algunas formas de corregir el @ts-ignore en user.ts
     ```
   </Step>
 
   <Step title="Aplique la corrección">
-    ```text theme={null}
+    ```text wrap theme={null}
     actualiza user.ts para agregar la verificación nula que sugeriste
     ```
   </Step>
@@ -155,27 +157,29 @@ Supongamos que ha encontrado un mensaje de error y necesita encontrar y corregir
 
 Supongamos que necesita actualizar código antiguo para utilizar patrones y prácticas modernas.
 
+Para portar una base de código completa a un nuevo lenguaje, consulte [cómo Anthropic ejecuta migraciones de código a gran escala con Claude Code](https://claude.com/blog/ai-code-migration) en el blog.
+
 <Steps>
   <Step title="Identifique código heredado para refactorización">
-    ```text theme={null}
+    ```text wrap theme={null}
     encuentra el uso de API obsoleta en nuestra base de código
     ```
   </Step>
 
   <Step title="Obtenga recomendaciones de refactorización">
-    ```text theme={null}
+    ```text wrap theme={null}
     sugiere cómo refactorizar utils.js para usar características modernas de JavaScript
     ```
   </Step>
 
   <Step title="Aplique los cambios de manera segura">
-    ```text theme={null}
+    ```text wrap theme={null}
     refactoriza utils.js para usar características de ES2024 manteniendo el mismo comportamiento
     ```
   </Step>
 
   <Step title="Verifique la refactorización">
-    ```text theme={null}
+    ```text wrap theme={null}
     ejecuta pruebas para el código refactorizado
     ```
   </Step>
@@ -199,25 +203,25 @@ Supongamos que necesita agregar pruebas para código no cubierto.
 
 <Steps>
   <Step title="Identifique código no probado">
-    ```text theme={null}
+    ```text wrap theme={null}
     encuentra funciones en NotificationsService.swift que no están cubiertas por pruebas
     ```
   </Step>
 
   <Step title="Genere andamiaje de prueba">
-    ```text theme={null}
+    ```text wrap theme={null}
     agrega pruebas para el servicio de notificaciones
     ```
   </Step>
 
   <Step title="Agregue casos de prueba significativos">
-    ```text theme={null}
+    ```text wrap theme={null}
     agrega casos de prueba para condiciones de borde en el servicio de notificaciones
     ```
   </Step>
 
   <Step title="Ejecute y verifique las pruebas">
-    ```text theme={null}
+    ```text wrap theme={null}
     ejecuta las nuevas pruebas y corrige cualquier fallo
     ```
   </Step>
@@ -237,25 +241,25 @@ Puede crear solicitudes de extracción pidiendo a Claude directamente ("crear un
 
 <Steps>
   <Step title="Resuma sus cambios">
-    ```text theme={null}
+    ```text wrap theme={null}
     resume los cambios que he hecho en el módulo de autenticación
     ```
   </Step>
 
   <Step title="Genere una solicitud de extracción">
-    ```text theme={null}
+    ```text wrap theme={null}
     crear una pr
     ```
   </Step>
 
   <Step title="Revise y refine">
-    ```text theme={null}
+    ```text wrap theme={null}
     mejora la descripción de la PR con más contexto sobre las mejoras de seguridad
     ```
   </Step>
 </Steps>
 
-Cuando crea una PR usando `gh pr create`, la sesión se vincula automáticamente a esa PR. Para regresar a ella más tarde, ejecute `claude --from-pr 123`, reemplazando 123 con el número de PR, o pegue la URL de la PR en el selector [`/resume`](/docs/es/sessions#use-the-session-picker).
+Para encontrar la sesión más tarde, ejecute `claude --from-pr 1234` con su propio número de PR, que abre el selector de sesión filtrado a sesiones vinculadas a esa PR, o pegue la URL de la PR en el selector [`/resume`](/docs/es/sessions#use-the-session-picker). Claude Code vincula la sesión a la PR cuando Claude la crea con `gh pr create` o `glab mr create`, y cuando Claude [trabaja en una PR existente](/docs/es/agent-view#pull-request-status).
 
 <Tip>
   Revise la PR generada por Claude antes de enviarla y pida a Claude que destaque los riesgos potenciales o consideraciones.
@@ -269,25 +273,25 @@ Supongamos que necesita agregar o actualizar documentación para su código.
 
 <Steps>
   <Step title="Identifique código sin documentar">
-    ```text theme={null}
+    ```text wrap theme={null}
     encuentra funciones sin comentarios JSDoc adecuados en el módulo de autenticación
     ```
   </Step>
 
   <Step title="Genere documentación">
-    ```text theme={null}
+    ```text wrap theme={null}
     agrega comentarios JSDoc a las funciones sin documentar en auth.js
     ```
   </Step>
 
   <Step title="Revise y mejore">
-    ```text theme={null}
+    ```text wrap theme={null}
     mejora la documentación generada con más contexto y ejemplos
     ```
   </Step>
 
   <Step title="Verifique la documentación">
-    ```text theme={null}
+    ```text wrap theme={null}
     verifica si la documentación sigue nuestros estándares de proyecto
     ```
   </Step>
@@ -324,40 +328,40 @@ Supongamos que necesita trabajar con imágenes en su base de código y desea la 
     Puede usar cualquiera de estos métodos:
 
     1. Arrastre y suelte una imagen en la ventana de Claude Code
-    2. Copie una imagen y péguela en la CLI con Ctrl+V. En macOS, Cmd+V también funciona en iTerm2.
+    2. Copie una imagen y péguela en la CLI con `Ctrl+V`, o con [`Alt+V` en Windows y WSL](/docs/es/interactive-mode#general-controls)
     3. Proporcione una ruta de imagen a Claude. Por ejemplo, "Analiza esta imagen: /path/to/your/image.png"
   </Step>
 
   <Step title="Pida a Claude que analice la imagen">
-    ```text theme={null}
+    ```text wrap theme={null}
     ¿Qué muestra esta imagen?
     ```
 
-    ```text theme={null}
+    ```text wrap theme={null}
     Describe los elementos de la interfaz de usuario en esta captura de pantalla
     ```
 
-    ```text theme={null}
+    ```text wrap theme={null}
     ¿Hay algún elemento problemático en este diagrama?
     ```
   </Step>
 
   <Step title="Usar imágenes para contexto">
-    ```text theme={null}
+    ```text wrap theme={null}
     Aquí hay una captura de pantalla del error. ¿Qué lo está causando?
     ```
 
-    ```text theme={null}
+    ```text wrap theme={null}
     Este es nuestro esquema de base de datos actual. ¿Cómo deberíamos modificarlo para la nueva característica?
     ```
   </Step>
 
   <Step title="Obtenga sugerencias de código del contenido visual">
-    ```text theme={null}
+    ```text wrap theme={null}
     Generar CSS para coincidir con este mockup de diseño
     ```
 
-    ```text theme={null}
+    ```text wrap theme={null}
     ¿Qué estructura HTML recrearía este componente?
     ```
   </Step>
@@ -383,7 +387,7 @@ Use @ para incluir rápidamente archivos o directorios sin esperar a que Claude 
 
 <Steps>
   <Step title="Haga referencia a un archivo único">
-    ```text theme={null}
+    ```text wrap theme={null}
     Explica la lógica en @src/utils/auth.js
     ```
 
@@ -391,15 +395,13 @@ Use @ para incluir rápidamente archivos o directorios sin esperar a que Claude 
   </Step>
 
   <Step title="Haga referencia a un directorio">
-    ```text theme={null}
+    ```text wrap theme={null}
     ¿Cuál es la estructura de @src/components?
     ```
-
-    Esto proporciona un listado de directorio con información de archivo.
   </Step>
 
   <Step title="Haga referencia a recursos MCP">
-    ```text theme={null}
+    ```text wrap theme={null}
     Muéstrame los datos de @github:repos/owner/repo/issues
     ```
 
@@ -411,6 +413,7 @@ Use @ para incluir rápidamente archivos o directorios sin esperar a que Claude 
   Consejos:
 
   * Las rutas de archivo pueden ser relativas o absolutas
+  * Escriba `@` para abrir un menú de sugerencias de ruta, luego presione Intro o Tab para aceptar la ruta resaltada e Intro nuevamente para enviar el mensaje
   * Las referencias de archivo @ agregan `CLAUDE.md` en el directorio del archivo y directorios principales al contexto
   * Las referencias de directorio muestran listados de archivos, no contenidos
   * Puede hacer referencia a múltiples archivos en un solo mensaje (por ejemplo, "@file1.js y @file2.js")
@@ -426,12 +429,12 @@ Supongamos que desea que Claude maneje una tarea automáticamente de forma recur
 
 Elija una opción de programación según dónde desee que se ejecute la tarea:
 
-| Opción                                                          | Dónde se ejecuta                                    | Mejor para                                                                                                                                                                                                                         |
-| :-------------------------------------------------------------- | :-------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Routines](/docs/es/routines)                                        | Infraestructura administrada por Anthropic          | Tareas que deben ejecutarse incluso cuando su computadora está apagada. También puede activarse en llamadas API o eventos de GitHub además de un horario. Configure en [claude.ai/code/routines](https://claude.ai/code/routines). |
-| [Tareas programadas de escritorio](/docs/es/desktop-scheduled-tasks) | Su máquina, a través de la aplicación de escritorio | Tareas que necesitan acceso directo a archivos locales, herramientas o cambios sin confirmar.                                                                                                                                      |
-| [GitHub Actions](/docs/es/github-actions)                            | Su canalización de CI                               | Tareas vinculadas a eventos de repositorio como PRs abiertos, o horarios cron que deben vivir junto con su configuración de flujo de trabajo.                                                                                      |
-| [`/loop`](/docs/es/scheduled-tasks)                                  | La sesión CLI actual                                | Sondeo rápido mientras una sesión está abierta. Las tareas se cancelan cuando comienza una nueva conversación; `--resume` y `--continue` restauran las no expiradas.                                                               |
+| Opción                                                          | Dónde se ejecuta                                         | Mejor para                                                                                                                                                                                                                         |
+| :-------------------------------------------------------------- | :------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Routines](/docs/es/routines)                                        | Nube, administrada por Anthropic de forma predeterminada | Tareas que deben ejecutarse incluso cuando su computadora está apagada. También puede activarse en llamadas API o eventos de GitHub además de un horario. Configure en [claude.ai/code/routines](https://claude.ai/code/routines). |
+| [Tareas programadas de escritorio](/docs/es/desktop-scheduled-tasks) | Su máquina, a través de la aplicación de escritorio      | Tareas que necesitan acceso directo a archivos locales, herramientas o cambios sin confirmar.                                                                                                                                      |
+| [GitHub Actions](/docs/es/github-actions)                            | Su canalización de CI                                    | Tareas vinculadas a eventos de repositorio como PRs abiertos, o horarios cron que deben vivir junto con su configuración de flujo de trabajo.                                                                                      |
+| [`/loop`](/docs/es/scheduled-tasks)                                  | La sesión CLI actual                                     | Sondeo rápido mientras una sesión está abierta. `--resume` y `--continue` restauran las no expiradas.                                                                                                                              |
 
 <Tip>
   Al escribir indicaciones para tareas programadas, sea explícito sobre qué se ve como éxito y qué hacer con los resultados. La tarea se ejecuta de forma autónoma, por lo que no puede hacer preguntas aclaratorias. Por ejemplo: "Revise PRs abiertas etiquetadas con `needs-review`, deje comentarios en línea sobre cualquier problema y publique un resumen en el canal `#eng-reviews` de Slack."
@@ -449,27 +452,27 @@ Claude tiene acceso integrado a su documentación y puede responder preguntas so
   Preguntas de ejemplo
 </h4>
 
-```text theme={null}
+```text wrap theme={null}
 ¿puede Claude Code crear solicitudes de extracción?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 ¿cómo maneja Claude Code los permisos?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 ¿qué skills están disponibles?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 ¿cómo uso MCP con Claude Code?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 ¿cómo configuro Claude Code para Amazon Bedrock?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 ¿cuáles son las limitaciones de Claude Code?
 ```
 
@@ -503,25 +506,25 @@ Esto reanuda la sesión más reciente en el directorio actual; si aún no existe
   Ejecutar sesiones paralelas con worktrees
 </h2>
 
-Trabaje en una característica en una terminal mientras Claude corrige un error en otra, sin que los cambios choquen. Cada worktree es un checkout separado en su propia rama.
+Trabaje en una característica en una terminal mientras Claude corrige un error en otra, sin que los cambios choquen. Cada [git worktree](https://git-scm.com/docs/git-worktree) es un checkout separado en su propia rama, creado a partir de un commit existente, por lo que el repositorio necesita al menos un commit primero.
 
 ```bash theme={null}
 claude --worktree feature-auth
 ```
 
-Ejecute el mismo comando con un nombre diferente en una segunda terminal para iniciar una sesión paralela aislada. Consulte [Worktrees](/docs/es/worktrees) para limpieza, `.worktreeinclude` y soporte de VCS que no sea git. Para monitorear sesiones paralelas desde una pantalla en lugar de terminales separadas, consulte [agentes de fondo](/docs/es/agent-view).
+Ejecute el mismo comando con un nombre diferente en una segunda terminal para iniciar una sesión paralela aislada. En un repositorio sin commits, el comando falla con `Failed to resolve base branch "HEAD": git rev-parse failed`. Consulte [Worktrees](/docs/es/worktrees) para limpieza, `.worktreeinclude` y soporte de VCS que no sea git. Para monitorear sesiones paralelas desde una pantalla en lugar de terminales separadas, consulte [agentes de fondo](/docs/es/agent-view).
 
 <h2 id="plan-before-editing">
   Planificar antes de editar
 </h2>
 
-Para cambios que desea revisar antes de que toquen el disco, cambie al modo de plan. Claude lee archivos y propone un plan pero no realiza ediciones hasta que apruebe.
+Para cambios que desea revisar antes de que toquen el disco, cambie al modo de plan. Claude lee archivos y propone un plan pero no realiza ediciones hasta que apruebe. La barra de estado muestra `⏸ plan mode on` mientras el modo de plan está activo.
 
 ```bash theme={null}
 claude --permission-mode plan
 ```
 
-También puede presionar `Shift+Tab` durante una sesión para cambiar al modo de plan. Consulte [Plan mode](/docs/es/permission-modes#analyze-before-you-edit-with-plan-mode) para el flujo de aprobación y editar el plan en su editor de texto.
+También puede presionar `Shift+Tab` durante una sesión hasta que la barra de estado muestre `⏸ plan mode on`. Consulte [Plan mode](/docs/es/permission-modes#analyze-before-you-edit-with-plan-mode) para el flujo de aprobación y editar el plan en su editor de texto.
 
 <h2 id="delegate-research-to-subagents">
   Delegar investigación a subagentes
@@ -529,7 +532,7 @@ También puede presionar `Shift+Tab` durante una sesión para cambiar al modo de
 
 Explorar una base de código grande llena su contexto con lecturas de archivos. Delegue la exploración para que solo los hallazgos regresen.
 
-```text theme={null}
+```text wrap theme={null}
 usa un subagente para investigar cómo nuestro sistema de autenticación maneja la actualización de tokens
 ```
 

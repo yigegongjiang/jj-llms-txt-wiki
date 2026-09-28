@@ -48,13 +48,13 @@ Claude Code 使用 GitLab CI/CD 在隔離的工作中執行 AI 任務，並透�
   Claude 可以做什麼？
 </h2>
 
-Claude Code 啟用強大的 CI/CD 工作流程，改變您與程式碼的互動方式：
+在 GitLab 管道中，Claude Code 可以：
 
-* 從問題描述或評論建立和更新 MR
-* 分析效能回歸並提出最佳化建議
+* 從議題描述或評論建立和更新 MR
+* 分析效能迴歸並提出最佳化建議
 * 直接在分支中實現功能，然後開啟 MR
-* 修復由測試或評論識別的錯誤和回歸
-* 回應後續評論以反覆進行請求的變更
+* 修復由測試或評論識別的錯誤和迴歸
+* 回應後續評論以反覆進行所要求的變更
 
 <h2 id="setup">
   設定
@@ -64,11 +64,11 @@ Claude Code 啟用強大的 CI/CD 工作流程，改變您與程式碼的互動�
   快速設定
 </h3>
 
-最快的入門方式是在您的 `.gitlab-ci.yml` 中新增最小工作，並將您的 API 金鑰設定為遮罩變數。
+開始使用的最快方式是在您的 `.gitlab-ci.yml` 中新增一個最小化的工作，並將您的 API 金鑰設定為遮罩變數。
 
 1. **新增遮罩 CI/CD 變數**
    * 前往 **Settings** → **CI/CD** → **Variables**
-   * 新增 `ANTHROPIC_API_KEY`（遮罩，根據需要保護）
+   * 新增 `ANTHROPIC_API_KEY`（遮罩，視需要保護）
 
 2. **在 `.gitlab-ci.yml` 中新增 Claude 工作**
 
@@ -82,7 +82,7 @@ claude:
   # 調整規則以符合您想要觸發工作的方式：
   # - 手動執行
   # - 合併請求事件
-  # - 當評論包含 '@claude' 時的 web/API 觸發
+  # - 當評論包含 '@claude' 時的網頁/API 觸發
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web"'
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
@@ -92,10 +92,12 @@ claude:
     - apk update
     - apk add --no-cache git curl bash
     - curl -fsSL https://claude.ai/install.sh | bash
+    # 安裝程式將 claude 放在 ~/.local/bin，在此映像中不在 PATH 上
+    - export PATH="$HOME/.local/bin:$PATH"
   script:
-    # 選用：如果您的設定提供，啟動 GitLab MCP server
+    # 選用：如果您的設定提供 GitLab MCP 伺服器，請啟動它
     - /bin/gitlab-mcp-server || true
-    # 透過 web/API 觸發器使用 AI_FLOW_* 變數時，使用上下文負載
+    # 透過包含內容承載的網頁/API 觸發時使用 AI_FLOW_* 變數
     - echo "$AI_FLOW_INPUT for $AI_FLOW_CONTEXT on $AI_FLOW_EVENT"
     - >
       claude
@@ -105,78 +107,78 @@ claude:
       --debug
 ```
 
-新增工作和您的 `ANTHROPIC_API_KEY` 變數後，透過 **CI/CD** → **Pipelines** 手動執行工作進行測試，或從 MR 觸發它，讓 Claude 在分支中提出更新並在需要時開啟 MR。
+新增工作和 `ANTHROPIC_API_KEY` 變數後，可以從 **CI/CD** → **Pipelines** 手動執行工作進行測試，或從 MR 觸發它，讓 Claude 在分支中提議更新並在需要時開啟 MR。
 
 <Note>
-  若要改為在 Amazon Bedrock 或 Google Cloud 的 Agent Platform 上執行而不是 Claude API，請參閱下方的 [Using with Amazon Bedrock and Google Cloud](#using-with-amazon-bedrock-and-google-cloud) 部分，了解驗證和環境設定。
+  若要在 Amazon Bedrock 或 Google Cloud 的 Agent Platform 上執行而不是使用 Claude API，請參閱下方的[使用 Amazon Bedrock 和 Google Cloud](#using-with-amazon-bedrock-and-google-cloud) 部分，了解驗證和環境設定。
 </Note>
 
 <h3 id="manual-setup-recommended-for-production">
-  手動設定（建議用於生產）
+  手動設定（建議用於生產環境）
 </h3>
 
 如果您偏好更受控的設定或需要企業提供者：
 
 1. **設定提供者存取**：
    * **Claude API**：建立並將 `ANTHROPIC_API_KEY` 儲存為遮罩 CI/CD 變數
-   * **Amazon Bedrock**：**Configure GitLab** → **AWS OIDC** 並為 Amazon Bedrock 建立 IAM 角色
-   * **Google Cloud 的 Agent Platform**：**Configure Workload Identity Federation for GitLab** → **GCP**
+   * **Amazon Bedrock**：**設定 GitLab** → **AWS OIDC** 並為 Amazon Bedrock 建立 IAM 角色
+   * **Google Cloud 的 Agent Platform**：**為 GitLab 設定工作負載身分識別聯盟** → **GCP**
 
 2. **為 GitLab API 操作新增專案認證**：
-   * 預設使用 `CI_JOB_TOKEN`，或建立具有 `api` 範圍的專案存取令牌
+   * 預設使用 `CI_JOB_TOKEN`，或建立具有 `api` 範圍的專案存取權杖
    * 如果使用 PAT，將其儲存為 `GITLAB_ACCESS_TOKEN`（遮罩）
 
-3. **在 `.gitlab-ci.yml` 中新增 Claude 工作**（請參閱下方的範例）
+3. **在 `.gitlab-ci.yml` 中新增 Claude 工作**：使用 Claude API 的[快速設定](#quick-setup)工作，或來自[設定範例](#configuration-examples)的提供者工作
 
-4. **（選用）啟用提及驅動的觸發器**：
-   * 為「Comments (notes)」新增專案 webhook 到您的事件監聽器（如果您使用的話）
-   * 當評論包含 `@claude` 時，讓監聽器使用 `AI_FLOW_INPUT` 和 `AI_FLOW_CONTEXT` 等變數呼叫管道觸發 API
+4. **（選用）啟用提及驅動的觸發**：
+   * 為「評論（備註）」新增專案 webhook 至您的事件接聽程式（如果您使用的話）
+   * 當評論包含 `@claude` 時，讓接聽程式使用 `AI_FLOW_INPUT` 和 `AI_FLOW_CONTEXT` 等變數呼叫管道觸發 API
 
 <h2 id="example-use-cases">
-  範例使用案例
+  使用案例範例
 </h2>
 
 <h3 id="turn-issues-into-mrs">
-  將問題轉變為 MR
+  將議題轉換為 MR
 </h3>
 
-在問題評論中：
+在議題評論中：
 
-```text theme={null}
+```text wrap theme={null}
 @claude implement this feature based on the issue description
 ```
 
-Claude 分析問題和程式碼庫，在分支中寫入變更，並開啟 MR 供審查。
+Claude 分析議題和程式碼庫，在分支中寫入變更，並開啟 MR 供審查。
 
 <h3 id="get-implementation-help">
-  獲得實現幫助
+  取得實作協助
 </h3>
 
 在 MR 討論中：
 
-```text theme={null}
+```text wrap theme={null}
 @claude suggest a concrete approach to cache the results of this API call
 ```
 
-Claude 提出變更，新增具有適當快取的程式碼，並更新 MR。
+Claude 提出變更建議，新增具有適當快取的程式碼，並更新 MR。
 
 <h3 id="fix-bugs-quickly">
   快速修復錯誤
 </h3>
 
-在問題或 MR 評論中：
+在議題或 MR 評論中：
 
-```text theme={null}
+```text wrap theme={null}
 @claude fix the TypeError in the user dashboard component
 ```
 
-Claude 定位錯誤，實現修復，並更新分支或開啟新的 MR。
+Claude 定位錯誤，實作修復，並更新分支或開啟新的 MR。
 
 <h2 id="using-with-amazon-bedrock-and-google-cloud">
-  使用 Amazon Bedrock 和 Google Cloud
+  搭配 Amazon Bedrock 和 Google Cloud 使用
 </h2>
 
-對於企業環境，您可以在您的雲端基礎設施上完全執行 Claude Code，具有相同的開發人員體驗。
+針對企業環境，您可以在自己的雲端基礎設施上完全執行 Claude Code，並享有相同的開發者體驗。
 
 <Tabs>
   <Tab title="Amazon Bedrock">
@@ -184,9 +186,9 @@ Claude 定位錯誤，實現修復，並更新分支或開啟新的 MR。
 
     在使用 Amazon Bedrock 設定 Claude Code 之前，您需要：
 
-    1. 具有 Amazon Bedrock 存取權限的 AWS 帳戶，可存取所需的 Claude 模型
-    2. 在 AWS IAM 中設定為 OIDC 身份提供者的 GitLab
-    3. 具有 Amazon Bedrock 權限和信任政策的 IAM 角色，限制於您的 GitLab 專案/refs
+    1. 一個 AWS 帳戶，具有 Amazon Bedrock 對所需 Claude 模型的存取權限
+    2. 在 AWS IAM 中將 GitLab 設定為 OIDC 身分提供者
+    3. 一個具有 Amazon Bedrock 權限的 IAM 角色，以及限制於您的 GitLab 專案/參考的信任政策
     4. 用於角色假設的 GitLab CI/CD 變數：
        * `AWS_ROLE_TO_ASSUME`（角色 ARN）
        * `AWS_REGION`（Amazon Bedrock 區域）
@@ -195,27 +197,14 @@ Claude 定位錯誤，實現修復，並更新分支或開啟新的 MR。
 
     設定 AWS 以允許 GitLab CI 工作透過 OIDC 假設 IAM 角色（無靜態金鑰）。
 
-    **必需的設定：**
+    **必要設定：**
 
-    1. 啟用 Amazon Bedrock 並請求存取您的目標 Claude 模型
-    2. 為 GitLab 建立 IAM OIDC 提供者（如果尚未存在）
-    3. 建立由 GitLab OIDC 提供者信任的 IAM 角色，限制於您的專案和受保護的 refs
-    4. 為 Amazon Bedrock invoke API 附加最小權限
+    1. 啟用 Amazon Bedrock 並要求存取您的目標 Claude 模型
+    2. 如果尚未存在，請為 GitLab 建立 IAM OIDC 提供者
+    3. 建立由 GitLab OIDC 提供者信任的 IAM 角色，限制於您的專案和受保護的參考
+    4. 為 Amazon Bedrock 叫用 API 附加最小權限
 
-    **要儲存在 CI/CD 變數中的必需值：**
-
-    * `AWS_ROLE_TO_ASSUME`
-    * `AWS_REGION`
-
-    在 Settings → CI/CD → Variables 中新增變數：
-
-    ```yaml theme={null}
-    # 對於 Amazon Bedrock：
-    - AWS_ROLE_TO_ASSUME
-    - AWS_REGION
-    ```
-
-    使用上面的 Amazon Bedrock 工作範例在執行時交換 GitLab 工作令牌以取得臨時 AWS 認證。
+    使用 [Amazon Bedrock 工作範例](#configuration-examples)在執行時交換工作的 OIDC 令牌以取得暫時 AWS 認證。
   </Tab>
 
   <Tab title="Google Cloud's Agent Platform">
@@ -223,40 +212,27 @@ Claude 定位錯誤，實現修復，並更新分支或開啟新的 MR。
 
     在使用 Google Cloud's Agent Platform 設定 Claude Code 之前，您需要：
 
-    1. 具有以下內容的 Google Cloud 專案：
-       * 啟用 Google Cloud's Agent Platform API
-       * 設定 Workload Identity Federation 以信任 GitLab OIDC
-    2. 僅具有所需 Google Cloud's Agent Platform 角色的專用服務帳戶
-    3. 用於 WIF 的 GitLab CI/CD 變數：
-       * `GCP_WORKLOAD_IDENTITY_PROVIDER`（完整資源名稱）
+    1. 一個 Google Cloud 專案，具有：
+       * 已啟用 Google Cloud's Agent Platform API
+       * 已設定工作負載身分聯盟以信任 GitLab OIDC
+    2. 一個專用服務帳戶，僅具有所需的 Google Cloud's Agent Platform 角色
+    3. GitLab CI/CD 變數：
+       * `GCP_WORKLOAD_IDENTITY_PROVIDER`（提供者資源名稱，不含 `//iam.googleapis.com/` 前綴，例如 `projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider`）
        * `GCP_SERVICE_ACCOUNT`（服務帳戶電子郵件）
+       * `GCP_PROJECT_ID`（Google Cloud 專案 ID）
 
     ### 設定說明
 
-    設定 Google Cloud 以允許 GitLab CI 工作透過 Workload Identity Federation 模擬服務帳戶。
+    設定 Google Cloud 以允許 GitLab CI 工作透過工作負載身分聯盟模擬服務帳戶。
 
-    **必需的設定：**
+    **必要設定：**
 
-    1. 啟用 IAM Credentials API、STS API 和 Google Cloud's Agent Platform API
-    2. 為 GitLab OIDC 建立 Workload Identity Pool 和提供者
+    1. 啟用 IAM 認證 API、STS API 和 Google Cloud's Agent Platform API
+    2. 為 GitLab OIDC 建立工作負載身分池和提供者
     3. 建立具有 Google Cloud's Agent Platform 角色的專用服務帳戶
     4. 授予 WIF 主體權限以模擬服務帳戶
 
-    **要儲存在 CI/CD 變數中的必需值：**
-
-    * `GCP_WORKLOAD_IDENTITY_PROVIDER`
-    * `GCP_SERVICE_ACCOUNT`
-
-    在 Settings → CI/CD → Variables 中新增變數：
-
-    ```yaml theme={null}
-    # 對於 Google Cloud's Agent Platform：
-    - GCP_WORKLOAD_IDENTITY_PROVIDER
-    - GCP_SERVICE_ACCOUNT
-    - CLOUD_ML_REGION (例如，us-east5)
-    ```
-
-    使用上面的 Google Cloud's Agent Platform 工作範例在不儲存金鑰的情況下進行驗證。
+    使用 [Agent Platform 工作範例](#configuration-examples)進行驗證，無需儲存金鑰。
   </Tab>
 </Tabs>
 
@@ -264,38 +240,7 @@ Claude 定位錯誤，實現修復，並更新分支或開啟新的 MR。
   設定範例
 </h2>
 
-以下是您可以調整到您的管道的現成程式碼片段。
-
-<h3 id="basic-gitlab-ci-yml-claude-api">
-  基本 .gitlab-ci.yml (Claude API)
-</h3>
-
-```yaml theme={null}
-stages:
-  - ai
-
-claude:
-  stage: ai
-  image: node:24-alpine3.21
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "web"'
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-  variables:
-    GIT_STRATEGY: fetch
-  before_script:
-    - apk update
-    - apk add --no-cache git curl bash
-    - curl -fsSL https://claude.ai/install.sh | bash
-  script:
-    - /bin/gitlab-mcp-server || true
-    - >
-      claude
-      -p "${AI_FLOW_INPUT:-'Summarize recent changes and suggest improvements'}"
-      --permission-mode acceptEdits
-      --allowedTools "Bash Read Edit Write mcp__gitlab"
-      --debug
-  # Claude Code 將使用 CI/CD 變數中的 ANTHROPIC_API_KEY
-```
+以下是您可以調整以適應您的管道的現成程式碼片段。
 
 <h3 id="amazon-bedrock-job-example-oidc">
   Amazon Bedrock 工作範例 (OIDC)
@@ -303,28 +248,37 @@ claude:
 
 **先決條件：**
 
-* 啟用 Amazon Bedrock 並存取您選擇的 Claude 模型
-* 在 AWS 中設定 GitLab OIDC，具有信任您的 GitLab 專案和 refs 的角色
+* Amazon Bedrock 已啟用，可存取您選擇的 Claude 模型
+* GitLab OIDC 已在 AWS 中設定，具有信任您的 GitLab 專案和 refs 的角色
 * 具有 Amazon Bedrock 權限的 IAM 角色（建議最小權限）
 
 **必需的 CI/CD 變數：**
 
-* `AWS_ROLE_TO_ASSUME`：Amazon Bedrock 存取的 IAM 角色的 ARN
-* `AWS_REGION`：Amazon Bedrock 區域（例如，`us-west-2`）
+* `AWS_ROLE_TO_ASSUME`：用於 Amazon Bedrock 存取的 IAM 角色 ARN
+* `AWS_REGION`：Amazon Bedrock 區域（例如 `us-west-2`）
+
+GitLab 從 `id_tokens:` 區塊鑄造工作的 OIDC 令牌，並將其公開為 `GITLAB_OIDC_TOKEN`。將 `aud` 設定為您在 AWS 的 IAM OIDC 身分提供者上設定的對象值，例如您的 GitLab 執行個體 URL。
 
 ```yaml theme={null}
+stages:
+  - ai
+
 claude-bedrock:
   stage: ai
   image: node:24-alpine3.21
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web"'
+  id_tokens:
+    GITLAB_OIDC_TOKEN:
+      aud: https://gitlab.example.com
   before_script:
-    - apk add --no-cache bash curl jq git python3 py3-pip
-    - pip install --no-cache-dir awscli
+    - apk add --no-cache bash curl jq git aws-cli
     - curl -fsSL https://claude.ai/install.sh | bash
-    # 交換 GitLab OIDC 令牌以取得 AWS 認證
-    - export AWS_WEB_IDENTITY_TOKEN_FILE="${CI_JOB_JWT_FILE:-/tmp/oidc_token}"
-    - if [ -n "${CI_JOB_JWT_V2}" ]; then printf "%s" "$CI_JOB_JWT_V2" > "$AWS_WEB_IDENTITY_TOKEN_FILE"; fi
+    # The installer places claude in ~/.local/bin, which isn't on PATH in this image
+    - export PATH="$HOME/.local/bin:$PATH"
+    # Exchange the job's OIDC token for AWS credentials
+    - export AWS_WEB_IDENTITY_TOKEN_FILE="/tmp/oidc_token"
+    - printf "%s" "$GITLAB_OIDC_TOKEN" > "$AWS_WEB_IDENTITY_TOKEN_FILE"
     - >
       aws sts assume-role-with-web-identity
       --role-arn "$AWS_ROLE_TO_ASSUME"
@@ -344,50 +298,70 @@ claude-bedrock:
       --debug
   variables:
     AWS_REGION: "us-west-2"
+    CLAUDE_CODE_USE_BEDROCK: "1"
 ```
 
 <Note>
-  Amazon Bedrock 的模型 ID 包括區域特定的前綴（例如，`us.anthropic.claude-sonnet-4-6`）。如果您的工作流程支援，透過您的工作設定或提示傳遞所需的模型。
+  Amazon Bedrock 的模型 ID 包含區域特定的前綴（例如 `us.anthropic.claude-sonnet-4-6`）。如果您的工作流程支援，請透過您的工作設定或提示傳遞所需的模型。
 </Note>
 
 <h3 id="agent-platform-job-example-workload-identity-federation">
-  Agent Platform 工作範例 (Workload Identity Federation)
+  Agent Platform 工作範例（工作負載身分聯盟）
 </h3>
 
 **先決條件：**
 
-* 在您的 GCP 專案中啟用 Google Cloud 的 Agent Platform API
-* 設定 Workload Identity Federation 以信任 GitLab OIDC
-* 具有 Google Cloud 的 Agent Platform 權限的服務帳戶
+* Google Cloud 的 Agent Platform API 已在您的 GCP 專案中啟用
+* 工作負載身分聯盟已設定為信任 GitLab OIDC
+* 具有 Google Cloud Agent Platform 權限的服務帳戶
 
 **必需的 CI/CD 變數：**
 
-* `GCP_WORKLOAD_IDENTITY_PROVIDER`：完整提供者資源名稱
+* `GCP_WORKLOAD_IDENTITY_PROVIDER`：提供者資源名稱，不含 `//iam.googleapis.com/` 前綴，例如 `projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider`
 * `GCP_SERVICE_ACCOUNT`：服務帳戶電子郵件
-* `CLOUD_ML_REGION`：Google Cloud 的 Agent Platform 區域（例如，`us-east5`）
+* `GCP_PROJECT_ID`：Google Cloud 專案 ID
+* `CLOUD_ML_REGION`：Google Cloud Agent Platform 區域（例如 `us-east5`）
+
+GitLab 從 `id_tokens:` 區塊鑄造工作的 OIDC 令牌，並將其公開為 `GITLAB_OIDC_TOKEN`。將 `aud` 設定為您在工作負載身分池提供者上設定的對象值，例如您的 GitLab 執行個體 URL。工作將令牌寫入檔案，認證設定的 `credential_source` 項目告訴 Google 的驗證程式庫從該處讀取它。將 `GOOGLE_APPLICATION_CREDENTIALS` 設定為認證設定檔案使其可透過[應用程式預設認證](/docs/zh-TW/google-vertex-ai#3-configure-gcp-credentials)供 Claude Code 使用。
 
 ```yaml theme={null}
+stages:
+  - ai
+
 claude-vertex:
   stage: ai
   image: gcr.io/google.com/cloudsdktool/google-cloud-cli:slim
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web"'
+  id_tokens:
+    GITLAB_OIDC_TOKEN:
+      aud: https://gitlab.example.com
   before_script:
     - apt-get update && apt-get install -y git && apt-get clean
     - curl -fsSL https://claude.ai/install.sh | bash
-    # 透過 WIF 驗證到 Google Cloud（無下載的金鑰）
-    - >
-      gcloud auth login --cred-file=<(cat <<EOF
+    # The installer places claude in ~/.local/bin, which isn't on PATH in this image
+    - export PATH="$HOME/.local/bin:$PATH"
+    # Write the job's OIDC token where credential_source expects it
+    - printf "%s" "$GITLAB_OIDC_TOKEN" > /tmp/oidc_token
+    # Write the WIF credential configuration to a file (no downloaded keys)
+    - |
+      cat > /tmp/cred.json <<EOF
       {
         "type": "external_account",
-        "audience": "${GCP_WORKLOAD_IDENTITY_PROVIDER}",
+        "audience": "//iam.googleapis.com/${GCP_WORKLOAD_IDENTITY_PROVIDER}",
         "subject_token_type": "urn:ietf:params:oauth:token-type:jwt",
-        "service_account_impersonation_url": "https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/${GCP_SERVICE_ACCOUNT}:generateAccessToken",
-        "token_url": "https://sts.googleapis.com/v1/token"
+        "token_url": "https://sts.googleapis.com/v1/token",
+        "credential_source": {
+          "file": "/tmp/oidc_token"
+        },
+        "service_account_impersonation_url": "https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/${GCP_SERVICE_ACCOUNT}:generateAccessToken"
       }
       EOF
-      )
-    - gcloud config set project "$(gcloud projects list --format='value(projectId)' --filter="name:${CI_PROJECT_NAMESPACE}" | head -n1)" || true
+    # Expose the credentials to Claude Code via Application Default Credentials
+    - export GOOGLE_APPLICATION_CREDENTIALS=/tmp/cred.json
+    # Authenticate the gcloud CLI with the same credential configuration
+    - gcloud auth login --cred-file=/tmp/cred.json
+    - gcloud config set project "$GCP_PROJECT_ID"
   script:
     - /bin/gitlab-mcp-server || true
     - >
@@ -399,10 +373,12 @@ claude-vertex:
       --debug
   variables:
     CLOUD_ML_REGION: "us-east5"
+    CLAUDE_CODE_USE_VERTEX: "1"
+    ANTHROPIC_VERTEX_PROJECT_ID: "$GCP_PROJECT_ID"
 ```
 
 <Note>
-  使用 Workload Identity Federation，您不需要儲存服務帳戶金鑰。使用儲存庫特定的信任條件和最小權限服務帳戶。
+  使用工作負載身分聯盟，您不需要儲存服務帳戶金鑰。使用存放庫特定的信任條件和最小權限服務帳戶。
 </Note>
 
 <h2 id="best-practices">
@@ -413,15 +389,15 @@ claude-vertex:
   CLAUDE.md 設定
 </h3>
 
-在儲存庫根目錄建立 `CLAUDE.md` 檔案以定義編碼標準、審查標準和專案特定規則。Claude 在執行期間讀取此檔案並在提出變更時遵循您的慣例。
+在儲存庫根目錄建立 `CLAUDE.md` 檔案，以定義編碼標準、審查條件和專案特定規則。Claude 在執行期間會讀取此檔案，並在提出變更時遵循您的慣例。
 
 <h3 id="security-considerations">
   安全考量
 </h3>
 
-**永遠不要將 API 金鑰或雲端認證提交到您的儲存庫**。始終使用 GitLab CI/CD 變數：
+**絕不將 API 金鑰或雲端認證提交到您的儲存庫**。請務必使用 GitLab CI/CD 變數：
 
-* 將 `ANTHROPIC_API_KEY` 新增為遮罩變數（並根據需要保護它）
+* 將 `ANTHROPIC_API_KEY` 新增為遮罩變數（如需要可保護它）
 * 盡可能使用提供者特定的 OIDC（無長期金鑰）
 * 限制工作權限和網路出口
 * 像審查任何其他貢獻者一樣審查 Claude 的 MR
@@ -430,52 +406,41 @@ claude-vertex:
   最佳化效能
 </h3>
 
-* 保持 `CLAUDE.md` 專注和簡潔
-* 提供清晰的問題/MR 描述以減少反覆
-* 設定合理的工作逾時以避免失控執行
-* 在可能的情況下在 runners 中快取 npm 和套件安裝
+* 保持 `CLAUDE.md` 專注且簡潔
+* 提供清晰的議題/MR 描述以減少迭代
+* 在執行器中盡可能快取 npm 和套件安裝
 
 <h3 id="ci-costs">
   CI 成本
 </h3>
 
-使用 Claude Code 與 GitLab CI/CD 時，請注意相關成本：
+使用 Claude Code 搭配 GitLab CI/CD 時，請注意相關成本：
 
 * **GitLab Runner 時間**：
-  * Claude 在您的 GitLab runners 上執行並消耗計算分鐘數
-  * 有關詳細資訊，請參閱您的 GitLab 計畫的 runner 計費
+  * Claude 在您的 GitLab 執行器上執行，並消耗計算分鐘數
+  * 請參閱您的 GitLab 方案的執行器計費詳細資訊
 
 * **API 成本**：
-  * 每次 Claude 互動根據提示和回應大小消耗令牌
-  * 令牌使用量因任務複雜性和程式碼庫大小而異
-  * 有關詳細資訊，請參閱 [Anthropic 定價](https://platform.claude.com/docs/zh-TW/about-claude/pricing)
+  * 每次 Claude 互動根據提示和回應大小消耗權杖
+  * 權杖使用量因任務複雜性和程式碼庫大小而異
+  * 詳細資訊請參閱 [Anthropic 定價](https://platform.claude.com/docs/en/about-claude/pricing)
 
 * **成本最佳化提示**：
-  * 使用特定的 `@claude` 命令以減少不必要的轉換
-  * 設定適當的 `max_turns` 和工作逾時值
+  * 使用特定的 `@claude` 命令以減少不必要的回合
+  * 設定適當的 `--max-turns` 和工作 `timeout` 值
   * 限制並行以控制平行執行
-
-<h2 id="security-and-governance">
-  安全和治理
-</h2>
-
-* 每個工作都在具有受限網路存取的隔離容器中執行
-* Claude 的變更透過 MR 流動，以便審查者看到每個差異
-* 分支保護和核准規則適用於 AI 生成的程式碼
-* Claude Code 使用工作區範圍的權限以限制寫入
-* 成本保持在您的控制下，因為您帶來自己的提供者認證
 
 <h2 id="troubleshooting">
   疑難排解
 </h2>
 
 <h3 id="claude-not-responding-to-claude-commands">
-  Claude 不回應 @claude 命令
+  Claude 未回應 @claude 指令
 </h3>
 
-* 驗證您的管道正在被觸發（手動、MR 事件或透過 note 事件監聽器/webhook）
-* 確保 CI/CD 變數（`ANTHROPIC_API_KEY` 或雲端提供者設定）存在且未遮罩
-* 檢查評論是否包含 `@claude`（不是 `/claude`）以及您的提及觸發器是否已設定
+* 驗證您的管道是否被觸發（手動、MR 事件或透過筆記事件監聽器/webhook）
+* 確保您的 `ANTHROPIC_API_KEY` 或雲端提供者變數存在
+* 檢查評論是否包含 `@claude`（不是 `/claude`），以及您的提及觸發器是否已設定
 
 <h3 id="job-can’t-write-comments-or-open-mrs">
   工作無法寫入評論或開啟 MR
@@ -483,14 +448,14 @@ claude-vertex:
 
 * 確保 `CI_JOB_TOKEN` 對專案具有足夠的權限，或使用具有 `api` 範圍的專案存取令牌
 * 檢查 `mcp__gitlab` 工具是否在 `--allowedTools` 中啟用
-* 確認工作在 MR 的上下文中執行或透過 `AI_FLOW_*` 變數有足夠的上下文
+* 確認工作在 MR 的上下文中執行，或透過 `AI_FLOW_*` 變數有足夠的上下文
 
 <h3 id="authentication-errors">
   驗證錯誤
 </h3>
 
-* **對於 Claude API**：確認 `ANTHROPIC_API_KEY` 有效且未過期
-* **對於 Amazon Bedrock 或 Google Cloud 的 Agent Platform**：驗證 OIDC/WIF 設定、角色模擬和祕密名稱；確認區域和模型可用性
+* **針對 Claude API**：確認 `ANTHROPIC_API_KEY` 有效且未過期
+* **針對 Amazon Bedrock 或 Google Cloud 的 Agent Platform**：驗證 OIDC/WIF 設定、角色模擬和密碼名稱；確認區域和模型可用性
 
 <h2 id="advanced-configuration">
   進階設定
@@ -500,11 +465,11 @@ claude-vertex:
   常見參數和變數
 </h3>
 
-Claude Code 支援這些常用輸入：
+使用這些 CLI 旗標、GitLab 關鍵字和變數來控制您工作中的 Claude Code 執行：
 
-* `prompt` / `prompt_file`：內聯提供說明（`-p`）或透過檔案
-* `max_turns`：限制來回反覆的次數
-* `timeout_minutes`：限制總執行時間
+* `-p`：提供內聯指示，例如 `claude -p "Review this MR"`
+* `--max-turns`：限制往返迭代的次數
+* `timeout`：使用 GitLab 的工作層級 `timeout` 關鍵字限制總工作執行時間，例如 `timeout: 30m`
 * `ANTHROPIC_API_KEY`：Claude API 所需（不用於 Amazon Bedrock 或 Google Cloud 的 Agent Platform）
 * 提供者特定環境：`AWS_REGION`、Google Cloud 的 Agent Platform 的專案/區域變數
 
@@ -516,7 +481,7 @@ Claude Code 支援這些常用輸入：
   自訂 Claude 的行為
 </h3>
 
-您可以透過兩種主要方式指導 Claude：
+您可以透過兩種主要方式引導 Claude：
 
-1. **CLAUDE.md**：定義編碼標準、安全要求和專案慣例。Claude 在執行期間讀取此檔案並遵循您的規則。
-2. **自訂提示**：透過工作中的 `prompt`/`prompt_file` 傳遞任務特定的說明。為不同的工作使用不同的提示（例如，審查、實現、重構）。
+1. **CLAUDE.md**：定義編碼標準、安全性需求和專案慣例。Claude 在執行期間讀取此檔案並遵循您的規則。
+2. **自訂提示**：透過工作中的 `-p` 傳遞特定任務的指示。為不同的工作使用不同的提示（例如，審查、實作、重構）。

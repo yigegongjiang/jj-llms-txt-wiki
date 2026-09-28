@@ -6,7 +6,9 @@
 
 > Pahami lifecycle pesan, eksekusi tool, context window, dan arsitektur yang menggerakkan agent SDK Anda.
 
-Agent SDK memungkinkan Anda untuk menyematkan autonomous agent loop Claude Code dalam aplikasi Anda sendiri. SDK adalah paket standalone yang memberikan Anda kontrol programatik atas tools, permissions, cost limits, dan output. Anda tidak perlu menginstal Claude Code CLI untuk menggunakannya.
+Agent SDK memungkinkan Anda untuk menyematkan autonomous agent loop Claude Code dalam aplikasi Anda sendiri. SDK adalah paket standalone yang memberikan Anda kontrol programatik atas tools, permissions, cost limits, dan output.
+
+Baik TypeScript maupun Python SDK menggabungkan binary Claude Code native, jadi sebagian besar instalasi tidak memerlukan instalasi Claude Code terpisah. Lihat [catatan instalasi quickstart](/docs/id/agent-sdk/quickstart) untuk instalasi yang memerlukan.
 
 Ketika Anda memulai agent, SDK menjalankan [execution loop yang sama yang menggerakkan Claude Code](/docs/id/how-claude-code-works#the-agentic-loop): Claude mengevaluasi prompt Anda, memanggil tools untuk mengambil tindakan, menerima hasilnya, dan mengulangi sampai tugas selesai. Halaman ini menjelaskan apa yang terjadi di dalam loop tersebut sehingga Anda dapat membangun, debug, dan mengoptimalkan agent Anda secara efektif.
 
@@ -16,10 +18,12 @@ Ketika Anda memulai agent, SDK menjalankan [execution loop yang sama yang mengge
 
 Setiap sesi agent mengikuti siklus yang sama:
 
-<img src="https://mintcdn.com/claude-code/ikqp3_70mqIahteV/images/agent-loop-diagram.svg?fit=max&auto=format&n=ikqp3_70mqIahteV&q=85&s=1c6e8f28d80dba14a7287419656f1237" alt="Diagram agent loop: prompt Anda memasuki agentic loop, di mana Claude mengevaluasi dan baik meminta tool calls, yang hasilnya umpan balik ke evaluasi lain, atau mengembalikan jawaban final" width="720" height="212" data-path="images/agent-loop-diagram.svg" />
+<img src="https://mintcdn.com/claude-code/ikqp3_70mqIahteV/images/agent-loop-diagram.svg?fit=max&auto=format&n=ikqp3_70mqIahteV&q=85&s=1c6e8f28d80dba14a7287419656f1237" className="dark:hidden" alt="Diagram agent loop: prompt Anda memasuki agentic loop, di mana Claude mengevaluasi dan baik meminta tool calls, yang hasilnya umpan balik ke evaluasi lain, atau mengembalikan jawaban final" width="720" height="212" data-path="images/agent-loop-diagram.svg" />
+
+<img src="https://mintcdn.com/claude-code/_xqph1dUOslCOwsj/images/agent-loop-diagram-dark.svg?fit=max&auto=format&n=_xqph1dUOslCOwsj&q=85&s=afe723c52a324d3c61fa72fb02432ab6" className="hidden dark:block" alt="Diagram agent loop: prompt Anda memasuki agentic loop, di mana Claude mengevaluasi dan baik meminta tool calls, yang hasilnya umpan balik ke evaluasi lain, atau mengembalikan jawaban final" width="720" height="212" data-path="images/agent-loop-diagram-dark.svg" />
 
 1. **Terima prompt.** Claude menerima prompt Anda, bersama dengan system prompt, tool definitions, dan conversation history. SDK menghasilkan [`SystemMessage`](#message-types) dengan subtype `"init"` yang berisi session metadata.
-2. **Evaluasi dan respons.** Claude mengevaluasi state saat ini dan menentukan cara melanjutkan. Ini dapat merespons dengan teks, meminta satu atau lebih tool calls, atau keduanya. SDK menghasilkan [`AssistantMessage`](#message-types) yang berisi teks dan permintaan tool call apa pun.
+2. **Evaluasi dan respons.** Claude mengevaluasi state saat ini dan menentukan cara melanjutkan. Ini dapat merespons dengan teks, meminta satu atau lebih tool calls, atau keduanya. SDK menghasilkan satu atau lebih objek [`AssistantMessage`](#message-types), satu untuk setiap content block, seperti text block atau permintaan tool call.
 3. **Eksekusi tools.** SDK menjalankan setiap tool yang diminta dan mengumpulkan hasilnya. Setiap set hasil tool umpan balik ke Claude untuk keputusan berikutnya. Anda dapat menggunakan [hooks](/docs/id/agent-sdk/hooks) untuk mengintersepsi, memodifikasi, atau memblokir tool calls sebelum dijalankan.
 4. **Ulangi.** Langkah 2 dan 3 berulang sebagai siklus. Setiap siklus penuh adalah satu turn. Claude terus memanggil tools dan memproses hasil sampai menghasilkan respons tanpa tool calls.
 5. **Kembalikan hasil.** SDK menghasilkan [`AssistantMessage`](#message-types) final dengan respons teks (tanpa tool calls), diikuti oleh [`ResultMessage`](#message-types) dengan teks final, token usage, cost, dan session ID.
@@ -37,8 +41,8 @@ Pertimbangkan seperti apa sesi penuh untuk prompt "Fix the failing tests in auth
 Pertama, SDK mengirim prompt Anda ke Claude dan menghasilkan [`SystemMessage`](#message-types) dengan session metadata. Kemudian loop dimulai:
 
 1. **Turn 1:** Claude memanggil `Bash` untuk menjalankan `npm test`. SDK menghasilkan [`AssistantMessage`](#message-types) dengan tool call, menjalankan perintah, kemudian menghasilkan [`UserMessage`](#message-types) dengan output (tiga kegagalan).
-2. **Turn 2:** Claude memanggil `Read` pada `auth.ts` dan `auth.test.ts`. SDK mengembalikan konten file dan menghasilkan `AssistantMessage`.
-3. **Turn 3:** Claude memanggil `Edit` untuk memperbaiki `auth.ts`, kemudian memanggil `Bash` untuk menjalankan kembali `npm test`. Ketiga tests lulus. SDK menghasilkan `AssistantMessage`.
+2. **Turn 2:** Claude memanggil `Read` pada `auth.ts` dan `auth.test.ts`. SDK menghasilkan `AssistantMessage` untuk setiap call dan mengembalikan konten file.
+3. **Turn 3:** Claude memanggil `Edit` untuk memperbaiki `auth.ts`, kemudian memanggil `Bash` untuk menjalankan kembali `npm test`. Ketiga tests lulus. SDK menghasilkan `AssistantMessage` untuk setiap call.
 4. **Turn final:** Claude menghasilkan respons hanya teks tanpa tool calls: "Fixed the auth bug, all three tests pass now." SDK menghasilkan `AssistantMessage` final dengan teks ini, kemudian [`ResultMessage`](#message-types) dengan teks yang sama ditambah cost dan usage.
 
 Itu adalah empat turns: tiga dengan tool calls, satu respons hanya teks final.
@@ -58,15 +62,15 @@ Saat loop berjalan, SDK menghasilkan aliran messages. Setiap message membawa tip
   * `"init"`: session metadata untuk run. Ketika hook `SessionStart` atau `Setup` berjalan selama session startup, [hook lifecycle messages](/docs/id/agent-sdk/typescript#sdkhookstartedmessage) tiba sebelum message `init`
   * `"compact_boundary"`: menyala setelah [compaction](#automatic-compaction)
   * `"informational"`: plain-text status banners dari loop
-  * `"worker_shutting_down"`: loop akan berakhir setelah turn saat ini karena host sedang keluar atau Remote Control terputus
+  * `"worker_shutting_down"`: host sedang keluar atau Remote Control terputus
 
   Di TypeScript, setiap subtype selain `"init"` adalah tipenya sendiri dalam union [`SDKMessage`](/docs/id/agent-sdk/typescript#sdkmessage) daripada subtype dari `SDKSystemMessage`.
-* **`AssistantMessage`:** dipancarkan setelah setiap respons Claude, termasuk yang hanya teks final. Berisi text content blocks dan tool call blocks dari turn itu.
+* **`AssistantMessage`:** dipancarkan untuk setiap content block dalam respons Claude, termasuk yang hanya teks final. Masing-masing membawa satu content block, seperti text atau tool call, dan messages dari satu respons berbagi message ID.
 * **`UserMessage`:** dipancarkan setelah setiap eksekusi tool dengan tool result content yang dikirim kembali ke Claude. Juga dipancarkan untuk input pengguna apa pun yang Anda stream mid-loop.
 * **`StreamEvent`:** hanya dipancarkan ketika partial messages diaktifkan. Berisi raw API streaming events (text deltas, tool input chunks). Lihat [Stream responses](/docs/id/agent-sdk/streaming-output).
 * **`ResultMessage`:** menandai akhir dari agent loop. Berisi hasil teks final, token usage, cost, dan session ID. Periksa field `subtype` untuk menentukan apakah tugas berhasil atau mencapai batas. Sejumlah kecil trailing system events, seperti `prompt_suggestion`, dapat tiba setelahnya, jadi iterasi stream hingga selesai daripada break pada hasil. Lihat [Handle the result](#handle-the-result).
 
-Lima tipe ini mencakup lifecycle agent loop penuh di kedua SDK. TypeScript SDK juga menghasilkan additional observability events (hook events, tool progress, rate limits, task notifications) yang memberikan detail ekstra tetapi tidak diperlukan untuk menjalankan loop. Lihat [Python message types reference](/docs/id/agent-sdk/python#message-types) dan [TypeScript message types reference](/docs/id/agent-sdk/typescript#message-types) untuk daftar lengkap.
+Lima tipe ini mencakup lifecycle agent loop penuh. Kedua SDK juga menghasilkan observability events seperti rate-limit status dan task notifications yang tidak diperlukan untuk menjalankan loop. Lihat [Python message types reference](/docs/id/agent-sdk/python#message-types) dan [TypeScript message types reference](/docs/id/agent-sdk/typescript#message-types) untuk daftar lengkap.
 
 <h3 id="handle-messages">
   Handle messages
@@ -87,14 +91,19 @@ Cara Anda memeriksa message types tergantung pada SDK:
   <CodeGroup>
     ```python Python theme={null}
     import asyncio
-    from claude_agent_sdk import query, AssistantMessage, ResultMessage
+    from claude_agent_sdk import query, AssistantMessage, ResultMessage, TextBlock, ToolUseBlock
 
 
     async def main():
         try:
             async for message in query(prompt="Summarize this project"):
                 if isinstance(message, AssistantMessage):
-                    print(f"Turn completed: {len(message.content)} content blocks")
+                    # Setiap AssistantMessage membawa satu content block
+                    for block in message.content:
+                        if isinstance(block, TextBlock):
+                            print(f"Claude: {block.text}")
+                        elif isinstance(block, ToolUseBlock):
+                            print(f"Tool call: {block.name}")
                 if isinstance(message, ResultMessage):
                     if message.subtype == "success":
                         print(message.result)
@@ -116,7 +125,14 @@ Cara Anda memeriksa message types tergantung pada SDK:
     try {
       for await (const message of query({ prompt: "Summarize this project" })) {
         if (message.type === "assistant") {
-          console.log(`Turn completed: ${message.message.content.length} content blocks`);
+          // Setiap assistant message membawa satu content block
+          for (const block of message.message.content) {
+            if (block.type === "text") {
+              console.log(`Claude: ${block.text}`);
+            } else if (block.type === "tool_use") {
+              console.log(`Tool call: ${block.name}`);
+            }
+          }
         }
         if (message.type === "result") {
           if (message.subtype === "success") {
@@ -157,6 +173,8 @@ SDK mencakup tools yang sama yang menggerakkan Claude Code:
 | **Discovery**       | `ToolSearch`                                                    | Temukan dan muat tools secara dinamis on-demand daripada preloading semuanya |
 | **Orchestration**   | `Agent`, `Skill`, `AskUserQuestion`, `TaskCreate`, `TaskUpdate` | Spawn subagents, invoke skills, tanya pengguna, track tasks                  |
 
+Pada [model yang tidak mendapatkan task-tracking tools](/docs/id/agent-sdk/todo-tracking#model-availability), Claude Code menyediakan `TaskCreate` dan `TaskUpdate` hanya ketika Anda opt in.
+
 Melampaui built-in tools, Anda dapat:
 
 * **Hubungkan layanan eksternal** dengan [MCP servers](/docs/id/agent-sdk/mcp) (databases, browsers, APIs)
@@ -169,9 +187,9 @@ Melampaui built-in tools, Anda dapat:
 
 Claude menentukan tools mana yang akan dipanggil berdasarkan tugas, tetapi Anda mengontrol apakah panggilan tersebut diizinkan untuk dieksekusi. Anda dapat auto-approve tools spesifik, memblokir yang lain sepenuhnya, atau memerlukan approval untuk semuanya. Tiga opsi bekerja bersama untuk menentukan apa yang berjalan:
 
-* **`allowed_tools` / `allowedTools`** auto-approves tools yang terdaftar. Agent read-only dengan `["Read", "Glob", "Grep"]` dalam daftar allowed tools-nya menjalankan tools tersebut tanpa prompting. Tools yang tidak terdaftar masih tersedia tetapi memerlukan permission.
+* **`allowed_tools` / `allowedTools`** auto-approves tools yang terdaftar. Agent read-only dengan `["Read", "Glob", "Grep"]` dalam daftar allowed tools-nya menjalankan tools tersebut tanpa prompting. Tools yang tidak terdaftar masih tersedia, dan panggilan ke tools tersebut yang memerlukan approval jatuh melalui permission mode dan `canUseTool`.
 * **`disallowed_tools` / `disallowedTools`** memblokir tools yang terdaftar, terlepas dari pengaturan lainnya. Lihat [Permissions](/docs/id/agent-sdk/permissions) untuk urutan aturan yang diperiksa sebelum tool berjalan.
-* **`permission_mode` / `permissionMode`** mengontrol apa yang terjadi pada tools yang tidak tercakup oleh allow atau deny rules. Lihat [Permission mode](#permission-mode) untuk mode yang tersedia.
+* **`permission_mode` / `permissionMode`** mengontrol berapa banyak pengawasan manusia yang Anda inginkan. SDK mengevaluasi mode aktif bersama dengan aturan allow dan deny Anda dalam urutan tetap, dijelaskan dalam [How permissions are evaluated](/docs/id/agent-sdk/permissions#how-permissions-are-evaluated). Lihat [Permission mode](#permission-mode) untuk mode yang tersedia.
 
 Anda juga dapat scope individual tools dengan rules seperti `"Bash(npm *)"` untuk mengizinkan hanya perintah spesifik. Lihat [Permissions](/docs/id/agent-sdk/permissions) untuk full rule syntax.
 
@@ -202,7 +220,9 @@ Anda dapat membatasi berapa banyak turns yang diambil loop, berapa banyak biayan
 
 Ketika salah satu batas tercapai, SDK mengembalikan `ResultMessage` dengan error subtype yang sesuai (`error_max_turns` atau `error_max_budget_usd`). Lihat [Handle the result](#handle-the-result) untuk cara memeriksa subtypes ini dan [`ClaudeAgentOptions`](/docs/id/agent-sdk/python#claudeagentoptions) / [`Options`](/docs/id/agent-sdk/typescript#options) untuk syntax.
 
-Dengan [streaming input](/docs/id/agent-sdk/streaming-vs-single-mode), pesan yang Anda kirim saat turn masih berjalan tetap antri ketika turn itu berakhir pada batas max-turns, dan itu memulai turn-nya sendiri dengan batas max-turns-nya sendiri. Sebelum v2.1.205, pesan yang tiba pada iterasi final turn bisa dikonsumsi ke dalam ending turn dan hilang tanpa pernah mencapai model.
+Budget cap mencakup [subagents](/docs/id/agent-sdk/subagents): pengeluaran mereka dihitung terhadap total. Setelah pengeluaran mencapai cap, spawning subagent lain gagal dengan `Budget limit reached`, dan Claude Code menghentikan subagent background apa pun yang masih berjalan. Perilaku penegakan cap memerlukan Claude Code v2.1.217 atau lebih baru.
+
+Dengan [streaming input](/docs/id/agent-sdk/streaming-vs-single-mode), pesan yang masih antri ketika turn berakhir pada batas max-turns tetap antri. Claude Code tidak menambahkannya ke model call terakhir turn itu. Ini memulai turn baru untuk pesan, dan hitungan max-turns dimulai lagi untuk turn itu. Total budget terus terakumulasi di seluruh pesan, dan setelah pengeluaran mencapai `maxBudgetUsd`, pesan-pesan selanjutnya dalam percakapan yang sama berakhir dengan hasil `error_max_budget_usd`. Sebuah [`/clear`](/docs/id/agent-sdk/cost-tracking) memulai ulang budget.
 
 <h3 id="effort-level">
   Effort level
@@ -210,18 +230,18 @@ Dengan [streaming input](/docs/id/agent-sdk/streaming-vs-single-mode), pesan yan
 
 Opsi `effort` mengontrol berapa banyak reasoning yang diterapkan Claude. Lower effort levels menggunakan fewer tokens per turn dan mengurangi cost. Tidak semua models mendukung effort parameter. Lihat [Effort](https://platform.claude.com/docs/en/build-with-claude/effort) untuk models mana yang mendukungnya.
 
-| Level      | Behavior                          | Baik untuk                                                                  |
-| :--------- | :-------------------------------- | :-------------------------------------------------------------------------- |
-| `"low"`    | Minimal reasoning, fast responses | File lookups, listing directories                                           |
-| `"medium"` | Balanced reasoning                | Routine edits, standard tasks                                               |
-| `"high"`   | Thorough analysis                 | Refactors, debugging                                                        |
-| `"xhigh"`  | Extended reasoning depth          | Coding dan agentic tasks; recommended pada Fable 5, Opus 4.7+, dan Sonnet 5 |
-| `"max"`    | Maximum reasoning depth           | Multi-step problems memerlukan deep analysis                                |
+| Level      | Behavior                          | Baik untuk                                                                                     |
+| :--------- | :-------------------------------- | :--------------------------------------------------------------------------------------------- |
+| `"low"`    | Minimal reasoning, fast responses | File lookups, listing directories                                                              |
+| `"medium"` | Balanced reasoning                | Routine edits, standard tasks                                                                  |
+| `"high"`   | Thorough analysis                 | Refactors, debugging                                                                           |
+| `"xhigh"`  | Extended reasoning depth          | Coding dan agentic tasks pada [models yang mendukungnya](/docs/id/model-config#adjust-effort-level) |
+| `"max"`    | Maximum reasoning depth           | Multi-step problems memerlukan deep analysis                                                   |
 
-Jika Anda tidak set `effort`, kedua SDKs membiarkan parameter unset dan menunda ke model's default behavior.
+Jika Anda tidak set `effort`, Claude Code menyelesaikan effort level itu sendiri, dalam urutan yang dijelaskan [Adjust effort level](/docs/id/model-config#adjust-effort-level).
 
 <Note>
-  `effort` trades latency dan token cost untuk reasoning depth dalam setiap respons. [Extended thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking) adalah fitur terpisah yang menghasilkan visible chain-of-thought blocks dalam output. Mereka independen: Anda dapat set `effort: "low"` dengan extended thinking diaktifkan, atau `effort: "max"` tanpanya.
+  `effort` trades latency dan token cost untuk reasoning depth dalam setiap respons. [Extended thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking) adalah fitur terpisah yang menghasilkan `thinking` blocks dalam output, dan field `display` pada `ThinkingConfig` untuk [Python](/docs/id/agent-sdk/python#thinkingconfig) atau [TypeScript](/docs/id/agent-sdk/typescript#thinkingconfig) mengontrol apakah Anda menerima text mereka. Mereka independen: Anda dapat set `effort: "low"` dengan extended thinking diaktifkan, atau `effort: "max"` tanpanya.
 </Note>
 
 Gunakan lower effort untuk agents yang melakukan simple, well-scoped tasks (seperti listing files atau menjalankan single grep) untuk mengurangi cost dan latency. Set `effort` dalam top-level `query()` options untuk seluruh sesi, atau per subagent dengan field `effort` pada [`AgentDefinition`](/docs/id/agent-sdk/subagents#agentdefinition-configuration) untuk override session level.
@@ -232,14 +252,14 @@ Gunakan lower effort untuk agents yang melakukan simple, well-scoped tasks (sepe
 
 Opsi permission mode (`permission_mode` di Python, `permissionMode` di TypeScript) mengontrol apakah agent meminta approval sebelum menggunakan tools:
 
-| Mode                  | Behavior                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| :-------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `"default"`           | Tools yang tidak tercakup oleh allow rules memicu approval callback Anda; tidak ada callback berarti deny                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| `"acceptEdits"`       | Auto-approves file edits dan common filesystem commands (`mkdir`, `touch`, `mv`, `cp`, dll.); Bash commands lainnya mengikuti default rules                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| `"plan"`              | Claude mengeksplorasi dan merencanakan tanpa mengedit source files Anda; file edits tidak pernah auto-approved dan prompt melalui `canUseTool` callback Anda                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| `"dontAsk"`           | Tidak pernah prompt. Tools pre-approved oleh [permission rules](/docs/id/settings#permission-settings) berjalan; semuanya lainnya ditolak. `AskUserQuestion`, connector tools [organisasi Anda set ke `ask`](/docs/id/mcp#organization-controls-on-connector-tools), dan MCP tools yang ditandai [`requiresUserInteraction`](/docs/id/mcp#require-approval-for-a-specific-tool) ditolak bahkan jika Anda telah mengizinkannya                                                                                                                                                                                   |
-| `"auto"`              | Menggunakan model classifier untuk approve atau deny setiap tool call. Lihat [Auto mode](/docs/id/permission-modes#eliminate-prompts-with-auto-mode) untuk availability dan behavior                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| `"bypassPermissions"` | Menjalankan semua allowed tools tanpa bertanya, kecuali tools yang cocok dengan explicit [`ask` rule](/docs/id/settings#permission-settings), connector tools [organisasi Anda set ke `ask`](/docs/id/mcp#organization-controls-on-connector-tools), dan tools yang memerlukan user interaction; lihat [How permissions are evaluated](/docs/id/agent-sdk/permissions#how-permissions-are-evaluated) untuk urutan precedence. Tidak dapat digunakan saat berjalan sebagai root pada Unix. Gunakan hanya dalam isolated environments di mana tindakan agent tidak dapat mempengaruhi systems yang Anda pedulikan |
+| Mode                  | Behavior                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | Use case                                                                                                                                                   |
+| :-------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :--------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `"default"`           | Tool calls yang memerlukan approval dan tidak tercakup oleh allow rules memicu `canUseTool` callback Anda; tidak ada callback berarti deny                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Interactive applications dengan custom approval callback                                                                                                   |
+| `"acceptEdits"`       | Auto-approves file edits dan common filesystem commands (`mkdir`, `touch`, `mv`, `cp`, dll.); Bash commands lainnya mengikuti default rules                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | Anda mempercayai edits Claude dan menginginkan iterasi lebih cepat, seperti selama prototyping atau saat bekerja dalam isolated directory                  |
+| `"plan"`              | Claude mengeksplorasi dan merencanakan tanpa mengedit source files Anda; file edits tidak pernah auto-approved dan prompt melalui `canUseTool` callback Anda                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | Anda menginginkan Claude untuk mengusulkan changes tanpa mengeksekusinya, seperti selama code review atau ketika Anda perlu approve changes sebelum dibuat |
+| `"dontAsk"`           | Tidak pernah prompt. Tools pre-approved oleh [permission rules](/docs/id/settings-reference#permission-settings) berjalan, dan begitu juga calls yang tidak memerlukan approval dalam mode `default`, seperti file reads di dalam working directories Anda; setiap call yang sebaliknya akan prompt ditolak. `AskUserQuestion`, connector tools [organisasi Anda set ke `ask`](/docs/id/mcp#organization-controls-on-connector-tools), dan MCP tools yang ditandai [`requiresUserInteraction`](/docs/id/mcp#require-approval-for-a-specific-tool) ditolak bahkan jika Anda telah mengizinkannya                                                                                                                                                                                                                                                | Anda menginginkan fixed, explicit tool surface untuk headless agent dan lebih memilih hard deny daripada silent reliance pada `canUseTool` yang absent     |
+| `"auto"`              | Menggunakan model classifier untuk approve atau deny permission prompts. Lihat [Auto mode](/docs/id/permission-modes#eliminate-prompts-with-auto-mode) untuk availability dan behavior                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | Autonomous agents yang masih menginginkan safety guardrails pada tool use                                                                                  |
+| `"bypassPermissions"` | Menjalankan semua allowed tools tanpa bertanya, kecuali tools yang cocok dengan explicit [`ask` rule](/docs/id/settings-reference#permission-settings), connector tools [organisasi Anda set ke `ask`](/docs/id/mcp#organization-controls-on-connector-tools), dan tools yang memerlukan user interaction. [Cross-session messaging safeguards](/docs/id/permission-modes#skip-all-checks-with-bypasspermissions-mode) masih berlaku. Lihat [How permissions are evaluated](/docs/id/agent-sdk/permissions#how-permissions-are-evaluated) untuk urutan precedence. Dalam TypeScript SDK, juga memerlukan `allowDangerouslySkipPermissions: true` dalam `options`. Tidak dapat digunakan saat berjalan sebagai root pada Unix. Gunakan hanya dalam isolated environments di mana tindakan agent tidak dapat mempengaruhi systems yang Anda pedulikan | CI, containers, atau isolated environments lainnya                                                                                                         |
 
 Untuk interactive applications, gunakan `"default"` dengan tool approval callback untuk surface approval prompts. Untuk autonomous agents pada dev machine, `"acceptEdits"` auto-approves file edits dan common filesystem commands (`mkdir`, `touch`, `mv`, `cp`, dll.) sambil masih gating `Bash` commands lainnya di belakang allow rules. Reserve `"bypassPermissions"` untuk CI, containers, atau isolated environments lainnya. Lihat [Permissions](/docs/id/agent-sdk/permissions) untuk full details.
 
@@ -247,13 +267,13 @@ Untuk interactive applications, gunakan `"default"` dengan tool approval callbac
   Model
 </h3>
 
-Jika Anda tidak set `model`, SDK menggunakan Claude Code's default, yang tergantung pada authentication method dan subscription Anda. Set secara eksplisit (misalnya, `model="claude-sonnet-5"`) untuk pin model spesifik atau untuk menggunakan smaller model untuk faster, cheaper agents. Lihat [models](https://platform.claude.com/docs/en/about-claude/models) untuk available IDs.
+Set opsi `model` untuk memilih model mana yang menjalankan sesi. Untuk informasi lebih lanjut, lihat [Choose a model](/docs/id/agent-sdk/configuration#choose-a-model).
 
 <h2 id="the-context-window">
   Jendela konteks
 </h2>
 
-Jendela konteks adalah total jumlah informasi yang tersedia untuk Claude selama sesi. Ini tidak reset antara turns dalam sesi. Semuanya terakumulasi: system prompt, tool definitions, conversation history, tool inputs, dan tool outputs. Konten yang tetap sama di seluruh turns (system prompt, tool definitions, CLAUDE.md) secara otomatis [prompt cached](https://platform.claude.com/docs/id/build-with-claude/prompt-caching), yang mengurangi cost dan latency untuk repeated prefixes.
+Jendela konteks adalah total jumlah informasi yang tersedia untuk Claude selama sesi. Ini tidak reset antara turns dalam sesi. Semuanya terakumulasi: system prompt, tool definitions, conversation history, tool inputs, dan tool outputs. Konten yang tetap sama di seluruh turns (system prompt, tool definitions, CLAUDE.md) secara otomatis [prompt cached](https://platform.claude.com/docs/en/build-with-claude/prompt-caching), yang mengurangi cost dan latency untuk repeated prefixes. Untuk cara custom system prompt atau teks `append` mempengaruhi cache reuse di seluruh sesi, lihat [Modifying system prompts](/docs/id/agent-sdk/modifying-system-prompts#improve-prompt-caching-across-users-and-machines).
 
 <h3 id="what-consumes-context">
   Apa yang mengkonsumsi konteks
@@ -261,13 +281,13 @@ Jendela konteks adalah total jumlah informasi yang tersedia untuk Claude selama 
 
 Berikut adalah cara setiap komponen mempengaruhi konteks dalam SDK:
 
-| Sumber                   | Ketika dimuat                                                                 | Dampak                                                                                                                                                                                                                                                                                                                                           |
-| :----------------------- | :---------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **System prompt**        | Setiap request                                                                | Small fixed cost, selalu present                                                                                                                                                                                                                                                                                                                 |
-| **CLAUDE.md files**      | Session start, melalui [`settingSources`](/docs/id/agent-sdk/claude-code-features) | Full content dalam setiap request (tetapi prompt-cached, jadi hanya request pertama yang membayar full cost)                                                                                                                                                                                                                                     |
-| **Tool definitions**     | Setiap request; MCP schemas deferred secara default                           | Built-in tool schemas dimuat setiap request. [Tool search](/docs/id/agent-sdk/mcp#mcp-tool-search) menunda MCP tool schemas secara default, kembali ke upfront loading pada Google Cloud's Agent Platform atau non-first-party `ANTHROPIC_BASE_URL`. Lihat [Configure tool search](/docs/id/agent-sdk/tool-search#configure-tool-search) untuk full matrix |
-| **Conversation history** | Terakumulasi di seluruh turns                                                 | Tumbuh dengan setiap turn: prompts, responses, tool inputs, tool outputs                                                                                                                                                                                                                                                                         |
-| **Skill descriptions**   | Session start, melalui setting sources                                        | Short summaries; full content dimuat hanya ketika invoked                                                                                                                                                                                                                                                                                        |
+| Sumber                   | Ketika dimuat                                                                 | Dampak                                                                                                                                                                                                                                                                                                                   |
+| :----------------------- | :---------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **System prompt**        | Setiap request                                                                | Small fixed cost, selalu present                                                                                                                                                                                                                                                                                         |
+| **CLAUDE.md files**      | Session start, melalui [`settingSources`](/docs/id/agent-sdk/claude-code-features) | Full content dalam setiap request (tetapi prompt-cached, jadi hanya request pertama yang membayar full cost)                                                                                                                                                                                                             |
+| **Tool definitions**     | Setiap request; MCP schemas deferred secara default                           | Built-in tool schemas dimuat setiap request. [Tool search](/docs/id/agent-sdk/mcp#mcp-tool-search) menunda MCP tool schemas secara default, kembali ke upfront loading pada model yang tidak didukung dan platform tertentu. Lihat [Configure tool search](/docs/id/agent-sdk/tool-search#configure-tool-search) untuk full matrix |
+| **Conversation history** | Terakumulasi di seluruh turns                                                 | Tumbuh dengan setiap turn: prompts, responses, tool inputs, tool outputs                                                                                                                                                                                                                                                 |
+| **Skill descriptions**   | Session start, melalui setting sources                                        | Short summaries; full content dimuat hanya ketika invoked                                                                                                                                                                                                                                                                |
 
 Large tool outputs mengkonsumsi significant context. Membaca file besar atau menjalankan command dengan verbose output dapat menggunakan ribuan tokens dalam satu turn. Konteks terakumulasi di seluruh turns, jadi longer sessions dengan banyak tool calls membangun significantly lebih banyak konteks daripada short ones.
 
@@ -281,9 +301,9 @@ Compaction menggantikan older messages dengan summary, jadi specific instruction
 
 Anda dapat customize compaction behavior dalam beberapa cara:
 
-* **Summarization instructions dalam CLAUDE.md:** Compactor membaca CLAUDE.md Anda seperti context lainnya, jadi Anda dapat menyertakan section yang memberi tahu apa yang dipertahankan saat merangkum. Section header adalah free-form (bukan magic string); compactor matches pada intent.
+* **Summarization instructions dalam CLAUDE.md:** Compactor membaca CLAUDE.md Anda seperti context lainnya, jadi Anda dapat menyertakan section yang memberi tahu apa yang dipertahankan saat merangkum. Compactor matches pada intent, jadi section header adalah free-form.
 * **`PreCompact` hook:** Jalankan custom logic sebelum compaction terjadi, misalnya untuk archive full transcript. Hook menerima field `trigger` (`manual` atau `auto`). Lihat [hooks](/docs/id/agent-sdk/hooks).
-* **Manual compaction:** Kirim `/compact` sebagai prompt string untuk trigger compaction on demand. Commands yang dikirim dengan cara ini adalah SDK inputs, bukan CLI-only shortcuts. Lihat [commands dalam SDK](/docs/id/agent-sdk/slash-commands).
+* **Manual compaction:** Kirim `/compact` sebagai prompt string untuk trigger compaction on demand. Commands yang dikirim dengan cara ini adalah SDK inputs biasa. Lihat [dispatch commands by name](/docs/id/agent-sdk/skills#dispatch-commands-by-name).
 
 <Accordion title="Contoh: Summarization instructions dalam CLAUDE.md">
   Tambahkan section ke CLAUDE.md proyek Anda yang memberi tahu compactor apa yang dipertahankan. Nama header tidak special; gunakan label yang jelas apa pun.
@@ -307,7 +327,7 @@ Beberapa strategi untuk long-running agents:
 
 * **Gunakan subagents untuk subtasks.** Setiap subagent dimulai dengan fresh conversation (tidak ada prior message history, meskipun dimuat system prompt dan project-level context seperti CLAUDE.md sendiri). Ini tidak melihat parent's turns, dan hanya final responsenya kembali ke parent sebagai tool result. Main agent's context tumbuh oleh summary itu, bukan oleh full subtask transcript. Lihat [What subagents inherit](/docs/id/agent-sdk/subagents#what-subagents-inherit) untuk details.
 * **Jadilah selective dengan tools.** Setiap tool definition mengambil context space. Gunakan field `tools` pada [`AgentDefinition`](/docs/id/agent-sdk/subagents#agentdefinition-configuration) untuk scope subagents ke minimum set yang mereka butuhkan.
-* **Perhatikan MCP server costs.** [MCP tool search](/docs/id/agent-sdk/mcp#mcp-tool-search) menunda MCP tool schemas secara default dan memuat mereka on demand. Ketika tool search dimatikan, pada Google Cloud's Agent Platform, atau di belakang non-first-party `ANTHROPIC_BASE_URL`, setiap MCP server menambahkan semua tool schemas-nya ke setiap request, jadi beberapa servers dengan banyak tools dapat mengkonsumsi significant context sebelum agent melakukan pekerjaan apa pun.
+* **Perhatikan MCP server costs.** [MCP tool search](/docs/id/agent-sdk/mcp#mcp-tool-search) menunda MCP tool schemas secara default dan memuat mereka on demand. Ketika tool search dimatikan atau telah kembali ke upfront loading, setiap MCP server menambahkan semua tool schemas-nya ke setiap request, jadi beberapa servers dengan banyak tools dapat mengkonsumsi significant context sebelum agent melakukan pekerjaan apa pun. Lihat [Configure tool search](/docs/id/agent-sdk/tool-search#configure-tool-search) untuk configurations di mana fallback berlaku.
 * **Gunakan lower effort untuk routine tasks.** Set [effort](#effort-level) ke `"low"` untuk agents yang hanya perlu membaca files atau list directories. Ini mengurangi token usage dan cost.
 
 Untuk detailed breakdown dari per-feature context costs, lihat [Understand context costs](/docs/id/features-overview#understand-context-costs).
@@ -320,7 +340,7 @@ Setiap interaksi dengan SDK membuat atau melanjutkan sesi. Capture session ID da
 
 Ketika Anda resume, full context dari previous turns dipulihkan: files yang dibaca, analysis yang dilakukan, dan actions yang diambil. Anda juga dapat fork sesi untuk branch ke pendekatan berbeda tanpa memodifikasi original.
 
-Lihat [Session management](/docs/id/agent-sdk/sessions) untuk full guide pada resume, continue, dan fork patterns.
+Lihat [Session management](/docs/id/agent-sdk/sessions) untuk full guide pada resume, continue, dan fork patterns. Untuk resume sessions di seluruh stateless containers atau serverless hosts, pass adapter [`session_store` / `sessionStore`](/docs/id/agent-sdk/session-storage) sehingga SDK mencerminkan transcripts ke backend Anda sendiri dan host lain dapat meresume mereka. Claude Code subprocess masih menulis ke local disk terlebih dahulu. Lihat [Dual-write architecture](/docs/id/agent-sdk/session-storage#dual-write-architecture) untuk copy mana yang bertahan lebih lama dari sesi fresh versus run yang dilanjutkan dari store, dan bagaimana cara menjaga local copy tetap ephemeral.
 
 <Note>
   Di Python, `ClaudeSDKClient` menangani session IDs secara otomatis di seluruh multiple calls. Lihat [Python SDK reference](/docs/id/agent-sdk/python#choosing-between-query-and-claudesdkclient) untuk details.
@@ -337,19 +357,28 @@ Ketika loop berakhir, `ResultMessage` memberi tahu Anda apa yang terjadi dan mem
 | `success`                             | Claude menyelesaikan tugas secara normal                                                                                                                                                     |            Ya            |
 | `error_max_turns`                     | Mencapai batas `maxTurns` sebelum selesai                                                                                                                                                    |           Tidak          |
 | `error_max_budget_usd`                | Mencapai batas `maxBudgetUsd` sebelum selesai                                                                                                                                                |           Tidak          |
-| `error_during_execution`              | Error mengganggu loop (misalnya, API failure atau cancelled request)                                                                                                                         |           Tidak          |
+| `error_during_execution`              | Sebuah error mengganggu loop (misalnya, permintaan yang dibatalkan)                                                                                                                          |           Tidak          |
 | `error_max_structured_output_retries` | Tidak ada structured output yang valid diproduksi dalam configured retry limit: setiap upaya gagal validation, atau model fallback mencabut output yang sudah selesai tanpa successful retry |           Tidak          |
 
-Field `result` (final text output) hanya present pada variant `success`, jadi selalu periksa subtype sebelum membacanya. Semua result subtypes membawa `total_cost_usd`, `usage`, `num_turns`, dan `session_id` sehingga Anda dapat track cost dan resume bahkan setelah errors. Di Python, `total_cost_usd` dan `usage` diketik sebagai optional dan mungkin `None` pada beberapa error paths, jadi guard sebelum formatting mereka. Lihat [Tracking costs dan usage](/docs/id/agent-sdk/cost-tracking) untuk details tentang interpreting `usage` fields.
+Field `result` menyimpan final text output dan hanya present pada variant `success`, jadi selalu periksa subtype sebelum membacanya.
+
+Semua result subtypes membawa `total_cost_usd`, `usage`, `num_turns`, dan `session_id` sehingga Anda dapat track cost dan resume bahkan setelah errors. Ada dua hal yang perlu dijaga:
+
+* Setelah session crash, final result adalah `error_during_execution` yang cost fields-nya mungkin zeroed dan `stop_reason`-nya adalah `null`, dan process exits setelah emitting it. Lihat [Recover totals after a session crash](/docs/id/agent-sdk/cost-tracking#recover-totals-after-a-session-crash).
+* Di Python, `total_cost_usd`, `usage`, dan `model_usage` diketik sebagai optional, jadi periksa bahwa mereka bukan `None` sebelum Anda membacanya.
+
+Field `usage` mencakup hanya main agent loop. Gunakan `modelUsage`, atau `model_usage` di Python, untuk whole-tree token dan cost accounting. Lihat [Tracking costs and usage](/docs/id/agent-sdk/cost-tracking) untuk details tentang interpreting `usage` fields.
 
 <Note>
   Ketika query berakhir pada error result:
 
-  * Sebuah single-shot `query()` call menghasilkan final result message, kemudian raises error yang mencakup failure text, seperti `Reached maximum number of turns`. Raise adalah intentional — bungkus loop dalam try block jika kode Anda perlu melanjutkan melewatinya. Underlying Claude Code process juga exits dengan nonzero code.
-  * Sebuah streaming input session tetap alive, dan Anda dapat terus mengirim messages.
+  * Sebuah single-shot `query()` call menghasilkan final result message, kemudian raises error yang mencakup failure text, seperti `Reached maximum number of turns`. Raise adalah intentional. Bungkus loop dalam try block jika kode Anda perlu melanjutkan melewatinya. Underlying Claude Code process juga exits dengan nonzero code.
+  * Sebuah streaming input session tetap alive, dan Anda dapat terus mengirim messages, kecuali setelah session crash, yang emits final `error_during_execution` result dan exits process.
 </Note>
 
-Hasil juga mencakup field `stop_reason` (`string | null` di TypeScript, `str | None` di Python) yang menunjukkan mengapa model berhenti generating pada final turn-nya. Common values adalah `end_turn` (model selesai secara normal), `max_tokens` (mencapai output token limit), dan `refusal` (model menolak request). Pada error result subtypes, `stop_reason` membawa value dari last assistant response sebelum loop berakhir. Untuk mendeteksi refusals, periksa `stop_reason === "refusal"` (TypeScript) atau `stop_reason == "refusal"` (Python). Lihat [`SDKResultMessage`](/docs/id/agent-sdk/typescript#sdkresultmessage) (TypeScript) atau [`ResultMessage`](/docs/id/agent-sdk/python#resultmessage) (Python) untuk full type.
+Result juga mencakup field `stop_reason` (`string | null` di TypeScript, `str | None` di Python) yang menunjukkan mengapa model berhenti generating pada final turn-nya. Common values adalah `end_turn` (model selesai secara normal), `max_tokens` (mencapai output token limit), dan `refusal` (model menolak request). Pada error results yang loop produksi, `stop_reason` membawa value dari last assistant response sebelum loop berakhir; result yang Claude Code synthesize setelah session crash membawa `null`.
+
+Untuk mendeteksi refusals, periksa `stop_reason === "refusal"` (TypeScript) atau `stop_reason == "refusal"` (Python). Lihat [`SDKResultMessage`](/docs/id/agent-sdk/typescript#sdkresultmessage) (TypeScript) atau [`ResultMessage`](/docs/id/agent-sdk/python#resultmessage) (Python) untuk full type.
 
 <h2 id="hooks">
   Hooks
@@ -474,6 +503,8 @@ Karena panggilan `query()` single-shot menaikkan error setelah menghasilkan hasi
   ```
 </CodeGroup>
 
+Ketika agent selesai dengan sukses, contoh ini mencetak baris `Done:` dengan ringkasan perbaikan agent, kemudian baris seperti `Cost: $0.0312`.
+
 <h2 id="next-steps">
   Langkah selanjutnya
 </h2>
@@ -485,5 +516,6 @@ Sekarang Anda memahami loop, berikut adalah tempat untuk pergi tergantung pada a
 * **Membangun interactive UI?** Aktifkan [streaming](/docs/id/agent-sdk/streaming-output) untuk menampilkan live text dan tool calls saat loop berjalan.
 * **Butuh tighter control atas apa yang dapat dilakukan agent?** Lock down tool access dengan [permissions](/docs/id/agent-sdk/permissions), dan gunakan [hooks](/docs/id/agent-sdk/hooks) untuk audit, block, atau transform tool calls sebelum dieksekusi.
 * **Menjalankan long atau expensive tasks?** Offload isolated work ke [subagents](/docs/id/agent-sdk/subagents) untuk keep main context Anda lean.
+* **Deploying sebagai service?** Lihat [Hosting the Agent SDK](/docs/id/agent-sdk/hosting) untuk container dan serverless guidance, dan [Session storage](/docs/id/agent-sdk/session-storage) untuk persist sessions ke backend Anda sendiri.
 
 Untuk broader conceptual picture dari agentic loop (bukan SDK-specific), lihat [How Claude Code works](/docs/id/how-claude-code-works). Untuk panduan praktis dalam merancang loops di Claude Code, dari turn-based hingga goal-based dan proactive loops, lihat [Loop engineering: getting started with loops](https://claude.com/blog/getting-started-with-loops) di blog.

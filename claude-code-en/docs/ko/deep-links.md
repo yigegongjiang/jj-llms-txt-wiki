@@ -19,11 +19,11 @@
 
 이 페이지에서는 [링크를 빌드하는 방법](#build-a-link), [런북에 포함하거나 셸에서 트리거하는 방법](#examples), 그리고 [각 플랫폼에서 핸들러 등록을 관리하거나 비활성화하는 방법](#registration-and-supported-platforms)을 다룹니다.
 
-<h2 id="how-it-works">
-  작동 방식
+<h2 id="how-deep-links-work">
+  딥 링크 작동 방식
 </h2>
 
-`claude-cli://` 접두사는 `mailto:` 링크가 이메일 클라이언트를 여는 방식과 유사하게 Claude Code가 운영 체제에 등록하는 사용자 정의 URL 스키마입니다. 링크는 웹 페이지, 위키, Slack 메시지 또는 링크를 렌더링하는 모든 앱에 있을 수 있습니다. 클릭하면:
+`claude-cli://` 접두사는 `mailto:` 링크가 이메일 클라이언트를 여는 방식과 유사하게 Claude Code가 운영 체제에 등록하는 사용자 정의 URL 스키마입니다. 링크를 클릭하면:
 
 1. 브라우저 또는 앱이 URL을 운영 체제에 전달합니다.
 2. 운영 체제가 `claude-cli://` 접두사를 인식하고 컴퓨터에서 Claude Code를 시작합니다.
@@ -32,9 +32,7 @@
 
 링크 자체는 어디든 호스팅될 수 있지만 세션은 항상 클릭한 컴퓨터에서 로컬로 열립니다. 각 운영 체제에서 어떤 터미널 에뮬레이터가 열리는지는 [등록 및 지원되는 플랫폼](#registration-and-supported-platforms)을 참조하세요.
 
-<Note>
-  링크를 표시하는 플랫폼은 사용자 정의 URL 스키마를 허용해야 합니다. GitHub에서 렌더링된 Markdown은 `http` 및 `https`를 허용하지만 README, 이슈, 풀 요청 및 위키에서 `claude-cli://`와 같은 스키마를 제거합니다. 링크 텍스트만 표시되고 뒤에 링크가 없으며 URL이 숨겨집니다. 해결 방법은 [문제 해결](#the-link-renders-as-plain-text-instead-of-being-clickable)을 참조하세요.
-</Note>
+링크를 표시하는 플랫폼은 사용자 정의 URL 스키마를 허용해야 합니다. GitHub에서 수행하는 작업 및 해결 방법은 [링크가 클릭 가능한 텍스트 대신 일반 텍스트로 렌더링됨](#the-link-renders-as-plain-text-instead-of-being-clickable)을 참조하세요.
 
 <h3 id="what-a-launched-session-shows">
   시작된 세션이 표시하는 것
@@ -54,12 +52,14 @@
 claude-cli://open
 ```
 
+페이지에 링크를 넣지 않고 시도하려면 브라우저의 주소 표시줄에 붙여넣거나 [셸에서 링크를 열기](#open-a-link-from-the-shell)를 참조하세요.
+
 프롬프트 상자에 세션이 시작되는 위치와 포함되는 내용을 제어하는 매개변수를 추가합니다:
 
 | 매개변수   | 설명                                                                                                                                                                                          |
 | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `q`    | 프롬프트 상자에 미리 채울 텍스트입니다. [URL 인코딩](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent)을 수행합니다. 여러 줄 프롬프트의 줄 바꿈에는 `%0A`를 사용합니다. 최대 5,000자입니다. |
-| `cwd`  | 작업 디렉터리로 사용할 절대 경로입니다. 네트워크 및 UNC 경로는 거부되며, 보이지 않는 문자나 양방향 제어 문자가 포함된 경로도 거부됩니다.                                                                                                            |
+| `cwd`  | 작업 디렉터리로 사용할 절대 경로입니다. 네트워크 및 UNC 경로는 거부되며, `..` 세그먼트가 포함된 경로나 보이지 않는 문자 또는 양방향 제어 문자가 포함된 경로도 거부됩니다.                                                                                       |
 | `repo` | GitHub `owner/name` 슬러그입니다. Claude Code는 이를 이전에 본 로컬 클론으로 확인하고 거기서 시작합니다. 일치하는 클론이 없으면 세션이 홈 디렉터리에서 대신 열립니다.                                                                                |
 
 `cwd`와 `repo`는 [작업 디렉터리를 설정하는 두 가지 방법](#choose-between-cwd-and-repo)입니다. 둘 다 전달하면 `cwd`가 우선하고 `cwd` 경로가 존재하지 않더라도 `repo`는 무시됩니다.
@@ -77,7 +77,7 @@ Investigate the failed deploy of payments-api.
 Check recent commits to main and the last successful build.
 ```
 
-Enter를 눌러 전송하기 전에 프롬프트를 편집할 수 있습니다. 저장소의 로컬 클론이 없으면 세션이 홈 디렉터리에서 대신 열립니다. 여러 클론 또는 worktree가 있을 때 로컬 경로가 선택되는 방식은 [`cwd`와 `repo` 중 선택하기](#choose-between-cwd-and-repo)를 참조하세요.
+Enter를 눌러 전송하기 전에 프롬프트를 편집할 수 있습니다. [`cwd`와 `repo` 중 선택하기](#choose-between-cwd-and-repo)에서 여러 클론 또는 worktree가 있을 때 로컬 경로가 선택되는 방식을 참조하세요.
 
 <h3 id="choose-between-cwd-and-repo">
   `cwd`와 `repo` 중 선택하기
@@ -87,9 +87,7 @@ Enter를 눌러 전송하기 전에 프롬프트를 편집할 수 있습니다. 
 
 링크가 공유되고 각 사람이 다른 위치에 클론할 때 `repo`를 사용합니다. Claude Code는 슬러그를 다음과 같이 로컬 경로로 확인합니다:
 
-* `claude`를 Git 저장소에서 실행할 때마다 해당 디렉터리의 파일 시스템 경로가 저장소의 GitHub `owner/name` 슬러그에 대해 기록됩니다.
-* 딥 링크가 도착하면 `repo`는 가장 최근에 사용한 일치하는 경로를 엽니다. 여러 클론과 worktree는 별도로 추적되므로 마지막으로 작업한 경로를 선택합니다.
-* 조회는 Claude Code를 최소한 한 번 이상 실행한 경로만 찾습니다.
+* `repo`는 가장 최근에 `claude`를 실행한 연결된 저장소의 클론 또는 worktree를 엽니다. `claude`를 Git 저장소에서 실행할 때마다 Claude Code는 해당 디렉터리의 경로를 저장소의 GitHub `owner/name` 슬러그에 대해 기록합니다. Claude Code는 클론과 worktree를 별도로 추적합니다.
 * 링크는 체크아웃된 분기를 변경하지 않습니다. 세션은 해당 디렉터리가 현재 있는 상태로 열립니다.
 
 시작 헤더는 선택한 경로를 표시하므로 올바른 클론이 열렸는지 확인할 수 있습니다.
@@ -124,7 +122,7 @@ Enter를 눌러 전송하기 전에 프롬프트를 편집할 수 있습니다. 
   셸에서 링크 열기
 </h3>
 
-클릭하는 대신 셸 스크립트, 별칭 또는 자동화에서 딥 링크를 열 수도 있습니다. 운영 체제의 URL 열기 명령을 링크를 인수로 호출합니다.
+클릭하는 대신 셸 스크립트, 별칭 또는 자동화에서 딥 링크를 열 수도 있습니다. 운영 체제의 URL 열기 명령을 링크를 인수로 호출합니다. 이러한 명령은 Claude Code가 [머신에서 대화형 세션의 첫 번째 프롬프트를 보낼 때 등록하는](#registration-and-supported-platforms) 핸들러에 의존합니다.
 
 <Tabs>
   <Tab title="macOS">
@@ -133,6 +131,8 @@ Enter를 눌러 전송하기 전에 프롬프트를 편집할 수 있습니다. 
     ```bash theme={null}
     open "claude-cli://open?repo=acme/payments&q=review%20open%20PRs"
     ```
+
+    성공하면 Claude Code가 실행 중이고 프롬프트가 미리 채워진 새 터미널 창이 열립니다.
   </Tab>
 
   <Tab title="Linux">
@@ -141,6 +141,8 @@ Enter를 눌러 전송하기 전에 프롬프트를 편집할 수 있습니다. 
     ```bash theme={null}
     xdg-open "claude-cli://open?repo=acme/payments&q=review%20open%20PRs"
     ```
+
+    성공하면 Claude Code가 실행 중이고 프롬프트가 미리 채워진 새 터미널 창이 열립니다. 셸에서 `xdg-open`을 찾을 수 없다고 보고하면 [문제 해결](#xdg-open-is-not-found-on-linux)을 참조하세요.
   </Tab>
 
   <Tab title="Windows">
@@ -155,6 +157,8 @@ Enter를 눌러 전송하기 전에 프롬프트를 편집할 수 있습니다. 
     ```cmd theme={null}
     start "" "claude-cli://open?repo=acme/payments&q=review%20open%20PRs"
     ```
+
+    성공하면 Claude Code가 실행 중이고 프롬프트가 미리 채워진 새 터미널 창이 열립니다.
   </Tab>
 </Tabs>
 
@@ -162,7 +166,7 @@ Enter를 눌러 전송하기 전에 프롬프트를 편집할 수 있습니다. 
   등록 및 지원되는 플랫폼
 </h2>
 
-Claude Code는 macOS, Linux 및 Windows에서 대화형 세션을 처음 시작할 때 운영 체제에 `claude-cli://` 핸들러를 등록합니다. 별도의 설치 명령을 실행하지 않습니다. 등록은 사용자 수준 위치에만 씁니다:
+Claude Code는 macOS, Linux 및 Windows에서 대화형 세션의 첫 번째 프롬프트를 보낼 때 운영 체제에 `claude-cli://` 핸들러를 등록합니다. `claude`를 시작하고 프롬프트를 보내지 않고 종료해도 핸들러가 등록되지 않습니다. 별도의 설치 명령을 실행할 필요가 없습니다. 등록은 사용자 수준 위치에만 씁니다:
 
 | 플랫폼     | 핸들러 위치                                                                                                  |
 | ------- | ------------------------------------------------------------------------------------------------------- |
@@ -172,7 +176,7 @@ Claude Code는 macOS, Linux 및 Windows에서 대화형 세션을 처음 시작�
 
 핸들러는 감지된 터미널 에뮬레이터에서 Claude Code를 시작합니다. macOS에서 Claude Code는 가장 최근의 대화형 세션에서 터미널을 기억하고 재사용하며, iTerm2, Ghostty, kitty, Alacritty, WezTerm 및 Terminal.app을 지원합니다. Linux에서는 `$TERMINAL` 환경 변수를 준수한 다음 `x-terminal-emulator`, 그 다음 일반적인 에뮬레이터 목록을 준수합니다. Windows에서는 Windows Terminal을 선호한 다음 PowerShell, 그 다음 `cmd.exe`를 선호합니다.
 
-등록을 완전히 방지하려면 `settings.json`에서 [`disableDeepLinkRegistration`](/docs/ko/settings)을 `"disable"`로 설정합니다. 조직 전체에 이를 적용하여 사용자가 다시 활성화할 수 없도록 하려면 [관리되는 설정](/docs/ko/server-managed-settings)에서 대신 설정합니다.
+등록을 완전히 방지하려면 `settings.json`에서 [`disableDeepLinkRegistration`](/docs/ko/settings-reference#disabledeeplinkregistration)을 `"disable"`로 설정합니다. 조직 전체에 이를 적용하여 사용자가 다시 활성화할 수 없도록 하려면 [관리되는 설정](/docs/ko/server-managed-settings)에서 대신 설정합니다.
 
 <h2 id="open-a-vs-code-tab-instead-of-a-terminal">
   터미널 대신 VS Code 탭 열기
@@ -188,7 +192,13 @@ VS Code 확장은 `vscode://anthropic.claude-code/open`에서 자체 핸들러�
   링크를 클릭해도 아무것도 일어나지 않음
 </h3>
 
-핸들러가 아직 등록되지 않았을 가능성이 높습니다. 해당 컴퓨터에서 대화형 `claude` 세션을 한 번 시작하고 종료한 후 링크를 다시 시도합니다. Linux에서 데스크톱 환경이 없으면 `xdg-open`이 디스패치할 것이 없을 수 있습니다.
+핸들러가 아직 등록되지 않았을 가능성이 높습니다. 등록은 세션이 시작될 때가 아니라 대화형 세션에서 첫 번째 프롬프트를 보낼 때 발생합니다. 해당 컴퓨터에서 대화형 `claude` 세션을 시작하고 프롬프트를 보낸 후 종료한 다음 링크를 다시 시도합니다. Linux에서 데스크톱 환경이 없으면 `xdg-open`이 디스패치할 것이 없을 수 있습니다.
+
+<h3 id="xdg-open-is-not-found-on-linux">
+  Linux에서 xdg-open을 찾을 수 없음
+</h3>
+
+`xdg-open` 명령은 `xdg-utils` 패키지의 일부이며, 최소 서버 이미지, 컨테이너 및 WSL 배포판에서는 종종 이를 제외합니다. 배포판의 패키지 관리자를 사용하여 `xdg-utils`를 설치합니다(예: `sudo apt install xdg-utils`). 그런 다음 명령을 다시 실행합니다. 명령이 실행되지만 아무것도 열리지 않으면 `xdg-open`에 디스패치할 데스크톱 환경이 없을 수 있습니다. [링크를 클릭해도 아무것도 일어나지 않음](#clicking-the-link-does-nothing)을 참조합니다.
 
 <h3 id="the-link-renders-as-plain-text-instead-of-being-clickable">
   링크가 일반 텍스트로 렌더링되고 클릭 가능하지 않음
@@ -200,7 +210,7 @@ VS Code 확장은 `vscode://anthropic.claude-code/open`에서 자체 핸들러�
   세션이 저장소 대신 홈 디렉터리에서 열림
 </h3>
 
-`repo` 매개변수는 Claude Code가 이미 본 클론으로만 확인됩니다. 클론 내에서 `claude`를 한 번 실행하여 경로를 기록하거나 링크를 절대 경로와 함께 `cwd`를 사용하도록 전환합니다.
+`repo` 매개변수는 Claude Code가 이미 본 클론으로만 확인됩니다. 클론 내에서 `claude`를 한 번 실행하여 Claude Code가 경로를 기록하도록 하거나, 링크를 절대 경로와 함께 `cwd`를 사용하도록 전환합니다.
 
 <h3 id="the-link-opens-the-wrong-terminal">
   링크가 잘못된 터미널을 열음

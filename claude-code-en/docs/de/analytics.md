@@ -139,12 +139,6 @@ Klicken Sie auf **Export all users**, um vollständige Beitragsdaten für alle B
 
 Wenn Beitragskennzahlen aktiviert sind, analysiert Claude Code zusammengeführte Pull Requests, um zu bestimmen, welcher Code mit Claude Code-Unterstützung geschrieben wurde. Dies geschieht durch Abgleich der Claude Code-Sitzungsaktivität mit dem Code in jedem PR.
 
-<h4 id="tagging-criteria">
-  Tagging-Kriterien
-</h4>
-
-PRs werden als „with Claude Code" gekennzeichnet, wenn sie mindestens eine Codezeile enthalten, die während einer Claude Code-Sitzung geschrieben wurde. Das System verwendet konservatives Matching: Nur Code, bei dem hohes Vertrauen in die Beteiligung von Claude Code besteht, wird als unterstützt gezählt.
-
 <h4 id="attribution-process">
   Zuordnungsprozess
 </h4>

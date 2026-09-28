@@ -28,7 +28,7 @@ Um gateway oferece à sua organização um único lugar para gerenciar:
 * **Registro de auditoria**: registre cada solicitação de modelo para conformidade
 * **Alternância de provedor**: altere o provedor na configuração do gateway, sem tocar nas máquinas dos desenvolvedores
 
-Todos esses, exceto alternância de provedor, se aplicam se o upstream é a API da Anthropic ou um [provedor de nuvem](/docs/pt/third-party-integrations). A alternância de provedor sem reconfigurar máquinas de desenvolvedores também depende do gateway expor um único [endpoint em formato Anthropic](/docs/pt/llm-gateway-protocol#api-formats) independentemente do upstream; um gateway que expõe o próprio formato de um provedor vincula a configuração do cliente a esse provedor.
+Todos esses, exceto alternância de provedor, se aplicam se o upstream é a API da Anthropic ou um [provedor de nuvem](/docs/pt/third-party-integrations). A alternância de provedor sem reconfigurar máquinas de desenvolvedores também depende do gateway expor um único [endpoint em formato Anthropic](/docs/pt/llm-gateway-protocol#api-formats) independentemente do upstream; um gateway que expõe o próprio formato de um provedor vincula a configuração do cliente a esse provedor e altera [o que Claude Code envia e quais padrões ele aplica](/docs/pt/llm-gateway-protocol#how-the-connection-method-changes-client-behavior).
 
 O tradeoff é que o gateway se torna infraestrutura que sua organização opera. Claude Code adiciona capacidades com cada lançamento, e um gateway que não as encaminha quebra os recursos correspondentes, então o produto gateway precisa ser mantido atualizado conforme Claude Code evolui. A [referência de protocolo de gateway](/docs/pt/llm-gateway-protocol) aborda o que encaminhar.
 
@@ -40,7 +40,7 @@ Quando você estiver pronto para implantar um gateway LLM para sua organização
 
 1. Implante o gateway e dê a ele sua credencial de provedor, para que ele possa autenticar as solicitações que encaminha.
 2. Emita a cada desenvolvedor uma credencial de gateway, para que o uso seja atribuído ao desenvolvedor e o offboarding revogue uma credencial.
-3. Distribua a configuração através de um [arquivo de configurações gerenciadas](/docs/pt/settings#settings-files) e sua ferramenta de segredos, para que cada máquina receba a URL base e uma credencial. Quando ambos forem distribuídos, os desenvolvedores não configuram nada. Se você não tiver distribuição de configurações em vigor, os desenvolvedores seguem a [página de conexão](/docs/pt/llm-gateway-connect) para definir as variáveis eles mesmos.
+3. Distribua a configuração através de um [arquivo de configurações gerenciadas](/docs/pt/managed-settings#delivery-mechanisms) e sua ferramenta de segredos, para que cada máquina receba a URL base e uma credencial. Quando ambos forem distribuídos, os desenvolvedores não configuram nada. Se você não tiver distribuição de configurações em vigor, os desenvolvedores seguem a [página de conexão](/docs/pt/llm-gateway-connect) para definir as variáveis eles mesmos.
 4. Faça cada desenvolvedor [verificar a configuração no Claude Code](/docs/pt/llm-gateway-connect#check-for-an-existing-configuration), para que problemas de distribuição apareçam antes de dependerem do gateway.
 
 [Implantar um gateway LLM para sua organização](/docs/pt/llm-gateway-rollout) percorre cada etapa e mostra os arquivos de configuração para distribuir em cada uma. O gateway é uma parte da configuração da organização; para aplicação de política, visibilidade de uso e decisões de tratamento de dados, consulte [Configurar Claude Code para sua organização](/docs/pt/admin-setup).
@@ -61,4 +61,4 @@ Enquanto uma [variável de credencial de gateway](/docs/pt/llm-gateway-connect#s
 * [Gateway de aplicativos Claude](/docs/pt/claude-apps-gateway): gateway auto-hospedado da Anthropic com entrada SSO e telemetria OTLP
 * [Conectar Claude Code a um gateway LLM](/docs/pt/llm-gateway-connect): defina a URL base e credencial em sua própria máquina, com configuração por superfície e uma tabela de solução de problemas
 * [Implantar um gateway LLM para sua organização](/docs/pt/llm-gateway-rollout): a lista de verificação do administrador para implantar um gateway, emitir credenciais de desenvolvedor e distribuir configurações gerenciadas
-* [Referência de protocolo de gateway](/docs/pt/llm-gateway-protocol): o que Claude Code envia a um gateway, para operadores configurando um, abrangendo endpoints, cabeçalhos para encaminhar e passagem de recursos
+* [Guia de compatibilidade de gateway](/docs/pt/llm-gateway-protocol): o que Claude Code envia a um gateway, para operadores configurando um, abrangendo endpoints, cabeçalhos para encaminhar e passagem de recursos

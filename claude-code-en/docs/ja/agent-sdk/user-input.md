@@ -12,18 +12,21 @@ Claude がユーザー入力をリクエストするのは 2 つの状況です�
 
 確認質問については、Claude が質問とオプションを生成します。あなたの役割は、それらをユーザーに提示して、ユーザーの選択を返すことです。このフローに独自の質問を追加することはできません。ユーザーに何か尋ねる必要がある場合は、アプリケーションロジックで別途実行してください。
 
-コールバックは無期限に保留中のままにすることができます。実行はコールバックが返されるまで一時停止したままであり、SDK はクエリ自体がキャンセルされた場合にのみ待機をキャンセルします。ユーザーがプロセスが合理的に実行し続けることができるより長く応答するのに時間がかかる可能性がある場合、[`defer` フック決定](/docs/ja/hooks#defer-a-tool-call-for-later)を返します。これにより、プロセスを終了して、後で永続化されたセッションから再開できます。
+コールバックは無期限に保留中のままにすることができます。実行はコールバックが返されるまで一時停止したままです。ユーザーがプロセスが合理的に実行し続けることができるより長く応答するのに時間がかかる可能性がある場合、[`PreToolUse` フック](/docs/ja/agent-sdk/hooks)を登録して、[`defer` 決定](/docs/ja/hooks#defer-a-tool-call-for-later)を返すことで、プロセスを終了して、後で永続化されたセッションから再開できます。
 
 このガイドでは、各タイプのリクエストを検出し、適切に応答する方法を示します。
 
 <h2 id="detect-when-claude-needs-input">
-  Claude が入力を必要とする場合を検出する
+  Claude が入力を必要とするタイミングを検出する
 </h2>
 
-クエリオプションで `canUseTool` コールバックを渡します。Claude がユーザー入力を必要とするたびにコールバックが発火し、ツール名と入力を引数として受け取ります。
+クエリオプションで `canUseTool` コールバックを渡してください。このコールバックは Claude がユーザー入力を必要とするたびに発火し、ツール名と入力を引数として受け取ります。
 
 <CodeGroup>
   ```python Python theme={null}
+  from claude_agent_sdk import ClaudeAgentOptions
+
+
   async def handle_tool_request(tool_name, input_data, context):
       # ユーザーにプロンプトを表示して、許可または拒否を返す
       ...
@@ -44,22 +47,24 @@ Claude がユーザー入力をリクエストするのは 2 つの状況です�
 
 コールバックは 2 つのケースで発火します。
 
-1. **ツールが承認を必要とする場合**：Claude が [許可ルール](/docs/ja/agent-sdk/permissions)またはモードによって自動承認されていないツールを使用したい場合。`tool_name` でツール（例：`"Bash"`、`"Write"`）を確認します。
-2. **Claude が質問をする場合**：Claude が `AskUserQuestion` ツールを呼び出します。`tool_name == "AskUserQuestion"` をチェックして、異なる方法で処理します。`tools` 配列を指定する場合は、これが機能するように `AskUserQuestion` を含めます。詳細は [確認質問を処理する](#handle-clarifying-questions)を参照してください。
+1. **ツールが承認を必要とする場合**: Claude が [権限ルール](/docs/ja/agent-sdk/permissions) または権限モードで自動承認されていないツールを使用したいとき。`tool_name` でツール（例：`"Bash"`、`"Write"`）を確認してください。
+2. **Claude が質問をする場合**: Claude が `AskUserQuestion` ツールを呼び出します。`tool_name == "AskUserQuestion"` をチェックして、異なる方法で処理してください。`tools` 配列を指定する場合は、これが機能するように `AskUserQuestion` を含めてください。詳細は [質問の明確化を処理する](#handle-clarifying-questions) を参照してください。
 
 <Warning>
-  **コールバックは自動承認されたツールに対しては発火しません。** [許可評価フロー](/docs/ja/agent-sdk/permissions#how-permissions-are-evaluated)の前の段階での承認、許可ルール、または `acceptEdits` や `bypassPermissions` のようなモードは、`canUseTool` が参照される前に呼び出しを解決します。`allowed_tools` にツールをそのまま列挙する場合、そのツールに対する `canUseTool` チェックは、ask ルールまたは `plan` モードが呼び出しをプロンプトに戻さない限り実行されません。すべてのツール呼び出しに適用する必要があるロジックについては、[`PreToolUse` フック](/docs/ja/agent-sdk/hooks)を使用してください。このフックはフローの残りの部分の前に実行され、リクエストを許可、拒否、または変更できます。
+  **コールバックは自動承認されたツールに対しては発火しません。** [権限評価フロー](/docs/ja/agent-sdk/permissions#how-permissions-are-evaluated) の前の段階での承認、許可ルール、または `acceptEdits` や `bypassPermissions` のようなモードは、`canUseTool` が参照される前に呼び出しを解決します。`allowed_tools` にツールをそのまま列挙した場合、そのツールの `canUseTool` チェックは、[評価フロー](/docs/ja/agent-sdk/permissions#how-permissions-are-evaluated) が呼び出しを質問ルールや `plan` モードなどのプロンプトに戻すルートを通るときのみ実行されます。すべてのツール呼び出しに適用する必要があるロジックの場合は、[`PreToolUse` フック](/docs/ja/agent-sdk/hooks) を使用してください。このフックはフローの残りの部分の前に実行され、リクエストを許可、拒否、または変更できます。
 
-  `AskUserQuestion`、[`requiresUserInteraction`](/docs/ja/mcp#require-approval-for-a-specific-tool)とマークされた MCP ツール、および [組織が `ask` に設定したコネクタツール](/docs/ja/mcp#organization-controls-on-connector-tools)は、許可ルールが一致する場合でもコールバックに到達します。`dontAsk` モードではこれらの呼び出しは代わりに拒否され、コールバックは呼び出されません。
+  許可ルールは [モードが自動承認しないアクション](/docs/ja/permission-modes#actions-no-mode-auto-approves) を事前承認しません。[権限がどのように評価されるか](/docs/ja/agent-sdk/permissions#how-permissions-are-evaluated) を参照して、どのアクションがコールバックに到達し、`dontAsk` モードと `auto` モードで何が起こるかを確認してください。
 </Warning>
 
-また、[`PermissionRequest` フック](/docs/ja/agent-sdk/hooks#available-hooks)を使用して、Claude が承認を待っているときに外部通知（Slack、メール、プッシュ）を送信することもできます。
+また、[`PermissionRequest` フック](/docs/ja/agent-sdk/hooks#available-hooks) を使用して、Claude が承認を待っているときに外部通知（Slack、メール、プッシュ）を送信することもできます。
 
 <h2 id="handle-tool-approval-requests">
   ツール承認リクエストを処理する
 </h2>
 
-クエリオプションで `canUseTool` コールバックを渡すと、Claude が自動承認されていないツールを使用したい場合に発火します。コールバックは 3 つの引数を受け取ります。
+クエリオプションで `canUseTool` コールバックを渡すと、Claude が以前の許可フローで承認されていないツールを使用したい場合に発火します。`dontAsk` モードなどの一部の設定では、Claude Code はこれを呼び出しません。[許可がどのように評価されるか](/docs/ja/agent-sdk/permissions#how-permissions-are-evaluated)の最後のステップにそれらが記載されており、代わりに呼び出しに何が起こるかが説明されています。
+
+コールバックは 3 つの引数を受け取ります。
 
 | 引数                               | 説明                                                                                                                                                                                                                                                                 |
 | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -199,10 +204,6 @@ Claude がユーザー入力をリクエストするのは 2 つの状況です�
   ```
 </CodeGroup>
 
-<Note>
-  Python では、`can_use_tool` は [ストリーミングモード](/docs/ja/agent-sdk/streaming-vs-single-mode)が必要です。有限のメッセージストリームを `query(prompt=generator)` または `ClaudeSDKClient.connect(prompt=async_iterable)` を通じて渡すと、登録されたフックまたはプロセス内 MCP サーバーがストリームを開いたままにしていない限り、SDK は最後のメッセージの後、許可コールバックが呼び出される前にストリームを閉じます。上記の例は、`{"continue_": True}` を返す `PreToolUse` フックでストリームを開いたままにします。プロンプトなしで接続し、`ClaudeSDKClient.query()` を通じてメッセージを送信すると、ストリームは自動的に開いたままになり、フックは不要です。
-</Note>
-
 この例では y/n フローを使用しており、`y` 以外の入力は拒否として扱われます。実際には、ユーザーがリクエストを変更したり、フィードバックを提供したり、Claude を完全にリダイレクトしたりできるより豊富な UI を構築する可能性があります。すべての応答方法については [ツールリクエストに応答する](#respond-to-tool-requests)を参照してください。
 
 <h3 id="respond-to-tool-requests">
@@ -220,26 +221,6 @@ Claude がユーザー入力をリクエストするのは 2 つの状況です�
 
 拒否する場合、理由を説明するメッセージを提供します。Claude はこのメッセージを見て、アプローチを調整する可能性があります。
 
-<CodeGroup>
-  ```python Python theme={null}
-  from claude_agent_sdk.types import PermissionResultAllow, PermissionResultDeny
-
-  # ツールの実行を許可する
-  return PermissionResultAllow(updated_input=input_data)
-
-  # ツールをブロックする
-  return PermissionResultDeny(message="User rejected this action")
-  ```
-
-  ```typescript TypeScript theme={null}
-  // ツールの実行を許可する
-  return { behavior: "allow", updatedInput: input };
-
-  // ツールをブロックする
-  return { behavior: "deny", message: "User rejected this action" };
-  ```
-</CodeGroup>
-
 許可または拒否を超えて、ツールの入力を変更したり、Claude がアプローチを調整するのに役立つコンテキストを提供したりできます。
 
 * **承認**：ツールを Claude がリクエストしたとおりに実行させる
@@ -248,6 +229,8 @@ Claude がユーザー入力をリクエストするのは 2 つの状況です�
 * **拒否**：ツールをブロックして Claude に理由を伝える
 * **代替案を提案**：ブロックするが、ユーザーが望むものに向かって Claude をガイドする
 * **完全にリダイレクト**：[ストリーミング入力](/docs/ja/agent-sdk/streaming-vs-single-mode)を使用して Claude に完全に新しい指示を送信する
+
+次のスニペットの `ask_user` および `askUser` ヘルパーは、アプリケーション独自のプロンプト UI の代わりになります。
 
 <Tabs>
   <Tab title="承認">
@@ -653,7 +636,7 @@ HTML プレビュー付きのオプション：
 
 複数選択質問の場合、ラベルの配列を渡すか、`", "` で結合します。[自由テキスト入力をサポート](#support-free-text-input)に示されているような質問ごとの自由テキスト（例：「その他」オプション）の場合は、ユーザーのテキストを `answers[question]` に入力します。`response` は、ユーザーが質問カードを閉じて、特定の質問への回答ではない一般的な返信を入力できる UI の場合にのみ設定します。`response` が設定されている場合、Claude は質問ごとの回答リストではなく「ユーザーが応答しました：…」を受け取ります。
 
-```json theme={null}
+```jsonc theme={null}
 {
   "questions": [
     // ...

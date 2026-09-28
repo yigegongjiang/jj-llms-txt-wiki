@@ -188,7 +188,9 @@ export const Experiment = ({flag, treatment, children}) => {
 
 <Experiment flag="docs-contact-sales-cta" treatment={<ContactSalesCard surface="claude_platform_on_aws" />} />
 
-Claude Platform on AWS é a API Claude operada pela Anthropic com autenticação AWS, controle de acesso IAM e faturamento do AWS Marketplace. As solicitações chegam diretamente à API da Anthropic, portanto você obtém os mesmos modelos e recursos de API que a [Claude API](https://platform.claude.com/docs) no mesmo cronograma de lançamento. Os recursos do lado do cliente que Claude Code ativa através do serviço de sinalizadores de recursos da Anthropic, como [`/loop` auto-ritmo](/docs/pt/scheduled-tasks#let-claude-choose-the-interval), estão desativados por padrão, e a [ferramenta advisor](/docs/pt/advisor) não está disponível. Consulte a [matriz de disponibilidade de recursos](/docs/pt/feature-availability#summary-by-provider) para obter a lista completa. Você se autentica com credenciais AWS ou uma chave de API do workspace, e paga através do AWS Marketplace.
+Claude Platform on AWS é a API Claude operada pela Anthropic com autenticação AWS, controle de acesso IAM e faturamento do AWS Marketplace. As solicitações chegam diretamente à API da Anthropic, portanto você obtém os mesmos modelos e recursos de API que a [Claude API](https://platform.claude.com/docs) no mesmo cronograma de lançamento. Você se autentica com credenciais AWS ou uma chave de API do workspace, e paga através do AWS Marketplace.
+
+Os recursos do lado do cliente que Claude Code ativa através do serviço de sinalizadores de recursos da Anthropic estão desativados por padrão, e a [ferramenta advisor](/docs/pt/advisor) não está disponível. Consulte a [matriz de disponibilidade de recursos](/docs/pt/feature-availability#summary-by-provider) para obter a lista completa.
 
 Use este guia para apontar Claude Code para um workspace que você já provisionou através do Claude Platform on AWS. Para a assinatura AWS e configuração do workspace que vem antes disso, consulte a [documentação do Claude Platform on AWS](https://platform.claude.com/docs/en/build-with-claude/claude-platform-on-aws).
 
@@ -230,7 +232,7 @@ export AWS_PROFILE=my-profile
 
 Para CI e automação, dê ao executor uma função IAM com permissão para invocar o serviço Anthropic e defina `AWS_REGION`. A cadeia de credenciais pega a função automaticamente.
 
-Se suas credenciais SSO expirarem durante a sessão, configure [`awsAuthRefresh`](/docs/pt/amazon-bedrock#advanced-credential-configuration) para que Claude Code execute novamente seu comando de login e tente novamente em vez de falhar. A atualização automática no Claude Platform on AWS requer Claude Code v2.1.198 ou posterior; versões anteriores param com um prompt para executar `/login`, que não pode atualizar credenciais AWS. Adicione o comando ao seu `settings.json`:
+Se suas credenciais SSO expirarem durante a sessão, configure [`awsAuthRefresh`](/docs/pt/amazon-bedrock#advanced-credential-configuration) para que Claude Code execute novamente seu comando de login e tente novamente em vez de falhar. A atualização automática no Claude Platform on AWS requer Claude Code v2.1.198 ou posterior; versões anteriores param com um prompt para executar `/login`, que não pode atualizar credenciais AWS. Adicione o comando ao seu [arquivo de configurações](/docs/pt/settings), como `~/.claude/settings.json`:
 
 ```json theme={null}
 {
@@ -238,7 +240,9 @@ Se suas credenciais SSO expirarem durante a sessão, configure [`awsAuthRefresh`
 }
 ```
 
-Com `awsAuthRefresh` configurado, `/login` mostra uma opção **Claude Platform on AWS · atualizar credenciais** em **Usando plataformas de terceiros**. Selecioná-la executa o comando configurado e relê suas credenciais AWS sem reiniciar Claude Code.
+Claude Code também executa este comando na inicialização quando não consegue validar suas credenciais AWS existentes e mostra a saída do comando em um painel `Authentication` até que o login seja concluído.
+
+Com `awsAuthRefresh` configurado, execute `/login`, selecione **plataforma de terceiros**, depois selecione **Claude Platform on AWS · atualizar credenciais** em **Usando plataformas de terceiros**. Claude Code executa o comando configurado e relê suas credenciais AWS sem uma reinicialização.
 
 **Opção B: Chave de API do Workspace**
 
@@ -253,7 +257,7 @@ A chave é enviada como `x-api-key` e tem precedência sobre SigV4, portanto qua
 Trate chaves de API do workspace como qualquer outra credencial de produção. O bloco `env` do [arquivo de configurações do usuário](/docs/pt/settings) é uma maneira conveniente de escopar a chave para sua máquina sem exportá-la globalmente.
 
 <Note>
-  Os comandos `/login` e `/logout` não o autenticam em uma assinatura Claude.ai para Claude Platform on AWS. A autenticação é executada através de suas credenciais AWS ou chave de API do workspace. A exceção é a opção **atualizar credenciais** que `/login` mostra quando `awsAuthRefresh` está configurado, que relê suas credenciais AWS conforme descrito acima.
+  Os comandos `/login` e `/logout` não o autenticam em uma assinatura Claude.ai para Claude Platform on AWS. A autenticação é executada através de suas credenciais AWS ou chave de API do workspace.
 </Note>
 
 <h3 id="2-configure-claude-code">
@@ -268,7 +272,9 @@ export ANTHROPIC_AWS_WORKSPACE_ID=wrkspc_01ABCDEFGHIJKLMN
 export AWS_REGION=us-east-1
 ```
 
-`ANTHROPIC_AWS_WORKSPACE_ID` é obrigatório e é enviado em cada solicitação como o cabeçalho `anthropic-workspace-id`. A URL base é calculada a partir de `AWS_REGION` como `https://aws-external-anthropic.{region}.api.aws`. Para substituir a URL diretamente, defina `ANTHROPIC_AWS_BASE_URL`.
+`ANTHROPIC_AWS_WORKSPACE_ID` é obrigatório. Claude Code o envia em cada solicitação como o cabeçalho `anthropic-workspace-id`. Substitua o valor de exemplo `wrkspc_01ABCDEFGHIJKLMN` pelo seu próprio ID de workspace da sua configuração Claude Platform on AWS.
+
+Claude Code calcula a URL base como `https://aws-external-anthropic.{region}.api.aws` a partir da região AWS, que ele resolve com a [mesma precedência que Amazon Bedrock](/docs/pt/amazon-bedrock#3-configure-claude-code). Para substituir a URL diretamente, defina `ANTHROPIC_AWS_BASE_URL`.
 
 Claude Platform on AWS é opt-in mesmo quando credenciais AWS estão presentes em seu ambiente. Amazon Bedrock e Microsoft Foundry têm precedência no roteamento de provedores, portanto desdefina `CLAUDE_CODE_USE_BEDROCK` e `CLAUDE_CODE_USE_FOUNDRY` se estiverem definidas.
 
@@ -278,7 +284,7 @@ Claude Platform on AWS é opt-in mesmo quando credenciais AWS estão presentes e
 
 Claude Platform on AWS usa os mesmos IDs de modelo que a API Claude direta.
 
-Os aliases padrão `fable`, `opus`, `sonnet` e `haiku` resolvem para os padrões integrados do Claude Code para Claude Platform on AWS, que podem ficar atrás da versão mais recente. Sem `ANTHROPIC_DEFAULT_OPUS_MODEL`, o alias `opus` resolve para Opus 4.8. Antes da v2.1.207, ele resolvia para Opus 4.7.
+Os aliases padrão `fable`, `opus`, `sonnet` e `haiku` resolvem para os padrões integrados do Claude Code para Claude Platform on AWS, que podem ficar atrás da versão mais recente. Sem `ANTHROPIC_DEFAULT_OPUS_MODEL`, o alias `opus` resolve para Opus 5.5. Antes da v2.1.280, ele resolvia para Opus 5 a partir da v2.1.219, para Opus 4.8 a partir da v2.1.207 e para Opus 4.7 antes disso.
 
 Se você implantar Claude Code para uma equipe, fixe os IDs de modelo explicitamente para que um novo lançamento não mova todos de uma vez:
 
@@ -292,6 +298,20 @@ export ANTHROPIC_DEFAULT_HAIKU_MODEL=claude-haiku-4-5
 Para a lista completa de IDs de modelo e aliases, consulte [Visão geral de modelos](https://platform.claude.com/docs/en/about-claude/models/overview). Para outras variáveis relacionadas a modelos, consulte [Configuração de modelo](/docs/pt/model-config).
 
 [Prompt caching](/docs/pt/prompt-caching) é ativado automaticamente. Para solicitar um TTL de cache de 1 hora em vez do padrão de 5 minutos, defina `ENABLE_PROMPT_CACHING_1H=1`. A API cobra gravações de cache de 1 hora a uma taxa mais alta. Consulte [preços de prompt caching](https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing) para as taxas.
+
+Para definir TTLs diferentes para sua conversa principal e para as solicitações que Claude Code faz fora dela, [escolha o TTL você mesmo](/docs/pt/prompt-caching#choose-the-ttl-yourself).
+
+<h3 id="4-launch-and-verify">
+  4. Inicie e verifique
+</h3>
+
+Inicie Claude Code e confirme o roteamento:
+
+```bash theme={null}
+claude
+```
+
+O banner de inicialização mostra `Claude Platform on AWS` quando o provedor está ativo. Execute `/status` para verificar os detalhes: a linha `API provider` lê `Claude Platform on AWS` e a saída inclui seu `Workspace ID`, a `AWS region` e a `Claude Platform on AWS base URL` se você definir uma substituição.
 
 <h2 id="use-the-agent-sdk">
   Use o Agent SDK
@@ -352,7 +372,7 @@ Se você definir `ANTHROPIC_AWS_API_KEY`, a chave tem precedência sobre SigV4 e
   Solicitações falham com um erro de workspace ausente
 </h3>
 
-`ANTHROPIC_AWS_WORKSPACE_ID` provavelmente está desdefido ou vazio. Cada solicitação do Claude Platform on AWS deve incluir o ID do workspace. Não é implícito por suas credenciais AWS. Encontre o ID em **Workspaces** na página de serviço do Console AWS e exporte-o antes de iniciar Claude Code.
+`ANTHROPIC_AWS_WORKSPACE_ID` provavelmente está desdefido ou vazio. Cada solicitação do Claude Platform on AWS deve incluir o ID do workspace. Não é implícito por suas credenciais AWS. Encontre o ID em sua configuração do Claude Platform on AWS e exporte-o antes de iniciar Claude Code.
 
 <h3 id="requests-still-go-to-api-anthropic-com">
   Solicitações ainda vão para `api.anthropic.com`

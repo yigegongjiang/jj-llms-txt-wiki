@@ -13,41 +13,48 @@
 * **컨텍스트 효율성:** 도구 정의는 컨텍스트 윈도우의 큰 부분을 차지할 수 있습니다(50개의 도구는 10-20K 토큰을 사용할 수 있음). 이로 인해 실제 작업을 위한 공간이 줄어듭니다.
 * **도구 선택 정확도:** 30-50개 이상의 도구가 동시에 로드되면 도구 선택 정확도가 저하됩니다.
 
-도구 검색은 기본적으로 활성화되어 있습니다.
-
 <h2 id="how-tool-search-works">
   도구 검색의 작동 방식
 </h2>
 
-도구 검색이 활성화되면 도구 정의는 컨텍스트 윈도우에서 제외됩니다. 에이전트는 사용 가능한 도구의 요약을 받고, 작업에 이미 로드되지 않은 기능이 필요할 때 관련 도구를 검색합니다. 가장 관련성이 높은 최대 5개의 도구가 컨텍스트에 로드되며, 이후 턴에서도 계속 사용할 수 있습니다. 대화가 길어서 SDK가 이전 메시지를 압축하여 공간을 확보하면, 이전에 발견한 도구가 제거될 수 있으며, 에이전트는 필요에 따라 다시 검색합니다.
+도구 검색이 기본적으로 활성화되어 있으며, [도구 검색 구성](#configure-tool-search)에 나열된 예외가 있습니다.
 
-도구 검색은 Claude가 처음 도구를 발견할 때(검색 단계) 한 번의 추가 왕복을 추가하지만, 큰 도구 세트의 경우 모든 턴에서 더 작은 컨텍스트로 인한 이점이 있습니다. 도구가 약 10개 미만인 경우, 모든 것을 미리 로드하는 것이 일반적으로 더 빠릅니다.
+활성화되면 도구 정의는 컨텍스트 윈도우에서 제외됩니다. 에이전트는 사용 가능한 도구의 요약을 받고, 작업에 이미 로드되지 않은 기능이 필요할 때 관련 도구를 검색합니다. 가장 관련성이 높은 최대 5개의 도구가 기본적으로 컨텍스트에 로드되며, SDK가 에이전트가 도구를 발견한 메시지를 압축할 때까지 이후 턴에서도 계속 사용할 수 있습니다. 그 압축 이후에는 에이전트가 필요할 때 해당 도구를 다시 검색합니다.
+
+도구 검색은 Claude가 도구를 검색할 때마다 한 번의 추가 왕복을 추가하지만, 큰 도구 세트의 경우 모든 턴에서 더 작은 컨텍스트로 인한 이점이 있습니다. 컨텍스트 윈도우에 편하게 맞는 약 10개 미만의 도구가 있는 경우, 모든 것을 미리 로드하는 것이 일반적으로 더 빠릅니다.
 
 기본 API 메커니즘에 대한 자세한 내용은 [API의 도구 검색](https://platform.claude.com/docs/ko/agents-and-tools/tool-use/tool-search-tool)을 참조하십시오.
 
 <Note>
-  도구 검색은 Claude Sonnet 4.5, Claude Haiku 4.5, Claude Opus 4.5 및 이후 모델에서 지원됩니다. 현재 목록은 [API 문서의 모델 호환성](https://platform.claude.com/docs/ko/agents-and-tools/tool-use/tool-search-tool#model-compatibility)을 참조하십시오. Google Cloud의 Agent Platform에서는 지원되는 최소 모델이 Claude Sonnet 4.5 및 Claude Opus 4.5입니다.
+  도구 검색은 Microsoft Foundry [Azure에서 호스팅되는 배포](https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry#hosting-options)에서 지원되지 않으며, 서버 측에서 거부합니다. SDK는 거부를 감지하고 해당 배포에 대해 대신 도구 정의를 미리 로드합니다. [`ENABLE_TOOL_SEARCH`](#configure-tool-search)는 배포 자체에서 거부가 발생하므로 이를 재정의할 수 없습니다.
 </Note>
 
 <h2 id="configure-tool-search">
   도구 검색 구성
 </h2>
 
-도구 검색은 기본적으로 켜져 있습니다. Google Cloud의 Agent Platform에서는 기본적으로 비활성화되어 있으며, Claude Sonnet 4.5 이상 및 Claude Opus 4.5 이상에서 지원됩니다. `ANTHROPIC_BASE_URL`이 비공식 호스트를 가리킬 때도 비활성화됩니다. 대부분의 프록시는 `tool_reference` 블록을 전달하지 않기 때문입니다. `ENABLE_TOOL_SEARCH` 환경 변수로 기본값을 재정의할 수 있습니다:
+도구 검색은 기본적으로 켜져 있습니다. SDK의 지원되지 않는 모델 목록에 있는 모델의 경우 SDK는 도구 정의를 미리 로드하며, `ENABLE_TOOL_SEARCH` 값이 이를 재정의할 수 없습니다. Google Cloud의 Agent Platform에서는 SDK가 모델 세대에 따라 결정합니다:
 
-| 값        | 동작                                                                                                                                                                                          |
-| :------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| (설정 안 함) | 도구 검색이 켜져 있습니다. 도구 정의는 지연되고 필요에 따라 발견됩니다. Google Cloud의 Agent Platform 또는 비공식 `ANTHROPIC_BASE_URL`에서는 미리 로드로 폴백됩니다.                                                                         |
-| `true`   | 도구 검색이 항상 켜져 있습니다. SDK는 Google Cloud의 Agent Platform 및 프록시를 통해서도 베타 헤더를 전송합니다. Sonnet 4.5 또는 Opus 4.5보다 이전 Google Cloud의 Agent Platform 모델이나 `tool_reference` 블록을 지원하지 않는 프록시에서는 요청이 실패합니다. |
-| `auto`   | 모든 도구 정의의 결합된 토큰 수를 모델의 컨텍스트 윈도우와 비교합니다. 10%를 초과하면 도구 검색이 활성화됩니다. 10% 미만이면 모든 도구가 정상적으로 컨텍스트에 로드됩니다.                                                                                        |
-| `auto:N` | `auto`와 동일하지만 사용자 정의 백분율입니다. `auto:5`는 도구 정의가 컨텍스트 윈도우의 5%를 초과할 때 활성화됩니다. 낮은 값은 더 빨리 활성화됩니다.                                                                                                |
-| `false`  | 도구 검색이 꺼져 있습니다. 모든 도구 정의는 매 턴마다 컨텍스트에 로드됩니다.                                                                                                                                                |
+* **Claude Opus 4.5, Sonnet 4.5, Haiku 4.5 및 이후 버전**: 도구 검색이 기본적으로 켜져 있습니다.
+* **이전 Agent Platform 모델**: SDK는 도구 정의를 미리 로드합니다. 필요한 베타 헤더를 거부하는 서빙 스택이 있기 때문입니다. `ENABLE_TOOL_SEARCH`는 이를 재정의할 수 없습니다.
 
-[`CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS`](/docs/ko/env-vars) 설정은 도구 검색을 끄고, `ENABLE_TOOL_SEARCH`는 이를 재정의할 수 없습니다. 이 변수는 `defer_loading` 도구 정의 및 `tool_reference` 콘텐츠 블록에 필요한 베타 헤더를 제거합니다.
+Claude Code v2.1.221 이전에는 `ENABLE_TOOL_SEARCH`를 설정하지 않으면 SDK가 Google Cloud의 Agent Platform의 모든 모델에 대해 도구 검색을 비활성화했습니다.
 
-도구 검색은 원격 MCP 서버에서 오든 [사용자 정의 SDK MCP 서버](/docs/ko/agent-sdk/custom-tools)에서 오든 모든 등록된 도구에 적용됩니다. `auto`를 사용할 때, 임계값은 모든 서버의 모든 도구 정의의 결합된 크기를 기반으로 합니다.
+SDK는 또한 `ANTHROPIC_BASE_URL`이 비공식 호스트를 가리킬 때 도구 검색을 비활성화합니다. 대부분의 프록시는 `tool_reference` 블록을 전달하지 않기 때문입니다. `ENABLE_TOOL_SEARCH` 환경 변수로 기본값을 재정의할 수 있습니다:
 
-`query()`의 `env` 옵션에서 값을 설정합니다. TypeScript에서 `env`는 서브프로세스 환경을 대체하므로 상속된 변수를 유지하려면 `...process.env`를 전개합니다. Python에서 `env`는 상속된 환경 위에 병합됩니다. 이 예제는 많은 도구를 노출하는 원격 MCP 서버에 연결하고, 와일드카드로 모두 사전 승인하며, 도구 정의가 컨텍스트 윈도우의 5%를 초과할 때 도구 검색이 활성화되도록 `auto:5`를 사용합니다:
+| 값        | 동작                                                                                                                                                                                                                                          |
+| :------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| (설정 안 함) | 도구 검색이 켜져 있습니다. 도구 정의는 지연되고 필요에 따라 발견됩니다. Google Cloud의 Agent Platform의 Claude 4.5 세대보다 이전 모델, 비공식 `ANTHROPIC_BASE_URL`, 또는 Azure에서 호스팅되는 Microsoft Foundry 배포에서는 미리 로드로 폴백됩니다.                                                             |
+| `true`   | 도구 검색이 항상 켜져 있습니다. Azure에서 호스팅되는 Microsoft Foundry 배포에서는 서버 측 거부가 여전히 미리 로드를 강제하고, Google Cloud의 Agent Platform의 Claude 4.5 세대보다 이전 모델에서는 SDK가 도구 정의를 계속 미리 로드합니다. SDK는 프록시를 통해 베타 헤더를 전송하며, `tool_reference` 블록을 지원하지 않는 프록시에서는 요청이 실패합니다. |
+| `auto`   | 도구 검색이 연기할 수 있는 도구 정의의 토큰을 계산하고 총합을 모델의 컨텍스트 윈도우와 비교합니다. 총합이 윈도우의 10%에 도달하면 도구 검색이 활성화됩니다. 그 아래에서는 SDK가 모든 도구 정의를 컨텍스트에 미리 로드합니다.                                                                                                           |
+| `auto:N` | `auto`와 동일하지만 사용자 정의 백분율입니다. `auto:5`는 해당 정의가 컨텍스트 윈도우의 5%에 도달할 때 활성화됩니다. 낮은 값은 더 빨리 활성화됩니다.                                                                                                                                                |
+| `false`  | 도구 검색이 꺼져 있습니다. 모든 도구 정의는 매 턴마다 컨텍스트에 로드됩니다.                                                                                                                                                                                                |
+
+[`CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS`](/docs/ko/env-vars) 설정은 도구 검색을 끕니다. `ENABLE_TOOL_SEARCH`를 직접 설정하여 이를 재정의할 수 없습니다. 조직은 Claude Code v2.1.227 이상에서 [관리 설정](/docs/ko/managed-settings)을 통해 도구 검색을 켜진 상태로 유지할 수 있습니다. [사전 릴리스 기능 비활성화](/docs/ko/llm-gateway-protocol#disable-pre-release-capabilities)는 재정의가 적용되는 위치와 변수가 제거하는 항목을 다룹니다.
+
+도구 검색은 원격 MCP 서버에서 오든 [사용자 정의 SDK MCP 서버](/docs/ko/agent-sdk/custom-tools)에서 오든 모든 등록된 도구에 적용됩니다. `auto`를 사용할 때 SDK는 도구 검색이 연기할 수 있는 모든 정의를 하나의 결합된 임계값으로 계산합니다: [`alwaysLoad`](/docs/ko/mcp#exempt-a-server-from-deferral)로 표시되지 않은 모든 MCP 도구(모든 서버에서), 그리고 필요에 따라 로드되는 기본 제공 도구입니다. SDK는 항상 Bash, Read, Edit과 같은 핵심 기본 제공 도구를 미리 로드하고 임계값에 계산하지 않습니다.
+
+`query()`의 `env` 옵션에서 값을 설정합니다. TypeScript에서 `env`는 서브프로세스 환경을 대체하므로 상속된 변수를 유지하려면 `...process.env`를 전개합니다. Python에서 `env`는 상속된 환경 위에 병합됩니다. 이 예제는 많은 도구를 노출하는 원격 MCP 서버에 연결하고, 와일드카드로 모두 사전 승인하며, 도구 검색이 연기할 수 있는 정의가 컨텍스트 윈도우의 5%에 도달할 때 도구 검색이 활성화되도록 `auto:5`를 사용합니다:
 
 <CodeGroup>
   ```typescript TypeScript theme={null}
@@ -67,7 +74,7 @@
         allowedTools: ["mcp__enterprise-tools__*"], // Wildcard pre-approves all tools from this server
         env: {
           ...process.env, // env replaces the subprocess environment, so keep inherited variables
-          ENABLE_TOOL_SEARCH: "auto:5" // Activate tool search when tools exceed 5% of context
+          ENABLE_TOOL_SEARCH: "auto:5" // Activate tool search when deferrable definitions reach 5% of context
         }
       }
     })) {
@@ -98,7 +105,7 @@
               "mcp__enterprise-tools__*"
           ],  # Wildcard pre-approves all tools from this server
           env={
-              "ENABLE_TOOL_SEARCH": "auto:5"  # Activate tool search when tools exceed 5% of context
+              "ENABLE_TOOL_SEARCH": "auto:5"  # Activate tool search when deferrable definitions reach 5% of context
           },
       )
 
@@ -121,8 +128,6 @@
 이 예제를 실행하려면 `https://tools.example.com/mcp`를 자신의 MCP 서버 URL로 바꿉니다. 성공하면 결과 텍스트가 콘솔에 출력됩니다.
 
 이것이 단일 `query()` 호출이므로 SDK는 오류 결과를 생성한 후 발생시키므로 예제는 루프를 try 블록으로 래핑합니다. 실행이 실패한 이유를 확인하려면 루프 내에서 결과 메시지의 `subtype`(예: `error_during_execution`)을 확인합니다. 결과 메시지에 대한 자세한 내용은 [결과 처리](/docs/ko/agent-sdk/agent-loop#handle-the-result)를 참조하세요.
-
-`ENABLE_TOOL_SEARCH`를 `"false"`로 설정하면 도구 검색이 비활성화되고 모든 도구 정의가 매 턴마다 컨텍스트에 로드됩니다. 이는 검색 왕복을 제거하므로, 도구 세트가 작을 때(약 10개 미만의 도구) 정의가 컨텍스트 윈도우에 편하게 맞을 때 더 빠를 수 있습니다.
 
 <h2 id="optimize-tool-discovery">
   도구 발견 최적화
@@ -162,7 +167,7 @@
 
 * **최대 도구:** 카탈로그에 10,000개의 도구
 * **검색 결과:** 기본적으로 검색당 가장 관련성이 높은 5개의 도구 반환
-* **모델 지원:** Claude Sonnet 4.5, Claude Haiku 4.5, Claude Opus 4.5 및 이후 모델; 현재 목록은 [API 문서의 모델 호환성](https://platform.claude.com/docs/ko/agents-and-tools/tool-use/tool-search-tool#model-compatibility)을 참조하십시오. Google Cloud의 Agent Platform에서는 Claude Sonnet 4.5 이후 및 Claude Opus 4.5 이후 버전입니다.
+* **모델 지원:** Claude Sonnet 4.5, Claude Haiku 4.5, Claude Opus 4.5 및 이후 모델; 현재 목록은 [API 문서의 모델 호환성](https://platform.claude.com/docs/ko/agents-and-tools/tool-use/tool-search-tool#model-compatibility)을 참조하십시오. Google Cloud의 Agent Platform에서도 동일한 최소 요구 사항이 적용됩니다.
 
 <h2 id="related-documentation">
   관련 문서

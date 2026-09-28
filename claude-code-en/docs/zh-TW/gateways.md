@@ -44,7 +44,7 @@ Claude Code 可與 Anthropic 自己的閘道或您的組織已經執行的閘道
   Claude 應用程式閘道
 </h3>
 
-Claude 應用程式閘道是 Anthropic 的自託管閘道，包含在 `claude` 二進位檔案中。它路由到 Amazon Bedrock、Claude Platform on AWS、Google Cloud、Microsoft Foundry 或 Anthropic API 作為上游。開發人員透過 `/login` 使用您的公司身份提供者登入，閘道按 IdP 群組強制執行模型存取和 [受管設定](/docs/zh-TW/permissions#managed-settings)，並向您自己的可觀測性堆疊發出 [OpenTelemetry Protocol (OTLP)](/docs/zh-TW/monitoring-usage) 使用情況指標。
+Claude 應用程式閘道是 Anthropic 的自託管閘道，包含在 `claude` 二進位檔案中。它路由到 Amazon Bedrock、Claude Platform on AWS、Google Cloud、Microsoft Foundry 或 Anthropic API 作為上游。開發人員透過 `/login` 使用您的公司身份提供者登入，閘道按 IdP 群組強制執行模型存取和 [受管設定](/docs/zh-TW/managed-settings)，並向您自己的可觀測性堆疊發出 [OpenTelemetry Protocol (OTLP)](/docs/zh-TW/monitoring-usage) 使用情況指標。
 
 因為它與每個 Claude Code 版本一起構建和測試，所以它轉發 Claude Code 傳送的標頭和請求欄位。單獨維護的閘道需要其 [轉發規則隨著每個版本中這些標頭和欄位的變化而更新](/docs/zh-TW/llm-gateway-protocol#forward-as-open-lists)；Claude 應用程式閘道與 CLI 一起發佈，因此沒有清單需要保持最新。有關在閘道工作階段上行為不同的小功能集，請參閱 [可用性和限制](/docs/zh-TW/claude-apps-gateway#availability-and-limitations)。
 
@@ -73,8 +73,11 @@ Claude 應用程式閘道是 Anthropic 的自託管閘道，包含在 `claude` �
 閘道路由模型 API 請求。您可能期望它處理的一些事情在其他地方配置：
 
 * **哪個模型回答**：使用 `/model` 命令或 [模型環境變數](/docs/zh-TW/model-config#setting-your-model) 選擇模型。閘道決定請求的去向，而不是開發人員選擇的模型。Claude 應用程式閘道可以使用每個群組的 `availableModels` 允許清單限制選擇，但開發人員仍在其中進行選擇。
-* **其他網路流量**：Claude Code 本身將版本檢查和下載直接傳送到 Anthropic，與閘道路徑分開。可選用戶端遙測流是否也在取決於您的提供者；[遙測預設值表](/docs/zh-TW/data-usage#telemetry-services) 涵蓋每種情況。在已登入的 Claude 應用程式閘道工作階段上，閘道認證禁用 Anthropic 繫結的分析，並在配置 [遙測轉發](/docs/zh-TW/claude-apps-gateway-config#telemetry) 時，將 OTLP 匯出固定到閘道。您的網路仍然需要對 [必需網域](/docs/zh-TW/network-config) 的出口，或設定 [`CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`](/docs/zh-TW/env-vars) 以關閉可選流。
-* **公司 HTTP 代理**：`HTTPS_PROXY` 位於 Claude Code 和它與之通訊的每個伺服器之間，包括閘道。如果您的網路需要一個，[配置代理](/docs/zh-TW/network-config) 以及閘道。對於 Claude 應用程式閘道，[登入檢查代理主機也在私人網路上](/docs/zh-TW/claude-apps-gateway#prerequisites)；如果不是，將閘道主機新增到 `NO_PROXY`，以便 CLI 直接連接到它。
+* **其他網路流量**：Claude Code 本身將版本檢查和下載直接傳送到 Anthropic，與閘道路徑分開。您的網路仍然需要對 [必需網域](/docs/zh-TW/network-config) 的出口，或設定 [`CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`](/docs/zh-TW/env-vars) 以關閉可選流。
+* **用戶端遙測**：當工作階段登入 Claude 應用程式閘道時，Claude Code 會停用其 Anthropic 繫結的用戶端分析。若要同時關閉登入前啟動分析，請在每個裝置上的 [用戶端側受管設定](/docs/zh-TW/claude-apps-gateway-config#client-side-managed-settings) 中傳遞 [`DISABLE_TELEMETRY`](/docs/zh-TW/managed-settings#turn-telemetry-off-for-your-organization)。
+* **其他閘道上的用戶端遙測**：Claude Code 是否傳送可選用戶端遙測流取決於您的提供者，[遙測預設值表](/docs/zh-TW/data-usage#default-behaviors-by-api-provider) 涵蓋每種情況。
+* **遙測目的地**：Claude Code 傳送閘道工作階段遙測的位置取決於工作階段如何登入，[開發人員上強制執行的項目](/docs/zh-TW/claude-apps-gateway#whats-enforced-on-developers) 說明每種工作階段的匯出位置。
+* **公司 HTTP 代理**：`HTTPS_PROXY` 位於 Claude Code 和它與之通訊的每個伺服器之間，包括閘道。如果您的網路需要一個，[配置代理](/docs/zh-TW/network-config) 以及閘道。對於您託管的 Claude 應用程式閘道，[登入檢查代理主機也在私人網路上](/docs/zh-TW/claude-apps-gateway#prerequisites)；如果不是，將閘道主機新增到 `NO_PROXY`，以便 CLI 直接連接到它。
 
 <h2 id="next-steps">
   後續步驟

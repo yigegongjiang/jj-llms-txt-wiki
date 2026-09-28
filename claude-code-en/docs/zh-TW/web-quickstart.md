@@ -2,35 +2,35 @@
 > Fetch the complete documentation index at: https://code.claude.com/docs/llms.txt
 > Use this file to discover all available pages before exploring further.
 
-# 在網頁上開始使用 Claude Code
+# 在雲端開始使用 Claude Code
 
 > 在雲端從瀏覽器或手機執行 Claude Code。連接 GitHub 儲存庫、提交任務，並在無需本地設定的情況下檢查 PR。
 
 <Note>
-  Claude Code on the web 目前處於研究預覽階段，適用於 Pro、Max 和 Team 用戶，以及擁有高級席位或 Chat + Claude Code 席位的企業用戶。
+  雲端會話適用於 Pro、Max 和 Team 方案，以及擁有高級席位或 Chat + Claude Code 席位的企業使用者。
 </Note>
 
-Claude Code on the web 在 Anthropic 管理的雲端基礎設施上執行，而不是在您的機器上。從瀏覽器或 Claude 行動應用程式的 [claude.ai/code](https://claude.ai/code) 提交任務。
+雲端會話在雲端基礎設施上執行 Claude Code，而不是在您的機器上，預設由 Anthropic 管理。此快速入門從瀏覽器中的 [claude.ai/code](https://claude.ai/code) 啟動一個會話。您也可以從 Claude 行動應用程式、Desktop 應用程式或終端機使用 `claude --cloud` 啟動一個會話。
 
-您需要一個 GitHub 儲存庫來[開始使用](#connect-github-and-create-an-environment)。Claude 將其複製到隔離的虛擬機器中、進行更改，並為您推送一個分支以供檢查。會話在設備間持續存在，因此您在筆記型電腦上開始的任務可以稍後從手機上檢查。
+您需要一個 GitHub 儲存庫來[開始使用](#connect-github)。Claude 將其複製到隔離的虛擬機器中、進行更改，並為您推送一個分支以供檢查。會話在設備間持續存在，因此您在筆記型電腦上開始的任務可以稍後從手機上檢查。
 
-Claude Code on the web 適用於：
+雲端會話適用於：
 
 * **並行任務**：同時執行多個獨立任務，每個任務在自己的會話和分支中，無需管理多個 worktrees
 * **您本地沒有的儲存庫**：Claude 在每個會話中新鮮複製儲存庫，因此您無需簽出它
 * **不需要頻繁引導的任務**：提交一個定義明確的任務，做其他事情，並在 Claude 完成時檢查結果
 * **代碼問題和探索**：理解代碼庫或追蹤功能如何實現，無需本地簽出
 
-對於需要您本地配置、工具或環境的工作，在本地執行 Claude Code 或使用 [Remote Control](/docs/zh-TW/remote-control) 更合適。
+對於需要您本地設定、工具或環境的工作，在本地執行 Claude Code 或使用 [Remote Control](/docs/zh-TW/remote-control) 更合適。
 
 <h2 id="how-sessions-run">
   會話如何執行
 </h2>
 
-當您提交任務時：
+以下步驟描述 Anthropic 託管的會話。在[自託管環境](/docs/zh-TW/self-hosted-environments)中，複製和之後的所有操作都在您組織自己的執行器上執行，其中網路邊界、設定和推送行為由操作員配置。當您提交任務時：
 
-1. **複製和準備**：您的儲存庫被複製到 Anthropic 管理的 VM，並且您的[設定指令碼](/docs/zh-TW/claude-code-on-the-web#setup-scripts)會在配置時執行。
-2. **配置網路**：根據您環境的[存取級別](/docs/zh-TW/claude-code-on-the-web#access-levels)設定網際網路存取。
+1. **複製和準備**：您的儲存庫被複製到 Anthropic 管理的 VM，並且您的[設定指令碼](/docs/zh-TW/cloud-environments#setup-scripts)會在配置時執行。
+2. **配置網路**：根據您環境的[存取級別](/docs/zh-TW/cloud-environments#access-levels)設定網際網路存取。
 3. **工作**：Claude 分析代碼、進行更改、執行測試並檢查其工作。您可以全程觀看和引導，或者離開並在完成時返回。
 4. **推送分支**：當 Claude 達到停止點時，它會將其分支推送到 GitHub。您檢查差異、留下內聯評論、建立 PR 或發送另一條訊息以繼續。
 
@@ -40,46 +40,53 @@ Claude Code on the web 適用於：
   比較執行 Claude Code 的方式
 </h2>
 
-Claude Code 在任何地方的行為都相同。改變的是代碼執行的位置以及您的本地配置是否可用。Desktop 應用程式提供本地和雲端會話，因此其下面的答案取決於您選擇的是哪一個：
+Claude Code 在任何地方的行為都相同。改變的是代碼執行的位置以及您的本地設定是否可用：
 
-|                                     | 在網頁上                                                                                            | Remote Control    | Terminal CLI | Desktop 應用程式 |
-| :---------------------------------- | :---------------------------------------------------------------------------------------------- | :---------------- | :----------- | :----------- |
-| **代碼執行於**                           | Anthropic 雲端 VM                                                                                 | 您的機器              | 您的機器         | 您的機器或雲端 VM   |
-| **您從以下位置聊天**                        | claude.ai 或行動應用程式                                                                               | claude.ai 或行動應用程式 | 您的終端         | Desktop UI   |
-| **使用您的本地配置**                        | 否，僅儲存庫                                                                                          | 是                 | 是            | 本地為是，雲端為否    |
-| **需要 GitHub**                       | 是，或透過 `--cloud` [捆綁本地儲存庫](/docs/zh-TW/claude-code-on-the-web#send-local-repositories-without-github) | 否                 | 否            | 僅限雲端會話       |
-| **如果您斷開連接，保持執行**                    | 是                                                                                               | 終端保持開啟時           | 否            | 取決於會話類型      |
-| **[權限模式](/docs/zh-TW/permission-modes)** | 接受編輯、Plan、Auto                                                                                  | 詢問、自動接受編輯、Plan    | 所有模式         | 取決於會話類型      |
-| **網路存取**                            | 每個環境可配置                                                                                         | 您機器的網路            | 您機器的網路       | 取決於會話類型      |
+|                                     | 雲端會話                                                                                            | 本地會話                                                                                          | 本地會話搭配 [Remote Control](/docs/zh-TW/remote-control) |
+| :---------------------------------- | :---------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------- | :--------------------------------------------- |
+| **代碼執行於**                           | 雲端 VM，預設由 Anthropic 管理                                                                          | 您的機器                                                                                          | 您的機器                                           |
+| **您從以下位置啟動**                        | claude.ai/code、Claude 行動應用程式、選擇 **Cloud** 的 Desktop 應用程式，或 `claude --cloud`                     | 您的終端、您的 IDE，或選擇 **Local** 的 Desktop 應用程式                                                      | 您的終端、VS Code 擴充功能，或 Desktop 應用程式               |
+| **您從以下位置聊天**                        | claude.ai、行動應用程式，或 Desktop 應用程式                                                                 | 您啟動它的位置                                                                                       | claude.ai 或行動應用程式，以及您啟動它的位置                    |
+| **使用您的本地設定**                        | 否，僅儲存庫                                                                                          | 是                                                                                             | 是                                              |
+| **需要 GitHub**                       | 是，或透過 `--cloud` [捆綁本地儲存庫](/docs/zh-TW/claude-code-on-the-web#send-local-repositories-without-github) | 否                                                                                             | 否                                              |
+| **如果您斷開連接，保持執行**                    | 是                                                                                               | 否                                                                                             | 當會話在您的機器上保持開啟時                                 |
+| **[權限模式](/docs/zh-TW/permission-modes)** | 接受編輯、Plan、Auto                                                                                  | 終端中的所有模式；請參閱 [切換權限模式](/docs/zh-TW/permission-modes#switch-permission-modes) 以了解 IDE 和 Desktop 應用程式 | 來自 claude.ai 和行動應用程式的手動、接受編輯或 Plan             |
+| **網路存取**                            | 每個環境可配置                                                                                         | 您機器的網路                                                                                        | 您機器的網路                                         |
 
-請參閱 [terminal quickstart](/docs/zh-TW/quickstart)、[Desktop 應用程式](/docs/zh-TW/desktop) 或 [Remote Control](/docs/zh-TW/remote-control) 文件以設定這些。
+請參閱 [terminal quickstart](/docs/zh-TW/quickstart)、[Desktop 應用程式](/docs/zh-TW/desktop) 或 [Remote Control](/docs/zh-TW/remote-control) 文件以設定本地會話。
 
-<h2 id="connect-github-and-create-an-environment">
-  連接 GitHub 並建立環境
+<h2 id="connect-github">
+  連接 GitHub
 </h2>
 
-設定是一次性過程。如果您已經使用 GitHub CLI，您可以[從您的終端執行此操作](#connect-from-your-terminal)，而不是使用瀏覽器。
+連接 GitHub 是一次性步驟。如果您已經使用 GitHub CLI，您可以[從終端執行此操作](#connect-from-your-terminal)，而不是使用瀏覽器。
+
+<Note>
+  在 Team 和 Enterprise 方案上，**使用 GitHub 登入**步驟僅在您的 Claude 組織的[擁有者](/docs/zh-TW/server-managed-settings#access-control)在[**管理設定 > 連接器**](https://claude.ai/admin-settings/connectors)開啟 GitHub 連接器後才有效。在此之前，該步驟會顯示「GitHub 存取權是 Claude Code 網頁版所需」而不是登入按鈕。連接器開啟後，重新載入 [claude.ai/code](https://claude.ai/code) 並從第一步重新開始。第二個切換開關[快速網頁設定](/docs/zh-TW/claude-code-on-the-web#github-authentication-options)位於[**管理設定 > Claude Code**](https://claude.ai/admin-settings/claude-code)，是選用的：開啟時，`/web-setup` 可運作，且上線流程會為成員建立環境。
+</Note>
 
 <Steps>
-  <Step title="訪問 claude.ai/code">
-    前往 [claude.ai/code](https://claude.ai/code) 並使用您的 Anthropic 帳戶登入。
+  <Step title="造訪 claude.ai/code">
+    前往 [claude.ai/code](https://claude.ai/code) 並使用您的 claude.ai 帳戶登入。
   </Step>
 
-  <Step title="安裝 Claude GitHub App">
-    登入後，claude.ai/code 會提示您連接 GitHub。按照提示安裝 Claude GitHub App 並授予其存取您的儲存庫的權限。雲端會話適用於現有的 GitHub 儲存庫，因此要啟動新項目，請先[在 GitHub 上建立空儲存庫](https://github.com/new)。
+  <Step title="使用 GitHub 登入">
+    登入後，claude.ai/code 會提示您連接 GitHub。按照提示操作，claude.ai/code 會將您導向 GitHub 的授權頁面。核准授權要求，GitHub 會將您返回 claude.ai/code。雲端工作階段可與現有 GitHub 儲存庫搭配使用。若要啟動新專案，請先[在 GitHub 上建立空白儲存庫](https://github.com/new)。
+
+    透過此連接，工作階段可以複製任何公開儲存庫，但只有在 Claude GitHub App 安裝在私人儲存庫上時，才能在私人儲存庫中工作。[在您想要使用其私人儲存庫的每個 GitHub 帳戶或組織上安裝 Claude GitHub App](https://github.com/apps/claude/installations/new)。在 GitHub 組織上，組織擁有者可能需要核准安裝。安裝應用程式也會啟用[自動修復](/docs/zh-TW/claude-code-on-the-web#auto-fix-pull-requests)，讓 Claude 能夠回應這些儲存庫中的 CI 失敗和提取要求審查意見。
+
+    如果上線流程在此時提示您安裝 Claude GitHub App，而您想稍後再安裝，請按一下**略過**。
   </Step>
 
-  <Step title="建立您的環境">
-    連接 GitHub 後，系統會提示您建立雲端環境。環境控制 Claude 在會話期間可以存取的網路以及在建立新會話時執行的內容。請參閱[已安裝的工具](/docs/zh-TW/claude-code-on-the-web#installed-tools)以了解無需任何配置即可使用的內容。
+  <Step title="設定您的預設環境">
+    [雲端環境](/docs/zh-TW/cloud-environments)是已儲存的設定，控制 Claude 在工作階段期間具有的網路存取權，以及工作階段啟動時執行的內容。連接 GitHub 後發生的情況取決於您的方案：
 
-    表單具有以下欄位：
+    * **Pro 和 Max**：上線流程會為您建立名為**預設**的環境。
+    * **Team 和 Enterprise**：上線流程會顯示**建立您的第一個雲端環境**表單。保持預填的名稱和網路存取權不變，然後按一下**建立並完成**以建立**預設**環境。如果擁有者已開啟[快速網頁設定](/docs/zh-TW/claude-code-on-the-web#github-authentication-options)，上線流程會改為為您建立**預設**。
 
-    * **名稱**：顯示標籤。當您為不同的項目或存取級別有多個環境時很有用。
-    * **網路存取**：控制會話可以在網際網路上到達的內容。預設值 `Trusted` 允許連接到[常見套件登錄](/docs/zh-TW/claude-code-on-the-web#default-allowed-domains)（如 npm、PyPI 和 RubyGems），同時阻止一般網際網路存取。
-    * **環境變數**：可選變數，在每個會話中可用，採用 `.env` 格式。不要用引號包裝值，因為引號會儲存為值的一部分。這些對任何可以編輯此環境的人都可見。
-    * **設定指令碼**：可選的 Bash 指令碼，在 Claude Code 啟動前執行。使用它來安裝雲端 VM 不包含的系統工具，如 `apt install -y gh`。結果會被[快取](/docs/zh-TW/claude-code-on-the-web#environment-caching)，因此指令碼不會在每個會話上重新執行。請參閱[設定指令碼](/docs/zh-TW/claude-code-on-the-web#setup-scripts)以了解範例和除錯提示。
+    **預設**使用[`信任`網路存取權](/docs/zh-TW/cloud-environments#access-levels)：工作階段可以存取[常見套件登錄](/docs/zh-TW/cloud-environments#default-allowed-domains)和其他允許清單中的網域，以及透過工作階段網路的其他任何內容都無法存取。請參閱[已安裝的工具](/docs/zh-TW/cloud-environments#installed-tools)以了解無需任何設定即可使用的內容。
 
-    對於第一個項目，保留預設值並點擊**建立環境**。您可以[稍後編輯它或為不同的項目建立其他環境](/docs/zh-TW/claude-code-on-the-web#configure-your-environment)。
+    對於第一個專案，**預設**環境可以按原樣使用。若要變更其網路存取權、新增環境變數或在工作階段啟動前執行[設定指令碼](/docs/zh-TW/cloud-environments#setup-scripts)，請[編輯它或建立其他環境](/docs/zh-TW/cloud-environments#configure-your-environment)。
   </Step>
 </Steps>
 
@@ -87,10 +94,14 @@ Claude Code 在任何地方的行為都相同。改變的是代碼執行的位�
   從您的終端連接
 </h3>
 
-如果您已經使用 GitHub CLI (`gh`)，您可以在不打開瀏覽器的情況下設定 Claude Code on the web。這需要 [Claude Code CLI](/docs/zh-TW/quickstart)。`/web-setup` 讀取您的本地 `gh` 令牌，將其連結到您的 Claude 帳戶，並在您沒有雲端環境時建立預設雲端環境。
+如果您已經使用 GitHub CLI (`gh`)，您可以從終端為雲端工作階段連接 GitHub。這需要 [Claude Code CLI](/docs/zh-TW/quickstart)。在 Team 和 Enterprise 方案上，`/web-setup` 僅在擁有者開啟[快速網頁設定](/docs/zh-TW/claude-code-on-the-web#github-authentication-options)後才可用。
+
+當您執行 `/web-setup` 時，Claude Code 會讀取 `gh auth token` 列印的權杖，要求您確認，並將權杖傳送給 Anthropic。Anthropic 會使用您的 claude.ai 帳戶加密儲存它，您的雲端工作階段會使用它進行 GitHub 存取，直到您[移除它](#remove-the-web-setup-token)。您自己啟動的雲端工作階段隨後可以存取該權杖可以存取的任何儲存庫，無需 Claude GitHub App 安裝。[專案](/docs/zh-TW/claude-projects#set-up-github-access)中的執行緒仍然需要 Claude GitHub App。
+
+如果您已經在瀏覽器中連接了 GitHub，`/web-setup` 會警告您繼續將會取代您的雲端工作階段的該連接。
 
 <Note>
-  啟用了[零資料保留](/docs/zh-TW/zero-data-retention)的組織無法使用 `/web-setup` 或其他雲端會話功能。如果未安裝或驗證 GitHub CLI，`/web-setup` 會改為開啟瀏覽器上線流程。
+  啟用[零資料保留](/docs/zh-TW/zero-data-retention)的組織無法使用 `/web-setup` 或其他雲端工作階段功能。如果未安裝 GitHub CLI 或未進行驗證，Claude Code 會改為開啟瀏覽器上線流程。
 </Note>
 
 <Steps>
@@ -103,7 +114,7 @@ Claude Code 在任何地方的行為都相同。改變的是代碼執行的位�
   </Step>
 
   <Step title="登入 Claude">
-    在 Claude Code CLI 中，執行 `/login` 以使用您的 claude.ai 帳戶登入。如果您已經登入，請跳過此步驟。
+    在 Claude Code CLI 中，執行 `/login` 以使用您的 claude.ai 帳戶登入。如果您已經使用 claude.ai 帳戶登入，請略過此步驟。使用 API 金鑰進行驗證不計算在內。若要檢查，請執行 `/status` 並確認**登入方法**列顯示 claude.ai 帳戶。
   </Step>
 
   <Step title="執行 /web-setup">
@@ -113,9 +124,17 @@ Claude Code 在任何地方的行為都相同。改變的是代碼執行的位�
     /web-setup
     ```
 
-    這會將您的 `gh` 令牌同步到您的 Claude 帳戶。如果您還沒有雲端環境，`/web-setup` 會建立一個具有 Trusted 網路存取且沒有設定指令碼的環境。您可以[稍後編輯環境或新增變數](/docs/zh-TW/claude-code-on-the-web#configure-your-environment)。一旦 `/web-setup` 完成，您可以使用 [`--cloud`](/docs/zh-TW/claude-code-on-the-web#from-terminal-to-web) 從您的終端啟動雲端會話，或使用 [`/schedule`](/docs/zh-TW/routines) 設定定期任務。
+    確認提示以將您的 `gh` 權杖傳送到您的 Claude 帳戶。成功時，Claude Code 會列印 `Connected as <your-github-username>` 並在您的瀏覽器中開啟 [claude.ai/code](https://claude.ai/code)。如果您還沒有雲端環境，`/web-setup` 會建立一個具有信任網路存取權且沒有設定指令碼的環境。您可以[稍後編輯環境或新增變數](/docs/zh-TW/cloud-environments#configure-your-environment)。`/web-setup` 完成後，您可以使用 [`--cloud`](/docs/zh-TW/claude-code-on-the-web#from-terminal-to-cloud) 從終端啟動雲端工作階段，或使用 [`/schedule`](/docs/zh-TW/routines) 設定定期工作。
   </Step>
 </Steps>
+
+<h4 id="remove-the-web-setup-token">
+  移除 `/web-setup` 權杖
+</h4>
+
+若要從您的 Claude 帳戶移除權杖，請在 [claude.ai/customize/connectors](https://claude.ai/customize/connectors) 斷開 GitHub 連接。斷開連接會刪除您的雲端工作階段使用的 GitHub 認證，無論它們來自瀏覽器還是 `/web-setup`，因此雲端工作階段會失去 GitHub 存取權，直到您再次連接。您的本機 `gh` 保持登入狀態，權杖在 GitHub 上保持有效。
+
+若要使權杖本身失效，請在 GitHub 上撤銷它。如果您透過瀏覽器登入 `gh`，權杖屬於 GitHub 上[**設定 > 應用程式 > 授權的 OAuth 應用程式**](https://github.com/settings/applications)下的 **GitHub CLI** 項目，撤銷該項目也會在您的機器上將 GitHub CLI 登出。雲端工作階段隨後會失去 GitHub 存取權，直到您再次執行 `gh auth login` 和 `/web-setup`。
 
 <h2 id="start-a-task">
   啟動任務
@@ -129,7 +148,13 @@ Claude Code 在任何地方的行為都相同。改變的是代碼執行的位�
   </Step>
 
   <Step title="選擇權限模式">
-    輸入框旁邊的模式下拉菜單預設為**接受編輯**，其中 Claude 進行更改並推送分支而無需停止以獲得批准。如果您希望 Claude 提出方法並在編輯文件前等待您的同意，請切換到 **Plan Mode**。雲端會話不提供 Manual 或 Bypass 權限。請參閱[權限模式完整列表](/docs/zh-TW/permission-modes#available-modes)以了解每個模式允許的操作。
+    輸入框旁邊的模式下拉菜單顯示會話將在其中執行的模式：
+
+    * **Auto**：分類器會檢查 Claude 的操作，而不是詢問您。當您的組織允許自動模式且選定的模型支援時出現
+    * **Accept edits**：Claude 進行更改並推送分支，無需停止以獲得批准
+    * **Plan**：Claude 提出方法並等待您批准後再編輯文件
+
+    雲端會話不提供 Manual 或 Bypass 權限。請參閱[權限模式完整列表](/docs/zh-TW/permission-modes#available-modes)以了解每個模式允許的操作。
   </Step>
 
   <Step title="描述任務並提交">
@@ -154,7 +179,7 @@ Claude Code 在任何地方的行為都相同。改變的是代碼執行的位�
 | `prompt`       | 要在輸入框中預填充的提示文本。也接受別名 `q`。                                      |
 | `prompt_url`   | 要從中獲取提示文本的 URL，用於太長而無法嵌入查詢字符串的提示。URL 必須允許跨源請求。設定 `prompt` 時忽略。 |
 | `repositories` | 要預選的 `owner/repo` 段的逗號分隔列表。也接受別名 `repo`。                       |
-| `environment`  | [環境](#connect-github-and-create-an-environment)的名稱或 ID 以預選。    |
+| `environment`  | [環境](#connect-github)的名稱或 ID 以預選。                              |
 
 對每個值進行 URL 編碼。下面的範例使用已選擇的提示和儲存庫打開表單：
 
@@ -171,10 +196,12 @@ https://claude.ai/code?prompt=Fix%20the%20login%20bug&repositories=acme/webapp
 <Steps>
   <Step title="打開差異檢視">
     差異指示器顯示整個會話中新增和移除的行，例如 `+42 -18`。選擇它以打開差異檢視，左側有文件列表，右側有更改。
+
+    差異預設會與其基礎分支進行比較。若要與不同的分支進行比較，請選擇**比較對象**並選擇一個。
   </Step>
 
   <Step title="留下內聯評論">
-    選擇差異中的任何行，輸入您的反饋，然後按 Enter。評論會排隊直到您發送下一條訊息，然後它們會與其捆綁。Claude 看到 "在 `src/auth.ts:47`，不要在這裡捕捉錯誤" 以及您的主要指令，因此您無需描述問題所在。
+    選擇差異中的任何行，輸入您的反饋，然後按 Enter。評論會排隊直到您發送下一條訊息，然後它們會與其捆綁。Claude 看到「在 `src/auth.ts:47`，不要在這裡捕捉錯誤」以及您的主要指令，因此您無需描述問題所在。
   </Step>
 
   <Step title="建立拉取請求">
@@ -182,7 +209,7 @@ https://claude.ai/code?prompt=Fix%20the%20login%20bug&repositories=acme/webapp
   </Step>
 
   <Step title="在 PR 後繼續迭代">
-    建立 PR 後會話保持活躍。將 CI 失敗輸出或審查者評論貼上到聊天中，並要求 Claude 解決它們。要讓 Claude 自動監控 PR，請參閱[自動修復拉取請求](/docs/zh-TW/claude-code-on-the-web#auto-fix-pull-requests)。
+    會話在建立 PR 後保持活躍。將 CI 失敗輸出或審查者評論貼上到聊天中，並要求 Claude 解決它們。若要讓 Claude 自動監控 PR，請參閱[自動修復拉取請求](/docs/zh-TW/claude-code-on-the-web#auto-fix-pull-requests)。
   </Step>
 </Steps>
 
@@ -194,7 +221,9 @@ https://claude.ai/code?prompt=Fix%20the%20login%20bug&repositories=acme/webapp
   連接 GitHub 後沒有儲存庫出現
 </h3>
 
-雲端會話可以使用連接的 GitHub 帳戶可以看到的任何儲存庫，無論 Claude GitHub App 安裝在哪些儲存庫上。如果儲存庫遺失，請驗證連接的 GitHub 帳戶在 GitHub 上是否有權存取它。如果您還想要儲存庫的[自動修復](/docs/zh-TW/claude-code-on-the-web#auto-fix-pull-requests)，請在其上安裝應用程式：在 github.com 上，打開**設定 → 應用程式 → Claude → 配置**並驗證儲存庫是否列在**儲存庫存取**下。私有儲存庫需要與公開儲存庫相同的授權。
+如果您在瀏覽器中連接了 GitHub，會話可以複製任何公開儲存庫，但私有儲存庫只有在 Claude GitHub App 安裝在擁有它的帳戶或組織上，且安裝的儲存庫存取包括它時才會出現。[安裝 Claude GitHub App](https://github.com/apps/claude/installations/new)，或要求組織擁有者安裝或批准它。
+
+如果您使用 `/web-setup` 連接，會話可以存取您的 `gh` 權杖可以存取的每個儲存庫。在您的 shell 中執行 `gh repo view OWNER/REPO` 以檢查您的 GitHub CLI 登入是否可以看到該儲存庫，如果您自連接以來已切換 `gh` 帳戶，請再次執行 `/web-setup`。
 
 <h3 id="the-page-only-shows-a-github-login-button">
   頁面只顯示 GitHub 登入按鈕
@@ -206,9 +235,21 @@ https://claude.ai/code?prompt=Fix%20the%20login%20bug&repositories=acme/webapp
   "不適用於選定的組織"
 </h3>
 
-企業組織可能需要管理員啟用 Claude Code on the web。聯繫您的 Anthropic 帳戶團隊。
+企業組織可能需要擁有者啟用雲端會話。聯繫您的 Anthropic 帳戶團隊。
 
-<h3 id="/web-setup-shows-no-commands-match-or-unknown-command">
+<h3 id="/web-setup-says-not-signed-in-to-claude">
+  `/web-setup` 說 "Not signed in to Claude"
+</h3>
+
+如果 `/web-setup` 回應 "Not signed in to Claude. Run /login first."，CLI 沒有有效的 claude.ai 登入。當先前的登入已過期時，也可能發生這種情況。執行 `/login`，使用您的 claude.ai 帳戶登入，然後再次執行 `/web-setup`。
+
+<h3 id="/web-setup-warns-that-your-token-doesn’t-have-the-workflow-scope">
+  `/web-setup` 警告您的權杖沒有 `workflow` 範圍
+</h3>
+
+如果 `/web-setup` 說您的 GitHub CLI 權杖沒有 `workflow` 範圍，您可以繼續，但 GitHub 可能會拒絕使用該權杖進行的某些推送，例如更改 GitHub Actions 工作流程檔案的推送。要新增範圍，在您的 shell 中執行 `gh auth refresh -s workflow`，然後再次執行 `/web-setup`。
+
+<h3 id="web-setup-shows-no-commands-match-or-unknown-command">
   `/web-setup` 顯示 "No commands match" 或 "Unknown command"
 </h3>
 
@@ -216,11 +257,18 @@ https://claude.ai/code?prompt=Fix%20the%20login%20bug&repositories=acme/webapp
 
 如果您在 Claude Code 內輸入它並且命令菜單顯示 `No commands match "/web-setup"`，或提交它返回 `Unknown command: /web-setup`，該命令被隱藏是因為未滿足要求。原因通常是您使用 API 金鑰或第三方提供商而不是 claude.ai 訂閱進行驗證。執行 `/login` 以使用您的 claude.ai 帳戶登入。
 
-<h3 id="could-not-create-a-cloud-environment-or-no-cloud-environment-available-when-using-cloud-or-ultraplan">
-  使用 `--cloud` 或 ultraplan 時出現 "Could not create a cloud environment" 或 "No cloud environment available"
+在 Team 和 Enterprise 方案上，該命令預設是隱藏的：[快速網頁設定切換](/docs/zh-TW/claude-code-on-the-web#github-authentication-options)在擁有者開啟之前是關閉的。當它關閉時，[從瀏覽器連接 GitHub](#connect-github) 代替。
+
+該命令在另外兩種情況下也被隱藏：
+
+* 管理員已為您的組織停用雲端會話。在這種情況下，提交 `/web-setup` 會返回 [`Cloud sessions are disabled by your organization's policy`](/docs/zh-TW/errors#cloud-sessions-are-disabled-by-your-organizations-policy)。在 v2.1.268 之前，這種情況也會返回 `Unknown command: /web-setup`。
+* 您的 Enterprise 組織已啟用[零資料保留](/docs/zh-TW/zero-data-retention)，這使雲端會話不可用。
+
+<h3 id="could-not-create-a-cloud-environment-or-no-cloud-environment-available-when-using-cloud">
+  使用 `--cloud` 時出現 "Could not create a cloud environment" 或 "No cloud environment available"
 </h3>
 
-遠端會話功能會在您沒有雲端環境時自動建立預設雲端環境。如果您看到 "Could not create a cloud environment"，自動建立失敗。如果您看到 "No cloud environment available"，您的 CLI 早於自動建立。在任何一種情況下，在 Claude Code CLI 中執行 `/web-setup` 以手動建立一個，或訪問 [claude.ai/code](https://claude.ai/code) 並按照上面的**建立您的環境**步驟進行。
+雲端會話功能會在您沒有雲端環境時自動建立預設雲端環境。如果您看到 "Could not create a cloud environment"，自動建立失敗。如果您看到 "No cloud environment available"，您的 CLI 早於自動建立。在任何一種情況下，在 Claude Code CLI 中執行 `/web-setup`，或從 [claude.ai/code](https://claude.ai/code) 的[環境選擇器](/docs/zh-TW/cloud-environments#configure-your-environment)新增環境。
 
 <h3 id="setup-script-failed">
   設定指令碼失敗
@@ -228,8 +276,8 @@ https://claude.ai/code?prompt=Fix%20the%20login%20bug&repositories=acme/webapp
 
 設定指令碼以非零狀態退出，這會阻止會話啟動。常見原因：
 
-* 套件安裝失敗，因為登錄不在您的[網路存取級別](/docs/zh-TW/claude-code-on-the-web#access-levels)中。`Trusted` 涵蓋大多數套件管理器；`None` 阻止它們全部。
-* 指令碼引用在新鮮複製中不存在的文件或路徑。
+* 套件安裝失敗，因為登錄不在您的[網路存取級別](/docs/zh-TW/cloud-environments#access-levels)中。`Trusted` 涵蓋大多數套件管理器；`None` 阻止它們全部。
+* 指令碼引用在新鮮複製中不存在的檔案或路徑。
 * 在本地工作的命令在 Ubuntu 上需要不同的調用。
 
 要除錯，在指令碼頂部新增 `set -x` 以查看哪個命令失敗。對於非關鍵命令，附加 `|| true` 以便它們不會阻止會話啟動。
@@ -238,12 +286,12 @@ https://claude.ai/code?prompt=Fix%20the%20login%20bug&repositories=acme/webapp
   新會話在設定期間掛起或逾時
 </h3>
 
-如果新會話在設定指令碼步驟上停滯或在指令碼完成前因通用容器錯誤而失敗，指令碼可能超過了大約五分鐘的時間預算來建立[環境快取](/docs/zh-TW/claude-code-on-the-web#environment-caching)。繁重的步驟，例如拉取大型 Docker 映像、同步完整依賴樹或下載模型權重，通常會將總數推過限制，特別是當它們一個接一個執行時。
+如果新會話在設定指令碼步驟上停滯或在指令碼完成前因通用容器錯誤而失敗，指令碼可能超過了大約五分鐘的時間預算來建立[環境快取](/docs/zh-TW/cloud-environments#environment-caching)。繁重的步驟，例如拉取大型 Docker 映像、同步完整依賴樹或下載模型權重，通常會將總數推過限制，特別是當它們一個接一個執行時。
 
 要修復此問題，修剪指令碼以便它可靠地在五分鐘內完成：
 
 * 使用 `&` 和最終 `wait` 並行執行獨立安裝，而不是按順序執行。
-* 將最大的下載移出設定指令碼，進入[SessionStart hook](/docs/zh-TW/claude-code-on-the-web#setup-scripts-vs-sessionstart-hooks)，在背景中啟動它們，以便會話在它們完成時變得可用。
+* 將最大的下載移出設定指令碼，進入 [SessionStart hook](/docs/zh-TW/cloud-environments#setup-scripts-vs-sessionstart-hooks)，在背景中啟動它們，以便會話在它們完成時變得可用。
 * 從設定指令碼中移除長重試睡眠，因為停滯的重試迴圈會計入預算。
 
 <h3 id="session-keeps-running-after-closing-the-tab">
@@ -258,7 +306,8 @@ https://claude.ai/code?prompt=Fix%20the%20login%20bug&repositories=acme/webapp
 
 現在您可以提交和檢查任務，這些頁面涵蓋接下來的內容：從您的終端啟動雲端會話、安排定期工作以及為 Claude 提供常設指令。
 
-* [使用 Claude Code on the web](/docs/zh-TW/claude-code-on-the-web)：完整參考，包括將會話傳送到您的終端、設定指令碼、環境變數和網路配置
+* [使用 Claude Code on the web](/docs/zh-TW/claude-code-on-the-web)：完整參考，包括將會話傳送到您的終端、會話共享和自動修復提取請求
+* [設定雲端環境](/docs/zh-TW/cloud-environments)：網路存取層級、環境變數和雲端會話的設定指令碼
 * [Routines](/docs/zh-TW/routines)：按計劃、透過 API 呼叫或回應 GitHub 事件自動化工作
 * [CLAUDE.md](/docs/zh-TW/memory)：為 Claude 提供在每個會話開始時載入的持久指令和上下文
-* 安裝 Claude 行動應用程式以用於 [iOS](https://apps.apple.com/us/app/claude-by-anthropic/id6473753684) 或 [Android](https://play.google.com/store/apps/details?id=com.anthropic.claude) 以從您的手機監控會話。從 Claude Code CLI，`/mobile` 顯示 QR 碼。
+* 安裝 Claude 行動應用程式以用於 [iOS](https://apps.apple.com/us/app/claude-by-anthropic/id6473753684) 或 [Android](https://play.google.com/store/apps/details?id=com.anthropic.claude) 以從您的手機監控會話。從 Claude Code CLI，`/mobile` 顯示 QR 碼以用於 [claude.ai/mobile](https://claude.ai/mobile)，該碼會為您的手機開啟正確的應用程式商店。

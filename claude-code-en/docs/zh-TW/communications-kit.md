@@ -93,7 +93,7 @@
     📚 快速入門 · VS Code · 免費 1 小時課程
        https://code.claude.com/docs/en/quickstart
        https://code.claude.com/docs/en/vs-code
-       https://anthropic.skilljar.com/claude-code-in-action
+       https://academy.claude.com/courses/claude-code-in-action
 
     問題 → 此討論串。[擁有者] 正在負責。
     ```
@@ -186,8 +186,6 @@
 
 設計用於在推出後推動功能啟用的現成 Slack 或 Teams 訊息。每個都遵循相同的模式：一個鉤子、收益、一個「現在嘗試」提示和一個文件連結。在 `#claude-code` 中每週滴灌一兩個，或選擇與您團隊差距相符的少數幾個。它們獨立存在，沒有必需的順序。
 
-直接從每個區塊複製訊息正文到 Slack 或 Teams。在發送前替換 `[括號中的佔位符]`。
-
 <h3 id="get-started">
   開始使用
 </h3>
@@ -200,19 +198,23 @@
 使用 Opus 修復打字錯誤會浪費計算。使用 Haiku 進行 12 檔案重構
 是要求重做。
 
-Claude Code 在與 Claude 應用相同的模型上執行，您可以在會話中間切換。*Sonnet* 是日常功能工作、錯誤、測試和審查的預設主力。在大型重構、複雜除錯或任何高風險的事情上使用 *Opus*。對於快速問題、格式化和速度獲勝的機械編輯，降低到 *Haiku*。*Fable 5* 是您最困難、最長時間執行任務的最有能力的模型；它不是預設值，所以使用 `/model fable` 選擇它，並注意網路安全和生物學內容會自動回退到 Opus。
+Claude Code 在與 Claude 應用相同的模型上執行，您可以在會話中間切換。*Sonnet* 是日常功能工作、錯誤、測試和審查的預設主力。在大型重構、複雜除錯或任何高風險的事情上使用 *Opus*。對於快速問題、格式化和速度獲勝的機械編輯，降低到 *Haiku*。
+
+*Fable* 是您最困難、最長時間執行任務的最有能力的模型；它不是
+預設值，所以使用 `/model fable` 選擇它，並注意網路安全和生物學內容會自動回退到 Opus。Opus 5.5 和 Opus 5 執行自己的
+檢查：標記的內容會切換到較早的 Opus，除了 Opus 5 上標記的生物學內容會被拒絕。
 
 *現在嘗試：* 輸入 `/model` 並選擇 Sonnet（如果您還沒有的話）。它是大多數任務的正確預設。
 
 📖 Model configuration → https://code.claude.com/docs/zh-TW/model-config
 ```
 
-| 模型      | 最適合                                                                                                          |
-| ------- | ------------------------------------------------------------------------------------------------------------ |
-| Fable 5 | 最困難、最長時間執行的任務。僅選擇加入：使用 `/model fable` 選擇它。網路安全或生物學內容[回退到 Opus](/docs/zh-TW/model-config#automatic-model-fallback) |
-| Opus    | 大規模重構、複雜除錯、架構決策、高風險變更                                                                                        |
-| Sonnet  | 日常功能工作、錯誤修復、測試、文件、程式碼審查。建議預設。                                                                                |
-| Haiku   | 快速問題、格式化、機械編輯、快速迭代                                                                                           |
+| 模型     | 最適合                                                                                                                |
+| ------ | ------------------------------------------------------------------------------------------------------------------ |
+| Fable  | 最困難、最長時間執行的任務。僅選擇加入：使用 `/model fable` 選擇它。網路安全或生物學內容觸發[自動模型回退到 Opus](/docs/zh-TW/model-config#automatic-model-fallback) |
+| Opus   | 大規模重構、複雜除錯、架構決策、高風險變更。在 Opus 5.5 和 Opus 5 上，網路安全或生物學內容觸發[自動模型回退或拒絕](/docs/zh-TW/model-config#automatic-model-fallback)  |
+| Sonnet | 日常功能工作、錯誤修復、測試、文件、程式碼審查。建議預設。                                                                                      |
+| Haiku  | 快速問題、格式化、機械編輯、快速迭代                                                                                                 |
 
 **首先嘗試的快速勝利**
 
@@ -277,7 +279,7 @@ Claude Code 在與 Claude 應用相同的模型上執行，您可以在會話中
 
 有時您希望 Claude 在每次編輯前請求許可。有時您只是希望它發貨。您不應該永遠選擇一個。
 
-*Shift+Tab* 循環通過 Claude 可以做多少而不需要詢問：*Manual*（`default` 設定值）在檔案編輯和大多數 shell 命令前詢問，*acceptEdits* 讓檔案編輯和常見檔案系統命令流通，同時仍在其他 shell 命令前檢查，*plan* 在觸及任何東西前為您的批准提議變更。Plan 模式是信任建立者，因此對於觸及多個檔案的任何事情，從那裡開始。
+*Shift+Tab* 循環通過 Claude 可以做多少而不需要詢問：*Manual*（`default` 設定值）在檔案編輯和大多數 shell 命令前詢問，*acceptEdits* 讓檔案編輯和常見檔案系統命令流通，同時仍在其他 shell 命令前檢查，*plan* 在觸及任何東西前為您的批准提議變更。Plan Mode 是信任建立者，因此對於觸及多個檔案的任何事情，從那裡開始。
 
 *現在嘗試：* 在您的下一個重構上，按 Shift+Tab 直到您看到「plan」，然後描述變更。您將在單個檔案移動前獲得完整提案。
 
@@ -293,8 +295,7 @@ Claude 三個回合前走錯了路，現在您正在解開它？您不必向前�
 
 `/rewind` 回滾到對話中的較早點，包括 Claude 沿途所做的檔案變更。Checkpointing 是自動的；您不需要設定任何東西。
 
-*現在嘗試：* 按 *Esc* 兩次以開啟倒帶菜單，或輸入 `/rewind`。
-選擇事情變得不對勁之前的點。
+*現在嘗試：* 按 *Esc* 兩次以開啟倒帶菜單，或輸入 `/rewind`。選擇事情變得不對勁之前的點。
 
 📖 Checkpointing → https://code.claude.com/docs/zh-TW/checkpointing
 ```
@@ -310,9 +311,9 @@ Claude 三個回合前走錯了路，現在您正在解開它？您不必向前�
 
 將 Jira 票證複製貼到終端感覺像是向後退一步。確實如此。
 
-一個配置檔案（您的專案根目錄中的 `.mcp.json`）將 Claude 連接到 GitHub、Jira、Linear 或您使用的任何追蹤器。然後「什麼是分配給我的最高優先級問題？」和「繼續修復它」在同一對話中發生。
+一個設定檔（您的專案根目錄中的 `.mcp.json`）將 Claude 連接到 GitHub、Jira、Linear 或您使用的任何追蹤器。然後「什麼是分配給我的最高優先級問題？」和「繼續修復它」在同一對話中發生。
 
-*現在嘗試：* 要求 Claude「在此儲存庫中為 [GitHub/Jira/Linear] 設定 MCP 連接器」。它將為您寫入配置。
+*現在嘗試：* 要求 Claude「在此儲存庫中為 [GitHub/Jira/Linear] 設定 MCP 連接器」。它將為您寫入設定。
 
 📖 MCP connectors → https://code.claude.com/docs/zh-TW/mcp
 ```
@@ -360,7 +361,7 @@ Hooks 是在 Claude Code 事件上觸發的 shell 命令。一個發送桌面通
 
 輸出「有一個紅色框說一些關於空參考的東西，它指向第 47 行左右」？螢幕截圖它。
 
-直接將螢幕截圖拖到終端中，Claude 看到它：錯誤對話框、UI 模型、白板照片、Figma 匯出。*Ctrl+V* 從剪貼板貼上（在 macOS 上也使用 Ctrl+V，而不是 Cmd+V）。
+直接將螢幕截圖拖到終端中，Claude 看到它：錯誤對話框、UI 模型、白板照片、Figma 匯出。*Ctrl+V* 從剪貼板貼上，或在 Windows 和 WSL 上使用 *Alt+V*。
 
 *現在嘗試：* 下次視覺上出現問題時，螢幕截圖它並直接貼到提示中。然後只需輸入「這裡出了什麼問題？」
 
@@ -376,8 +377,7 @@ Hooks 是在 Claude Code 事件上觸發的 shell 命令。一個發送桌面通
 
 Claude 處理完整的 git 流程：具有常規訊息的提交、分支、具有適當摘要的 PR。一個要求：「修復偏差一，使用常規提交訊息提交，並開啟 PR。」審查別人的工作？貼上 PR URL 並要求 Claude 向您介紹差異。
 
-*現在嘗試：* 在您的下一個修復後，而不是切換到您的 git 客戶端，
-只需輸入「用好訊息提交此內容並開啟 PR」。
+*現在嘗試：* 在您的下一個修復後，而不是切換到您的 git 客戶端，只需輸入「用好訊息提交此內容並開啟 PR」。
 
 📖 Creating pull requests → https://code.claude.com/docs/zh-TW/common-workflows
 ```
@@ -414,8 +414,7 @@ Skills 被捆綁並作為外掛共享。`/plugin` 瀏覽可用的內容並在一
 
 許可優先設計。每個檔案編輯、shell 命令和外部呼叫都由您的批准控制。CLI 在您的終端中執行，直接與 Anthropic 的 API 通訊，沒有第三方伺服器，並支援 shell 命令的可選作業系統級沙箱。根據我們的企業計畫，Anthropic 不使用您的程式碼或提示來訓練其模型。
 
-*現在嘗試：* 保存這兩個連結，以備下次問題出現時使用。
-它們回答了大多數安全審查問題。
+*現在嘗試：* 保存這兩個連結，以備下次問題出現時使用。它們回答了大多數安全審查問題。
 
 📖 https://code.claude.com/docs/zh-TW/security
 📖 https://code.claude.com/docs/zh-TW/data-usage

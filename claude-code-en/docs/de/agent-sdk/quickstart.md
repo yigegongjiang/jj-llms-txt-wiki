@@ -19,7 +19,7 @@ Verwenden Sie das Agent SDK, um einen KI-Agenten zu erstellen, der Ihren Code li
 </h2>
 
 * **Node.js 18+** oder **Python 3.10+**
-* Ein **Anthropic-Konto** ([hier registrieren](https://platform.claude.com/))
+* Ein **Anthropic-Konto**. Falls Sie noch kein Konto haben, [registrieren Sie sich hier](https://platform.claude.com/).
 
 <h2 id="setup">
   Einrichtung
@@ -49,7 +49,7 @@ Verwenden Sie das Agent SDK, um einen KI-Agenten zu erstellen, der Ihren Code li
         npm install --save-dev tsx
         ```
 
-        Das Setzen von `"type": "module"` in `package.json` ermöglicht Ihrem Agent-Skript die Verwendung von Top-Level-`await`, und [tsx](https://tsx.is) führt TypeScript-Dateien direkt aus.
+        Das Setzen von `"type": "module"` in `package.json` ermöglicht Ihrem Agent-Skript die Verwendung von Top-Level-`await`, und [tsx](https://tsx.hirok.io) führt TypeScript-Dateien direkt aus. npm gibt `added N packages` aus, wenn die Installation erfolgreich ist.
       </Tab>
 
       <Tab title="TypeScript (bestehendes Projekt)">
@@ -58,11 +58,11 @@ Verwenden Sie das Agent SDK, um einen KI-Agenten zu erstellen, der Ihren Code li
         npm install --save-dev tsx
         ```
 
-        [tsx](https://tsx.is) führt TypeScript-Dateien direkt aus. Wenn Ihr Projekt CommonJS verwendet, benennen Sie Ihr Agent-Skript `agent.mts` statt `agent.ts`. Die `.mts`-Erweiterung veranlasst tsx, die Datei als ES-Modul zu behandeln, sodass Top-Level-`await` funktioniert, ohne Ihr gesamtes Projekt in ES-Module zu konvertieren. Verwenden Sie `agent.mts` anstelle von `agent.ts` in den Erstellungs- und Ausführungsschritten später in diesem Schnellstart.
+        [tsx](https://tsx.hirok.io) führt TypeScript-Dateien direkt aus. Wenn Ihr Projekt CommonJS verwendet, benennen Sie Ihr Agent-Skript `agent.mts` statt `agent.ts`. Die `.mts`-Erweiterung veranlasst tsx, die Datei als ES-Modul zu behandeln, sodass Top-Level-`await` funktioniert, ohne Ihr gesamtes Projekt in ES-Module zu konvertieren. Verwenden Sie `agent.mts` anstelle von `agent.ts` in den Erstellungs- und Ausführungsschritten später in diesem Schnellstart.
       </Tab>
 
       <Tab title="Python (uv)">
-        [uv](https://docs.astral.sh/uv/) ist ein schneller Python-Paketmanager, der virtuelle Umgebungen automatisch verwaltet:
+        [Installieren Sie uv](https://docs.astral.sh/uv/), einen schnellen Python-Paketmanager, der virtuelle Umgebungen automatisch verwaltet. Initialisieren Sie dann ein Projekt und fügen Sie das SDK hinzu:
 
         ```bash theme={null}
         uv init
@@ -94,7 +94,10 @@ Verwenden Sie das Agent SDK, um einen KI-Agenten zu erstellen, der Ihren Code li
     </Tabs>
 
     <Note>
-      Das TypeScript SDK bündelt eine native Claude Code-Binärdatei für Ihre Plattform als optionale Abhängigkeit, sodass Sie Claude Code nicht separat installieren müssen.
+      Sowohl das TypeScript als auch das Python SDK bündeln eine native Claude Code-Binärdatei, daher benötigen die meisten Installationen keine separate Claude Code-Installation. Einige Installationen haben keine gebündelte Binärdatei:
+
+      * Wenn pip die Python SDK-Quelldistribution anstelle eines Plattform-Wheels installiert, beispielsweise auf ARM64 Windows, wird keine Binärdatei gebündelt. [Installieren Sie Claude Code nativ](/docs/de/setup#install-claude-code). Das Python SDK findet es auf Ihrem `PATH`.
+      * Das TypeScript SDK installiert seine Binärdatei über npm optionale Abhängigkeiten, daher erhält eine Installation, die diese überspringt, beispielsweise `npm ci --omit=optional`, auch auf einer unterstützten Plattform keine Binärdatei. Installieren Sie erneut, ohne optionale Abhängigkeiten zu überspringen, oder [installieren Sie Claude Code nativ](/docs/de/setup#install-claude-code) und setzen Sie `pathToClaudeCodeExecutable` auf seinen Pfad.
     </Note>
   </Step>
 
@@ -122,7 +125,7 @@ Verwenden Sie das Agent SDK, um einen KI-Agenten zu erstellen, der Ihren Code li
     * **Amazon Bedrock**: Setzen Sie die Umgebungsvariable `CLAUDE_CODE_USE_BEDROCK=1` und konfigurieren Sie AWS-Anmeldedaten
     * **Claude Platform on AWS**: Setzen Sie `CLAUDE_CODE_USE_ANTHROPIC_AWS=1` und `ANTHROPIC_AWS_WORKSPACE_ID` und konfigurieren Sie AWS-Anmeldedaten
     * **Google Cloud's Agent Platform**: Setzen Sie die Umgebungsvariable `CLAUDE_CODE_USE_VERTEX=1` und konfigurieren Sie Google Cloud-Anmeldedaten
-    * **Microsoft Azure**: Setzen Sie die Umgebungsvariable `CLAUDE_CODE_USE_FOUNDRY=1` und konfigurieren Sie Azure-Anmeldedaten
+    * **Microsoft Foundry**: Setzen Sie die Umgebungsvariable `CLAUDE_CODE_USE_FOUNDRY=1` und konfigurieren Sie Azure-Anmeldedaten
 
     Weitere Informationen finden Sie in den Einrichtungsleitfäden für [Amazon Bedrock](/docs/de/amazon-bedrock), [Claude Platform on AWS](/docs/de/claude-platform-on-aws), [Google Cloud's Agent Platform](/docs/de/google-vertex-ai) oder [Microsoft Foundry](/docs/de/microsoft-foundry).
 
@@ -225,7 +228,7 @@ Dieser Code hat drei Hauptteile:
 
 3. **`options`**: Konfiguration für den Agenten. Dieses Beispiel verwendet `allowedTools`, um `Read`, `Edit` und `Glob` vorab zu genehmigen, und `permissionMode: "acceptEdits"`, um Dateiänderungen automatisch zu genehmigen. Weitere Optionen sind `systemPrompt`, `mcpServers` und mehr. Siehe alle Optionen für [Python](/docs/de/agent-sdk/python#claudeagentoptions) oder [TypeScript](/docs/de/agent-sdk/typescript#options).
 
-Die `async for`-Schleife läuft weiter, während Claude denkt, Tools aufruft, Ergebnisse beobachtet und entscheidet, was als nächstes zu tun ist. Jede Iteration ergibt eine Nachricht: Claudes Überlegung, ein Tool-Aufruf, ein Tool-Ergebnis oder das endgültige Ergebnis. Das SDK verwaltet die Orchestrierung (Tool-Ausführung, Kontextverwaltung, Wiederholungen), sodass Sie einfach den Stream verbrauchen. Die Schleife endet, wenn Claude die Aufgabe abschließt oder auf einen Fehler stößt.
+Die `async for`-Schleife läuft weiter, während Claude denkt, Tools aufruft, Ergebnisse beobachtet und entscheidet, was als nächstes zu tun ist. Jede Iteration ergibt eine Nachricht: Claudes Überlegung, ein Tool-Aufruf, ein Tool-Ergebnis oder das endgültige Ergebnis. Das SDK verwaltet die Orchestrierung, Tool-Ausführung, Kontextverwaltung und Wiederholungen, sodass Sie einfach den Stream verbrauchen. Die Schleife endet, wenn Claude die Aufgabe abschließt oder auf einen Fehler stößt.
 
 Die Nachrichtenbehandlung in der Schleife filtert nach benutzerfreundlicher Ausgabe. Ohne Filterung würden Sie rohe Nachrichtenobjekte sehen, einschließlich Systeminitialisierung und internem Status, was zum Debuggen nützlich ist, aber sonst störend wirkt.
 
@@ -272,7 +275,9 @@ Während es arbeitet, druckt der Agent seine Überlegungen und jeden Tool-Aufruf
 Das macht das Agent SDK anders: Claude führt Tools direkt aus, anstatt Sie zu bitten, sie zu implementieren.
 
 <Note>
-  Wenn Sie 'API-Schlüssel nicht gefunden" sehen, stellen Sie sicher, dass Sie die Umgebungsvariable `ANTHROPIC_API_KEY` in der Shell gesetzt haben, in der Sie Ihren Agenten ausführen. Das SDK lädt `.env`-Dateien nicht automatisch. Weitere Hilfe finden Sie im [vollständigen Fehlerbehebungsleitfaden](/docs/de/troubleshooting).
+  Wenn Sie einen Authentifizierungsfehler wie `Not logged in` oder `Invalid API key` sehen, stellen Sie sicher, dass Sie die Umgebungsvariable `ANTHROPIC_API_KEY` in der Shell gesetzt haben, in der Sie Ihren Agenten ausführen. Das SDK lädt `.env`-Dateien nicht automatisch.
+
+  Informationen zu den Ursachen und Lösungen dieser und anderer Authentifizierungsfehler finden Sie unter [Authentifizierungsfehler](/docs/de/errors#authentication-errors) in der Fehlerreferenz.
 </Note>
 
 <h3 id="try-other-prompts">
@@ -353,6 +358,8 @@ Sie können das Verhalten Ihres Agenten ändern, indem Sie die Optionen ändern.
 
 Mit aktiviertem `Bash` versuchen Sie: `"Write unit tests for utils.py, run them, and fix any failures"`
 
+Jedes dieser Snippets setzt Felder auf demselben Optionsobjekt. Weitere Informationen finden Sie unter [Konfigurieren Sie Ihren Agenten](/docs/de/agent-sdk/configuration).
+
 <h2 id="key-concepts">
   Wichtige Konzepte
 </h2>
@@ -365,18 +372,7 @@ Mit aktiviertem `Bash` versuchen Sie: `"Write unit tests for utils.py, run them,
 | `Read`, `Edit`, `Glob`                 | Code analysieren und ändern  |
 | `Read`, `Edit`, `Bash`, `Glob`, `Grep` | Vollständige Automatisierung |
 
-**Genehmigungsmodi** steuern, wie viel menschliche Aufsicht Sie möchten:
-
-| Modus               | Verhalten                                                                                                                                                                                                                                                                                                                           | Anwendungsfall                                         |
-| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
-| `acceptEdits`       | Genehmigt Dateibearbeitungen und häufige Dateisystembefehle automatisch, fragt nach anderen Aktionen                                                                                                                                                                                                                                | Vertrauenswürdige Entwicklungs-Workflows               |
-| `plan`              | Führt schreibgeschützte Tools aus; Dateibearbeitungen werden nie automatisch genehmigt und erreichen Ihren `canUseTool`-Callback                                                                                                                                                                                                    | Aufgabenumfang vor Genehmigung der Ausführung          |
-| `dontAsk`           | Lehnt alles ab, das nicht in `allowedTools` enthalten ist; Connector-Tools [die Ihre Organisation auf `ask` gesetzt hat](/docs/de/mcp#organization-controls-on-connector-tools) und Tools, die Benutzerinteraktion erfordern, werden abgelehnt, auch wenn Sie sie aufgelistet haben                                                      | Gesperrte Headless-Agenten                             |
-| `auto`              | Ein Modell-Klassifizierer genehmigt oder lehnt jeden Tool-Aufruf ab                                                                                                                                                                                                                                                                 | Autonome Agenten mit Sicherheitsvorkehrungen           |
-| `bypassPermissions` | Führt jedes Tool ohne Eingabeaufforderungen aus, außer Tools, die einer expliziten [`ask`-Regel](/docs/de/agent-sdk/permissions#how-permissions-are-evaluated) entsprechen, Connector-Tools [die Ihre Organisation auf `ask` gesetzt hat](/docs/de/mcp#organization-controls-on-connector-tools) und Tools, die Benutzerinteraktion erfordern | Sandboxed CI, vollständig vertrauenswürdige Umgebungen |
-| `default`           | Erfordert einen `canUseTool`-Callback zur Genehmigungsbehandlung                                                                                                                                                                                                                                                                    | Benutzerdefinierte Genehmigungsabläufe                 |
-
-Das obige Beispiel verwendet den `acceptEdits`-Modus, der Dateivorgänge automatisch genehmigt, damit der Agent ohne interaktive Eingabeaufforderungen ausgeführt werden kann. Wenn Sie Benutzer zur Genehmigung auffordern möchten, verwenden Sie den `default`-Modus und stellen Sie einen [`canUseTool`-Callback](/docs/de/agent-sdk/user-input) bereit, der Benutzereingaben sammelt. Für mehr Kontrolle siehe [Berechtigungen](/docs/de/agent-sdk/permissions).
+**Genehmigungsmodi** steuern, wie viel menschliche Aufsicht Sie möchten. Das SDK wertet den aktiven Modus zusammen mit Ihren Allow- und Deny-Regeln in einer festen Reihenfolge aus, die unter [Wie Berechtigungen ausgewertet werden](/docs/de/agent-sdk/permissions#how-permissions-are-evaluated) beschrieben ist. Die vollständige Liste der Modi, ihr Verhalten und wann Sie jeden verwenden sollten, finden Sie unter [Genehmigungsmodus in Wie die Agent-Schleife funktioniert](/docs/de/agent-sdk/agent-loop#permission-mode).
 
 <h2 id="next-steps">
   Nächste Schritte
@@ -384,9 +380,11 @@ Das obige Beispiel verwendet den `acceptEdits`-Modus, der Dateivorgänge automat
 
 Jetzt, da Sie Ihren ersten Agenten erstellt haben, erfahren Sie, wie Sie seine Funktionen erweitern und ihn an Ihren Anwendungsfall anpassen:
 
+* **[Konfigurieren Sie Ihren Agenten](/docs/de/agent-sdk/configuration)**: Stellen Sie das Optionsobjekt zusammen und finden Sie die Seite, die jede Einstellung abdeckt
 * **[Berechtigungen](/docs/de/agent-sdk/permissions)**: Steuern Sie, was Ihr Agent tun kann und wann er Genehmigung benötigt
 * **[Hooks](/docs/de/agent-sdk/hooks)**: Führen Sie benutzerdefinierten Code vor oder nach Tool-Aufrufen aus
 * **[Sitzungen](/docs/de/agent-sdk/sessions)**: Erstellen Sie Multi-Turn-Agenten, die den Kontext beibehalten
 * **[MCP-Server](/docs/de/agent-sdk/mcp)**: Verbinden Sie sich mit Datenbanken, Browsern, APIs und anderen externen Systemen
 * **[Hosting](/docs/de/agent-sdk/hosting)**: Stellen Sie Agenten in Docker, Cloud und CI/CD bereit
 * **[Beispiel-Agenten](https://github.com/anthropics/claude-agent-sdk-demos)**: Siehe vollständige Beispiele: E-Mail-Assistent, Forschungsagent und mehr
+* **[Fehlerbehebung](/docs/de/agent-sdk/troubleshooting)**: Beheben Sie Fehler, wenn die CLI nicht startet oder beendet wird, oder wenn ein Ergebnis ohne strukturierte Ausgabe ankommt

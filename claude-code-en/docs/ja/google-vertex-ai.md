@@ -104,7 +104,7 @@ Google Cloud 認証情報を持っていて、Google Cloud の Agent Platform �
   </Step>
 
   <Step title="Claude Code を起動して Google Cloud の Agent Platform を選択する">
-    `claude` を実行します。ログインプロンプトで、**3rd-party platform**、次に **Google Vertex AI** を選択します。これはログインプロンプトが Google Cloud の Agent Platform に対して使用しているラベルです。
+    `claude` を実行します。ログインプロンプトで、**3rd-party platform**、次に **Google Vertex AI** を選択します。これはログインプロンプトが Google Cloud の Agent Platform に対して使用しているラベルです。既にサインインしている場合は、`/login` を実行して同じメニューを開きます。
   </Step>
 
   <Step title="ウィザードプロンプトに従う">
@@ -134,7 +134,7 @@ Claude Code は Google Cloud の Agent Platform の[グローバル](https://clo
   1. Agent Platform API を有効にする
 </h3>
 
-GCP プロジェクトで Google Cloud の Agent Platform API を有効にします。
+GCP プロジェクトで Google Cloud の Agent Platform API を有効にします。`YOUR-PROJECT-ID` を GCP プロジェクト ID に置き換えてください。以下の設定手順でも同じように置き換えます。
 
 ```bash theme={null}
 # プロジェクト ID を設定
@@ -151,7 +151,7 @@ gcloud services enable aiplatform.googleapis.com
 Google Cloud の Agent Platform で Claude モデルへのアクセスをリクエストします。
 
 1. [Google Cloud の Agent Platform Model Garden](https://console.cloud.google.com/vertex-ai/model-garden)に移動します
-2. 'Claude'モデルを検索します
+2. 「Claude」モデルを検索します
 3. 目的の Claude モデルへのアクセスをリクエストします（例：Claude Sonnet 4.6）
 4. 承認を待ちます（24 ～ 48 時間かかる場合があります）
 
@@ -163,17 +163,17 @@ Claude Code は標準的な Google Cloud 認証を使用します。
 
 詳細については、[Google Cloud 認証ドキュメント](https://cloud.google.com/docs/authentication)を参照してください。
 
-Claude Code v2.1.121 以降は、同じ Application Default Credentials チェーンを通じて [X.509 証明書ベースのワークロード ID フェデレーション](https://cloud.google.com/iam/docs/workload-identity-federation-with-x509-certificates)をサポートしています。`GOOGLE_APPLICATION_CREDENTIALS` を認証情報設定ファイルのパスに設定します。
+Claude Code は、同じ Application Default Credentials チェーンを通じて [X.509 証明書ベースのワークロード ID フェデレーション](https://cloud.google.com/iam/docs/workload-identity-federation-with-x509-certificates)をサポートしています。`GOOGLE_APPLICATION_CREDENTIALS` を認証情報設定ファイルのパスに設定します。
 
 <Note>
-  Claude Code は Google Cloud の Agent Platform リクエストのプロジェクト ID として `ANTHROPIC_VERTEX_PROJECT_ID` を使用します。`GCLOUD_PROJECT` および `GOOGLE_CLOUD_PROJECT` 環境変数と `GOOGLE_APPLICATION_CREDENTIALS` で参照される認証情報ファイルがこれより優先されます。これらのいずれも設定されていない場合、プロジェクト ID は `gcloud` 設定またはアタッチされたサービスアカウントから解決されます。
+  Claude Code は Google Cloud の Agent Platform リクエストを `ANTHROPIC_VERTEX_PROJECT_ID` のプロジェクトにアドレス指定します。`GCLOUD_PROJECT`、`GOOGLE_CLOUD_PROJECT`、または `GOOGLE_APPLICATION_CREDENTIALS` で参照される認証情報ファイルが異なるプロジェクトを持つ場合でも同じです。
 </Note>
 
 <h4 id="advanced-credential-configuration">
   高度な認証情報設定
 </h4>
 
-Claude Code は `gcpAuthRefresh` 設定を通じて GCP の自動認証情報更新をサポートしています。Claude Code が GCP 認証情報の有効期限が切れているか読み込めないことを検出すると、リクエストを再試行する前に新しい認証情報を取得するために設定されたコマンドを実行します。
+Claude Code は `gcpAuthRefresh` 設定を通じて GCP の自動認証情報更新をサポートしています。これを Claude Code の [設定ファイル](/docs/ja/settings)（例：`~/.claude/settings.json`）に追加します。Claude Code が GCP 認証情報の有効期限が切れているか読み込めないことを検出すると、リクエストを再試行する前に新しい認証情報を取得するために設定されたコマンドを実行します。
 
 ```json theme={null}
 {
@@ -184,7 +184,11 @@ Claude Code は `gcpAuthRefresh` 設定を通じて GCP の自動認証情報更
 }
 ```
 
-コマンドの出力はユーザーに表示されますが、対話的な入力はサポートされていません。これは、CLI が URL を表示し、ブラウザで認証を完了するブラウザベースの認証フローに適しています。認証が完了しない場合、更新コマンドは 3 分後にタイムアウトします。`.claude/settings.json` などのプロジェクト設定で `gcpAuthRefresh` を設定した場合、コマンドはワークスペース信頼プロンプトを受け入れた後にのみ実行されます。
+コマンドを実行する前に、Claude Code は現在の認証情報でアクセストークンをリクエストして、実際に有効期限が切れていることを確認し、まだ機能している場合はコマンドをスキップします。
+
+チェックが 5 秒以内に完了しない場合、Claude Code もコマンドをスキップし、リクエストが認証情報エラーで失敗した後にのみ実行します。v2.1.261 より前は、タイムアウトしたチェックは有効期限が切れた認証情報としてカウントされたため、認証情報がまだ有効であってもコマンドがスタートアップ時にブラウザを開く可能性がありました。
+
+Claude Code はコマンドの出力を表示しますが、コマンドに対話的な入力を送信することはできません。これは、CLI が URL を表示し、ブラウザで認証を完了するブラウザベースの認証フローに適しています。認証が完了しない場合、更新コマンドは 3 分後にタイムアウトします。`.claude/settings.json` などのプロジェクト設定で `gcpAuthRefresh` を設定した場合、Claude Code は設定ファイルの [ワークスペース信頼ルールと同じルール](/docs/ja/permissions#what-runs-before-you-trust-a-folder)の下でそれを実行します。これには、信頼したことのないフォルダ内の `-p` セッションが含まれます。
 
 <h3 id="4-configure-claude-code">
   4. Claude Code を設定する
@@ -201,12 +205,6 @@ export ANTHROPIC_VERTEX_PROJECT_ID=YOUR-PROJECT-ID
 # オプション：カスタムエンドポイントまたはゲートウェイ用に Agent Platform エンドポイント URL をオーバーライドする
 # export ANTHROPIC_VERTEX_BASE_URL=https://aiplatform.googleapis.com
 
-# オプション：必要に応じてプロンプトキャッシングを無効にする
-export DISABLE_PROMPT_CACHING=1
-
-# オプション：デフォルトの 5 分ではなく 1 時間のプロンプトキャッシュ TTL をリクエストする
-export ENABLE_PROMPT_CACHING_1H=1
-
 # CLOUD_ML_REGION=global の場合、グローバルエンドポイントをサポートしていないモデルのリージョンをオーバーライドする
 export VERTEX_REGION_CLAUDE_HAIKU_4_5=us-east5
 export VERTEX_REGION_CLAUDE_4_6_SONNET=europe-west1
@@ -214,21 +212,33 @@ export VERTEX_REGION_CLAUDE_4_6_SONNET=europe-west1
 
 ほとんどのモデルバージョンには、対応する `VERTEX_REGION_CLAUDE_*` 変数があります。完全なリストについては、[環境変数リファレンス](/docs/ja/env-vars)を参照してください。どのモデルがグローバルエンドポイントをサポートしているか、または地域別のみをサポートしているかを確認するには、[Google Cloud の Agent Platform Model Garden](https://console.cloud.google.com/vertex-ai/model-garden)を確認してください。
 
-[prompt caching](/docs/ja/prompt-caching)は自動的に有効になります。これを無効にするには、`DISABLE_PROMPT_CACHING=1` を設定します。デフォルトの 5 分ではなく 1 時間のキャッシュ TTL をリクエストするには、`ENABLE_PROMPT_CACHING_1H=1` を設定します。1 時間の TTL でのキャッシュ書き込みはより高いレートで課金されます。レート制限を高くするには、Google Cloud サポートに連絡してください。Google Cloud の Agent Platform を使用する場合、Google Cloud 認証情報を通じて認証が処理されるため、`/logout` コマンドは無効になります。
+リージョン値がリージョンまたはロケーション名のような形状でない場合、Claude Code はそれを未設定として扱います。例えば、Claude Code はスラッシュ、ドット、またはスペースを含む値を未設定として扱います。Claude Code は各変数に対して異なるソースにフォールバックします。
 
-Claude Code は Google Cloud の Agent Platform でデフォルトで [MCP tool search](/docs/ja/mcp#scale-with-mcp-tool-search)を無効にしているため、MCP ツール定義は事前にロードされます。Google Cloud の Agent Platform は Claude Sonnet 4.5 以降および Claude Opus 4.5 以降のツール検索をサポートしています。`ENABLE_TOOL_SEARCH=true` を設定して、これらのモデルで有効にします。Google Cloud の Agent Platform の以前のモデルは必要なベータヘッダーを受け入れず、これらのモデルでツール検索を有効にするとリクエストが失敗します。
+* `VERTEX_REGION_CLAUDE_*`：Claude Code は `CLOUD_ML_REGION` にフォールバックします。
+* `CLOUD_ML_REGION`：Claude Code は `us-east5` にフォールバックします。
+
+[prompt caching](/docs/ja/prompt-caching)は自動的に有効になります。これを無効にするには、`DISABLE_PROMPT_CACHING=1` を設定します。デフォルトの 5 分ではなく 1 時間のキャッシュ TTL をリクエストするには、`ENABLE_PROMPT_CACHING_1H=1` を設定します。1 時間の TTL でのキャッシュ書き込みはより高いレートで課金されます。メインの会話と Claude Code が外部で行うリクエストに異なる TTL を設定するには、[TTL を自分で選択](/docs/ja/prompt-caching#choose-the-ttl-yourself)してください。
+
+レート制限を高くするには、Google Cloud サポートに連絡してください。Google Cloud の Agent Platform を使用する場合、認証が Google Cloud 認証情報を通じて処理されるため、`/logout` コマンドは利用できません。
+
+Claude Code は [MCP tool search](/docs/ja/mcp#scale-with-mcp-tool-search)と事前ロードをモデル生成によって決定します。
+
+* **Claude Opus 4.5、Sonnet 4.5、Haiku 4.5、およびそれ以降**：Claude Code はデフォルトでツール検索を有効にします。
+* **Claude 3.x モデルを含む以前のモデル**：Claude Code は MCP ツール定義を事前にロードします。これは、Agent Platform サービングスタックが必要なベータヘッダーを拒否するためです。`ENABLE_TOOL_SEARCH=true` を設定してもこれをオーバーライドしません。
+
+すべてのモデルでツール検索を無効にするには、`ENABLE_TOOL_SEARCH=false` を設定します。v2.1.221 より前は、Claude Code は `ENABLE_TOOL_SEARCH=true` を設定しない限り、Google Cloud の Agent Platform 上のすべてのモデルでツール検索を無効にしていました。
 
 <h3 id="5-pin-model-versions">
   5. モデルバージョンをピン留めする
 </h3>
 
 <Warning>
-  複数のユーザーにデプロイする場合は、特定のモデルバージョンをピン留めしてください。ピン留めなしでは、`sonnet` および `opus` などのモデルエイリアスは Claude Code の Google Cloud の Agent Platform 用の組み込みデフォルトに解決され、最新リリースより遅れる可能性があり、プロジェクトでまだ有効になっていない可能性があります。Claude Code は、デフォルトが利用できない場合、起動時に前のバージョンにフォールバックしますが、ピン留めすることで、ユーザーが新しいモデルに移行するタイミングを制御できます。
+  複数のユーザーにデプロイする場合は、特定のモデルバージョンをピン留めしてください。ピン留めなしでは、`sonnet` および `opus` などのモデルエイリアスは Claude Code の Google Cloud の Agent Platform 用の組み込みデフォルトに解決され、最新リリースより遅れる可能性があり、プロジェクトでまだ有効になっていない可能性があります。Claude Code は、デフォルトが利用できない場合、[スタートアップ時](#startup-model-checks)に前のバージョンまたは下位層のモデルにフォールバックしますが、ピン留めすることで、ユーザーが新しいモデルに移行するタイミングを制御できます。
 </Warning>
 
 これらの環境変数を特定の Google Cloud の Agent Platform モデル ID に設定します。
 
-`ANTHROPIC_DEFAULT_OPUS_MODEL` がない場合、Google Cloud の Agent Platform 上の `opus` エイリアスは Opus 4.8 に解決され、`ANTHROPIC_DEFAULT_SONNET_MODEL` がない場合、`sonnet` エイリアスは Sonnet 4.5 に解決されます。この例では、各エイリアスを特定のバージョンにピン留めします。
+`ANTHROPIC_DEFAULT_OPUS_MODEL` がない場合、Google Cloud の Agent Platform 上の `opus` エイリアスは Opus 5.5 に解決され、`ANTHROPIC_DEFAULT_SONNET_MODEL` がない場合、`sonnet` エイリアスは Sonnet 4.5 に解決されます。この例では、各エイリアスを特定のバージョンにピン留めします。
 
 ```bash theme={null}
 export ANTHROPIC_DEFAULT_OPUS_MODEL='claude-opus-4-8'
@@ -242,19 +252,19 @@ Claude Code は、ピン留め変数が設定されていない場合、これ�
 
 | モデルタイプ   | デフォルト値                       |
 | :------- | :--------------------------- |
-| プライマリモデル | `claude-opus-4-8`            |
+| プライマリモデル | `claude-opus-5-5`            |
 | 小型/高速モデル | `claude-sonnet-4-5@20250929` |
 
 セッションタイトル生成などのバックグラウンドタスクは、小型/高速モデル（通常は Haiku クラスモデル）を使用します。Google Cloud の Agent Platform では、Haiku がすべてのプロジェクトまたはリージョンで有効になっていない可能性があるため、Claude Code はバックグラウンドタスクにデフォルトの Sonnet モデルを使用します。2 つの選択がどのモデルがバックグラウンドタスクを実行するかを変更します。
 
-* `--model`、`ANTHROPIC_MODEL`、または `model` 設定でプライマリモデルを選択すると、バックグラウンドタスクはそのモデルを使用します。`ANTHROPIC_DEFAULT_SONNET_MODEL` なしで `ANTHROPIC_DEFAULT_OPUS_MODEL` を設定することも、組み込み Sonnet モデルがプロジェクトで有効になっていない可能性があるため、選択としてカウントされます。
+* `--model`、`ANTHROPIC_MODEL`、または `model` 設定でプライマリモデルを選択すると、バックグラウンドタスクはそのモデルを使用します。[`ANTHROPIC_DEFAULT_MODEL`](/docs/ja/model-config#set-a-default-model-for-new-sessions)で設定したモデルで Claude Code がセッションを開始する場合、バックグラウンドタスクもそのモデルを使用します。`ANTHROPIC_DEFAULT_SONNET_MODEL` なしで `ANTHROPIC_DEFAULT_OPUS_MODEL` を設定することも、組み込み Sonnet モデルがプロジェクトで有効になっていない可能性があるため、選択としてカウントされます。
 * バックグラウンドタスクに Haiku を使用するには、`ANTHROPIC_DEFAULT_HAIKU_MODEL` をプロジェクトで利用可能なモデル ID に設定します。
 
 <Warning>
   Opus モデルは Sonnet モデルより高いトークンあたりの価格を持つため、プライマリモデルをピン留めしないデプロイメントは v2.1.207 以降に更新されると Opus レートで課金されます。Sonnet 4.5 をプライマリモデルとして保つには、`ANTHROPIC_MODEL` をその完全なモデル ID に設定します。`ANTHROPIC_DEFAULT_SONNET_MODEL` でデフォルトを制御し、`ANTHROPIC_DEFAULT_OPUS_MODEL` を設定しないデプロイメントは、制御された Sonnet モデルをデフォルトとして保ちます。
 </Warning>
 
-v2.1.207 より前は、Google Cloud の Agent Platform 上のプライマリモデルは Sonnet 4.5 にデフォルト設定され、`opus` エイリアスは Opus 4.6 に解決され、バックグラウンドタスクは常にプライマリモデルを使用していました。
+v2.1.280 より前は、Google Cloud の Agent Platform 上のプライマリモデルは Opus 5 にデフォルト設定され、`opus` エイリアスは v2.1.219 から Opus 5 に解決されました。v2.1.207 ～ v2.1.218 では、Google Cloud の Agent Platform 上のプライマリモデルは Opus 4.8 にデフォルト設定され、`opus` エイリアスは Opus 4.8 に解決されました。v2.1.207 より前は、プライマリモデルは Sonnet 4.5 にデフォルト設定され、`opus` エイリアスは Opus 4.6 に解決され、バックグラウンドタスクは常にプライマリモデルを使用していました。
 
 モデルをさらにカスタマイズするには、以下を実行します。
 
@@ -262,6 +272,12 @@ v2.1.207 より前は、Google Cloud の Agent Platform 上のプライマリモ
 export ANTHROPIC_MODEL='claude-opus-4-8'
 export ANTHROPIC_DEFAULT_HAIKU_MODEL='claude-haiku-4-5@20251001'
 ```
+
+<h3 id="6-verify-your-configuration">
+  6. 設定を確認する
+</h3>
+
+Claude Code を起動して `/status` を実行し、セットアップを確認します。`API provider` 行は `Google Vertex AI` を表示し、`GCP project`、`Default region`、および `Model` 行はプロジェクト ID、リージョン、および解決されたモデルを表示します。プロバイダー行が見つからない場合、環境変数がプロセスに到達していません。`claude` を起動したシェルでエクスポートされているか、[設定ファイル](/docs/ja/settings)の `env` ブロックで設定されていることを確認してください。
 
 <h2 id="startup-model-checks">
   起動時のモデルチェック
@@ -273,13 +289,15 @@ Claude Code デフォルトより古いモデルバージョンをピン留め�
 
 モデルをピン留めしていなくて、現在のデフォルトがプロジェクトで利用できない場合、Claude Code は現在のセッション用にフォールバックし、通知を表示します。デフォルトモデルの以前のバージョンを最初に試し、デフォルトが Opus モデルで Opus バージョンが利用できない場合は、デフォルト Sonnet モデルにフォールバックします。フォールバックは永続化されません。[Model Garden](https://console.cloud.google.com/vertex-ai/model-garden)で新しいモデルを有効にするか、[バージョンをピン留めして](#5-pin-model-versions)選択を永続化してください。
 
+特定の Sonnet または Opus バージョンでセッションを開始する場合（例えば `--model`、`ANTHROPIC_MODEL`、または[`model` 設定](/docs/ja/settings-reference#model)を使用）、そのバージョンは一致する `sonnet` または `opus` エイリアスのセッションのピン留めされたデフォルトとして機能します。Claude Code は、設定したモデルが置き換える組み込みデフォルトの可用性チェックをスキップし、設定したモデルで起動します。フォールバック通知はありません。
+
+`opus` などのモデルエイリアスはピンとして機能せず、Claude Code が認識しないモデル ID も同様です。
+
 <h2 id="iam-configuration">
   IAM 設定
 </h2>
 
-必要な IAM 権限を割り当てます。
-
-`roles/aiplatform.user` ロールには、必要な権限が含まれています。
+`roles/aiplatform.user` ロールを割り当てます。このロールには必要な権限が含まれています。
 
 * `aiplatform.endpoints.predict` - モデル呼び出しとトークンカウントに必要
 

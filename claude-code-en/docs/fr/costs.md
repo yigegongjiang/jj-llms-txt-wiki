@@ -24,41 +24,99 @@ Cette page explique comment [suivre vos coûts](#track-your-costs), [gérer les 
   Le bloc Session dans `/usage` affiche l'utilisation des tokens API et est destiné aux utilisateurs d'API. Les abonnés Claude Max et Pro ont l'utilisation incluse dans leur abonnement, donc le chiffre du coût de session n'est pas pertinent à des fins de facturation. Les abonnés voient les barres d'utilisation du plan, les statistiques d'activité et une ventilation de l'utilisation sur le même écran.
 </Note>
 
-Le bloc Session en haut de `/usage` affiche des statistiques détaillées sur l'utilisation des tokens pour votre session actuelle. Le chiffre en dollars est une estimation calculée localement à partir des décomptes de tokens et peut différer de votre facture réelle. Pour une facturation fiable, consultez la page Utilisation dans la [Console Claude](https://platform.claude.com/usage).
+Le bloc Session en haut de `/usage` affiche des statistiques détaillées sur l'utilisation des tokens pour votre session actuelle. Claude Code calcule le chiffre en dollars localement à partir des décomptes de tokens au prix catalogue, sauf si une table [`modelPricing`](/docs/fr/settings-reference#modelpricing) est en vigueur. Un administrateur en définit une dans les paramètres gérés de votre organisation afin que le chiffre utilise vos tarifs contractuels, et tant qu'une table est en vigueur, la ligne `Total cost` porte la note `at your organization's configured rates`. Le chiffre est une estimation, donc pour une facturation fiable, consultez la page Utilisation dans la [Console Claude](https://platform.claude.com/usage).
 
 ```text theme={null}
 Total cost:            $0.55
-Total duration (API):  6m 19.7s
-Total duration (wall): 6h 33m 10.2s
+Total duration (API):  6m 20s
+Total duration (wall): 6h 33m 10s
 Total code changes:    0 lines added, 0 lines removed
+Usage by model:
+   claude-sonnet-4-6:  1.2k input, 5.3k output, 940.0k cache read, 50.0k cache write ($0.55)
 ```
 
-Sur un plan Pro, Max, Team ou Enterprise, `/usage` affiche également une ventilation de ce qui compte par rapport à vos limites de plan. Il attribue l'utilisation récente aux skills, subagents, plugins et serveurs MCP individuels, chacun étant affiché en pourcentage du total. Appuyez sur `d` ou `w` pour basculer entre les 24 dernières heures et les 7 derniers jours. Les chiffres sont approximatifs et calculés à partir de l'historique des sessions locales sur cette machine, donc l'utilisation d'autres appareils ou de claude.ai n'est pas incluse.
+Ces totaux se réinitialisent quand `/clear` démarre une nouvelle session, donc le coût total de la session suivante recommence à \$0. Avant la v2.1.211, ils continuaient à s'accumuler sur `/clear` pendant la durée de vie du processus Claude Code.
 
-Lorsque la demande de vos limites de plan échoue, le plus souvent parce que le point de terminaison d'utilisation est limité en débit, `/usage` affiche les dernières barres d'utilisation qu'il a chargées sur cette machine au cours des 60 dernières minutes, ainsi qu'une note « Affichage de la dernière utilisation connue » indiquant depuis combien de temps ces données ont été récupérées. Appuyez sur `r` pour réessayer ; une nouvelle tentative réussie remplace les dernières barres connues par des données actualisées. Sans un instantané des 60 dernières minutes, `/usage` signale que le point de terminaison d'utilisation est limité en débit et propose le même raccourci de nouvelle tentative. Avant la v2.1.208, une demande limitée en débit dans une session qui n'avait pas encore chargé l'utilisation affichait toujours l'erreur sans barres.
+Pour une réponse de l'API Claude facturée au [taux de résidence des données](https://platform.claude.com/docs/en/about-claude/pricing#data-residency-pricing) 1,1×, Claude Code multiplie le prix catalogue des tokens de cette réponse par 1,1 dans le chiffre du coût de session. Le même total apparaît dans le [champ de coût de la ligne d'état](/docs/fr/statusline#cost-and-duration-tracking), et le chiffre multiplié compte également vers [`--max-budget-usd`](/docs/fr/cli-reference#cli-flags). Avant la v2.1.239, Claude Code n'appliquait pas le 1,1× à ces réponses, donc le chiffre du coût de session était inférieur à la facture.
 
-Dans l'[extension VS Code](/docs/fr/vs-code#check-account-and-usage), la même ventilation apparaît dans la boîte de dialogue Compte et utilisation avec un bouton bascule Jour et Semaine. Nécessite Claude Code v2.1.174 ou version ultérieure.
+<h4 id="prompt-cache-statistics">
+  Statistiques du cache de prompt
+</h4>
 
-<h3 id="set-a-spend-limit-on-pro-and-max">
-  Définir une limite de dépenses sur Pro et Max
+Après la première réponse API de la conversation principale, Claude Code ajoute également une ligne `Prompt cache (main)` au bloc Session, résumant l'utilisation du [cache de prompt](/docs/fr/prompt-caching) de la session : le nombre de demandes, la part des tokens d'entrée servis à partir du cache, les défauts de cache, et si le cache est chaud en ce moment. Nécessite Claude Code v2.1.251 ou version ultérieure.
+
+```text theme={null}
+Prompt cache (main):   14 requests · 91% of input tokens from cache · 2 misses (last 6m 10s ago, 310.2k tokens re-cached) · 1 expected rebuild (compaction or tool-result clearing) · warm (1h TTL, last activity 40s ago)
+```
+
+Les défauts, les reconstructions attendues, et les parties chaudes ou froides de la ligne signifient ce qui suit :
+
+* **Misses** : demandes qui ont retraité le contenu que le cache contenait déjà, avec l'heure du dernier défaut et le nombre de tokens que ces demandes ont réécrits dans le cache. Claude Code compte une demande comme un défaut quand la demande a retraité plus de 5 % et au moins 2 000 tokens de ce qu'elle aurait pu lire à partir du cache. [Les actions qui invalident le cache](/docs/fr/prompt-caching#actions-that-invalidate-the-cache) énumèrent les causes habituelles. Quand Claude Code peut identifier une cause probable du dernier défaut, la ligne la nomme aussi, par exemple `likely cause: tool definitions changed`. Le texte de cause probable nécessite Claude Code v2.1.260 ou version ultérieure.
+* **Expected rebuilds** : quand Claude Code a lui-même réécrit la conversation, par [compaction](/docs/fr/prompt-caching#compacting-the-conversation) ou en supprimant les anciens résultats d'outils du contexte, il compte le même type de défaut comme une reconstruction attendue à la place. Cette partie n'apparaît qu'après qu'au moins une reconstruction attendue s'est produite.
+* **Warm or cold** : si le préfixe mis en cache se trouve toujours dans sa [durée de vie du cache](/docs/fr/prompt-caching#cache-lifetime), avec le TTL en vigueur. Quand le cache est froid, la ligne affiche depuis combien de temps la session est inactive. Quand aucune réponse n'a rapporté de tokens de cache, la ligne se termine par `no prompt caching reported by the API` à la place.
+
+Les décomptes proviennent des champs de tokens de cache dans les réponses de l'API, donc la ligne fonctionne sur chaque fournisseur et passerelle. Elle couvre la conversation principale uniquement, pas les subagents. `/clear` la réinitialise avec le reste du bloc Session.
+
+Les scripts de ligne d'état peuvent lire les mêmes nombres à partir de l'[objet `prompt_cache`](/docs/fr/statusline#prompt-cache-fields).
+
+<h4 id="plan-usage-breakdown">
+  Ventilation de l'utilisation du plan
+</h4>
+
+Sur un plan Pro, Max, Team ou Enterprise, `/usage` affiche également une ventilation de ce qui compte par rapport à vos limites de plan :
+
+* **Attribution** : utilisation récente attribuée aux skills, subagents, plugins et serveurs MCP individuels, chacun affiché en pourcentage du total. La part d'un serveur MCP compte uniquement les demandes qui ont consommé l'un de ses résultats d'outils. Avant la v2.1.222, après un appel à un serveur MCP, Claude Code attribuait chaque demande ultérieure à ce serveur, surestimant sa part.
+* **Behavior flags** : comportements tels que le contexte long ou les défauts de cache, signalés quand l'un d'eux représente 10 % ou plus de l'utilisation récente.
+* **Loops** : une ligne pour chacune des tâches [`/loop` ou autres tâches planifiées](/docs/fr/scheduled-tasks) les plus lourdes qui ont été exécutées récemment, ordonnées par tokens totaux, avec un décompte du reste. Claude Code rapporte la fréquence d'exécution de chaque tâche, le nombre de fois qu'elle a été exécutée, ses tokens totaux et par exécution, et quand elle a été exécutée pour la dernière fois. Claude Code clé une ligne par le prompt de la tâche, donc une boucle que vous arrêtez et recréez reste une ligne. Nécessite Claude Code v2.1.242 ou version ultérieure.
+
+Appuyez sur `d` ou `w` pour basculer entre les 24 dernières heures et les 7 derniers jours. Les chiffres sont approximatifs et calculés à partir de l'historique des sessions locales sur cette machine, donc l'utilisation d'autres appareils ou de claude.ai n'est pas incluse.
+
+Dans l'[extension VS Code](/docs/fr/vs-code#check-account-and-usage), les parts d'attribution et les drapeaux de comportement apparaissent dans la boîte de dialogue Compte et utilisation avec un bouton bascule Jour et Semaine, sans les lignes Loops.
+
+<h4 id="check-your-usage-credits-spend">
+  Vérifier vos dépenses en crédits d'utilisation
+</h4>
+
+`/usage` affiche également une ligne de crédits d'utilisation tandis que les [crédits d'utilisation](#add-usage-credits-to-your-subscription) sont activés. Ce que la ligne affiche dépend de votre plan :
+
+* **Pro et Max** : vos dépenses pour le mois en cours, mesurées par rapport à votre limite de dépenses mensuelles quand vous en avez défini une. Quand vous n'avez pas défini de limite, la ligne affiche `Unlimited` et aucun chiffre de dépenses.
+* **Team et Enterprise** : vos propres dépenses pour le mois en cours, mesurées par rapport à toute [limite que votre organisation a définie](#claude-for-teams-and-enterprise) qui s'applique à vous. Une limite qui couvre l'ensemble de l'organisation n'apparaît pas dans la ligne. Quand vous n'avez pas de limite qui vous est propre, la ligne affiche vos dépenses sans limite à côté. Tandis que les crédits d'utilisation sont désactivés pour vous, `/usage` n'affiche aucune ligne de crédits d'utilisation.
+
+Quand vous avez une limite de dépenses, la ligne apparaît dès que les crédits d'utilisation sont activés et affiche 0 % jusqu'à ce que vous dépensez d'abord des crédits d'utilisation. Avant la v2.1.236, `/usage` affichait la ligne uniquement sur les plans Pro et Max, et une ligne avec une limite de dépenses restait cachée jusqu'à ce que vous ayez dépensé quelque chose.
+
+<h4 id="when-the-usage-request-fails">
+  Quand la demande d'utilisation échoue
+</h4>
+
+Quand la demande de vos limites de plan échoue, le plus souvent parce que le point de terminaison d'utilisation est limité en débit, `/usage` affiche les dernières barres d'utilisation qu'il a chargées sur cette machine au cours des 60 dernières minutes, ainsi qu'une note « Showing last-known usage » indiquant depuis combien de temps ces données ont été récupérées. Appuyez sur `r` pour réessayer ; une nouvelle tentative réussie remplace les dernières barres connues par des données actualisées. Sans un instantané des 60 dernières minutes, `/usage` signale que le point de terminaison d'utilisation est limité en débit et propose le même raccourci de nouvelle tentative. Avant la v2.1.208, une demande limitée en débit dans une session qui n'avait pas encore chargé l'utilisation affichait toujours l'erreur sans barres.
+
+<h3 id="analyze-your-usage-patterns">
+  Analyser vos modèles d'utilisation
 </h3>
 
-Sur les plans Pro et Max, la commande `/usage-credits` ouvre une boîte de dialogue dans la CLI où vous gérez les [crédits d'utilisation](https://support.claude.com/en/articles/12429409-extra-usage-for-paid-claude-plans). À partir de la boîte de dialogue, vous pouvez :
+Exécutez [`/insights`](/docs/fr/commands#all-commands) pour un rapport sur votre façon de travailler plutôt que sur le nombre de tokens que vous avez utilisés. Il analyse vos sessions récentes sur cette machine et écrit un rapport HTML couvrant ce sur quoi vous travaillez, les points de friction tels que les demandes mal comprises ou le code bogué, et les suggestions pour utiliser Claude Code plus efficacement. Une seule exécution analyse jusqu'à 200 sessions qu'il n'a pas vues auparavant et ignore les très courtes. Quand des sessions sont omises, l'en-tête du rapport affiche le nombre analysé avec le total entre parenthèses, par exemple `200 sessions (412 total)`.
 
-* Activer les crédits d'utilisation pour votre compte
-* Acheter plus de crédits d'utilisation, soit un bundle répertorié, soit un montant personnalisé
-* Définir, modifier ou supprimer votre limite de dépenses mensuelles
-* Configurer le rechargement automatique, qui achète automatiquement plus de crédits d'utilisation lorsque votre solde tombe en dessous d'un seuil que vous définissez
+Claude Code écrit le dernier rapport dans `~/.claude/usage-data/report.html` et enregistre une copie horodatée de chaque exécution dans le même répertoire, donc les rapports antérieurs ne sont pas écrasés. Claude Code supprime les rapports selon le même calendrier que le reste de vos données de session : au démarrage, il supprime les fichiers plus anciens que [`cleanupPeriodDays`](/docs/fr/claude-directory#cleaned-up-automatically), 30 jours par défaut.
 
-Sur les versions de Claude Code antérieures à la v2.1.207 et sur les comptes où la boîte de dialogue dans la CLI n'est pas disponible, `/usage-credits` ouvre la page de facturation des crédits d'utilisation dans votre navigateur à la place. Sur les plans Team et Enterprise, les membres ayant accès à la facturation obtiennent la même page de navigateur, et les membres sans accès à la facturation envoient une demande depuis la CLI demandant à leur administrateur d'activer les crédits d'utilisation ou d'augmenter la limite.
+Vous pouvez exécuter `/insights` sur n'importe quel plan et avec n'importe quel fournisseur. L'analyse s'exécute via le même fournisseur et le même compte que vos sessions régulières, et les tokens comptent par rapport à votre utilisation de plan ou d'API. Les sessions d'autres appareils et de claude.ai ne sont pas incluses.
 
-La modification de la limite de dépenses mensuelles nécessite un accès à la facturation sur le compte. Si vous atteignez la limite alors que vous avez toujours des crédits d'utilisation disponibles, Claude Code vous invite à augmenter ou supprimer la limite afin que vous puissiez continuer sans quitter la CLI.
+<h3 id="add-usage-credits-to-your-subscription">
+  Ajouter des crédits d'utilisation à votre abonnement
+</h3>
 
-Les montants que vous tapez dans la boîte de dialogue, tels qu'un montant d'achat personnalisé, la limite de dépenses mensuelles ou le seuil et la cible de rechargement automatique, doivent être des chiffres, éventuellement suivis d'un point et d'une ou deux décimales, par exemple `20` ou `20.50`. Toute autre entrée, y compris les virgules, affiche une erreur en ligne et n'est pas enregistrée. Les versions antérieures à la v2.1.207 n'affichent pas la boîte de dialogue et ouvrent la page de facturation à la place.
+Les [crédits d'utilisation](https://support.claude.com/en/articles/12429409-extra-usage-for-paid-claude-plans) vous permettent de continuer à travailler au-delà de la limite d'utilisation de votre plan. Pour les gérer, exécutez `/usage-credits` après vous être connecté avec votre abonnement claude.ai via `/login` ; la commande n'est pas disponible avec l'authentification par clé API. Dans les organisations Enterprise en libre-service, les essais Enterprise et les organisations Enterprise facturées via AWS Marketplace, la commande nécessite Claude Code v2.1.248 ou version ultérieure ; les versions antérieures la rejettent avec [`Unknown command: /usage-credits`](/docs/fr/errors#unknown-command). Ce qu'elle ouvre dépend de votre rôle :
 
-Claude Code vous demande de taper `yes` pour confirmer chaque achat et chaque modification de rechargement automatique, quel que soit le montant, et la confirmation d'achat affiche le total après impôts que vous approuvez. La modification de la limite de dépenses mensuelles demande la même confirmation tapée uniquement au-dessus de 1 000 \$, ou au-dessus de 1 000 unités d'une devise de facturation non-USD. Avant la v2.1.208, les achats et les modifications de rechargement automatique utilisaient également ce seuil, donc les montants plus petits passaient par le flux de dialogue standard sans l'étape supplémentaire `yes` tapée.
+| Votre rôle                                            | Ce que `/usage-credits` fait                                                                                                                                                                                                                                                                     |
+| :---------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Abonné Pro ou Max                                     | Ouvre [**Settings > Usage**](https://claude.ai/settings/usage) sur claude.ai dans le navigateur. Dans sa section **Usage credits** vous pouvez activer ou désactiver les crédits d'utilisation et vérifier votre solde de crédit, les dépenses de ce mois et votre limite de dépenses mensuelles |
+| Membre Team ou Enterprise avec accès à la facturation | Ouvre les paramètres d'utilisation de votre organisation, [**Admin settings > Usage**](https://claude.ai/admin-settings/usage), dans le navigateur                                                                                                                                               |
+| Membre Team ou Enterprise sans accès à la facturation | Vous demande de confirmer, puis envoie une demande aux administrateurs de votre organisation. Avant la v2.1.211, Claude Code envoyait la demande sans étape de confirmation                                                                                                                      |
 
-Les champs de montant s'ouvrent préremplis avec une valeur suggérée, et le premier chiffre que vous tapez remplace la suggestion au lieu de s'y ajouter. L'écran qui active les crédits d'utilisation s'ouvre avec Annuler sélectionné, donc les activer nécessite une sélection délibérée plutôt qu'une Entrée accidentelle. Les deux nécessitent Claude Code v2.1.208 ou version ultérieure.
+Pour les membres Team et Enterprise sans accès à la facturation, la confirmation n'apparaît que dans les sessions interactives : en mode non interactif avec le drapeau `-p` et depuis [Remote Control](/docs/fr/remote-control), la commande n'envoie aucune demande et vous dit de l'exécuter dans une session interactive à la place.
+
+Si vous exécutez `/usage-credits` à nouveau tandis que votre demande antérieure attend un administrateur, Claude Code vous dit qu'une demande a déjà été envoyée plutôt que d'envoyer un doublon. Après qu'un administrateur rejette votre demande, l'exécution de la commande à nouveau envoie une nouvelle. Avant la v2.1.222, une demande rejetée bloquait également les nouvelles demandes.
+
+Sur les plans Pro et Max, quand vous atteignez votre limite de dépenses avec des crédits d'utilisation toujours disponibles, Claude Code vous invite à augmenter ou supprimer la limite sans quitter la CLI. Si le serveur rejette la modification, consultez [Could not update your spend limit](/docs/fr/errors#could-not-update-your-spend-limit).
 
 <h2 id="manage-costs-for-your-organization">
   Gérer les coûts pour votre organisation
@@ -66,7 +124,7 @@ Les champs de montant s'ouvrent préremplis avec une valeur suggérée, et le pr
 
 Les contrôles dont vous disposez dépendent de la façon dont votre organisation accède à Claude Code : un plan Claude for Teams ou Enterprise, la Claude Console, ou un fournisseur cloud. Sur les plans Teams et Enterprise, l'utilisation est prélevée sur l'allocation de siège de chaque membre. Sur la Console et chez les fournisseurs cloud, l'utilisation est facturée par token à votre organisation. Si votre organisation mélange les méthodes de connexion, chaque développeur est mesuré selon celle avec laquelle il s'est authentifié.
 
-Le tableau mappe chaque configuration à l'endroit où vous voyez les dépenses, où vous les plafonnez, et comment vous extrayez les chiffres par utilisateur.
+Le tableau mappe chaque configuration à l'endroit où vous voyez les dépenses, où vous les plafonnez, et comment vous extrayez les chiffres par utilisateur. Sur un plan Pro ou Max individuel, vous n'avez pas d'organisation à gérer, donc suivez vos propres dépenses en crédits d'utilisation, y compris le [mode rapide](/docs/fr/fast-mode#see-where-fast-mode-spend-appears), sous [Ajouter des crédits d'utilisation à votre abonnement](#add-usage-credits-to-your-subscription).
 
 | Votre configuration                                                                     | Voir les dépenses                                                                                                                                          | Plafonner les dépenses                                   | Rapports par utilisateur                                                                                                                                                                                                              |
 | :-------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -75,6 +133,28 @@ Le tableau mappe chaque configuration à l'endroit où vous voyez les dépenses,
 | [Amazon Bedrock, Google Cloud's Agent Platform, ou Microsoft Foundry](#cloud-providers) | Votre console de facturation cloud                                                                                                                         | Les contrôles budgétaires de votre cloud                 | [OpenTelemetry](/docs/fr/monitoring-usage) ou une [passerelle LLM](/docs/fr/llm-gateway)                                                                                                                                                        |
 
 [L'export OpenTelemetry](/docs/fr/monitoring-usage) fonctionne sur chaque configuration et est la seule option qui diffuse les métriques de tokens et de coûts par utilisateur dans votre propre pile d'observabilité en temps quasi réel.
+
+<h3 id="report-spend-at-your-contracted-rates">
+  Signaler les dépenses à vos tarifs contractuels
+</h3>
+
+Par défaut, Claude Code calcule chaque chiffre de coût qu'il affiche aux développeurs au prix catalogue, donc si votre organisation paie des tarifs contractuels, les chiffres dans `/usage`, la ligne d'état et OpenTelemetry ne correspondent pas à votre facture. Pour les faire correspondre, définissez le paramètre géré [`modelPricing`](/docs/fr/settings-reference#modelpricing) à vos tarifs. Le paramètre change ce que Claude Code signale, pas ce qu'Anthropic facture. Nécessite Claude Code v2.1.242 ou ultérieur.
+
+<Steps>
+  <Step title="Prenez les tarifs de votre contrat">
+    Entrez les tarifs par million de tokens de votre contrat. Claude Code ne les récupère pas de la Claude Console, donc mettez à jour le paramètre lorsque le contrat change.
+  </Step>
+
+  <Step title="Écrivez le paramètre">
+    Définissez `multiplier` en dessous de 1 pour une réduction forfaitaire ou au-dessus de 1 pour une majoration, listez les quatre tarifs par token de chaque modèle sous `overrides`, ou faites les deux. Une majoration nécessite Claude Code v2.1.271 ou ultérieur. L'[entrée `modelPricing`](/docs/fr/settings-reference#modelpricing) a la forme et un exemple prêt à coller.
+  </Step>
+
+  <Step title="Déployez-le via les paramètres gérés">
+    Livrez-le en tant que [paramètres gérés](/docs/fr/managed-settings) : paramètres gérés par serveur, une politique MDM, `managed-settings.json`, ou un [assistant de politique](/docs/fr/managed-settings#compute-the-policy-with-a-helper-program). Claude Code ignore la clé dans les paramètres utilisateur, projet et locaux et dans `--settings`.
+  </Step>
+</Steps>
+
+Pour confirmer que les tarifs sont en vigueur, exécutez `/usage` dans une session qui a [reçu les paramètres gérés](/docs/fr/managed-settings#read-the-source-in-%2Fstatus) : la ligne `Total cost` du bloc Session porte la note `at your organization's configured rates`. Les chiffres sont toujours des estimations, pas une facture. Les prix par million de tokens dans le sélecteur `/model` restent au prix catalogue.
 
 <h3 id="claude-for-teams-and-enterprise">
   Claude for Teams et Enterprise
@@ -98,7 +178,7 @@ Les organisations API gèrent les dépenses de Claude Code via les [espaces de t
 <Note>
   Lorsque vous authentifiez pour la première fois Claude Code avec votre compte Claude Console, un espace de travail appelé « Claude Code » est automatiquement créé pour vous. Cet espace de travail fournit un suivi et une gestion centralisés des coûts pour toute l'utilisation de Claude Code dans votre organisation. Vous ne pouvez pas créer de clés API pour cet espace de travail ; il est exclusivement destiné à l'authentification et à l'utilisation de Claude Code.
 
-  Pour les organisations avec des limites de débit personnalisées, le trafic Claude Code dans cet espace de travail compte vers les limites de débit API globales de votre organisation. Vous pouvez définir une [limite de débit d'espace de travail](https://platform.claude.com/docs/fr/api/rate-limits#setting-lower-limits-for-workspaces) sur la page Limites de cet espace de travail dans la Console Claude pour limiter la part de Claude Code et protéger les autres charges de travail de production.
+  Pour les organisations avec des limites de débit personnalisées, le trafic Claude Code dans cet espace de travail compte vers les limites de débit API globales de votre organisation. Vous pouvez définir une [limite de débit d'espace de travail](https://platform.claude.com/docs/en/api/rate-limits#setting-lower-limits-for-workspaces) sur la page Limites de cet espace de travail dans la Console Claude pour limiter la part de Claude Code et protéger les autres charges de travail de production.
 </Note>
 
 Pour les rapports par utilisateur, le [tableau de bord de la Console](https://platform.claude.com/claude-code) affiche les dépenses et les lignes acceptées par membre, et l'[API d'analyse Claude Code](https://platform.claude.com/docs/en/build-with-claude/claude-code-analytics-api) retourne les mêmes métriques quotidiennes par utilisateur par programmation avec une [clé API Admin](https://platform.claude.com/settings/admin-keys). Voir [analyse pour les clients API](/docs/fr/analytics#access-analytics-for-api-customers).
@@ -142,10 +222,14 @@ Pour l'attribution des coûts par utilisateur, vous avez trois options :
   Quand un développeur pose des questions sur une limite
 </h3>
 
-Les développeurs apportent généralement les questions de limite à leur administrateur, il est donc utile de savoir quel plafond ils ont atteint. Les trois situations signifient des choses différentes :
+Les développeurs apportent généralement les questions de limite à leur administrateur, il est donc utile de savoir quel plafond ils ont atteint. Ces situations signifient des choses différentes :
 
-* **« Vous avez atteint votre limite de session » ou « Vous avez atteint votre limite hebdomadaire »** : une fenêtre d'utilisation basée sur le siège sur un plan d'abonnement. Ces fenêtres sont partagées sur tous les modèles, donc changer de modèle avec `/model` ne restaure pas l'accès, bien que cela permette au développeur de continuer après le message « Vous avez atteint votre limite Opus ». Le message affiche quand la fenêtre se réinitialise, et le développeur peut exécuter `/usage-credits` pour demander une utilisation au-delà de l'allocation si vous avez activé les [crédits d'utilisation](https://support.claude.com/en/articles/12429409-extra-usage-for-paid-claude-plans). Voir [erreurs de limite d'utilisation](/docs/fr/errors#youve-hit-your-session-limit).
-* **Un avertissement de contexte ou d'auto-compactage** : pas une limite d'utilisation. La conversation s'est rapprochée de la taille d'entrée maximale du modèle, et Claude Code résume l'historique plus ancien pour libérer de l'espace. Pointez le développeur vers [réduire l'utilisation des tokens](#reduce-token-usage).
+* **« Vous avez atteint votre limite de session » ou « Vous avez atteint votre limite hebdomadaire »** : une fenêtre d'utilisation basée sur le siège sur un plan d'abonnement, partagée sur tous les modèles, donc le développeur ne peut pas restaurer l'accès en changeant de modèles avec `/model`. Le message affiche quand la fenêtre se réinitialise. Après le message spécifique au modèle « Vous avez atteint votre limite Opus » ou « Vous avez atteint votre limite Sonnet », passer à un modèle en dehors de cette famille avec `/model` permet au développeur de continuer à travailler. Voir [erreurs de limite d'utilisation](/docs/fr/errors#youve-hit-your-session-limit). Ce que le développeur peut faire en attendant :
+  * Exécutez `/usage-credits` pour demander une utilisation au-delà de l'allocation, si vous avez activé les [crédits d'utilisation](https://support.claude.com/en/articles/12429409-extra-usage-for-paid-claude-plans).
+  * Sur Claude Code v2.1.234 ou ultérieur, [attendez et continuez la tâche interrompue automatiquement après la réinitialisation](/docs/fr/interactive-mode#wait-for-a-usage-limit-to-reset) ; cette section énumère quand Claude Code démarre l'attente de lui-même et quand le développeur la choisit dans `/rate-limit-options`. Pour contrôler pour votre flotte si Claude Code démarre cette attente de lui-même, définissez [`autoContinueAtUsageLimit`](/docs/fr/settings-reference#autocontinueatusagelimit) dans les [paramètres gérés](/docs/fr/settings#settings-precedence).
+* **« Vous avez atteint votre limite de dépenses individuelle », « limite de dépenses mensuelle de l'organisation » ou « budget partagé de l'équipe »** : la demande du développeur serait facturée aux crédits d'utilisation, et ces crédits ont atteint une limite de dépenses que vous avez définie. Pour permettre au développeur de continuer, allez à [**Paramètres d'administration > Utilisation**](https://claude.ai/admin-settings/usage) et augmentez la limite que le message nomme. Lorsque le message nomme également une heure de réinitialisation du plan, le développeur peut plutôt attendre jusqu'à ce moment. Voir [la référence d'erreur](/docs/fr/errors#youve-hit-your-monthly-spend-limit) pour chaque variante.
+* **Un message de limite de dépenses d'une [passerelle d'applications Claude](/docs/fr/claude-apps-gateway)** : le développeur a dépassé un plafond de dépenses que vous avez défini sur votre passerelle auto-hébergée, et la passerelle bloque ses demandes jusqu'à ce que la période se réinitialise ou que vous augmentiez le plafond. Voir [limites de dépenses de la passerelle](/docs/fr/claude-apps-gateway-spend-limits) pour les plafonds, les calendriers de réinitialisation et le message que le développeur voit.
+* **Un avertissement de contexte ou d'auto-compactage** : pas une limite d'utilisation. La conversation s'est rapprochée de la [fenêtre d'auto-compactage](/docs/fr/model-config#set-the-auto-compact-window) de la session, le seuil où Claude Code résume l'historique plus ancien pour libérer de l'espace. Pointez le développeur vers [réduire l'utilisation des tokens](#reduce-token-usage).
 * **Des dépenses inhabituellement élevées sur un plan API ou fournisseur cloud** : généralement tracées jusqu'à des sessions longues qui n'ont jamais été effacées ou à Opus laissé comme modèle par défaut. Les habitudes à impact le plus élevé à partager sont l'effacement entre les tâches non liées et l'adaptation du modèle au travail, tous deux couverts dans [réduire l'utilisation des tokens](#reduce-token-usage).
 
 <h3 id="agent-team-token-costs">
@@ -177,7 +261,7 @@ Les stratégies suivantes vous aident à maintenir le contexte petit et à rédu
 Utilisez `/usage` pour vérifier votre utilisation actuelle des tokens, ou [configurez votre ligne d'état](/docs/fr/statusline#context-window-usage) pour l'afficher en continu.
 
 * **Effacer entre les tâches** : Utilisez `/clear` pour recommencer à zéro lorsque vous passez à un travail non lié. Le contexte obsolète gaspille des tokens à chaque message suivant. Utilisez `/rename` avant d'effacer pour pouvoir facilement retrouver la session plus tard, puis `/resume` pour y revenir.
-* **Ajouter des instructions de compaction personnalisées** : `/compact Focus on code samples and API usage` indique à Claude ce qu'il faut préserver lors de la résumé.
+* **Ajouter des instructions de compaction personnalisées** : `/compact Focus on code samples and API usage` indique à Claude ce qu'il faut préserver lors de la résumé. Dans une session nouvelle, `/compact` affiche `Not enough messages to compact.` car il n'y a pas encore d'historique de conversation à résumer.
 
 Vous pouvez également personnaliser le comportement de compaction dans votre fichier CLAUDE.md à la racine de votre projet :
 
@@ -191,13 +275,13 @@ When you are using compact, please focus on test output and code changes
   Choisir le bon modèle
 </h3>
 
-Sonnet gère bien la plupart des tâches de codage et coûte moins cher qu'Opus. Réservez Opus pour les décisions architecturales complexes ou le raisonnement multi-étapes. Utilisez `/model` pour changer de modèle en cours de session, ou définissez une valeur par défaut dans `/config`. Pour les tâches simples de subagent, spécifiez `model: haiku` dans votre [configuration de subagent](/docs/fr/sub-agents#choose-a-model).
+Sonnet gère bien la plupart des tâches de codage et coûte moins cher qu'Opus. Réservez Opus pour les décisions architecturales complexes ou le raisonnement multi-étapes. Utilisez `/model` pour changer de modèle en cours de session, ou définissez une valeur par défaut dans `/config`. Un changement vers Opus s'applique également aux [subagents qui héritent du modèle de votre session](/docs/fr/model-config#setting-your-model). Pour les tâches simples de subagent, spécifiez `model: haiku` dans votre [configuration de subagent](/docs/fr/sub-agents#choose-a-model).
 
 <h3 id="reduce-mcp-server-overhead">
   Réduire la surcharge des serveurs MCP
 </h3>
 
-Les définitions d'outils MCP sont [reportées par défaut](/docs/fr/mcp#scale-with-mcp-tool-search), donc seuls les noms d'outils entrent en contexte jusqu'à ce que Claude utilise un outil spécifique. Exécutez `/context` pour voir ce qui consomme de l'espace.
+Les définitions d'outils MCP sont [reportées par défaut](/docs/fr/mcp#scale-with-mcp-tool-search), donc seuls les noms d'outils et les instructions du serveur entrent en contexte jusqu'à ce que Claude utilise un outil spécifique. Exécutez `/context` pour voir ce qui consomme de l'espace.
 
 * **Préférez les outils CLI lorsqu'ils sont disponibles** : Les outils comme `gh`, `aws`, `gcloud` et `sentry-cli` sont plus efficaces en contexte que les serveurs MCP car ils n'ajoutent pas de liste d'outils par outil. Claude peut exécuter les commandes CLI directement.
 * **Désactiver les serveurs inutilisés** : Exécutez `/mcp` pour voir les serveurs configurés et désactiver ceux que vous n'utilisez pas activement.
@@ -206,7 +290,7 @@ Les définitions d'outils MCP sont [reportées par défaut](/docs/fr/mcp#scale-w
   Installer des plugins d'intelligence de code pour les langages typés
 </h3>
 
-Les [plugins d'intelligence de code](/docs/fr/discover-plugins#code-intelligence) donnent à Claude une navigation de symboles précise au lieu d'une recherche basée sur le texte, réduisant les lectures de fichiers inutiles lors de l'exploration de code inconnu. Un seul appel « aller à la définition » remplace ce qui pourrait autrement être une recherche grep suivie de la lecture de plusieurs fichiers candidats. Les serveurs de langage installés signalent également automatiquement les erreurs de type après les modifications, donc Claude détecte les erreurs sans exécuter un compilateur.
+Les [plugins d'intelligence de code](/docs/fr/plugins/code-intelligence) donnent à Claude une navigation de symboles précise au lieu d'une recherche basée sur le texte, réduisant les lectures de fichiers inutiles lors de l'exploration de code inconnu. Un seul appel « aller à la définition » remplace ce qui pourrait autrement être une recherche grep suivie de la lecture de plusieurs fichiers candidats. Les serveurs de langage installés signalent également automatiquement les erreurs de type après les modifications, donc Claude détecte les erreurs sans exécuter un compilateur.
 
 <h3 id="offload-processing-to-hooks-and-skills">
   Déléguer le traitement aux hooks et aux skills
@@ -220,7 +304,7 @@ Par exemple, ce hook PreToolUse filtre la sortie des tests pour afficher uniquem
 
 <Tabs>
   <Tab title="settings.json">
-    Ajoutez ceci à votre [settings.json](/docs/fr/settings#settings-files) pour exécuter le hook avant chaque commande Bash :
+    Ajoutez ceci à votre [settings.json](/docs/fr/settings#where-settings-live) pour exécuter le hook avant chaque commande Bash :
 
     ```json theme={null}
     {
@@ -252,13 +336,16 @@ Par exemple, ce hook PreToolUse filtre la sortie des tests pour afficher uniquem
     # If running tests, filter to show only failures
     if [[ "$cmd" =~ ^(npm test|pytest|go test) ]]; then
       filtered_cmd="$cmd 2>&1 | grep -A 5 -E '(FAIL|ERROR|error:)' | head -100"
-      echo "{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"permissionDecision\":\"allow\",\"updatedInput\":{\"command\":\"$filtered_cmd\"}}}"
+      echo "$input" | jq --arg filtered "$filtered_cmd" \
+        '{hookSpecificOutput: {hookEventName: "PreToolUse", permissionDecision: "allow", updatedInput: (.tool_input + {command: $filtered})}}'
     else
       echo "{}"
     fi
     ```
   </Tab>
 </Tabs>
+
+Pour vérifier la configuration, exécutez `/hooks` et vérifiez que le hook apparaît sous PreToolUse. Vous pouvez également démarrer Claude Code avec `claude --debug-file ./claude-debug.txt` et demander à Claude d'exécuter `npm test`. Lorsque le hook réécrit la commande, ce fichier journal contient une ligne `modified tool input keys` listant `command` et les autres champs d'entrée Bash.
 
 <h3 id="move-instructions-from-claude-md-to-skills">
   Déplacer les instructions de CLAUDE.md vers les skills
@@ -270,7 +357,11 @@ Votre fichier [CLAUDE.md](/docs/fr/memory) est chargé en contexte au démarrage
   Ajuster la réflexion étendue
 </h3>
 
-La réflexion étendue est activée par défaut car elle améliore considérablement les performances sur les tâches complexes de planification et de raisonnement. Les tokens de réflexion sont facturés comme des tokens de sortie, et le budget par défaut peut être des dizaines de milliers de tokens par requête selon le modèle. Pour les tâches plus simples où un raisonnement approfondi n'est pas nécessaire, vous pouvez réduire les coûts en abaissant le [niveau d'effort](/docs/fr/model-config#adjust-effort-level) avec `/effort` ou dans `/model`, en désactivant la réflexion dans `/config`, ou, sur les modèles avec un [budget de réflexion fixe](/docs/fr/model-config#adaptive-reasoning-and-fixed-thinking-budgets), en abaissant le budget en définissant la [variable d'environnement](/docs/fr/env-vars) `MAX_THINKING_TOKENS`, par exemple `MAX_THINKING_TOKENS=8000`. Les modèles de raisonnement adaptatif ignorent les budgets non nuls, donc utilisez plutôt les niveaux d'effort. La désactivation de la réflexion n'est pas disponible sur Fable 5, qui utilise toujours la réflexion étendue.
+La réflexion étendue est activée par défaut car elle améliore considérablement les performances sur les tâches complexes de planification et de raisonnement. Les tokens de réflexion sont facturés comme des tokens de sortie, et le budget par défaut peut être des dizaines de milliers de tokens par requête selon le modèle.
+
+Pour les tâches plus simples où un raisonnement approfondi n'est pas nécessaire, vous pouvez réduire les coûts en abaissant le [niveau d'effort](/docs/fr/model-config#adjust-effort-level) avec `/effort` ou dans `/model`, ou en désactivant la réflexion dans `/config`. Vous ne pouvez pas désactiver la réflexion sur les modèles Opus 5.5 ou les modèles Fable, qui utilisent toujours la réflexion étendue.
+
+Sur les modèles avec un [budget de réflexion fixe](/docs/fr/model-config#adaptive-reasoning-and-fixed-thinking-budgets), vous pouvez également abaisser le budget en définissant la [variable d'environnement](/docs/fr/env-vars) `MAX_THINKING_TOKENS`, par exemple `MAX_THINKING_TOKENS=8000`. Les modèles de raisonnement adaptatif ignorent les budgets non nuls, donc utilisez plutôt les niveaux d'effort.
 
 <h3 id="delegate-verbose-operations-to-subagents">
   Déléguer les opérations détaillées aux subagents
@@ -312,8 +403,33 @@ Claude Code utilise des tokens pour certaines fonctionnalités en arrière-plan 
 
 Ces processus en arrière-plan consomment une petite quantité de tokens (généralement moins de 0,04 \$ par session) même sans interaction active.
 
-<h2 id="understanding-changes-in-claude-code-behavior">
-  Comprendre les changements dans le comportement de Claude Code
+Lorsque les suggestions de prompt sont activées, Claude Code envoie également une courte requête au modèle utilisé par votre session après que Claude réponde, pour [suggérer votre prochain prompt](/docs/fr/interactive-mode#prompt-suggestions). Cette requête réutilise le cache de prompt de la conversation, il s'agit donc principalement de lectures du cache plus quelques tokens de sortie. Claude Code [ignore ces requêtes lorsque votre compte est proche ou à sa limite d'utilisation](/docs/fr/interactive-mode#when-claude-code-skips-suggestions). Pour arrêter ces requêtes, [désactivez les suggestions de prompt](/docs/fr/interactive-mode#turn-prompt-suggestions-off).
+
+<h2 id="why-usage-climbs-in-a-long-session">
+  Pourquoi l'utilisation augmente dans une longue session
 </h2>
 
-Claude Code reçoit régulièrement des mises à jour qui peuvent modifier le fonctionnement des fonctionnalités, y compris la génération de rapports de coûts. Exécutez `claude --version` pour vérifier votre version actuelle. Pour des questions de facturation spécifiques, contactez le support Anthropic via votre [compte Console](https://platform.claude.com/login).
+Une session qui a été ouverte pendant des heures peut utiliser bien plus de vos limites de plan que votre activité ne le suggère, généralement pour l'une de ces raisons :
+
+* **Contexte long** : Claude Code envoie votre conversation complète avec chaque requête, et chaque fois que Claude utilise des outils, il envoie une autre requête contenant ce lot de résultats d'outils. Avec la [mise en cache des invites](/docs/fr/prompt-caching), Claude Code relit cet historique au [taux de jetons mis en cache](https://platform.claude.com/docs/en/about-claude/pricing), donc une question d'une ligne dans une session ouverte toute la journée consomme quand même l'utilisation pour toute la conversation. Consultez [Gérer le contexte de manière proactive](#manage-context-proactively) pour découvrir des façons de garder votre contexte petit
+* **Absences de cache** : votre premier message après une pause plus longue que la [durée de vie du cache](/docs/fr/prompt-caching#cache-lifetime) manque le cache et retraite votre contexte complet. La durée de vie est d'une heure sur un abonnement et tombe à cinq minutes une fois que vous utilisez des [crédits d'utilisation](https://support.claude.com/en/articles/12429409-extra-usage-for-paid-claude-plans) ; sur une clé API ou un fournisseur cloud, c'est cinq minutes par défaut. Pour conserver la durée de vie d'une heure tout en utilisant des crédits d'utilisation, [choisissez vous-même le TTL](/docs/fr/prompt-caching#choose-the-ttl-yourself). Sur les plans Pro et Max, lorsque vous reprenez une grande session après une longue pause, Claude Code [propose de reprendre à partir d'un résumé](/docs/fr/sessions#resume-from-a-summary) afin que les requêtes ultérieures ne portent pas l'historique complet
+* **Tâches planifiées** : une [tâche planifiée](/docs/fr/scheduled-tasks) s'exécute selon son intervalle même pendant que la session est inactive, envoyant votre contexte complet à chaque fois
+* **Messages entre sessions** : Claude Code livre un [message d'une autre de vos sessions](/docs/fr/cross-session-messaging) comme un nouveau tour lorsque cette session est inactive, envoyant votre contexte complet à chaque fois. Pour retenir les messages entrants au lieu de les livrer, définissez [`crossSessionInbound`](/docs/fr/settings-reference#crosssessioninbound) sur `hold`
+* **Vérifications d'objectifs** : tandis que le travail en arrière-plan maintient un [objectif](/docs/fr/goal) actif en attente, Claude Code [demande à Claude de vérifier ce travail](/docs/fr/goal#background-work-defers-evaluation) même lorsque la session est inactive, en commençant un nouveau tour qui envoie votre contexte complet. Claude Code démarre au maximum trois vérifications inactives par objectif entre vos invites. Avant la v2.1.246, les vérifications inactives n'étaient pas limitées. Pour désactiver les vérifications, définissez [`CLAUDE_CODE_GOAL_CHECKIN_MINUTES`](/docs/fr/env-vars) sur `0`. Les vérifications inactives nécessitent Claude Code v2.1.236 ou version ultérieure
+* **Coéquipiers agents** : chaque [coéquipier](#agent-team-token-costs) actif continue de consommer des jetons jusqu'à sa sortie
+* **Compaction** : `/compact` lit la conversation qu'il résume, donc [compacter un grand contexte](/docs/fr/prompt-caching#compacting-the-conversation) est en soi une grande requête. Lorsque vous voulez un nouveau départ au lieu de continuité, `/clear` ne coûte rien
+
+Sur un plan Pro, Max, Team ou Enterprise, la répartition `/usage` signale les comportements qui représentent 10 % ou plus de votre utilisation récente, comme un contexte long ou des absences de cache, chacun avec un conseil pour le réduire.
+
+<h2 id="understanding-changes-in-claude-code-behavior">
+  Comprendre les changements de comportement de Claude Code
+</h2>
+
+Claude Code reçoit régulièrement des mises à jour qui peuvent modifier le fonctionnement des fonctionnalités, y compris la génération de rapports de coûts. Exécutez `claude --version` pour vérifier votre version actuelle.
+
+Pour les questions de facturation concernant votre compte spécifique, contactez le support Anthropic via le messenger intégré au produit :
+
+* **Plans d'abonnement** (Pro, Max, Team, Enterprise) : connectez-vous sur [claude.ai](https://claude.ai), cliquez sur vos initiales en bas à gauche, et sélectionnez **Obtenir de l'aide**
+* **Facturation Console (API)** : connectez-vous sur [platform.claude.com](https://platform.claude.com), cliquez sur vos initiales, et sélectionnez **Obtenir de l'aide**
+
+Consultez [Comment obtenir du support](https://support.claude.com/en/articles/9015913-how-to-get-support) pour connaître le processus complet, y compris qui peut vous mettre en contact avec un agent humain selon votre plan.

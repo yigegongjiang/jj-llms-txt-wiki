@@ -28,9 +28,9 @@ gateway는 조직이 다음을 관리할 수 있는 한 곳을 제공합니다:
 * **감사 로깅**: 규정 준수를 위해 모든 모델 요청을 기록합니다
 * **공급자 전환**: 개발자 머신을 건드리지 않고 gateway 구성에서 공급자를 변경합니다
 
-이 중 공급자 전환을 제외한 모든 것은 업스트림이 Anthropic의 API이든 [클라우드 공급자](/docs/ko/third-party-integrations)이든 적용됩니다. 개발자 머신을 재구성하지 않고도 공급자 전환이 가능하려면 gateway가 업스트림과 관계없이 단일 [Anthropic 형식 엔드포인트](/docs/ko/llm-gateway-protocol#api-formats)를 노출해야 합니다. 공급자 자체 형식을 노출하는 gateway는 클라이언트 구성을 해당 공급자에 연결합니다.
+이 중 공급자 전환을 제외한 모든 것은 업스트림이 Anthropic의 API이든 [클라우드 공급자](/docs/ko/third-party-integrations)이든 적용됩니다. 개발자 머신을 재구성하지 않고도 공급자 전환이 가능하려면 gateway가 업스트림과 관계없이 단일 [Anthropic 형식 엔드포인트](/docs/ko/llm-gateway-protocol#api-formats)를 노출해야 합니다. 공급자 자체 형식을 노출하는 gateway는 클라이언트 구성을 해당 공급자에 연결하고 [Claude Code가 전송하는 내용과 적용하는 기본값을 변경합니다](/docs/ko/llm-gateway-protocol#how-the-connection-method-changes-client-behavior).
 
-트레이드오프는 gateway가 조직이 운영하는 인프라가 된다는 것입니다. Claude Code는 각 릴리스마다 기능을 추가하고, gateway가 이를 전달하지 않으면 해당 기능이 손상되므로, gateway 제품은 Claude Code가 진화함에 따라 최신 상태로 유지되어야 합니다. [gateway 프로토콜 참조](/docs/ko/llm-gateway-protocol)는 전달할 내용을 다룹니다.
+트레이드오프는 gateway가 조직이 운영하는 인프라가 된다는 것입니다. Claude Code는 각 릴리스마다 기능을 추가하고, gateway가 이를 전달하지 않으면 해당 기능이 손상되므로, gateway 제품은 Claude Code가 진화함에 따라 최신 상태로 유지되어야 합니다. [gateway 호환성 가이드](/docs/ko/llm-gateway-protocol)는 전달할 내용을 다룹니다.
 
 <h2 id="roll-out-a-gateway">
   gateway 배포
@@ -40,7 +40,7 @@ gateway는 조직이 다음을 관리할 수 있는 한 곳을 제공합니다:
 
 1. gateway를 배포하고 공급자 자격 증명을 제공하여 전달하는 요청을 인증할 수 있도록 합니다.
 2. 각 개발자에게 gateway 자격 증명을 발급하여 사용량이 개발자에게 속성화되고 오프보딩이 하나의 자격 증명을 취소하도록 합니다.
-3. [관리되는 설정 파일](/docs/ko/settings#settings-files) 및 비밀 도구를 통해 구성을 배포하여 모든 머신이 기본 URL과 자격 증명을 받도록 합니다. 둘 다 배포되면 개발자는 아무것도 구성하지 않습니다. 설정 배포가 없으면 개발자는 [연결 페이지](/docs/ko/llm-gateway-connect)를 따라 변수를 직접 설정합니다.
+3. [관리되는 설정 파일](/docs/ko/managed-settings#delivery-mechanisms) 및 비밀 도구를 통해 구성을 배포하여 모든 머신이 기본 URL과 자격 증명을 받도록 합니다. 둘 다 배포되면 개발자는 아무것도 구성하지 않습니다. 설정 배포가 없으면 개발자는 [연결 페이지](/docs/ko/llm-gateway-connect)를 따라 변수를 직접 설정합니다.
 4. 각 개발자가 [Claude Code에서 구성을 확인](/docs/ko/llm-gateway-connect#check-for-an-existing-configuration)하도록 하여 배포 문제가 gateway에 의존하기 전에 표면화되도록 합니다.
 
 [조직을 위해 LLM gateway 배포](/docs/ko/llm-gateway-rollout)는 각 단계를 안내하고 각 단계에서 배포할 구성 파일을 보여줍니다. gateway는 조직 설정의 한 부분입니다. 정책 적용, 사용량 가시성 및 데이터 처리 결정의 경우 [조직을 위해 Claude Code 설정](/docs/ko/admin-setup)을 참조하세요.
@@ -61,4 +61,4 @@ gateway는 조직이 다음을 관리할 수 있는 한 곳을 제공합니다:
 * [Claude 앱 gateway](/docs/ko/claude-apps-gateway): SSO 로그인 및 OTLP 원격 분석을 포함한 Anthropic의 자체 호스팅 gateway
 * [Claude Code를 LLM gateway에 연결](/docs/ko/llm-gateway-connect): 자신의 머신에서 기본 URL 및 자격 증명을 설정하고, 표면별 구성 및 문제 해결 테이블 포함
 * [조직을 위해 LLM gateway 배포](/docs/ko/llm-gateway-rollout): gateway 배포, 개발자 자격 증명 발급 및 관리되는 설정 배포를 위한 관리자 체크리스트
-* [Gateway 프로토콜 참조](/docs/ko/llm-gateway-protocol): Claude Code가 gateway에 전송하는 내용, gateway를 구성하는 운영자를 위해, 엔드포인트, 전달할 헤더 및 기능 통과를 다룸
+* [Gateway 호환성 가이드](/docs/ko/llm-gateway-protocol): Claude Code가 gateway에 전송하는 내용, gateway를 구성하는 운영자를 위해, 엔드포인트, 전달할 헤더 및 기능 통과를 다룸

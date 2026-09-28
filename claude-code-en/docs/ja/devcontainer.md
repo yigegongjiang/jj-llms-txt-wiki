@@ -59,6 +59,8 @@ VS Code または Codespaces でコンテナを開くと、機能は Claude Code
     ```
 
     `image` 行をプロジェクトのベースイメージに置き換えるか、既存ファイルが Dockerfile を使用している場合は削除します。
+
+    Claude Code 機能は、ベースイメージが Node.js を提供しない場合、Node.js 自体をインストールします。そのインストールが失敗し、ビルドが `Failed to install Node.js and npm` で停止する場合は、`"ghcr.io/devcontainers/features/node:1": {}` を Claude Code 機能の上の `features` ブロックに追加して、再構築してください。
   </Step>
 
   <Step title="コンテナを再構築する">
@@ -89,21 +91,26 @@ VS Code または Codespaces でコンテナを開くと、機能は Claude Code
   再構築時に認証と設定を保持する
 </h2>
 
-デフォルトでは、コンテナのホームディレクトリは再構築時に破棄されるため、エンジニアは毎回サインインし直す必要があります。Claude Code は認証トークン、ユーザー設定、セッション履歴を [`~/.claude`](/docs/ja/claude-directory) に保存します。そのパスに名前付きボリュームをマウントして、再構築時にこの状態を保持します。
+デフォルトでは、コンテナのホームディレクトリは再構築時に破棄されるため、エンジニアは毎回サインインし直す必要があります。Claude Code は認証トークン、ユーザー設定、セッション履歴を [`~/.claude`](/docs/ja/claude-directory) ディレクトリに保存します。OAuth アカウント、個人用 MCP サーバー、プロジェクトごとの信頼設定は [`~/.claude.json`](/docs/ja/settings-reference#global-config-settings) に保存されます。これはそのディレクトリの外にある別ファイルであるため、`~/.claude` だけにボリュームをマウントしても、サインイン状態は保持されません。`~/.claude` に名前付きボリュームをマウントし、[`CLAUDE_CONFIG_DIR`](/docs/ja/env-vars) を同じパスに設定して、Claude Code が `.claude.json` をボリューム内に書き込むようにします。
 
-以下の例は、`node` ユーザーのホームディレクトリにボリュームをマウントします：
+以下の例は、`remoteUser` が `node` であるコンテナのボリュームをマウントし、`CLAUDE_CONFIG_DIR` を設定します：
 
 ```json devcontainer.json theme={null}
 "mounts": [
   "source=claude-code-config,target=/home/node/.claude,type=volume"
-]
+],
+"containerEnv": {
+  "CLAUDE_CONFIG_DIR": "/home/node/.claude"
+}
 ```
 
-`/home/node` をコンテナの `remoteUser` のホームディレクトリに置き換えます。ボリュームを `~/.claude` 以外の場所にマウントする場合は、[`CLAUDE_CONFIG_DIR`](/docs/ja/env-vars) をマウントパスに設定して、Claude Code がそこで読み書きするようにします。
+`/home/node` をコンテナの `remoteUser` のホームディレクトリに置き換えます。既に `containerEnv` を設定している場合（例えば [組織ポリシーの適用](#enforce-organization-policy) で設定している場合）、新しいオブジェクトを追加するのではなく、そのオブジェクトに `CLAUDE_CONFIG_DIR` を追加します。
 
 プロジェクトごとに状態を分離して、すべてのリポジトリ間で 1 つのボリュームを共有しないようにするには、ソース名に `${devcontainerId}` 変数を含めます。[リファレンス設定](https://github.com/anthropics/claude-code/blob/main/.devcontainer/devcontainer.json)はこの目的で `source=claude-code-config-${devcontainerId}` を使用しています。
 
-GitHub Codespaces では、`~/.claude` は codespace の停止と開始の間で保持されますが、コンテナを再構築するときはまだクリアされるため、上記のボリュームマウントがそこにも適用されます。codespace 間で認証を実行するには、[Codespaces シークレット](https://docs.github.com/en/codespaces/managing-your-codespaces/managing-your-account-specific-secrets-for-github-codespaces)として `ANTHROPIC_API_KEY` または [`claude setup-token`](/docs/ja/authentication#generate-a-long-lived-token) からの `CLAUDE_CODE_OAUTH_TOKEN` を保存します。Codespaces はシークレットを自動的にコンテナ内の環境変数として利用可能にします。
+GitHub Codespaces では、`~/.claude` は codespace の停止と開始の間で保持されますが、コンテナを再構築するときはクリアされるため、上記の設定がそこにも適用されます。
+
+codespace 間で認証を実行するには、[Codespaces シークレット](https://docs.github.com/en/codespaces/managing-your-codespaces/managing-your-account-specific-secrets-for-github-codespaces)として `ANTHROPIC_API_KEY` または [`claude setup-token`](/docs/ja/authentication#generate-a-long-lived-token) からの `CLAUDE_CODE_OAUTH_TOKEN` を保存します。Codespaces はシークレットを自動的にコンテナ内の環境変数として利用可能にします。
 
 <h2 id="enforce-organization-policy">
   組織ポリシーを適用する
@@ -111,14 +118,14 @@ GitHub Codespaces では、`~/.claude` は codespace の停止と開始の間で
 
 開発コンテナは、同じイメージと設定がすべてのエンジニアのマシンで実行されるため、組織ポリシーを適用するのに便利な場所です。
 
-Claude Code は Linux で `/etc/claude-code/managed-settings.json` を読み取り、[設定階層](/docs/ja/settings#how-scopes-interact)で最高の優先度で適用するため、そこの値はエンジニアが `~/.claude` またはプロジェクトの `.claude/` ディレクトリで設定したものをオーバーライドします。Dockerfile からファイルをコピーして配置します：
+Claude Code は Linux で `/etc/claude-code/managed-settings.json` を読み取り、[設定階層](/docs/ja/settings#settings-precedence)で最高の優先度で適用するため、そこの値はエンジニアが `~/.claude` またはプロジェクトの `.claude/` ディレクトリで設定したものをオーバーライドします。Dockerfile からファイルをコピーして配置します：
 
 ```dockerfile Dockerfile theme={null}
 RUN mkdir -p /etc/claude-code
 COPY managed-settings.json /etc/claude-code/managed-settings.json
 ```
 
-Dockerfile はリポジトリに存在するため、書き込みアクセス権を持つ誰でもこのステップを変更または削除できます。エンジニアがリポジトリファイルを編集してバイパスできないポリシーについては、[サーバー管理設定](/docs/ja/server-managed-settings)または MDM を通じて管理設定を配信します。利用可能なキーと他の配信パスについては、[管理設定ファイル](/docs/ja/settings#settings-files)を参照してください。
+Dockerfile はリポジトリに存在するため、書き込みアクセス権を持つ誰でもこのステップを変更または削除できます。エンジニアがリポジトリファイルを編集してバイパスできないポリシーについては、[サーバー管理設定](/docs/ja/server-managed-settings)または MDM を通じて管理設定を配信します。利用可能なキーと他の配信パスについては、[管理設定ファイル](/docs/ja/managed-settings#delivery-mechanisms)を参照してください。
 
 コンテナ内のすべての Claude Code セッションに適用される[環境変数](/docs/ja/env-vars)を設定するには、`devcontainer.json` の `containerEnv` に追加します。以下の例は、テレメトリとエラーレポートをオプトアウトし、Claude Code がインストール後に自動更新されるのを防ぎます：
 
@@ -129,7 +136,9 @@ Dockerfile はリポジトリに存在するため、書き込みアクセス権
 }
 ```
 
-Dev Container Feature は常に最新の Claude Code リリースをインストールします。再現可能なビルドのために特定の Claude Code バージョンをピン留めするには、機能を使用する代わりに Dockerfile から `npm install -g @anthropic-ai/claude-code@X.Y.Z` でインストールし、上記のように `DISABLE_AUTOUPDATER` を設定します。
+`CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` は、[Remote Control](/docs/ja/remote-control#requirements)と他の[フィーチャーフラグ取得が必要な機能](/docs/ja/env-vars#features-that-need-feature-flag-fetching)が依存するフィーチャーフラグ評価も無効にするため、コンテナ内のセッションはそれらを使用できません。
+
+Dev Container Feature は常に最新の Claude Code リリースをインストールします。再現可能なビルドのために特定の Claude Code バージョンをピン留めするには、機能を使用する代わりに Dockerfile から `npm install -g @anthropic-ai/claude-code@X.Y.Z` でインストールし、`containerEnv` で `DISABLE_AUTOUPDATER` を `1` に設定します。
 
 権限ルール、ツール制限、MCP サーバーアローリストを含むポリシーコントロールの完全なリストについては、[組織向けに Claude Code をセットアップする](/docs/ja/admin-setup)を参照してください。
 
@@ -141,7 +150,7 @@ Dev Container Feature は常に最新の Claude Code リリースをインスト
 
 コンテナのアウトバウンドトラフィックを Claude Code が必要とするドメインのみに制限できます。推論と認証ドメインについては[ネットワークアクセス要件](/docs/ja/network-config#network-access-requirements)を参照し、オプションのテレメトリとエラーレポート接続およびそれらを無効にする方法については[テレメトリサービス](/docs/ja/data-usage#telemetry-services)を参照してください。
 
-リファレンスコンテナには、Claude Code と開発ツールが必要とするドメイン以外のすべてのアウトバウンドトラフィックをブロックする [`init-firewall.sh`](https://github.com/anthropics/claude-code/blob/main/.devcontainer/init-firewall.sh) スクリプトが含まれています。コンテナ内でファイアウォールを実行するには追加の権限が必要なため、リファレンスは `runArgs` を通じて `NET_ADMIN` と `NET_RAW` 機能を追加します。ファイアウォールスクリプトとこれらの機能は Claude Code 自体には必須ではありません。これらを除外して、代わりに独自のネットワークコントロールに依存することができます。
+リファレンスコンテナには、スクリプトが許可する宛先へのアウトバウンドトラフィックを制限する [`init-firewall.sh`](https://github.com/anthropics/claude-code/blob/main/.devcontainer/init-firewall.sh) スクリプトが含まれています。コンテナ内でファイアウォールを実行するには追加の権限が必要なため、リファレンスは `runArgs` を通じて `NET_ADMIN` と `NET_RAW` 機能を追加します。ファイアウォールスクリプトとこれらの機能は Claude Code 自体には必須ではありません。これらを除外して、代わりに独自のネットワークコントロールに依存することができます。
 
 <h2 id="run-without-permission-prompts">
   権限プロンプトなしで実行する
@@ -151,7 +160,7 @@ Dev Container Feature は常に最新の Claude Code リリースをインスト
 
 権限プロンプトをスキップすると、実行前にツール呼び出しを確認する機会が失われます。Claude はバインドマウントされたワークスペース内のあらゆるファイルを変更でき、これはホストに直接表示され、コンテナのネットワークポリシーが許可するものに到達できます。このフラグを上記の[ネットワークエグレス制限](#restrict-network-egress)と組み合わせて、バイパスされたセッションが到達できるものを制限します。
 
-安全チェックを無効にせずにプロンプトを減らしたい場合は、代わりに[自動モード](/docs/ja/permission-modes#eliminate-prompts-with-auto-mode)を検討してください。これは、実行前にアクションを確認するための分類器を備えています。エンジニアが `--dangerously-skip-permissions` をまったく使用できないようにするには、[管理設定](/docs/ja/settings#permission-settings)で `permissions.disableBypassPermissionsMode` を `"disable"` に設定します。
+安全チェックを無効にせずにプロンプトを減らしたい場合は、代わりに[自動モード](/docs/ja/permission-modes#eliminate-prompts-with-auto-mode)を検討してください。これは、実行前にアクションを確認するための分類器を備えています。エンジニアが `--dangerously-skip-permissions` をまったく使用できないようにするには、[管理設定](/docs/ja/settings-reference#permission-settings)で `permissions.disableBypassPermissionsMode` を `"disable"` に設定します。
 
 <h2 id="try-the-reference-container">
   リファレンスコンテナを試す
@@ -194,7 +203,7 @@ Dev Container Feature は常に最新の Claude Code リリースをインスト
 Claude Code が開発コンテナで実行されたら、以下のページは組織ロールアウトの残りの部分をカバーしています。認証パスの選択、リポジトリ外での管理ポリシーの配信、使用状況の監視、Claude Code が保存および送信するものの理解です。
 
 * [組織向けに Claude Code をセットアップする](/docs/ja/admin-setup)：認証プロバイダーを選択し、ポリシーがデバイスに到達する方法を決定し、ロールアウトを計画します
-* [サーバー管理設定](/docs/ja/server-managed-settings)：Claude.ai 管理コンソールから管理ポリシーを配信して、エンジニアがリポジトリファイルを編集してバイパスできないようにします
+* [サーバー管理設定](/docs/ja/server-managed-settings)：claude.ai 管理コンソールから管理ポリシーを配信して、エンジニアがリポジトリファイルを編集してバイパスできないようにします
 * [使用状況の監視と監査アクティビティ](/docs/ja/monitoring-usage)：OpenTelemetry メトリクスをエクスポートして、チームが実行しているものを確認します
 * [ネットワークアクセス要件](/docs/ja/network-config#network-access-requirements)：プロキシとファイアウォール用の完全なドメインアローリスト
 * [テレメトリサービスとオプトアウト](/docs/ja/data-usage#telemetry-services)：Claude Code がデフォルトで送信するもの、およびそれを無効にする環境変数

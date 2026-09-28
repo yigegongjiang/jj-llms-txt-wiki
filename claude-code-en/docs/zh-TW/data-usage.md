@@ -29,7 +29,9 @@
   使用 `/feedback` 命令的回饋
 </h3>
 
-如果您選擇使用 `/feedback` 命令向我們發送有關 Claude Code 的回饋，我們可能會使用您的回饋來改進我們的產品和服務。透過 `/feedback` 共享的文字記錄會保留 5 年。
+如果您選擇使用 `/feedback` 命令向我們發送有關 Claude Code 的回饋，我們可能會使用您的回饋來改進我們的產品和服務。透過 `/feedback`、`/bug` 和 `/share` 共享的文字記錄（透過相同路徑報告）會保留 5 年。
+
+使用[Claude 起草的回饋](/docs/zh-TW/tools-reference#sendfeedback-tool-behavior)，Claude 也可以起草回饋報告並在您的機器上排隊供您檢閱。Claude Code 在您選擇發送草稿之前不會發送任何內容，已發送的草稿會通過與其他 `/feedback` 報告相同的提交路徑和保留期。
 
 <h3 id="session-quality-surveys">
   工作階段品質調查
@@ -45,7 +47,7 @@
 
 除非您明確選擇**是**，否則不會上傳任何內容。具有[零資料保留](/docs/zh-TW/zero-data-retention)的組織，或組織政策停用產品回饋的組織，或設定了 `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` 的組織，永遠不會看到此後續提問。您對此調查的回應（包括評分提示後提交的工作階段文字記錄）不會影響您的資料訓練偏好設定，也不能用於訓練我們的 AI 模型。
 
-若要停用這些調查，請設定 `CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY=1`。當設定 `DISABLE_TELEMETRY`、`DO_NOT_TRACK` 或 `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` 時，調查也會停用。具有[零資料保留](/docs/zh-TW/zero-data-retention)的組織，或組織政策停用產品回饋的組織，或設定了 `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` 的組織，永遠不會看到此後續提問。阻止非必要流量但透過自己的 [OpenTelemetry 收集器](/docs/zh-TW/monitoring-usage)捕獲調查回應的組織可以透過設定 `CLAUDE_CODE_ENABLE_FEEDBACK_SURVEY_FOR_OTEL=1` 選擇重新啟用調查。調查隨後只會將評分記錄到已設定的收集器。文字記錄共享後續提問和所有其他 Anthropic 相關的回饋流量保持停用。若要控制頻率而不是停用，請在您的設定檔中設定 [`feedbackSurveyRate`](/docs/zh-TW/settings#available-settings) 為 `0` 到 `1` 之間的機率。
+若要停用這些調查，請設定 `CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY=1`。當設定 `DISABLE_TELEMETRY`、`DO_NOT_TRACK` 或 `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` 時，調查也會停用。具有阻止非必要流量但透過自己的 [OpenTelemetry 收集器](/docs/zh-TW/monitoring-usage)捕獲調查回應的組織可以透過設定 `CLAUDE_CODE_ENABLE_FEEDBACK_SURVEY_FOR_OTEL=1` 選擇重新啟用調查。調查隨後只會將評分記錄到已設定的收集器。文字記錄共享後續提問和所有其他 Anthropic 相關的回饋流量保持停用。若要控制頻率而不是停用，請在您的設定檔中設定 [`feedbackSurveyRate`](/docs/zh-TW/settings-reference#feedbacksurveyrate) 為 `0` 到 `1` 之間的機率。
 
 <h3 id="data-retention">
   資料保留
@@ -65,6 +67,8 @@ Anthropic 根據您的帳戶類型和偏好設定保留 Claude Code 資料。
 * [零資料保留](/docs/zh-TW/zero-data-retention)：適用於 Claude for Enterprise 上的 Claude Code。ZDR 不包含在標準 Enterprise 方案中；在您的帳戶團隊確認符合資格後，會按組織啟用
 * 本機快取：Claude Code 用戶端在 `~/.claude/projects/` 下以純文字形式本機儲存工作階段文字記錄，預設為 30 天，以啟用工作階段繼續。使用 `cleanupPeriodDays` 調整期間。請參閱[應用程式資料](/docs/zh-TW/claude-directory#application-data)以了解儲存的內容以及如何清除。
 
+  在 Claude Desktop 或 Cowork 中開始或最近繼續的工作階段文字記錄[預設不受該限制](/docs/zh-TW/claude-directory#cleaned-up-automatically)。
+
 您可以隨時刪除網路上的個別 Claude Code 工作階段。刪除工作階段會永久移除工作階段的事件資料。如需有關如何刪除工作階段的說明，請參閱[刪除工作階段](/docs/zh-TW/claude-code-on-the-web#delete-sessions)。
 
 在我們的[隱私中心](https://privacy.anthropic.com/)了解更多有關資料保留實踐的資訊。
@@ -83,18 +87,20 @@ Anthropic 根據您的帳戶類型和偏好設定保留 Claude Code 資料。
 
 下圖顯示 Claude Code 在安裝和正常操作期間如何連接到外部服務。實線表示必需的連接，而虛線表示可選或使用者啟動的資料流。
 
-<img src="https://mintcdn.com/claude-code/YR4DRZyI3CdsXkiT/images/claude-code-data-flow.svg?fit=max&auto=format&n=YR4DRZyI3CdsXkiT&q=85&s=2846ea92cfc2297b8620c31c82b482ad" alt="顯示 Claude Code 外部連接的圖表：安裝/更新連接到發佈伺服器，使用者請求連接到 Anthropic 的 Console 驗證和 public-api，以及可選的遙測流量將指標和錯誤報告傳送到 Anthropic 和第三方服務。透過 /feedback 傳送的意見反應會傳送到 Google Cloud Storage，並可選擇性地建立 GitHub 議題" width="720" height="520" data-path="images/claude-code-data-flow.svg" />
+<img src="https://mintcdn.com/claude-code/YR4DRZyI3CdsXkiT/images/claude-code-data-flow.svg?fit=max&auto=format&n=YR4DRZyI3CdsXkiT&q=85&s=2846ea92cfc2297b8620c31c82b482ad" className="dark:hidden" alt="顯示 Claude Code 外部連接的圖表：安裝/更新連接到發佈伺服器，使用者請求連接到 Anthropic 的 Console 驗證和 public-api，以及可選的遙測流量將指標和錯誤報告傳送到 Anthropic 和第三方服務。透過 /feedback 傳送的意見反應會傳送到 Google Cloud Storage，並可選擇性地建立 GitHub 議題" width="720" height="520" data-path="images/claude-code-data-flow.svg" />
+
+<img src="https://mintcdn.com/claude-code/_xqph1dUOslCOwsj/images/claude-code-data-flow-dark.svg?fit=max&auto=format&n=_xqph1dUOslCOwsj&q=85&s=4fb6e8c88a9740845217bf2a2b040877" className="hidden dark:block" alt="顯示 Claude Code 外部連接的圖表：安裝/更新連接到發佈伺服器，使用者請求連接到 Anthropic 的 Console 驗證和 public-api，以及可選的遙測流量將指標和錯誤報告傳送到 Anthropic 和第三方服務。透過 /feedback 傳送的意見反應會傳送到 Google Cloud Storage，並可選擇性地建立 GitHub 議題" width="720" height="520" data-path="images/claude-code-data-flow-dark.svg" />
 
 Claude Code 在本機執行。為了與 LLM 互動，Claude Code 透過網路發送資料。此資料包括所有使用者提示和模型輸出，在傳輸中透過 TLS 1.2+ 加密。Claude Code 與大多數流行的 VPN 和 LLM 代理相容。
 
 靜止時的加密取決於您的模型提供者：
 
-| 提供者                           | 靜止時加密                                                                 |
-| ----------------------------- | --------------------------------------------------------------------- |
-| Anthropic API                 | 基礎設施層級磁碟加密 (AES-256)。啟用[零資料保留](/docs/zh-TW/zero-data-retention)以避免伺服器端持久化。 |
-| Amazon Bedrock                | AES-256 搭配 AWS 管理的金鑰。客戶管理的金鑰可透過 AWS KMS 取得。                           |
-| Google Cloud 的 Agent Platform | Google 管理的加密金鑰。CMEK 可用。                                               |
-| Microsoft Foundry             | 請求路由到 Anthropic 基礎設施，具有 AES-256 磁碟加密。                                 |
+| 提供者                           | 靜止時加密                                                                                                                                                                                                                                                         |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Anthropic API                 | 基礎設施層級磁碟加密 (AES-256)。啟用[零資料保留](/docs/zh-TW/zero-data-retention)以避免伺服器端持久化。                                                                                                                                                                                         |
+| Amazon Bedrock                | AES-256 搭配 AWS 管理的金鑰。客戶管理的金鑰可透過 AWS KMS 取得。                                                                                                                                                                                                                   |
+| Google Cloud 的 Agent Platform | Google 管理的加密金鑰。CMEK 可用。                                                                                                                                                                                                                                       |
+| Microsoft Foundry             | 取決於部署的[託管選項](https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry#hosting-options)。對於在 Azure 上託管的部署，提示和完成內容保留在 Azure 內；只有使用情況中繼資料和由 Anthropic 安全系統標記的內容會流出到 Anthropic。對於在 Anthropic 上託管的部署，請求路由到 Anthropic 基礎設施，具有 AES-256 磁碟加密。 |
 
 Claude Code 建立在 Anthropic 的 API 上。有關 API 安全控制的詳細資訊，包括 API 記錄程序，請參閱 [Anthropic 信任中心](https://trust.anthropic.com)中的合規性文件。
 
@@ -102,7 +108,7 @@ Claude Code 建立在 Anthropic 的 API 上。有關 API 安全控制的詳細�
   雲端執行：資料流和相依性
 </h3>
 
-使用[網路上的 Claude Code](/docs/zh-TW/claude-code-on-the-web)時，工作階段在 Anthropic 管理的虛擬機器中執行，而不是在本機執行。在雲端環境中：
+使用[網路上的 Claude Code](/docs/zh-TW/claude-code-on-the-web)時，工作階段在 Anthropic 管理的虛擬機器中執行，而不是在本機執行。您的組織路由到[自託管環境](/docs/zh-TW/self-hosted-environments)的工作階段在您控制的基礎設施上執行；有關哪些內容保留在您的機器上以及哪些內容仍然流向 Anthropic，請參閱[哪些內容保留在您的基礎設施上](/docs/zh-TW/self-hosted-environments#what-stays-on-your-infrastructure)。在 Anthropic 託管的雲端工作階段中：
 
 * \*\*程式碼和資料儲存：\*\*您的儲存庫被複製到隔離的 VM。程式碼和工作階段資料受您帳戶類型的保留和使用政策約束（請參閱上面的資料保留部分）
 * \*\*認證：\*\*GitHub 驗證透過安全代理進行；您的 GitHub 認證永遠不會進入沙箱
@@ -115,7 +121,7 @@ Claude Code 建立在 Anthropic 的 API 上。有關 API 安全控制的詳細�
   遙測服務
 </h2>
 
-Claude Code 傳送兩種操作遙測：使用指標和錯誤報告。您可以使用下面的環境變數分別關閉每一種，或透過設定 `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` 一次停用所有非必要流量。
+Claude Code 傳送兩種操作遙測：使用指標和錯誤報告。您可以使用下面的環境變數分別關閉每一種，或透過設定 `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` 一次停用所有非必要流量。設定 `DISABLE_TELEMETRY` 或 `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` 也會停用 [Remote Control](/docs/zh-TW/remote-control#requirements) 所依賴的功能旗標評估；`DISABLE_ERROR_REPORTING` 則不會。
 
 **指標**：延遲、可靠性和使用模式，透過 TLS 傳送至 Anthropic 和第三方日誌基礎設施。指標永遠不包括您的程式碼、提示或檔案路徑。設定 `DISABLE_TELEMETRY=1` 以選擇退出。
 
@@ -128,7 +134,7 @@ Claude Code 傳送兩種操作遙測：使用指標和錯誤報告。您可以�
 * 您直接連接到 Claude API
 * 您的組織沒有零資料保留或 HIPAA 協議
 
-當使用者執行 `/feedback` 命令時，他們的完整對話歷史記錄（包括程式碼）的副本會發送到 Anthropic。在提交前，使用者可以選擇要包含多少歷史記錄：僅限目前工作階段（預設值），或也包括同一專案在過去 24 小時或 7 天內的其他工作階段。資料在傳輸中使用 TLS 加密，並儲存在 Google Cloud Storage 中，預設情況下會加密靜止的資料。可選地，在公開儲存庫中建立 GitHub 問題。若要選擇退出，請設定 `DISABLE_FEEDBACK_COMMAND` 環境變數為 `1`。
+當您執行 `/feedback` 命令時，您的對話歷史記錄（包括程式碼）的副本會發送到 Anthropic。`/bug` 和 `/share` 命令透過相同的路徑提交。在從回饋對話框提交報告之前，您可以選擇要包含多少歷史記錄：僅限目前工作階段（預設值），或也包括同一專案在過去 24 小時或 7 天內的其他工作階段。Claude Code 透過相同的路徑提交 [Claude 起草的回饋](/docs/zh-TW/tools-reference#sendfeedback-tool-behavior)，包括您在草稿的檢閱畫面上選擇包含的文字記錄。資料在傳輸中使用 TLS 加密，並儲存在 Google Cloud Storage 中，預設情況下會加密靜止的資料。可選地，在公開儲存庫中建立 GitHub 問題。若要選擇退出，請設定 `DISABLE_FEEDBACK_COMMAND` 環境變數為 `1`。
 
 當使用者使用第三方提供者（例如 Amazon Bedrock 或 Google Cloud 的 Agent Platform）或未設定 Anthropic 認證時，`/feedback` 會將報告寫入 `~/.claude/feedback-bundles/` 下的本機封存，而不是將其發送到 Anthropic。已知的 API 金鑰和權杖模式在寫入封存前會被編輯。在使用者將該檔案發送給 Anthropic 帳戶代表或將其附加到支援請求之前，任何內容都不會離開使用者的機器。
 
@@ -136,7 +142,7 @@ Claude Code 傳送兩種操作遙測：使用指標和錯誤報告。您可以�
   按 API 提供者的預設行為
 </h2>
 
-根據預設，當使用 Amazon Bedrock、Google Cloud 的 Agent Platform、Microsoft Foundry 或 Claude Platform on AWS 時，錯誤報告、遙測和錯誤報告會停用。工作階段品質調查和 WebFetch 網域安全檢查是例外，無論提供者為何都會執行。在已登入的 [Claude apps gateway](/docs/zh-TW/claude-apps-gateway) 工作階段上，使用分析、錯誤報告和對 Anthropic 的調查評分會由閘道認證本身停用，沒有重新啟用的設定。您可以透過設定 `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` 一次選擇退出所有非必要流量，包括調查。此變數不會影響 WebFetch 檢查，該檢查有其自己的選擇退出。以下是完整的預設行為：
+根據預設，當使用 Amazon Bedrock、Google Cloud 的 Agent Platform、Microsoft Foundry 或 Claude Platform on AWS 時，錯誤報告、遙測和錯誤報告會停用。工作階段品質調查和 WebFetch 網域安全檢查是例外，無論提供者為何都會執行。在已登入的 [Claude apps gateway](/docs/zh-TW/claude-apps-gateway) 工作階段上，使用分析、錯誤報告和對 Anthropic 的調查評分會由閘道認證本身停用，沒有重新啟用的設定。您可以透過設定 `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` 一次選擇退出所有非必要流量，包括調查。此變數不會影響 WebFetch 檢查或官方外掛程式市集自動安裝；每個都有其自己的選擇退出：[設定](/docs/zh-TW/settings)中的 `skipWebFetchPreflight` 用於 WebFetch，以及 `CLAUDE_CODE_DISABLE_OFFICIAL_MARKETPLACE_AUTOINSTALL` 用於市集。以下是完整的預設行為：
 
 | 服務                             | Claude API                                                                | Google Cloud 的 Agent Platform API                                     | Amazon Bedrock API                                                    | Microsoft Foundry API                                                 | Claude Platform on AWS                                                |
 | ------------------------------ | ------------------------------------------------------------------------- | --------------------------------------------------------------------- | --------------------------------------------------------------------- | --------------------------------------------------------------------- | --------------------------------------------------------------------- |
@@ -146,14 +152,14 @@ Claude Code 傳送兩種操作遙測：使用指標和錯誤報告。您可以�
 | **工作階段品質調查**                   | 預設開啟。<br />`CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY=1` 以停用。                   | 預設開啟。<br />`CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY=1` 以停用。               | 預設開啟。<br />`CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY=1` 以停用。               | 預設開啟。<br />`CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY=1` 以停用。               | 預設開啟。<br />`CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY=1` 以停用。               |
 | **WebFetch 網域安全檢查**            | 預設開啟。<br />[設定](/docs/zh-TW/settings)中的 `skipWebFetchPreflight: true` 以停用。     | 預設開啟。<br />[設定](/docs/zh-TW/settings)中的 `skipWebFetchPreflight: true` 以停用。 | 預設開啟。<br />[設定](/docs/zh-TW/settings)中的 `skipWebFetchPreflight: true` 以停用。 | 預設開啟。<br />[設定](/docs/zh-TW/settings)中的 `skipWebFetchPreflight: true` 以停用。 | 預設開啟。<br />[設定](/docs/zh-TW/settings)中的 `skipWebFetchPreflight: true` 以停用。 |
 
-所有環境變數都可以簽入 `settings.json`（請參閱[設定參考](/docs/zh-TW/settings)）。
+所有環境變數都可以簽入 `settings.json`（請參閱[設定參考](/docs/zh-TW/settings-reference)）。
 
-自 v2.1.126 起，當主機平台設定 `CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST` 時，Google Cloud 的 Agent Platform、Amazon Bedrock 和 Microsoft Foundry 上的指標預設為開啟，並遵循標準 `DISABLE_TELEMETRY` 選擇退出。錯誤報告和 `/feedback` 報告在這些提供者上仍預設為關閉。
+當主機平台設定 `CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST` 時，Google Cloud 的 Agent Platform、Amazon Bedrock、Microsoft Foundry 和 Claude Platform on AWS 上的指標預設為開啟，並遵循標準 `DISABLE_TELEMETRY` 選擇退出。錯誤報告和 `/feedback` 報告在這些提供者上仍預設為關閉。
 
 <h3 id="webfetch-domain-safety-check">
   WebFetch 網域安全檢查
 </h3>
 
-在擷取 URL 之前，WebFetch 工具會將請求的主機名稱發送到 `api.anthropic.com`，以根據 Anthropic 維護的安全封鎖清單進行檢查。只會發送主機名稱，不會發送完整 URL、路徑或頁面內容。結果按主機名稱快取五分鐘。
+在擷取 URL 之前，WebFetch 工具會將請求的主機名稱發送到 `api.anthropic.com`，以根據 Anthropic 維護的安全封鎖清單進行檢查。只會發送主機名稱，不會發送完整 URL、路徑或頁面內容。Claude Code 會將通過檢查的主機名稱快取五分鐘，並在下一個請求時重新檢查被封鎖或失敗的主機名稱。
 
 無論您使用哪個模型提供者，此檢查都會執行，並且不受 `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` 影響。如果您的網路封鎖 `api.anthropic.com`，WebFetch 請求會失敗，直到您允許清單該網域或在[設定](/docs/zh-TW/settings)中設定 `skipWebFetchPreflight: true`。停用檢查意味著 WebFetch 會嘗試擷取任何 URL，而不查詢封鎖清單，因此如果您需要限制 Claude 可以存取的網域，請將其與 [`WebFetch` 權限規則](/docs/zh-TW/permissions#webfetch)結合。

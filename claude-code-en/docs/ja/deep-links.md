@@ -19,11 +19,11 @@
 
 このページでは、[リンクの構築方法](#build-a-link)、[ランブックに埋め込む方法またはシェルからトリガーする方法](#examples)、および[各プラットフォームでハンドラー登録を管理または無効化する方法](#registration-and-supported-platforms)について説明します。
 
-<h2 id="how-it-works">
-  仕組み
+<h2 id="how-deep-links-work">
+  ディープリンクの仕組み
 </h2>
 
-`claude-cli://` プレフィックスはカスタム URL スキームで、Claude Code がオペレーティングシステムに登録します。これは `mailto:` リンクがメールクライアントを開く方法と似ています。リンクは Web ページ、ウィキ、Slack メッセージ、またはリンクをレンダリングするアプリに配置できます。クリックすると以下のことが起こります。
+`claude-cli://` プレフィックスはカスタム URL スキームで、Claude Code がオペレーティングシステムに登録します。これは `mailto:` リンクがメールクライアントを開く方法と似ています。ディープリンクをクリックすると以下のことが起こります。
 
 1. ブラウザまたはアプリが URL をオペレーティングシステムに渡します。
 2. オペレーティングシステムが `claude-cli://` プレフィックスを認識し、マシン上で Claude Code を起動します。
@@ -32,9 +32,7 @@
 
 リンク自体はどこにでもホストできますが、セッションは常にクリックしたコンピューター上でローカルに開きます。各オペレーティングシステムで開くターミナルエミュレーターについては、[登録とサポートされているプラットフォーム](#registration-and-supported-platforms)を参照してください。
 
-<Note>
-  リンクを表示するプラットフォームはカスタム URL スキームを許可する必要があります。GitHub でレンダリングされた Markdown は `http` と `https` を許可しますが、README、issue、pull request、wiki で `claude-cli://` などのスキームを削除します。リンクテキストのみが表示され、リンクはなく、URL は非表示です。回避策については、[トラブルシューティング](#the-link-renders-as-plain-text-instead-of-being-clickable)を参照してください。
-</Note>
+リンクを表示するプラットフォームはカスタム URL スキームを許可する必要があります。GitHub がそれらで行うことと回避策については、[リンクがクリック可能ではなくプレーンテキストとしてレンダリングされる](#the-link-renders-as-plain-text-instead-of-being-clickable)を参照してください。
 
 <h3 id="what-a-launched-session-shows">
   起動されたセッションが表示するもの
@@ -54,12 +52,14 @@
 claude-cli://open
 ```
 
+ページに配置せずにリンクを試すには、ブラウザーのアドレスバーに貼り付けるか、[シェルからリンクを開く](#open-a-link-from-the-shell)してください。
+
 パラメーターを追加して、セッションが開始される場所とプロンプトボックスに含まれるテキストを制御します。
 
 | パラメーター | 説明                                                                                                                                                                                   |
 | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `q`    | プロンプトボックスにプリフィルするテキスト。[URL エンコード](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent)してください。複数行プロンプトの改行には `%0A` を使用します。最大 5,000 文字。 |
-| `cwd`  | 作業ディレクトリとして使用する絶対パス。ネットワークおよび UNC パスは拒否されます。また、目に見えない制御文字または双方向制御文字を含むパスも拒否されます。                                                                                                     |
+| `cwd`  | 作業ディレクトリとして使用する絶対パス。ネットワークおよび UNC パスは拒否されます。また、`..` セグメント、目に見えない制御文字、または双方向制御文字を含むパスも拒否されます。                                                                                         |
 | `repo` | GitHub の `owner/name` スラッグ。Claude Code はそれを以前に見たローカルクローンに解決し、そこから開始します。一致するクローンがない場合、セッションはホームディレクトリで開きます。                                                                           |
 
 `cwd` と `repo` は[作業ディレクトリを設定する 2 つの方法](#choose-between-cwd-and-repo)です。両方を渡す場合、`cwd` が優先され、`cwd` パスが存在しない場合でも `repo` は無視されます。
@@ -77,7 +77,7 @@ Investigate the failed deploy of payments-api.
 Check recent commits to main and the last successful build.
 ```
 
-Enter キーを押して送信する前にプロンプトを編集できます。リポジトリのローカルクローンがない場合、セッションはホームディレクトリで開きます。複数のクローンまたはワークツリーがある場合にローカルパスがどのように選択されるかについては、[`cwd` と `repo` の選択](#choose-between-cwd-and-repo)を参照してください。
+Enter キーを押して送信する前にプロンプトを編集できます。複数のクローンまたはワークツリーがある場合にローカルパスがどのように選択されるかについては、[`cwd` と `repo` の選択](#choose-between-cwd-and-repo)を参照してください。
 
 <h3 id="choose-between-cwd-and-repo">
   `cwd` と `repo` の選択
@@ -87,9 +87,7 @@ Enter キーを押して送信する前にプロンプトを編集できます�
 
 リンクが共有され、各人がクローンを別の場所にクローンする場合は `repo` を使用します。Claude Code はスラッグをローカルパスに解決します。
 
-* `claude` を Git リポジトリで実行するたびに、そのディレクトリのファイルシステムパスがリポジトリの GitHub `owner/name` スラッグに対して記録されます。
-* ディープリンクが到着すると、`repo` は最近使用した一致するパスを開きます。複数のクローンとワークツリーは個別に追跡されるため、最後に作業したものを選択します。
-* ルックアップは、少なくとも 1 回 Claude Code を実行したパスのみを検出します。
+* `repo` は、リンクされたリポジトリのクローンまたはワークツリーを開きます。ここで最近 `claude` を実行しました。`claude` を Git リポジトリで実行するたびに、Claude Code はそのディレクトリのパスをリポジトリの GitHub `owner/name` スラッグに対して記録します。Claude Code はクローンとワークツリーを個別に追跡します。
 * リンクはどのブランチがチェックアウトされているかを変更しません。セッションはそのディレクトリが現在ある状態で開きます。
 
 ウェルカムヘッダーは、選択したパスを表示するため、正しいクローンが開いたことを確認できます。
@@ -124,7 +122,7 @@ Enter キーを押して送信する前にプロンプトを編集できます�
   シェルからリンクを開く
 </h3>
 
-クリックする代わりに、シェルスクリプト、エイリアス、または自動化からディープリンクを開くこともできます。オペレーティングシステムの URL 開くコマンドをリンクを引数として呼び出します。
+クリックする代わりに、シェルスクリプト、エイリアス、または自動化からディープリンクを開くこともできます。オペレーティングシステムの URL を開くコマンドをリンクを引数として呼び出します。これらのコマンドは、Claude Code が[インタラクティブセッションの最初のプロンプトを送信するときにマシンに登録](#registration-and-supported-platforms)するハンドラーに依存しています。
 
 <Tabs>
   <Tab title="macOS">
@@ -133,6 +131,8 @@ Enter キーを押して送信する前にプロンプトを編集できます�
     ```bash theme={null}
     open "claude-cli://open?repo=acme/payments&q=review%20open%20PRs"
     ```
+
+    成功すると、Claude Code が実行されており、プロンプトが事前に入力された新しいターミナルウィンドウが開きます。
   </Tab>
 
   <Tab title="Linux">
@@ -141,6 +141,8 @@ Enter キーを押して送信する前にプロンプトを編集できます�
     ```bash theme={null}
     xdg-open "claude-cli://open?repo=acme/payments&q=review%20open%20PRs"
     ```
+
+    成功すると、Claude Code が実行されており、プロンプトが事前に入力された新しいターミナルウィンドウが開きます。シェルが `xdg-open` が見つからないと報告する場合は、[トラブルシューティング](#xdg-open-is-not-found-on-linux)を参照してください。
   </Tab>
 
   <Tab title="Windows">
@@ -155,6 +157,8 @@ Enter キーを押して送信する前にプロンプトを編集できます�
     ```cmd theme={null}
     start "" "claude-cli://open?repo=acme/payments&q=review%20open%20PRs"
     ```
+
+    成功すると、Claude Code が実行されており、プロンプトが事前に入力された新しいターミナルウィンドウが開きます。
   </Tab>
 </Tabs>
 
@@ -162,7 +166,7 @@ Enter キーを押して送信する前にプロンプトを編集できます�
   登録とサポートされているプラットフォーム
 </h2>
 
-Claude Code は、macOS、Linux、Windows で最初に対話的セッションを開始するときに、`claude-cli://` ハンドラーをオペレーティングシステムに登録します。別のインストールコマンドを実行する必要はありません。登録はユーザーレベルの場所にのみ書き込みます。
+Claude Code は、macOS、Linux、Windows で対話的セッションの最初のプロンプトを送信するときに、`claude-cli://` ハンドラーをオペレーティングシステムに登録します。`claude` を起動してプロンプトを送信せずに終了しても、ハンドラーは登録されません。別のインストールコマンドを実行する必要はありません。登録はユーザーレベルの場所にのみ書き込みます。
 
 | プラットフォーム | ハンドラーの場所                                                                                                 |
 | -------- | -------------------------------------------------------------------------------------------------------- |
@@ -172,7 +176,7 @@ Claude Code は、macOS、Linux、Windows で最初に対話的セッション�
 
 ハンドラーは検出されたターミナルエミュレーターで Claude Code を起動します。macOS では、Claude Code は最後の対話的セッションからターミナルを記憶し、再利用します。iTerm2、Ghostty、kitty、Alacritty、WezTerm、Terminal.app をサポートしています。Linux では `$TERMINAL` 環境変数を尊重し、次に `x-terminal-emulator`、次に一般的なエミュレーターのリストを使用します。Windows では Windows Terminal を優先し、次に PowerShell、次に `cmd.exe` を使用します。
 
-登録を完全に防ぐには、`settings.json` で [`disableDeepLinkRegistration`](/docs/ja/settings) を `"disable"` に設定します。組織全体でこれを強制し、ユーザーが再度有効にできないようにするには、代わりに[マネージド設定](/docs/ja/server-managed-settings)で設定します。
+登録を完全に防ぐには、`settings.json` で [`disableDeepLinkRegistration`](/docs/ja/settings-reference#disabledeeplinkregistration) を `"disable"` に設定します。組織全体でこれを強制し、ユーザーが再度有効にできないようにするには、代わりに[マネージド設定](/docs/ja/server-managed-settings)で設定します。
 
 <h2 id="open-a-vs-code-tab-instead-of-a-terminal">
   ターミナルの代わりに VS Code タブを開く
@@ -188,7 +192,13 @@ VS Code 拡張機能は `vscode://anthropic.claude-code/open` で独自のハン
   リンクをクリックしても何も起こらない
 </h3>
 
-ハンドラーはまだ登録されていない可能性があります。そのマシンで対話的な `claude` セッションを 1 回開始し、終了してから、リンクを再度試してください。Linux でデスクトップ環境がない場合、`xdg-open` はディスパッチするものがない可能性があります。
+ハンドラーはまだ登録されていない可能性があります。登録はセッションの開始時ではなく、対話的セッションで最初のプロンプトを送信するときに行われます。そのマシンで対話的な `claude` セッションを開始し、任意のプロンプトを送信して終了してから、リンクを再度試してください。Linux でデスクトップ環境がない場合、`xdg-open` はディスパッチするものがない可能性があります。
+
+<h3 id="xdg-open-is-not-found-on-linux">
+  Linux で xdg-open が見つからない
+</h3>
+
+`xdg-open` コマンドは `xdg-utils` パッケージの一部であり、最小限のサーバーイメージ、コンテナ、WSL ディストリビューションではしばしば省略されています。ディストリビューションのパッケージマネージャーで `xdg-utils` をインストールしてください。例えば `sudo apt install xdg-utils` を実行してから、コマンドを再度実行してください。コマンドが実行されても何も開かない場合、`xdg-open` はディスパッチするデスクトップ環境がない可能性があります。[リンクをクリックしても何も起こらない](#clicking-the-link-does-nothing)を参照してください。
 
 <h3 id="the-link-renders-as-plain-text-instead-of-being-clickable">
   リンクがプレーンテキストとしてレンダリングされ、クリック可能ではない

@@ -139,12 +139,6 @@ Fai clic su **Export all users** per scaricare i dati di contributo completi per
 
 Quando le metriche di contributo sono abilitate, Claude Code analizza le pull request unite per determinare quale codice è stato scritto con assistenza di Claude Code. Questo viene fatto abbinando l'attività della sessione di Claude Code al codice in ogni PR.
 
-<h4 id="tagging-criteria">
-  Tagging criteria
-</h4>
-
-I PR sono etichettati come "with Claude Code" se contengono almeno una riga di codice scritta durante una sessione di Claude Code. Il sistema utilizza un abbinamento conservativo: solo il codice dove c'è un'alta confidenza nel coinvolgimento di Claude Code viene conteggiato come assistito.
-
 <h4 id="attribution-process">
   Attribution process
 </h4>

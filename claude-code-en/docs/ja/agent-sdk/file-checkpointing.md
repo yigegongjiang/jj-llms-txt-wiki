@@ -15,7 +15,7 @@ checkpointing を使用すると、以下のことができます：
 * **エラーから回復する** - エージェントが不正な修正を行った場合に回復します
 
 <Warning>
-  Write、Edit、NotebookEdit ツールを通じて行われた変更のみが追跡されます。Bash コマンド（`echo > file.txt` や `sed -i` など）を通じて行われた変更は、checkpoint システムでキャプチャされません。
+  Write、Edit、NotebookEdit ツールを通じて行われた変更のみが追跡されます。Bash コマンド（`echo > file.txt` や `sed -i` など）を通じて行われた変更は、checkpoint システムでキャプチャされません。また、[subagent](/docs/ja/agent-sdk/subagents)が適用する編集もキャプチャされません。ただし、[`context: fork` を持つ skill](/docs/ja/skills#run-skills-in-a-subagent)がフォアグラウンドで実行される場合は除きます。
 </Warning>
 
 <h2 id="how-checkpointing-works">
@@ -24,25 +24,11 @@ checkpointing を使用すると、以下のことができます：
 
 ファイル checkpointing を有効にすると、SDK は Write、Edit、または NotebookEdit ツールを通じてファイルを修正する前に、ファイルのバックアップを作成します。レスポンスストリーム内のユーザーメッセージには、復元ポイントとして使用できる checkpoint UUID が含まれます。
 
-Checkpoint は、エージェントがファイルを修正するために使用するこれらの組み込みツールで機能します：
-
-| ツール          | 説明                                     |
-| ------------ | -------------------------------------- |
-| Write        | 新しいファイルを作成するか、既存のファイルを新しいコンテンツで上書きします  |
-| Edit         | 既存ファイルの特定の部分に対して、対象を絞った編集を行います         |
-| NotebookEdit | Jupyter ノートブック（`.ipynb` ファイル）のセルを修正します |
-
 <Note>
   ファイル巻き戻しは、ディスク上のファイルを以前の状態に復元します。会話自体を巻き戻すわけではありません。`rewindFiles()`（TypeScript）または `rewind_files()`（Python）を呼び出した後も、会話履歴とコンテキストはそのまま保持されます。
 </Note>
 
-checkpoint システムは以下を追跡します：
-
-* セッション中に作成されたファイル
-* セッション中に修正されたファイル
-* 修正されたファイルの元のコンテンツ
-
-checkpoint に巻き戻すと、作成されたファイルは削除され、修正されたファイルはその時点でのコンテンツに復元されます。
+checkpoint に巻き戻すと、Claude Code は作成したファイルを削除し、修正したファイルをその時点でのコンテンツに復元します。Claude Code は、シンボリックリンク、ハードリンク、またはその他の通常以外のファイルである追跡パスをスキップします。また、親ディレクトリが checkpoint 時点での場所に解決されなくなった追跡ファイル、またはバックアップを安全に読み取ることができない追跡ファイルもスキップします。[`RewindFilesResult`](/docs/ja/agent-sdk/typescript#rewindfilesresult) は、`skippedLinks` フィールドでスキップされたすべてのパスをカウントします。スキップには Claude Code v2.1.216 以降が必要です。v2.1.216 より前では、巻き戻しは追跡パスのリンクを通じて書き込みと削除を行いました。
 
 <h2 id="implement-checkpointing">
   checkpointing を実装する
@@ -122,13 +108,21 @@ checkpoint に巻き戻すと、作成されたファイルは削除され、修
     let sessionId: string | undefined;
 
     // Step 2: 最初のユーザーメッセージから checkpoint UUID をキャプチャ
-    for await (const message of response) {
-      if (message.type === "user" && message.uuid && !checkpointId) {
-        checkpointId = message.uuid;
+    try {
+      for await (const message of response) {
+        if (message.type === "user" && message.uuid && !checkpointId) {
+          checkpointId = message.uuid;
+        }
+        if ("session_id" in message && !sessionId) {
+          sessionId = message.session_id;
+        }
       }
-      if ("session_id" in message && !sessionId) {
-        sessionId = message.session_id;
-      }
+    } catch (error) {
+      // A single-shot query() throws after yielding an error result. If the
+      // failure was an error result, sessionId and checkpointId were already
+      // captured by the loop above; connection or process failures yield no
+      // result message.
+      console.error(`Session ended with an error: ${error}`);
     }
 
     // Step 3: 後で、空のプロンプトでセッションを再開して巻き戻す
@@ -185,7 +179,7 @@ checkpoint に巻き戻すと、作成されたファイルは削除され、修
   </Step>
 
   <Step title="checkpoint UUID とセッション ID をキャプチャする">
-    `replay-user-messages` オプションが設定されている場合（上記を参照）、レスポンスストリーム内の各ユーザーメッセージには、checkpoint として機能する UUID があります。
+    `replay-user-messages` オプションが設定されている場合、レスポンスストリーム内の各ユーザーメッセージには、checkpoint として機能する UUID があります。
 
     ほとんどのユースケースでは、最初のユーザーメッセージ UUID（`message.uuid`）をキャプチャします。これに巻き戻すと、すべてのファイルが元の状態に復元されます。複数の checkpoint を保存して中間状態に巻き戻すには、[複数の復元ポイント](#multiple-restore-points)を参照してください。
 
@@ -233,7 +227,8 @@ checkpoint に巻き戻すと、作成されたファイルは削除され、修
       ) as client:
           await client.query("")  # 接続を開くための空のプロンプト
           async for message in client.receive_response():
-              await client.rewind_files(checkpoint_id)
+              if checkpoint_id:
+                  await client.rewind_files(checkpoint_id)
               break
       ```
 
@@ -244,7 +239,9 @@ checkpoint に巻き戻すと、作成されたファイルは削除され、修
       });
 
       for await (const msg of rewindQuery) {
-        await rewindQuery.rewindFiles(checkpointId);
+        if (checkpointId) {
+          await rewindQuery.rewindFiles(checkpointId);
+        }
         break;
       }
       ```
@@ -256,7 +253,7 @@ checkpoint に巻き戻すと、作成されたファイルは削除され、修
     CLAUDE_CODE_ENABLE_SDK_FILE_CHECKPOINTING=true claude -p --resume <session-id> --rewind-files <checkpoint-uuid>
     ```
 
-    `--rewind-files` フラグは `claude --help` 出力には表示されませんが、CLI は上記のように受け入れます。
+    `--rewind-files` フラグは `claude --help` 出力には表示されませんが、CLI は上記のように受け入れます。巻き戻しが成功すると、コマンドは `Files rewound to state at message <checkpoint-uuid>` を出力して、プロンプトを送信せずに終了します。
   </Step>
 </Steps>
 
@@ -440,17 +437,22 @@ Claude が複数のターンにわたって変更を加える場合、すべて�
     const checkpoints: Checkpoint[] = [];
     let sessionId: string | undefined;
 
-    for await (const message of response) {
-      if (message.type === "user" && message.uuid) {
-        checkpoints.push({
-          id: message.uuid,
-          description: `After turn ${checkpoints.length + 1}`,
-          timestamp: new Date()
-        });
+    try {
+      for await (const message of response) {
+        if (message.type === "user" && message.uuid) {
+          checkpoints.push({
+            id: message.uuid,
+            description: `After turn ${checkpoints.length + 1}`,
+            timestamp: new Date()
+          });
+        }
+        if ("session_id" in message && !sessionId) {
+          sessionId = message.session_id;
+        }
       }
-      if ("session_id" in message && !sessionId) {
-        sessionId = message.session_id;
-      }
+    } catch (error) {
+      // 単一ショットの query() はエラー結果を生成した後にスローします。失敗がエラー結果だった場合、sessionId とチェックポイント配列は上記のループによってすでに入力されています。接続またはプロセスの失敗は結果メッセージを生成しません。
+      console.error(`Session ended with an error: ${error}`);
     }
 
     // 後で：セッションを再開して任意の checkpoint に巻き戻す
@@ -624,15 +626,23 @@ Claude が複数のターンにわたって変更を加える場合、すべて�
           options: opts
         });
 
-        for await (const message of response) {
-          // 最初のユーザーメッセージ UUID をキャプチャ - これが復元ポイント
-          if (message.type === "user" && message.uuid && !checkpointId) {
-            checkpointId = message.uuid;
+        try {
+          for await (const message of response) {
+            // 最初のユーザーメッセージ UUID をキャプチャ - これが復元ポイント
+            if (message.type === "user" && message.uuid && !checkpointId) {
+              checkpointId = message.uuid;
+            }
+            // 後で再開できるようにセッション ID をキャプチャ
+            if ("session_id" in message) {
+              sessionId = message.session_id;
+            }
           }
-          // 後で再開できるようにセッション ID をキャプチャ
-          if ("session_id" in message) {
-            sessionId = message.session_id;
-          }
+        } catch (error) {
+          // A single-shot query() throws after yielding an error result. If the
+          // failure was an error result, checkpointId and sessionId were already
+          // captured by the loop above; connection or process failures yield no
+          // result message.
+          console.error(`Session ended with an error: ${error}`);
         }
 
         console.log("Done! Open utils.ts to see the added doc comments.\n");
@@ -671,13 +681,6 @@ Claude が複数のターンにわたって変更を加える場合、すべて�
       main();
       ```
     </CodeGroup>
-
-    この例は、完全な checkpointing ワークフローを示しています：
-
-    1. **checkpointing を有効にする**：`enable_file_checkpointing=True` と `permission_mode="acceptEdits"` で SDK を設定して、ファイル編集を自動承認します
-    2. **checkpoint データをキャプチャする**：エージェントが実行されるときに、最初のユーザーメッセージ UUID（復元ポイント）とセッション ID を保存します
-    3. **巻き戻しを促す**：エージェントが完了した後、ユーティリティファイルをチェックしてドキュメンテーションコメントを確認し、変更を元に戻したいかどうかを決定します
-    4. **再開して巻き戻す**：はいの場合、空のプロンプトでセッションを再開し、`rewind_files()` を呼び出して元のファイルを復元します
   </Step>
 
   <Step title="例を実行する">
@@ -711,12 +714,13 @@ Claude が複数のターンにわたって変更を加える場合、すべて�
 
 ファイル checkpointing には、次の制限事項があります：
 
-| 制限事項                          | 説明                                   |
-| ----------------------------- | ------------------------------------ |
-| Write/Edit/NotebookEdit ツールのみ | Bash コマンドを通じて行われた変更は追跡されません          |
-| 同じセッション                       | Checkpoint は、それを作成したセッションに関連付けられています |
-| ファイルコンテンツのみ                   | ディレクトリの作成、移動、または削除は、巻き戻しによって元に戻されません |
-| ローカルファイル                      | リモートまたはネットワークファイルは追跡されません            |
+| 制限事項                          | 説明                                                                                                                                         |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| Write/Edit/NotebookEdit ツールのみ | Bash コマンドを通じて行われた変更は追跡されません                                                                                                                |
+| Subagent の編集                  | [subagent](/docs/ja/agent-sdk/subagents) が適用する編集は追跡または復元されません。ただし、`context: fork` を使用して foreground で実行されるスキルは除きます。追跡されていない編集を戻すには git を使用してください |
+| 同じセッション                       | Checkpoint は、それを作成したセッションに関連付けられています                                                                                                       |
+| ファイルコンテンツのみ                   | ディレクトリの作成、移動、または削除は、巻き戻しによって元に戻されません                                                                                                       |
+| ローカルファイル                      | リモートまたはネットワークファイルは追跡されません                                                                                                                  |
 
 <h2 id="troubleshooting">
   トラブルシューティング
@@ -743,8 +747,8 @@ Claude が複数のターンにわたって変更を加える場合、すべて�
 
 **解決策**：オプションに `extra_args={"replay-user-messages": None}`（Python）または `extraArgs: { 'replay-user-messages': null }`（TypeScript）を追加します。
 
-<h3 id="no-file-checkpoint-found-for-message-error">
-  「No file checkpoint found for message」エラー
+<h3 id="no-file-checkpoint-found-for-this-message-error">
+  「No file checkpoint found for this message」エラー
 </h3>
 
 このエラーは、指定されたユーザーメッセージ UUID の checkpoint データが存在しない場合に発生します。
@@ -786,7 +790,8 @@ SDK の場合、このページの例で行うように、再開されたセッ�
   ) as client:
       await client.query("")
       async for message in client.receive_response():
-          await client.rewind_files(checkpoint_id)
+          if checkpoint_id:
+              await client.rewind_files(checkpoint_id)
           break
   ```
 
@@ -797,9 +802,17 @@ SDK の場合、このページの例で行うように、再開されたセッ�
     options: { ...opts, resume: sessionId }
   });
 
-  for await (const msg of rewindQuery) {
-    await rewindQuery.rewindFiles(checkpointId);
-    break;
+  try {
+    for await (const msg of rewindQuery) {
+      if (checkpointId) {
+        await rewindQuery.rewindFiles(checkpointId);
+      }
+      break;
+    }
+  } catch (error) {
+    // ここでエラーが発生した場合、巻き戻しが完了しなかったことを意味します。例えば、checkpoint
+    // が見つからなかったか、セッションを再開できませんでした。
+    console.error(`Rewind session ended with an error: ${error}`);
   }
   ```
 </CodeGroup>

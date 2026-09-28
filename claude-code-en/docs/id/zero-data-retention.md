@@ -31,11 +31,17 @@ ZDR mencakup inferensi Claude Code di Claude for Enterprise.
   ZDR diaktifkan berdasarkan per-organisasi. Setiap organisasi baru memerlukan ZDR untuk diaktifkan secara terpisah oleh tim akun Anthropic Anda. ZDR tidak secara otomatis berlaku untuk organisasi baru yang dibuat di bawah akun yang sama. Hubungi tim akun Anda untuk mengaktifkan ZDR untuk organisasi baru apa pun.
 </Warning>
 
+<h3 id="route-claude-code-traffic-to-your-zdr-organization">
+  Arahkan lalu lintas Claude Code ke organisasi ZDR Anda
+</h3>
+
+ZDR berlaku untuk permintaan yang mengautentikasi ke organisasi yang diaktifkan ZDR. Jika pengembang masuk ke Claude Code dengan akun pribadi atau dengan kunci API dari organisasi yang berbeda, sesi tersebut tidak tercakup. Untuk memerlukan bahwa login claude.ai pengembang milik organisasi ZDR Anda, terapkan pengaturan terkelola `forceLoginMethod` dan `forceLoginOrgUUID`; lihat [Batasi login ke organisasi Anda](/docs/id/authentication#restrict-login-to-your-organization), yang juga menjelaskan bagaimana kunci ini memperlakukan login Claude Console.
+
 <h3 id="what-zdr-covers">
   Apa yang dicakup ZDR
 </h3>
 
-ZDR mencakup panggilan inferensi model yang dilakukan melalui Claude Code di Claude for Enterprise. Ketika Anda menggunakan Claude Code di terminal Anda, prompt yang Anda kirim dan respons yang dihasilkan Claude tidak disimpan oleh Anthropic. Ini berlaku untuk setiap model yang tersedia untuk organisasi ZDR. Beberapa model memerlukan retensi data dan tidak tersedia di bawah ZDR; lihat [Ketersediaan model di bawah ZDR](#model-availability-under-zdr).
+ZDR mencakup panggilan inferensi model yang dilakukan melalui Claude Code di Claude for Enterprise. Ketika Anda menggunakan Claude Code di terminal Anda, prompt yang Anda kirim dan respons yang dihasilkan Claude tidak disimpan oleh Anthropic. Ini berlaku untuk setiap model yang tersedia untuk organisasi ZDR Anda. Beberapa model memerlukan retensi data secara default; lihat [Ketersediaan model di bawah ZDR](#model-availability-under-zdr).
 
 <h3 id="what-zdr-does-not-cover">
   Apa yang tidak dicakup ZDR
@@ -57,13 +63,13 @@ ZDR tidak berlaku untuk hal-hal berikut, bahkan untuk organisasi dengan ZDR diak
 
 Ketika ZDR diaktifkan untuk organisasi Claude Code di Claude for Enterprise, fitur-fitur tertentu yang memerlukan penyimpanan prompt atau completion secara otomatis dinonaktifkan di tingkat backend:
 
-| Fitur                                                              | Alasan                                                                                                  |
-| ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------- |
-| [Claude Code di Web](/docs/id/claude-code-on-the-web)                   | Memerlukan penyimpanan riwayat percakapan di sisi server.                                               |
-| [Cloud sessions](/docs/id/desktop#cloud-sessions) dari aplikasi Desktop | Memerlukan data sesi persisten yang mencakup prompt dan completion.                                     |
-| [Artifacts](/docs/id/artifacts)                                         | Memerlukan penyimpanan konten halaman yang dipublikasikan di infrastruktur yang dioperasikan Anthropic. |
-| Pengiriman umpan balik (`/feedback`)                               | Mengirimkan umpan balik mengirimkan data percakapan ke Anthropic.                                       |
-| [Remote Control](/docs/id/remote-control)                               | Menyimpan transkrip sesi di server Anthropic untuk menyinkronkan percakapan di seluruh perangkat.       |
+| Fitur                                                                                                                   | Alasan                                                                                                     |
+| ----------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| [Cloud sessions](/docs/id/claude-code-on-the-web), termasuk yang dimulai dari [aplikasi Desktop](/docs/id/desktop#cloud-sessions) | Memerlukan penyimpanan data sesi di sisi server, termasuk riwayat percakapan dengan prompt dan completion. |
+| [Claude Tag](https://claude.com/docs/claude-tag)                                                                        | Mempertahankan memori saluran dan transkrip sesi.                                                          |
+| [Artifacts](/docs/id/artifacts)                                                                                              | Memerlukan penyimpanan konten halaman yang dipublikasikan di infrastruktur yang dioperasikan Anthropic.    |
+| Pengiriman umpan balik (`/feedback`, `/bug`, `/share`)                                                                  | Mengirimkan umpan balik mengirimkan data percakapan ke Anthropic.                                          |
+| [Remote Control](/docs/id/remote-control)                                                                                    | Menyimpan transkrip sesi di server Anthropic untuk menyinkronkan percakapan di seluruh perangkat.          |
 
 Fitur-fitur ini diblokir di backend terlepas dari tampilan sisi klien. Jika Anda melihat fitur yang dinonaktifkan di terminal Claude Code selama startup, mencoba menggunakannya mengembalikan kesalahan yang menunjukkan kebijakan organisasi tidak memungkinkan tindakan tersebut.
 
@@ -73,9 +79,9 @@ Fitur-fitur di masa depan juga dapat dinonaktifkan jika memerlukan penyimpanan p
   Ketersediaan model di bawah ZDR
 </h3>
 
-Claude Fable 5 tidak tersedia untuk organisasi dengan zero data retention yang diaktifkan. Kelas model ini [memerlukan retensi data](https://platform.claude.com/docs/en/manage-claude/api-and-data-retention#model-specific-data-retention-requirements), sehingga permintaan dari organisasi ZDR tidak dapat dilayani olehnya. Model ini baik tidak ada di pemilih `/model` untuk organisasi ZDR atau ditampilkan sebagai dinonaktifkan dengan pemberitahuan bahwa menonaktifkan ZDR diperlukan, dan server menolak permintaan untuknya terlepas dari konfigurasi klien.
+Claude Fable 5.1 dan Fable 5 adalah [Covered Models](https://support.claude.com/en/articles/15425695-covered-models) yang [memerlukan retensi data](https://platform.claude.com/docs/en/manage-claude/api-and-data-retention#model-specific-data-retention-requirements) secara default, dan apakah organisasi atau workspace ZDR dapat menggunakannya diatur oleh kebijakan Covered Models daripada oleh Claude Code. Di mana organisasi Anda tidak dapat menggunakannya, model-model tersebut baik tidak ada di pemilih `/model` atau ditampilkan sebagai dinonaktifkan, dan server menolak permintaan untuk mereka terlepas dari konfigurasi klien.
 
-Model lainnya tetap tersedia di bawah ZDR. Fable 5 bukan model default, dan alias `best`, yang diselesaikan ke Fable 5 di mana tersedia, diselesaikan ke Opus untuk organisasi di mana tidak tersedia, termasuk organisasi ZDR.
+Model lainnya tetap tersedia di bawah ZDR. Model Fable bukan model default, dan alias `best`, yang diselesaikan ke model Fable terbaru di mana tersedia, diselesaikan ke Opus untuk organisasi di mana tidak tersedia.
 
 <h2 id="data-retention-for-policy-violations">
   Retensi data untuk pelanggaran kebijakan

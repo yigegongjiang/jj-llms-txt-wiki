@@ -8,10 +8,6 @@
 
 在 Claude Code CLI 中說出您的提示，而不是輸入它們。您的語音會即時轉錄到提示輸入中，因此您可以在同一條訊息中混合語音和輸入。使用 `/voice` 啟用聽寫，然後在說話時按住一個鍵或點擊一次開始，再點擊一次發送。
 
-<Note>
-  點擊模式需要 Claude Code v2.1.116 或更高版本。使用 `claude --version` 檢查您的版本。
-</Note>
-
 聽寫也適用於[代理檢視](/docs/zh-TW/agent-view#peek-and-reply)。在調度輸入或窺視面板回覆聚焦時，按住或點擊您的推送通話鍵以聽寫到背景工作階段。
 
 <h2 id="requirements">
@@ -21,8 +17,7 @@
 語音聽寫會將您錄製的音頻串流傳輸到 Anthropic 的伺服器進行轉錄。音頻不在本地處理。它需要以下所有條件：
 
 * **Claude.ai 帳戶**：語音轉文字服務僅在您使用 Claude.ai 帳戶進行身份驗證時可用，當 Claude Code 配置為直接使用 Anthropic API 金鑰、Amazon Bedrock、Google Cloud 的 Agent Platform 或 Microsoft Foundry 時不可用。
-* **未啟用 HIPAA 合規性的組織**：當此限制適用時，`/voice` 會顯示 `Voice mode is disabled by your organization's policy`。
-* **本地麥克風**：語音聽寫在遠端環境中不起作用，例如[網頁上的 Claude Code](/docs/zh-TW/claude-code-on-the-web)或 SSH 工作階段。
+* **本地麥克風**：語音聽寫在[雲端工作階段](/docs/zh-TW/claude-code-on-the-web)或 SSH 工作階段中不起作用。
 * **如果您在 WSL 中執行 Claude Code，則需要 WSLg**：WSLg 在從 Microsoft Store 在 Windows 10 或 11 上安裝 WSL2 時包含。如果 WSLg 不可用，例如在 WSL1 上，改為在原生 Windows 中執行 Claude Code。
 
 轉錄不會消耗 Claude 訊息或代幣，也不會計入 `/usage` 中顯示的限制。請參閱[資料使用](/docs/zh-TW/data-usage)了解 Anthropic 如何處理您的資料。
@@ -62,7 +57,7 @@ Voice mode enabled (hold). Hold space to record. Dictation language: en (/config
 }
 ```
 
-啟用語音聽寫時，當提示為空時，輸入頁尾會顯示 `hold space to speak` 提示。提示文字反映您目前的 `voice:pushToTalk` 快捷鍵繫結，如果您[重新繫結聽寫鍵](#rebind-the-dictation-key)，則會更新。提示文字在兩種模式中都相同，如果您配置了[自訂狀態行](/docs/zh-TW/statusline)，則不會出現。
+啟用語音聽寫的前三個工作階段中，當提示為空時，輸入頁尾會顯示 `hold space to speak` 提示。提示文字反映您目前的 `voice:pushToTalk` 快捷鍵繫結，如果您[重新繫結聽寫鍵](#rebind-the-dictation-key)，則會更新。提示文字在兩種模式中都相同，如果您配置了[自訂狀態行](/docs/zh-TW/statusline)，則不會出現。
 
 轉錄在兩種模式中都針對編碼詞彙進行了調整。常見的開發術語如 `regex`、`OAuth`、`JSON` 和 `localhost` 都能正確識別，您目前的專案名稱和 git 分支名稱會自動新增為識別提示。
 
@@ -72,9 +67,11 @@ Voice mode enabled (hold). Hold space to record. Dictation language: en (/config
 
 按住模式是推送通話：錄製在您按住鍵時執行，在您鬆開時停止。這是預設模式。
 
-按住 `Space` 開始錄製。Claude Code 通過監視來自您終端機的快速按鍵重複事件來偵測按住的鍵，因此在錄製開始前有一個簡短的預熱期。頁尾在預熱期間顯示 `keep holding…`，然後在錄製啟動後切換到即時波形。
+按住 `Space` 開始錄製。Claude Code 通過監視來自您終端機的快速按鍵重複事件來偵測按住的鍵，因此在錄製開始前有一個簡短的預熱期。頁尾在預熱期間顯示 `keep holding…`，然後在錄製啟動後顯示 `listening…`。錄製時，提示游標會變成一個隨著您麥克風音量上下波動的橫條，除非您已開啟 [`prefersReducedMotion`](/docs/zh-TW/settings-reference#prefersreducedmotion)。
 
 前幾個按鍵重複字元在預熱期間輸入到輸入中，並在錄製啟動時自動移除。單個 `Space` 點擊仍會輸入一個空格，因為按住偵測只在快速重複時觸發。
+
+按住或點擊 `Space` 只在按鍵會輸入到提示的地方開始聽寫。在[轉錄檢視器](/docs/zh-TW/interactive-mode#transcript-viewer)中，`Space` 會翻頁瀏覽對話，在[vim 模式](/docs/zh-TW/interactive-mode#vim-editor-mode)外的 INSERT 中是一個命令。[重新繫結的修飾符組合](#rebind-the-dictation-key)（例如 `meta+k`）永遠不會輸入文字，因此它也會從這些地方開始聽寫。
 
 <Tip>
   若要跳過預熱，使用 `/voice tap` 切換到[點擊模式](#tap-to-record-and-send)，或[重新繫結到修飾符組合](#rebind-the-dictation-key)，例如 `meta+k`。修飾符組合在第一次按鍵時開始錄製。
@@ -84,7 +81,7 @@ Voice mode enabled (hold). Hold space to record. Dictation language: en (/config
 
 ```
 > refactor the auth middleware to ▮
-  # hold Space, speak "use the new token validation helper"
+  # hold space, speak "use the new token validation helper"
 > refactor the auth middleware to use the new token validation helper▮
 ```
 
@@ -96,19 +93,29 @@ Voice mode enabled (hold). Hold space to record. Dictation language: en (/config
 
 點擊模式使用單個按鍵切換錄製：點擊一次開始，說話，然後再點擊一次發送提示。沒有預熱，您不需要保持鍵被按住。
 
-使用 `/voice tap` 啟用點擊模式。當提示輸入為空時，點擊 `Space` 開始錄製。頁尾在錄製時顯示即時波形。再次點擊 `Space` 停止。
+使用 `/voice tap` 啟用點擊模式。當提示輸入為空時，點擊 `Space` 開始錄製。頁尾在錄製時顯示 `● REC · tap to send`。再次點擊 `Space` 停止。
 
 Claude Code 插入轉錄，當轉錄至少有三個單詞時自動提交提示。較短的轉錄會被插入但不會被提交，因此意外點擊不會發送一個隨意的單詞。
 
-三個單詞的閾值計算不使用空格書寫的語言中的單詞。自 v2.1.195 起，日文、中文和泰文轉錄計算個別單詞，因此它們在點擊模式和使用 `autoSubmit` 的保持模式中自動提交。較早的版本將沒有空格的轉錄計為一個單詞，並且從不自動提交。
+三個單詞的閾值計算不使用空格書寫的語言中的單詞。日文、中文和泰文轉錄計算個別單詞，因此它們在點擊模式和使用 `autoSubmit` 的保持模式中自動提交。
 
 第一次點擊只在提示輸入為空時開始錄製，因此您在撰寫訊息時仍然可以正常輸入空格。第二次點擊無論輸入內容如何都會停止錄製。錄製也會在 15 秒無聲或 2 分鐘總時間後自動停止。
+
+<h2 id="cancel-a-recording">
+  取消錄音
+</h2>
+
+按 `Esc` 或 `Ctrl+C` 來取消聽寫，而不是完成它。Claude Code 會停止麥克風、捨棄文字記錄，並將提示恢復到錄音開始前的狀態。
+
+兩個按鍵也會在完成的錄音文字記錄仍在處理時取消。您在處理期間編輯或提交的提示會保持您留下的狀態。
+
+這兩個按鍵在取消的按下中不會執行任何其他操作：`Esc` 不會中斷 Claude 的回應，`Ctrl+C` 不會清除提示或計為[退出 Claude Code 的兩次按下](/docs/zh-TW/interactive-mode#general-controls)中的第一次。
 
 <h2 id="change-the-dictation-language">
   變更聽寫語言
 </h2>
 
-語音聽寫使用與控制 Claude 回應語言相同的[`language` 設定](/docs/zh-TW/settings)。如果該設定為空，聽寫預設為英文。在 VS Code 擴充功能中，如果 `language` 為空，聽寫會在預設為英文之前使用 VS Code 的 `accessibility.voice.speechLanguage` 設定。
+語音聽寫使用與控制 Claude 回應語言相同的 [`language` 設定](/docs/zh-TW/settings-reference#language)。如果該設定為空，聽寫預設為英文。在 VS Code 擴充功能中，如果 `language` 為空，聽寫會在預設為英文之前使用 VS Code 的 `accessibility.voice.speechLanguage` 設定。
 
 <Accordion title="支援的聽寫語言">
   | 語言   | 代碼   |
@@ -178,16 +185,17 @@ Claude Code 插入轉錄，當轉錄至少有三個單詞時自動提交提示�
 語音聽寫未啟動或錄製時的常見問題：
 
 * **`Voice mode requires a Claude.ai account`**：您使用 API 金鑰或第三方提供者進行了身份驗證。執行 `/login` 以使用 Claude.ai 帳戶登入。
-* **`Voice mode is disabled by your organization's policy`**：您的組織的合規性配置停用了語音聽寫，如[需求](#requirements)中所述。請聯絡您的組織管理員以確認您的組織是否可使用語音聽寫。
+* **`Voice mode is disabled by your organization's policy`**：您的組織的管理員政策停用了語音聽寫。請聯絡您的組織管理員以確認您的組織是否可使用語音聽寫。
 * **`Microphone access is denied`**：在系統設定中授予您的終端機麥克風權限。在 macOS 上，前往系統設定 → 隱私與安全 → 麥克風並啟用您的終端機應用程式，然後再次執行 `/voice`。在 Windows 上，前往設定 → 隱私與安全 → 麥克風並開啟桌面應用程式的麥克風存取，然後再次執行 `/voice`。如果您的終端機未列在 macOS 設定中，請參閱[終端機未列在 macOS 麥克風設定中](#terminal-not-listed-in-macos-microphone-settings)。
-* **Linux 上的 `No audio recording tool found`**：原生音頻模組無法載入，且未安裝回退。使用錯誤訊息中顯示的命令安裝 SoX，例如 `sudo apt-get install sox`。
+* **`Voice mode requires SoX for audio recording` on Linux**：原生音頻模組無法載入，且未安裝回退。使用錯誤訊息中顯示的命令安裝 SoX，例如 `sudo apt-get install sox`。
 * **`Voice mode requires a microphone, but SoX could not open an audio capture device`**：SoX 已安裝，但主機沒有音頻擷取裝置，例如無頭伺服器或容器。在具有麥克風的機器上執行 Claude Code。自 v2.1.195 起，Linux 上的 Claude Code 在該情況下報告此訊息；較早的版本即使已安裝 SoX 也會要求您安裝它。
 * **`Voice mode could not find a working audio recorder in WSL`**：WSLg 透過 PulseAudio 而非 ALSA 裝置路由音頻，因此 SoX 需要明確安裝其 PulseAudio 後端。執行 `sudo apt install sox libsox-fmt-pulse`。單獨安裝 `sox` 會拉入 ALSA 後端，這在 WSL 上無法錄製，因為沒有 `/dev/snd` 裝置。
-* **`Voice input is failing repeatedly and has been paused`**：語音聽寫連續遇到多個啟動失敗，並停止嘗試新的工作階段，直到一個成功。失敗計數無論麥克風無法啟動或錄音機啟動後停止而未產生任何音頻。這通常表示此主機上的麥克風或音頻堆疊無法捕獲音頻，例如無頭伺服器、沒有音頻傳遞的遠端 shell 或被拒絕的麥克風權限。確認工作輸入裝置，修復上述項目中的根本原因，然後再次觸發語音。在 v2.1.202 之前，只有啟動失敗計入暫停。
+* **`Voice input is failing repeatedly and has been paused`**：語音聽寫在 10 秒內連續遇到三個擷取失敗。Claude Code 暫停聽寫，直到自這些失敗中的第一個以來已經過了 10 秒。無論麥克風無法啟動或錄音機啟動後停止而未產生任何音頻，失敗都會計數。這通常表示此主機上的麥克風或音頻堆疊無法捕獲音頻，例如無頭伺服器、沒有音頻傳遞的遠端 shell 或被拒絕的麥克風權限。確認工作輸入裝置，修復上述項目中的根本原因，然後再次觸發語音。在 v2.1.202 之前，只有啟動失敗計入暫停。
 * **在按住模式中按住 `Space` 時沒有任何反應**：在按住時監視提示輸入。如果空格不斷累積，語音聽寫可能已關閉；執行 `/voice hold` 啟用它。如果只出現一個或兩個空格然後沒有任何反應，語音聽寫已開啟但按住偵測未觸發。按住偵測需要您的終端機發送按鍵重複事件，因此如果在作業系統層級停用了按鍵重複，它無法偵測按住的鍵。使用 `/voice tap` 切換到點擊模式以避免按鍵重複要求。
 * **在點擊模式中點擊 `Space` 輸入空格而不是錄製**：第一次點擊只在提示輸入為空時開始錄製。先清除輸入，或通過執行 `/voice tap` 檢查您是否處於點擊模式。
 * **`No audio detected from microphone`**：錄製已開始但捕獲了無聲。確認正確的輸入裝置設定為系統預設值，其輸入級別未靜音或接近零。在 Windows 上，開啟設定 → 系統 → 聲音 → 輸入並選擇您的麥克風。在 macOS 上，開啟系統設定 → 聲音 → 輸入。
 * **`Voice connection failed`**：您的錄製因為連線失敗而從未到達轉錄服務。檢查您的網路並重試。捕獲無音頻的錄製會報告 `No audio detected from microphone` 而不是此訊息。在 v2.1.200 之前，無聲麥克風可能會報告連線失敗，這暗示網路問題，而實際問題是輸入裝置。
+* **`Voice stream error: WebSocket upgrade rejected with HTTP <status>`**：伺服器以顯示的 HTTP 狀態拒絕了您的連線，因此這不是網路中斷。400 範圍內的狀態通常表示過期的登入、代理或機器人保護服務代替轉錄服務回應。執行 `/login` 以重新整理您的登入，如果狀態持續，請檢查您的網路路徑上是否有 VPN 或代理。如果拒絕到達時您仍在錄製，Claude Code 會在顯示此訊息之前重試 400 範圍外的狀態一次；它不會重試 400 範圍內的狀態。在 v2.1.229 至 v2.1.231 中，原生組建未顯示此訊息：Claude Code 繼續錄製，按住模式頁尾仍顯示 `listening…`，並在您停止錄製後報告 `Voice connection failed`。
 * **`No speech detected`**：音頻到達轉錄服務但未識別任何單詞。靠近麥克風說話，減少背景噪音，並確認您的[聽寫語言](#change-the-dictation-language)與您說話的語言相符。
 * **轉錄是亂碼或使用了錯誤的語言**：聽寫預設為英文。如果您用另一種語言聽寫，請先在 `/config` 中設定它。請參閱[變更聽寫語言](#change-the-dictation-language)。
 
@@ -220,6 +228,6 @@ Claude Code 插入轉錄，當轉錄至少有三個單詞時自動提交提示�
 </h2>
 
 * [自訂鍵盤快捷鍵](/docs/zh-TW/keybindings)：重新繫結 `voice:pushToTalk` 和其他 CLI 鍵盤動作
-* [設定設定](/docs/zh-TW/settings)：`voice`、`language` 和其他設定鍵的完整參考
+* [所有設定](/docs/zh-TW/settings-reference#voice)：`voice`、`language` 和其他設定鍵
 * [互動模式](/docs/zh-TW/interactive-mode)：鍵盤快捷鍵、輸入模式和工作階段控制
 * [命令](/docs/zh-TW/commands)：`/voice`、`/config` 和所有其他命令的參考

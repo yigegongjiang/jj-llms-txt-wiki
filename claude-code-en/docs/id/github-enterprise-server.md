@@ -4,13 +4,13 @@
 
 # Claude Code dengan GitHub Enterprise Server
 
-> Hubungkan Claude Code ke instans GitHub Enterprise Server yang di-host sendiri untuk sesi web, tinjauan kode, dan pasar plugin.
+> Hubungkan Claude Code ke instans GitHub Enterprise Server yang di-host sendiri untuk sesi cloud, tinjauan kode, dan pasar plugin.
 
 <Note>
   Dukungan GitHub Enterprise Server tersedia untuk paket Team dan Enterprise.
 </Note>
 
-Dukungan GitHub Enterprise Server (GHES) memungkinkan organisasi Anda menggunakan Claude Code dengan repositori yang dihosting di instans GitHub yang dikelola sendiri, bukan github.com. Setelah Owner menghubungkan instans GHES Anda, pengembang dapat menjalankan sesi web dan mendapatkan tinjauan kode otomatis tanpa konfigurasi per-repositori apa pun. Pasar plugin yang dihosting di instans Anda juga didukung; persyaratan kredensial bervariasi menurut permukaan, seperti yang dijelaskan dalam [Plugin marketplaces on GHES](#plugin-marketplaces-on-ghes).
+Dukungan GitHub Enterprise Server (GHES) memungkinkan organisasi Anda menggunakan Claude Code dengan repositori yang dihosting di instans GitHub yang dikelola sendiri, bukan github.com. Setelah Owner menghubungkan instans GHES Anda, pengembang dapat menjalankan sesi cloud dan mendapatkan tinjauan kode otomatis tanpa konfigurasi per-repositori apa pun. Pasar plugin yang dihosting di instans Anda juga didukung; persyaratan kredensial bervariasi menurut permukaan, seperti yang dijelaskan dalam [Plugin marketplaces on GHES](#plugin-marketplaces-on-ghes).
 
 Untuk repositori di github.com, lihat [Claude Code di web](/docs/id/claude-code-on-the-web) dan [Code Review](/docs/id/code-review). Untuk menjalankan Claude di infrastruktur CI Anda sendiri, lihat [GitHub Actions](/docs/id/github-actions).
 
@@ -20,16 +20,16 @@ Untuk repositori di github.com, lihat [Claude Code di web](/docs/id/claude-code-
 
 Tabel di bawah menunjukkan fitur Claude Code mana yang mendukung GHES dan perbedaan apa pun dari perilaku github.com.
 
-| Fitur              | Dukungan GHES    | Catatan                                                                                                                                        |
-| :----------------- | :--------------- | :--------------------------------------------------------------------------------------------------------------------------------------------- |
-| Claude Code di web | ✅ Didukung       | Pemilik menghubungkan instans GHES sekali; pengembang menggunakan `claude --cloud` atau [claude.ai/code](https://claude.ai/code) seperti biasa |
-| Code Review        | ✅ Didukung       | Tinjauan PR otomatis yang sama seperti github.com                                                                                              |
-| Claude Security    | ✅ Didukung       | Tersedia dalam beta publik untuk paket Enterprise di [claude.ai/security](https://claude.ai/security)                                          |
-| Sesi Teleport      | ✅ Didukung       | Pindahkan sesi antara web dan terminal dengan `--teleport`                                                                                     |
-| Pasar plugin       | ✅ Didukung       | Persyaratan kredensial berbeda menurut permukaan. Lihat [Pasar plugin di GHES](#plugin-marketplaces-on-ghes)                                   |
-| Metrik kontribusi  | ✅ Didukung       | Dikirimkan melalui webhook ke [dasbor analitik](/docs/id/analytics)                                                                                 |
-| GitHub Actions     | ✅ Didukung       | Memerlukan pengaturan alur kerja manual; `/install-github-app` hanya untuk github.com                                                          |
-| Server GitHub MCP  | ❌ Tidak didukung | Server GitHub MCP tidak berfungsi dengan instans GHES                                                                                          |
+| Fitur             | Dukungan GHES    | Catatan                                                                                                                                        |
+| :---------------- | :--------------- | :--------------------------------------------------------------------------------------------------------------------------------------------- |
+| Cloud sessions    | ✅ Didukung       | Pemilik menghubungkan instans GHES sekali; pengembang menggunakan `claude --cloud` atau [claude.ai/code](https://claude.ai/code) seperti biasa |
+| Code Review       | ✅ Didukung       | Tinjauan PR otomatis yang sama seperti github.com                                                                                              |
+| Claude Security   | ✅ Didukung       | Tersedia dalam beta publik untuk paket Enterprise di [claude.ai/security](https://claude.ai/security)                                          |
+| Teleport sessions | ✅ Didukung       | Pindahkan sesi antara cloud dan terminal dengan `--teleport`                                                                                   |
+| Pasar plugin      | ✅ Didukung       | Persyaratan kredensial berbeda menurut permukaan. Lihat [Pasar plugin di GHES](#plugin-marketplaces-on-ghes)                                   |
+| Metrik kontribusi | ✅ Didukung       | Dikirimkan melalui webhook ke [dasbor analitik](/docs/id/analytics)                                                                                 |
+| GitHub Actions    | ✅ Didukung       | Memerlukan pengaturan alur kerja manual; `/install-github-app` hanya untuk github.com                                                          |
+| Server GitHub MCP | ❌ Tidak didukung | Server GitHub MCP tidak berfungsi dengan instans GHES                                                                                          |
 
 <h2 id="admin-setup">
   Pengaturan admin
@@ -45,7 +45,7 @@ Pengaturan terpandu menghasilkan manifes GitHub App dan mengarahkan ulang Anda k
   </Step>
 
   <Step title="Mulai pengaturan terpandu">
-    Klik **Connect**. Masukkan nama tampilan untuk koneksi dan nama host GHES Anda, misalnya `github.example.com`. Jika instans GHES Anda menggunakan sertifikat yang ditandatangani sendiri atau otoritas sertifikat pribadi, tempel sertifikat CA di bidang opsional.
+    Klik **Connect**. Masukkan nama tampilan hingga 20 karakter untuk koneksi dan nama host GHES Anda, misalnya `github.example.com`. Jika instans GHES Anda menggunakan sertifikat yang ditandatangani sendiri atau otoritas sertifikat pribadi, tempel sertifikat CA di bidang opsional.
   </Step>
 
   <Step title="Buat GitHub App">
@@ -65,31 +65,37 @@ Pengaturan terpandu menghasilkan manifes GitHub App dan mengarahkan ulang Anda k
   Izin GitHub App
 </h3>
 
-Manifes mengonfigurasi GitHub App dengan izin dan acara webhook yang Claude butuhkan di seluruh sesi web, Code Review, Claude Security, dan metrik kontribusi:
+Manifes mengonfigurasi GitHub App dengan izin dan acara webhook di bawah ini, yang bersama-sama mencakup sesi web, Code Review, Claude Security, pasar plugin, dan metrik kontribusi:
 
-| Izin             | Akses          | Digunakan untuk                             |
-| :--------------- | :------------- | :------------------------------------------ |
-| Contents         | Baca dan tulis | Kloning repositori dan push cabang          |
-| Pull requests    | Baca dan tulis | Membuat PR dan memposting komentar tinjauan |
-| Issues           | Baca dan tulis | Merespons penyebutan masalah                |
-| Checks           | Baca dan tulis | Memposting jalankan pemeriksaan Code Review |
-| Actions          | Baca           | Membaca status CI untuk perbaikan otomatis  |
-| Repository hooks | Baca dan tulis | Menerima webhook untuk metrik kontribusi    |
-| Metadata         | Baca           | Diperlukan oleh GitHub untuk semua aplikasi |
+| Izin                 | Akses          | Digunakan untuk                                                                                                                                                                                             |
+| :------------------- | :------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Contents             | Baca dan tulis | Kloning repositori dan push cabang                                                                                                                                                                          |
+| Pull requests        | Baca dan tulis | Membuat PR dan memposting komentar tinjauan                                                                                                                                                                 |
+| Issues               | Baca dan tulis | Merespons penyebutan masalah                                                                                                                                                                                |
+| Checks               | Baca dan tulis | Memposting jalankan pemeriksaan Code Review                                                                                                                                                                 |
+| Actions              | Baca           | Membaca status CI untuk perbaikan otomatis                                                                                                                                                                  |
+| Commit statuses      | Baca           | Membaca status CI dari penyedia yang melaporkan status commit alih-alih jalankan pemeriksaan                                                                                                                |
+| Repository hooks     | Baca dan tulis | Membuat webhook di repositori pasar plugin ketika **Sync automatically** diaktifkan untuk pasar di [**Organization settings > Plugins & skills**](https://claude.ai/admin-settings/skills?tab=marketplaces) |
+| Metadata             | Baca           | Diperlukan oleh GitHub untuk semua aplikasi                                                                                                                                                                 |
+| Organization members | Baca           | Mencocokkan GitHub App Claude di github.com, yang menggunakannya untuk memeriksa peran organisasi pengguna yang terhubung saat menghubungkan instalasi                                                      |
 
-Aplikasi berlangganan acara `pull_request`, `issue_comment`, `pull_request_review_comment`, `pull_request_review`, dan `check_run`.
+Aplikasi berlangganan acara `pull_request`, `issue_comment`, `pull_request_review_comment`, `pull_request_review`, `check_run`, dan `status`.
+
+GitHub menerapkan manifes hanya ketika aplikasi dibuat, jadi aplikasi yang dibuat dari versi manifes sebelumnya mempertahankan izin dan acara yang dibuat dengannya. Jika aplikasi Anda kehilangan salah satu izin atau acara di atas, tambahkan di pengaturan aplikasi di instans GHES Anda. GitHub kemudian meminta pemilik setiap instalasi untuk menyetujui izin baru, dan instalasi mempertahankan izin lamanya sampai mereka melakukannya.
 
 <h3 id="manual-setup">
   Pengaturan manual
 </h3>
 
-Jika alur pengalihan terpandu diblokir oleh konfigurasi jaringan Anda, klik **Add manually** alih-alih Connect. Buat GitHub App di instans GHES Anda dengan [izin dan acara di atas](#github-app-permissions), kemudian masukkan kredensial aplikasi dalam formulir: nama host, ID klien OAuth dan rahasia, ID GitHub App, ID klien, rahasia klien, rahasia webhook, dan kunci pribadi.
+Jika alur pengalihan terpandu diblokir oleh konfigurasi jaringan Anda, klik **Add manually** alih-alih Connect. Buat GitHub App di instans GHES Anda dengan [izin dan acara di atas](#github-app-permissions), kemudian masukkan detail koneksi dalam formulir: nama tampilan, nama host GHES dan port opsional Anda, dan ID aplikasi, ID klien, rahasia klien, rahasia webhook, dan kunci pribadi aplikasi. Formulir juga menerima sertifikat CA kustom opsional dan nama host replika baca.
+
+Claude menghasilkan URL webhook aplikasi ketika Anda menyimpan koneksi. Setelah Anda klik **Add configuration**, buka menu **More options** koneksi, pilih **Copy webhook URL**, dan tempel URL ke pengaturan webhook aplikasi di instans GHES Anda. Gunakan rahasia webhook yang sama yang Anda masukkan dalam formulir.
 
 <h3 id="network-requirements">
   Persyaratan jaringan
 </h3>
 
-Instans GHES Anda harus dapat dijangkau dari infrastruktur Anthropic sehingga Claude dapat mengkloning repositori dan memposting komentar tinjauan. Jika instans GHES Anda berada di belakang firewall, daftarkan [alamat IP API Anthropic](https://platform.claude.com/docs/en/api/ip-addresses).
+Untuk sesi yang dihosting Anthropic, instans GHES Anda harus dapat dijangkau dari infrastruktur Anthropic sehingga Claude dapat mengkloning repositori dan memposting komentar tinjauan. Jika instans GHES Anda berada di belakang firewall, daftarkan [alamat IP keluar Anthropic](https://platform.claude.com/docs/en/api/ip-addresses#outbound-ip-addresses) Anthropic. Sesi di [lingkungan yang dihosting sendiri](/docs/id/self-hosted-environments-deploy#configure-git) mengkloning dari dalam jaringan Anda, kecuali runner memilih [proxy git Anthropic](/docs/id/self-hosted-environments-deploy#use-the-anthropic-git-proxy), yang mengambil dari sisi Anthropic dan memerlukan jangkauan yang sama; [konektor SCM](/docs/id/self-hosted-environments-reference#scm-connector-flags) mencakup alur pra-sesi yang dihosting, seperti pemilih repositori, untuk host GHES yang hanya dapat dirutekan secara internal.
 
 <h2 id="developer-workflow">
   Alur kerja pengembang
@@ -97,26 +103,26 @@ Instans GHES Anda harus dapat dijangkau dari infrastruktur Anthropic sehingga Cl
 
 Setelah admin Anda menghubungkan instans GHES, tidak ada konfigurasi sisi pengembang yang diperlukan. Claude Code mendeteksi nama host GHES Anda secara otomatis dari git remote di direktori kerja Anda.
 
-Kloning repositori dari instans GHES Anda seperti biasa:
+Kloning repositori dari instans GHES Anda seperti biasa, mengganti `github.example.com` dan jalur repositori dengan nama host GHES dan repositori Anda:
 
 ```bash theme={null}
 git clone git@github.example.com:platform/api-service.git
 cd api-service
 ```
 
-Kemudian mulai sesi web. Claude mendeteksi host GHES dari git remote Anda dan merutekan sesi melalui instans yang dikonfigurasi organisasi Anda:
+Kemudian mulai sesi cloud. Claude mendeteksi host GHES dari git remote Anda dan merutekan sesi melalui instans yang dikonfigurasi organisasi Anda:
 
 ```bash theme={null}
 claude --cloud "Add retry logic to the payment webhook handler"
 ```
 
-Sesi berjalan di infrastruktur Anthropic, mengkloning repositori Anda dari GHES, dan mendorong perubahan kembali ke cabang. Pantau kemajuan dengan `/tasks` atau di [claude.ai/code](https://claude.ai/code). Lihat [Claude Code di web](/docs/id/claude-code-on-the-web) untuk alur kerja sesi jarak jauh lengkap termasuk tinjauan diff, perbaikan otomatis, dan rutinitas.
+Sesi mengkloning repositori Anda dari GHES dan mendorong perubahan kembali ke cabang. Pantau kemajuan di [claude.ai/code](https://claude.ai/code). Lihat [Claude Code di web](/docs/id/claude-code-on-the-web) untuk alur kerja sesi cloud lengkap termasuk tinjauan diff, perbaikan otomatis, dan rutinitas.
 
 <h3 id="teleport-sessions-to-your-terminal">
   Teleport sesi ke terminal Anda
 </h3>
 
-Tarik sesi web ke terminal lokal Anda dengan `claude --teleport`. Teleport memverifikasi Anda berada di checkout repositori GHES yang sama sebelum mengambil cabang dan memuat riwayat sesi. Lihat [persyaratan teleport](/docs/id/claude-code-on-the-web#teleport-requirements) untuk detail.
+Tarik sesi cloud ke terminal lokal Anda dengan `claude --teleport`. Teleport memverifikasi Anda berada di checkout repositori GHES yang sama sebelum mengambil cabang dan memuat riwayat sesi. Lihat [persyaratan teleport](/docs/id/claude-code-on-the-web#teleport-requirements) untuk detail.
 
 <h2 id="plugin-marketplaces-on-ghes">
   Pasar plugin di GHES
@@ -130,7 +136,7 @@ Host pasar plugin di instans GHES Anda untuk mendistribusikan alat internal di s
 | Pengaturan terkelola (`extraKnownMarketplaces`) | Claude Code mendaftarkan entri dan mengkloning repositori menggunakan kredensial git yang ada di mesin                                                                                                        | Akses Git ke host GHES Anda dari mesin mereka                                                                                                                                                                                                |
 | Pengaturan plugin organisasi claude.ai          | Pemilik memilih instans GHES sebagai sumber; backend Anthropic mengambil dan menyinkronkan repositori menggunakan GitHub App dari [pengaturan admin](#admin-setup)                                            | Tidak ada per pengguna setelah ditambahkan. Pemilik yang menambahkannya memerlukan akun GitHub Enterprise mereka sendiri yang terhubung sebagai pemeriksaan akses, dan GitHub App harus diinstal di repositori pasar                         |
 | Pengaturan pengguna claude.ai                   | Backend Anthropic mengambil repositori menggunakan koneksi GitHub Enterprise pengguna yang mengirimkan                                                                                                        | Akun GitHub Enterprise mereka sendiri yang terhubung ke Claude                                                                                                                                                                               |
-| Claude Code di web                              | Sesi cloud mengkloning pasar di dalam sandbox sesi. Sandbox hanya dapat menjangkau instans GHES Anda ketika repositori sesi berada di instans yang sama, dan kredensial git-nya dibatasi pada repositori sesi | Tidak dapat diandalkan untuk pasar yang dihosting GHES: host yang berbeda dari repositori sesi tidak dapat dijangkau, dan bahkan instalasi instans yang sama dapat gagal. Gunakan CLI, pengaturan terkelola, atau claude.ai sebagai gantinya |
+| Sesi cloud                                      | Sesi cloud mengkloning pasar di dalam sandbox sesi. Sandbox hanya dapat menjangkau instans GHES Anda ketika repositori sesi berada di instans yang sama, dan kredensial git-nya dibatasi pada repositori sesi | Tidak dapat diandalkan untuk pasar yang dihosting GHES: host yang berbeda dari repositori sesi tidak dapat dijangkau, dan bahkan instalasi instans yang sama dapat gagal. Gunakan CLI, pengaturan terkelola, atau claude.ai sebagai gantinya |
 
 <Warning>
   Koneksi GitHub Enterprise di claude.ai adalah per pengguna ketika pasar ditambahkan dari pengaturan pengguna. [Pengaturan admin](#admin-setup) menghubungkan instans GHES Anda ke organisasi Anda, tetapi tidak menghubungkan akun pengguna individual: setiap pengguna yang menambahkan pasar GHES dari pengaturan mereka sendiri harus terlebih dahulu menghubungkan akun GitHub Enterprise mereka sendiri, dan koneksi satu pengguna, termasuk Pemilik, tidak mencakup siapa pun yang lain. Pasar yang ditambahkan oleh Pemilik dalam pengaturan plugin organisasi tidak memberlakukan persyaratan ini pada pengguna, karena pengambilan berkelanjutan menggunakan GitHub App organisasi. Pemilik yang menambahkan pasar masih memerlukan akun GitHub Enterprise mereka sendiri yang terhubung pada waktu penambahan.
@@ -140,7 +146,7 @@ Host pasar plugin di instans GHES Anda untuk mendistribusikan alat internal di s
   Tambahkan pasar GHES
 </h3>
 
-Shorthand `owner/repo` selalu diselesaikan ke github.com. Untuk pasar yang dihosting GHES, gunakan URL git lengkap. URL HTTPS direkomendasikan:
+Shorthand `owner/repo` selalu diselesaikan ke github.com. Untuk pasar yang dihosting GHES, gunakan URL git lengkap, mengganti `github.example.com` dan jalur repositori dengan milik Anda sendiri. URL HTTPS direkomendasikan:
 
 ```bash theme={null}
 /plugin marketplace add https://github.example.com/platform/claude-plugins.git
@@ -154,13 +160,13 @@ URL SSH berfungsi jika mesin sudah mempercayai host GHES Anda:
 
 Claude Code menjalankan git secara non-interaktif dan menolak koneksi SSH ke host yang tidak ada dalam file `known_hosts` mesin. URL HTTPS dengan pembantu kredensial git menghindari persyaratan `known_hosts`.
 
-Lihat [Buat dan distribusikan pasar plugin](/docs/id/plugin-marketplaces) untuk panduan lengkap membangun pasar.
+Lihat [Buat dan distribusikan pasar plugin](/docs/id/plugins/create-marketplace) untuk panduan lengkap membangun pasar.
 
 <h3 id="pre-register-ghes-marketplaces-with-managed-settings">
   Daftarkan pasar GHES sebelumnya dengan pengaturan terkelola
 </h3>
 
-Pengaturan `extraKnownMarketplaces` mendaftarkan pasar sebelumnya sehingga pengembang mendapatkannya tanpa pengaturan manual. Ini bekerja dari [file pengaturan apa pun](/docs/id/settings#extraknownmarketplaces), termasuk `.claude/settings.json` repositori; pengaturan terkelola mengirimkannya di seluruh organisasi:
+Pengaturan `extraKnownMarketplaces` mendaftarkan pasar sebelumnya sehingga pengembang mendapatkannya tanpa pengaturan manual. Ini bekerja dari [file pengaturan apa pun](/docs/id/settings-reference#extraknownmarketplaces), termasuk `.claude/settings.json` repositori; pengaturan terkelola mengirimkannya di seluruh organisasi:
 
 ```json theme={null}
 {
@@ -180,13 +186,13 @@ Claude Code menginstal pasar ini secara lokal: mendaftarkan setiap entri dan men
 * **Gunakan URL git lengkap.** Shorthand `owner/repo` selalu diselesaikan ke github.com dan tidak dapat mereferensikan host GHES.
 * **Lebih suka URL HTTPS.** Kloning SSH gagal pada mesin yang tidak sudah mempercayai kunci host GHES Anda. URL HTTPS dengan pembantu kredensial git standar organisasi Anda bekerja pada mesin apa pun dengan kredensial yang dikonfigurasi.
 * **Konfirmasi setiap mesin dapat mengkloning dari host GHES Anda.** Jika mesin tidak memiliki kredensial, pasar didaftarkan tetapi tidak pernah diinstal, dan plugin-nya melaporkan sebagai tidak ditemukan alih-alih meminta kredensial.
-* **Konfirmasi pengaturan mencapai setiap mesin.** File pengaturan terkelola hanya berlaku pada mesin yang diterapkan, misalnya melalui sistem manajemen perangkat Anda. Lihat [pengaturan terkelola](/docs/id/settings#settings-files) untuk lokasi file.
+* **Konfirmasi pengaturan mencapai setiap mesin.** File pengaturan terkelola hanya berlaku pada mesin yang diterapkan, misalnya melalui sistem manajemen perangkat Anda. Lihat [Terapkan pengaturan terkelola](/docs/id/managed-settings#delivery-mechanisms) untuk lokasi file.
 
 <h3 id="allowlist-ghes-marketplaces-in-managed-settings">
   Daftarkan pasar GHES dalam pengaturan terkelola
 </h3>
 
-Jika organisasi Anda menggunakan [pengaturan terkelola](/docs/id/settings) untuk membatasi pasar mana yang dapat ditambahkan pengembang, gunakan tipe sumber `hostPattern` untuk memungkinkan semua pasar dari instans GHES Anda tanpa menghitung setiap repositori:
+Jika organisasi Anda menggunakan [pengaturan terkelola](/docs/id/settings) untuk membatasi pasar mana yang dapat ditambahkan pengembang, gunakan tipe sumber `hostPattern` untuk memungkinkan semua pasar dari instans GHES Anda tanpa menghitung setiap repositori. Lihat [Mekanisme pengiriman](/docs/id/managed-settings#delivery-mechanisms) untuk lokasi file di setiap platform. Tambahkan JSON ke file `managed-settings.json` Anda atau kebijakan MDM yang setara:
 
 ```json theme={null}
 {
@@ -199,7 +205,7 @@ Jika organisasi Anda menggunakan [pengaturan terkelola](/docs/id/settings) untuk
 }
 ```
 
-Lihat referensi pengaturan [strictKnownMarketplaces](/docs/id/settings#strictknownmarketplaces) dan [extraKnownMarketplaces](/docs/id/settings#extraknownmarketplaces) untuk skema lengkap.
+Lihat referensi pengaturan [strictKnownMarketplaces](/docs/id/settings-reference#strictknownmarketplaces) dan [extraKnownMarketplaces](/docs/id/settings-reference#extraknownmarketplaces) untuk skema lengkap.
 
 <h2 id="limitations">
   Keterbatasan
@@ -214,8 +220,8 @@ Beberapa fitur berperilaku berbeda di GHES daripada di github.com. [Tabel fitur]
   Troubleshooting
 </h2>
 
-<h3 id="web-session-fails-to-clone-repository">
-  Sesi web gagal mengkloning repositori
+<h3 id="cloud-session-fails-to-clone-repository">
+  Cloud session fails to clone repository
 </h3>
 
 Jika `claude --cloud` gagal dengan kesalahan kloning, verifikasi bahwa seorang Owner telah menyelesaikan pengaturan untuk instans GHES Anda dan bahwa GitHub App dipasang di repositori tempat Anda bekerja. Tanyakan kepada Owner yang menghubungkan instans untuk mengonfirmasi bahwa nama host yang terdaftar dalam pengaturan Claude cocok dengan nama host di git remote Anda.
@@ -240,7 +246,13 @@ Di permukaan claude.ai lainnya, kesalahan "Repository not found. If it's private
   Instans GHES tidak dapat dijangkau
 </h3>
 
-Jika tinjauan atau sesi web habis waktu, instans GHES Anda mungkin tidak dapat dijangkau dari infrastruktur Anthropic. Konfirmasi firewall Anda memungkinkan koneksi masuk dari [alamat IP API Anthropic](https://platform.claude.com/docs/en/api/ip-addresses).
+Jika tinjauan atau sesi cloud habis waktu, instans GHES Anda mungkin tidak dapat dijangkau dari infrastruktur Anthropic. Konfirmasi firewall Anda memungkinkan koneksi masuk dari [outbound IP addresses](https://platform.claude.com/docs/en/api/ip-addresses#outbound-ip-addresses) Anthropic. Sesi dalam [self-hosted environment](/docs/id/self-hosted-environments) mencapai GHES dari dalam jaringan Anda, jadi untuk mereka periksa jalur jaringan runner sendiri dan [SCM connector](/docs/id/self-hosted-environments-reference#scm-connector-flags) sebagai gantinya.
+
+<h3 id="session-start-fails-with-unable-to-get-organization-uuid">
+  Awal sesi gagal dengan `Unable to get organization UUID`
+</h3>
+
+Sesi cloud memerlukan organisasi Tim atau Enterprise. Masuk dengan `/login` menggunakan akun organisasi Anda. Jika Anda mengautentikasi dengan kunci API sebagai gantinya, sesi cloud gagal lebih awal dengan pesan yang meminta Anda menjalankan `/login`.
 
 <h2 id="related-resources">
   Sumber daya terkait
@@ -250,7 +262,7 @@ Halaman-halaman ini mencakup fitur yang direferensikan di seluruh panduan ini se
 
 * [Claude Code di web](/docs/id/claude-code-on-the-web): jalankan sesi Claude Code di infrastruktur cloud
 * [Code Review](/docs/id/code-review): tinjauan PR otomatis
-* [Pasar plugin](/docs/id/plugin-marketplaces): bangun dan distribusikan katalog plugin
+* [Pasar plugin](/docs/id/plugins/host-marketplace): bangun dan distribusikan katalog plugin
 * [Analytics](/docs/id/analytics): lacak penggunaan dan metrik kontribusi
 * [Pengaturan terkelola](/docs/id/settings): konfigurasi kebijakan di seluruh organisasi
 * [Konfigurasi jaringan](/docs/id/network-config): persyaratan firewall dan daftar izin IP

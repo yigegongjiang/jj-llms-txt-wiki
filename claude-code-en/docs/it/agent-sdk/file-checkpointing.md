@@ -15,7 +15,7 @@ Con il checkpointing, puoi:
 * **Recuperare da errori** quando l'agente effettua modifiche non corrette
 
 <Warning>
-  Solo le modifiche effettuate tramite gli strumenti Write, Edit e NotebookEdit vengono tracciate. Le modifiche effettuate tramite comandi Bash (come `echo > file.txt` o `sed -i`) non vengono acquisite dal sistema di checkpoint.
+  Solo le modifiche effettuate tramite gli strumenti Write, Edit e NotebookEdit vengono tracciate. Le modifiche effettuate tramite comandi Bash (come `echo > file.txt` o `sed -i`) non vengono acquisite dal sistema di checkpoint, e nemmeno le modifiche che un [subagent](/docs/it/agent-sdk/subagents) applica, ad eccezione di una [skill con `context: fork`](/docs/it/skills#run-skills-in-a-subagent) che viene eseguita in primo piano.
 </Warning>
 
 <h2 id="how-checkpointing-works">
@@ -24,25 +24,11 @@ Con il checkpointing, puoi:
 
 Quando abiliti il checkpointing dei file, l'SDK crea backup dei file prima di modificarli tramite gli strumenti Write, Edit o NotebookEdit. I messaggi dell'utente nel flusso di risposta includono un UUID di checkpoint che puoi utilizzare come punto di ripristino.
 
-Checkpoint funziona con questi strumenti integrati che l'agente utilizza per modificare i file:
-
-| Tool         | Description                                                            |
-| ------------ | ---------------------------------------------------------------------- |
-| Write        | Crea un nuovo file o sovrascrive un file esistente con nuovo contenuto |
-| Edit         | Effettua modifiche mirate a parti specifiche di un file esistente      |
-| NotebookEdit | Modifica le celle nei notebook Jupyter (file `.ipynb`)                 |
-
 <Note>
   Il ripristino dei file ripristina i file su disco a uno stato precedente. Non ripristina la conversazione stessa. La cronologia della conversazione e il contesto rimangono intatti dopo la chiamata a `rewindFiles()` (TypeScript) o `rewind_files()` (Python).
 </Note>
 
-Il sistema di checkpoint traccia:
-
-* File creati durante la sessione
-* File modificati durante la sessione
-* Il contenuto originale dei file modificati
-
-Quando ripristini a un checkpoint, i file creati vengono eliminati e i file modificati vengono ripristinati al loro contenuto in quel momento.
+Quando ripristini a un checkpoint, Claude Code elimina i file che ha creato e ripristina i file che ha modificato al loro contenuto in quel momento. Claude Code salta un percorso tracciato che è un symlink, hard link o altro file non regolare. Salta anche un file tracciato il cui directory padre non si risolve più nella sua posizione al momento del checkpoint, o il cui backup non può leggere in modo sicuro. [`RewindFilesResult`](/docs/it/agent-sdk/typescript#rewindfilesresult) conta ogni percorso saltato nel suo campo `skippedLinks`. Il salto richiede Claude Code v2.1.216 o successivo; prima di v2.1.216, un ripristino scriveva ed eliminava attraverso i link nei percorsi tracciati.
 
 <h2 id="implement-checkpointing">
   Implementare il checkpointing
@@ -122,13 +108,21 @@ L'esempio seguente mostra il flusso completo: abilita il checkpointing, acquisis
     let sessionId: string | undefined;
 
     // Step 2: Capture checkpoint UUID from the first user message
-    for await (const message of response) {
-      if (message.type === "user" && message.uuid && !checkpointId) {
-        checkpointId = message.uuid;
+    try {
+      for await (const message of response) {
+        if (message.type === "user" && message.uuid && !checkpointId) {
+          checkpointId = message.uuid;
+        }
+        if ("session_id" in message && !sessionId) {
+          sessionId = message.session_id;
+        }
       }
-      if ("session_id" in message && !sessionId) {
-        sessionId = message.session_id;
-      }
+    } catch (error) {
+      // A single-shot query() throws after yielding an error result. If the
+      // failure was an error result, sessionId and checkpointId were already
+      // captured by the loop above; connection or process failures yield no
+      // result message.
+      console.error(`Session ended with an error: ${error}`);
     }
 
     // Step 3: Later, rewind by resuming the session with an empty prompt
@@ -185,7 +179,7 @@ L'esempio seguente mostra il flusso completo: abilita il checkpointing, acquisis
   </Step>
 
   <Step title="Acquisisci l'UUID di checkpoint e l'ID di sessione">
-    Con l'opzione `replay-user-messages` impostata (mostrata sopra), ogni messaggio dell'utente nel flusso di risposta ha un UUID che funge da checkpoint.
+    Con l'opzione `replay-user-messages` impostata, ogni messaggio dell'utente nel flusso di risposta ha un UUID che funge da checkpoint.
 
     Per la maggior parte dei casi d'uso, acquisisci il primo UUID del messaggio dell'utente (`message.uuid`); il ripristino ad esso ripristina tutti i file al loro stato originale. Per archiviare più checkpoint e ripristinare a stati intermedi, vedi [Più punti di ripristino](#multiple-restore-points).
 
@@ -233,7 +227,8 @@ L'esempio seguente mostra il flusso completo: abilita il checkpointing, acquisis
       ) as client:
           await client.query("")  # Empty prompt to open the connection
           async for message in client.receive_response():
-              await client.rewind_files(checkpoint_id)
+              if checkpoint_id:
+                  await client.rewind_files(checkpoint_id)
               break
       ```
 
@@ -244,7 +239,9 @@ L'esempio seguente mostra il flusso completo: abilita il checkpointing, acquisis
       });
 
       for await (const msg of rewindQuery) {
-        await rewindQuery.rewindFiles(checkpointId);
+        if (checkpointId) {
+          await rewindQuery.rewindFiles(checkpointId);
+        }
         break;
       }
       ```
@@ -256,7 +253,7 @@ L'esempio seguente mostra il flusso completo: abilita il checkpointing, acquisis
     CLAUDE_CODE_ENABLE_SDK_FILE_CHECKPOINTING=true claude -p --resume <session-id> --rewind-files <checkpoint-uuid>
     ```
 
-    Il flag `--rewind-files` non appare nell'output di `claude --help`, ma la CLI lo accetta come mostrato.
+    Il flag `--rewind-files` non appare nell'output di `claude --help`, ma la CLI lo accetta come mostrato. Quando il ripristino ha successo, il comando stampa `Files rewound to state at message <checkpoint-uuid>` e esce senza inviare un prompt.
   </Step>
 </Steps>
 
@@ -440,17 +437,25 @@ Questo modello archivia tutti gli UUID di checkpoint in un array con metadati. D
     const checkpoints: Checkpoint[] = [];
     let sessionId: string | undefined;
 
-    for await (const message of response) {
-      if (message.type === "user" && message.uuid) {
-        checkpoints.push({
-          id: message.uuid,
-          description: `After turn ${checkpoints.length + 1}`,
-          timestamp: new Date()
-        });
+    try {
+      for await (const message of response) {
+        if (message.type === "user" && message.uuid) {
+          checkpoints.push({
+            id: message.uuid,
+            description: `After turn ${checkpoints.length + 1}`,
+            timestamp: new Date()
+          });
+        }
+        if ("session_id" in message && !sessionId) {
+          sessionId = message.session_id;
+        }
       }
-      if ("session_id" in message && !sessionId) {
-        sessionId = message.session_id;
-      }
+    } catch (error) {
+      // A single-shot query() throws after yielding an error result. If the
+      // failure was an error result, sessionId and the checkpoints array were
+      // already populated by the loop above; connection or process failures
+      // yield no result message.
+      console.error(`Session ended with an error: ${error}`);
     }
 
     // Later: rewind to any checkpoint by resuming the session
@@ -624,15 +629,23 @@ Prima di iniziare, assicurati di avere [Claude Agent SDK installato](/docs/it/ag
           options: opts
         });
 
-        for await (const message of response) {
-          // Capture the first user message UUID - this is our restore point
-          if (message.type === "user" && message.uuid && !checkpointId) {
-            checkpointId = message.uuid;
+        try {
+          for await (const message of response) {
+            // Capture the first user message UUID - this is our restore point
+            if (message.type === "user" && message.uuid && !checkpointId) {
+              checkpointId = message.uuid;
+            }
+            // Capture the session ID so we can resume later
+            if ("session_id" in message) {
+              sessionId = message.session_id;
+            }
           }
-          // Capture the session ID so we can resume later
-          if ("session_id" in message) {
-            sessionId = message.session_id;
-          }
+        } catch (error) {
+          // A single-shot query() throws after yielding an error result. If the
+          // failure was an error result, checkpointId and sessionId were already
+          // captured by the loop above; connection or process failures yield no
+          // result message.
+          console.error(`Session ended with an error: ${error}`);
         }
 
         console.log("Done! Open utils.ts to see the added doc comments.\n");
@@ -671,13 +684,6 @@ Prima di iniziare, assicurati di avere [Claude Agent SDK installato](/docs/it/ag
       main();
       ```
     </CodeGroup>
-
-    Questo esempio dimostra il flusso di lavoro completo del checkpointing:
-
-    1. **Abilita il checkpointing**: configura l'SDK con `enable_file_checkpointing=True` e `permission_mode="acceptEdits"` per approvare automaticamente le modifiche ai file
-    2. **Acquisisci i dati di checkpoint**: mentre l'agente è in esecuzione, archivia il primo UUID del messaggio dell'utente (il tuo punto di ripristino) e l'ID di sessione
-    3. **Richiedi il ripristino**: dopo che l'agente ha terminato, controlla il tuo file di utilità per vedere i commenti doc, quindi decidi se vuoi annullare le modifiche
-    4. **Riprendi e ripristina**: se sì, riprendi la sessione con un prompt vuoto e chiama `rewind_files()` per ripristinare il file originale
   </Step>
 
   <Step title="Esegui l'esempio">
@@ -711,12 +717,13 @@ Prima di iniziare, assicurati di avere [Claude Agent SDK installato](/docs/it/ag
 
 Il checkpointing dei file ha le seguenti limitazioni:
 
-| Limitation                             | Description                                                                                     |
-| -------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| Solo strumenti Write/Edit/NotebookEdit | Le modifiche effettuate tramite comandi Bash non vengono tracciate                              |
-| Stessa sessione                        | I checkpoint sono legati alla sessione che li ha creati                                         |
-| Solo contenuto del file                | La creazione, lo spostamento o l'eliminazione di directory non vengono annullati dal ripristino |
-| File locali                            | I file remoti o di rete non vengono tracciati                                                   |
+| Limitation                             | Description                                                                                                                                                                                                                                  |
+| -------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Solo strumenti Write/Edit/NotebookEdit | Le modifiche effettuate tramite comandi Bash non vengono tracciate                                                                                                                                                                           |
+| Modifiche dei subagent                 | Le modifiche che un [subagent](/docs/it/agent-sdk/subagents) applica non vengono tracciate o ripristinate, ad eccezione di una skill con `context: fork` in esecuzione in primo piano; utilizzare git per ripristinare le modifiche non tracciate |
+| Stessa sessione                        | I checkpoint sono legati alla sessione che li ha creati                                                                                                                                                                                      |
+| Solo contenuto del file                | La creazione, lo spostamento o l'eliminazione di directory non vengono annullati dal ripristino                                                                                                                                              |
+| File locali                            | I file remoti o di rete non vengono tracciati                                                                                                                                                                                                |
 
 <h2 id="troubleshooting">
   Troubleshooting
@@ -743,8 +750,8 @@ Se `message.uuid` è `undefined` o mancante, non stai ricevendo gli UUID di chec
 
 **Soluzione**: Aggiungi `extra_args={"replay-user-messages": None}` (Python) o `extraArgs: { 'replay-user-messages': null }` (TypeScript) alle tue opzioni.
 
-<h3 id="no-file-checkpoint-found-for-message-error">
-  Errore "No file checkpoint found for message"
+<h3 id="no-file-checkpoint-found-for-this-message-error">
+  Errore "No file checkpoint found for this message"
 </h3>
 
 Questo errore si verifica quando i dati di checkpoint non esistono per l'UUID del messaggio dell'utente specificato.
@@ -786,7 +793,8 @@ Questo errore si verifica quando chiami `rewindFiles()` o `rewind_files()` dopo 
   ) as client:
       await client.query("")
       async for message in client.receive_response():
-          await client.rewind_files(checkpoint_id)
+          if checkpoint_id:
+              await client.rewind_files(checkpoint_id)
           break
   ```
 
@@ -797,9 +805,17 @@ Questo errore si verifica quando chiami `rewindFiles()` o `rewind_files()` dopo 
     options: { ...opts, resume: sessionId }
   });
 
-  for await (const msg of rewindQuery) {
-    await rewindQuery.rewindFiles(checkpointId);
-    break;
+  try {
+    for await (const msg of rewindQuery) {
+      if (checkpointId) {
+        await rewindQuery.rewindFiles(checkpointId);
+      }
+      break;
+    }
+  } catch (error) {
+    // An error here means the rewind didn't complete, for example the checkpoint
+    // wasn't found or the session couldn't be resumed.
+    console.error(`Rewind session ended with an error: ${error}`);
   }
   ```
 </CodeGroup>

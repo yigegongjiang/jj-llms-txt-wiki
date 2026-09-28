@@ -26,10 +26,10 @@ Claude Code プラグインは、以下を含むほとんどの JetBrains IDEs �
 </h2>
 
 * **クイック起動**: `Cmd+Esc`（Mac）または `Ctrl+Esc`（Windows/Linux）を使用してエディタから Claude Code を直接開くか、UI の Claude Code ボタンをクリックします
-* **Diff ビューイング**: コードの変更をターミナルではなく IDE の diff ビューアに直接表示できます
+* **Diff ビューイング**: Claude Code はコードの変更をターミナルではなく IDE の diff ビューアで開きます。`/config` の **Diff tool** 設定でこれを変更できます
 * **選択コンテキスト**: IDE の現在の選択またはタブが Claude Code と自動的に共有されます。[`Read` 拒否ルール](/docs/ja/permissions#read-and-edit)は、一致するファイルのこの共有をブロックします
 * **ファイル参照ショートカット**: `Cmd+Option+K`（Mac）または `Alt+Ctrl+K`（Linux/Windows）を使用して `@src/auth.ts#L1-99` などのファイル参照を挿入します
-* **診断共有**: IDE からの診断エラー（lint、構文エラーなど）が作業中に Claude と自動的に共有されます
+* **診断共有**: Claude は [`getDiagnostics` ツール](#the-built-in-ide-mcp-server)を呼び出して IDE の検査診断（lint や構文エラーなど）を読み取ります。Claude Code は編集後に独自にプラグインから診断をリクエストしません
 
 <h2 id="installation">
   インストール
@@ -50,10 +50,6 @@ Claude Code プラグインは、以下を含むほとんどの JetBrains IDEs �
 `claude` が IDE が見つけられない場所にインストールされている場合は、プラグインの [Claude コマンド設定](#general-settings) でフルパスを設定してください。
 
 Claude Code は、任意の有料 Claude サブスクリプション（Pro、Max、Team、または Enterprise）または Claude Console アカウントで動作し、API キーは不要です。`claude` を初めて実行するときに [ログイン](/docs/ja/authentication#log-in-to-claude-code) するよう求められます。
-
-<Note>
-  プラグインをインストール後、IDE を完全に再起動する必要がある場合があります。
-</Note>
 
 <h2 id="usage">
   使用方法
@@ -79,6 +75,8 @@ claude
 /ide
 ```
 
+接続が成功すると、Claude Code は `Connected to IntelliJ IDEA.` のようなメッセージで確認します。Claude Code がプラグインを持たない実行中の IDE を検出した場合、`/ide` はプラグインをインストールし、IDE を再起動するよう求めます。
+
 Claude が IDE と同じファイルにアクセスできるようにしたい場合は、IDE プロジェクトルートと同じディレクトリから Claude Code を起動してください。
 
 <h2 id="configuration">
@@ -93,7 +91,9 @@ Claude Code の設定を通じて IDE 統合を設定します。
 
 1. `claude` を実行します
 2. `/config` コマンドを入力します
-3. diff ツールを `auto` に設定して IDE に diff を表示するか、`terminal` に設定してターミナルに表示したままにします
+3. **Diff tool** を `auto` に設定して IDE に diff を表示するか、`terminal` に設定してターミナルに表示したままにします
+
+**Diff tool** エントリは Claude Code が IDE に接続されている場合にのみ `/config` に表示されるため、JetBrains ターミナルから `claude` を実行するか、外部ターミナルから最初に [`/ide`](/docs/ja/commands) を実行してください。基になる設定については [`diffTool`](/docs/ja/settings-reference#difftool) を参照してください。
 
 <h3 id="plugin-settings">
   プラグイン設定
@@ -106,7 +106,7 @@ Claude Code の設定を通じて IDE 統合を設定します。
 </h4>
 
 * **Claude command**: Claude を実行するカスタムコマンドを指定します（例：`claude`、`/usr/local/bin/claude`、または `npx @anthropic-ai/claude-code`）
-* **Suppress notification for Claude command not found**: Claude コマンドが見つからないことに関する通知をスキップします
+* **Suppress notification for when Claude Command is not found**: Claude コマンドが見つからないことに関する通知をスキップします
 * **Enable using Option+Enter for multi-line prompts**: macOS のみ。有効にすると、Option+Enter は Claude Code プロンプトに新しい行を挿入します。Option キーが予期せずキャプチャされる場合は無効にしてください。ターミナルの再起動が必要です。
 * **Enable automatic updates**: プラグインの更新を自動的にチェックしてインストールします。再起動時に適用されます
 
@@ -137,10 +137,8 @@ ESC キーが JetBrains ターミナルで Claude Code 操作を中断しない�
 </h3>
 
 <Warning>
-  JetBrains リモート開発を使用する場合、**Settings → Plugin (Host)** を通じてリモートホストにプラグインをインストールする必要があります。
+  JetBrains リモート開発を使用する場合、ローカルクライアントマシンではなく、**Settings → Plugin (Host)** を通じてリモートホストにプラグインをインストールする必要があります。
 </Warning>
-
-プラグインはローカルクライアントマシンではなく、リモートホストにインストールする必要があります。
 
 <h3 id="wsl-configuration">
   WSL 設定
@@ -162,7 +160,7 @@ Claude Code を WSL2 の JetBrains IDE で使用していて「No available IDEs
     hostname -I
     ```
 
-    サブネットをメモします。例えば `172.21.123.45` は `172.21.0.0/16` に含まれます。
+    サブネットをメモします。アドレスの最初の 2 つのセグメントを取得し、その後に `.0.0/16` を付けます。例えば、アドレスが `172.21.123.45` の場合、サブネットは `172.21.0.0/16` です。
   </Step>
 
   <Step title="ファイアウォールルールを作成する">
@@ -212,11 +210,11 @@ networkingMode=mirrored
   IDE が検出されない
 </h3>
 
-`claude` を実行して「No available IDEs detected」が表示される場合：
+`/ide` コマンドが「No available IDEs detected」を表示する場合：
 
 * プラグインがインストールされて有効になっていることを確認してください
 * IDE を完全に再起動してください
-* 統合ターミナルから Claude Code を実行していることを確認してください
+* `/ide` を実行せずに自動接続が期待される場合は、IDE の統合ターミナルから `claude` を起動したことを確認してください
 * WSL ユーザーの場合、上記の [WSL 設定](#wsl-configuration) を参照してください
 
 <h3 id="command-not-found">
@@ -233,11 +231,11 @@ Claude アイコンをクリックして「command not found」が表示され�
   セキュリティに関する考慮事項
 </h2>
 
-Claude Code が [`acceptEdits` 権限モード](/docs/ja/permission-modes#auto-approve-file-edits-with-acceptedits-mode)で JetBrains IDE で実行される場合、IDE によって自動的に実行される可能性のある IDE 設定ファイルを変更できる場合があります。これにより、`acceptEdits` モードで Claude Code を実行するリスクが増加し、bash 実行に対する Claude Code の権限プロンプトをバイパスできる可能性があります。
+Claude Code が [`acceptEdits` 権限モード](/docs/ja/permission-modes#auto-approve-file-edits-with-acceptedits-mode)で JetBrains IDE で実行される場合、IDE によって自動的に実行される可能性のある IDE 設定ファイルを変更できる場合があります。これにより、`acceptEdits` モードで Claude Code を実行するリスクが増加し、Bash 実行に対する Claude Code の権限プロンプトをバイパスできる可能性があります。
 
 JetBrains IDEs で実行する場合は、以下を検討してください。
 
-* 編集に対して手動承認モードを使用する
+* 編集に対して手動モードを使用する。`acceptEdits` と自動モードの両方は、[保護されたパス](/docs/ja/permission-modes#protected-paths)を除いて、作業ディレクトリ内の編集を確認なしで承認するため
 * Claude が信頼できるプロンプトでのみ使用されることを確認するために特に注意する
 * Claude Code がアクセスして変更できるファイルを認識する
 
@@ -247,7 +245,7 @@ Claude Code のインストールまたはログインの問題については�
   組み込み IDE MCP サーバー
 </h3>
 
-プラグインがアクティブな場合、CLI が自動的に接続するローカル MCP サーバーが実行されます。これは、CLI が IDE のネイティブ diff ビューアーで diff を開き、`@` メンションの現在の選択を読み取り、検査診断を会話に取り込む方法です。
+プラグインがアクティブな場合、CLI が自動的に接続するローカル MCP サーバーが実行されます。これは、CLI が IDE のネイティブ diff ビューアーで diff を開き、`@` メンションの現在の選択を読み取り、Claude が検査診断を読み取る方法です。
 
 サーバーは `ide` という名前で、設定するものがないため `/mcp` から非表示になっています。ただし、組織が [`PreToolUse` フック](/docs/ja/hooks#pretooluse) を使用して MCP ツールをホワイトリストに登録している場合は、それが存在することを知っておく必要があります。
 
@@ -257,9 +255,9 @@ Claude Code のインストールまたはログインの問題については�
 
 **モデルに公開されるツール。** サーバーはいくつかのツールをホストしていますが、モデルに表示されるのは 1 つだけです。残りは、diff を開いたり選択を読み取ったりするなど、CLI が独自の UI に使用する内部 RPC であり、ツールリストが Claude に到達する前にフィルタリングされます。
 
-| ツール名（フックで表示）               | 機能                                                          | 読み取り専用 |
-| -------------------------- | ----------------------------------------------------------- | ------ |
-| `mcp__ide__getDiagnostics` | IDE の検査診断（エディターに表示されるエラーと警告）を返します。オプションで 1 つのファイルにスコープできます。 | はい     |
+| ツール名（フックで表示）               | 機能                                                                                                                | 読み取り専用 |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------------- | ------ |
+| `mcp__ide__getDiagnostics` | IDE の検査診断（エディターに表示されるエラーと警告）を返します。各呼び出しは 1 つのファイルをカバーします。Claude が指定するファイル、または Claude が指定しない場合はアクティブエディター内のファイルです。 | はい     |
 
 JetBrains プラグインは、モデルにコード実行ツールを公開しません。
 

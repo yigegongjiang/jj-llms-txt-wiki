@@ -36,7 +36,7 @@
   </Accordion>
 
   <Accordion title="使用結構化輸出">
-    ```json theme={null}
+    ```jsonc theme={null}
     {
       "name": "Chocolate Chip Cookies",
       "prep_time_minutes": 15,
@@ -77,20 +77,26 @@
     required: ["company_name"]
   };
 
-  for await (const message of query({
-    prompt: "Research Anthropic and provide key company information",
-    options: {
-      outputFormat: {
-        type: "json_schema",
-        schema: schema
+  try {
+    for await (const message of query({
+      prompt: "Research Anthropic and provide key company information",
+      options: {
+        outputFormat: {
+          type: "json_schema",
+          schema: schema
+        }
+      }
+    })) {
+      // 結果訊息包含具有驗證資料的 structured_output
+      if (message.type === "result" && message.subtype === "success" && message.structured_output) {
+        console.log(message.structured_output);
+        // { company_name: "Anthropic", founded_year: 2021, headquarters: "San Francisco, CA" }
       }
     }
-  })) {
-    // 結果訊息包含具有驗證資料的 structured_output
-    if (message.type === "result" && message.subtype === "success" && message.structured_output) {
-      console.log(message.structured_output);
-      // { company_name: "Anthropic", founded_year: 2021, headquarters: "San Francisco, CA" }
-    }
+  } catch (error) {
+    // 單次 query() 在產生錯誤結果後會拋出異常，例如
+    // error_max_structured_output_retries；請參閱錯誤處理部分。
+    console.error(`Session ended with an error: ${error}`);
   }
   ```
 
@@ -111,16 +117,21 @@
 
 
   async def main():
-      async for message in query(
-          prompt="Research Anthropic and provide key company information",
-          options=ClaudeAgentOptions(
-              output_format={"type": "json_schema", "schema": schema}
-          ),
-      ):
-          # 結果訊息包含具有驗證資料的 structured_output
-          if isinstance(message, ResultMessage) and message.structured_output:
-              print(message.structured_output)
-              # {'company_name': 'Anthropic', 'founded_year': 2021, 'headquarters': 'San Francisco, CA'}
+      try:
+          async for message in query(
+              prompt="Research Anthropic and provide key company information",
+              options=ClaudeAgentOptions(
+                  output_format={"type": "json_schema", "schema": schema}
+              ),
+          ):
+              # 結果訊息包含具有驗證資料的 structured_output
+              if isinstance(message, ResultMessage) and message.structured_output:
+                  print(message.structured_output)
+                  # {'company_name': 'Anthropic', 'founded_year': 2021, 'headquarters': 'San Francisco, CA'}
+      except Exception as error:
+          # 單次 query() 在產生錯誤結果後會拋出異常，例如
+          # error_max_structured_output_retries；請參閱錯誤處理部分。
+          print(f"Session ended with an error: {error}")
 
 
   asyncio.run(main())
@@ -134,6 +145,8 @@
 與其手動編寫 JSON Schema，您可以使用 [Zod](https://zod.dev/)（TypeScript）或 [Pydantic](https://docs.pydantic.dev/latest/)（Python）來定義您的架構。這些庫為您生成 JSON Schema，並讓您將回應解析為完全類型化的物件，您可以在整個程式碼庫中使用，具有自動完成和類型檢查。
 
 下面的範例定義了一個功能實現計劃的架構，包括摘要、步驟列表（每個步驟都有複雜性級別）和潛在風險。代理計劃該功能並返回一個類型化的 `FeaturePlan` 物件。然後您可以訪問 `plan.summary` 等屬性，並使用完整的類型安全遍歷 `plan.steps`。
+
+SDK 使用 JSON Schema draft-07 驗證架構，因此宣告較新版本的架構會被拒絕。Zod 預設目標是 draft 2020-12，所以在轉換您的架構時傳遞 `target: "draft-7"`。
 
 <CodeGroup>
   ```typescript TypeScript theme={null}
@@ -156,32 +169,38 @@
 
   type FeaturePlan = z.infer<typeof FeaturePlan>;
 
-  // 轉換為 JSON Schema
-  const schema = z.toJSONSchema(FeaturePlan);
+  // 使用 SDK 預期的 draft-07 目標轉換為 JSON Schema
+  const schema = z.toJSONSchema(FeaturePlan, { target: "draft-7" });
 
   // 在查詢中使用
-  for await (const message of query({
-    prompt:
-      "Plan how to add dark mode support to a React app. Break it into implementation steps.",
-    options: {
-      outputFormat: {
-        type: "json_schema",
-        schema: schema
+  try {
+    for await (const message of query({
+      prompt:
+        "Plan how to add dark mode support to a React app. Break it into implementation steps.",
+      options: {
+        outputFormat: {
+          type: "json_schema",
+          schema: schema
+        }
+      }
+    })) {
+      if (message.type === "result" && message.subtype === "success" && message.structured_output) {
+        // 驗證並獲得完全類型化的結果
+        const parsed = FeaturePlan.safeParse(message.structured_output);
+        if (parsed.success) {
+          const plan: FeaturePlan = parsed.data;
+          console.log(`Feature: ${plan.feature_name}`);
+          console.log(`Summary: ${plan.summary}`);
+          plan.steps.forEach((step) => {
+            console.log(`${step.step_number}. [${step.estimated_complexity}] ${step.description}`);
+          });
+        }
       }
     }
-  })) {
-    if (message.type === "result" && message.subtype === "success" && message.structured_output) {
-      // 驗證並獲得完全類型化的結果
-      const parsed = FeaturePlan.safeParse(message.structured_output);
-      if (parsed.success) {
-        const plan: FeaturePlan = parsed.data;
-        console.log(`Feature: ${plan.feature_name}`);
-        console.log(`Summary: ${plan.summary}`);
-        plan.steps.forEach((step) => {
-          console.log(`${step.step_number}. [${step.estimated_complexity}] ${step.description}`);
-        });
-      }
-    }
+  } catch (error) {
+    // 單次查詢 query() 在產生錯誤結果後會拋出，例如
+    // error_max_structured_output_retries；請參閱錯誤處理部分。
+    console.error(`Session ended with an error: ${error}`);
   }
   ```
 
@@ -205,36 +224,34 @@
 
 
   async def main():
-      async for message in query(
-          prompt="Plan how to add dark mode support to a React app. Break it into implementation steps.",
-          options=ClaudeAgentOptions(
-              output_format={
-                  "type": "json_schema",
-                  "schema": FeaturePlan.model_json_schema(),
-              }
-          ),
-      ):
-          if isinstance(message, ResultMessage) and message.structured_output:
-              # 驗證並獲得完全類型化的結果
-              plan = FeaturePlan.model_validate(message.structured_output)
-              print(f"Feature: {plan.feature_name}")
-              print(f"Summary: {plan.summary}")
-              for step in plan.steps:
-                  print(
-                      f"{step.step_number}. [{step.estimated_complexity}] {step.description}"
-                  )
+      try:
+          async for message in query(
+              prompt="Plan how to add dark mode support to a React app. Break it into implementation steps.",
+              options=ClaudeAgentOptions(
+                  output_format={
+                      "type": "json_schema",
+                      "schema": FeaturePlan.model_json_schema(),
+                  }
+              ),
+          ):
+              if isinstance(message, ResultMessage) and message.structured_output:
+                  # 驗證並獲得完全類型化的結果
+                  plan = FeaturePlan.model_validate(message.structured_output)
+                  print(f"Feature: {plan.feature_name}")
+                  print(f"Summary: {plan.summary}")
+                  for step in plan.steps:
+                      print(
+                          f"{step.step_number}. [{step.estimated_complexity}] {step.description}"
+                      )
+      except Exception as error:
+          # 單次查詢 query() 在產生錯誤結果後會拋出，例如
+          # error_max_structured_output_retries；請參閱錯誤處理部分。
+          print(f"Session ended with an error: {error}")
 
 
   asyncio.run(main())
   ```
 </CodeGroup>
-
-**優點：**
-
-* 完整的類型推斷（TypeScript）和類型提示（Python）
-* 使用 `safeParse()` 或 `model_validate()` 進行運行時驗證
-* 更好的錯誤訊息
-* 可組合、可重用的架構
 
 <h2 id="output-format-configuration">
   輸出格式配置
@@ -243,7 +260,7 @@
 `outputFormat`（TypeScript）或 `output_format`（Python）選項接受一個物件，其中包含：
 
 * `type`：設置為 `"json_schema"` 以進行結構化輸出
-* `schema`：一個 [JSON Schema](https://json-schema.org/understanding-json-schema/about) 物件，定義您的輸出結構。您可以使用 `z.toJSONSchema()` 從 Zod 架構或使用 `.model_json_schema()` 從 Pydantic 模型生成此項。
+* `schema`：一個 [JSON Schema](https://json-schema.org/understanding-json-schema/about) 物件，定義您的輸出結構。您可以使用 `z.toJSONSchema(schema, { target: "draft-7" })` 從 Zod 架構或使用 `.model_json_schema()` 從 Pydantic 模型生成此項。
 
 SDK 支援標準 JSON Schema 功能，包括所有基本類型（object、array、string、number、boolean、null）、`enum`、`const`、`required`、嵌套物件和 `$ref` 定義。有關支援的功能和限制的完整列表，請參閱 [JSON Schema 限制](https://platform.claude.com/docs/zh-TW/build-with-claude/structured-outputs#json-schema-limitations)。
 
@@ -287,25 +304,31 @@ SDK 支援標準 JSON Schema 功能，包括所有基本類型（object、array�
   };
 
   // 代理使用 Grep 查找 TODO，使用 Bash 獲取 git blame 資訊
-  for await (const message of query({
-    prompt: "Find all TODO comments in this codebase and identify who added them",
-    options: {
-      outputFormat: {
-        type: "json_schema",
-        schema: todoSchema
+  try {
+    for await (const message of query({
+      prompt: "Find all TODO comments in this codebase and identify who added them",
+      options: {
+        outputFormat: {
+          type: "json_schema",
+          schema: todoSchema
+        }
+      }
+    })) {
+      if (message.type === "result" && message.subtype === "success" && message.structured_output) {
+        const data = message.structured_output as { total_count: number; todos: Array<{ file: string; line: number; text: string; author?: string; date?: string }> };
+        console.log(`Found ${data.total_count} TODOs`);
+        data.todos.forEach((todo) => {
+          console.log(`${todo.file}:${todo.line} - ${todo.text}`);
+          if (todo.author) {
+            console.log(`  Added by ${todo.author} on ${todo.date}`);
+          }
+        });
       }
     }
-  })) {
-    if (message.type === "result" && message.subtype === "success" && message.structured_output) {
-      const data = message.structured_output as { total_count: number; todos: Array<{ file: string; line: number; text: string; author?: string; date?: string }> };
-      console.log(`Found ${data.total_count} TODOs`);
-      data.todos.forEach((todo) => {
-        console.log(`${todo.file}:${todo.line} - ${todo.text}`);
-        if (todo.author) {
-          console.log(`  Added by ${todo.author} on ${todo.date}`);
-        }
-      });
-    }
+  } catch (error) {
+    // 單次 query() 在產生錯誤結果後會拋出異常，例如
+    // error_max_structured_output_retries；請參閱錯誤處理部分。
+    console.error(`Session ended with an error: ${error}`);
   }
   ```
 
@@ -339,19 +362,24 @@ SDK 支援標準 JSON Schema 功能，包括所有基本類型（object、array�
 
   async def main():
       # 代理使用 Grep 查找 TODO，使用 Bash 獲取 git blame 資訊
-      async for message in query(
-          prompt="Find all TODO comments in this codebase and identify who added them",
-          options=ClaudeAgentOptions(
-              output_format={"type": "json_schema", "schema": todo_schema}
-          ),
-      ):
-          if isinstance(message, ResultMessage) and message.structured_output:
-              data = message.structured_output
-              print(f"Found {data['total_count']} TODOs")
-              for todo in data["todos"]:
-                  print(f"{todo['file']}:{todo['line']} - {todo['text']}")
-                  if "author" in todo:
-                      print(f"  Added by {todo['author']} on {todo['date']}")
+      try:
+          async for message in query(
+              prompt="Find all TODO comments in this codebase and identify who added them",
+              options=ClaudeAgentOptions(
+                  output_format={"type": "json_schema", "schema": todo_schema}
+              ),
+          ):
+              if isinstance(message, ResultMessage) and message.structured_output:
+                  data = message.structured_output
+                  print(f"Found {data['total_count']} TODOs")
+                  for todo in data["todos"]:
+                      print(f"{todo['file']}:{todo['line']} - {todo['text']}")
+                      if "author" in todo:
+                          print(f"  Added by {todo['author']} on {todo['date']}")
+      except Exception as error:
+          # 單次 query() 在產生錯誤結果後會拋出異常，例如
+          # error_max_structured_output_retries；請參閱錯誤處理部分。
+          print(f"Session ended with an error: {error}")
 
 
   asyncio.run(main())
@@ -362,7 +390,7 @@ SDK 支援標準 JSON Schema 功能，包括所有基本類型（object、array�
   錯誤處理
 </h2>
 
-結構化輸出生成可能會失敗，當代理無法生成與您的架構相匹配的有效 JSON 時。這通常發生在架構對於任務過於複雜、任務本身不明確或代理在嘗試修復驗證錯誤時達到重試限制時。它也可能在沒有任何驗證失敗的情況下發生：[模型回退](/docs/zh-TW/model-config#automatic-model-fallback)可以在中途收回已完成的輸出，如果沒有重試替換它，運行將以相同的錯誤結束。在調試您的架構之前，請檢查結果訊息上的 `errors` 欄位以區分這兩個原因。
+結構化輸出生成可能會失敗，當代理無法生成與您的架構相匹配的有效 JSON 時。這通常發生在架構對於任務過於複雜、任務本身不明確或代理在嘗試修復驗證錯誤時達到重試限制時。它也可能在沒有任何驗證失敗的情況下發生：[模型回退](/docs/zh-TW/model-config#automatic-model-fallback)可以在中途收回已完成的輸出，如果沒有重試替換它，運行將以相同的錯誤結束。在調試您的架構之前，請檢查結果訊息上的 `errors` 清單以區分這兩個原因。
 
 發生錯誤時，結果訊息有一個 `subtype` 指示出了什麼問題：
 
@@ -371,45 +399,88 @@ SDK 支援標準 JSON Schema 功能，包括所有基本類型（object、array�
 | `success`                             | 輸出已成功生成並驗證                         |
 | `error_max_structured_output_retries` | 多次嘗試後沒有有效輸出存活（驗證失敗，或模型回退收回且沒有成功重試） |
 
-下面的範例檢查 `subtype` 欄位以確定輸出是否成功生成或您是否需要處理失敗：
+結果也可以以 `success` 的 subtype 結束，但沒有 `structured_output` 值，例如當運行完成而代理沒有生成結構化輸出時。將該情況也視為失敗。疑難排解項目[structured\_output 為 None 但結果顯示成功](/docs/zh-TW/agent-sdk/troubleshooting#structured_output-is-none-but-the-result-says-success)涵蓋此情況。下面的範例僅在 `subtype` 為 `success` 且 `structured_output` 存在時才將結果視為成功，並將所有其他結果作為失敗處理：
 
 <CodeGroup>
   ```typescript TypeScript theme={null}
-  for await (const msg of query({
-    prompt: "Extract contact info from the document",
-    options: {
-      outputFormat: {
-        type: "json_schema",
-        schema: contactSchema
+  import { query } from "@anthropic-ai/claude-agent-sdk";
+
+  const contactSchema = {
+    type: "object",
+    properties: {
+      name: { type: "string" },
+      email: { type: "string" }
+    },
+    required: ["name"]
+  };
+
+  try {
+    for await (const msg of query({
+      prompt: "Extract contact info from the document",
+      options: {
+        outputFormat: {
+          type: "json_schema",
+          schema: contactSchema
+        }
+      }
+    })) {
+      if (msg.type === "result") {
+        if (msg.subtype === "success" && msg.structured_output) {
+          // 使用驗證的輸出
+          console.log(msg.structured_output);
+        } else if (msg.subtype === "error_max_structured_output_retries") {
+          console.error("Could not produce valid output");
+        } else {
+          console.error("Run ended without a structured output");
+        }
       }
     }
-  })) {
-    if (msg.type === "result") {
-      if (msg.subtype === "success" && msg.structured_output) {
-        // 使用驗證的輸出
-        console.log(msg.structured_output);
-      } else if (msg.subtype === "error_max_structured_output_retries") {
-        // 處理失敗 - 使用更簡單的提示重試、回退到非結構化等
-        console.error("Could not produce valid output");
-      }
-    }
+  } catch (error) {
+    // A single-shot query() throws after yielding an error result. If the
+    // failure was an error result, the error subtype branches above have
+    // already run; connection or process failures yield no result message.
+    console.log(`Session ended with an error: ${error}`);
   }
   ```
 
   ```python Python theme={null}
-  async for message in query(
-      prompt="Extract contact info from the document",
-      options=ClaudeAgentOptions(
-          output_format={"type": "json_schema", "schema": contact_schema}
-      ),
-  ):
-      if isinstance(message, ResultMessage):
-          if message.subtype == "success" and message.structured_output:
-              # 使用驗證的輸出
-              print(message.structured_output)
-          elif message.subtype == "error_max_structured_output_retries":
-              # 處理失敗
-              print("Could not produce valid output")
+  import asyncio
+  from claude_agent_sdk import query, ClaudeAgentOptions, ResultMessage
+
+  contact_schema = {
+      "type": "object",
+      "properties": {
+          "name": {"type": "string"},
+          "email": {"type": "string"},
+      },
+      "required": ["name"],
+  }
+
+
+  async def main():
+      try:
+          async for message in query(
+              prompt="Extract contact info from the document",
+              options=ClaudeAgentOptions(
+                  output_format={"type": "json_schema", "schema": contact_schema}
+              ),
+          ):
+              if isinstance(message, ResultMessage):
+                  if message.subtype == "success" and message.structured_output:
+                      # 使用驗證的輸出
+                      print(message.structured_output)
+                  elif message.subtype == "error_max_structured_output_retries":
+                      print("Could not produce valid output")
+                  else:
+                      print("Run ended without a structured output")
+      except Exception as error:
+          # A single-shot query() raises after yielding an error result. If the
+          # failure was an error result, the error subtype branches above have
+          # already run; connection or process failures yield no result message.
+          print(f"Session ended with an error: {error}")
+
+
+  asyncio.run(main())
   ```
 </CodeGroup>
 

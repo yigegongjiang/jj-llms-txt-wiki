@@ -16,13 +16,15 @@ Claude Code 是在您的終端機中執行的代理助手。雖然它在編碼�
 
 當您給 Claude 一項任務時，它會經歷三個階段：**收集上下文**、**採取行動**和**驗證結果**。這些階段相互融合。Claude 始終使用工具，無論是搜尋檔案以了解您的程式碼、編輯以進行變更，還是執行測試以檢查其工作。
 
-<img src="https://mintcdn.com/claude-code/ikqp3_70mqIahteV/images/agentic-loop.svg?fit=max&auto=format&n=ikqp3_70mqIahteV&q=85&s=4a30fb7ce2815012a9f27c955e2c6bb0" alt="代理迴圈的圖表：您的提示導致 Claude 收集上下文、採取行動、驗證結果，並重複直到任務完成。您可以在任何時刻中斷。" width="720" height="280" data-path="images/agentic-loop.svg" />
+<img src="https://mintcdn.com/claude-code/ikqp3_70mqIahteV/images/agentic-loop.svg?fit=max&auto=format&n=ikqp3_70mqIahteV&q=85&s=4a30fb7ce2815012a9f27c955e2c6bb0" className="dark:hidden" alt="代理迴圈的圖表：您的提示導致 Claude 收集上下文、採取行動、驗證結果，並重複直到任務完成。您可以在任何時刻中斷。" width="720" height="280" data-path="images/agentic-loop.svg" />
+
+<img src="https://mintcdn.com/claude-code/_xqph1dUOslCOwsj/images/agentic-loop-dark.svg?fit=max&auto=format&n=_xqph1dUOslCOwsj&q=85&s=75e1d55ed76857a952f9a2dffbab02df" className="hidden dark:block" alt="代理迴圈的圖表：您的提示導致 Claude 收集上下文、採取行動、驗證結果，並重複直到任務完成。您可以在任何時刻中斷。" width="720" height="280" data-path="images/agentic-loop-dark.svg" />
 
 迴圈會根據您的要求進行調整。關於您程式碼庫的問題可能只需要收集上下文。錯誤修復會反覆循環所有三個階段。重構可能涉及廣泛的驗證。Claude 根據從上一步學到的內容決定每一步需要什麼，將數十個操作鏈接在一起，並沿途進行課程修正。
 
 您也是這個迴圈的一部分。您可以在任何時刻中斷以引導 Claude 朝不同方向發展、提供額外上下文，或要求它嘗試不同的方法。Claude 自主工作，但對您的輸入保持回應。
 
-代理迴圈由兩個元件提供動力：[模型](#models)進行推理，[工具](#tools)採取行動。Claude Code 充當 Claude 周圍的**代理工具**：它提供工具、上下文管理和執行環境，將語言模型轉變為能力強大的編碼代理。
+代理迴圈由兩個元件提供動力：[模型](#models)進行推理，[工具](#tools)採取行動。Claude Code 是 Claude 周圍的層，提供工具並管理模型看到的上下文。這個周圍層就是術語代理工具所指的。
 
 <h3 id="models">
   模型
@@ -42,13 +44,13 @@ Claude Code 使用 Claude 模型來理解您的程式碼並推理任務。Claude
 
 內建工具通常分為五個類別，每個類別代表不同類型的代理能力。
 
-| 類別        | Claude 可以做什麼                                                                      |
-| --------- | --------------------------------------------------------------------------------- |
-| **檔案操作**  | 讀取檔案、編輯程式碼、建立新檔案、重新命名和重新組織                                                        |
-| **搜尋**    | 按模式查找檔案、使用正規表達式搜尋內容、探索程式碼庫                                                        |
-| **執行**    | 執行 shell 命令、啟動伺服器、執行測試、使用 git                                                     |
-| **網路**    | 搜尋網路、擷取文件、查詢錯誤訊息                                                                  |
-| **程式碼智能** | 編輯後查看類型錯誤和警告、跳轉到定義、查找參考（需要[程式碼智能外掛程式](/docs/zh-TW/discover-plugins#code-intelligence)） |
+| 類別        | Claude 可以做什麼                                                             |
+| --------- | ------------------------------------------------------------------------ |
+| **檔案操作**  | 讀取檔案、編輯程式碼、建立新檔案、重新命名和重新組織                                               |
+| **搜尋**    | 按模式查找檔案、使用正規表達式搜尋內容、探索程式碼庫                                               |
+| **執行**    | 執行 shell 命令、啟動伺服器、執行測試、使用 git                                            |
+| **網路**    | 搜尋網路、擷取文件、查詢錯誤訊息                                                         |
+| **程式碼智能** | 編輯後查看類型錯誤和警告、跳轉到定義、查找參考（需要[程式碼智能外掛程式](/docs/zh-TW/plugins/code-intelligence)） |
 
 這些是主要功能。Claude 還具有用於生成 subagents、詢問您問題和其他編排任務的工具。請參閱[Claude 可用的工具](/docs/zh-TW/tools-reference)以取得完整清單。
 
@@ -69,15 +71,13 @@ Claude 根據您的提示和沿途學到的內容選擇使用哪些工具。當�
   Claude 可以存取什麼
 </h2>
 
-本指南重點介紹終端機。Claude Code 也在 [VS Code](/docs/zh-TW/vs-code)、[JetBrains IDE](/docs/zh-TW/jetbrains) 和其他環境中執行。
-
 當您在目錄中執行 `claude` 時，Claude Code 可以存取：
 
 * **您的專案。** 您目錄和子目錄中的檔案，以及其他地方經您許可的檔案。
 * **您的終端機。** 您可以執行的任何命令：建置工具、git、套件管理器、系統公用程式、指令碼。如果您可以從命令列執行，Claude 也可以。
 * **您的 git 狀態。** 目前分支、未提交的變更和最近的提交歷史。
-* **您的 [CLAUDE.md](/docs/zh-TW/memory)。** 一個 markdown 檔案，您可以在其中儲存專案特定的指示、慣例和 Claude 應該在每個會話中知道的上下文。
-* **[自動記憶](/docs/zh-TW/memory#auto-memory)。** Claude 在您工作時自動儲存的學習內容，例如專案模式和您的偏好。MEMORY.md 的前 200 行或 25KB（以先到者為準）在每個會話開始時載入。
+* **您的 [CLAUDE.md](/docs/zh-TW/memory)。** 一個 markdown 檔案，您可以在其中儲存專案特定的指示、慣例和 Claude 應該在每個會話中知道的上下文。如果您的儲存庫有用於其他編碼代理的 AGENTS.md，Claude [可以自行讀取](/docs/zh-TW/memory#agents-md)或與 CLAUDE.md 一起讀取。
+* **[自動記憶](/docs/zh-TW/memory#auto-memory)。** Claude 在您工作時自動儲存的學習內容，例如您的偏好。MEMORY.md 的前 200 行或 25KB（以先到者為準）在每個會話開始時載入。
 * **您設定的擴展。** 用於外部服務的 [MCP servers](/docs/zh-TW/mcp)、用於工作流程的 [skills](/docs/zh-TW/skills)、用於委派工作的 [subagents](/docs/zh-TW/sub-agents)，以及用於瀏覽器互動的 [Claude in Chrome](/docs/zh-TW/chrome)。
 
 因為 Claude 看到您的整個專案，它可以跨越它工作。當您要求 Claude「修復身份驗證錯誤」時，它會搜尋相關檔案、讀取多個檔案以理解上下文、跨它們進行協調編輯、執行測試以驗證修復，以及在您要求時提交變更。這與只看到目前檔案的內聯程式碼助手不同。
@@ -86,7 +86,7 @@ Claude 根據您的提示和沿途學到的內容選擇使用哪些工具。當�
   環境和介面
 </h2>
 
-代理迴圈、工具和上述功能在您使用 Claude Code 的任何地方都是相同的。改變的是程式碼執行的位置以及您與它互動的方式。
+[代理迴圈](#the-agentic-loop)、[工具](#tools)和功能在您使用 Claude Code 的任何地方都是相同的。改變的是程式碼執行的位置以及您與它互動的方式。
 
 <h3 id="execution-environments">
   執行環境
@@ -94,17 +94,17 @@ Claude 根據您的提示和沿途學到的內容選擇使用哪些工具。當�
 
 Claude Code 在三個環境中執行，每個環境對程式碼執行位置有不同的權衡。
 
-| 環境       | 程式碼執行位置          | 使用案例              |
-| -------- | ---------------- | ----------------- |
-| **本機**   | 您的機器             | 預設。完全存取您的檔案、工具和環境 |
-| **雲端**   | Anthropic 管理的 VM | 卸載任務、處理您本機沒有的儲存庫  |
-| **遠端控制** | 您的機器，從瀏覽器控制      | 使用網路 UI，同時保持一切本機  |
+| 環境       | 程式碼執行位置                                                           | 使用案例                   |
+| -------- | ----------------------------------------------------------------- | ---------------------- |
+| **本機**   | 您的機器                                                              | 預設。完全存取您的檔案、工具和環境      |
+| **雲端**   | Anthropic 管理的 VM，或[您的組織運營的自託管環境](/docs/zh-TW/self-hosted-environments) | 卸載任務、處理您本機沒有的儲存庫       |
+| **遠端控制** | 您的機器，從瀏覽器控制                                                       | 使用網路 UI，同時保持執行和您的檔案在本機 |
 
 <h3 id="interfaces">
   介面
 </h3>
 
-您可以透過終端機、[桌面應用程式](/docs/zh-TW/desktop)、[IDE 擴展](/docs/zh-TW/vs-code)、[claude.ai/code](https://claude.ai/code)、[遠端控制](/docs/zh-TW/remote-control)、[Slack](/docs/zh-TW/slack) 和 [CI/CD 管道](/docs/zh-TW/github-actions)存取 Claude Code。介面決定了您如何看到和與 Claude 互動，但底層代理迴圈是相同的。請參閱[在任何地方使用 Claude Code](/docs/zh-TW/overview#use-claude-code-everywhere) 以取得完整清單。
+您可以透過終端機、[桌面應用程式](/docs/zh-TW/desktop)、[IDE 擴展](/docs/zh-TW/vs-code)、[claude.ai/code](https://claude.ai/code)、[遠端控制](/docs/zh-TW/remote-control)、[Slack](/docs/zh-TW/slack) 和 [CI/CD 管道](/docs/zh-TW/github-actions)存取 Claude Code。介面決定了您如何看到和與 Claude 互動，但底層代理迴圈是相同的。請參閱[在任何地方使用 Claude Code](/docs/zh-TW/overview#use-claude-code-everywhere)以取得完整清單。
 
 <h2 id="work-with-sessions">
   使用會話
@@ -130,7 +130,9 @@ Claude 看到您目前分支的檔案。當您切換分支時，Claude 看到新
 
 使用 `claude --continue` 或 `claude --resume` 恢復會話會在相同的會話 ID 下重新開啟它，並將新訊息附加到現有對話。使用 `--fork-session` 或 `/branch` 分叉會將歷史複製到新的會話 ID 中，保持原始不變。
 
-<img src="https://mintcdn.com/claude-code/ikqp3_70mqIahteV/images/session-continuity.svg?fit=max&auto=format&n=ikqp3_70mqIahteV&q=85&s=04ed0984a58e4127e05b3640265241a3" alt="會話連續性：恢復繼續相同的會話，分叉使用新 ID 建立新分支。" width="560" height="280" data-path="images/session-continuity.svg" />
+<img src="https://mintcdn.com/claude-code/ikqp3_70mqIahteV/images/session-continuity.svg?fit=max&auto=format&n=ikqp3_70mqIahteV&q=85&s=04ed0984a58e4127e05b3640265241a3" className="dark:hidden" alt="會話連續性圖表：恢復繼續相同的會話，分叉使用新 ID 建立新分支。" width="560" height="280" data-path="images/session-continuity.svg" />
+
+<img src="https://mintcdn.com/claude-code/_xqph1dUOslCOwsj/images/session-continuity-dark.svg?fit=max&auto=format&n=_xqph1dUOslCOwsj&q=85&s=886a384bce8298594e43f124617ea665" className="hidden dark:block" alt="會話連續性圖表：恢復繼續相同的會話，分叉使用新 ID 建立新分支。" width="560" height="280" data-path="images/session-continuity-dark.svg" />
 
 如需恢復旗標、`/resume` 選擇器、命名，以及當相同會話在兩個終端機中開啟時會發生什麼，請參閱[管理會話](/docs/zh-TW/sessions)。
 
@@ -152,7 +154,7 @@ Claude Code 在您接近限制時自動管理上下文。它首先清除較舊�
 
 如果單個檔案或工具輸出非常大，以至於在每次摘要後上下文立即重新填滿，Claude Code 會在幾次嘗試後停止自動壓縮，並顯示錯誤而不是迴圈。請參閱[自動壓縮停止並出現 thrashing 錯誤](/docs/zh-TW/troubleshooting#auto-compaction-stops-with-a-thrashing-error)以取得恢復步驟。
 
-執行 `/context` 以查看什麼在使用空間。MCP 工具定義預設會延遲，並透過[工具搜尋](/docs/zh-TW/mcp#scale-with-mcp-tool-search)按需載入，因此只有工具名稱會消耗上下文，直到 Claude 使用特定工具。執行 `/mcp` 以檢查每個伺服器的成本。
+執行 `/context` 以查看什麼在使用空間。MCP 工具定義預設會延遲，並透過[工具搜尋](/docs/zh-TW/mcp#scale-with-mcp-tool-search)按需載入，因此只有工具名稱和伺服器指示會消耗上下文，直到 Claude 使用特定工具。
 
 <h4 id="manage-context-with-skills-and-subagents">
   使用 skills 和 subagents 管理上下文
@@ -162,7 +164,7 @@ Claude Code 在您接近限制時自動管理上下文。它首先清除較舊�
 
 [Skills](/docs/zh-TW/skills) 按需載入。Claude 在會話開始時看到 skill 描述，但完整內容只在使用 skill 時載入。對於您手動呼叫的 skills，設定 `disable-model-invocation: true` 以將描述保留在上下文之外，直到您需要它們。對於您沒有撰寫的 skills，使用 [`skillOverrides`](/docs/zh-TW/skills#override-skill-visibility-from-settings) 從設定中執行相同操作。
 
-[Subagents](/docs/zh-TW/sub-agents) 獲得自己的新上下文，完全與您的主要對話分開。他們的工作不會使您的上下文膨脹。完成後，他們返回摘要。這種隔離是 subagents 在長會話中有幫助的原因。
+[Subagents](/docs/zh-TW/sub-agents) 在自己的上下文視窗中工作。Subagent 會以新的開始，除非它是[分叉](/docs/zh-TW/sub-agents#fork-the-current-conversation)，這會以您目前為止的對話副本開始。無論哪種方式，subagent 的工具呼叫都保持在您的上下文之外，Claude 在 subagent 完成時會獲得摘要。
 
 請參閱[上下文成本](/docs/zh-TW/features-overview#understand-context-costs)以了解每個功能的成本，以及[減少令牌使用](/docs/zh-TW/costs#reduce-token-usage)以獲得管理上下文的提示。
 
@@ -176,20 +178,20 @@ Claude 有兩個安全機制：檢查點讓您撤銷檔案變更，許可控制 
   使用檢查點撤銷變更
 </h3>
 
-**每個檔案編輯都是可逆的。** 在 Claude 編輯任何檔案之前，它會快照目前內容。如果出現問題，按 `Esc` 兩次以重新開始到先前狀態，或要求 Claude 撤銷。
+**檔案編輯是可逆的。** 在 Claude 編輯檔案之前，它會快照目前內容。如果出現問題，按 `Esc` 兩次以重新開始到先前狀態，或要求 Claude 撤銷。
 
-檢查點是會話本機的，與 git 分開。它們只涵蓋檔案變更。影響遠端系統的操作（資料庫、API、部署）無法檢查點，這就是為什麼 Claude 在執行具有外部副作用的命令之前詢問。
+檢查點與 git 分開，當您繼續對話時仍然可用。它們只涵蓋檔案變更，而復原會[跳過符號連結和硬連結檔案](/docs/zh-TW/checkpointing#symlinked-and-hard-linked-paths-not-restored)。影響遠端系統的操作（資料庫、API、部署）無法檢查點。您可以使用許可模式和許可規則來控制這些。
 
 <h3 id="control-what-claude-can-do">
   控制 Claude 可以做什麼
 </h3>
 
-按 `Shift+Tab` 循環通過許可模式：
+選擇許可模式以設定 Claude 可以在不詢問您的情況下執行的操作。按 `Shift+Tab` 循環通過許可模式：
 
+* **Auto**：分類器在背景中檢查大多數操作，並阻止風險操作而不是詢問您。在 Pro、Max 和 Team 方案上，它是互動式終端和 VS Code 工作階段的[內建起始許可模式](/docs/zh-TW/permission-modes#which-mode-a-session-starts-in)
 * **Manual**：Claude 在檔案編輯和 shell 命令之前詢問
 * **Accept edits**：Claude 編輯檔案並執行常見的檔案系統命令（如 `mkdir` 和 `mv`）而不詢問，仍然詢問其他命令
 * **Plan**：Claude 探索並提出計畫而不編輯您的原始檔案
-* **Auto**：Claude 使用背景安全檢查評估所有操作
 
 您也可以在 `.claude/settings.json` 中允許特定命令，以便 Claude 不會每次都詢問。這對於受信任的命令（如 `npm test` 或 `git status`）很有用。設定可以從組織範圍的政策範圍到個人偏好。請參閱[許可](/docs/zh-TW/permissions)以取得詳細資訊。
 
@@ -199,7 +201,7 @@ Claude 有兩個安全機制：檢查點讓您撤銷檔案變更，許可控制 
   有效使用 Claude Code
 </h2>
 
-這些提示可幫助您從 Claude Code 獲得更好的結果。
+這些提示可幫助您從 Claude Code 獲得更好的結果。如需更多關於特定提示、驗證和規劃的資訊，請參閱[最佳實踐](/docs/zh-TW/best-practices)。
 
 <h3 id="ask-claude-code-for-help">
   向 Claude Code 尋求幫助
@@ -209,7 +211,7 @@ Claude Code 可以教您如何使用它。提出問題，例如「我如何設�
 
 內建命令也會引導您完成設定：
 
-* `/init` 引導您為您的專案建立 CLAUDE.md
+* `/init` 為您的專案產生一個入門 CLAUDE.md
 * `/doctor` 執行設定檢查，診斷安裝和配置問題，並可以修復它們
 
 <h3 id="it’s-a-conversation">
@@ -236,50 +238,10 @@ Claude Code 是對話式的。您不需要完美的提示。從您想要的開�
   中斷和引導
 </h4>
 
-您可以在任何時刻重新導向 Claude，無需等待該輪次完成或重新開始：
+您可以在任何時刻重新導向 Claude，無需重新開始。執行以下任一操作：
 
-* **按 `Esc`** 立即停止 Claude。正在執行的工具呼叫被取消，Claude 等待您的下一個指令。
-* **輸入更正並按 `Enter`** 以在不停止正在執行的工具的情況下發送。Claude 在目前操作完成後立即讀取它，並在決定下一步之前進行調整。
-
-<h3 id="be-specific-upfront">
-  預先具體
-</h3>
-
-您的初始提示越精確，您需要的更正就越少。參考特定檔案、提及約束，並指出範例模式。
-
-```text theme={null}
-結帳流程對於具有過期卡的使用者已損壞。
-檢查 src/payments/ 以查找問題，特別是令牌刷新。
-先寫一個失敗的測試，然後修復它。
-```
-
-模糊的提示有效，但您會花更多時間引導。像上面這樣的具體提示通常在第一次嘗試時成功。
-
-<h3 id="give-claude-something-to-verify-against">
-  給 Claude 一些東西來驗證
-</h3>
-
-Claude 在能夠檢查自己的工作時表現更好。包括測試案例、貼上預期 UI 的螢幕截圖，或定義您想要的輸出。
-
-```text theme={null}
-實現 validateEmail。測試案例：'user@example.com' → true，
-'invalid' → false，'user@.com' → false。之後執行測試。
-```
-
-對於視覺工作，貼上設計的螢幕截圖，並要求 Claude 將其實現與其進行比較。
-
-<h3 id="explore-before-implementing">
-  在實現之前探索
-</h3>
-
-對於複雜的問題，將研究與編碼分開。使用 plan mode（按 `Shift+Tab` 兩次）首先分析程式碼庫：
-
-```text theme={null}
-讀取 src/auth/ 並理解我們如何處理會話。
-然後為新增 OAuth 支援建立計畫。
-```
-
-檢查計畫，透過對話細化它，然後讓 Claude 實現。這種兩階段方法比直接跳到程式碼產生更好的結果。
+* **按 `Esc`** 立即停止 Claude。正在執行的工具呼叫被取消，Claude 等待您的下一個指令。如果您有排隊的訊息，Claude Code [會接著發送它們](/docs/zh-TW/interactive-mode#queue-messages-while-claude-works)。
+* **輸入更正並按 `Enter`** 而不停止 Claude。訊息在輸入框上方顯示為已排隊。如果 Claude 正在執行工具呼叫，它會在這些呼叫完成後立即讀取訊息，在同一輪內進行調整，然後執行下一步。[在 Claude 工作時排隊訊息](/docs/zh-TW/interactive-mode#queue-messages-while-claude-works)涵蓋何時發送其他排隊項目。
 
 <h3 id="delegate-don’t-dictate">
   委派，不要指示
@@ -300,7 +262,7 @@ Claude 在能夠檢查自己的工作時表現更好。包括測試案例、貼�
 
 <CardGroup cols={2}>
   <Card title="使用功能擴展" icon="puzzle-piece" href="/docs/zh-TW/features-overview">
-    新增 Skills、MCP 連接和自訂命令
+    新增 Skills 和 MCP 連接
   </Card>
 
   <Card title="常見工作流程" icon="graduation-cap" href="/docs/zh-TW/common-workflows">

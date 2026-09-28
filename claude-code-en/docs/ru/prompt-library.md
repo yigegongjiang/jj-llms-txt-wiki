@@ -626,13 +626,14 @@ export const PromptLibrary = ({text = {}, labels = {}, tagLabels = {}, phaseLabe
       return base + (href.startsWith('/en/') ? '/' + locale + href.slice(3) : href);
     };
   }, []);
+  const SAFE_HREF = /^(\/(?![\/\\\s])|#|https?:\/\/)/;
   const linkify = s => {
     const out = [];
     let last = 0;
     const re = /\[([^\]]+)\]\(([^)]+)\)/g;
     for (let m; m = re.exec(s); ) {
       if (m.index > last) out.push(s.slice(last, m.index));
-      out.push(<a key={m.index} href={doc(m[2])}>{m[1]}</a>);
+      out.push(SAFE_HREF.test(m[2]) ? <a key={m.index} href={doc(m[2])}>{m[1]}</a> : m[1]);
       last = re.lastIndex;
     }
     if (last < s.length) out.push(s.slice(last));
@@ -776,7 +777,7 @@ export const PromptLibrary = ({text = {}, labels = {}, tagLabels = {}, phaseLabe
             </div>
             <div className="pl-label">{L.whyWorks}</div>
             <div className="pl-teaches">{linkify(p.teaches)}</div>
-            {p.nextHref && p.next && <div className="pl-next">
+            {p.nextHref && p.next && SAFE_HREF.test(p.nextHref) && <div className="pl-next">
                 <span className="pl-next-label">{L.makeItStick}</span>
                 <a href={doc(p.nextHref)}>{codeify(p.next)} →</a>
               </div>}
@@ -1202,7 +1203,7 @@ export const text = {
   },
   "migrate-a-pattern-across": {
     title: "Перенесите паттерн по всей кодовой базе",
-    teaches: "Опишите старый паттерн и новый. Попросить Claude сначала определить каждое место означает, что сайты вызовов перечислены в ответе, поэтому вы можете проверить, что ничего не пропущено."
+    teaches: "Опишите старый паттерн и новый. Попросить Claude сначала определить каждое место означает, что сайты вызовов перечислены в ответе, поэтому вы можете проверить, что ничего не пропущено. Для миграции по многим файлам запустите [/batch](/docs/ru/commands). Claude разбивает работу на единицы для вашего одобрения, затем фоновые подагенты делают изменения."
   },
   "optimize-against-a-measurable": {
     title: "Оптимизируйте против измеримой цели",
@@ -1222,7 +1223,7 @@ export const text = {
   "review-a-pull-request": {
     title: "Проверьте pull request",
     teaches: "Claude проверяет со всей кодовой базой в контексте, а не только diff. Он читает изменённый код и то, что он вызывает, поэтому он ловит проблемы, которые проверка только diff пропустит.",
-    next: "Включите это для каждого PR с Code Review"
+    next: "Запустите `/code-review <pr#>` в одной команде, или включите Code Review для каждого PR"
   },
   "review-infrastructure-changes-before": {
     title: "Проверьте изменения инфраструктуры перед применением",
@@ -1337,37 +1338,37 @@ export const text = {
 
 **Опишите результат, а не шаги.** Скажите, что вы хотите, и позвольте Claude найти файлы. Промпт ниже работает без указания ни одного пути файла.
 
-```text theme={null}
+```text wrap theme={null}
 add rate limiting to the public API and make sure existing tests still pass
 ```
 
-**Дайте ему способ проверить свою работу.** Спросите запустить, протестировать, сравнить или проверить в одном промпте, чтобы Claude повторял вместо остановки после одной попытки.
+**Дайте ему способ проверить свою работу.** Спросите запустить, протестировать, сравнить или проверить в одном промпте, чтобы Claude повторял вместо остановки после одной попытки. Чтобы проверить завершённое изменение против работающего приложения, запустите [`/verify`](/docs/ru/skills#run-and-verify-your-app).
 
-```text theme={null}
+```text wrap theme={null}
 write the migration, run it against the dev database, and confirm the schema matches
 ```
 
 **Укажите на ссылку.** Назовите существующий файл, тест или паттерн для соответствия, чтобы новый код был согласован с тем, что у вас уже есть.
 
-```text theme={null}
+```text wrap theme={null}
 add a settings page that follows the same layout as the profile page
 ```
 
 **Укажите измеримую цель.** Когда цель — производительность или покрытие, дайте метрику и пороговое значение, чтобы завершение было однозначным.
 
-```text theme={null}
+```text wrap theme={null}
 get the bundle size under 200KB and show me what you removed
 ```
 
 **Дайте ему артефакт.** Вставьте ошибки, логи, скриншоты и вывод плана прямо в промпт, или введите `@`, чтобы ссылаться на файл. Claude читает источник вместо вашего описания.
 
-```text theme={null}
+```text wrap theme={null}
 why is the build failing? @build.log
 ```
 
 **Скажите, как вы хотите ответ.** Назовите формат, длину или аудиторию, чтобы объяснение соответствовало тому, как вы его будете использовать. Чтобы сделать формат по умолчанию для каждого ответа, установите [стиль вывода](/docs/ru/output-styles).
 
-```text theme={null}
+```text wrap theme={null}
 explain how the payment retry logic works as an HTML page with a diagram, then open it in my browser
 ```
 
@@ -1384,7 +1385,7 @@ explain how the payment retry logic works as an HTML page with a diagram, then o
 * [Как команды Anthropic используют Claude Code](https://claude.com/blog/how-anthropic-teams-use-claude-code): реальные рабочие процессы из команд инженерии, продукта, дизайна и данных, с глубокими погружениями в [legal](https://claude.com/blog/how-anthropic-uses-claude-legal), [marketing](https://claude.com/blog/how-anthropic-uses-claude-marketing) и [cybersecurity](https://claude.com/blog/how-anthropic-uses-claude-cybersecurity)
 * [Руководство по масштабированию агентного кодирования](https://resources.anthropic.com/hubfs/Scaling%20agentic%20coding%20across%20your%20organization.pdf): руководство по внедрению на уровне предприятия
 
-Для видеопрохождений этих паттернов, см. бесплатный курс [Claude Code in Action](https://anthropic.skilljar.com/claude-code-in-action) на Anthropic Academy.
+Для видеопрохождений этих паттернов, см. бесплатный курс [Claude Code in Action](https://academy.claude.com/courses/claude-code-in-action) на [Claude Academy](https://academy.claude.com/).
 
 <h2 id="related-resources">
   Связанные ресурсы

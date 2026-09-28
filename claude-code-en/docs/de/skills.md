@@ -4,61 +4,71 @@
 
 # Claude mit Skills erweitern
 
-> Erstellen, verwalten und teilen Sie Skills, um Claudes Funktionen in Claude Code zu erweitern. Umfasst benutzerdefinierte Befehle und gebündelte Skills.
+> Erstellen, verwalten und teilen Sie Skills, um die Funktionen von Claude in Claude Code zu erweitern. Umfasst benutzerdefinierte Befehle und gebündelte Skills.
 
-Skills erweitern das, was Claude tun kann. Erstellen Sie eine `SKILL.md`-Datei mit Anweisungen, und Claude fügt sie zu seinem Toolkit hinzu. Claude verwendet Skills, wenn sie relevant sind, oder Sie können einen direkt mit `/skill-name` aufrufen.
+Skills erweitern die Möglichkeiten von Claude. Erstellen Sie eine `SKILL.md`-Datei mit Anweisungen, und Claude fügt sie zu seinem Toolkit hinzu. Claude verwendet Skills, wenn sie relevant sind, oder Sie können einen direkt mit `/skill-name` aufrufen.
 
-Erstellen Sie einen Skill, wenn Sie immer wieder die gleichen Anweisungen, eine Checkliste oder ein mehrstufiges Verfahren in den Chat einfügen, oder wenn ein Abschnitt von CLAUDE.md zu einem Verfahren statt zu einer Tatsache geworden ist. Im Gegensatz zu CLAUDE.md-Inhalten wird der Body eines Skills nur geladen, wenn er verwendet wird, sodass lange Referenzmaterialien fast nichts kosten, bis Sie sie benötigen.
+Erstellen Sie einen Skill, wenn Sie dieselben Anweisungen, Checklisten oder mehrstufige Verfahren immer wieder in den Chat einfügen, oder wenn ein Abschnitt von CLAUDE.md zu einem Verfahren statt zu einer Tatsache geworden ist. Im Gegensatz zu CLAUDE.md-Inhalten wird der Text eines Skills nur geladen, wenn er verwendet wird, sodass umfangreiches Referenzmaterial fast nichts kostet, bis Sie es benötigen.
 
 <Note>
-  Für integrierte Befehle wie `/help` und `/compact` sowie gebündelte Skills wie `/debug` und `/code-review` siehe die [Befehlsreferenz](/docs/de/commands).
+  Informationen zu integrierten Befehlen wie `/help` und `/compact` sowie zu gebündelten Skills wie `/debug` und `/code-review` finden Sie in der [Befehlsreferenz](/docs/de/commands).
 
-  **Benutzerdefinierte Befehle wurden in Skills zusammengeführt.** Eine Datei unter `.claude/commands/deploy.md` und ein Skill unter `.claude/skills/deploy/SKILL.md` erstellen beide `/deploy` und funktionieren auf die gleiche Weise. Ihre vorhandenen `.claude/commands/`-Dateien funktionieren weiterhin. Skills fügen optionale Funktionen hinzu: ein Verzeichnis für unterstützende Dateien, Frontmatter zum [Steuern, wer einen Skill aufruft](#control-who-invokes-a-skill), und die Möglichkeit für Claude, sie automatisch zu laden, wenn sie relevant sind.
+  **Benutzerdefinierte Befehle wurden in Skills zusammengeführt.** Eine Datei unter `.claude/commands/deploy.md` und ein Skill unter `.claude/skills/deploy/SKILL.md` erstellen beide `/deploy` und funktionieren auf die gleiche Weise. Ihre vorhandenen `.claude/commands/`-Dateien funktionieren weiterhin. Skills bieten optionale Funktionen: ein Verzeichnis für unterstützende Dateien, Frontmatter zur [Kontrolle, ob Sie oder Claude sie aufrufen](#control-who-invokes-a-skill), und die Möglichkeit für Claude, sie automatisch zu laden, wenn sie relevant sind.
 </Note>
 
-Claude Code Skills folgen dem [Agent Skills](https://agentskills.io) offenen Standard, der über mehrere KI-Tools funktioniert. Claude Code erweitert den Standard mit zusätzlichen Funktionen wie [Invocation Control](#control-who-invokes-a-skill), [Subagent-Ausführung](#run-skills-in-a-subagent) und [dynamischer Kontexteinspritzung](#inject-dynamic-context).
+Claude Code Skills folgen dem [Agent Skills](https://agentskills.io) offenen Standard, der über mehrere KI-Tools hinweg funktioniert. Claude Code erweitert den Standard um zusätzliche Funktionen wie [Aufrufersteuerung](#control-who-invokes-a-skill), [Subagent-Ausführung](#run-skills-in-a-subagent) und [dynamische Kontexteinspeisung](#inject-dynamic-context). Siehe [Verwendung von Skill-Frontmatter außerhalb von Claude Code](#using-skill-frontmatter-outside-claude-code) für die Frontmatter-Felder, die Teil des Standards sind, und welche Claude Code-Erweiterungen sind.
 
 <h2 id="bundled-skills">
   Gebündelte Skills
 </h2>
 
-Claude Code wird mit einer Reihe von gebündelten Skills ausgeliefert, die in jeder Sitzung verfügbar sind, sofern sie nicht mit der Einstellung [`disableBundledSkills`](/docs/de/settings#available-settings) deaktiviert werden, einschließlich `/doctor`, `/code-review`, `/batch`, `/debug`, `/loop` und `/claude-api`. Im Gegensatz zu den meisten integrierten Befehlen, die direkt feste Logik ausführen, sind gebündelte Skills prompt-basiert: Sie geben Claude detaillierte Anweisungen und lassen es die Arbeit mit seinen Tools orchestrieren. Sie rufen sie auf die gleiche Weise auf wie jeden anderen Skill, indem Sie `/` gefolgt vom Skill-Namen eingeben.
+Claude Code enthält eine Reihe von gebündelten Skills wie `/doctor`, `/code-review`, `/batch`, `/debug`, `/loop` und `/claude-api`. Gebündelte Skills sind prompt-basiert: Sie geben Claude detaillierte Anweisungen und ermöglichen es ihm, die Arbeit mit seinen Tools zu orchestrieren. Die meisten integrierten Befehle führen stattdessen direkt eine feste Logik aus.
 
-Die [`/doctor`](/docs/de/commands#all-commands) Setup-Überprüfung ist die eine Ausnahme zu `disableBundledSkills` in Claude Code v2.1.205 und später: Sie bleibt eingabbar, wenn die Einstellung aktiviert ist. Um sie auszublenden, setzen Sie die Umgebungsvariable `DISABLE_DOCTOR_COMMAND` oder einen [`skillOverrides`](#override-skill-visibility-from-settings) Eintrag von `"doctor": "off"`. Vor v2.1.205 war `/doctor` ein integrierter Befehl und kein gebündelter Skill.
+Sie rufen einen gebündelten Skill auf die gleiche Weise auf wie jeden anderen Skill, indem Sie `/` gefolgt vom Skill-Namen eingeben. Claude ruft einige gebündelte Skills automatisch auf, wenn sie relevant sind; andere, einschließlich `/verify`, werden nur ausgeführt, wenn Sie sie aufrufen, was Ihnen die Kontrolle darüber gibt, wann diese längeren Überprüfungen Zeit und Token aufwenden.
 
-Gebündelte Skills sind in der [Befehlsreferenz](/docs/de/commands) neben integrierten Befehlen aufgelistet und mit **Skill** in der Spalte „Zweck" gekennzeichnet.
+Die meisten gebündelten Skills sind in jeder Sitzung verfügbar. Einige hängen von einer bestimmten Funktion ab: `/workflow-authoring` ist beispielsweise nur verfügbar, wenn [dynamische Workflows](/docs/de/workflows) aktiviert sind.
+
+Um gebündelte Skills auszuschalten, verwenden Sie die Einstellung [`disableBundledSkills`](/docs/de/settings-reference#disablebundledskills).
+
+<Note>
+  Die Einrichtungsüberprüfung [`/doctor`](/docs/de/commands#all-commands) bleibt eingabbar, wenn `disableBundledSkills` aktiviert ist, in Claude Code v2.1.205 und später. Um sie auszublenden, setzen Sie die Umgebungsvariable `DISABLE_DOCTOR_COMMAND` oder einen [`skillOverrides`](#override-skill-visibility-from-settings)-Eintrag von `"doctor": "off"`. Vor v2.1.205 war `/doctor` ein integrierter Befehl und kein gebündelter Skill.
+</Note>
+
+Gebündelte Skills werden zusammen mit integrierten Befehlen in der [Befehlsreferenz](/docs/de/commands) aufgelistet, gekennzeichnet mit **Skill** in der Spalte „Zweck".
 
 <h3 id="run-and-verify-your-app">
-  Ihre App ausführen und überprüfen
+  Führen Sie Ihre App aus und überprüfen Sie sie
 </h3>
 
-Drei gebündelte Skills arbeiten zusammen, um Ihre App zu starten und Änderungen gegen die laufende App zu bestätigen, anstatt nur Tests durchzuführen:
+Drei gebündelte Skills arbeiten zusammen, um Ihre App zu starten und Änderungen gegen die laufende App zu bestätigen, anstatt nur gegen Tests:
 
-| Skill                  | Zweck                                                                                                                                                   |
-| :--------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `/run`                 | Starten und steuern Sie Ihre App, um eine Änderung in Aktion zu sehen                                                                                   |
-| `/verify`              | Erstellen und führen Sie Ihre App aus, um zu bestätigen, dass eine Codeänderung das tut, was sie soll, ohne auf Tests oder Typprüfungen zurückzugreifen |
-| `/run-skill-generator` | Lehren Sie `/run` und `/verify`, wie Sie Ihr Projekt erstellen und starten                                                                              |
+| Skill                  | Zweck                                                                                                                                                       |
+| :--------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/run`                 | Starten und steuern Sie Ihre App, um eine Änderung in Aktion zu sehen                                                                                       |
+| `/verify`              | Erstellen und führen Sie Ihre App aus, um zu bestätigen, dass eine Codeänderung das tut, was sie soll, ohne auf Tests oder Typüberprüfungen zurückzugreifen |
+| `/run-skill-generator` | Lehren Sie `/run` und `/verify`, wie Sie Ihr Projekt erstellen und starten                                                                                  |
 
-Alle drei Skills erfordern Claude Code v2.1.145 oder später.
-
-`/run` und `/verify` funktionieren ohne Einrichtung. Sie leiten den Start von Ihrem Projekttyp ab (CLI, Server, TUI, browsergesteuert) und von dem, was sich in Ihrer README, `package.json` oder `Makefile` befindet. Diese Ableitung wird unzuverlässig für Projekte, die mehr als einen Standard-Start benötigen: eine Datenbank, eine Env-Datei, eine grafische Sitzung, einen mehrstufigen Build.
+`/run` und `/verify` funktionieren ohne Einrichtung. Sie leiten den Start von Ihrem Projekttyp ab (CLI, Server, TUI, Browser-gesteuert) und von dem, was sich in Ihrer README, `package.json` oder `Makefile` befindet. Diese Ableitung wird unzuverlässig für Projekte, die mehr als einen Standard-Start benötigen: eine Datenbank, eine Env-Datei, eine grafische Sitzung, einen mehrstufigen Build.
 
 `/run-skill-generator` zeichnet stattdessen das Rezept auf. Es bringt Ihre App aus einer sauberen Umgebung zum Laufen, erfasst, was funktioniert hat (die Installationsbefehle, die Umgebungsvariablen, das Startskript), und speichert es als projektspezifischen Skill unter `.claude/skills/run-<name>/`. Danach folgen `/run`, `/verify` und alle anderen Agenten im Repository dem aufgezeichneten Rezept, anstatt es neu zu entdecken. Führen Sie `/run-skill-generator` einmal pro Projekt aus, und erneut, wenn sich der Build- oder Startprozess ändert.
+
+`/verify` kann auch sein eigenes Rezept aufzeichnen. Wenn es Ihre App ohne ein aufgezeichnetes Rezept erstellen und steuern muss, schreibt es, was funktioniert hat, in `.claude/skills/verify/SKILL.md` im Repository-Root oder im betroffenen Paketverzeichnis in einem Monorepo, damit spätere Läufe und andere Agenten die gleichen Schritte befolgen. Im Repository-Root ersetzt das aufgezeichnete Skill den gebündelten `/verify`. Dies erfordert Claude Code v2.1.200 oder später.
+
+Claude bearbeitet die aufgezeichnete Datei nur, wenn es einen Lauf falsch gesteuert hat, z. B. einen Befehl, der fehlgeschlagen ist, oder einen fehlenden Schritt, damit Sie die Datei ohne sitzungsspezifische Diffs committen können. Vor v2.1.205 sagte der gebündelte Skill Claude, dass es alles einbeziehen sollte, was ein Lauf gelernt hat, was häufige Merge-Konflikte verursachte.
 
 <h2 id="getting-started">
   Erste Schritte
 </h2>
 
 <h3 id="create-your-first-skill">
-  Erstellen Sie Ihren ersten Skill
+  Erstellen Sie Ihre erste Skill
 </h3>
 
-Dieses Beispiel erstellt einen Skill, der die nicht committeten Änderungen in Ihrem Git-Repository zusammenfasst und alles Riskante kennzeichnet. Es zieht den Live-Diff in den Prompt, bevor Claude ihn liest, sodass die Antwort in Ihrem tatsächlichen Arbeitsbaum verankert ist, anstatt auf dem zu basieren, was Claude aus offenen Dateien erraten kann. Claude lädt den Skill automatisch, wenn Sie nach Ihren Änderungen fragen, oder Sie können ihn direkt mit `/summarize-changes` aufrufen.
+Dieses Beispiel erstellt eine Skill, die die nicht committeten Änderungen in Ihrem Git-Repository zusammenfasst und alles Riskante kennzeichnet. Sie zieht den Live-Diff in den Prompt, bevor Claude ihn liest, sodass die Antwort in Ihrem tatsächlichen Arbeitsbaum verankert ist, anstatt auf dem, was Claude aus offenen Dateien erraten kann. Claude lädt die Skill automatisch, wenn Sie nach Ihren Änderungen fragen, oder Sie können sie direkt mit `/summarize-changes` aufrufen.
 
 <Steps>
   <Step title="Erstellen Sie das Skill-Verzeichnis">
-    Erstellen Sie ein Verzeichnis für den Skill in Ihrem persönlichen Skills-Ordner. Persönliche Skills sind über alle Ihre Projekte hinweg verfügbar.
+    Erstellen Sie ein Verzeichnis für die Skill in Ihrem persönlichen Skills-Ordner. Persönliche Skills sind in allen Ihren Projekten verfügbar.
 
     ```bash theme={null}
     mkdir -p ~/.claude/skills/summarize-changes
@@ -66,37 +76,37 @@ Dieses Beispiel erstellt einen Skill, der die nicht committeten Änderungen in I
   </Step>
 
   <Step title="Schreiben Sie SKILL.md">
-    Jeder Skill benötigt eine `SKILL.md`-Datei mit zwei Teilen: YAML-Frontmatter zwischen `---`-Markierungen, das Claude mitteilt, wann der Skill verwendet werden soll, und Markdown-Inhalt mit Anweisungen, die Claude befolgt, wenn der Skill ausgeführt wird. Das Verzeichnisname wird zum Befehl, den Sie eingeben, und die `description` hilft Claude zu entscheiden, wann der Skill automatisch geladen werden soll.
+    Jede Skill benötigt eine `SKILL.md`-Datei mit zwei Teilen: YAML-Frontmatter zwischen `---`-Markierungen, das Claude mitteilt, wann die Skill verwendet werden soll, und Markdown-Inhalt mit den Anweisungen, die Claude befolgt, wenn die Skill ausgeführt wird. Der Verzeichnisname wird zum Befehl, den Sie eingeben, und die `description` hilft Claude zu entscheiden, wann die Skill automatisch geladen werden soll.
 
     Speichern Sie dies unter `~/.claude/skills/summarize-changes/SKILL.md`:
 
     ```yaml theme={null}
     ---
-    description: Summarizes uncommitted changes and flags anything risky. Use when the user asks what changed, wants a commit message, or asks to review their diff.
+    description: Fasst nicht committete Änderungen zusammen und kennzeichnet alles Riskante. Verwenden Sie dies, wenn der Benutzer fragt, was sich geändert hat, eine Commit-Nachricht möchte oder seinen Diff überprüfen möchte.
     ---
 
-    ## Current changes
+    ## Aktuelle Änderungen
 
     !`git diff HEAD`
 
-    ## Instructions
+    ## Anweisungen
 
-    Summarize the changes above in two or three bullet points, then list any risks you notice such as missing error handling, hardcoded values, or tests that need updating. If the diff is empty, say there are no uncommitted changes.
+    Fassen Sie die obigen Änderungen in zwei oder drei Aufzählungspunkten zusammen, listen Sie dann alle Risiken auf, die Sie bemerken, wie fehlende Fehlerbehandlung, hartcodierte Werte oder Tests, die aktualisiert werden müssen. Wenn der Diff leer ist, sagen Sie, dass es keine nicht committeten Änderungen gibt.
     ```
 
-    Die Zeile `` !`git diff HEAD` `` verwendet [dynamische Kontextinjektion](#inject-dynamic-context): Claude Code führt den Befehl aus und ersetzt die Zeile mit seiner Ausgabe, bevor Claude den Skill-Inhalt sieht, sodass die Anweisungen mit dem aktuellen Diff bereits inline ankommen.
+    Die Zeile `` !`git diff HEAD` `` verwendet [dynamische Kontextinjektion](#inject-dynamic-context): Claude Code führt den Befehl aus und ersetzt die Zeile durch seine Ausgabe, bevor Claude den Skill-Inhalt sieht, sodass die Anweisungen mit dem aktuellen Diff bereits inline ankommen.
   </Step>
 
-  <Step title="Testen Sie den Skill">
-    Öffnen Sie ein Git-Projekt, nehmen Sie eine kleine Änderung an einer beliebigen Datei vor, und starten Sie Claude Code, indem Sie `claude` ausführen. Sie können den Skill auf zwei Arten testen.
+  <Step title="Testen Sie die Skill">
+    Öffnen Sie ein Git-Projekt, nehmen Sie eine kleine Änderung an einer beliebigen Datei vor, und starten Sie Claude Code, indem Sie `claude` ausführen. Sie können die Skill auf zwei Arten testen.
 
-    **Lassen Sie Claude ihn automatisch aufrufen**, indem Sie etwas eingeben, das der Beschreibung entspricht:
+    **Lassen Sie Claude sie automatisch aufrufen**, indem Sie etwas eingeben, das der Beschreibung entspricht:
 
     ```text theme={null}
     What did I change?
     ```
 
-    **Oder rufen Sie ihn direkt auf** mit dem Skill-Namen:
+    **Oder rufen Sie sie direkt auf** mit dem Skill-Namen:
 
     ```text theme={null}
     /summarize-changes
@@ -106,98 +116,194 @@ Dieses Beispiel erstellt einen Skill, der die nicht committeten Änderungen in I
   </Step>
 </Steps>
 
-<h3 id="where-skills-live">
-  Wo Skills leben
-</h3>
-
-Wo Sie einen Skill speichern, bestimmt, wer ihn verwenden kann:
-
-| Ort         | Pfad                                                          | Gilt für                            |
-| :---------- | :------------------------------------------------------------ | :---------------------------------- |
-| Unternehmen | Siehe [verwaltete Einstellungen](/docs/de/settings#settings-files) | Alle Benutzer in Ihrer Organisation |
-| Persönlich  | `~/.claude/skills/<skill-name>/SKILL.md`                      | Alle Ihre Projekte                  |
-| Projekt     | `.claude/skills/<skill-name>/SKILL.md`                        | Nur dieses Projekt                  |
-| Plugin      | `<plugin>/skills/<skill-name>/SKILL.md`                       | Wo das Plugin aktiviert ist         |
-
-Wenn Skills auf verschiedenen Ebenen denselben Namen haben, gewinnt Unternehmen gegenüber Persönlich, und Persönlich gewinnt gegenüber Projekt. Ein Skill auf jeder dieser Ebenen setzt auch einen gebündelten Skill mit demselben Namen außer Kraft. Beispielsweise ersetzt ein `code-review`-Skill in Ihrem Projekt `.claude/skills/` den gebündelten `/code-review`. Plugin-Skills verwenden einen `plugin-name:skill-name`-Namespace, sodass sie nicht mit anderen Ebenen in Konflikt geraten können. Wenn Sie Dateien in `.claude/commands/` haben, funktionieren diese auf die gleiche Weise, aber wenn ein Skill und ein Befehl denselben Namen haben, hat der Skill Vorrang.
-
-Skills werden auch aus verschachtelten `.claude/skills/`-Verzeichnissen unter Ihrem Arbeitsverzeichnis geladen. Wenn Claude eine Datei in einem Unterverzeichnis liest oder bearbeitet, werden Skills aus dem `.claude/skills/` dieses Unterverzeichnisses verfügbar. Dies ermöglicht es einem Monorepo-Paket, seine eigenen Skills bereitzustellen, die beim Arbeiten an diesem Paket gelten, auch wenn die Sitzung in der Repository-Root gestartet wurde.
-
-Wenn ein verschachtelter Skill denselben Namen wie ein anderer Skill hat, bleiben beide verfügbar. Beispielsweise mit einem `deploy`-Skill in der Projekt-Root und einem anderen in `apps/web/.claude/skills/`:
-
-* Der verschachtelte wird unter einem verzeichnisqualifizierten Namen angezeigt, `apps/web:deploy`.
-* Seine Beschreibung sagt, auf welches Verzeichnis er sich bezieht.
-* Claude wählt die Variante, die zu den Dateien passt, an denen er arbeitet.
-
-Wenn Sie `/deploy` eingeben, wird der Skill in der Projekt-Root ausgeführt. Geben Sie den qualifizierten Namen `/apps/web:deploy` ein, um die verschachtelte Variante explizit auszuführen.
-
-Wenn Sie oder Claude den unqualifizierten Namen aufrufen, wird der Skill in der Projekt-Root geladen, und Claude Code fügt eine Liste der verzeichnisqualifizierten Varianten zu seinem Inhalt mit einer Anweisung hinzu, auch jede Variante aufzurufen, deren Verzeichnis die Dateien enthält, an denen Claude arbeitet. Ein verschachtelter Skill gilt daher immer noch für die Arbeit in seinem Verzeichnis, wenn nur der unqualifizierte Name aufgerufen wird. Erfordert Claude Code v2.1.203 oder später.
-
-Ein `<skill-name>`-Eintrag an den Standorten Unternehmen, Persönlich oder Projekt kann ein Symlink zu einem Verzeichnis an anderer Stelle auf der Festplatte sein. Claude Code folgt dem Symlink und liest `SKILL.md` aus dem Zielverzeichnis, und wenn dasselbe Ziel von mehr als einem Ort aus erreichbar ist, lädt Claude Code den Skill einmal. Plugin-Skills handhaben Symlinks anders; siehe [Dateien in einem Marketplace mit Symlinks teilen](/docs/de/plugins-reference#share-files-within-a-marketplace-with-symlinks).
-
-<Note>
-  Fügen Sie eine `.claude-plugin/plugin.json` zu einem Skill-Ordner hinzu und er wird als [Plugin](/docs/de/plugins-reference#skills-directory-plugins) mit dem Namen `<name>@skills-dir` geladen, sodass er Agenten, hooks und MCP-Server bündeln kann. In einem Projekt `.claude/skills/` ist dies erforderlich, um zuerst das Workspace-Trust-Dialogfeld zu akzeptieren.
-</Note>
-
-<h4 id="live-change-detection">
-  Live-Änderungserkennung
-</h4>
-
-Claude Code überwacht Skill-Verzeichnisse auf Dateiänderungen. Das Hinzufügen, Bearbeiten oder Entfernen eines Skills unter `~/.claude/skills/`, dem Projekt `.claude/skills/` oder einem `.claude/skills/` in einem `--add-dir`-Verzeichnis wird in der aktuellen Sitzung wirksam, ohne Claude Code neu zu starten. Das Erstellen eines Skill-Verzeichnisses auf oberster Ebene, das nicht vorhanden war, als die Sitzung gestartet wurde, erfordert einen Neustart von Claude Code, damit das neue Verzeichnis überwacht werden kann.
-
-<Note>
-  Die Live-Änderungserkennung umfasst nur `SKILL.md`-Text. Für einen Skill-Ordner, der auch ein [Plugin](/docs/de/plugins-reference#skills-directory-plugins) ist, benötigen Änderungen an `hooks/`, `.mcp.json`, `agents/` und `output-styles/` `/reload-plugins`, um wirksam zu werden.
-</Note>
-
-<h4 id="automatic-discovery-from-parent-and-nested-directories">
-  Automatische Erkennung aus übergeordneten und verschachtelten Verzeichnissen
-</h4>
-
-Projekt-Skills werden aus `.claude/skills/` in Ihrem Startverzeichnis und in jedem übergeordneten Verzeichnis bis zur Repository-Root geladen, sodass das Starten von Claude in einem Unterverzeichnis immer noch Skills erfasst, die in der Root definiert sind. Wenn Sie mit Dateien in Unterverzeichnissen unter Ihrem Startverzeichnis arbeiten, erkennt Claude Code auch Skills aus verschachtelten `.claude/skills/`-Verzeichnissen bei Bedarf. Wenn Sie beispielsweise eine Datei in `packages/frontend/` bearbeiten, sucht Claude Code auch nach Skills in `packages/frontend/.claude/skills/`. Dies unterstützt Monorepo-Setups, bei denen Pakete ihre eigenen Skills haben.
-
-Jeder Skill ist ein Verzeichnis mit `SKILL.md` als Einstiegspunkt:
-
-```text theme={null}
-my-skill/
-├── SKILL.md           # Main instructions (required)
-├── template.md        # Template for Claude to fill in
-├── examples/
-│   └── sample.md      # Example output showing expected format
-└── scripts/
-    └── validate.sh    # Script Claude can execute
-```
-
-Die `SKILL.md` enthält die Hauptanweisungen und ist erforderlich. Andere Dateien sind optional und ermöglichen es Ihnen, leistungsfähigere Skills zu erstellen: Vorlagen für Claude zum Ausfüllen, Beispielausgaben, die das erwartete Format zeigen, Scripts, die Claude ausführen kann, oder detaillierte Referenzdokumentation. Verweisen Sie auf diese Dateien von Ihrer `SKILL.md` aus, damit Claude weiß, was sie enthalten und wann sie geladen werden sollen. Siehe [Unterstützende Dateien hinzufügen](#add-supporting-files) für weitere Details.
-
-<Note>
-  Dateien in `.claude/commands/` funktionieren weiterhin und unterstützen das gleiche [Frontmatter](#frontmatter-reference). Skills werden empfohlen, da sie zusätzliche Funktionen wie unterstützende Dateien unterstützen.
-</Note>
-
-<h4 id="skills-from-additional-directories">
-  Skills aus zusätzlichen Verzeichnissen
-</h4>
-
-Das Flag `--add-dir` und der Befehl `/add-dir` [gewähren Dateizugriff](/docs/de/permissions#additional-directories-grant-file-access-not-configuration) statt Konfigurationserkennung, aber Skills sind eine Ausnahme: `.claude/skills/` in einem hinzugefügten Verzeichnis wird automatisch geladen. Diese Ausnahme gilt nur für `--add-dir` und `/add-dir`. Die Einstellung `permissions.additionalDirectories` in `settings.json` gewährt nur Dateizugriff und lädt keine Skills. Siehe [Live-Änderungserkennung](#live-change-detection) für die Aufnahme von Änderungen während einer Sitzung.
-
-Andere `.claude/`-Konfigurationen wie Befehle und Ausgabestile werden nicht aus zusätzlichen Verzeichnissen geladen. Siehe die [Ausnahmetabelle](/docs/de/permissions#additional-directories-grant-file-access-not-configuration) für die vollständige Liste dessen, was geladen wird und was nicht, sowie die empfohlenen Wege zum Teilen von Konfigurationen über Projekte hinweg.
-
-<Note>
-  CLAUDE.md-Dateien aus `--add-dir`-Verzeichnissen werden standardmäßig nicht geladen. Um sie zu laden, setzen Sie `CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1`. Siehe [Aus zusätzlichen Verzeichnissen laden](/docs/de/memory#load-from-additional-directories).
-</Note>
-
-<h2 id="configure-skills">
-  Skills konfigurieren
+<h2 id="where-skills-live">
+  Wählen Sie, wo Skills geladen werden
 </h2>
 
-Skills werden durch YAML-Frontmatter oben in `SKILL.md` und den Markdown-Inhalt, der folgt, konfiguriert.
+Wo Sie einen Skill speichern, entscheidet, welche Sitzungen ihn laden. Speichern Sie ihn in Ihrem Home-Verzeichnis, um ihn in jedem Projekt zu erhalten, committen Sie ihn in ein Repository, um ihn mit allen zu teilen, die dort arbeiten, oder verteilen Sie ihn über ein Plugin oder verwaltete Einstellungen, um ein ganzes Team zu erreichen.
 
-<h3 id="types-of-skill-content">
-  Arten von Skill-Inhalten
+| Speicherort              | Pfad                                                                                                                           | Wird geladen in                                                                                                                                                                                                                                          |
+| :----------------------- | :----------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Enterprise               | `.claude/skills/<skill-name>/SKILL.md` im [Verzeichnis für verwaltete Einstellungen](/docs/de/managed-settings#delivery-mechanisms) | Alle Benutzer auf Maschinen, auf denen Ihre Organisation es bereitstellt                                                                                                                                                                                 |
+| Persönlich               | `~/.claude/skills/<skill-name>/SKILL.md`                                                                                       | Alle Ihre Projekte auf dieser Maschine, aber nicht [Cowork- oder Cloud-Sitzungen](#skills-in-cowork-and-cloud-sessions)                                                                                                                                  |
+| Projekt                  | `.claude/skills/<skill-name>/SKILL.md`                                                                                         | Sitzungen in diesem Repository. Committen Sie es, damit Ihr Team es auch erhält                                                                                                                                                                          |
+| Verschachtelt            | `<subdir>/.claude/skills/<skill-name>/SKILL.md`                                                                                | Sitzungen, die in oder unter `<subdir>` gestartet werden. Eine Sitzung, die darüber gestartet wird, lädt den Skill einmal, wenn Claude an Dateien dort arbeitet. Siehe [Monorepos und Unterverzeichnisse](#discovery-from-parent-and-nested-directories) |
+| Zusätzliches Verzeichnis | `.claude/skills/<skill-name>/SKILL.md` in einem Verzeichnis, das Sie mit `--add-dir` übergeben                                 | Diese Sitzung. Siehe [Verzeichnisse außerhalb des Projekts](#skills-from-additional-directories)                                                                                                                                                         |
+| Plugin                   | `<plugin>/skills/<skill-name>/SKILL.md`                                                                                        | Überall dort, wo das [Plugin](/docs/de/plugins/overview) aktiviert ist, als `/plugin-name:skill-name`                                                                                                                                                         |
+| claude.ai-Konto          | Skills, die für Ihr claude.ai-Konto aktiviert sind                                                                             | Cowork-Sitzungen, Cloud-Sitzungen und Terminal-Sitzungen, in denen Sie sich mit diesem Konto anmelden. Siehe [Skills, die von claude.ai synchronisiert werden](#how-synced-skills-behave)                                                                |
+
+Skill-Ordner folgen auch diesen Regeln:
+
+* **Symverlinkte Ordner**: Ein `<skill-name>`-Eintrag am Enterprise-, Personal- oder Projekt-Speicherort kann ein Symlink zu einem Verzeichnis an anderer Stelle auf der Festplatte sein. Claude Code liest `SKILL.md` aus dem Ziel und lädt den Skill einmal, auch wenn mehrere Speicherorte auf dasselbe Ziel verweisen. Plugin-Skills [handhaben Symlinks anders](/docs/de/plugins/host-marketplace#share-files-within-a-marketplace-with-symlinks).
+* **Reservierter Name**: Benennen Sie einen Skill-Ordner nicht `synced`, in keiner Schreibweise. Claude Code verwendet `~/.claude/skills/synced/` für [Skills, die von claude.ai heruntergeladen werden](#where-synced-skills-load) und überspringt einen Skill, den Sie unter diesem Namen an den Enterprise-, Personal- und Projekt-Speicherorten erstellen.
+* **Befehlsdateien**: Eine Markdown-Datei in `.claude/commands/` ist das ältere Format und funktioniert immer noch. Sie unterstützt dieselbe [Frontmatter](#frontmatter-reference) außer `name` und `paths`. Um den Namen zu finden, den Sie eingeben, um ihn aufzurufen, siehe [Wie ein Skill seinen Befehlsnamen erhält](#how-a-skill-gets-its-command-name). Bevorzugen Sie einen Skill für neue Arbeiten, da Skills auch [unterstützende Dateien](#add-supporting-files) unterstützen.
+* **Skill-Ordner als Plugin**: Fügen Sie eine `.claude-plugin/plugin.json` zu einem Skill-Ordner hinzu und er wird als [Plugin](/docs/de/plugins/loading#plugins-shared-through-a-repository) mit dem Namen `<name>@skills-dir` geladen, sodass er Agents, Hooks und MCP-Server bündeln kann. In einem Projekt `.claude/skills/` ist dies erforderlich, um zuerst den Workspace-Trust-Dialog zu akzeptieren.
+
+<h3 id="discovery-from-parent-and-nested-directories">
+  Skills in Monorepos und Unterverzeichnissen laden
 </h3>
 
-Skill-Dateien können beliebige Anweisungen enthalten, aber das Nachdenken darüber, wie Sie sie aufrufen möchten, hilft zu leiten, was Sie einbeziehen:
+Claude Code lädt Projekt-Skills aus `.claude/skills/` in dem Verzeichnis, in dem Sie ihn starten, und in jedem übergeordneten Verzeichnis bis zur Repository-Root, sodass das Starten in `packages/frontend/` immer noch Skills aufgreift, die in der Root definiert sind. Wenn Sie [die Sitzung mit `/cd`](/docs/de/permissions#move-the-session-to-another-directory) auf v2.1.246 oder später verschieben, fügt Claude Code die Projekt-Skills des neuen Verzeichnisses hinzu.
 
-**Referenzinhalt** fügt Wissen hinzu, das Claude auf Ihre aktuelle Arbeit anwendet. Konventionen, Muster, Stilhandbücher, Domänenwissen. Dieser Inhalt wird inline ausgeführt, sodass Claude ihn neben Ihrem Gesprächskontext verwenden kann.
+In einer verknüpften [Git Worktree](/docs/de/worktrees) sucht Claude Code übergeordnete Verzeichnisse nur bis zur Worktree-Root. Auf Claude Code v2.1.277 oder später lädt Claude Code, wenn der Worktree-Checkout kein `.claude/skills`-Verzeichnis in seiner Root hat, stattdessen die Projekt-Skills des Haupt-Checkouts. Siehe [Was Worktrees mit dem Haupt-Checkout teilen](/docs/de/worktrees#what-worktrees-share-with-the-main-checkout).
+
+Skills in einem `.claude/skills/`-Verzeichnis unter dem Ort, an dem Sie gestartet haben, werden beim Start nicht geladen. Sie werden geladen, wenn Claude zum ersten Mal eine Datei in diesem Unterverzeichnis liest oder bearbeitet, und bleiben für den Rest der Sitzung verfügbar. Bis dahin erscheinen sie nicht im `/`-Menü und Sie können sie nicht nach Name aufrufen. Um sie früher zu laden, führen Sie `/add-dir` mit dem Pfad des Unterverzeichnisses aus, was Claude Code v2.1.257 oder später erfordert.
+
+Wenn ein verschachtelter Skill denselben Namen wie ein anderer Skill hat, bleiben beide verfügbar. Mit einem `deploy`-Skill in der Repository-Root und einem anderen in `apps/web/.claude/skills/`:
+
+* `/deploy` führt den Root-Skill aus. Claude Code listet auch die verzeichnisqualifizierten Varianten für Claude auf, mit einer Anweisung, den aufzurufen, dessen Verzeichnis die Dateien enthält, an denen es arbeitet, sodass der verschachtelte Skill immer noch auf Arbeiten in `apps/web/` angewendet wird.
+* `/apps/web:deploy` führt den verschachtelten Skill allein aus. Seine Beschreibung benennt das Verzeichnis, auf das es angewendet wird.
+
+<h3 id="skills-from-additional-directories">
+  Skills aus einem Verzeichnis außerhalb des Projekts laden
+</h3>
+
+Wenn Sie ein Verzeichnis mit `--add-dir` oder `/add-dir` hinzufügen, lädt Claude Code die Skills in `.claude/skills/` dieses Verzeichnisses zusammen mit `.claude/commands/` und `.claude/agents/`. Verzeichnisse, die das Agent SDK durch [`additionalDirectories`](/docs/de/agent-sdk/typescript#options) in TypeScript oder [`add_dirs`](/docs/de/agent-sdk/python#claudeagentoptions) in Python hinzufügt, werden auf die gleiche Weise geladen, da das SDK sie als `--add-dir` übergibt. Die Einstellung `permissions.additionalDirectories` in `settings.json` gewährt nur Dateizugriff und lädt keine dieser.
+
+Claude Code überwacht `.claude/skills/` in einem Verzeichnis, das Sie mit `--add-dir` beim Start übergeben, wie [Bearbeiten Sie einen Skill während einer Sitzung](#live-change-detection) beschreibt. Es überwacht nicht `.claude/commands/` oder `.claude/agents/` des hinzugefügten Verzeichnisses, daher starten Sie die Sitzung nach dem Ändern einer Datei dort neu.
+
+Diese Ladevorgänge hängen von der `project` [Einstellungsquelle](/docs/de/agent-sdk/claude-code-features#control-filesystem-settings-with-settingsources) ab, die standardmäßig aktiviert ist. Eine [`strictPluginOnlyCustomization`](/docs/de/settings-reference#strictpluginonlycustomization)-Richtlinie, [Bare Mode](/docs/de/headless#start-faster-with-bare-mode) und [`--safe-mode`](/docs/de/cli-reference#cli-flags) beschränken sie weiter, wie diese Seiten beschreiben. Siehe [Zusätzliche Verzeichnisse gewähren Dateizugriff, keine Konfiguration](/docs/de/permissions#additional-directories-grant-file-access-not-configuration) für die vollständige Tabelle, was ein hinzugefügtes Verzeichnis lädt, einschließlich `CLAUDE.md` und Plugin-Einstellungen.
+
+<h3 id="resolve-skills-that-share-a-name">
+  Beheben Sie Skills, die denselben Namen haben
+</h3>
+
+Wenn zwei Skills denselben Namen haben, entscheidet, woher jeder kommt, welcher `/name` ausführt. Die Tabelle behandelt die Enterprise-, Personal-, Projekt-, verschachtelte, Plugin- und claude.ai-Speicherorte, gebündelte Skills und Befehlsdateien:
+
+| Gleicher Name in                                                                                     | Welcher wird ausgeführt                                                                                                                                                                                                                                   |
+| :--------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Zwei von Enterprise, Personal und Projekt                                                            | Enterprise über Personal und Personal über Projekt. Mit `deploy` in beiden `~/.claude/skills/` und `.claude/skills/` des Projekts führt `/deploy` den Personal-Skill aus                                                                                  |
+| Einer dieser Speicherorte und ein [gebündelter Skill](#bundled-skills)                               | Ihr Skill ersetzt den gebündelten Befehl, aber nicht seine Aliase. Ein Projekt-`code-review`-Skill ersetzt `/code-review`, und der gebündelte Alias `/review` führt Ihren Skill nie aus                                                                   |
+| Ein Skill und eine Datei in `.claude/commands/`                                                      | Der Skill                                                                                                                                                                                                                                                 |
+| Ein Projekt-Root-Skill und ein verschachtelter Skill                                                 | Beide werden geladen. Siehe [Monorepos und Unterverzeichnisse](#discovery-from-parent-and-nested-directories)                                                                                                                                             |
+| Ein Plugin-Skill und ein Skill an einem der obigen Speicherorte                                      | Beide werden geladen, da Plugin-Skills als `/plugin-name:skill-name` namensgebunden sind                                                                                                                                                                  |
+| Einer der obigen und ein Skill [von Ihrem claude.ai-Konto synchronisiert](#how-synced-skills-behave) | Der andere Skill oder Befehl. Der synchronisierte Skill wird immer noch als `/anthropic-skills:<name>` ausgeführt. Siehe [Wenn ein synchronisierter Skill-Name mit einem anderen Befehl übereinstimmt](#when-a-synced-skill-name-matches-another-command) |
+
+<h3 id="skills-in-cowork-and-cloud-sessions">
+  Verwenden Sie Skills in Cowork- und Cloud-Sitzungen
+</h3>
+
+[Cowork](https://claude.com/product/cowork)-Sitzungen und [Cloud-Sitzungen](/docs/de/cloud-environments#what-carries-over-from-your-setup), einschließlich [Routinen](/docs/de/routines), lesen nicht `~/.claude/skills/` auf Ihrer Maschine. Sowohl interaktive als auch geplante Cowork-Sitzungen laden die Skills, die für Ihr claude.ai-Konto aktiviert sind, synchronisiert beim Sitzungsstart; verwalten Sie sie über **Customize** in der Desktop-App-Seitenleiste oder in den Skill-Einstellungen auf claude.ai. Cloud-Sitzungen laden zusätzlich Projekt-Skills, die in `.claude/skills/` des geklonten Repositorys committet sind.
+
+Wenn ein Skill nur in `~/.claude/skills/` auf Ihrer Maschine vorhanden ist, meldet Claude Code, dass der Skill nicht gefunden wurde, wenn eine [Routine](/docs/de/routines) ihn aufruft, da jede Routine-Ausführung als frische Cloud-Sitzung startet. Um einen persönlichen Skill in diesen Sitzungen verfügbar zu machen:
+
+* Für Cowork- und Cloud-Sitzungen aktivieren Sie den Skill für Ihr claude.ai-Konto.
+* Für Cloud-Sitzungen können Sie den Skill stattdessen in `.claude/skills/` des Repositorys committen. Plugins, die in `.claude/settings.json` des Repositorys deklariert sind, [werden beim Sitzungsstart geladen](/docs/de/cloud-environments#what-carries-over-from-your-setup); Plugins, die nur in Ihren Benutzereinstellungen aktiviert sind, werden nicht übertragen.
+
+[Desktop-geplante Aufgaben](/docs/de/desktop-scheduled-tasks) werden lokal auf Ihrer Maschine ausgeführt, daher laden sie `~/.claude/skills/`.
+
+<h3 id="how-synced-skills-behave">
+  Skills, die von claude.ai synchronisiert werden
+</h3>
+
+Dieser Abschnitt gilt für Sie, wenn Sie Cowork- oder Cloud-Sitzungen verwenden oder sich in Ihrem Terminal mit einem claude.ai-Konto bei Claude Code anmelden. In diesen Sitzungen lädt Claude Code die Skills, die für Ihr claude.ai-Konto aktiviert sind, ohne Setup auf Ihrer Seite, wie [Wo synchronisierte Skills geladen werden](#where-synced-skills-load) beschreibt. Diese Skills umfassen die Skills, die Sie in Ihren claude.ai-Einstellungen erstellen oder aktivieren, Skills, die Ihre Organisation dort bereitstellt, und Anthropics integrierte Skills wie `pdf` und `xlsx`.
+
+Claude Code lädt einen synchronisierten Skill von Ihrem Konto herunter, anstatt eine Datei zu lesen, die Sie auf der Maschine geschrieben haben, auf der die Sitzung läuft, daher wendet es Regeln auf synchronisierte Skills an, die nicht auf die Skills angewendet werden, die Sie in den [Skill-Speicherorten](#where-skills-live) speichern.
+
+<h4 id="where-synced-skills-load">
+  Wo synchronisierte Skills geladen werden
+</h4>
+
+In einer Cowork- oder Cloud-Sitzung lädt Claude Code die Skills, die für Ihr claude.ai-Konto aktiviert sind, und [Skills in Cowork- und Cloud-Sitzungen](#skills-in-cowork-and-cloud-sessions) sagt, wie Sie wählen, welche Skills diese Sitzungen erhalten.
+
+In Ihrem Terminal synchronisiert Claude Code diese Skills in Sitzungen, in denen Sie sich mit Ihrem claude.ai-Konto anmelden. Wenn die Sitzung startet, lädt Claude Code Ihre Account-Skills im Hintergrund in `~/.claude/skills/synced/` herunter und prüft dann etwa alle 10 Minuten auf Änderungen auf claude.ai, während die Sitzung läuft. Wenn eine Überprüfung feststellt, dass ein Skill auf claude.ai hinzugefügt, bearbeitet oder deaktiviert wurde, fügt Claude Code ihn in der laufenden Sitzung hinzu, aktualisiert oder entfernt ihn ohne Neustart. Die Synchronisierung in Terminal-Sitzungen erfordert Claude Code v2.1.273 oder später.
+
+Die Synchronisierung verzögert niemals den Start, da Claude auf den Download eines Skills nur wartet, wenn es diesen Skill aufruft. Ein kurzer [nicht-interaktiver](/docs/de/headless) Lauf kann daher beendet werden, bevor ein neu hinzugefügter Skill heruntergeladen wird. In diesem Fall lädt eine spätere Sitzung ihn herunter. Um einen nicht-interaktiven Lauf dazu zu bringen, Ihre Skills herunterzuladen und auf die Liste zu warten, bevor er die Eingabeaufforderung beantwortet, setzen Sie [`CLAUDE_CODE_SYNC_SKILLS`](/docs/de/env-vars#variables) auf `1`.
+
+Claude Code synchronisiert nur in einer Sitzung, die sich mit Ihrem claude.ai-Konto anmeldet und [Feature-Flags von Anthropic abruft](/docs/de/env-vars#features-that-need-feature-flag-fetching). Es synchronisiert nicht in diesen Sitzungen:
+
+* Eine Sitzung, die keine von `/login` gespeicherte Anmeldung verwendet, wie eine, die sich mit einem API-Schlüssel authentifiziert, oder eine, bei der `ANTHROPIC_AUTH_TOKEN`, `CLAUDE_CODE_OAUTH_TOKEN` oder ein `apiKeyHelper`-Skript die Anmeldedaten bereitstellt
+* Eine Sitzung, die keine Feature-Flags abruft, wie eine auf Amazon Bedrock oder eine, bei der Sie `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` setzen
+* Eine Sitzung im [Bare Mode](/docs/de/headless#start-faster-with-bare-mode) oder eine, die Sie mit `--safe-mode` starten
+* Eine Sitzung, bei der die verwalteten Einstellungen Ihrer Organisation [Skills auf Plugin-Quellen sperren](/docs/de/settings-reference#strictpluginonlycustomization-skills), oder eine, die Sie mit einer [`--setting-sources`](/docs/de/cli-reference#cli-flags)-Liste starten, die `user` auslässt
+
+Wenn Sie sich während einer Sitzung mit `/login` anmelden, starten Sie Claude Code neu, um die Synchronisierung zu starten.
+
+Skills, die eine frühere Sitzung synchronisiert hat, bleiben auf der Festplatte. Claude Code lädt sie in späteren Sitzungen, die sich mit demselben Konto anmelden, auch wenn es claude.ai nicht erreichen kann.
+
+Claude Code lädt synchronisierte Skills herunter und lädt sie nie hoch. Wenn Sie oder Claude eine Datei unter `~/.claude/skills/synced/` bearbeiten, wird die Änderung nicht in Ihrem claude.ai-Konto gespeichert, und eine spätere Synchronisierung kann sie überschreiben oder entfernen. Um einen synchronisierten Skill zu ändern, aktualisieren Sie ihn auf claude.ai; die nächste Synchronisierung lädt die neue Version herunter.
+
+Um zu sehen, welche Skills synchronisiert wurden, führen Sie `/skills` aus. Das Menü listet sie unter `claude.ai sync` auf.
+
+Einige von Anthropics Skills, wie `pdf` und `xlsx`, werden immer synchronisiert. Für die übrigen aktivieren oder deaktivieren Sie einen Skill in Ihren Skill-Einstellungen auf claude.ai, um zu ändern, ob er synchronisiert wird.
+
+Um die Synchronisierung auf einer Maschine zu beenden, setzen Sie [`syncClaudeAiSkills`](/docs/de/settings-reference#syncclaudeaiskills) in Ihren Benutzereinstellungen auf `false`. Claude Code stoppt das Herunterladen, und beim nächsten Start verschiebt es die Skills, die es bereits synchronisiert hat, in `~/.claude/skills/.trash/` und lädt sie nicht mehr. Ihre Organisation kann die Synchronisierung für alle ausschalten, indem sie Skills auf claude.ai ausschaltet. Um die Synchronisierung zu beenden und Skills eingeschaltet zu lassen, kann sie denselben Schlüssel in [verwalteten Einstellungen](/docs/de/managed-settings) setzen.
+
+Wenn Ihre Organisation Skills auf claude.ai ausschaltet, entfernt Claude Code die heruntergeladenen Skills und sie werden nicht mehr geladen. Die entfernten Skills werden in `~/.claude/skills/.trash/` verschoben, wo Sie die Dateien wiederherstellen können, bis die [Aufbewahrungslöschung](/docs/de/claude-directory#cleaned-up-automatically) sie löscht. Sobald Ihre Organisation Skills wieder einschaltet, lädt Claude Code die Skills herunter, die Sie beim nächsten Synchronisierungsvorgang aktiviert haben.
+
+<h4 id="when-a-synced-skill-name-matches-another-command">
+  Wenn ein synchronisierter Skill-Name mit einem anderen Befehl übereinstimmt
+</h4>
+
+Sie können einen synchronisierten Skill mit seinem vollständigen Namen, `/anthropic-skills:<name>`, oder seinem Kurznamen, `/<name>`, aufrufen. Wenn ein anderer Befehl diesen Kurznamen verwendet, führt `/<name>` den anderen Befehl aus, und der synchronisierte Skill wird nur als `/anthropic-skills:<name>` ausgeführt. Mit einem lokalen `deploy`-Skill und einem synchronisierten `deploy` führt `/deploy` den lokalen Skill aus und `/anthropic-skills:deploy` führt den synchronisierten aus. Vor v2.1.269 hatte ein synchronisierter Skill nur seinen Kurznamen.
+
+Der andere Befehl kann einer dieser sein:
+
+* Ein integrierter Befehl oder ein [gebündelter Skill](#bundled-skills), einschließlich eines, der in Ihrer Sitzung nicht verfügbar ist, zum Beispiel nachdem Sie gebündelte Skills ausschalten
+* Ein Skill auf einer beliebigen [lokalen Ebene](#where-skills-live) oder eine Datei in `.claude/commands/`
+* Ein Plugin-Skill
+* Ein [MCP-Prompt](/docs/de/mcp#use-mcp-prompts-as-commands)
+
+Claude Code kennzeichnet synchronisierte Skills, damit Sie sehen können, woher sie kommen. Das `/skills`-Menü und `/context` gruppieren synchronisierte Skills unter `claude.ai sync`, und das `/`-Befehlsmenü kennzeichnet sie als von claude.ai kommend.
+
+Beim Vergleich von Namen ignoriert Claude Code Groß-/Kleinschreibung, Abstände und unsichtbare Zeichen und behandelt Kompatibilitätsformen wie Vollbreitenbuchstaben und Bindestrich-Varianten als ihre einfachen Äquivalente. Zum Beispiel zählt ein synchronisierter Skill namens `Commit` und ein lokaler Skill namens `commit` als derselbe Name, daher führt `/commit` weiterhin Ihren lokalen Skill aus.
+
+Ein Name, der sich nur durch einen ähnlich aussehenden Buchstaben aus einem anderen Alphabet unterscheidet, zählt als ein anderer Name, und das `claude.ai sync`-Label ist, wie Sie die beiden unterscheiden. Diese Überprüfungen und Labels erfordern Claude Code v2.1.228 oder später.
+
+<h4 id="how-claude-code-handles-the-frontmatter-of-a-synced-skill">
+  Wie Claude Code die Frontmatter eines synchronisierten Skills handhabt
+</h4>
+
+Claude Code wendet zwei Regeln auf die Frontmatter eines synchronisierten Skills an:
+
+* Claude Code respektiert die Frontmatter in jeder Art von Sitzung, daher geht eine `allowed-tools`-Gewährung durch den normalen [Berechtigungsfluss](/docs/de/permissions).
+* Claude Code bereinigt den Anzeigetext, den der Skill liefert, wie seine Beschreibung. Es entfernt Steuerzeichen und in Text, der Claude erreicht, wie die Beschreibung, maskiert es auch spitzklammern, damit der Text nicht Claude Codes interne Formatierung imitieren kann. Diese Bereinigung erfordert Claude Code v2.1.228 oder später.
+
+<h4 id="how-claude-code-handles-the-body-of-a-synced-skill">
+  Wie Claude Code den Body eines synchronisierten Skills handhabt
+</h4>
+
+Was Claude Code mit dem Body eines synchronisierten Skills tut, hängt davon ab, wo die Sitzung läuft:
+
+* In einer Cloud-Sitzung behält der Body das Verhalten, das ein lokaler Skill hat, da die Sitzung in einem isolierten Container läuft.
+* In einer Cowork-Sitzung auf Ihrem Desktop behält der Body das Verhalten, das ein lokaler Skill hat, außer dass Claude Code jede `!`-Befehlszeile durch den [`disableSkillShellExecution`-Platzhalter](#inject-dynamic-context) ersetzt, wie es für jeden Skill tut, den Sie dort liefern.
+* In jeder anderen Sitzung auf Ihrer Maschine führt Claude Code keine [`!`-Befehle](#inject-dynamic-context) aus, hängt nicht die Dateien an, die `@`-Referenzen benennen, wie es für einen lokalen Skill tut, und ersetzt nicht die Platzhalter `${CLAUDE_PROJECT_DIR}` und `${CLAUDE_SESSION_ID}`, daher erreichen die `@`-Referenzen und beide Platzhalter Claude als wörtlicher Text. Eine `!`-Befehlszeile erreicht Claude auch als wörtlicher Text oder als dieser Platzhalter, wenn `disableSkillShellExecution` aktiviert ist. Diese Handhabung erfordert Claude Code v2.1.228 oder später.
+
+<h3 id="live-change-detection">
+  Bearbeiten Sie einen Skill während einer Sitzung
+</h3>
+
+Claude Code überwacht Skill-Verzeichnisse auf Dateiänderungen, außer im [Bare Mode](/docs/de/headless#start-faster-with-bare-mode). Wenn Sie einen Skill unter `~/.claude/skills/`, dem Projekt `.claude/skills/` oder einem `.claude/skills/` in einem `--add-dir`-Verzeichnis hinzufügen, bearbeiten oder entfernen, nimmt Claude Code die Änderung in der aktuellen Sitzung auf, ohne einen Neustart. Wenn Sie ein Top-Level-Skills-Verzeichnis erstellen, das beim Start der Sitzung nicht vorhanden war, starten Sie Claude Code neu, damit es das neue Verzeichnis überwachen kann.
+
+Die Live-Änderungserkennung deckt nur `SKILL.md`-Text ab. Für einen Skill-Ordner, der auch ein [Plugin](/docs/de/plugins/loading#plugins-shared-through-a-repository) ist, benötigen Änderungen an `hooks/`, `.mcp.json`, `agents/` und `output-styles/` `/reload-plugins`, um wirksam zu werden.
+
+<h3 id="remove-a-skill">
+  Entfernen Sie einen Skill
+</h3>
+
+Wie Sie einen Skill entfernen, hängt davon ab, woher er kommt:
+
+* **Persönlicher oder Projekt-Skill**: Löschen Sie das Verzeichnis des Skills, `~/.claude/skills/<skill-name>/` oder `.claude/skills/<skill-name>/`. Claude Code [entfernt ihn aus `/skills` in der aktuellen Sitzung](#live-change-detection); Inhalte, die Claude Code bereits daraus geladen hat, folgen dem [Skill-Content-Lebenszyklus](#skill-content-lifecycle).
+* **Enterprise-Skill**: Ein Administrator löscht das Verzeichnis des Skills aus `.claude/skills/` im [Verzeichnis für verwaltete Einstellungen](/docs/de/managed-settings#delivery-mechanisms), zum Beispiel `/etc/claude-code/.claude/skills/<skill-name>/` auf Linux.
+* **Plugin-Skill**: Deaktivieren oder deinstallieren Sie das Plugin, das ihn bereitstellt, aus dem `/plugin`-Menü oder mit `/plugin uninstall <plugin-name>@<marketplace-name>`. Claude Code entlädt die Skills des Plugins, wenn [die Änderung angewendet wird](/docs/de/plugins/cli-reference#reload-plugins) oder wenn Sie neu starten.
+* **Skill, der von claude.ai synchronisiert wird**: Schalten Sie den Skill für Ihr claude.ai-Konto aus, an derselben Stelle, an der Sie ihn [aktiviert haben](#skills-in-cowork-and-cloud-sessions). Claude Code entfernt ihn aus `~/.claude/skills/synced/` beim nächsten Mal, wenn es [Ihre Skills synchronisiert](#where-synced-skills-load). Wenn Sie das Verzeichnis stattdessen von Hand löschen, lädt die nächste Synchronisierung es erneut herunter, während der Skill auf claude.ai aktiviert bleibt.
+* **Gebündelter Skill**: Setzen Sie [`disableBundledSkills`](#bundled-skills) auf `true`, um gebündelte Skills auszuschalten, oder setzen Sie einen Skill auf `"off"` in [`skillOverrides`](#override-skill-visibility-from-settings), um ihn auszublenden.
+
+Um einen persönlichen oder Projekt-Skill zu behalten, aber Claude daran zu hindern, ihn von selbst aufzurufen, setzen Sie [`disable-model-invocation: true`](#control-who-invokes-a-skill) in seiner Frontmatter oder `"user-invocable-only"` in [`skillOverrides`](#override-skill-visibility-from-settings), wenn Sie die Datei nicht bearbeiten möchten.
+
+<h2 id="configure-skills">
+  Fähigkeiten konfigurieren
+</h2>
+
+Fähigkeiten werden durch YAML-Frontmatter am Anfang von `SKILL.md` und den darauffolgenden Markdown-Inhalt konfiguriert.
+
+<h3 id="types-of-skill-content">
+  Arten von Fähigkeitsinhalten
+</h3>
+
+Fähigkeitsdateien können beliebige Anweisungen enthalten, aber das Nachdenken darüber, wie Sie sie aufrufen möchten, hilft bei der Entscheidung, was Sie einbeziehen:
+
+**Referenzinhalte** fügen Wissen hinzu, das Claude auf Ihre aktuelle Arbeit anwendet. Konventionen, Muster, Stilrichtlinien, Domänenwissen. Dieser Inhalt wird inline ausgeführt, sodass Claude ihn zusammen mit Ihrem Gesprächskontext verwenden kann.
 
 ```yaml theme={null}
 ---
@@ -211,7 +317,7 @@ When writing API endpoints:
 - Include request validation
 ```
 
-**Task-Inhalt** gibt Claude Schritt-für-Schritt-Anweisungen für eine bestimmte Aktion, wie Bereitstellungen, Commits oder Code-Generierung. Dies sind oft Aktionen, die Sie direkt mit `/skill-name` aufrufen möchten, anstatt Claude entscheiden zu lassen, wann sie ausgeführt werden. Fügen Sie `disable-model-invocation: true` hinzu, um zu verhindern, dass Claude sie automatisch auslöst.
+**Aufgabeninhalte** geben Claude Schritt-für-Schritt-Anweisungen für eine bestimmte Aktion, wie Bereitstellungen, Commits oder Code-Generierung. Dies sind oft Aktionen, die Sie direkt mit `/skill-name` aufrufen möchten, anstatt Claude entscheiden zu lassen, wann sie ausgeführt werden. Fügen Sie `disable-model-invocation: true` hinzu, um zu verhindern, dass Claude sie automatisch auslöst. Das folgende Beispiel fügt `context: fork` hinzu, das die Fähigkeit in ihrem eigenen Subagent-Kontext ausführt; siehe [Fähigkeiten in einem Subagent ausführen](#run-skills-in-a-subagent).
 
 ```yaml theme={null}
 ---
@@ -227,15 +333,13 @@ Deploy the application:
 3. Push to the deployment target
 ```
 
-Ihre `SKILL.md` kann alles enthalten, aber das Nachdenken darüber, wie Sie den Skill aufrufen möchten (von Ihnen, von Claude oder von beiden) und wo Sie ihn ausführen möchten (inline oder in einem Subagent) hilft zu leiten, was Sie einbeziehen. Für komplexe Skills können Sie auch [unterstützende Dateien hinzufügen](#add-supporting-files), um den Hauptskill fokussiert zu halten.
-
-Halten Sie den Text selbst prägnant. Sobald ein Skill geladen ist, bleibt sein Inhalt [über Züge hinweg im Kontext](#skill-content-lifecycle), sodass jede Zeile eine wiederkehrende Token-Kosten darstellt. Geben Sie an, was zu tun ist, anstatt zu erzählen, wie oder warum, und wenden Sie denselben Prägnanz-Test an, den Sie für [CLAUDE.md-Inhalt](/docs/de/best-practices#write-an-effective-claude-md) verwenden würden.
+Halten Sie den Text selbst prägnant. Sobald eine Fähigkeit geladen ist, bleibt ihr Inhalt [über Turns hinweg im Kontext](#skill-content-lifecycle), sodass jede Zeile wiederkehrende Token-Kosten verursacht. Geben Sie an, was zu tun ist, anstatt zu erzählen, wie oder warum, und wenden Sie denselben Prägnanztest an, den Sie für [CLAUDE.md-Inhalte](/docs/de/best-practices#write-an-effective-claude-md) verwenden würden.
 
 <h3 id="frontmatter-reference">
   Frontmatter-Referenz
 </h3>
 
-Über den Markdown-Inhalt hinaus können Sie das Skill-Verhalten mit YAML-Frontmatter-Feldern zwischen `---`-Markierungen oben in Ihrer `SKILL.md`-Datei konfigurieren:
+Konfigurieren Sie eine Fähigkeit mit YAML-[Frontmatter](/docs/de/glossary#frontmatter) zwischen `---`-Markierungen am Anfang von `SKILL.md`, und schreiben Sie die Anweisungen der Fähigkeit als Markdown nach dem schließenden `---`. Feldnamen verwenden Kleinbuchstaben-Wörter, die durch Bindestriche getrennt sind, außer `when_to_use`. Eine [Befehlsdatei](#where-skills-live) in `.claude/commands/` akzeptiert die gleichen Felder außer `name` und `paths`. Dieses Beispiel setzt vier Felder:
 
 ```yaml theme={null}
 ---
@@ -248,67 +352,122 @@ allowed-tools: Read Grep
 Your skill instructions here...
 ```
 
-Alle Felder sind optional. Nur `description` wird empfohlen, damit Claude weiß, wann der Skill verwendet werden soll.
+Alle Felder sind optional. Nur `description` wird empfohlen, damit Claude weiß, wann die Fähigkeit verwendet werden soll. Ein Feldname muss genau mit der Tabelle übereinstimmen, Bindestriche eingeschlossen: Claude Code ignoriert ein Feld, das es nicht erkennt, ohne einen Fehler zu melden.
 
-| Feld                       | Erforderlich | Beschreibung                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| :------------------------- | :----------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `name`                     | Nein         | Anzeigename, der in Skill-Auflistungen angezeigt wird. Standardmäßig der Verzeichnisname. Siehe [Wie ein Skill seinen Befehlsnamen erhält](#how-a-skill-gets-its-command-name), um zu verstehen, wie sich dies vom Namen unterscheidet, den Sie eingeben, um den Skill aufzurufen.                                                                                                                                                                                                                                                                                           |
-| `description`              | Empfohlen    | Was der Skill tut und wann er verwendet werden soll. Claude verwendet dies, um zu entscheiden, wann der Skill angewendet werden soll. Falls weggelassen, wird der erste Absatz des Markdown-Inhalts verwendet. Stellen Sie den wichtigsten Anwendungsfall an den Anfang: Der kombinierte Text `description` und `when_to_use` wird in der Skill-Auflistung bei 1.536 Zeichen gekürzt, um die Kontextnutzung zu reduzieren.                                                                                                                                                   |
-| `when_to_use`              | Nein         | Zusätzlicher Kontext für den Zeitpunkt, zu dem Claude den Skill aufrufen sollte, z. B. Trigger-Phrasen oder Beispielanfragen. An `description` in der Skill-Auflistung angehängt und zählt zur 1.536-Zeichen-Obergrenze.                                                                                                                                                                                                                                                                                                                                                     |
-| `argument-hint`            | Nein         | Hinweis, der während der Autovervollständigung angezeigt wird, um erwartete Argumente anzuzeigen. Beispiel: `[issue-number]` oder `[filename] [format]`.                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| `arguments`                | Nein         | Benannte positionelle Argumente für [`$name`-Substitution](#available-string-substitutions) im Skill-Inhalt. Akzeptiert eine durch Leerzeichen getrennte Zeichenkette oder eine YAML-Liste. Namen werden in Reihenfolge auf Argumentpositionen abgebildet.                                                                                                                                                                                                                                                                                                                   |
-| `disable-model-invocation` | Nein         | Setzen Sie auf `true`, um zu verhindern, dass Claude diesen Skill automatisch lädt. Verwenden Sie für Workflows, die Sie manuell mit `/name` auslösen möchten. Verhindert auch, dass der Skill [in Subagenten vorgeladen wird](/docs/de/sub-agents#preload-skills-into-subagents). Ab v2.1.196 verhindert dies auch, dass der Skill ausgeführt wird, wenn eine [geplante Aufgabe](/docs/de/scheduled-tasks) mit dem Skill als Eingabe ausgelöst wird. Standard: `false`.                                                                                                               |
-| `user-invocable`           | Nein         | Setzen Sie auf `false`, um aus dem `/`-Menü auszublenden. Verwenden Sie für Hintergrundwissen, das Benutzer nicht direkt aufrufen sollten. Standard: `true`.                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| `allowed-tools`            | Nein         | Tools, die Claude ohne Genehmigung verwenden kann, wenn dieser Skill aktiv ist. Akzeptiert eine durch Leerzeichen oder Komma getrennte Zeichenkette oder eine YAML-Liste.                                                                                                                                                                                                                                                                                                                                                                                                    |
-| `disallowed-tools`         | Nein         | Tools, die aus Claudes verfügbarem Pool entfernt werden, während dieser Skill aktiv ist. Verwenden Sie für autonome Skills, die niemals bestimmte Tools aufrufen sollten, wie `AskUserQuestion` für eine Hintergrund-Schleife. Akzeptiert eine durch Leerzeichen oder Komma getrennte Zeichenkette oder eine YAML-Liste. Die Einschränkung wird gelöscht, wenn Sie Ihre nächste Nachricht senden.                                                                                                                                                                            |
-| `model`                    | Nein         | Modell, das verwendet werden soll, wenn dieser Skill aktiv ist. Die Überschreibung gilt für den Rest des aktuellen Zuges und wird nicht in den Einstellungen gespeichert; das Sitzungsmodell wird bei Ihrer nächsten Eingabe fortgesetzt. Akzeptiert die gleichen Werte wie [`/model`](/docs/de/model-config) oder `inherit`, um das aktive Modell beizubehalten. Ein Wert, der durch die [`availableModels`](/docs/de/model-config#restrict-model-selection)-Zulassungsliste Ihrer Organisation ausgeschlossen ist, wird nicht verwendet und die Sitzung behält ihr aktuelles Modell. |
-| `effort`                   | Nein         | [Anstrengungsstufe](/docs/de/model-config#adjust-effort-level) wenn dieser Skill aktiv ist. Überschreibt die Anstrengungsstufe der Sitzung. Standard: erbt von Sitzung. Optionen: `low`, `medium`, `high`, `xhigh`, `max`; verfügbare Stufen hängen vom Modell ab.                                                                                                                                                                                                                                                                                                                |
-| `context`                  | Nein         | Setzen Sie auf `fork`, um in einem verzweigten Subagent-Kontext ausgeführt zu werden.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| `agent`                    | Nein         | Welcher Subagent-Typ verwendet werden soll, wenn `context: fork` gesetzt ist.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| `hooks`                    | Nein         | Hooks, die auf den Lebenszyklus dieses Skills beschränkt sind. Siehe [Hooks in Skills und Agenten](/docs/de/hooks#hooks-in-skills-and-agents) für das Konfigurationsformat.                                                                                                                                                                                                                                                                                                                                                                                                       |
-| `paths`                    | Nein         | Glob-Muster, die begrenzen, wann dieser Skill aktiviert wird. Akzeptiert eine kommagetrennte Zeichenkette oder eine YAML-Liste. Wenn gesetzt, lädt Claude den Skill automatisch nur, wenn mit Dateien arbeitet, die den Mustern entsprechen. Verwendet das gleiche Format wie [pfadspezifische Regeln](/docs/de/memory#path-specific-rules).                                                                                                                                                                                                                                      |
-| `shell`                    | Nein         | Shell, die für `` !`command` `` und ` ```! ` Blöcke in diesem Skill verwendet werden soll. Akzeptiert `bash` (Standard) oder `powershell`. Das Setzen von `powershell` führt Inline-Shell-Befehle über PowerShell unter Windows aus. Erfordert `CLAUDE_CODE_USE_POWERSHELL_TOOL=1`.                                                                                                                                                                                                                                                                                          |
+Claude Code liest das Frontmatter nur, wenn die öffnende `---` die erste Zeile der Datei ist. Andernfalls behandelt es die gesamte Datei, einschließlich `---`-Markierungen, als Fähigkeitsinhalt. Wenn das YAML zwischen den Markierungen nicht analysiert wird, wird die Fähigkeit immer noch geladen, ohne dass Felder gesetzt werden; siehe [Fähigkeit wird nicht ausgelöst](#skill-not-triggering), um den Fehler zu finden und zu beheben.
 
-<h4 id="how-a-skill-gets-its-command-name">
-  Wie ein Skill seinen Befehlsnamen erhält
+Boolesche Felder akzeptieren `yes`, `no`, `on`, `off`, `1` und `0` in beliebiger Schreibweise, zusätzlich zu `true` und `false`. Vor v2.1.218 erkannte Claude Code nur `true` und `false`.
+
+| Feld                       | Erforderlich | Beschreibung                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| :------------------------- | :----------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `name`                     | Nein         | Anzeigename, der in Fähigkeitsauflistungen angezeigt wird. Standardmäßig der Verzeichnisname. Siehe [Wie eine Fähigkeit ihren Befehlsnamen erhält](#how-a-skill-gets-its-command-name), um zu sehen, wie das Feld mit dem Namen interagiert, den Sie eingeben, um die Fähigkeit aufzurufen.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `description`              | Empfohlen    | Was die Fähigkeit tut und wann sie verwendet werden soll. Claude verwendet dies, um zu entscheiden, wann die Fähigkeit angewendet werden soll. Wenn weggelassen, wird die erste nicht leere Zeile des Markdown-Inhalts verwendet. Setzen Sie den wichtigsten Anwendungsfall zuerst: Der kombinierte `description`- und `when_to_use`-Text wird in der Fähigkeitsauflistung auf 1.536 Zeichen gekürzt, um die Kontextnutzung zu reduzieren.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `when_to_use`              | Nein         | Zusätzlicher Kontext für den Zeitpunkt, zu dem Claude die Fähigkeit aufrufen sollte, z. B. Trigger-Phrasen oder Beispielanfragen. An `description` in der Fähigkeitsauflistung angehängt und zählt zur 1.536-Zeichen-Obergrenze.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| `argument-hint`            | Nein         | Hinweis, der während der Autovervollständigung angezeigt wird, um erwartete Argumente anzuzeigen. Beispiel: `[issue-number]` oder `[filename] [format]`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `arguments`                | Nein         | Benannte Positionsargumente für [`$name`-Substitution](#available-string-substitutions) im Fähigkeitsinhalt. Akzeptiert eine durch Leerzeichen getrennte Zeichenkette oder eine YAML-Liste. Namen werden in Reihenfolge Argumentpositionen zugeordnet.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `disable-model-invocation` | Nein         | Setzen Sie auf `true`, um zu verhindern, dass Claude diese Fähigkeit automatisch lädt. Verwenden Sie für Workflows, die Sie manuell mit `/name` auslösen möchten. Verhindert auch, dass die Fähigkeit [in Subagents vorgeladen wird](/docs/de/sub-agents#preload-skills-into-subagents). Ab v2.1.196 verhindert dies auch, dass die Fähigkeit ausgeführt wird, wenn eine [geplante Aufgabe](/docs/de/scheduled-tasks) mit der Fähigkeit als Eingabeaufforderung ausgelöst wird. Standard: `false`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `user-invocable`           | Nein         | Setzen Sie auf `false`, wenn nur Claude die Fähigkeit aufrufen sollte: Claude Code blendet sie aus dem `/`-Menü aus und führt sie nicht aus, wenn Sie `/name` eingeben. Verwenden Sie für Hintergrundwissen, das Benutzer nicht direkt aufrufen sollten. Standard: `true`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `allowed-tools`            | Nein         | Tools, die Claude ohne Genehmigung während des Turns verwenden kann, der diese Fähigkeit aufruft. Die Genehmigung wird gelöscht, wenn Sie Ihre nächste Nachricht senden. Akzeptiert eine durch Leerzeichen oder Komma getrennte Zeichenkette oder eine YAML-Liste. Siehe [Tools für eine Fähigkeit vorab genehmigen](#pre-approve-tools-for-a-skill).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `disallowed-tools`         | Nein         | Tools, die aus Claudes verfügbarem Pool entfernt werden, während diese Fähigkeit aktiv ist. Verwenden Sie für autonome Fähigkeiten, die niemals bestimmte Tools aufrufen sollten, z. B. `AskUserQuestion` für eine Hintergrundschleife. Akzeptiert eine durch Leerzeichen oder Komma getrennte Zeichenkette oder eine YAML-Liste. Die Einschränkung wird gelöscht, wenn Sie Ihre nächste Nachricht senden. Wie Ablehnungsregeln kann das Feld [`EndConversation`](/docs/de/tools-reference#endconversation-tool-behavior) nicht entfernen, während ein anderes Tool verfügbar bleibt.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| `model`                    | Nein         | Modell, das verwendet werden soll, wenn diese Fähigkeit aktiv ist. Die Außerkraftsetzung gilt für den Rest des aktuellen Turns und wird nicht in den Einstellungen gespeichert; das Sitzungsmodell wird bei Ihrer nächsten Eingabeaufforderung fortgesetzt. Akzeptiert die gleichen Werte wie [`/model`](/docs/de/model-config), oder `inherit`, um das aktive Modell beizubehalten. Ein Wert, der durch die [`availableModels`](/docs/de/model-config#restrict-model-selection)-Zulassungsliste Ihrer Organisation ausgeschlossen ist, wird nicht verwendet und die Sitzung behält ihr aktuelles Modell. Im [Auto-Modus](/docs/de/permission-modes#eliminate-prompts-with-auto-mode) und im [Plan-Modus, während der Klassifizierer Befehle überprüft](/docs/de/permission-modes#analyze-before-you-edit-with-plan-mode), wird ein Modell, das der Auto-Modus nicht unterstützt, auch nicht verwendet, und die Sitzung behält ihr aktuelles Modell. Mit `context: fork` setzt der Wert stattdessen das [Modell des verzweigten Subagents](#run-skills-in-a-subagent) und ein ausgeschlossener Wert folgt den [gleichen Regeln wie eine Subagent-Modellüberschreibung](/docs/de/model-config#restrict-model-selection). |
+| `effort`                   | Nein         | [Aufwandsstufe](/docs/de/model-config#adjust-effort-level), wenn diese Fähigkeit aktiv ist. Überschreibt die Sitzungsaufwandsstufe. Standard: erbt von Sitzung. Optionen: `low`, `medium`, `high`, `xhigh`, `max`; verfügbare Stufen hängen vom Modell ab.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `context`                  | Nein         | Setzen Sie auf `fork`, um in einem verzweigten Subagent-Kontext ausgeführt zu werden. Siehe [Fähigkeiten in einem Subagent ausführen](#run-skills-in-a-subagent).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `agent`                    | Nein         | Welcher Subagent-Typ verwendet werden soll, wenn `context: fork` gesetzt ist.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `background`               | Nein         | Gilt nur mit `context: fork`. Setzen Sie auf `false`, um auf das Ergebnis des verzweigten Subagents im Turn zu warten, der die Fähigkeit aufgerufen hat, anstatt [es im Hintergrund auszuführen](#run-skills-in-a-subagent). Standard: `true`. Erfordert Claude Code v2.1.218 oder später.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `hooks`                    | Nein         | Hooks, die Claude Code registriert, wenn die Fähigkeit aufgerufen wird, und die für den Rest der Sitzung weiterhin ausgeführt werden. Siehe [Hooks in Fähigkeiten und Agenten](/docs/de/hooks#hooks-in-skills-and-agents) für das Konfigurationsformat und die `once`-Option.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `paths`                    | Nein         | Glob-Muster, die einschränken, wann diese Fähigkeit aktiviert wird. Akzeptiert eine durch Komma getrennte Zeichenkette oder eine YAML-Liste. Wenn gesetzt, lädt Claude die Fähigkeit automatisch nur, wenn mit Dateien arbeitet, die den Mustern entsprechen. Verwendet das gleiche Format wie [pfadspezifische Regeln](/docs/de/memory#path-specific-rules).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `shell`                    | Nein         | Shell, die für `` !`command` `` und ` ```! ` Blöcke in dieser Fähigkeit verwendet werden soll. Akzeptiert `bash` (Standard) oder `powershell`. Das Setzen von `powershell` führt Inline-Shell-Befehle über PowerShell aus, wenn das [PowerShell-Tool](/de/tools-reference#powershell-tool) aktiviert ist: Es ist standardmäßig unter Windows ohne Git Bash aktiviert, standardmäßig mit Git Bash für claude.ai und Console-Konten aktiviert, und benötigt `CLAUDE_CODE_USE_POWERSHELL_TOOL=1` in Amazon Bedrock, Google Cloud's Agent Platform und Microsoft Foundry-Sitzungen sowie auf macOS, Linux und WSL. Setzen Sie es auf `0`, um das Tool auszuschalten.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| `metadata`                 | Nein         | Freie YAML-Zuordnung für Ihre eigenen Schlüssel-Wert-Daten, z. B. Berechtigung oder Katalogfelder, die von Ihrem eigenen Tooling aus `SKILL.md` gelesen werden. Claude Code handelt nicht nach ihrem Inhalt und verwirft einen Wert, der keine Zuordnung ist. Verwenden Sie keine Frontmatter-Feldnamen wie `paths` als Schlüssel erneut.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `license`                  | Nein         | Lizenz, die die Fähigkeit abdeckt. Teil der [Agent Skills](https://agentskills.io)-Spezifikation; siehe [Fähigkeits-Frontmatter außerhalb von Claude Code verwenden](#using-skill-frontmatter-outside-claude-code). Claude Code akzeptiert das Feld, handelt aber nicht danach.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `compatibility`            | Nein         | Umgebungsanforderungen für die Fähigkeit, z. B. beabsichtigte Produkte oder Systemvoraussetzungen, wie in der [Agent Skills](https://agentskills.io)-Spezifikation definiert; siehe [Fähigkeits-Frontmatter außerhalb von Claude Code verwenden](#using-skill-frontmatter-outside-claude-code). Akzeptiert eine Zeichenkette von bis zu 500 Zeichen. Claude Code akzeptiert das Feld, handelt aber nicht danach.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+
+<h4 id="using-skill-frontmatter-outside-claude-code">
+  Fähigkeits-Frontmatter außerhalb von Claude Code verwenden
 </h4>
 
-Der Befehl, den Sie eingeben, um einen Skill aufzurufen, kommt von dem Ort, an dem sich die Skill-Datei befindet. Das Frontmatter-Feld `name` setzt die Anzeigebeschriftung, die in Skill-Auflistungen angezeigt wird, und ändert außer bei einem Plugin-Root-`SKILL.md` nicht, was Sie nach `/` eingeben.
+Claude Code akzeptiert jedes Feld in der obigen Tabelle. Außerhalb von Claude Code können Sie nur die Felder in der [Agent Skills](https://agentskills.io)-Spezifikation verwenden:
+
+| Verteilungspfad                                                                                                                                  | Frontmatter-Felder, die Sie verwenden können                                   |
+| :----------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------- |
+| Claude Code-Fähigkeiten auf [beliebiger Ebene](#where-skills-live), einschließlich [Plugin](/docs/de/plugins/overview)-Fähigkeiten                    | Jedes Feld in der obigen Tabelle                                               |
+| claude.ai-Fähigkeits-Uploads, die Skills-API und Verpackung mit `package_skill.py` aus [anthropics/skills](https://github.com/anthropics/skills) | `name`, `description`, `license`, `compatibility`, `metadata`, `allowed-tools` |
+
+Wenn Sie eine persönliche Fähigkeit für Ihr claude.ai-Konto aktivieren, um sie beispielsweise in [Cowork- und Cloud-Sitzungen](#skills-in-cowork-and-cloud-sessions) und Routinen zu verwenden, laden Sie sie auf claude.ai hoch, sodass die gleichen Regeln gelten.
+
+Wenn Sie ein Feld einbeziehen, das die Spezifikation nicht zulässt, schlägt die Verpackung oder der Upload mit einem schwerwiegenden Fehler fehl, anstatt das Feld zu ignorieren:
+
+```
+Unexpected key(s) in SKILL.md frontmatter: argument-hint. Allowed properties are: allowed-tools, compatibility, description, license, metadata, name
+```
+
+Das Einschränken des Frontmatters auf die sechs Felder der Spezifikation vermeidet den obigen Fehler „unexpected-key". Die [Agent Skills-Spezifikation](https://agentskills.io) und die [Skills-API-Anforderungen](https://docs.claude.com/en/api/skills-guide) definieren alles andere, das diese Pfade validieren. Claude Code-spezifische Body-Funktionen, wie [dynamische Kontexteinspritzung](#inject-dynamic-context), funktionieren nicht in claude.ai-Chat oder über die API. Claude Code akzeptiert alle sechs Felder, sodass Frontmatter, das der Spezifikation folgt, ohne Änderungen in Claude Code geladen wird.
+
+<h4 id="how-a-skill-gets-its-command-name">
+  Wie eine Fähigkeit ihren Befehlsnamen erhält
+</h4>
+
+Der Befehl, den Sie eingeben, um eine Fähigkeit aufzurufen, kommt von dem Ort, an dem die Fähigkeitsdatei lebt, und für Plugin-Fähigkeiten auch vom Frontmatter-Feld `name`. In einer persönlichen oder Projektfähigkeit setzt `name` nur das Anzeigelabel, das in Fähigkeitsauflistungen angezeigt wird, und der Befehl kommt immer noch vom Verzeichnisnamen. In einer Plugin-Fähigkeit setzt `name` das letzte Segment des Befehls und das Plugin-Präfix bleibt bestehen.
 
 Die folgende Tabelle zeigt, woher der Befehlsname für jedes Layout kommt:
 
-| Skill-Speicherort                                                                                                     | Befehlsnamen-Quelle                                                                 | Beispiel                                                                                                                                |
-| :-------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------- |
-| Skill-Verzeichnis unter `~/.claude/skills/` oder `.claude/skills/`                                                    | Verzeichnisname                                                                     | `.claude/skills/deploy-staging/SKILL.md` → `/deploy-staging`                                                                            |
-| [Verschachteltes](#where-skills-live) `.claude/skills/`-Verzeichnis, wenn der Name mit einem anderen Skill kollidiert | Unterverzeichnispfad relativ zum Arbeitsverzeichnis, dann der Skill-Verzeichnisname | `apps/web/.claude/skills/deploy/SKILL.md` → `/apps/web:deploy`                                                                          |
-| Datei unter `.claude/commands/`                                                                                       | Dateiname ohne Erweiterung                                                          | `.claude/commands/deploy.md` → `/deploy`                                                                                                |
-| Plugin-`skills/`-Unterverzeichnis                                                                                     | Verzeichnisname, mit Namespace durch Plugin                                         | `my-plugin/skills/review/SKILL.md` → `/my-plugin:review`                                                                                |
-| Plugin-Root-`SKILL.md`                                                                                                | Frontmatter `name`, mit dem Plugin-Verzeichnisnamen als Fallback                    | `my-plugin/SKILL.md` mit `name: review` → `/my-plugin:review`. Siehe [Pfad-Verhaltensregeln](/docs/de/plugins-reference#path-behavior-rules) |
+| Fähigkeitsort                                                                                                             | Befehlsnamenquelle                                                                                                 | Beispiel                                                                                                                                     |
+| :------------------------------------------------------------------------------------------------------------------------ | :----------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------- |
+| Fähigkeitsverzeichnis unter `~/.claude/skills/` oder `.claude/skills/`                                                    | Verzeichnisname                                                                                                    | `.claude/skills/deploy-staging/SKILL.md` → `/deploy-staging`                                                                                 |
+| [Verschachteltes](#where-skills-live) `.claude/skills/`-Verzeichnis, wenn der Name mit einer anderen Fähigkeit kollidiert | Unterverzzeichnisspfad relativ zum Arbeitsverzeichnis, dann der Fähigkeitsverzeichnisname                          | `apps/web/.claude/skills/deploy/SKILL.md` → `/apps/web:deploy`                                                                               |
+| Datei unter `.claude/commands/`                                                                                           | Dateiname ohne Erweiterung                                                                                         | `.claude/commands/deploy.md` → `/deploy`                                                                                                     |
+| Datei in einem Unterverzeichnis von `.claude/commands/`                                                                   | Unterverzzeichnisspfad relativ zu `commands/` mit jedem `/` ersetzt durch `:`, dann der Dateiname ohne Erweiterung | `.claude/commands/frontend/component.md` → `/frontend:component`                                                                             |
+| Plugin `skills/` Unterverzeichnis                                                                                         | Frontmatter `name` oder der Verzeichnisname, mit Namespace durch Plugin                                            | `my-plugin/skills/review/SKILL.md` → `/my-plugin:review`, oder `/my-plugin:fancy` mit `name: fancy`                                          |
+| Plugin-Root `SKILL.md`                                                                                                    | Frontmatter `name`, mit dem Plugin-Verzeichnisnamen als Fallback                                                   | `my-plugin/SKILL.md` mit `name: review` → `/my-plugin:review`. Siehe [eine einzelne Fähigkeit im Plugin-Root](/docs/de/plugins/components#skills) |
+| Fähigkeit [synchronisiert von claude.ai](#how-synced-skills-behave)                                                       | Der Name der Fähigkeit auf Ihrem claude.ai-Konto, mit dem Präfix `anthropic-skills:`                               | Kontofähigkeit `deploy` → `/anthropic-skills:deploy`, oder `/deploy`, wenn kein anderer Befehl diesen Namen verwendet                        |
 
-Der Plugin-Root-Fall ist der einzige Ort, an dem `name` den Befehlsnamen setzt, da es kein Skill-Verzeichnis gibt, das ihn übernehmen könnte. Wenn `name` nicht im Frontmatter gesetzt ist, wird stattdessen der Plugin-Verzeichnisname verwendet.
+In einer Plugin-Fähigkeit ersetzt das Frontmatter-Feld `name` den Verzeichnisnamen im letzten Segment des Befehls, sodass `my-plugin/skills/review/SKILL.md` mit `name: fancy` zu `/my-plugin:fancy` wird. Der bloße `/fancy` ruft die Fähigkeit auch auf, es sei denn, ein anderer Befehl verwendet bereits diesen Namen. Wenn der `name`, den Sie schreiben, bereits mit dem eigenen Präfix des Plugins beginnt, fügt Claude Code das Präfix nicht erneut auf v2.1.246 oder später hinzu. Zum Beispiel wird `name: my-plugin:fancy` immer noch zu `/my-plugin:fancy`. Von v2.1.216 bis v2.1.245 verdoppelte Claude Code das Präfix, wenn der `name` es bereits trug.
+
+In [nicht-interaktiven Sitzungen](/docs/de/headless) sind die Namen `help` und `feedback` nicht für ihre nur-Terminal-Befehle reserviert, sodass eine Plugin-Fähigkeit mit einem dieser Namen ihren bloßen Befehl dort behält. Jeder andere nur-Terminal-Befehl, wie `/login`, bleibt reserviert, obwohl der Befehl in diesen Sitzungen nicht ausgeführt werden kann.
+
+Für eine Plugin-Root `SKILL.md` gibt es kein Fähigkeitsverzeichnis, aus dem der Name genommen werden kann, sodass `name` das ganze letzte Segment liefert. Ohne ein `name`-Feld fällt Claude Code auf den Plugin-Verzeichnisnamen zurück.
 
 <h4 id="available-string-substitutions">
-  Verfügbare String-Substitutionen
+  Verfügbare Zeichenkettensubstitutionen
 </h4>
 
-Skills unterstützen String-Substitution für dynamische Werte im Skill-Inhalt:
+Fähigkeiten unterstützen Zeichenkettensubstitution für dynamische Werte im Fähigkeitsinhalt:
 
-| Variable                | Beschreibung                                                                                                                                                                                                                                                                                                                                 |
-| :---------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `$ARGUMENTS`            | Alle Argumente, die beim Aufrufen des Skills übergeben werden. Wenn `$ARGUMENTS` nicht im Inhalt vorhanden ist, werden Argumente als `ARGUMENTS: <value>` angehängt.                                                                                                                                                                         |
-| `$ARGUMENTS[N]`         | Greifen Sie auf ein bestimmtes Argument nach 0-basiertem Index zu, z. B. `$ARGUMENTS[0]` für das erste Argument.                                                                                                                                                                                                                             |
-| `$N`                    | Kurzform für `$ARGUMENTS[N]`, z. B. `$0` für das erste Argument oder `$1` für das zweite.                                                                                                                                                                                                                                                    |
-| `$name`                 | Benanntes Argument, das in der [`arguments`](#frontmatter-reference)-Frontmatter-Liste deklariert ist. Namen werden in Reihenfolge auf Positionen abgebildet, daher wird mit `arguments: [issue, branch]` der Platzhalter `$issue` zum ersten Argument erweitert und `$branch` zum zweiten.                                                  |
-| `${CLAUDE_SESSION_ID}`  | Die aktuelle Sitzungs-ID. Nützlich zum Protokollieren, Erstellen sitzungsspezifischer Dateien oder Korrelieren der Skill-Ausgabe mit Sitzungen.                                                                                                                                                                                              |
-| `${CLAUDE_EFFORT}`      | Die aktuelle Anstrengungsstufe: `low`, `medium`, `high`, `xhigh` oder `max`. Ultracode ist keine separate Stufe und wird als `xhigh` gemeldet. Verwenden Sie dies, um Skill-Anweisungen an die aktive Anstrengungseinstellung anzupassen.                                                                                                    |
-| `${CLAUDE_SKILL_DIR}`   | Das Verzeichnis, das die `SKILL.md`-Datei des Skills enthält. Für Plugin-Skills ist dies das Skill-Unterverzeichnis im Plugin, nicht das Plugin-Root. Verwenden Sie dies in Bash-Injektionsbefehlen, um auf Scripts oder Dateien zu verweisen, die mit dem Skill gebündelt sind, unabhängig vom aktuellen Arbeitsverzeichnis.                |
-| `${CLAUDE_PROJECT_DIR}` | Das Projekt-Root-Verzeichnis. Dies ist der gleiche Pfad, den [Hooks](/docs/de/hooks#reference-scripts-by-path) und MCP-Server als `CLAUDE_PROJECT_DIR` erhalten. Verwenden Sie dies, um auf projektlokale Scripts oder Dateien zu verweisen, wie `${CLAUDE_PROJECT_DIR}/.claude/hooks/helper.sh`, unabhängig davon, wo der Skill installiert ist. |
+| Variable                | Beschreibung                                                                                                                                                                                                                                                                                                                                                  |
+| :---------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `$ARGUMENTS`            | Alle Argumente, die beim Aufrufen der Fähigkeit übergeben werden. Wenn kein Platzhalter ein Argument empfängt, hängt Claude Code `ARGUMENTS: <value>` am Ende des Fähigkeitsinhalts an. Siehe [Argumente an Fähigkeiten übergeben](#pass-arguments-to-skills).                                                                                                |
+| `$ARGUMENTS[N]`         | Greifen Sie auf ein bestimmtes Argument nach 0-basiertem Index zu, z. B. `$ARGUMENTS[0]` für das erste Argument.                                                                                                                                                                                                                                              |
+| `$N`                    | Kurzform für `$ARGUMENTS[N]`, z. B. `$0` für das erste Argument oder `$1` für das zweite.                                                                                                                                                                                                                                                                     |
+| `$name`                 | Benanntes Argument, das in der [`arguments`](#frontmatter-reference)-Frontmatter-Liste deklariert ist. Namen werden in Reihenfolge Positionen zugeordnet, sodass mit `arguments: [issue, branch]` der Platzhalter `$issue` zum ersten Argument und `$branch` zum zweiten expandiert.                                                                          |
+| `${CLAUDE_SESSION_ID}`  | Die aktuelle Sitzungs-ID. Nützlich für Protokollierung, Erstellen von sitzungsspezifischen Dateien oder Korrelation von Fähigkeitsausgabe mit Sitzungen.                                                                                                                                                                                                      |
+| `${CLAUDE_EFFORT}`      | Die aktuelle Aufwandsstufe: `low`, `medium`, `high`, `xhigh` oder `max`. Ultracode ist keine separate Stufe und wird als `xhigh` gemeldet. Verwenden Sie dies, um Fähigkeitsanweisungen an die aktive Aufwandseinstellung anzupassen.                                                                                                                         |
+| `${CLAUDE_SKILL_DIR}`   | Das Verzeichnis, das die `SKILL.md`-Datei der Fähigkeit enthält. Für Plugin-Fähigkeiten ist dies das Fähigkeitsunterverzeichnis innerhalb des Plugins, nicht die Plugin-Root. Verwenden Sie dies in Bash-Injektionsbefehlen, um auf Skripte oder Dateien zu verweisen, die mit der Fähigkeit gebündelt sind, unabhängig vom aktuellen Arbeitsverzeichnis.     |
+| `${CLAUDE_PROJECT_DIR}` | Das Projektroot-Verzeichnis. Dies ist der gleiche Pfad, den [Hooks](/docs/de/hooks#reference-scripts-by-path) und MCP-Server als `CLAUDE_PROJECT_DIR` erhalten. Verwenden Sie dies, um auf projektlokale Skripte oder Dateien zu verweisen, z. B. `${CLAUDE_PROJECT_DIR}/.claude/hooks/helper.sh`, unabhängig davon, wo die Fähigkeit installiert ist.             |
+| `${CLAUDE_PLUGIN_ROOT}` | Das Installationsverzeichnis des Plugins. Wird nur in Plugin-Fähigkeiten ersetzt. Verwenden Sie dies, um auf Skripte oder Dateien zu verweisen, die überall im Plugin gebündelt sind, einschließlich Ressourcen, die zwischen den Plugin-Fähigkeiten geteilt werden. Siehe [Plugin-Umgebungsvariablen](/docs/de/plugins/manifest-reference#environment-variables). |
+| `${CLAUDE_PLUGIN_DATA}` | Das [persistente Datenverzeichnis](/docs/de/plugins/components#path-variables-and-persistent-data) des Plugins, das Plugin-Updates überlebt. Wird nur in Plugin-Fähigkeiten ersetzt. Verwenden Sie dies, um auf installierte Abhängigkeiten, generierte Dateien oder Caches zu verweisen, die ein Update überleben müssen.                                         |
 
-Die `${CLAUDE_PROJECT_DIR}`-Substitution erfordert Claude Code v2.1.196 oder später. Sie gilt sowohl für den Skill-Text als auch für das [`allowed-tools`](#frontmatter-reference)-Frontmatter, sodass eine Berechtigungsregel wie `Bash(${CLAUDE_PROJECT_DIR}/scripts/lint.sh *)` zum gleichen Pfad aufgelöst wird, den der Skill-Text verwendet.
+Claude Code ersetzt `${CLAUDE_SKILL_DIR}` und `${CLAUDE_PROJECT_DIR}` an zwei Stellen: im Markdown-Inhalt der Fähigkeit und in Bash-Regeln im [`allowed-tools`](#frontmatter-reference)-Frontmatter. In einer Plugin-Fähigkeit ersetzt Claude Code `${CLAUDE_PLUGIN_ROOT}` und `${CLAUDE_PLUGIN_DATA}` an den gleichen zwei Stellen. Die Verwendung der gleichen Variable an beiden Stellen ermöglicht es einer Fähigkeit, ein gebündeltes Skript ohne Genehmigungsaufforderung auszuführen. Die folgende Fähigkeit zeigt das Muster:
 
-Indizierte Argumente verwenden Shell-ähnliche Anführungszeichen, daher müssen Sie mehrteilige Werte in Anführungszeichen setzen, um sie als einzelnes Argument zu übergeben. Zum Beispiel macht `/my-skill "hello world" second` `$0` zu `hello world` und `$1` zu `second`. Der `$ARGUMENTS`-Platzhalter wird immer zur vollständigen Argumentzeichenkette erweitert, wie eingegeben.
+```yaml theme={null}
+---
+name: render-chart
+description: Render a chart from a CSV file
+allowed-tools: Bash(${CLAUDE_SKILL_DIR}/scripts/render.sh *)
+---
 
-Um ein Literal `$` vor einer Ziffer, `ARGUMENTS` oder einem deklarierten Argumentnamen einzufügen, z. B. `$1.00` in Prosa, maskieren Sie es mit einem Backslash: `\$1.00`. Ein Backslash vor jedem anderen `$` wird unverändert gelassen. Nur ein einzelner Backslash direkt vor dem Token maskiert ihn. Ein doppelter Backslash wie `\\$1` lässt beide Backslashes an Ort und Stelle, und `$1` wird immer noch zum Argumentwert erweitert.
+Run `${CLAUDE_SKILL_DIR}/scripts/render.sh <csv-file>` to render the chart.
+```
+
+Wenn diese Fähigkeit unter `~/.claude/skills/render-chart/` installiert ist, expandieren beide Vorkommen von `${CLAUDE_SKILL_DIR}` zu diesem Verzeichnis. Die `allowed-tools`-Regel stimmt dann mit dem genauen Befehl überein, den der Fähigkeitstext Claude ausführen sagt, sodass das Skript ohne Aufforderung ausgeführt wird.
+
+Die `${CLAUDE_PROJECT_DIR}`-Substitution erfordert Claude Code v2.1.196 oder später.
+
+Indizierte Argumente verwenden Shell-ähnliche Anführungszeichen, sodass mehrteilige Werte in Anführungszeichen einschließen, um sie als einzelnes Argument zu übergeben. Zum Beispiel macht `/my-skill "hello world" second` `$0` zu `hello world` und `$1` zu `second`. Der `$ARGUMENTS`-Platzhalter expandiert immer zur vollständigen Argumentzeichenkette wie eingegeben.
+
+Ein indizierter Platzhalter ohne entsprechendes Argument, z. B. `$2`, wenn nur ein Argument übergeben wurde, bleibt im Inhalt unverändert. Ein benannter Platzhalter aus dem [`arguments`](#frontmatter-reference)-Frontmatter ohne übereinstimmendes Argument expandiert zu einer leeren Zeichenkette.
+
+Wenn Sie einen Argumentwert übergeben, der selbst Text wie `$1` oder `$ARGUMENTS` enthält, fügt Claude Code ihn als Literaltext ein und expandiert ihn nicht. Zum Beispiel, wenn der Fähigkeitstext `Summarize $0` enthält und Sie `/summarize "$ARGUMENTS from yesterday"` ausführen, empfängt Claude `Summarize $ARGUMENTS from yesterday`. Claude Code ersetzt immer noch `${CLAUDE_*}`-Variablen wie `${CLAUDE_SKILL_DIR}`, nachdem es die Argumente eingefügt hat.
+
+Um ein Literal `$` vor einer Ziffer, `ARGUMENTS` oder einem deklarierten Argumentnamen einzubeziehen, z. B. `$1.00` in Prosa, maskieren Sie es mit einem Backslash: `\$1.00`. Ein Backslash vor jedem anderen `$` bleibt unverändert. Nur ein einzelner Backslash direkt vor dem Token maskiert ihn. Ein verdoppelter Backslash wie `\\$1` lässt beide Backslashes an Ort und Stelle, und `$1` expandiert immer noch zum Argumentwert. Die Backslash-Maskierung deckt nur diese Argumentplatzhalter ab. Ein Backslash verhindert nicht die Substitution einer `${CLAUDE_*}`-Variable, wo die Variable angewendet wird.
 
 **Beispiel mit Substitutionen:**
 
@@ -327,7 +486,7 @@ $ARGUMENTS
   Unterstützende Dateien hinzufügen
 </h3>
 
-Skills können mehrere Dateien in ihrem Verzeichnis enthalten. Dies hält `SKILL.md` auf das Wesentliche konzentriert, während Claude detailliertes Referenzmaterial nur bei Bedarf abrufen kann. Große Referenzdokumente, API-Spezifikationen oder Beispielsammlungen müssen nicht jedes Mal geladen werden, wenn der Skill ausgeführt wird.
+Fähigkeiten können mehrere Dateien in ihrem Verzeichnis enthalten. Dies hält `SKILL.md` auf das Wesentliche konzentriert, während Claude auf detailliertes Referenzmaterial nur bei Bedarf zugreifen kann. Große Referenzdokumente, API-Spezifikationen oder Beispielsammlungen müssen nicht jedes Mal geladen werden, wenn die Fähigkeit ausgeführt wird.
 
 ```text theme={null}
 my-skill/
@@ -338,7 +497,7 @@ my-skill/
     └── helper.py (utility script - executed, not loaded)
 ```
 
-Verweisen Sie auf unterstützende Dateien von `SKILL.md` aus, damit Claude weiß, was jede Datei enthält und wann sie geladen werden soll:
+Verweisen Sie auf unterstützende Dateien aus `SKILL.md`, damit Claude weiß, was jede Datei enthält und wann sie geladen werden soll:
 
 ```markdown theme={null}
 ## Additional resources
@@ -350,16 +509,16 @@ Verweisen Sie auf unterstützende Dateien von `SKILL.md` aus, damit Claude weiß
 <Tip>Halten Sie `SKILL.md` unter 500 Zeilen. Verschieben Sie detailliertes Referenzmaterial in separate Dateien.</Tip>
 
 <h3 id="control-who-invokes-a-skill">
-  Steuern Sie, wer einen Skill aufruft
+  Kontrollieren Sie, wer eine Fähigkeit aufruft
 </h3>
 
-Standardmäßig können sowohl Sie als auch Claude jeden Skill aufrufen. Sie können `/skill-name` eingeben, um ihn direkt aufzurufen, und Claude kann ihn automatisch laden, wenn er für Ihr Gespräch relevant ist. Zwei Frontmatter-Felder ermöglichen es Ihnen, dies einzuschränken:
+Standardmäßig können Sie und Claude jede Fähigkeit aufrufen. Sie können `/skill-name` eingeben, um sie direkt aufzurufen, und Claude kann sie automatisch laden, wenn sie für Ihr Gespräch relevant ist. Zwei Frontmatter-Felder ermöglichen es Ihnen, dies einzuschränken:
 
-* **`disable-model-invocation: true`**: Nur Sie können den Skill aufrufen. Verwenden Sie dies für Workflows mit Nebenwirkungen oder die Sie zeitlich steuern möchten, wie `/commit`, `/deploy` oder `/send-slack-message`. Sie möchten nicht, dass Claude bereitstellt, weil Ihr Code bereit aussieht.
+* **`disable-model-invocation: true`**: Nur Sie können die Fähigkeit aufrufen. Verwenden Sie dies für Workflows mit Nebenwirkungen oder die Sie zeitlich kontrollieren möchten, wie `/commit`, `/deploy` oder `/send-slack-message`. Sie möchten nicht, dass Claude bereitstellt, weil Ihr Code bereit aussieht.
 
-* **`user-invocable: false`**: Nur Claude kann den Skill aufrufen. Verwenden Sie dies für Hintergrundwissen, das nicht als Befehl umsetzbar ist. Ein `legacy-system-context`-Skill erklärt, wie ein altes System funktioniert. Claude sollte dies kennen, wenn es relevant ist, aber `/legacy-system-context` ist keine aussagekräftige Aktion für Benutzer.
+* **`user-invocable: false`**: Nur Claude kann die Fähigkeit aufrufen. Verwenden Sie dies für Hintergrundwissen, das nicht als Befehl umsetzbar ist. Eine `legacy-system-context`-Fähigkeit erklärt, wie ein altes System funktioniert. Claude sollte dies kennen, wenn relevant, aber `/legacy-system-context` ist keine aussagekräftige Aktion für Benutzer.
 
-Dieses Beispiel erstellt einen Deploy-Skill, den nur Sie auslösen können. Das `disable-model-invocation: true`-Feld verhindert, dass Claude ihn automatisch ausführt:
+Dieses Beispiel erstellt eine Deploy-Fähigkeit, die nur Sie auslösen können. Wenn Sie `disable-model-invocation: true` setzen, kann Claude die Fähigkeit nicht automatisch ausführen:
 
 ```yaml theme={null}
 ---
@@ -376,39 +535,41 @@ Deploy $ARGUMENTS to production:
 4. Verify the deployment succeeded
 ```
 
+Wenn Claude es trotzdem versucht, blockiert Claude Code den Aufruf und weist es an, die Deploy-Schritte nicht auf andere Weise zu reproduzieren, sodass Sie erwarten können, dass Claude vorschlägt, `/deploy` selbst auszuführen.
+
 Hier ist, wie die beiden Felder Aufrufe und Kontextladung beeinflussen:
 
-| Frontmatter                      | Sie können aufrufen | Claude kann aufrufen | Wann in Kontext geladen                                                            |
-| :------------------------------- | :------------------ | :------------------- | :--------------------------------------------------------------------------------- |
-| (Standard)                       | Ja                  | Ja                   | Beschreibung immer im Kontext, vollständiger Skill wird beim Aufrufen geladen      |
-| `disable-model-invocation: true` | Ja                  | Nein                 | Beschreibung nicht im Kontext, vollständiger Skill wird geladen, wenn Sie aufrufen |
-| `user-invocable: false`          | Nein                | Ja                   | Beschreibung immer im Kontext, vollständiger Skill wird beim Aufrufen geladen      |
+| Frontmatter                      | Sie können aufrufen | Claude kann aufrufen | Wann in Kontext geladen                                                                    |
+| :------------------------------- | :------------------ | :------------------- | :----------------------------------------------------------------------------------------- |
+| (Standard)                       | Ja                  | Ja                   | Beschreibung immer im Kontext, vollständige Fähigkeit wird beim Aufrufen geladen           |
+| `disable-model-invocation: true` | Ja                  | Nein                 | Beschreibung nicht im Kontext, vollständige Fähigkeit wird beim Aufrufen durch Sie geladen |
+| `user-invocable: false`          | Nein                | Ja                   | Beschreibung immer im Kontext, vollständige Fähigkeit wird beim Aufrufen geladen           |
 
 <Note>
-  In einer regulären Sitzung werden Skill-Beschreibungen in den Kontext geladen, damit Claude weiß, was verfügbar ist, aber vollständiger Skill-Inhalt wird nur beim Aufrufen geladen. [Subagenten mit vorgeladenen Skills](/docs/de/sub-agents#preload-skills-into-subagents) funktionieren anders: Der vollständige Skill-Inhalt wird beim Start eingespritzt.
+  In einer regulären Sitzung werden Fähigkeitsbeschreibungen in den Kontext geladen, damit Claude weiß, was verfügbar ist, aber vollständiger Fähigkeitsinhalt wird nur beim Aufrufen geladen. [Subagents mit vorgeladenen Fähigkeiten](/docs/de/sub-agents#preload-skills-into-subagents) funktionieren anders: Der vollständige Fähigkeitsinhalt wird beim Start eingespritzt.
 </Note>
 
 <h3 id="skill-content-lifecycle">
-  Skill-Inhalts-Lebenszyklus
+  Fähigkeitsinhalts-Lebenszyklus
 </h3>
 
-Wenn Sie oder Claude einen Skill aufrufen, wird der gerenderte `SKILL.md`-Inhalt als einzelne Nachricht in das Gespräch eingegeben und bleibt dort für den Rest der Sitzung. Claude Code liest die Skill-Datei bei späteren Zügen nicht erneut, daher schreiben Sie Anleitung, die während einer Aufgabe gelten sollte, als stehende Anweisungen statt als einmalige Schritte.
+Wenn Sie oder Claude eine Fähigkeit aufrufen, tritt der gerenderte `SKILL.md`-Inhalt als einzelne Nachricht in das Gespräch ein und bleibt über spätere Turns hinweg bestehen. Diese Persistenz gilt für die Anweisungen der Fähigkeit, nicht ihre Berechtigungen: Eine [`allowed-tools`](#pre-approve-tools-for-a-skill)-Genehmigung wird gelöscht, wenn Sie Ihre nächste Nachricht senden. Claude Code liest die Fähigkeitsdatei bei späteren Turns nicht erneut, daher schreiben Sie Anleitung, die während einer Aufgabe gelten sollte, als stehende Anweisungen anstelle von einmaligen Schritten.
 
-Wenn Claude einen Skill erneut aufruft, dessen gerenderter Inhalt identisch mit der bereits im Kontext vorhandenen Kopie ist, fügt Claude Code eine kurze Notiz hinzu, dass der Skill bereits geladen ist, anstatt eine zweite Kopie des Inhalts zu erstellen. Wenn sich der gerenderte Inhalt unterscheidet, weil sich die Argumente geändert haben oder ein [dynamischer Kontext](#inject-dynamic-context)-Befehl neue Ausgabe erzeugt hat, hängt Claude Code den vollständigen Inhalt erneut an. Vor v2.1.202 hängte jeder erneute Aufruf eine weitere vollständige Kopie der Skill-Anweisungen an.
+Wenn Claude eine Fähigkeit erneut aufruft, deren gerenderter Inhalt identisch mit der bereits im Kontext vorhandenen Kopie ist, fügt Claude Code einen kurzen Hinweis hinzu, dass die Fähigkeit bereits geladen ist, anstatt eine zweite Kopie des Inhalts zu erstellen. Wenn sich der gerenderte Inhalt unterscheidet, weil sich die Argumente geändert haben oder ein [dynamischer Kontext](#inject-dynamic-context)-Befehl neue Ausgabe erzeugt hat, hängt Claude Code den vollständigen Inhalt erneut an.
 
-[Auto-Komprimierung](/docs/de/how-claude-code-works#when-context-fills-up) trägt aufgerufene Skills innerhalb eines Token-Budgets weiter. Wenn das Gespräch zusammengefasst wird, um Kontext freizugeben, hängt Claude Code die neueste Aufrufe jedes Skills nach der Zusammenfassung wieder an und behält die ersten 5.000 Token jedes Skills. Wieder angehängte Skills teilen sich ein kombiniertes Budget von 25.000 Token. Claude Code füllt dieses Budget ab dem zuletzt aufgerufenen Skill, sodass ältere Skills vollständig gelöscht werden können, wenn Sie viele in einer Sitzung aufgerufen haben.
+[Auto-Komprimierung](/docs/de/how-claude-code-works#when-context-fills-up) trägt aufgerufene Fähigkeiten innerhalb eines Token-Budgets vorwärts. Wenn das Gespräch zusammengefasst wird, um Kontext freizugeben, hängt Claude Code die neueste Aufrufinvokation jeder Fähigkeit nach der Zusammenfassung erneut an, wobei die ersten 5.000 Token jeder beibehalten werden. Erneut angehängte Fähigkeiten teilen sich ein kombiniertes Budget von 25.000 Token. Claude Code füllt dieses Budget beginnend mit der zuletzt aufgerufenen Fähigkeit, sodass ältere Fähigkeiten vollständig gelöscht werden können, nachdem die Komprimierung erfolgt ist, wenn Sie viele in einer Sitzung aufgerufen haben.
 
-Wenn ein Skill das Verhalten nach der ersten Antwort nicht mehr zu beeinflussen scheint, ist der Inhalt normalerweise immer noch vorhanden und das Modell wählt andere Tools oder Ansätze. Stärken Sie die `description` und Anweisungen des Skills, damit das Modell es weiterhin bevorzugt, oder verwenden Sie [Hooks](/docs/de/hooks), um Verhalten deterministisch zu erzwingen. Wenn der Skill groß ist oder Sie mehrere andere danach aufgerufen haben, rufen Sie ihn nach der Komprimierung erneut auf, um den vollständigen Inhalt wiederherzustellen.
+Wenn eine Fähigkeit nach der ersten Antwort zu beeinflussen zu stoppen scheint, ist der Inhalt normalerweise immer noch vorhanden und das Modell wählt andere Tools oder Ansätze. Stärken Sie die `description` und Anweisungen der Fähigkeit, damit das Modell sie weiterhin bevorzugt, oder verwenden Sie [Hooks](/docs/de/hooks), um Verhalten deterministisch zu erzwingen. Wenn die Fähigkeit groß ist oder Sie mehrere andere danach aufgerufen haben, rufen Sie sie nach der Komprimierung erneut auf, um den vollständigen Inhalt wiederherzustellen.
 
 <h3 id="pre-approve-tools-for-a-skill">
-  Tools für einen Skill vorab genehmigen
+  Tools für eine Fähigkeit vorab genehmigen
 </h3>
 
-Das `allowed-tools`-Feld gewährt Berechtigung für die aufgelisteten Tools, während der Skill aktiv ist, sodass Claude sie verwenden kann, ohne Sie um Genehmigung zu bitten. Es schränkt nicht ein, welche Tools verfügbar sind: Jedes Tool bleibt aufrufbar, und Ihre [Berechtigungseinstellungen](/docs/de/permissions) regeln weiterhin Tools, die nicht aufgelistet sind.
+Das Feld `allowed-tools` gewährt Genehmigung für die aufgelisteten Tools während des Turns, der die Fähigkeit aufruft, sodass Claude sie ohne Genehmigungsaufforderung verwenden kann. Die Genehmigung wird gelöscht, wenn Sie Ihre nächste Nachricht senden, obwohl der Fähigkeitsinhalt [im Kontext bleibt](#skill-content-lifecycle); das erneute Aufrufen der Fähigkeit wendet es für diesen Turn erneut an. Es schränkt nicht ein, welche Tools verfügbar sind: Jedes Tool bleibt aufrufbar, und Ihre [Berechtigungseinstellungen](/docs/de/permissions) regieren immer noch Tools, die nicht aufgelistet sind. Um Tools für die ganze Sitzung vorab zu genehmigen, anstatt einen einzelnen Turn, fügen Sie stattdessen Zulassungsregeln zu diesen Berechtigungseinstellungen hinzu.
 
-Für Skills, die in das Verzeichnis `.claude/skills/` eines Projekts eingecheckt werden, tritt `allowed-tools` in Kraft, nachdem Sie den Workspace-Trust-Dialog für diesen Ordner akzeptiert haben, genauso wie Berechtigungsregeln in `.claude/settings.json`. Überprüfen Sie Projekt-Skills vor dem Vertrauen in ein Repository, da ein Skill sich selbst breiten Tool-Zugriff gewähren kann.
+Workspace-Vertrauen gatet dieses Feld nicht. Claude Code wendet die `allowed-tools` einer Projektfähigkeit an, wann immer Sie oder Claude die Fähigkeit aufrufen, einschließlich in einem `-p`-Lauf in einem Ordner, dem Sie nie vertraut haben. Eine Fähigkeit kann sich selbst breiten Tool-Zugriff gewähren, daher überprüfen Sie die `allowed-tools` von Fähigkeiten, die in ein Repository eingecheckt sind, bevor Sie Claude Code dort ausführen.
 
-Dieser Skill lässt Claude Git-Befehle ohne Genehmigung pro Verwendung ausführen, wenn Sie ihn aufrufen:
+Diese Fähigkeit ermöglicht es Claude, Git-Befehle ohne Genehmigung pro Verwendung auszuführen, wann immer Sie sie aufrufen:
 
 ```yaml theme={null}
 ---
@@ -419,15 +580,15 @@ allowed-tools: Bash(git add *) Bash(git commit *) Bash(git status *)
 ---
 ```
 
-Um Tools aus Claudes verfügbarem Pool zu entfernen, während ein Skill aktiv ist, listen Sie sie in `disallowed-tools` im Frontmatter des Skills auf. Die Einschränkung wird gelöscht, wenn Sie Ihre nächste Nachricht senden. Um Tools über alle Skills und Eingaben hinweg zu blockieren, fügen Sie Ablehnungsregeln in Ihren [Berechtigungseinstellungen](/docs/de/permissions) hinzu.
+Um Tools aus Claudes verfügbarem Pool zu entfernen, während eine Fähigkeit aktiv ist, listen Sie sie im `disallowed-tools` im Frontmatter der Fähigkeit auf. Die Einschränkung wird gelöscht, wenn Sie Ihre nächste Nachricht senden. Wie Ablehnungsregeln kann das Feld [`EndConversation`](/docs/de/tools-reference#endconversation-tool-behavior) nicht entfernen, während ein anderes Tool verfügbar bleibt. Um Tools über alle Fähigkeiten und Eingabeaufforderungen hinweg zu blockieren, fügen Sie Ablehnungsregeln in Ihren [Berechtigungseinstellungen](/docs/de/permissions) hinzu.
 
 <h3 id="pass-arguments-to-skills">
-  Argumente an Skills übergeben
+  Argumente an Fähigkeiten übergeben
 </h3>
 
-Sowohl Sie als auch Claude können Argumente beim Aufrufen eines Skills übergeben. Argumente sind über den `$ARGUMENTS`-Platzhalter verfügbar.
+Sowohl Sie als auch Claude können Argumente beim Aufrufen einer Fähigkeit übergeben. Argumente sind über den `$ARGUMENTS`-Platzhalter verfügbar.
 
-Dieser Skill behebt ein GitHub-Problem nach Nummer. Der `$ARGUMENTS`-Platzhalter wird durch alles ersetzt, was dem Skill-Namen folgt:
+Diese Fähigkeit behebt ein GitHub-Problem nach Nummer. Der `$ARGUMENTS`-Platzhalter wird durch alles ersetzt, das dem Fähigkeitsnamen folgt:
 
 ```yaml theme={null}
 ---
@@ -445,32 +606,32 @@ Fix GitHub issue $ARGUMENTS following our coding standards.
 5. Create a commit
 ```
 
-Wenn Sie `/fix-issue 123` ausführen, erhält Claude „Fix GitHub issue 123 following our coding standards..."
+Wenn Sie `/fix-issue 123` ausführen, empfängt Claude „Fix GitHub issue 123 following our coding standards..."
 
-Wenn Sie einen Skill mit Argumenten aufrufen, aber der Skill `$ARGUMENTS` nicht enthält, hängt Claude Code `ARGUMENTS: <your input>` am Ende des Skill-Inhalts an, damit Claude immer noch sieht, was Sie eingegeben haben.
+Wenn Sie eine Fähigkeit mit Argumenten aufrufen, aber kein Platzhalter im Fähigkeitsinhalt ein Argument empfängt, hängt Claude Code `ARGUMENTS: <your input>` am Ende des Fähigkeitsinhalts an, damit Claude immer noch sieht, was Sie eingegeben haben. Ein Platzhalter ist `$ARGUMENTS`, eine indizierte Form wie `$1` oder ein benanntes Argument. Ein indizierter Platzhalter ohne Argument an seiner Position bleibt als Literaltext und zählt nicht als empfangen. Ein benannter Platzhalter zählt auch, wenn seine Position kein Argument hat, weil er zu einer leeren Zeichenkette expandiert.
 
-Sie können auch mehrere Skills am Anfang einer Nachricht stapeln. Ab v2.1.199 lädt das Eingeben von `/code-review /fix-issue 123` beide Skills und übergibt den nachfolgenden Text `123` als `$ARGUMENTS` an jeden von ihnen. In früheren Versionen wurde nur der erste Skill geladen und erhielt `/fix-issue 123` als wörtlichen Argumenttext.
+Sie können auch mehrere Fähigkeiten am Anfang einer Nachricht stapeln. Das Eingeben von `/write-tests /fix-issue 123` lädt beide Fähigkeiten und übergibt den nachfolgenden Text `123` als `$ARGUMENTS` an jede von ihnen. Vor v2.1.199 wurde nur die erste Fähigkeit geladen und erhielt `/fix-issue 123` als Literalargumenttext.
 
-Claude Code erweitert den ersten Skill plus bis zu fünf weitere, die danach gestapelt sind. Die Erweiterung stoppt beim ersten Token, das kein Inline-Benutzer-aufgerufener Skill ist, daher endet auch ein Skill, der als [verzweigter Subagent](#run-skills-in-a-subagent) ausgeführt wird, oder einer, dessen Argumente selbst mit einem Schrägstrich-Befehl beginnen können, wie `/loop`, auch dort; dieses Token und alles danach werden zum Argumenttext für jeden erweiterten Skill.
+Claude Code expandiert die erste Fähigkeit plus bis zu fünf weitere, die danach gestapelt sind. Die Expansion stoppt beim ersten Token, das keine Inline-Benutzer-aufgerufene Fähigkeit ist, sodass eine Fähigkeit, die als [verzweigter Subagent](#run-skills-in-a-subagent) ausgeführt wird, wie [`/code-review`](/docs/de/code-review#review-a-diff-locally), oder eine, deren Argumente selbst mit einem Schrägstrich-Befehl beginnen können, wie `/loop`, auch dort endet. Dieser Token und alles danach werden der Argumenttext für jede expandierte Fähigkeit. `/code-review` wird ab v2.1.218 als verzweigter Subagent ausgeführt; in früheren Versionen wurde es inline ausgeführt und gestapelt.
 
-Um auf einzelne Argumente nach Position zuzugreifen, verwenden Sie `$ARGUMENTS[N]` oder die kürzere Form `$N`:
+Um auf einzelne Argumente nach Position zuzugreifen, verwenden Sie `$ARGUMENTS[N]` oder die kürzere `$N`:
 
 ```yaml theme={null}
 ---
 name: migrate-component
-description: Migrate a component from one framework to another
+description: Migrate a component from one language to another
 ---
 
 Migrate the $ARGUMENTS[0] component from $ARGUMENTS[1] to $ARGUMENTS[2].
 Preserve all existing behavior and tests.
 ```
 
-Wenn Sie `/migrate-component SearchBar React Vue` ausführen, wird `$ARGUMENTS[0]` durch `SearchBar`, `$ARGUMENTS[1]` durch `React` und `$ARGUMENTS[2]` durch `Vue` ersetzt. Der gleiche Skill mit der `$N`-Kurzform:
+Das Ausführen von `/migrate-component SearchBar JavaScript TypeScript` ersetzt `$ARGUMENTS[0]` durch `SearchBar`, `$ARGUMENTS[1]` durch `JavaScript` und `$ARGUMENTS[2]` durch `TypeScript`. Die gleiche Fähigkeit mit der `$N`-Kurzform:
 
 ```yaml theme={null}
 ---
 name: migrate-component
-description: Migrate a component from one framework to another
+description: Migrate a component from one language to another
 ---
 
 Migrate the $0 component from $1 to $2.
@@ -478,16 +639,16 @@ Preserve all existing behavior and tests.
 ```
 
 <h2 id="advanced-patterns">
-  Fortgeschrittene Muster
+  Erweiterte Muster
 </h2>
 
 <h3 id="inject-dynamic-context">
-  Dynamischen Kontext einspritzen
+  Dynamischen Kontext injizieren
 </h3>
 
-Die `` !`<command>` `` Syntax führt Shell-Befehle aus, bevor der Skill-Inhalt an Claude gesendet wird. Die Befehlsausgabe ersetzt den Platzhalter, sodass Claude tatsächliche Daten erhält, nicht den Befehl selbst.
+Die Syntax `` !`<command>` `` führt Shell-Befehle aus, bevor der Skill-Inhalt an Claude gesendet wird. Die Befehlsausgabe ersetzt den Platzhalter, sodass Claude tatsächliche Daten erhält, nicht den Befehl selbst. Claude Code führt diese Befehle auf Ihrem Computer nicht aus, wenn der Skill [von Ihrem claude.ai-Konto synchronisiert wird](#how-claude-code-handles-the-body-of-a-synced-skill). Diese Einschränkung erfordert Claude Code v2.1.228 oder später.
 
-Dieser Skill fasst einen Pull Request zusammen, indem er Live-PR-Daten mit der GitHub CLI abruft. Die `` !`gh pr diff` `` und andere Befehle werden zuerst ausgeführt, und ihre Ausgabe wird in den Prompt eingefügt:
+Dieser Skill fasst einen Pull Request zusammen, indem er Live-PR-Daten mit der GitHub CLI abruft. Die Befehle `` !`gh pr diff` `` und andere werden zuerst ausgeführt, und ihre Ausgabe wird in den Prompt eingefügt:
 
 ```yaml theme={null}
 ---
@@ -507,59 +668,113 @@ allowed-tools: Bash(gh *)
 Summarize this pull request...
 ```
 
-Wenn dieser Skill ausgeführt wird:
-
-1. Jeder `` !`<command>` `` wird sofort ausgeführt (bevor Claude etwas sieht)
-2. Die Ausgabe ersetzt den Platzhalter im Skill-Inhalt
-3. Claude erhält den vollständig gerenderten Prompt mit tatsächlichen PR-Daten
-
-Dies ist Vorverarbeitung, nicht etwas, das Claude ausführt. Claude sieht nur das Endergebnis.
-
-Die Substitution wird einmal über die ursprüngliche Datei ausgeführt. Die Befehlsausgabe wird als Klartext eingefügt und wird nicht erneut auf weitere `` !`<command>` `` Platzhalter gescannt, sodass ein Befehl keinen Platzhalter für einen späteren Durchgang ausgeben kann.
+Die Ersetzung wird einmal über die ursprüngliche Datei ausgeführt. Die Befehlsausgabe wird als Klartext eingefügt und wird nicht erneut nach weiteren `` !`<command>` ``-Platzhaltern gescannt, sodass ein Befehl keinen Platzhalter für einen späteren Durchgang ausgeben kann.
 
 Die Inline-Form wird nur erkannt, wenn `!` am Anfang einer Zeile oder unmittelbar nach Leerzeichen erscheint. Wenn `!` auf ein anderes Zeichen folgt, wie in `` KEY=!`cmd` ``, wird der Platzhalter als Literaltext belassen und der Befehl wird nicht ausgeführt.
 
-Für mehrzeilige Befehle verwenden Sie einen Codeblock, der mit ` ```! ` statt der Inline-Form geöffnet wird:
+Verwenden Sie für mehrzeilige Befehle einen eingezäunten Code-Block, der mit ` ```! ` statt der Inline-Form geöffnet wird:
 
 ````markdown theme={null}
 ## Environment
 ```!
 node --version
-npm --version
 git status --short
 ```
 ````
 
-Um dieses Verhalten für Skills und benutzerdefinierte Befehle aus Benutzer-, Projekt-, Plugin- oder [zusätzlichen Verzeichnis](#skills-from-additional-directories)-Quellen zu deaktivieren, setzen Sie `"disableSkillShellExecution": true` in [Einstellungen](/docs/de/settings). Jeder Befehl wird stattdessen durch `[shell command execution disabled by policy]` ersetzt. Gebündelte und verwaltete Skills sind nicht betroffen. Diese Einstellung ist am nützlichsten in [verwalteten Einstellungen](/docs/de/permissions#managed-settings), wo Benutzer sie nicht überschreiben können.
+Um dieses Verhalten für Skills und benutzerdefinierte Befehle aus Benutzer-, Projekt-, Plugin- oder [zusätzlichen Verzeichnisquellen](#skills-from-additional-directories) zu deaktivieren, setzen Sie `"disableSkillShellExecution": true` in [settings](/docs/de/settings). Jeder Befehl wird durch `[shell command execution disabled by policy]` ersetzt, anstatt ausgeführt zu werden. Gebündelte und verwaltete Skills sind nicht betroffen. Diese Einstellung ist am nützlichsten in [verwalteten Einstellungen](/docs/de/managed-settings), wo Benutzer sie nicht überschreiben können.
+
+Claude Code führt diese Befehle auf Ihrem Computer niemals aus, wenn sie in Skills [von Ihrem claude.ai-Konto synchronisiert werden](#how-synced-skills-behave), unabhängig von dieser Einstellung. Diese Einschränkung erfordert Claude Code v2.1.228 oder später. [Wie Claude Code den Text eines synchronisierten Skills verarbeitet](#how-claude-code-handles-the-body-of-a-synced-skill) sagt, was Claude anstelle des Befehls in jeder Art von Sitzung erhält.
 
 <Tip>
-  Um tiefere Überlegungen zu anfordern, wenn ein Skill ausgeführt wird, fügen Sie `ultrathink` irgendwo im Skill-Inhalt ein. Siehe [Verwenden Sie ultrathink für einmalige tiefe Überlegungen](/docs/de/model-config#use-ultrathink-for-one-off-deep-reasoning).
+  Um tiefere Überlegungen anzufordern, wenn ein Skill ausgeführt wird, fügen Sie `ultrathink` irgendwo im Skill-Inhalt ein. Siehe [Verwenden Sie ultrathink für einmalige tiefe Überlegungen](/docs/de/model-config#use-ultrathink-for-one-off-deep-reasoning).
 </Tip>
 
+<h4 id="how-injected-commands-run">
+  Wie injizierte Befehle ausgeführt werden
+</h4>
+
+Claude Code wählt das Tool, das die injizierte Befehle eines Skills ausführt, aus dem `shell`-Schlüssel in der Frontmatter des Skills und Ihrer Umgebung aus. Jede Kombination führt die Befehle durch das Bash-Tool oder das PowerShell-Tool aus, mit Ausnahme einer Kombination, die den Aufruf sofort fehlschlagen lässt:
+
+* `shell: powershell`, mit dem [PowerShell-Tool](/docs/de/tools-reference#powershell-tool) aktiviert: Die Befehle werden durch das PowerShell-Tool ausgeführt.
+* `shell: bash`, wenn bash nicht verfügbar ist: Der Aufruf schlägt fehl, bevor ein Befehl ausgeführt wird. Dies geschieht unter Windows ohne Git Bash. Claude Code zeigt ``Skill <name> requires bash (`shell: bash` in frontmatter) but Git Bash was not found``.
+* Jede andere Kombination: Die Befehle werden durch das Bash-Tool ausgeführt, wenn bash verfügbar ist. Wenn nicht, werden sie durch das PowerShell-Tool ausgeführt.
+
+Beide Tools führen die Befehle auf die gleiche Weise aus wie Claudes eigene Shell-Befehle. Sie teilen sich das Arbeitsverzeichnis, das Timeout und die Ausgabeverarbeitung:
+
+* **Arbeitsverzeichnis**: Claude Code führt jeden Befehl im aktuellen Arbeitsverzeichnis der Session-Shell aus. Dieses Verzeichnis wechselt, wenn Claude `cd` ausführt. Verwenden Sie [`${CLAUDE_SKILL_DIR}` oder `${CLAUDE_PROJECT_DIR}`](#available-string-substitutions) in Pfaden, die sich jedes Mal auf die gleiche Weise auflösen müssen.
+* **stderr**: Mit der Standard-`bash`-Shell führt Claude Code stderr in stdout zusammen. Alles, was der Befehl in stderr schreibt, erscheint im eingefügten Text.
+* **Timeout**: Jeder Befehl wird unter dem Standard-2-Minuten-[Timeout](/docs/de/tools-reference#timeout-and-output-limits) des Bash-Tools ausgeführt. Wenn das Bash-Tool [einen Befehl mit Timeout in den Hintergrund verschiebt](/docs/de/tools-reference#background-commands), wird der Skill trotzdem gerendert. Der eingefügte Text meldet die Verschiebung und nennt die Hintergrund-Task und die Datei, die die Ausgabe des Befehls sammelt. Wenn der Befehl einer ist, den das Bash-Tool niemals automatisch in den Hintergrund verschiebt, beendet Claude Code ihn beim Timeout. Dieser Fehler [bricht den Aufruf ab](#when-an-injected-command-fails).
+* **Ausgabegröße**: Ausgabe, die die Inline-Obergrenze des Bash-Tools überschreitet, kommt als Dateipfad plus kurze Vorschau an, nicht als gekürzter Text. [Ausgabegrenzen](/docs/de/tools-reference#output-limits) behandelt die Obergrenze und wie man jede Grenze anpasst.
+
+Das PowerShell-Tool wendet das gleiche Timeout-, Backgrounding- und Output-Ceiling-Verhalten auf die Befehle an, die es ausführt. Siehe den Abschnitt [PowerShell-Tool](/docs/de/tools-reference#powershell-tool) für seine Besonderheiten.
+
+<h4 id="when-an-injected-command-fails">
+  Wenn ein injizierter Befehl fehlschlägt
+</h4>
+
+Ein fehlgeschlagener Befehl bricht den gesamten Skill-Aufruf ab, nicht nur seinen eigenen Platzhalter. Claude sieht den Skill-Inhalt für diesen Aufruf nie. Der Abbruch zeigt `Shell command failed for pattern "..."`. Die Fehlermeldung enthält die Ausgabe des Befehls unter `[stderr]`.
+
+Mit der Standard-`bash`-Shell zählt jeder Exit-Code ungleich Null als Fehler. Eine Ausnahme gilt: Claude Code behandelt Exit-Code 1 von [Such- und Vergleichsbefehlen](/docs/de/tools-reference#output-limits) als normales Ergebnis und fügt ihre Ausgabe ein. Exit-Codes von 2 oder höher schlagen auch für diese Befehle fehl.
+
+Welche Befehle die Ausnahme erhalten, hängt von der Shell ab:
+
+* Standard-`bash`-Shell: Die Befehle, die unter [Ausgabegrenzen](/docs/de/tools-reference#output-limits) aufgelistet sind
+* `shell: powershell`, wenn das PowerShell-Tool aktiviert ist: Ein [anderer Satz](/docs/de/tools-reference#shell-selection-in-settings-hooks-and-skills), der `grep` und `git diff` enthält, aber nicht `find` oder `diff`
+
+Mit der Standard-`bash`-Shell fügen Sie `|| true` an jeden anderen Befehl an, von dem Sie erwarten, dass er mit einem Exit-Code ungleich Null endet. Ein Überprüfungsskript, das 1 beendet, wenn es Probleme findet, ist ein Beispiel.
+
+<h4 id="permission-checks-on-injected-commands">
+  Berechtigungsprüfungen für injizierte Befehle
+</h4>
+
+Injizierte Befehle fordern niemals Genehmigung an, während der Skill gerendert wird. Claude Code prüft jeden gegen Ihre [Berechtigungsregeln](/docs/de/permissions) zuerst. Ein Befehl, den eine Deny-Regel erfasst, bricht den Aufruf mit `Shell command permission check failed for pattern "..."` ab.
+
+Außerhalb des [Auto-Modus](/docs/de/permission-modes#eliminate-prompts-with-auto-mode), wenn die Berechtigungsprüfung eines Befehls etwas anderes als Zulassung zurückgibt, bricht Claude Code den Aufruf ab. Dies schließt eine Regel ein, die normalerweise fragen würde. Um zu verhindern, dass ein nicht übereinstimmender Befehl hier abbricht, genehmigen Sie ihn vorher mit [`allowed-tools`](#pre-approve-tools-for-a-skill). Deny- und Ask-Regeln überschreiben immer noch `allowed-tools`. Siehe [Berechtigungen verwalten](/docs/de/permissions#manage-permissions).
+
+Im Auto-Modus bricht ein Befehl, der sonst Ihre Genehmigung benötigen würde, den Aufruf nicht ab. Der Skill wird mit einer Anweisung geladen, die Claude anweist, den Befehl zuerst auszuführen, und Claudes eigener Aufruf wird dann durch [die üblichen Prüfungen des Auto-Modus](/docs/de/permission-modes#how-the-classifier-evaluates-actions) durchgeführt. Der Aufruf bricht immer noch in einem [verzweigten Skill](#run-skills-in-a-subagent) ab, der `agent` setzt, und in einer Sitzung, in der Claude nicht das [Shell-Tool hat, das injizierte Befehle ausführt](#how-injected-commands-run).
+
 <h3 id="run-skills-in-a-subagent">
-  Skills in einem Subagent ausführen
+  Skills in einem Subagenten ausführen
 </h3>
 
-Fügen Sie `context: fork` zu Ihrem Frontmatter hinzu, wenn Sie möchten, dass ein Skill isoliert ausgeführt wird. Der Skill-Inhalt wird zum Prompt, der den Subagent antreibt. Er hat keinen Zugriff auf Ihren Gesprächsverlauf.
+Fügen Sie `context: fork` zu Ihrer Frontmatter hinzu, wenn Sie möchten, dass ein Skill isoliert ausgeführt wird. Claude Code startet einen neuen Subagenten des im `agent`-Feld festgelegten Typs und gibt ihm den Skill-Inhalt als seinen Prompt. Der Subagent sieht Ihren Gesprächsverlauf nicht, daher müssen die Anweisungen des Skills eigenständig sein.
+
+<Note>
+  Trotz des Namens wird ein Skill mit `context: fork` nicht in einer [Verzweigung des aktuellen Gesprächs](/docs/de/sub-agents#fork-the-current-conversation) ausgeführt, was dem Subagenten alles geben würde, das Sie bisher besprochen haben. Wenn die Task von diesem Verlauf abhängt, verzweigen Sie das Gespräch, anstatt `context: fork` zu verwenden.
+</Note>
+
+Der verzweigte Subagent wird im [Hintergrund](/docs/de/sub-agents#run-subagents-in-foreground-or-background) ausgeführt: Sie arbeiten weiter, während er läuft, und sein Ergebnis kommt in Ihr Gespräch, wenn es abgeschlossen ist. Setzen Sie `background: false` in der Frontmatter, um stattdessen auf das Ergebnis in dem Zug zu warten, der den Skill aufgerufen hat. Vor v2.1.218 blockierten verzweigte Skills den Zug immer, bis sie fertig waren.
+
+Claude Code wartet auch auf das Ergebnis, selbst wenn der Skill `background: false` nicht setzt, in Fällen wie diesen:
+
+* Im nicht-interaktiven Modus mit dem `-p`-Flag oder dem Agent SDK
+* Wenn Sie [`CLAUDE_CODE_DISABLE_BACKGROUND_TASKS`](/docs/de/env-vars) auf `1` setzen, was auch alle anderen Hintergrund-Task-Funktionen ausschaltet
+* Wenn Sie einen verzweigten Skill aufrufen, während ein früherer Aufruf desselben Skills noch läuft
+* Wenn eine [geplante Task](/docs/de/scheduled-tasks) mit dem Skill als Prompt ausgelöst wird
+
+Ein hintergrund-verzweigter Skill wird auch mit dem [engeren Tool-Set ausgeführt, das für Hintergrund-Subagenten gilt](/docs/de/sub-agents#run-subagents-in-foreground-or-background): Der Subagent des Skills ist ein regulärer Agent-Typ, daher gilt die Ausnahme für Subagenten, die das Gespräch verzweigen, nicht. Wenn die Schritte Ihres Skills von einem Tool außerhalb dieses Sets abhängen, setzen Sie `background: false`, um das vollständige Tool-Set beizubehalten.
+
+Ein verzweigter Skill, der im Hintergrund läuft, wendet seine Änderungen außerhalb der [Checkpoints](/docs/de/checkpointing) Ihrer Session an, sodass `/rewind` sie nicht rückgängig macht; verwenden Sie git, um sie rückgängig zu machen.
 
 <Warning>
-  `context: fork` macht nur Sinn für Skills mit expliziten Anweisungen. Wenn Ihr Skill Richtlinien wie „verwenden Sie diese API-Konventionen" ohne eine Aufgabe enthält, erhält der Subagent die Richtlinien, aber keinen umsetzbaren Prompt, und gibt ohne aussagekräftige Ausgabe zurück.
+  `context: fork` macht nur Sinn für Skills mit expliziten Anweisungen. Wenn Ihr Skill Richtlinien wie „verwenden Sie diese API-Konventionen" ohne eine Task enthält, erhält der Subagent die Richtlinien, aber keinen umsetzbaren Prompt, und gibt ohne aussagekräftige Ausgabe zurück.
 </Warning>
 
-Skills und [Subagenten](/docs/de/sub-agents) funktionieren in zwei Richtungen zusammen:
+Skills und [Subagenten](/docs/de/sub-agents) arbeiten in zwei Richtungen zusammen:
 
-| Ansatz                     | System-Prompt          | Aufgabe                      | Lädt auch                                             |
-| :------------------------- | :--------------------- | :--------------------------- | :---------------------------------------------------- |
-| Skill mit `context: fork`  | Vom Agent-Typ          | SKILL.md-Inhalt              | CLAUDE.md, außer wenn der Agent Explore oder Plan ist |
-| Subagent mit `skills`-Feld | Subagent-Markdown-Body | Claudes Delegationsnachricht | Vorgeladene Skills + CLAUDE.md                        |
+| Ansatz                     | System-Prompt                | Task                         | Lädt auch                                                                                                        |
+| :------------------------- | :--------------------------- | :--------------------------- | :--------------------------------------------------------------------------------------------------------------- |
+| Skill mit `context: fork`  | Vom Agent-Typ                | SKILL.md-Inhalt              | CLAUDE.md, gemäß dem [Startup-Kontext](/docs/de/sub-agents#what-loads-at-startup) des Agenten                         |
+| Subagent mit `skills`-Feld | Markdown-Text des Subagenten | Claudes Delegationsnachricht | Vorgeladene Skills + CLAUDE.md, gemäß dem [Startup-Kontext](/docs/de/sub-agents#what-loads-at-startup) des Subagenten |
 
-Mit `context: fork` schreiben Sie die Aufgabe in Ihren Skill und wählen einen Agent-Typ aus, um sie auszuführen. Die integrierten Explore- und Plan-Agenten [überspringen CLAUDE.md und Git-Status](/docs/de/sub-agents#what-loads-at-startup), um ihren Kontext klein zu halten, sodass ein verzweigter Skill mit `agent: Explore` nur den SKILL.md-Inhalt und den eigenen System-Prompt des Agenten sieht. Für das Inverse, bei dem Sie einen benutzerdefinierten Subagenten definieren, der Skills als Referenzmaterial verwendet, siehe [Subagenten](/docs/de/sub-agents#preload-skills-into-subagents).
+Mit `context: fork` schreiben Sie die Task in Ihren Skill und wählen einen Agent-Typ aus, um sie auszuführen. Die integrierten Explore- und Plan-Agenten [überspringen CLAUDE.md und git status](/docs/de/sub-agents#what-loads-at-startup), um ihren Kontext klein zu halten, sodass ein verzweigter Skill mit `agent: Explore` nur den SKILL.md-Inhalt und den eigenen System-Prompt des Agenten sieht. Für das Gegenteil, bei dem Sie einen benutzerdefinierten Subagenten definieren, der Skills als Referenzmaterial verwendet, siehe [Subagenten](/docs/de/sub-agents#preload-skills-into-subagents).
 
 <h4 id="example-research-skill-using-explore-agent">
   Beispiel: Research-Skill mit Explore-Agent
 </h4>
 
-Dieser Skill führt Recherchen in einem verzweigten Explore-Agent aus. Der Skill-Inhalt wird zur Aufgabe, und der Agent bietet schreibgeschützte Tools, die für die Codebase-Erkundung optimiert sind:
+Dieser Skill führt Recherchen in einem verzweigten Explore-Agent aus. Der Skill-Inhalt wird zur Task, und der Agent bietet schreibgeschützte Tools, die für die Codebase-Exploration optimiert sind:
 
 ```yaml theme={null}
 ---
@@ -579,28 +794,28 @@ Research $ARGUMENTS thoroughly:
 Wenn dieser Skill ausgeführt wird:
 
 1. Ein neuer isolierter Kontext wird erstellt
-2. Der Subagent erhält den Skill-Inhalt als seinen Prompt („Research \$ARGUMENTS thoroughly...")
+2. Der Subagent erhält den Skill-Inhalt als seinen Prompt (die „Research \$ARGUMENTS thoroughly..."-Anweisungen)
 3. Das `agent`-Feld bestimmt die Ausführungsumgebung (Modell, Tools und Berechtigungen)
-4. Ergebnisse werden zusammengefasst und an Ihr Hauptgespräch zurückgegeben
+4. Der Subagent fasst seine Ergebnisse zusammen und gibt sie an Ihr Hauptgespräch zurück, wenn er fertig ist
 
-Das `agent`-Feld gibt an, welche Subagent-Konfiguration verwendet werden soll. Optionen umfassen integrierte Agenten (`Explore`, `Plan`, `general-purpose`) oder jeden benutzerdefinierten Subagenten aus `.claude/agents/`. Falls weggelassen, wird `general-purpose` verwendet.
+Das `agent`-Feld gibt an, welche Subagenten-Konfiguration verwendet werden soll. Optionen sind integrierte Agenten (`Explore`, `Plan`, `general-purpose`) oder ein beliebiger benutzerdefinierter Subagent aus `.claude/agents/`. Wenn nicht angegeben, wird `general-purpose` verwendet.
 
 <h3 id="restrict-claude’s-skill-access">
-  Beschränken Sie Claudes Skill-Zugriff
+  Claudes Skill-Zugriff einschränken
 </h3>
 
-Standardmäßig kann Claude jeden Skill aufrufen, der nicht `disable-model-invocation: true` gesetzt hat. Skills, die `allowed-tools` definieren, gewähren Claude Zugriff auf diese Tools ohne Genehmigung pro Verwendung, wenn der Skill aktiv ist. Ihre [Berechtigungseinstellungen](/docs/de/permissions) regeln weiterhin das Baseline-Genehmigungsverhalten für alle anderen Tools. Einige integrierte Befehle sind auch über das Skill-Tool verfügbar, einschließlich `/init`, `/review` und `/security-review`. Andere integrierte Befehle wie `/compact` sind nicht verfügbar.
+Standardmäßig kann Claude jeden Skill aufrufen, der nicht `disable-model-invocation: true` gesetzt hat. Skills, die `allowed-tools` definieren, gewähren Claude Zugriff auf diese Tools ohne Genehmigung pro Verwendung während des Zugs, der den Skill aufruft; die Genehmigung wird gelöscht, wenn Sie Ihre nächste Nachricht senden. Ihre [Berechtigungseinstellungen](/docs/de/permissions) regeln immer noch das Baseline-Genehmigungsverhalten für alle anderen Tools. Einige integrierte Befehle sind auch über das Skill-Tool verfügbar, einschließlich `/init` und `/security-review`. Andere integrierte Befehle wie `/compact` sind nicht verfügbar.
 
-Drei Möglichkeiten, um zu steuern, welche Skills Claude aufrufen kann:
+Drei Möglichkeiten, um zu kontrollieren, welche Skills Claude aufrufen kann:
 
-**Deaktivieren Sie alle Skills**, indem Sie das Skill-Tool in `/permissions` ablehnen:
+**Alle Skills deaktivieren**, indem Sie das Skill-Tool in `/permissions` ablehnen:
 
 ```text theme={null}
 # Add to deny rules:
 Skill
 ```
 
-**Erlauben oder verweigern Sie bestimmte Skills** mit [Berechtigungsregeln](/docs/de/permissions):
+**Spezifische Skills zulassen oder ablehnen** mit [Berechtigungsregeln](/docs/de/permissions):
 
 ```text theme={null}
 # Allow only specific skills
@@ -611,19 +826,23 @@ Skill(review-pr *)
 Skill(deploy *)
 ```
 
-Berechtigungssyntax: `Skill(name)` für exakte Übereinstimmung, `Skill(name *)` für Präfixübereinstimmung mit beliebigen Argumenten.
+Berechtigungssyntax: `Skill(name)` für exakte Übereinstimmung, `Skill(name *)` für Präfix-Übereinstimmung mit beliebigen Argumenten.
 
-**Verstecken Sie einzelne Skills**, indem Sie `disable-model-invocation: true` zu ihrem Frontmatter hinzufügen. Dies entfernt den Skill vollständig aus Claudes Kontext.
+Wenn Ihre `deny`-Regel einen Alias oder einen unqualifizierten Namen anstelle des eigenen Namens des Skills benennt, blockiert Claude Code den Skill trotzdem: Mit `Skill(review)` blockiert es den gebündelten `/code-review` durch seinen `/review`-Alias, und mit `Skill(deploy)` blockiert es einen [verschachtelten Skill](#where-skills-live), der als `apps/web:deploy` aufgelistet ist, durch seinen unqualifizierten Namen. Vor v2.1.260 blockierte Claude Code einen verschachtelten Skill, der unter seinem qualifizierten Namen aufgelistet ist, nicht, wenn die deny-Regel nur den unqualifizierten Namen benannte.
+
+Claude Code stimmt einer `allow`-Regel nur gegen den eigenen Namen des Skills und den Namen in Claudes Aufruf ab.
+
+**Einzelne Skills ausblenden**, indem Sie `disable-model-invocation: true` zu ihrer Frontmatter hinzufügen. Dies entfernt den Skill vollständig aus Claudes Kontext.
 
 <Note>
-  Das `user-invocable`-Feld steuert nur die Menüsichtbarkeit, nicht den Skill-Tool-Zugriff. Verwenden Sie `disable-model-invocation: true`, um die programmgesteuerte Aufrufe zu blockieren.
+  Mit `user-invocable: false` können Sie den Skill nicht aufrufen, aber Claude kann. Um zu verhindern, dass Claude ihn über das Skill-Tool aufruft, setzen Sie `disable-model-invocation: true`.
 </Note>
 
 <h3 id="override-skill-visibility-from-settings">
   Skill-Sichtbarkeit aus Einstellungen überschreiben
 </h3>
 
-Die `skillOverrides`-Einstellung steuert die Skill-Sichtbarkeit aus Ihren [Einstellungen](/docs/de/settings) statt aus dem Frontmatter des Skills selbst. Verwenden Sie sie für Skills, deren SKILL.md Sie nicht bearbeiten möchten, z. B. solche, die in ein gemeinsames Projekt-Repository eingecheckt sind oder von einem MCP-Server bereitgestellt werden. Das `/skills`-Menü schreibt es für Sie: Markieren Sie einen Skill und drücken Sie `Space`, um die Zustände zu durchlaufen, dann `Enter`, um in `.claude/settings.local.json` zu speichern.
+Die `skillOverrides`-Einstellung steuert die Skill-Sichtbarkeit aus Ihren [Einstellungen](/docs/de/settings) anstelle der eigenen Frontmatter des Skills. Verwenden Sie sie für Skills, deren SKILL.md Sie nicht bearbeiten möchten, wie z. B. solche, die in ein gemeinsames Projekt-Repo eingecheckt sind. Das `/skills`-Menü schreibt es für Sie: Markieren Sie einen Skill und drücken Sie `Space`, um die Zustände zu durchlaufen, dann `Esc`, um in `.claude/settings.local.json` zu speichern.
 
 Jeder Schlüssel ist ein Skill-Name und jeder Wert ist einer von vier Zuständen:
 
@@ -634,9 +853,11 @@ Jeder Schlüssel ist ein Skill-Name und jeder Wert ist einer von vier Zuständen
 | `"user-invocable-only"` | Versteckt              | Ja          |
 | `"off"`                 | Versteckt              | Versteckt   |
 
-Ab v2.1.199 versteckt `"off"` den Skill auch vor den Befehlslisten, die an [Remote Control](/docs/de/remote-control)-Clients und an [Agent SDK](/docs/de/agent-sdk/slash-commands)-Aufrufer angekündigt werden, nicht nur das Terminal-Menü `/`. Das Aufrufen eines versteckten Skills nach seinem vollständigen Namen gibt stattdessen den `skillOverrides`-Fehler zurück, anstatt ihn auszuführen.
+Das `/skills`-Menü kennzeichnet den `"user-invocable-only"`-Zustand als `user-only`.
 
-Ein Skill, der in `skillOverrides` fehlt, wird als `"on"` behandelt. Das folgende Beispiel reduziert einen Skill auf seinen Namen und deaktiviert einen anderen vollständig:
+Ab v2.1.199 versteckt `"off"` den Skill auch vor den Befehlslisten, die [Remote Control](/docs/de/remote-control)-Clients und [Agent SDK](/docs/de/agent-sdk/skills#discover-available-commands)-Aufrufer erhalten, zusätzlich zum Terminal-`/`-Menü. Das Aufrufen eines versteckten Skills mit seinem vollständigen Namen gibt stattdessen den `skillOverrides`-Fehler zurück, anstatt ihn auszuführen.
+
+Ein Skill, der in `skillOverrides` fehlt, wird als `"on"` behandelt. Das folgende Beispiel reduziert einen Skill auf seinen Namen und schaltet einen anderen ganz aus:
 
 ```json theme={null}
 {
@@ -647,65 +868,84 @@ Ein Skill, der in `skillOverrides` fehlt, wird als `"on"` behandelt. Das folgend
 }
 ```
 
+Einige gebündelte Skills haben Aliase, wie z. B. `checkup` für `/doctor`. Wenn Sie einen `skillOverrides`-Eintrag unter einem Alias in [verwalteten Einstellungen](/docs/de/managed-settings) oder in einer Datei, die Sie mit dem `--settings`-Flag übergeben, festlegen, wendet Claude Code ihn auf den Skill hinter dem Alias an. Sie können einen Skill nur durch einen Alias weiter einschränken, ihn niemals sichtbarer machen, und wenn Sie auch einen Eintrag unter dem eigenen Namen des Skills in verwalteten Einstellungen festlegen, hat dieser Eintrag Vorrang. Vor v2.1.260 wendete Claude Code einen Eintrag unter einem Alias nicht auf den Skill in einer Einstellungsquelle an.
+
+In Benutzer-, Projekt- und lokalen Einstellungen stimmt Claude Code Einträge nur gegen Skill-Namen ab. Wenn Sie dort einen Eintrag für `review` festlegen, gilt er für einen Skill namens `review`, nicht für den gebündelten `/code-review` durch seinen `/review`-Alias.
+
 Plugin-Skills sind nicht von `skillOverrides` betroffen. Verwalten Sie diese stattdessen über `/plugin`.
 
-<h2 id="evaluate-and-iterate-on-a-skill">
-  Evaluieren und iterieren Sie einen Skill
-</h2>
-
-Zu sehen, dass ein Skill ausgelöst wird, sagt Ihnen, dass Claude ihn gefunden hat, nicht dass er das tat, was Sie beabsichtigten. Um zu wissen, dass ein Skill funktioniert, messen Sie zwei Dinge separat: ob Claude ihn auf den Eingaben aufruft, die er sollte, und ob die Ausgabe dem entspricht, was Sie erwarten, wenn er es tut.
-
-Die Überprüfung für beide ist ein Baseline-Vergleich. Sammeln Sie ein paar realistische Eingaben, führen Sie jede in einer neuen Sitzung mit dem verfügbaren Skill aus und erneut mit ihm [deaktiviert](#override-skill-visibility-from-settings), und vergleichen Sie die Ergebnisse. Eine neue Sitzung ist wichtig, da übrig gebliebener Kontext aus der Erstellung des Skills Lücken in den geschriebenen Anweisungen maskiert.
-
-<h3 id="run-evals-with-skill-creator">
-  Führen Sie Evals mit skill-creator aus
+<h3 id="find-unused-skills">
+  Ungenutzte Skills finden
 </h3>
 
-Das [`skill-creator`-Plugin](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/skill-creator) automatisiert die Vergleichsschleife in Claude Code. Installieren Sie es aus dem offiziellen Marketplace:
+Jeder Skill in der [Skill-Auflistung](#skill-descriptions-are-cut-short) trägt zu Ihrem Kontext bei jedem Zug bei, unabhängig davon, ob Claude ihn jemals verwendet. Führen Sie `/skill-doctor` aus, um zu sehen, was jeder Ihrer Skills kostet und wie oft er verwendet wird, damit Sie entscheiden können, welche Sie ausschalten möchten. In einer interaktiven Sitzung wird der Bericht in der Registerkarte **Stats** des `/plugin`-Managers geöffnet. Im [nicht-interaktiven Modus](/docs/de/headless) mit `-p` gibt Claude Code ihn als Text aus.
+
+Der Bericht behandelt die Skills in Ihrer Sitzung außer gebündelten Skills und Enterprise-Skills. Er kennzeichnet Skills in der Auflistung, die nie aufgerufen wurden, und sagt, wo man sie ausschalten kann. Von den Skills, bei denen er sagt, wo man sie ausschalten kann, beginnen Sie mit denen, die die höchsten Kontextkosten haben. Der Bericht listet auch Plugins auf, die Sie kürzlich nicht verwendet haben.
+
+`/skill-doctor` erfordert Claude Code v2.1.252 oder später und ist nicht in Sitzungen verfügbar, die [Feature-Flag-Abruf](/docs/de/env-vars#features-that-need-feature-flag-fetching) überspringen. Wenn Sie `/skill-doctor` über [Remote Control](/docs/de/remote-control) von Ihrem Telefon oder Browser aus ausführen, antwortet Claude Code stattdessen [`Skill usage reports are not available on this connection.`](/docs/de/errors#skill-usage-reports-are-not-available-on-this-connection). Führen Sie `/skill-doctor` im Terminal auf dem Computer aus, auf dem die Sitzung läuft.
+
+<h2 id="evaluate-and-iterate-on-a-skill">
+  Skill evaluieren und iterieren
+</h2>
+
+Das Sehen eines Skill-Triggers zeigt dir, dass Claude ihn gefunden hat, nicht dass er das getan hat, was du beabsichtigt hast. Um zu wissen, dass ein Skill funktioniert, musst du zwei Dinge separat messen: ob Claude ihn bei den Prompts aufruft, bei denen er sollte, und ob die Ausgabe dem entspricht, was du erwartest, wenn er es tut.
+
+Die Überprüfung beider ist ein Baseline-Vergleich. Sammle ein paar realistische Prompts, führe jeden in einer neuen Sitzung mit dem verfügbaren Skill aus und wiederhole dies mit ihm [deaktiviert](#override-skill-visibility-from-settings), und vergleiche die Ergebnisse. Eine neue Sitzung ist wichtig, da der verbleibende Kontext aus der Erstellung des Skills Lücken in den geschriebenen Anweisungen verdeckt.
+
+Zwei Tools automatisieren diesen Vergleich. Für einen Skill, der in einem [Plugin](/docs/de/plugins/overview) ausgeliefert wird, führt [`claude plugin eval`](/docs/de/plugin-evals) jeden Prompt in einer isolierten Sitzung mit und ohne das Plugin aus, bewertet ihn mit Gradern, die du definierst oder die er für dich schreibt, und beendet sich mit einem Nicht-Null-Wert unterhalb eines Schwellwerts, sodass du CI darauf abstimmen kannst. Um an einem einzelnen Skill in einer Claude Code-Konversation zu iterieren, führt das unten stehende skill-creator-Plugin eine ähnliche Schleife mit seinem eigenen `evals/evals.json`-Format aus. Die beiden Formate sind nicht austauschbar.
+
+<h3 id="run-evals-with-skill-creator">
+  Evals mit skill-creator ausführen
+</h3>
+
+Das [`skill-creator` Plugin](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/skill-creator) automatisiert die Vergleichsschleife in Claude Code. Installiere es vom offiziellen Marketplace:
 
 ```text theme={null}
 /plugin install skill-creator@claude-plugins-official
 ```
 
-Wenn Claude Code meldet, dass das Plugin in keinem Marketplace gefunden wird, fehlt Ihr Marketplace entweder oder ist veraltet. Führen Sie `/plugin marketplace update claude-plugins-official` aus, um es zu aktualisieren, oder `/plugin marketplace add anthropics/claude-plugins-official`, wenn Sie es noch nicht hinzugefügt haben. Versuchen Sie dann erneut zu installieren.
+Wenn die Installation fehlschlägt, vergleiche die Nachricht, die Claude Code meldet:
 
-Nach der Installation führen Sie `/reload-plugins` aus, um die Skills des Plugins in der aktuellen Sitzung verfügbar zu machen. Bitten Sie dann Claude, einen vorhandenen Skill zu evaluieren, zum Beispiel `evaluate my summarize-changes skill with skill-creator`. Das Plugin führt Sie durch das Schreiben von Testfällen und führt die Schleife aus:
+* `Marketplace "claude-plugins-official" not found`: Füge den Marketplace mit `/plugin marketplace add anthropics/claude-plugins-official` hinzu und versuche dann die Installation erneut.
+* Das Plugin wird [nicht im Marketplace gefunden](/docs/de/plugins/install#install-a-plugin): Überprüfe den Plugin-Namen.
 
-* **Testfälle**: speichert Eingaben, Eingabedateien und erwartetes Verhalten in `evals/evals.json` im Skill-Verzeichnis
-* **Isolierte Läufe**: spawnt einen [Subagent](/docs/de/sub-agents) pro Testfall, sodass jeder Lauf mit einem sauberen Kontext beginnt, und zeichnet Token-Anzahl und Dauer auf
-* **Bewertung**: überprüft jede Assertion gegen die Ausgabe und schreibt Pass oder Fail mit Beweis in `grading.json`
-* **Benchmark**: aggregiert Pass-Rate, Zeit und Token für mit-Skill versus ohne-Skill in `benchmark.json`, sodass Sie die Pass-Rate-Verbesserung gegen den Token- und Zeit-Overhead vergleichen können
-* **Versionsvergleich**: führt einen blinden A/B zwischen zwei Versionen des Skills durch, sodass Sie bestätigen können, dass eine Bearbeitung eine Verbesserung ist, bevor Sie sie committen
-* **Beschreibungsabstimmung**: generiert sollte-auslösen und sollte-nicht-auslösen Eingaben, misst die Hit-Rate und schlägt Beschreibungsbearbeitungen vor, wenn der Skill auf den falschen Anfragen aktiviert wird
-* **Review-Viewer**: öffnet einen HTML-Bericht, in dem Sie jede Ausgabe überprüfen und qualitatives Feedback aufzeichnen, das die nächste Iteration liest
+Wenn die Installationszusammenfassung `Run /reload-plugins to activate.` meldet, führt Claude Code dann diesen Reload für dich aus. Wenn der Reload warnt, dass deine nächste Nachricht die Konversation erneut lesen würde, führe `/reload-plugins --force` aus, um die Skills des Plugins in der aktuellen Sitzung verfügbar zu machen. Bitte dann Claude, einen vorhandenen Skill zu evaluieren, zum Beispiel `evaluate my summarize-changes skill with skill-creator`. Das Plugin führt dich durch das Schreiben von Testfällen und führt die Schleife aus:
 
-Für das Eval-Dateiformat und den vollständigen Iterations-Workflow siehe [Evaluating skill output quality](https://agentskills.io/skill-creation/evaluating-skills) auf agentskills.io. Für Hintergrund zum Benchmark- und Vergleichsmodus siehe die [skill-creator-Ankündigung](https://claude.com/blog/improving-skill-creator-test-measure-and-refine-agent-skills).
+* **Testfälle**: speichert Prompts, Eingabedateien und erwartetes Verhalten in `evals/evals.json` im Skill-Verzeichnis
+* **Isolierte Ausführungen**: spawnt einen [Subagent](/docs/de/sub-agents) pro Testfall, sodass jede Ausführung mit einem sauberen Kontext beginnt, und zeichnet Token-Anzahl und Dauer auf
+* **Bewertung**: überprüft jede Assertion gegen die Ausgabe und schreibt Bestanden oder Nicht bestanden mit Beweis in `grading.json`
+* **Benchmark**: aggregiert Erfolgsquote, Zeit und Tokens für mit-Skill versus ohne-Skill in `benchmark.json`, sodass du die Verbesserung der Erfolgsquote gegen den Token- und Zeit-Overhead vergleichen kannst
+* **Versionsvergleich**: führt einen blinden A/B zwischen zwei Versionen des Skills durch, sodass du bestätigen kannst, dass eine Bearbeitung eine Verbesserung ist, bevor du sie commitest
+* **Beschreibungsoptimierung**: generiert sollte-auslösen und sollte-nicht-auslösen Prompts, misst die Trefferquote und schlägt Beschreibungsbearbeitungen vor, wenn der Skill bei falschen Anfragen aktiviert wird
+* **Review-Viewer**: öffnet einen HTML-Bericht, in dem du jede Ausgabe inspizieren und qualitatives Feedback aufzeichnen kannst, das die nächste Iteration liest
+
+Für das Eval-Dateiformat und den vollständigen Iterations-Workflow siehe [Evaluating skill output quality](https://agentskills.io/skill-creation/evaluating-skills) auf agentskills.io. Für Hintergrundinformationen zum Benchmark- und Vergleichsmodus siehe die [skill-creator Ankündigung](https://claude.com/blog/improving-skill-creator-test-measure-and-refine-agent-skills).
 
 <h2 id="share-skills">
-  Skills teilen
+  Fähigkeiten teilen
 </h2>
 
-Skills können je nach Ihrer Zielgruppe in verschiedenen Bereichen verteilt werden:
+Fähigkeiten können je nach Zielgruppe in verschiedenen Bereichen verteilt werden:
 
-* **Projekt-Skills**: Committen Sie `.claude/skills/` zur Versionskontrolle
-* **Plugins**: Erstellen Sie ein `skills/`-Verzeichnis in Ihrem [Plugin](/docs/de/plugins)
-* **Verwaltet**: Stellen Sie organisationsweit über [verwaltete Einstellungen](/docs/de/settings#settings-files) bereit
+* **Projektfähigkeiten**: Commit `.claude/skills/` zur Versionskontrolle
+* **Plugins**: Erstellen Sie ein `skills/`-Verzeichnis in Ihrem [Plugin](/docs/de/plugins/overview)
+* **Verwaltet**: Bereitstellung organisationsweit über [verwaltete Einstellungen](/docs/de/managed-settings)
 
 <h3 id="generate-visual-output">
   Visuelle Ausgabe generieren
 </h3>
 
-Skills können Scripts in jeder Sprache bündeln und ausführen, was Claude Funktionen gibt, die über das hinausgehen, was in einem einzelnen Prompt möglich ist. Ein leistungsstarkes Muster ist die Generierung visueller Ausgabe: interaktive HTML-Dateien, die in Ihrem Browser geöffnet werden, um Daten zu erkunden, zu debuggen oder Berichte zu erstellen.
+Fähigkeiten können Skripte in jeder Sprache bündeln und ausführen und Claude Funktionen geben, die über das hinausgehen, was in einer einzelnen Eingabeaufforderung möglich ist. Ein Muster ist die Generierung visueller Ausgabe: interaktive HTML-Dateien, die in Ihrem Browser geöffnet werden, um Daten zu erkunden, Fehler zu beheben oder Berichte zu erstellen.
 
-Dieses Beispiel erstellt einen Codebase-Explorer: eine interaktive Baumansicht, in der Sie Verzeichnisse erweitern und reduzieren, Dateigröße auf einen Blick sehen und Dateitypen nach Farbe identifizieren können.
+Dieses Beispiel erstellt einen Codebase-Explorer: eine interaktive Baumansicht, in der Sie Verzeichnisse erweitern und reduzieren können, Dateigröße auf einen Blick sehen und Dateitypen nach Farbe identifizieren können.
 
-Erstellen Sie das Skill-Verzeichnis:
+Erstellen Sie das Fähigkeitsverzeichnis:
 
 ```bash theme={null}
 mkdir -p ~/.claude/skills/codebase-visualizer/scripts
 ```
 
-Speichern Sie dies unter `~/.claude/skills/codebase-visualizer/SKILL.md`. Die Beschreibung teilt Claude mit, wann dieser Skill aktiviert werden soll, und die Anweisungen teilen Claude mit, das gebündelte Script auszuführen. Der Script-Pfad verwendet [`${CLAUDE_SKILL_DIR}`](#available-string-substitutions), damit er korrekt aufgelöst wird, unabhängig davon, ob der Skill auf persönlicher, Projekt- oder Plugin-Ebene installiert ist:
+Speichern Sie dies unter `~/.claude/skills/codebase-visualizer/SKILL.md`. Die Beschreibung teilt Claude mit, wann diese Fähigkeit aktiviert werden soll, und die Anweisungen teilen Claude mit, das gebündelte Skript auszuführen. Der Skriptpfad verwendet [`${CLAUDE_SKILL_DIR}`](#available-string-substitutions), damit er korrekt aufgelöst wird, unabhängig davon, ob die Fähigkeit auf persönlicher, Projekt- oder Plugin-Ebene installiert ist:
 
 ````yaml theme={null}
 ---
@@ -736,13 +976,13 @@ This creates `codebase-map.html` in the current directory and opens it in your d
 - **Directory totals**: Shows aggregate size of each folder
 ````
 
-Speichern Sie dies unter `~/.claude/skills/codebase-visualizer/scripts/visualize.py`. Dieses Script scannt einen Verzeichnisbaum und generiert eine eigenständige HTML-Datei mit:
+Speichern Sie dies unter `~/.claude/skills/codebase-visualizer/scripts/visualize.py`. Dieses Skript scannt einen Verzeichnisbaum und generiert eine in sich geschlossene HTML-Datei mit:
 
-* Eine **Zusammenfassungs-Seitenleiste**, die Dateianzahl, Verzeichnisanzahl, Gesamtgröße und Anzahl der Dateitypen anzeigt
-* Ein **Balkendiagramm**, das die Codebasis nach Dateityp aufschlüsselt (Top 8 nach Größe)
-* Einen **zusammenklappbaren Baum**, in dem Sie Verzeichnisse erweitern und reduzieren können, mit farbcodierten Dateityp-Indikatoren
+* Eine **Zusammenfassungs-Seitenleiste** mit Dateianzahl, Verzeichnisanzahl, Gesamtgröße und Anzahl der Dateitypen
+* Ein **Balkendiagramm**, das die Codebase nach Dateityp aufschlüsselt (Top 8 nach Größe)
+* Ein **zusammenklappbarer Baum**, in dem Sie Verzeichnisse erweitern und reduzieren können, mit farbcodierten Dateityp-Indikatoren
 
-Das Script erfordert Python 3, verwendet aber nur integrierte Bibliotheken, daher müssen keine Pakete installiert werden:
+Das Skript erfordert Python 3, verwendet aber nur integrierte Bibliotheken, daher müssen keine Pakete installiert werden:
 
 ```python expandable theme={null}
 #!/usr/bin/env python3
@@ -880,9 +1120,9 @@ if __name__ == '__main__':
     webbrowser.open(f'file://{out.absolute()}')
 ```
 
-Um zu testen, öffnen Sie Claude Code in einem beliebigen Projekt und fragen Sie „Visualize this codebase." Claude führt das Script aus, generiert `codebase-map.html` und öffnet es in Ihrem Browser.
+Zum Testen öffnen Sie Claude Code in einem beliebigen Projekt und fragen Sie „Visualize this codebase." Claude führt das Skript aus, das den Pfad der generierten Datei ausgibt, z. B. `Generated /path/to/codebase-map.html`, und öffnet es in Ihrem Browser. Wenn Sie in einer Umgebung ohne Kopf arbeiten, in der kein Browser geöffnet wird, bestätigt der gedruckte Pfad, dass das Skript erfolgreich war.
 
-Dieses Muster funktioniert für jede visuelle Ausgabe: Abhängigkeitsgraphen, Test-Coverage-Berichte, API-Dokumentation oder Datenbankschema-Visualisierungen. Das gebündelte Script erledigt die schwere Arbeit, während Claude die Orchestrierung übernimmt.
+Dieses Muster funktioniert für jede visuelle Ausgabe: Abhängigkeitsgraphen, Testabdeckungsberichte, API-Dokumentation oder Datenbankschema-Visualisierungen. Das gebündelte Skript erledigt die Arbeit, während Claude die Orchestrierung übernimmt.
 
 <h2 id="troubleshooting">
   Fehlerbehebung
@@ -892,14 +1132,18 @@ Dieses Muster funktioniert für jede visuelle Ausgabe: Abhängigkeitsgraphen, Te
   Skill wird nicht ausgelöst
 </h3>
 
-Wenn Claude Ihren Skill nicht verwendet, wenn erwartet:
+Wenn Claude Ihren Skill nicht wie erwartet verwendet:
 
-1. Überprüfen Sie, ob die Beschreibung Schlüsselwörter enthält, die Benutzer natürlicherweise sagen würden
-2. Überprüfen Sie, ob der Skill in `What skills are available?` angezeigt wird
-3. Versuchen Sie, Ihre Anfrage umzuformulieren, um die Beschreibung besser zu treffen
+1. Überprüfen Sie, dass die Beschreibung Schlüsselwörter enthält, die Benutzer natürlicherweise sagen würden
+2. Stellen Sie sicher, dass der Skill in `What skills are available?` angezeigt wird
+3. Versuchen Sie, Ihre Anfrage umzuformulieren, um sie besser an die Beschreibung anzupassen
 4. Rufen Sie ihn direkt mit `/skill-name` auf, wenn der Skill vom Benutzer aufgerufen werden kann
 
-Wenn die Frontmatter-YAML fehlerhaft ist, lädt Claude Code den Skill-Body mit leeren Metadaten, sodass `/skill-name` immer noch funktioniert, aber Claude keine `description` zum Abgleichen hat. Führen Sie mit `--debug` aus, um den Parse-Fehler zu sehen.
+Wenn die Frontmatter-YAML fehlerhaft ist, lädt Claude Code den Skill-Body mit leeren Metadaten, sodass `/skill-name` weiterhin funktioniert, aber Claude keine `description` zum Abgleichen hat. Führen Sie mit `--debug` aus, um den Parse-Fehler zu sehen.
+
+Wenn der Skill in einem Plugin enthalten ist, können Sie messen, wie oft er bei realistischen Prompts ausgelöst wird, anstatt ihn einzeln zu überprüfen: Schreiben Sie einen Eval-Fall mit einem [`tool_used: Skill` Grader](/docs/de/plugin-evals#create-your-first-eval-suite) und führen Sie ihn mit `claude plugin eval` nach jeder Beschreibungsänderung aus.
+
+Um `SKILL.md`-Dateien zu finden, deren Frontmatter nicht geparst wird, führen Sie [`claude plugin validate`](/docs/de/plugins/cli-reference#validate-a-directory) im Skills-Verzeichnis aus, beispielsweise `claude plugin validate .claude/skills` für Projekt-Skills oder `claude plugin validate ~/.claude/skills` für persönliche Skills. Erfordert Claude Code v2.1.233 oder später.
 
 <h3 id="skill-triggers-too-often">
   Skill wird zu oft ausgelöst
@@ -914,13 +1158,23 @@ Wenn Claude Ihren Skill verwendet, wenn Sie das nicht möchten:
   Skill-Beschreibungen werden gekürzt
 </h3>
 
-Claude Code lädt eine Auflistung von Skill-Namen und Beschreibungen in den Kontext, damit Claude weiß, was verfügbar ist. Die Auflistung enthält immer jeden Skill-Namen, aber wenn Sie viele Skills haben, kürzt Claude Code Beschreibungen, um in das Zeichenbudget der Auflistung zu passen, was die Schlüsselwörter entfernen kann, die Claude benötigt, um Ihre Anfrage zu erfüllen. Das Budget skaliert bei 1% des Kontextfensters des Modells. Wenn die Auflistung überläuft, löscht Claude Code Beschreibungen beginnend mit den Skills, die Sie am wenigsten aufrufen, sodass die Skills, die Sie am meisten verwenden, ihren vollständigen Text behalten.
+Claude Code lädt eine Auflistung von Skill-Namen und Beschreibungen in den Kontext, damit Claude weiß, was verfügbar ist. Die Auflistung enthält immer jeden Skill-Namen, aber wenn Sie viele Skills haben, kürzt Claude Code die Beschreibungen, um in das Zeichenbudget der Auflistung zu passen, was die Schlüsselwörter entfernen kann, die Claude zum Abgleichen Ihrer Anfrage benötigt. Das Budget skaliert mit 1 % des Kontextfensters des Modells. Wenn die Auflistung überläuft, löscht Claude Code Beschreibungen beginnend mit den Skills, die Sie am wenigsten aufrufen, sodass die Skills, die Sie am meisten verwenden, ihren vollständigen Text behalten.
 
-Führen Sie `/doctor` aus, um eine Schätzung der Kontextkosten der Auflistung und ihrer größten Beitragenden zu erhalten. Wenn die Auflistung ihr Budget überschreitet, schreibt Claude Code auch eine Warnung in das Debug-Protokoll, sichtbar mit [`--debug`](/docs/de/cli-reference#cli-flags).
+Führen Sie `/doctor` aus, um eine Schätzung der Kontextkosten der Auflistung und ihrer größten Beitragenden zu erhalten. Um Skills zu finden, die sich lohnen auszuschalten, führen Sie [`/skill-doctor`](#find-unused-skills) aus. Wenn die Auflistung ihr Budget überschreitet, schreibt Claude Code auch eine Warnung in das Debug-Protokoll, das mit [`--debug`](/docs/de/cli-reference#cli-flags) sichtbar ist.
 
-Die Skills-Zeile in `/context` meldet die Größe der Auflistung nach Anwendung des Budgets, sodass sie dem entspricht, was das Modell erhält. Vor v2.1.196 zählte die Zeile den vollständigen Text jeder Beschreibung und konnte einen Wert anzeigen, der mehrmals größer als das konfigurierte Budget ist.
+Die Skills-Zeile in `/context` meldet die Größe der Auflistung nach Anwendung des Budgets, sodass sie dem entspricht, was das Modell erhält. Vor v2.1.196 zählte die Zeile den vollständigen Text jeder Beschreibung und konnte einen Wert anzeigen, der mehrmals größer als das konfigurierte Budget war.
 
-Um das Budget zu erhöhen, setzen Sie die Einstellung [`skillListingBudgetFraction`](/docs/de/settings#available-settings) (z. B. `0.02` = 2%) oder die Umgebungsvariable `SLASH_COMMAND_TOOL_CHAR_BUDGET` auf eine feste Zeichenanzahl. Um Budget für andere Skills freizugeben, setzen Sie Einträge mit niedriger Priorität auf `"name-only"` in [`skillOverrides`](#override-skill-visibility-from-settings), damit sie ohne Beschreibung aufgelistet werden. Sie können auch den Text `description` und `when_to_use` an der Quelle kürzen: Stellen Sie den wichtigsten Anwendungsfall an den Anfang, da der kombinierte Text jedes Eintrags unabhängig vom Budget auf 1.536 Zeichen begrenzt ist. Die Obergrenze ist mit [`skillListingMaxDescChars`](/docs/de/settings#available-settings) konfigurierbar.
+Um das Budget zu erhöhen, legen Sie die Einstellung [`skillListingBudgetFraction`](/docs/de/settings-reference#skilllistingbudgetfraction) (z. B. `0.02` = 2 %) oder die Umgebungsvariable `SLASH_COMMAND_TOOL_CHAR_BUDGET` auf eine feste Zeichenanzahl fest. Um Budget für andere Skills freizugeben, legen Sie Einträge mit niedriger Priorität auf `"name-only"` in [`skillOverrides`](#override-skill-visibility-from-settings) fest, sodass sie ohne Beschreibung aufgelistet werden. Sie können auch den Text `description` und `when_to_use` an der Quelle kürzen: Stellen Sie den wichtigsten Anwendungsfall zuerst, da der kombinierte Text jedes Eintrags unabhängig vom Budget auf 1.536 Zeichen begrenzt ist. Die Obergrenze ist mit [`skillListingMaxDescChars`](/docs/de/settings-reference#skilllistingmaxdescchars) konfigurierbar.
+
+<h3 id="personal-skills-disappeared">
+  Persönliche Skills sind verschwunden
+</h3>
+
+Wenn Skill-Ordner, die Sie in `~/.claude/skills/` erstellt haben, weg sind, schauen Sie in `~/.claude/skills/.trash/`. Wenn Claude Code [Skills von claude.ai synchronisiert](#how-synced-skills-behave), lädt es sie in den separaten `synced`-Unterordner herunter und verschiebt oder löscht nicht die Ordner, die Sie erstellen.
+
+Vor v2.1.280 führte eine Datei namens `manifest.json` in `~/.claude/skills/` dazu, dass Claude Code die Skill-Ordner, die diese Datei auflistete, in einen mit Zeitstempel versehenen Ordner unter `~/.claude/skills/.trash/` verschob, und diese Skills wurden nicht mehr geladen.
+
+Um einen Skill wiederherzustellen, verschieben Sie seinen Ordner aus dem mit Zeitstempel versehenen Ordner zurück in `~/.claude/skills/`. Tun Sie dies vor dem [Aufbewahrungssweep](/docs/de/claude-directory#cleaned-up-automatically), der Trash-Einträge löscht, standardmäßig 30 Tage nach dem Verschieben in den Papierkorb.
 
 <h2 id="related-resources">
   Verwandte Ressourcen
@@ -930,7 +1184,7 @@ Um das Budget zu erhöhen, setzen Sie die Einstellung [`skillListingBudgetFracti
 * **[Evaluating skill output quality](https://agentskills.io/skill-creation/evaluating-skills)**: das Eval-Dateiformat und Iterations-Workflow auf agentskills.io
 * **[Skill authoring best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices)**: Schreibanleitung, die über Claude-Produkte hinweg gilt
 * **[Subagenten](/docs/de/sub-agents)**: Delegieren Sie Aufgaben an spezialisierte Agenten
-* **[Plugins](/docs/de/plugins)**: Packen und verteilen Sie Skills mit anderen Erweiterungen
+* **[Plugins](/docs/de/plugins/overview)**: Packen und verteilen Sie Skills mit anderen Erweiterungen
 * **[Hooks](/docs/de/hooks)**: Automatisieren Sie Workflows um Tool-Ereignisse
 * **[Memory](/docs/de/memory)**: Verwalten Sie CLAUDE.md-Dateien für persistenten Kontext
 * **[Befehle](/docs/de/commands)**: Referenz für integrierte Befehle und gebündelte Skills

@@ -13,41 +13,48 @@ Dieser Ansatz löst zwei Herausforderungen, wenn Tool-Bibliotheken skalieren:
 * **Kontexteffizienz:** Tool-Definitionen können große Teile des Kontextfensters verbrauchen (50 Tools können 10–20 K Token verwenden), was weniger Platz für tatsächliche Arbeit lässt.
 * **Genauigkeit der Tool-Auswahl:** Die Genauigkeit der Tool-Auswahl verschlechtert sich, wenn mehr als 30–50 Tools gleichzeitig geladen sind.
 
-Die Tool-Suche ist standardmäßig aktiviert.
-
 <h2 id="how-tool-search-works">
   Wie die Tool-Suche funktioniert
 </h2>
 
-Wenn die Tool-Suche aktiv ist, werden Tool-Definitionen aus dem Kontextfenster zurückgehalten. Der Agent erhält eine Zusammenfassung der verfügbaren Tools und sucht nach relevanten, wenn die Aufgabe eine Fähigkeit erfordert, die nicht bereits geladen ist. Bis zu fünf der relevantesten Tools werden standardmäßig in den Kontext geladen, wo sie für nachfolgende Durchläufe verfügbar bleiben. Wenn das Gespräch lang genug ist, dass das SDK frühere Nachrichten komprimiert, um Platz freizugeben, können zuvor entdeckte Tools entfernt werden, und der Agent sucht bei Bedarf erneut.
+Die Tool-Suche ist standardmäßig aktiviert, mit Ausnahmen, die unter [Tool-Suche konfigurieren](#configure-tool-search) aufgelistet sind.
 
-Die Tool-Suche fügt beim ersten Mal, wenn Claude ein Tool entdeckt (der Suchschritt), einen zusätzlichen Roundtrip hinzu, aber bei großen Tool-Sets wird dies durch einen kleineren Kontext bei jedem Durchlauf ausgeglichen. Mit weniger als etwa 10 Tools ist das Laden von allem vorab normalerweise schneller.
+Wenn sie aktiv ist, werden Tool-Definitionen aus dem Kontextfenster zurückgehalten. Der Agent erhält eine Zusammenfassung der verfügbaren Tools und sucht nach relevanten, wenn die Aufgabe eine Fähigkeit erfordert, die nicht bereits geladen ist. Bis zu fünf der relevantesten Tools werden standardmäßig in den Kontext geladen, wo sie für nachfolgende Durchläufe verfügbar bleiben, bis das SDK die Nachrichten komprimiert, in denen der Agent sie entdeckt hat. Nach dieser Komprimierung sucht der Agent diese Tools erneut, wenn er sie benötigt.
+
+Die Tool-Suche fügt jedes Mal, wenn Claude nach Tools sucht, einen zusätzlichen Roundtrip hinzu, aber bei großen Tool-Sets wird dies durch einen kleineren Kontext bei jedem Durchlauf ausgeglichen. Mit weniger als etwa 10 Tools, deren Definitionen bequem in das Kontextfenster passen, ist das Laden von allem vorab normalerweise schneller.
 
 Weitere Informationen zum zugrunde liegenden API-Mechanismus finden Sie unter [Tool-Suche in der API](https://platform.claude.com/docs/de/agents-and-tools/tool-use/tool-search-tool).
 
 <Note>
-  Die Tool-Suche wird auf Claude Sonnet 4.5, Claude Haiku 4.5, Claude Opus 4.5 und späteren Modellen unterstützt. Weitere Informationen finden Sie unter [Modellkompatibilität in der API-Dokumentation](https://platform.claude.com/docs/de/agents-and-tools/tool-use/tool-search-tool#model-compatibility) für die aktuelle Liste. Auf Googles Agent Platform sind die mindestens unterstützten Modelle Claude Sonnet 4.5 und Claude Opus 4.5.
+  Die Tool-Suche wird auf Microsoft Foundry-[Bereitstellungen, die auf Azure gehostet werden](https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry#hosting-options), nicht unterstützt, da diese sie serverseitig ablehnen: Das SDK erkennt die Ablehnung und lädt stattdessen Tool-Definitionen vorab für diese Bereitstellung. [`ENABLE_TOOL_SEARCH`](#configure-tool-search) kann dies nicht überschreiben, da die Ablehnung von der Bereitstellung selbst kommt.
 </Note>
 
 <h2 id="configure-tool-search">
   Tool-Suche konfigurieren
 </h2>
 
-Die Tool-Suche ist standardmäßig aktiviert. Sie ist standardmäßig auf Google Cloud's Agent Platform deaktiviert, wo sie für Claude Sonnet 4.5 und später sowie Claude Opus 4.5 und später unterstützt wird. Sie ist auch deaktiviert, wenn `ANTHROPIC_BASE_URL` auf einen Host eines Drittanbieters verweist, da die meisten Proxys `tool_reference`-Blöcke nicht weiterleiten. Sie können jeden Standard mit der Umgebungsvariablen `ENABLE_TOOL_SEARCH` überschreiben:
+Die Tool-Suche ist standardmäßig aktiviert. Bei Modellen auf der Liste der nicht unterstützten Modelle des SDK lädt das SDK Tool-Definitionen stattdessen vorab, und kein `ENABLE_TOOL_SEARCH`-Wert überschreibt das. Auf Google Cloud's Agent Platform entscheidet das SDK nach Modellgeneration:
 
-| Wert            | Verhalten                                                                                                                                                                                                                                                                                          |
-| :-------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| (nicht gesetzt) | Die Tool-Suche ist aktiviert. Tool-Definitionen werden aufgeschoben und bei Bedarf entdeckt. Fällt auf Google Cloud's Agent Platform oder einen `ANTHROPIC_BASE_URL` eines Drittanbieters auf das Laden vorab zurück.                                                                              |
-| `true`          | Die Tool-Suche ist immer aktiviert. Das SDK sendet den Beta-Header auch auf Google Cloud's Agent Platform und durch Proxys. Anfragen schlagen auf Google Cloud's Agent Platform-Modellen früher als Sonnet 4.5 oder Opus 4.5 oder auf Proxys fehl, die `tool_reference`-Blöcke nicht unterstützen. |
-| `auto`          | Überprüft die kombinierte Token-Anzahl aller Tool-Definitionen gegen das Kontextfenster des Modells. Wenn sie 10 % überschreiten, wird die Tool-Suche aktiviert. Wenn sie unter 10 % liegen, werden alle Tools normal in den Kontext geladen.                                                      |
-| `auto:N`        | Wie `auto` mit einem benutzerdefinierten Prozentsatz. `auto:5` wird aktiviert, wenn Tool-Definitionen 5 % des Kontextfensters überschreiten. Niedrigere Werte werden früher aktiviert.                                                                                                             |
-| `false`         | Die Tool-Suche ist deaktiviert. Alle Tool-Definitionen werden bei jedem Durchlauf in den Kontext geladen.                                                                                                                                                                                          |
+* **Claude Opus 4.5, Sonnet 4.5, Haiku 4.5 und später**: Tool-Suche ist standardmäßig aktiviert.
+* **Frühere Agent Platform-Modelle**: Das SDK lädt Tool-Definitionen vorab, da ihre Serving-Stacks den erforderlichen Beta-Header ablehnen. `ENABLE_TOOL_SEARCH` kann dies nicht überschreiben.
 
-Das Setzen von [`CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS`](/docs/de/env-vars) hält die Tool-Suche aus, und `ENABLE_TOOL_SEARCH` kann es nicht überschreiben. Die Variable entfernt den Beta-Header, den `defer_loading`-Tool-Definitionen und `tool_reference`-Inhaltsblöcke erfordern.
+Vor Claude Code v2.1.221 deaktivierte das SDK die Tool-Suche für alle Modelle auf Google Cloud's Agent Platform, es sei denn, Sie haben `ENABLE_TOOL_SEARCH` gesetzt.
 
-Die Tool-Suche gilt für alle registrierten Tools, unabhängig davon, ob sie von Remote-MCP-Servern oder [benutzerdefinierten SDK-MCP-Servern](/docs/de/agent-sdk/custom-tools) stammen. Bei Verwendung von `auto` basiert der Schwellenwert auf der kombinierten Größe aller Tool-Definitionen auf allen Servern.
+Das SDK deaktiviert auch die Tool-Suche, wenn `ANTHROPIC_BASE_URL` auf einen Host eines Drittanbieters verweist, da die meisten Proxys `tool_reference`-Blöcke nicht weiterleiten. Sie können diesen Standard mit der Umgebungsvariablen `ENABLE_TOOL_SEARCH` überschreiben:
 
-Legen Sie den Wert in der `env`-Option auf `query()` fest. In TypeScript ersetzt `env` die Subprocess-Umgebung, daher sollten Sie `...process.env` verteilen, um vererbte Variablen beizubehalten. In Python wird `env` auf die vererbte Umgebung zusammengeführt. Dieses Beispiel verbindet sich mit einem Remote-MCP-Server, der viele Tools bereitstellt, genehmigt alle vorab mit einem Platzhalter und verwendet `auto:5`, sodass die Tool-Suche aktiviert wird, wenn ihre Definitionen 5 % des Kontextfensters überschreiten:
+| Wert            | Verhalten                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| :-------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| (nicht gesetzt) | Die Tool-Suche ist aktiviert. Tool-Definitionen werden aufgeschoben und bei Bedarf entdeckt. Fällt auf Google Cloud's Agent Platform-Modellen früher als die Claude 4.5-Generation, einen `ANTHROPIC_BASE_URL` eines Drittanbieters oder eine auf Azure gehostete Microsoft Foundry-Bereitstellung auf das Laden vorab zurück.                                                                                                                             |
+| `true`          | Die Tool-Suche ist immer aktiviert, außer bei einer auf Azure gehosteten Microsoft Foundry-Bereitstellung, wo die serverseitige Ablehnung immer noch das Laden vorab erzwingt, und bei Google Cloud's Agent Platform-Modellen früher als die Claude 4.5-Generation, wo das SDK weiterhin Tool-Definitionen vorab lädt. Das SDK sendet den Beta-Header durch Proxys, und Anfragen schlagen auf Proxys fehl, die `tool_reference`-Blöcke nicht unterstützen. |
+| `auto`          | Zählt die Token in den Tool-Definitionen, die die Tool-Suche aufschieben kann, und vergleicht die Summe mit dem Kontextfenster des Modells. Wenn die Summe 10 % des Fensters erreicht, wird die Tool-Suche aktiviert. Darunter lädt das SDK jede Tool-Definition vorab in den Kontext.                                                                                                                                                                     |
+| `auto:N`        | Wie `auto` mit einem benutzerdefinierten Prozentsatz. `auto:5` wird aktiviert, wenn diese Definitionen 5 % des Kontextfensters erreichen. Niedrigere Werte werden früher aktiviert.                                                                                                                                                                                                                                                                        |
+| `false`         | Die Tool-Suche ist deaktiviert. Alle Tool-Definitionen werden bei jedem Durchlauf in den Kontext geladen.                                                                                                                                                                                                                                                                                                                                                  |
+
+Das Setzen von [`CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS`](/docs/de/env-vars) hält die Tool-Suche aus. Sie können es nicht durch das Setzen von `ENABLE_TOOL_SEARCH` selbst überschreiben. Ihre Organisation kann die Tool-Suche durch [verwaltete Einstellungen](/docs/de/managed-settings) auf Claude Code v2.1.227 oder später aktiviert halten. [Deaktivieren Sie Pre-Release-Funktionen](/docs/de/llm-gateway-protocol#disable-pre-release-capabilities) behandelt, wo die Überschreibung gilt und was die Variable entfernt.
+
+Die Tool-Suche gilt für alle registrierten Tools, unabhängig davon, ob sie von Remote-MCP-Servern oder [benutzerdefinierten SDK-MCP-Servern](/docs/de/agent-sdk/custom-tools) stammen. Wenn Sie `auto` verwenden, zählt das SDK jede Definition, die die Tool-Suche aufschieben kann, gegen einen kombinierten Schwellenwert: jedes MCP-Tool, das nicht als [`alwaysLoad`](/docs/de/mcp#exempt-a-server-from-deferral) markiert ist, von jedem Server, plus die integrierten Tools, die bei Bedarf geladen werden. Das SDK lädt immer Core-Built-in-Tools wie Bash, Read und Edit vorab und zählt sie nicht zum Schwellenwert.
+
+Legen Sie den Wert in der `env`-Option auf `query()` fest. In TypeScript ersetzt `env` die Subprocess-Umgebung, daher sollten Sie `...process.env` verteilen, um vererbte Variablen beizubehalten. In Python wird `env` auf die vererbte Umgebung zusammengeführt. Dieses Beispiel verbindet sich mit einem Remote-MCP-Server, der viele Tools bereitstellt, genehmigt alle vorab mit einem Platzhalter und verwendet `auto:5`, sodass die Tool-Suche aktiviert wird, wenn die Definitionen, die sie aufschieben kann, 5 % des Kontextfensters erreichen:
 
 <CodeGroup>
   ```typescript TypeScript theme={null}
@@ -67,7 +74,7 @@ Legen Sie den Wert in der `env`-Option auf `query()` fest. In TypeScript ersetzt
         allowedTools: ["mcp__enterprise-tools__*"], // Wildcard pre-approves all tools from this server
         env: {
           ...process.env, // env replaces the subprocess environment, so keep inherited variables
-          ENABLE_TOOL_SEARCH: "auto:5" // Activate tool search when tools exceed 5% of context
+          ENABLE_TOOL_SEARCH: "auto:5" // Activate tool search when deferrable definitions reach 5% of context
         }
       }
     })) {
@@ -98,7 +105,7 @@ Legen Sie den Wert in der `env`-Option auf `query()` fest. In TypeScript ersetzt
               "mcp__enterprise-tools__*"
           ],  # Wildcard pre-approves all tools from this server
           env={
-              "ENABLE_TOOL_SEARCH": "auto:5"  # Activate tool search when tools exceed 5% of context
+              "ENABLE_TOOL_SEARCH": "auto:5"  # Activate tool search when deferrable definitions reach 5% of context
           },
       )
 
@@ -121,8 +128,6 @@ Legen Sie den Wert in der `env`-Option auf `query()` fest. In TypeScript ersetzt
 Um dieses Beispiel auszuführen, ersetzen Sie `https://tools.example.com/mcp` durch die URL Ihres eigenen MCP-Servers. Bei Erfolg wird der Ergebnistext auf der Konsole ausgegeben.
 
 Da dies ein einmaliger `query()`-Aufruf ist, löst das SDK nach dem Ausgeben eines Fehlerergebnisses eine Ausnahme aus, daher umhüllt das Beispiel die Schleife in einen Try-Block. Um zu sehen, warum eine Ausführung fehlgeschlagen ist, überprüfen Sie den `subtype` der Ergebnismeldung, z. B. `error_during_execution`, innerhalb der Schleife. Weitere Informationen zu Ergebnismeldungen finden Sie unter [Behandeln Sie das Ergebnis](/docs/de/agent-sdk/agent-loop#handle-the-result).
-
-Das Setzen von `ENABLE_TOOL_SEARCH` auf `"false"` deaktiviert die Tool-Suche und lädt alle Tool-Definitionen bei jedem Durchlauf in den Kontext. Dies entfernt den Suchrundruf, was schneller sein kann, wenn der Tool-Satz klein ist (weniger als etwa 10 Tools) und die Definitionen bequem in das Kontextfenster passen.
 
 <h2 id="optimize-tool-discovery">
   Tool-Entdeckung optimieren
@@ -162,7 +167,7 @@ Den vollständigen Satz von Systemaufforderungsoptionen finden Sie unter [System
 
 * **Maximale Tools:** 10.000 Tools in Ihrem Katalog
 * **Suchergebnisse:** Gibt bis zu fünf relevanteste Tools pro Suche standardmäßig zurück
-* **Modellunterstützung:** Claude Sonnet 4.5, Claude Haiku 4.5, Claude Opus 4.5 und spätere Modelle; siehe [Modellkompatibilität in der API-Dokumentation](https://platform.claude.com/docs/de/agents-and-tools/tool-use/tool-search-tool#model-compatibility) für die aktuelle Liste. Auf Google Clouds Agent Platform: Claude Sonnet 4.5 und spätere sowie Claude Opus 4.5 und spätere.
+* **Modellunterstützung:** Claude Sonnet 4.5, Claude Haiku 4.5, Claude Opus 4.5 und spätere Modelle; siehe [Modellkompatibilität in der API-Dokumentation](https://platform.claude.com/docs/de/agents-and-tools/tool-use/tool-search-tool#model-compatibility) für die aktuelle Liste. Dasselbe gilt auf Google Clouds Agent Platform.
 
 <h2 id="related-documentation">
   Zugehörige Dokumentation

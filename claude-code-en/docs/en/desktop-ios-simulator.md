@@ -7,7 +7,7 @@
 > Claude Code Desktop opens your app in the iOS Simulator pane when Claude builds, runs, or checks it, with a separate simulator for each session.
 
 <Note>
-  The iOS Simulator pane is in public beta in Claude Code Desktop on macOS. It's available on Pro, Max, Team, and Enterprise plans, except in Enterprise organizations that have a HIPAA configuration or [Zero Data Retention (ZDR)](/docs/en/zero-data-retention) enabled.
+  The iOS Simulator pane is in public beta in Claude Code Desktop on macOS. It's available on Pro, Max, Team, and Enterprise plans, except in Enterprise organizations that have a HIPAA configuration enabled.
 </Note>
 
 The iOS Simulator pane shows your app running in Apple's iOS Simulator next to your conversation in Claude Code Desktop. When Claude builds, installs, launches, or checks your app in a simulator, the pane opens automatically and streams the device screen live. Use it to watch Claude run and test your app, or to tap through the app yourself while Claude keeps working.
@@ -27,7 +27,7 @@ The simulator pane uses Apple's simulator tooling, which the desktop app doesn't
   On this page, "device" refers to a simulated iPhone or iPad, one of the same simulator devices you manage in Xcode under **Window → Devices and Simulators**, not physical hardware.
 </Note>
 
-The simulator pane is available in local sessions only. In [cloud](/docs/en/desktop#run-long-running-tasks-remotely) and [SSH](/docs/en/desktop#ssh-sessions) sessions, Claude runs on a machine that can't reach the simulators on your Mac.
+The simulator pane is available in local sessions only. In [cloud](/docs/en/desktop#run-long-running-tasks-in-the-cloud) and [SSH](/docs/en/desktop#ssh-sessions) sessions, Claude runs on a machine that can't reach the simulators on your Mac.
 
 ## Run your app in the simulator
 
@@ -72,7 +72,7 @@ The simulator pane is interactive, not only a viewer. While Claude works, or bet
 
 The row under the device name tunes the video stream from the simulator. Lower **Frame rate** or **Resolution** if the pane strains your Mac, switch **Encoding** between H.264 and JPEG, or check **FPS** to display the frame rate the pane is receiving. These settings change how the pane displays the device, not how the app runs.
 
-You and Claude drive the same device, so your taps change the app state Claude sees. To have Claude check a specific screen, navigate to it by tapping, then ask. While Claude is driving the device, the pane shows a **Claude is using this device** badge above the screen; hold off tapping until the badge clears, so the result reflects the app rather than your input.
+You and Claude drive the same device, so your taps change the app state Claude sees. To have Claude check a specific screen, tap through to it, then ask. While Claude is driving the device, the pane shows a **Claude is using this device** badge above the screen; hold off tapping until the badge clears, so the result reflects the app rather than your input.
 
 ## How sessions manage devices
 
@@ -121,7 +121,7 @@ Claude may not have recognized that you wanted to run or test the app, or the si
 * State the goal explicitly, for example "run the app in the iOS Simulator and tap through the signup flow".
 * Confirm Xcode and the iOS simulators are installed and that your Xcode version meets the [requirements](#requirements).
 * If your organization manages Claude Code, the [simulator tools may be disabled by policy](#turn-off-simulator-access).
-* If you're in an Enterprise organization that has a HIPAA configuration or ZDR enabled, the simulator pane isn't available to you.
+* If you're in an Enterprise organization that has a HIPAA configuration enabled, the simulator pane isn't available to you.
 * The simulator pane requires Claude Desktop v1.24012.0 or later. Open **Claude → Check for Updates**, then restart the app.
 
 ### The simulator pane says no simulators were found

@@ -4,16 +4,18 @@
 
 # Ejecutar Claude Code detrás de un lanzador corporativo
 
-> Enrute los procesos que Claude Code inicia desde su propio binario, incluido el servicio de fondo y cada sesión de vista de agente, a través de un lanzador requerido con CLAUDE_CODE_PROCESS_WRAPPER.
+> Enrute los procesos que Claude Code inicia desde su propio binario, incluido el servicio de fondo y cada sesión de vista de agente, a través de un lanzador requerido con CLAUDE_CODE_PROCESS_WRAPPER o la configuración processWrapper.
 
 Algunas organizaciones requieren que cada proceso en una estación de trabajo se inicie a través de un lanzador obligatorio. El lanzador aplica la zona de pruebas, los controles de red o la inyección de credenciales en las que depende la postura de seguridad de la empresa, y un binario que se inicia sin ella es una violación de política.
 
 `CLAUDE_CODE_PROCESS_WRAPPER` inicia cada proceso que Claude Code lanza desde su propio binario a través de su lanzador: el servicio de fondo, cada sesión que aloja en [vista de agente](/docs/es/agent-view), y los relanzamientos de Claude Code después de una actualización. Establézcalo en la ruta absoluta de su lanzador, y Claude Code ejecuta el lanzador con el comando de Claude Code como sus argumentos.
 
-Un lanzador que envuelve el comando `claude` en su `PATH` no puede alcanzar estos procesos, porque se inician desde la ruta directa del binario sin buscar `claude`.
+Un lanzador que envuelve el comando `claude` en su `PATH` no puede alcanzar el servicio de fondo o las sesiones que aloja, porque se inician desde la ruta directa del binario sin buscar `claude`.
 
 <Note>
-  `CLAUDE_CODE_PROCESS_WRAPPER` requiere Claude Code v2.1.208 o posterior. Las versiones anteriores ignoran la variable e inician cada proceso sin envolver.
+  `CLAUDE_CODE_PROCESS_WRAPPER` requiere Claude Code v2.1.208 o posterior. Las versiones anteriores ignoran la variable e inician cada proceso sin envolver. La configuración equivalente [`processWrapper`](/docs/es/settings-reference#processwrapper) requiere v2.1.210 o posterior. Las versiones anteriores la ignoran como una clave desconocida, no aplican ningún lanzador y no reportan ningún error.
+
+  Después de implementar cualquiera de las dos formas, utilice el [paso Verificar](#set-up-the-launcher) para confirmar que la versión en ejecución la aplica.
 </Note>
 
 <h2 id="what-the-launcher-covers">
@@ -26,6 +28,8 @@ Con `CLAUDE_CODE_PROCESS_WRAPPER` establecido, Claude Code inicia cada uno de lo
 * El host de terminal y la sesión de Claude Code dentro de cada fila de vista de agente, incluidas las sesiones de espera en caliente que el servicio mantiene listas.
 * Las sesiones que el servicio reinicia después de una actualización o un bloqueo.
 * El relanzamiento que Claude Code realiza de sí mismo para terminar de instalar una actualización, incluida la acción de reinicio para actualización de la vista de agente.
+* Los procesos de sesión que [Control Remoto](/docs/es/remote-control) inicia. Requiere Claude Code v2.1.210 o posterior.
+* Las sesiones de compañero de panel dividido que [equipos de agentes](/docs/es/agent-teams) inician en tmux o iTerm2. Los paneles de compañero son interactivos en lugar de procesos de fondo, pero Claude Code los inicia desde su propio binario, por lo que el lanzador los cubre. Requiere Claude Code v2.1.210 o posterior.
 
 En Windows, la variable se ignora: el contrato del lanzador depende de `exec`, que Windows no admite. Una máquina Windows con la variable establecida ejecuta cada proceso sin envolver y continúa funcionando, y la única señal es una advertencia en el [registro de depuración](/docs/es/troubleshooting). Si su política de lanzador cubre Windows, la variable no la satisface allí: cuente las máquinas Windows como sin envolver cuando planifique el despliegue.
 
@@ -33,17 +37,19 @@ En Windows, la variable se ignora: el contrato del lanzador depende de `exec`, q
   Procesos que se inician fuera del lanzador
 </h3>
 
-Tres procesos nunca se inician a través del lanzador:
+Los siguientes procesos no se inician a través del lanzador:
 
-* Un [servicio de fondo instalado](/docs/es/agent-view#the-supervisor-process): `launchd` o `systemd` inicia ese proceso desde su archivo de unidad. `/status` y `claude daemon status` advierten cuando esto se aplica, y las sesiones que el servicio genera aún se inician a través del lanzador una vez que el servicio se reinicia con la variable en su configuración.
-* Una sesión que usted inicia usted mismo en una terminal, que se ejecuta como la invocó. Para cubrir estas sesiones, coloque un script llamado `claude` en un directorio anterior en `PATH` que ejecute su lanzador con el binario real; no reemplace el enlace simbólico administrado. Los auto-generados no consultan `PATH`, por lo que los dos lanzadores nunca se apilan.
+* Un [servicio de fondo instalado](/docs/es/agent-view#the-supervisor-process) cuya unidad se escribió antes de que se configurara el lanzador: `launchd` o `systemd` inicia ese proceso desde su archivo de unidad. `/status` y `claude daemon status` advierten cuando el servicio en ejecución y el lanzador configurado no coinciden, y las sesiones que el servicio genera aún se inician a través del lanzador una vez que el servicio se reinicia con la variable en su configuración.
+* Una sesión que usted inicia usted mismo en una terminal, que se ejecuta como la invocó. Para cubrir estas sesiones, coloque un script llamado `claude` en un directorio anterior en `PATH` que ejecute su lanzador con el binario real; no reemplace el enlace simbólico administrado. El servicio de fondo y sus sesiones se inician sin una búsqueda de `PATH`, por lo que los dos lanzadores no se apilan allí.
 * El primer proceso de un enlace profundo `claude-cli://`, que el controlador de protocolo del sistema operativo inicia directamente. Todo lo que esa sesión inicia en el fondo después se ejecuta a través del lanzador. Para cerrar completamente este camino, [evite el registro del controlador](/docs/es/deep-links#registration-and-supported-platforms) con la configuración `disableDeepLinkRegistration`.
+* El relanzamiento que `--worktree` combinado con `--tmux` realiza: el multiplexor de terminal inicia ese panel, no el binario de Claude Code.
+* El host de mensajería nativa que [Claude en Chrome](/docs/es/chrome) registra: el navegador lo inicia, no el binario de Claude Code.
 
 <h3 id="helper-process-names-in-process-monitors">
   Nombres de procesos auxiliares en monitores de procesos
 </h3>
 
-Con un lanzador configurado, `ps` y Activity Monitor muestran el nombre binario versionado para los procesos auxiliares de fondo en lugar de las etiquetas `claude bg-pty-host` y `claude bg-spare` de Claude Code, porque el `exec` del lanzador reconstruye la lista de argumentos. El cambio de nombre es un efecto secundario, no un ocultamiento: los procesos son de otra manera sin cambios, y Claude Code identifica sus propios procesos por ruta binaria, nunca por nombre de visualización.
+Con un lanzador configurado, `ps` y Activity Monitor ya no muestran las etiquetas `claude bg-pty-host` y `claude bg-spare` de Claude Code para los procesos auxiliares de fondo, porque el `exec` del lanzador reconstruye la lista de argumentos. Perder las etiquetas es un efecto secundario, no un ocultamiento: los procesos son de otra manera sin cambios, y Claude Code identifica sus propios procesos por ruta binaria, nunca por nombre de visualización.
 
 <h2 id="set-up-the-launcher">
   Configurar el lanzador
@@ -70,7 +76,7 @@ Con un lanzador configurado, `ps` y Activity Monitor muestran el nombre binario 
   <Step title="Establecer CLAUDE_CODE_PROCESS_WRAPPER en configuración">
     Establezca la variable en el bloque `env` de un archivo de configuración para que el servicio de fondo desacoplado la herede. Una `export` de shell no es suficiente: el servicio de fondo se inicia bajo demanda, sobrevive a su shell y nunca vuelve a leer perfiles de shell.
 
-    Para una máquina, agréguelo a `~/.claude/settings.json`. Para implementarlo en cada máquina de su organización, coloque el mismo bloque en [configuración administrada](/docs/es/permissions#managed-settings):
+    Para una máquina, agréguelo a `~/.claude/settings.json`. Para implementarlo en cada máquina de su organización, coloque el mismo bloque en [configuración administrada](/docs/es/managed-settings):
 
     ```json theme={null}
     {
@@ -82,7 +88,19 @@ Con un lanzador configurado, `ps` y Activity Monitor muestran el nombre binario 
 
     Cuando más de una fuente establece la variable, el valor de configuración administrada anula tanto `~/.claude/settings.json` como un valor exportado en el shell, por lo que los usuarios no pueden apuntar auto-generados a un lanzador diferente.
 
-    La configuración de proyecto y local no puede establecer esta variable. Un archivo confirmado en un repositorio no debe poder poner un binario frente a cada proceso de Claude Code en la máquina, por lo que `CLAUDE_CODE_PROCESS_WRAPPER` en `.claude/settings.json` o `.claude/settings.local.json` se ignora, con una advertencia en el [registro de depuración](/docs/es/troubleshooting).
+    La configuración [`processWrapper`](/docs/es/settings-reference#processwrapper) lleva el mismo valor que una clave de configuración nombrada de nivel superior. Establézcala cuando su organización envíe configuración como claves individuales en lugar de un bloque `env`. La configuración `processWrapper` requiere Claude Code v2.1.210 o posterior. El siguiente archivo de configuración establece el mismo lanzador a través de la clave:
+
+    ```json theme={null}
+    {
+      "processWrapper": "/opt/corp/launcher"
+    }
+    ```
+
+    `CLAUDE_CODE_PROCESS_WRAPPER` tiene precedencia cuando ambas están establecidas.
+
+    Debido a que `processWrapper` es una configuración nombrada, una organización que la entrega a través de [configuración administrada remota](/docs/es/managed-settings#delivery-mechanisms) la ve listada en el [diálogo de aprobación de seguridad](/docs/es/server-managed-settings#security-approval-dialogs) junto con las otras configuraciones que ejecutan ejecutables suministrados por el administrador.
+
+    La configuración de proyecto y local no puede configurar el lanzador. Un archivo confirmado en un repositorio no debe poder poner un binario frente a cada proceso de Claude Code en la máquina, por lo que Claude Code ignora `CLAUDE_CODE_PROCESS_WRAPPER` en `.claude/settings.json` o `.claude/settings.local.json` con una advertencia en el [registro de depuración](/docs/es/troubleshooting), y nunca lee la clave `processWrapper` de esos archivos.
   </Step>
 
   <Step title="Reiniciar el servicio de fondo y sus sesiones">
@@ -102,21 +120,20 @@ Con un lanzador configurado, `ps` y Activity Monitor muestran el nombre binario 
 
 Cuando el lanzador no puede ejecutarse, Claude Code se niega a iniciar el proceso en lugar de iniciarlo sin envolver. En Windows, [la variable se ignora](#what-the-launcher-covers) y los procesos se inician sin envolver. Claude Code mantiene el script a estas reglas:
 
-* **Terminar con `exec "$@"`**. Un lanzador que bifurca un hijo y sale deja un proceso de Claude Code huérfano que el servicio de fondo no puede rastrear. La vista de agente marca tal sesión como fallida con un mensaje que nombra el lanzador, y el servicio recoge lo que el lanzador dejó atrás.
+* **Terminar con `exec "$@"`.** Un lanzador que bifurca un hijo y sale deja un proceso de Claude Code huérfano que el servicio de fondo no puede rastrear. La vista de agente marca tal sesión como fallida con un mensaje que nombra el lanzador, y el servicio recoge lo que el lanzador dejó atrás.
 * **No reordene, absorba o anteponga argumentos.** El primer argumento es el binario de Claude Code y todo después de él es su argv.
 * **Pase cada variable de entorno heredada a través de `exec`.** Agregar variables, como credenciales inyectadas, está bien; descartar las heredadas no.
   * Los tokens de autenticación por sesión, la selección de modelo y proveedor, y `CLAUDE_CODE_PROCESS_WRAPPER` en sí viajan en el entorno heredado, por lo que un lanzador que lo reconstruye desde una lista de permitidos rompe las sesiones que inicia, y `/status` reporta una falta de coincidencia del lanzador.
   * Si el lanzador debe entrar en un espacio de nombres o zona de pruebas que reinicia el entorno, vuelva a exportar el entorno heredado dentro de él textualmente.
 * **Alcance `exec` dentro de aproximadamente tres segundos cada vez que se ejecute el lanzador.** Un envío de fondo frío ejecuta el lanzador dos veces en serie antes del primer byte de salida, así que haga trabajo lento como un intercambio de inicio de sesión único de manera perezosa o desde un caché.
-  * Un lanzador que se ejecuta mucho más allá del presupuesto se trata como un inicio estancado y se reinicia.
 * **Tolere ser invocado desde dentro de sí mismo.** Claude Code aplica el lanzador a cada auto-generado anidado, por lo que un lanzador que adquiere un recurso exclusivo debe detectar que ya lo posee.
 * **No escriba en la terminal antes de que Claude Code se inicie.** Cualquier cosa impresa antes del `exec` se reporta como la causa del bloqueo si la sesión muere antes de inicializarse.
 
-<h3 id="format-of-the-claude_code_process_wrapper-value">
-  Formato del valor `CLAUDE_CODE_PROCESS_WRAPPER`
+<h3 id="format-of-the-launcher-value">
+  Formato del valor del lanzador
 </h3>
 
-Para la mayoría de los lanzadores, el valor es solo la ruta absoluta del script, como `/opt/corp/launcher`.
+`CLAUDE_CODE_PROCESS_WRAPPER` y la configuración `processWrapper` toman el mismo formato. Para la mayoría de los lanzadores, el valor es la ruta absoluta del script, como `/opt/corp/launcher`.
 
 Para pasar argumentos de su lanzador, escríbalos después de la ruta. Claude Code analiza el valor como una lista de argumentos, no como un comando de shell:
 

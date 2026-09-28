@@ -12,7 +12,7 @@
   Pour migrer, utilisez l'[API `query()`](/docs/fr/agent-sdk/typescript) et les [options de session](/docs/fr/agent-sdk/sessions) qu'elle accepte. Passez un `AsyncIterable<SDKUserMessage>` pour les conversations multi-tours, ou `options.resume` pour continuer une session sauvegardée. Cette page est conservée à titre de référence si vous maintenez du code sur Agent SDK 0.2.x ou antérieur.
 </Warning>
 
-V2 était une API de session expérimentale qui supprimait le besoin de générateurs asynchrones et de coordination de rendement. Au lieu de gérer l'état du générateur entre les tours, chaque tour était un cycle `send()`/`stream()` séparé. La surface de l'API se réduisait à trois concepts :
+V2 était une API de session expérimentale qui supprimait le besoin de générateurs asynchrones et de coordination de rendement. Au lieu de gérer l'état du générateur entre les tours, chaque tour était un cycle `send()`/`stream()` séparé. La surface de l'API se réduisait à créer une session, envoyer un message et diffuser la réponse :
 
 * `createSession()` / `resumeSession()` : Démarrer ou continuer une conversation
 * `session.send()` : Envoyer un message
@@ -29,7 +29,7 @@ npm install @anthropic-ai/claude-agent-sdk@0.2
 ```
 
 <Note>
-  Le SDK regroupe un binaire Claude Code natif pour votre plateforme en tant que dépendance optionnelle, vous n'avez donc pas besoin d'installer Claude Code séparément.
+  Le SDK regroupe un binaire Claude Code natif pour votre plateforme en tant que dépendance optionnelle, donc la plupart des installations n'ont besoin d'aucune installation Claude Code séparée. Consultez la [note d'installation du démarrage rapide](/docs/fr/agent-sdk/quickstart) pour les installations qui en ont besoin.
 </Note>
 
 <h2 id="quick-start">
@@ -318,6 +318,8 @@ for await (const msg of resumedSession.stream()) {
 </h3>
 
 Les sessions peuvent être fermées manuellement ou automatiquement en utilisant [`await using`](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-2.html#using-declarations-and-explicit-resource-management), une fonctionnalité TypeScript 5.2+ pour le nettoyage automatique des ressources. Si vous utilisez une version TypeScript plus ancienne ou rencontrez des problèmes de compatibilité, utilisez plutôt le nettoyage manuel.
+
+Les exemples ci-dessous montrent uniquement le modèle de nettoyage et n'envoient aucun message, donc leur exécution ne produit aucune sortie.
 
 **Nettoyage automatique (TypeScript 5.2+) :**
 

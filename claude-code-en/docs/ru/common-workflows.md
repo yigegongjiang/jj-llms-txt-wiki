@@ -40,6 +40,8 @@
     ```bash theme={null}
     cd /path/to/project 
     ```
+
+    Замените `/path/to/project` на путь к вашему проекту.
   </Step>
 
   <Step title="Запустите Claude Code">
@@ -49,21 +51,21 @@
   </Step>
 
   <Step title="Попросите высокоуровневый обзор">
-    ```text theme={null}
+    ```text wrap theme={null}
     give me an overview of this codebase
     ```
   </Step>
 
   <Step title="Углубитесь в конкретные компоненты">
-    ```text theme={null}
+    ```text wrap theme={null}
     explain the main architecture patterns used here
     ```
 
-    ```text theme={null}
+    ```text wrap theme={null}
     what are the key data models?
     ```
 
-    ```text theme={null}
+    ```text wrap theme={null}
     how is authentication handled?
     ```
   </Step>
@@ -85,19 +87,19 @@
 
 <Steps>
   <Step title="Попросите Claude найти релевантные файлы">
-    ```text theme={null}
+    ```text wrap theme={null}
     find the files that handle user authentication
     ```
   </Step>
 
   <Step title="Получите контекст о том, как компоненты взаимодействуют">
-    ```text theme={null}
+    ```text wrap theme={null}
     how do these authentication files work together?
     ```
   </Step>
 
   <Step title="Поймите поток выполнения">
-    ```text theme={null}
+    ```text wrap theme={null}
     trace the login process from front-end to database
     ```
   </Step>
@@ -108,7 +110,7 @@
 
   * Будьте конкретны в том, что вы ищете
   * Используйте предметный язык из проекта
-  * Установите [плагин анализа кода](/docs/ru/discover-plugins#code-intelligence) для вашего языка, чтобы дать Claude точную навигацию "перейти к определению" и "найти ссылки"
+  * Установите [плагин анализа кода](/docs/ru/plugins/code-intelligence) для вашего языка, чтобы дать Claude точную навигацию "перейти к определению" и "найти ссылки"
 </Tip>
 
 ***
@@ -121,19 +123,19 @@
 
 <Steps>
   <Step title="Поделитесь ошибкой с Claude">
-    ```text theme={null}
+    ```text wrap theme={null}
     I'm seeing an error when I run npm test
     ```
   </Step>
 
   <Step title="Попросите рекомендации по исправлению">
-    ```text theme={null}
+    ```text wrap theme={null}
     suggest a few ways to fix the @ts-ignore in user.ts
     ```
   </Step>
 
   <Step title="Примените исправление">
-    ```text theme={null}
+    ```text wrap theme={null}
     update user.ts to add the null check you suggested
     ```
   </Step>
@@ -155,27 +157,29 @@
 
 Предположим, вам нужно обновить старый код для использования современных паттернов и практик.
 
+Для переноса всей кодовой базы на новый язык см. [как Anthropic проводит крупномасштабные миграции кода с помощью Claude Code](https://claude.com/blog/ai-code-migration) в блоге.
+
 <Steps>
   <Step title="Определите устаревший код для рефакторинга">
-    ```text theme={null}
+    ```text wrap theme={null}
     find deprecated API usage in our codebase
     ```
   </Step>
 
   <Step title="Получите рекомендации по рефакторингу">
-    ```text theme={null}
+    ```text wrap theme={null}
     suggest how to refactor utils.js to use modern JavaScript features
     ```
   </Step>
 
   <Step title="Примените изменения безопасно">
-    ```text theme={null}
+    ```text wrap theme={null}
     refactor utils.js to use ES2024 features while maintaining the same behavior
     ```
   </Step>
 
   <Step title="Проверьте рефакторинг">
-    ```text theme={null}
+    ```text wrap theme={null}
     run tests for the refactored code
     ```
   </Step>
@@ -199,25 +203,25 @@
 
 <Steps>
   <Step title="Определите непротестированный код">
-    ```text theme={null}
+    ```text wrap theme={null}
     find functions in NotificationsService.swift that are not covered by tests
     ```
   </Step>
 
   <Step title="Создайте каркас тестов">
-    ```text theme={null}
+    ```text wrap theme={null}
     add tests for the notification service
     ```
   </Step>
 
   <Step title="Добавьте значимые тестовые случаи">
-    ```text theme={null}
+    ```text wrap theme={null}
     add test cases for edge conditions in the notification service
     ```
   </Step>
 
   <Step title="Запустите и проверьте тесты">
-    ```text theme={null}
+    ```text wrap theme={null}
     run the new tests and fix any failures
     ```
   </Step>
@@ -237,25 +241,25 @@ Claude может создавать тесты, которые следуют �
 
 <Steps>
   <Step title="Суммируйте ваши изменения">
-    ```text theme={null}
+    ```text wrap theme={null}
     summarize the changes I've made to the authentication module
     ```
   </Step>
 
   <Step title="Создайте pull request">
-    ```text theme={null}
+    ```text wrap theme={null}
     create a pr
     ```
   </Step>
 
   <Step title="Просмотрите и уточните">
-    ```text theme={null}
+    ```text wrap theme={null}
     enhance the PR description with more context about the security improvements
     ```
   </Step>
 </Steps>
 
-Когда вы создаёте PR с помощью `gh pr create`, сеанс автоматически связывается с этим PR. Чтобы вернуться к нему позже, запустите `claude --from-pr 123`, заменив 123 номером PR, или вставьте URL PR в средство выбора [`/resume`](/docs/ru/sessions#use-the-session-picker).
+Чтобы найти сеанс позже, запустите `claude --from-pr 1234` с номером вашего PR, который открывает средство выбора сеанса, отфильтрованное по сеансам, связанным с этим PR, или вставьте URL PR в средство выбора [`/resume`](/docs/ru/sessions#use-the-session-picker). Claude Code связывает сеанс с PR, когда Claude создает его с помощью `gh pr create` или `glab mr create`, и когда Claude [работает над существующим PR](/docs/ru/agent-view#pull-request-status).
 
 <Tip>
   Просмотрите PR, созданный Claude, перед отправкой и попросите Claude выделить потенциальные риски или соображения.
@@ -269,25 +273,25 @@ Claude может создавать тесты, которые следуют �
 
 <Steps>
   <Step title="Определите недокументированный код">
-    ```text theme={null}
+    ```text wrap theme={null}
     find functions without proper JSDoc comments in the auth module
     ```
   </Step>
 
   <Step title="Создайте документацию">
-    ```text theme={null}
+    ```text wrap theme={null}
     add JSDoc comments to the undocumented functions in auth.js
     ```
   </Step>
 
   <Step title="Просмотрите и улучшите">
-    ```text theme={null}
+    ```text wrap theme={null}
     improve the generated documentation with more context and examples
     ```
   </Step>
 
   <Step title="Проверьте документацию">
-    ```text theme={null}
+    ```text wrap theme={null}
     check if the documentation follows our project standards
     ```
   </Step>
@@ -324,40 +328,40 @@ Claude Code работает в любом каталоге. Запустите 
     Вы можете использовать любой из этих методов:
 
     1. Перетащите изображение в окно Claude Code
-    2. Скопируйте изображение и вставьте его в CLI с помощью Ctrl+V. На macOS, Cmd+V также работает в iTerm2.
-    3. Предоставьте Claude путь к изображению. Например, "Analyze this image: /path/to/your/image.png"
+    2. Скопируйте изображение и вставьте его в CLI с помощью `Ctrl+V`, или с помощью [`Alt+V` на Windows и WSL](/docs/ru/interactive-mode#general-controls)
+    3. Предоставьте Claude путь к изображению, например "Analyze this image: /path/to/your/image.png"
   </Step>
 
   <Step title="Попросите Claude проанализировать изображение">
-    ```text theme={null}
+    ```text wrap theme={null}
     What does this image show?
     ```
 
-    ```text theme={null}
+    ```text wrap theme={null}
     Describe the UI elements in this screenshot
     ```
 
-    ```text theme={null}
+    ```text wrap theme={null}
     Are there any problematic elements in this diagram?
     ```
   </Step>
 
   <Step title="Используйте изображения для контекста">
-    ```text theme={null}
+    ```text wrap theme={null}
     Here's a screenshot of the error. What's causing it?
     ```
 
-    ```text theme={null}
+    ```text wrap theme={null}
     This is our current database schema. How should we modify it for the new feature?
     ```
   </Step>
 
   <Step title="Получите предложения кода из визуального содержимого">
-    ```text theme={null}
+    ```text wrap theme={null}
     Generate CSS to match this design mockup
     ```
 
-    ```text theme={null}
+    ```text wrap theme={null}
     What HTML structure would recreate this component?
     ```
   </Step>
@@ -383,7 +387,7 @@ Claude Code работает в любом каталоге. Запустите 
 
 <Steps>
   <Step title="Ссылка на один файл">
-    ```text theme={null}
+    ```text wrap theme={null}
     Explain the logic in @src/utils/auth.js
     ```
 
@@ -391,15 +395,13 @@ Claude Code работает в любом каталоге. Запустите 
   </Step>
 
   <Step title="Ссылка на каталог">
-    ```text theme={null}
+    ```text wrap theme={null}
     What's the structure of @src/components?
     ```
-
-    Это предоставляет список каталогов с информацией о файлах.
   </Step>
 
   <Step title="Ссылка на MCP ресурсы">
-    ```text theme={null}
+    ```text wrap theme={null}
     Show me the data from @github:repos/owner/repo/issues
     ```
 
@@ -411,6 +413,7 @@ Claude Code работает в любом каталоге. Запустите 
   Советы:
 
   * Пути к файлам могут быть относительными или абсолютными
+  * Введите `@` для открытия меню предложений пути, затем нажмите Enter или Tab для принятия выделенного пути и снова Enter для отправки сообщения
   * Ссылки на файлы @ добавляют `CLAUDE.md` в каталог файла и родительские каталоги в контекст
   * Ссылки на каталоги показывают списки файлов, а не содержимое
   * Вы можете ссылаться на несколько файлов в одном сообщении (например, "@file1.js and @file2.js")
@@ -426,12 +429,12 @@ Claude Code работает в любом каталоге. Запустите 
 
 Выберите вариант планирования на основе того, где вы хотите, чтобы задача выполнялась:
 
-| Вариант                                                              | Где выполняется                          | Лучше всего для                                                                                                                                                                                                                    |
-| :------------------------------------------------------------------- | :--------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Routines](/docs/ru/routines)                                             | Инфраструктура, управляемая Anthropic    | Задачи, которые должны выполняться даже когда ваш компьютер выключен. Также может срабатывать на вызовы API или события GitHub в дополнение к расписанию. Настройте на [claude.ai/code/routines](https://claude.ai/code/routines). |
-| [Запланированные задачи рабочего стола](/docs/ru/desktop-scheduled-tasks) | Ваша машина, через настольное приложение | Задачи, которым нужен прямой доступ к локальным файлам, инструментам или незафиксированным изменениям.                                                                                                                             |
-| [GitHub Actions](/docs/ru/github-actions)                                 | Ваш конвейер CI                          | Задачи, связанные с событиями репозитория, такими как открытые PR, или расписания cron, которые должны находиться рядом с конфигурацией рабочего процесса.                                                                         |
-| [`/loop`](/docs/ru/scheduled-tasks)                                       | Текущий сеанс CLI                        | Быстрый опрос во время открытого сеанса. Задачи отменяются при начале нового разговора; `--resume` и `--continue` восстанавливают неистекшие.                                                                                      |
+| Вариант                                                              | Где выполняется                            | Лучше всего для                                                                                                                                                                                                                    |
+| :------------------------------------------------------------------- | :----------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Routines](/docs/ru/routines)                                             | Облако, управляемое Anthropic по умолчанию | Задачи, которые должны выполняться даже когда ваш компьютер выключен. Также может срабатывать на вызовы API или события GitHub в дополнение к расписанию. Настройте на [claude.ai/code/routines](https://claude.ai/code/routines). |
+| [Запланированные задачи рабочего стола](/docs/ru/desktop-scheduled-tasks) | Ваша машина, через настольное приложение   | Задачи, которым нужен прямой доступ к локальным файлам, инструментам или незафиксированным изменениям.                                                                                                                             |
+| [GitHub Actions](/docs/ru/github-actions)                                 | Ваш конвейер CI                            | Задачи, связанные с событиями репозитория, такими как открытые PR, или расписания cron, которые должны находиться рядом с конфигурацией рабочего процесса.                                                                         |
+| [`/loop`](/docs/ru/scheduled-tasks)                                       | Текущий сеанс CLI                          | Быстрый опрос во время открытого сеанса. `--resume` и `--continue` восстанавливают неистекшие циклы с фиксированным интервалом.                                                                                                    |
 
 <Tip>
   При написании подсказок для запланированных задач будьте явны в отношении того, что означает успех и что делать с результатами. Задача выполняется автономно, поэтому она не может задавать уточняющие вопросы. Например: "Просмотрите открытые PR с меткой `needs-review`, оставьте встроенные комментарии по любым проблемам и опубликуйте сводку в канале `#eng-reviews` Slack."
@@ -449,27 +452,27 @@ Claude имеет встроенный доступ к своей докумен
   Примеры вопросов
 </h4>
 
-```text theme={null}
+```text wrap theme={null}
 can Claude Code create pull requests?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 how does Claude Code handle permissions?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 what skills are available?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 how do I use MCP with Claude Code?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 how do I configure Claude Code for Amazon Bedrock?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 what are the limitations of Claude Code?
 ```
 
@@ -503,25 +506,25 @@ claude --continue
   Запуск параллельных сеансов с worktrees
 </h2>
 
-Работайте над функцией в одном терминале, пока Claude исправляет ошибку в другом, без конфликтов редактирования. Каждый worktree — это отдельный checkout на своей собственной ветке.
+Работайте над функцией в одном терминале, пока Claude исправляет ошибку в другом, без конфликтов редактирования. Каждый [git worktree](https://git-scm.com/docs/git-worktree) — это отдельный checkout на своей собственной ветке, созданный из существующего коммита, поэтому репозиторий должен иметь хотя бы один коммит в первую очередь.
 
 ```bash theme={null}
 claude --worktree feature-auth
 ```
 
-Запустите ту же команду с другим именем во втором терминале для запуска изолированного параллельного сеанса. См. [Worktrees](/docs/ru/worktrees) для очистки, `.worktreeinclude` и поддержки VCS, не основанной на git. Для мониторинга параллельных сеансов с одного экрана вместо отдельных терминалов см. [фоновые агенты](/docs/ru/agent-view).
+Запустите ту же команду с другим именем во втором терминале для запуска изолированного параллельного сеанса. В репозитории без коммитов команда завершается с ошибкой `Failed to resolve base branch "HEAD": git rev-parse failed`. См. [Worktrees](/docs/ru/worktrees) для очистки, `.worktreeinclude` и поддержки VCS, не основанной на git. Для мониторинга параллельных сеансов с одного экрана вместо отдельных терминалов см. [фоновые агенты](/docs/ru/agent-view).
 
 <h2 id="plan-before-editing">
   Планирование перед редактированием
 </h2>
 
-Для изменений, которые вы хотите просмотреть перед их записью на диск, переключитесь в режим плана. Claude читает файлы и предлагает план, но не вносит изменения, пока вы не одобрите.
+Для изменений, которые вы хотите просмотреть перед их записью на диск, переключитесь в режим плана. Claude читает файлы и предлагает план, но не вносит изменения, пока вы не одобрите. Строка состояния показывает `⏸ plan mode on` во время активного режима плана.
 
 ```bash theme={null}
 claude --permission-mode plan
 ```
 
-Вы также можете нажать `Shift+Tab` во время сеанса для переключения в режим плана. См. [Plan Mode](/docs/ru/permission-modes#analyze-before-you-edit-with-plan-mode) для потока одобрения и редактирования плана в вашем текстовом редакторе.
+Вы также можете нажать `Shift+Tab` во время сеанса до тех пор, пока строка состояния не покажет `⏸ plan mode on`. См. [Plan mode](/docs/ru/permission-modes#analyze-before-you-edit-with-plan-mode) для потока одобрения и редактирования плана в вашем текстовом редакторе.
 
 <h2 id="delegate-research-to-subagents">
   Делегирование исследований subagents
@@ -529,7 +532,7 @@ claude --permission-mode plan
 
 Изучение большой кодовой базы заполняет ваш контекст чтением файлов. Делегируйте исследование, чтобы только результаты вернулись.
 
-```text theme={null}
+```text wrap theme={null}
 use a subagent to investigate how our auth system handles token refresh
 ```
 

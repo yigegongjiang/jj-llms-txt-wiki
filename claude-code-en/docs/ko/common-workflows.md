@@ -40,6 +40,8 @@
     ```bash theme={null}
     cd /path/to/project 
     ```
+
+    `/path/to/project`를 프로젝트의 경로로 바꾸십시오.
   </Step>
 
   <Step title="Claude Code 시작">
@@ -49,21 +51,21 @@
   </Step>
 
   <Step title="높은 수준의 개요 요청">
-    ```text theme={null}
+    ```text wrap theme={null}
     give me an overview of this codebase
     ```
   </Step>
 
   <Step title="특정 구성 요소에 대해 더 깊이 있게 살펴보기">
-    ```text theme={null}
+    ```text wrap theme={null}
     explain the main architecture patterns used here
     ```
 
-    ```text theme={null}
+    ```text wrap theme={null}
     what are the key data models?
     ```
 
-    ```text theme={null}
+    ```text wrap theme={null}
     how is authentication handled?
     ```
   </Step>
@@ -85,19 +87,19 @@
 
 <Steps>
   <Step title="Claude에게 관련 파일을 찾도록 요청">
-    ```text theme={null}
+    ```text wrap theme={null}
     find the files that handle user authentication
     ```
   </Step>
 
   <Step title="구성 요소가 어떻게 상호작용하는지에 대한 컨텍스트 얻기">
-    ```text theme={null}
+    ```text wrap theme={null}
     how do these authentication files work together?
     ```
   </Step>
 
   <Step title="실행 흐름 이해하기">
-    ```text theme={null}
+    ```text wrap theme={null}
     trace the login process from front-end to database
     ```
   </Step>
@@ -108,7 +110,7 @@
 
   * 찾고 있는 것에 대해 구체적으로 설명하기
   * 프로젝트의 도메인 언어 사용하기
-  * 언어에 대한 [코드 인텔리전스 플러그인](/docs/ko/discover-plugins#code-intelligence)을 설치하여 Claude에게 정확한 "정의로 이동" 및 "참조 찾기" 네비게이션 제공하기
+  * 언어에 대한 [코드 인텔리전스 플러그인](/docs/ko/plugins/code-intelligence)을 설치하여 Claude에게 정확한 "정의로 이동" 및 "참조 찾기" 네비게이션 제공하기
 </Tip>
 
 ***
@@ -121,19 +123,19 @@
 
 <Steps>
   <Step title="Claude와 오류 공유하기">
-    ```text theme={null}
+    ```text wrap theme={null}
     I'm seeing an error when I run npm test
     ```
   </Step>
 
   <Step title="수정 권장사항 요청하기">
-    ```text theme={null}
+    ```text wrap theme={null}
     suggest a few ways to fix the @ts-ignore in user.ts
     ```
   </Step>
 
   <Step title="수정 적용하기">
-    ```text theme={null}
+    ```text wrap theme={null}
     update user.ts to add the null check you suggested
     ```
   </Step>
@@ -155,27 +157,29 @@
 
 오래된 코드를 최신 패턴과 관행을 사용하도록 업데이트해야 한다고 가정해봅시다.
 
+전체 코드베이스를 새로운 언어로 이식하는 방법은 블로그의 [Anthropic이 Claude Code로 대규모 코드 마이그레이션을 실행하는 방법](https://claude.com/blog/ai-code-migration)을 참조하십시오.
+
 <Steps>
   <Step title="리팩토링할 레거시 코드 식별">
-    ```text theme={null}
+    ```text wrap theme={null}
     find deprecated API usage in our codebase
     ```
   </Step>
 
   <Step title="리팩토링 권장사항 얻기">
-    ```text theme={null}
+    ```text wrap theme={null}
     suggest how to refactor utils.js to use modern JavaScript features
     ```
   </Step>
 
   <Step title="안전하게 변경사항 적용하기">
-    ```text theme={null}
+    ```text wrap theme={null}
     refactor utils.js to use ES2024 features while maintaining the same behavior
     ```
   </Step>
 
   <Step title="리팩토링 검증하기">
-    ```text theme={null}
+    ```text wrap theme={null}
     run tests for the refactored code
     ```
   </Step>
@@ -199,25 +203,25 @@
 
 <Steps>
   <Step title="테스트되지 않은 코드 식별">
-    ```text theme={null}
+    ```text wrap theme={null}
     find functions in NotificationsService.swift that are not covered by tests
     ```
   </Step>
 
   <Step title="테스트 스캐폴딩 생성">
-    ```text theme={null}
+    ```text wrap theme={null}
     add tests for the notification service
     ```
   </Step>
 
   <Step title="의미 있는 테스트 케이스 추가">
-    ```text theme={null}
+    ```text wrap theme={null}
     add test cases for edge conditions in the notification service
     ```
   </Step>
 
   <Step title="테스트 실행 및 검증">
-    ```text theme={null}
+    ```text wrap theme={null}
     run the new tests and fix any failures
     ```
   </Step>
@@ -237,25 +241,25 @@ Claude에게 직접 풀 요청을 만들도록 요청하거나 ("create a pr for
 
 <Steps>
   <Step title="변경사항 요약하기">
-    ```text theme={null}
+    ```text wrap theme={null}
     summarize the changes I've made to the authentication module
     ```
   </Step>
 
   <Step title="풀 요청 생성하기">
-    ```text theme={null}
+    ```text wrap theme={null}
     create a pr
     ```
   </Step>
 
   <Step title="검토 및 정제하기">
-    ```text theme={null}
+    ```text wrap theme={null}
     enhance the PR description with more context about the security improvements
     ```
   </Step>
 </Steps>
 
-`gh pr create`를 사용하여 PR을 만들면 세션이 자동으로 해당 PR에 연결됩니다. 나중에 `claude --from-pr 123`으로 재개하거나 (123을 PR 번호로 바꾸기), [`/resume` 선택기](/docs/ko/sessions#use-the-session-picker)에 PR URL을 붙여넣어 재개할 수 있습니다.
+나중에 세션을 찾으려면 `claude --from-pr 1234`를 자신의 PR 번호로 실행하여 해당 PR에 연결된 세션으로 필터링된 세션 선택기를 열거나, [`/resume` 선택기](/docs/ko/sessions#use-the-session-picker) 검색에 PR URL을 붙여넣으십시오. Claude Code는 Claude가 `gh pr create` 또는 `glab mr create`로 생성할 때, 그리고 Claude가 [기존 PR에서 작업할](/docs/ko/agent-view#pull-request-status) 때 세션을 PR에 연결합니다.
 
 <Tip>
   Claude가 생성한 PR을 제출하기 전에 검토하고 Claude에게 잠재적 위험이나 고려사항을 강조하도록 요청하십시오.
@@ -269,25 +273,25 @@ Claude에게 직접 풀 요청을 만들도록 요청하거나 ("create a pr for
 
 <Steps>
   <Step title="문서화되지 않은 코드 식별">
-    ```text theme={null}
+    ```text wrap theme={null}
     find functions without proper JSDoc comments in the auth module
     ```
   </Step>
 
   <Step title="문서 생성하기">
-    ```text theme={null}
+    ```text wrap theme={null}
     add JSDoc comments to the undocumented functions in auth.js
     ```
   </Step>
 
   <Step title="검토 및 개선하기">
-    ```text theme={null}
+    ```text wrap theme={null}
     improve the generated documentation with more context and examples
     ```
   </Step>
 
   <Step title="문서 검증하기">
-    ```text theme={null}
+    ```text wrap theme={null}
     check if the documentation follows our project standards
     ```
   </Step>
@@ -324,40 +328,40 @@ Claude Code는 모든 디렉토리에서 작동합니다. 노트 저장소, 문�
     다음 방법 중 하나를 사용할 수 있습니다:
 
     1. Claude Code 창으로 이미지를 드래그 앤 드롭하기
-    2. 이미지를 복사하고 Ctrl+V로 CLI에 붙여넣기. macOS에서는 iTerm2에서도 Cmd+V가 작동합니다.
+    2. 이미지를 복사하고 `Ctrl+V`로 CLI에 붙여넣기, 또는 [`Alt+V` (Windows 및 WSL)](/docs/ko/interactive-mode#general-controls)로 붙여넣기
     3. Claude에 이미지 경로 제공하기. 예: "Analyze this image: /path/to/your/image.png"
   </Step>
 
   <Step title="Claude에게 이미지 분석 요청하기">
-    ```text theme={null}
+    ```text wrap theme={null}
     What does this image show?
     ```
 
-    ```text theme={null}
+    ```text wrap theme={null}
     Describe the UI elements in this screenshot
     ```
 
-    ```text theme={null}
+    ```text wrap theme={null}
     Are there any problematic elements in this diagram?
     ```
   </Step>
 
   <Step title="컨텍스트를 위해 이미지 사용하기">
-    ```text theme={null}
+    ```text wrap theme={null}
     Here's a screenshot of the error. What's causing it?
     ```
 
-    ```text theme={null}
+    ```text wrap theme={null}
     This is our current database schema. How should we modify it for the new feature?
     ```
   </Step>
 
   <Step title="시각적 콘텐츠에서 코드 제안 얻기">
-    ```text theme={null}
+    ```text wrap theme={null}
     Generate CSS to match this design mockup
     ```
 
-    ```text theme={null}
+    ```text wrap theme={null}
     What HTML structure would recreate this component?
     ```
   </Step>
@@ -383,7 +387,7 @@ Claude Code는 모든 디렉토리에서 작동합니다. 노트 저장소, 문�
 
 <Steps>
   <Step title="단일 파일 참조하기">
-    ```text theme={null}
+    ```text wrap theme={null}
     Explain the logic in @src/utils/auth.js
     ```
 
@@ -391,15 +395,13 @@ Claude Code는 모든 디렉토리에서 작동합니다. 노트 저장소, 문�
   </Step>
 
   <Step title="디렉토리 참조하기">
-    ```text theme={null}
+    ```text wrap theme={null}
     What's the structure of @src/components?
     ```
-
-    이것은 파일 정보가 있는 디렉토리 목록을 제공합니다.
   </Step>
 
   <Step title="MCP 리소스 참조하기">
-    ```text theme={null}
+    ```text wrap theme={null}
     Show me the data from @github:repos/owner/repo/issues
     ```
 
@@ -411,6 +413,7 @@ Claude Code는 모든 디렉토리에서 작동합니다. 노트 저장소, 문�
   팁:
 
   * 파일 경로는 상대 또는 절대 경로일 수 있습니다
+  * @를 입력하여 경로 제안 메뉴를 열고, Enter 또는 Tab을 눌러 강조 표시된 경로를 수락한 다음 다시 Enter를 눌러 메시지를 보내기
   * @ 파일 참조는 파일의 디렉토리 및 상위 디렉토리에 `CLAUDE.md`를 추가합니다
   * 디렉토리 참조는 내용이 아닌 파일 목록을 표시합니다
   * 단일 메시지에서 여러 파일을 참조할 수 있습니다 (예: "@file1.js and @file2.js")
@@ -426,12 +429,12 @@ Claude가 정기적으로 작업을 자동으로 처리하도록 하고 싶다�
 
 작업을 실행할 위치에 따라 일정 옵션을 선택합니다:
 
-| 옵션                                        | 실행 위치            | 최적 사용                                                                                                                                     |
-| :---------------------------------------- | :--------------- | :---------------------------------------------------------------------------------------------------------------------------------------- |
-| [Routines](/docs/ko/routines)                  | Anthropic 관리 인프라 | 컴퓨터가 꺼져 있어도 실행되어야 하는 작업. API 호출 또는 GitHub 이벤트 외에도 일정에 따라 트리거될 수 있습니다. [claude.ai/code/routines](https://claude.ai/code/routines)에서 구성합니다. |
-| [데스크톱 예약 작업](/docs/ko/desktop-scheduled-tasks) | 데스크톱 앱을 통한 컴퓨터   | 로컬 파일, 도구 또는 커밋되지 않은 변경사항에 직접 액세스해야 하는 작업.                                                                                                |
-| [GitHub Actions](/docs/ko/github-actions)      | CI 파이프라인         | 열린 PR 또는 cron 일정과 같은 저장소 이벤트와 연결된 작업. 워크플로우 구성과 함께 있어야 합니다.                                                                               |
-| [`/loop`](/docs/ko/scheduled-tasks)            | 현재 CLI 세션        | 세션이 열려 있는 동안 빠른 폴링. 새 대화를 시작하면 작업이 중지됩니다. `--resume` 및 `--continue`는 만료되지 않은 것을 복원합니다.                                                    |
+| 옵션                                        | 실행 위치                  | 최적 사용                                                                                                                                     |
+| :---------------------------------------- | :--------------------- | :---------------------------------------------------------------------------------------------------------------------------------------- |
+| [Routines](/docs/ko/routines)                  | 클라우드, Anthropic 관리 기본값 | 컴퓨터가 꺼져 있어도 실행되어야 하는 작업. API 호출 또는 GitHub 이벤트 외에도 일정에 따라 트리거될 수 있습니다. [claude.ai/code/routines](https://claude.ai/code/routines)에서 구성합니다. |
+| [데스크톱 예약 작업](/docs/ko/desktop-scheduled-tasks) | 데스크톱 앱을 통한 컴퓨터         | 로컬 파일, 도구 또는 커밋되지 않은 변경사항에 직접 액세스해야 하는 작업.                                                                                                |
+| [GitHub Actions](/docs/ko/github-actions)      | CI 파이프라인               | 열린 PR 또는 cron 일정과 같은 저장소 이벤트와 연결된 작업. 워크플로우 구성과 함께 있어야 합니다.                                                                               |
+| [`/loop`](/docs/ko/scheduled-tasks)            | 현재 CLI 세션              | 세션이 열려 있는 동안 빠른 폴링. `--resume` 및 `--continue`는 만료되지 않은 것을 복원합니다.                                                                          |
 
 <Tip>
   예약된 작업을 위한 프롬프트를 작성할 때 성공이 무엇인지, 결과를 어떻게 처리할지 명시적으로 설명하십시오. 작업이 자동으로 실행되므로 명확한 질문을 할 수 없습니다. 예를 들어: "Review open PRs labeled `needs-review`, leave inline comments on any issues, and post a summary in the `#eng-reviews` Slack channel."
@@ -449,27 +452,27 @@ Claude는 자신의 문서에 대한 기본 제공 액세스 권한을 가지고
   예제 질문
 </h4>
 
-```text theme={null}
+```text wrap theme={null}
 can Claude Code create pull requests?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 how does Claude Code handle permissions?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 what skills are available?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 how do I use MCP with Claude Code?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 how do I configure Claude Code for Amazon Bedrock?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 what are the limitations of Claude Code?
 ```
 
@@ -503,25 +506,25 @@ claude --continue
   worktree를 사용하여 병렬 세션 실행하기
 </h2>
 
-한 터미널에서 기능을 작업하는 동안 Claude가 다른 터미널에서 버그를 수정하며, 편집이 충돌하지 않습니다. 각 worktree는 자체 분기의 별도 체크아웃입니다.
+한 터미널에서 기능을 작업하는 동안 Claude가 다른 터미널에서 버그를 수정하며, 편집이 충돌하지 않습니다. 각 [git worktree](https://git-scm.com/docs/git-worktree)는 기존 커밋에서 생성된 자체 분기의 별도 체크아웃이므로, 저장소는 먼저 최소한 하나의 커밋이 필요합니다.
 
 ```bash theme={null}
 claude --worktree feature-auth
 ```
 
-다른 이름으로 두 번째 터미널에서 동일한 명령을 실행하여 격리된 병렬 세션을 시작합니다. [Worktrees](/docs/ko/worktrees)에서 정리, `.worktreeinclude` 및 비git VCS 지원을 참조하십시오. 별도의 터미널 대신 한 화면에서 병렬 세션을 모니터링하려면 [백그라운드 에이전트](/docs/ko/agent-view)를 참조하십시오.
+다른 이름으로 두 번째 터미널에서 동일한 명령을 실행하여 격리된 병렬 세션을 시작합니다. 커밋이 없는 저장소에서는 명령이 `Failed to resolve base branch "HEAD": git rev-parse failed` 오류로 실패합니다. 정리, `.worktreeinclude` 및 비git VCS 지원에 대해서는 [Worktrees](/docs/ko/worktrees)를 참조하십시오. 별도의 터미널 대신 한 화면에서 병렬 세션을 모니터링하려면 [백그라운드 에이전트](/docs/ko/agent-view)를 참조하십시오.
 
 <h2 id="plan-before-editing">
   편집 전에 계획하기
 </h2>
 
-변경사항이 디스크에 닿기 전에 검토하려는 경우 계획 모드로 전환합니다. Claude는 파일을 읽고 계획을 제안하지만 승인할 때까지 편집하지 않습니다.
+변경사항이 디스크에 닿기 전에 검토하려는 경우 계획 모드로 전환합니다. Claude는 파일을 읽고 계획을 제안하지만 승인할 때까지 편집하지 않습니다. 상태 표시줄에 `⏸ plan mode on`이 표시되어 계획 모드가 활성화되어 있음을 나타냅니다.
 
 ```bash theme={null}
 claude --permission-mode plan
 ```
 
-세션 중에 `Shift+Tab`을 눌러 계획 모드로 전환할 수도 있습니다. [계획 모드](/docs/ko/permission-modes#analyze-before-you-edit-with-plan-mode)에서 승인 흐름 및 텍스트 편집기에서 계획 편집을 참조하십시오.
+세션 중에 `Shift+Tab`을 눌러 상태 표시줄에 `⏸ plan mode on`이 표시될 때까지 계획 모드로 전환할 수도 있습니다. 승인 흐름 및 텍스트 편집기에서 계획 편집에 대해서는 [계획 모드](/docs/ko/permission-modes#analyze-before-you-edit-with-plan-mode)를 참조하십시오.
 
 <h2 id="delegate-research-to-subagents">
   subagent에게 연구 위임하기
@@ -529,7 +532,7 @@ claude --permission-mode plan
 
 큰 코드베이스를 탐색하면 컨텍스트가 파일 읽기로 채워집니다. 탐색을 위임하여 결과만 돌아오도록 합니다.
 
-```text theme={null}
+```text wrap theme={null}
 use a subagent to investigate how our auth system handles token refresh
 ```
 

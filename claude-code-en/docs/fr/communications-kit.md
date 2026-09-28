@@ -102,7 +102,7 @@ Utilisez ceci comme votre message de déploiement standard à l'échelle de l'or
     📚 Démarrage rapide · VS Code · Cours gratuit d'1 heure
        https://code.claude.com/docs/fr/quickstart
        https://code.claude.com/docs/fr/vs-code
-       https://anthropic.skilljar.com/claude-code-in-action
+       https://academy.claude.com/courses/claude-code-in-action
 
     Questions → ce fil. [Propriétaire] est en première ligne.
     ```
@@ -209,8 +209,6 @@ Anthropic. Je peux partager un petit guide si tu es partant.
 
 Messages Slack ou Teams prêts à coller conçus pour stimuler l'activation des fonctionnalités après le lancement. Chacun suit le même modèle : un crochet, le gain, une invite « essayez maintenant » et un lien de documentation. Versez-les un ou deux par semaine dans `#claude-code`, ou choisissez la poignée qui correspond aux lacunes de votre équipe. Ils se suffisent à eux-mêmes sans ordre requis.
 
-Copiez le corps du message de chaque bloc directement dans Slack ou Teams. Remplacez les `[espaces réservés entre crochets]` avant d'envoyer.
-
 <h3 id="get-started">
   Commencer
 </h3>
@@ -227,10 +225,12 @@ Claude Code s'exécute sur les mêmes modèles que l'application Claude, et vous
 en milieu de session. *Sonnet* est le workhorse par défaut pour le travail de fonctionnalité quotidienne,
 les bugs, les tests et les révisions. Utilisez *Opus* pour les grandes refactorisations, le débogage complexe,
 ou tout ce qui est à enjeux élevés. Passez à *Haiku* pour les questions rapides,
-le formatage et les modifications mécaniques où la vitesse gagne. *Fable 5* est le modèle le plus
+le formatage et les modifications mécaniques où la vitesse gagne. *Fable* est le modèle le plus
 capable pour vos tâches les plus difficiles et les plus longues ; ce n'est pas le
 défaut, donc sélectionnez-le avec `/model fable`, et notez que le contenu de cybersécurité et
-de biologie revient automatiquement à Opus.
+de biologie revient automatiquement à Opus. Opus 5.5 et Opus 5 exécutent leurs propres
+vérifications aussi : le contenu signalé bascule vers un Opus antérieur, sauf
+que le contenu de biologie signalé sur Opus 5 est refusé.
 
 *Essayez maintenant :* tapez `/model` et choisissez Sonnet si vous ne l'avez pas déjà fait. C'est
 le bon défaut pour la plupart des tâches.
@@ -238,12 +238,12 @@ le bon défaut pour la plupart des tâches.
 📖 Configuration du modèle → https://code.claude.com/docs/fr/model-config
 ```
 
-| Modèle  | Meilleur pour                                                                                                                                                                                                       |
-| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Fable 5 | Les tâches les plus difficiles et les plus longues. Opt-in uniquement : sélectionnez-le avec `/model fable`. Le contenu de cybersécurité ou de biologie [revient à Opus](/docs/fr/model-config#automatic-model-fallback) |
-| Opus    | Refactorisations à grande échelle, débogage complexe, décisions architecturales, changements à enjeux élevés                                                                                                        |
-| Sonnet  | Travail de fonctionnalité quotidienne, corrections de bugs, tests, documentation, révision de code. Défaut recommandé.                                                                                              |
-| Haiku   | Questions rapides, formatage, modifications mécaniques, itération rapide                                                                                                                                            |
+| Modèle | Meilleur pour                                                                                                                                                                                                                                                                            |
+| ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Fable  | Les tâches les plus difficiles et les plus longues. Opt-in uniquement : sélectionnez-le avec `/model fable`. Le contenu de cybersécurité ou de biologie déclenche [un basculement de modèle automatique vers Opus](/docs/fr/model-config#automatic-model-fallback)                            |
+| Opus   | Refactorisations à grande échelle, débogage complexe, décisions architecturales, changements à enjeux élevés. Sur Opus 5.5 et Opus 5, le contenu de cybersécurité ou de biologie déclenche [un basculement de modèle automatique ou un refus](/docs/fr/model-config#automatic-model-fallback) |
+| Sonnet | Travail de fonctionnalité quotidienne, corrections de bugs, tests, documentation, révision de code. Défaut recommandé.                                                                                                                                                                   |
+| Haiku  | Questions rapides, formatage, modifications mécaniques, itération rapide                                                                                                                                                                                                                 |
 
 **Victoires rapides à essayer en premier**
 
@@ -320,7 +320,7 @@ Parfois, vous voulez que Claude demande avant chaque modification. Parfois, vous
 qu'il expédie. Vous ne devriez pas avoir à choisir une fois pour toutes.
 
 *Maj+Tab* parcourt la longueur de la laisse que Claude obtient : *Manual* (la
-valeur de paramètre `default`) demande avant chaque action, *acceptEdits* laisse les modifications de fichiers et les commandes de système de fichiers courantes
+valeur de paramètre `default`) demande avant les modifications de fichiers et la plupart des commandes shell, *acceptEdits* laisse les modifications de fichiers et les commandes de système de fichiers courantes
 passer tout en vérifiant avant les autres commandes shell, et *plan*
 propose des modifications pour votre approbation avant que quoi que ce soit ne soit touché. Le mode plan est
 le constructeur de confiance, alors commencez par là pour tout ce qui touche plusieurs fichiers.
@@ -426,7 +426,7 @@ et elle pointe vers la ligne 47 environ » ? Prenez une capture d'écran.
 
 Faites glisser une capture d'écran directement dans le terminal et Claude la voit : boîtes de dialogue d'erreur,
 maquettes d'interface utilisateur, photos de tableau blanc, exports Figma. *Ctrl+V* colle depuis
-le presse-papiers (utilisez aussi Ctrl+V sur macOS, pas Cmd+V).
+le presse-papiers, ou *Alt+V* sur Windows et WSL.
 
 *Essayez maintenant :* la prochaine fois que quelque chose de visuel se casse, prenez une capture d'écran et collez-la
 directement dans l'invite. Ensuite, tapez juste « qu'est-ce qui ne va pas ici ? »

@@ -15,7 +15,7 @@ Avec le point de contrôle, vous pouvez :
 * **Récupérer après les erreurs** lorsque l'agent effectue des modifications incorrectes
 
 <Warning>
-  Seules les modifications effectuées via les outils Write, Edit et NotebookEdit sont suivies. Les modifications effectuées via les commandes Bash (comme `echo > file.txt` ou `sed -i`) ne sont pas capturées par le système de point de contrôle.
+  Seules les modifications effectuées via les outils Write, Edit et NotebookEdit sont suivies. Les modifications effectuées via les commandes Bash (comme `echo > file.txt` ou `sed -i`) ne sont pas capturées par le système de point de contrôle, et les modifications qu'un [sous-agent](/docs/fr/agent-sdk/subagents) applique ne le sont pas non plus, sauf un [skill avec `context: fork`](/docs/fr/skills#run-skills-in-a-subagent) qui s'exécute au premier plan.
 </Warning>
 
 <h2 id="how-checkpointing-works">
@@ -24,25 +24,11 @@ Avec le point de contrôle, vous pouvez :
 
 Lorsque vous activez le point de contrôle de fichier, le SDK crée des sauvegardes de fichiers avant de les modifier via les outils Write, Edit ou NotebookEdit. Les messages utilisateur dans le flux de réponse incluent un UUID de point de contrôle que vous pouvez utiliser comme point de restauration.
 
-Le point de contrôle fonctionne avec ces outils intégrés que l'agent utilise pour modifier les fichiers :
-
-| Outil        | Description                                                                          |
-| ------------ | ------------------------------------------------------------------------------------ |
-| Write        | Crée un nouveau fichier ou remplace un fichier existant par un nouveau contenu       |
-| Edit         | Effectue des modifications ciblées sur des parties spécifiques d'un fichier existant |
-| NotebookEdit | Modifie les cellules dans les notebooks Jupyter (fichiers `.ipynb`)                  |
-
 <Note>
   Le rembobinage de fichier restaure les fichiers sur le disque à un état antérieur. Il ne remboîne pas la conversation elle-même. L'historique de la conversation et le contexte restent intacts après l'appel de `rewindFiles()` (TypeScript) ou `rewind_files()` (Python).
 </Note>
 
-Le système de point de contrôle suit :
-
-* Les fichiers créés pendant la session
-* Les fichiers modifiés pendant la session
-* Le contenu original des fichiers modifiés
-
-Lorsque vous remboîinez à un point de contrôle, les fichiers créés sont supprimés et les fichiers modifiés sont restaurés à leur contenu à ce moment-là.
+Lorsque vous remboîinez à un point de contrôle, Claude Code supprime les fichiers qu'il a créés et restaure les fichiers qu'il a modifiés à leur contenu à ce moment-là. Claude Code ignore un chemin suivi qui est un lien symbolique, un lien physique ou un autre fichier non régulier. Il ignore également un fichier suivi dont le répertoire parent ne se résout plus à son emplacement au moment du point de contrôle, ou dont il ne peut pas lire la sauvegarde en toute sécurité. [`RewindFilesResult`](/docs/fr/agent-sdk/typescript#rewindfilesresult) compte chaque chemin ignoré dans son champ `skippedLinks`. L'ignorance nécessite Claude Code v2.1.216 ou ultérieur ; avant v2.1.216, un rembobinage écrivait et supprimait via les liens aux chemins suivis.
 
 <h2 id="implement-checkpointing">
   Implémenter le point de contrôle
@@ -122,13 +108,21 @@ L'exemple suivant montre le flux complet : activez le point de contrôle, captur
     let sessionId: string | undefined;
 
     // Step 2: Capture checkpoint UUID from the first user message
-    for await (const message of response) {
-      if (message.type === "user" && message.uuid && !checkpointId) {
-        checkpointId = message.uuid;
+    try {
+      for await (const message of response) {
+        if (message.type === "user" && message.uuid && !checkpointId) {
+          checkpointId = message.uuid;
+        }
+        if ("session_id" in message && !sessionId) {
+          sessionId = message.session_id;
+        }
       }
-      if ("session_id" in message && !sessionId) {
-        sessionId = message.session_id;
-      }
+    } catch (error) {
+      // A single-shot query() throws after yielding an error result. If the
+      // failure was an error result, sessionId and checkpointId were already
+      // captured by the loop above; connection or process failures yield no
+      // result message.
+      console.error(`Session ended with an error: ${error}`);
     }
 
     // Step 3: Later, rewind by resuming the session with an empty prompt
@@ -185,7 +179,7 @@ L'exemple suivant montre le flux complet : activez le point de contrôle, captur
   </Step>
 
   <Step title="Capturer l'UUID du point de contrôle et l'ID de session">
-    Avec l'option `replay-user-messages` définie (comme indiqué ci-dessus), chaque message utilisateur dans le flux de réponse a un UUID qui sert de point de contrôle.
+    Avec l'option `replay-user-messages` définie, chaque message utilisateur dans le flux de réponse a un UUID qui sert de point de contrôle.
 
     Pour la plupart des cas d'utilisation, capturez l'UUID du premier message utilisateur (`message.uuid`) ; le rembobinage vers celui-ci restaure tous les fichiers à leur état d'origine. Pour stocker plusieurs points de contrôle et rembobiner vers des états intermédiaires, consultez [Points de restauration multiples](#multiple-restore-points).
 
@@ -233,7 +227,8 @@ L'exemple suivant montre le flux complet : activez le point de contrôle, captur
       ) as client:
           await client.query("")  # Empty prompt to open the connection
           async for message in client.receive_response():
-              await client.rewind_files(checkpoint_id)
+              if checkpoint_id:
+                  await client.rewind_files(checkpoint_id)
               break
       ```
 
@@ -244,7 +239,9 @@ L'exemple suivant montre le flux complet : activez le point de contrôle, captur
       });
 
       for await (const msg of rewindQuery) {
-        await rewindQuery.rewindFiles(checkpointId);
+        if (checkpointId) {
+          await rewindQuery.rewindFiles(checkpointId);
+        }
         break;
       }
       ```
@@ -256,7 +253,7 @@ L'exemple suivant montre le flux complet : activez le point de contrôle, captur
     CLAUDE_CODE_ENABLE_SDK_FILE_CHECKPOINTING=true claude -p --resume <session-id> --rewind-files <checkpoint-uuid>
     ```
 
-    Le drapeau `--rewind-files` n'apparaît pas dans la sortie `claude --help`, mais la CLI l'accepte comme indiqué.
+    Le drapeau `--rewind-files` n'apparaît pas dans la sortie `claude --help`, mais la CLI l'accepte comme indiqué. Lorsque le rembobinage réussit, la commande affiche `Files rewound to state at message <checkpoint-uuid>` et se termine sans envoyer d'invite.
   </Step>
 </Steps>
 
@@ -440,17 +437,25 @@ Ce modèle stocke tous les UUID de point de contrôle dans un tableau avec des m
     const checkpoints: Checkpoint[] = [];
     let sessionId: string | undefined;
 
-    for await (const message of response) {
-      if (message.type === "user" && message.uuid) {
-        checkpoints.push({
-          id: message.uuid,
-          description: `After turn ${checkpoints.length + 1}`,
-          timestamp: new Date()
-        });
+    try {
+      for await (const message of response) {
+        if (message.type === "user" && message.uuid) {
+          checkpoints.push({
+            id: message.uuid,
+            description: `After turn ${checkpoints.length + 1}`,
+            timestamp: new Date()
+          });
+        }
+        if ("session_id" in message && !sessionId) {
+          sessionId = message.session_id;
+        }
       }
-      if ("session_id" in message && !sessionId) {
-        sessionId = message.session_id;
-      }
+    } catch (error) {
+      // A single-shot query() throws after yielding an error result. If the
+      // failure was an error result, sessionId and the checkpoints array were
+      // already populated by the loop above; connection or process failures
+      // yield no result message.
+      console.error(`Session ended with an error: ${error}`);
     }
 
     // Later: rewind to any checkpoint by resuming the session
@@ -624,15 +629,23 @@ Avant de commencer, assurez-vous que vous avez [installé le Claude Agent SDK](/
           options: opts
         });
 
-        for await (const message of response) {
-          // Capture the first user message UUID - this is our restore point
-          if (message.type === "user" && message.uuid && !checkpointId) {
-            checkpointId = message.uuid;
+        try {
+          for await (const message of response) {
+            // Capture the first user message UUID - this is our restore point
+            if (message.type === "user" && message.uuid && !checkpointId) {
+              checkpointId = message.uuid;
+            }
+            // Capture the session ID so we can resume later
+            if ("session_id" in message) {
+              sessionId = message.session_id;
+            }
           }
-          // Capture the session ID so we can resume later
-          if ("session_id" in message) {
-            sessionId = message.session_id;
-          }
+        } catch (error) {
+          // A single-shot query() throws after yielding an error result. If the
+          // failure was an error result, checkpointId and sessionId were already
+          // captured by the loop above; connection or process failures yield no
+          // result message.
+          console.error(`Session ended with an error: ${error}`);
         }
 
         console.log("Done! Open utils.ts to see the added doc comments.\n");
@@ -671,13 +684,6 @@ Avant de commencer, assurez-vous que vous avez [installé le Claude Agent SDK](/
       main();
       ```
     </CodeGroup>
-
-    Cet exemple démontre le flux de travail complet du point de contrôle :
-
-    1. **Activer le point de contrôle** : configurez le SDK avec `enable_file_checkpointing=True` et `permission_mode="acceptEdits"` pour approuver automatiquement les modifications de fichiers
-    2. **Capturer les données de point de contrôle** : pendant que l'agent s'exécute, stockez l'UUID du premier message utilisateur (votre point de restauration) et l'ID de session
-    3. **Demander le rembobinage** : après la fin de l'agent, vérifiez votre fichier utilitaire pour voir les commentaires de documentation, puis décidez si vous souhaitez annuler les modifications
-    4. **Reprendre et rembobiner** : si oui, reprenez la session avec une invite vide et appelez `rewind_files()` pour restaurer le fichier d'origine
   </Step>
 
   <Step title="Exécuter l'exemple">
@@ -711,12 +717,13 @@ Avant de commencer, assurez-vous que vous avez [installé le Claude Agent SDK](/
 
 Le point de contrôle de fichier a les limitations suivantes :
 
-| Limitation                                | Description                                                                                         |
-| ----------------------------------------- | --------------------------------------------------------------------------------------------------- |
-| Outils Write/Edit/NotebookEdit uniquement | Les modifications effectuées via les commandes Bash ne sont pas suivies                             |
-| Même session                              | Les points de contrôle sont liés à la session qui les a créés                                       |
-| Contenu du fichier uniquement             | La création, le déplacement ou la suppression de répertoires ne sont pas annulés par le rembobinage |
-| Fichiers locaux                           | Les fichiers distants ou réseau ne sont pas suivis                                                  |
+| Limitation                                | Description                                                                                                                                                                                                                    |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Outils Write/Edit/NotebookEdit uniquement | Les modifications effectuées via les commandes Bash ne sont pas suivies                                                                                                                                                        |
+| Éditions de sous-agent                    | Les éditions qu'un [sous-agent](/docs/fr/agent-sdk/subagents) applique ne sont pas suivies ou restaurées, sauf une compétence avec `context: fork` s'exécutant au premier plan ; utilisez git pour annuler les éditions non suivies |
+| Même session                              | Les points de contrôle sont liés à la session qui les a créés                                                                                                                                                                  |
+| Contenu du fichier uniquement             | La création, le déplacement ou la suppression de répertoires ne sont pas annulés par le rembobinage                                                                                                                            |
+| Fichiers locaux                           | Les fichiers distants ou réseau ne sont pas suivis                                                                                                                                                                             |
 
 <h2 id="troubleshooting">
   Dépannage
@@ -743,8 +750,8 @@ Si `message.uuid` est `undefined` ou manquant, vous ne recevez pas les UUID de p
 
 **Solution** : Ajoutez `extra_args={"replay-user-messages": None}` (Python) ou `extraArgs: { 'replay-user-messages': null }` (TypeScript) à vos options.
 
-<h3 id="no-file-checkpoint-found-for-message-error">
-  Erreur « No file checkpoint found for message »
+<h3 id="no-file-checkpoint-found-for-this-message-error">
+  Erreur « No file checkpoint found for this message »
 </h3>
 
 Cette erreur se produit lorsque les données de point de contrôle n'existent pas pour l'UUID de message utilisateur spécifié.
@@ -786,7 +793,8 @@ Cette erreur se produit lorsque vous appelez `rewindFiles()` ou `rewind_files()`
   ) as client:
       await client.query("")
       async for message in client.receive_response():
-          await client.rewind_files(checkpoint_id)
+          if checkpoint_id:
+              await client.rewind_files(checkpoint_id)
           break
   ```
 
@@ -797,9 +805,17 @@ Cette erreur se produit lorsque vous appelez `rewindFiles()` ou `rewind_files()`
     options: { ...opts, resume: sessionId }
   });
 
-  for await (const msg of rewindQuery) {
-    await rewindQuery.rewindFiles(checkpointId);
-    break;
+  try {
+    for await (const msg of rewindQuery) {
+      if (checkpointId) {
+        await rewindQuery.rewindFiles(checkpointId);
+      }
+      break;
+    }
+  } catch (error) {
+    // An error here means the rewind didn't complete, for example the checkpoint
+    // wasn't found or the session couldn't be resumed.
+    console.error(`Rewind session ended with an error: ${error}`);
   }
   ```
 </CodeGroup>

@@ -4,7 +4,7 @@
 
 # 在公司啟動程式後面執行 Claude Code
 
-> 使用 CLAUDE_CODE_PROCESS_WRAPPER 透過必要的啟動程式路由 Claude Code 從其自身二進位檔案啟動的程序，包括背景服務和每個代理檢視工作階段。
+> 使用 CLAUDE_CODE_PROCESS_WRAPPER 或 processWrapper 設定，透過必要的啟動程式路由 Claude Code 從其自身二進位檔案啟動的程序，包括背景服務和每個代理檢視工作階段。
 
 某些組織要求工作站上的每個程序都透過強制性啟動程式啟動。啟動程式會應用沙箱、網路控制或認證注入，這些是公司安全態勢所依賴的，而不透過它啟動的二進位檔案是違反政策的。
 
@@ -13,37 +13,43 @@
 在您的 `PATH` 上包裝 `claude` 命令的啟動程式無法到達這些程序，因為它們從二進位檔案的直接路徑啟動，不會查詢 `claude`。
 
 <Note>
-  `CLAUDE_CODE_PROCESS_WRAPPER` 需要 Claude Code v2.1.208 或更新版本。較早的版本會忽略該變數，並啟動每個未包裝的程序。
+  `CLAUDE_CODE_PROCESS_WRAPPER` 需要 Claude Code v2.1.208 或更新版本。較早的版本會忽略該變數，並啟動每個未包裝的程序。等效的 [`processWrapper` 設定](/docs/zh-TW/settings-reference#processwrapper)需要 v2.1.210 或更新版本。較早的版本會將其忽略為未知的鍵，不應用啟動程式，並且不報告任何錯誤。
+
+  部署任一形式後，使用[驗證步驟](#set-up-the-launcher)來確認執行中的版本應用了它。
 </Note>
 
 <h2 id="what-the-launcher-covers">
-  啟動程式涵蓋的內容
+  啟動器涵蓋的內容
 </h2>
 
-設定 `CLAUDE_CODE_PROCESS_WRAPPER` 後，Claude Code 會透過您的啟動程式啟動以下每個程序：
+設定 `CLAUDE_CODE_PROCESS_WRAPPER` 後，Claude Code 會透過您的啟動器啟動以下每個程序：
 
 * `claude agents` 和背景工作階段按需啟動的背景服務。
-* 每個代理檢視列中的終端主機和 Claude Code 工作階段，包括服務保持就緒的暖備用工作階段。
-* 服務在更新或當機後重新產生的工作階段。
-* Claude Code 執行自身以完成安裝更新的重新啟動，包括代理檢視的重新啟動以進行更新動作。
+* 每個代理檢視列中的終端主機和 Claude Code 工作階段，包括服務保持就緒的暖待命工作階段。
+* 服務在更新或當機後重新啟動的工作階段。
+* Claude Code 執行自身重新啟動以完成更新安裝的情況，包括代理檢視的重新啟動以進行更新動作。
+* [遠端控制](/docs/zh-TW/remote-control)啟動的工作階段程序。需要 Claude Code v2.1.210 或更新版本。
+* [代理團隊](/docs/zh-TW/agent-teams)在 tmux 或 iTerm2 中啟動的分割窗格隊友工作階段。隊友窗格是互動式的，而不是背景程序，但 Claude Code 從其自身二進位檔案啟動它們，所以啟動器涵蓋它們。需要 Claude Code v2.1.210 或更新版本。
 
-在 Windows 上，該變數被忽略：啟動程式合約取決於 `exec`，而 Windows 不支援。設定了該變數的 Windows 機器會執行每個未包裝的程序並繼續工作，唯一的信號是[偵錯日誌](/docs/zh-TW/troubleshooting)中的警告。如果您的啟動程式政策涵蓋 Windows，該變數在那裡不滿足它：在規劃推出時，將 Windows 機器計為未包裝。
+在 Windows 上，該變數會被忽略：啟動器合約取決於 `exec`，而 Windows 不支援。設定了該變數的 Windows 機器會執行每個未包裝的程序並繼續運作，唯一的信號是[偵錯日誌](/docs/zh-TW/troubleshooting)中的警告。如果您的啟動器原則涵蓋 Windows，該變數在那裡不滿足它：在規劃推出時，將 Windows 機器計為未包裝。
 
 <h3 id="processes-that-start-outside-the-launcher">
-  在啟動程式外啟動的程序
+  在啟動器外啟動的程序
 </h3>
 
-三個程序永遠不會透過啟動程式啟動：
+以下程序不會透過啟動器啟動：
 
-* [已安裝的背景服務](/docs/zh-TW/agent-view#the-supervisor-process)：`launchd` 或 `systemd` 從其單位檔案啟動該程序。當這適用時，`/status` 和 `claude daemon status` 會發出警告，服務產生的工作階段在服務使用設定中的變數重新啟動後仍會透過啟動程式啟動。
-* 您自己在終端中啟動的工作階段，它會按照您叫用它的方式執行。要涵蓋這些工作階段，請在 `PATH` 上較早的目錄中放置一個名為 `claude` 的指令碼，該指令碼使用真實二進位檔案執行您的啟動程式；不要替換受管理的符號連結。自我產生不會查詢 `PATH`，因此兩個啟動程式永遠不會堆疊。
-* `claude-cli://` 深層連結的第一個程序，作業系統的協定處理程式直接啟動。該工作階段之後在背景中啟動的所有內容都會透過啟動程式執行。要完全關閉此路徑，請使用 `disableDeepLinkRegistration` 設定[防止處理程式註冊](/docs/zh-TW/deep-links#registration-and-supported-platforms)。
+* 一個[已安裝的背景服務](/docs/zh-TW/agent-view#the-supervisor-process)，其單位是在設定啟動器之前編寫的：`launchd` 或 `systemd` 從其單位檔案啟動該程序。`/status` 和 `claude daemon status` 在執行中的服務和設定的啟動器不相符時發出警告，一旦服務在其設定中使用該變數重新啟動，服務產生的工作階段仍會透過啟動器啟動。
+* 您自己在終端中啟動的工作階段，其執行方式取決於您的調用方式。若要涵蓋這些工作階段，請在 `PATH` 上較早的目錄中放置一個名為 `claude` 的指令碼，該指令碼使用真實二進位檔案執行您的啟動器；不要取代受管理的符號連結。背景服務及其工作階段啟動時不進行 `PATH` 查詢，所以這兩個啟動器在那裡不會堆疊。
+* `claude-cli://` 深層連結的第一個程序，作業系統的協定處理程式直接啟動。該工作階段之後在背景中啟動的所有內容都會透過啟動器執行。若要完全關閉此路徑，請使用 `disableDeepLinkRegistration` 設定[防止處理程式註冊](/docs/zh-TW/deep-links#registration-and-supported-platforms)。
+* `--worktree` 結合 `--tmux` 執行的重新啟動：終端多工器啟動該窗格，而不是 Claude Code 的二進位檔案。
+* [Chrome 中的 Claude](/docs/zh-TW/chrome) 註冊的原生訊息主機：瀏覽器啟動它，而不是 Claude Code 的二進位檔案。
 
 <h3 id="helper-process-names-in-process-monitors">
   程序監視器中的協助程序名稱
 </h3>
 
-配置了啟動程式後，`ps` 和 Activity Monitor 會顯示背景協助程序的版本化二進位檔案名稱，而不是 Claude Code 的 `claude bg-pty-host` 和 `claude bg-spare` 標籤，因為啟動程式的 `exec` 會重建引數清單。重新命名是副作用，不是隱蔽：程序在其他方面保持不變，Claude Code 透過二進位檔案路徑識別自己的程序，永遠不會透過顯示名稱。
+設定啟動器後，`ps` 和 Activity Monitor 不再顯示 Claude Code 的 `claude bg-pty-host` 和 `claude bg-spare` 標籤用於背景協助程序，因為啟動器的 `exec` 重建了引數清單。失去標籤是一個副作用，而不是隱瞞：程序在其他方面保持不變，Claude Code 透過二進位檔案路徑識別其自身程序，絕不透過顯示名稱。
 
 <h2 id="set-up-the-launcher">
   設定啟動程式
@@ -70,7 +76,7 @@
   <Step title="在設定中設定 CLAUDE_CODE_PROCESS_WRAPPER">
     在設定檔案的 `env` 區塊中設定變數，以便分離的背景服務繼承它。shell `export` 還不夠：背景服務按需啟動，超過您的 shell 的生命週期，並且永遠不會重新讀取 shell 設定檔。
 
-    對於一台機器，將其新增到 `~/.claude/settings.json`。要將其部署到組織中的每台機器，請在[受管理設定](/docs/zh-TW/permissions#managed-settings)中放置相同的區塊：
+    對於一台機器，將其新增到 `~/.claude/settings.json`。要將其部署到組織中的每台機器，請在[受管理設定](/docs/zh-TW/managed-settings)中放置相同的區塊：
 
     ```json theme={null}
     {
@@ -82,7 +88,19 @@
 
     當多個來源設定變數時，受管理設定值會覆蓋 `~/.claude/settings.json` 和 shell 中匯出的值，因此使用者無法將自我產生指向不同的啟動程式。
 
-    專案和本機設定無法設定此變數。提交到儲存庫的檔案不得能夠將二進位檔案放在機器上的每個 Claude Code 程序前面，因此 `.claude/settings.json` 或 `.claude/settings.local.json` 中的 `CLAUDE_CODE_PROCESS_WRAPPER` 會被忽略，並在[偵錯日誌](/docs/zh-TW/troubleshooting)中發出警告。
+    [`processWrapper` 設定](/docs/zh-TW/settings-reference#processwrapper)與具名的頂層設定金鑰具有相同的值。當您的組織以個別金鑰而非 `env` 區塊的方式推送設定時，請設定它。`processWrapper` 設定需要 Claude Code v2.1.210 或更新版本。下列設定檔案透過該金鑰設定相同的啟動程式：
+
+    ```json theme={null}
+    {
+      "processWrapper": "/opt/corp/launcher"
+    }
+    ```
+
+    當兩者都設定時，`CLAUDE_CODE_PROCESS_WRAPPER` 優先。
+
+    因為 `processWrapper` 是具名設定，透過[遠端受管理設定](/docs/zh-TW/managed-settings#delivery-mechanisms)傳遞它的組織會在[安全核准對話](/docs/zh-TW/server-managed-settings#security-approval-dialogs)上看到它與其他執行管理員提供的可執行檔的設定一起列出。
+
+    專案和本機設定無法設定啟動程式。提交到儲存庫的檔案不得能夠將二進位檔案放在機器上的每個 Claude Code 程序前面，因此 Claude Code 會忽略 `.claude/settings.json` 或 `.claude/settings.local.json` 中的 `CLAUDE_CODE_PROCESS_WRAPPER`，並在[偵錯日誌](/docs/zh-TW/troubleshooting)中發出警告，並且永遠不會從這些檔案讀取 `processWrapper` 金鑰。
   </Step>
 
   <Step title="重新啟動背景服務和您的工作階段">
@@ -108,21 +126,20 @@
   * 每個工作階段的驗證令牌、模型和提供者選擇，以及 `CLAUDE_CODE_PROCESS_WRAPPER` 本身都在繼承的環境中傳遞，因此從允許清單重建環境的啟動程式會破壞它啟動的工作階段，`/status` 會報告啟動程式不匹配。
   * 如果啟動程式必須進入重設環境的命名空間或沙箱，請在其內部逐字重新匯出繼承的環境。
 * **在啟動程式每次執行時約三秒內到達 `exec`。** 冷背景分派在第一個輸出位元組前連續執行啟動程式兩次，因此請懶惰地或從快取執行緩慢的工作，例如單一登入交換。
-  * 執行遠超預算的啟動程式被視為停滯啟動並重新啟動。
 * **容忍從內部叫用自身。** Claude Code 將啟動程式應用於每個嵌套的自我產生，因此獲取獨佔資源的啟動程式必須偵測它是否已持有它。
 * **在 Claude Code 啟動前不要寫入終端。** 在 `exec` 前列印的任何內容都會在工作階段在初始化前死亡時報告為當機原因。
 
-<h3 id="format-of-the-claude_code_process_wrapper-value">
-  `CLAUDE_CODE_PROCESS_WRAPPER` 值的格式
+<h3 id="format-of-the-launcher-value">
+  啟動程式值的格式
 </h3>
 
-對於大多數啟動程式，該值只是指令碼的絕對路徑，例如 `/opt/corp/launcher`。
+`CLAUDE_CODE_PROCESS_WRAPPER` 和 `processWrapper` 設定採用相同的格式。對於大多數啟動程式，該值是指令碼的絕對路徑，例如 `/opt/corp/launcher`。
 
 要傳遞您的啟動程式自己的引數，請在路徑後寫入它們。Claude Code 將該值解析為引數清單，而不是 shell 命令：
 
 * 空白分隔令牌，雙引號將包含空格的令牌分組。
 * 以 `[` 開頭的值被讀取為 JSON 字串陣列，例如 `["/opt/corp/launcher", "--profile", "cc"]`。
-* Shell 語法不起作用：沒有變數擴展或全域化，未引用的運算子（例如 `;`、`|`、`&` 或 `$(`）被拒絕為配置錯誤，而不是重新解釋。
+* Shell 語法不起作用：沒有變數擴展或全域化，未引用的運算子（例如 `;`、`|`、`&` 或 `$(`）被拒絕為設定錯誤，而不是重新解釋。
 
 當無法使用該值時，Claude Code 拒絕啟動受影響的程序並[報告原因](/docs/zh-TW/errors#claude_code_process_wrapper-launcher-errors)。
 

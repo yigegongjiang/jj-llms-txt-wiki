@@ -17,7 +17,7 @@
 * Открытый терминал или командная строка
   * Если вы никогда раньше не использовали терминал, ознакомьтесь с [руководством по терминалу](/docs/ru/terminal-guide)
 * Проект кода для работы
-* [Подписка Claude](https://claude.com/pricing?utm_source=claude_code\&utm_medium=docs\&utm_content=quickstart_prereq) (Pro, Max, Team или Enterprise), учётная запись [Claude Console](https://console.anthropic.com/) или доступ через [поддерживаемого облачного провайдера](/docs/ru/third-party-integrations)
+* [Подписка Claude](https://claude.com/pricing?utm_source=claude_code\&utm_medium=docs\&utm_content=quickstart_prereq) (Pro, Max, Team или Enterprise), учётная запись [Claude Console](https://platform.claude.com/) или доступ через [поддерживаемого облачного провайдера](/docs/ru/third-party-integrations)
 
 <Note>
   Это руководство охватывает CLI терминала. Claude Code также доступен в [веб-версии](https://claude.ai/code), как [настольное приложение](/docs/ru/desktop), в [VS Code](/docs/ru/vs-code) и [JetBrains IDEs](/docs/ru/jetbrains), в [Slack](/docs/ru/slack) и в CI/CD с [GitHub Actions](/docs/ru/github-actions) и [GitLab](/docs/ru/gitlab-ci-cd). Смотрите [все интерфейсы](/docs/ru/overview#use-claude-code-everywhere).
@@ -27,10 +27,10 @@
   Шаг 1: Установите Claude Code
 </h2>
 
-To install Claude Code, use one of the following methods:
+Для установки Claude Code используйте один из следующих методов:
 
 <Tabs>
-  <Tab title="Native Install (Recommended)">
+  <Tab title="Встроенная установка (рекомендуется)">
     **macOS, Linux, WSL:**
 
     ```bash theme={null}
@@ -49,14 +49,14 @@ To install Claude Code, use one of the following methods:
     curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del install.cmd
     ```
 
-    If you see `The token '&&' is not a valid statement separator`, you're in PowerShell, not CMD. If you see `'irm' is not recognized as an internal or external command`, you're in CMD, not PowerShell. Your prompt shows `PS C:\` when you're in PowerShell and `C:\` without the `PS` when you're in CMD.
+    Если вы видите `The token '&&' is not a valid statement separator`, вы находитесь в PowerShell, а не в CMD. Если вы видите `'irm' is not recognized as an internal or external command`, вы находитесь в CMD, а не в PowerShell. Ваша подсказка показывает `PS C:\` когда вы находитесь в PowerShell и `C:\` без `PS` когда вы находитесь в CMD.
 
-    If the install command fails with `syntax error near unexpected token '<'`, a `403`, or another curl error, see [Troubleshoot installation](/docs/en/troubleshoot-install#find-your-error) to match the error to a fix and for alternative install methods.
+    Если команда установки завершается с ошибкой `syntax error near unexpected token '<'`, `403` или другой ошибкой curl, см. [Устранение неполадок при установке](/docs/ru/troubleshoot-install#find-your-error) чтобы сопоставить ошибку с исправлением и для альтернативных методов установки.
 
-    [Git for Windows](https://git-scm.com/downloads/win) is recommended on native Windows so Claude Code can use the Bash tool. If Git for Windows is not installed, Claude Code uses PowerShell as the shell tool instead. WSL setups do not need Git for Windows.
+    [Git for Windows](https://git-scm.com/downloads/win) рекомендуется на встроенной Windows, чтобы Claude Code мог использовать инструмент Bash. Если Git for Windows не установлен, Claude Code использует PowerShell в качестве инструмента оболочки. Установки WSL не требуют Git for Windows.
 
     <Info>
-      Native installations automatically update in the background to keep you on the latest version.
+      Встроенные установки автоматически обновляются в фоновом режиме, чтобы вы всегда использовали последнюю версию.
     </Info>
   </Tab>
 
@@ -65,10 +65,10 @@ To install Claude Code, use one of the following methods:
     brew install --cask claude-code
     ```
 
-    Homebrew offers two casks. `claude-code` tracks the stable release channel, which is typically about a week behind and skips releases with major regressions. `claude-code@latest` tracks the latest channel and receives new versions as soon as they ship.
+    Homebrew предлагает два пакета. `claude-code` отслеживает канал стабильного выпуска, который обычно отстает примерно на неделю и пропускает выпуски с серьезными регрессиями. `claude-code@latest` отслеживает последний канал и получает новые версии сразу после их выпуска.
 
     <Info>
-      Homebrew installations do not auto-update. Run `brew upgrade claude-code` or `brew upgrade claude-code@latest`, depending on which cask you installed, to get the latest features and security fixes.
+      Установки Homebrew не обновляются автоматически. Запустите `brew upgrade claude-code` или `brew upgrade claude-code@latest`, в зависимости от того, какой пакет вы установили, чтобы получить последние функции и исправления безопасности.
     </Info>
   </Tab>
 
@@ -78,12 +78,20 @@ To install Claude Code, use one of the following methods:
     ```
 
     <Info>
-      WinGet installations do not auto-update. Run `winget upgrade Anthropic.ClaudeCode` periodically to get the latest features and security fixes.
+      Установки WinGet не обновляются автоматически. Периодически запускайте `winget upgrade Anthropic.ClaudeCode` чтобы получить последние функции и исправления безопасности.
     </Info>
   </Tab>
 </Tabs>
 
-You can also install with [apt, dnf, or apk](/docs/en/setup#install-with-linux-package-managers) on Debian, Fedora, RHEL, and Alpine.
+Вы также можете установить с помощью [apt, dnf или apk](/docs/ru/setup#install-with-linux-package-managers) на Debian, Fedora, RHEL и Alpine.
+
+Чтобы подтвердить, что установка прошла успешно, выполните:
+
+```bash theme={null}
+claude --version
+```
+
+Команда выводит номер версии, за которым следует `(Claude Code)`.
 
 <h2 id="step-2-log-in-to-your-account">
   Шаг 2: Войдите в свою учётную запись
@@ -95,20 +103,20 @@ Claude Code требует учётную запись для использов
 claude
 ```
 
-Для учётных записей Claude подписки или Console следуйте подсказкам для завершения аутентификации в вашем браузере. Чтобы позже переключиться на другую учётную запись или повторно пройти аутентификацию, введите `/login` в работающем сеансе:
+Для учётных записей Claude подписки или Console следуйте подсказкам для завершения аутентификации в вашем браузере. Если вы установили переменную окружения `ANTHROPIC_API_KEY`, Claude Code пропускает приглашение входа и вместо этого просит вас одобрить ключ. Чтобы позже переключиться на другую учётную запись или повторно пройти аутентификацию, введите `/login` в работающем сеансе:
 
-```text theme={null}
+```text wrap theme={null}
 /login
 ```
 
 Вы можете войти, используя любой из этих типов учётных записей:
 
 * [Claude Pro, Max, Team или Enterprise](https://claude.com/pricing?utm_source=claude_code\&utm_medium=docs\&utm_content=quickstart_login) (рекомендуется)
-* [Claude Console](https://console.anthropic.com/) (доступ к API с предоплаченными кредитами). При первом входе рабочее пространство "Claude Code" автоматически создаётся в Console для централизованного отслеживания затрат.
+* [Claude Console](https://platform.claude.com/) (доступ к API с предоплаченными кредитами). При первом входе рабочее пространство "Claude Code" автоматически создаётся в Console для централизованного отслеживания затрат.
 * [Amazon Bedrock, Google Cloud's Agent Platform или Microsoft Foundry](/docs/ru/third-party-integrations) (облачные провайдеры для предприятий)
 * Самостоятельно размещённый [шлюз приложений Claude](/docs/ru/claude-apps-gateway), если ваша организация его использует: ваш администратор предварительно настраивает URL шлюза, и `/login` открывает экран **Cloud gateway** для входа с корпоративным SSO
 
-После входа ваши учётные данные сохраняются, и вам не нужно будет входить снова.
+После входа ваши учётные данные сохраняются, и вам не нужно будет входить снова. Узнайте больше в разделе [Управление учётными данными](/docs/ru/authentication#credential-management).
 
 <h2 id="step-3-start-your-first-session">
   Шаг 3: Начните свой первый сеанс
@@ -121,11 +129,9 @@ cd /path/to/your/project
 claude
 ```
 
-Вы увидите приглашение Claude Code с версией, текущей моделью и рабочим каталогом, показанными выше. Введите `/help` для доступных команд или `/resume` для продолжения предыдущего разговора.
+Замените `/path/to/your/project` на путь к проекту, над которым вы хотите работать.
 
-<Tip>
-  После входа (Шаг 2) ваши учётные данные сохраняются на вашей системе. Узнайте больше в [Управлении учётными данными](/docs/ru/authentication#credential-management).
-</Tip>
+Вы увидите приглашение Claude Code с версией, текущей моделью и рабочим каталогом, показанными выше. Введите `/help` для доступных команд или `/resume` для продолжения предыдущего разговора.
 
 <h2 id="step-4-ask-your-first-question">
   Шаг 4: Задайте свой первый вопрос
@@ -133,35 +139,35 @@ claude
 
 Давайте начнём с понимания вашей кодовой базы. Попробуйте одну из этих команд:
 
-```text theme={null}
+```text wrap theme={null}
 what does this project do?
 ```
 
 Claude проанализирует ваши файлы и предоставит резюме. Вы также можете задать более конкретные вопросы:
 
-```text theme={null}
+```text wrap theme={null}
 what technologies does this project use?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 where is the main entry point?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 explain the folder structure
 ```
 
 Вы также можете спросить Claude о его собственных возможностях:
 
-```text theme={null}
+```text wrap theme={null}
 what can Claude Code do?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 how do I create custom skills in Claude Code?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 can Claude Code work with Docker?
 ```
 
@@ -175,19 +181,16 @@ can Claude Code work with Docker?
 
 Теперь давайте заставим Claude Code выполнить некоторое реальное кодирование. Попробуйте простую задачу:
 
-```text theme={null}
+```text wrap theme={null}
 add a hello world function to the main file
 ```
 
-Claude Code будет:
+Claude Code находит подходящий файл и показывает вам изменение. Если он просит разрешение перед внесением изменения, выберите **Да** для одобрения.
 
-1. Найти подходящий файл
-2. Показать вам предложенные изменения
-3. Попросить ваше одобрение
-4. Сделать редактирование
+Auto mode — это [встроенный начальный режим разрешений](/docs/ru/permission-modes#eliminate-prompts-with-auto-mode) для интерактивных сеансов терминала на планах Pro, Max и Team: классификатор проверяет действия вместо вас, и Claude редактирует большинство файлов и выполняет большинство команд без запроса. На других планах Manual mode — это встроенный начальный режим разрешений. Для сеанса, который вы запускаете сразу после установки, см. [Первый сеанс после установки или обновления](/docs/ru/env-vars#first-session-after-an-install-or-upgrade).
 
 <Note>
-  Claude Code всегда просит разрешение перед изменением файлов. Вы можете одобрить отдельные изменения или включить режим "Принять всё" для сеанса.
+  Ваши параметры или ваша организация могут установить другой начальный режим разрешений. [Какой режим разрешений начинается в сеансе](/docs/ru/permission-modes#which-mode-a-session-starts-in) перечисляет, что это делает. Нажмите `Shift+Tab` в любой момент, чтобы переключить режим разрешений сеанса, в котором вы находитесь.
 </Note>
 
 <h2 id="step-6-use-git-with-claude-code">
@@ -196,25 +199,25 @@ Claude Code будет:
 
 Claude Code делает операции Git разговорными:
 
-```text theme={null}
+```text wrap theme={null}
 what files have I changed?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 commit my changes with a descriptive message
 ```
 
 Вы также можете запросить более сложные операции Git:
 
-```text theme={null}
+```text wrap theme={null}
 create a new branch called feature/quickstart
 ```
 
-```text theme={null}
+```text wrap theme={null}
 show me the last 5 commits
 ```
 
-```text theme={null}
+```text wrap theme={null}
 help me resolve merge conflicts
 ```
 
@@ -226,13 +229,13 @@ Claude хорошо справляется с отладкой и реализа
 
 Опишите то, что вы хотите, на естественном языке:
 
-```text theme={null}
+```text wrap theme={null}
 add input validation to the user registration form
 ```
 
 Или исправьте существующие проблемы:
 
-```text theme={null}
+```text wrap theme={null}
 there's a bug where users can submit empty forms - fix it
 ```
 
@@ -251,25 +254,25 @@ Claude Code будет:
 
 **Рефакторинг кода**
 
-```text theme={null}
+```text wrap theme={null}
 refactor the authentication module to use async/await instead of callbacks
 ```
 
 **Написание тестов**
 
-```text theme={null}
+```text wrap theme={null}
 write unit tests for the calculator functions
 ```
 
 **Обновление документации**
 
-```text theme={null}
+```text wrap theme={null}
 update the README with installation instructions
 ```
 
 **Проверка кода**
 
-```text theme={null}
+```text wrap theme={null}
 review my changes and suggest improvements
 ```
 
@@ -288,18 +291,18 @@ review my changes and suggest improvements
 | Команда             | Что она делает                                         | Пример                              |
 | ------------------- | ------------------------------------------------------ | ----------------------------------- |
 | `claude`            | Запустить интерактивный режим                          | `claude`                            |
-| `claude "task"`     | Запустить одноразовую задачу                           | `claude "fix the build error"`      |
+| `claude "task"`     | Запустить интерактивный режим с начальным приглашением | `claude "fix the build error"`      |
 | `claude -p "query"` | Запустить одноразовый запрос, затем выйти              | `claude -p "explain this function"` |
 | `claude -c`         | Продолжить самый последний разговор в текущем каталоге | `claude -c`                         |
 | `claude -r`         | Возобновить предыдущий разговор                        | `claude -r`                         |
 
 **Команды сеанса**
 
-| Команда            | Что она делает             | Пример   |
-| ------------------ | -------------------------- | -------- |
-| `/clear`           | Очистить историю разговора | `/clear` |
-| `/help`            | Показать доступные команды | `/help`  |
-| `/exit` или Ctrl+D | Выйти из Claude Code       | `/exit`  |
+| Команда                   | Что она делает             | Пример   |
+| ------------------------- | -------------------------- | -------- |
+| `/clear`                  | Очистить историю разговора | `/clear` |
+| `/help`                   | Показать доступные команды | `/help`  |
+| `/exit` или Ctrl+D дважды | Выйти из Claude Code       | `/exit`  |
 
 Смотрите [справочник CLI](/docs/ru/cli-reference) для полного списка команд оболочки и [справочник команд](/docs/ru/commands) для полного списка команд сеанса.
 
@@ -319,7 +322,7 @@ review my changes and suggest improvements
   <Accordion title="Используйте пошаговые инструкции">
     Разбейте сложные задачи на этапы:
 
-    ```text theme={null}
+    ```text wrap theme={null}
     1. создать новую таблицу базы данных для профилей пользователей
     2. создать конечную точку API для получения и обновления профилей пользователей
     3. создать веб-страницу, которая позволяет пользователям просматривать и редактировать свою информацию
@@ -329,11 +332,11 @@ review my changes and suggest improvements
   <Accordion title="Позвольте Claude сначала исследовать">
     Перед внесением изменений позвольте Claude понять ваш код:
 
-    ```text theme={null}
+    ```text wrap theme={null}
     проанализировать схему базы данных
     ```
 
-    ```text theme={null}
+    ```text wrap theme={null}
     создать панель управления, показывающую продукты, которые чаще всего возвращаются нашими клиентами из Великобритании
     ```
   </Accordion>
@@ -374,6 +377,7 @@ review my changes and suggest improvements
   Получение помощи
 </h2>
 
-* **В Claude Code**: Введите `/help` или спросите "how do I..."
+* **В Claude Code**: Введите `/help` или спросите "how do I" вопрос
 * **Документация**: Вы здесь! Просмотрите другие руководства
+* **Курсы**: Пройдите [Claude Code 101](https://academy.claude.com/courses/claude-code-101) и другие бесплатные самостоятельные курсы на [Claude Academy](https://academy.claude.com/)
 * **Сообщество**: Присоединитесь к нашему [Discord](https://www.anthropic.com/discord) для советов и поддержки

@@ -4,92 +4,92 @@
 
 # 使用分析追蹤團隊使用情況
 
-> 在分析儀表板中查看 Claude Code 使用指標、追蹤採用情況並衡量工程速度。
+> 在分析儀表板中檢視 Claude Code 使用指標、追蹤採用情況，並衡量 Claude Code 對工程速度的影響。
 
-Claude Code 提供分析儀表板，幫助組織了解開發人員使用模式、追蹤貢獻指標，並衡量 Claude Code 對工程速度的影響。根據您的計劃訪問儀表板：
+Claude Code 提供分析儀表板，幫助組織瞭解開發人員使用模式、追蹤貢獻指標，並衡量 Claude Code 對工程速度的影響。存取您方案的儀表板：
 
-| 計劃                            | 儀表板 URL                                                                    | 包含內容                           | 了解更多                                            |
-| ----------------------------- | -------------------------------------------------------------------------- | ------------------------------ | ----------------------------------------------- |
-| Claude for Teams / Enterprise | [claude.ai/analytics/claude-code](https://claude.ai/analytics/claude-code) | 使用指標、與 GitHub 整合的貢獻指標、排行榜、數據匯出 | [詳情](#access-analytics-for-team-and-enterprise) |
-| API (Claude Console)          | [platform.claude.com/claude-code](https://platform.claude.com/claude-code) | 使用指標、支出追蹤、團隊洞察                 | [詳情](#access-analytics-for-api-customers)       |
+| 方案                            | 儀表板 URL                                                                    | 包含內容                           | 深入瞭解                                              |
+| ----------------------------- | -------------------------------------------------------------------------- | ------------------------------ | ------------------------------------------------- |
+| Claude for Teams / Enterprise | [claude.ai/analytics/claude-code](https://claude.ai/analytics/claude-code) | 使用指標、與 GitHub 整合的貢獻指標、排行榜、資料匯出 | [詳細資訊](#access-analytics-for-team-and-enterprise) |
+| API (Claude Console)          | [platform.claude.com/claude-code](https://platform.claude.com/claude-code) | 使用指標、支出追蹤、團隊見解                 | [詳細資訊](#access-analytics-for-api-customers)       |
 
 <h2 id="access-analytics-for-team-and-enterprise">
-  訪問 Team 和 Enterprise 的分析
+  存取 Team 和 Enterprise 的分析資料
 </h2>
 
-導航至 [claude.ai/analytics/claude-code](https://claude.ai/analytics/claude-code)。管理員和所有者可以查看儀表板。
+導覽至 [claude.ai/analytics/claude-code](https://claude.ai/analytics/claude-code)。管理員和擁有者可以檢視儀表板。
 
 Team 和 Enterprise 儀表板包括：
 
-* **使用指標**：已接受的代碼行數、建議接受率、每日活躍用戶和會話
-* **貢獻指標**：使用 Claude Code 協助發布的 PR 和代碼行數，具有 [GitHub 整合](#enable-contribution-metrics)
+* **使用情況指標**：已接受的程式碼行數、建議接受率、每日活躍使用者和工作階段
+* **貢獻指標**：使用 Claude Code 協助的 PR 和已發佈的程式碼行數，搭配 [GitHub 整合](#enable-contribution-metrics)
 * **排行榜**：按 Claude Code 使用情況排名的頂級貢獻者
-* **數據匯出**：將貢獻數據下載為 CSV 格式以進行自訂報告
+* **資料匯出**：下載貢獻資料為 CSV 格式以進行自訂報告
 
-如需每個用戶的令牌計數和成本估計，請配置 [OpenTelemetry 匯出](/docs/zh-TW/monitoring-usage)，或從您組織的分析設定匯出 [支出報告](https://support.claude.com/en/articles/12883420-view-usage-analytics-for-team-and-enterprise-plans)，其中列出每個用戶和每個模型的令牌使用情況和估計使用額度支出。
+如需每位使用者的權杖計數和成本估計，請設定 [OpenTelemetry 匯出](/docs/zh-TW/monitoring-usage)，或從您組織的分析設定匯出 [支出報告](https://support.claude.com/en/articles/12883420-view-usage-analytics-for-team-and-enterprise-plans)，其中列出每位使用者和每個模型的權杖使用情況和估計使用額度支出。
 
 <h3 id="enable-contribution-metrics">
   啟用貢獻指標
 </h3>
 
 <Note>
-  貢獻指標處於公開測試版，可在 Claude for Teams 和 Claude for Enterprise 計劃上使用。這些指標僅涵蓋您 claude.ai 組織內的用戶。通過 Claude Console API 或第三方整合的使用不包括在內。
+  貢獻指標處於公開測試版，可在 Claude for Teams 和 Claude for Enterprise 方案上使用。這些指標僅涵蓋您 claude.ai 組織內的使用者。透過 Claude Console API 或第三方整合的使用情況不包括在內。
 </Note>
 
-使用和採用數據適用於所有 Claude for Teams 和 Claude for Enterprise 帳戶。貢獻指標需要額外設置以連接您的 GitHub 組織。
+使用情況和採用資料適用於所有 Claude for Teams 和 Claude for Enterprise 帳戶。貢獻指標需要額外設定以連接您的 GitHub 組織。
 
-您需要所有者角色來配置分析設置。GitHub 管理員必須安裝 GitHub 應用程序。
+您需要擁有者角色才能設定分析設定。GitHub 管理員必須安裝 GitHub 應用程式。
 
 <Warning>
-  啟用了 [Zero Data Retention](/docs/zh-TW/zero-data-retention) 的組織無法使用貢獻指標。分析儀表板將僅顯示使用指標。
+  貢獻指標不適用於啟用 [Zero Data Retention](/docs/zh-TW/zero-data-retention) 的組織。分析儀表板將僅顯示使用情況指標。
 </Warning>
 
 <Steps>
-  <Step title="安裝 GitHub 應用程序">
-    GitHub 管理員在您組織的 GitHub 帳戶上安裝 Claude GitHub 應用程序，位址為 [github.com/apps/claude](https://github.com/apps/claude)。
+  <Step title="安裝 GitHub 應用程式">
+    GitHub 管理員在您組織的 GitHub 帳戶上安裝 Claude GitHub 應用程式，位址為 [github.com/apps/claude](https://github.com/apps/claude)。
   </Step>
 
   <Step title="啟用 Claude Code 分析">
-    Claude 所有者導航至 [claude.ai/admin-settings/claude-code](https://claude.ai/admin-settings/claude-code) 並啟用 Claude Code 分析功能。
+    Claude 擁有者導覽至 [claude.ai/admin-settings/claude-code](https://claude.ai/admin-settings/claude-code) 並啟用 Claude Code 分析功能。
   </Step>
 
   <Step title="啟用 GitHub 分析">
-    在同一頁面上，啟用'GitHub 分析'切換。
+    在同一頁面上，啟用「GitHub 分析」切換。
   </Step>
 
-  <Step title="使用 GitHub 進行身份驗證">
-    完成 GitHub 身份驗證流程並選擇要包含在分析中的 GitHub 組織。
+  <Step title="使用 GitHub 進行驗證">
+    完成 GitHub 驗證流程並選擇要包括在分析中的 GitHub 組織。
   </Step>
 </Steps>
 
-啟用後，數據通常在 24 小時內出現，並進行每日更新。如果沒有數據出現，您可能會看到以下消息之一：
+資料通常在啟用後的 24 小時內出現，並進行每日更新。如果沒有資料出現，您可能會看到以下其中一則訊息：
 
-* **「需要 GitHub 應用程序」**：安裝 GitHub 應用程序以查看貢獻指標
-* **「數據處理進行中」**：幾天後重新檢查，如果數據未出現，請確認 GitHub 應用程序已安裝
+* **「需要 GitHub 應用程式」**：安裝 GitHub 應用程式以檢視貢獻指標
+* **「資料處理進行中」**：幾天後再檢查，如果資料未出現，請確認 GitHub 應用程式已安裝
 
-貢獻指標支持 GitHub Cloud 和 GitHub Enterprise Server。
+貢獻指標支援 GitHub Cloud 和 GitHub Enterprise Server。
 
 <h3 id="review-summary-metrics">
-  查看摘要指標
+  檢視摘要指標
 </h3>
 
 <Note>
-  這些指標故意保守，代表對 Claude Code 實際影響的低估。只有高度確信 Claude Code 參與的代碼行和 PR 才會被計算。
+  這些指標刻意保守，代表對 Claude Code 實際影響的低估。只有在高度確信 Claude Code 參與的情況下，才會計算程式碼行和 PR。
 </Note>
 
 儀表板在頂部顯示這些摘要指標：
 
-* **帶有 CC 的 PR**：包含至少一行使用 Claude Code 編寫的代碼的已合併拉取請求的總計數
-* **帶有 CC 的代碼行**：所有已合併 PR 中使用 Claude Code 協助編寫的代碼行總數。僅計算「有效行」：規範化後超過 3 個字符的行，不包括空行和僅包含括號或瑣碎標點符號的行。
-* **帶有 Claude Code 的 PR (%)**：包含 Claude Code 協助代碼的所有已合併 PR 的百分比
-* **建議接受率**：用戶接受 Claude Code 代碼編輯建議的次數百分比，包括 Edit、Write 和 NotebookEdit 工具使用
-* **已接受的代碼行**：Claude Code 編寫且用戶在其會話中已接受的代碼行總數。這不包括被拒絕的建議，也不追蹤後續刪除。
+* **包含 CC 的 PR**：包含至少一行使用 Claude Code 撰寫的程式碼的已合併提取要求的總計數
+* **包含 CC 的程式碼行**：所有已合併 PR 中使用 Claude Code 協助撰寫的程式碼總行數。只計算「有效行」：正規化後超過 3 個字元的行，不包括空行和僅包含括號或瑣碎標點符號的行。
+* **包含 Claude Code 的 PR (%)**：包含 Claude Code 協助程式碼的所有已合併 PR 的百分比
+* **建議接受率**：使用者接受 Claude Code 程式碼編輯建議的次數百分比，包括 Edit、Write 和 NotebookEdit 工具使用情況
+* **已接受的程式碼行**：Claude Code 撰寫且使用者在其工作階段中已接受的程式碼總行數。這不包括被拒絕的建議，也不追蹤後續刪除。
 
 <h3 id="explore-the-charts">
   探索圖表
 </h3>
 
-儀表板包括多個圖表以可視化一段時間內的趨勢。
+儀表板包括多個圖表以視覺化一段時間內的趨勢。
 
 <h4 id="track-adoption">
   追蹤採用
@@ -97,140 +97,134 @@ Team 和 Enterprise 儀表板包括：
 
 採用圖表顯示每日使用趨勢：
 
-* **用戶**：每日活躍用戶
-* **會話**：每天活躍 Claude Code 會話的數量
+* **使用者**：每日活躍使用者
+* **工作階段**：每天的活躍 Claude Code 工作階段數
 
 <h4 id="measure-prs-per-user">
-  衡量每個用戶的 PR
+  測量每位使用者的 PR
 </h4>
 
-此圖表顯示一段時間內的個人開發人員活動：
+此圖表顯示一段時間內的個別開發人員活動：
 
-* **每個用戶的 PR**：每天合併的 PR 總數除以每日活躍用戶
-* **用戶**：每日活躍用戶
+* **每位使用者的 PR**：每天合併的 PR 總數除以每日活躍使用者
+* **使用者**：每日活躍使用者
 
-使用此功能了解隨著 Claude Code 採用增加，個人生產力如何變化。
+使用此功能可了解隨著 Claude Code 採用增加，個別生產力如何變化。
 
 <h4 id="view-pull-requests-breakdown">
-  查看拉取請求細分
+  檢視提取要求細目
 </h4>
 
-拉取請求圖表顯示已合併 PR 的每日細分：
+提取要求圖表顯示已合併 PR 的每日細目：
 
-* **帶有 CC 的 PR**：包含 Claude Code 協助代碼的拉取請求
-* **不帶 CC 的 PR**：不包含 Claude Code 協助代碼的拉取請求
+* **包含 CC 的 PR**：包含 Claude Code 協助程式碼的提取要求
+* **不包含 CC 的 PR**：不包含 Claude Code 協助程式碼的提取要求
 
-切換至**代碼行**視圖以按代碼行而不是 PR 計數查看相同的細分。
+切換至**程式碼行**檢視以按程式碼行而非 PR 計數查看相同的細目。
 
 <h4 id="find-top-contributors">
-  查找頂級貢獻者
+  尋找頂級貢獻者
 </h4>
 
-排行榜顯示按貢獻量排名的前 10 名用戶。在以下之間切換：
+排行榜顯示按貢獻量排名的前 10 位使用者。在以下項目之間切換：
 
-* **拉取請求**：顯示每個用戶的帶有 Claude Code 的 PR 與所有 PR
-* **代碼行**：顯示每個用戶的帶有 Claude Code 的行與所有行
+* **提取要求**：顯示每位使用者的 Claude Code 與所有 PR
+* **程式碼行**：顯示每位使用者的 Claude Code 與所有行
 
-點擊**匯出所有用戶**以將所有用戶的完整貢獻數據下載為 CSV 文件。匯出包括所有用戶，而不僅僅是顯示的前 10 名。
+按一下**匯出所有使用者**以下載所有使用者的完整貢獻資料為 CSV 檔案。匯出包括所有使用者，而不僅是顯示的前 10 位。
 
 <h3 id="pr-attribution">
   PR 歸因
 </h3>
 
-啟用貢獻指標後，Claude Code 會分析已合併的拉取請求，以確定哪些代碼是使用 Claude Code 協助編寫的。這是通過將 Claude Code 會話活動與每個 PR 中的代碼進行匹配來完成的。
-
-<h4 id="tagging-criteria">
-  標記標準
-</h4>
-
-如果 PR 包含在 Claude Code 會話期間編寫的至少一行代碼，則將其標記為「帶有 Claude Code」。系統使用保守匹配：只有高度確信 Claude Code 參與的代碼才被計為協助。
+啟用貢獻指標後，Claude Code 會分析已合併的提取要求，以確定哪些程式碼是使用 Claude Code 協助撰寫的。這是透過將 Claude Code 工作階段活動與每個 PR 中的程式碼進行比對來完成的。
 
 <h4 id="attribution-process">
-  歸因過程
+  歸因程序
 </h4>
 
-當拉取請求被合併時：
+合併提取要求時：
 
-1. 從 PR diff 中提取添加的行
-2. 識別在時間窗口內編輯匹配文件的 Claude Code 會話
-3. 使用多種策略將 PR 行與 Claude Code 輸出進行匹配
+1. 從 PR 差異中提取新增的行
+2. 識別在時間視窗內編輯相符檔案的 Claude Code 工作階段
+3. 使用多種策略將 PR 行與 Claude Code 輸出進行比對
 4. 計算 AI 協助行和總行的指標
 
-在比較之前，行被規範化：空格被修剪、多個空格被折疊、引號被標準化、文本被轉換為小寫。
+在比較之前，行會進行正規化：空白字元會被修剪、多個空格會被摺疊、引號會被標準化，文字會轉換為小寫。
 
-包含 Claude Code 協助行的已合併拉取請求在 GitHub 中被標記為 `claude-code-assisted`。
+包含 Claude Code 協助行的已合併提取要求在 GitHub 中會標籤為 `claude-code-assisted`。
 
 <h4 id="time-window">
-  時間窗口
+  時間視窗
 </h4>
 
-PR 合併日期前 21 天至後 2 天的會話被考慮用於歸因匹配。
+PR 合併日期前 21 天至後 2 天的工作階段會被考慮用於歸因比對。
 
 <h4 id="excluded-files">
-  排除的文件
+  排除的檔案
 </h4>
 
-某些文件會自動從分析中排除，因為它們是自動生成的：
+某些檔案會自動從分析中排除，因為它們是自動產生的：
 
-* 鎖定文件：package-lock.json、yarn.lock、Cargo.lock 及類似文件
-* 生成的代碼：Protobuf 輸出、構建工件、縮小的文件
-* 構建目錄：dist/、build/、node\_modules/、target/
-* 測試夾具：快照、盒帶、模擬數據
-* 超過 1,000 個字符的行，可能是縮小或生成的
+* 鎖定檔案：package-lock.json、yarn.lock、Cargo.lock 及類似檔案
+* 產生的程式碼：Protobuf 輸出、建置成品、縮小的檔案
+* 建置目錄：dist/、build/、node\_modules/、target/
+* 測試夾具：快照、錄製、模擬資料
+* 超過 1,000 個字元的行，可能是縮小或產生的
 
 <h4 id="attribution-notes">
-  歸因說明
+  歸因附註
 </h4>
 
-在解釋歸因數據時，請記住這些額外詳情：
+在解釋歸因資料時，請記住這些額外詳細資訊：
 
-* 由開發人員大幅重寫的代碼，差異超過 20%，不歸因於 Claude Code
-* 21 天窗口外的會話不被考慮
-* 該算法在執行歸因時不考慮 PR 源或目標分支
+* 由開發人員大幅重寫的程式碼（差異超過 20%）不會歸因於 Claude Code
+* 不考慮 21 天視窗外的工作階段
+* 演算法在執行歸因時不考慮 PR 來源或目的地分支
 
 <h3 id="get-the-most-from-analytics">
-  從分析中獲得最大收益
+  充分利用分析
 </h3>
 
-使用貢獻指標來展示 ROI、識別採用模式並找到可以幫助他人入門的團隊成員。
+使用貢獻指標來展示投資報酬率、識別採用模式，並找到可以幫助他人開始使用的團隊成員。
 
 <h4 id="monitor-adoption">
   監控採用
 </h4>
 
-追蹤採用圖表和用戶計數以識別：
+追蹤採用圖表和使用者計數以識別：
 
-* 可以分享最佳實踐的活躍用戶
+* 可以分享最佳實踐的活躍使用者
 * 整個組織的整體採用趨勢
-* 可能表示摩擦或問題的使用下降
+* 可能表示摩擦或問題的使用情況下降
 
 <h4 id="measure-roi">
-  衡量 ROI
+  測量投資報酬率
 </h4>
 
-貢獻指標幫助回答「這個工具值得投資嗎？」，使用來自您自己代碼庫的數據：
+貢獻指標有助於使用您自己程式碼庫中的資料回答「此工具值得投資嗎？」：
 
-* 隨著採用增加，追蹤一段時間內每個用戶的 PR 變化
-* 比較使用和不使用 Claude Code 發布的 PR 和代碼行
+* 隨著採用增加，追蹤一段時間內每位使用者的 PR 變化
+* 比較使用和不使用 Claude Code 發佈的 PR 和程式碼行
 * 與 [DORA 指標](https://dora.dev/)、衝刺速度或其他工程 KPI 一起使用，以了解採用 Claude Code 帶來的變化
 
 <h4 id="identify-power-users">
-  識別超級用戶
+  識別超級使用者
 </h4>
 
-排行榜幫助您找到具有高 Claude Code 採用率的團隊成員，他們可以：
+排行榜可幫助您找到具有高 Claude Code 採用率的團隊成員，他們可以：
 
-* 與團隊分享提示技術和工作流程
-* 提供有關什麼運作良好的反饋
-* 幫助新用戶入門
+* 與團隊分享提示技巧和工作流程
+* 提供有關運作良好的反饋
+* 幫助新使用者上手
 
 <h4 id="access-data-programmatically">
-  以編程方式訪問數據
+  以程式設計方式存取資料
 </h4>
 
-在 Enterprise 計劃上，[Claude Enterprise Analytics API](https://platform.claude.com/docs/en/api/admin/analytics) 為您的組織返回每個用戶的參與度、使用情況和成本報告，涵蓋所有 Claude 表面，包括 Claude Code。主要所有者在 [claude.ai/analytics/api-keys](https://claude.ai/analytics/api-keys) 處使用 `read:analytics` 範圍創建密鑰。該 API 在 Teams 計劃上不可用。
+在 Enterprise 方案上，[Claude Enterprise Analytics API](https://platform.claude.com/docs/en/api/admin/analytics) 會為您的組織返回每位使用者的參與度、使用情況和成本報告，涵蓋所有 Claude 表面，包括 Claude Code。主要擁有者在 [claude.ai/analytics/api-keys](https://claude.ai/analytics/api-keys) 建立具有 `read:analytics` 範圍的金鑰。API 在 Teams 方案上不可用。
 
-要通過 GitHub 查詢貢獻數據，請搜索標記為 `claude-code-assisted` 的 PR。
+若要改為透過 GitHub 查詢貢獻資料，請搜尋標籤為 `claude-code-assisted` 的 PR。
 
 <h2 id="access-analytics-for-api-customers">
   訪問 API 客戶的分析

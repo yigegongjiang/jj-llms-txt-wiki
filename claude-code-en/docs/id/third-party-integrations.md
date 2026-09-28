@@ -86,11 +86,13 @@ Organisasi dapat menyebarkan Claude Code melalui Anthropic secara langsung atau 
 
 Untuk sebagian besar organisasi, Claude for Teams atau Claude for Enterprise memberikan pengalaman terbaik. Anggota tim mendapatkan akses ke Claude Code dan Claude di web dengan satu langganan, penagihan terpusat, dan tidak ada setup infrastruktur yang diperlukan.
 
-**Claude for Teams** adalah self-service dan mencakup fitur kolaborasi, alat admin, dan manajemen penagihan. Terbaik untuk tim yang lebih kecil yang perlu memulai dengan cepat.
+**Claude for Teams** adalah self-service dan mencakup fitur kolaborasi, alat admin, SSO, manajemen penagihan, dan [pengaturan yang dikelola server](/docs/id/server-managed-settings) untuk konfigurasi Claude Code di seluruh organisasi. Terbaik untuk tim yang lebih kecil yang perlu memulai dengan cepat.
 
-**Claude for Enterprise** menambahkan SSO dan domain capture, izin berbasis peran, akses API kepatuhan, dan pengaturan kebijakan terkelola untuk menyebarkan konfigurasi Claude Code di seluruh organisasi. Terbaik untuk organisasi yang lebih besar dengan persyaratan keamanan dan kepatuhan.
+**Claude for Enterprise** menambahkan domain capture, izin berbasis peran, dan akses API kepatuhan. Terbaik untuk organisasi yang lebih besar dengan persyaratan keamanan dan kepatuhan.
 
 Pelajari lebih lanjut tentang [rencana Tim](https://support.claude.com/en/articles/9266767-what-is-the-team-plan) dan [rencana Enterprise](https://support.claude.com/en/articles/9797531-what-is-the-enterprise-plan).
+
+Opsi penyebaran yang dibandingkan di bawah ini mencakup tempat inferensi model berjalan. Untuk menjalankan sesi [Claude Code di web](/docs/id/claude-code-on-the-web) pada komputasi yang dioperasikan organisasi Anda, lihat [lingkungan yang di-host sendiri](/docs/id/self-hosted-environments).
 
 Jika organisasi Anda memiliki persyaratan infrastruktur khusus, bandingkan opsi di bawah ini:
 
@@ -150,8 +152,8 @@ Jika organisasi Anda memiliki persyaratan infrastruktur khusus, bandingkan opsi 
 
     <tr>
       <td>Autentikasi</td>
-      <td>Claude.ai SSO atau email</td>
-      <td>Kunci API</td>
+      <td>claude.ai SSO atau email</td>
+      <td>Kunci API atau [sign-in Console tanpa kunci](/docs/id/authentication#sign-in-without-an-api-key)</td>
       <td>Kunci API atau kredensial AWS</td>
       <td>Kunci API atau kredensial AWS</td>
       <td>Kredensial GCP</td>
@@ -213,120 +215,9 @@ Sebagian besar organisasi dapat menggunakan penyedia cloud secara langsung tanpa
 * **Corporate proxy**: Merutekan lalu lintas melalui proxy HTTP/HTTPS. Gunakan ini jika organisasi Anda memerlukan semua lalu lintas keluar untuk melewati server proxy untuk pemantauan keamanan, kepatuhan, atau penegakan kebijakan jaringan. Konfigurasi dengan variabel lingkungan `HTTPS_PROXY` atau `HTTP_PROXY`. Pelajari lebih lanjut di [Konfigurasi jaringan enterprise](/docs/id/network-config).
 * **LLM Gateway**: Layanan yang berada di antara Claude Code dan penyedia cloud untuk menangani autentikasi dan perutean. Gunakan ini jika Anda memerlukan pelacakan penggunaan terpusat di seluruh tim, pembatasan laju kustom atau anggaran, atau manajemen autentikasi terpusat. Konfigurasi dengan variabel lingkungan `ANTHROPIC_BASE_URL`, `ANTHROPIC_BEDROCK_BASE_URL`, `ANTHROPIC_AWS_BASE_URL`, `ANTHROPIC_VERTEX_BASE_URL`, atau `ANTHROPIC_FOUNDRY_BASE_URL`. Pelajari lebih lanjut di [Gateway LLM](/docs/id/llm-gateway).
 
-Contoh berikut menunjukkan variabel lingkungan yang harus diatur di shell atau profil shell Anda (`.bashrc`, `.zshrc`). Lihat [Pengaturan](/docs/id/settings) untuk metode konfigurasi lainnya.
+Untuk variabel lingkungan per-penyedia yang merutekan Amazon Bedrock, Microsoft Foundry, atau Google Cloud's Agent Platform melalui gateway LLM, lihat [rutekan ke penyedia cloud melalui gateway](/docs/id/llm-gateway-connect#route-to-a-cloud-provider-through-a-gateway). Jalankan `/status` di Claude Code untuk memverifikasi penyedia mana, URL dasar, dan proxy yang digunakan sesi.
 
-<h3 id="amazon-bedrock">
-  Amazon Bedrock
-</h3>
-
-<Tabs>
-  <Tab title="Corporate proxy">
-    Rutekan lalu lintas Amazon Bedrock melalui proxy perusahaan Anda dengan mengatur [variabel lingkungan](/docs/id/env-vars) berikut:
-
-    ```bash theme={null}
-    # Enable Bedrock
-    export CLAUDE_CODE_USE_BEDROCK=1
-    export AWS_REGION=us-east-1
-
-    # Configure corporate proxy
-    export HTTPS_PROXY='https://proxy.example.com:8080'
-    ```
-  </Tab>
-
-  <Tab title="LLM Gateway">
-    Rutekan lalu lintas Amazon Bedrock melalui gateway LLM Anda dengan mengatur [variabel lingkungan](/docs/id/env-vars) berikut:
-
-    ```bash theme={null}
-    # Enable Bedrock
-    export CLAUDE_CODE_USE_BEDROCK=1
-
-    # Configure LLM gateway
-    export ANTHROPIC_BEDROCK_BASE_URL='https://your-llm-gateway.com/bedrock'
-    export CLAUDE_CODE_SKIP_BEDROCK_AUTH=1  # If gateway handles AWS auth
-    ```
-  </Tab>
-</Tabs>
-
-<h3 id="microsoft-foundry">
-  Microsoft Foundry
-</h3>
-
-<Tabs>
-  <Tab title="Corporate proxy">
-    Rutekan lalu lintas Microsoft Foundry melalui proxy perusahaan Anda dengan mengatur [variabel lingkungan](/docs/id/env-vars) berikut:
-
-    ```bash theme={null}
-    # Enable Microsoft Foundry
-    export CLAUDE_CODE_USE_FOUNDRY=1
-    export ANTHROPIC_FOUNDRY_RESOURCE=your-resource
-    export ANTHROPIC_FOUNDRY_API_KEY=your-api-key  # Or omit for Entra ID auth
-
-    # Configure corporate proxy
-    export HTTPS_PROXY='https://proxy.example.com:8080'
-    ```
-  </Tab>
-
-  <Tab title="LLM Gateway">
-    Rutekan lalu lintas Microsoft Foundry melalui gateway LLM Anda dengan mengatur [variabel lingkungan](/docs/id/env-vars) berikut:
-
-    ```bash theme={null}
-    # Enable Microsoft Foundry
-    export CLAUDE_CODE_USE_FOUNDRY=1
-
-    # Configure LLM gateway
-    export ANTHROPIC_FOUNDRY_BASE_URL='https://your-llm-gateway.com'
-    export ANTHROPIC_FOUNDRY_API_KEY=your-gateway-key  # Sent as x-api-key
-    ```
-  </Tab>
-</Tabs>
-
-<h3 id="google-cloud’s-agent-platform">
-  Google Cloud's Agent Platform
-</h3>
-
-<Tabs>
-  <Tab title="Corporate proxy">
-    Rutekan lalu lintas Google Cloud's Agent Platform melalui proxy perusahaan Anda dengan mengatur [variabel lingkungan](/docs/id/env-vars) berikut:
-
-    ```bash theme={null}
-    # Enable Agent Platform
-    export CLAUDE_CODE_USE_VERTEX=1
-    export CLOUD_ML_REGION=us-east5
-    export ANTHROPIC_VERTEX_PROJECT_ID=your-project-id
-
-    # Configure corporate proxy
-    export HTTPS_PROXY='https://proxy.example.com:8080'
-    ```
-  </Tab>
-
-  <Tab title="LLM Gateway">
-    Rutekan lalu lintas Google Cloud's Agent Platform melalui gateway LLM Anda dengan mengatur [variabel lingkungan](/docs/id/env-vars) berikut:
-
-    ```bash theme={null}
-    # Enable Agent Platform
-    export CLAUDE_CODE_USE_VERTEX=1
-
-    # Configure LLM gateway
-    export ANTHROPIC_VERTEX_BASE_URL='https://your-llm-gateway.com/vertex'
-    export CLAUDE_CODE_SKIP_VERTEX_AUTH=1  # If gateway handles GCP auth
-    export ANTHROPIC_VERTEX_PROJECT_ID=your-gcp-project-id
-    export CLOUD_ML_REGION=us-east5
-    ```
-  </Tab>
-</Tabs>
-
-<Tip>
-  Gunakan `/status` di Claude Code untuk memverifikasi bahwa konfigurasi proxy dan gateway Anda diterapkan dengan benar. Misalnya, dengan konfigurasi gateway Bedrock di atas, output mencakup baris seperti:
-
-  ```
-  API provider: Amazon Bedrock
-  Bedrock base URL: https://your-llm-gateway.com/bedrock
-  AWS region: us-east-1
-  AWS auth skipped
-  ```
-
-  Jika Anda mengonfigurasi proxy perusahaan, `/status` juga menampilkan baris `Proxy` dengan URL proxy Anda.
-</Tip>
+Jika organisasi Anda menggunakan [kunci enkripsi yang dikelola pelanggan](https://platform.claude.com/docs/en/manage-claude/cmek) (CMEK) dan merutekan Claude Code melalui gateway LLM atau `ANTHROPIC_BASE_URL` kustom, CMEK tidak berlaku untuk telemetri operasional Claude Code pada sesi tersebut. Untuk mematikan telemetri untuk setiap pengembang, berikan `DISABLE_TELEMETRY` melalui pengaturan terkelola seperti yang ditunjukkan di [Matikan telemetri untuk organisasi Anda](/docs/id/managed-settings#turn-telemetry-off-for-your-organization).
 
 <h2 id="best-practices-for-organizations">
   Praktik terbaik untuk organisasi
@@ -336,12 +227,7 @@ Contoh berikut menunjukkan variabel lingkungan yang harus diatur di shell atau p
   Investasi dalam dokumentasi dan memori
 </h3>
 
-Kami sangat merekomendasikan investasi dalam dokumentasi sehingga Claude Code memahami basis kode Anda. Organisasi dapat menyebarkan file CLAUDE.md di berbagai tingkat:
-
-* **Seluruh organisasi**: Sebarkan ke direktori sistem seperti `/Library/Application Support/ClaudeCode/CLAUDE.md` (macOS), `/etc/claude-code/CLAUDE.md` (Linux dan WSL), atau `C:\Program Files\ClaudeCode\CLAUDE.md` (Windows) untuk standar perusahaan
-* **Tingkat repositori**: Buat file `CLAUDE.md` di akar repositori yang berisi arsitektur proyek, perintah build, dan panduan kontribusi. Periksa ini ke dalam kontrol sumber sehingga semua pengguna mendapat manfaat
-
-Pelajari lebih lanjut di [Memori dan file CLAUDE.md](/docs/id/memory).
+Kami sangat merekomendasikan investasi dalam dokumentasi sehingga Claude Code memahami basis kode Anda. Organisasi dapat menyebarkan file CLAUDE.md di berbagai tingkat. Lihat [di mana file CLAUDE.md dapat berada](/docs/id/memory#choose-where-to-put-claude-md-files) dan [cara menyebarkan CLAUDE.md di seluruh organisasi](/docs/id/memory#deploy-organization-wide-claude-md).
 
 <h3 id="simplify-deployment">
   Sederhanakan penyebaran
@@ -372,8 +258,6 @@ Tim keamanan dapat mengonfigurasi izin terkelola untuk apa yang Claude Code diiz
 </h3>
 
 MCP adalah cara yang bagus untuk memberikan Claude Code lebih banyak informasi, seperti menghubungkan ke sistem manajemen tiket atau log kesalahan. Kami merekomendasikan bahwa satu tim pusat mengonfigurasi server MCP dan memeriksa konfigurasi `.mcp.json` ke dalam basis kode sehingga semua pengguna mendapat manfaat. [Pelajari lebih lanjut](/docs/id/mcp).
-
-Di Anthropic, kami mempercayai Claude Code untuk mendorong pengembangan di seluruh setiap basis kode Anthropic. Kami harap Anda menikmati menggunakan Claude Code sebanyak yang kami lakukan.
 
 <h2 id="next-steps">
   Langkah berikutnya

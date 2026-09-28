@@ -7,10 +7,10 @@
 > 動態工作流程從 Claude 編寫的指令碼協調許多子代理，您可以重新執行。用於程式碼庫審計、大規模遷移和交叉檢查研究。
 
 <Note>
-  Dynamic workflows 需要 Claude Code v2.1.154 或更新版本，並在所有付費方案上可用，具有 Anthropic API 存取權限，以及在 Amazon Bedrock、Google Cloud 的 Agent Platform 和 Microsoft Foundry 上可用。在 Pro 上，從 `/config` 中的 Dynamic workflows 列啟用它們。
+  動態工作流程在所有付費方案上可用，具有 Anthropic API 存取權限，以及在 Amazon Bedrock、Google Cloud 的 Agent Platform 和 Microsoft Foundry 上可用。在 Pro 上，從 `/config` 中的 Dynamic workflows 列啟用它們。
 </Note>
 
-動態工作流程是一個 JavaScript 指令碼，可大規模協調[子代理](/docs/zh-TW/sub-agents)。Claude 為您描述的任務編寫指令碼，執行時期在背景執行它，同時您的工作階段保持回應。
+動態工作流程是一個 JavaScript 指令碼，可大規模協調許多[子代理](/docs/zh-TW/sub-agents)。Claude 為您描述的任務編寫指令碼，執行時期在背景執行它，同時您的工作階段保持回應。
 
 當任務需要超過一個對話可以協調的代理數量時，或當您想將協調編成可以讀取和重新執行的指令碼時，請使用工作流程。範例包括程式碼庫範圍的錯誤掃描、500 個檔案遷移、需要相互交叉檢查來源的研究問題，以及值得從多個獨立角度起草的困難計畫，然後再提交給其中一個。
 
@@ -43,7 +43,7 @@
   <Step title="執行工作流程">
     使用您想調查的問題執行 `/deep-research`。它在多個角度上展開網路搜尋，獲取並交叉檢查它找到的來源，並合成引用的報告。
 
-    ```text theme={null}
+    ```text wrap theme={null}
     /deep-research What changed in the Node.js permission model between v20 and v22?
     ```
   </Step>
@@ -55,7 +55,7 @@
   <Step title="監視進度">
     執行在背景中啟動。執行 `/workflows`，使用箭頭鍵選擇執行，然後按 Enter 開啟其進度檢視：
 
-    ```text theme={null}
+    ```text wrap theme={null}
     /workflows
     ```
 
@@ -67,7 +67,7 @@
   <Step title="閱讀報告">
     執行完成後，報告進入您的工作階段。它引用每項聲明來自的來源，未通過交叉檢查的聲明已被篩選出去。
 
-    自 v2.1.196 起，當驗證代理無法檢查聲明時（例如在速率限制或 API 錯誤之後），報告會將該聲明列為未驗證，而不是計為駁回。
+    當驗證代理無法檢查聲明時（例如在速率限制或 API 錯誤之後），報告會將該聲明列為未驗證，而不是計為駁回。
   </Step>
 </Steps>
 
@@ -79,9 +79,11 @@
 
 Claude Code 包含 `/deep-research` 作為內建工作流程：
 
-| 命令                          | 它做什麼                                                                                                                                  |
-| :-------------------------- | :------------------------------------------------------------------------------------------------------------------------------------ |
-| `/deep-research <question>` | 在多個角度上展開網路搜尋問題，獲取並交叉檢查它找到的來源，對每項聲明進行投票，並返回引用的報告，其中未通過交叉檢查的聲明已被篩選出去。需要[WebSearch 工具](/docs/zh-TW/tools-reference#websearch-tool-behavior)可用 |
+| 命令                          | 它做什麼                                                                                                                                   |
+| :-------------------------- | :------------------------------------------------------------------------------------------------------------------------------------- |
+| `/deep-research <question>` | 在多個角度上展開網路搜尋問題，獲取並交叉檢查它找到的來源，對每項聲明進行投票，並返回引用的報告，其中未通過交叉檢查的聲明已被篩選出去。需要 [WebSearch 工具](/docs/zh-TW/tools-reference#websearch-tool-behavior)可用 |
+
+`/deep-research` 僅在您叫用時執行。
 
 [您自己儲存的工作流程](#save-the-workflow-for-reuse)以相同方式成為命令，並在 `/` 自動完成中與捆綁的命令一起出現。
 
@@ -91,16 +93,12 @@ Claude Code 包含 `/deep-research` 作為內建工作流程：
 
 工作流程在背景中執行，因此工作階段在代理工作時保持回應。隨時執行 `/workflows` 以列出執行中和已完成的工作流程，然後選擇一個以開啟其進度檢視。
 
-```text theme={null}
-/workflows
-```
-
 進度檢視顯示每個階段及其代理計數、令牌總計和經過時間。頁腳列出每個動作的鍵：
 
 | 鍵             | 動作                                                         |
 | :------------ | :--------------------------------------------------------- |
 | `↑` / `↓`     | 選擇階段或代理                                                    |
-| `Enter` 或 `→` | 深入選定的階段，然後進入代理以讀取其提示、最近的工具呼叫和結果                            |
+| `Enter` 或 `→` | 深入選定的階段，然後進入代理的詳細資訊。在詳細資訊中，`Enter` 展開或摺疊它                  |
 | `Esc` 或 `←`   | 返回一個級別。在 v2.1.203 至 v2.1.205 中，`←` 未步出階段或代理；在這些版本上使用 `Esc` |
 | `j` / `k`     | 當代理詳細資訊溢出時在其中捲動                                            |
 | `f`           | 按狀態篩選選定階段中的代理清單。再次按以循環                                     |
@@ -109,110 +107,155 @@ Claude Code 包含 `/deep-research` 作為內建工作流程：
 | `r`           | 重新啟動選定的執行中代理                                               |
 | `s`           | [儲存](#save-the-workflow-for-reuse)執行的指令碼作為命令               |
 
+代理詳細資訊列出代理的提示、其最近的工具呼叫和其結果。每個呼叫顯示其狀態，例如仍在執行或失敗。當代理保持自己的任務清單時，詳細資訊會顯示它，以及每個任務的狀態。
+
+按 `Enter` 展開詳細資訊。提示和結果隨後會完整顯示，每個列出的呼叫會顯示其輸入和其結果的開始。
+
 <h2 id="have-claude-write-a-workflow">
-  讓 Claude 編寫工作流程
+  讓 Claude 撰寫工作流程
 </h2>
 
-您可以通過兩種方式讓 Claude 為您的任務編寫工作流程：
+您可以透過兩種方式讓 Claude 為您的任務撰寫工作流程：
 
-* [在您的提示中要求工作流程](#ask-for-a-workflow-in-your-prompt)，使用關鍵字 `ultracode`，Claude 為任務編寫一個。
-* [讓 Claude 使用 ultracode 決定](#let-claude-decide-with-ultracode)：設定 `/effort ultracode`，Claude 為工作階段中的每項實質性任務規劃工作流程。
+* [在提示中要求工作流程](#ask-for-a-workflow-in-your-prompt)，用您自己的話語或包含關鍵字 `ultracode`，Claude 會為該任務撰寫一個工作流程。
+* [讓 Claude 使用 ultracode 決定](#let-claude-decide-with-ultracode)：設定 `/effort ultracode`，Claude 會為工作階段中的每個實質性任務規劃一個工作流程。
 
-您也可以執行已存在的工作流程命令：[捆綁的工作流程](#bundled-workflows)如 `/deep-research`，或您[儲存的](#save-the-workflow-for-reuse)工作流程。
+您也可以執行已存在的工作流程命令：像 `/deep-research` 這樣的[捆綁工作流程](#bundled-workflows)，或您[保存](#save-the-workflow-for-reuse)的工作流程。
 
 <h3 id="ask-for-a-workflow-in-your-prompt">
-  在您的提示中要求工作流程
+  在提示中要求工作流程
 </h3>
 
-要在不改變工作階段努力級別的情況下將單個任務作為工作流程執行，請在提示中包含關鍵字 `ultracode`。用您自己的話提問，例如「使用工作流程」或「執行工作流程」，也可以：Claude 將直接請求視為相同的選擇加入。在 v2.1.160 之前，字面觸發關鍵字是 `workflow`；自然語言請求在兩個版本中都有效。
+若要在不變更工作階段努力程度的情況下將單一任務作為工作流程執行，請在提示中包含關鍵字 `ultracode`。用您自己的話語提問，例如「使用工作流程」或「執行工作流程」，也同樣有效：Claude 將直接要求視為相同的選擇加入。
 
-```text theme={null}
+```text wrap theme={null}
 ultracode: audit every API endpoint under src/routes/ for missing auth checks
 ```
 
-Claude Code 在您的輸入中突出顯示該關鍵字，Claude 為任務編寫工作流程指令碼，而不是逐輪完成它。如果您沒有打算啟動工作流程，請在 macOS 上按 `Option+W` 或在 Windows 和 Linux 上按 `Alt+W` 以忽略此提示的突出顯示，或在游標位於突出顯示單詞的正後方時按退格鍵。要停止該單詞完全觸發，請在 `/config` 中關閉 Ultracode keyword trigger。
+Claude Code 會在您的輸入中突顯該關鍵字，Claude 會為該任務撰寫工作流程指令碼，而不是逐步進行。該關鍵字只會選擇 Claude 如何組織工作：代理程式的工具呼叫會收到與工作階段中任何其他工具呼叫相同的權限檢查和[沙箱隔離](/docs/zh-TW/sandboxing)。
 
-如果執行執行您想要的操作，您可以之後[將其儲存為命令](#save-the-workflow-for-reuse)。
+如果執行結果符合您的需求，您可以之後[將其保存為命令](#save-the-workflow-for-reuse)。如果您已經用另一種方式建立了協調器，例如子代理程式提示的資料夾或分散工作的技能，您可以指向它並要求 Claude 撰寫執行相同操作的工作流程。
 
-如果您已經以另一種方式建立了協調器，例如子代理提示的資料夾或一個分散工作的技能，您可以指向 Claude 並要求工作流程執行相同的操作。
+<h4 id="dismiss-or-turn-off-the-keyword">
+  關閉或停用關鍵字
+</h4>
+
+如果您不打算啟動工作流程，請在 macOS 上按 `Option+W` 或在 Windows 和 Linux 上按 `Alt+W` 以關閉此提示的突顯，或在游標位於突顯關鍵字之後時按退格鍵。若要完全停止關鍵字觸發，請在 `/config` 中關閉 Ultracode 關鍵字觸發。
+
+<h4 id="where-the-keyword-works">
+  關鍵字的適用位置
+</h4>
+
+該關鍵字是僅在您自己輸入的提示中選擇加入：在互動式提示、IDE 擴充面板、[遠端控制](/docs/zh-TW/remote-control)用戶端或在代理程式 SDK 應用程式中，該應用程式將您的鍵盤輸入的 [`origin`](/docs/zh-TW/agent-sdk/typescript#sdkmessageorigin) 標記為 `{ kind: "human" }`。當它以其他方式進入工作階段時，不會啟動工作流程：
+
+* 使用 `-p` 傳遞的提示
+* 代理程式 SDK 應用程式發送但未標記為人類輸入的提示
+* 排程任務提示
+* 轉發到對話中的 webhook 承載或拉取要求評論
+
+<Note>
+  在 v2.1.210 之前，該關鍵字也會從這些路由中的任何一個啟動工作流程，包括轉發到對話中的 webhook 承載或拉取要求評論。
+</Note>
 
 <h3 id="let-claude-decide-with-ultracode">
   讓 Claude 使用 ultracode 決定
 </h3>
 
-Ultracode 是一個 Claude Code 設定，結合 `xhigh` [推理努力](/docs/zh-TW/model-config#adjust-effort-level)與自動工作流程協調。啟用它後，Claude 為每項實質性任務規劃工作流程，而不是等待您要求。
+Ultracode 是一個 Claude Code 設定，它結合了 `xhigh` [推理努力](/docs/zh-TW/model-config#adjust-effort-level)與自動工作流程協調。啟用它後，Claude 會為每個實質性任務規劃一個工作流程，而不是等待您提出要求。
 
-```text theme={null}
+```text wrap theme={null}
 /effort ultracode
 ```
 
-要啟動已啟用 ultracode 的工作階段，請使用 `claude --effort ultracode` 啟動。需要 Claude Code v2.1.203 或更新版本。
+若要在已啟用 ultracode 的情況下啟動工作階段，請使用 `claude --effort ultracode` 啟動。需要 Claude Code v2.1.203 或更新版本。
 
-啟用 ultracode 後，Claude 決定任務何時值得工作流程。單個請求可以變成一系列工作流程：一個用於理解程式碼，一個用於進行更改，一個用於驗證它。這適用於工作階段中的每項任務，因此每個請求使用更多令牌並花費比較低努力級別更長的時間。
+若要在選擇模型時啟用它，請使用箭頭鍵將 `/model` 選擇器的努力滑塊移至 `ultracode`。[調整努力程度](/docs/zh-TW/model-config#adjust-effort-level)列出了啟用 ultracode 的路由。
 
-Ultracode 持續當前工作階段，當您啟動新工作階段時重設。當您返回日常工作時，使用 `/effort high` 下降。它在支援 `xhigh` [努力](/docs/zh-TW/model-config#adjust-effort-level)的模型上可用；在其他模型上，`/effort` 功能表不提供它。
+啟用 ultracode 後，Claude 會決定任務何時需要工作流程。單一要求可以轉變為連續的多個工作流程：一個用於理解程式碼，一個用於進行變更，一個用於驗證。這適用於工作階段中的每個任務，因此每個要求使用更多令牌並花費比較低努力程度更長的時間。
+
+`/effort ultracode` 持續整個目前工作階段；若要讓每個工作階段都以它開始，請設定 [`ultracode`](/docs/zh-TW/settings-reference#ultracode) 設定。當您返回例行工作時，使用 `/effort high` 降級。`/effort` 功能表僅在 [ultracode 可用時](/docs/zh-TW/model-config#when-ultracode-is-available)提供它。
 
 <h3 id="approve-the-plan-before-it-runs">
   在執行前批准計畫
 </h3>
 
-在 CLI 中，每次執行提示顯示計畫的階段和這些選項：
+在 CLI 中，每次執行提示會顯示計畫的階段和這些選項：
 
-* **是，執行它**：啟動執行
-* **是，不再詢問 `<name>` 在 `<path>` 中**：啟動，並從現在開始跳過此專案中此工作流程的此提示
-* **檢視原始指令碼**：在決定前讀取指令碼
-* **否**：取消
+* **Yes, run it**：啟動執行
+* **Yes, and don't ask again for `<name>` in `<path>`**：啟動，並從現在開始在此專案中跳過此工作流程的此提示。當您按名稱執行捆綁、保存或外掛工作流程時，Claude Code 會提供此選項，而不是針對 Claude 為目前任務撰寫的指令碼。
+* **View raw script**：在決定前讀取指令碼
+* **No**：取消
 
-`Ctrl+G` 在您的編輯器中開啟指令碼。`Tab` 讓您在執行啟動前調整提示。
+`Ctrl+G` 在您的編輯器中開啟指令碼。`Tab` 讓您在執行開始前調整提示。
 
 您是否看到此提示取決於您的[權限模式](/docs/zh-TW/permission-modes)：
 
-| 權限模式                       | 何時提示您                                                      |
-| :------------------------- | :--------------------------------------------------------- |
-| 預設、接受編輯                    | 每次執行，除非您已為此專案中的該工作流程選擇**是，不再詢問**                           |
-| 自動                         | 首次啟動。任何**是**在您的使用者設定中記錄同意，稍後啟動無需提示即可啟動。當 ultracode 啟用時完全跳過 |
-| 繞過權限、`claude -p`、Agent SDK | 從不。執行立即啟動                                                  |
+| 權限模式                   | 何時提示您                                                         |
+| :--------------------- | :------------------------------------------------------------ |
+| Auto                   | 僅首次啟動。任何 **Yes** 會在您的使用者設定中記錄同意，之後啟動時不會提示。當 ultracode 啟用時完全跳過 |
+| Manual, accept edits   | 每次執行，除非您已為此專案中的該工作流程選擇 **Yes, and don't ask again**           |
+| Bypass permissions     | Claude Code 不會提示您。執行立即啟動                                      |
+| `claude -p`, Agent SDK | Claude Code 不會提示您                                             |
 
-在桌面應用程式中，批准卡顯示工作流程名稱、階段列表和令牌使用警告，具有**一次**、**始終**和**拒絕**動作。進度檢視出現在背景任務側窗格中。
+在 `claude -p` 和 Agent SDK 中，Claude Code 永遠不會顯示此提示。它透過與工作階段其餘部分相同的[權限評估](/docs/zh-TW/agent-sdk/permissions#how-permissions-are-evaluated)執行 Workflow 工具呼叫，因此拒絕規則、詢問規則和 `dontAsk` 模式適用於啟動，就像它們適用於每個工具呼叫一樣。若要讓工作流程在這些執行中啟動，請使用以下其中一個：
 
-您的權限模式僅控制上面的啟動提示。工作流程生成的子代理始終在 `acceptEdits` 模式下執行，並繼承您的[工具允許清單](/docs/zh-TW/settings#permission-settings)，無論您的工作階段模式如何。檔案編輯自動批准。
+* **Permission rule**：您允許規則中的 `Workflow` 批准每個工作流程，`Workflow(<name>)` 按名稱批准一個保存的工作流程。
+* **Auto permission mode**：[分類器](/docs/zh-TW/permission-modes#eliminate-prompts-with-auto-mode)檢查呼叫並可以批准它。
+* **Bypass permissions mode**：Claude Code 批准呼叫。
+* **A `PreToolUse` hook**：返回呼叫 `allow` 的[鉤子](/docs/zh-TW/hooks#pretooluse)批准它。
+* **Your host**：[`--permission-prompt-tool`](/docs/zh-TW/cli-reference#cli-flags) 批准它，或使用 Agent SDK，[`canUseTool`](/docs/zh-TW/agent-sdk/permissions) 回呼或 [`PermissionRequest` 鉤子](/docs/zh-TW/hooks#permissionrequest)批准它。
 
-Shell 命令、網路獲取和不在您允許清單中的 MCP 工具仍可在執行中提示您。要在長時間執行時避免這種情況，請在啟動前將代理需要的命令新增到您的允許清單。
+在桌面應用程式中，批准卡會顯示工作流程名稱、階段清單和令牌使用警告，具有 **Once**、**Always** 和 **Deny** 動作。進度檢視會出現在「背景任務」側窗格中。
 
-在 `claude -p` 和 Agent SDK 中沒有人提示，因此工具呼叫遵循您配置的權限規則，無需互動確認。
+工作流程產生的子代理程式使用您的[權限規則](/docs/zh-TW/settings-reference#permission-settings)，Claude Code 根據[子代理程式執行的權限模式](/docs/zh-TW/sub-agents#permission-modes)下的規則選擇其權限模式。若要避免在長時間執行時出現提示，請在啟動前將代理程式需要的工具新增到您的允許規則。
 
 <h3 id="save-the-workflow-for-reuse">
-  儲存工作流程以供重複使用
+  保存工作流程以供重複使用
 </h3>
 
-當 Claude 為您將重複的任務編寫工作流程時，您可以將該執行的指令碼儲存為命令。一個您在每個分支上執行的審查流程然後每次執行相同的協調。
+當 Claude 為您將重複的任務撰寫工作流程時，您可以將該執行的指令碼保存為命令。像在每個分支上執行的檢查這樣的程序然後每次執行相同的協調。
 
-執行 `/workflows`，選擇您想保留的執行，然後按 `s`。在儲存對話中，Tab 在兩個儲存位置之間切換：
+執行 `/workflows`，選擇您想保留的執行，然後按 `s`。在保存對話中，Tab 在兩個保存位置之間切換：
 
-* `.claude/workflows/` 在您的專案中：與克隆儲存庫的每個人共享
-* `~/.claude/workflows/` 在您的主目錄中：在每個專案中可用，僅對您可見。如果您設定了 [`CLAUDE_CONFIG_DIR`](/docs/zh-TW/env-vars)，此位置是該路徑下的 `workflows/` 目錄。
+* 您專案中的 `.claude/workflows/`：與克隆儲存庫的每個人共享
+* 您主目錄中的 `~/.claude/workflows/`：在每個專案中可用，僅對您可見。如果您設定了 [`CLAUDE_CONFIG_DIR`](/docs/zh-TW/env-vars)，此位置是該路徑下的 `workflows/` 目錄。
 
-儲存對話顯示個人位置的已解析路徑。在 v2.1.208 之前，即使設定了 `CLAUDE_CONFIG_DIR`，它也顯示 `~/.claude/workflows/`；檔案仍然儲存在配置的目錄下。
+保存對話會顯示個人位置的已解析路徑。
 
-按 Enter 儲存。工作流程在未來工作階段中從任一位置作為 `/<name>` 執行。
+按 Enter 保存。工作流程在未來工作階段中從任一位置作為 `/<name>` 執行。
 
-自 v2.1.178 起，儲存到專案位置會寫入您的工作目錄和儲存庫根目錄之間已存在的最接近的 `.claude/workflows/` 目錄，或如果尚不存在則寫入儲存庫根目錄。專案工作流程也從該路徑沿著的每個 `.claude/workflows/` 載入，當多個定義相同名稱時 Claude Code 執行最接近工作目錄的那個。
+Claude Code 在寫入前檢查保存位置是否有符號連結，並顯示錯誤而不是透過符號連結寫入。它檢查的內容取決於您保存的位置：
+
+* 專案位置：如果 `.claude`、`.claude/workflows` 或目標檔案是符號連結，Claude Code 會拒絕。
+* 個人位置：Claude Code 僅在目標檔案本身是符號連結時拒絕，因此由 dotfiles 工具管理的 `~/.claude` 目錄仍然有效。
+
+在 v2.1.216 之前，Claude Code 跟隨連結，這可能會將檔案放在您選擇的位置之外。
+
+在具有多個 `.claude/` 目錄的 monorepo 中，您可以將工作流程保留在它們適用的套件旁邊。保存到專案位置會寫入您的工作目錄和儲存庫根目錄之間已存在的最接近的 `.claude/workflows/` 目錄，或如果尚不存在，則寫入儲存庫根目錄。專案工作流程也會從該路徑沿著的每個 `.claude/workflows/` 載入，當多個定義相同名稱時，Claude Code 執行最接近工作目錄的那個。
 
 如果專案工作流程和個人工作流程共享名稱，則執行專案工作流程。
 
-<h3 id="pass-input-to-a-saved-workflow">
-  將輸入傳遞給已儲存的工作流程
+<h3 id="distribute-a-workflow-in-a-plugin">
+  在外掛中分發工作流程
 </h3>
 
-已儲存的工作流程可以通過 `args` 參數接受輸入。指令碼將其讀取為名為 `args` 的全域變數。使用此功能在調用時提供研究問題、目標路徑清單或配置物件，而不是為每次執行編輯指令碼。
+若要在團隊或儲存庫之間共享工作流程，請將其包含在[外掛](/docs/zh-TW/plugins/overview)中。將指令碼放在外掛根目錄的 `workflows/` 目錄中，或使用 [`workflows` 資訊清單欄位](/docs/zh-TW/plugins/manifest-reference#fields)指向不同位置。
 
-以下提示使用問題編號清單執行已儲存的工作流程：
+外掛工作流程由外掛名稱命名空間。名為 `acme-tools` 的外掛，其 `meta.name` 為 `release-audit` 的指令碼作為 `/acme-tools:release-audit` 執行。
 
-```text theme={null}
-> Run /triage-issues on issues 1024, 1025, and 1030
+<h3 id="pass-input-to-a-saved-workflow">
+  將輸入傳遞到保存的工作流程
+</h3>
+
+保存的工作流程可以透過 `args` 參數接受輸入。指令碼將其讀取為名為 `args` 的全域變數。使用此方法在呼叫時提供研究問題、目標路徑清單或設定物件，而不是為每次執行編輯指令碼。
+
+以下提示使用問題編號清單執行保存的工作流程：
+
+```text wrap theme={null}
+Run /triage-issues on issues 1024, 1025, and 1030
 ```
 
-Claude 將清單作為結構化資料傳遞，因此指令碼可以直接在 `args` 上呼叫陣列和物件方法，無需先解析它。如果省略 `args`，全域變數在指令碼內為 `undefined`。
+Claude 將清單作為結構化資料傳遞，因此指令碼可以直接在 `args` 上呼叫陣列和物件方法，而無需先解析它。如果省略 `args`，全域變數在指令碼內為 `undefined`。
 
 <h2 id="example-workflow-prompts">
   工作流程提示範例
@@ -226,8 +269,8 @@ Claude 將清單作為結構化資料傳遞，因此指令碼可以直接在 `ar
 
 展開每個檔案一個代理，然後收集並驗證發現。
 
-```text theme={null}
-> use a workflow to audit every route handler under src/routes/ for missing authentication checks, and adversarially verify each finding before reporting it
+```text wrap theme={null}
+use a workflow to audit every route handler under src/routes/ for missing authentication checks, and adversarially verify each finding before reporting it
 ```
 
 <h3 id="keep-fixing-until-a-check-passes">
@@ -236,8 +279,8 @@ Claude 將清單作為結構化資料傳遞，因此指令碼可以直接在 `ar
 
 執行檢查器、修復失敗的內容，並重複直到通過或停止進展。
 
-```text theme={null}
-> use a workflow to run npx tsc --noEmit and keep fixing the reported errors until the type check passes or two rounds in a row make no progress
+```text wrap theme={null}
+use a workflow to run npx tsc --noEmit and keep fixing the reported errors until the type check passes or two rounds in a row make no progress
 ```
 
 <h3 id="migrate-many-files-in-parallel">
@@ -246,8 +289,8 @@ Claude 將清單作為結構化資料傳遞，因此指令碼可以直接在 `ar
 
 發現要遷移的檔案，在隔離的副本中轉換每個檔案，以便編輯不衝突，並驗證每個結果。
 
-```text theme={null}
-> use a workflow to migrate every component under src/components/ from styled-components to Tailwind, working on each file in its own isolated copy
+```text wrap theme={null}
+use a workflow to migrate every component under src/components/ from JavaScript to TypeScript, working on each file in its own isolated copy
 ```
 
 <h3 id="review-every-changed-file-and-write-one-summary">
@@ -256,8 +299,8 @@ Claude 將清單作為結構化資料傳遞，因此指令碼可以直接在 `ar
 
 為每個檔案執行審查者，然後將所有發現交給一個代理，該代理對它們進行排名和去重。
 
-```text theme={null}
-> use a workflow to review every file changed in this PR for correctness issues, then merge the per-file findings into one ranked summary
+```text wrap theme={null}
+use a workflow to review every file changed in this PR for correctness issues, then merge the per-file findings into one ranked summary
 ```
 
 <h3 id="research-a-topic-across-many-sources">
@@ -266,8 +309,8 @@ Claude 將清單作為結構化資料傳遞，因此指令碼可以直接在 `ar
 
 在變更日誌、問題和文件中展開讀者，然後合成。捆綁的 `/deep-research` 工作流程執行此操作；您也可以描述更狹隘的版本。
 
-```text theme={null}
-> use a workflow to research how our three competitors handle rate limiting: read their public docs and recent changelog entries in parallel, then compare the approaches
+```text wrap theme={null}
+use a workflow to research how our three competitors handle rate limiting: read their public docs and recent changelog entries in parallel, then compare the approaches
 ```
 
 <h3 id="find-issues-until-the-list-stops-growing">
@@ -276,8 +319,8 @@ Claude 將清單作為結構化資料傳遞，因此指令碼可以直接在 `ar
 
 持續搜尋並在新輪次發現沒有新內容時停止。
 
-```text theme={null}
-> use a workflow to find flaky tests in this repo: run the suite repeatedly, record which tests fail intermittently, and stop once two rounds in a row find nothing new
+```text wrap theme={null}
+use a workflow to find flaky tests in this repo: run the suite repeatedly, record which tests fail intermittently, and stop once two rounds in a row find nothing new
 ```
 
 <h3 id="what-the-saved-script-looks-like">
@@ -303,7 +346,32 @@ const audits = await pipeline(found.files, file =>
 return audits.filter(Boolean)
 ```
 
-主體是具有頂級 `await` 的純 JavaScript。`agent()` 生成一個子代理，`pipeline()` 為清單中的每個項目執行一個。如果您想手動編輯指令碼，請要求 Claude 引導您完成更改，或查看 [Agent SDK 參考](/docs/zh-TW/agent-sdk/typescript)中的 Workflow 工具條目以獲取完整的選項集。
+主體是具有頂級 `await` 的純 JavaScript。`agent()` 生成一個子代理，`pipeline()` 為清單中的每個項目執行一個，而 `parallel()` 同時執行一組代理任務並等待所有任務完成。
+
+如果您停止 `agent()` 呼叫中途或它遇到無法恢復的 API 錯誤，該呼叫會解析為 `null`。`pipeline()` 在結果陣列中保留每個 `null`，這就是為什麼範例以 `.filter(Boolean)` 結尾以刪除這些項目。
+
+在[自動模式](/docs/zh-TW/permission-modes#eliminate-prompts-with-auto-mode)中，您的指令碼傳遞給 `agent()` 的提示不會計為您的請求，當分類器審查該子代理的動作時，因為 Claude Code 將其標記為指令碼計算的文字。
+
+如果您在 `agent()` 呼叫上傳遞 `schema`，該子代理會傳回與形狀相符的 JSON 而不是散文。Claude Code 在啟動子代理之前檢查架構：當它可以證明架構自相矛盾時，呼叫會失敗並出現錯誤，命名矛盾，子代理永遠不會啟動。它可以證明的一個矛盾是 `additionalProperties: false` 排除的 `required` 鍵。
+
+如果子代理的輸出在五次嘗試後仍然無法通過驗證，呼叫會失敗並出現包含最後驗證失敗的錯誤。若要變更嘗試次數，請設定 [`MAX_STRUCTURED_OUTPUT_RETRIES`](/docs/zh-TW/env-vars)。
+
+<h3 id="edit-a-saved-script">
+  編輯已儲存的指令碼
+</h3>
+
+若要變更[您儲存的工作流程](#save-the-workflow-for-reuse)，請編輯其 `.js` 檔案或要求 Claude 進行變更。在您編輯或要求之前，執行 `/workflow-authoring` [捆綁技能](/docs/zh-TW/skills#bundled-skills)以載入 Claude 工作的指令碼編寫參考。該技能需要 Claude Code v2.1.248 或更新版本。
+
+若要在目前工作階段中執行編輯版本，執行 [`/reload-skills`](/docs/zh-TW/commands#all-commands) 以重新讀取工作流程目錄，然後再次執行 `/<name>`。
+
+Claude Code 在載入和執行指令碼時對檔案的每個部分應用這些規則：
+
+* **`meta` 塊**：將 `export const meta` 保留為第一個陳述式，並將其保留為具有 `name` 和 `description` 的純物件字面值。如果它包含除字面值以外的任何內容，例如變數、函式呼叫或展開，Claude Code 會從 `/` 自動完成中刪除 `/<name>`。
+* **主體**：除了 `agent()`、`pipeline()` 和 `parallel()` 之外，您可以呼叫 `phase()` 以在進度檢視中將後續代理分組到標題下，呼叫 `log()` 以在階段上方顯示訊息，並讀取 [`args`](#pass-input-to-a-saved-workflow) 全域。如果主體有語法錯誤，Claude Code 會在您執行工作流程時報告它。
+* **`phases`**：如果您在 `meta` 中列出它們，請為每個項目提供您傳遞給 `phase()` 的確切標題。沒有項目的 `phase()` 標題會獲得自己的進度群組。
+* **時間戳記和隨機性**：Claude Code 使 `Date.now()`、`Math.random()` 和無引數 `new Date()` 在指令碼內拋出，以便[重新啟動的執行](#resume-after-a-pause)重複相同的 `agent()` 呼叫。改為透過 `args` 傳遞時間戳記。
+
+您也可以編輯[單次執行的指令碼](#how-a-workflow-runs)而不是已儲存的副本。[在暫停後繼續](#resume-after-a-pause)涵蓋當您重新啟動編輯的指令碼時哪些代理再次執行。如需 Workflow 工具的輸入，請參閱其在 [Agent SDK 參考](/docs/zh-TW/agent-sdk/typescript#workflow)中的項目。
 
 <h2 id="how-a-workflow-runs">
   工作流程如何執行
@@ -313,7 +381,19 @@ return audits.filter(Boolean)
 
 每次執行都會將其指令碼寫入您工作階段目錄下的 `~/.claude/projects/` 中的檔案。執行開始時 Claude 會收到該路徑，因此您可以要求它。您可以開啟該檔案以讀取 Claude 編寫的協調指令碼，將其與先前執行的指令碼進行比較，或編輯它並要求 Claude 從編輯後的版本重新啟動。
 
+Claude 只能從工作階段已允許讀取的指令碼檔案啟動工作流程。若要執行保存在工作目錄外的指令碼，請先使用 [`/add-dir`](/docs/zh-TW/permissions#working-directories) 或 [Read 允許規則](/docs/zh-TW/permissions#read-and-edit)新增其目錄。
+
 執行時期在執行進行時追蹤每個代理的結果，這是使執行在同一工作階段中[可恢復](#resume-after-a-pause)的原因。
+
+<h3 id="prompt-caching-in-a-fan-out">
+  扇出中的提示快取
+</h3>
+
+同一執行中的代理可以讀取彼此的[提示快取](/docs/zh-TW/prompt-caching#subagents-and-the-cache)。使用相同模型、努力等級、代理類型、工具、輸出架構和工作目錄執行的兩個代理會建立相同的工具和系統提示前綴，因此在匹配同級代理的回應開始後啟動的代理會在其第一個請求上讀取該同級代理的快取。
+
+工作流程代理的請求不在主對話的[快取 TTL 時段](/docs/zh-TW/prompt-caching#which-ttl-each-request-gets)內，因此其快取預設保留五分鐘，包括在 Claude 訂閱上。若要將其保留一小時，請將 [`subagentPromptCacheTtl`](/docs/zh-TW/settings-reference#subagentpromptcachettl) 設定為 `1h`。API 以更高的費率計費 1 小時快取寫入。
+
+當扇出同時啟動多個匹配的代理時，Claude Code 會保留除第一個外的所有代理，直到第一個代理的回應開始，然後一起釋放保留的代理，以便它們的第一個請求讀取共享前綴，而不是每個都未快取地處理它。Claude Code 將保留時間上限設定為 [`CLAUDE_CODE_WORKFLOW_PREFIX_STAGGER_MS`](/docs/zh-TW/env-vars) 毫秒，預設為 `5000`。將其設定為 `0` 以停用保留。
 
 <h3 id="behavior-and-limits">
   行為和限制
@@ -321,12 +401,15 @@ return audits.filter(Boolean)
 
 執行時期應用以下約束：
 
-| 約束                           | 為什麼                                        |
-| :--------------------------- | :----------------------------------------- |
-| 無中途使用者輸入                     | 只有代理權限提示可以暫停執行。對於階段之間的簽核，將每個階段作為其自己的工作流程執行 |
-| 無來自工作流程本身的直接檔案系統或 shell 存取   | 代理讀取、寫入和執行命令。指令碼協調代理                       |
-| 最多 16 個並行代理，在 CPU 核心有限的機器上更少 | 限制本地資源使用                                   |
-| 每次執行 1,000 個代理               | 防止失控迴圈                                     |
+| 約束                                                                                                                                                                                      | 為什麼                                                                                     |
+| :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------- |
+| 無中途使用者輸入                                                                                                                                                                                | 執行只會因代理權限提示和[使用量限制等待](#when-a-run-hits-your-usage-limit)而暫停。對於階段之間的簽核，將每個階段作為其自己的工作流程執行 |
+| 無來自工作流程本身的直接檔案系統或 shell 存取                                                                                                                                                              | 代理讀取、寫入和執行命令。指令碼協調代理                                                                    |
+| 無模組載入：包含 `import()` 的指令碼在執行開始前會失敗                                                                                                                                                       | 指令碼主體是純 JavaScript。將需要程式庫的工作放在代理的任務中                                                    |
+| 最多 16 個並行代理，在 Claude Code 可用 CPU 較少時更少，包括在 CPU 受限的容器內。若要變更限制，請將 [`CLAUDE_CODE_WORKFLOW_MAX_CONCURRENT_AGENTS`](/docs/zh-TW/env-vars#variables) 設定為 1 到 256 的值，這需要 Claude Code v2.1.269 或更新版本 | 限制本地資源使用                                                                                |
+| 在扇出中，共享第一個代理提示快取前綴的代理預設在其後最多啟動 5 秒                                                                                                                                                      | 除第一個外的所有代理都讀取[第一個代理快取的前綴](#prompt-caching-in-a-fan-out)，而不是每個都未快取地處理它                   |
+| 單一 `parallel()` 或 `pipeline()` 呼叫中最多 4,096 個項目：執行時期會以錯誤拒絕更長的清單                                                                                                                          | 無聲上限會在不告知指令碼的情況下丟棄部分工作負載                                                                |
+| 每次執行 1,000 個代理                                                                                                                                                                          | 防止失控迴圈                                                                                  |
 
 <h2 id="manage-runs">
   管理執行
@@ -334,48 +417,88 @@ return audits.filter(Boolean)
 
 執行啟動後，您從 `/workflows` 檢視或通過展開輸入框下方任務面板中的進度線來管理它。
 
+當您停止執行時，它會保留在任務面板中，而其任何代理的程序仍在執行。如果您再次停止它，Claude Code 會重新向這些程序發送信號。
+
 <h3 id="resume-after-a-pause">
   暫停後恢復
 </h3>
 
-如果您停止執行，您可以恢復它：已完成的代理返回其快取結果，其餘的實時執行。當您停止時仍在執行的代理不會被保存，並在恢復時重新開始，因此將工作分散到許多小代理的工作流程比一個長代理保留更多進度。從 `/workflows` 恢復暫停的執行，方法是選擇它並按 `p`，或要求 Claude 使用相同指令碼重新啟動工作流程。
+從 `/workflows` 恢復暫停的執行，方法是選擇它並按 `p`。對於您停止的執行，要求 Claude 使用相同指令碼重新啟動工作流程。如果已停止執行中的代理尚未退出，Claude Code 會拒絕重新啟動，直到它們退出為止，因此這些代理的第二個副本無法與它們並行執行。
 
-恢復在同一 Claude Code 工作階段內工作。如果您在工作流程執行時退出 Claude Code，下一個工作階段將重新啟動工作流程。
+Claude Code 按代理啟動的順序重新執行該執行，每個代理要麼返回其已保存的結果，要麼再次執行：
+
+* **已完成**：返回其已保存的結果。第一個提示與前次執行不同的代理（因為您編輯了指令碼或較早的代理返回了不同的內容）會再次執行，之後的每個代理也會執行，即使是已完成的代理。
+* **停止時仍在執行**：重新開始。停止整個執行不會將任何代理計為失敗。
+* **失敗**：再次執行，之後啟動的每個代理也會執行，即使是已完成的代理。通過在 [`/workflows`](#watch-the-run) 中選擇代理並按 `x` 來單獨停止一個代理，會將其計為失敗。
+
+最後一種情況意味著中間的失敗會重新執行已完成的工作。如果指令碼按該順序啟動 A、B、C 和 D，並且 B 失敗，重新啟動會從快取返回 A 並再次執行 B、C 和 D。
+
+您可以在同一 Claude Code 工作階段內恢復執行。當您離開工作階段時，執行中的工作流程會發生什麼取決於您如何離開：
+
+* 如果您[將工作階段放在背景](/docs/zh-TW/agent-view#what-carries-over-when-you-background)，Claude Code 會在背景工作階段中以相同方式重新執行該執行並繼續它。
+* 如果您在工作流程執行時退出 Claude Code 並且[代理檢視已開啟](/docs/zh-TW/agent-view#from-inside-a-session)，退出對話框會提供 `Move to background and exit`，它以相同方式帶過該執行。如果您改為選擇 `Exit and stop tasks`，或未提供該選項，執行會隨工作階段停止。Claude Code 將執行的已保存結果保留在 `~/.claude/projects/` 中該工作階段的目錄下，因此您使用 `claude --resume` 恢復的工作階段可以在您要求 Claude 重新啟動工作流程時重新執行它們。在您全新啟動的工作階段中，Claude 沒有較早的執行可重新啟動，並將工作流程作為新執行啟動。
+
+在[雲端工作階段](/docs/zh-TW/claude-code-on-the-web)中，Claude Code 也會將執行的結果與工作階段的對話歷史記錄一起保存，當工作階段的 VM 被回收時，這些結果會保留。當您[重新開啟此類工作階段](/docs/zh-TW/claude-code-on-the-web#environment-expired)並要求 Claude 重新啟動工作流程時，已完成的代理仍會返回其已保存的結果。
+
+在本地和雲端工作階段中，當 Claude 重新啟動較早的執行並且 Claude Code 根本找不到該執行的已保存結果時，重新啟動會失敗並出現 `nothing to resume` 錯誤，而不是自動啟動執行。要求 Claude 將工作流程作為新執行啟動。
+
+<h3 id="when-a-run-hits-your-usage-limit">
+  當執行達到您的使用限制時
+</h3>
+
+當代理達到您的 claude.ai [使用限制](/docs/zh-TW/interactive-mode#wait-for-a-usage-limit-to-reset)時，執行會暫停而不是該代理失敗：達到限制的代理會等待重設，並且不會啟動新代理。限制重設後不久，等待中的代理會再次執行，執行會自動繼續。需要 Claude Code v2.1.271 或更新版本；在較早版本上，受影響的代理會失敗。
+
+執行等待時，任務面板中的進度線和 [`/workflows`](#watch-the-run) 標題會顯示限制何時重設。
+
+執行只在以下所有情況成立時暫停；當其中一個不成立時，受影響的代理會改為失敗：
+
+* 工作階段是互動式的，並使用 claude.ai 訂閱登入。執行不會在[非互動模式](/docs/zh-TW/headless)中使用 `claude -p` 或 [Agent SDK](/docs/zh-TW/agent-sdk/overview) 暫停，在[背景工作階段](/docs/zh-TW/agent-view)中，或在[遠端控制](/docs/zh-TW/remote-control)或[代理團隊](/docs/zh-TW/agent-teams)隊友工作階段中。
+* [`autoContinueAtUsageLimit`](/docs/zh-TW/settings-reference#autocontinueatusagelimit) 已開啟，這是允許工作階段本身[等待使用限制重設](/docs/zh-TW/interactive-mode#wait-for-a-usage-limit-to-reset)的相同設定。如果您在等待期間關閉它，等待會結束，等待中的代理會失敗。
+* 限制在 24 小時內重設。每週限制可能會更晚重設。
+* 執行尚未已等待兩次。當它第三次達到限制時，代理會失敗。
 
 <h3 id="cost">
   成本
 </h3>
 
-工作流程生成許多代理，因此單次執行可以使用比在對話中完成相同任務更多的令牌。執行計入您的方案使用量和速率限制，如任何其他工作階段。
+工作流程生成許多代理，因此單次執行可以使用比在對話中完成相同任務更多的令牌。執行計入您的方案使用量和速率限制。
 
-為了在提交大型任務前評估支出，請先在小片段上執行工作流程：一個目錄而不是整個儲存庫，或一個狹隘的問題而不是廣泛的問題。`/workflows` 檢視顯示每個代理的令牌使用量，隨著執行進行，您可以隨時在那裡停止執行而不會丟失已完成的工作。執行時間的[代理上限](#behavior-and-limits)限制單次執行可以生成多少個代理，這限制了失控指令碼的成本。要保持每次執行預設較小，請在 `/config` 中[設定大小指南](#set-a-size-guideline)。
+為了在提交大型任務前評估支出，請先在小片段上執行工作流程：一個目錄而不是整個儲存庫，或一個狹隘的問題而不是廣泛的問題。`/workflows` 檢視顯示每個代理的令牌使用量，隨著執行進行，您可以隨時在那裡停止執行，通常不會丟失已完成的工作。[暫停後恢復](#resume-after-a-pause)涵蓋已停止的執行保留的內容。執行時間的[代理上限](#behavior-and-limits)限制單次執行可以生成多少個代理，這限制了失控指令碼的成本。要保持執行為較少的代理，請選擇 `small`[大小指南](#set-a-size-guideline)。
 
-Claude Code 也會標記異常增長的執行。當工作流程排程超過 25 個代理，或其預計令牌總數超過 150 萬時，輸入框下方任務面板中的進度線會顯示 `Large workflow` 警告。警告指向您可以停止執行的 [`/workflows`](#watch-the-run)。需要 Claude Code v2.1.203 或更新版本。
+Claude Code 也會標記異常增長的執行。當工作流程排程超過 25 個代理，或其預計令牌總數超過 150 萬時，輸入框下方任務面板中的進度線會顯示 `Large workflow` 警告。警告指向您可以停止執行的 [`/workflows`](#watch-the-run)。
 
 警告是建議性的：它不會暫停或限制執行。當您看到它時，有兩個設定會改變：
 
-* 如果您[設定大小指南](#set-a-size-guideline)，指南的代理計數會取代 25 個代理的閾值。
+* 如果您自己選擇[大小指南](#set-a-size-guideline)，其代理計數會取代 25 個代理的閾值。內建預設指南將閾值保留在 25。
 * 啟用[ultracode](#let-claude-decide-with-ultracode) 的工作階段不會顯示警告，因為啟用 ultracode 已經讓您選擇加入大型執行。
 
-工作流程中的每個代理使用您的工作階段模型，除非指令碼將階段路由到不同的模型，或設定了 [`CLAUDE_CODE_SUBAGENT_MODEL`](/docs/zh-TW/model-config#environment-variables) 環境變數，這會覆蓋兩者。要控制模型成本：
+Claude Code 按照它用於子代理的相同[順序選擇每個工作流程代理的模型](/docs/zh-TW/sub-agents#choose-a-model)。指令碼為階段命名的模型在該順序中計為每次調用模型。當沒有其他內容分配模型時，代理在您的工作階段模型上執行。
+
+要控制模型成本：
 
 * 在大型執行前檢查 `/model`，如果您通常為日常工作切換到較小的模型
 * 當您描述任務時，要求 Claude 為不需要最強模型的階段使用較小的模型
+
+當您組織的 [`availableModels` 允許清單](/docs/zh-TW/model-config#restrict-model-selection)阻止指令碼為代理請求的模型時，該代理會改為在替代模型上執行，遵循與子代理相同的[替代規則](/docs/zh-TW/sub-agents#choose-a-model)。[`/workflows`](#watch-the-run) 中的執行進度檢視會顯示一個警告，命名請求的和替代的模型。
 
 <h3 id="set-a-size-guideline">
   設定大小指南
 </h3>
 
-`/config` 中的 Dynamic workflow size 設定保持 Claude 編寫的工作流程預設為較小規模。Claude Code 將設定作為建議發送給 Claude，因此呼叫不同規模的提示仍會覆蓋它。需要 Claude Code v2.1.202 或更新版本。
+大小指南告訴 Claude 在編寫動態工作流程時應該針對多少個代理。Claude Code 將指南作為建議而不是上限發送給 Claude，因此呼叫不同規模的提示仍會覆蓋它。需要 Claude Code v2.1.202 或更新版本。
 
-每個值設定 Claude 在其編寫的指令碼中目標的代理計數。
+每個值對應一個代理計數：
 
-| 值              | 發送給 Claude 的指南 |
-| :------------- | :------------- |
-| `unrestricted` | 無指南。這是預設值。     |
-| `small`        | 目標少於 5 個代理。    |
-| `medium`       | 目標少於 15 個代理。   |
-| `large`        | 目標少於 50 個代理。   |
+| 值              | Claude 目標的代理計數          |
+| :------------- | :---------------------- |
+| `unrestricted` | 無指南：Claude 根據任務調整工作流程大小 |
+| `small`        | 少於 5 個代理                |
+| `medium`       | 少於 10 個代理               |
+| `large`        | 少於 50 個代理               |
+
+預設值為 `medium`，或當您使用 Claude Code v2.1.271 或更新版本登入 Pro 方案時為 `small`。在您選擇值之前，`/config` 列會將值標記為預設值，工作流程的 `Running in background` 列會命名生效的大小。需要 Claude Code v2.1.219 或更新版本；較早版本預設為 `unrestricted`。
+
+要變更指南，在 `/config` 中為 Dynamic workflow size 設定選擇一個值，或執行 `/config workflowSizeGuideline=small`。在 v2.1.219 及更新版本上，您也可以在任何設定檔中設定 [`workflowSizeGuideline` 鍵](/docs/zh-TW/settings-reference#workflowsizeguideline)；該值優先於 `/config`，而當設定檔提供一個時，Claude Code 會隱藏 `/config` 列。
 
 變更在下一個提示時生效。[執行時間代理上限](#behavior-and-limits)仍然適用，無論設定如何。
 
@@ -393,7 +516,7 @@ Claude Code 也會標記異常增長的執行。當工作流程排程超過 25 �
 
 要為整個組織關閉工作流程，在[受管設定](/docs/zh-TW/server-managed-settings)中設定 `"disableWorkflows": true`，或使用 [Claude Code 管理員設定](https://claude.ai/admin-settings/claude-code)頁面上的切換。
 
-禁用工作流程時，捆綁的工作流程命令不可用，`ultracode` 關鍵字不再觸發執行，`ultracode` 從 `/effort` 功能表中移除。
+禁用工作流程時，捆綁的工作流程命令和 `/workflow-authoring` 技能不可用，`ultracode` 關鍵字不再觸發執行，`ultracode` 從 `/effort` 功能表中移除。
 
 <h2 id="related-resources">
   相關資源

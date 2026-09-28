@@ -19,7 +19,7 @@ Gunakan Agent SDK untuk membangun agen AI yang membaca kode Anda, menemukan bug,
 </h2>
 
 * **Node.js 18+** atau **Python 3.10+**
-* Akun **Anthropic** ([daftar di sini](https://platform.claude.com/))
+* Akun **Anthropic**. Jika Anda belum memilikinya, [daftar di sini](https://platform.claude.com/).
 
 <h2 id="setup">
   Penyiapan
@@ -49,7 +49,7 @@ Gunakan Agent SDK untuk membangun agen AI yang membaca kode Anda, menemukan bug,
         npm install --save-dev tsx
         ```
 
-        Mengatur `"type": "module"` di `package.json` memungkinkan skrip agen Anda menggunakan `await` tingkat atas, dan [tsx](https://tsx.is) menjalankan file TypeScript secara langsung.
+        Mengatur `"type": "module"` di `package.json` memungkinkan skrip agen Anda menggunakan `await` tingkat atas, dan [tsx](https://tsx.hirok.io) menjalankan file TypeScript secara langsung. npm mencetak `added N packages` ketika instalasi berhasil.
       </Tab>
 
       <Tab title="TypeScript (proyek yang ada)">
@@ -58,11 +58,11 @@ Gunakan Agent SDK untuk membangun agen AI yang membaca kode Anda, menemukan bug,
         npm install --save-dev tsx
         ```
 
-        [tsx](https://tsx.is) menjalankan file TypeScript secara langsung. Jika proyek Anda menggunakan CommonJS, beri nama skrip agen Anda `agent.mts` alih-alih `agent.ts`. Ekstensi `.mts` membuat tsx memperlakukan file sebagai modul ES, sehingga `await` tingkat atas berfungsi tanpa mengonversi seluruh proyek Anda ke modul ES. Gunakan `agent.mts` sebagai pengganti `agent.ts` dalam langkah buat dan jalankan nanti dalam panduan cepat ini.
+        [tsx](https://tsx.hirok.io) menjalankan file TypeScript secara langsung. Jika proyek Anda menggunakan CommonJS, beri nama skrip agen Anda `agent.mts` alih-alih `agent.ts`. Ekstensi `.mts` membuat tsx memperlakukan file sebagai modul ES, sehingga `await` tingkat atas berfungsi tanpa mengonversi seluruh proyek Anda ke modul ES. Gunakan `agent.mts` sebagai pengganti `agent.ts` dalam langkah buat dan jalankan nanti dalam panduan cepat ini.
       </Tab>
 
       <Tab title="Python (uv)">
-        [uv](https://docs.astral.sh/uv/) adalah pengelola paket Python yang cepat yang menangani lingkungan virtual secara otomatis:
+        [Instal uv](https://docs.astral.sh/uv/), pengelola paket Python yang cepat yang menangani lingkungan virtual secara otomatis. Kemudian inisialisasi proyek dan tambahkan SDK:
 
         ```bash theme={null}
         uv init
@@ -94,7 +94,10 @@ Gunakan Agent SDK untuk membangun agen AI yang membaca kode Anda, menemukan bug,
     </Tabs>
 
     <Note>
-      TypeScript SDK menggabungkan biner Claude Code asli untuk platform Anda sebagai dependensi opsional, jadi Anda tidak perlu menginstal Claude Code secara terpisah.
+      Baik SDK TypeScript maupun Python menggabungkan biner Claude Code asli, jadi sebagian besar instalasi tidak memerlukan instalasi Claude Code terpisah. Beberapa instalasi tidak memiliki biner yang digabungkan:
+
+      * Jika pip menginstal distribusi sumber SDK Python alih-alih roda platform, misalnya di ARM64 Windows, tidak ada biner yang digabungkan. [Instal Claude Code secara native](/docs/id/setup#install-claude-code). SDK Python menemukannya di `PATH` Anda.
+      * SDK TypeScript menginstal binernya melalui dependensi opsional npm, jadi instalasi yang melewatkannya, misalnya `npm ci --omit=optional`, tidak mendapatkan biner bahkan di platform yang didukung. Instal ulang tanpa melewatkan dependensi opsional, atau [instal Claude Code secara native](/docs/id/setup#install-claude-code) dan atur `pathToClaudeCodeExecutable` ke jalurnya.
     </Note>
   </Step>
 
@@ -122,7 +125,7 @@ Gunakan Agent SDK untuk membangun agen AI yang membaca kode Anda, menemukan bug,
     * **Amazon Bedrock**: atur variabel lingkungan `CLAUDE_CODE_USE_BEDROCK=1` dan konfigurasikan kredensial AWS
     * **Claude Platform on AWS**: atur `CLAUDE_CODE_USE_ANTHROPIC_AWS=1` dan `ANTHROPIC_AWS_WORKSPACE_ID`, kemudian konfigurasikan kredensial AWS
     * **Google Cloud's Agent Platform**: atur variabel lingkungan `CLAUDE_CODE_USE_VERTEX=1` dan konfigurasikan kredensial Google Cloud
-    * **Microsoft Azure**: atur variabel lingkungan `CLAUDE_CODE_USE_FOUNDRY=1` dan konfigurasikan kredensial Azure
+    * **Microsoft Foundry**: atur variabel lingkungan `CLAUDE_CODE_USE_FOUNDRY=1` dan konfigurasikan kredensial Azure
 
     Lihat panduan penyiapan untuk [Amazon Bedrock](/docs/id/amazon-bedrock), [Claude Platform on AWS](/docs/id/claude-platform-on-aws), [Google Cloud's Agent Platform](/docs/id/google-vertex-ai), atau [Microsoft Foundry](/docs/id/microsoft-foundry) untuk detail selengkapnya.
 
@@ -225,7 +228,7 @@ Kode ini memiliki tiga bagian utama:
 
 3. **`options`**: konfigurasi untuk agen. Contoh ini menggunakan `allowedTools` untuk pra-persetujuan `Read`, `Edit`, dan `Glob`, dan `permissionMode: "acceptEdits"` untuk auto-persetujuan perubahan file. Opsi lainnya termasuk `systemPrompt`, `mcpServers`, dan lainnya. Lihat semua opsi untuk [Python](/docs/id/agent-sdk/python#claudeagentoptions) atau [TypeScript](/docs/id/agent-sdk/typescript#options).
 
-Loop `async for` terus berjalan saat Claude berpikir, memanggil alat, mengamati hasil, dan memutuskan apa yang harus dilakukan selanjutnya. Setiap iterasi menghasilkan pesan: penalaran Claude, panggilan alat, hasil alat, atau hasil akhir. SDK menangani orkestrasi (eksekusi alat, manajemen konteks, percobaan ulang) sehingga Anda hanya mengonsumsi aliran. Loop berakhir ketika Claude menyelesaikan tugas atau mengalami kesalahan.
+Loop `async for` terus berjalan saat Claude berpikir, memanggil alat, mengamati hasil, dan memutuskan apa yang harus dilakukan selanjutnya. Setiap iterasi menghasilkan pesan: penalaran Claude, panggilan alat, hasil alat, atau hasil akhir. SDK menangani orkestrasi, eksekusi alat, manajemen konteks, dan percobaan ulang, sehingga Anda mengonsumsi aliran. Loop berakhir ketika Claude menyelesaikan tugas atau mengalami kesalahan.
 
 Penanganan pesan di dalam loop memfilter output yang dapat dibaca manusia. Tanpa penyaringan, Anda akan melihat objek pesan mentah termasuk inisialisasi sistem dan status internal, yang berguna untuk debugging tetapi berisik sebaliknya.
 
@@ -272,7 +275,9 @@ Saat bekerja, agen mencetak penalarannya dan setiap alat yang dipanggilnya, diak
 Inilah yang membuat Agent SDK berbeda: Claude menjalankan alat secara langsung alih-alih meminta Anda untuk mengimplementasikannya.
 
 <Note>
-  Jika Anda melihat "API key not found", pastikan Anda telah menetapkan variabel lingkungan `ANTHROPIC_API_KEY` di shell tempat Anda menjalankan agen Anda. SDK tidak memuat file `.env` secara otomatis. Lihat [panduan pemecahan masalah lengkap](/docs/id/troubleshooting) untuk bantuan lebih lanjut.
+  Jika Anda melihat kesalahan autentikasi seperti `Not logged in` atau `Invalid API key`, pastikan Anda telah menetapkan variabel lingkungan `ANTHROPIC_API_KEY` di shell tempat Anda menjalankan agen Anda. SDK tidak memuat file `.env` secara otomatis.
+
+  Untuk penyebab dan perbaikan di balik kesalahan autentikasi ini dan kesalahan lainnya, lihat [Kesalahan autentikasi](/docs/id/errors#authentication-errors) dalam referensi Kesalahan.
 </Note>
 
 <h3 id="try-other-prompts">
@@ -353,6 +358,8 @@ Anda dapat mengubah perilaku agen dengan mengubah opsi. Berikut adalah beberapa 
 
 Dengan `Bash` diaktifkan, coba: `"Write unit tests for utils.py, run them, and fix any failures"`
 
+Setiap snippet ini menetapkan bidang pada objek opsi yang sama. Untuk informasi lebih lanjut, lihat [Konfigurasi agen Anda](/docs/id/agent-sdk/configuration).
+
 <h2 id="key-concepts">
   Konsep kunci
 </h2>
@@ -365,18 +372,7 @@ Dengan `Bash` diaktifkan, coba: `"Write unit tests for utils.py, run them, and f
 | `Read`, `Edit`, `Glob`                 | Analisis dan modifikasi kode  |
 | `Read`, `Edit`, `Bash`, `Glob`, `Grep` | Otomasi penuh                 |
 
-**Permission modes** mengontrol berapa banyak pengawasan manusia yang Anda inginkan:
-
-| Mode                | Perilaku                                                                                                                                                                                                                                                                                                 | Kasus penggunaan                                     |
-| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
-| `acceptEdits`       | Auto-persetujuan pengeditan file dan perintah sistem file umum, meminta tindakan lain                                                                                                                                                                                                                    | Alur kerja pengembangan terpercaya                   |
-| `plan`              | Menjalankan alat hanya-baca; pengeditan file tidak pernah auto-disetujui dan mencapai callback `canUseTool` Anda                                                                                                                                                                                         | Menentukan cakupan tugas sebelum menyetujui eksekusi |
-| `dontAsk`           | Menolak apa pun yang tidak ada di `allowedTools`; connector tools [organisasi Anda atur ke `ask`](/docs/id/mcp#organization-controls-on-connector-tools) dan tools yang memerlukan interaksi pengguna ditolak bahkan jika Anda telah mencantumkannya                                                          | Agen headless terkunci                               |
-| `auto`              | Pengklasifikasi model menyetujui atau menolak setiap panggilan alat                                                                                                                                                                                                                                      | Agen otonom dengan penjaga keamanan                  |
-| `bypassPermissions` | Menjalankan setiap alat tanpa prompt, kecuali tools yang cocok dengan aturan [`ask`](/docs/id/agent-sdk/permissions#how-permissions-are-evaluated) eksplisit, connector tools [organisasi Anda atur ke `ask`](/docs/id/mcp#organization-controls-on-connector-tools), dan tools yang memerlukan interaksi pengguna | CI sandboxed, lingkungan yang sepenuhnya terpercaya  |
-| `default`           | Memerlukan callback `canUseTool` untuk menangani persetujuan                                                                                                                                                                                                                                             | Alur persetujuan kustom                              |
-
-Contoh di atas menggunakan mode `acceptEdits`, yang auto-persetujuan operasi file sehingga agen dapat berjalan tanpa prompt interaktif. Jika Anda ingin meminta pengguna untuk persetujuan, gunakan mode `default` dan sediakan callback [`canUseTool`](/docs/id/agent-sdk/user-input) yang mengumpulkan input pengguna. Untuk kontrol lebih lanjut, lihat [Permissions](/docs/id/agent-sdk/permissions).
+**Permission modes** mengontrol berapa banyak pengawasan manusia yang Anda inginkan. SDK mengevaluasi mode aktif bersama dengan aturan allow dan deny Anda dalam urutan tetap, dijelaskan dalam [Bagaimana izin dievaluasi](/docs/id/agent-sdk/permissions#how-permissions-are-evaluated). Untuk daftar lengkap mode, perilakunya, dan kapan menggunakan masing-masing, lihat [Permission mode dalam Bagaimana agent loop bekerja](/docs/id/agent-sdk/agent-loop#permission-mode).
 
 <h2 id="next-steps">
   Langkah berikutnya
@@ -384,9 +380,11 @@ Contoh di atas menggunakan mode `acceptEdits`, yang auto-persetujuan operasi fil
 
 Sekarang Anda telah membuat agen pertama Anda, pelajari cara memperluas kemampuannya dan menyesuaikannya dengan kasus penggunaan Anda:
 
+* **[Konfigurasi agen Anda](/docs/id/agent-sdk/configuration)**: susun objek opsi dan temukan halaman yang mencakup setiap pengaturan
 * **[Permissions](/docs/id/agent-sdk/permissions)**: kontrol apa yang dapat dilakukan agen Anda dan kapan memerlukan persetujuan
 * **[Hooks](/docs/id/agent-sdk/hooks)**: jalankan kode kustom sebelum atau sesudah panggilan alat
 * **[Sessions](/docs/id/agent-sdk/sessions)**: bangun agen multi-turn yang mempertahankan konteks
 * **[MCP servers](/docs/id/agent-sdk/mcp)**: terhubung ke database, browser, API, dan sistem eksternal lainnya
 * **[Hosting](/docs/id/agent-sdk/hosting)**: sebarkan agen ke Docker, cloud, dan CI/CD
 * **[Example agents](https://github.com/anthropics/claude-agent-sdk-demos)**: lihat contoh lengkap: asisten email, agen penelitian, dan lainnya
+* **[Troubleshooting](/docs/id/agent-sdk/troubleshooting)**: perbaiki kesalahan ketika CLI gagal dimulai atau keluar, atau hasil tiba tanpa output terstruktur

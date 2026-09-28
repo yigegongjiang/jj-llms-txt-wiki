@@ -626,13 +626,14 @@ export const PromptLibrary = ({text = {}, labels = {}, tagLabels = {}, phaseLabe
       return base + (href.startsWith('/en/') ? '/' + locale + href.slice(3) : href);
     };
   }, []);
+  const SAFE_HREF = /^(\/(?![\/\\\s])|#|https?:\/\/)/;
   const linkify = s => {
     const out = [];
     let last = 0;
     const re = /\[([^\]]+)\]\(([^)]+)\)/g;
     for (let m; m = re.exec(s); ) {
       if (m.index > last) out.push(s.slice(last, m.index));
-      out.push(<a key={m.index} href={doc(m[2])}>{m[1]}</a>);
+      out.push(SAFE_HREF.test(m[2]) ? <a key={m.index} href={doc(m[2])}>{m[1]}</a> : m[1]);
       last = re.lastIndex;
     }
     if (last < s.length) out.push(s.slice(last));
@@ -776,7 +777,7 @@ export const PromptLibrary = ({text = {}, labels = {}, tagLabels = {}, phaseLabe
             </div>
             <div className="pl-label">{L.whyWorks}</div>
             <div className="pl-teaches">{linkify(p.teaches)}</div>
-            {p.nextHref && p.next && <div className="pl-next">
+            {p.nextHref && p.next && SAFE_HREF.test(p.nextHref) && <div className="pl-next">
                 <span className="pl-next-label">{L.makeItStick}</span>
                 <a href={doc(p.nextHref)}>{codeify(p.next)} →</a>
               </div>}
@@ -1202,7 +1203,7 @@ export const text = {
   },
   "migrate-a-pattern-across": {
     title: "在程式碼庫中遷移模式",
-    teaches: "描述舊模式和新模式。要求 Claude 首先識別每個位置意味著呼叫網站在回應中列出，以便您可以檢查是否未遺漏任何內容。"
+    teaches: "描述舊模式和新模式。要求 Claude 首先識別每個位置意味著呼叫網站在回應中列出，以便您可以檢查是否未遺漏任何內容。對於跨許多檔案的遷移，執行 [/batch](/docs/zh-TW/commands)。Claude 將工作分成單位供您批准，然後背景子代理進行變更。"
   },
   "optimize-against-a-measurable": {
     title: "針對可測量目標進行最佳化",
@@ -1222,7 +1223,7 @@ export const text = {
   "review-a-pull-request": {
     title: "審查拉取請求",
     teaches: "Claude 在整個程式碼庫的背景下進行審查，而不僅僅是差異。它讀取已變更的程式碼及其呼叫的內容，因此它會捕捉僅差異審查會遺漏的問題。",
-    next: "使用程式碼審查為每個 PR 開啟此功能"
+    next: "在一個命令中執行 `/code-review <pr#>`，或為每個 PR 開啟程式碼審查"
   },
   "review-infrastructure-changes-before": {
     title: "在應用前審查基礎結構變更",
@@ -1337,37 +1338,37 @@ export const text = {
 
 **描述結果，而不是步驟。** 說出您想要的內容，讓 Claude 找到檔案。下面的提示詞無需命名單個檔案路徑即可運作。
 
-```text theme={null}
+```text wrap theme={null}
 add rate limiting to the public API and make sure existing tests still pass
 ```
 
-**給它一種檢查自己工作的方式。** 在同一提示詞中要求執行、測試、比較或驗證，以便 Claude 進行迭代，而不是在一次嘗試後停止。
+**給它一種檢查自己工作的方式。** 在同一提示詞中要求執行、測試、比較或驗證，以便 Claude 進行迭代，而不是在一次嘗試後停止。若要檢查完成的變更與執行中的應用程式，請執行 [`/verify`](/docs/zh-TW/skills#run-and-verify-your-app)。
 
-```text theme={null}
+```text wrap theme={null}
 write the migration, run it against the dev database, and confirm the schema matches
 ```
 
 **指向參考。** 命名現有檔案、測試或模式以符合，以便新程式碼與您已有的內容一致。
 
-```text theme={null}
+```text wrap theme={null}
 add a settings page that follows the same layout as the profile page
 ```
 
 **說明可測量的目標。** 當目標是效能或涵蓋範圍時，提供指標和閾值，以便完成是明確的。
 
-```text theme={null}
+```text wrap theme={null}
 get the bundle size under 200KB and show me what you removed
 ```
 
 **給它工件。** 直接在提示詞中貼上錯誤、日誌、螢幕截圖和計畫輸出，或輸入 `@` 以參考檔案。Claude 讀取來源而不是您對它的描述。
 
-```text theme={null}
+```text wrap theme={null}
 why is the build failing? @build.log
 ```
 
 **說出您想要答案的方式。** 命名格式、長度或受眾，以便解釋適合您使用它的方式。若要為每個回應設定預設格式，請設定 [輸出樣式](/docs/zh-TW/output-styles)。
 
-```text theme={null}
+```text wrap theme={null}
 explain how the payment retry logic works as an HTML page with a diagram, then open it in my browser
 ```
 
@@ -1384,7 +1385,7 @@ explain how the payment retry logic works as an HTML page with a diagram, then o
 * [Anthropic 團隊如何使用 Claude Code](https://claude.com/blog/how-anthropic-teams-use-claude-code)：來自工程、產品、設計和資料團隊的真實工作流程，深入探討[法律](https://claude.com/blog/how-anthropic-uses-claude-legal)、[行銷](https://claude.com/blog/how-anthropic-uses-claude-marketing)和[網路安全](https://claude.com/blog/how-anthropic-uses-claude-cybersecurity)
 * [擴展代理編碼指南](https://resources.anthropic.com/hubfs/Scaling%20agentic%20coding%20across%20your%20organization.pdf)：企業採用指南
 
-如需這些模式的影片演練，請參閱 Anthropic Academy 上的免費 [Claude Code in Action](https://anthropic.skilljar.com/claude-code-in-action) 課程。
+如需這些模式的影片演練，請參閱 [Claude Academy](https://academy.claude.com/) 上的免費 [Claude Code in Action](https://academy.claude.com/courses/claude-code-in-action) 課程。
 
 <h2 id="related-resources">
   相關資源

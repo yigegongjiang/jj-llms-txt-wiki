@@ -12,10 +12,8 @@
 
 Claude Agent SDK mendukung dua mode input yang berbeda untuk berinteraksi dengan agen:
 
-* **Streaming Input Mode** (Default & Direkomendasikan) - Sesi interaktif yang persisten
-* **Single Message Input** - Kueri sekali jalan yang menggunakan status sesi dan melanjutkan
-
-Panduan ini menjelaskan perbedaan, manfaat, dan kasus penggunaan untuk setiap mode untuk membantu Anda memilih pendekatan yang tepat untuk aplikasi Anda.
+* **Streaming Input Mode**: sesi interaktif yang persisten
+* **Single Message Input**: kueri sekali jalan yang menggunakan status sesi dan melanjutkan
 
 <h2 id="streaming-input-mode-recommended">
   Streaming Input Mode (Direkomendasikan)
@@ -25,75 +23,23 @@ Streaming input mode adalah cara yang **lebih disukai** untuk menggunakan Claude
 
 Mode ini memungkinkan agen beroperasi sebagai proses yang berumur panjang yang menerima input pengguna, menangani gangguan, menampilkan permintaan izin, dan menangani manajemen sesi.
 
-<h3 id="how-it-works">
-  Cara Kerjanya
-</h3>
-
-```mermaid theme={null}
-sequenceDiagram
-    participant App as Your Application
-    participant Agent as Claude Agent
-    participant Tools as Tools/Hooks
-    participant FS as Environment/<br/>File System
-
-    App->>Agent: Initialize with AsyncGenerator
-    activate Agent
-
-    App->>Agent: Yield Message 1
-    Agent->>Tools: Execute tools
-    Tools->>FS: Read files
-    FS-->>Tools: File contents
-    Tools->>FS: Write/Edit files
-    FS-->>Tools: Success/Error
-    Agent-->>App: Stream partial response
-    Agent-->>App: Stream more content...
-    Agent->>App: Complete Message 1
-
-    App->>Agent: Yield Message 2 + Image
-    Agent->>Tools: Process image & execute
-    Tools->>FS: Access filesystem
-    FS-->>Tools: Operation results
-    Agent-->>App: Stream response 2
-
-    App->>Agent: Queue Message 3
-    App->>Agent: Interrupt/Cancel
-    Agent->>App: Handle interruption
-
-    Note over App,Agent: Session stays alive
-    Note over Tools,FS: Persistent file system<br/>state maintained
-
-    deactivate Agent
-```
-
 <h3 id="benefits">
   Manfaat
 </h3>
 
-<CardGroup cols={2}>
-  <Card title="Unggahan Gambar" icon="image">
-    Lampirkan gambar langsung ke pesan untuk analisis visual dan pemahaman
-  </Card>
+Dalam streaming input mode, Anda bekerja dalam sesi yang persisten dengan kemampuan berikut:
 
-  <Card title="Pesan Antrian" icon="stack">
-    Kirim beberapa pesan yang diproses secara berurutan, dengan kemampuan untuk mengganggu
-  </Card>
-
-  <Card title="Integrasi Tool" icon="wrench">
-    Akses penuh ke semua tools dan server MCP kustom selama sesi
-  </Card>
-
-  <Card title="Umpan Balik Real-time" icon="lightning">
-    Lihat respons saat dihasilkan, bukan hanya hasil akhir
-  </Card>
-
-  <Card title="Persistensi Konteks" icon="database">
-    Pertahankan konteks percakapan di beberapa giliran secara alami
-  </Card>
-</CardGroup>
+* **Unggahan gambar**: lampirkan gambar langsung ke pesan untuk analisis visual dan pemahaman
+* **Pesan antrian**: kirim beberapa pesan yang diproses secara berurutan, dengan kemampuan untuk mengganggu
+* **Integrasi tool**: akses penuh ke semua tools dan server MCP kustom selama sesi
+* **Umpan balik real-time**: lihat respons saat dihasilkan, bukan hanya hasil akhir
+* **Persistensi konteks**: pertahankan konteks percakapan di beberapa giliran secara alami
 
 <h3 id="implementation-example">
   Contoh Implementasi
 </h3>
+
+Contoh-contoh ini membaca gambar bernama `diagram.png` dari direktori kerja. Buat satu di sana terlebih dahulu, atau ubah nama file untuk menunjuk ke gambar Anda sendiri.
 
 <CodeGroup>
   ```typescript TypeScript theme={null}
@@ -218,6 +164,8 @@ sequenceDiagram
   ```
 </CodeGroup>
 
+Ketika Anda menjalankan contoh, versi TypeScript mencetak setiap respons saat selesai. Loop `receive_response()` versi Python berakhir pada pesan hasil pertama, jadi mencetak analisis keamanan; untuk membaca kedua respons, gunakan satu pasangan `query()` dan `receive_response()` per pesan seperti yang ditunjukkan dalam [contoh referensi Python tentang melanjutkan percakapan](/docs/id/agent-sdk/python#example-continuing-a-conversation).
+
 <Note>
   Dalam TypeScript SDK, jika generator pesan Anda melempar kesalahan, misalnya ketika file yang dibacanya hilang, aliran berakhir dengan kesalahan yang berbunyi `Claude Code process aborted by user` alih-alih kesalahan asli, jadi periksa kode di dalam generator Anda terlebih dahulu ketika Anda melihat pesan itu. Kesalahan juga dapat didahului oleh baris minified panjang dari sumber SDK bundel, jadi baca hingga akhir output untuk teks kesalahan.
 
@@ -255,7 +203,7 @@ Gunakan single message input ketika:
 
 Jika kueri berakhir dengan hasil kesalahan, seperti `error_max_turns`, panggilan `query()` pesan tunggal akan memunculkan kesalahan yang mencakup teks kegagalan setelah menghasilkan pesan hasil akhir, jadi bungkus loop dalam blok try jika kode Anda perlu melanjutkan. Lihat [Handle the result](/docs/id/agent-sdk/agent-loop#handle-the-result) untuk subtipe hasil.
 
-<h3 id="implementation-example-1">
+<h3 id="implementation-example-2">
   Contoh Implementasi
 </h3>
 
@@ -264,29 +212,38 @@ Jika kueri berakhir dengan hasil kesalahan, seperti `error_max_turns`, panggilan
   import { query } from "@anthropic-ai/claude-agent-sdk";
 
   // Simple one-shot query
-  for await (const message of query({
-    prompt: "Explain the authentication flow",
-    options: {
-      maxTurns: 1,
-      allowedTools: ["Read", "Grep"]
+  // query() throws after an error result, such as error_max_turns
+  try {
+    for await (const message of query({
+      prompt: "Explain the authentication flow",
+      options: {
+        maxTurns: 5,
+        allowedTools: ["Read", "Grep"]
+      }
+    })) {
+      if (message.type === "result" && message.subtype === "success") {
+        console.log(message.result);
+      }
     }
-  })) {
-    if (message.type === "result" && message.subtype === "success") {
-      console.log(message.result);
-    }
+  } catch (error) {
+    console.error(`Query failed: ${error}`);
   }
 
   // Continue conversation with session management
-  for await (const message of query({
-    prompt: "Now explain the authorization process",
-    options: {
-      continue: true,
-      maxTurns: 1
+  try {
+    for await (const message of query({
+      prompt: "Now explain the authorization process",
+      options: {
+        continue: true,
+        maxTurns: 5
+      }
+    })) {
+      if (message.type === "result" && message.subtype === "success") {
+        console.log(message.result);
+      }
     }
-  })) {
-    if (message.type === "result" && message.subtype === "success") {
-      console.log(message.result);
-    }
+  } catch (error) {
+    console.error(`Query failed: ${error}`);
   }
   ```
 
@@ -297,22 +254,31 @@ Jika kueri berakhir dengan hasil kesalahan, seperti `error_max_turns`, panggilan
 
   async def single_message_example():
       # Simple one-shot query using query() function
-      async for message in query(
-          prompt="Explain the authentication flow",
-          options=ClaudeAgentOptions(max_turns=1, allowed_tools=["Read", "Grep"]),
-      ):
-          if isinstance(message, ResultMessage):
-              print(message.result)
+      # query() raises ResultError after an error result, such as error_max_turns
+      try:
+          async for message in query(
+              prompt="Explain the authentication flow",
+              options=ClaudeAgentOptions(max_turns=5, allowed_tools=["Read", "Grep"]),
+          ):
+              if isinstance(message, ResultMessage) and message.subtype == "success":
+                  print(message.result)
+      except Exception as e:
+          print(f"Query failed: {e}")
 
       # Continue conversation with session management
-      async for message in query(
-          prompt="Now explain the authorization process",
-          options=ClaudeAgentOptions(continue_conversation=True, max_turns=1),
-      ):
-          if isinstance(message, ResultMessage):
-              print(message.result)
+      try:
+          async for message in query(
+              prompt="Now explain the authorization process",
+              options=ClaudeAgentOptions(continue_conversation=True, max_turns=5),
+          ):
+              if isinstance(message, ResultMessage) and message.subtype == "success":
+                  print(message.result)
+      except Exception as e:
+          print(f"Query failed: {e}")
 
 
   asyncio.run(single_message_example())
   ```
 </CodeGroup>
+
+Ketika Anda menjalankan contoh, setiap kueri mencetak teks hasil akhirnya: pertama penjelasan autentikasi, kemudian penjelasan otorisasi.

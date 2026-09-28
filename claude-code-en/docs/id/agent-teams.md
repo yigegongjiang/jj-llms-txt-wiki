@@ -7,16 +7,12 @@
 > Koordinasikan beberapa instance Claude Code yang bekerja bersama sebagai tim, dengan tugas bersama, pesan antar-agent, dan manajemen terpusat.
 
 <Warning>
-  Tim agent bersifat eksperimental dan dinonaktifkan secara default. Aktifkan dengan menambahkan `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS` ke [settings.json](/docs/id/settings) atau environment Anda. Tanpa variabel tersebut, tidak ada tim yang diatur pada awal session, tidak ada direktori tim yang ditulis, dan Claude tidak menspawn atau mengusulkan rekan tim. Tim agent memiliki [keterbatasan yang diketahui](#limitations) seputar session resumption, koordinasi tugas, dan perilaku shutdown.
+  Tim agent bersifat eksperimental dan dinonaktifkan secara default. Aktifkan dengan menetapkan `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` di [settings.json](/docs/id/settings) atau environment Anda. Tanpa variabel tersebut, tidak ada tim yang diatur pada awal session, tidak ada direktori tim yang ditulis, dan Claude tidak menspawn atau mengusulkan rekan tim. Tim agent memiliki [keterbatasan yang diketahui](#limitations) seputar session resumption, koordinasi tugas, dan perilaku shutdown.
 </Warning>
 
-Tim agent memungkinkan Anda mengoordinasikan beberapa instance Claude Code yang bekerja bersama. Satu session bertindak sebagai team lead, mengoordinasikan pekerjaan, menugaskan tugas, dan mensintesis hasil. Rekan tim bekerja secara independen, masing-masing dalam context window-nya sendiri, dan berkomunikasi langsung satu sama lain.
+Tim agent memungkinkan Anda mengoordinasikan beberapa instance Claude Code yang bekerja bersama. Satu session bertindak sebagai team lead, mengoordinasikan pekerjaan, menugaskan tugas, dan mensintesis hasil. Rekan tim bekerja secara independen, masing-masing dalam context window-nya sendiri, dan berkomunikasi langsung satu sama lain. Anda juga dapat berbicara dengan rekan tim mana pun secara langsung tanpa melalui lead.
 
-Tidak seperti [subagents](/docs/id/sub-agents), yang berjalan dalam satu session dan hanya dapat melaporkan kembali ke agent utama, Anda juga dapat berinteraksi dengan rekan tim individual secara langsung tanpa melalui lead.
-
-<Note>
-  Halaman ini menjelaskan tim agent per v2.1.178. Dengan `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS` diatur, menspawn rekan tim tidak lagi memerlukan langkah setup, dan cleanup terjadi secara otomatis ketika session keluar. Sebelum v2.1.178, Anda meminta Claude untuk membuat dan memberi nama tim terlebih dahulu, dan Claude menggunakan tools `TeamCreate` dan `TeamDelete` untuk mengaturnya dan menghapusnya. Kedua tools tidak lagi ada. Input `team_name` pada tool Agent diterima tetapi diabaikan, dan field `team_name` dalam [hook payloads](/docs/id/hooks#taskcreated) `TaskCreated`, `TaskCompleted`, dan `TeammateIdle` membawa nama yang diturunkan dari session dan sudah usang.
-</Note>
+Sebelum Anda menyiapkan tim, periksa apakah opsi yang lebih ringan dapat menyelesaikan pekerjaan. [Subagents](/docs/id/sub-agents) bekerja dalam satu session, dan dengan [cross-session messaging](/docs/id/cross-session-messaging) Claude dapat meneruskan temuan antar session yang Anda jalankan sendiri.
 
 <h2 id="when-to-use-agent-teams">
   Kapan menggunakan tim agent
@@ -35,21 +31,21 @@ Tim agent menambah overhead koordinasi dan menggunakan token secara signifikan l
   Bandingkan dengan subagents
 </h3>
 
-Baik tim agent maupun [subagents](/docs/id/sub-agents) memungkinkan Anda memparalelkan pekerjaan, tetapi mereka beroperasi berbeda. Pilih berdasarkan apakah pekerja Anda perlu berkomunikasi satu sama lain:
+Baik tim agent maupun [subagents](/docs/id/sub-agents) memungkinkan Anda memparalelkan pekerjaan, tetapi mereka beroperasi berbeda. Untuk session terpisah yang melewatkan pesan satu sama lain tanpa tim, lihat [cross-session messaging](/docs/id/cross-session-messaging).
 
-<Frame caption="Subagents hanya melaporkan hasil kembali ke agent utama dan tidak pernah berbicara satu sama lain. Dalam tim agent, rekan tim berbagi daftar tugas, mengklaim pekerjaan, dan berkomunikasi langsung satu sama lain.">
+<Frame caption="Subagents melaporkan hasil kembali ke agent utama. Dalam tim agent, rekan tim berbagi daftar tugas, mengklaim pekerjaan, dan berkomunikasi langsung satu sama lain.">
   <img src="https://mintcdn.com/claude-code/nsvRFSDNfpSU5nT7/images/subagents-vs-agent-teams-light.png?fit=max&auto=format&n=nsvRFSDNfpSU5nT7&q=85&s=2f8db9b4f3705dd3ab931fbe2d96e42a" className="dark:hidden" alt="Diagram membandingkan arsitektur subagent dan tim agent. Subagents dihasilkan oleh agent utama, melakukan pekerjaan, dan melaporkan hasil kembali. Tim agent berkoordinasi melalui daftar tugas bersama, dengan rekan tim berkomunikasi langsung satu sama lain." width="4245" height="1615" data-path="images/subagents-vs-agent-teams-light.png" />
 
   <img src="https://mintcdn.com/claude-code/nsvRFSDNfpSU5nT7/images/subagents-vs-agent-teams-dark.png?fit=max&auto=format&n=nsvRFSDNfpSU5nT7&q=85&s=d573a037540f2ada6a9ae7d8285b46fd" className="hidden dark:block" alt="Diagram membandingkan arsitektur subagent dan tim agent. Subagents dihasilkan oleh agent utama, melakukan pekerjaan, dan melaporkan hasil kembali. Tim agent berkoordinasi melalui daftar tugas bersama, dengan rekan tim berkomunikasi langsung satu sama lain." width="4245" height="1615" data-path="images/subagents-vs-agent-teams-dark.png" />
 </Frame>
 
-|                   | Subagents                                              | Tim agent                                                      |
-| :---------------- | :----------------------------------------------------- | :------------------------------------------------------------- |
-| **Context**       | Context window sendiri; hasil kembali ke pemanggil     | Context window sendiri; sepenuhnya independen                  |
-| **Komunikasi**    | Melaporkan hasil kembali ke agent utama saja           | Rekan tim saling mengirim pesan secara langsung                |
-| **Koordinasi**    | Agent utama mengelola semua pekerjaan                  | Daftar tugas bersama dengan self-coordination                  |
-| **Terbaik untuk** | Tugas terfokus di mana hanya hasil yang penting        | Pekerjaan kompleks yang memerlukan diskusi dan kolaborasi      |
-| **Biaya token**   | Lebih rendah: hasil diringkas kembali ke context utama | Lebih tinggi: setiap rekan tim adalah instance Claude terpisah |
+|                   | Subagents                                                                                                                                                           | Tim agent                                                                                                                                          |
+| :---------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Context**       | Context window sendiri; hasil kembali ke pemanggil                                                                                                                  | Context window sendiri; sepenuhnya independen                                                                                                      |
+| **Komunikasi**    | Melaporkan hasil kembali ke pemanggil. Subagents yang Claude beri nama saat memunculkannya juga dapat [saling mengirim pesan](/docs/id/sub-agents#what-loads-at-startup) | Rekan tim saling mengirim pesan secara langsung                                                                                                    |
+| **Koordinasi**    | Agent utama mengelola semua pekerjaan                                                                                                                               | Self-coordination melalui pesan, ditambah daftar tugas bersama untuk [agents yang memiliki Task tools](/docs/id/tools-reference#task-tool-availability) |
+| **Terbaik untuk** | Tugas terfokus di mana hanya hasil yang penting                                                                                                                     | Pekerjaan kompleks yang memerlukan diskusi dan kolaborasi                                                                                          |
+| **Biaya token**   | Lebih rendah: hasil diringkas kembali ke context utama                                                                                                              | Lebih tinggi: setiap rekan tim adalah instance Claude terpisah                                                                                     |
 
 Gunakan subagents ketika Anda membutuhkan pekerja cepat dan terfokus yang melaporkan kembali. Gunakan tim agent ketika rekan tim perlu berbagi temuan, menantang satu sama lain, dan berkoordinasi sendiri.
 
@@ -67,6 +63,10 @@ Tim agent dinonaktifkan secara default. Aktifkan dengan mengatur variabel enviro
 }
 ```
 
+Mengaktifkan tim agent juga mengubah delegasi biasa. Claude dapat [memberi nama subagent](/docs/id/sub-agents#subagent-names) dengan sendirinya, dan sementara tim agent diaktifkan, subagent yang diberi nama Claude diluncurkan sebagai rekan tim, sehingga tim dapat terbentuk bahkan ketika Anda tidak memintanya. Untuk informasi lebih lanjut, lihat [Bagaimana Claude memulai tim agent](#how-claude-starts-agent-teams); untuk mematikan perilaku ini, lihat [Claude menspawn rekan tim alih-alih subagent](#claude-spawns-teammates-instead-of-subagents).
+
+Menspawn rekan tim juga memerlukan sesi interaktif. Dalam [mode non-interaktif](/docs/id/headless) dengan flag `-p`, termasuk sesi Agent SDK, Claude tidak menspawn rekan tim, dan subagent yang diberi nama Claude berjalan sebagai [subagent](/docs/id/sub-agents) biasa bahkan dengan tim agent diaktifkan.
+
 <h2 id="start-your-first-agent-team">
   Mulai tim agent pertama Anda
 </h2>
@@ -75,19 +75,21 @@ Setelah mengaktifkan tim agent, jelaskan tugas dan rekan tim yang Anda inginkan 
 
 Contoh ini bekerja dengan baik karena tiga peran independen dan dapat mengeksplorasi masalah tanpa menunggu satu sama lain:
 
-```text theme={null}
+```text wrap theme={null}
 Saya merancang alat CLI yang membantu developer melacak komentar TODO di seluruh
 codebase mereka. Buat tiga rekan tim untuk mengeksplorasi ini dari sudut berbeda:
 satu pada UX, satu pada arsitektur teknis, satu memainkan devil's advocate.
 ```
 
-Dari sana, Claude mengisi [daftar tugas bersama](/docs/id/interactive-mode#task-list), menelurkan rekan tim untuk setiap perspektif, membuat mereka mengeksplorasi masalah, dan mensintesis temuan ketika selesai.
+Dari sana, Claude mengisi [daftar tugas bersama](/docs/id/interactive-mode#task-list) dalam [sesi yang memiliki Task tools](/docs/id/tools-reference#task-tool-availability), menelurkan rekan tim untuk setiap perspektif, membuat mereka mengeksplorasi masalah, dan mensintesis temuan ketika selesai.
+
+Claude kadang-kadang dapat menggunakan [subagents](/docs/id/sub-agents) sebagai gantinya membuat tim. Subagents muncul di panel agent yang sama dengan rekan tim, jadi panel saja tidak mengkonfirmasi tim terbentuk. Jika Claude menelurkan subagents sebagai gantinya, tanyakan lagi dan secara eksplisit minta tim agent.
 
 Panel lead mencantumkan rekan tim di panel agent di bawah input prompt. Dari panel:
 
 * **Panah atas dan bawah**: pilih rekan tim
 * **Enter**: buka transkrip rekan tim yang dipilih dan kirim pesan langsung kepadanya
-* **Escape**: hentikan giliran saat ini rekan tim yang dipilih
+* **Escape**: hapus pilihan. Saat Anda melihat transkrip rekan tim, Escape menghentikan giliran saat ini rekan tim tersebut
 
 Mulai dari v2.1.199, baris rekan tim yang idle tetap berada di panel sementara rekan tim atau subagent mana pun masih bekerja, sehingga Anda dapat memilihnya untuk meninjau transkrip atau memberikan pekerjaan lebih lanjut. Setelah setiap agent di panel idle, baris idle bersembunyi setelah 30 detik dan muncul kembali pada giliran berikutnya rekan tim; rekan tim tetap berjalan dan dapat dialamatkan saat tersembunyi. Di v2.1.181 hingga v2.1.198, baris idle bersembunyi 30 detik setelah giliran sendirinya berakhir, bahkan sementara rekan tim lain masih bekerja; baris idle tidak disembunyikan di versi sebelum v2.1.181.
 
@@ -114,11 +116,11 @@ Tim agent mendukung dua mode tampilan:
   `tmux` memiliki keterbatasan yang diketahui pada sistem operasi tertentu dan secara tradisional bekerja paling baik di macOS. Menggunakan `tmux -CC` di iTerm2 adalah entrypoint yang disarankan ke `tmux`.
 </Note>
 
-Default adalah `"in-process"`. Sebelum v2.1.179 default adalah `"auto"`, jadi session yang ditingkatkan yang sebelumnya membuka split panes sekarang tetap dalam satu terminal kecuali Anda menetapkan mode secara eksplisit. Atur `"auto"` untuk mengaktifkan split panes ketika Anda sudah berjalan di dalam session tmux, atau ketika terminal Anda adalah iTerm2 dengan CLI `it2` yang terinstal, jatuh kembali ke in-process sebaliknya. Pengaturan `"tmux"` mengaktifkan mode split-pane dan auto-detects apakah akan menggunakan tmux atau iTerm2 berdasarkan terminal Anda.
+Default adalah `"in-process"`. Atur `"auto"` untuk mengaktifkan split panes ketika Anda sudah berjalan di dalam session tmux, atau ketika terminal Anda adalah iTerm2 dengan CLI `it2` yang terinstal, jatuh kembali ke in-process sebaliknya. Pengaturan `"tmux"` mengaktifkan mode split-pane dan auto-detects apakah akan menggunakan tmux atau iTerm2 berdasarkan terminal Anda.
 
-Mulai dari v2.1.186, atur `"iterm2"` untuk menggunakan iTerm2 native split panes secara eksplisit. Mode ini memerlukan [`it2` CLI](https://github.com/mkusaka/it2) dan menampilkan error dengan perintah install jika `it2` hilang. Prompt setup yang menawarkan untuk menginstal `it2` atau beralih ke tmux muncul di bawah `"auto"` atau `"tmux"` ketika terminal Anda adalah iTerm2 dan tmux tersedia sebagai fallback.
+Atur `"iterm2"` untuk menggunakan iTerm2 native split panes secara eksplisit. Mode ini memerlukan [`it2` CLI](https://github.com/mkusaka/it2) dan menampilkan error dengan perintah install jika `it2` hilang. Prompt setup yang menawarkan untuk menginstal `it2` atau beralih ke tmux muncul di bawah `"auto"` atau `"tmux"` ketika terminal Anda adalah iTerm2 dan tmux tersedia sebagai fallback.
 
-Untuk mengganti default, atur [`teammateMode`](/docs/id/settings#available-settings) di `~/.claude/settings.json`:
+Untuk mengganti default, atur [`teammateMode`](/docs/id/settings-reference#teammatemode) di `~/.claude/settings.json`:
 
 ```json theme={null}
 {
@@ -132,6 +134,8 @@ Untuk menetapkan mode untuk satu session, teruskan sebagai flag:
 claude --teammate-mode auto
 ```
 
+Flag `--teammate-mode` bersifat eksperimental dan tidak muncul di `claude --help`.
+
 Mode split-pane memerlukan baik [tmux](https://github.com/tmux/tmux/wiki) atau iTerm2 dengan [`it2` CLI](https://github.com/mkusaka/it2). Untuk menginstal secara manual:
 
 * **tmux**: instal melalui package manager sistem Anda. Lihat [tmux wiki](https://github.com/tmux/tmux/wiki/Installing) untuk instruksi spesifik platform.
@@ -143,29 +147,44 @@ Mode split-pane memerlukan baik [tmux](https://github.com/tmux/tmux/wiki) atau i
 
 Claude memutuskan jumlah rekan tim untuk dihasilkan berdasarkan tugas Anda, atau Anda dapat menentukan dengan tepat apa yang Anda inginkan:
 
-```text theme={null}
+```text wrap theme={null}
 Spawn 4 teammates to refactor these modules in parallel. Use Sonnet for
 each teammate.
 ```
 
-Rekan tim tidak mewarisi pilihan `/model` lead secara default. Untuk mengubah model yang digunakan ketika prompt tidak menentukan satu, atur **Default teammate model** di `/config`. Pilih **Default (leader's model)** untuk membuat rekan tim mengikuti model saat ini lead.
+Claude Code memilih model setiap rekan tim dari yang pertama dari ini yang berlaku:
+
+1. Model yang prompt spawn Anda beri nama untuk rekan tim itu.
+2. Untuk rekan tim yang dihasilkan dari [definisi subagent](#use-subagent-definitions-for-teammates), `model` definisi, di mana `inherit` memilih model lead.
+3. [`CLAUDE_CODE_SUBAGENT_MODEL`](/docs/id/model-config#environment-variables), ketika diatur ke apa pun selain `inherit`.
+4. Model saat ini lead.
+
+Jika Anda menetapkan [`CLAUDE_CODE_SUBAGENT_MODEL_FORCE=1`](/docs/id/sub-agents#run-every-subagent-on-one-model), dua sumber pertama tidak berlaku. Claude Code memilih model setiap rekan tim dari `CLAUDE_CODE_SUBAGENT_MODEL` ketika diatur ke apa pun selain `inherit`, dan dari model lead saat ini sebaliknya. Memerlukan Claude Code v2.1.257 atau lebih baru.
+
+Sebelum v2.1.251, `CLAUDE_CODE_SUBAGENT_MODEL` datang pertama dalam urutan ini.
+
+<Note>
+  `teammateDefaultModel` dihapus di v2.1.234; Claude Code mengabaikan nilai sisa. Beri nama model dalam prompt Anda sebagai gantinya.
+</Note>
+
+Claude Code memeriksa model yang dipilihnya untuk rekan tim terhadap [`availableModels`](/docs/id/model-config#restrict-model-selection) allowlist organisasi Anda. Ketika allowlist memblokir nilai, Claude Code mengganti model lain:
+
+* **Family alias seperti `opus`**: Pada Anthropic API dan Claude Platform di AWS, Claude Code menjalankan rekan tim pada versi terbaru dari keluarga itu yang allowlist izinkan. Pada provider dengan ID model spesifik provider, di mana [substitusi tidak beroperasi](/docs/id/model-config#restrict-model-selection), alias yang diblokir jatuh kembali seperti nilai yang diblokir lainnya per bullet berikutnya
+* **Nilai yang diblokir lainnya, termasuk family alias pada provider di mana substitusi tidak beroperasi, atau yang keluarganya tidak memiliki versi yang diizinkan**: Claude Code menjalankan rekan tim pada model lead sebagai gantinya. Jika Anda menetapkan `CLAUDE_CODE_SUBAGENT_MODEL`, Claude Code mencoba model itu terlebih dahulu, di bawah aturan yang sama ini
 
 Rekan tim mewarisi [effort level](/docs/id/model-config#adjust-effort-level) lead. Dalam mode split-pane ini berlaku dari v2.1.186; versi sebelumnya tidak meneruskan effort session lead ke rekan tim split-pane.
 
-<h3 id="require-plan-approval-for-teammates">
-  Perlukan persetujuan rencana untuk rekan tim
+<h3 id="have-teammates-plan-before-implementing">
+  Perlukan rekan tim merencanakan sebelum mengimplementasikan
 </h3>
 
-Untuk tugas kompleks atau berisiko, Anda dapat memerlukan rekan tim untuk merencanakan sebelum mengimplementasikan. Rekan tim bekerja dalam mode rencana read-only sampai lead menyetujui pendekatan mereka:
+Untuk tugas kompleks atau berisiko, Anda dapat memerlukan rekan tim untuk merencanakan sebelum mengimplementasikan. Rekan tim yang Claude hasilkan saat lead berada dalam [plan mode](/docs/id/permission-modes#analyze-before-you-edit-with-plan-mode) bekerja dalam mode rencana read-only sampai rencananya siap. Alihkan lead ke plan mode terlebih dahulu, kemudian minta rekan tim:
 
-```text theme={null}
+```text wrap theme={null}
 Spawn an architect teammate to refactor the authentication module.
-Require plan approval before they make any changes.
 ```
 
-Ketika rekan tim selesai merencanakan, mereka mengirim permintaan persetujuan rencana ke lead. Lead meninjau rencana dan baik menyetujuinya atau menolaknya dengan umpan balik. Jika ditolak, rekan tim tetap dalam mode rencana, merevisi berdasarkan umpan balik, dan mengirimkan kembali. Setelah disetujui, rekan tim keluar dari mode rencana dan mulai implementasi.
-
-Lead membuat keputusan persetujuan secara otonom. Untuk mempengaruhi penilaian lead, berikan kriteria dalam prompt Anda, seperti "hanya setujui rencana yang mencakup test coverage" atau "tolak rencana yang memodifikasi skema database."
+Ketika rekan tim selesai merencanakan, mereka mengirim permintaan persetujuan rencana ke lead. Claude Code menyetujui rencana dalam session lead segera setelah permintaan tiba, tanpa lead meninjau. Edit dan perintah rekan tim masih melalui prompt izin yang dijelaskan dalam [Permissions](#permissions). Setelah disetujui, rekan tim keluar dari plan mode dan mulai implementasi.
 
 <h3 id="talk-to-teammates-directly">
   Berbicara dengan rekan tim secara langsung
@@ -186,6 +205,8 @@ Model rekan tim dan fast mode diperbaiki ketika mereka spawn, jadi `/model` dan 
 
 Daftar tugas bersama mengoordinasikan pekerjaan di seluruh tim. Lead membuat tugas dan rekan tim mengerjakannya. Tugas memiliki tiga status: pending, in progress, dan completed. Tugas juga dapat bergantung pada tugas lain: tugas pending dengan dependensi yang tidak terselesaikan tidak dapat diklaim sampai dependensi tersebut selesai.
 
+Agent [tanpa Task tools](/docs/id/tools-reference#task-tool-availability) mengoordinasikan melalui pesan sebagai gantinya dari daftar tugas bersama.
+
 Lead dapat menugaskan tugas secara eksplisit, atau rekan tim dapat self-claim:
 
 * **Lead menugaskan**: beri tahu lead tugas mana yang diberikan kepada rekan tim mana
@@ -199,7 +220,7 @@ Klaim tugas menggunakan file locking untuk mencegah race conditions ketika beber
 
 Untuk mengakhiri session rekan tim dengan baik, rujuk dengan nama. Misalnya, dengan rekan tim bernama researcher:
 
-```text theme={null}
+```text wrap theme={null}
 Ask the researcher teammate to shut down
 ```
 
@@ -227,12 +248,9 @@ Bagian ini mencakup arsitektur dan mekanik di balik tim agent. Jika Anda ingin m
   Bagaimana Claude memulai tim agent
 </h3>
 
-Tim agent terbentuk ketika rekan tim pertama dihasilkan, dengan sesi utama bertindak sebagai pemimpin. Ada dua cara rekan tim dihasilkan:
+Untuk memulai tim, minta Claude untuk rekan tim. Claude meluncurkan rekan tim ketika memanggil [Agent tool](/docs/id/tools-reference) dengan [`name`](/docs/id/sub-agents#subagent-names) sementara tim agent diaktifkan, kecuali panggilan adalah [fork](/docs/id/sub-agents#fork-the-current-conversation) atau melewatkan `isolation` pada panggilan itu sendiri. Claude Code tidak meminta Anda untuk mengonfirmasi peluncuran.
 
-* **Anda meminta rekan tim**: berikan Claude tugas yang menguntungkan dari pekerjaan paralel dan secara eksplisit minta rekan tim. Claude menghasilkannya berdasarkan instruksi Anda.
-* **Claude mengusulkan rekan tim**: jika Claude menentukan tugas Anda akan menguntungkan dari pekerjaan paralel, mungkin menyarankan untuk menghasilkan rekan tim. Anda mengonfirmasi sebelum melanjutkan.
-
-Dalam kedua kasus, Anda tetap mengendalikan. Claude tidak akan menghasilkan rekan tim tanpa persetujuan Anda.
+Claude juga memberi nama subagent biasa dengan sendirinya sehingga dapat mengirim pesan kepada mereka nanti. Panggilan-panggilan tersebut mengikuti aturan yang sama, jadi tim dapat terbentuk bahkan ketika Anda tidak memintanya. Jika Anda menginginkan subagent sebagai gantinya, [matikan tim agent](#claude-spawns-teammates-instead-of-subagents).
 
 <h3 id="architecture">
   Arsitektur
@@ -247,24 +265,24 @@ Tim agent terdiri dari:
 | **Daftar tugas** | Daftar item pekerjaan bersama yang diklaim dan diselesaikan rekan tim               |
 | **Mailbox**      | Sistem pesan untuk komunikasi antar agent                                           |
 
-Lihat [Pilih mode tampilan](#choose-a-display-mode) untuk opsi konfigurasi tampilan. Pesan rekan tim tiba di lead secara otomatis.
-
 Mailbox setiap agent adalah file JSON di `~/.claude/teams/{team-name}/inboxes/{agent-name}.json`. Claude Code memvalidasi setiap entri ketika membaca file mailbox. Entri yang tidak sesuai dengan format pesan dilaporkan sebagai kesalahan dan dihapus dari file; pesan yang valid masih dikirimkan. Sebelum v2.1.207, satu entri mailbox yang salah format menyebabkan kesalahan berulang setiap detik dan memblokir pengiriman untuk mailbox itu sampai Anda menghapus file secara manual.
 
-Sistem mengelola dependensi tugas secara otomatis. Ketika rekan tim menyelesaikan tugas yang tugas lain bergantung padanya, tugas yang diblokir membuka tanpa intervensi manual.
+Claude Code melaporkan pesan sebagai terkirim hanya ketika penulisan ke file mailbox penerima berhasil, baik pesan itu teks biasa atau pesan protokol terstruktur seperti persetujuan rencana atau permintaan shutdown. Ketika penulisan gagal, misalnya karena disk penuh atau direktori mailbox tidak dapat ditulis, agent pengirim menerima kesalahan dan tidak ada yang dikirim. Lihat [Gagal menulis ke inbox rekan tim](/docs/id/errors#failed-to-write-to-a-teammate-inbox) untuk pesan kesalahan dan langkah pemulihan.
+
+Claude Code mengelola dependensi tugas secara otomatis: ketika rekan tim menyelesaikan tugas yang tugas lain bergantung padanya, tugas yang diblokir membuka tanpa tindakan apa pun dari Anda.
 
 Tim dan tugas disimpan secara lokal dengan nama yang diturunkan dari sesi. Nama adalah `session-` diikuti oleh delapan karakter pertama dari session ID:
 
 * **Konfigurasi tim**: `~/.claude/teams/{team-name}/config.json`
 * **Daftar tugas**: `~/.claude/tasks/{team-name}/`
 
-Claude Code menghasilkan keduanya secara otomatis saat startup sesi dan memperbarui mereka saat rekan tim bergabung, idle, atau pergi. Direktori konfigurasi tim dihapus ketika sesi berakhir. Direktori daftar tugas tetap ada secara lokal dan tidak pernah diunggah, jadi sesi yang dilanjutkan menyimpan tugas mereka. Retensi diatur oleh [`cleanupPeriodDays`](/docs/id/settings#available-settings) yang sama yang sudah Anda kontrol untuk transkrip sesi.
+Claude Code menghasilkan keduanya secara otomatis saat startup sesi dan memperbarui mereka saat rekan tim bergabung, idle, atau pergi. Direktori konfigurasi tim dihapus ketika sesi berakhir. Direktori daftar tugas tetap ada secara lokal dan tidak pernah diunggah, jadi sesi yang dilanjutkan menyimpan tugas mereka. Retensi diatur oleh [`cleanupPeriodDays`](/docs/id/settings-reference#cleanupperioddays) yang sama yang sudah Anda kontrol untuk transkrip sesi, mengikuti [aturan pembersihan retensi](/docs/id/claude-directory#cleaned-up-automatically).
 
 Konfigurasi tim menyimpan status runtime seperti session IDs dan tmux pane IDs, jadi jangan mengeditnya dengan tangan atau pre-author: perubahan Anda ditimpa pada update status berikutnya.
 
 Untuk mendefinisikan peran rekan tim yang dapat digunakan kembali, gunakan [subagent definitions](#use-subagent-definitions-for-teammates) sebagai gantinya.
 
-Konfigurasi tim berisi array `members` dengan nama setiap rekan tim, agent ID, dan tipe agent. Rekan tim dapat membaca file ini untuk menemukan anggota tim lainnya.
+Konfigurasi tim berisi array `members` dengan nama setiap anggota dan agent ID. Entri lead selalu membawa tipe agent `team-lead`. Entri rekan tim membawa tipe agent apa pun yang lead beri nama saat menghasilkannya, baik [tipe built-in](/docs/id/sub-agents#built-in-subagents) atau [subagent definition](#use-subagent-definitions-for-teammates), dan menghilangkan field ketika lead tidak memberi nama apa pun. Rekan tim dapat membaca file ini untuk menemukan anggota tim lainnya.
 
 Tidak ada padanan tingkat proyek dari konfigurasi tim. File seperti `.claude/teams/teams.json` di direktori proyek Anda tidak dikenali sebagai konfigurasi; Claude memperlakukannya sebagai file biasa.
 
@@ -272,29 +290,44 @@ Tidak ada padanan tingkat proyek dari konfigurasi tim. File seperti `.claude/tea
   Gunakan subagent definitions untuk rekan tim
 </h3>
 
-Ketika menghasilkan rekan tim, Anda dapat mereferensikan tipe [subagent](/docs/id/sub-agents) dari [subagent scope](/docs/id/sub-agents#choose-the-subagent-scope) apa pun: proyek, pengguna, plugin, atau CLI-defined. Ini memungkinkan Anda mendefinisikan peran sekali, seperti security-reviewer atau test-runner, dan menggunakannya kembali baik sebagai subagent yang didelegasikan maupun sebagai rekan tim agent team.
+Ketika menghasilkan rekan tim dalam mode tampilan apa pun, Anda dapat mereferensikan tipe [subagent](/docs/id/sub-agents) dari proyek, pengguna, atau [subagent scope](/docs/id/sub-agents#choose-the-subagent-scope) yang dikelola. Ini memungkinkan Anda mendefinisikan peran sekali, seperti security-reviewer atau test-runner, dan menggunakannya kembali baik sebagai subagent yang didelegasikan maupun sebagai rekan tim agent team.
 
 Untuk menggunakan subagent definition, sebutkan berdasarkan nama ketika meminta Claude untuk menghasilkan rekan tim:
 
-```text theme={null}
+```text wrap theme={null}
 Hasilkan rekan tim menggunakan tipe agent security-reviewer untuk mengaudit modul auth.
 ```
 
-Rekan tim menghormati allowlist `tools` definisi itu dan `model`, dan body definisi ditambahkan ke system prompt rekan tim sebagai instruksi tambahan daripada menggantinya. Team coordination tools seperti `SendMessage` dan task management tools selalu tersedia untuk rekan tim bahkan ketika `tools` membatasi tools lain.
+Claude Code membaca subagent definition yang Anda beri nama dan menerapkan bagian-bagian ini ke rekan tim. Jika bagian bergantung pada [mode tampilan](#choose-a-display-mode) rekan tim, entri mengatakan demikian:
 
-<Note>
-  Field frontmatter `skills` dan `mcpServers` dalam subagent definition tidak diterapkan ketika definisi itu berjalan sebagai rekan tim. Rekan tim memuat skills dan MCP servers dari pengaturan proyek dan pengguna Anda, sama seperti session reguler.
-</Note>
+* **`tools`**: Claude Code membatasi rekan tim ke tools dalam daftar `tools` definition. Untuk rekan tim in-process, Claude Code menambahkan `SendMessage` ke daftar itu, dan dalam [sesi yang memiliki Task tools](/docs/id/tools-reference#task-tool-availability) menambahkan `TaskCreate`, `TaskGet`, `TaskList`, dan `TaskUpdate` juga.
+* **`model`**: Claude Code menggunakan `model` definition dalam mode tampilan apa pun ketika spawn prompt Anda tidak memberi nama satu. Lihat [bagaimana Claude Code memilih model rekan tim](#specify-teammates-and-models).
+* **Body**: untuk rekan tim in-process, Claude Code menambahkan body definition ke system prompt default-nya sebagai instruksi tambahan. Untuk rekan tim split-pane, Claude Code menggunakan body sebagai pengganti system prompt default-nya.
+* **`skills`**: Claude Code tidak menerapkan `skills` definition ke rekan tim dalam mode tampilan apa pun. Rekan tim memuat skills dari pengaturan proyek dan pengguna Anda.
+* **`mcpServers`**: untuk rekan tim split-pane, Claude Code menerapkan `mcpServers` definition di bawah [aturan untuk field itu](/docs/id/sub-agents#scope-mcp-servers-to-a-subagent), yang mencakup sesi yang dimulai dengan `--agent` juga. Rekan tim in-process mengabaikan field dan memuat MCP servers dari pengaturan proyek dan pengguna Anda.
+
+Ketika Claude mengirim pesan ke rekan tim in-process yang tidak lagi berjalan, Claude Code membawanya kembali dalam sesi yang sama, memulihkan percakapan apa pun yang disimpan untuk itu, dan memberikan pesan sebagai prompt berikutnya. Setelah Anda melanjutkan sesi, rekan tim tidak dibawa kembali dengan cara ini, sesuai [batasan resume](#limitations).
+
+Untuk rekan tim yang dibawanya kembali, Claude Code menerapkan kembali definition yang berasal dari direktori `.claude/agents/` proyek atau direktori `--add-dir` hanya jika Anda telah [mempercayai folder tempat file agent berada](/docs/id/permissions#what-runs-before-you-trust-a-folder). Mempercayai folder induk tidak dihitung. Sampai saat itu, rekan tim kembali tanpa tools atau instruksi definition apa pun, hanya menyimpan tools yang Claude Code tambahkan ke setiap rekan tim in-process. Lihat [definisi agent rekan tim tidak dipulihkan](/docs/id/errors#teammate-agent-definition-not-restored) untuk teks pemberitahuan.
 
 <h3 id="permissions">
   Izin
 </h3>
 
-Rekan tim dimulai dengan pengaturan izin lead. Jika lead berjalan dengan `--dangerously-skip-permissions`, semua rekan tim juga demikian. Setelah dihasilkan, Anda dapat mengubah mode rekan tim individual, tetapi Anda tidak dapat mengatur mode per-rekan tim pada waktu spawn.
+Rekan tim dimulai dengan mode izin lead, kecuali mode [`dontAsk`](/docs/id/permission-modes#allow-only-pre-approved-tools-with-dontask-mode), yang tidak mereka warisi. Jika lead berjalan dengan `--dangerously-skip-permissions`, semua rekan tim juga demikian. Setelah dihasilkan, Anda dapat mengubah mode izin rekan tim individual, tetapi Anda tidak dapat mengatur mode izin per-rekan tim pada waktu spawn.
 
-Ketika satu agent mengirim agent lain pesan melalui `SendMessage`, agent penerima diberitahu bahwa itu berasal dari sesi Claude lain, bukan dari Anda. Rekan tim tidak dapat menyetujui prompt izin atau memberikan persetujuan atas nama Anda, dan rekan tim yang ditolak tindakannya tidak dapat menyampaikannya ke rekan tim lain untuk melewati pemeriksaan. Dalam [auto mode](/docs/id/permission-modes#eliminate-prompts-with-auto-mode), classifier memperlakukan klaim persetujuan yang disalurkan dari agent lain sebagai input yang tidak dipercaya daripada konfirmasi dari Anda.
+Prompt izin rekan tim muncul di sesi lead, jadi setujui mereka di sana sendiri. [Persetujuan rencana](#have-teammates-plan-before-implementing) adalah pengecualian yang dirancang: sesi lead memberikan persetujuan rencana rekan tim tanpa prompt terpisah kepada Anda.
 
-Prompt izin rekan tim naik ke sesi lead, jadi setujui mereka di sana sendiri. [Persetujuan rencana](#require-plan-approval-for-teammates) adalah pengecualian yang dirancang: sesi lead memberikan persetujuan rencana rekan tim tanpa prompt terpisah kepada Anda.
+<h4 id="messages-between-agents">
+  Pesan antar agent
+</h4>
+
+Ketika satu agent mengirim agent lain pesan melalui `SendMessage`, Claude Code memberi tahu agent penerima bahwa pesan itu berasal dari sesi Claude lain, bukan dari Anda. Rekan tim tidak dapat menyetujui prompt izin atau memberikan persetujuan atas nama Anda, dan rekan tim yang ditolak tindakannya tidak dapat menyampaikannya ke rekan tim lain untuk melewati pemeriksaan. Aturan yang sama berlaku untuk pesan yang tiba dari [salah satu sesi Claude Code lain Anda](/docs/id/cross-session-messaging#how-a-session-treats-an-incoming-message), di luar tim sepenuhnya.
+
+Dalam [auto mode](/docs/id/permission-modes#eliminate-prompts-with-auto-mode), classifier menerapkan dua pemeriksaan ke pesan antar agent:
+
+* Ini memperlakukan klaim persetujuan yang disalurkan dari agent lain sebagai input yang tidak dipercaya daripada konfirmasi dari Anda.
+* Ini meninjau setiap pesan sebelum Claude Code mengirimkannya, baik pesan biasa atau pesan protokol terstruktur seperti permintaan shutdown atau respons persetujuan rencana. Pesan yang diblokir tidak pernah mencapai penerima.
 
 <h3 id="context-and-communication">
   Context dan komunikasi
@@ -305,8 +338,8 @@ Setiap rekan tim memiliki context window-nya sendiri. Ketika dihasilkan, rekan t
 **Bagaimana rekan tim berbagi informasi:**
 
 * **Pengiriman pesan otomatis**: ketika rekan tim mengirim pesan, mereka dikirimkan secara otomatis ke penerima. Lead tidak perlu polling untuk update.
-* **Notifikasi idle**: ketika rekan tim selesai dan berhenti, mereka secara otomatis memberi tahu lead. Mulai dari v2.1.198, rekan tim yang giliran berakhir pada kesalahan API memberi tahu lead bahwa itu gagal dan menyertakan teks kesalahan, daripada tampak selesai secara normal.
-* **Daftar tugas bersama**: semua agent dapat melihat status tugas dan mengklaim pekerjaan yang tersedia.
+* **Notifikasi idle**: ketika rekan tim selesai dan berhenti, mereka secara otomatis memberi tahu lead dan menyertakan jawaban akhir mereka dalam notifikasi. Rekan tim yang giliran berakhir pada kesalahan API memberi tahu lead bahwa itu gagal dan menyertakan teks kesalahan.
+* **Daftar tugas bersama**: [agent yang memiliki Task tools](/docs/id/tools-reference#task-tool-availability) dapat melihat status tugas dan mengklaim pekerjaan yang tersedia.
 * **Pesan rekan tim**: kirim pesan ke satu rekan tim spesifik berdasarkan nama. Untuk menjangkau semua orang, kirim satu pesan per penerima.
 
 Lead menugaskan setiap rekan tim nama ketika menghasilkannya, dan rekan tim mana pun dapat mengirim pesan ke yang lain berdasarkan nama itu. Untuk mendapatkan nama yang dapat diprediksi yang dapat Anda referensikan dalam prompt kemudian, beri tahu lead apa yang harus dipanggil setiap rekan tim dalam instruksi spawn Anda.
@@ -316,6 +349,8 @@ Lead menugaskan setiap rekan tim nama ketika menghasilkannya, dan rekan tim mana
 </h3>
 
 Tim agent menggunakan token secara signifikan lebih banyak daripada satu session. Setiap rekan tim memiliki context window-nya sendiri, dan penggunaan token skala dengan jumlah rekan tim aktif. Untuk penelitian, review, dan pekerjaan fitur baru, token tambahan biasanya berharga. Untuk tugas rutin, satu session lebih cost-effective. Lihat [biaya token tim agent](/docs/id/costs#agent-team-token-costs) untuk panduan penggunaan.
+
+Permintaan rekan tim in-process jatuh di luar [cache TTL bucket](/docs/id/prompt-caching#which-ttl-each-request-gets) percakapan utama, jadi cache-nya berlaku selama lima menit secara default, termasuk pada langganan Claude. Untuk menyimpannya selama satu jam, atur [`subagentPromptCacheTtl`](/docs/id/settings-reference#subagentpromptcachettl) ke `1h`. API menagih penulisan cache 1 jam dengan tarif yang lebih tinggi.
 
 <h2 id="use-case-examples">
   Contoh use case
@@ -329,7 +364,7 @@ Contoh-contoh ini menunjukkan bagaimana tim agent menangani tugas di mana eksplo
 
 Seorang reviewer tunggal cenderung tertarik pada satu jenis masalah pada satu waktu. Membagi kriteria review menjadi domain independen berarti keamanan, kinerja, dan test coverage semuanya mendapat perhatian menyeluruh secara bersamaan. Prompt menugaskan setiap rekan tim lensa yang berbeda sehingga mereka tidak tumpang tindih:
 
-```text theme={null}
+```text wrap theme={null}
 Spawn three teammates to review PR #142:
 - One focused on security implications
 - One checking performance impact
@@ -345,7 +380,7 @@ Setiap reviewer bekerja dari PR yang sama tetapi menerapkan filter berbeda. Lead
 
 Ketika akar penyebab tidak jelas, satu agent cenderung menemukan satu penjelasan yang masuk akal dan berhenti mencari. Prompt melawan ini dengan membuat rekan tim secara eksplisit adversarial: pekerjaan setiap orang bukan hanya menyelidiki teori mereka sendiri tetapi menantang yang lain.
 
-```text theme={null}
+```text wrap theme={null}
 Users report the app exits after one message instead of staying connected.
 Spawn 5 agent teammates to investigate different hypotheses. Have them talk to
 each other to try to disprove each other's theories, like a scientific
@@ -366,7 +401,7 @@ Dengan beberapa investigator independen secara aktif mencoba membantah satu sama
 
 Rekan tim memuat konteks proyek secara otomatis, termasuk CLAUDE.md, MCP servers, dan skills, tetapi mereka tidak mewarisi riwayat percakapan lead. Lihat [Context dan komunikasi](#context-and-communication) untuk detail. Sertakan detail spesifik tugas dalam spawn prompt:
 
-```text theme={null}
+```text wrap theme={null}
 Spawn a security reviewer teammate with the prompt: "Review the authentication module
 at src/auth/ for security vulnerabilities. Focus on token handling, session
 management, and input validation. The app uses JWT tokens stored in
@@ -383,9 +418,7 @@ Tidak ada batas keras pada jumlah rekan tim, tetapi batasan praktis berlaku:
 * **Overhead koordinasi meningkat**: lebih banyak rekan tim berarti lebih banyak komunikasi, koordinasi tugas, dan potensi konflik
 * **Diminishing returns**: di luar titik tertentu, rekan tim tambahan tidak mempercepat pekerjaan secara proporsional
 
-Mulai dengan 3-5 rekan tim untuk sebagian besar workflow. Ini menyeimbangkan pekerjaan paralel dengan koordinasi yang dapat dikelola. Contoh-contoh dalam panduan ini menggunakan 3-5 rekan tim karena rentang itu bekerja dengan baik di berbagai jenis tugas.
-
-Memiliki 5-6 [tasks](/docs/id/agent-teams#architecture) per rekan tim membuat semua orang produktif tanpa context switching yang berlebihan. Jika Anda memiliki 15 tugas independen, 3 rekan tim adalah titik awal yang baik.
+Mulai dengan 3-5 rekan tim untuk sebagian besar workflow. Ini menyeimbangkan pekerjaan paralel dengan koordinasi yang dapat dikelola. Jika Anda memiliki 15 tugas independen, 3 rekan tim adalah titik awal yang baik.
 
 Skala naik hanya ketika pekerjaan benar-benar menguntungkan dari rekan tim bekerja secara bersamaan. Tiga rekan tim terfokus sering mengungguli lima yang tersebar.
 
@@ -407,7 +440,7 @@ Skala naik hanya ketika pekerjaan benar-benar menguntungkan dari rekan tim beker
 
 Kadang-kadang lead mulai mengimplementasikan tugas sendiri alih-alih menunggu rekan tim. Jika Anda memperhatikan ini:
 
-```text theme={null}
+```text wrap theme={null}
 Tunggu rekan tim Anda menyelesaikan tugas mereka sebelum melanjutkan
 ```
 
@@ -448,14 +481,39 @@ Jika rekan tim tidak muncul setelah Anda meminta Claude untuk membuat mereka:
   ```
 * Untuk iTerm2, verifikasi `it2` CLI diinstal dan Python API diaktifkan di preferensi iTerm2.
 
+<h3 id="claude-spawns-teammates-instead-of-subagents">
+  Claude menelurkan rekan tim alih-alih subagents
+</h3>
+
+Sementara agent teams diaktifkan, subagent yang Claude namai dalam sesi lead diluncurkan sebagai rekan tim. Claude [dapat mengganti nama subagents sendiri](#how-claude-starts-agent-teams), jadi ini dapat terjadi selama delegasi yang tidak pernah Anda bingkai sebagai pekerjaan tim.
+
+Untuk membuat subagents bernama diluncurkan sebagai subagents lagi, matikan agent teams dengan mengatur `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS` ke `0`:
+
+```json settings.json theme={null}
+{
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "0"
+  }
+}
+```
+
+Anda tidak perlu memulai sesi baru: Claude Code menerapkan kembali nilai `env` file pengaturan ke sesi yang berjalan ketika Anda menyimpan, dan membaca ulang variabel setiap kali Claude menelurkan subagent, jadi subagent berikutnya yang Claude namai diluncurkan sebagai subagent.
+
+Mengatur variabel ke `0` di `settings.json` pengguna Anda mengganti shell export. Sumber pengaturan lainnya masih dapat mengaktifkan agent teams:
+
+* **File pengaturan dengan prioritas lebih tinggi**: pengaturan proyek, pengaturan lokal, dan payload `--settings` diterapkan setelah pengaturan pengguna, jadi entri `env` yang mengatur variabel ke `1` di salah satu dari mereka menang. Lihat [Settings precedence](/docs/id/settings#settings-precedence).
+* **Managed settings**: [managed settings](/docs/id/server-managed-settings) diterapkan setelah setiap sumber lainnya. Jika organisasi Anda mengaktifkan agent teams di sana, minta administrator Anda untuk mengubah nilai yang dikelola.
+
+Setelah perubahan, Claude mungkin masih mengganti nama subagents, dan nama terus bekerja sebagai alamat [`SendMessage`](/docs/id/sub-agents#resume-subagents). Claude menerima hasil setiap subagent ketika selesai.
+
 <h3 id="too-many-permission-prompts">
   Terlalu banyak permission prompts
 </h3>
 
 Permintaan izin rekan tim naik ke lead, yang dapat menciptakan gesekan. Pre-approve operasi umum di [pengaturan izin](/docs/id/permissions) Anda sebelum menelurkan rekan tim untuk mengurangi gangguan.
 
-<h3 id="teammates-stopping-on-errors">
-  Rekan tim berhenti pada errors
+<h3 id="agents-stopping-early">
+  Agents berhenti lebih awal
 </h3>
 
 Rekan tim dapat berhenti setelah mengalami errors alih-alih pulih. Periksa output mereka dengan memilih rekan tim di panel agen dan menekan Enter dalam mode in-process, atau dengan mengklik pane dalam mode split, kemudian baik:
@@ -463,13 +521,9 @@ Rekan tim dapat berhenti setelah mengalami errors alih-alih pulih. Periksa outpu
 * Berikan instruksi tambahan kepada mereka secara langsung
 * Hasilkan rekan tim pengganti untuk melanjutkan pekerjaan
 
-Mulai dari v2.1.198, pesan dari lead atau rekan tim lain membangunkan rekan tim in-process yang menunggu untuk mencoba ulang permintaan API yang gagal, sehingga mencoba ulang segera alih-alih menunggu penundaan percobaan ulang penuh.
+Pesan dari lead atau rekan tim lain membangunkan rekan tim in-process yang menunggu untuk mencoba ulang permintaan API yang gagal, sehingga mencoba ulang segera alih-alih menunggu penundaan percobaan ulang penuh.
 
-<h3 id="lead-shuts-down-before-work-is-done">
-  Lead shuts down sebelum pekerjaan selesai
-</h3>
-
-Lead dapat memutuskan tim selesai sebelum semua tugas benar-benar selesai. Jika ini terjadi, beri tahu untuk terus. Anda juga dapat memberi tahu lead untuk menunggu rekan tim selesai sebelum melanjutkan jika mulai melakukan pekerjaan alih-alih mendelegasikan.
+Lead dapat berhenti lebih awal juga, memutuskan tim selesai sebelum semua tugas benar-benar selesai. Jika itu terjadi, beri tahu untuk terus.
 
 <h3 id="orphaned-tmux-sessions">
   Orphaned tmux sessions
@@ -493,14 +547,10 @@ Tim agent bersifat eksperimental. Keterbatasan saat ini untuk diketahui:
 * **Shutdown dapat lambat**: rekan tim menyelesaikan permintaan atau tool call saat ini sebelum shutdown, yang dapat memakan waktu.
 * **Satu tim per session**: sebuah session memiliki tepat satu tim, yang dibatasi pada session tersebut. Anda tidak dapat membuat tim bernama tambahan atau berbagi tim di seluruh session.
 * **Tidak ada tim bersarang**: rekan tim tidak dapat menelurkan rekan tim mereka sendiri. Hanya lead yang dapat mengelola tim.
-* **Tidak ada background subagents dari rekan tim in-process**: subagents rekan tim in-process sendiri berjalan di foreground. Meminta yang background, baik dengan `run_in_background` atau definisi subagent yang menetapkan `background: true`, mengembalikan error, karena pekerjaan background rekan tim tidak dapat bertahan lebih lama dari proses lead. Subagents yang diluncurkan dari percakapan utama mengikuti [default background](/docs/id/sub-agents#run-subagents-in-foreground-or-background).
+* **Tidak ada background subagents dari rekan tim in-process**: subagents rekan tim in-process sendiri berjalan di foreground, karena pekerjaan background rekan tim tidak dapat bertahan lebih lama dari proses lead. Claude Code mengembalikan error ketika rekan tim menelurkan subagent yang definisinya menetapkan `background: true`. Permintaan `run_in_background: true` rekan tim juga gagal, baik dengan error atau dengan berjalan diam-diam di foreground, seperti yang dijelaskan dalam [bagaimana Claude Code memilih foreground atau background](/docs/id/sub-agents#run-subagents-in-foreground-or-background). Subagents yang diluncurkan dari percakapan utama mengikuti [default background](/docs/id/sub-agents#run-subagents-in-foreground-or-background).
 * **Lead tetap**: session utama adalah lead seumur hidupnya. Anda tidak dapat mempromosikan rekan tim ke lead atau mentransfer kepemimpinan.
-* **Izin ditetapkan pada spawn**: semua rekan tim dimulai dengan mode izin lead. Anda dapat mengubah mode rekan tim individual setelah spawn, tetapi Anda tidak dapat mengatur mode per-rekan tim pada waktu spawn.
+* **Izin ditetapkan pada spawn**: rekan tim dimulai dengan mode izin yang dijelaskan di bawah [Izin](#permissions). Anda dapat mengubah mode izin rekan tim individual setelah menelurkan, tetapi Anda tidak dapat mengatur mode izin per-rekan tim pada waktu spawn.
 * **Split panes memerlukan tmux atau iTerm2**: mode in-process default bekerja di terminal apa pun. Mode split-pane tidak didukung di integrated terminal VS Code, Windows Terminal, atau Ghostty.
-
-<Tip>
-  **`CLAUDE.md` bekerja secara normal**: rekan tim membaca file `CLAUDE.md` dari direktori kerja mereka. Gunakan ini untuk memberikan panduan spesifik proyek ke semua rekan tim.
-</Tip>
 
 <h2 id="next-steps">
   Langkah berikutnya
@@ -509,5 +559,5 @@ Tim agent bersifat eksperimental. Keterbatasan saat ini untuk diketahui:
 Jelajahi pendekatan terkait untuk pekerjaan paralel dan delegasi:
 
 * **Delegasi ringan**: [subagents](/docs/id/sub-agents) menelurkan agent pembantu untuk penelitian atau verifikasi dalam session Anda, lebih baik untuk tugas yang tidak memerlukan koordinasi inter-agent
+* **Pesan antar session Anda sendiri**: [cross-session messaging](/docs/id/cross-session-messaging) memungkinkan Claude melewatkan temuan antar session yang Anda jalankan sendiri
 * **Session paralel manual**: [Git worktrees](/docs/id/worktrees) memungkinkan Anda menjalankan beberapa session Claude Code sendiri tanpa koordinasi tim otomatis
-* **Bandingkan pendekatan**: lihat perbandingan [subagent vs tim agent](/docs/id/features-overview#compare-similar-features) untuk rincian side-by-side

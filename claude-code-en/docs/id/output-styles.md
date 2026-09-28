@@ -4,35 +4,114 @@
 
 # Output styles
 
-> Sesuaikan Claude Code untuk penggunaan di luar rekayasa perangkat lunak
+> Ubah peran, nada, dan format respons Claude Code dengan gaya output bawaan seperti Concise atau Explanatory, atau tulis gaya kustom Anda sendiri.
 
-Output styles mengubah cara Claude merespons, bukan apa yang Claude ketahui. Mereka memodifikasi system prompt untuk menetapkan peran, nada, dan format output. Gunakan satu ketika Anda terus-menerus meminta kembali untuk suara atau format yang sama setiap giliran, atau ketika Anda ingin Claude bertindak sebagai sesuatu selain seorang insinyur perangkat lunak.
+Output style adalah serangkaian instruksi yang menetapkan peran, nada, dan format respons Claude untuk setiap respons dalam sesi. Claude Code mencakup empat gaya bawaan selain defaultnya, dan Anda dapat menulis gaya Anda sendiri.
 
-Custom output style menambahkan instruksi Anda ke system prompt dan memungkinkan Anda memilih apakah akan mempertahankan instruksi rekayasa perangkat lunak bawaan Claude Code. Pertahankan mereka ketika Anda mengubah cara Claude berkomunikasi tetapi masih coding, seperti selalu menjawab dengan diagram. Tinggalkan mereka ketika Claude tidak melakukan rekayasa perangkat lunak sama sekali, seperti asisten penulisan atau analis data.
+Gunakan output style untuk mengubah cara Claude merespons dan bekerja dengan Anda selama seluruh sesi, sehingga Anda tidak perlu mengulangi permintaan di setiap prompt. Misalnya, gaya bawaan dapat membuat respons lebih pendek, menambahkan penjelasan setiap perubahan, atau membuat Claude mulai bekerja tanpa mengajukan pertanyaan rutin. Gaya kustom juga dapat mengubah Claude menjadi sesuatu selain insinyur perangkat lunak, seperti asisten penulisan atau analis data.
 
-Untuk instruksi tentang proyek, konvensi, atau codebase Anda, gunakan [CLAUDE.md](/docs/id/memory) sebagai gantinya.
+* Untuk menggunakan gaya bawaan, pilih salah satu dari [gaya output bawaan](#built-in-output-styles) dan [beralih ke gaya tersebut](#change-your-output-style).
+* Untuk menulis instruksi Anda sendiri, [buat output style kustom](#create-a-custom-output-style).
+
+<Note>
+  Output style memberikan Claude instruksi untuk diikuti. Ini tidak menjamin bahwa sesuatu selalu terjadi atau tidak pernah terjadi. Beberapa kebutuhan sesuai dengan fitur yang berbeda:
+
+  * Untuk apa yang harus Claude ketahui tentang proyek Anda, gunakan [CLAUDE.md](/docs/id/memory).
+  * Untuk sesuatu yang harus terjadi setiap kali, seperti pemformatan setelah setiap edit atau memblokir perintah, gunakan [hook](/docs/id/hooks-guide).
+  * Untuk skills, subagents, dan opsi lainnya, lihat [Pilih antara output style dan fitur lainnya](#choose-between-an-output-style-and-other-features).
+</Note>
 
 <h2 id="built-in-output-styles">
   Gaya output bawaan
 </h2>
 
-Gaya output **Default** Claude Code adalah system prompt yang ada, dirancang untuk membantu Anda menyelesaikan tugas-tugas rekayasa perangkat lunak secara efisien.
+Claude Code dimulai dalam gaya [**Default**](#default), instruksi standarnya untuk menyelesaikan tugas-tugas rekayasa perangkat lunak. Masing-masing dari empat gaya bawaan lainnya mempertahankan instruksi tersebut dan menambahkan instruksinya sendiri.
 
-Ada tiga gaya output bawaan tambahan:
+Tabel ini menunjukkan apa yang setiap gaya ubah tentang sesi dan kapan cocok digunakan:
 
-* **Proactive**: Claude dieksekusi segera, membuat asumsi yang masuk akal alih-alih berhenti untuk keputusan rutin, dan lebih memilih tindakan daripada perencanaan. Ini adalah panduan eksekusi otonom yang lebih kuat daripada yang diterapkan [mode otomatis](/docs/id/permission-modes#eliminate-prompts-with-auto-mode), dan ini berfungsi tanpa mengubah mode izin Anda, jadi Anda masih melihat prompt izin sebelum alat dijalankan.
+| Gaya                        | Apa yang berubah                                                                                         | Gunakan ketika                                                                                         |
+| :-------------------------- | :------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------- |
+| [Proactive](#proactive)     | Claude mulai bekerja segera dan membuat asumsi yang masuk akal daripada bertanya tentang keputusan rutin | Anda ingin Claude terus bekerja melalui keputusan rutin, dan Anda akan mengubah arah jika asumsi salah |
+| [Concise](#concise)         | Respons dimulai dengan hasil dan menghilangkan pembukaan, narasi, dan rekap                              | Respons default lebih panjang dari yang Anda inginkan                                                  |
+| [Explanatory](#explanatory) | Claude menambahkan blok `Insight` pendek yang menjelaskan pilihan di balik kode yang ditulisnya          | Anda sedang mengenal codebase atau menginginkan penalaran bersama dengan perubahan                     |
+| [Learning](#learning)       | Claude menjelaskan pilihannya dan meninggalkan potongan kode kecil untuk Anda tulis sendiri              | Anda menginginkan praktik coding langsung sambil tugas masih selesai                                   |
 
-* **Explanatory**: Menyediakan "Insights" edukatif di antara membantu Anda menyelesaikan tugas-tugas rekayasa perangkat lunak. Membantu Anda memahami pilihan implementasi dan pola codebase.
+<h3 id="default">
+  Default
+</h3>
 
-* **Learning**: Mode kolaboratif belajar-dengan-melakukan di mana Claude tidak hanya akan berbagi "Insights" saat coding, tetapi juga meminta Anda untuk berkontribusi dengan potongan kode kecil dan strategis sendiri. Claude Code akan menambahkan penanda `TODO(human)` dalam kode Anda untuk Anda implementasikan.
+Default berarti tidak ada gaya output yang dipilih. Claude Code tidak menambahkan instruksi gaya, dan Claude bekerja dari prompt sistem standar Claude Code, yang ditulis untuk tugas-tugas rekayasa perangkat lunak.
+
+`default` muncul dalam daftar `/output-style` bersama dengan gaya lainnya, jadi Anda [memilihnya dengan cara yang sama](#change-your-output-style).
+
+<h3 id="proactive">
+  Proactive
+</h3>
+
+Dalam gaya Proactive, Claude mulai mengimplementasikan segera setelah Anda mengirim tugas. Ini membuat asumsi yang masuk akal tentang keputusan rutin daripada berhenti untuk bertanya, dan tidak beralih ke plan mode kecuali Anda meminta rencana. Anda dapat mengalihkannya kapan saja.
+
+Instruksi gaya juga memberi tahu Claude untuk memeriksa dengan Anda dalam percakapan sebelum tindakan yang menghapus data atau mengubah sistem bersama atau produksi. Pemeriksaan itu adalah instruksi yang Claude ikuti dan terpisah dari prompt izin.
+
+Beralih ke gaya Proactive tidak mengubah [mode izin](/docs/id/permission-modes) Anda. Mode izin Anda masih menentukan panggilan alat mana yang berjalan tanpa meminta Anda, jadi prompt izin muncul dengan cara yang sama seperti sebelum Anda beralih.
+
+<h3 id="concise">
+  Concise
+</h3>
+
+Dalam gaya Concise, kalimat pertama respons menyatakan apa yang terjadi atau apa jawabannya. Claude menghilangkan pembukaan, narasi langkah demi langkah, dan rekap penutup, dan menjawab pertanyaan sederhana dalam satu hingga tiga kalimat. Ini melakukan pekerjaan rekayasa sethoroughly seperti dalam gaya Default. Memerlukan Claude Code v2.1.237 atau lebih baru.
+
+Claude masih menulis dengan panjang penuh dalam kasus-kasus ini:
+
+* **Apa pun yang Anda minta**: ketika Anda meminta penjelasan atau detail lebih lanjut, Claude menjawab secara lengkap.
+* **Apa pun yang Anda butuhkan untuk bertindak dengan aman**: laporan kesalahan, output tes yang gagal, peringatan keamanan, dan konfirmasi untuk tindakan destruktif mempertahankan konten lengkap mereka.
+
+<h3 id="explanatory">
+  Explanatory
+</h3>
+
+Dalam gaya Explanatory, Claude melakukan tugas dengan cara yang sama seperti dalam gaya Default dan menambahkan penjelasan singkat tentang mengapa ia membuat pilihan yang ia buat. Setiap penjelasan muncul dalam percakapan, sebelum atau sesudah kode yang terkait, dalam blok berlabel `Insight`. Penjelasan tidak ditulis ke dalam file Anda sebagai komentar.
+
+Blok `Insight` membawa dua atau tiga poin tentang codebase Anda atau kode yang Claude tulis, seperti yang ini setelah menambahkan endpoint API:
+
+```text theme={null}
+★ Insight ─────────────────────────────────────
+- Setiap rute di repo ini melewati wrapper withAuth, jadi endpoint baru mendapatkan pemeriksaan sesi tanpa middleware-nya sendiri.
+- Batas laju diatur per rute dalam limits.ts, itulah mengapa perubahan ini menambahkan entri di sana daripada default global.
+─────────────────────────────────────────────────
+```
+
+<h3 id="learning">
+  Learning
+</h3>
+
+Dalam gaya Learning, Claude menambahkan blok `Insight` yang sama seperti [gaya Explanatory](#explanatory) dan juga meminta Anda untuk menulis beberapa kode. Claude menangani implementasi rutin itu sendiri. Ketika mencapai bagian dengan keputusan desain nyata, seperti penanganan kesalahan, struktur data, atau logika bisnis dengan lebih dari satu pendekatan yang valid, ia meninggalkan beberapa baris untuk Anda.
+
+Claude menandai tempat dengan komentar `TODO(human)` dalam file, kemudian mengirim permintaan yang mengatakan apa yang sudah dibangun, apa yang harus ditulis, dan apa yang harus dipertimbangkan:
+
+```text theme={null}
+● Learn by Doing
+
+Context: Formulir upload sudah ada dan memanggil validateFile() sebelum menerima file. Pemeriksaan ukuran dan tipe berfungsi untuk gambar, tetapi pernyataan switch tidak memiliki penanganan untuk dokumen belum.
+
+Your Task: Dalam upload.js, implementasikan cabang kasus "document" di dalam validateFile(). Cari TODO(human).
+
+Guidance: Tentukan batas ukuran untuk dokumen dan apakah ekstensi file harus cocok dengan tipe MIME. Kembalikan {valid: boolean, error?: string}.
+```
+
+Claude kemudian berhenti dan menunggu. Tulis kode Anda di komentar `TODO(human)` dan beri tahu Claude ketika Anda selesai. Claude merespons dengan satu `Insight` tentang kode Anda dan melanjutkan tugas.
 
 <h2 id="change-your-output-style">
   Ubah gaya output Anda
 </h2>
 
-Jalankan `/config` dan pilih **Output style** untuk memilih gaya dari menu. Pilihan Anda disimpan ke `.claude/settings.local.json` di [tingkat proyek lokal](/docs/id/settings).
+Pilih gaya dengan perintah, menu, atau file settings. Perintah dan kedua menu menyimpan pilihan Anda ke `.claude/settings.local.json` di [tingkat proyek lokal](/docs/id/settings).
 
-<Note>Perintah standalone `/output-style` sudah tidak digunakan lagi di v2.1.73 dan dihapus di v2.1.91. Gunakan `/config` atau edit pengaturan `outputStyle` secara langsung.</Note>
+* **Perintah `/output-style`**: jalankan `/output-style <style>` untuk beralih, misalnya `/output-style concise`. Tanpa argumen, perintah mencantumkan gaya yang dapat Anda pilih dan menandai yang saat ini.
+
+  Perintah ini juga berfungsi dalam [mode non-interaktif](/docs/id/headless) dan sesi Agent SDK, serta dari aplikasi mobile atau web melalui [Remote Control](/docs/id/remote-control#limitations), di mana Anda dapat mencantumkan dan memilih hanya [gaya bawaan](#built-in-output-styles). Memerlukan Claude Code v2.1.269 atau lebih baru.
+* **Menu Terminal**: jalankan `/config` dan pilih **Output style** untuk memilih gaya dari menu.
+* **Ekstensi VS Code**: buka [menu perintah](/docs/id/vs-code#use-the-prompt-box) dengan `/` dan pilih **Output styles** untuk memilih gaya, termasuk gaya kustom Anda. Memerlukan Claude Code v2.1.257 atau lebih baru.
+* **Aplikasi Desktop**: atur field `outputStyle` dalam file settings, misalnya `.claude/settings.local.json`, file yang ditulis menu terminal. Ketika Anda menjalankan `/config` di sana, Claude Code [membuka **Settings > Claude Code**](/docs/id/desktop#what%E2%80%99s-not-available-in-desktop) daripada menu.
 
 Untuk menetapkan gaya tanpa menu, edit field `outputStyle` secara langsung dalam file settings:
 
@@ -42,13 +121,19 @@ Untuk menetapkan gaya tanpa menu, edit field `outputStyle` secara langsung dalam
 }
 ```
 
-Output style adalah bagian dari system prompt, yang dibaca Claude Code sekali saat awal sesi. Perubahan berlaku setelah `/clear` atau sesi baru. Lihat [Bagaimana Claude Code menggunakan prompt caching](/docs/id/prompt-caching#changing-output-style) untuk mengetahui apa yang dilakukan perubahan output style terhadap cache.
+Nilainya peka huruf besar-kecil, jadi tulis nama bawaan sebagai `Proactive`, `Concise`, `Explanatory`, dan `Learning`. Nilai yang tidak cocok dengan nama gaya secara tepat, seperti `explanatory`, memberikan Anda gaya Default. Perintah `/output-style` mengabaikan huruf besar-kecil.
+
+Untuk menjadikan gaya Anda default di seluruh proyek, atur `outputStyle` dalam `~/.claude/settings.json`. File settings proyek sendiri [mengambil prioritas](/docs/id/settings#settings-precedence) atas nilai tersebut.
+
+Ketika Anda beralih gaya di tengah sesi, Claude menggunakan gaya baru mulai dari pesan Anda berikutnya. Untuk biaya pesan pertama itu dalam prompt caching, lihat [Mengubah gaya output](/docs/id/prompt-caching#changing-output-style). Sebelum v2.1.251, gaya baru diterapkan hanya setelah Anda menjalankan `/clear` atau memulai sesi baru.
 
 <h2 id="create-a-custom-output-style">
   Buat custom output style
 </h2>
 
-Custom output style adalah file Markdown: frontmatter untuk metadata, kemudian instruksi untuk ditambahkan ke system prompt.
+Custom output style adalah file Markdown: frontmatter untuk metadata, kemudian instruksi untuk Claude.
+
+Di VS Code extension, Anda juga dapat membuat file dari [menu **Output styles**](/docs/id/vs-code#use-the-prompt-box) daripada menulisnya dengan tangan. Ini memerlukan Claude Code v2.1.261 atau lebih baru.
 
 <Steps>
   <Step title="Buat file Markdown">
@@ -56,9 +141,9 @@ Custom output style adalah file Markdown: frontmatter untuk metadata, kemudian i
 
     * User: `~/.claude/output-styles`
     * Project: `.claude/output-styles`
-    * Managed policy: `.claude/output-styles` di dalam [direktori pengaturan terkelola](/docs/id/settings#settings-files)
+    * Managed policy: `.claude/output-styles` di dalam [direktori pengaturan terkelola](/docs/id/managed-settings#delivery-mechanisms)
 
-    Project output styles dimuat dari setiap `.claude/output-styles/` antara direktori kerja dan akar repositori. Mulai dari v2.1.178, ketika lebih dari satu direktori bersarang ini mendefinisikan style dengan nama yang sama, Claude Code menggunakan yang paling dekat dengan direktori kerja.
+    Project output styles dimuat dari setiap `.claude/output-styles/` antara direktori kerja dan akar repositori. Ketika lebih dari satu direktori bersarang ini mendefinisikan style dengan nama yang sama, Claude Code menggunakan yang paling dekat dengan direktori kerja.
   </Step>
 
   <Step title="Tambahkan frontmatter dan instruksi">
@@ -82,50 +167,60 @@ Custom output style adalah file Markdown: frontmatter untuk metadata, kemudian i
   </Step>
 
   <Step title="Beralih ke style Anda">
-    Jalankan `/config` dan pilih style Anda di bawah **Output style**. Ini berlaku setelah `/clear` atau saat Anda memulai sesi berikutnya.
+    Jalankan `/output-style <style>` di terminal, atau jalankan `/config` dan pilih style Anda di bawah **Output style**. Claude menggunakan style baru mulai dari pesan Anda berikutnya. Di terminal, Claude Code membaca file style saat dimulai, jadi jika Anda membuat atau mengedit satu selama sesi yang sedang berjalan, restart Claude Code untuk mengambil perubahan tersebut.
   </Step>
 </Steps>
 
-[Plugins](/docs/id/plugins-reference) juga dapat mengirimkan output styles dalam direktori `output-styles/`.
+[Plugins](/docs/id/plugins/manifest-reference) juga dapat mengirimkan output styles dalam direktori `output-styles/`.
 
 <h3 id="frontmatter">
-  Frontmatter
+  Referensi frontmatter
 </h3>
 
-File output style mendukung field frontmatter ini:
+Konfigurasikan output style dengan [frontmatter](/docs/id/glossary#frontmatter) YAML antara penanda `---` di bagian atas file. Semua field bersifat opsional, dan nama field menggunakan kata-kata huruf kecil yang dipisahkan oleh tanda hubung. Field yang salah eja diabaikan tanpa kesalahan. Jika YAML tidak dapat diuraikan, style masih dimuat dengan nama filenya tanpa field yang ditetapkan; jalankan `claude --debug` untuk melihat kesalahan penguraian.
 
-| Frontmatter                | Tujuan                                                                                                                                                                                                                                                                                       | Default                 |
-| :------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------- |
-| `name`                     | Nama output style, jika bukan nama file                                                                                                                                                                                                                                                      | Mewarisi dari nama file |
-| `description`              | Deskripsi output style, ditampilkan dalam picker `/config`                                                                                                                                                                                                                                   | Tidak ada               |
-| `keep-coding-instructions` | Pertahankan instruksi rekayasa perangkat lunak bawaan Claude Code                                                                                                                                                                                                                            | `false`                 |
-| `force-for-plugin`         | Plugin output styles hanya: terapkan style ini secara otomatis kapan pun plugin diaktifkan, tanpa memerlukan pengguna untuk memilihnya. Mengesampingkan pengaturan `outputStyle` pengguna. Jika beberapa plugin yang diaktifkan menetapkan ini, Claude Code menggunakan yang pertama dimuat. | `false`                 |
+| Field                      | Diperlukan | Deskripsi                                                                                                                                                                                                                                                                                                                           |
+| :------------------------- | :--------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `name`                     | Tidak      | Nama output style, ditampilkan dalam picker `/config`. Default: nama file                                                                                                                                                                                                                                                           |
+| `description`              | Tidak      | Deskripsi output style, ditampilkan dalam picker `/config`                                                                                                                                                                                                                                                                          |
+| `keep-coding-instructions` | Tidak      | Atur ke `true` untuk mempertahankan instruksi rekayasa perangkat lunak bawaan Claude Code bersama style Anda. Default: `false`                                                                                                                                                                                                      |
+| `force-for-plugin`         | Tidak      | Output styles plugin saja. Atur ke `true` untuk menerapkan style ini secara otomatis kapan pun plugin diaktifkan, tanpa memerlukan pengguna untuk memilihnya. Mengesampingkan pengaturan `outputStyle` pengguna. Jika beberapa plugin yang diaktifkan menetapkan ini, Claude Code menggunakan yang pertama dimuat. Default: `false` |
+
+<span id="comparisons-to-related-features" />
+
+<h2 id="choose-between-an-output-style-and-other-features">
+  Pilih antara output style dan fitur lainnya
+</h2>
+
+Output style berlaku untuk setiap respons dalam sesi. Ini adalah instruksi yang diikuti Claude, jadi tidak ada yang memberlakukannya. Ketika apa yang Anda inginkan lebih sempit daripada setiap respons, atau harus terjadi tanpa gagal, fitur lain lebih cocok.
+
+Tabel ini mencocokkan apa yang Anda inginkan dengan fitur yang melakukannya:
+
+| Anda ingin                                                                                                               | Gunakan                                                           | Mengapa cocok                                                                                                         |
+| :----------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------- |
+| Setiap respons dalam suara, panjang, atau format tertentu, atau Claude dalam peran yang berbeda                          | Output style                                                      | Ini berlaku untuk seluruh sesi, dan Anda beralih style dengan satu perintah                                           |
+| Claude mengetahui konvensi, perintah, dan struktur proyek Anda                                                           | [CLAUDE.md](/docs/id/memory)                                           | Ini menyimpan apa yang harus diketahui Claude tentang codebase, dan tetap dimuat dengan style apa pun yang Anda pilih |
+| Instruksi untuk satu jenis tugas, seperti checklist rilis atau prosedur review                                           | A [skill](/docs/id/skills)                                             | Claude memmuatnya hanya ketika Anda menginvokasinya atau tugas cocok, jadi tidak membentuk respons yang tidak terkait |
+| Sesuatu yang harus terjadi setiap saat tanpa terkecuali, seperti pemformatan setelah setiap edit atau memblokir perintah | A [hook](/docs/id/hooks-guide)                                         | Claude Code menjalankan hook itu sendiri pada acara lifecycle, jadi tidak bergantung pada Claude mengikuti instruksi  |
+| Pembantu dengan instruksi, model, dan tools sendiri untuk tugas yang terfokus                                            | A [subagent](/docs/id/sub-agents)                                      | Ini berjalan dalam konteks terpisah dengan system prompt sendiri dan mengembalikan ringkasan ke percakapan Anda       |
+| Penambahan pada instruksi Claude yang Anda berikan saat memulai Claude Code                                              | [`--append-system-prompt`](/docs/id/cli-reference#system-prompt-flags) | Ini menambahkan ke system prompt tanpa menghapus apa pun                                                              |
+
+Fitur-fitur ini dapat digabungkan. Misalnya, Anda dapat menggunakan CLAUDE.md untuk apa yang harus diketahui Claude, output style untuk cara meresponnya, dan hook untuk apa pun yang harus dijamin. [Perluas Claude Code](/docs/id/features-overview) membandingkan fitur ekstensi lainnya.
 
 <h2 id="how-output-styles-work">
   Cara kerja output styles
 </h2>
 
-Output styles secara langsung memodifikasi system prompt Claude Code.
+Output style mengubah instruksi yang diberikan Claude Code kepada Claude.
 
-* Semua output styles memiliki instruksi kustom mereka sendiri yang ditambahkan ke akhir system prompt.
-* Semua output styles memicu pengingat bagi Claude untuk mematuhi instruksi output style selama percakapan.
-* Custom output styles menghilangkan instruksi rekayasa perangkat lunak bawaan Claude Code, seperti cara membatasi perubahan, menulis komentar, dan memverifikasi pekerjaan, kecuali `keep-coding-instructions` diatur ke `true`.
+* Claude Code mengirimkan instruksi style aktif dengan setiap permintaan.
+* Output styles kustom menghilangkan instruksi rekayasa perangkat lunak bawaan Claude Code, seperti cara membatasi perubahan, menulis komentar, dan memverifikasi pekerjaan, kecuali `keep-coding-instructions` diatur ke `true`.
 
-Penggunaan token tergantung pada style. Menambahkan instruksi ke system prompt meningkatkan input tokens, meskipun prompt caching mengurangi biaya ini setelah permintaan pertama dalam sesi. Built-in Explanatory dan Learning styles menghasilkan respons yang lebih panjang daripada Default secara desain, yang meningkatkan output tokens. Untuk custom styles, penggunaan output tokens tergantung pada apa yang instruksi Anda katakan kepada Claude untuk diproduksi.
+Output styles berlaku untuk percakapan utama dan untuk [fork](/docs/id/sub-agents#fork-the-current-conversation), yang mewarisi percakapan lengkap dan system prompt induk. [Subagent lain menjalankan system prompt mereka sendiri](/docs/id/sub-agents#what-loads-at-startup), jadi styles tidak mengubah cara mereka merespons.
 
-<h2 id="comparisons-to-related-features">
-  Perbandingan dengan fitur terkait
-</h2>
+Penggunaan token tergantung pada style. Instruksi style menambahkan input tokens, meskipun prompt caching mengurangi biaya ini setelah permintaan pertama dalam sesi.
 
-Beberapa fitur menyesuaikan perilaku Claude Code. Output styles memodifikasi system prompt secara langsung dan berlaku untuk setiap respons. Yang lain menambahkan instruksi tanpa mengubah system prompt default, atau membatasi mereka ke tugas tertentu.
-
-| Fitur                    | Cara kerjanya                                                           | Gunakan ketika                                                                         |
-| :----------------------- | :---------------------------------------------------------------------- | :------------------------------------------------------------------------------------- |
-| Output styles            | Memodifikasi system prompt                                              | Anda menginginkan peran, nada, atau format respons default yang berbeda setiap giliran |
-| [CLAUDE.md](/docs/id/memory)  | Menambahkan pesan pengguna setelah system prompt                        | Claude harus selalu mengetahui konvensi proyek dan konteks codebase Anda               |
-| `--append-system-prompt` | Menambahkan ke system prompt tanpa menghapus apa pun                    | Anda menginginkan penambahan satu kali untuk satu invokasi                             |
-| [Agents](/docs/id/sub-agents) | Menjalankan subagent dengan system prompt, model, dan tools-nya sendiri | Anda menginginkan helper dengan cakupan terpisah untuk tugas yang terfokus             |
-| [Skills](/docs/id/skills)     | Memuat instruksi khusus tugas saat dipanggil atau relevan               | Anda memiliki alur kerja yang dapat digunakan kembali                                  |
+Style Explanatory dan Learning bawaan menghasilkan respons yang lebih panjang daripada Default secara desain, yang meningkatkan output tokens. Style Concise melakukan sebaliknya dengan menginstruksikan Claude untuk menjaga respons tetap singkat secara default. Untuk styles kustom, penggunaan output token tergantung pada apa yang instruksi Anda katakan kepada Claude untuk diproduksi.
 
 <h2 id="related-resources">
   Sumber daya terkait
@@ -133,5 +228,5 @@ Beberapa fitur menyesuaikan perilaku Claude Code. Output styles memodifikasi sys
 
 * [Settings](/docs/id/settings): di mana field `outputStyle` berada dan cara kerja precedence settings
 * [Permission modes](/docs/id/permission-modes): bagaimana style Proactive dibandingkan dengan mode otomatis
-* [Plugins](/docs/id/plugins): paket dan distribusikan output styles bersama skills, hooks, dan agents
+* [Plugins](/docs/id/plugins/overview): paket dan distribusikan output styles bersama skills, hooks, dan agents
 * [Debug your configuration](/docs/id/debug-your-config): diagnosa mengapa output style tidak berlaku

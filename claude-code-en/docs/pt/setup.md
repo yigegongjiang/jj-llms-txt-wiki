@@ -41,10 +41,10 @@ Claude Code é executado nas seguintes plataformas e configurações:
   Novo no terminal? Consulte o [guia de terminal](/docs/pt/terminal-guide) para instruções passo a passo.
 </Tip>
 
-To install Claude Code, use one of the following methods:
+Para instalar Claude Code, use um dos seguintes métodos:
 
 <Tabs>
-  <Tab title="Native Install (Recommended)">
+  <Tab title="Instalação Nativa (Recomendado)">
     **macOS, Linux, WSL:**
 
     ```bash theme={null}
@@ -63,14 +63,14 @@ To install Claude Code, use one of the following methods:
     curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del install.cmd
     ```
 
-    If you see `The token '&&' is not a valid statement separator`, you're in PowerShell, not CMD. If you see `'irm' is not recognized as an internal or external command`, you're in CMD, not PowerShell. Your prompt shows `PS C:\` when you're in PowerShell and `C:\` without the `PS` when you're in CMD.
+    Se você vir `The token '&&' is not a valid statement separator`, você está no PowerShell, não no CMD. Se você vir `'irm' is not recognized as an internal or external command`, você está no CMD, não no PowerShell. Seu prompt mostra `PS C:\` quando você está no PowerShell e `C:\` sem o `PS` quando você está no CMD.
 
-    If the install command fails with `syntax error near unexpected token '<'`, a `403`, or another curl error, see [Troubleshoot installation](/docs/en/troubleshoot-install#find-your-error) to match the error to a fix and for alternative install methods.
+    Se o comando de instalação falhar com `syntax error near unexpected token '<'`, um `403`, ou outro erro de curl, consulte [Solucionar problemas de instalação](/docs/pt/troubleshoot-install#find-your-error) para corresponder o erro a uma correção e para métodos alternativos de instalação.
 
-    [Git for Windows](https://git-scm.com/downloads/win) is recommended on native Windows so Claude Code can use the Bash tool. If Git for Windows is not installed, Claude Code uses PowerShell as the shell tool instead. WSL setups do not need Git for Windows.
+    [Git for Windows](https://git-scm.com/downloads/win) é recomendado no Windows nativo para que Claude Code possa usar a ferramenta Bash. Se Git for Windows não estiver instalado, Claude Code usa PowerShell como ferramenta de shell. Configurações WSL não precisam de Git for Windows.
 
     <Info>
-      Native installations automatically update in the background to keep you on the latest version.
+      As instalações nativas são atualizadas automaticamente em segundo plano para mantê-lo na versão mais recente.
     </Info>
   </Tab>
 
@@ -79,10 +79,10 @@ To install Claude Code, use one of the following methods:
     brew install --cask claude-code
     ```
 
-    Homebrew offers two casks. `claude-code` tracks the stable release channel, which is typically about a week behind and skips releases with major regressions. `claude-code@latest` tracks the latest channel and receives new versions as soon as they ship.
+    Homebrew oferece dois casks. `claude-code` rastreia o canal de versão estável, que normalmente fica cerca de uma semana atrás e pula versões com regressões importantes. `claude-code@latest` rastreia o canal mais recente e recebe novas versões assim que são lançadas.
 
     <Info>
-      Homebrew installations do not auto-update. Run `brew upgrade claude-code` or `brew upgrade claude-code@latest`, depending on which cask you installed, to get the latest features and security fixes.
+      As instalações do Homebrew não são atualizadas automaticamente. Execute `brew upgrade claude-code` ou `brew upgrade claude-code@latest`, dependendo de qual cask você instalou, para obter os recursos mais recentes e correções de segurança.
     </Info>
   </Tab>
 
@@ -92,18 +92,20 @@ To install Claude Code, use one of the following methods:
     ```
 
     <Info>
-      WinGet installations do not auto-update. Run `winget upgrade Anthropic.ClaudeCode` periodically to get the latest features and security fixes.
+      As instalações do WinGet não são atualizadas automaticamente. Execute `winget upgrade Anthropic.ClaudeCode` periodicamente para obter os recursos mais recentes e correções de segurança.
     </Info>
   </Tab>
 </Tabs>
 
-You can also install with [apt, dnf, or apk](/docs/en/setup#install-with-linux-package-managers) on Debian, Fedora, RHEL, and Alpine.
+Você também pode instalar com [apt, dnf, ou apk](/docs/pt/setup#install-with-linux-package-managers) no Debian, Fedora, RHEL e Alpine.
 
 Após a conclusão da instalação, abra um terminal no projeto em que deseja trabalhar e inicie Claude Code:
 
 ```bash theme={null}
 claude
 ```
+
+Claude Code abre uma sessão interativa em seu terminal.
 
 Se você encontrar algum problema durante a instalação, consulte [Solucionar problemas de instalação e login](/docs/pt/troubleshoot-install).
 
@@ -138,7 +140,7 @@ Após a instalação, inicie `claude` a partir de qualquer terminal.
   }
   ```
 
-Quando Git for Windows está instalado, a ferramenta PowerShell está sendo lançada progressivamente como uma opção adicional ao lado do Bash. Defina `CLAUDE_CODE_USE_POWERSHELL_TOOL=1` para aceitar ou `0` para recusar. Consulte [ferramenta PowerShell](/docs/pt/tools-reference#powershell-tool) para configuração e limitações.
+Quando Git for Windows está instalado, a ferramenta PowerShell está disponível ao lado do Bash: ativada por padrão para contas claude.ai e Console, e habilitada com `CLAUDE_CODE_USE_POWERSHELL_TOOL=1` em sessões do Amazon Bedrock, Google Cloud's Agent Platform e Microsoft Foundry. Defina como `0` para desativar a ferramenta. Consulte [ferramenta PowerShell](/docs/pt/tools-reference#powershell-tool) para configuração e limitações.
 
 **Opção 2: WSL**
 
@@ -148,15 +150,23 @@ Abra sua distribuição WSL e execute o instalador Linux a partir das [instruç�
   Alpine Linux e distribuições baseadas em musl
 </h3>
 
-O instalador nativo no Alpine e outras distribuições baseadas em musl/uClibc requer `libgcc`, `libstdc++` e `ripgrep`. Instale-os usando o gerenciador de pacotes da sua distribuição e defina `USE_BUILTIN_RIPGREP=0`.
+Instalar Claude Code no Alpine e outras distribuições baseadas em musl/uClibc requer `bash` e `curl` para o comando de instalação, e `libgcc`, `libstdc++` e `ripgrep` em tempo de execução. O Alpine não inclui `bash` ou `curl` por padrão, portanto o comando de instalação documentado falha com um erro `not found` até que você os instale. Instale esses pacotes usando o gerenciador de pacotes da sua distribuição e defina `USE_BUILTIN_RIPGREP=0`.
 
 Este exemplo instala os pacotes necessários no Alpine:
 
 ```bash theme={null}
-apk add libgcc libstdc++ ripgrep
+apk add bash curl libgcc libstdc++ ripgrep
 ```
 
-Em seguida, defina `USE_BUILTIN_RIPGREP` como `0` em seu arquivo [`settings.json`](/docs/pt/settings#available-settings):
+No Alpine, `ripgrep` está no repositório community. Se `apk` relatar que o pacote está faltando, adicione o repositório community a `/etc/apk/repositories`, usando sua versão do Alpine:
+
+```bash theme={null}
+echo "https://dl-cdn.alpinelinux.org/alpine/v3.22/community" >> /etc/apk/repositories
+```
+
+Execute `apk update` para atualizar o índice de pacotes e tente novamente o comando `apk add`.
+
+Em seguida, defina `USE_BUILTIN_RIPGREP` como `0` em seu arquivo [`settings.json`](/docs/pt/settings-reference#all-settings):
 
 ```json theme={null}
 {
@@ -176,6 +186,8 @@ Após a instalação, confirme que Claude Code está funcionando:
 claude --version
 ```
 
+Uma instalação funcionando imprime um número de versão como `2.1.211 (Claude Code)`.
+
 Se isso falhar com `command not found` ou outro erro, consulte [Solucionar problemas de instalação e login](/docs/pt/troubleshoot-install).
 
 Para uma verificação mais detalhada de sua instalação e configuração, execute [`claude doctor`](/docs/pt/troubleshooting#get-more-help):
@@ -184,13 +196,15 @@ Para uma verificação mais detalhada de sua instalação e configuração, exec
 claude doctor
 ```
 
+`claude doctor` imprime diagnósticos de instalação e configurações somente leitura sem iniciar uma sessão, incluindo saúde da instalação, erros de validação de arquivo de configurações e quaisquer avisos com correções sugeridas.
+
 <h2 id="authenticate">
   Autenticar
 </h2>
 
 Claude Code requer uma conta Pro, Max, Team, Enterprise ou Console. O plano gratuito do Claude.ai não inclui acesso ao Claude Code. Você também pode usar Claude Code com um provedor de API de terceiros como [Amazon Bedrock](/docs/pt/amazon-bedrock), [Google Cloud's Agent Platform](/docs/pt/google-vertex-ai) ou [Microsoft Foundry](/docs/pt/microsoft-foundry).
 
-Após a instalação, faça login executando `claude` e seguindo os prompts do navegador. Consulte [Autenticação](/docs/pt/authentication) para todos os tipos de conta e opções de configuração de equipe.
+Após a instalação, faça login executando `claude` e seguindo os prompts do navegador. Se a variável de ambiente `ANTHROPIC_API_KEY` estiver definida, Claude Code solicita uma vez que você aprove a chave em vez de abrir um navegador. Consulte [Autenticação](/docs/pt/authentication) para todos os tipos de conta e opções de configuração de equipe.
 
 <h2 id="update-claude-code">
   Atualizar Claude Code
@@ -243,7 +257,7 @@ Configure isso via `/config` → **Canal de atualização automática**, ou adic
 }
 ```
 
-Para implantações empresariais, você pode impor um canal de lançamento consistente em toda a sua organização usando [configurações gerenciadas](/docs/pt/permissions#managed-settings).
+Para implantações empresariais, você pode impor um canal de lançamento consistente em toda a sua organização usando [configurações gerenciadas](/docs/pt/managed-settings).
 
 As instalações do Homebrew escolhem um canal pelo nome do cask em vez dessa configuração: `claude-code` rastreia estável e `claude-code@latest` rastreia mais recente.
 
@@ -264,15 +278,15 @@ Adicione-o ao seu [arquivo settings.json](/docs/pt/settings) para fixar um piso 
 }
 ```
 
-Em [configurações gerenciadas](/docs/pt/permissions#managed-settings), isso impõe um mínimo em toda a organização que as configurações de usuário e projeto não podem substituir.
+Em [configurações gerenciadas](/docs/pt/managed-settings), isso impõe um mínimo em toda a organização que as configurações de usuário e projeto não podem substituir.
 
-O pino `minimumVersion` apenas restringe atualizações. Para fazer Claude Code recusar iniciar fora de um intervalo de versão, use as configurações gerenciadas `requiredMinimumVersion` e `requiredMaximumVersion` em vez disso. As atualizações também respeitam o teto `requiredMaximumVersion`. Consulte [configurações disponíveis](/docs/pt/settings#available-settings).
+O pino `minimumVersion` apenas restringe atualizações. Para fazer Claude Code recusar iniciar fora de um intervalo de versão, use as configurações gerenciadas `requiredMinimumVersion` e `requiredMaximumVersion` em vez disso. As atualizações também respeitam o teto `requiredMaximumVersion`. Consulte [`requiredMinimumVersion`](/docs/pt/settings-reference#requiredminimumversion) e [`requiredMaximumVersion`](/docs/pt/settings-reference#requiredmaximumversion).
 
 <h3 id="disable-auto-updates">
   Desabilitar atualizações automáticas
 </h3>
 
-Defina `DISABLE_AUTOUPDATER` como `"1"` na chave `env` do seu arquivo [`settings.json`](/docs/pt/settings#available-settings):
+Defina `DISABLE_AUTOUPDATER` como `"1"` na chave `env` do seu arquivo [`settings.json`](/docs/pt/settings-reference#all-settings):
 
 ```json theme={null}
 {
@@ -281,6 +295,8 @@ Defina `DISABLE_AUTOUPDATER` como `"1"` na chave `env` do seu arquivo [`settings
   }
 }
 ```
+
+Em uma instalação nativa ou npm, confirme que a alteração entrou em vigor executando `claude doctor` e verificando se a linha `Auto-updates` mostra `disabled (set by env: DISABLE_AUTOUPDATER)` em vez de `enabled`.
 
 `DISABLE_AUTOUPDATER` apenas interrompe a verificação em segundo plano; `claude update` e `claude install` ainda funcionam. Para bloquear todos os caminhos de atualização, incluindo atualizações manuais, defina [`DISABLE_UPDATES`](/docs/pt/env-vars) em vez disso. Use isso quando você distribuir Claude Code através de seus próprios canais e precisar que os usuários permaneçam na versão que você fornece.
 
@@ -293,6 +309,8 @@ Para aplicar uma atualização imediatamente sem aguardar a próxima verificaç�
 ```bash theme={null}
 claude update
 ```
+
+Quando uma atualização é instalada, o comando relata `Successfully updated from <old version> to version <new version>`. Se você já estiver na versão mais recente, ele relata `Claude Code is up to date (<version>)`. As instalações gerenciadas pelo Homebrew, WinGet ou apk relatam `Claude is up to date!` em vez disso.
 
 <h2 id="advanced-installation-options">
   Opções avançadas de instalação
@@ -372,6 +390,8 @@ Para instalar um número de versão específico:
   </Tab>
 </Tabs>
 
+Para confirmar qual versão foi instalada, execute `claude --version`: o comando imprime a versão exata que você passou, como `2.1.89 (Claude Code)`.
+
 <h3 id="install-with-linux-package-managers">
   Instalar com gerenciadores de pacotes Linux
 </h3>
@@ -382,18 +402,31 @@ Todos os repositórios são assinados com a [chave de assinatura de lançamento 
 
 <Tabs>
   <Tab title="apt">
-    Para Debian e Ubuntu. Os comandos de instalação abaixo baixam a chave de assinatura com `curl`, que instalações recentes de Debian e Ubuntu podem não incluir. Se o download falhar com `sudo: curl: command not found`, instale curl primeiro:
+    Para Debian e Ubuntu. Os comandos de instalação abaixo baixam a chave de assinatura com `curl` e a verificam com `gpg`, que instalações recentes de Debian e Ubuntu podem não incluir. Se algum comando relatar `command not found`, instale ambos primeiro:
 
     ```bash theme={null}
-    sudo apt install curl
+    sudo apt install curl gnupg
     ```
 
-    Os comandos a seguir configuram o canal `stable`:
+    Baixe a chave de assinatura:
 
     ```bash theme={null}
     sudo install -d -m 0755 /etc/apt/keyrings
     sudo curl -fsSL https://downloads.claude.ai/keys/claude-code.asc \
       -o /etc/apt/keyrings/claude-code.asc
+    ```
+
+    Se este download falhar, `apt update` mais tarde falhará com `NO_PUBKEY BAA929FF1A7ECACE`. Confirme que a chave foi baixada e pertence à Anthropic antes de continuar:
+
+    ```bash theme={null}
+    gpg --show-keys /etc/apt/keyrings/claude-code.asc
+    ```
+
+    A impressão digital que gpg imprime deve ser `31DDDE24DDFAB679F42D7BD2BAA929FF1A7ECACE`. Se gpg relatar que o arquivo não pode ser aberto ou não contém dados OpenPGP válidos, o download falhou ou retornou o conteúdo errado: confirme que sua rede pode alcançar `downloads.claude.ai`, depois execute novamente o comando de download.
+
+    Registre o repositório no canal `stable` e instale:
+
+    ```bash theme={null}
     echo "deb [signed-by=/etc/apt/keyrings/claude-code.asc] https://downloads.claude.ai/claude-code/apt/stable stable main" \
       | sudo tee /etc/apt/sources.list.d/claude-code.list
     sudo apt update
@@ -406,8 +439,6 @@ Todos os repositórios são assinados com a [chave de assinatura de lançamento 
     echo "deb [signed-by=/etc/apt/keyrings/claude-code.asc] https://downloads.claude.ai/claude-code/apt/latest latest main" \
       | sudo tee /etc/apt/sources.list.d/claude-code.list
     ```
-
-    Verifique a impressão digital da chave GPG antes de confiar nela: `gpg --show-keys /etc/apt/keyrings/claude-code.asc` deve relatar `31DD DE24 DDFA B679 F42D 7BD2 BAA9 29FF 1A7E CACE`.
 
     Para atualizar mais tarde, execute `sudo apt update && sudo apt upgrade claude-code`.
   </Tab>

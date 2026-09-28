@@ -6,7 +6,7 @@
 
 > Dapatkan respons real-time dari Agent SDK saat teks dan tool calls streaming masuk
 
-Secara default, Agent SDK menghasilkan objek `AssistantMessage` lengkap setelah Claude selesai menghasilkan setiap respons. Untuk menerima pembaruan inkremental saat teks dan tool calls dihasilkan, aktifkan partial message streaming dengan mengatur `include_partial_messages` (Python) atau `includePartialMessages` (TypeScript) ke `true` dalam opsi Anda.
+Secara default, Agent SDK menghasilkan `AssistantMessage` lengkap untuk setiap blok konten yang tidak kosong, seperti blok teks atau tool call, setelah Claude selesai menghasilkan blok tersebut. Untuk menerima pembaruan inkremental saat teks dan tool calls dihasilkan, aktifkan partial message streaming.
 
 <Tip>
   Halaman ini mencakup output streaming (menerima token secara real-time). Untuk input modes (cara Anda mengirim pesan), lihat [Kirim pesan ke agents](/docs/id/agent-sdk/streaming-vs-single-mode). Anda juga dapat [stream responses using the Agent SDK via the CLI](/docs/id/headless).
@@ -79,34 +79,14 @@ Contoh di bawah mengaktifkan streaming dan mencetak chunk teks saat tiba. Perhat
 
 Ketika partial messages diaktifkan, Anda menerima raw Claude API streaming events yang dibungkus dalam objek. Tipe memiliki nama berbeda di setiap SDK:
 
-* **Python**: `StreamEvent` (import dari `claude_agent_sdk.types`)
-* **TypeScript**: `SDKPartialAssistantMessage` dengan `type: 'stream_event'`
+* **Python**: [`StreamEvent`](/docs/id/agent-sdk/python#streamevent) (import dari `claude_agent_sdk.types`)
+* **TypeScript**: [`SDKPartialAssistantMessage`](/docs/id/agent-sdk/typescript#sdkpartialassistantmessage) dengan `type: 'stream_event'`
 
-Keduanya berisi raw Claude API events, bukan teks terakumulasi. Anda perlu mengekstrak dan mengakumulasi text deltas sendiri. Berikut adalah struktur setiap tipe:
-
-<CodeGroup>
-  ```python Python theme={null}
-  @dataclass
-  class StreamEvent:
-      uuid: str  # Unique identifier for this event
-      session_id: str  # Session identifier
-      event: dict[str, Any]  # The raw Claude API stream event
-      parent_tool_use_id: str | None  # Always None
-  ```
-
-  ```typescript TypeScript theme={null}
-  type SDKPartialAssistantMessage = {
-    type: "stream_event";
-    event: BetaRawMessageStreamEvent; // From Anthropic SDK
-    parent_tool_use_id: string | null;
-    uuid: UUID;
-    session_id: string;
-    ttft_ms?: number; // Time to first token in ms, present only on message_start events
-  };
-  ```
-</CodeGroup>
+Keduanya berisi raw Claude API events, bukan teks terakumulasi. Anda perlu mengekstrak dan mengakumulasi text deltas sendiri.
 
 Field `parent_tool_use_id` selalu `None` di Python dan `null` di TypeScript. Stream events dipancarkan untuk sesi utama saja; token-level deltas dari subagents tidak diteruskan. Untuk mengatribusikan output ke subagent, gunakan complete messages, yang membawa `parent_tool_use_id`. Lihat [Detect subagent invocation](/docs/id/agent-sdk/subagents#detect-subagent-invocation).
+
+Claude Code menetapkan `user_message_uuid` pada stream event non-ping pertama giliran, dan lagi ketika pesan yang dijawab giliran berubah, di bawah kondisi dalam [`user_message_uuid`](/docs/id/agent-sdk/typescript#user_message_uuid). Python `StreamEvent` tidak mengekspos field ini.
 
 Field `event` berisi raw streaming event dari [Claude API](https://platform.claude.com/docs/en/build-with-claude/streaming#event-types). Tipe event umum meliputi:
 
@@ -123,75 +103,26 @@ Field `event` berisi raw streaming event dari [Claude API](https://platform.clau
   Alur pesan
 </h2>
 
-Dengan partial messages diaktifkan, Anda menerima pesan dalam urutan ini:
+Claude Code mengeluarkan `AssistantMessage` saat setiap blok konten yang tidak kosong selesai, jadi respons dengan blok teks dan panggilan alat menghasilkan dua objek `AssistantMessage`. Masing-masing membawa hanya blok kontennya sendiri, dan keduanya berbagi ID pesan yang sama, yang Anda baca sebagai `message.message.id` di TypeScript dan `message.message_id` di Python. Dengan pesan parsial diaktifkan, setiap `AssistantMessage` tiba sebelum acara `content_block_stop` blok tersebut, dan Anda menerima pesan dalam urutan ini:
 
 ```text theme={null}
 StreamEvent (message_start)
 StreamEvent (content_block_start) - text block
 StreamEvent (content_block_delta) - text chunks...
+AssistantMessage - complete text block
 StreamEvent (content_block_stop)
 StreamEvent (content_block_start) - tool_use block
 StreamEvent (content_block_delta) - tool input chunks...
+AssistantMessage - complete tool_use block
 StreamEvent (content_block_stop)
 StreamEvent (message_delta)
 StreamEvent (message_stop)
-AssistantMessage - complete message with all content
 ... tool executes ...
 ... more streaming events for next turn ...
 ResultMessage - final result
 ```
 
-Tanpa partial messages diaktifkan (`include_partial_messages` di Python, `includePartialMessages` di TypeScript), Anda menerima semua tipe pesan kecuali `StreamEvent`. Tipe umum meliputi `SystemMessage` (inisialisasi sesi), `AssistantMessage` (respons lengkap), `ResultMessage` (hasil akhir), dan pesan batas kompak yang menunjukkan kapan riwayat percakapan dikompres (`SDKCompactBoundaryMessage` di TypeScript; `SystemMessage` dengan subtype `"compact_boundary"` di Python).
-
-<h2 id="stream-text-responses">
-  Stream text responses
-</h2>
-
-Untuk menampilkan teks saat dihasilkan, cari event `content_block_delta` di mana `delta.type` adalah `text_delta`. Ini berisi chunk teks inkremental. Contoh di bawah mencetak setiap chunk saat tiba:
-
-<CodeGroup>
-  ```python Python theme={null}
-  from claude_agent_sdk import query, ClaudeAgentOptions
-  from claude_agent_sdk.types import StreamEvent
-  import asyncio
-
-
-  async def stream_text():
-      options = ClaudeAgentOptions(include_partial_messages=True)
-
-      async for message in query(prompt="Explain how databases work", options=options):
-          if isinstance(message, StreamEvent):
-              event = message.event
-              if event.get("type") == "content_block_delta":
-                  delta = event.get("delta", {})
-                  if delta.get("type") == "text_delta":
-                      # Print each text chunk as it arrives
-                      print(delta.get("text", ""), end="", flush=True)
-
-      print()  # Final newline
-
-
-  asyncio.run(stream_text())
-  ```
-
-  ```typescript TypeScript theme={null}
-  import { query } from "@anthropic-ai/claude-agent-sdk";
-
-  for await (const message of query({
-    prompt: "Explain how databases work",
-    options: { includePartialMessages: true }
-  })) {
-    if (message.type === "stream_event") {
-      const event = message.event;
-      if (event.type === "content_block_delta" && event.delta.type === "text_delta") {
-        process.stdout.write(event.delta.text);
-      }
-    }
-  }
-
-  console.log(); // Final newline
-  ```
-</CodeGroup>
+Tanpa pesan parsial diaktifkan, Anda menerima semua jenis pesan kecuali `StreamEvent`. Jenis umum termasuk `SystemMessage` (inisialisasi sesi), `AssistantMessage` (blok konten lengkap), `ResultMessage` (hasil akhir), dan pesan batas kompak yang menunjukkan kapan riwayat percakapan dikompres (`SDKCompactBoundaryMessage` di TypeScript; `SystemMessage` dengan subtipe `"compact_boundary"` di Python).
 
 <h2 id="stream-tool-calls">
   Stream tool calls

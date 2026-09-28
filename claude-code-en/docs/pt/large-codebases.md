@@ -71,7 +71,7 @@ Onde você inicia `claude` determina quais arquivos Claude pode ler e editar sem
 | Raiz do repositório | Cada arquivo                                  | Apenas raiz; arquivos de subdiretório carregam sob demanda quando Claude lê lá | Tarefas abrangem múltiplos pacotes ou subsistemas |
 | Um subdiretório     | Apenas essa subárvore, até você conceder mais | Desse diretório mais cada ancestral                                            | O trabalho é escopo de um pacote ou subsistema    |
 
-As configurações de projeto em `.claude/settings.json` carregam apenas do seu diretório inicial e não são herdadas de diretórios pai da maneira que os arquivos CLAUDE.md são: um `.claude/settings.json` na raiz do repositório se aplica apenas quando você inicia da raiz.
+As configurações de projeto em `.claude/settings.json` não são herdadas de diretórios pai da maneira que os arquivos CLAUDE.md são. Para saber qual diretório `.claude/settings.json` uma sessão lê, consulte [onde Claude Code procura por cada arquivo](/docs/pt/settings#where-claude-code-looks-for-each-file).
 
 Cada seção abaixo afirma se seu arquivo de configurações pertence à raiz do repositório ou ao subdiretório do qual você inicia, e se é confirmado ou mantido localmente.
 
@@ -85,39 +85,28 @@ Claude Code carrega cada arquivo [CLAUDE.md](/docs/pt/memory) do seu diretório 
 
 Uma divisão comum é dois níveis:
 
-* **CLAUDE.md raiz**: instruções que se aplicam em todos os lugares, como padrões de codificação, convenções de commit e layout de repositório
+* **CLAUDE.md raiz**: instruções que se aplicam em todos os lugares, como padrões de codificação e convenções de commit
 * **CLAUDE.md por subdiretório**: convenções específicas da pilha dessa área. Em um monorepo é um por pacote. Em uma grande árvore única é um por subsistema como `src/db/` ou `src/api/`
 
 Confirme esses arquivos no repositório para que colegas de trabalho os herdem. O proprietário de cada diretório normalmente mantém seu arquivo.
 
-O CLAUDE.md raiz orienta Claude para a estrutura do repositório:
+Para aparar um arquivo que já está verificado, execute o [checkup `/doctor`](/docs/pt/memory#my-claude-md-is-too-large). O CLAUDE.md raiz contém as regras que se aplicam em cada pacote:
 
 ```markdown CLAUDE.md theme={null}
-Este é um monorepo com três pacotes sob packages/:
-
-- packages/api: API REST Node.js com Express, TypeScript e PostgreSQL
-- packages/web: frontend React com Vite, TypeScript e TailwindCSS
-- packages/shared: utilitários TypeScript compartilhados usados por api e web
-
-Execute comandos do diretório do pacote, não da raiz do monorepo.
-Cada pacote tem seu próprio tsconfig.json, package.json e suite de testes.
+Execute scripts de pacote do diretório do pacote, não da raiz do monorepo.
+Prefixe assuntos de commit com o nome do pacote, por exemplo `api: add rate limiting`.
+Nunca edite arquivos sob packages/*/generated/. Execute `npm run codegen` no pacote em vez disso.
 ```
 
-O CLAUDE.md de cada subdiretório, aqui `packages/api/CLAUDE.md`, adiciona contexto específico da pilha dessa área:
+O CLAUDE.md de cada subdiretório, aqui `packages/api/CLAUDE.md`, adiciona as convenções específicas dessa área:
 
 ```markdown packages/api/CLAUDE.md theme={null}
-Este pacote é o servidor da API REST.
-
-- Executar testes: `npm test` (usa Vitest)
-- Executar servidor dev: `npm run dev` (porta 3001)
-- Migrações de banco de dados: `npm run migrate`
-- Variáveis de ambiente: copie `.env.example` para `.env`
-
-As rotas da API estão em src/routes/. Cada arquivo de rota exporta um roteador Express.
-As consultas de banco de dados usam Knex em src/db/. Nunca escreva strings SQL brutas em manipuladores de rota.
+Copie `.env.example` para `.env` antes de executar qualquer coisa. Testes e o servidor dev falham sem ele.
+Escreva consultas de banco de dados com o construtor de consultas Knex. Nunca coloque strings SQL brutas em manipuladores de rota.
+Nunca edite uma migração depois que ela foi mesclada. Adicione uma nova migração em vez disso.
 ```
 
-Quando você inicia Claude de `packages/api/`, ele carrega tanto `packages/api/CLAUDE.md` quanto o CLAUDE.md raiz. Claude vê as instruções locais ao lado das regras em toda a repositório, sem instruções de `packages/web/` no contexto. O mesmo vale para qualquer subdiretório em uma árvore não-monorepo.
+Quando você inicia Claude de `packages/api/`, ele carrega tanto `packages/api/CLAUDE.md` quanto o CLAUDE.md raiz. Claude vê as instruções locais ao lado das regras em toda a repositório, sem instruções de `packages/web/` no contexto. O mesmo vale para qualquer subdiretório em uma árvore não-monorepo. Para confirmar quais arquivos carregaram, execute `/context` e verifique a lista sob **Memory files**.
 
 Algumas maneiras de manter os arquivos atualizados conforme a base de código e os modelos mudam:
 
@@ -144,30 +133,29 @@ Para uma comparação que também cobre skills, veja [Comparar recursos similare
   Excluir arquivos CLAUDE.md irrelevantes
 </h3>
 
-Quando você inicia Claude da raiz do repositório, o CLAUDE.md de cada subdiretório carrega assim que Claude lê um arquivo nesse diretório. A configuração `claudeMdExcludes` pula arquivos específicos por caminho ou padrão glob para que nunca carreguem.
+Quando você inicia Claude da raiz do repositório, cada CLAUDE.md de subdiretório carrega assim que Claude lê um arquivo nesse diretório. A configuração `claudeMdExcludes` pula arquivos específicos por caminho ou padrão glob para que nunca carreguem.
 
 Use isso para diretórios em que você nunca trabalha, como pacotes de outras equipes, código legado ou subárvores fornecidas. A lista de exclusão é estática, não um switch por tarefa. Para focar em um pacote hoje e outro amanhã, [inicie Claude do diretório desse pacote](#choose-where-to-start-claude) em vez de editar exclusões.
 
-Se você quer apenas essas exclusões para você, coloque a configuração em `.claude/settings.local.json`. Claude Code gitignores esse arquivo quando o cria; já que você está criando manualmente aqui, adicione-o ao seu gitignore. Os padrões usam sintaxe glob correspondida contra caminhos de arquivo absolutos, então comece padrões de estilo relativo com `**/` para corresponder em qualquer lugar da árvore. O exemplo abaixo exclui pacotes pertencentes a outras equipes:
+Se você quer apenas essas exclusões para você, coloque a configuração em `.claude/settings.local.json`. Claude Code adiciona esse arquivo ao seu gitignore global quando salva uma configuração lá. Como você está criando manualmente aqui, adicione-o ao seu gitignore você mesmo. Os padrões usam sintaxe glob correspondida contra caminhos de arquivo absolutos, então comece padrões de estilo relativo com `**/` para corresponder em qualquer lugar da árvore. O exemplo abaixo exclui um pacote pertencente a outra equipe:
 
 ```json .claude/settings.local.json theme={null}
 {
   "claudeMdExcludes": [
-    "**/packages/admin-dashboard/**",
-    "**/packages/legacy-*/**"
+    "**/packages/web/**"
   ]
 }
 ```
 
-Isso pula cada CLAUDE.md e arquivo de regras sob esses pacotes. O CLAUDE.md raiz e os pacotes em que você trabalha ainda carregam normalmente.
+Isso pula cada CLAUDE.md e arquivo de regras sob esse pacote. O CLAUDE.md raiz e os pacotes em que você trabalha ainda carregam normalmente.
 
 Esses padrões cobrem outros casos comuns:
 
 * `"**/packages/*/CLAUDE.md"`: exclui o CLAUDE.md de cada pacote enquanto mantém a raiz
-* `"**/packages/web/**"`: exclui tudo sob o pacote web, incluindo regras
+* `"**/packages/legacy-*/**"`: exclui cada pacote cujo nome corresponde ao glob, incluindo regras
 * `"/home/user/monorepo/legacy/CLAUDE.md"`: exclui um arquivo específico por caminho absoluto
 
-Arquivos CLAUDE.md de política gerenciada não podem ser excluídos, então instruções em toda a organização sempre se aplicam. Você pode definir `claudeMdExcludes` em qualquer [escopo de configurações](/docs/pt/settings#configuration-scopes): usuário, projeto, local ou gerenciado. Os arrays se mesclam entre escopos, então uma equipe pode definir padrões em nível de projeto enquanto indivíduos adicionam substituições locais.
+Arquivos CLAUDE.md de política gerenciada não podem ser excluídos, então instruções em toda a organização sempre se aplicam. Você pode definir `claudeMdExcludes` em qualquer [escopo de configurações](/docs/pt/settings#where-settings-live): usuário, projeto, local ou gerenciado. Os arrays se mesclam entre escopos, então uma equipe pode definir padrões em nível de projeto enquanto indivíduos adicionam substituições locais.
 
 Para a documentação completa de exclusão, veja [Excluir arquivos CLAUDE.md específicos](/docs/pt/memory#exclude-specific-claude-md-files).
 
@@ -175,66 +163,81 @@ Para a documentação completa de exclusão, veja [Excluir arquivos CLAUDE.md es
   Reduza o que Claude lê
 </h2>
 
-Instruções são apenas parte do que acaba no contexto do Claude. Leituras de arquivo são outro custo que cresce com a base de código. As configurações abaixo bloqueiam leituras de caminhos irrelevantes e substituem varreduras exaustivas por buscas de servidor de linguagem.
+As instruções são apenas parte do que acaba no contexto do Claude. As leituras de arquivo são outro custo que cresce com a base de código. As configurações abaixo bloqueiam leituras de caminhos irrelevantes e substituem varreduras exaustivas de arquivos por pesquisas de servidor de linguagem.
 
 <h3 id="block-reads-of-generated-and-vendored-code">
   Bloqueie leituras de código gerado e fornecido
 </h3>
 
-As buscas de conteúdo do Claude respeitam `.gitignore` por padrão, então caminhos já listados lá, como `node_modules/`, `dist/` e `build/`, ficam fora dos resultados de busca sem configuração adicional.
+As pesquisas de conteúdo do Claude respeitam `.gitignore` por padrão, portanto, caminhos já listados lá, como `node_modules/`, `dist/` e `build/`, ficam fora dos resultados de pesquisa sem configuração adicional.
 
-Para caminhos que são verificados, como um SDK fornecido ou código gerado confirmado, adicione regras de negação `Read` em `permissions.deny` para bloquear Claude de abrir esses arquivos mesmo quando uma busca os lista.
+Para caminhos que são verificados, como um SDK fornecido ou código gerado confirmado, adicione regras de negação `Read` em `permissions.deny` para impedir que Claude abra esses arquivos.
 
-Para aplicar essas exclusões para todos que trabalham no repositório, confirme-as em `.claude/settings.json`. Para mantê-las pessoais, use `.claude/settings.local.json` em vez disso. Como outras configurações de projeto nesta página, esses arquivos carregam apenas do seu diretório inicial. Coloque-os na raiz do repositório se você inicia Claude lá, ou em cada `.claude/` do pacote se você inicia de subdiretórios. Para impor as mesmas regras de negação em cada sessão independentemente do diretório inicial, defina-as em [configurações gerenciadas](/docs/pt/settings#settings-files), que as configurações de usuário e projeto não podem substituir.
+As regras de negação podem cobrir todos que trabalham no repositório, apenas você ou cada sessão na máquina, dependendo de qual arquivo de configurações você as colocar:
 
-O exemplo abaixo bloqueia artefatos de compilação e um SDK fornecido:
+* **Todos que trabalham no repositório**: confirme as regras em `.claude/settings.json`, na raiz do repositório se você iniciar o Claude lá, ou em cada `.claude/` do pacote se você iniciar a partir de subdiretórios. Como outras configurações de projeto nesta página, esse arquivo não é herdado de diretórios pai.
+* **Apenas você**: use `.claude/settings.local.json` na raiz do repositório, que carrega em cada sessão CLI dentro do repositório independentemente do diretório inicial, exceto nos casos em que Claude Code [não usa a raiz do repositório](/docs/pt/settings#where-claude-code-looks-for-each-file), como no Windows. Padrões relativos como o `Read(./**/vendor/**/*)` do exemplo ainda [ancoram no diretório de trabalho atual da sessão](/docs/pt/permissions#read-and-edit) em vez da raiz do repositório, portanto, se você iniciar sessões a partir de subdiretórios, escreva as regras neste arquivo como caminhos absolutos `//`, como `Read(//absolute/path/to/repo/**/vendor/**/*)`. Antes da v2.1.211, `.claude/settings.local.json` também carregava apenas a partir do diretório inicial.
+* **Todos, aplicado em cada sessão**: defina as regras em [configurações gerenciadas](/docs/pt/managed-settings), que as configurações de usuário e projeto não podem substituir.
+
+O exemplo abaixo bloqueia artefatos de compilação e um SDK fornecido. Seus padrões de diretório terminam com `/**/*` em vez de `/**` para que cada regra cubra tudo dentro do diretório, mas não o próprio diretório. Claude pode então ainda listar esses diretórios ou entrar neles, por exemplo com `ls dist` ou `cd build`.
 
 ```json .claude/settings.json theme={null}
 {
   "permissions": {
     "deny": [
-      "Read(./**/dist/**)",
-      "Read(./**/build/**)",
+      "Read(./**/dist/**/*)",
+      "Read(./**/build/**/*)",
       "Read(./**/*.generated.*)",
-      "Read(./vendor/**)"
+      "Read(./**/vendor/**/*)"
     ]
   }
 }
 ```
 
-As regras de negação cobrem as ferramentas de arquivo integradas do Claude e comandos Bash reconhecidos, incluindo `cat`, `head`, `grep` e `find`, quando um caminho negado é passado como argumento. Elas não filtram caminhos negados da saída de uma busca recursiva, e não cobrem subprocessos arbitrários que abrem arquivos por conta própria. Para a sintaxe de padrão completa, veja [Regras de permissão Read e Edit](/docs/pt/permissions#read-and-edit).
+As regras de negação cobrem as ferramentas de arquivo integradas do Claude. Em Bash, elas cobrem os comandos de arquivo que Claude Code reconhece, como `cat`, `head`, `grep` e `find`, quando um caminho negado aparece como um argumento, e o alvo de um [redirecionamento](/docs/pt/permissions#redirections) como `< file`. Claude Code também faz uma tentativa de melhor esforço para manter caminhos negados fora dos resultados das ferramentas Grep e Glob integradas. Uma pesquisa Bash como `grep -r` ou `find` em um diretório que contém arquivos negados ainda os inclui em sua saída.
+
+As regras de negação não cobrem subprocessos que abrem arquivos por conta própria. Para a sintaxe de padrão completa, consulte [Regras de permissão Read e Edit](/docs/pt/permissions#read-and-edit).
 
 <h3 id="reduce-file-reads-with-code-intelligence">
   Reduza leituras de arquivo com inteligência de código
 </h3>
 
-Em uma grande base de código, encontrar onde um símbolo é definido ou usado pode custar muitas leituras de arquivo e chamadas grep. [Plugins de inteligência de código](/docs/pt/discover-plugins#code-intelligence) conectam Claude a um servidor de linguagem para que ele possa pular para definições, encontrar referências e superfícies erros de tipo diretamente em vez de verificar a árvore.
+Em uma base de código grande, encontrar onde um símbolo é definido ou usado pode custar muitas leituras de arquivo e chamadas grep. [Plugins de inteligência de código](/docs/pt/plugins/code-intelligence) conectam Claude a um servidor de linguagem para que ele possa pular para definições, encontrar referências e exibir erros de tipo diretamente em vez de varrer a árvore.
 
-O marketplace oficial tem plugins para TypeScript, Python, Go, Rust e outras linguagens comuns. O exemplo abaixo instala o plugin TypeScript:
+O marketplace oficial tem plugins para TypeScript, Python, Go, Rust e outras linguagens comuns. Execute o comando abaixo dentro de uma sessão Claude Code para instalar o plugin TypeScript:
 
 ```shell theme={null}
 /plugin install typescript-lsp@claude-plugins-official
 ```
 
-Para habilitar um plugin para todos no repositório em vez de instalá-lo você mesmo, adicione-o à configuração de projeto [`enabledPlugins`](/docs/pt/settings#plugin-settings).
+Se a instalação falhar, corresponda à mensagem que Claude Code relata:
 
-Os plugins de inteligência de código requerem o binário do servidor de linguagem da linguagem em cada máquina do desenvolvedor. Veja [qual binário cada linguagem requer](/docs/pt/discover-plugins#code-intelligence). Instalar do marketplace oficial requer acesso à rede para GitHub, onde o marketplace é hospedado. Em uma rede restrita, [adicione o marketplace de um host Git interno ou caminho local](/docs/pt/discover-plugins#add-from-other-git-hosts) em vez disso.
+* `Marketplace "claude-plugins-official" not found`: adicione o marketplace com `/plugin marketplace add anthropics/claude-plugins-official`, depois tente novamente a instalação.
+* O plugin [não foi encontrado no marketplace](/docs/pt/plugins/install#install-a-plugin): verifique o nome do plugin.
 
-Isso funciona bem com `claudeMdExcludes` e as regras de negação `Read` acima. Aqueles mantêm conteúdo irrelevante fora do contexto, e inteligência de código mantém Claude de ler através do que permanece para localizar uma definição.
+Para habilitar um plugin para todos no repositório em vez de instalá-lo você mesmo, adicione-o à [configuração de projeto `enabledPlugins`](/docs/pt/settings-reference#plugin-settings).
+
+Os plugins de inteligência de código exigem o binário do servidor de linguagem da linguagem em cada máquina do desenvolvedor. Veja [qual binário cada linguagem exige](/docs/pt/plugins/code-intelligence). A instalação do marketplace oficial requer acesso à rede para GitHub, onde o marketplace é hospedado. Em uma rede restrita, [adicione o marketplace de um host Git interno ou caminho local](/docs/pt/plugins/install#add-a-marketplace) em vez disso.
+
+Isso funciona bem com `claudeMdExcludes` e as regras de negação `Read` acima. Aqueles mantêm conteúdo irrelevante fora do contexto, e a inteligência de código impede que Claude leia o que permanece para localizar uma definição.
 
 <h2 id="scope-worktrees-and-file-access">
-  Escopo worktrees e acesso a arquivos
+  Escopo de worktrees e acesso a arquivos
 </h2>
 
-Essas configurações controlam o que está no disco em worktrees e quais diretórios Claude pode ler e escrever além do seu ponto inicial.
+Essas configurações controlam o que está no disco em worktrees e quais diretórios Claude pode ler e escrever além do seu ponto de partida.
 
 <h3 id="check-out-only-the-directories-you-need">
-  Verifique apenas os diretórios que você precisa
+  Faça checkout apenas dos diretórios que você precisa
 </h3>
 
-A flag `--worktree` inicia uma sessão em um novo git worktree para que as mudanças fiquem isoladas do seu checkout principal. Por padrão, ela verifica todo o repositório. Em um repositório grande, a configuração `worktree.sparsePaths` usa git sparse-checkout para escrever apenas os diretórios listados mais arquivos em nível raiz no disco, para que worktrees iniciem mais rápido e usem menos espaço.
+A flag `--worktree` inicia uma sessão em uma nova git worktree para que as alterações fiquem isoladas do seu checkout principal. Por padrão, ela faz checkout de todo o repositório. Em um repositório grande, a configuração `worktree.sparsePaths` usa git sparse-checkout para escrever apenas os diretórios listados mais arquivos no nível raiz no disco, para que worktrees iniciem mais rapidamente e usem menos espaço.
 
-Se todos que trabalham neste diretório precisam dos mesmos caminhos, confirme a configuração em `.claude/settings.json`. Para adicionar caminhos para você, use `.claude/settings.local.json`: as listas se mesclam entre escopos, então um arquivo local pode adicionar caminhos à lista confirmada mas não removê-los. O exemplo abaixo mostra o arquivo confirmado:
+Se todos que trabalham neste diretório precisam dos mesmos caminhos, confirme a configuração em `.claude/settings.json`. Para adicionar caminhos para você mesmo, use `.claude/settings.local.json`: as listas se mesclam entre escopos, então um arquivo local pode adicionar caminhos à lista confirmada, mas não removê-los.
+
+Os exemplos JSON nesta página mostram uma configuração por vez. Se seu `.claude/settings.json` já contiver outras chaves, como as regras `permissions.deny` acima, adicione a chave `worktree` ao lado delas em vez de substituir o arquivo. [Coloque tudo junto](#put-it-together) mostra o resultado combinado.
+
+O exemplo abaixo mostra o arquivo confirmado:
 
 ```json .claude/settings.json theme={null}
 {
@@ -248,15 +251,15 @@ Se todos que trabalham neste diretório precisam dos mesmos caminhos, confirme a
 }
 ```
 
-Quando Claude cria um worktree, ele verifica apenas `.claude/`, `packages/api/` e `packages/shared/` em vez da árvore completa. Os caminhos em `sparsePaths` são relativos à raiz do repositório, independentemente de qual subdiretório você inicia Claude. Qualquer caminho de diretório funciona aqui, não apenas raízes de pacote.
+Quando Claude cria uma worktree, ele faz checkout apenas de `.claude/`, `packages/api/` e `packages/shared/` em vez da árvore completa. Os caminhos em `sparsePaths` são relativos à raiz do repositório, independentemente de qual subdiretório você inicia Claude. Qualquer caminho de diretório funciona aqui, não apenas raízes de pacotes.
 
-Isso é particularmente útil para [isolamento de worktree de subagente](/docs/pt/worktrees#isolate-subagents-with-worktrees). Subagentes são instâncias Claude paralelas geradas para subtarefas, e cada uma que executa em um worktree obtém um checkout leve em vez da árvore completa. Todos os worktrees em uma sessão compartilham o mesmo `sparsePaths`, então se um subagente precisa de `packages/api/` e outro precisa de `packages/web/`, liste ambos.
+Isso é particularmente útil para [isolamento de worktree de subagentes](/docs/pt/worktrees#isolate-subagents-with-worktrees). Subagentes são instâncias paralelas de Claude geradas para subtarefas, e cada uma que é executada em uma worktree obtém um checkout leve em vez da árvore completa. Todas as worktrees em uma sessão compartilham o mesmo `sparsePaths`, então se um subagente precisa de `packages/api/` e outro precisa de `packages/web/`, liste ambos.
 
-Liste diretórios em `sparsePaths`, não arquivos individuais. Arquivos em nível raiz como `package.json`, `tsconfig.base.json` e arquivos de lock são sempre verificados ao lado dos diretórios que você lista. Diretórios em nível raiz não são, então inclua `.claude` na lista se você quer o `.claude/settings.json`, `.claude/rules/` ou `.claude/skills/` da raiz do repositório disponível dentro do worktree.
+Liste diretórios em `sparsePaths`, não arquivos individuais. Arquivos no nível raiz como `package.json`, `tsconfig.base.json` e arquivos de lock são sempre feitos checkout ao lado dos diretórios que você lista. Diretórios no nível raiz não são, então inclua `.claude` na lista se você quiser que o `.claude/settings.json` da raiz do repositório ou `.claude/rules/` estejam disponíveis dentro da worktree. Para skills de projeto, agentes e comandos, veja [O que worktrees compartilham com o checkout principal](/docs/pt/worktrees#what-worktrees-share-with-the-main-checkout).
 
-Sparse checkout requer que git habilite `extensions.worktreeConfig` no `.git/config` compartilhado do repositório enquanto um worktree esparso existe. Claude Code remove essa entrada após o último worktree ser removido, mas apenas se Claude Code a adicionou. Nunca remove um valor que você definiu você mesmo. Antes da v2.1.207, a entrada permanecia após o último worktree ser removido, e ferramentas baseadas em go-git como `tea` falhavam ao abrir o repositório até você executar `git config --unset extensions.worktreeConfig`.
+O sparse checkout requer que o git habilite `extensions.worktreeConfig` no `.git/config` compartilhado do repositório enquanto uma worktree esparsa existe. Claude Code remove essa entrada após a última worktree ser removida, mas apenas se Claude Code a adicionou. Nunca remove um valor que você definiu você mesmo. Antes da v2.1.207, a entrada permanecia após a última worktree ser removida, e ferramentas baseadas em go-git como `tea` falhavam ao abrir o repositório até que você executasse `git config --unset extensions.worktreeConfig`.
 
-Para evitar duplicar diretórios grandes como `node_modules` entre worktrees, emparelhe `sparsePaths` com `symlinkDirectories` no mesmo `.claude/settings.json`:
+Para evitar duplicar diretórios grandes como `node_modules` entre worktrees, combine `sparsePaths` com `symlinkDirectories` no mesmo `.claude/settings.json`:
 
 ```json .claude/settings.json theme={null}
 {
@@ -273,25 +276,25 @@ Para evitar duplicar diretórios grandes como `node_modules` entre worktrees, em
 }
 ```
 
-Isso cria um symlink do `node_modules/` de cada worktree de volta para a cópia do repositório principal em vez de duplicá-lo no disco.
+Isso cria um symlink de cada `node_modules/` da worktree de volta para a cópia do repositório principal em vez de duplicá-lo no disco.
 
 <Note>
-  As configurações `sparsePaths` e `symlinkDirectories` são lidas do seu diretório inicial antes do worktree ser criado. Após a criação, o diretório de trabalho da sessão é a raiz do worktree, não o subdiretório do qual você iniciou. As configurações de projeto dentro do worktree portanto carregam do `.claude/settings.json` da raiz do worktree, a cópia verificada do arquivo da raiz do repositório. Coloque qualquer outra configuração que você precisa dentro de worktrees, como regras de permissão ou hooks, no `.claude/settings.json` da raiz do repositório.
+  As configurações `sparsePaths` e `symlinkDirectories` são lidas do seu diretório inicial antes da worktree ser criada. Após a criação, o diretório de trabalho da sessão é a raiz da worktree, não o subdiretório do qual você iniciou. As configurações de projeto dentro da worktree, portanto, carregam do `.claude/settings.json` da raiz da worktree, a cópia verificada do arquivo da raiz do repositório. Coloque qualquer outra configuração que você precise dentro de worktrees, como regras de permissão ou hooks, no `.claude/settings.json` da raiz do repositório.
 </Note>
 
-Para a referência completa de configurações de worktree, veja [Configurações de Worktree](/docs/pt/settings#worktree-settings).
+Para a referência completa de configurações de worktree, veja [Configurações de Worktree](/docs/pt/settings-reference#worktree).
 
 <h3 id="grant-access-across-packages-or-repositories">
   Conceda acesso entre pacotes ou repositórios
 </h3>
 
-Esta seção se aplica quando você inicia Claude de um subdiretório, ou quando uma tarefa abrange múltiplos checkouts. Se você inicia da raiz do repositório em uma grande árvore única, Claude já tem acesso a cada arquivo e você pode pular isso.
+Esta seção se aplica quando você inicia Claude de um subdiretório, ou quando uma tarefa abrange múltiplos checkouts. Se você iniciar da raiz do repositório em uma única árvore grande, Claude já tem acesso a todos os arquivos e você pode pular isso.
 
-Quando você inicia Claude de `packages/api/`, ele pode ler e escrever arquivos dentro desse diretório. Se uma tarefa requer mudanças entre pacotes, como atualizar um tipo compartilhado que tanto `api` quanto `web` importam, você precisa conceder acesso ao diretório irmão. O mesmo mecanismo concede acesso a um repositório separadamente verificado.
+Quando você inicia Claude de `packages/api/`, ele pode ler e escrever arquivos dentro desse diretório. Se uma tarefa requer alterações entre pacotes, como atualizar um tipo compartilhado que tanto `api` quanto `web` importam, você precisa conceder acesso ao diretório irmão. O mesmo mecanismo concede acesso a um repositório separadamente verificado.
 
-A configuração `additionalDirectories` em `.claude/settings.json` dá ao Claude acesso a diretórios fora do diretório de trabalho. O exemplo abaixo concede acesso a dois pacotes irmãos:
+A configuração `additionalDirectories` em `.claude/settings.json` dá a Claude acesso a diretórios fora do diretório de trabalho. O exemplo abaixo concede acesso a dois pacotes irmãos:
 
-```json .claude/settings.json theme={null}
+```json packages/api/.claude/settings.json theme={null}
 {
   "permissions": {
     "additionalDirectories": [
@@ -302,7 +305,7 @@ A configuração `additionalDirectories` em `.claude/settings.json` dá ao Claud
 }
 ```
 
-Os caminhos relativos resolvem contra o diretório do qual você inicia Claude. Com essa configuração, Claude pode ler e editar arquivos em `packages/shared/` e `packages/web/` enquanto trabalha de `packages/api/`.
+Os caminhos relativos são resolvidos em relação ao diretório do qual você inicia Claude. Com essa configuração, Claude pode ler e editar arquivos em `packages/shared/` e `packages/web/` enquanto trabalha de `packages/api/`.
 
 Você também pode conceder acesso em tempo de execução sem editar configurações passando `--add-dir` quando você inicia Claude:
 
@@ -317,7 +320,7 @@ Porém você adicione um diretório, Claude pode ler e editar arquivos nele. Se 
 | Configuração `additionalDirectories`   | Nunca                                    | Nunca          |
 | Flag `--add-dir` ou comando `/add-dir` | Apenas com a variável de ambiente abaixo | Sim            |
 
-Para carregar arquivos CLAUDE.md e regras de um diretório adicionado com `--add-dir` ou `/add-dir`, defina a variável de ambiente `CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD`:
+Para carregar arquivos CLAUDE.md e rules de um diretório adicionado com `--add-dir` ou `/add-dir`, defina a variável de ambiente `CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD`:
 
 ```bash theme={null}
 CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1 claude --add-dir ../shared
@@ -325,7 +328,7 @@ CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1 claude --add-dir ../shared
 
 A variável de ambiente não tem efeito em diretórios listados na configuração `additionalDirectories`. Veja [Carregar de diretórios adicionais](/docs/pt/memory#load-from-additional-directories) para detalhes.
 
-Para diretórios irmãos que todos nesta área precisam, confirme `additionalDirectories` em `.claude/settings.json`. Para uma seleção pessoal ou acesso único, use `.claude/settings.local.json` ou passe `--add-dir` na inicialização.
+Para diretórios irmãos que todos nesta área precisam, confirme `additionalDirectories` em `.claude/settings.json`. Para uma seleção pessoal ou acesso único, use `.claude/settings.local.json` ou passe `--add-dir` no lançamento.
 
 <h2 id="add-per-directory-skills">
   Adicione skills por diretório
@@ -382,17 +385,17 @@ Para mais sobre criar e organizar skills, veja [Skills](/docs/pt/skills).
   Mantenha skills descobríveis
 </h3>
 
-Com skills espalhadas por muitos diretórios, a lista da qual Claude escolhe pode crescer grande. Claude escolhe uma skill lendo o nome e descrição de cada skill descoberta, e apenas o conteúdo completo da skill escolhida carrega no contexto. Esta seção cobre como manter essa lista pequena e escrever descrições que sobrevivem ao encurtamento.
+Com skills espalhadas por muitos diretórios, a lista da qual Claude escolhe pode crescer grande. Claude escolhe uma skill lendo o nome e descrição de cada skill descoberta, e apenas o conteúdo completo da skill escolhida carrega no contexto. Esta seção cobre como manter essa lista pequena.
 
 Quais skills estão em escopo depende de onde você inicia Claude:
 
 * **De um subdiretório como `packages/api/`**: skills desse diretório, cada pai até a raiz do repositório, e os níveis de usuário e empresa
-* **Da raiz do repositório**: skills de cada subdiretório que Claude toca durante a sessão, que pode acumular em centenas
+* **Da raiz do repositório**: skills de raiz, mais skills de cada subdiretório que Claude toca durante a sessão, que pode acumular em centenas
 * **Depois de adicionar um irmão com [`--add-dir`](#grant-access-across-packages-or-repositories)**: as skills desse irmão também carregam. A configuração `additionalDirectories` concede apenas acesso a arquivo e não carrega skills
 
-Os nomes sempre carregam, mas [descrições são encurtadas quando há muitas](/docs/pt/skills#skill-descriptions-are-cut-short), que pode remover as palavras-chave que Claude usa para decidir se uma skill se aplica. Mantenha descrições curtas e comece com palavras que uma solicitação conteria, como "escrevendo ou modificando testes em `packages/api/`".
+Os nomes sempre carregam, mas [quando há muitas, algumas skills perdem suas descrições inteiramente](/docs/pt/skills#skill-descriptions-are-cut-short), que pode remover as palavras-chave que Claude usa para decidir se uma skill se aplica. Mantenha descrições curtas e comece com palavras que uma solicitação conteria, como "escrevendo ou modificando testes em `packages/api/`".
 
-Para skills que muitos diretórios compartilham, como convenções de PR ou uma checklist de deploy, coloque-as no `.claude/skills/` da raiz do repositório para que carreguem de qualquer diretório inicial. Quando skills compartilhadas precisam de seu próprio histórico de versão ou devem funcionar entre repositórios, empacote-as como um [plugin](/docs/pt/plugins) em vez disso. As skills de plugin usam um namespace `plugin-name:skill-name`, então nunca colidem com skills por diretório. Uma equipe de plataforma pode versioná-las e atualizá-las em um lugar.
+Para skills que muitos diretórios compartilham, como convenções de PR ou uma checklist de deploy, coloque-as no `.claude/skills/` da raiz do repositório para que carreguem de qualquer diretório inicial. Quando skills compartilhadas precisam de seu próprio histórico de versão ou devem funcionar entre repositórios, empacote-as como um [plugin](/docs/pt/plugins/overview) em vez disso. As skills de plugin usam um namespace `plugin-name:skill-name`, então nunca colidem com skills por diretório. Uma equipe de plataforma pode versioná-las e atualizá-las em um lugar.
 
 Para encontrar quais skills vão não utilizadas, habilite o exportador OpenTelemetry [logs](/docs/pt/monitoring-usage) e defina `OTEL_LOG_TOOL_DETAILS=1` para que nomes de skill sejam registrados verbatim em vez de redacted. O evento [`skill_activated`](/docs/pt/monitoring-usage#skill-activated-event) registra cada invocação em seu atributo `skill.name`, e `invocation_trigger` registra se um comando, Claude ou uma skill aninhada o invocou, que te diz o que consolidar ou aposentar.
 
@@ -405,7 +408,7 @@ Arquivos CLAUDE.md por diretório podem se tornar difíceis de governar conforme
 Mova convenções e conteúdo de referência para fora de CLAUDE.md sempre carregado e para mecanismos que carregam sob demanda:
 
 * [Skills](/docs/pt/skills): material de referência que Claude carrega apenas quando relevante para a tarefa
-* [Plugins](/docs/pt/plugins): pacotes versionados de skills, hooks e comandos que uma equipe de plataforma possui centralmente
+* [Plugins](/docs/pt/plugins/overview): pacotes versionados de skills, hooks e comandos que uma equipe de plataforma possui centralmente
 * [Servidores MCP](/docs/pt/mcp): se sua organização já executa uma busca de código ou índice RAG sobre o repositório, exponha-o como uma ferramenta MCP para que Claude a consulte em vez de ler arquivos diretamente
 
 Veja [configurações gerenciadas por servidor ou endpoint](/docs/pt/server-managed-settings#choose-between-server-managed-and-endpoint-managed-settings) para como equipes de plataforma podem impor essas centralmente.
@@ -414,7 +417,7 @@ Veja [configurações gerenciadas por servidor ou endpoint](/docs/pt/server-mana
   Recomende o plugin certo na inicialização da sessão
 </h3>
 
-Uma vez que convenções vivem em plugins, um colega iniciando Claude em uma parte desconhecida da árvore não tem sinal sobre qual plugin os proprietários dessa área mantêm. Um [`SessionStart` hook](/docs/pt/hooks#sessionstart) pode fechar essa lacuna, já que qualquer coisa que o hook imprime para stdout é adicionada ao contexto do Claude antes do primeiro prompt.
+Uma vez que convenções vivem em plugins, um colega iniciando Claude em uma parte desconhecida da árvore não tem sinal sobre qual plugin os proprietários dessa área mantêm. Um [`SessionStart` hook](/docs/pt/hooks#sessionstart) pode fechar essa lacuna, já que Claude Code adiciona texto simples que o hook imprime para stdout ao contexto do Claude antes do primeiro prompt.
 
 Por exemplo, você pode escrever um script que lê o diretório de inicialização da [entrada do hook](/docs/pt/hooks#common-input-fields), o procura em um mapa de caminho para plugin confirmado no repositório, e imprime a recomendação para Claude retransmitir em sua primeira resposta. Veja [Automatize ações com hooks](/docs/pt/hooks-guide) para escrever e registrar o hook.
 
@@ -422,7 +425,7 @@ Por exemplo, você pode escrever um script que lê o diretório de inicializaç�
   Junte tudo
 </h2>
 
-A configuração combinada abaixo usa o layout do monorepo. Os mesmos arquivos funcionam para qualquer subdiretório em uma grande árvore única. As configurações de projeto carregam apenas do diretório do qual você inicia Claude, então o `.claude/settings.json` de cada subdiretório deve ser autossuficiente em vez de em camadas em um arquivo raiz.
+A configuração combinada abaixo usa o layout do monorepo. Os mesmos arquivos funcionam para qualquer subdiretório em uma grande árvore única. O `.claude/settings.json` de cada subdiretório deve ser autossuficiente em vez de em camadas em um arquivo raiz.
 
 O exemplo confirma `worktree`, `additionalDirectories` e as regras de negação `Read` em `.claude/settings.json` para que cada desenvolvedor em `packages/api/` obtenha o mesmo acesso irmão, caminhos esparsos e exclusões. O arquivo abaixo é as configurações por área confirmadas para `packages/api/`:
 
@@ -443,8 +446,8 @@ O exemplo confirma `worktree`, `additionalDirectories` e as regras de negação 
       "../shared"
     ],
     "deny": [
-      "Read(./**/dist/**)",
-      "Read(./**/build/**)"
+      "Read(./**/dist/**/*)",
+      "Read(./**/build/**/*)"
     ]
   }
 }
@@ -458,8 +461,8 @@ A entrada `additionalDirectories` se aplica quando você inicia Claude de `packa
 {
   "permissions": {
     "deny": [
-      "Read(./**/dist/**)",
-      "Read(./**/build/**)"
+      "Read(./**/dist/**/*)",
+      "Read(./**/build/**/*)"
     ]
   }
 }
@@ -500,7 +503,7 @@ A configuração acima controla o que Claude vê. Quando uma única mudança toc
 Duas técnicas ajudam a manter uma mudança entre pacotes consistente:
 
 * **Dê ao Claude a mudança inteira em uma sessão**: entregar a edição compartilhada e seus sites de chamada juntos mantém as decisões atrás de cada edição consistentes, em vez de re-derivá-las por pacote
-* **Salve o plano em um arquivo antes de editar**: [planeje primeiro](/docs/pt/best-practices#explore-first-then-plan-then-code) e peça ao Claude para escrever o plano em um arquivo markdown no repositório. Uma longa sessão entre pacotes [compacta seu contexto](/docs/pt/context-window#what-survives-compaction) ao longo do caminho, e o plano salvo sobrevive onde o histórico de conversa pode não
+* **Planeje antes de editar**: [planeje primeiro](/docs/pt/best-practices#explore-first-then-plan-then-code) em [plan mode](/docs/pt/permission-modes#analyze-before-you-edit-with-plan-mode), e Claude escreve o plano em um arquivo. Uma longa sessão entre pacotes [compacta seu contexto](/docs/pt/context-window#what-survives-compaction) ao longo do caminho. Claude Code reinjecta o arquivo de plano após cada compactação, então o plano sobrevive onde o histórico de conversa pode não
 
 <h2 id="next-steps">
   Próximos passos

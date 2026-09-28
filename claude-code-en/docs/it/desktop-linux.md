@@ -7,19 +7,31 @@
 > Installa e aggiorna l'app desktop di Claude su Ubuntu e Debian
 
 <Note>
-  Il supporto di Linux per l'app desktop di Claude è in beta. Le schede Chat, Cowork e Code sono tutte disponibili.
+  Il supporto di Linux per l'app desktop di Claude è in beta.
 </Note>
 
-L'app desktop su Linux ti offre la stessa esperienza di Chat, Cowork e Claude Code di macOS e Windows: sessioni parallele, revisione visiva delle differenze, un terminale e un editor integrati e anteprima live dell'app. Consulta [Usa Claude Code Desktop](/docs/it/desktop) per il riferimento completo delle funzionalità.
+L'app desktop su Linux ti offre la stessa esperienza di Chat, Cowork e Claude Code di macOS e Windows: sessioni parallele, revisione visiva delle differenze, un terminale e un editor integrati e anteprima live dell'app. Consulta [Usa Claude Code Desktop](/docs/it/desktop) per il riferimento delle funzionalità.
 
 <h2 id="requirements">
   Requisiti
 </h2>
 
-* Ubuntu 22.04 o versioni successive, oppure Debian 12 o versioni successive
+* Una distribuzione basata su Debian: Ubuntu 22.04 o versioni successive, oppure Debian 12 o versioni successive
 * x86\_64 o arm64
 
-Altre distribuzioni basate su Debian che soddisfano questi requisiti potrebbero funzionare ma non sono ufficialmente testate.
+Altre distribuzioni basate su Debian che soddisfano questi requisiti potrebbero funzionare ma non sono ufficialmente testate. Su distribuzioni che non sono basate su Debian, come Fedora o Arch, eseguire la [CLI](/docs/it/setup#system-requirements) invece. Se lavorate su Windows con WSL 2, installate l'app desktop di Windows ed eseguite le sessioni all'interno della vostra distribuzione; vedere [Claude Code Desktop in WSL](/docs/it/desktop-wsl).
+
+<h3 id="cowork-requirements">
+  Requisiti di Cowork
+</h3>
+
+Cowork è la scheda desktop per [Dispatch e lavoro agentico più lungo](https://claude.com/docs/cowork/overview). Su Linux, Cowork esegue queste attività in una macchina virtuale che l'app desktop ospita con QEMU e KVM. Per utilizzare Cowork, la vostra macchina ha bisogno di:
+
+* **Virtualizzazione hardware**: attivata nelle impostazioni del firmware. Senza di essa, la scheda Cowork segnala "Cowork requires hardware virtualization (KVM)".
+* **QEMU e firmware UEFI**: `qemu-system-x86`, `ovmf` e `virtiofsd` su x86\_64, oppure `qemu-system-arm`, `qemu-efi-aarch64` e `virtiofsd` su arm64. `apt install claude-desktop` li installa per impostazione predefinita come pacchetti consigliati. Se avete installato con `--no-install-recommends`, o il vostro sistema è un'immagine minima che salta i pacchetti consigliati, la scheda Cowork segnala "Cowork requires QEMU" e mostra il comando `apt install` da eseguire. Ubuntu 22.04 non ha alcun pacchetto `virtiofsd`; l'app utilizza una copia in bundle lì.
+* **Accesso a `/dev/kvm`**: aggiungete il vostro utente al gruppo `kvm` con `sudo usermod -aG kvm $USER`, quindi disconnettetevi e riconnettetevi. Alcuni ambienti desktop concedono all'utente connesso l'accesso a `/dev/kvm` senza il gruppo, ma Cowork ha anche bisogno di `/dev/vhost-vsock`, che solo i membri del gruppo `kvm` possono aprire. Unitevi al gruppo anche se `/dev/kvm` funziona già per voi.
+
+L'app controlla questi requisiti una volta all'avvio: riavviatela dopo aver installato i pacchetti, e disconnettetevi e riconnettetevi dopo aver aderito al gruppo. Se `/dev/vhost-vsock` manca e il vostro kernel in esecuzione non ha alcuna directory di moduli sotto `/lib/modules`, la scheda Cowork segnala che il kernel non include il supporto di virtualizzazione di cui Cowork ha bisogno e che non può essere aggiunto manualmente. Questa combinazione è comune su ChromeOS e negli ambienti Linux basati su container.
 
 <h2 id="install">
   Installa
@@ -29,10 +41,10 @@ Installa dal repository apt di Anthropic in modo che gli aggiornamenti arrivino 
 
 <Steps>
   <Step title="Aggiungi il repository apt di Anthropic">
-    Questo passaggio scarica la chiave di firma con `curl`, che le installazioni fresche di Debian e Ubuntu potrebbero non includere. Se il comando di download non riesce con `sudo: curl: command not found`, installa prima curl:
+    Questo passaggio scarica la chiave di firma con `curl` e la verifica con `gpg`, che le installazioni fresche di Debian e Ubuntu potrebbero non includere. Se uno dei due comandi segnala `command not found`, installa prima entrambi:
 
     ```bash theme={null}
-    sudo apt install curl
+    sudo apt install curl gnupg
     ```
 
     Scarica la chiave di firma di Anthropic:
@@ -40,6 +52,14 @@ Installa dal repository apt di Anthropic in modo che gli aggiornamenti arrivino 
     ```bash theme={null}
     sudo curl -fsSLo /usr/share/keyrings/claude-desktop-archive-keyring.asc https://downloads.claude.ai/claude-desktop/key.asc
     ```
+
+    Il comando non stampa nulla quando ha successo e un errore `curl:` quando non riesce. Una chiave mancante o errata fa fallire `apt update` in seguito con `NO_PUBKEY BAA929FF1A7ECACE`, quindi conferma che la chiave sia stata scaricata e appartenga ad Anthropic prima di continuare:
+
+    ```bash theme={null}
+    gpg --show-keys /usr/share/keyrings/claude-desktop-archive-keyring.asc
+    ```
+
+    L'impronta digitale che gpg stampa dovrebbe essere `31DDDE24DDFAB679F42D7BD2BAA929FF1A7ECACE`. Se gpg segnala che il file non può essere aperto o non contiene dati OpenPGP validi, il download non è riuscito o ha restituito il contenuto sbagliato: conferma che la tua rete possa raggiungere `downloads.claude.ai`, quindi esegui di nuovo il comando di download.
 
     Registra il repository:
 
@@ -61,16 +81,6 @@ Installa dal repository apt di Anthropic in modo che gli aggiornamenti arrivino 
   </Step>
 </Steps>
 
-<Accordion title="Verifica la chiave di firma">
-  Puoi confermare che la chiave di firma scaricata appartiene ad Anthropic:
-
-  ```bash theme={null}
-  gpg --show-keys /usr/share/keyrings/claude-desktop-archive-keyring.asc
-  ```
-
-  L'impronta digitale dovrebbe essere `31DD DE24 DDFA B679 F42D 7BD2 BAA9 29FF 1A7E CACE`.
-</Accordion>
-
 <h3 id="install-from-a-downloaded-file">
   Installa da un file scaricato
 </h3>
@@ -83,6 +93,8 @@ curl -fLO "https://downloads.claude.ai/claude-desktop/apt/stable/$(curl -s "http
 
 Se il comando non riesce con `Remote file name has no length`, la ricerca non ha restituito alcun percorso di pacchetto. Questo può significare che l'indice del repository non potrebbe essere recuperato, ad esempio quando la tua rete blocca `downloads.claude.ai`, oppure che non esiste alcun pacchetto per la tua architettura. Conferma che la tua rete può raggiungere `downloads.claude.ai` e che `dpkg --print-architecture` stampa `amd64` o `arm64`; il repository non pubblica pacchetti per altre architetture.
 
+Per installare senza registrare il repository apt di Anthropic, crea prima `/etc/default/claude-desktop` con la riga `CLAUDE_DESKTOP_ADD_REPO="false"`. Senza il repository, apt non fornisce nuove versioni; per aggiornare, esegui di nuovo il comando di download e reinstalla, oppure [registra il repository](#install) in seguito.
+
 Quindi apri il file scaricato con il tuo programma di installazione del software, come GNOME Software, oppure installalo con apt dalla directory che contiene il file scaricato:
 
 ```bash theme={null}
@@ -91,7 +103,7 @@ sudo apt install ./claude-desktop_*.deb
 
 Se apt segnala `E: Unsupported file ./claude-desktop_*.deb given on commandline`, il pattern non ha corrisposto a un file `.deb` nella directory corrente. Conferma che il download sia completato, quindi esegui di nuovo il comando dalla directory che contiene il file.
 
-Un `.deb` installato in questo modo non riceve aggiornamenti. Per ricevere gli aggiornamenti tramite apt, registra il repository dal passaggio [Aggiungi il repository apt di Anthropic](#install). Il pacchetto scrive anche una voce di repository commentata in `/etc/apt/sources.list.d/claude-desktop.list`; rimuovere il commento dalla sua riga `deb` è equivalente.
+L'installazione del `.deb` registra anche il repository apt di Anthropic in `/etc/apt/sources.list.d/claude-desktop.list`, quindi gli aggiornamenti futuri arrivano con gli [aggiornamenti regolari dei pacchetti](#update) del tuo sistema.
 
 <h2 id="update">
   Aggiorna
@@ -113,7 +125,7 @@ Lo strumento di aggiornamento software grafico della tua distribuzione raccoglie
 sudo apt remove claude-desktop
 ```
 
-Questo rimuove la chiave di firma insieme all'app, quindi se hai aggiunto la voce del repository durante l'installazione, rimuovila anche:
+La disinstallazione del pacchetto rimuove anche la voce del repository e la chiave di firma che ha registrato. Se hai aggiunto la voce del repository tu stesso con il passaggio [Aggiungi il repository apt di Anthropic](#install), rimuovila anche:
 
 ```bash theme={null}
 sudo rm /etc/apt/sources.list.d/claude-desktop.list
@@ -129,11 +141,38 @@ sudo rm /etc/apt/sources.list.d/claude-desktop.list
 
 Se `sudo apt install claude-desktop` non riesce con `E: Unable to locate package claude-desktop`, apt non ha trovato il repository che avete aggiunto. Verificate quanto segue:
 
+* Eseguite `sudo apt update` dopo aver aggiunto il repository. `apt install` da solo non vede un repository che avete aggiunto dopo l'ultima volta che avete eseguito `apt update`.
 * Confermate che la voce del repository sia stata scritta. `cat /etc/apt/sources.list.d/claude-desktop.list` dovrebbe mostrare la riga `deb` dal passaggio [Aggiungere il repository apt di Anthropic](#install). Se il file è vuoto o mancante, eseguite di nuovo quel passaggio.
 * Confermate che la vostra architettura sia supportata. `dpkg --print-architecture` dovrebbe stampare `amd64` o `arm64`. Il repository non pubblica pacchetti per altre architetture.
 * Eseguite di nuovo `sudo apt update` e controllate il suo output per errori relativi a `downloads.claude.ai`. Un errore di rete o di chiave lì significa che il repository è stato aggiunto ma non poteva essere raggiunto o verificato.
 
 Se il repository è in posizione e raggiungibile e il pacchetto non viene ancora trovato, [installate da un file scaricato](#install-from-a-downloaded-file) invece.
+
+<h3 id="unmet-dependencies">
+  Dipendenze non soddisfatte
+</h3>
+
+Se `apt` si ferma con `The following packages have unmet dependencies` o `Unsatisfied dependencies`, leggete quale dipendenza nomina:
+
+* `libc6 (>= 2.34)`: la vostra distribuzione è più vecchia di quella supportata dal pacchetto. Ubuntu 20.04 fornisce `libc6` 2.31. Aggiornate a Ubuntu 22.04 o successivo, oppure Debian 12 o successivo.
+* Tutte le dipendenze mancanti mostrano `not installable` con un suffisso `:amd64` o `:arm64`: avete scaricato il `.deb` per un'architettura diversa da quella della vostra macchina. Eseguite `dpkg --print-architecture` e scaricate il `.deb` corrispondente, oppure [installate dal repository apt](#install), che seleziona il pacchetto per la vostra architettura.
+
+<h3 id="running-as-root-without-no-sandbox-is-not-supported">
+  L'esecuzione come root senza --no-sandbox non è supportata
+</h3>
+
+Se `claude-desktop` esce con questo messaggio, l'avete lanciato come root. Accedete come utente regolare e lanciatelo da lì.
+
+<h3 id="cowork-isn’t-available">
+  Cowork non è disponibile
+</h3>
+
+Se la scheda Cowork mostra uno di questi messaggi, correggete il requisito che nomina, quindi riavviate l'app:
+
+* **Cowork richiede QEMU**: installate i [pacchetti QEMU e firmware UEFI](#cowork-requirements) che il messaggio elenca.
+* **Cowork richiede virtualizzazione hardware (KVM)**: attivate la [virtualizzazione hardware](#cowork-requirements) nelle impostazioni del firmware.
+* **Claude non ha il permesso di utilizzare la virtualizzazione (/dev/kvm)**: aggiungete il vostro utente al [gruppo `kvm`](#cowork-requirements), quindi disconnettetevi e riconnettetevi.
+* **Cowork richiede il modulo kernel `vhost_vsock`**: eseguite `sudo modprobe vhost_vsock`, quindi riavviate l'app. Questo carica il modulo solo per l'avvio corrente. Per caricarlo ad ogni avvio, eseguite `echo vhost_vsock | sudo tee /etc/modules-load.d/vhost_vsock.conf`.
 
 <h2 id="what’s-not-in-the-linux-beta-yet">
   Cosa non è ancora nella beta di Linux

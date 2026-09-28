@@ -36,7 +36,9 @@
 * **チャットプラットフォーム**（Telegram、Discord）：プラグインはローカルで実行され、プラットフォームの API をポーリングして新しいメッセージを取得します。誰かがボットに DM を送信すると、プラグインはメッセージを受け取り、Claude に転送します。公開する URL は不要です。
 * **Webhook**（CI、監視）：サーバーはローカル HTTP ポートでリッスンします。外部システムがそのポートに POST し、サーバーはペイロードを Claude にプッシュします。
 
-<img src="https://mintcdn.com/claude-code/9FG0ZKj9uKYiHmbi/images/channel-architecture.svg?fit=max&auto=format&n=9FG0ZKj9uKYiHmbi&q=85&s=9a037b7da80184ae49015c0256b21a1f" alt="外部システムがローカルチャネルサーバーに接続し、stdio 経由で Claude Code と通信するアーキテクチャ図" width="600" height="220" data-path="images/channel-architecture.svg" />
+<img src="https://mintcdn.com/claude-code/9FG0ZKj9uKYiHmbi/images/channel-architecture.svg?fit=max&auto=format&n=9FG0ZKj9uKYiHmbi&q=85&s=9a037b7da80184ae49015c0256b21a1f" className="dark:hidden" alt="外部システムがローカルチャネルサーバーに接続し、stdio 経由で Claude Code と通信するアーキテクチャ図" width="600" height="220" data-path="images/channel-architecture.svg" />
+
+<img src="https://mintcdn.com/claude-code/_xqph1dUOslCOwsj/images/channel-architecture-dark.svg?fit=max&auto=format&n=_xqph1dUOslCOwsj&q=85&s=ae1e494440806a6a5d74a1279e22e162" className="hidden dark:block" alt="外部システムがローカルチャネルサーバーに接続し、stdio 経由で Claude Code と通信するアーキテクチャ図" width="600" height="220" data-path="images/channel-architecture-dark.svg" />
 
 <h2 id="what-you-need">
   必要なもの
@@ -48,7 +50,7 @@
 
 1. `claude/channel` 機能を宣言して、Claude Code が通知リスナーを登録するようにする
 2. 何かが発生したときに `notifications/claude/channel` イベントを発行する
-3. [stdio トランスポート](https://modelcontextprotocol.io/docs/concepts/transports#standard-io)経由で接続する（Claude Code はサーバーをサブプロセスとして生成）
+3. [stdio トランスポート](https://modelcontextprotocol.io/docs/concepts/transports#standard-io)経由で接続する
 
 [サーバーオプション](#server-options)と[通知フォーマット](#notification-format)セクションでは、これらのそれぞれについて詳しく説明しています。完全なウォークスルーについては、[例：webhook レシーバーを構築](#example-build-a-webhook-receiver)を参照してください。
 
@@ -64,11 +66,11 @@
 
 <Steps>
   <Step title="プロジェクトを作成">
-    新しいディレクトリを作成して MCP SDK をインストールします：
+    [権限リレー](#relay-permission-prompts) の例は `zod` を直接インポートするため、MCP SDK と一緒にインストールされます。新しいディレクトリを作成して両方をインストールします：
 
     ```bash theme={null}
     mkdir webhook-channel && cd webhook-channel
-    bun add @modelcontextprotocol/sdk
+    bun add @modelcontextprotocol/sdk zod
     ```
   </Step>
 
@@ -86,7 +88,7 @@
       {
         // このキーがチャネルにする — Claude Code はそれのリスナーを登録
         capabilities: { experimental: { 'claude/channel': {} } },
-        // Claude のシステムプロンプトに追加されるため、これらのイベントの処理方法を知っている
+        // Claude Code はサーバーが接続するときこれを Claude にコンテキストとして配信するため、これらのイベントの処理方法を知っている
         instructions: 'Events from the webhook channel arrive as <channel source="webhook" ...>. They are one-way: read them and act, no reply expected.',
       },
     )
@@ -116,8 +118,8 @@
 
     ファイルは順番に 3 つのことを実行します：
 
-    * **サーバー設定**：`claude/channel` をその機能に含む MCP サーバーを作成します。これが Claude Code にこれがチャネルであることを伝えます。[`instructions`](#server-options) 文字列は Claude のシステムプロンプトに入ります：Claude に期待するイベント、返信するかどうか、返信する場合はどのように返信を処理するかを伝えます。
-    * **Stdio 接続**：stdin/stdout 経由で Claude Code に接続します。これは任意の [MCP サーバー](https://modelcontextprotocol.io/docs/concepts/transports#standard-io) の標準です：Claude Code はそれをサブプロセスとして生成します。
+    * **サーバー設定**：`claude/channel` をその機能に含む MCP サーバーを作成します。これが Claude Code にこれがチャネルであることを伝えます。Claude Code はサーバーが接続するときに [`instructions`](#server-options) 文字列を Claude にコンテキストとして配信します：Claude に期待するイベント、返信するかどうか、返信する場合はどのように返信をルーティングするかを伝えます。
+    * **Stdio 接続**：stdin/stdout 経由で Claude Code に接続します。これは任意の [MCP サーバー](https://modelcontextprotocol.io/docs/concepts/transports#standard-io) の標準です。
     * **HTTP リスナー**：ポート 8788 でローカル Web サーバーを開始します。すべての POST 本文は `mcp.notification()` 経由でチャネルイベントとして Claude に転送されます。`content` はイベント本文になり、各 `meta` エントリは `<channel>` タグの属性になります。リスナーは `mcp` インスタンスへのアクセスが必要なため、同じプロセスで実行されます。より大きなプロジェクトの場合は、別のモジュールに分割できます。
   </Step>
 
@@ -142,9 +144,11 @@
     claude --dangerously-load-development-channels server:webhook
     ```
 
-    このプロジェクトで初めてセッションを開始するとき、Claude Code は `.mcp.json` から新しいサーバーを使用する前に同意を求めます。ダイアログは'このプロジェクトで見つかった新しい MCP サーバー：webhook'と報告します。**このMCPサーバーを使用** を選択して続行します。
+    Claude Code は最初に、読み込んでいる開発チャネルをリストする全画面警告ダイアログを表示します。**ローカル開発に使用しています** を選択して続行するか、**終了** を選択して終了します。
 
-    Claude Code が起動すると、MCP 設定を読み込み、`webhook.ts` をサブプロセスとして生成し、HTTP リスナーは設定したポート（この例では 8788）で自動的に開始されます。サーバーを自分で実行する必要はありません。
+    このプロジェクトで初めてセッションを開始するとき、Claude Code は `.mcp.json` から新しいサーバーを使用する前に同意を求めます。ダイアログは「このプロジェクトで見つかった新しい MCP サーバー：webhook」と報告します。**このMCPサーバーを使用** を選択して続行します。
+
+    同意した後、Claude Code は `webhook.ts` をサブプロセスとして生成し、HTTP リスナーは設定したポート（この例では 8788）で自動的に開始されます。サーバーを自分で実行する必要はありません。
 
     スタートアップバナーの下の薄い通知がチャネルが登録されたことを確認します：`Channels (experimental) messages from server:webhook inject directly in this session · restart without --dangerously-load-development-channels to stop`。
 
@@ -156,17 +160,17 @@
     curl -X POST localhost:8788 -d "build failed on main: https://ci.example.com/run/1234"
     ```
 
-    ペイロードは Claude Code セッションに `<channel>` タグとして到着します：
+    ペイロードは Claude のコンテキストに `<channel>` タグとして到着します：
 
     ```text theme={null}
     <channel source="webhook" path="/" method="POST">build failed on main: https://ci.example.com/run/1234</channel>
     ```
 
-    Claude Code ターミナルでは、Claude がメッセージを受け取り、応答を開始するのが見えます：ファイルを読み込み、コマンドを実行、またはメッセージが要求するもの。これは一方向チャネルなので、Claude はセッションで動作しますが、webhook を通じて何も返送しません。返信を追加するには、[返信ツールを公開](#expose-a-reply-tool) を参照してください。
+    ターミナルはイベントを 1 行の概要として、`← webhook: build failed on main: https://ci.example.com/run/1234` としてレンダリングします。これは生のタグではなく、その後 Claude が応答を開始するのが見えます：ファイルを読み込み、コマンドを実行、またはメッセージが要求するもの。これは一方向チャネルなので、Claude はセッションで動作しますが、webhook を通じて何も返送しません。返信を追加するには、[返信ツールを公開](#expose-a-reply-tool) を参照してください。
 
     イベントが到着しない場合、診断は `curl` が返したものに依存します：
 
-    * **`curl` は成功するが Claude に何も到着しない**：セッションで `/mcp` を実行してサーバーのステータスを確認します。「接続に失敗」は通常、サーバーファイルの依存関係またはインポートエラーを意味します。`~/.claude/debug/<session-id>.txt` のデバッグログで stderr トレースを確認してください。
+    * **`curl` は成功するが Claude に何も到着しない**：セッションで `/mcp` を実行してサーバーのステータスを確認します。`failed` ステータスは通常、サーバーファイルの依存関係またはインポートエラーを意味します。stderr トレースを確認するには、`claude --debug --dangerously-load-development-channels server:webhook` で再開し、`~/.claude/debug/<session-id>.txt` のデバッグログを確認してください。
     * **`curl` が「接続が拒否されました」で失敗**：ポートはまだバインドされていないか、以前の実行からの古いプロセスがそれを保持しています。`lsof -i :<port>` は何がリッスンしているかを示します。セッションを再開する前に古いプロセスを `kill` してください。
   </Step>
 </Steps>
@@ -187,7 +191,7 @@ claude --dangerously-load-development-channels plugin:yourplugin@yourmarketplace
 claude --dangerously-load-development-channels server:webhook
 ```
 
-バイパスはエントリごとです。このフラグを `--channels` と組み合わせても、バイパスは `--channels` エントリに拡張されません。リサーチプレビュー中、承認許可リストは Anthropic がキュレーションしているため、チャネルは構築とテスト中は開発フラグに留まります。
+バイパスはエントリごとです。このフラグを `--channels` と組み合わせても、バイパスは `--channels` エントリに拡張されません。リサーチプレビュー中、あなたのチャネルは承認許可リストにないため、構築とテスト中は開発フラグに留まります。
 
 <Note>
   このフラグは許可リストのみをスキップします。`channelsEnabled` 組織ポリシーは引き続き適用されます。信頼できないソースからチャネルを実行するために使用しないでください。
@@ -197,14 +201,14 @@ claude --dangerously-load-development-channels server:webhook
   サーバーオプション
 </h2>
 
-チャネルは [`Server`](https://modelcontextprotocol.io/docs/concepts/servers) コンストラクタでこれらのオプションを設定します。`instructions` と `capabilities.tools` フィールドは[標準 MCP](https://modelcontextprotocol.io/docs/concepts/servers) です。`capabilities.experimental['claude/channel']` と `capabilities.experimental['claude/channel/permission']` はチャネル固有の追加です：
+チャネルは [`Server`](https://modelcontextprotocol.io/docs/learn/server-concepts) コンストラクタでこれらのオプションを設定します。`instructions` と `capabilities.tools` フィールドは[標準 MCP](https://modelcontextprotocol.io/docs/learn/server-concepts) です。`capabilities.experimental['claude/channel']` と `capabilities.experimental['claude/channel/permission']` はチャネル固有の追加です：
 
-| フィールド                                                    | タイプ      | 説明                                                                                                                                                                   |
-| :------------------------------------------------------- | :------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `capabilities.experimental['claude/channel']`            | `object` | 必須。常に `{}`。存在は通知リスナーを登録します。                                                                                                                                          |
-| `capabilities.experimental['claude/channel/permission']` | `object` | オプション。常に `{}`。このチャネルが権限リレーリクエストを受け取ることができることを宣言します。宣言されると、Claude Code はツール承認プロンプトをチャネルに転送して、リモートで承認または拒否できるようにします。[権限プロンプトをリレー](#relay-permission-prompts)を参照してください。 |
-| `capabilities.tools`                                     | `object` | 双方向のみ。常に `{}`。標準 MCP ツール機能。[返信ツールを公開](#expose-a-reply-tool)を参照してください。                                                                                                |
-| `instructions`                                           | `string` | 推奨。Claude のシステムプロンプトに追加されます。Claude に期待するイベント、`<channel>` タグ属性の意味、返信するかどうか、返信する場合はどのツールを使用するか、どの属性を返送するか（`chat_id` など）を伝えます。                                          |
+| フィールド                                                    | タイプ                  | 説明                                                                                                                                                                                                                                                          |
+| :------------------------------------------------------- | :------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `capabilities.experimental['claude/channel']`            | `object`             | 必須。常に `{}`。存在は通知リスナーを登録します。                                                                                                                                                                                                                                 |
+| `capabilities.experimental['claude/channel/permission']` | `object` または `false` | オプション。`{}` に設定して、このチャネルが権限リレーリクエストを受け取ることができることを宣言します。宣言されると、Claude Code はツール承認プロンプトをチャネルに転送して、リモートで承認または拒否できるようにします。オプトアウトするには、キーを省略するか、`false` に設定します。v2.1.234 より前では、Claude Code は `false` を宣言として扱いました。[権限プロンプトをリレー](#relay-permission-prompts)を参照してください。 |
+| `capabilities.tools`                                     | `object`             | 双方向のみ。常に `{}`。標準 MCP ツール機能。[返信ツールを公開](#expose-a-reply-tool)を参照してください。                                                                                                                                                                                       |
+| `instructions`                                           | `string`             | 推奨。Claude Code はサーバーが接続するときにそれを Claude にコンテキストとして配信します。Claude に期待するイベント、`<channel>` タグ属性の意味、返信するかどうか、返信する場合はどのツールを使用するか、どの属性を返送するか（`chat_id` など）を伝えます。                                                                                                      |
 
 一方向チャネルを作成するには、`capabilities.tools` を省略します。この例は、チャネル機能、ツール、および設定された命令を含む双方向セットアップを示しています：
 
@@ -218,13 +222,11 @@ const mcp = new Server(
       experimental: { 'claude/channel': {} },  // チャネルリスナーを登録
       tools: {},  // 一方向チャネルの場合は省略
     },
-    // Claude のシステムプロンプトに追加されるため、イベントの処理方法を知っている
+    // Claude Code はサーバーが接続するときにこれを Claude に配信するため、イベントの処理方法を知っている
     instructions: 'Messages arrive as <channel source="your-channel" ...>. Reply with the reply tool.',
   },
 )
 ```
-
-イベントをプッシュするには、メソッド `notifications/claude/channel` で `mcp.notification()` を呼び出します。パラメータは次のセクションにあります。
 
 <h2 id="notification-format">
   通知フォーマット
@@ -257,7 +259,7 @@ build failed on main: https://ci.example.com/run/1234
 </channel>
 ```
 
-通知は確認されません。`mcp.notification()` の `await` は、メッセージがトランスポートに書き込まれるときに解決され、Claude が処理したときではありません。セッションがチャネルとしてサーバーを読み込んでいない場合、または組織ポリシーがそれをブロックしている場合、イベントはサーバーにエラーが返されることなくサイレントにドロップされます。
+Claude Code は通知を確認しません。`mcp.notification()` の `await` は、メッセージがトランスポートに書き込まれるときに解決され、Claude が処理したときではありません。セッションがチャネルとしてサーバーを読み込んでいない場合、または組織ポリシーがそれをブロックしている場合、Claude Code はイベントをサイレントにドロップし、サーバーにエラーを返しません。
 
 配信確認が必要な場合は、サーバーでイベント状態を追跡し、Claude が状態を報告するために呼び出せる[返信ツール](#expose-a-reply-tool)を公開します。
 
@@ -447,7 +449,7 @@ await mcp.notification({ ... })
 
 チャットまたはルーム ID ではなく、送信者の ID でゲートします：例では `message.from.id`、`message.chat.id` ではありません。グループチャットでは、これらは異なり、ルームでゲートすると、許可リストに登録されたグループ内の誰もがセッションにメッセージを注入できます。
 
-[Telegram](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/telegram) と [Discord](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/discord) チャネルは同じ方法で送信者許可リストでゲートします。ペアリングでリストをブートストラップします：ユーザーがボットに DM を送信し、ボットはペアリングコードで返信し、ユーザーが Claude Code セッションで承認し、プラットフォーム ID が追加されます。完全なペアリングフローについては、いずれかの実装を参照してください。[iMessage](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/imessage) チャネルは異なるアプローチを取ります：起動時にメッセージデータベースからユーザー自身のアドレスを検出し、それらを自動的に通します。他の送信者はハンドルで追加されます。
+[Telegram](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/telegram) と [Discord](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/discord) チャネルは同じ方法で送信者許可リストでゲートします。[ペアリング](/docs/ja/channels#security)でリストをブートストラップします。完全なペアリングフローについては、いずれかの実装を参照してください。[iMessage](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/imessage) チャネルは異なるアプローチを取ります：起動時にメッセージデータベースからユーザー自身のアドレスを検出し、それらを自動的に通します。他の送信者はハンドルで追加されます。
 
 <h2 id="relay-permission-prompts">
   権限プロンプトをリレー
@@ -456,6 +458,8 @@ await mcp.notification({ ... })
 Claude が承認が必要なツールを呼び出すと、ローカルターミナルダイアログが開き、セッションが待機します。双方向チャネルは、同じプロンプトを並行して受け取り、別のデバイスでそれをリレーすることを選択できます。両方がライブのままです：ターミナルまたは電話で答えることができ、Claude Code は最初に到着した答えを適用し、もう一方を閉じます。
 
 リレーは `Bash`、`Write`、`Edit` などのツール使用承認をカバーします。プロジェクト信頼と MCP サーバー同意ダイアログはリレーされません。これらはローカルターミナルにのみ表示されます。
+
+Claude Code v2.1.234 以降は、セッション用にチャネルとして登録したサーバーにのみ権限リクエストを送信するため、リレーは[セッションオプトインと組織コントロール](/docs/ja/channels#security)と同じ背後にあります。リレーはまた、`--channels` または開発フラグでサーバーをオプトインし、サーバーが権限機能を宣言することを必要とします。
 
 <h3 id="how-relay-works">
   リレーの仕組み
@@ -470,7 +474,9 @@ Claude が承認が必要なツールを呼び出すと、ローカルターミ�
 
 ローカルターミナルダイアログはこのすべてを通じて開いたままです。ターミナルの誰かがリモート判定が到着する前に答えた場合、その答えが代わりに適用され、保留中のリモートリクエストはドロップされます。
 
-<img src="https://mintcdn.com/claude-code/9FG0ZKj9uKYiHmbi/images/channel-permission-relay.svg?fit=max&auto=format&n=9FG0ZKj9uKYiHmbi&q=85&s=97d57f128f0da55f105ab1e3a7e10240" alt="シーケンス図：Claude Code は権限リクエスト通知をチャネルサーバーに送信し、サーバーはプロンプトと ID をチャットアプリにフォーマットして送信し、人間は判定で返信し、サーバーはその返信を権限通知に解析して Claude Code に戻す" width="600" height="230" data-path="images/channel-permission-relay.svg" />
+<img src="https://mintcdn.com/claude-code/9FG0ZKj9uKYiHmbi/images/channel-permission-relay.svg?fit=max&auto=format&n=9FG0ZKj9uKYiHmbi&q=85&s=97d57f128f0da55f105ab1e3a7e10240" className="dark:hidden" alt="シーケンス図：Claude Code は権限リクエスト通知をチャネルサーバーに送信し、サーバーはプロンプトと ID をチャットアプリにフォーマットして送信し、人間は判定で返信し、サーバーはその返信を権限通知に解析して Claude Code に戻す" width="600" height="230" data-path="images/channel-permission-relay.svg" />
+
+<img src="https://mintcdn.com/claude-code/_xqph1dUOslCOwsj/images/channel-permission-relay-dark.svg?fit=max&auto=format&n=_xqph1dUOslCOwsj&q=85&s=368c8d9119a9a9cff5d826d806724842" className="hidden dark:block" alt="シーケンス図：Claude Code は権限リクエスト通知をチャネルサーバーに送信し、サーバーはプロンプトと ID をチャットアプリにフォーマットして送信し、人間は判定で返信し、サーバーはその返信を権限通知に解析して Claude Code に戻す" width="600" height="230" data-path="images/channel-permission-relay-dark.svg" />
 
 <h3 id="permission-request-fields">
   権限リクエストフィールド
@@ -482,10 +488,28 @@ Claude Code からのアウトバウンド通知は `notifications/claude/channe
 | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `request_id`    | `a`-`z` から `l` なしで描画された 5 つの小文字。電話で入力するときに `1` または `I` として読まれることはありません。発信プロンプトに含めて、返信で反映できるようにします。Claude Code は発行した ID を持つ判定のみを受け入れます。ローカルターミナルダイアログはこの ID を表示しないため、アウトバウンドハンドラーはそれを学ぶ唯一の方法です。 |
 | `tool_name`     | Claude が使用したいツールの名前、例えば `Bash` または `Write`。                                                                                                                                                    |
-| `description`   | この特定のツール呼び出しが何をするかの人間が読める要約。ローカルターミナルダイアログが表示するのと同じテキスト。Bash 呼び出しの場合、これは Claude のコマンドの説明、または何も与えられていない場合はコマンド自体です。                                                                             |
-| `input_preview` | ツールの引数を JSON 文字列として、200 文字に切り詰めたもの。Bash の場合はコマンド。Write の場合はファイルパスとコンテンツのプレフィックス。1 行のメッセージの余地しかない場合はプロンプトから省略します。サーバーは何を表示するかを決定します。                                                            |
+| `description`   | この特定のツール呼び出しが何をするかの人間が読める要約。コマンド自体ではありません。Bash 呼び出しの場合、これは Claude のコマンドの説明です。モデルが説明を与えない場合、フィールドは定数 `Run shell command` であり、ゼロのコマンド詳細を持ちます。余地がある場合は `input_preview` をレンダリングします。                |
+| `input_preview` | ツールの引数を JSON 形式の表示テキストとして、トップレベルフィールドごとにキー付けされたもの。Bash の場合はコマンド。Write の場合はファイルパスとコンテンツ。1 行のメッセージの余地しかない場合はプロンプトから省略します。サーバーは何を表示するかを決定します。                                                     |
 
-サーバーが返送する判定は `notifications/claude/channel/permission` で、2 つのフィールド：上記の ID を反映する `request_id` と、`'allow'` または `'deny'` に設定された `behavior`。Allow はツール呼び出しを続行させます。Deny はそれを拒否し、ローカルダイアログで No と答えるのと同じです。どちらの判定も将来の呼び出しに影響しません。
+Claude Code v2.1.211 以降のクライアントは、リレーする前に `description` と `input_preview` をサニタイズします。受け取るテキストに 3 つの変更を予想してください：
+
+* Claude Code は方向オーバーライド文字、非表示文字、および引用符と角括弧のルックアライクを中立化します。
+* Claude Code は各ホワイトスペース実行を単一スペースに折ります。
+* Claude Code はテキスト全体を最大 3,500 コードポイントまでリレーします。より長い値の場合、カウント済みの `⋯ N code points elided ⋯` マーカーの周りにその開始と終了を受け取ります。長いコマンドの終了は依然として承認者に到達します。
+
+`input_preview` の場合、Claude Code は 3,500 制限を引数の各トップレベルフィールドに個別に適用し、JSON 自体の構造的引用符を保持します。v2.1.211 より前のクライアントは `description` をそのままリレーし、`input_preview` を 200 UTF-16 ユニットに末尾の省略記号で切り詰めます。
+
+Claude Code v2.1.234 以降のクライアントは、循環構造や極めて大きな配列など、安全にシリアライズできない `input_preview` フィールド値の代わりに、マーカー `(value unserializable)` をリレーします。フィールドのキーは依然として受け取り、プレビューの他のフィールドは変わりません。
+
+Claude Code v2.1.234 以降のクライアントはまた、`description` と `input_preview` の認証情報をマスクします。API キーまたは個人アクセストークンなど、認識可能なプロバイダー認証情報トークンの代わりに `[REDACTED]` を受け取ります。フィールドをレンダリングするときにマスキングの 3 つの効果を予想してください：
+
+* Claude Code は `input_preview` 内のキー名とその値をマスクします。表示するキー名は入力のキー名と一致しない場合があります。
+* Claude Code はシェル構文、パス文字、または URL 文字を含むスパンをマスクしません。マスクは承認されるコマンド、ファイルパス、または宛先を隠すことはできません。
+* Claude Code は認識可能なプレフィックスを持たないシークレット、またはホワイトスペースにまたがるシークレット（秘密鍵ブロックなど）をマスクしません。両方ともサーバーにマスクされていない状態で到達します。
+
+マスキングはフィールドを受け取る人を変更しません。マスクされていない状態で残るものは、`--channels` または開発フラグでオプトインしたサーバーにのみ送信されます。両方のフィールドをクライアントフリートを制御しない限り信頼されないものとして扱います。
+
+サーバーが返送する判定は `notifications/claude/channel/permission` で、2 つのフィールド：上記の ID を反映する `request_id` と、`'allow'` または `'deny'` に設定された `behavior`。Allow はツール呼び出しを続行させます。Deny はそれを拒否します。どちらの判定も将来の呼び出しに影響しません。
 
 <h3 id="add-relay-to-a-chat-bridge">
   チャットブリッジにリレーを追加
@@ -529,8 +553,8 @@ Claude Code からのアウトバウンド通知は `notifications/claude/channe
       params: z.object({
         request_id: z.string(),     // 5 つの小文字、プロンプトに逐語的に含める
         tool_name: z.string(),      // 例：'Bash'、'Write'
-        description: z.string(),    // この呼び出しが何をするかの人間が読める要約
-        input_preview: z.string(),  // ツール引数を JSON として、約 200 文字に切り詰め
+        description: z.string(),    // この呼び出しが何をするかの要約。信頼されないものとして扱う。
+        input_preview: z.string(),  // ツール引数を JSON 形式のテキストとして。信頼されないものとして扱う。
       }),
     })
 
@@ -538,7 +562,10 @@ Claude Code からのアウトバウンド通知は `notifications/claude/channe
       // send() はアウトバウンド：チャットプラットフォームに POST、またはローカル
       // テストの場合は下の完全な例に示されている SSE ブロードキャスト。
       send(
-        `Claude wants to run ${params.tool_name}: ${params.description}\n\n` +
+        `Claude wants to run ${params.tool_name}: ${params.description}\n` +
+        // input_preview は実際の引数を持ちます。余地がある場合はレンダリングします：
+        // Bash の場合、説明だけは「Run shell command」で、ゼロのコマンド詳細かもしれません
+        `${params.input_preview}\n\n` +
         // 命令の ID はステップ 3 でインバウンドハンドラーが解析するもの
         `Reply "yes ${params.request_id}" or "no ${params.request_id}"`,
       )
@@ -584,7 +611,7 @@ Claude Code からのアウトバウンド通知は `notifications/claude/channe
   </Step>
 </Steps>
 
-Claude Code はローカルターミナルダイアログも開いたままにするため、どちらかの場所で答えることができ、最初に到着した答えが適用されます。期待されたフォーマットと正確に一致しないリモート返信は、2 つの方法のいずれかで失敗し、どちらの場合もダイアログは開いたままです：
+期待されたフォーマットと正確に一致しないリモート返信は、2 つの方法のいずれかで失敗し、どちらの場合もローカルターミナルダイアログは開いたままです：
 
 * **異なるフォーマット**：インバウンドハンドラーの正規表現が一致しないため、'approve it'または ID なしの'yes'のようなテキストは通常のメッセージとして Claude にフォールスルーします。
 * **正しいフォーマット、間違った ID**：サーバーは判定を発行しますが、Claude Code はその ID を持つ開いているリクエストを見つけず、サイレントにドロップします。
@@ -673,7 +700,8 @@ const PermissionRequestSchema = z.object({
 
 mcp.setNotificationHandler(PermissionRequestSchema, async ({ params }) => {
   send(
-    `Claude wants to run ${params.tool_name}: ${params.description}\n\n` +
+    `Claude wants to run ${params.tool_name}: ${params.description}\n` +
+    `${params.input_preview}\n\n` +
     `Reply "yes ${params.request_id}" or "no ${params.request_id}"`,
   )
 })
@@ -741,6 +769,8 @@ Bun.serve({
 claude --dangerously-load-development-channels server:webhook
 ```
 
+このウォークスルーは権限ダイアログ自体をテストするため、セッションが開いたら、`Shift+Tab` を押してステータスバーが `⏸ manual mode on` を表示するまで。オートモードでは分類器は `reply` 呼び出しの代わりに決定し、リモート側が答えるためのダイアログは開きません。
+
 2 番目では、アウトバウンド側をストリーミングして、Claude の返信と権限プロンプトがライブで到着するのを見ることができます：
 
 ```bash theme={null}
@@ -771,9 +801,9 @@ curl -d "yes <id>" -H "X-Sender: dev" localhost:8788
   プラグインとしてパッケージ化
 </h2>
 
-チャネルをインストール可能で共有可能にするには、[プラグイン](/docs/ja/plugins)でラップして[マーケットプレイス](/docs/ja/plugin-marketplaces)に公開します。ユーザーは `/plugin install` でインストールし、`--channels plugin:<name>@<marketplace>` でセッションごとに有効化します。
+チャネルをインストール可能で共有可能にするには、[プラグイン](/docs/ja/plugins/overview)でラップして[マーケットプレイス](/docs/ja/plugins/overview)に公開します。ユーザーは `/plugin install` でインストールし、`--channels plugin:<name>@<marketplace>` でセッションごとに有効化します。
 
-独自のマーケットプレイスに公開されたチャネルは、[承認許可リスト](/docs/ja/channels#supported-channels)にないため、実行するには `--dangerously-load-development-channels` が必要です。デフォルトの許可リストは `claude-plugins-official` のチャネルプラグインで、Anthropic がその裁量で管理しています。[アプリ内送信フォーム](/docs/ja/plugins#submit-your-plugin-to-the-community-marketplace)はプラグインをコミュニティマーケットプレイスに追加しますが、これはチャネル許可リストにはありません。
+独自のマーケットプレイスに公開されたチャネルは、[承認許可リスト](/docs/ja/channels#supported-channels)にないため、実行するには `--dangerously-load-development-channels` が必要です。デフォルトの許可リストは `claude-plugins-official` のチャネルプラグインです。[アプリ内送信フォーム](/docs/ja/plugins/publish#submit-to-the-community-marketplace)はプラグインをコミュニティマーケットプレイスに追加しますが、これはチャネル許可リストにはありません。
 
 Anthropic パートナー連絡先と協力している場合は、公式マーケットプレイスリストを調整するために彼らに連絡してください。Team および Enterprise プランでは、管理者は代わりにプラグインを組織の独自の [`allowedChannelPlugins`](/docs/ja/channels#restrict-which-channel-plugins-can-run) リストに含めることができます。これはデフォルトの Anthropic 許可リストを置き換えます。
 
@@ -784,4 +814,4 @@ Anthropic パートナー連絡先と協力している場合は、公式マー�
 * [チャネル](/docs/ja/channels)：Telegram、Discord、iMessage、または fakechat デモをインストールして使用し、Team または Enterprise 組織のチャネルを有効化
 * [チャネル実装の動作](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins)：ペアリングフロー、返信ツール、ファイル添付を含む完全なサーバーコード
 * [MCP](/docs/ja/mcp)：チャネルサーバーが実装する基礎となるプロトコル
-* [プラグイン](/docs/ja/plugins)：チャネルをパッケージ化して、ユーザーが `/plugin install` でインストールできるようにする
+* [プラグイン](/docs/ja/plugins/overview)：チャネルをパッケージ化して、ユーザーが `/plugin install` でインストールできるようにする

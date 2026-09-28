@@ -105,9 +105,12 @@ export const ContactSalesCard = ({surface}) => {
 1. 瀏覽至 [Microsoft Foundry 入口網站](https://ai.azure.com/)
 2. 建立新資源，並記下您的資源名稱
 3. 為 Claude 模型建立部署，並記下您為每個部署指定的部署名稱；您將在步驟 4 中將這些名稱設定為模型變數：
+
    * Claude Opus
    * Claude Sonnet
    * Claude Haiku
+
+   當您配置部署時，您也會選擇其[託管選項](https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry#hosting-options)，這決定推論是在 Azure 上執行還是在 Anthropic 基礎設施上執行。
 
 <h3 id="2-configure-azure-credentials">
   2) 配置 Azure 認證
@@ -179,7 +182,7 @@ export ANTHROPIC_FOUNDRY_RESOURCE={resource}
 
 設定模型變數以符合您在步驟 1 中建立的部署名稱。
 
-如果沒有 `ANTHROPIC_DEFAULT_OPUS_MODEL`，Microsoft Foundry 上的 `opus` 別名會解析為 Opus 4.6。將其設定為 Opus 4.8 ID 以使用最新模型：
+如果沒有 `ANTHROPIC_DEFAULT_OPUS_MODEL`，Microsoft Foundry 上的 `opus` 別名會解析為 Opus 4.6。將其設定為較新 Opus 模型的 ID，例如 Opus 4.8：
 
 ```bash theme={null}
 export ANTHROPIC_DEFAULT_OPUS_MODEL='claude-opus-4-8'
@@ -196,6 +199,8 @@ export ANTHROPIC_DEFAULT_HAIKU_MODEL='claude-haiku-4-5'
 ```bash theme={null}
 export ENABLE_PROMPT_CACHING_1H=1
 ```
+
+若要為您的主要對話和 Claude Code 在其外部進行的請求設定不同的 TTL，請[自行選擇 TTL](/docs/zh-TW/prompt-caching#choose-the-ttl-yourself)。
 
 <h3 id="5-run-claude-code">
   5. 執行 Claude Code

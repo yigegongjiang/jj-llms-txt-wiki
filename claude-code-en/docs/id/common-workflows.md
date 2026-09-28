@@ -40,6 +40,8 @@ Misalkan Anda baru saja bergabung dengan proyek baru dan perlu memahami struktur
     ```bash theme={null}
     cd /path/to/project 
     ```
+
+    Ganti `/path/to/project` dengan jalur ke proyek Anda.
   </Step>
 
   <Step title="Mulai Claude Code">
@@ -49,21 +51,21 @@ Misalkan Anda baru saja bergabung dengan proyek baru dan perlu memahami struktur
   </Step>
 
   <Step title="Minta gambaran umum tingkat tinggi">
-    ```text theme={null}
+    ```text wrap theme={null}
     give me an overview of this codebase
     ```
   </Step>
 
   <Step title="Selami komponen spesifik lebih dalam">
-    ```text theme={null}
+    ```text wrap theme={null}
     explain the main architecture patterns used here
     ```
 
-    ```text theme={null}
+    ```text wrap theme={null}
     what are the key data models?
     ```
 
-    ```text theme={null}
+    ```text wrap theme={null}
     how is authentication handled?
     ```
   </Step>
@@ -85,19 +87,19 @@ Misalkan Anda perlu menemukan kode yang terkait dengan fitur atau fungsionalitas
 
 <Steps>
   <Step title="Minta Claude untuk menemukan file yang relevan">
-    ```text theme={null}
+    ```text wrap theme={null}
     find the files that handle user authentication
     ```
   </Step>
 
   <Step title="Dapatkan konteks tentang cara komponen berinteraksi">
-    ```text theme={null}
+    ```text wrap theme={null}
     how do these authentication files work together?
     ```
   </Step>
 
   <Step title="Pahami alur eksekusi">
-    ```text theme={null}
+    ```text wrap theme={null}
     trace the login process from front-end to database
     ```
   </Step>
@@ -108,7 +110,7 @@ Misalkan Anda perlu menemukan kode yang terkait dengan fitur atau fungsionalitas
 
   * Jadilah spesifik tentang apa yang Anda cari
   * Gunakan bahasa domain dari proyek
-  * Instal [plugin code intelligence](/docs/id/discover-plugins#code-intelligence) untuk bahasa Anda untuk memberikan Claude navigasi "go to definition" dan "find references" yang presisi
+  * Instal [plugin code intelligence](/docs/id/plugins/code-intelligence) untuk bahasa Anda untuk memberikan Claude navigasi "go to definition" dan "find references" yang presisi
 </Tip>
 
 ***
@@ -121,19 +123,19 @@ Misalkan Anda telah mengalami pesan kesalahan dan perlu menemukan dan memperbaik
 
 <Steps>
   <Step title="Bagikan kesalahan dengan Claude">
-    ```text theme={null}
+    ```text wrap theme={null}
     I'm seeing an error when I run npm test
     ```
   </Step>
 
   <Step title="Minta rekomendasi perbaikan">
-    ```text theme={null}
+    ```text wrap theme={null}
     suggest a few ways to fix the @ts-ignore in user.ts
     ```
   </Step>
 
   <Step title="Terapkan perbaikan">
-    ```text theme={null}
+    ```text wrap theme={null}
     update user.ts to add the null check you suggested
     ```
   </Step>
@@ -155,27 +157,29 @@ Misalkan Anda telah mengalami pesan kesalahan dan perlu menemukan dan memperbaik
 
 Misalkan Anda perlu memperbarui kode lama untuk menggunakan pola dan praktik modern.
 
+Untuk memindahkan seluruh basis kode ke bahasa baru, lihat [bagaimana Anthropic menjalankan migrasi kode skala besar dengan Claude Code](https://claude.com/blog/ai-code-migration) di blog.
+
 <Steps>
   <Step title="Identifikasi kode legacy untuk refactoring">
-    ```text theme={null}
+    ```text wrap theme={null}
     find deprecated API usage in our codebase
     ```
   </Step>
 
   <Step title="Dapatkan rekomendasi refactoring">
-    ```text theme={null}
+    ```text wrap theme={null}
     suggest how to refactor utils.js to use modern JavaScript features
     ```
   </Step>
 
   <Step title="Terapkan perubahan dengan aman">
-    ```text theme={null}
+    ```text wrap theme={null}
     refactor utils.js to use ES2024 features while maintaining the same behavior
     ```
   </Step>
 
   <Step title="Verifikasi refactoring">
-    ```text theme={null}
+    ```text wrap theme={null}
     run tests for the refactored code
     ```
   </Step>
@@ -199,25 +203,25 @@ Misalkan Anda perlu menambahkan tes untuk kode yang tidak tercakup.
 
 <Steps>
   <Step title="Identifikasi kode yang tidak diuji">
-    ```text theme={null}
+    ```text wrap theme={null}
     find functions in NotificationsService.swift that are not covered by tests
     ```
   </Step>
 
   <Step title="Hasilkan scaffolding tes">
-    ```text theme={null}
+    ```text wrap theme={null}
     add tests for the notification service
     ```
   </Step>
 
   <Step title="Tambahkan kasus tes yang bermakna">
-    ```text theme={null}
+    ```text wrap theme={null}
     add test cases for edge conditions in the notification service
     ```
   </Step>
 
   <Step title="Jalankan dan verifikasi tes">
-    ```text theme={null}
+    ```text wrap theme={null}
     run the new tests and fix any failures
     ```
   </Step>
@@ -237,25 +241,25 @@ Anda dapat membuat pull request dengan meminta Claude secara langsung ("create a
 
 <Steps>
   <Step title="Ringkas perubahan Anda">
-    ```text theme={null}
+    ```text wrap theme={null}
     summarize the changes I've made to the authentication module
     ```
   </Step>
 
   <Step title="Hasilkan pull request">
-    ```text theme={null}
+    ```text wrap theme={null}
     create a pr
     ```
   </Step>
 
   <Step title="Tinjau dan perbaiki">
-    ```text theme={null}
+    ```text wrap theme={null}
     enhance the PR description with more context about the security improvements
     ```
   </Step>
 </Steps>
 
-Ketika Anda membuat PR menggunakan `gh pr create`, sesi secara otomatis ditautkan ke PR tersebut. Untuk kembali ke sana nanti, jalankan `claude --from-pr 123`, ganti 123 dengan nomor PR, atau tempel URL PR ke dalam [pemilih `/resume`](/docs/id/sessions#use-the-session-picker).
+Untuk menemukan sesi nanti, jalankan `claude --from-pr 1234` dengan nomor PR Anda sendiri, yang membuka pemilih sesi yang disaring ke sesi yang ditautkan ke PR tersebut, atau tempel URL PR ke dalam pencarian [pemilih `/resume`](/docs/id/sessions#use-the-session-picker). Claude Code menautkan sesi ke PR ketika Claude membuatnya dengan `gh pr create` atau `glab mr create`, dan ketika Claude [bekerja pada PR yang ada](/docs/id/agent-view#pull-request-status).
 
 <Tip>
   Tinjau PR yang dihasilkan Claude sebelum mengirimkan dan minta Claude untuk menyoroti risiko atau pertimbangan potensial.
@@ -269,25 +273,25 @@ Misalkan Anda perlu menambah atau memperbarui dokumentasi untuk kode Anda.
 
 <Steps>
   <Step title="Identifikasi kode yang tidak terdokumentasi">
-    ```text theme={null}
+    ```text wrap theme={null}
     find functions without proper JSDoc comments in the auth module
     ```
   </Step>
 
   <Step title="Hasilkan dokumentasi">
-    ```text theme={null}
+    ```text wrap theme={null}
     add JSDoc comments to the undocumented functions in auth.js
     ```
   </Step>
 
   <Step title="Tinjau dan tingkatkan">
-    ```text theme={null}
+    ```text wrap theme={null}
     improve the generated documentation with more context and examples
     ```
   </Step>
 
   <Step title="Verifikasi dokumentasi">
-    ```text theme={null}
+    ```text wrap theme={null}
     check if the documentation follows our project standards
     ```
   </Step>
@@ -324,40 +328,40 @@ Misalkan Anda perlu bekerja dengan gambar dalam basis kode Anda, dan Anda ingin 
     Anda dapat menggunakan salah satu metode ini:
 
     1. Seret dan lepas gambar ke jendela Claude Code
-    2. Salin gambar dan tempel ke CLI dengan Ctrl+V. Di macOS, Cmd+V juga bekerja di iTerm2.
-    3. Berikan jalur gambar ke Claude. Misalnya, "Analyze this image: /path/to/your/image.png"
+    2. Salin gambar dan tempel ke CLI dengan `Ctrl+V`, atau dengan [`Alt+V` di Windows dan WSL](/docs/id/interactive-mode#general-controls)
+    3. Berikan jalur gambar ke Claude, misalnya "Analyze this image: /path/to/your/image.png"
   </Step>
 
   <Step title="Minta Claude untuk menganalisis gambar">
-    ```text theme={null}
+    ```text wrap theme={null}
     What does this image show?
     ```
 
-    ```text theme={null}
+    ```text wrap theme={null}
     Describe the UI elements in this screenshot
     ```
 
-    ```text theme={null}
+    ```text wrap theme={null}
     Are there any problematic elements in this diagram?
     ```
   </Step>
 
   <Step title="Gunakan gambar untuk konteks">
-    ```text theme={null}
+    ```text wrap theme={null}
     Here's a screenshot of the error. What's causing it?
     ```
 
-    ```text theme={null}
+    ```text wrap theme={null}
     This is our current database schema. How should we modify it for the new feature?
     ```
   </Step>
 
   <Step title="Dapatkan saran kode dari konten visual">
-    ```text theme={null}
+    ```text wrap theme={null}
     Generate CSS to match this design mockup
     ```
 
-    ```text theme={null}
+    ```text wrap theme={null}
     What HTML structure would recreate this component?
     ```
   </Step>
@@ -383,7 +387,7 @@ Gunakan @ untuk dengan cepat menyertakan file atau direktori tanpa menunggu Clau
 
 <Steps>
   <Step title="Referensikan file tunggal">
-    ```text theme={null}
+    ```text wrap theme={null}
     Explain the logic in @src/utils/auth.js
     ```
 
@@ -391,15 +395,13 @@ Gunakan @ untuk dengan cepat menyertakan file atau direktori tanpa menunggu Clau
   </Step>
 
   <Step title="Referensikan direktori">
-    ```text theme={null}
+    ```text wrap theme={null}
     What's the structure of @src/components?
     ```
-
-    Ini menyediakan daftar direktori dengan informasi file.
   </Step>
 
   <Step title="Referensikan sumber daya MCP">
-    ```text theme={null}
+    ```text wrap theme={null}
     Show me the data from @github:repos/owner/repo/issues
     ```
 
@@ -411,6 +413,7 @@ Gunakan @ untuk dengan cepat menyertakan file atau direktori tanpa menunggu Clau
   Tips:
 
   * Jalur file dapat relatif atau absolut
+  * Ketik `@` untuk membuka menu saran jalur, kemudian tekan Enter atau Tab untuk menerima jalur yang disorot dan Enter lagi untuk mengirim pesan
   * Referensi file @ menambahkan `CLAUDE.md` di direktori file dan direktori induk ke konteks
   * Referensi direktori menampilkan daftar file, bukan konten
   * Anda dapat mereferensikan beberapa file dalam satu pesan (misalnya, "@file1.js and @file2.js")
@@ -426,12 +429,12 @@ Misalkan Anda ingin Claude menangani tugas secara otomatis secara berulang, sepe
 
 Pilih opsi penjadwalan berdasarkan tempat Anda ingin tugas berjalan:
 
-| Opsi                                                   | Tempat berjalan                       | Terbaik untuk                                                                                                                                                                                                   |
-| :----------------------------------------------------- | :------------------------------------ | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Routines](/docs/id/routines)                               | Infrastruktur yang dikelola Anthropic | Tugas yang harus berjalan bahkan ketika komputer Anda mati. Dapat juga dipicu oleh panggilan API atau event GitHub selain jadwal. Konfigurasikan di [claude.ai/code/routines](https://claude.ai/code/routines). |
-| [Desktop scheduled tasks](/docs/id/desktop-scheduled-tasks) | Mesin Anda, melalui aplikasi desktop  | Tugas yang memerlukan akses langsung ke file lokal, alat, atau perubahan yang tidak dilakukan.                                                                                                                  |
-| [GitHub Actions](/docs/id/github-actions)                   | Pipeline CI Anda                      | Tugas yang terikat pada event repo seperti PR yang dibuka, atau jadwal cron yang harus hidup bersama konfigurasi alur kerja Anda.                                                                               |
-| [`/loop`](/docs/id/scheduled-tasks)                         | Sesi CLI saat ini                     | Polling cepat saat sesi terbuka. Tugas berhenti ketika Anda memulai percakapan baru; `--resume` dan `--continue` mengembalikan yang belum kadaluarsa.                                                           |
+| Opsi                                                   | Tempat berjalan                          | Terbaik untuk                                                                                                                                                                                                   |
+| :----------------------------------------------------- | :--------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Routines](/docs/id/routines)                               | Cloud, dikelola Anthropic secara default | Tugas yang harus berjalan bahkan ketika komputer Anda mati. Dapat juga dipicu oleh panggilan API atau event GitHub selain jadwal. Konfigurasikan di [claude.ai/code/routines](https://claude.ai/code/routines). |
+| [Desktop scheduled tasks](/docs/id/desktop-scheduled-tasks) | Mesin Anda, melalui aplikasi desktop     | Tugas yang memerlukan akses langsung ke file lokal, alat, atau perubahan yang tidak dilakukan.                                                                                                                  |
+| [GitHub Actions](/docs/id/github-actions)                   | Pipeline CI Anda                         | Tugas yang terikat pada event repo seperti PR yang dibuka, atau jadwal cron yang harus hidup bersama konfigurasi alur kerja Anda.                                                                               |
+| [`/loop`](/docs/id/scheduled-tasks)                         | Sesi CLI saat ini                        | Polling cepat saat sesi terbuka. `--resume` dan `--continue` mengembalikan loop interval tetap yang belum kadaluarsa.                                                                                           |
 
 <Tip>
   Saat menulis prompt untuk tugas terjadwal, jelaskan apa yang terlihat seperti kesuksesan dan apa yang harus dilakukan dengan hasil. Tugas berjalan secara otonom, jadi tidak dapat mengajukan pertanyaan klarifikasi. Misalnya: "Review open PRs labeled `needs-review`, leave inline comments on any issues, and post a summary in the `#eng-reviews` Slack channel."
@@ -449,27 +452,27 @@ Claude memiliki akses bawaan ke dokumentasinya dan dapat menjawab pertanyaan ten
   Contoh pertanyaan
 </h4>
 
-```text theme={null}
+```text wrap theme={null}
 can Claude Code create pull requests?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 how does Claude Code handle permissions?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 what skills are available?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 how do I use MCP with Claude Code?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 how do I configure Claude Code for Amazon Bedrock?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 what are the limitations of Claude Code?
 ```
 
@@ -503,25 +506,25 @@ Ini melanjutkan sesi terbaru di direktori saat ini; jika belum ada, itu mencetak
   Jalankan sesi paralel dengan worktrees
 </h2>
 
-Bekerja pada fitur di satu terminal sementara Claude memperbaiki bug di terminal lain, tanpa edit bertabrakan. Setiap worktree adalah checkout terpisah di cabangnya sendiri.
+Bekerja pada fitur di satu terminal sementara Claude memperbaiki bug di terminal lain, tanpa edit bertabrakan. Setiap [git worktree](https://git-scm.com/docs/git-worktree) adalah checkout terpisah di cabangnya sendiri, dibuat dari commit yang ada, jadi repositori memerlukan setidaknya satu commit terlebih dahulu.
 
 ```bash theme={null}
 claude --worktree feature-auth
 ```
 
-Jalankan perintah yang sama dengan nama berbeda di terminal kedua untuk memulai sesi paralel terisolasi. Lihat [Worktrees](/docs/id/worktrees) untuk pembersihan, `.worktreeinclude`, dan dukungan VCS non-git. Untuk memantau sesi paralel dari satu layar daripada terminal terpisah, lihat [background agents](/docs/id/agent-view).
+Jalankan perintah yang sama dengan nama berbeda di terminal kedua untuk memulai sesi paralel terisolasi. Dalam repositori tanpa commit, perintah gagal dengan `Failed to resolve base branch "HEAD": git rev-parse failed`. Lihat [Worktrees](/docs/id/worktrees) untuk pembersihan, `.worktreeinclude`, dan dukungan VCS non-git. Untuk memantau sesi paralel dari satu layar daripada terminal terpisah, lihat [background agents](/docs/id/agent-view).
 
 <h2 id="plan-before-editing">
   Rencanakan sebelum mengedit
 </h2>
 
-Untuk perubahan yang ingin Anda tinjau sebelum menyentuh disk, beralih ke plan mode. Claude membaca file dan mengusulkan rencana tetapi tidak membuat edit sampai Anda menyetujui.
+Untuk perubahan yang ingin Anda tinjau sebelum menyentuh disk, beralih ke plan mode. Claude membaca file dan mengusulkan rencana tetapi tidak membuat edit sampai Anda menyetujui. Bilah status menampilkan `⏸ plan mode on` saat plan mode aktif.
 
 ```bash theme={null}
 claude --permission-mode plan
 ```
 
-Anda juga dapat menekan `Shift+Tab` di tengah sesi untuk beralih ke plan mode. Lihat [Plan mode](/docs/id/permission-modes#analyze-before-you-edit-with-plan-mode) untuk alur persetujuan dan mengedit rencana di editor teks Anda.
+Anda juga dapat menekan `Shift+Tab` di tengah sesi sampai bilah status menampilkan `⏸ plan mode on`. Lihat [Plan mode](/docs/id/permission-modes#analyze-before-you-edit-with-plan-mode) untuk alur persetujuan dan mengedit rencana di editor teks Anda.
 
 <h2 id="delegate-research-to-subagents">
   Delegasikan penelitian ke subagents
@@ -529,7 +532,7 @@ Anda juga dapat menekan `Shift+Tab` di tengah sesi untuk beralih ke plan mode. L
 
 Menjelajahi basis kode besar mengisi konteks Anda dengan pembacaan file. Delegasikan eksplorasi sehingga hanya temuan yang kembali.
 
-```text theme={null}
+```text wrap theme={null}
 use a subagent to investigate how our auth system handles token refresh
 ```
 

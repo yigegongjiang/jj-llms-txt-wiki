@@ -20,9 +20,13 @@ Die Sicherheit Ihres Codes ist von größter Bedeutung. Claude Code ist mit Sich
   Berechtigungsbasierte Architektur
 </h3>
 
-Claude Code verwendet standardmäßig strikte Nur-Lesen-Berechtigungen. Wenn zusätzliche Aktionen erforderlich sind (Dateien bearbeiten, Tests ausführen, Befehle ausführen), fordert Claude Code explizite Genehmigung an. Benutzer kontrollieren, ob sie Aktionen einmalig genehmigen oder automatisch zulassen möchten.
+Im manuellen Modus startet Claude Code mit Nur-Lesen-Berechtigungen. Wenn Claude Code Dateien bearbeiten, Tests ausführen oder Befehle ausführen muss, fragt es Sie zuerst, und Sie entscheiden, ob Sie die Aktion einmalig genehmigen oder von nun an zulassen möchten.
 
-Claude Code erfordert Genehmigung vor der Ausführung von Bash-Befehlen, die Ihr System ändern können. Ein integrierter Satz von [Nur-Lesen-Befehlen](/docs/de/permissions#read-only-commands) wie `ls`, `cat` und `git status` wird ohne Aufforderung ausgeführt. Dieser Ansatz ermöglicht es Benutzern und Organisationen, Berechtigungen direkt zu konfigurieren.
+Im manuellen Modus fragt Claude Code auch vor der Ausführung von Bash-Befehlen, die Ihr System ändern können. Es führt einen integrierten Satz von [Nur-Lesen-Befehlen](/docs/de/permissions#read-only-commands) wie `ls`, `cat` und `git status` ohne Aufforderung aus. Sie und Ihre Organisation konfigurieren diese Berechtigungen direkt.
+
+Im [automatischen Modus](/docs/de/permission-modes#eliminate-prompts-with-auto-mode) überprüft ein separates Klassifizierungsmodell Aktionen anstelle von Ihnen und blockiert diejenigen, die es als unsicher einstuft. [Wie der Klassifizierer Aktionen bewertet](/docs/de/permission-modes#how-the-classifier-evaluates-actions) listet auf, welche Aktionen Claude Code direkt genehmigt, welche es an den Klassifizierer sendet, und welche Claude Code Sie noch fragt. Ihre expliziten Zulassungs- und Ablehnungsregeln gelten weiterhin, und Ihre Organisation kann [den automatischen Modus deaktivieren](/docs/de/permission-modes#eliminate-prompts-with-auto-mode).
+
+Welcher Berechtigungsmodus eine Sitzung startet, hängt von Ihrem Plan, der Oberfläche, von der Sie sie starten, und Ihren Einstellungen und denen Ihrer Organisation ab; siehe [Berechtigungsmodi](/docs/de/permission-modes#which-mode-a-session-starts-in).
 
 Für detaillierte Berechtigungskonfiguration siehe [Berechtigungen](/docs/de/permissions).
 
@@ -32,8 +36,8 @@ Für detaillierte Berechtigungskonfiguration siehe [Berechtigungen](/docs/de/per
 
 Um Risiken in agentengestützten Systemen zu mindern:
 
-* **Sandbox-Bash-Tool**: [Sandbox](/docs/de/sandboxing) Bash-Befehle mit Dateisystem- und Netzwerkisolation, wodurch Berechtigungsaufforderungen reduziert werden, während die Sicherheit gewährleistet bleibt. Aktivieren Sie mit `/sandbox`, um Grenzen zu definieren, in denen Claude Code autonom arbeiten kann
-* **Arbeitsverzeichnis-Grenze**: Claude Code kann nur in den Ordner schreiben, in dem es gestartet wurde, und in dessen Unterordner, und kann Dateien in übergeordneten Verzeichnissen nicht ohne explizite Genehmigung ändern. Das Lesen von Pfaden außerhalb dieser Grenze mit den Tools Read, Grep und Glob ist nach einer Genehmigungsaufforderung möglich. Erweitern Sie die Grenze mit [zusätzlichen Verzeichnissen](/docs/de/permissions#working-directories), um die Aufforderung zu überspringen, oder beschränken Sie den breiteren Lesezugriff, der für Nur-Lesen-Bash-Befehle verfügbar ist, mit [Sandbox-`denyRead`-Regeln](/docs/de/sandboxing#filesystem-isolation), die nur gelten, wenn Sandboxing aktiviert ist
+* **Sandbox-Bash-Tool**: [Sandbox](/docs/de/sandboxing) Bash-Befehle mit Dateisystem- und Netzwerkisolation, wodurch Berechtigungsaufforderungen reduziert werden, während die Sicherheit gewährleistet bleibt. Konfigurieren Sie mit `/sandbox`, um Grenzen zu definieren, in denen Claude Code autonom arbeiten kann
+* **Arbeitsverzeichnis-Grenze**: Im manuellen Modus kann Claude Code nur in den Ordner schreiben, in dem es gestartet wurde, und in dessen Unterordner, und kann Dateien in übergeordneten Verzeichnissen nicht ohne explizite Genehmigung ändern. Im manuellen Modus fragt Claude Code Sie auch, bevor es Pfade außerhalb dieser Grenze mit den Tools Read, Grep und Glob liest. Erweitern Sie die Grenze mit [zusätzlichen Verzeichnissen](/docs/de/permissions#working-directories), um die Aufforderung zu überspringen, oder beschränken Sie den breiteren Lesezugriff, der für Nur-Lesen-Bash-Befehle verfügbar ist, mit [Sandbox-`denyRead`-Regeln](/docs/de/sandboxing#filesystem-isolation), die nur gelten, wenn Sandboxing aktiviert ist
 * **Minderung von Genehmigungsmüdigkeit**: Unterstützung für das Zulassen häufig verwendeter sicherer Befehle pro Benutzer, pro Codebasis oder pro Organisation
 * **Accept Edits-Modus**: Genehmigt automatisch Dateibearbeitungen und einen festen Satz von Dateisystem-Bash-Befehlen wie `mkdir`, `touch`, `rm`, `mv`, `cp` und `sed` für Pfade im Arbeitsverzeichnis. Andere Bash-Befehle und Pfade außerhalb des Umfangs werden weiterhin angefordert
 
@@ -53,10 +57,10 @@ Prompt-Injection ist eine Technik, bei der ein Angreifer versucht, die Anweisung
   Kernschutzmaßnahmen
 </h3>
 
-* **Berechtigungssystem**: Sensible Operationen erfordern explizite Genehmigung
+* **Berechtigungssystem**: Im Manual-Modus erfordern sensible Operationen explizite Genehmigung
 * **Kontextbewusste Analyse**: Erkennt potenziell schädliche Anweisungen durch Analyse der vollständigen Anfrage
 * **Eingabebereinigung**: Verhindert Befehlsinjektionen durch Verarbeitung von Benutzereingaben
-* **Genehmigung von Netzwerkbefehlen**: Befehle, die Inhalte aus dem Web abrufen, wie `curl` und `wget`, werden standardmäßig nicht automatisch genehmigt. Sie werden wie jeder andere nicht-schreibgeschützte Bash-Befehl behandelt, sodass Sie diese trotzdem genehmigen oder eine explizite Zulassungsregel wie `Bash(curl *)` hinzufügen können. Um sie vollständig zu blockieren, fügen Sie sie zu [`permissions.deny`](/docs/de/permissions#tool-specific-permission-rules) hinzu
+* **Genehmigung von Netzwerkbefehlen**: Befehle, die Inhalte aus dem Web abrufen, wie `curl` und `wget`, werden standardmäßig nicht automatisch genehmigt. Im Manual-Modus werden sie wie jeder andere nicht-schreibgeschützte Bash-Befehl behandelt, sodass Sie diese trotzdem genehmigen oder eine explizite Zulassungsregel wie `Bash(curl *)` hinzufügen können. Um sie vollständig zu blockieren, fügen Sie sie zu [`permissions.deny`](/docs/de/permissions#tool-specific-permission-rules) hinzu. Eine Deny-Regel entspricht dem Befehl [wie geschrieben](/docs/de/permissions#bash-rule-limits); für Netzwerkdurchsetzung, die nicht vom Befehlstext abhängt, siehe [Sandbox-Netzwerkisolation](/docs/de/sandboxing#network-isolation)
 
 <h3 id="privacy-safeguards">
   Datenschutzvorkehrungen
@@ -74,13 +78,13 @@ Für vollständige Details überprüfen Sie bitte unsere [Commercial Terms of Se
   Zusätzliche Schutzmaßnahmen
 </h3>
 
-* **Genehmigung von Netzwerkanfragen**: Tools, die Netzwerkanfragen stellen, erfordern standardmäßig Benutzergenehmigung
+* **Genehmigung von Netzwerkanfragen**: Im Manual-Modus erfordern die meisten Tools, die Netzwerkanfragen stellen, standardmäßig Benutzergenehmigung
 * **Isolierte Kontextfenster**: Web Fetch verwendet ein separates Kontextfenster, um die Injection potenziell bösartiger Prompts zu vermeiden
 * **Vertrauensüberprüfung**: Erste Codebasis-Ausführungen und neue MCP-Server erfordern Vertrauensüberprüfung
   * Hinweis: Vertrauensüberprüfung ist deaktiviert, wenn nicht-interaktiv mit dem `-p`-Flag ausgeführt wird
   * Hinweis: Wenn Sie Claude Code direkt in Ihrem Home-Verzeichnis starten, wird die Vertrauensannahme nur für die aktuelle Sitzung beibehalten und nicht auf die Festplatte geschrieben, sodass die Eingabeaufforderung bei jedem Start erneut angezeigt wird. Es gibt keine Einstellung, um sie beizubehalten. Starten Sie Claude Code stattdessen aus einem Projektunterverzeichnis, in dem die Vertrauensannahme pro Verzeichnis gespeichert wird
-* **Erkennung von Befehlsinjektionen**: Verdächtige Bash-Befehle erfordern manuelle Genehmigung, auch wenn sie zuvor auf die Zulassungsliste gesetzt wurden
-* **Fail-Closed-Matching**: Nicht übereinstimmende Befehle erfordern standardmäßig manuelle Genehmigung
+* **Erkennung von Befehlsinjektionen**: Im Manual-Modus erfordern verdächtige Bash-Befehle manuelle Genehmigung, auch wenn sie zuvor auf die Zulassungsliste gesetzt wurden
+* **Fail-Closed-Matching**: Im Manual-Modus erfordern nicht übereinstimmende Befehle standardmäßig Genehmigung
 * **Beschreibungen in natürlicher Sprache**: Komplexe Bash-Befehle enthalten Erklärungen zum Verständnis des Benutzers
 * **Sichere Anmeldedatenspeicherung**: API-Schlüssel und Token werden im macOS Keychain gespeichert, wenn verfügbar, und durch Dateiberechtigungen unter Windows und Linux geschützt. Siehe [Credential Management](/docs/de/authentication#credential-management)
 
@@ -120,16 +124,16 @@ Siehe [VS Code-Sicherheit und Datenschutz](/docs/de/vs-code#security-and-privacy
   Cloud-Ausführungssicherheit
 </h2>
 
-Bei Verwendung von [Claude Code im Web](/docs/de/claude-code-on-the-web) sind zusätzliche Sicherheitskontrollen vorhanden:
+Bei Verwendung von [Cloud-Sitzungen](/docs/de/claude-code-on-the-web) sind zusätzliche Sicherheitskontrollen vorhanden. Sitzungen, die Ihre Organisation in eine [selbstgehostete Umgebung](/docs/de/self-hosted-environments) leitet, werden auf Ihrer eigenen Infrastruktur ausgeführt, wobei Isolation, Netzwerk-Egress und Git-Anmeldedaten die Verantwortung Ihrer Bereitstellung sind. In von Anthropic gehosteten Umgebungen:
 
 * **Isolierte virtuelle Maschinen**: Jede Cloud-Sitzung wird in einer isolierten, von Anthropic verwalteten VM ausgeführt
 * **Netzwerkzugriffskontrollen**: Der Netzwerkzugriff ist standardmäßig begrenzt und kann so konfiguriert werden, dass er deaktiviert ist oder nur bestimmte Domänen zulässt
 * **Anmeldedatenschutz**: Die Authentifizierung wird über einen sicheren Proxy durchgeführt, der einen scoped Credential in der Sandbox verwendet, der dann in Ihr tatsächliches GitHub-Authentifizierungstoken übersetzt wird
 * **Branch-Einschränkungen**: Git-Push-Operationen sind auf den aktuellen Arbeitsbranch beschränkt
-* **Audit-Protokollierung**: Alle Operationen in Cloud-Umgebungen werden zu Compliance- und Audit-Zwecken protokolliert
-* **Automatische Bereinigung**: Cloud-Umgebungen werden nach Abschluss der Sitzung automatisch beendet
+* **Audit-Protokollierung**: Alle Operationen in Cloud-Sitzungen werden zu Compliance- und Audit-Zwecken protokolliert
+* **Automatische Bereinigung**: Sitzungs-VMs werden nach einer Phase der Inaktivität freigegeben
 
-Weitere Details zur Cloud-Ausführung finden Sie unter [Claude Code im Web](/docs/de/claude-code-on-the-web).
+Weitere Details zur Cloud-Ausführung finden Sie unter [Claude Code im Web](/docs/de/claude-code-on-the-web); um den Netzwerkzugriff für Cloud-Sitzungen zu konfigurieren, siehe [Cloud-Umgebungen konfigurieren](/docs/de/cloud-environments#network-access).
 
 [Remote Control](/docs/de/remote-control)-Sitzungen funktionieren anders: Die Weboberfläche verbindet sich mit einem Claude Code-Prozess, der auf Ihrem lokalen Computer ausgeführt wird. Alle Code-Ausführungen und Dateizugriffe bleiben lokal, und der Sitzungsdatenverkehr wird über die Anthropic API über TLS übertragen. Während der Verbindung wird das Sitzungstranskript auf Anthropic-Servern gespeichert, um die Konversation über Geräte hinweg zu synchronisieren, wie in [Verbindung und Sicherheit](/docs/de/remote-control#connection-and-security) beschrieben. Es sind keine Cloud-VMs oder Sandboxing beteiligt. Die Verbindung verwendet mehrere kurzlebige, eng begrenzte Anmeldedaten, die jeweils auf einen bestimmten Zweck beschränkt sind und unabhängig ablaufen, um den Blast-Radius eines einzelnen kompromittierten Credentials zu begrenzen.
 
@@ -150,7 +154,7 @@ Weitere Details zur Cloud-Ausführung finden Sie unter [Claude Code im Web](/doc
   Team-Sicherheit
 </h3>
 
-* Verwenden Sie [verwaltete Einstellungen](/docs/de/settings#settings-files), um organisatorische Standards durchzusetzen
+* Verwenden Sie [verwaltete Einstellungen](/docs/de/settings#where-settings-live) um organisatorische Standards durchzusetzen
 * Teilen Sie genehmigte Berechtigungskonfigurationen über Versionskontrolle
 * Schulen Sie Teammitglieder in Best Practices für Sicherheit
 * Überwachen Sie die Claude Code-Nutzung durch [OpenTelemetry-Metriken](/docs/de/monitoring-usage)
@@ -172,9 +176,11 @@ Wenn Sie eine Sicherheitslücke in Claude Code entdecken:
 </h2>
 
 * [Security guidance plugin](/docs/de/security-guidance): Claude kann Sicherheitslücken in seinen eigenen Code-Änderungen während der Sitzung überprüfen und beheben
+* [`/security-review`](/docs/de/commands#all-commands): Führen Sie einen bedarfsgesteuerten Sicherheitscheck über die Änderungen in Ihrem aktuellen Branch durch
 * [Sandbox-Umgebungen](/docs/de/sandbox-environments): Vergleichen Sie Isolierungsansätze und wählen Sie einen für Ihr Bedrohungsmodell
 * [Sandboxing](/docs/de/sandboxing): Dateisystem- und Netzwerkisolation für Bash-Befehle
 * [Berechtigungen](/docs/de/permissions): Konfigurieren Sie Berechtigungen und Zugriffskontrolle
 * [Nutzungsüberwachung](/docs/de/monitoring-usage): Verfolgen und überprüfen Sie Claude Code-Aktivität
 * [Entwicklungscontainer](/docs/de/devcontainer): Sichere, isolierte Umgebungen
 * [Anthropic Trust Center](https://trust.anthropic.com): Sicherheitszertifizierungen und Compliance
+* [CISO's guide to agentic AI](https://claude.com/blog/ciso-guide-to-agentic-ai): Ein Rahmenwerk für Sicherheitsleiter zur Bewertung von agentengestützten KI-Bereitstellungen

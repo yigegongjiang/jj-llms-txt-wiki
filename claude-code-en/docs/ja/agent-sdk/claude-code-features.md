@@ -10,8 +10,6 @@ Agent SDK は Claude Code と同じ基盤の上に構築されているため、
 
 `settingSources` を省略すると、`query()` は Claude Code CLI と同じファイルシステム設定を読み込みます。ユーザー、プロジェクト、ローカル設定、CLAUDE.md ファイル、`.claude/` スキル、エージェント、コマンドです。これらなしで実行するには、`settingSources: []` を渡します。これにより、エージェントはプログラムで設定したものに限定されます。マネージドポリシー設定とグローバル `~/.claude.json` 設定は、このオプションに関係なく読み込まれます。[settingSources が制御しないもの](#what-settingsources-does-not-control)を参照してください。
 
-各機能の概念的な概要と使用時期については、[Claude Code を拡張する](/docs/ja/features-overview)を参照してください。
-
 <h2 id="control-filesystem-settings-with-settingsources">
   settingSources でファイルシステム設定を制御する
 </h2>
@@ -23,23 +21,29 @@ Agent SDK は Claude Code と同じ基盤の上に構築されているため、
 <CodeGroup>
   ```python Python theme={null}
   from claude_agent_sdk import query, ClaudeAgentOptions, AssistantMessage, ResultMessage
+  import asyncio
 
-  async for message in query(
-      prompt="Help me refactor the auth module",
-      options=ClaudeAgentOptions(
-          # "user" loads from ~/.claude/, "project" loads from ./.claude/ in cwd.
-          # Together they give the agent access to CLAUDE.md, skills, hooks, and
-          # permissions from both locations.
-          setting_sources=["user", "project"],
-          allowed_tools=["Read", "Edit", "Bash"],
-      ),
-  ):
-      if isinstance(message, AssistantMessage):
-          for block in message.content:
-              if hasattr(block, "text"):
-                  print(block.text)
-      if isinstance(message, ResultMessage) and message.subtype == "success":
-          print(f"\nResult: {message.result}")
+
+  async def main():
+      async for message in query(
+          prompt="Help me refactor the auth module",
+          options=ClaudeAgentOptions(
+              # "user" loads from ~/.claude/, "project" loads from ./.claude/ in cwd.
+              # Together they give the agent access to CLAUDE.md, skills, hooks, and
+              # permissions from both locations.
+              setting_sources=["user", "project"],
+              allowed_tools=["Read", "Edit", "Bash"],
+          ),
+      ):
+          if isinstance(message, AssistantMessage):
+              for block in message.content:
+                  if hasattr(block, "text"):
+                      print(block.text)
+          if isinstance(message, ResultMessage) and message.subtype == "success":
+              print(f"\nResult: {message.result}")
+
+
+  asyncio.run(main())
   ```
 
   ```typescript TypeScript theme={null}
@@ -67,17 +71,19 @@ Agent SDK は Claude Code と同じ基盤の上に構築されているため、
   ```
 </CodeGroup>
 
+このコードが実行されると、アシスタントの応答が stdout に出力され、実行が完了すると最終的な結果行が続きます。
+
 各ソースは特定の場所から設定を読み込みます。`<cwd>` は `cwd` オプション経由で渡す作業ディレクトリです（設定されていない場合はプロセスの現在のディレクトリ）。完全な型定義については、[`SettingSource`](/docs/ja/agent-sdk/typescript#settingsource)（TypeScript）または [`SettingSource`](/docs/ja/agent-sdk/python#settingsource)（Python）を参照してください。
 
-| ソース         | 読み込むもの                                                                           | 場所                                                                                                             |
-| :---------- | :------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------- |
-| `"project"` | プロジェクト CLAUDE.md、`.claude/rules/*.md`、プロジェクトスキル、プロジェクトフック、プロジェクト `settings.json` | `<cwd>/.claude/` （`settings.json` とフック用）；CLAUDE.md とルール用に `<cwd>` と全親ディレクトリ；スキル用に `<cwd>` とリポジトリルートまでの全親ディレクトリ |
-| `"user"`    | ユーザー CLAUDE.md、`~/.claude/rules/*.md`、ユーザースキル、ユーザー設定                             | `~/.claude/`                                                                                                   |
-| `"local"`   | CLAUDE.local.md、`.claude/settings.local.json`                                    | `<cwd>/.claude/` （`settings.local.json` 用）；CLAUDE.local.md 用に `<cwd>` と全親ディレクトリ                                |
+| ソース         | 読み込むもの                                                                                      | 場所                                                                                                                                                                                                                                                                                                                                                                             |
+| :---------- | :------------------------------------------------------------------------------------------ | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `"project"` | プロジェクト `settings.json` とフック；プロジェクト CLAUDE.md と `.claude/rules/*.md`；プロジェクトスキル、コマンド、サブエージェント | `<cwd>/.claude/` （`settings.json` とフック用）；CLAUDE.md とルール用に `<cwd>` と全親ディレクトリ；スキル、コマンド、サブエージェント用に `<cwd>` とリポジトリルートまでの全親ディレクトリ、および `additionalDirectories` または `add_dirs` オプション経由で渡す各ディレクトリの `.claude/skills/`、`.claude/commands/`、`.claude/agents/` フォルダ（SDK は Claude Code に [`--add-dir`](/docs/ja/permissions#additional-directories-grant-file-access-not-configuration) として渡します） |
+| `"user"`    | ユーザー `settings.json`；ユーザー CLAUDE.md と `~/.claude/rules/*.md`；ユーザースキル、コマンド、サブエージェント          | `~/.claude/` （`settings.json`、CLAUDE.md、ルール用）；`~/.claude/skills/`、`~/.claude/commands/`、`~/.claude/agents/` （スキル、コマンド、サブエージェント用）                                                                                                                                                                                                                                               |
+| `"local"`   | CLAUDE.local.md、`.claude/settings.local.json`                                               | `<cwd>/.claude/` （`settings.local.json` 用）；CLAUDE.local.md 用に `<cwd>` と全親ディレクトリ                                                                                                                                                                                                                                                                                                |
 
 `settingSources` を省略することは `["user", "project", "local"]` と同等です。
 
-`cwd` オプションは、SDK がプロジェクトレベルの入力を探す場所を決定します。CLAUDE.md とルールは `<cwd>` と全親ディレクトリから読み込まれます。スキルは `<cwd>` とリポジトリルートまでの全親ディレクトリから読み込まれます。プロジェクト `settings.json` とフックは `<cwd>/.claude/` からのみ読み込まれ、親ディレクトリへのフォールバックはありません。
+`cwd` オプションは、SDK がプロジェクトレベルの入力を探す場所を決定します。プロジェクト `settings.json` とフックは `<cwd>/.claude/` からのみ読み込まれ、親ディレクトリへのフォールバックはありません。
 
 <h3 id="what-settingsources-does-not-control">
   settingSources が制御しないもの
@@ -85,12 +91,13 @@ Agent SDK は Claude Code と同じ基盤の上に構築されているため、
 
 `settingSources` はユーザー、プロジェクト、ローカル設定をカバーします。その値に関係なく読み込まれるいくつかの入力があります。
 
-| 入力                                                           | 動作                                                                                                                                                                                                                            | 無効にするには                                                                                                                                                                |
-| :----------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| マネージドポリシー設定                                                  | エンドポイント管理ポリシー（MDM plist、レジストリポリシー、またはマネージド設定ファイル）はホストから読み込まれます。[サーバー管理設定](/docs/ja/server-managed-settings)は、組織 OAuth ログインまたは直接構成された API キーでセッションが認証されるときに取得されます（[対象となる構成](/docs/ja/server-managed-settings#platform-availability)の場合）。 | エンドポイントポリシー：ホストからマネージド設定ファイル、plist、またはレジストリポリシーを削除します。サーバー管理設定：組織管理者によって制御されます；SDK から無効にすることはできません。                                                                    |
-| `~/.claude.json` グローバル設定                                     | 常に読み込まれます                                                                                                                                                                                                                     | `env` の `CLAUDE_CONFIG_DIR` で再配置します                                                                                                                                    |
-| `~/.claude/projects/<project>/memory/` の自動メモリ                | セッション開始時にシステムプロンプトに読み込まれます。エージェントは専用のメモリツールではなく、標準の `Write` および `Edit` ツールを使用して新しいメモリをそこに書き込むため、エージェントがメモリを保存するにはこれらのツールを有効にする必要があります。                                                                                        | 設定で `autoMemoryEnabled: false` を設定するか、`env` で `CLAUDE_CODE_DISABLE_AUTO_MEMORY=1` を設定します                                                                               |
-| [claude.ai MCP コネクタ](/docs/ja/mcp#use-mcp-servers-from-claude-ai) | アクティブな認証方法が claude.ai サブスクリプションの場合に読み込まれます。`mcpServers: {}` を渡しても抑制されません                                                                                                                                                      | `strictMcpConfig: true` を設定するか、設定で [`disableClaudeAiConnectors: true`](/docs/ja/mcp#disable-claude-ai-connectors) を設定するか、`env` で `ENABLE_CLAUDEAI_MCP_SERVERS=false` を設定します |
+| 入力                                                                                                                   | 動作                                                                                                                                                                                                                                                                                                                                        | 無効にするには                                                                                                                                                                |
+| :------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| マネージドポリシー設定                                                                                                          | エンドポイント管理ポリシー（MDM plist、レジストリポリシー、またはマネージド設定ファイルなど）はホストから読み込まれます。[サーバー管理設定](/docs/ja/server-managed-settings)は、組織 OAuth ログイン、直接構成された API キー、または `user_oauth` [Anthropic プロファイル](/docs/ja/authentication#anthropic-profiles-and-federation-credentials)などの適格な認証情報でセッションが認証されるときに、[対象となる構成](/docs/ja/server-managed-settings#platform-availability)で取得されます | エンドポイントポリシー：ホストからマネージド設定ファイル、plist、またはレジストリポリシーを削除します。サーバー管理設定：Claude 組織の[オーナー](/docs/ja/server-managed-settings#access-control)によって制御されます；SDK から無効にすることはできません              |
+| `~/.claude.json` グローバル設定                                                                                             | 常に読み込まれます                                                                                                                                                                                                                                                                                                                                 | `env` の `CLAUDE_CONFIG_DIR` で再配置します                                                                                                                                    |
+| `~/.claude/projects/<project>/memory/` の自動メモリ                                                                        | セッション開始時にシステムプロンプトに読み込まれます。エージェントは専用のメモリツールではなく、標準の `Write` および `Edit` ツールを使用して新しいメモリをそこに書き込むため、エージェントがメモリを保存するにはこれらのツールを有効にする必要があります。                                                                                                                                                                                                    | 設定で `autoMemoryEnabled: false` を設定するか、`env` で `CLAUDE_CODE_DISABLE_AUTO_MEMORY=1` を設定します                                                                               |
+| [claude.ai MCP コネクタ](/docs/ja/mcp#use-mcp-servers-from-claude-ai)                                                         | セッションが claude.ai ログインで認証されるときに読み込まれます。`CLAUDE_CODE_OAUTH_TOKEN` が [`claude setup-token`](/docs/ja/authentication#generate-a-long-lived-token) からのトークンを保持している場合は読み込まれません。このトークンはモデルリクエストのみを実行できます。`mcpServers: {}` を渡してもコネクタは抑制されません                                                                                                            | `strictMcpConfig: true` を設定するか、設定で [`disableClaudeAiConnectors: true`](/docs/ja/mcp#disable-claude-ai-connectors) を設定するか、`env` で `ENABLE_CLAUDEAI_MCP_SERVERS=false` を設定します |
+| [`sandbox.credentials`](/docs/ja/sandboxing#protect-credentials) `deny` エントリと `~/.claude/settings.json` のファイル `mask` エントリ | [コマンドサンドボックス](/docs/ja/sandboxing)が実行されるとき、Claude Code は `deny` エントリを適用し、`settingSources` がユーザー設定を除外する場合でも `credentials.files` `mask` エントリを制限として保持します。Claude Code はこれらのエントリを使用して、サンドボックス化されたコマンドがアクセスできるものを制限するだけです                                                                                                                            | `~/.claude/settings.json` からエントリを削除します                                                                                                                                 |
 
 <Warning>
   マルチテナント分離のためにデフォルトの `query()` オプションに依存しないでください。上記の入力は `settingSources` に関係なく読み込まれるため、SDK プロセスはホストレベルの設定とディレクトリごとのメモリを取得できます。マルチテナント展開の場合は、各テナントを独自のファイルシステムで実行し、`settingSources: []` と `env` で `CLAUDE_CODE_DISABLE_AUTO_MEMORY=1` を設定します。[サーバー管理設定](/docs/ja/server-managed-settings)は、プロセスが組織認証情報で認証されるときに取得されます；ファイルシステム分離はそれらを削除しません。[セキュアな展開](/docs/ja/agent-sdk/secure-deployment)を参照してください。
@@ -100,7 +107,7 @@ Agent SDK は Claude Code と同じ基盤の上に構築されているため、
   プロジェクト指示（CLAUDE.md とルール）
 </h2>
 
-`CLAUDE.md` ファイルと `.claude/rules/*.md` ファイルは、エージェントにプロジェクトに関する永続的なコンテキストを提供します。コーディング規約、ビルドコマンド、アーキテクチャの決定、指示です。`settingSources` に `"project"` が含まれている場合（上記の例のように）、SDK はセッション開始時にこれらのファイルをコンテキストに読み込みます。その後、エージェントはプロジェクト規約に従い、すべてのプロンプトで繰り返す必要がありません。
+`CLAUDE.md` ファイルと `.claude/rules/*.md` ファイルは、エージェントにプロジェクトに関する永続的なコンテキストを提供します。コーディング規約、ビルドコマンド、アーキテクチャの決定、指示です。`settingSources` に `"project"` が含まれている場合（[`settingSources` の例](#control-filesystem-settings-with-settingsources)のように）、SDK はセッション開始時にこれらのファイルをコンテキストに読み込みます。その後、エージェントはプロジェクト規約に従い、すべてのプロンプトで繰り返す必要がありません。
 
 <h3 id="claude-md-load-locations">
   CLAUDE.md 読み込み場所
@@ -135,19 +142,25 @@ CLAUDE.md コンテンツの構造と整理方法については、[Claude の�
 <CodeGroup>
   ```python Python theme={null}
   from claude_agent_sdk import query, ClaudeAgentOptions, ResultMessage
+  import asyncio
+
 
   # Skills in .claude/skills/ are discovered automatically
   # when settingSources includes "project"
-  async for message in query(
-      prompt="Review this PR using our code review checklist",
-      options=ClaudeAgentOptions(
-          setting_sources=["user", "project"],
-          skills="all",
-          allowed_tools=["Read", "Grep", "Glob"],
-      ),
-  ):
-      if isinstance(message, ResultMessage) and message.subtype == "success":
-          print(message.result)
+  async def main():
+      async for message in query(
+          prompt="Review this PR using our code review checklist",
+          options=ClaudeAgentOptions(
+              setting_sources=["user", "project"],
+              skills="all",
+              allowed_tools=["Read", "Grep", "Glob"],
+          ),
+      ):
+          if isinstance(message, ResultMessage) and message.subtype == "success":
+              print(message.result)
+
+
+  asyncio.run(main())
   ```
 
   ```typescript TypeScript theme={null}
@@ -174,8 +187,6 @@ CLAUDE.md コンテンツの構造と整理方法については、[Claude の�
   スキルはファイルシステムアーティファクト（`.claude/skills/<name>/SKILL.md`）として作成する必要があります。SDK にはスキルを登録するためのプログラマティック API がありません。詳細については、[SDK のエージェントスキル](/docs/ja/agent-sdk/skills)を参照してください。
 </Note>
 
-スキルの作成と使用の詳細については、[SDK のエージェントスキル](/docs/ja/agent-sdk/skills)を参照してください。
-
 <h2 id="hooks">
   フック
 </h2>
@@ -185,19 +196,18 @@ SDK は 2 つの方法でフックを定義することをサポートしてお�
 * **ファイルシステムフック：** `settings.json` で定義されたシェルコマンド。`settingSources` に関連するソースが含まれている場合に読み込まれます。これらは[インタラクティブな Claude Code セッション](/docs/ja/hooks-guide)用に設定するのと同じフックです。
 * **プログラマティックフック：** `query()` に直接渡されるコールバック関数。これらはアプリケーションプロセスで実行され、構造化された決定を返すことができます。[フックで実行を制御する](/docs/ja/agent-sdk/hooks)を参照してください。
 
-両方のタイプは同じフックライフサイクル中に実行されます。プロジェクトの `.claude/settings.json` にフックが既にあり、`settingSources: ["project"]` を設定している場合、それらのフックは追加の設定なしで SDK で自動的に実行されます。
-
-フックコールバックはツール入力を受け取り、決定辞書を返します。`{}` を返すことはツールの実行を許可することを意味します。実行をブロックするには、`permissionDecision: "deny"` と `permissionDecisionReason` を含む `hookSpecificOutput` オブジェクトを返します。理由は Claude にツール結果として送信されます。トップレベルの `decision` と `reason` フィールドは `PreToolUse` では非推奨です。完全なコールバック署名と戻り値の型については、[フックガイド](/docs/ja/agent-sdk/hooks)を参照してください。
+フックコールバックはツール入力を受け取り、決定辞書を返します。`{}` を返すことはツールの実行を許可することを意味します。実行をブロックするには、`permissionDecision: "deny"` と `permissionDecisionReason` を含む `hookSpecificOutput` オブジェクトを返します。理由は Claude にツール結果として送信されます。完全なコールバック署名と戻り値の型については、[フックガイド](/docs/ja/agent-sdk/hooks)を参照してください。
 
 <CodeGroup>
   ```python Python theme={null}
   from claude_agent_sdk import query, ClaudeAgentOptions, HookMatcher, ResultMessage
+  import asyncio
 
 
   # PreToolUse hook callback. Positional args:
   #   input_data: HookInput dict with tool_name, tool_input, hook_event_name
   #   tool_use_id: str | None, the ID of the tool call being intercepted
-  #   context: HookContext, carries session metadata
+  #   context: HookContext, reserved for future abort-signal support
   async def audit_bash(input_data, tool_use_id, context):
       command = input_data.get("tool_input", {}).get("command", "")
       if "rm -rf" in command:
@@ -213,19 +223,23 @@ SDK は 2 つの方法でフックを定義することをサポートしてお�
 
   # Filesystem hooks from .claude/settings.json run automatically
   # when settingSources loads them. You can also add programmatic hooks:
-  async for message in query(
-      prompt="Refactor the auth module",
-      options=ClaudeAgentOptions(
-          setting_sources=["project"],  # Loads hooks from .claude/settings.json
-          hooks={
-              "PreToolUse": [
-                  HookMatcher(matcher="Bash", hooks=[audit_bash]),
-              ]
-          },
-      ),
-  ):
-      if isinstance(message, ResultMessage) and message.subtype == "success":
-          print(message.result)
+  async def main():
+      async for message in query(
+          prompt="Refactor the auth module",
+          options=ClaudeAgentOptions(
+              setting_sources=["project"],  # Loads hooks from .claude/settings.json
+              hooks={
+                  "PreToolUse": [
+                      HookMatcher(matcher="Bash", hooks=[audit_bash]),
+                  ]
+              },
+          ),
+      ):
+          if isinstance(message, ResultMessage) and message.subtype == "success":
+              print(message.result)
+
+
+  asyncio.run(main())
   ```
 
   ```typescript TypeScript theme={null}
@@ -274,7 +288,7 @@ SDK は 2 つの方法でフックを定義することをサポートしてお�
 | フックタイプ                            | 最適な用途                                                                                                                                                                                                              |
 | :-------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **ファイルシステム** （`settings.json`）    | CLI と SDK セッション間でフックを共有します。`"command"`（シェルスクリプト）、`"http"`（エンドポイントへの POST）、`"mcp_tool"`（接続された MCP サーバーのツールを呼び出す）、`"prompt"`（LLM がプロンプトを評価する）、`"agent"`（検証エージェントを生成する）をサポートします。これらはメインエージェントとそれが生成するサブエージェントで実行されます。 |
-| **プログラマティック** （`query()` のコールバック） | アプリケーション固有のロジック、構造化された決定、およびプロセス内統合。これらはサブエージェント内でも実行されます。コールバックは `agent_id` と `agent_type` を受け取り、区別することができます。                                                                                                     |
+| **プログラマティック** （`query()` のコールバック） | アプリケーション固有のロジック、構造化された決定、およびプロセス内統合。これらはサブエージェント内でも実行されます。フック入力（コールバックの最初の引数）は、どのエージェントがフックを実行したかを識別する `agent_id` と `agent_type` フィールドを含みます。                                                                       |
 
 <Note>
   TypeScript SDK は Python を超えた追加のフックイベントをサポートしており、`SessionStart`、`SessionEnd`、`TeammateIdle`、`TaskCompleted` が含まれます。完全なイベント互換性テーブルについては、[フックガイド](/docs/ja/agent-sdk/hooks)を参照してください。
@@ -297,10 +311,6 @@ Agent SDK は、エージェントの動作を拡張するいくつかの方法�
 | 共有タスクリストと直接的なエージェント間メッセージングで複数の Claude Code インスタンスを調整する | [Agent teams](/docs/ja/agent-teams)                | SDK オプション経由で直接設定されません。エージェントチームは CLI 機能で、1 つのセッションがチームリードとして機能し、独立したチームメイト間で作業を調整します |
 | ツール呼び出しで決定論的ロジックを実行する（監査、ブロック、変換）                       | [Hooks](/docs/ja/agent-sdk/hooks)                  | `hooks` パラメータとコールバック、または `settingSources` 経由で読み込まれたシェルスクリプト                          |
 | Claude に外部サービスへの構造化ツールアクセスを提供する                         | [MCP](/docs/ja/agent-sdk/mcp)                      | `mcpServers` パラメータ                                                                   |
-
-<Tip>
-  **Subagents 対 agent teams：** Subagents は一時的で分離されています。新しい会話、1 つのタスク、親に返される要約。Agent teams は、タスクリストを共有し、直接メッセージを送り合う複数の独立した Claude Code インスタンスを調整します。Agent teams は CLI 機能です。詳細については、[What subagents inherit](/docs/ja/agent-sdk/subagents#what-subagents-inherit)と[agent teams comparison](/docs/ja/agent-teams#compare-with-subagents)を参照してください。
-</Tip>
 
 有効にする機能ごとに、エージェントのコンテキストウィンドウに追加されます。機能ごとのコストとこれらの機能がどのように層状に配置されるかについては、[Extend Claude Code](/docs/ja/features-overview#understand-context-costs)を参照してください。
 

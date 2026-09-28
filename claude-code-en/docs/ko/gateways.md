@@ -21,7 +21,7 @@ Claude Code에는 `claude` 바이너리에 포함된 자체 호스팅 게이트�
   게이트웨이의 작동 방식
 </h2>
 
-각 개발자의 Claude Code는 게이트웨이의 주소를 가리키도록 설정되고 게이트웨이에서 발급한 자격 증명으로 인증합니다.
+각 개발자의 Claude Code는 게이트웨이의 주소로 요청을 전송하고 게이트웨이에서 발급한 자격 증명으로 인증합니다.
 
 게이트웨이는 개발자를 인증하고, 구성한 모든 액세스 및 예산 규칙을 적용하며, 조직의 자격 증명을 사용하여 요청을 제공자에게 전달합니다. 제공자는 Anthropic의 API이거나 Amazon Bedrock, Google Cloud의 Agent Platform 또는 Microsoft Foundry와 같은 [클라우드 제공자](/docs/ko/third-party-integrations)일 수 있습니다. 게이트웨이의 구성이 결정합니다. Claude 앱 게이트웨이 또는 단일 Anthropic 형식 엔드포인트를 노출하는 다른 게이트웨이를 사용하면, 제공자를 변경해도 개발자 머신을 건드릴 필요가 없습니다.
 
@@ -44,7 +44,7 @@ Claude Code는 Anthropic의 자체 게이트웨이 또는 조직이 이미 실�
   Claude 앱 게이트웨이
 </h3>
 
-Claude 앱 게이트웨이는 `claude` 바이너리에 포함된 Anthropic의 자체 호스팅 게이트웨이입니다. Amazon Bedrock, Claude Platform on AWS, Google Cloud, Microsoft Foundry 또는 Anthropic API를 업스트림으로 라우팅합니다. 개발자는 `/login`을 통해 회사 ID 제공자로 로그인하고, 게이트웨이는 IdP 그룹별로 모델 액세스 및 [관리 설정](/docs/ko/permissions#managed-settings)을 적용하며, [OpenTelemetry Protocol (OTLP)](/docs/ko/monitoring-usage) 사용량 메트릭을 자신의 관찰성 스택으로 내보냅니다.
+Claude 앱 게이트웨이는 `claude` 바이너리에 포함된 Anthropic의 자체 호스팅 게이트웨이입니다. Amazon Bedrock, Claude Platform on AWS, Google Cloud, Microsoft Foundry 또는 Anthropic API를 업스트림으로 라우팅합니다. 개발자는 `/login`을 통해 회사 ID 제공자로 로그인하고, 게이트웨이는 IdP 그룹별로 모델 액세스 및 [관리 설정](/docs/ko/managed-settings)을 적용하며, [OpenTelemetry Protocol (OTLP)](/docs/ko/monitoring-usage) 사용량 메트릭을 자신의 관찰성 스택으로 내보냅니다.
 
 각 Claude Code 릴리스와 함께 빌드되고 테스트되므로, Claude Code가 전송하는 헤더 및 요청 필드를 전달합니다. 별도로 유지 관리되는 게이트웨이는 각 릴리스에서 해당 헤더 및 필드가 변경될 때 [전달 규칙을 업데이트](/docs/ko/llm-gateway-protocol#forward-as-open-lists)해야 합니다. Claude 앱 게이트웨이는 CLI와 함께 릴리스되므로 최신 상태를 유지할 목록이 없습니다. [가용성 및 제한 사항](/docs/ko/claude-apps-gateway#availability-and-limitations)에서 게이트웨이 세션에서 다르게 작동하는 작은 기능 집합을 참조하세요.
 
@@ -73,8 +73,11 @@ Claude 앱 게이트웨이는 `claude` 바이너리에 포함된 Anthropic의 �
 게이트웨이는 모델 API 요청을 라우팅합니다. 게이트웨이가 처리할 것으로 예상할 수 있는 몇 가지 항목은 다른 곳에서 구성됩니다:
 
 * **어떤 모델이 응답하는지**: `/model` 명령 또는 [모델 환경 변수](/docs/ko/model-config#setting-your-model)로 모델을 선택합니다. 게이트웨이는 요청이 어디로 가는지 결정하며, 개발자가 선택한 모델이 아닙니다. Claude 앱 게이트웨이는 그룹별 `availableModels` 허용 목록으로 선택을 제한할 수 있지만, 개발자는 여전히 그 범위 내에서 선택합니다.
-* **다른 네트워크 트래픽**: Claude Code 자체는 버전 확인을 전송하고 게이트웨이 경로와 별도로 Anthropic에서 직접 다운로드합니다. 선택적 클라이언트 원격 분석 스트림도 켜져 있는지 여부는 제공자에 따라 다릅니다. [원격 분석 기본값 표](/docs/ko/data-usage#telemetry-services)에서 각 경우를 다룹니다. 로그인한 Claude 앱 게이트웨이 세션에서 게이트웨이 자격 증명은 Anthropic 바운드 분석을 비활성화하고, [원격 분석 전달](/docs/ko/claude-apps-gateway-config#telemetry)이 구성된 경우 OTLP 내보내기를 게이트웨이에 고정합니다. 네트워크는 여전히 [필수 도메인](/docs/ko/network-config)으로의 송신이 필요하거나 [`CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`](/docs/ko/env-vars)을 설정하여 선택적 스트림을 끕니다.
-* **회사 HTTP 프록시**: `HTTPS_PROXY`는 Claude Code와 게이트웨이를 포함하여 통신하는 모든 서버 사이에 위치합니다. 네트워크에 필요한 경우, 게이트웨이 외에 [프록시를 구성](/docs/ko/network-config)하세요. Claude 앱 게이트웨이의 경우, [로그인은 프록시 호스트도 개인 네트워크에 있는지 확인](/docs/ko/claude-apps-gateway#prerequisites)합니다. 그렇지 않으면 게이트웨이 호스트를 `NO_PROXY`에 추가하여 CLI가 직접 연결하도록 하세요.
+* **다른 네트워크 트래픽**: Claude Code 자체는 버전 확인을 전송하고 게이트웨이 경로와 별도로 Anthropic에서 직접 다운로드합니다. 네트워크는 여전히 [필수 도메인](/docs/ko/network-config)으로의 송신이 필요하거나 [`CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`](/docs/ko/env-vars)을 설정하여 선택적 스트림을 끕니다.
+* **클라이언트 원격 분석**: Claude Code는 세션이 Claude 앱 게이트웨이에 로그인할 때 Anthropic 바운드 클라이언트 분석을 비활성화합니다. 로그인 전 시작 분석도 꺼두려면, 각 기기의 [클라이언트 측 관리 설정](/docs/ko/claude-apps-gateway-config#client-side-managed-settings)에서 [`DISABLE_TELEMETRY`](/docs/ko/managed-settings#turn-telemetry-off-for-your-organization)를 전달합니다.
+* **다른 게이트웨이의 클라이언트 원격 분석**: Claude Code가 선택적 클라이언트 원격 분석 스트림을 전송하는지 여부는 제공자에 따라 다르며, [원격 분석 기본값 표](/docs/ko/data-usage#default-behaviors-by-api-provider)에서 각 경우를 다룹니다.
+* **원격 분석 대상**: Claude Code가 게이트웨이 세션의 원격 분석을 전송하는 위치는 세션이 로그인한 방식에 따라 다르며, [개발자에게 적용되는 항목](/docs/ko/claude-apps-gateway#whats-enforced-on-developers)에서 각 종류의 세션의 내보내기가 어디로 가는지 설명합니다.
+* **회사 HTTP 프록시**: `HTTPS_PROXY`는 Claude Code와 게이트웨이를 포함하여 통신하는 모든 서버 사이에 위치합니다. 네트워크에 필요한 경우, 게이트웨이 외에 [프록시를 구성](/docs/ko/network-config)하세요. Claude 앱 게이트웨이를 호스팅하는 경우, [로그인은 프록시 호스트도 개인 네트워크에 있는지 확인](/docs/ko/claude-apps-gateway#prerequisites)합니다. 그렇지 않으면 게이트웨이 호스트를 `NO_PROXY`에 추가하여 CLI가 직접 연결하도록 하세요.
 
 <h2 id="next-steps">
   다음 단계

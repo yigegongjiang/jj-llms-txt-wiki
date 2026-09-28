@@ -104,7 +104,7 @@ Jika Anda memiliki kredensial Google Cloud dan ingin mulai menggunakan Claude Co
   </Step>
 
   <Step title="Mulai Claude Code dan pilih Agent Platform Google Cloud">
-    Jalankan `claude`. Pada prompt login, pilih **3rd-party platform**, kemudian **Google Vertex AI**, label yang masih digunakan prompt login untuk Agent Platform Google Cloud.
+    Jalankan `claude`. Pada prompt login, pilih **3rd-party platform**, kemudian **Google Vertex AI**, label yang masih digunakan prompt login untuk Agent Platform Google Cloud. Jika Anda sudah masuk, jalankan `/login` untuk membuka menu yang sama.
   </Step>
 
   <Step title="Ikuti prompt wizard">
@@ -134,7 +134,7 @@ Untuk mengonfigurasi Google Cloud's Agent Platform melalui variabel lingkungan a
   1. Aktifkan Agent Platform API
 </h3>
 
-Aktifkan Google Cloud's Agent Platform API di proyek GCP Anda:
+Aktifkan Google Cloud's Agent Platform API di proyek GCP Anda. Ganti `YOUR-PROJECT-ID` dengan ID proyek GCP Anda di sini dan di langkah konfigurasi di bawah:
 
 ```bash theme={null}
 # Atur ID proyek Anda
@@ -163,17 +163,17 @@ Claude Code menggunakan autentikasi Google Cloud standar.
 
 Untuk informasi lebih lanjut, lihat [dokumentasi autentikasi Google Cloud](https://cloud.google.com/docs/authentication).
 
-Claude Code v2.1.121 atau lebih baru mendukung [Workload Identity Federation berbasis sertifikat X.509](https://cloud.google.com/iam/docs/workload-identity-federation-with-x509-certificates) melalui rantai Application Default Credentials yang sama. Atur `GOOGLE_APPLICATION_CREDENTIALS` ke jalur file konfigurasi kredensial Anda.
+Claude Code mendukung [Workload Identity Federation berbasis sertifikat X.509](https://cloud.google.com/iam/docs/workload-identity-federation-with-x509-certificates) melalui rantai Application Default Credentials yang sama. Atur `GOOGLE_APPLICATION_CREDENTIALS` ke jalur file konfigurasi kredensial Anda.
 
 <Note>
-  Claude Code menggunakan `ANTHROPIC_VERTEX_PROJECT_ID` sebagai ID proyek untuk permintaan Google Cloud's Agent Platform. Variabel lingkungan `GCLOUD_PROJECT` dan `GOOGLE_CLOUD_PROJECT` serta file kredensial yang dirujuk oleh `GOOGLE_APPLICATION_CREDENTIALS` memiliki prioritas lebih tinggi daripada itu. Jika tidak ada yang diatur, ID proyek diselesaikan dari konfigurasi `gcloud` Anda atau akun layanan yang terlampir.
+  Claude Code mengarahkan permintaan Google Cloud's Agent Platform ke proyek di `ANTHROPIC_VERTEX_PROJECT_ID`, bahkan ketika `GCLOUD_PROJECT`, `GOOGLE_CLOUD_PROJECT`, atau file kredensial yang dirujuk oleh `GOOGLE_APPLICATION_CREDENTIALS` membawa proyek yang berbeda.
 </Note>
 
 <h4 id="advanced-credential-configuration">
   Konfigurasi kredensial lanjutan
 </h4>
 
-Claude Code mendukung penyegaran kredensial otomatis untuk GCP melalui pengaturan `gcpAuthRefresh`. Ketika Claude Code mendeteksi bahwa kredensial GCP Anda telah kedaluwarsa atau tidak dapat dimuat, Claude Code menjalankan perintah yang dikonfigurasi untuk mendapatkan kredensial baru sebelum mencoba ulang permintaan.
+Claude Code mendukung penyegaran kredensial otomatis untuk GCP melalui pengaturan `gcpAuthRefresh`. Tambahkan ke [file pengaturan](/docs/id/settings) Claude Code Anda, misalnya `~/.claude/settings.json`. Ketika Claude Code mendeteksi bahwa kredensial GCP Anda telah kedaluwarsa atau tidak dapat dimuat, Claude Code menjalankan perintah yang dikonfigurasi untuk mendapatkan kredensial baru sebelum mencoba ulang permintaan.
 
 ```json theme={null}
 {
@@ -184,7 +184,11 @@ Claude Code mendukung penyegaran kredensial otomatis untuk GCP melalui pengatura
 }
 ```
 
-Output perintah ditampilkan kepada pengguna, tetapi input interaktif tidak didukung. Ini berfungsi dengan baik untuk alur autentikasi berbasis browser di mana CLI menampilkan URL dan Anda menyelesaikan autentikasi di browser. Perintah penyegaran habis waktu setelah tiga menit jika autentikasi tidak selesai. Jika Anda mengatur `gcpAuthRefresh` dalam pengaturan proyek seperti `.claude/settings.json`, perintah hanya berjalan setelah Anda menerima prompt kepercayaan ruang kerja.
+Sebelum menjalankan perintah, Claude Code meminta token akses dengan kredensial Anda saat ini untuk mengonfirmasi bahwa kredensial tersebut benar-benar kedaluwarsa, dan melewati perintah ketika kredensial masih berfungsi.
+
+Jika pemeriksaan tidak selesai dalam lima detik, Claude Code juga melewati perintah dan menjalankannya hanya setelah permintaan gagal dengan kesalahan kredensial. Sebelum v2.1.261, pemeriksaan yang habis waktu dihitung sebagai kredensial yang kedaluwarsa, jadi perintah dapat membuka browser Anda saat startup meskipun kredensial Anda masih valid.
+
+Claude Code menampilkan output perintah kepada Anda, tetapi tidak dapat mengirim input interaktif perintah. Ini berfungsi dengan baik untuk alur autentikasi berbasis browser di mana CLI menampilkan URL dan Anda menyelesaikan autentikasi di browser. Perintah penyegaran habis waktu setelah tiga menit jika autentikasi tidak selesai. Jika Anda mengatur `gcpAuthRefresh` dalam pengaturan proyek seperti `.claude/settings.json`, Claude Code menjalankannya di bawah [aturan kepercayaan ruang kerja yang sama dengan hooks dalam file pengaturan](/docs/id/permissions#what-runs-before-you-trust-a-folder), yang mencakup sesi `-p` di folder yang belum pernah Anda percayai.
 
 <h3 id="4-configure-claude-code">
   4. Konfigurasi Claude Code
@@ -201,12 +205,6 @@ export ANTHROPIC_VERTEX_PROJECT_ID=YOUR-PROJECT-ID
 # Opsional: Timpa URL titik akhir Agent Platform untuk titik akhir kustom atau gateway
 # export ANTHROPIC_VERTEX_BASE_URL=https://aiplatform.googleapis.com
 
-# Opsional: Nonaktifkan prompt caching jika diperlukan
-export DISABLE_PROMPT_CACHING=1
-
-# Opsional: Minta TTL cache prompt 1 jam alih-alih default 5 menit
-export ENABLE_PROMPT_CACHING_1H=1
-
 # Ketika CLOUD_ML_REGION=global, timpa wilayah untuk model yang tidak mendukung titik akhir global
 export VERTEX_REGION_CLAUDE_HAIKU_4_5=us-east5
 export VERTEX_REGION_CLAUDE_4_6_SONNET=europe-west1
@@ -214,9 +212,21 @@ export VERTEX_REGION_CLAUDE_4_6_SONNET=europe-west1
 
 Sebagian besar versi model memiliki variabel `VERTEX_REGION_CLAUDE_*` yang sesuai. Lihat [referensi variabel lingkungan](/docs/id/env-vars) untuk daftar lengkap. Periksa [Google Cloud's Agent Platform Model Garden](https://console.cloud.google.com/vertex-ai/model-garden) untuk menentukan model mana yang mendukung titik akhir global versus regional saja.
 
-[Prompt caching](/docs/id/prompt-caching) diaktifkan secara otomatis. Untuk menonaktifkannya, atur `DISABLE_PROMPT_CACHING=1`. Untuk meminta TTL cache 1 jam alih-alih default 5 menit, atur `ENABLE_PROMPT_CACHING_1H=1`; penulisan cache dengan TTL 1 jam ditagih dengan tarif yang lebih tinggi. Untuk batas laju yang lebih tinggi, hubungi dukungan Google Cloud. Saat menggunakan Google Cloud's Agent Platform, perintah `/logout` tidak tersedia karena autentikasi ditangani melalui kredensial Google Cloud.
+Jika nilai wilayah tidak berbentuk seperti nama wilayah atau lokasi, Claude Code memperlakukannya sebagai tidak diatur. Misalnya, Claude Code memperlakukan nilai yang berisi garis miring, titik, atau spasi sebagai tidak diatur. Claude Code kembali ke sumber yang berbeda untuk setiap variabel:
 
-Claude Code menonaktifkan [pencarian alat MCP](/docs/id/mcp#scale-with-mcp-tool-search) secara default di Google Cloud's Agent Platform, sehingga definisi alat MCP dimuat di muka. Google Cloud's Agent Platform mendukung pencarian alat untuk Claude Sonnet 4.5 dan lebih baru serta Claude Opus 4.5 dan lebih baru. Atur `ENABLE_TOOL_SEARCH=true` untuk mengaktifkannya pada model tersebut. Model sebelumnya di Google Cloud's Agent Platform tidak menerima header beta yang diperlukan, dan permintaan gagal jika Anda mengaktifkan pencarian alat dengan model tersebut.
+* `VERTEX_REGION_CLAUDE_*`: Claude Code kembali ke `CLOUD_ML_REGION`.
+* `CLOUD_ML_REGION`: Claude Code kembali ke `us-east5`.
+
+[Prompt caching](/docs/id/prompt-caching) diaktifkan secara otomatis. Untuk menonaktifkannya, atur `DISABLE_PROMPT_CACHING=1`. Untuk meminta TTL cache 1 jam alih-alih default 5 menit, atur `ENABLE_PROMPT_CACHING_1H=1`; penulisan cache dengan TTL 1 jam ditagih dengan tarif yang lebih tinggi. Untuk menetapkan TTL yang berbeda untuk percakapan utama Anda dan untuk permintaan yang Claude Code buat di luar itu, [pilih TTL sendiri](/docs/id/prompt-caching#choose-the-ttl-yourself).
+
+Untuk menaikkan batas laju Anda, hubungi dukungan Google Cloud. Saat menggunakan Google Cloud's Agent Platform, perintah `/logout` tidak tersedia karena autentikasi ditangani melalui kredensial Google Cloud.
+
+Claude Code memutuskan antara [pencarian alat MCP](/docs/id/mcp#scale-with-mcp-tool-search) dan pemuatan di muka berdasarkan generasi model:
+
+* **Claude Opus 4.5, Sonnet 4.5, Haiku 4.5, dan yang lebih baru**: Claude Code mengaktifkan pencarian alat secara default.
+* **Model sebelumnya, termasuk semua model Claude 3.x**: Claude Code memuat definisi alat MCP di muka, karena tumpukan penyajian Agent Platform mereka menolak header beta yang diperlukan. Mengatur `ENABLE_TOOL_SEARCH=true` tidak mengganti ini.
+
+Atur `ENABLE_TOOL_SEARCH=false` untuk menonaktifkan pencarian alat pada setiap model. Sebelum v2.1.221, Claude Code menonaktifkan pencarian alat untuk semua model di Google Cloud's Agent Platform kecuali Anda mengatur `ENABLE_TOOL_SEARCH=true`.
 
 <h3 id="5-pin-model-versions">
   5. Pin versi model
@@ -228,7 +238,7 @@ Claude Code menonaktifkan [pencarian alat MCP](/docs/id/mcp#scale-with-mcp-tool-
 
 Atur variabel lingkungan ini ke ID model Google Cloud's Agent Platform spesifik.
 
-Tanpa `ANTHROPIC_DEFAULT_OPUS_MODEL`, alias `opus` di Google Cloud's Agent Platform diselesaikan ke Opus 4.8, dan tanpa `ANTHROPIC_DEFAULT_SONNET_MODEL`, alias `sonnet` diselesaikan ke Sonnet 4.5. Contoh ini pin setiap alias ke versi spesifik:
+Tanpa `ANTHROPIC_DEFAULT_OPUS_MODEL`, alias `opus` di Google Cloud's Agent Platform diselesaikan ke Opus 5.5, dan tanpa `ANTHROPIC_DEFAULT_SONNET_MODEL`, alias `sonnet` diselesaikan ke Sonnet 4.5. Contoh ini pin setiap alias ke versi spesifik:
 
 ```bash theme={null}
 export ANTHROPIC_DEFAULT_OPUS_MODEL='claude-opus-4-8'
@@ -242,19 +252,19 @@ Claude Code menggunakan model default ini ketika tidak ada variabel pinning yang
 
 | Jenis model       | Nilai default                |
 | :---------------- | :--------------------------- |
-| Model utama       | `claude-opus-4-8`            |
+| Model utama       | `claude-opus-5-5`            |
 | Model kecil/cepat | `claude-sonnet-4-5@20250929` |
 
 Tugas latar belakang seperti pembuatan judul sesi menggunakan model kecil/cepat, biasanya model kelas Haiku. Di Google Cloud's Agent Platform, Claude Code menggunakan model Sonnet default untuk tugas latar belakang karena Haiku mungkin tidak diaktifkan di setiap proyek atau wilayah. Dua pilihan mengubah model mana yang membawanya:
 
-* Ketika Anda memilih model utama dengan `--model`, `ANTHROPIC_MODEL`, atau pengaturan `model`, tugas latar belakang menggunakan model tersebut. Mengatur `ANTHROPIC_DEFAULT_OPUS_MODEL` tanpa `ANTHROPIC_DEFAULT_SONNET_MODEL` juga dihitung sebagai pilihan, karena model Sonnet bawaan mungkin tidak diaktifkan dalam proyek yang mengarahkan Opus-nya sendiri.
+* Ketika Anda memilih model utama dengan `--model`, `ANTHROPIC_MODEL`, atau pengaturan `model`, tugas latar belakang menggunakan model tersebut. Ketika Claude Code memulai sesi pada model yang Anda atur dengan [`ANTHROPIC_DEFAULT_MODEL`](/docs/id/model-config#set-a-default-model-for-new-sessions), tugas latar belakang menggunakan model tersebut juga. Mengatur `ANTHROPIC_DEFAULT_OPUS_MODEL` tanpa `ANTHROPIC_DEFAULT_SONNET_MODEL` juga dihitung sebagai pilihan, karena model Sonnet bawaan mungkin tidak diaktifkan dalam proyek yang mengarahkan Opus-nya sendiri.
 * Untuk menggunakan Haiku untuk tugas latar belakang, atur `ANTHROPIC_DEFAULT_HAIKU_MODEL` ke ID model yang tersedia di proyek Anda.
 
 <Warning>
   Model Opus memiliki harga per-token yang lebih tinggi daripada model Sonnet, jadi penerapan yang tidak pin model utama ditagih dengan tarif Opus setelah diperbarui ke v2.1.207 atau lebih baru. Untuk menjaga Sonnet 4.5 sebagai model utama, atur `ANTHROPIC_MODEL` ke ID model lengkapnya. Penerapan yang mengarahkan default dengan `ANTHROPIC_DEFAULT_SONNET_MODEL` dan tidak mengatur `ANTHROPIC_DEFAULT_OPUS_MODEL` menjaga model Sonnet yang diarahkan sebagai default.
 </Warning>
 
-Sebelum v2.1.207, model utama di Google Cloud's Agent Platform default ke Sonnet 4.5, alias `opus` diselesaikan ke Opus 4.6, dan tugas latar belakang selalu menggunakan model utama.
+Sebelum v2.1.280, model utama di Google Cloud's Agent Platform default ke Opus 5 dan alias `opus` diselesaikan ke Opus 5 dari v2.1.219. Pada v2.1.207 melalui v2.1.218, model utama di Google Cloud's Agent Platform default ke Opus 4.8 dan alias `opus` diselesaikan ke Opus 4.8. Sebelum v2.1.207, model utama default ke Sonnet 4.5, alias `opus` diselesaikan ke Opus 4.6, dan tugas latar belakang selalu menggunakan model utama.
 
 Untuk menyesuaikan model lebih lanjut:
 
@@ -262,6 +272,12 @@ Untuk menyesuaikan model lebih lanjut:
 export ANTHROPIC_MODEL='claude-opus-4-8'
 export ANTHROPIC_DEFAULT_HAIKU_MODEL='claude-haiku-4-5@20251001'
 ```
+
+<h3 id="6-verify-your-configuration">
+  6. Verifikasi konfigurasi Anda
+</h3>
+
+Mulai Claude Code dan jalankan `/status` untuk mengonfirmasi pengaturan. Baris `API provider` menampilkan `Google Vertex AI`, dan baris `GCP project`, `Default region`, dan `Model` menampilkan ID proyek, wilayah, dan model yang diselesaikan Anda. Jika baris penyedia hilang, variabel lingkungan tidak mencapai proses. Konfirmasi bahwa variabel tersebut diekspor di shell tempat Anda meluncurkan `claude`, atau atur di blok `env` dari [file pengaturan](/docs/id/settings) Anda.
 
 <h2 id="startup-model-checks">
   Pemeriksaan model startup
@@ -273,19 +289,21 @@ Jika Anda telah mempinkan versi model yang lebih lama dari default Claude Code s
 
 Jika Anda belum mempinkan model dan default saat ini tidak tersedia di proyek Anda, Claude Code kembali untuk sesi saat ini dan menampilkan pemberitahuan. Ia mencoba versi sebelumnya dari model default terlebih dahulu dan, ketika default adalah model Opus dan tidak ada versi Opus yang tersedia, kembali ke model Sonnet default. Fallback tidak disimpan. Aktifkan model yang lebih baru di [Model Garden](https://console.cloud.google.com/vertex-ai/model-garden) atau [pin versi](#5-pin-model-versions) untuk membuat pilihan permanen.
 
+Ketika Anda memulai sesi pada versi Sonnet atau Opus tertentu, misalnya dengan `--model`, `ANTHROPIC_MODEL`, atau [pengaturan `model`](/docs/id/settings-reference#model), versi tersebut bertindak sebagai default yang dipinkan untuk sesi yang cocok dengan alias `sonnet` atau `opus`. Claude Code melewati pemeriksaan ketersediaan untuk default bawaan yang diganti model Anda dan dimulai pada model yang Anda konfigurasi, tanpa pemberitahuan fallback.
+
+Alias model seperti `opus` tidak bertindak sebagai pin, begitu juga dengan ID model yang tidak dikenali Claude Code.
+
 <h2 id="iam-configuration">
   Konfigurasi IAM
 </h2>
 
-Tetapkan izin IAM yang diperlukan:
-
-Peran `roles/aiplatform.user` mencakup izin yang diperlukan:
+Tetapkan peran `roles/aiplatform.user`, yang mencakup izin yang diperlukan:
 
 * `aiplatform.endpoints.predict` - Diperlukan untuk invokasi model dan penghitungan token
 
 Untuk izin yang lebih ketat, buat peran kustom dengan hanya izin di atas.
 
-Untuk detail, lihat [dokumentasi IAM Platform Agent Google Cloud](https://cloud.google.com/vertex-ai/docs/general/access-control).
+Untuk detail, lihat [dokumentasi IAM Agent Platform Google Cloud](https://cloud.google.com/vertex-ai/docs/general/access-control).
 
 <Note>
   Buat proyek GCP khusus untuk Claude Code untuk menyederhanakan pelacakan biaya dan kontrol akses.

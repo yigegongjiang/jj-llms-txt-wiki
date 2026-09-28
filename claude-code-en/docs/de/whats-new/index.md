@@ -6,7 +6,71 @@
 
 > Eine wöchentliche Zusammenfassung der bemerkenswertesten Claude Code-Funktionen mit Code-Snippets, Demos und Kontext, warum sie wichtig sind.
 
-Die wöchentliche Entwickler-Zusammenfassung hebt die Funktionen hervor, die am ehesten ändern, wie Sie arbeiten. Jeder Eintrag enthält ausführbaren Code, eine kurze Demo und einen Link zur vollständigen Dokumentation. Für jeden Fehlerbehebung und kleinere Verbesserung siehe das [Changelog](/docs/de/changelog).
+Die wöchentliche Entwickler-Zusammenfassung hebt die Funktionen hervor, die am ehesten ändern, wie Sie arbeiten. Jeder Eintrag enthält ausführbaren Code, eine kurze Demo und einen Link zur vollständigen Dokumentation. Für jeden Fehlerbehebung und kleinere Verbesserung siehe das [Changelog](/docs/en/changelog).
+
+<Update label="Woche 37" description="7.–11. September 2026" tags={["v2.1.263–v2.1.269"]}>
+  **`claude plugin eval`**: Führen Sie Ihr Plugin gegen eine Suite von Testfällen aus, bewerten Sie die Ergebnisse und vergleichen Sie sie mit einer Baseline ohne Plugin. `claude plugin eval init` entwirft die Fälle und Bewerter für Sie.
+
+  Auch diese Woche: Pop any **Claude Code Desktop-Bereich** in sein eigenes Fenster und docken Sie es später wieder an; die **`maxEffortLevel`**-Einstellung begrenzt die Aufwandsstufe auf jedem Provider; und eine Seite, die **WebFetch** nicht innerhalb von fünf Minuten heruntergeladen hat, schlägt fehl, anstatt zu hängen.
+
+  [Lesen Sie die Woche-37-Zusammenfassung →](/docs/de/whats-new/2026-w37)
+</Update>
+
+<Update label="Woche 36" description="31. August – 4. September 2026" tags={["v2.1.251–v2.1.261"]}>
+  **Claude Fable 5.1**: verfügbar in Claude Code mit einem 1-Million-Token-Kontextfenster.
+
+  Auch diese Woche: Auf Pro- und Max-Plänen funktioniert **Computernutzung in der Desktop-App** im Hintergrund auf macOS, während Sie weiterarbeiten; beim Fullscreen-Rendering öffnet **`/diff`** ein Live-Panel neben dem Gespräch, das sich aktualisiert, während Claude bearbeitet; und **`/skill-doctor`** zeigt, was jede Ihrer Skills im Kontext kostet und wie oft sie verwendet wird.
+
+  [Lesen Sie die Woche-36-Zusammenfassung →](/docs/de/whats-new/2026-w36)
+</Update>
+
+<Update label="Woche 35" description="24.–28. August 2026" tags={["v2.1.240–v2.1.250"]}>
+  **Terminal-Sitzungen in der Desktop-App fortsetzen**: Geben Sie `/resume` in das Claude Code Desktop-Eingabefeld ein, um eine beliebige Sitzung aufzugreifen, die Sie von der CLI aus gestartet haben, mit dem vollständigen Gespräch und Kontext intakt.
+
+  Auch diese Woche: **Von Claude entworfenes Feedback** lässt Claude einen Feedbackbericht schreiben, wenn etwas in einer Sitzung schiefgeht, den Sie überprüfen und von `/feedback` aus senden; **`--restricted`** startet eine Sitzung ohne die Befehlsausführungs-Tools oder Ihre Benutzer- und Projekteinstellungen, für Evaluierungs-Harnesses auf gemeinsamen Maschinen; und die **`modelPicker`**-Einstellung steuert, welche Modelle der `/model`-Picker auflistet.
+
+  [Lesen Sie die Woche-35-Zusammenfassung →](/docs/de/whats-new/2026-w35)
+</Update>
+
+<Update label="Woche 34" description="17.–21. August 2026" tags={["v2.1.234–v2.1.239"]}>
+  **`/design`**: eine Forschungsvorschau, die Claudes Design-Artboard-Workflow in die CLI und Claude Code Desktop bringt, basierend auf Artifacts, sodass Claude bearbeitbare Artboards für Ihre Benutzeroberfläche entwirft und die von Ihnen ausgewählte implementiert.
+
+  Auch diese Woche: Der integrierte **Concise-Ausgabestil** führt Claude mit dem Ergebnis an und überspringt die Präambel; jede Maschine, auf der `claude remote-control` läuft, wird als **Gerätekarte** auf Ihrem Telefon angezeigt, sodass Sie eine Sitzung darauf von der Code-Registerkarte aus starten können; und **`ANTHROPIC_DEFAULT_MODEL`** legt das Modell fest, mit dem neue Sitzungen beginnen.
+
+  [Lesen Sie die Woche-34-Zusammenfassung →](/docs/de/whats-new/2026-w34)
+</Update>
+
+<Update label="Woche 33" description="10.–14. August 2026" tags={["v2.1.225–v2.1.233"]}>
+  **Auto-Fortsetzen nach einem Nutzungslimit auf Desktop**: Wenn Sie Ihr Sitzungslimit in Claude Code Desktop erreichen, aktivieren Sie **Auto-Fortsetzen, wenn Limits zurückgesetzt werden** auf der Limit-Karte und die App wiederholt den unterbrochenen Durchgang, sobald das Limit zurückgesetzt wird.
+
+  Auch diese Woche: **Fork-Modus** ist standardmäßig in interaktiven Sitzungen aktiviert, sodass Claude eine Nebenaufgabe an einen Subagenten übergeben kann, der das vollständige Gespräch erbt; **GitLab**-Merge-Request-URLs funktionieren mit `--worktree` und der `claude agents`-Ansicht, und Marktplätze klonen nackte `gitlab.com`-URLs; und das Eingeben von **`@`** in der Eingabeaufforderung erwähnt eine andere Claude-Sitzung nach Name.
+
+  [Lesen Sie die Woche-33-Zusammenfassung →](/docs/de/whats-new/2026-w33)
+</Update>
+
+<Update label="Woche 32" description="3.–7. August 2026" tags={["v2.1.220–v2.1.224"]}>
+  **Sitzungsübergreifendes Messaging**: Auf macOS und Linux können Ihre Claude Code-Sitzungen sich jetzt gegenseitig Nachrichten senden, sodass Claude eine Erkenntnis oder eine Entscheidung von einer Sitzung zu einer anderen übergibt, anstatt dass Sie sie erneut erklären.
+
+  Auch diese Woche: **Selbst gehostete Umgebungen** führen Claude Code Cloud-Sitzungen auf einer Infrastruktur aus, die Ihre Organisation betreibt, in öffentlicher Beta auf Team- und Enterprise-Plänen; **Auto-Modus** wird zum Standard-Berechtigungsmodus für neue Sitzungen auf Pro-, Max- und Team-Plänen ab 14. August; und die **VS Code-Erweiterung** erhält Focus-Ansicht.
+
+  [Lesen Sie die Woche-32-Zusammenfassung →](/docs/de/whats-new/2026-w32)
+</Update>
+
+<Update label="Woche 30" description="20.–24. Juli 2026" tags={["v2.1.214–v2.1.219"]}>
+  **Claude Opus 5**: das neue Standard-Opus-Modell in Claude Code, mit einem 1-Million-Token-Kontextfenster und Fast-Modus bei \$10/\$50 pro MTok.
+
+  Auch diese Woche: **Claude Code Desktop** öffnet einen iOS-Simulator-Bereich in öffentlicher Beta, sodass Claude Ihre App ausführen und durchklicken kann, während Sie zuschauen; das **Claude Security Plugin** führt einen Multi-Agent-Schwachstellenscan Ihrer Codebasis durch und verwandelt die von Ihnen ausgewählten Ergebnisse in Patches, die Sie selbst anwenden; und **`/code-review`** läuft als Hintergrund-Subagent.
+
+  [Lesen Sie die Woche-30-Zusammenfassung →](/docs/de/whats-new/2026-w30)
+</Update>
+
+<Update label="Woche 29" description="13.–17. Juli 2026" tags={["v2.1.207–v2.1.212"]}>
+  **Artifacts rufen Ihre MCP-Konnektoren auf**: Ein veröffentlichtes Artifact kann Live-Daten abrufen und Aktionen durch die eigenen MCP-Konnektoren jedes Betrachters durchführen, wenn dieser die Seite öffnet, und diese Woche fügt auch öffentliche Freigabelinks, Editor-Rollen auf Team und Enterprise und Artifacts hinzu, die aus Claude Tag-Sitzungen erstellt wurden.
+
+  Auch diese Woche: **Bildschirmlesemodus** ersetzt die visuelle Terminal-Schnittstelle durch einfachen, linearen Text für Bildschirmleser wie VoiceOver und NVDA; **`/fork`** kopiert Ihr Gespräch in eine neue Hintergrund-Sitzung, während Sie weiterarbeiten; und **Auto-Modus** benötigt keine Opt-in-Variable mehr auf Amazon Bedrock, Google Cloud's Agent Platform und Microsoft Foundry.
+
+  [Lesen Sie die Woche-29-Zusammenfassung →](/docs/de/whats-new/2026-w29)
+</Update>
 
 <Update label="Woche 28" description="6.–10. Juli 2026" tags={["v2.1.202–v2.1.206"]}>
   **In-App-Browser auf Desktop**: Claude Code auf dem Desktop erhält einen integrierten Browser, sodass Claude Dokumentationen, Designs oder andere Websites aufrufen und mit Seiten auf die gleiche Weise interagieren kann wie mit Ihren lokalen Dev-Server-Vorschauen.

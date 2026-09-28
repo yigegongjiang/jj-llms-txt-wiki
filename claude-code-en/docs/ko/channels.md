@@ -42,9 +42,12 @@ Team, Enterprise 또는 Console 조직을 관리하는 경우 [조직에 대해 
         /plugin install telegram@claude-plugins-official
         ```
 
-        Claude Code가 플러그인을 어떤 마켓플레이스에서도 찾을 수 없다고 보고하면 마켓플레이스가 누락되었거나 오래되었습니다. `/plugin marketplace update claude-plugins-official`을 실행하여 새로 고치거나 이전에 추가하지 않았다면 `/plugin marketplace add anthropics/claude-plugins-official`을 실행합니다. 그런 다음 설치를 다시 시도합니다.
+        설치가 실패하면 Claude Code가 보고하는 메시지와 일치시킵니다:
 
-        설치 후 `/reload-plugins`을 실행하여 플러그인의 구성 명령을 활성화합니다.
+        * `Marketplace "claude-plugins-official" not found`: `/plugin marketplace add anthropics/claude-plugins-official`로 마켓플레이스를 추가한 다음 설치를 다시 시도합니다.
+        * 플러그인이 [마켓플레이스에서 찾을 수 없음](/docs/ko/plugins/install#install-a-plugin): 플러그인 이름을 확인합니다.
+
+        설치에서 설치 범위를 요청할 때 사용자 범위 옵션을 선택하여 플러그인이 모든 프로젝트에서 사용 가능하도록 합니다. 설치 요약을 확인합니다. `Run /reload-plugins to activate.`를 보고하면 [플러그인 변경 사항을 다시 시작하지 않고 적용](/docs/ko/plugins/cli-reference#reload-plugins)을 참조하여 플러그인의 구성 명령을 사용 가능하게 합니다.
       </Step>
 
       <Step title="토큰 구성">
@@ -117,9 +120,12 @@ Team, Enterprise 또는 Console 조직을 관리하는 경우 [조직에 대해 
         /plugin install discord@claude-plugins-official
         ```
 
-        Claude Code가 플러그인을 어떤 마켓플레이스에서도 찾을 수 없다고 보고하면 마켓플레이스가 누락되었거나 오래되었습니다. `/plugin marketplace update claude-plugins-official`을 실행하여 새로 고치거나 이전에 추가하지 않았다면 `/plugin marketplace add anthropics/claude-plugins-official`을 실행합니다. 그런 다음 설치를 다시 시도합니다.
+        설치가 실패하면 Claude Code가 보고하는 메시지와 일치시킵니다:
 
-        설치 후 `/reload-plugins`을 실행하여 플러그인의 구성 명령을 활성화합니다.
+        * `Marketplace "claude-plugins-official" not found`: `/plugin marketplace add anthropics/claude-plugins-official`로 마켓플레이스를 추가한 다음 설치를 다시 시도합니다.
+        * 플러그인이 [마켓플레이스에서 찾을 수 없음](/docs/ko/plugins/install#install-a-plugin): 플러그인 이름을 확인합니다.
+
+        설치에서 설치 범위를 요청할 때 사용자 범위 옵션을 선택하여 플러그인이 모든 프로젝트에서 사용 가능하도록 합니다. 설치 요약을 확인합니다. `Run /reload-plugins to activate.`를 보고하면 [플러그인 변경 사항을 다시 시작하지 않고 적용](/docs/ko/plugins/cli-reference#reload-plugins)을 참조하여 플러그인의 구성 명령을 사용 가능하게 합니다.
       </Step>
 
       <Step title="토큰 구성">
@@ -179,7 +185,14 @@ Team, Enterprise 또는 Console 조직을 관리하는 경우 [조직에 대해 
         /plugin install imessage@claude-plugins-official
         ```
 
-        Claude Code가 플러그인을 어떤 마켓플레이스에서도 찾을 수 없다고 보고하면 마켓플레이스가 누락되었거나 오래되었습니다. `/plugin marketplace update claude-plugins-official`을 실행하여 새로 고치거나 이전에 추가하지 않았다면 `/plugin marketplace add anthropics/claude-plugins-official`을 실행합니다. 그런 다음 설치를 다시 시도합니다.
+        설치가 실패하면 Claude Code가 보고하는 메시지와 일치시킵니다:
+
+        * `Marketplace "claude-plugins-official" not found`: `/plugin marketplace add anthropics/claude-plugins-official`로 마켓플레이스를 추가한 다음 설치를 다시 시도합니다.
+        * 플러그인이 [마켓플레이스에서 찾을 수 없음](/docs/ko/plugins/install#install-a-plugin): 플러그인 이름을 확인합니다.
+
+        설치에서 설치 범위를 요청할 때 사용자 범위 옵션을 선택하여 플러그인이 모든 프로젝트에서 사용 가능하도록 합니다.
+
+        설치 요약에서 `Run /reload-plugins to activate.`를 보고하면 다음 단계에서 다시 시작하면 플러그인을 선택하므로 건너뛸 수 있습니다.
       </Step>
 
       <Step title="채널이 활성화된 상태로 다시 시작">
@@ -209,8 +222,6 @@ Team, Enterprise 또는 Console 조직을 관리하는 경우 [조직에 대해 
   </Tab>
 </Tabs>
 
-아직 플러그인이 없는 시스템의 경우 [자신의 채널을 구축](/docs/ko/channels-reference)할 수도 있습니다.
-
 <h2 id="quickstart">
   빠른 시작
 </h2>
@@ -233,7 +244,14 @@ fakechat 데모를 시도하려면 다음이 필요합니다:
     /plugin install fakechat@claude-plugins-official
     ```
 
-    Claude Code가 플러그인을 어떤 마켓플레이스에서도 찾을 수 없다고 보고하면 마켓플레이스가 누락되었거나 오래되었습니다. `/plugin marketplace update claude-plugins-official`을 실행하여 새로 고치거나 이전에 추가하지 않았다면 `/plugin marketplace add anthropics/claude-plugins-official`을 실행합니다. 그런 다음 설치를 다시 시도합니다.
+    설치가 실패하면 Claude Code가 보고하는 메시지와 일치시킵니다:
+
+    * `Marketplace "claude-plugins-official" not found`: `/plugin marketplace add anthropics/claude-plugins-official`로 마켓플레이스를 추가한 다음 설치를 다시 시도합니다.
+    * 플러그인이 [마켓플레이스에서 찾을 수 없음](/docs/ko/plugins/install#install-a-plugin): 플러그인 이름을 확인합니다.
+
+    설치에서 설치 범위를 요청할 때 사용자 범위 옵션을 선택하여 플러그인이 모든 프로젝트에서 사용 가능하도록 합니다.
+
+    설치 요약에서 `Run /reload-plugins to activate.`를 보고하면 다음 단계에서 다시 시작할 때 플러그인을 선택하므로 여기서는 조치할 필요가 없습니다.
   </Step>
 
   <Step title="채널이 활성화된 상태로 다시 시작">
@@ -243,7 +261,7 @@ fakechat 데모를 시도하려면 다음이 필요합니다:
     claude --channels plugin:fakechat@claude-plugins-official
     ```
 
-    fakechat 서버가 자동으로 시작됩니다.
+    fakechat 서버가 자동으로 시작됩니다. 시작 화면에는 `plugin:fakechat@claude-plugins-official`의 메시지가 이 세션에 직접 주입된다는 채널 공지가 표시됩니다. 플러그인이 설치되지 않았거나 승인된 허용 목록에 없으면 문제를 명시하는 경고 줄이 해당 공지 아래에 나타납니다.
 
     <Tip>
       `--channels`에 여러 플러그인을 공백으로 구분하여 전달할 수 있습니다.
@@ -254,14 +272,14 @@ fakechat 데모를 시도하려면 다음이 필요합니다:
     [http://localhost:8787](http://localhost:8787)에서 fakechat UI를 열고 메시지를 입력합니다:
 
     ```text theme={null}
-    hey, what's in my working directory?
+    what's in my working directory?
     ```
 
-    메시지는 Claude Code 세션에 `<channel source="fakechat">` 이벤트로 도착합니다. Claude가 읽고 작업을 수행한 다음 fakechat의 `reply` 도구를 호출합니다. 답변이 채팅 UI에 나타납니다.
+    메시지가 Claude Code 세션에 도착합니다. 터미널에는 `← fakechat · web: what's in my working directory?`와 같은 인바운드 채널 줄로 표시되며, 모델은 플러그인의 범위가 지정된 서버 이름을 사용하여 `<channel source="plugin:fakechat:fakechat">` 이벤트로 수신합니다. Claude가 읽고 작업을 수행한 다음 fakechat의 `reply` 도구를 호출합니다. Claude Code가 첫 번째 회신에 대한 권한을 요청하면 승인합니다. 답변이 채팅 UI에 나타납니다.
   </Step>
 </Steps>
 
-Claude가 터미널에서 멀리 있을 때 권한 프롬프트에 도달하면 세션이 응답할 때까지 일시 중지됩니다. [권한 릴레이 기능](/docs/ko/channels-reference#relay-permission-prompts)을 선언하는 채널 서버는 이러한 프롬프트를 사용자에게 전달하여 원격으로 승인하거나 거부할 수 있습니다. 무인 사용의 경우 [`--dangerously-skip-permissions`](/docs/ko/permission-modes#skip-all-checks-with-bypasspermissions-mode)는 명시적 요청 규칙 이외의 프롬프트를 우회하지만 신뢰하는 환경에서만 사용하세요. 명시적 요청 규칙, 커넥터 도구 [조직에서 `ask`로 설정](/docs/ko/mcp#organization-controls-on-connector-tools), 그리고 [`requiresUserInteraction`](/docs/ko/mcp#require-approval-for-a-specific-tool)으로 표시된 MCP 도구는 여전히 프롬프트를 표시합니다.
+Claude가 터미널에서 멀리 있을 때 권한 프롬프트에 도달하면 세션이 응답할 때까지 일시 중지됩니다. [권한 릴레이 기능](/docs/ko/channels-reference#relay-permission-prompts)을 선언하는 채널 서버는 이러한 프롬프트를 사용자에게 전달하여 원격으로 승인하거나 거부할 수 있습니다. 무인 사용의 경우 [`--dangerously-skip-permissions`](/docs/ko/permission-modes#skip-all-checks-with-bypasspermissions-mode)는 대부분의 프롬프트를 우회하지만 신뢰하는 환경에서만 사용하세요. 그렇더라도 [actions no 모드 자동 승인](/docs/ko/permission-modes#actions-no-mode-auto-approves)은 여전히 적용됩니다.
 
 비대화형 모드에서 `-p`로 채널을 실행할 때 여러 선택지 질문 및 계획 모드 승인과 같이 터미널 입력이 필요한 도구는 비활성화되므로 세션이 입력을 기다리며 멈추지 않습니다.
 
@@ -292,15 +310,15 @@ iMessage는 다르게 작동합니다. 자신에게 문자를 보내면 자동�
 
 관리자는 사용자가 재정의할 수 없는 두 가지 [관리 설정](/docs/ko/settings)을 통해 가용성을 제어합니다. 기본값은 인증 방식에 따라 다릅니다:
 
-* **claude.ai Team 및 Enterprise**: 소유자가 활성화할 때까지 채널이 차단됩니다.
+* **claude.ai Team 및 Enterprise**: 소유자가 [채널을 활성화](#enable-channels-for-your-organization)할 때까지 채널이 차단됩니다.
 * **Anthropic Console with API key authentication**: 채널이 기본적으로 허용됩니다. 조직이 관리 설정을 배포하는 경우에만 이 설정이 필요합니다.
 
 모든 경우에 사용자가 `--channels`로 세션에 옵트인할 때까지 채널이 실행되지 않습니다.
 
-| 설정                      | 목적                                                                                                                                                                     | 구성되지 않은 경우                                                                                          |
-| :---------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------- |
-| `channelsEnabled`       | 마스터 스위치. 채널이 메시지를 전달하려면 `true`여야 합니다. [claude.ai Admin 콘솔](https://claude.ai/admin-settings/claude-code) 토글을 통해 또는 관리 설정에서 직접 설정합니다. 꺼져 있을 때 개발 플래그를 포함한 모든 채널을 차단합니다. | claude.ai Team 및 Enterprise: 채널 차단됨. Console: 조직이 관리 설정을 배포하지 않는 한 채널 허용됨. 이 경우 이 키가 설정될 때까지 채널 차단됨 |
-| `allowedChannelPlugins` | 채널이 활성화되면 등록할 수 있는 플러그인. 설정되면 Anthropic 유지 관리 목록을 대체합니다. `channelsEnabled`가 `true`일 때만 적용됩니다.                                                                          | Anthropic 기본 목록 적용                                                                                  |
+| 설정                      | 목적                                                                                                                                          | 구성되지 않은 경우                                                                                          |
+| :---------------------- | :------------------------------------------------------------------------------------------------------------------------------------------ | :-------------------------------------------------------------------------------------------------- |
+| `channelsEnabled`       | 마스터 스위치. 채널이 메시지를 전달하려면 `true`여야 합니다. 채널이 꺼져 있을 때 개발 플래그를 포함한 모든 채널을 차단합니다. [조직에 대해 채널 활성화](#enable-channels-for-your-organization)를 참조하세요. | claude.ai Team 및 Enterprise: 채널 차단됨. Console: 조직이 관리 설정을 배포하지 않는 한 채널 허용됨. 이 경우 이 키가 설정될 때까지 채널 차단됨 |
+| `allowedChannelPlugins` | 채널이 활성화되면 등록할 수 있는 플러그인. 설정되면 Anthropic 유지 관리 목록을 대체합니다.                                                                                    | Anthropic 기본 목록 적용                                                                                  |
 
 조직이 없는 Pro 및 Max 사용자는 이러한 검사를 완전히 건너뜁니다. 채널을 사용할 수 있으며 사용자는 `--channels`로 세션당 옵트인합니다.
 
@@ -329,15 +347,17 @@ iMessage는 다르게 작동합니다. 자신에게 문자를 보내면 자동�
 }
 ```
 
-`allowedChannelPlugins`이 설정되면 Anthropic 허용 목록을 완전히 대체합니다. 나열된 플러그인만 등록할 수 있습니다. 기본 Anthropic 허용 목록으로 돌아가려면 설정하지 않은 상태로 두세요. 빈 배열은 허용 목록의 모든 채널 플러그인을 차단하지만 `--dangerously-load-development-channels`는 여전히 로컬 테스트를 위해 이를 우회할 수 있습니다. 개발 플래그를 포함한 채널을 완전히 차단하려면 대신 `channelsEnabled`를 설정하지 않은 상태로 두세요.
+빈 배열을 설정하면 허용 목록의 모든 채널 플러그인을 차단하지만 `--dangerously-load-development-channels`는 여전히 로컬 테스트를 위해 이를 우회할 수 있습니다. 개발 플래그를 포함한 채널을 완전히 차단하려면 대신 `channelsEnabled`를 설정하지 않은 상태로 두세요.
 
-이 설정에는 `channelsEnabled: true`가 필요합니다. 사용자가 `--channels`에 조직 목록에 없는 플러그인을 전달하면 Claude Code가 정상적으로 시작되지만 채널이 등록되지 않으며 시작 알림이 플러그인이 조직의 승인된 목록에 없음을 설명합니다.
+이 설정에는 `channelsEnabled: true`가 필요합니다. 사용자가 `--channels`에 조직 목록에 없는 플러그인을 전달하면 Claude Code가 정상적으로 시작되지만 채널이 등록되지 않으며 시작 알림이 플러그인이 조직의 승인된 목록에 없음을 설명합니다. `MCP_PROTOCOL_NEGOTIATION`을 v2 MCP 클라이언트 런타임에서 `auto`로 설정하면 Claude Code가 [프로토콜 개정 2026-07-28을 협상하는 채널 서버를 등록하지 않기](/docs/ko/mcp#push-messages-with-channels) 때문에 채널이 등록되지 않을 수도 있습니다.
 
 <h2 id="research-preview">
   연구 미리보기
 </h2>
 
 채널은 연구 미리보기 기능입니다. 가용성은 점진적으로 출시되고 있으며 `--channels` 플래그 구문 및 프로토콜 계약은 피드백에 따라 변경될 수 있습니다.
+
+미리보기 중에 `--channels` 및 `--dangerously-load-development-channels`는 `claude --help`에 나타나지 않습니다. 플래그는 나열되지 않았지만 작동합니다.
 
 미리보기 중에 `--channels`는 Anthropic 유지 관리 허용 목록의 플러그인만 허용하거나 관리자가 [`allowedChannelPlugins`](#restrict-which-channel-plugins-can-run)을 설정한 경우 조직의 허용 목록에서만 허용합니다. [claude-plugins-official](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins)의 채널 플러그인은 기본 승인된 집합입니다. 유효한 허용 목록에 없는 것을 전달하면 Claude Code가 정상적으로 시작되지만 채널이 등록되지 않으며 시작 알림이 이유를 알려줍니다.
 
@@ -354,7 +374,7 @@ iMessage는 다르게 작동합니다. 자신에게 문자를 보내면 자동�
 | 기능                                           | 수행하는 작업                                   | 좋은 점                                  |
 | -------------------------------------------- | ----------------------------------------- | ------------------------------------- |
 | [웹의 Claude Code](/docs/ko/claude-code-on-the-web) | GitHub에서 복제된 새로운 클라우드 샌드박스에서 작업 실행        | 나중에 확인하는 자체 포함된 비동기 작업 위임             |
-| [Slack의 Claude](/docs/ko/slack)                   | 채널 또는 스레드의 `@Claude` 언급에서 웹 세션 생성         | 팀 대화 컨텍스트에서 직접 작업 시작                  |
+| [Slack의 Claude](/docs/ko/slack)                   | 채널 또는 스레드의 `@Claude` 언급에서 클라우드 세션 생성      | 팀 대화 컨텍스트에서 직접 작업 시작                  |
 | 표준 [MCP 서버](/docs/ko/mcp)                         | Claude는 작업 중에 쿼리합니다. 세션으로 푸시되는 것은 없습니다.   | Claude에게 시스템을 읽거나 쿼리하기 위한 온디맨드 액세스 제공 |
 | [Remote Control](/docs/ko/remote-control)         | claude.ai 또는 Claude 모바일 앱에서 로컬 세션을 운전합니다. | 책상에서 멀리 있을 때 진행 중인 세션 조종              |
 

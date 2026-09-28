@@ -626,13 +626,14 @@ export const PromptLibrary = ({text = {}, labels = {}, tagLabels = {}, phaseLabe
       return base + (href.startsWith('/en/') ? '/' + locale + href.slice(3) : href);
     };
   }, []);
+  const SAFE_HREF = /^(\/(?![\/\\\s])|#|https?:\/\/)/;
   const linkify = s => {
     const out = [];
     let last = 0;
     const re = /\[([^\]]+)\]\(([^)]+)\)/g;
     for (let m; m = re.exec(s); ) {
       if (m.index > last) out.push(s.slice(last, m.index));
-      out.push(<a key={m.index} href={doc(m[2])}>{m[1]}</a>);
+      out.push(SAFE_HREF.test(m[2]) ? <a key={m.index} href={doc(m[2])}>{m[1]}</a> : m[1]);
       last = re.lastIndex;
     }
     if (last < s.length) out.push(s.slice(last));
@@ -776,7 +777,7 @@ export const PromptLibrary = ({text = {}, labels = {}, tagLabels = {}, phaseLabe
             </div>
             <div className="pl-label">{L.whyWorks}</div>
             <div className="pl-teaches">{linkify(p.teaches)}</div>
-            {p.nextHref && p.next && <div className="pl-next">
+            {p.nextHref && p.next && SAFE_HREF.test(p.nextHref) && <div className="pl-next">
                 <span className="pl-next-label">{L.makeItStick}</span>
                 <a href={doc(p.nextHref)}>{codeify(p.next)} →</a>
               </div>}
@@ -1202,7 +1203,7 @@ export const text = {
   },
   "migrate-a-pattern-across": {
     title: "Migrer un modèle dans la base de code",
-    teaches: "Décrivez l'ancien modèle et le nouveau. Demander à Claude d'identifier d'abord chaque endroit signifie que les sites d'appel sont énumérés dans la réponse, afin que vous puissiez vérifier qu'aucun n'a été manqué."
+    teaches: "Décrivez l'ancien modèle et le nouveau. Demander à Claude d'identifier d'abord chaque endroit signifie que les sites d'appel sont énumérés dans la réponse, afin que vous puissiez vérifier qu'aucun n'a été manqué. Pour une migration sur plusieurs fichiers, exécutez [/batch](/docs/fr/commands). Claude divise le travail en unités pour que vous approuviez, puis les sous-agents d'arrière-plan effectuent les modifications."
   },
   "optimize-against-a-measurable": {
     title: "Optimiser par rapport à une cible mesurable",
@@ -1222,7 +1223,7 @@ export const text = {
   "review-a-pull-request": {
     title: "Examiner une demande de tirage",
     teaches: "Claude examine avec la base de code entière en contexte, pas seulement le diff. Il lit le code modifié et ce qu'il appelle, afin qu'il repère les problèmes qu'un examen diff-only manquerait.",
-    next: "Activez ceci pour chaque PR avec Code Review"
+    next: "Exécutez `/code-review <pr#>` en une commande, ou activez Code Review pour chaque PR"
   },
   "review-infrastructure-changes-before": {
     title: "Examiner les modifications d'infrastructure avant d'appliquer",
@@ -1337,37 +1338,37 @@ Les prompts ci-dessus partagent quelques modèles. Les reconnaître vous aide à
 
 **Décrivez le résultat, pas les étapes.** Dites ce que vous voulez et laissez Claude trouver les fichiers. Le prompt ci-dessous fonctionne sans nommer un seul chemin de fichier.
 
-```text theme={null}
+```text wrap theme={null}
 ajouter la limitation de débit à l'API publique et s'assurer que les tests existants passent toujours
 ```
 
-**Donnez-lui un moyen de vérifier son propre travail.** Demandez d'exécuter, tester, comparer ou vérifier dans le même prompt afin que Claude itère au lieu de s'arrêter après une tentative.
+**Donnez-lui un moyen de vérifier son propre travail.** Demandez d'exécuter, tester, comparer ou vérifier dans le même prompt afin que Claude itère au lieu de s'arrêter après une tentative. Pour vérifier la modification terminée par rapport à l'application en cours d'exécution, exécutez [`/verify`](/docs/fr/skills#run-and-verify-your-app).
 
-```text theme={null}
+```text wrap theme={null}
 écrire la migration, l'exécuter contre la base de données de développement et confirmer que le schéma correspond
 ```
 
 **Pointez une référence.** Nommez un fichier, un test ou un modèle existant à correspondre afin que le nouveau code soit cohérent avec ce que vous avez déjà.
 
-```text theme={null}
+```text wrap theme={null}
 ajouter une page de paramètres qui suit la même mise en page que la page de profil
 ```
 
 **Énoncez la cible mesurable.** Quand l'objectif est la performance ou la couverture, donnez la métrique et le seuil afin que la fin soit sans ambiguïté.
 
-```text theme={null}
+```text wrap theme={null}
 obtenir la taille du bundle sous 200 KB et montrez-moi ce que vous avez supprimé
 ```
 
 **Donnez-lui l'artefact.** Collez les erreurs, les journaux, les captures d'écran et la sortie du plan directement dans le prompt, ou tapez `@` pour référencer un fichier. Claude lit la source au lieu de votre description de celle-ci.
 
-```text theme={null}
+```text wrap theme={null}
 pourquoi la construction échoue-t-elle ? @build.log
 ```
 
 **Dites comment vous voulez la réponse.** Nommez le format, la longueur ou le public afin que l'explication correspond à la façon dont vous l'utiliserez. Pour faire d'un format le défaut pour chaque réponse, définissez un [style de sortie](/docs/fr/output-styles).
 
-```text theme={null}
+```text wrap theme={null}
 expliquer comment la logique de nouvelle tentative de paiement fonctionne en tant que page HTML avec un diagramme, puis l'ouvrir dans mon navigateur
 ```
 
@@ -1384,7 +1385,7 @@ Ces prompts sont basés sur des modèles de ressources Anthropic publiées. Chaq
 * [Comment les équipes Anthropic utilisent Claude Code](https://claude.com/blog/how-anthropic-teams-use-claude-code) : flux de travail réels des équipes d'ingénierie, de produit, de conception et de données, avec des approfondissements sur [juridique](https://claude.com/blog/how-anthropic-uses-claude-legal), [marketing](https://claude.com/blog/how-anthropic-uses-claude-marketing), et [cybersécurité](https://claude.com/blog/how-anthropic-uses-claude-cybersecurity)
 * [Guide de codage agentique à l'échelle](https://resources.anthropic.com/hubfs/Scaling%20agentic%20coding%20across%20your%20organization.pdf) : le guide d'adoption en entreprise
 
-Pour des présentations vidéo de ces modèles, voir le cours gratuit [Claude Code in Action](https://anthropic.skilljar.com/claude-code-in-action) sur Anthropic Academy.
+Pour des présentations vidéo de ces modèles, voir le cours gratuit [Claude Code in Action](https://academy.claude.com/courses/claude-code-in-action) sur [Claude Academy](https://academy.claude.com/).
 
 <h2 id="related-resources">
   Ressources connexes

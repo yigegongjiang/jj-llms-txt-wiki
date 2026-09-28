@@ -55,23 +55,51 @@ curl -sS https://claude-gateway.internal.example.com/v1/organizations/spend_limi
   적용 방식
 </h2>
 
-각 `/v1/messages` 요청에서 게이트웨이는 개발자의 한도와 기간 누적 지출을 하나의 Postgres 쿼리로 해결합니다. 한도를 초과하면 요청은 `error.type: billing_error`와 헤더 `x-should-retry: false`를 포함한 `429`를 반환합니다. 메시지는 `spend limit reached`이고 설정된 경우 [`admin.blocked_message`](/docs/ko/claude-apps-gateway-config#admin)가 뒤따릅니다.
+각 `/v1/messages` 요청에서 게이트웨이는 개발자의 한도와 기간 누적 지출을 하나의 Postgres 쿼리로 조회합니다. 한도를 초과한 개발자는 `error.type: billing_error`와 헤더 `x-should-retry: false`를 포함한 `429`를 받습니다.
 
-`/v1/messages/count_tokens`은 제외됩니다. 토큰 계산은 무료이므로 한도 상태와 관계없이 실행됩니다.
+메시지는 기간과 재설정 시간을 명시합니다. 예를 들어 `spend limit reached (daily; resets 2026-08-08 00:00 UTC)`이며, 설정된 경우 [`admin.blocked_message`](/docs/ko/claude-apps-gateway-config#admin)가 뒤따릅니다. 개발자가 여러 한도를 동시에 초과하면 메시지는 가장 늦게 재설정되는 한도를 명시합니다. 응답에는 해당 재설정까지 남은 초 단위 시간을 나타내는 `retry-after` 헤더도 포함됩니다. 게이트웨이 서버의 v2.1.225 이전 버전에서는 메시지가 기간, 재설정 시간 또는 `retry-after` 헤더 없이 `spend limit reached`였습니다.
 
-각 응답 후 사용량 미터는 응답에서 토큰 수를 읽고 USD 정가로 가격을 책정한 후 세 기간 버킷 모두에 대해 Postgres 카운터를 증가시킵니다. 미터는 스트림의 단일 리더이므로 클라이언트의 바이트는 손상되지 않으며 미터링 실패는 응답을 손상시키지 않습니다.
+v2.1.227 이상에서는 `<public_url>/protocol`의 프로토콜 참조에 정확한 사용량 제한 응답 헤더와 `429` 본문도 나열됩니다.
 
-지출 한도는 토큰 수에서 USD 정가로 지출을 추정합니다. 이는 차단기이지 송장이 아닙니다. 권위 있는 청구를 위해 Anthropic Usage & Cost Admin API, Amazon Bedrock의 호출 로그 또는 Google Cloud의 Cloud Monitoring과 같은 공급자의 자체 사용량 보고에 대해 조정합니다.
+한도는 UTC 달력 경계에서 재설정됩니다. 매일 00:00 UTC, 매주 월요일, 매월 1일에 재설정됩니다. 게이트웨이는 토큰 계산이 무료이므로 `/v1/messages/count_tokens`을 차단하지 않습니다.
 
-가격 책정은 Claude Code CLI가 자체 비용 표시에 사용하는 것과 동일한 테이블을 사용하며, Anthropic, Amazon Bedrock (`us.anthropic.…-v1:0`), Google Cloud의 Agent Platform (`claude-…@date`) 및 Microsoft Foundry ID 형식 전체에서 동일한 모델 ID 정규화를 사용합니다. Microsoft Foundry 배포 이름 또는 추론 프로필 ARN과 같이 테이블이 배치할 수 없는 모델 ID는 0이 아닌 미알려진 모델 기본 계층인 백만 입력/출력 토큰당 \$5/\$25로 가격이 책정되므로 인식되지 않는 ID는 미계량으로 이동하여 한도를 우회할 수 없습니다. 게이트웨이는 부팅 시 및 런타임에 ID당 한 번 경고합니다.
+<h3 id="how-requests-are-priced">
+  요청 가격 책정 방식
+</h3>
 
-클라이언트 중단도 청구됩니다. 업스트림은 스트림의 터미널 프레임에서만 출력 토큰을 보고하므로 중단된 스트림은 이를 전달하지 않습니다. 미터는 스트림된 콘텐츠 크기에서 보수적인 하한 추정값(토큰당 약 4자)을 유지하고 터미널 사용량 프레임이 누락된 경우에만 청구합니다. 완전한 스트림은 항상 업스트림 보고 수를 청구합니다. 이 없이 제한된 개발자는 출력을 스트림하고 끝나기 직전에 각 요청을 중단하여 계산되지 않고 지출할 수 있습니다.
+각 응답 후 사용량 미터는 토큰 수를 읽고 일일, 주간 및 월간 카운터에 비용을 추가합니다. 클라이언트로 전송된 바이트는 건드리지 않으므로 미터링 실패가 응답을 손상시킬 수 없습니다. 금액은 USD 추정값이며 송장이 아닌 차단기입니다. 청구를 위해 공급자의 사용량 보고에 대해 조정합니다.
+
+미터는 다음 순서로 각 요청의 요금을 선택합니다.
+
+1. 요청을 처리한 업스트림에 대한 일치하는 [`pricing.overrides`](/docs/ko/claude-apps-gateway-config#pricing) 행입니다. v2.1.227 이상이 필요합니다.
+2. Claude Code 비용 표가 인식하는 업스트림 모델 ID의 정가입니다. 이 표는 Anthropic, Amazon Bedrock, Google Cloud의 Agent Platform 및 Microsoft Foundry ID 형식을 허용합니다.
+3. Amazon Bedrock 애플리케이션 추론 프로필 ARN 또는 Microsoft Foundry 배포 이름과 같이 모델 이름을 포함하지 않는 업스트림 문자열에 대해 해당 업스트림 ID에 매핑한 [`models[].id`](/docs/ko/claude-apps-gateway-config#models)의 정가입니다. v2.1.218 이상이 필요합니다.
+4. 미알려진 모델 계층인 백만 입력/출력 토큰당 \$5/\$25입니다. 따라서 미터가 배치할 수 없는 ID는 절대 무료가 아닙니다. 게이트웨이는 부팅 시 및 런타임에 ID당 한 번 경고합니다.
+
+어떤 요금이 적용되든 미터는 금액에 [`pricing.multiplier`](/docs/ko/claude-apps-gateway-config#pricing)를 곱합니다. 기본값은 `1`입니다.
+
+클라이언트 중단도 청구됩니다. 스트림이 업스트림의 최종 사용량 프레임 없이 종료되면 미터는 클라이언트로 이미 전송된 텍스트에 대해 출력 토큰당 약 4자의 하한 추정값을 청구합니다. 따라서 요청을 조기에 중단해도 한도를 회피할 수 없습니다.
 
 <h3 id="postgres-availability">
   Postgres 가용성
 </h3>
 
-사전 확인 쿼리는 2초 타임아웃으로 Postgres를 쿼리합니다. 저장소에 연결할 수 없거나 타임아웃되면 기본적으로 적용이 열린 상태로 실패합니다. 요청이 진행되고 게이트웨이가 경고를 기록합니다. 대신 [`enforcement.fail_closed_on_error: true`](/docs/ko/claude-apps-gateway-config#enforcement)를 설정하여 닫힌 상태로 실패하면 메시지 `spend limit unavailable`과 함께 동일한 `429 billing_error`를 반환합니다. 열린 상태 실패는 저장소 중단이 추론 중단이 되는 것을 방지합니다. 닫힌 상태 실패는 미계량 지출이 없음을 보장합니다.
+사전 확인 쿼리는 2초 타임아웃으로 Postgres를 쿼리합니다. 저장소에 연결할 수 없거나 타임아웃되면 기본적으로 적용이 열린 상태로 실패합니다. 요청이 진행되고 게이트웨이가 경고를 기록하며 응답에는 `anthropic-ratelimit-unified-*` 헤더가 없습니다. 대신 [`enforcement.fail_closed_on_error: true`](/docs/ko/claude-apps-gateway-config#enforcement)를 설정하여 닫힌 상태로 실패하면 동일한 `429 billing_error`를 반환하지만 메시지는 `spend limit unavailable`이며 기간, 재설정 시간 또는 `retry-after` 헤더가 없습니다. 열린 상태 실패는 저장소 중단이 추론 중단이 되는 것을 방지합니다. 닫힌 상태 실패는 미계량 지출이 없음을 보장합니다.
+
+<h3 id="usage-warnings-in-claude-code">
+  Claude Code의 사용량 경고
+</h3>
+
+Claude Code는 개발자가 한도에 접근할 때 경고합니다. 사용률이 75%를 초과하면 한 번, 가장 많이 소비된 한도의 95%를 초과하면 다시 경고합니다. 게이트웨이가 요청을 차단하면 Claude Code는 `admin.blocked_message`를 포함하여 게이트웨이의 `429` 메시지를 그대로 표시합니다.
+
+경고는 응답 헤더에서 작동합니다.
+
+* 게이트웨이 서버에서 v2.1.225 이상이면 한도가 있는 개발자에 대한 각 성공적인 `/v1/messages` 응답은 `anthropic-ratelimit-unified-*` 헤더에 자신의 한도 사용률과 재설정 시간을 포함합니다.
+* 개발자의 머신에서도 v2.1.225 이상이면 Claude Code는 헤더를 읽고 경고를 표시합니다.
+
+헤더는 항상 개발자 자신의 한도를 설명합니다. 게이트웨이는 공유 할당량을 설명하는 업스트림 공급자의 속도 제한 헤더를 제거하고 절대 전달하지 않습니다.
+
+개발자의 머신에서 v2.1.251 이상이면 Claude Code는 동일한 헤더를 읽어 `/usage`에 **지출 한도** 막대를 표시합니다. 이는 한도의 사용 비율과 재설정 시간을 표시하며 [상태 줄](/docs/ko/statusline#rate-limit-usage) 입력에 `rate_limits.spend_limit` 객체를 추가합니다. Claude Code는 둘 다 달러 금액이 아닌 백분율로 표시하며 게이트웨이 서버에서 v2.1.225보다 최신 버전이 필요하지 않습니다.
 
 <h2 id="admin-api-reference">
   Admin API 참조
@@ -79,14 +107,14 @@ curl -sS https://claude-gateway.internal.example.com/v1/organizations/spend_limi
 
 아래 엔드포인트는 `/v1/organizations/spend_limits` 아래에서 제공됩니다.
 
-| 메서드 및 경로                                       | 설명                                                         |
-| ---------------------------------------------- | ---------------------------------------------------------- |
-| `GET /v1/organizations/spend_limits`           | 구성된 한도를 나열합니다. 쿼리: `?limit=&after_id=&before_id=`.         |
-| `POST /v1/organizations/spend_limits`          | `{scope, period}`에 대한 한도를 생성하거나 대체합니다.                     |
-| `GET /v1/organizations/spend_limits/{id}`      | `spl_` 접두사가 있는 ID로 하나의 한도를 가져옵니다.                          |
-| `DELETE /v1/organizations/spend_limits/{id}`   | 하나의 한도를 삭제합니다. `{type: "spend_limit_deleted", id}`를 반환합니다. |
-| `GET /v1/organizations/spend_limits/effective` | 기간당 주체별로 해결된 한도 및 누적 지출.                                   |
-| `GET /v1/organizations/spend_limits/audit`     | 관리자 변경 추적, 최신 우선. 쿼리: `?limit=`.                           |
+| 메서드 및 경로                                       | 설명                                                                                                                                  |
+| ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `GET /v1/organizations/spend_limits`           | 구성된 한도를 나열합니다. 선택적으로 `organization`, `rbac_group` 또는 `user`의 `scope_type`으로 필터링됩니다. 쿼리: `?limit=&after_id=&before_id=&scope_type=`. |
+| `POST /v1/organizations/spend_limits`          | `{scope, period}`에 대한 한도를 생성하거나 대체합니다.                                                                                              |
+| `GET /v1/organizations/spend_limits/{id}`      | `spl_` 접두사가 있는 ID로 하나의 한도를 가져옵니다.                                                                                                   |
+| `DELETE /v1/organizations/spend_limits/{id}`   | 하나의 한도를 삭제합니다. `{type: "spend_limit_deleted", id}`를 반환합니다.                                                                          |
+| `GET /v1/organizations/spend_limits/effective` | 기간당 주체별로 해결된 한도 및 누적 지출.                                                                                                            |
+| `GET /v1/organizations/spend_limits/audit`     | 관리자 변경 추적, 최신 우선. 쿼리: `?limit=&after_id=`.                                                                                          |
 
 규칙은 Anthropic의 Admin API를 미러링합니다:
 
@@ -94,7 +122,7 @@ curl -sS https://claude-gateway.internal.example.com/v1/organizations/spend_limi
 * `spl_` 접두사가 있는 ID
 * USD 센트의 정수 문자열로 된 금액. `POST`는 다른 `currency`를 `400`으로 거부합니다.
 * `{type: "error", error: {type, message}, request_id}` 오류 봉투
-* 성공 또는 오류인 모든 관리자 응답의 `request-id` 응답 헤더, 본문의 `request_id`와 일치합니다.
+* 성공 또는 오류인 모든 관리자 응답의 `request-id` 응답 헤더, 오류 본문도 `request_id`로 전달합니다.
 
 모든 변경은 동일한 트랜잭션에서 `admin_audit`에 변경 전/후 행을 작성하며, `admin-key:<id>` 또는 `oidc:<sub>`에 귀속됩니다.
 
@@ -129,13 +157,13 @@ curl -sS https://claude-gateway.internal.example.com/v1/organizations/spend_limi
   `/audit`
 </h3>
 
-지출 한도 변경 추적을 반환합니다. 누가 어떤 한도를 변경했는지, 변경 전/후 스냅샷 및 선택적 이유, 최신 우선. `has_more`는 정확합니다. 이 엔드포인트는 첫 번째 당사자 와이어 형태가 아닌 로컬 Admin API 규칙을 따릅니다.
+지출 한도 변경 추적을 반환합니다. 누가 어떤 한도를 변경했는지, 변경 전/후 스냅샷, 최신 우선. `has_more`는 정확합니다. 이 엔드포인트는 첫 번째 당사자 와이어 형태가 아닌 로컬 Admin API 규칙을 따릅니다.
 
 <h3 id="pagination">
   페이지 매김
 </h3>
 
-원본 목록은 `after_id` 및 `before_id`로 페이지를 매기며, 이는 상호 배타적인 `spl_…` ID입니다. 결과는 생성 순서로 정렬되고 `has_more`는 순회 방향을 반영합니다. `/effective`는 이전 응답에서 `?page=`로 다시 전달되는 불투명 `next_page` 토큰으로 페이지를 매기며, 주체는 오름차순으로 정렬되어 지출이 기록되는 동안 페이지가 안정적으로 유지됩니다. `limit`은 둘 다에서 1–1000, 기본값 20입니다.
+원본 목록은 `after_id` 및 `before_id`로 페이지를 매기며, 이는 상호 배타적인 `spl_…` ID입니다. 결과는 생성 순서로 정렬되고 `has_more`는 순회 방향을 반영합니다. `/effective`는 이전 응답에서 `?page=`로 다시 전달되는 불투명 `next_page` 토큰으로 페이지를 매기며, 주체는 오름차순으로 정렬되어 지출이 기록되는 동안 페이지가 안정적으로 유지됩니다. `limit`은 둘 다에서 1–1000, 기본값 20입니다. `/audit`는 `after_id`, 이전 페이지의 마지막 이벤트의 숫자 `id`로 페이지를 매기며, 해당 `limit`의 기본값은 100입니다.
 
 <h2 id="data-lifecycle">
   데이터 수명 주기
@@ -149,8 +177,6 @@ curl -sS https://claude-gateway.internal.example.com/v1/organizations/spend_limi
 | `spend_limits`     | 구성된 한도                                        | API를 통해 삭제될 때까지                                                                           |
 | `admin_audit`      | 변경 추적                                         | [`admin.audit_retention_days`](/docs/ko/claude-apps-gateway-config#admin), 기본값 365             |
 | `principal_emails` | 각 주체의 마지막 확인 이메일, 표시 이름 및 IdP 그룹. PII를 포함합니다. | [`admin.identity_retention_days`](/docs/ko/claude-apps-gateway-config#admin) 마지막 활동 이후, 기본값 90 |
-
-`identity_retention_days`는 의도적으로 `spend_retention_months`보다 짧습니다. 프로비저닝 해제된 ID는 새로 고침을 중지하고 나이가 들지만 익명 지출 카운터는 연간 보고를 위해 유지됩니다.
 
 개발자가 떠날 때 `DELETE /v1/organizations/spend_limits/{id}`를 통해 사용자별 한도를 삭제합니다. 지출 및 ID 행은 위의 보존 기간에 나이가 듭니다. 오프보딩 또는 데이터 주체 액세스 요청(DSAR)을 위해 한 사람을 즉시 지우려면 게이트웨이 데이터베이스에 대해 직접 `DELETE FROM principal_emails WHERE principal = '<sub>'`를 실행합니다. 이는 이메일, 이름 및 그룹을 보유하는 유일한 테이블을 제거합니다. `spend` 및 `admin_audit` 행은 의사명 OIDC `sub`만 참조하고 자체 기간에 나이가 듭니다.
 

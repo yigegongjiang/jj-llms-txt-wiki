@@ -7,73 +7,44 @@
 > Tentukan dan panggil subagents untuk mengisolasi konteks, menjalankan tugas secara paralel, dan menerapkan instruksi khusus dalam aplikasi Claude Agent SDK Anda.
 
 Subagents adalah instans agen terpisah yang dapat dihasilkan oleh agen utama Anda untuk menangani subtask yang terfokus.
-Gunakan subagents untuk mengisolasi konteks, menjalankan beberapa analisis secara paralel, dan menerapkan instruksi khusus tanpa menambah prompt agen utama.
-
-Panduan ini menjelaskan cara mendefinisikan dan menggunakan subagents dalam SDK menggunakan parameter `agents`.
+Gunakan mereka untuk mengisolasi konteks, menjalankan beberapa analisis secara paralel, dan menerapkan instruksi khusus tanpa menambah prompt agen utama Anda.
 
 <h2 id="overview">
   Ikhtisar
 </h2>
 
-Anda dapat membuat subagents dengan tiga cara:
+Anda dapat membuat subagen dalam tiga cara:
 
-* **Secara programatis**: gunakan parameter `agents` dalam opsi `query()` Anda. Lihat referensi [TypeScript](/docs/id/agent-sdk/typescript#agentdefinition) dan [Python](/docs/id/agent-sdk/python#agentdefinition)
-* **Berbasis sistem file**: tentukan agents sebagai file markdown di direktori `.claude/agents/`. Lihat [mendefinisikan subagents sebagai file](/docs/id/sub-agents)
-* **Tujuan umum bawaan**: Claude dapat memanggil subagent `general-purpose` bawaan kapan saja melalui alat Agent tanpa Anda mendefinisikan apa pun
+* **Secara Programatik**: gunakan parameter `agents` dalam opsi `query()` Anda. Lihat referensi [TypeScript](/docs/id/agent-sdk/typescript#agentdefinition) dan [Python](/docs/id/agent-sdk/python#agentdefinition)
+* **Berbasis Sistem File**: tentukan agen sebagai file markdown di direktori `.claude/agents/`. Lihat [mendefinisikan subagen sebagai file](/docs/id/sub-agents)
+* **Tujuan Umum Bawaan**: Claude dapat memanggil subagen `general-purpose` bawaan kapan saja melalui alat Agent tanpa Anda perlu mendefinisikan apa pun
 
-Panduan ini berfokus pada pendekatan programatis, yang direkomendasikan untuk aplikasi SDK.
-
-Ketika Anda mendefinisikan subagents, Claude menentukan apakah akan memanggil mereka berdasarkan field `description` setiap subagent. Tulis deskripsi yang jelas yang menjelaskan kapan menggunakan subagent, dan Claude akan secara otomatis mendelegasikan tugas yang sesuai. Anda juga dapat secara eksplisit meminta subagent berdasarkan nama dalam prompt Anda, misalnya "Gunakan agen code-reviewer untuk...".
+Panduan ini berfokus pada pendekatan programatik, yang direkomendasikan untuk aplikasi SDK.
 
 <h2 id="benefits-of-using-subagents">
   Manfaat menggunakan subagents
 </h2>
 
-<h3 id="context-isolation">
-  Isolasi konteks
-</h3>
+Karena subagents adalah instance agent terpisah, mendelegasikan pekerjaan kepada mereka memberikan Anda empat manfaat:
 
-Setiap subagent berjalan dalam percakapan segar mereka sendiri. Panggilan alat perantara dan hasil tetap berada di dalam subagent; hanya pesan finalnya yang kembali ke parent. Lihat [Apa yang diwarisi subagents](#what-subagents-inherit) untuk mengetahui dengan tepat apa yang ada dalam konteks subagent.
-
-**Contoh:** subagent `research-assistant` dapat menjelajahi puluhan file tanpa konten apa pun yang terakumulasi dalam percakapan utama. Parent menerima ringkasan ringkas, bukan setiap file yang dibaca subagent.
-
-<h3 id="parallelization">
-  Paralelisasi
-</h3>
-
-Beberapa subagents dapat berjalan secara bersamaan, sehingga subtask independen selesai dalam waktu yang paling lambat daripada jumlah dari semuanya.
-
-**Contoh:** selama tinjauan kode, Anda dapat menjalankan subagents `style-checker`, `security-scanner`, dan `test-coverage` secara bersamaan, bukan secara berurutan.
-
-<h3 id="specialized-instructions-and-knowledge">
-  Instruksi dan pengetahuan khusus
-</h3>
-
-Setiap subagent dapat memiliki prompt sistem yang disesuaikan dengan keahlian spesifik, praktik terbaik, dan batasan.
-
-**Contoh:** subagent `database-migration` dapat memiliki pengetahuan terperinci tentang praktik terbaik SQL, strategi rollback, dan pemeriksaan integritas data yang akan menjadi kebisingan yang tidak perlu dalam instruksi agen utama.
-
-<h3 id="tool-restrictions">
-  Pembatasan alat
-</h3>
-
-Subagents dapat dibatasi pada alat tertentu, mengurangi risiko tindakan yang tidak diinginkan.
-
-**Contoh:** subagent `doc-reviewer` mungkin hanya memiliki akses ke alat Read dan Grep, memastikan dapat menganalisis tetapi tidak pernah secara tidak sengaja memodifikasi file dokumentasi Anda.
+* **Isolasi konteks**: setiap subagent berjalan dalam percakapannya sendiri, yang dimulai segar kecuali subagent adalah [fork](/docs/id/sub-agents#fork-the-current-conversation). Bagaimanapun, panggilan alat perantara dan hasil tetap berada di dalam subagent; hanya pesan finalnya yang kembali ke parent. Subagent `research-assistant` dapat menjelajahi puluhan file tanpa konten apa pun yang terakumulasi dalam percakapan utama. Parent menerima ringkasan ringkas, bukan setiap file yang dibaca subagent. Lihat [What subagents inherit](#what-subagents-inherit) untuk mengetahui dengan tepat apa yang ada dalam konteks subagent.
+* **Paralelisasi**: beberapa subagents dapat berjalan secara bersamaan, sehingga subtask independen selesai dalam waktu yang paling lambat daripada jumlah semua dari mereka. Selama tinjauan kode, Anda dapat menjalankan subagents `style-checker`, `security-scanner`, dan `test-coverage` secara bersamaan daripada secara berurutan.
+* **Instruksi dan pengetahuan khusus**: setiap subagent dapat memiliki system prompt yang disesuaikan dengan keahlian spesifik, praktik terbaik, dan batasan. Subagent `database-migration` dapat memiliki pengetahuan terperinci tentang praktik terbaik SQL, strategi rollback, dan pemeriksaan integritas data yang akan menjadi kebisingan yang tidak perlu dalam instruksi agent utama.
+* **Pembatasan alat**: subagents dapat dibatasi pada alat tertentu, mengurangi risiko tindakan yang tidak diinginkan. Subagent `doc-reviewer` mungkin hanya memiliki akses ke alat Read dan Grep, memastikan bahwa ia dapat menganalisis tetapi tidak pernah secara tidak sengaja memodifikasi file dokumentasi Anda.
 
 <h2 id="create-subagents">
-  Membuat subagents
+  Buat subagen
 </h2>
 
 <h3 id="programmatic-definition-recommended">
-  Definisi programatis (direkomendasikan)
+  Definisi programatik (direkomendasikan)
 </h3>
 
-Tentukan subagents langsung dalam kode Anda menggunakan parameter `agents`. Claude memanggil subagents melalui alat `Agent`, jadi sertakan `Agent` dalam `allowedTools` untuk auto-approve invokasi subagent tanpa prompt izin.
+Tentukan subagen langsung dalam kode Anda menggunakan parameter `agents`. Claude menjalankan subagen melalui tool `Agent`.
 
-Sebagian besar contoh di halaman ini hanya mencetak hasil akhir. Untuk mengonfirmasi bahwa Claude mendelegasikan ke subagent daripada menjawab secara langsung, lihat [Mendeteksi invokasi subagent](#detect-subagent-invocation).
+Sebagian besar contoh di halaman ini hanya mencetak hasil akhir. Untuk memastikan bahwa Claude mendelegasikan ke subagen daripada menjawab secara langsung, lihat [Deteksi invokasi subagen](#detect-subagent-invocation).
 
-Contoh ini membuat dua subagents: peninjau kode dengan akses read-only dan runner test yang dapat menjalankan perintah.
+Contoh ini membuat dua subagen: pengulas kode dengan akses baca-saja dan pelari tes yang dapat menjalankan perintah.
 
 <CodeGroup>
   ```python Python theme={null}
@@ -85,7 +56,7 @@ Contoh ini membuat dua subagents: peninjau kode dengan akses read-only dan runne
       async for message in query(
           prompt="Review the authentication module for security issues",
           options=ClaudeAgentOptions(
-              # Auto-approve these tools, including Agent for subagent invocation
+              # Auto-approve these tools
               allowed_tools=["Read", "Grep", "Glob", "Agent"],
               agents={
                   "code-reviewer": AgentDefinition(
@@ -134,7 +105,7 @@ Contoh ini membuat dua subagents: peninjau kode dengan akses read-only dan runne
   for await (const message of query({
     prompt: "Review the authentication module for security issues",
     options: {
-      // Auto-approve these tools, including Agent for subagent invocation
+      // Auto-approve these tools
       allowedTools: ["Read", "Grep", "Glob", "Agent"],
       agents: {
         "code-reviewer": {
@@ -181,94 +152,100 @@ Contoh ini membuat dua subagents: peninjau kode dengan akses read-only dan runne
   Konfigurasi AgentDefinition
 </h3>
 
-| Field             | Type                                                        | Required | Description                                                                                                                                                                                                                             |
-| :---------------- | :---------------------------------------------------------- | :------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `description`     | `string`                                                    | Yes      | Deskripsi bahasa alami tentang kapan menggunakan agen ini                                                                                                                                                                               |
-| `prompt`          | `string`                                                    | Yes      | Prompt sistem agen yang mendefinisikan peran dan perilakunya                                                                                                                                                                            |
-| `tools`           | `string[]`                                                  | No       | Array nama alat yang diizinkan. Jika dihilangkan, mewarisi semua alat                                                                                                                                                                   |
-| `disallowedTools` | `string[]`                                                  | No       | Array nama alat yang akan dihapus dari set alat agen. Pola tingkat server MCP juga diterima: `mcp__server` atau `mcp__server__*` menghapus setiap alat dari server tersebut, dan `mcp__*` menghapus setiap alat MCP dari server apa pun |
-| `model`           | `string`                                                    | No       | Penggantian model untuk agen ini. Menerima alias seperti `'fable'`, `'opus'`, `'sonnet'`, `'haiku'`, `'inherit'`, atau ID model lengkap. Default ke model utama jika dihilangkan                                                        |
-| `skills`          | `string[]`                                                  | No       | Daftar nama skill untuk dimuat sebelumnya ke dalam konteks agen saat startup. Skill yang tidak terdaftar tetap dapat dipanggil melalui alat Skill                                                                                       |
-| `memory`          | `'user' \| 'project' \| 'local'`                            | No       | Sumber memori untuk agen ini                                                                                                                                                                                                            |
-| `mcpServers`      | `(string \| object)[]`                                      | No       | Server MCP yang tersedia untuk agen ini, berdasarkan nama atau konfigurasi inline                                                                                                                                                       |
-| `initialPrompt`   | `string`                                                    | No       | Auto-submitted sebagai putaran pengguna pertama saat agen ini berjalan sebagai agen thread utama. Diabaikan saat agen dipanggil sebagai subagent                                                                                        |
-| `maxTurns`        | `number`                                                    | No       | Jumlah maksimum putaran agentic sebelum agen berhenti                                                                                                                                                                                   |
-| `background`      | `boolean`                                                   | No       | Jalankan agen ini sebagai tugas latar belakang non-blocking saat dipanggil                                                                                                                                                              |
-| `effort`          | `'low' \| 'medium' \| 'high' \| 'xhigh' \| 'max' \| number` | No       | Tingkat upaya penalaran untuk agen ini                                                                                                                                                                                                  |
-| `permissionMode`  | `PermissionMode`                                            | No       | Mode izin untuk eksekusi alat dalam agen ini                                                                                                                                                                                            |
+| Field             | Type                                                        | Required | Description                                                                                                                                                                                                                                                                                                                                                      |
+| :---------------- | :---------------------------------------------------------- | :------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `description`     | `string`                                                    | Ya       | Deskripsi bahasa alami tentang kapan menggunakan agen ini                                                                                                                                                                                                                                                                                                        |
+| `prompt`          | `string`                                                    | Ya       | Prompt sistem agen yang mendefinisikan peran dan perilakunya                                                                                                                                                                                                                                                                                                     |
+| `tools`           | `string[]`                                                  | Tidak    | Array nama tool yang diizinkan. Jika dihilangkan, mewarisi setiap [tool yang tersedia untuk subagen](/docs/id/sub-agents#available-tools)                                                                                                                                                                                                                             |
+| `disallowedTools` | `string[]`                                                  | Tidak    | Array nama tool yang akan dihapus dari set tool agen. Pola tingkat server MCP juga diterima: `mcp__server` atau `mcp__server__*` menghapus setiap tool dari server tersebut, dan `mcp__*` menghapus setiap tool MCP dari server apa pun                                                                                                                          |
+| `model`           | `string`                                                    | Tidak    | Penggantian model untuk agen ini. Menerima alias seperti `'fable'`, `'opus'`, `'sonnet'`, `'haiku'`, `'inherit'`, atau ID model lengkap. `'inherit'` menggunakan model utama. Ketika Anda menghilangkannya, Claude Code memilih model dalam [urutan model subagen](/docs/id/sub-agents#choose-a-model)                                                                |
+| `skills`          | `string[]`                                                  | Tidak    | Daftar nama skill yang dimuat sebelumnya ke dalam konteks agen saat startup. Skill yang tidak terdaftar tetap dapat dipanggil melalui tool Skill                                                                                                                                                                                                                 |
+| `memory`          | `'user' \| 'project' \| 'local'`                            | Tidak    | Sumber memori untuk agen ini                                                                                                                                                                                                                                                                                                                                     |
+| `mcpServers`      | `(string \| object)[]`                                      | Tidak    | Server MCP yang tersedia untuk agen ini, berdasarkan nama atau konfigurasi inline                                                                                                                                                                                                                                                                                |
+| `initialPrompt`   | `string`                                                    | Tidak    | Otomatis dikirimkan sebagai giliran pengguna pertama ketika agen ini berjalan sebagai agen thread utama. Diabaikan ketika agen dipanggil sebagai subagen                                                                                                                                                                                                         |
+| `maxTurns`        | `number`                                                    | Tidak    | Jumlah maksimum giliran agentic sebelum agen berhenti. Ketika agen mencapai batas, Claude Code mengembalikan output-nya yang ditandai sebagai parsial, dan Anda dapat [melanjutkan agen](#resume-subagents) untuk terus berlanjut. Penandaan parsial memerlukan Claude Code v2.1.246 atau lebih baru                                                             |
+| `background`      | `boolean`                                                   | Tidak    | Jalankan agen ini sebagai tugas latar belakang non-blocking ketika dipanggil                                                                                                                                                                                                                                                                                     |
+| `omitClaudeMd`    | `boolean`                                                   | Tidak    | Jalankan agen ini tanpa file CLAUDE.md pengguna, proyek, dan lokal ketika berjalan sebagai subagen; file kebijakan yang dikelola tetap dimuat. Diabaikan ketika agen berjalan sebagai agen thread utama. Memerlukan TypeScript Agent SDK v0.3.271 atau lebih baru. Python SDK [`AgentDefinition`](/docs/id/agent-sdk/python#agentdefinition) tidak memiliki field ini |
+| `effort`          | `'low' \| 'medium' \| 'high' \| 'xhigh' \| 'max' \| number` | Tidak    | Tingkat upaya penalaran untuk agen ini                                                                                                                                                                                                                                                                                                                           |
+| `permissionMode`  | `PermissionMode`                                            | Tidak    | Mode izin untuk eksekusi tool dalam agen ini. [Aturan pewarisan subagen](/docs/id/agent-sdk/permissions#available-modes) menentukan kapan itu berlaku                                                                                                                                                                                                                 |
 
 Dalam Python SDK, nama field multi-kata seperti `disallowedTools` dan `mcpServers` mempertahankan ejaan camelCase mereka untuk mencocokkan format wire daripada mengikuti konvensi snake\_case Python. Lihat referensi [`AgentDefinition`](/docs/id/agent-sdk/python#agentdefinition) untuk detail.
 
-Dua perilaku subagent berubah dalam Claude Code v2.1.198:
+Subagen berjalan di latar belakang secara default. Panggilan tool Agent yang menghilangkan input [`run_in_background`](/docs/id/sub-agents#run-subagents-in-foreground-or-background) meluncurkan subagen latar belakang, dan Claude menetapkan `run_in_background: false` ketika memerlukan hasil sebelum melanjutkan. Atur field `background` ke `true` untuk memaksa eksekusi latar belakang untuk agen tertentu terlepas dari apa yang diminta Claude. Sebelum Claude Code v2.1.198, default latar belakang sedang diluncurkan secara bertahap, dan panggilan tool Agent yang menghilangkan `run_in_background` dapat menjalankan subagen secara sinkron.
 
-* Subagents berjalan di latar belakang secara default. Panggilan alat Agent yang menghilangkan input [`run_in_background`](/docs/id/agent-sdk/typescript) meluncurkan subagent latar belakang, dan Claude menetapkan `run_in_background: false` ketika memerlukan hasil sebelum melanjutkan. Sebelum v2.1.198, menghilangkan `run_in_background` menjalankan subagent secara sinkron. Atur field `background` ke `true` untuk memaksa eksekusi latar belakang untuk agen tertentu terlepas dari apa yang diminta Claude.
-* Subagent mewarisi konfigurasi extended thinking sesi utama. Pada versi sebelumnya, extended thinking dinonaktifkan di dalam subagents terlepas dari pengaturan sesi utama.
-
-<Note>
-  Sejak Claude Code v2.1.172, subagents dapat menghasilkan subagents mereka sendiri. Subagent lima level di bawah agen utama tidak dapat menghasilkan subagents lebih lanjut, terlepas dari apakah itu berjalan di foreground atau background. Untuk mencegah subagent menghasilkan yang lain, hilangkan `Agent` dari array `tools` atau tambahkan ke `disallowedTools`. Lihat [subagents bersarang](/docs/id/sub-agents#spawn-nested-subagents) untuk aturan kedalaman lengkap.
-</Note>
+Subagen juga dapat menghasilkan subagen mereka sendiri. Untuk membatasi seberapa dalam nesting itu, berapa banyak subagen yang berjalan sekaligus, dan berapa banyak kueri yang dihabiskan, lihat [Batasi kedalaman, konkurensi, dan pengeluaran subagen](#cap-subagent-depth-concurrency-and-spend).
 
 <h3 id="filesystem-based-definition-alternative">
-  Definisi berbasis sistem file (alternatif)
+  Definisi berbasis filesystem (alternatif)
 </h3>
 
-Anda juga dapat mendefinisikan subagents sebagai file markdown di direktori `.claude/agents/`. Lihat [dokumentasi subagents Claude Code](/docs/id/sub-agents) untuk detail tentang pendekatan ini. Agen yang didefinisikan secara programatis memiliki prioritas lebih tinggi daripada agen berbasis sistem file dengan nama yang sama.
+Anda juga dapat mendefinisikan subagen sebagai file markdown di direktori `.claude/agents/`. Lihat [dokumentasi subagen Claude Code](/docs/id/sub-agents) untuk detail tentang pendekatan ini. Agen yang didefinisikan secara programatik memiliki prioritas lebih tinggi daripada agen berbasis filesystem dengan nama yang sama.
 
 <Note>
-  Bahkan tanpa mendefinisikan subagents khusus, Claude dapat menghasilkan subagent `general-purpose` bawaan. Ini berguna untuk mendelegasikan tugas penelitian atau eksplorasi tanpa membuat agen khusus. Sertakan `Agent` dalam `allowedTools` sehingga invokasi ini auto-approve tanpa prompt izin.
+  Ketika Claude memanggil tool Agent tanpa `subagent_type`, ia mendapatkan subagen `general-purpose` bawaan, yang dapat Claude hasilkan bahkan ketika Anda tidak mendefinisikan agen apa pun sendiri. Menetapkan [`CLAUDE_AGENT_SDK_DISABLE_BUILTIN_AGENTS=1`](/docs/id/env-vars) menghapus default tersebut, dan panggilan seperti itu gagal dengan [`subagent_type is required`](/docs/id/errors#subagent-type-is-required).
 </Note>
 
 <h2 id="what-subagents-inherit">
-  Apa yang diwarisi subagents
+  Apa yang diwariskan subagent
 </h2>
 
-Jendela konteks subagent dimulai segar, tanpa percakapan parent, tetapi tidak kosong. Satu-satunya konten yang Anda teruskan dari parent ke subagent adalah string prompt alat Agent, jadi sertakan jalur file, pesan kesalahan, atau keputusan apa pun yang dibutuhkan subagent langsung dalam prompt itu.
+Kecuali subagent adalah [fork](/docs/id/sub-agents#fork-the-current-conversation), jendela konteksnya dimulai segar, tanpa percakapan induk, tetapi tidak kosong. Satu-satunya konten yang Anda teruskan dari induk ke subagent adalah string prompt alat Agent, jadi sertakan jalur file, pesan kesalahan, atau keputusan apa pun yang dibutuhkan subagent langsung dalam prompt tersebut.
 
-Subagent yang memiliki alat [`SendMessage`](/docs/id/tools-reference) dimulai dengan daftar agen bernama lainnya yang berjalan dalam sesi, sehingga mengetahui nama mana yang dapat dikirim pesan. Claude Code menambahkan daftar ke giliran pertama subagent secara otomatis. [Fork](/docs/id/sub-agents#fork-the-current-conversation) tidak mendapatkan daftar karena mewarisi percakapan parent sebagai gantinya. Daftar memerlukan Claude Code v2.1.206 atau lebih baru.
+Subagent yang memiliki alat [`SendMessage`](/docs/id/tools-reference) dimulai dengan daftar agen bernama lainnya yang berjalan dalam sesi, sehingga mengetahui nama mana yang dapat dikirim pesan. Claude Code menambahkan daftar ke giliran pertama subagent secara otomatis. [Fork](/docs/id/sub-agents#fork-the-current-conversation) tidak mendapatkan daftar karena mewarisi percakapan induk sebagai gantinya.
 
-| Subagent menerima                                                                                                                         | Subagent tidak menerima                                                               |
-| :---------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------ |
-| Prompt sistem sendiri (`AgentDefinition.prompt`) dan prompt alat Agent                                                                    | Riwayat percakapan parent atau hasil alat                                             |
-| Project CLAUDE.md (dimuat melalui [`settingSources`](/docs/id/agent-sdk/claude-code-features#control-filesystem-settings-with-settingsources)) | Konten skill yang dimuat sebelumnya, kecuali terdaftar dalam `AgentDefinition.skills` |
-| Definisi alat (diwarisi dari parent, atau subset dalam `tools`)                                                                           | Prompt sistem parent                                                                  |
+Subagent juga mewarisi konfigurasi pemikiran yang diperluas dari sesi utama.
+
+Tabel di bawah mencantumkan apa yang diterima konteks subagent non-fork dan apa yang ditinggalkannya.
+
+| Subagent menerima                                                                                                                                                                                                   | Subagent tidak menerima                                                               |
+| :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :------------------------------------------------------------------------------------ |
+| Prompt sistem miliknya sendiri (`AgentDefinition.prompt`) dan prompt alat Agent                                                                                                                                     | Riwayat percakapan induk atau hasil alat                                              |
+| Project CLAUDE.md (dimuat melalui [`settingSources`](/docs/id/agent-sdk/claude-code-features#control-filesystem-settings-with-settingsources)), kecuali agen menetapkan [`omitClaudeMd`](#agentdefinition-configuration) | Konten skill yang dimuat sebelumnya, kecuali tercantum dalam `AgentDefinition.skills` |
+| Definisi alat (diwariskan dari induk atau subset dalam `tools`, [disaring untuk background runs](/docs/id/sub-agents#available-tools))                                                                                   | Prompt sistem induk                                                                   |
 
 <Note>
-  Parent menerima pesan final subagent verbatim sebagai hasil alat Agent, tetapi dapat merangkumnya dalam respons sendiri. Untuk mempertahankan output subagent verbatim dalam respons yang menghadap pengguna, sertakan instruksi untuk melakukannya dalam prompt atau opsi `systemPrompt` yang Anda berikan ke panggilan `query()` utama.
+  Induk menerima pesan terakhir subagent sebagai hasil alat Agent, tetapi dapat merangkumnya dalam respons miliknya sendiri. Untuk mempertahankan output subagent verbatim dalam respons yang menghadap pengguna, sertakan instruksi untuk melakukannya dalam prompt atau opsi `systemPrompt` yang Anda teruskan ke panggilan `query()` utama.
+
+  Dalam v2.1.210 dan yang lebih baru, Claude Code [memindai pesan terakhir untuk pola berbentuk instruksi](/docs/id/sub-agents#subagent-output-scanning) sebelum induk membacanya. Pemindaian memperlakukan tiga jenis pola secara berbeda:
+
+  * **Peniruan tag kontrol**: Claude Code menetralkan tag yang hanya dipancarkan harness, seperti blok `<system-reminder>`, di tempat. Ini menyisipkan garis miring terbalik setelah kurung sudut pembuka dan tidak menghapus apa pun.
+  * **Penyebutan konfigurasi izin**: Claude Code menyimpan referensi ke konfigurasi izin, seperti `.claude/settings.json`, `bypassPermissions`, atau `--dangerously-skip-permissions`, seperti yang ditulis.
+  * **Penanda giliran**: baris yang dimulai dengan `Human:` atau `Assistant:` mendapatkan garis miring terbalik sebelum titik dua, sehingga pesan tidak dapat meniru batas giliran percakapan.
+
+  Untuk kecocokan tag kontrol atau konfigurasi izin, Claude Code menambahkan baris penanda `[harness: ...]` yang menamai pola yang cocok; kecocokan penanda giliran tidak menambahkan baris penanda. Itu adalah satu-satunya modifikasi yang dilakukan pemindaian: tidak pernah menghapus atau mengubah kata-kata subagent.
 </Note>
 
-Kesalahan API yang mengakhiri subagent lebih awal, seperti batas laju, tidak pernah disampaikan sebagai hasilnya. Jika batas laju, kelebihan beban, atau kesalahan server memotong subagent foreground yang sudah menghasilkan output teks, alat Agent mengembalikan output parsial itu dengan catatan bahwa subagent tidak selesai. Subagent yang tidak menghasilkan apa pun, atau yang output-nya hanya berupa panggilan alat tanpa teks, gagal dengan pesan kesalahan, `Agent terminated early due to an API error`, diikuti oleh detail kesalahan. Lihat [API errors in subagents](/docs/id/sub-agents#api-errors-in-subagents) untuk perilaku foreground dan background.
-
-Penanganan output parsial ini memerlukan Claude Code v2.1.199 atau lebih baru. Dalam v2.1.199, batas laju, kelebihan beban, atau kesalahan server membiarkan bentuk tool-calls-only dengan hasil parsial kosong yang hanya berisi catatan cutoff.
+Kesalahan API yang mengakhiri subagent lebih awal, seperti batas laju, tidak pernah dikirimkan sebagai hasilnya. Lihat [Kesalahan API dalam subagent](/docs/id/sub-agents#api-errors-in-subagents) untuk perilaku foreground dan background.
 
 <h2 id="invoke-subagents">
-  Memanggil subagents
+  Panggil subagen
 </h2>
 
 <h3 id="automatic-invocation">
-  Invokasi otomatis
+  Pemanggilan otomatis
 </h3>
 
-Claude secara otomatis memutuskan kapan akan memanggil subagents berdasarkan tugas dan `description` setiap subagent. Misalnya, jika Anda mendefinisikan subagent `performance-optimizer` dengan deskripsi "Performance optimization specialist for query tuning", Claude akan memanggilnya ketika prompt Anda menyebutkan optimasi query.
+Claude secara otomatis memutuskan kapan harus memanggil subagen berdasarkan tugas dan `description` setiap subagen. Misalnya, jika Anda mendefinisikan subagen `performance-optimizer` dengan deskripsi "Performance optimization specialist for query tuning", Claude akan memanggilnya ketika prompt Anda menyebutkan optimasi kueri.
 
-Tulis deskripsi yang jelas dan spesifik sehingga Claude dapat mencocokkan tugas ke subagent yang tepat.
+Tulis deskripsi yang jelas dan spesifik sehingga Claude dapat mencocokkan tugas dengan subagen yang tepat.
 
 <h3 id="explicit-invocation">
-  Invokasi eksplisit
+  Pemanggilan eksplisit
 </h3>
 
-Untuk menjamin Claude menggunakan subagent tertentu, sebutkan berdasarkan nama dalam prompt Anda:
+Untuk menjamin Claude menggunakan subagen tertentu, sebutkan namanya dalam prompt Anda:
 
 ```text theme={null}
 "Use the code-reviewer agent to check the authentication module"
 ```
 
-Ini melewati pencocokan otomatis dan langsung memanggil subagent bernama.
+Ini melewati pencocokan otomatis dan secara langsung memanggil subagen yang dinamai.
 
 <h3 id="dynamic-agent-configuration">
   Konfigurasi agen dinamis
 </h3>
 
-Anda dapat membuat definisi agen secara dinamis berdasarkan kondisi runtime. Contoh ini membuat peninjau keamanan dengan tingkat ketat yang berbeda, menggunakan model yang lebih kuat untuk tinjauan ketat.
+Anda dapat membuat definisi agen secara dinamis berdasarkan kondisi runtime. Contoh ini membuat reviewer keamanan dengan tingkat ketat yang berbeda, menggunakan model yang lebih mampu untuk review ketat.
 
 <CodeGroup>
   ```python Python theme={null}
@@ -343,18 +320,18 @@ Anda dapat membuat definisi agen secara dinamis berdasarkan kondisi runtime. Con
 </CodeGroup>
 
 <h2 id="detect-subagent-invocation">
-  Mendeteksi invokasi subagent
+  Deteksi pemanggilan subagent
 </h2>
 
-Claude menginvokasi subagents melalui alat Agent. Untuk mendeteksi ketika subagent diinvokasi, periksa blok `tool_use` di mana `name` adalah `"Agent"`. Pesan dari dalam konteks subagent mencakup field `parent_tool_use_id`.
+Claude memanggil subagent melalui tool Agent. Untuk mendeteksi ketika subagent dipanggil, periksa blok `tool_use` di mana `name` adalah `"Agent"`. Pesan dari dalam konteks subagent mencakup field `parent_tool_use_id`.
 
 <Note>
-  Nama alat diubah dari `"Task"` menjadi `"Agent"` dalam Claude Code v2.1.63. Rilis SDK saat ini memancarkan `"Agent"` dalam blok `tool_use` tetapi masih menggunakan `"Task"` dalam daftar alat `system:init` dan dalam `result.permission_denials[].tool_name`. Memeriksa kedua nilai dalam `block.name` memastikan kompatibilitas di seluruh versi SDK.
+  Tool muncul sebagai `"Agent"` dalam blok `tool_use` tetapi sebagai `"Task"` dalam daftar tool `system:init`. Sebelum Claude Code v2.1.63, blok `tool_use` juga menamakannya `"Task"`. Untuk menjaga deteksi tetap berfungsi di seluruh versi SDK, cocokkan kedua nilai dalam `block.name`.
 </Note>
 
-Struktur pesan berbeda antara SDK. Dalam Python, blok konten diakses langsung melalui `message.content`. Dalam TypeScript, `SDKAssistantMessage` membungkus pesan Claude API, jadi konten diakses melalui `message.message.content`.
+Struktur pesan berbeda antara SDK. Di Python, Anda mengakses blok konten secara langsung melalui `message.content`. Di TypeScript, `SDKAssistantMessage` membungkus pesan API Claude, jadi Anda mengakses konten melalui `message.message.content`.
 
-Contoh ini mengulangi pesan yang dialirkan, mencatat ketika subagent dipanggil dan ketika pesan berikutnya berasal dari dalam konteks eksekusi subagent itu.
+Contoh ini melakukan iterasi melalui pesan yang di-stream, mencatat ketika subagent dipanggil dan ketika pesan berikutnya berasal dari dalam konteks eksekusi subagent tersebut.
 
 <CodeGroup>
   ```python Python theme={null}
@@ -439,21 +416,21 @@ Contoh ini mengulangi pesan yang dialirkan, mencatat ketika subagent dipanggil d
   Melanjutkan subagents
 </h2>
 
-Anda dapat melanjutkan subagent untuk terus dari mana ia berhenti daripada memulai dari awal. Subagent yang dilanjutkan mempertahankan riwayat percakapan lengkapnya, termasuk semua panggilan alat sebelumnya, hasil, dan penalaran.
+Anda dapat melanjutkan subagent untuk meneruskan dari tempat ia berhenti daripada memulai dari awal. Subagent yang dilanjutkan mempertahankan riwayat percakapan lengkapnya, termasuk semua panggilan alat sebelumnya, hasil, dan penalaran.
 
-Ketika subagent selesai, hasil alat Agent mencakup blok teks yang berisi `agentId: <id>`. Agen bawaan [`Explore` dan `Plan`](/docs/id/sub-agents#built-in-subagents) adalah one-shot dan tidak mengembalikan `agentId`, jadi gunakan agen khusus atau `general-purpose` ketika Anda perlu melanjutkan. Untuk melanjutkan subagent secara programatis:
+Ketika subagent berhenti pada batas [`maxTurns`](#agentdefinition-configuration) nya, Claude Code menandai output dalam hasil alat Agent sebagai parsial, sehingga Claude mengetahui bahwa jalannya belum selesai.
 
-1. **Tangkap ID sesi**: ekstrak `session_id` dari pesan selama query pertama
-2. **Ekstrak ID agen**: parse `agentId` dari teks hasil alat Agent
-3. **Lanjutkan sesi**: berikan `resume: sessionId` dalam opsi query kedua, dan sertakan ID agen dalam prompt Anda
+Ketika subagent selesai, hasil alat Agent mencakup blok teks yang berisi `agentId: <id>`. Agent [`Explore` dan `Plan`](/docs/id/sub-agents#built-in-subagents) bawaan adalah one-shot dan tidak mengembalikan `agentId`, jadi gunakan agent kustom atau `general-purpose` ketika Anda perlu melanjutkan. Untuk melanjutkan subagent secara terprogram:
+
+1. **Tangkap ID sesi**: ekstrak `session_id` dari pesan selama kueri pertama
+2. **Ekstrak ID agent**: parse `agentId` dari teks hasil alat Agent
+3. **Lanjutkan sesi**: teruskan `resume: sessionId` dalam opsi kueri kedua, dan sertakan ID agent dalam prompt Anda. Setiap panggilan `query()` memulai sesi baru secara default, dan Anda harus melanjutkan sesi yang sama untuk mengakses transkrip subagent.
 
 <Note>
-  Anda harus melanjutkan sesi yang sama untuk mengakses transkrip subagent. Setiap panggilan `query()` memulai sesi baru secara default, jadi berikan `resume: sessionId` untuk melanjutkan dalam sesi yang sama.
-
-  Ketika menggunakan agen khusus, berikan definisi agen yang sama dalam parameter `agents` untuk kedua query.
+  Saat menggunakan agent kustom, teruskan definisi agent yang sama dalam parameter `agents` untuk kedua kueri.
 </Note>
 
-Contoh di bawah mendefinisikan agen khusus `endpoint-finder`. Query pertama menjalankannya dan menangkap ID sesi dan ID agen dari hasil alat Agent, kemudian query kedua melanjutkan sesi untuk mengajukan pertanyaan tindak lanjut yang memerlukan konteks dari analisis pertama.
+Contoh di bawah ini mendefinisikan agent `endpoint-finder` kustom. Kueri pertama menjalankannya dan menangkap ID sesi dan ID agent dari hasil alat Agent, kemudian kueri kedua melanjutkan sesi untuk mengajukan pertanyaan lanjutan yang memerlukan konteks dari analisis pertama.
 
 <CodeGroup>
   ```python Python theme={null}
@@ -577,22 +554,20 @@ Contoh di bawah mendefinisikan agen khusus `endpoint-finder`. Query pertama menj
   ```
 </CodeGroup>
 
-Transkrip subagent bertahan secara independen dari percakapan utama:
+Transkrip subagent disimpan dalam file terpisah dan bertahan secara independen dari percakapan utama. Lihat [melanjutkan subagents di Claude Code](/docs/id/sub-agents#resume-subagents) untuk perilaku pemadatan dan periode pembersihan `cleanupPeriodDays`.
 
-* **Pemadatan percakapan utama**: ketika percakapan utama dipadatkan, transkrip subagent tidak terpengaruh. Mereka disimpan dalam file terpisah.
-* **Persistensi sesi**: transkrip subagent bertahan dalam sesi mereka. Anda dapat melanjutkan subagent setelah memulai ulang Claude Code dengan melanjutkan sesi yang sama.
-* **Pembersihan otomatis**: transkrip dibersihkan berdasarkan pengaturan `cleanupPeriodDays`, yang secara default adalah 30 hari.
-
-<h2 id="tool-restrictions-2">
+<h2 id="tool-restrictions">
   Pembatasan alat
 </h2>
 
-Subagents dapat memiliki akses alat terbatas melalui field `tools`:
+Gunakan field `tools` untuk membatasi apa yang dapat dilakukan subagen:
 
-* **Hilangkan field**: agen mewarisi semua alat yang tersedia (default)
-* **Tentukan alat**: agen hanya dapat menggunakan alat yang terdaftar
+* **Abaikan `tools`**: subagen mendapatkan setiap [alat yang tersedia untuk subagen](/docs/id/sub-agents#available-tools)
+* **Daftar alat**: subagen hanya mendapatkan yang tersebut. Misalnya, pengulas kode yang tidak boleh mengedit file mendapatkan `["Read", "Grep", "Glob"]`
 
-Contoh ini membuat agen analisis read-only yang dapat memeriksa kode tetapi tidak dapat memodifikasi file atau menjalankan perintah.
+Alat yang Anda tinggalkan tidak ada dalam sesi subagen sama sekali: Claude bekerja tanpanya, tanpa permintaan izin atau kesalahan.
+
+Contoh ini membuat agen analisis baca-saja yang dapat memeriksa kode tetapi tidak dapat memodifikasi file atau menjalankan perintah.
 
 <CodeGroup>
   ```python Python theme={null}
@@ -650,12 +625,109 @@ Contoh ini membuat agen analisis read-only yang dapat memeriksa kode tetapi tida
   Kombinasi alat umum
 </h3>
 
-| Kasus penggunaan   | Alat                                    | Deskripsi                                                       |
-| :----------------- | :-------------------------------------- | :-------------------------------------------------------------- |
-| Analisis read-only | `Read`, `Grep`, `Glob`                  | Dapat memeriksa kode tetapi tidak memodifikasi atau menjalankan |
-| Eksekusi test      | `Bash`, `Read`, `Grep`                  | Dapat menjalankan perintah dan menganalisis output              |
-| Modifikasi kode    | `Read`, `Edit`, `Write`, `Grep`, `Glob` | Akses read/write penuh tanpa eksekusi perintah                  |
-| Akses penuh        | Semua alat                              | Mewarisi semua alat dari parent (hilangkan field `tools`)       |
+| Kasus penggunaan   | Alat                                    | Deskripsi                                                         |
+| :----------------- | :-------------------------------------- | :---------------------------------------------------------------- |
+| Analisis baca-saja | `Read`, `Grep`, `Glob`                  | Dapat memeriksa kode tetapi tidak memodifikasi atau menjalankan   |
+| Eksekusi pengujian | `Bash`, `Read`, `Grep`                  | Dapat menjalankan perintah dan menganalisis output                |
+| Modifikasi kode    | `Read`, `Edit`, `Write`, `Grep`, `Glob` | Akses baca/tulis penuh tanpa eksekusi perintah                    |
+| Akses penuh        | Semua alat                              | Mewarisi alat yang tersedia untuk subagen (abaikan field `tools`) |
+
+<h2 id="cap-subagent-depth-concurrency-and-spend">
+  Batasi kedalaman, konkurensi, dan pengeluaran subagen
+</h2>
+
+<Note>
+  Bagian ini menjelaskan TypeScript SDK v0.3.219 dan Python SDK v0.2.127 dan yang lebih baru, rilis yang menggabungkan Claude Code v2.1.219 atau yang lebih baru. Pada rilis sebelumnya, beberapa batas ini hilang atau default berbeda, jadi tingkatkan sebelum Anda mengandalkannya untuk membatasi jalankan. [Referensi variabel lingkungan](/docs/id/env-vars) dan [giliran dan anggaran](/docs/id/agent-sdk/agent-loop#turns-and-budget) mencatat versi Claude Code yang menambahkan setiap variabel dan penegakan batas pengeluaran subagen.
+</Note>
+
+Claude memutuskan sendiri kapan akan menspawn subagen dan berapa banyak yang akan dispawn. Setiap subagen membuat permintaan API-nya sendiri, yang dihitung terhadap `total_cost_usd` kueri, dan subagen dapat menspawn subagen mereka sendiri, jadi satu prompt dapat berkembang menjadi pohon agen.
+
+Anda dapat membatasi pertumbuhan itu dengan tiga cara: seberapa dalam subagen bersarang, berapa banyak yang berjalan sekaligus, dan berapa banyak seluruh kueri menghabiskan. Atur batas kedalaman dan konkurensi sebagai variabel lingkungan melalui opsi [`env`](/docs/id/agent-sdk/typescript#options), dan batas pengeluaran sebagai opsi kueri:
+
+| Batas       | Atur dengan                                              | Default                                                                                                        | Apa yang Claude Code lakukan pada batas                                                                                                                                                                                                                                                                                                                                |
+| :---------- | :------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Kedalaman   | [`CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH`](/docs/id/env-vars)   | `3` lapisan subagen di bawah agen utama Anda. `1` menghentikan subagen Anda dari menspawn milik mereka sendiri | Meninggalkan subagen di lapisan bawah tidak dapat menspawn, jadi ia melakukan pekerjaan yang didelegasikan sendiri. Lihat [subagen bersarang](/docs/id/sub-agents#let-subagents-spawn-their-own-subagents)                                                                                                                                                                  |
+| Konkurensi  | [`CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`](/docs/id/env-vars)   | `20` subagen berjalan sekaligus, menghitung setiap subagen yang Claude spawnkan dengan alat Agent              | Menolak untuk menspawn subagen lain, mengembalikan `Concurrent subagent limit reached`, sampai jumlah yang berjalan turun di bawah batas. Sesi dengan [ultracode](/docs/id/model-config#adjust-effort-level) aktif tidak pernah ditolak. Lihat [batas subagen bersamaan](/docs/id/sub-agents#concurrent-subagent-limit)                                                          |
+| Pengeluaran | `maxBudgetUsd` di TypeScript, `max_budget_usd` di Python | Tidak ada batas. Menghitung pengeluaran panggilan sendiri, permintaan subagen disertakan                       | Menegakkan batas dengan tiga cara: menolak untuk menspawn lebih banyak subagen, mengembalikan `Budget limit reached`, menghentikan subagen latar belakang yang masih berjalan, dan mengakhiri kueri dengan subtipe hasil `error_max_budget_usd`. Untuk cara batas berperilaku di seluruh sesi, lihat [giliran dan anggaran](/docs/id/agent-sdk/agent-loop#turns-and-budget) |
+
+Kedua SDK memperlakukan opsi `env` secara berbeda: SDK TypeScript mengganti lingkungan subprocess dengannya, jadi sebarkan `process.env` ke dalamnya untuk menjaga variabel seperti `PATH`, sementara SDK Python menggabungkannya ke dalam lingkungan yang diwariskan. Contoh ini mematikan penyarangan, memungkinkan paling banyak lima subagen sekaligus, dan menghentikan kueri setelah pengeluaran yang diperkirakan mencapai \$5:
+
+<CodeGroup>
+  ```python Python theme={null}
+  import asyncio
+  from claude_agent_sdk import query, ClaudeAgentOptions, ResultMessage
+
+
+  async def main():
+      try:
+          async for message in query(
+              prompt="Audit every service in this repo for unhandled promise rejections",
+              options=ClaudeAgentOptions(
+                  allowed_tools=["Read", "Grep", "Glob", "Agent"],
+                  # env is merged on top of the inherited environment
+                  env={
+                      "CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH": "1",
+                      "CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS": "5",
+                  },
+                  max_budget_usd=5.0,
+              ),
+          ):
+              if isinstance(message, ResultMessage):
+                  print(f"{message.subtype}: ${message.total_cost_usd}")
+      except Exception as error:
+          # A single-shot query() raises after yielding an error result,
+          # so the budget-capped result has already been printed above.
+          print(f"Session ended with an error: {error}")
+
+
+  asyncio.run(main())
+  ```
+
+  ```typescript TypeScript theme={null}
+  import { query } from "@anthropic-ai/claude-agent-sdk";
+
+  try {
+    for await (const message of query({
+      prompt: "Audit every service in this repo for unhandled promise rejections",
+      options: {
+        allowedTools: ["Read", "Grep", "Glob", "Agent"],
+        // env replaces the subprocess environment, so spread process.env to keep PATH
+        env: {
+          ...process.env,
+          CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH: "1",
+          CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS: "5",
+        },
+        maxBudgetUsd: 5,
+      },
+    })) {
+      if (message.type === "result") {
+        console.log(`${message.subtype}: $${message.total_cost_usd}`);
+      }
+    }
+  } catch (error) {
+    // A single-shot query() throws after yielding an error result,
+    // so the budget-capped result has already been logged above.
+    console.error(`Session ended with an error: ${error}`);
+  }
+  ```
+</CodeGroup>
+
+Apa yang Anda lihat tergantung pada batas mana, jika ada, yang dicapai kueri:
+
+* **Di bawah batas pengeluaran**: Anda melihat `success` dan biaya yang diperkirakan.
+* **Pada batas pengeluaran**: Anda melihat `error_max_budget_usd` dengan biaya pada atau di atas `5`, dan kemudian penanganan kesalahan Anda berjalan.
+* **Pada batas konkurensi**: Anda melihat blok `tool_result` dalam aliran pesan yang membawa `Concurrent subagent limit reached`. Claude menerima blok yang sama sebagai hasil alat Agent.
+
+<h3 id="run-opus-5-with-subagents">
+  Jalankan Opus 5 dengan subagen
+</h3>
+
+Claude Opus 5 mendelegasikan ke subagen lebih mudah daripada model sebelumnya, jadi [batas kedalaman, konkurensi, dan pengeluaran](#cap-subagent-depth-concurrency-and-spend) paling penting pada kueri yang menjalankan Opus 5. [Panduan prompting Opus 5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5#controlling-subagent-spawning) memiliki instruksi delegasi yang dapat Anda tambahkan ke prompt apa pun. Apakah Claude Code menambahkan instruksi sendiri tergantung pada [prompt sistem](/docs/id/agent-sdk/modifying-system-prompts#how-system-prompts-work) mana yang Anda gunakan:
+
+* **Preset `claude_code`**: ketika modelnya adalah Opus 5, Claude Code menambahkan baris ke prompt sistemnya yang memberi tahu Claude untuk tidak memanggil alat Agent kecuali diminta. Alat Agent tetap tersedia.
+* **Prompt kustom, atau tidak ada `systemPrompt`**: Claude Code tidak membangun prompt sistemnya, jadi baris itu tidak ada. Tambahkan instruksi delegasi dari panduan prompting ke prompt Anda sendiri.
+
+Setiap instruksi hanya mengarahkan Claude, jadi atur batasnya juga. Claude Code menegakkannya bagaimanapun Claude memutuskan untuk mendelegasikan.
 
 <h2 id="scale-up-with-dynamic-workflows">
   Skalakan dengan alur kerja dinamis
@@ -675,8 +747,7 @@ Alat `Workflow` tersedia dalam TypeScript Agent SDK v0.3.149 dan yang lebih baru
 
 Jika Claude menyelesaikan tugas secara langsung daripada mendelegasikan ke subagent Anda:
 
-* **Periksa bahwa invokasi Agent disetujui**: sertakan `Agent` dalam `allowedTools` untuk auto-approve panggilan subagent. Tanpa itu, invokasi Agent jatuh ke callback `canUseTool` Anda atau, dalam mode `dontAsk`, ditolak
-* **Gunakan prompting eksplisit**: sebutkan subagent berdasarkan nama dalam prompt Anda, misalnya "Gunakan agen code-reviewer untuk..."
+* **Gunakan prompting eksplisit**: sebutkan subagent berdasarkan nama dalam prompt Anda, misalnya "Gunakan agen code-reviewer untuk memeriksa modul autentikasi"
 * **Tulis deskripsi yang jelas**: jelaskan dengan tepat kapan menggunakan subagent sehingga Claude dapat mencocokkan tugas dengan tepat
 
 <h3 id="filesystem-based-agents-not-loading">
@@ -688,15 +759,10 @@ Claude Code memantau `~/.claude/agents/` dan `.claude/agents/` dan mengambil fil
 * **Direktori `agents` baru**: pemantau hanya mencakup direktori yang ada saat sesi dimulai, jadi file pertama di direktori baru memerlukan restart sesi. Ini adalah penyebab paling umum.
 * **Frontmatter tidak valid atau `name` duplikat**: periksa YAML file, dan apakah agen yang ada sudah menggunakan `name` tersebut.
 * **`--disable-slash-commands`**: sesi yang dimulai dengan flag ini tidak memantau direktori-direktori ini dan selalu memerlukan restart untuk memuat file baru.
+* **File di bawah direktori yang ditambahkan**: Claude Code memuat `.claude/agents/` dari direktori yang ditambahkan dengan opsi `add_dirs` (Python) atau `additionalDirectories` (TypeScript), atau CLI `--add-dir` atau `/add-dir`, tetapi tidak memantaunya, jadi file baru atau yang telah diedit di sana memerlukan restart sesi.
 * **Agen programatik dengan nama yang sama**: `agents` yang dilewatkan ke `query()` menimpa agen filesystem dengan nama yang sama.
 
 Untuk format file, lihat [cara menulis file subagent](/docs/id/sub-agents#write-subagent-files).
-
-<h3 id="long-prompt-failures-on-windows">
-  Kegagalan prompt panjang di Windows
-</h3>
-
-Di Windows, subagents dengan prompt yang sangat panjang mungkin gagal karena batasan panjang baris perintah sebesar 8191 karakter. Jaga prompt tetap ringkas atau gunakan agen berbasis filesystem untuk instruksi kompleks.
 
 <h2 id="related-documentation">
   Dokumentasi terkait

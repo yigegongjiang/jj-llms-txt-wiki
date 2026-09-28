@@ -105,9 +105,12 @@ export const ContactSalesCard = ({surface}) => {
 1. Перейдите на [портал Microsoft Foundry](https://ai.azure.com/)
 2. Создайте новый ресурс, отметив имя вашего ресурса
 3. Создайте развертывания для моделей Claude, отметив имя развертывания, которое вы даете каждому; вы установите эти имена как переменные модели на шаге 4:
+
    * Claude Opus
    * Claude Sonnet
    * Claude Haiku
+
+   При настройке развертывания вы также выбираете его [вариант размещения](https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry#hosting-options), который определяет, выполняется ли вывод на Azure или на инфраструктуре Anthropic.
 
 <h3 id="2-configure-azure-credentials">
   2) Настройка учетных данных Azure
@@ -179,7 +182,7 @@ export ANTHROPIC_FOUNDRY_RESOURCE={resource}
 
 Установите переменные модели в соответствии с именами развертываний, которые вы создали на шаге 1.
 
-Без `ANTHROPIC_DEFAULT_OPUS_MODEL` псевдоним `opus` на Microsoft Foundry разрешается в Opus 4.6. Установите его на идентификатор Opus 4.8, чтобы использовать последнюю модель:
+Без `ANTHROPIC_DEFAULT_OPUS_MODEL` псевдоним `opus` на Microsoft Foundry разрешается в Opus 4.6. Установите его на идентификатор более новой модели Opus, такой как Opus 4.8:
 
 ```bash theme={null}
 export ANTHROPIC_DEFAULT_OPUS_MODEL='claude-opus-4-8'
@@ -196,6 +199,8 @@ export ANTHROPIC_DEFAULT_HAIKU_MODEL='claude-haiku-4-5'
 ```bash theme={null}
 export ENABLE_PROMPT_CACHING_1H=1
 ```
+
+Чтобы установить разные TTL для вашего основного разговора и для запросов, которые Claude Code делает вне его, [выберите TTL самостоятельно](/docs/ru/prompt-caching#choose-the-ttl-yourself).
 
 <h3 id="5-run-claude-code">
   5. Запуск Claude Code

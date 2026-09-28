@@ -59,6 +59,8 @@ Ketika Anda membuka kontainer di VS Code atau Codespaces, fitur juga menambahkan
     ```
 
     Ganti baris `image` dengan citra dasar proyek Anda atau hapus jika file yang ada menggunakan Dockerfile.
+
+    Fitur Claude Code menginstal Node.js itu sendiri ketika citra dasar tidak menyediakannya. Jika instalasi itu gagal dan build berhenti dengan `Failed to install Node.js and npm`, tambahkan `"ghcr.io/devcontainers/features/node:1": {}` ke blok `features` di atas fitur Claude Code dan bangun kembali.
   </Step>
 
   <Step title="Bangun kembali kontainer">
@@ -89,21 +91,26 @@ Lihat [Pilih penyedia API Anda](/docs/id/admin-setup#choose-your-api-provider) u
   Pertahankan autentikasi dan pengaturan di seluruh rebuild
 </h2>
 
-Secara default, direktori home kontainer dibuang saat rebuild, jadi insinyur harus masuk lagi setiap kali. Claude Code menyimpan token autentikasi, pengaturan pengguna, dan riwayat sesi di bawah [`~/.claude`](/docs/id/claude-directory). Pasang volume bernama di jalur tersebut untuk menjaga status ini di seluruh rebuild.
+Secara default, direktori home kontainer dibuang saat rebuild, jadi insinyur harus masuk lagi setiap kali. Claude Code menyimpan token autentikasi, pengaturan pengguna, dan riwayat sesi di bawah direktori [`~/.claude`](/docs/id/claude-directory). Direktori ini menyimpan akun OAuth Anda, server MCP pribadi, dan kepercayaan per-proyek di [`~/.claude.json`](/docs/id/settings-reference#global-config-settings), file terpisah di luar direktori tersebut, jadi memasang volume di `~/.claude` saja tidak membuat Anda tetap masuk. Pasang volume bernama di `~/.claude` dan atur [`CLAUDE_CONFIG_DIR`](/docs/id/env-vars) ke jalur yang sama sehingga Claude Code menulis `.claude.json` di dalam volume.
 
-Contoh berikut memasang volume di direktori home pengguna `node`:
+Contoh berikut memasang volume dan mengatur `CLAUDE_CONFIG_DIR` untuk kontainer yang `remoteUser`-nya adalah `node`:
 
 ```json devcontainer.json theme={null}
 "mounts": [
   "source=claude-code-config,target=/home/node/.claude,type=volume"
-]
+],
+"containerEnv": {
+  "CLAUDE_CONFIG_DIR": "/home/node/.claude"
+}
 ```
 
-Ganti `/home/node` dengan direktori home `remoteUser` kontainer Anda. Jika Anda memasang volume di tempat lain selain `~/.claude`, atur [`CLAUDE_CONFIG_DIR`](/docs/id/env-vars) ke jalur mount sehingga Claude Code membaca dan menulis di sana.
+Ganti `/home/node` dengan direktori home `remoteUser` kontainer Anda. Jika Anda sudah mengatur `containerEnv`, misalnya di [Enforce organization policy](#enforce-organization-policy), tambahkan `CLAUDE_CONFIG_DIR` ke objek tersebut daripada menambahkan objek kedua.
 
 Untuk mengisolasi status per proyek daripada berbagi satu volume di semua repositori, sertakan variabel `${devcontainerId}` dalam nama sumber. [Konfigurasi referensi](https://github.com/anthropics/claude-code/blob/main/.devcontainer/devcontainer.json) menggunakan `source=claude-code-config-${devcontainerId}` untuk tujuan ini.
 
-Di GitHub Codespaces, `~/.claude` bertahan di seluruh penghentian dan memulai codespace, tetapi masih dihapus saat Anda membangun kembali kontainer, jadi pemasangan volume di atas juga berlaku di sana. Untuk membawa autentikasi di seluruh codespace, simpan `ANTHROPIC_API_KEY` atau `CLAUDE_CODE_OAUTH_TOKEN` dari [`claude setup-token`](/docs/id/authentication#generate-a-long-lived-token) sebagai [rahasia Codespaces](https://docs.github.com/en/codespaces/managing-your-codespaces/managing-your-account-specific-secrets-for-github-codespaces); Codespaces membuat rahasia tersedia sebagai variabel lingkungan di dalam kontainer secara otomatis.
+Di GitHub Codespaces, `~/.claude` bertahan saat Anda menghentikan dan memulai codespace tetapi dihapus saat Anda membangun kembali kontainer, jadi konfigurasi di atas juga berlaku di sana.
+
+Untuk membawa autentikasi di seluruh codespaces, simpan `ANTHROPIC_API_KEY` atau `CLAUDE_CODE_OAUTH_TOKEN` dari [`claude setup-token`](/docs/id/authentication#generate-a-long-lived-token) sebagai [rahasia Codespaces](https://docs.github.com/en/codespaces/managing-your-codespaces/managing-your-account-specific-secrets-for-github-codespaces). Codespaces mengekspos rahasia sebagai variabel lingkungan di dalam kontainer secara otomatis.
 
 <h2 id="enforce-organization-policy">
   Terapkan kebijakan organisasi
@@ -111,14 +118,14 @@ Di GitHub Codespaces, `~/.claude` bertahan di seluruh penghentian dan memulai co
 
 Dev container adalah tempat yang nyaman untuk menerapkan kebijakan organisasi, karena citra dan konfigurasi yang sama berjalan di mesin setiap insinyur.
 
-Claude Code membaca `/etc/claude-code/managed-settings.json` di Linux dan menerapkannya dengan prioritas tertinggi dalam [hierarki pengaturan](/docs/id/settings#how-scopes-interact), jadi nilai di sana menggantikan apa pun yang ditetapkan insinyur di `~/.claude` atau direktori `.claude/` proyek. Salin file ke tempat dari Dockerfile Anda:
+Claude Code membaca `/etc/claude-code/managed-settings.json` di Linux dan menerapkannya dengan prioritas tertinggi dalam [hierarki pengaturan](/docs/id/settings#settings-precedence), jadi nilai di sana menggantikan apa pun yang ditetapkan insinyur di `~/.claude` atau direktori `.claude/` proyek. Salin file ke tempat dari Dockerfile Anda:
 
 ```dockerfile Dockerfile theme={null}
 RUN mkdir -p /etc/claude-code
 COPY managed-settings.json /etc/claude-code/managed-settings.json
 ```
 
-Karena Dockerfile berada di repositori, siapa pun dengan akses tulis dapat mengubah atau menghapus langkah ini. Untuk kebijakan yang tidak dapat dilewati insinyur dengan mengedit file repositori, berikan pengaturan terkelola melalui [pengaturan yang dikelola server](/docs/id/server-managed-settings) atau MDM Anda. Lihat [file pengaturan terkelola](/docs/id/settings#settings-files) untuk kunci yang tersedia dan jalur pengiriman lainnya.
+Karena Dockerfile berada di repositori, siapa pun dengan akses tulis dapat mengubah atau menghapus langkah ini. Untuk kebijakan yang tidak dapat dilewati insinyur dengan mengedit file repositori, berikan pengaturan terkelola melalui [pengaturan yang dikelola server](/docs/id/server-managed-settings) atau MDM Anda. Lihat [file pengaturan terkelola](/docs/id/managed-settings#delivery-mechanisms) untuk kunci yang tersedia dan jalur pengiriman lainnya.
 
 Untuk mengatur [variabel lingkungan](/docs/id/env-vars) yang berlaku untuk setiap sesi Claude Code di kontainer, tambahkan ke `containerEnv` di `devcontainer.json` Anda. Contoh berikut memilih keluar dari telemetri dan pelaporan kesalahan dan mencegah Claude Code dari auto-update setelah instalasi:
 
@@ -129,7 +136,9 @@ Untuk mengatur [variabel lingkungan](/docs/id/env-vars) yang berlaku untuk setia
 }
 ```
 
-Dev Container Feature selalu menginstal rilis Claude Code terbaru. Untuk menentukan versi Claude Code tertentu untuk build yang dapat direproduksi, instal dari Dockerfile Anda dengan `npm install -g @anthropic-ai/claude-code@X.Y.Z` daripada menggunakan fitur, dan atur `DISABLE_AUTOUPDATER` seperti yang ditunjukkan di atas.
+`CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` juga menonaktifkan evaluasi bendera fitur yang [Remote Control](/docs/id/remote-control#requirements) dan [fitur lain yang memerlukan pengambilan bendera fitur](/docs/id/env-vars#features-that-need-feature-flag-fetching) bergantung, jadi sesi di kontainer tidak dapat menggunakannya.
+
+Dev Container Feature selalu menginstal rilis Claude Code terbaru. Untuk menentukan versi Claude Code tertentu untuk build yang dapat direproduksi, instal dari Dockerfile Anda dengan `npm install -g @anthropic-ai/claude-code@X.Y.Z` daripada menggunakan fitur, dan atur `DISABLE_AUTOUPDATER` ke `1` di `containerEnv`.
 
 Untuk daftar lengkap kontrol kebijakan termasuk aturan izin, pembatasan alat, dan allowlist server MCP, lihat [Atur Claude Code untuk organisasi Anda](/docs/id/admin-setup).
 
@@ -141,7 +150,7 @@ Untuk membuat [server MCP](/docs/id/mcp) tersedia di dalam kontainer, tentukan d
 
 Anda dapat membatasi lalu lintas keluar kontainer hanya ke domain yang dibutuhkan Claude Code. Lihat [Persyaratan akses jaringan](/docs/id/network-config#network-access-requirements) untuk domain inferensi dan autentikasi, dan [Layanan telemetri](/docs/id/data-usage#telemetry-services) untuk koneksi telemetri dan pelaporan kesalahan opsional dan cara menonaktifkannya.
 
-Kontainer referensi mencakup skrip [`init-firewall.sh`](https://github.com/anthropics/claude-code/blob/main/.devcontainer/init-firewall.sh) yang memblokir semua lalu lintas keluar kecuali domain yang dibutuhkan Claude Code dan alat pengembangan Anda. Menjalankan firewall di dalam kontainer memerlukan izin ekstra, jadi referensi menambahkan kemampuan `NET_ADMIN` dan `NET_RAW` melalui `runArgs`. Skrip firewall dan kemampuan ini tidak diperlukan untuk Claude Code itu sendiri: Anda dapat meninggalkannya dan mengandalkan kontrol jaringan Anda sendiri.
+Kontainer referensi mencakup skrip [`init-firewall.sh`](https://github.com/anthropics/claude-code/blob/main/.devcontainer/init-firewall.sh) yang membatasi lalu lintas keluar ke tujuan yang diizinkan skrip. Menjalankan firewall di dalam kontainer memerlukan izin ekstra, jadi referensi menambahkan kemampuan `NET_ADMIN` dan `NET_RAW` melalui `runArgs`. Skrip firewall dan kemampuan ini tidak diperlukan untuk Claude Code itu sendiri: Anda dapat meninggalkannya dan mengandalkan kontrol jaringan Anda sendiri.
 
 <h2 id="run-without-permission-prompts">
   Jalankan tanpa permintaan izin
@@ -151,7 +160,7 @@ Karena kontainer menjalankan Claude Code sebagai pengguna non-root dan membatasi
 
 Melewatkan permintaan izin menghilangkan kesempatan Anda untuk meninjau panggilan alat sebelum dijalankan. Claude masih dapat memodifikasi file apa pun di workspace yang di-bind-mount, yang muncul langsung di host Anda, dan menjangkau apa pun yang diizinkan kebijakan jaringan kontainer. Pasangkan flag ini dengan [pembatasan egress jaringan](#restrict-network-egress) di atas untuk membatasi apa yang dapat dijangkau sesi yang dilewati.
 
-Jika Anda menginginkan lebih sedikit permintaan tanpa menonaktifkan pemeriksaan keamanan, pertimbangkan [mode otomatis](/docs/id/permission-modes#eliminate-prompts-with-auto-mode), yang memiliki pengklasifikasi meninjau tindakan sebelum dijalankan. Untuk mencegah insinyur menggunakan `--dangerously-skip-permissions` sama sekali, atur `permissions.disableBypassPermissionsMode` ke `"disable"` dalam [pengaturan terkelola](/docs/id/settings#permission-settings).
+Jika Anda menginginkan lebih sedikit permintaan tanpa menonaktifkan pemeriksaan keamanan, pertimbangkan [mode otomatis](/docs/id/permission-modes#eliminate-prompts-with-auto-mode), yang memiliki pengklasifikasi meninjau tindakan sebelum dijalankan. Untuk mencegah insinyur menggunakan `--dangerously-skip-permissions` sama sekali, atur `permissions.disableBypassPermissionsMode` ke `"disable"` dalam [pengaturan terkelola](/docs/id/settings-reference#permission-settings).
 
 <h2 id="try-the-reference-container">
   Coba kontainer referensi
@@ -185,7 +194,7 @@ Konfigurasi referensi terdiri dari tiga file. Tidak satupun dari mereka diperluk
 | ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
 | [`devcontainer.json`](https://github.com/anthropics/claude-code/blob/main/.devcontainer/devcontainer.json) | Pemasangan volume, kemampuan `runArgs`, ekstensi VS Code, dan `containerEnv` |
 | [`Dockerfile`](https://github.com/anthropics/claude-code/blob/main/.devcontainer/Dockerfile)               | Citra dasar, alat pengembangan, dan instalasi Claude Code                    |
-| [`init-firewall.sh`](https://github.com/anthropics/claude-code/blob/main/.devcontainer/init-firewall.sh)   | Memblokir semua lalu lintas jaringan keluar kecuali domain yang diizinkan    |
+| [`init-firewall.sh`](https://github.com/anthropics/claude-code/blob/main/.devcontainer/init-firewall.sh)   | Membatasi lalu lintas jaringan keluar ke tujuan yang diizinkan oleh skrip    |
 
 <h2 id="next-steps">
   Langkah berikutnya

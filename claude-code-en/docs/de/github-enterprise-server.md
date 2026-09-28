@@ -45,7 +45,7 @@ Die geführte Einrichtung generiert ein GitHub App-Manifest und leitet Sie zu Ih
   </Step>
 
   <Step title="Starten Sie die geführte Einrichtung">
-    Klicken Sie auf **Verbinden**. Geben Sie einen Anzeigenamen für die Verbindung und Ihren GHES-Hostnamen ein, z. B. `github.example.com`. Wenn Ihre GHES-Instanz ein selbstsigniertes oder privates Zertifikat einer Zertifizierungsstelle verwendet, fügen Sie das CA-Zertifikat in das optionale Feld ein.
+    Klicken Sie auf **Verbinden**. Geben Sie einen Anzeigenamen von bis zu 20 Zeichen für die Verbindung und Ihren GHES-Hostnamen ein, z. B. `github.example.com`. Wenn Ihre GHES-Instanz ein selbstsigniertes oder privates Zertifikat einer Zertifizierungsstelle verwendet, fügen Sie das CA-Zertifikat in das optionale Feld ein.
   </Step>
 
   <Step title="Erstellen Sie die GitHub App">
@@ -65,31 +65,37 @@ Die geführte Einrichtung generiert ein GitHub App-Manifest und leitet Sie zu Ih
   GitHub App-Berechtigungen
 </h3>
 
-Das Manifest konfiguriert die GitHub App mit den Berechtigungen und Webhook-Ereignissen, die Claude für Web-Sitzungen, Code Review, Claude Security und Beitragskennzahlen benötigt:
+Das Manifest konfiguriert die GitHub App mit den Berechtigungen und Webhook-Ereignissen unten, die zusammen Web-Sitzungen, Code Review, Claude Security, Plugin-Marktplätze und Beitragskennzahlen abdecken:
 
-| Berechtigung     | Zugriff             | Verwendet für                                       |
-| :--------------- | :------------------ | :-------------------------------------------------- |
-| Contents         | Lesen und Schreiben | Klonen von Repositories und Pushen von Branches     |
-| Pull requests    | Lesen und Schreiben | Erstellen von PRs und Posten von Review-Kommentaren |
-| Issues           | Lesen und Schreiben | Antworten auf Issue-Erwähnungen                     |
-| Checks           | Lesen und Schreiben | Posten von Code Review-Check-Läufen                 |
-| Actions          | Lesen               | Lesen des CI-Status für Auto-Fix                    |
-| Repository hooks | Lesen und Schreiben | Empfangen von Webhooks für Beitragskennzahlen       |
-| Metadata         | Lesen               | Von GitHub für alle Apps erforderlich               |
+| Berechtigung         | Zugriff             | Verwendet für                                                                                                                                                                                                                |
+| :------------------- | :------------------ | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Contents             | Lesen und Schreiben | Klonen von Repositories und Pushen von Branches                                                                                                                                                                              |
+| Pull requests        | Lesen und Schreiben | Erstellen von PRs und Posten von Review-Kommentaren                                                                                                                                                                          |
+| Issues               | Lesen und Schreiben | Antworten auf Issue-Erwähnungen                                                                                                                                                                                              |
+| Checks               | Lesen und Schreiben | Posten von Code Review-Check-Läufen                                                                                                                                                                                          |
+| Actions              | Lesen               | Lesen des CI-Status für Auto-Fix                                                                                                                                                                                             |
+| Commit statuses      | Lesen               | Lesen des CI-Status von Anbietern, die Commit-Status statt Check-Läufe melden                                                                                                                                                |
+| Repository hooks     | Lesen und Schreiben | Erstellen eines Webhooks auf einem Plugin-Marktplatz-Repository, wenn **Automatisch synchronisieren** für einen Marktplatz in [Organisationseinstellungen > Plugins](https://claude.ai/admin-settings/plugins) aktiviert ist |
+| Metadata             | Lesen               | Von GitHub für alle Apps erforderlich                                                                                                                                                                                        |
+| Organization members | Lesen               | Abgleich der Claude GitHub App auf github.com, die dies verwendet, um die Organisationsrolle eines verbindenden Benutzers beim Verknüpfen einer Installation zu überprüfen                                                   |
 
-Die App abonniert `pull_request`, `issue_comment`, `pull_request_review_comment`, `pull_request_review` und `check_run`-Ereignisse.
+Die App abonniert `pull_request`, `issue_comment`, `pull_request_review_comment`, `pull_request_review`, `check_run` und `status`-Ereignisse.
+
+GitHub wendet ein Manifest nur an, wenn die App erstellt wird, daher behält eine App, die aus einer früheren Version des Manifests erstellt wurde, die Berechtigungen und Ereignisse, mit denen sie erstellt wurde. Wenn Ihrer App eine der oben genannten Berechtigungen oder Ereignisse fehlt, fügen Sie diese in den App-Einstellungen auf Ihrer GHES-Instanz hinzu. GitHub fordert dann einen Besitzer jeder Installation auf, die neuen Berechtigungen zu genehmigen, und die Installation behält ihre alten Berechtigungen, bis dies geschieht.
 
 <h3 id="manual-setup">
   Manuelle Einrichtung
 </h3>
 
-Wenn der geführte Umleitungsfluss durch Ihre Netzwerkkonfiguration blockiert wird, klicken Sie auf **Manuell hinzufügen** anstelle von Verbinden. Erstellen Sie eine GitHub App auf Ihrer GHES-Instanz mit den [oben genannten Berechtigungen und Ereignissen](#github-app-permissions) und geben Sie dann die App-Anmeldedaten in das Formular ein: Hostname, OAuth-Client-ID und -Geheimnis, GitHub App-ID, Client-ID, Client-Geheimnis, Webhook-Geheimnis und privater Schlüssel.
+Wenn der geführte Umleitungsfluss durch Ihre Netzwerkkonfiguration blockiert wird, klicken Sie auf **Manuell hinzufügen** anstelle von Verbinden. Erstellen Sie eine GitHub App auf Ihrer GHES-Instanz mit den [oben genannten Berechtigungen und Ereignissen](#github-app-permissions) und geben Sie dann die Verbindungsdetails in das Formular ein: einen Anzeigenamen, Ihren GHES-Hostnamen und optionalen Port sowie die App-ID, Client-ID, Client-Geheimnis, Webhook-Geheimnis und privaten Schlüssel der App. Das Formular akzeptiert auch ein optionales benutzerdefiniertes CA-Zertifikat und Read-Replica-Hostnamen.
+
+Claude generiert die Webhook-URL der App, wenn Sie die Verbindung speichern. Nachdem Sie auf **Konfiguration hinzufügen** geklickt haben, öffnen Sie das Menü **Weitere Optionen** der Verbindung, wählen Sie **Webhook-URL kopieren** und fügen Sie die URL in die Webhook-Einstellungen der App auf Ihrer GHES-Instanz ein. Verwenden Sie das gleiche Webhook-Geheimnis, das Sie in das Formular eingegeben haben.
 
 <h3 id="network-requirements">
   Netzwerkanforderungen
 </h3>
 
-Ihre GHES-Instanz muss von der Anthropic-Infrastruktur erreichbar sein, damit Claude Repositories klonen und Review-Kommentare posten kann. Wenn Ihre GHES-Instanz hinter einer Firewall liegt, fügen Sie die [Anthropic API-IP-Adressen](https://platform.claude.com/docs/en/api/ip-addresses) zur Whitelist hinzu.
+Für von Anthropic gehostete Sitzungen muss Ihre GHES-Instanz von der Anthropic-Infrastruktur erreichbar sein, damit Claude Repositories klonen und Review-Kommentare posten kann. Wenn Ihre GHES-Instanz hinter einer Firewall liegt, fügen Sie die [ausgehenden IP-Adressen von Anthropic](https://platform.claude.com/docs/en/api/ip-addresses#outbound-ip-addresses) zur Whitelist hinzu. Sitzungen in einer [selbst gehosteten Umgebung](/docs/de/self-hosted-environments-deploy#configure-git) klonen von innerhalb Ihres Netzwerks, es sei denn, der Runner entscheidet sich für den [Anthropic Git-Proxy](/docs/de/self-hosted-environments-deploy#use-the-anthropic-git-proxy), der von der Seite von Anthropic abruft und die gleiche Erreichbarkeit benötigt; der [SCM-Connector](/docs/de/self-hosted-environments-reference#scm-connector-flags) deckt die gehosteten Pre-Session-Flows ab, wie z. B. die Repository-Auswahl, für einen GHES-Host, der nur intern routbar ist.
 
 <h2 id="developer-workflow">
   Entwickler-Workflow
@@ -97,7 +103,7 @@ Ihre GHES-Instanz muss von der Anthropic-Infrastruktur erreichbar sein, damit Cl
 
 Sobald ein Inhaber die GHES-Instanz verbunden hat, ist keine Konfiguration auf der Entwicklerseite erforderlich. Claude Code erkennt Ihren GHES-Hostnamen automatisch aus dem Git-Remote in Ihrem Arbeitsverzeichnis.
 
-Klonen Sie ein Repository von Ihrer GHES-Instanz wie gewohnt:
+Klonen Sie ein Repository von Ihrer GHES-Instanz wie gewohnt, und ersetzen Sie `github.example.com` und den Repository-Pfad durch Ihren GHES-Hostnamen und das Repository:
 
 ```bash theme={null}
 git clone git@github.example.com:platform/api-service.git
@@ -110,7 +116,7 @@ Starten Sie dann eine Web-Sitzung. Claude erkennt den GHES-Host aus Ihrem Git-Re
 claude --cloud "Add retry logic to the payment webhook handler"
 ```
 
-Die Sitzung wird auf der Anthropic-Infrastruktur ausgeführt, klont Ihr Repository von GHES und pusht Änderungen zurück zu einem Branch. Überwachen Sie den Fortschritt mit `/tasks` oder unter [claude.ai/code](https://claude.ai/code). Siehe [Claude Code im Web](/docs/de/claude-code-on-the-web) für den vollständigen Cloud-Sitzungs-Workflow einschließlich Diff-Review, Auto-Fix und Routinen.
+Die Sitzung klont Ihr Repository von GHES und pusht Änderungen zurück zu einem Branch. Überwachen Sie den Fortschritt unter [claude.ai/code](https://claude.ai/code). Siehe [Claude Code im Web](/docs/de/claude-code-on-the-web) für den vollständigen Cloud-Sitzungs-Workflow einschließlich Diff-Review, Auto-Fix und Routinen.
 
 <h3 id="teleport-sessions-to-your-terminal">
   Teleport-Sitzungen zu Ihrem Terminal
@@ -140,7 +146,7 @@ Hosten Sie Plugin-Marktplätze auf Ihrer GHES-Instanz, um interne Tools in Ihrer
   Fügen Sie einen GHES-Marktplatz hinzu
 </h3>
 
-Die `owner/repo`-Kurzform wird immer zu github.com aufgelöst. Für GHES-gehostete Marktplätze verwenden Sie die vollständige Git-URL. HTTPS-URLs werden empfohlen:
+Die `owner/repo`-Kurzform wird immer zu github.com aufgelöst. Für GHES-gehostete Marktplätze verwenden Sie die vollständige Git-URL und ersetzen Sie `github.example.com` und den Repository-Pfad durch Ihre eigenen. HTTPS-URLs werden empfohlen:
 
 ```bash theme={null}
 /plugin marketplace add https://github.example.com/platform/claude-plugins.git
@@ -160,7 +166,7 @@ Siehe [Erstellen und Verteilen eines Plugin-Marktplatzes](/docs/de/plugin-market
   Registrieren Sie GHES-Marktplätze vorab mit verwalteten Einstellungen
 </h3>
 
-Die `extraKnownMarketplaces`-Einstellung registriert einen Marktplatz vorab, damit Entwickler ihn ohne manuelle Einrichtung erhalten. Sie funktioniert aus [jeder Einstellungsdatei](/docs/de/settings#extraknownmarketplaces), einschließlich der `.claude/settings.json` eines Repositories; verwaltete Einstellungen liefern sie organisationsweit:
+Die `extraKnownMarketplaces`-Einstellung registriert einen Marktplatz vorab, damit Entwickler ihn ohne manuelle Einrichtung erhalten. Sie funktioniert aus [jeder Einstellungsdatei](/docs/de/settings-reference#extraknownmarketplaces), einschließlich der `.claude/settings.json` eines Repositories; verwaltete Einstellungen liefern sie organisationsweit:
 
 ```json theme={null}
 {
@@ -180,13 +186,13 @@ Claude Code installiert diese Marktplätze lokal: Es registriert jeden Eintrag u
 * **Verwenden Sie eine vollständige Git-URL.** Die `owner/repo`-Kurzform wird immer zu github.com aufgelöst und kann nicht auf einen GHES-Host verweisen.
 * **Bevorzugen Sie HTTPS-URLs.** SSH-Klone schlagen auf Computern fehl, die Ihren GHES-Host-Schlüssel nicht bereits vertrauen. Eine HTTPS-URL mit dem Standard-Git-Credential-Helper Ihrer Organisation funktioniert auf jedem Computer mit konfigurierten Anmeldedaten.
 * **Bestätigen Sie, dass jeder Computer von Ihrem GHES-Host klonen kann.** Wenn ein Computer keine Anmeldedaten hat, wird der Marktplatz registriert, aber nie installiert, und seine Plugins werden als nicht gefunden gemeldet, anstatt nach Anmeldedaten zu fragen.
-* **Bestätigen Sie, dass die Einstellung jeden Computer erreicht.** Eine verwaltete Einstellungsdatei wird nur auf Computern wirksam, auf denen sie bereitgestellt wird, beispielsweise über Ihr Geräteverwaltungssystem. Siehe [verwaltete Einstellungen](/docs/de/settings#settings-files) für Dateispeicherorte.
+* **Bestätigen Sie, dass die Einstellung jeden Computer erreicht.** Eine verwaltete Einstellungsdatei wird nur auf Computern wirksam, auf denen sie bereitgestellt wird, beispielsweise über Ihr Geräteverwaltungssystem. Siehe [Verwaltete Einstellungen bereitstellen](/docs/de/managed-settings#delivery-mechanisms) für Dateispeicherorte.
 
 <h3 id="allowlist-ghes-marketplaces-in-managed-settings">
   Whitelist GHES-Marktplätze in verwalteten Einstellungen
 </h3>
 
-Wenn Ihre Organisation [verwaltete Einstellungen](/docs/de/settings) verwendet, um einzuschränken, welche Marktplätze Entwickler hinzufügen können, verwenden Sie den `hostPattern`-Quellentyp, um alle Marktplätze von Ihrer GHES-Instanz zuzulassen, ohne jedes Repository aufzuzählen:
+Wenn Ihre Organisation [verwaltete Einstellungen](/docs/de/settings) verwendet, um einzuschränken, welche Marktplätze Entwickler hinzufügen können, verwenden Sie den `hostPattern`-Quellentyp, um alle Marktplätze von Ihrer GHES-Instanz zuzulassen, ohne jedes Repository aufzuzählen. Siehe [Bereitstellungsmechanismen](/docs/de/managed-settings#delivery-mechanisms) für Dateispeicherorte auf jeder Plattform. Fügen Sie das JSON zu Ihrer `managed-settings.json`-Datei oder einer entsprechenden MDM-Richtlinie hinzu:
 
 ```json theme={null}
 {
@@ -199,7 +205,7 @@ Wenn Ihre Organisation [verwaltete Einstellungen](/docs/de/settings) verwendet, 
 }
 ```
 
-Siehe die Referenz zu den Einstellungen [strictKnownMarketplaces](/docs/de/settings#strictknownmarketplaces) und [extraKnownMarketplaces](/docs/de/settings#extraknownmarketplaces) für das vollständige Schema.
+Siehe die Referenz zu den Einstellungen [strictKnownMarketplaces](/docs/de/settings-reference#strictknownmarketplaces) und [extraKnownMarketplaces](/docs/de/settings-reference#extraknownmarketplaces) für das vollständige Schema.
 
 <h2 id="limitations">
   Einschränkungen
@@ -240,7 +246,13 @@ Auf anderen claude.ai-Oberflächen deutet ein Fehler „Repository nicht gefunde
   GHES-Instanz nicht erreichbar
 </h3>
 
-Wenn Reviews oder Web-Sitzungen zeitüberschritten werden, ist Ihre GHES-Instanz möglicherweise nicht von der Anthropic-Infrastruktur erreichbar. Bestätigen Sie, dass Ihre Firewall eingehende Verbindungen von den [Anthropic API-IP-Adressen](https://platform.claude.com/docs/de/api/ip-addresses) zulässt.
+Wenn Reviews oder von Anthropic gehostete Web-Sitzungen zeitüberschritten werden, ist Ihre GHES-Instanz möglicherweise nicht von der Anthropic-Infrastruktur erreichbar. Bestätigen Sie, dass Ihre Firewall eingehende Verbindungen von Anthropics [ausgehenden IP-Adressen](https://platform.claude.com/docs/en/api/ip-addresses#outbound-ip-addresses) zulässt. Sitzungen in einer [selbstgehosteten Umgebung](/docs/de/self-hosted-environments) erreichen GHES von innerhalb Ihres Netzwerks, überprüfen Sie daher für diese den eigenen Netzwerkpfad des Runners und den [SCM-Connector](/docs/de/self-hosted-environments-reference#scm-connector-flags) stattdessen.
+
+<h3 id="session-start-fails-with-unable-to-get-organization-uuid">
+  Sitzungsstart schlägt mit `Unable to get organization UUID` fehl
+</h3>
+
+Web-Sitzungen erfordern eine Team- oder Enterprise-Organisation. Melden Sie sich mit `/login` mit Ihrem Organisationskonto an. Wenn Sie sich stattdessen mit einem API-Schlüssel authentifizieren, schlagen Web-Sitzungen früher fehl mit einer Nachricht, die Sie auffordert, `/login` auszuführen.
 
 <h2 id="related-resources">
   Verwandte Ressourcen

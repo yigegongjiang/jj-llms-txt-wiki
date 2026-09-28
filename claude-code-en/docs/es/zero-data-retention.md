@@ -31,11 +31,17 @@ ZDR cubre la inferencia de Claude Code en Claude for Enterprise.
   ZDR se habilita por organización. Cada nueva organización requiere que ZDR sea habilitado por separado por su equipo de cuenta de Anthropic. ZDR no se aplica automáticamente a las nuevas organizaciones creadas bajo la misma cuenta. Póngase en contacto con su equipo de cuenta para habilitar ZDR para cualquier nueva organización.
 </Warning>
 
+<h3 id="route-claude-code-traffic-to-your-zdr-organization">
+  Enrutar el tráfico de Claude Code a su organización ZDR
+</h3>
+
+ZDR se aplica a las solicitudes que se autentican en una organización habilitada para ZDR. Si un desarrollador inicia sesión en Claude Code con una cuenta personal o con una clave API de una organización diferente, esas sesiones no están cubiertas. Para requerir que los inicios de sesión de claude.ai de los desarrolladores pertenezcan a su organización ZDR, implemente la configuración administrada `forceLoginMethod` y `forceLoginOrgUUID`; consulte [Restringir el inicio de sesión a su organización](/docs/es/authentication#restrict-login-to-your-organization), que también explica cómo estas claves tratan los inicios de sesión de Claude Console.
+
 <h3 id="what-zdr-covers">
   Qué cubre ZDR
 </h3>
 
-ZDR cubre las llamadas de inferencia del modelo realizadas a través de Claude Code en Claude for Enterprise. Cuando utiliza Claude Code en su terminal, los prompts que envía y las respuestas que genera Claude no se retienen por Anthropic. Esto se aplica a todos los modelos disponibles para organizaciones ZDR. Algunos modelos requieren retención de datos y no están disponibles bajo ZDR; consulte [Disponibilidad de modelos bajo ZDR](#model-availability-under-zdr).
+ZDR cubre las llamadas de inferencia del modelo realizadas a través de Claude Code en Claude for Enterprise. Cuando utiliza Claude Code en su terminal, los prompts que envía y las respuestas que genera Claude no se retienen por Anthropic. Esto se aplica a todos los modelos disponibles para su organización ZDR. Algunos modelos requieren retención de datos de forma predeterminada; consulte [Disponibilidad de modelos bajo ZDR](#model-availability-under-zdr).
 
 <h3 id="what-zdr-does-not-cover">
   Qué no cubre ZDR
@@ -57,13 +63,13 @@ ZDR no se extiende a lo siguiente, incluso para organizaciones con ZDR habilitad
 
 Cuando ZDR está habilitado para una organización de Claude Code en Claude for Enterprise, ciertas características que requieren almacenar prompts o completaciones se deshabilitan automáticamente a nivel de backend:
 
-| Característica                                                             | Razón                                                                                                                  |
-| -------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| [Claude Code en la Web](/docs/es/claude-code-on-the-web)                        | Requiere almacenamiento del lado del servidor del historial de conversaciones.                                         |
-| [Sesiones remotas](/docs/es/desktop#cloud-sessions) desde la aplicación Desktop | Requiere datos de sesión persistentes que incluyen prompts y completaciones.                                           |
-| [Artefactos](/docs/es/artifacts)                                                | Requiere almacenar contenido de página publicado en infraestructura operada por Anthropic.                             |
-| Envío de comentarios (`/feedback`)                                         | Enviar comentarios envía datos de conversación a Anthropic.                                                            |
-| [Control remoto](/docs/es/remote-control)                                       | Almacena la transcripción de la sesión en servidores de Anthropic para sincronizar la conversación entre dispositivos. |
+| Característica                                                                                                                  | Razón                                                                                                                                   |
+| ------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| [Cloud sessions](/docs/es/claude-code-on-the-web), incluidas las iniciadas desde la [aplicación Desktop](/docs/es/desktop#cloud-sessions) | Requiere almacenamiento del lado del servidor de datos de sesión, incluido el historial de conversaciones con prompts y completaciones. |
+| [Claude Tag](https://claude.com/docs/claude-tag)                                                                                | Retiene la memoria del canal y las transcripciones de sesión.                                                                           |
+| [Artefactos](/docs/es/artifacts)                                                                                                     | Requiere almacenar contenido de página publicado en infraestructura operada por Anthropic.                                              |
+| Envío de comentarios (`/feedback`, `/bug`, `/share`)                                                                            | Enviar comentarios envía datos de conversación a Anthropic.                                                                             |
+| [Control remoto](/docs/es/remote-control)                                                                                            | Almacena la transcripción de la sesión en servidores de Anthropic para sincronizar la conversación entre dispositivos.                  |
 
 Estas características se bloquean en el backend independientemente de la visualización del lado del cliente. Si ve una característica deshabilitada en la terminal de Claude Code durante el inicio, intentar usarla devuelve un error indicando que las políticas de la organización no permiten esa acción.
 
@@ -73,9 +79,9 @@ Las características futuras también pueden deshabilitarse si requieren almacen
   Disponibilidad de modelos bajo ZDR
 </h3>
 
-Claude Fable 5 no está disponible para organizaciones con retención de datos cero habilitada. Esta clase de modelo [requiere retención de datos](https://platform.claude.com/docs/en/manage-claude/api-and-data-retention#model-specific-data-retention-requirements), por lo que las solicitudes de organizaciones ZDR no pueden ser servidas por ella. El modelo está ausente del selector `/model` para organizaciones ZDR o se muestra como deshabilitado con un aviso de que se requiere deshabilitar ZDR, y el servidor rechaza las solicitudes para él independientemente de la configuración del cliente.
+Claude Fable 5.1 y Fable 5 son [Modelos Cubiertos](https://support.claude.com/en/articles/15425695-covered-models) que [requieren retención de datos](https://platform.claude.com/docs/en/manage-claude/api-and-data-retention#model-specific-data-retention-requirements) por defecto, y si una organización o espacio de trabajo ZDR puede usarlos se rige por las políticas de Modelos Cubiertos en lugar de por Claude Code. Donde su organización no puede usarlos, los modelos están ausentes del selector `/model` o se muestran como deshabilitados, y el servidor rechaza las solicitudes para ellos independientemente de la configuración del cliente.
 
-Otros modelos permanecen disponibles bajo ZDR. Fable 5 no es el modelo predeterminado, y el alias `best`, que se resuelve a Fable 5 donde está disponible, se resuelve a Opus para organizaciones donde no lo está, incluidas las organizaciones ZDR.
+Otros modelos permanecen disponibles bajo ZDR. Los modelos Fable no son el predeterminado, y el alias `best`, que se resuelve al modelo Fable más reciente donde está disponible, se resuelve a Opus para organizaciones donde no lo está.
 
 <h2 id="data-retention-for-policy-violations">
   Retención de datos para violaciones de políticas

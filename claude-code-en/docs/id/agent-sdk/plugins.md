@@ -6,30 +6,22 @@
 
 > Muat plugin kustom untuk memperluas Claude Code dengan skills, agen, hooks, dan server MCP melalui Agent SDK
 
-Plugins memungkinkan Anda memperluas Claude Code dengan fungsionalitas kustom yang dapat dibagikan di seluruh proyek. Melalui Agent SDK, Anda dapat secara terprogram memuat plugins dari direktori lokal untuk menambahkan skills, agen, hooks, dan server MCP ke sesi agen Anda.
+Plugins memungkinkan Anda memperluas Claude Code dengan fungsionalitas kustom yang dapat dibagikan di seluruh proyek. Melalui Agent SDK, Anda dapat secara terprogram memuat plugins dari direktori lokal untuk menambahkan kemampuan ke sesi agen Anda. Sebuah plugin dapat mencakup:
 
-<h2 id="what-are-plugins">
-  Apa itu plugins?
-</h2>
+* **Skills**: kemampuan yang Claude panggil secara otonom ketika relevan. Anda juga dapat menjalankan plugin skill secara langsung dengan `/plugin-name:skill-name`.
+* **Agents**: subagen khusus untuk tugas-tugas tertentu
+* **Hooks**: penanganan peristiwa yang merespons penggunaan alat dan peristiwa lainnya
+* **MCP servers**: integrasi alat eksternal melalui Model Context Protocol
 
-Plugins adalah paket ekstensi Claude Code yang dapat mencakup:
-
-* **Skills**: Kemampuan yang dipanggil model yang digunakan Claude secara otonom (juga dapat dipanggil dengan `/skill-name`)
-* **Agents**: Subagen khusus untuk tugas-tugas tertentu
-* **Hooks**: Penanganan peristiwa yang merespons penggunaan alat dan peristiwa lainnya
-* **MCP servers**: Integrasi alat eksternal melalui Model Context Protocol
-
-<Note>
-  Direktori `commands/` adalah format warisan. Gunakan `skills/` untuk plugin baru. Claude Code terus mendukung kedua format untuk kompatibilitas mundur.
-</Note>
-
-Untuk informasi lengkap tentang struktur plugin dan cara membuat plugins, lihat [Plugins](/docs/id/plugins).
+Untuk informasi lengkap tentang struktur plugin dan cara membuat plugins, lihat [Plugins](/docs/id/plugins/overview).
 
 <h2 id="loading-plugins">
   Memuat plugins
 </h2>
 
-Muat plugins dengan menyediakan jalur sistem file lokal mereka dalam konfigurasi opsi Anda. Bidang `type` harus `"local"`, satu-satunya nilai yang diterima SDK. Untuk menggunakan plugin yang didistribusikan melalui [marketplace](/docs/id/plugin-marketplaces) atau repositori jarak jauh, unduh terlebih dahulu dan sediakan jalur direktori lokal. SDK mendukung pemuatan beberapa plugins dari lokasi berbeda.
+Muat plugins dengan menyediakan jalur sistem file lokal mereka dalam konfigurasi opsi Anda. Bidang `type` harus `"local"`, satu-satunya nilai yang diterima SDK. SDK mendukung pemuatan beberapa plugins dari lokasi berbeda.
+
+Untuk menggunakan plugin yang didistribusikan melalui [marketplace](/docs/id/plugins/overview) atau repositori jarak jauh, unduh terlebih dahulu dan sediakan jalur direktori lokal. Untuk tata letak direktori yang dibutuhkan plugin, lihat [referensi struktur Plugin](#plugin-structure-reference) di bawah.
 
 <CodeGroup>
   ```typescript TypeScript theme={null}
@@ -77,11 +69,11 @@ Muat plugins dengan menyediakan jalur sistem file lokal mereka dalam konfigurasi
 
 Jalur plugin dapat berupa:
 
-* **Jalur relatif**: Diselesaikan relatif terhadap direktori kerja saat ini (misalnya, `"./plugins/my-plugin"`)
-* **Jalur absolut**: Jalur sistem file lengkap (misalnya, `"/home/user/plugins/my-plugin"`)
+* **Jalur relatif**: diselesaikan relatif terhadap opsi `cwd` (misalnya, `"./plugins/my-plugin"`)
+* **Jalur absolut**: jalur sistem file lengkap (misalnya, `"/home/user/plugins/my-plugin"`)
 
 <Note>
-  Jalur harus menunjuk ke direktori root plugin: induk dari `skills/`, `agents/`, `hooks/`, `commands/` (legacy), atau `.claude-plugin/`, bukan subdirektori.
+  Jalur harus menunjuk ke direktori root plugin: induk dari `skills/`, `agents/`, `hooks/`, `commands/`, atau `.claude-plugin/`.
 </Note>
 
 <h2 id="verifying-plugin-installation">
@@ -103,7 +95,7 @@ Ketika plugins dimuat dengan berhasil, mereka muncul dalam pesan inisialisasi si
     if (message.type === "system" && message.subtype === "init") {
       // Check loaded plugins
       console.log("Plugins:", message.plugins);
-      // Example: [{ name: "my-plugin", path: "./my-plugin" }]
+      // Example: [{ name: "my-plugin", path: "/absolute/path/to/my-plugin" }]
 
       // Plugin skills appear with the plugin name as a prefix
       console.log("Skills:", message.skills);
@@ -131,7 +123,7 @@ Ketika plugins dimuat dengan berhasil, mereka muncul dalam pesan inisialisasi si
           if isinstance(message, SystemMessage) and message.subtype == "init":
               # Check loaded plugins
               print("Plugins:", message.data.get("plugins"))
-              # Example: [{"name": "my-plugin", "path": "./my-plugin"}]
+              # Example: [{"name": "my-plugin", "path": "/absolute/path/to/my-plugin"}]
 
               # Plugin skills appear with the plugin name as a prefix
               print("Skills:", message.data.get("skills"))
@@ -146,7 +138,7 @@ Ketika plugins dimuat dengan berhasil, mereka muncul dalam pesan inisialisasi si
   ```
 </CodeGroup>
 
-<h2 id="using-plugin-skills">
+<h2 id="use-plugin-skills">
   Menggunakan plugin skills
 </h2>
 
@@ -178,9 +170,9 @@ Skills dari plugins secara otomatis diberi namespace dengan nama plugin untuk me
   async def main():
       # Load a plugin with a custom /greet skill
       async for message in query(
-          prompt="/demo-plugin:greet",  # Use plugin skill with namespace
+          prompt="/my-plugin:greet",  # Use plugin skill with namespace
           options=ClaudeAgentOptions(
-              plugins=[{"type": "local", "path": "./plugins/demo-plugin"}]
+              plugins=[{"type": "local", "path": "./my-plugin"}]
           ),
       ):
           # Claude executes the custom greeting skill from the plugin
@@ -207,10 +199,10 @@ Berikut adalah contoh lengkap yang mendemonstrasikan pemuatan dan penggunaan plu
 <CodeGroup>
   ```typescript TypeScript theme={null}
   import { query } from "@anthropic-ai/claude-agent-sdk";
-  import * as path from "path";
+  import { fileURLToPath } from "node:url";
 
   async function runWithPlugin() {
-    const pluginPath = path.join(__dirname, "plugins", "my-plugin");
+    const pluginPath = fileURLToPath(new URL("./plugins/my-plugin", import.meta.url));
 
     console.log("Loading plugin from:", pluginPath);
 
@@ -240,8 +232,9 @@ Berikut adalah contoh lengkap yang mendemonstrasikan pemuatan dan penggunaan plu
   #!/usr/bin/env python3
   """Example demonstrating how to use plugins with the Agent SDK."""
 
+  import asyncio
   from pathlib import Path
-  import anyio
+
   from claude_agent_sdk import (
       AssistantMessage,
       ClaudeAgentOptions,
@@ -253,7 +246,7 @@ Berikut adalah contoh lengkap yang mendemonstrasikan pemuatan dan penggunaan plu
 
   async def run_with_plugin():
       """Example using a custom plugin."""
-      plugin_path = Path(__file__).parent / "plugins" / "demo-plugin"
+      plugin_path = Path(__file__).parent / "plugins" / "my-plugin"
 
       print(f"Loading plugin from: {plugin_path}")
 
@@ -277,7 +270,7 @@ Berikut adalah contoh lengkap yang mendemonstrasikan pemuatan dan penggunaan plu
 
 
   if __name__ == "__main__":
-      anyio.run(run_with_plugin)
+      asyncio.run(run_with_plugin())
   ```
 </CodeGroup>
 
@@ -291,10 +284,10 @@ Direktori plugin biasanya berisi file manifest `.claude-plugin/plugin.json`. Man
 my-plugin/
 ├── .claude-plugin/
 │   └── plugin.json          # Plugin manifest (opsional, komponen ditemukan secara otomatis tanpanya)
-├── skills/                   # Agent Skills (dipanggil secara otonom atau melalui /skill-name)
+├── skills/                   # Agent Skills (dipanggil secara otonom atau melalui /plugin-name:skill-name)
 │   └── my-skill/
 │       └── SKILL.md
-├── commands/                 # Legacy: gunakan skills/ sebagai gantinya
+├── commands/                 # Skills sebagai file .md datar
 │   └── custom-cmd.md
 ├── agents/                   # Custom agents
 │   └── specialist.md
@@ -303,47 +296,32 @@ my-plugin/
 └── .mcp.json                # Definisi server MCP
 ```
 
-Untuk informasi terperinci tentang membuat plugins, lihat:
+<Note>
+  Direktori `commands/` menyimpan skills sebagai file Markdown datar. Gunakan `skills/` untuk plugin baru. Claude Code mendukung kedua lokasi.
+</Note>
 
-* [Plugins](/docs/id/plugins) - Panduan pengembangan plugin lengkap
-* [Plugins reference](/docs/id/plugins-reference) - Spesifikasi teknis dan skema
-
-<h2 id="common-use-cases">
-  Kasus penggunaan umum
-</h2>
-
-<h3 id="development-and-testing">
-  Pengembangan dan pengujian
-</h3>
-
-Muat plugins selama pengembangan tanpa menginstalnya secara global:
-
-```typescript theme={null}
-plugins: [{ type: "local", path: "./dev-plugins/my-plugin" }];
-```
-
-<h3 id="project-specific-extensions">
-  Ekstensi khusus proyek
-</h3>
-
-Sertakan plugins di repositori proyek Anda untuk konsistensi di seluruh tim:
-
-```typescript theme={null}
-plugins: [{ type: "local", path: "./project-plugins/team-workflows" }];
-```
-
-<h3 id="multiple-plugin-sources">
+<h2 id="multiple-plugin-sources">
   Sumber plugin ganda
-</h3>
+</h2>
 
 Gabungkan plugins dari lokasi berbeda:
 
 ```typescript theme={null}
+import * as os from "node:os";
+import * as path from "node:path";
+
 plugins: [
   { type: "local", path: "./local-plugin" },
-  { type: "local", path: "~/.claude/custom-plugins/shared-plugin" }
+  {
+    type: "local",
+    path: path.join(os.homedir(), ".claude", "custom-plugins", "shared-plugin")
+  }
 ];
 ```
+
+<Note>
+  SDK tidak memperluas jalur tilde seperti `~/plugins`. Jika jalur plugin tidak ada, SDK melewati plugin tersebut dan sesi berlanjut, jadi periksa daftar `plugins` dalam pesan init untuk mengonfirmasi setiap plugin dimuat.
+</Note>
 
 <h2 id="troubleshooting">
   Troubleshooting
@@ -355,9 +333,10 @@ plugins: [
 
 Jika plugin Anda tidak muncul dalam pesan init:
 
-1. **Periksa jalurnya**: pastikan jalur menunjuk ke direktori root plugin, induk dari `skills/`, `agents/`, `hooks/`, `commands/` (legacy), atau `.claude-plugin/`
+1. **Periksa jalurnya**: pastikan jalur menunjuk ke direktori root plugin, induk dari `skills/`, `agents/`, `hooks/`, `commands/`, atau `.claude-plugin/`
 2. **Validasi plugin.json**: jika plugin Anda menyertakan manifest, pastikan memiliki sintaks JSON yang valid
 3. **Periksa izin file**: pastikan direktori plugin dapat dibaca
+4. **Konfirmasi direktori ada**: SDK melewati jalur yang tidak ada, dan plugin tidak muncul dalam daftar `plugins` pesan init
 
 <h3 id="skills-not-appearing">
   Skills tidak muncul
@@ -369,22 +348,12 @@ Jika plugin skills tidak berfungsi:
 2. **Periksa pesan init**: verifikasi bahwa skill muncul di daftar `skills` dengan namespace yang benar
 3. **Validasi file skill**: pastikan setiap skill memiliki file `SKILL.md` di subdirektorinya sendiri di bawah `skills/`, misalnya `skills/my-skill/SKILL.md`
 
-<h3 id="path-resolution-issues">
-  Masalah resolusi jalur
-</h3>
-
-Jika jalur relatif tidak berfungsi:
-
-1. **Periksa direktori kerja**: jalur relatif diselesaikan dari direktori kerja saat ini Anda
-2. **Gunakan jalur absolut**: untuk keandalan, pertimbangkan menggunakan jalur absolut
-3. **Normalkan jalur**: gunakan utilitas jalur untuk membuat jalur dengan benar
-
 <h2 id="see-also">
   Lihat juga
 </h2>
 
-* [Plugins](/docs/id/plugins) - Panduan pengembangan plugin lengkap
-* [Plugins reference](/docs/id/plugins-reference) - Spesifikasi teknis
-* [Commands](/docs/id/agent-sdk/slash-commands) - Menggunakan commands di SDK
+* [Plugins](/docs/id/plugins/overview) - Panduan pengembangan plugin lengkap
+* [Plugins reference](/docs/id/plugins/manifest-reference) - Spesifikasi teknis
+* [Commands](/docs/id/agent-sdk/skills#dispatch-commands-by-name) - Mengirimkan commands di SDK
 * [Subagents](/docs/id/agent-sdk/subagents) - Bekerja dengan agen khusus
 * [Skills](/docs/id/agent-sdk/skills) - Menggunakan Agent Skills

@@ -13,7 +13,7 @@ Wenn Sie Agenten in der Produktion ausführen, benötigen Sie Einblick in ihre A
 * wie viele Token ausgegeben wurden
 * wo Fehler aufgetreten sind
 
-Das Agent SDK kann diese Daten als OpenTelemetry-Traces, Metriken und Log-Events in jedes Backend exportieren, das das OpenTelemetry Protocol (OTLP) akzeptiert, wie Honeycomb, Datadog, Grafana, Langfuse oder einen selbst gehosteten Collector.
+Das Agent SDK kann diese Daten als OpenTelemetry-Traces, Metriken und Log-Events in jedes Backend exportieren, das das OpenTelemetry Protocol (OTLP) akzeptiert, ob eine gehostete Observability-Plattform oder ein selbst gehosteter Collector.
 
 Dieser Leitfaden erklärt, wie das SDK Telemetrie ausgibt, wie Sie den Export konfigurieren und wie Sie die Daten nach ihrer Ankunft in Ihrem Backend taggen und filtern. Um Token-Nutzung und Kosten direkt aus dem SDK-Antwortstrom zu lesen, anstatt in ein Backend zu exportieren, siehe [Kosten und Nutzung verfolgen](/docs/de/agent-sdk/cost-tracking).
 
@@ -107,8 +107,10 @@ Das folgende Beispiel setzt die Variablen in einem Dictionary und übergibt sie 
 
 Da der untergeordnete Prozess standardmäßig die Umgebung Ihrer Anwendung erbt, können Sie das gleiche Ergebnis erreichen, indem Sie diese Variablen in einer Dockerfile, einem Kubernetes-Manifest oder einem Shell-Profil exportieren und `options.env` ganz weglassen.
 
+Um zu bestätigen, dass der Export funktioniert, überprüfen Sie die Protokolle Ihres Collectors auf eingehende Spans, Metriken und Log-Events, nachdem die Aufgabe abgeschlossen ist. Die CLI schlägt bei Exportfehlern standardmäßig stillschweigend fehl: Wenn der Endpunkt nicht erreichbar ist oder die Daten ablehnt, wird der Agent weiterhin normal ausgeführt und die CLI verwirft die Telemetrie, ohne einen Fehler in Ihrer Anwendung anzuzeigen. Um Exporterfehler anzuzeigen, setzen Sie [`CLAUDE_CODE_OTEL_DIAG_STDERR=1`](/docs/de/env-vars) zusammen mit den Exportervariablen und lesen Sie die Diagnose über den `stderr`-Callback des SDK (Python) oder die `stderr`-Option (TypeScript). Erfordert Claude Code v2.1.179 oder später.
+
 <Note>
-  Der `console`-Exporter schreibt Telemetrie in die Standardausgabe, die das SDK als seinen Nachrichtenkanal verwendet. Setzen Sie `console` nicht als Exporterwert, wenn Sie durch das SDK ausführen. Um Telemetrie lokal zu inspizieren, verweisen Sie `OTEL_EXPORTER_OTLP_ENDPOINT` stattdessen auf einen lokalen Collector oder einen All-in-One-Jaeger-Container.
+  Der `console`-Exporter schreibt Telemetrie in die Standardausgabe, die das SDK als seinen Nachrichtenkanal verwendet. Setzen Sie `console` nicht als Exporterwert, wenn Sie durch das SDK ausführen. Um Telemetrie lokal zu inspizieren, verweisen Sie `OTEL_EXPORTER_OTLP_ENDPOINT` stattdessen auf einen lokalen OpenTelemetry Collector.
 </Note>
 
 <h3 id="flush-telemetry-from-short-lived-calls">
@@ -148,11 +150,11 @@ Traces geben Ihnen die detaillierteste Ansicht eines Agent-Laufs. Mit `CLAUDE_CO
 * **`claude_code.interaction`:** umhüllt eine einzelne Runde der Agent-Schleife, vom Empfangen eines Prompts bis zur Erzeugung einer Antwort.
 * **`claude_code.llm_request`:** umhüllt jeden Aufruf der Claude API mit Modellname, Latenz und Token-Zählungen als Attribute.
 * **`claude_code.tool`:** umhüllt jede Tool-Invokation mit untergeordneten Spans für das Berechtigungswarten (`claude_code.tool.blocked_on_user`) und die Ausführung selbst (`claude_code.tool.execution`).
-* **`claude_code.hook`:** umhüllt jede [Hook](/docs/de/agent-sdk/hooks)-Ausführung. Erfordert detailliertes Beta-Tracing (`ENABLE_BETA_TRACING_DETAILED=1` und `BETA_TRACING_ENDPOINT`) zusätzlich zu den obigen Variablen.
+* **`claude_code.hook`:** umhüllt jede [Hook](/docs/de/agent-sdk/hooks)-Ausführung. Erfordert detailliertes Beta-Tracing (`ENABLE_BETA_TRACING_DETAILED=1` und `BETA_TRACING_ENDPOINT`), ein Paar, das auch [ändert, wohin Ihre Logs und Traces gehen](/docs/de/env-vars#variables).
 
-Die `llm_request`-, `tool`- und `hook`-Spans sind untergeordnete Elemente des umschließenden `claude_code.interaction`-Spans. Wenn der Agent einen Subagenten durch das Task-Tool spawnt, verschachteln sich die `llm_request`- und `tool`-Spans des Subagenten unter dem `claude_code.tool`-Span des übergeordneten Agenten, sodass die vollständige Delegationskette als ein Trace erscheint.
+Die `llm_request`-, `tool`- und `hook`-Spans sind untergeordnete Elemente des umschließenden `claude_code.interaction`-Spans. Wenn der Agent einen Subagenten durch das Agent-Tool spawnt, verschachteln sich die `llm_request`- und `tool`-Spans des Subagenten unter dem `claude_code.tool`-Span des übergeordneten Agenten, sodass die vollständige Delegationskette als ein Trace erscheint.
 
-Spans tragen standardmäßig ein `session.id`-Attribut. Wenn Sie mehrere `query()`-Aufrufe gegen die gleiche [Sitzung](/docs/de/agent-sdk/sessions) machen, filtern Sie auf `session.id` in Ihrem Backend, um sie als eine Zeitleiste zu sehen. Das Attribut wird weggelassen, wenn `OTEL_METRICS_INCLUDE_SESSION_ID` auf einen falschen Wert gesetzt ist.
+Spans tragen standardmäßig ein `session.id`-Attribut. Wenn Sie mehrere `query()`-Aufrufe gegen die gleiche [Sitzung](/docs/de/agent-sdk/sessions) machen, filtern Sie auf `session.id` in Ihrem Backend, um sie als eine Zeitleiste zu sehen. Claude Code lässt das Attribut weg, wenn Sie `OTEL_METRICS_INCLUDE_SESSION_ID` auf einen falschen Wert setzen.
 
 <Note>
   Tracing ist in Beta. Span-Namen und Attribute können sich zwischen Releases ändern. Siehe [Traces (Beta)](/docs/de/monitoring-usage#traces-beta) in der Überwachungsreferenz für die Trace-Exporter-Konfigurationsvariablen.
@@ -163,6 +165,8 @@ Spans tragen standardmäßig ein `session.id`-Attribut. Wenn Sie mehrere `query(
 </h2>
 
 Das SDK propagiert automatisch W3C-Trace-Kontext in den CLI-Subprozess. Wenn Sie `query()` aufrufen, während ein OpenTelemetry-Span in Ihrer Anwendung aktiv ist, injiziert das SDK `TRACEPARENT` und `TRACESTATE` in die Umgebung des untergeordneten Prozesses, und die CLI liest sie, sodass sein `claude_code.interaction`-Span ein untergeordnetes Element Ihres Spans wird. Der Agent-Lauf erscheint dann in Ihrem Anwendungs-Trace, anstatt als getrennter Root.
+
+OTLP-Ereignisprotokoll-Datensätze, die während des Laufs ausgegeben werden, tragen denselben Trace-Kontext: Mit `TRACEPARENT` gesetzt, stimmen die `trace_id` und `span_id` jedes Datensatzes mit Ihrem Anwendungs-Trace überein, sodass Sie [Ereignisse](/docs/de/monitoring-usage#events) mit Spans in Ihrem Backend verknüpfen können. Vor v2.1.212 trugen Ereignisdatensätze, die außerhalb eines aktiven Spans ausgegeben wurden, keine `trace_id` oder `span_id`.
 
 Wenn die Trace-Kontext-Propagation aktiviert ist, leitet die CLI auch `TRACEPARENT` an jeden Bash- und PowerShell-Befehl weiter, den sie ausführt. Wenn ein Befehl, der durch das Bash-Tool gestartet wird, seine eigenen OpenTelemetry-Spans ausgibt, verschachteln sich diese Spans unter dem `claude_code.tool.execution`-Span, der den Befehl umhüllt.
 
@@ -180,7 +184,7 @@ Das folgende Beispiel benennt den Service um und fügt Bereitstellungsmetadaten 
   ```python Python theme={null}
   options = ClaudeAgentOptions(
       env={
-          # ... exporter configuration ...
+          # ... exporter configuration from the Enable telemetry export example ...
           "OTEL_SERVICE_NAME": "support-triage-agent",
           "OTEL_RESOURCE_ATTRIBUTES": "service.version=1.4.0,deployment.environment=production",
       },
@@ -191,9 +195,9 @@ Das folgende Beispiel benennt den Service um und fügt Bereitstellungsmetadaten 
   const options = {
     env: {
       ...process.env,
-      // ... exporter configuration ...
+      // ... exporter configuration from the Enable telemetry export example ...
       OTEL_SERVICE_NAME: "support-triage-agent",
-      OTEL_RESOURCE_ATTRIBUTES":
+      OTEL_RESOURCE_ATTRIBUTES:
         "service.version=1.4.0,deployment.environment=production",
     },
   };
@@ -214,7 +218,8 @@ Um Tool-Aufrufe und MCP-Aktivität Ihren Anwendungs-Endbenutzern zuzuordnen, inj
 
   options = ClaudeAgentOptions(
       env={
-          # ... exporter configuration ...
+          # ... exporter configuration from the Enable telemetry export example ...
+          # request is the incoming request object from your web framework.
           "OTEL_RESOURCE_ATTRIBUTES": f"enduser.id={quote(request.user_id)},tenant.id={quote(request.tenant_id)}",
       },
   )
@@ -224,7 +229,8 @@ Um Tool-Aufrufe und MCP-Aktivität Ihren Anwendungs-Endbenutzern zuzuordnen, inj
   const options = {
     env: {
       ...process.env,
-      // ... exporter configuration ...
+      // ... exporter configuration from the Enable telemetry export example ...
+      // request is the incoming request object from your web framework.
       OTEL_RESOURCE_ATTRIBUTES: `enduser.id=${encodeURIComponent(request.userId)},tenant.id=${encodeURIComponent(request.tenantId)}`,
     },
   };
@@ -239,12 +245,12 @@ Mit Endbenutzer-Identität angeheftet, werden die `tool_decision`-, `tool_result
 
 Telemetrie ist standardmäßig strukturell. Dauern, Modellnamen und Tool-Namen werden auf jedem Span aufgezeichnet; Token-Zählungen werden aufgezeichnet, wenn die zugrunde liegende API-Anfrage Nutzungsdaten zurückgibt, sodass Spans für fehlgeschlagene oder abgebrochene Anfragen diese möglicherweise weglassen. Der Inhalt, den Ihr Agent liest und schreibt, wird standardmäßig nicht aufgezeichnet. Diese Opt-in-Variablen fügen Inhalte zu den exportierten Daten hinzu:
 
-| Variable                  | Fügt hinzu                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `OTEL_LOG_USER_PROMPTS=1` | Prompt-Text auf `claude_code.user_prompt`-Events und auf dem `claude_code.interaction`-Span                                                                                                                                                                                                                                                                                                                                                                                                        |
-| `OTEL_LOG_TOOL_DETAILS=1` | Tool-Eingabeargumente (Dateipfade, Shell-Befehle, Suchmuster) auf `claude_code.tool_result`-Events                                                                                                                                                                                                                                                                                                                                                                                                 |
-| `OTEL_LOG_TOOL_CONTENT=1` | Vollständige Tool-Eingabe- und Ausgabetexte als Span-Events auf `claude_code.tool`, gekürzt auf 60 KB. Erfordert, dass [Tracing](#read-agent-traces) aktiviert ist                                                                                                                                                                                                                                                                                                                                 |
-| `OTEL_LOG_RAW_API_BODIES` | Vollständige Anthropic Messages API-Anfrage und Antwort JSON als `claude_code.api_request_body` und `claude_code.api_response_body` Log-Events. Setzen Sie auf `1` für Inline-Texte gekürzt auf 60 KB oder `file:<dir>` für ungekürzte Texte auf der Festplatte mit einem `body_ref`-Pfad im Event. Texte enthalten die gesamte Gesprächshistorie und haben erweiterte Denkinhalte redigiert. Das Aktivieren davon impliziert Zustimmung zu allem, was die drei obigen Variablen offenbaren würden |
+| Variable                  | Fügt hinzu                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `OTEL_LOG_USER_PROMPTS=1` | Prompt-Text auf `claude_code.user_prompt`-Events und auf dem `claude_code.interaction`-Span                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `OTEL_LOG_TOOL_DETAILS=1` | Tool-Eingabeargumente (Dateipfade, Shell-Befehle, Suchmuster) auf `claude_code.tool_result`-Events                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `OTEL_LOG_TOOL_CONTENT=1` | Ein [`tool.output`-Span-Event](/docs/de/monitoring-usage#tool-output-span-event) auf `claude_code.tool` mit Dateiinhalten und Bash-Ausgabe, gekürzt auf 60 KB standardmäßig, konfigurierbar über `CLAUDE_CODE_OTEL_CONTENT_MAX_LENGTH`, was Claude Code v2.1.214 oder später erfordert. Erfordert, dass [Tracing](#read-agent-traces) aktiviert ist. Span-Attribute tragen Tool-Inhalte unter [ihren eigenen Gates](/docs/de/monitoring-usage#new-context-gates)                                                                                                                                                                                         |
+| `OTEL_LOG_RAW_API_BODIES` | Vollständige Anthropic Messages API-Anfrage und Antwort JSON als `claude_code.api_request_body` und `claude_code.api_response_body` Log-Events. Setzen Sie auf `1` für Inline-Texte gekürzt auf 60 KB standardmäßig, oder `file:<dir>` für ungekürzte Texte auf der Festplatte mit einem `body_ref`-Pfad im Event. `CLAUDE_CODE_OTEL_CONTENT_MAX_LENGTH` konfiguriert das Inline-Kürzungslimit, und erfordert Claude Code v2.1.214 oder später. Texte enthalten die gesamte Gesprächshistorie und haben erweiterte Denkinhalte redigiert. Das Aktivieren davon impliziert Zustimmung zu allem, was die drei obigen Variablen offenbaren würden |
 
 Lassen Sie diese ungesetzt, es sei denn, Ihre Observability-Pipeline ist genehmigt, um die Daten zu speichern, die Ihr Agent verarbeitet. Siehe [Sicherheit und Datenschutz](/docs/de/monitoring-usage#security-and-privacy) in der Überwachungsreferenz für die vollständige Liste der Attribute und des Redaktionsverhaltens.
 

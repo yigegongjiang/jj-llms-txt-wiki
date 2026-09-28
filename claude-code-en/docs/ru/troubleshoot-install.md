@@ -14,34 +14,41 @@
 
 Сопоставьте сообщение об ошибке или симптом, который вы видите, с исправлением:
 
-| Что вы видите                                                                                              | Решение                                                                                                                                          |
-| :--------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------- |
-| `command not found: claude` или `'claude' is not recognized`                                               | [Исправьте ваш PATH](#command-not-found-claude-after-installation)                                                                               |
-| `syntax error near unexpected token '<'`                                                                   | [Install script returns HTML](#install-script-returns-html-instead-of-a-shell-script)                                                            |
-| `curl: (22) The requested URL returned error: 403`                                                         | [Install script returned 403](#install-script-returns-html-instead-of-a-shell-script)                                                            |
-| `curl: (23)` или `curl: (56) Failure writing output to destination`                                        | [Проверьте подключение или используйте альтернативный установщик](#curl-56-failure-writing-output-to-destination)                                |
-| `Killed` во время установки на Linux, или `Installation was killed before it could finish (exit code 137)` | [Освободите память или добавьте пространство подкачки](#install-killed-on-low-memory-linux-servers)                                              |
-| `TLS connect error` или `SSL/TLS secure channel`                                                           | [Обновите сертификаты CA](#tls-or-ssl-connection-errors)                                                                                         |
-| `Failed to fetch version` или невозможно достичь сервера загрузки                                          | [Проверьте параметры сети и прокси](#check-network-connectivity)                                                                                 |
-| `irm is not recognized` или `&& is not valid`                                                              | [Используйте правильную команду для вашей оболочки](#wrong-install-command-on-windows)                                                           |
-| `Cask 'claude-code' is unavailable: No Cask with this name exists`                                         | [Обновите Homebrew](#homebrew-cask-unavailable-or-outdated)                                                                                      |
-| `'bash' is not recognized as the name of a cmdlet`                                                         | [Используйте команду установщика Windows](#wrong-install-command-on-windows)                                                                     |
-| `A parameter cannot be found that matches parameter name 'fsSL'`                                           | [Используйте команду установщика Windows](#wrong-install-command-on-windows)                                                                     |
-| `Claude Code on Windows requires either Git for Windows (for bash) or PowerShell`                          | [Установите оболочку](#claude-code-on-windows-requires-either-git-for-windows-for-bash-or-powershell)                                            |
-| `Claude Code does not support 32-bit Windows`                                                              | [Откройте Windows PowerShell, а не запись x86](#claude-code-does-not-support-32-bit-windows)                                                     |
-| `The process cannot access the file ... because it is being used by another process`                       | [Очистите папку загрузок и повторите попытку](#the-process-cannot-access-the-file-during-windows-install)                                        |
-| `Error loading shared library`                                                                             | [Неправильный вариант двоичного файла для вашей системы](#linux-musl-or-glibc-binary-mismatch)                                                   |
-| `Illegal instruction`                                                                                      | [Несоответствие архитектуры или набора инструкций процессора](#illegal-instruction)                                                              |
-| `cannot execute binary file: Exec format error` в WSL                                                      | [WSL1 native-binary regression](#exec-format-error-on-wsl1)                                                                                      |
-| Установщик PowerShell завершается, но `claude` не найден или показывает старую версию                      | [Добавьте каталог установки в ваш PATH](#verify-your-path), затем откройте новый терминал                                                        |
-| `dyld: cannot load`, `dyld: Symbol not found` или `Abort trap` на macOS                                    | [Несовместимость двоичного файла](#dyld-cannot-load-on-macos)                                                                                    |
-| `Invoke-Expression: Missing argument in parameter list`                                                    | [Install script returns HTML](#install-script-returns-html-instead-of-a-shell-script)                                                            |
-| `App unavailable in region`                                                                                | Claude Code недоступен в вашей стране. См. [поддерживаемые страны](https://www.anthropic.com/supported-countries).                               |
-| `unable to get local issuer certificate`                                                                   | [Настройте корпоративные сертификаты CA](#tls-or-ssl-connection-errors)                                                                          |
-| `OAuth error` или `403 Forbidden`                                                                          | [Исправьте аутентификацию](#login-and-authentication)                                                                                            |
-| `Could not load the default credentials` или `Could not load credentials from any providers`               | [Учетные данные Amazon Bedrock, Google Cloud's Agent Platform или Microsoft Foundry](#bedrock-agent-platform-or-foundry-credentials-not-loading) |
-| `ChainedTokenCredential authentication failed` или `CredentialUnavailableError`                            | [Учетные данные Amazon Bedrock, Google Cloud's Agent Platform или Microsoft Foundry](#bedrock-agent-platform-or-foundry-credentials-not-loading) |
-| `API Error: 500`, `529 Overloaded`, `429` или другие ошибки 4xx и 5xx, не указанные выше                   | См. [справочник ошибок](/docs/ru/errors)                                                                                                              |
+| Что вы видите                                                                                                      | Решение                                                                                                                                          |
+| :----------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `command not found: claude` или `'claude' is not recognized`                                                       | [Исправьте ваш PATH](#command-not-found-claude-after-installation)                                                                               |
+| `syntax error near unexpected token '<'`                                                                           | [Install script returns HTML](#install-script-returns-html-instead-of-a-shell-script)                                                            |
+| `curl: (22) The requested URL returned error: 403`                                                                 | [Install script returned 403](#install-script-returns-html-instead-of-a-shell-script)                                                            |
+| `curl: (23)` или `curl: (56) Failure writing output to destination`                                                | [Проверьте подключение или используйте альтернативный установщик](#curl-56-failure-writing-output-to-destination)                                |
+| `Killed` во время установки на Linux, или `Installation was killed before it could finish (exit code 137)`         | [Освободите память или добавьте пространство подкачки](#install-killed-on-low-memory-linux-servers)                                              |
+| `Raw mode is not supported` во время установки                                                                     | [Повторно запустите установщик](#raw-mode-is-not-supported-during-install)                                                                       |
+| `TLS connect error` или `SSL/TLS secure channel`                                                                   | [Обновите сертификаты CA](#tls-or-ssl-connection-errors)                                                                                         |
+| `Failed to fetch version` или невозможно достичь сервера загрузки                                                  | [Проверьте параметры сети и прокси](#check-network-connectivity)                                                                                 |
+| `irm is not recognized` или `The token '&&' is not a valid statement separator`                                    | [Используйте правильную команду для вашей оболочки](#wrong-install-command-on-windows)                                                           |
+| `Cask 'claude-code' is unavailable: No Cask with this name exists`                                                 | [Обновите Homebrew](#homebrew-cask-unavailable-or-outdated)                                                                                      |
+| `'bash' is not recognized as the name of a cmdlet`                                                                 | [Используйте команду установщика Windows](#wrong-install-command-on-windows)                                                                     |
+| `A parameter cannot be found that matches parameter name 'fsSL'`                                                   | [Используйте команду установщика Windows](#wrong-install-command-on-windows)                                                                     |
+| `Claude Code on Windows requires either Git for Windows (for bash) or PowerShell`                                  | [Установите оболочку](#claude-code-on-windows-requires-either-git-for-windows-for-bash-or-powershell)                                            |
+| `Claude Code does not support 32-bit Windows`                                                                      | [Откройте Windows PowerShell, а не запись x86](#claude-code-does-not-support-32-bit-windows)                                                     |
+| `The process cannot access the file ... because it is being used by another process`                               | [Очистите папку загрузок и повторите попытку](#the-process-cannot-access-the-file-during-windows-install)                                        |
+| `Error loading shared library`                                                                                     | [Неправильный вариант двоичного файла для вашей системы](#linux-musl-or-glibc-binary-mismatch)                                                   |
+| `Illegal instruction`                                                                                              | [Несоответствие архитектуры или набора инструкций процессора](#illegal-instruction)                                                              |
+| `cannot execute binary file: Exec format error` в WSL                                                              | [WSL1 native-binary regression](#exec-format-error-on-wsl1)                                                                                      |
+| Установщик PowerShell завершается, но `claude` не найден или показывает старую версию                              | [Добавьте каталог установки в ваш PATH](#verify-your-path), затем откройте новый терминал                                                        |
+| `dyld: Symbol not found`, `dyld: cannot load` или `Abort trap` на macOS                                            | [Несовместимость двоичного файла](#dyld-cannot-load-on-macos)                                                                                    |
+| `claude update` зависает после `Checking for updates`, или `claude doctor` зависает без вывода                     | [Переместите каталог по пути конфигурации оболочки](#claude-update-or-claude-doctor-hangs)                                                       |
+| `Invoke-Expression` или `iex` ошибки парсинга цитирования HTML-тегов или CSS, или `ParserError` с `ParseException` | [Install script returns HTML](#install-script-returns-html-instead-of-a-shell-script)                                                            |
+| `running scripts is disabled on this system` или `PSSecurityException`                                             | [Разрешите npm shims запускаться](#running-scripts-is-disabled-on-this-system)                                                                   |
+| `Error: claude native binary not installed`                                                                        | [Завершите установку npm](#native-binary-not-found-after-npm-install)                                                                            |
+| `npm error code ENOTEMPTY` во время обновления или переустановки                                                   | [Удалите оставшийся каталог пакета](#npm-enotempty-during-update-or-reinstall)                                                                   |
+| На Windows команда установки выводит текст скрипта и ничего не устанавливается                                     | [Запустите полную команду установки](#wrong-install-command-on-windows)                                                                          |
+| `App unavailable in region`                                                                                        | Claude Code недоступен в вашей стране. См. [поддерживаемые страны](https://www.anthropic.com/supported-countries).                               |
+| `unable to get local issuer certificate`                                                                           | [Настройте корпоративные сертификаты CA](#tls-or-ssl-connection-errors)                                                                          |
+| `OAuth error` или `403 Forbidden`                                                                                  | [Исправьте аутентификацию](#login-and-authentication)                                                                                            |
+| `Unable to connect to Anthropic services` во время установки                                                       | См. [Unable to connect to Anthropic services](/docs/ru/errors#unable-to-connect-to-anthropic-services) в справочнике ошибок                           |
+| `Could not load the default credentials` или `Could not load credentials from any providers`                       | [Учетные данные Amazon Bedrock, Google Cloud's Agent Platform или Microsoft Foundry](#bedrock-agent-platform-or-foundry-credentials-not-loading) |
+| `ChainedTokenCredential authentication failed` или `CredentialUnavailableError`                                    | [Учетные данные Amazon Bedrock, Google Cloud's Agent Platform или Microsoft Foundry](#bedrock-agent-platform-or-foundry-credentials-not-loading) |
+| `API Error: 500`, `529 Overloaded`, `429` или другие ошибки 4xx и 5xx, не указанные выше                           | См. [справочник ошибок](/docs/ru/errors)                                                                                                              |
 
 Если вашей проблемы нет в списке, выполните диагностические проверки ниже, чтобы сузить причину.
 
@@ -59,13 +66,28 @@
 
 Установщик загружает с `downloads.claude.ai`. Убедитесь, что вы можете его достичь:
 
-```bash theme={null}
-curl -sI https://downloads.claude.ai/claude-code-releases/latest
-```
+<Tabs>
+  <Tab title="macOS/Linux">
+    ```bash theme={null}
+    curl -sI https://downloads.claude.ai/claude-code-releases/latest
+    ```
+  </Tab>
 
-В PowerShell запустите `curl.exe -sI` вместо этого. PowerShell создаёт псевдоним `curl` на `Invoke-WebRequest`, который отклоняет флаги `-sI`.
+  <Tab title="Windows PowerShell">
+    ```powershell theme={null}
+    curl.exe -sI https://downloads.claude.ai/claude-code-releases/latest
+    ```
 
-Строка `HTTP/2 200` означает, что вы достигли сервера. Если вы видите отсутствие вывода, `Could not resolve host` или timeout соединения, ваша сеть блокирует соединение. Распространённые причины:
+    PowerShell создаёт псевдоним `curl` на `Invoke-WebRequest`, который отклоняет флаги `-sI`, поэтому вызовите `curl.exe` явно.
+  </Tab>
+</Tabs>
+
+Вы достигли сервера, если первая строка показывает статус `200`. Вы видите `HTTP/2 200` на macOS и Linux, и `HTTP/1.1 200 OK` из `curl.exe`, включённого в Windows. Другие результаты указывают на причину:
+
+* `403`: обычно прокси или сетевой фильтр, блокирующий хост, или Claude Code [недоступен в вашем регионе](https://www.anthropic.com/supported-countries)
+* `5xx`: обычно временная проблема с сервисом; подождите несколько минут и повторите попытку
+
+Если вы не видите вывода, `Could not resolve host` или timeout соединения, ваша сеть блокирует соединение. Распространённые причины:
 
 * Корпоративные брандмауэры или прокси, блокирующие `downloads.claude.ai`
 * Региональные ограничения сети: попробуйте VPN или альтернативную сеть
@@ -234,15 +256,19 @@ npm uninstall -g @anthropic-ai/claude-code
 
 Удалите устаревшую локальную установку npm:
 
-```bash theme={null}
-rm -rf ~/.claude/local
-```
+<Tabs>
+  <Tab title="macOS/Linux">
+    ```bash theme={null}
+    rm -rf ~/.claude/local
+    ```
+  </Tab>
 
-На Windows используйте PowerShell:
-
-```powershell theme={null}
-Remove-Item -Recurse -Force "$env:USERPROFILE\.claude\local"
-```
+  <Tab title="Windows PowerShell">
+    ```powershell theme={null}
+    Remove-Item -Recurse -Force "$env:USERPROFILE\.claude\local"
+    ```
+  </Tab>
+</Tabs>
 
 Удалите установку Homebrew на macOS. Если вы установили кэш `claude-code@latest`, замените это имя:
 
@@ -284,15 +310,19 @@ sudo chown -R $(whoami) ~/.local
 
 Подтвердите, что бинарный файл существует и исполняемый:
 
-```bash theme={null}
-ls -la "$(command -v claude)"
-```
+<Tabs>
+  <Tab title="macOS/Linux">
+    ```bash theme={null}
+    ls -la "$(command -v claude)"
+    ```
+  </Tab>
 
-На Windows используйте PowerShell:
-
-```powershell theme={null}
-Get-Command claude | Select-Object Source
-```
+  <Tab title="Windows PowerShell">
+    ```powershell theme={null}
+    Get-Command claude | Select-Object Source
+    ```
+  </Tab>
+</Tabs>
 
 На Linux проверьте отсутствующие общие библиотеки. Если `ldd` показывает отсутствующие библиотеки, вам может потребоваться установить системные пакеты. На Alpine Linux и других дистрибутивах на основе musl см. [Alpine Linux setup](/docs/ru/setup#alpine-linux-and-musl-based-distributions).
 
@@ -323,11 +353,16 @@ bash: line 1: syntax error near unexpected token `<'
 bash: line 1: `<!DOCTYPE html>'
 ```
 
-На PowerShell та же проблема выглядит как:
+На PowerShell та же проблема выглядит как ошибки парсинга, указывающие на возвращённую страницу, с `iex`, пытающимся запустить HTML и CSS как PowerShell:
 
 ```text theme={null}
-Invoke-Expression: Missing argument in parameter list.
+iex : At line:1 char:2310
++ ... igin="anonymous"/><script type="text/javascript">!function(o,c){var n ...
+Missing argument in parameter list.
+...
 ```
+
+Формулировка варьируется в зависимости от версии PowerShell и языка системы: вы можете увидеть `Missing expression after unary operator '--'` или `ParserError` с `ParseException` вместо этого. HTML-теги или CSS в цитируемом тексте идентифицируют этот сбой. Если вы загружаете с `-OutFile install.ps1` вместо этого, сохранённый файл — это та же веб-страница, поэтому это тоже не помогает.
 
 В зависимости от того, как был маршрутизирован запрос, вы можете вместо этого увидеть 403 без HTML-тела:
 
@@ -357,6 +392,8 @@ curl: (22) The requested URL returned error: 403
    winget install Anthropic.ClaudeCode
    ```
 
+   Затем запустите `claude --version` для подтверждения: команда выводит номер версии, такой как `2.1.211 (Claude Code)`. Если оболочка сообщает, что `claude` не найден, откройте новое окно терминала и повторите попытку: сессия, из которой вы установили, сохраняет свой старый `PATH`.
+
 2. **Повторите попытку через несколько минут**: проблема часто временная. Подождите и попробуйте исходную команду снова.
 
 <h3 id="command-not-found-claude-after-installation">
@@ -380,27 +417,7 @@ curl: (22) The requested URL returned error: 403
 
 Команда `curl ... | bash` загружает скрипт и передаёт его в Bash для выполнения. Эта ошибка и связанная с ней `curl: (23) Failure writing output to destination` означают, что Bash не получил полный скрипт. Код выхода 56 указывает, что сама загрузка была прервана, а код выхода 23 указывает, что curl не смог записать полученное в канал, обычно потому что Bash завершился рано.
 
-**Решения:**
-
-1. **Проверьте стабильность сети**: бинарные файлы Claude Code размещены на `downloads.claude.ai`. Проверьте, что вы можете его достичь:
-   ```bash theme={null}
-   curl -sI https://downloads.claude.ai/claude-code-releases/latest
-   ```
-   Строка `HTTP/2 200` означает, что вы достигли сервера и исходный сбой был вероятно временным; повторите команду установки. Если вы видите `Could not resolve host` или timeout соединения, ваша сеть блокирует загрузку.
-
-2. **Попробуйте альтернативный метод установки**:
-
-   На macOS:
-
-   ```bash theme={null}
-   brew install --cask claude-code
-   ```
-
-   На Windows:
-
-   ```powershell theme={null}
-   winget install Anthropic.ClaudeCode
-   ```
+Проверьте, что вы можете достичь `downloads.claude.ai` с проверкой в [Проверка подключения к сети](#check-network-connectivity). Если вы достигли сервера, исходный сбой был вероятно временным; повторите команду установки. Вы также можете [попробовать альтернативный метод установки](/docs/ru/setup#install-claude-code).
 
 <h3 id="homebrew-cask-unavailable-or-outdated">
   Homebrew cask unavailable or outdated
@@ -439,17 +456,47 @@ brew install --cask claude-code
    irm https://claude.ai/install.ps1 | iex
    ```
 
-3. **Проверьте помехи прокси или брандмауэра**: корпоративные прокси, выполняющие TLS inspection, могут вызвать эти ошибки, включая `unable to get local issuer certificate` и `SELF_SIGNED_CERT_IN_CHAIN`. Для шага установки укажите curl на ваш корпоративный пакет CA с `--cacert`:
-   ```bash theme={null}
-   curl --cacert /path/to/corporate-ca.pem -fsSL https://claude.ai/install.sh | bash
-   ```
+3. **Проверьте помехи прокси или брандмауэра**: корпоративные прокси, выполняющие TLS inspection, могут вызвать эти ошибки, включая `unable to get local issuer certificate` и `SELF_SIGNED_CERT_IN_CHAIN`. Для шага установки укажите curl на ваш корпоративный пакет CA:
+
+   <Tabs>
+     <Tab title="macOS/Linux">
+       ```bash theme={null}
+       curl --cacert /path/to/corporate-ca.pem -fsSL https://claude.ai/install.sh | bash
+       ```
+     </Tab>
+
+     <Tab title="Windows PowerShell">
+       Установщик PowerShell загружается через .NET, который проверяет TLS в хранилище сертификатов Windows. Попросите вашу IT-команду добавить сертификат CA прокси в хранилище Windows, если его там ещё нет, затем запустите установщик:
+
+       ```powershell theme={null}
+       irm https://claude.ai/install.ps1 | iex
+       ```
+     </Tab>
+   </Tabs>
+
    Для самого Claude Code после установки установите `NODE_EXTRA_CA_CERTS` так, чтобы запросы API доверяли тому же пакету:
-   ```bash theme={null}
-   export NODE_EXTRA_CA_CERTS=/path/to/corporate-ca.pem
-   ```
+
+   <Tabs>
+     <Tab title="macOS/Linux">
+       ```bash theme={null}
+       export NODE_EXTRA_CA_CERTS=/path/to/corporate-ca.pem
+       ```
+     </Tab>
+
+     <Tab title="Windows PowerShell">
+       ```powershell theme={null}
+       $env:NODE_EXTRA_CA_CERTS = 'C:\path\to\corporate-ca.pem'
+       ```
+     </Tab>
+   </Tabs>
+
    Попросите файл сертификата у вашей IT-команды, если у вас его нет. Вы также можете попробовать на прямом соединении, чтобы подтвердить, что прокси является причиной.
 
-4. **На Windows переключитесь на установщики, если ваша сеть блокирует проверки отзыва**. Ошибки `CRYPT_E_NO_REVOCATION_CHECK (0x80092012)` и `CRYPT_E_REVOCATION_OFFLINE (0x80092013)` означают, что curl достиг сервера, но ваша сеть блокирует поиск отзыва сертификата, что распространено за корпоративными брандмауэрами. Добавление флага `--ssl-revoke-best-effort` к curl не исправляет это: флаг применяется только к загрузке самого `install.cmd`, а собственные загрузки скрипта работают без него, поэтому установка не удаётся с той же ошибкой. Используйте метод установки, который допускает заблокированный поиск. Откройте PowerShell и запустите установщик PowerShell, который загружается через .NET и не падает, когда сервер отзыва недоступен:
+4. **На Windows обойдите заблокированные проверки отзыва**. Ошибки `CRYPT_E_NO_REVOCATION_CHECK (0x80092012)` и `CRYPT_E_REVOCATION_OFFLINE (0x80092013)` означают, что curl достиг сервера, но ваша сеть блокирует поиск отзыва сертификата, что распространено за корпоративными брандмауэрами. Если команда, которая не удаётся, — это `curl`, который загружает `install.cmd`, переустановите её из Command Prompt с добавленным `--ssl-revoke-best-effort`:
+   ```batch theme={null}
+   curl --ssl-revoke-best-effort -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del install.cmd
+   ```
+   Когда собственные загрузки скрипта попадают на те же ошибки, он переустанавливает их с проверкой отзыва best-effort автоматически, поэтому флаг нужен только на команде, которую вы запускаете сами. Проверка best-effort допускает недостижимый сервер отзыва, но всё ещё отклоняет сертификат, который известен как отозванный, соответствуя тому, как браузеры обрабатывают отзыв. Вы также можете полностью избежать проверки отзыва curl, запустив установщик PowerShell из PowerShell, который загружается через .NET и не падает, когда сервер отзыва недоступен:
    ```powershell theme={null}
    irm https://claude.ai/install.ps1 | iex
    ```
@@ -459,40 +506,13 @@ brew install --cask claude-code
   `Failed to fetch version from downloads.claude.ai`
 </h3>
 
-Установщик не смог достичь сервера загрузки. Это обычно означает, что `downloads.claude.ai` заблокирован в вашей сети.
-
-**Решения:**
-
-1. **Проверьте подключение напрямую**:
-   ```bash theme={null}
-   curl -sI https://downloads.claude.ai/claude-code-releases/latest
-   ```
-
-2. **Если за прокси**, установите `HTTPS_PROXY` так, чтобы установщик мог маршрутизировать через него. См. [конфигурация прокси](/docs/ru/network-config#proxy-configuration) для деталей.
-   ```bash theme={null}
-   export HTTPS_PROXY=http://proxy.example.com:8080
-   curl -fsSL https://claude.ai/install.sh | bash
-   ```
-
-3. **Если в ограниченной сети**, попробуйте другую сеть или VPN, или используйте альтернативный метод установки:
-
-   На macOS:
-
-   ```bash theme={null}
-   brew install --cask claude-code
-   ```
-
-   На Windows:
-
-   ```powershell theme={null}
-   winget install Anthropic.ClaudeCode
-   ```
+Установщик не смог достичь сервера загрузки. Это обычно означает, что `downloads.claude.ai` заблокирован в вашей сети. См. [Проверка подключения к сети](#check-network-connectivity).
 
 <h3 id="wrong-install-command-on-windows">
   Wrong install command on Windows
 </h3>
 
-Если вы видите `'irm' is not recognized`, `The token '&&' is not valid`, `A parameter cannot be found that matches parameter name 'fsSL'` или `'bash' is not recognized as the name of a cmdlet`, вы скопировали команду установки для другой оболочки или операционной системы.
+Если вы видите `'irm' is not recognized`, `The token '&&' is not a valid statement separator`, `A parameter cannot be found that matches parameter name 'fsSL'` или `'bash' is not recognized as the name of a cmdlet`, вы скопировали команду установки для другой оболочки или операционной системы. Если команда выводит текст скрипта вместо установки чего-либо, вы запустили только часть его.
 
 * **`irm` не распознан**: вы находитесь в CMD, а не PowerShell. У вас есть два варианта:
 
@@ -523,6 +543,43 @@ brew install --cask claude-code
   irm https://claude.ai/install.ps1 | iex
   ```
 
+* **Команда выводит текст скрипта вместо установки**: вы запустили половину загрузки команды без части, которая её выполняет. `irm https://claude.ai/install.ps1` само по себе выводит загруженный скрипт в терминал. Передайте его в `iex` для запуска:
+
+  ```powershell theme={null}
+  irm https://claude.ai/install.ps1 | iex
+  ```
+
+  В CMD `curl -fsSL https://claude.ai/install.cmd` без `-o` выводит пакетный скрипт вместо его сохранения. Запустите полную команду:
+
+  ```batch theme={null}
+  curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del install.cmd
+  ```
+
+Какой бы установщик вы ни использовали, подтвердите, что он сработал: откройте новый терминал и запустите `claude --version`, который выводит номер версии, такой как `2.1.211 (Claude Code)`.
+
+<h3 id="running-scripts-is-disabled-on-this-system">
+  `running scripts is disabled on this system`
+</h3>
+
+Установка или запуск Claude Code через npm на Windows может не удаться с `SecurityError`:
+
+```text theme={null}
+npm : File C:\Program Files\nodejs\npm.ps1 cannot be loaded because running scripts is disabled on this system. For more information, see about_Execution_Policies at https:/go.microsoft.com/fwlink/?LinkID=135170.
+...
+    + CategoryInfo          : SecurityError: (:) [], PSSecurityException
+```
+
+Та же ошибка называет `claude.ps1`, когда вы запускаете `claude` после установки npm. Политика выполнения PowerShell блокирует скрипты `.ps1` launcher, которые npm создаёт для своих команд. Политика применяется к файлам скриптов, поэтому она не влияет на установщик PowerShell `irm https://claude.ai/install.ps1 | iex`, который запускает загруженный текст напрямую.
+
+**Решения:**
+
+1. **Разрешите локально созданные скрипты для вашего пользователя**, затем повторите попытку:
+   ```powershell theme={null}
+   Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+   ```
+2. **Вызовите launcher `.cmd` вместо этого**: `npm.cmd` и `claude.cmd` делают то же самое, и политика их не охватывает.
+3. **Используйте [установщик PowerShell](/docs/ru/setup#install-claude-code)** вместо npm. Он устанавливает бинарный файл, а не скрипт `.ps1`.
+
 <h3 id="the-process-cannot-access-the-file-during-windows-install">
   `The process cannot access the file` during Windows install
 </h3>
@@ -540,16 +597,14 @@ irm https://claude.ai/install.ps1 | iex
   Install killed on low-memory Linux servers
 </h3>
 
-Сообщение `Killed` во время установки обычно означает, что убийца Linux out-of-memory (OOM) завершил шаг `claude install`, потому что система исчерпала свободную память. Это распространено на небольших VPS и облачных экземплярах. Скрипт установки сообщает причину и выходит с кодом 137:
+Сообщение `Killed` во время установки обычно означает, что убийца Linux out-of-memory (OOM) завершил шаг `claude install`, потому что система исчерпала свободную память. Это распространено на небольших VPS и облачных экземплярах. Скрипт установки сообщает причину и выходит с кодом 137. В этом примере номер строки и ID процесса варьируются в зависимости от выпуска и запуска:
 
 ```text theme={null}
 Setting up Claude Code...
-bash: line 142: 34803 Killed    "$binary_path" install ${TARGET:+"$TARGET"}
+bash: line 183: 34803 Killed    "$binary_path" install ${TARGET:+"$TARGET"}
 Installation was killed before it could finish (exit code 137). This usually means the system ran out of memory.
 Claude Code needs roughly 512MB of free memory to install. Free up memory, then run this script again.
 ```
-
-До v2.1.200 скрипт выходил только с голой строкой `Killed` оболочки и без объяснения.
 
 Установка требует примерно 512 МБ свободной памяти, а запуск Claude Code требует больше. См. [системные требования](/docs/ru/setup#system-requirements).
 
@@ -590,10 +645,47 @@ Claude Code needs roughly 512MB of free memory to install. Free up memory, then 
    RUN curl -fsSL https://claude.ai/install.sh | bash
    ```
 
-2. **Увеличьте лимиты памяти Docker**, если используете Docker Desktop:
-   ```bash theme={null}
-   docker build --memory=4g .
-   ```
+2. **Увеличьте лимиты памяти Docker**, если используете Docker Desktop. Постройте контейнеры, которые делят память, выделенную виртуальной машине Docker Desktop, поэтому откройте **Settings > Resources** в Docker Desktop, поднимите лимит памяти и переустановите сборку.
+
+<h3 id="raw-mode-is-not-supported-during-install">
+  `Raw mode is not supported` during install
+</h3>
+
+Когда [параметры, управляемые сервером](/docs/ru/server-managed-settings) вашей организации включают изменения, которые требуют [одобрения безопасности](/docs/ru/server-managed-settings#security-approval-dialogs), версии Claude Code до 2.1.246 пытаются показать диалог одобрения во время `claude install`. Диалог требует терминал на stdin. Когда установщик запускает `claude install` из канала, как `curl -fsSL https://claude.ai/install.sh | bash` делает, stdin — это канал, а не терминал, поэтому установка не удаётся с ошибкой, содержащей `Raw mode is not supported`.
+
+Claude Code v2.1.246 и позже не показывают диалог во время `claude install` или `claude update`. Команда запускается с параметрами, которые вы в последний раз одобрили, и Claude Code показывает диалог в вашей следующей интерактивной сессии. Если конфигурация запуска вашей организации [ждёт выборки параметров](/docs/ru/server-managed-settings#enforce-fail-closed-startup), такая как когда она устанавливает `forceRemoteSettingsRefresh`, диалог всё ещё появляется во время этих команд, и запуск установки из канала всё ещё не удаётся.
+
+В каждой другой конфигурации переустановка установщика преодолевает эту ошибку, потому что скрипт запускает команду `install` последнего выпуска даже когда вы просите его установить более старую версию. Переустановите команду для вашей платформы:
+
+<Tabs>
+  <Tab title="macOS/Linux">
+    ```bash theme={null}
+    curl -fsSL https://claude.ai/install.sh | bash
+    ```
+  </Tab>
+
+  <Tab title="Windows PowerShell">
+    ```powershell theme={null}
+    irm https://claude.ai/install.ps1 | iex
+    ```
+  </Tab>
+</Tabs>
+
+`claude --version` выводит версию, которую переустановка установила.
+
+<h3 id="claude-update-or-claude-doctor-hangs">
+  `claude update` or `claude doctor` hangs
+</h3>
+
+`claude update` и `claude doctor` сканируют ваши файлы конфигурации оболочки на предмет устаревшего псевдонима `claude`: `~/.zshrc`, `~/.bashrc` и `~/.config/fish/config.fish`, плюс на macOS первый из `~/.bash_profile`, `~/.bash_login` или `~/.profile`, который существует. Если вы установили `ZDOTDIR`, файл Zsh — это `$ZDOTDIR/.zshrc` вместо этого. Когда один из этих путей — это директория, Claude Code пропускает его и обе команды завершаются нормально. До v2.1.214 директория в одном из этих путей заставляла обе команды зависать и оставляла раздел System diagnostics в `/status` пустым. `claude doctor` зависал без вывода; `claude update` зависал сразу после вывода `Checking for updates`.
+
+Если вы попали на зависание на более ранней версии, найдите директорию. В выводе этой команды строка, начинающаяся с `d`, отмечает этот путь как директорию. Строка `No such file or directory` означает, что ничего не существует в этом пути и не является причиной:
+
+```bash theme={null}
+ls -ld ~/.zshrc ~/.bashrc ~/.bash_profile ~/.bash_login ~/.profile ~/.config/fish/config.fish
+```
+
+Переместите директорию в сторону, или обновитесь до v2.1.214 или позже. Так как `claude update` зависает на затронутых версиях, обновитесь, переустановив [скрипт установки](/docs/ru/setup#install-claude-code) вместо этого.
 
 <h3 id="claude-desktop-overrides-the-claude-command-on-windows">
   Claude Desktop overrides the `claude` command on Windows
@@ -607,13 +699,20 @@ Claude Code needs roughly 512MB of free memory to install. Free up memory, then 
   Claude Code on Windows requires either Git for Windows (for bash) or PowerShell
 </h3>
 
-Git for Windows является опциональным. Claude Code использует [PowerShell tool](/docs/ru/tools-reference#powershell-tool) при отсутствии Git Bash, поэтому эта ошибка означает, что ни одна оболочка не была найдена.
+Git for Windows является опциональным. Claude Code использует [инструмент PowerShell](/docs/ru/tools-reference#powershell-tool) при отсутствии Git Bash, поэтому эта ошибка означает, что ни одна оболочка не была найдена.
 
 **Если PowerShell отсутствует в вашем PATH**, его местоположение по умолчанию — `C:\Windows\System32\WindowsPowerShell\v1.0\`. Добавьте эту директорию в ваш `PATH`, или установите [PowerShell 7](https://aka.ms/powershell), который предоставляет `pwsh`.
 
 **Чтобы вместо этого установить Git for Windows**, загрузите его с [git-scm.com/downloads/win](https://git-scm.com/downloads/win). Во время установки выберите "Add to PATH." Перезагрузите ваш терминал после установки. Установка его включает инструмент Bash, полезный при работе со скриптами и инструментами на основе Bash.
 
-**Если Git уже установлен**, но Claude Code не может его найти, установите путь в вашем [settings.json file](/docs/ru/settings):
+**Если Git уже установлен**, но Claude Code не может его найти, сравните его местоположение с местами, которые Claude Code проверяет. Когда `CLAUDE_CODE_GIT_BASH_PATH` не установлен, Claude Code ищет `bash.exe` в этом порядке:
+
+1. Местоположения установки по умолчанию `C:\Program Files\Git` и `C:\Program Files (x86)\Git`.
+2. `git` на вашем `PATH`, используя `bin\bash.exe` из этой установки Git.
+
+На шаге 2 Claude Code пропускает `git`, который находится в папке, из которой вы запустили Claude Code, или ниже её в пути, который содержит `node_modules` или папку виртуального окружения, такую как `.venv` или `env`, например `C:\dev\env\myproject\Git`, когда вы запустили из `C:\dev\env\myproject`. Это предотвращает запуск Claude Code исполняемого файла, который проект поместил туда. Если ваш Git находится в месте, подобном этому, укажите `CLAUDE_CODE_GIT_BASH_PATH` на него.
+
+**Чтобы указать Claude Code на конкретную установку Git**, найдите её, запустив `where.exe git` в PowerShell, затем установите путь `bin\bash.exe` из этой установки как `CLAUDE_CODE_GIT_BASH_PATH` в вашем [файле settings.json](/docs/ru/settings):
 
 ```json theme={null}
 {
@@ -623,11 +722,9 @@ Git for Windows является опциональным. Claude Code испо�
 }
 ```
 
-Если ваш Git установлен где-то ещё, найдите путь, запустив `where.exe git` в PowerShell и используйте путь `bin\bash.exe` из этой директории.
+**Если `CLAUDE_CODE_GIT_BASH_PATH` установлен на правильный путь и файл существует**, но Claude Code всё ещё не использует его, сначала проверьте имя файла. Claude Code принимает только файл с именем `bash.exe`, `sh.exe`, `bash` или `sh`; с любым другим именем, таким как launcher `git-bash.exe` Git for Windows, он игнорирует переменную и автоматически определяет Git Bash, как если бы она была не установлена, логируя предупреждение, видимое с `--debug`. Путь, который не существует, получает тот же fallback и предупреждение. До v2.1.219 Claude Code использовал любой существующий файл как оболочку без проверки его имени и выходил при запуске с `Claude Code was unable to find CLAUDE_CODE_GIT_BASH_PATH path`, когда путь не существовал.
 
-**Если путь правильный и файл существует**, но Claude Code всё ещё сообщает, что он не найден, программное обеспечение безопасности конечной точки, такое как AppLocker, политики ограничения программного обеспечения Group Policy или агенты EDR, могут вмешиваться. На версиях до v2.1.116 Claude Code порождал дочерний процесс (`cmd.exe`) для проверки пути, который эти политики могут блокировать — распространённый сигнал заключается в том, что `cmd.exe /c dir "C:\Program Files\Git\bin\bash.exe"` работает, когда вы запускаете его непосредственно в PowerShell, но молча не удаётся при запуске `claude.exe`.
-
-Claude Code v2.1.116 и позже проверяют файловую систему напрямую, поэтому сначала обновитесь. Если ошибка сохраняется на текущей версии, попросите вашу IT-команду добавить в список разрешений `claude.exe` и процессы, которые он порождает, включая `cmd.exe` и `bash.exe`, в вашей политике защиты конечной точки.
+Если имя файла правильное, программное обеспечение безопасности конечной точки, такое как AppLocker, политики ограничения программного обеспечения Group Policy или агенты EDR, могут вмешиваться. Попросите вашу IT-команду добавить в список разрешений `claude.exe` и процессы, которые он порождает, включая `cmd.exe` и `bash.exe`, в вашей политике защиты конечной точки.
 
 <h3 id="claude-code-does-not-support-32-bit-windows">
   Claude Code does not support 32-bit Windows
@@ -669,6 +766,7 @@ Error loading shared library libstdc++.so.6: No such file or directory
    ```bash theme={null}
    apk add libgcc libstdc++ ripgrep
    ```
+   На Alpine `ripgrep` находится в репозитории community. Если `apk` сообщает, что пакет отсутствует, см. [Alpine Linux setup](/docs/ru/setup#alpine-linux-and-musl-based-distributions).
 
 <h3 id="illegal-instruction">
   `Illegal instruction`
@@ -690,19 +788,21 @@ Error loading shared library libstdc++.so.6: No such file or directory
   `dyld: cannot load` on macOS
 </h3>
 
-Если вы видите `dyld: cannot load`, `dyld: Symbol not found` или `Abort trap: 6` во время установки, бинарный файл несовместим с вашей версией macOS или оборудованием.
+Если вы видите `dyld: Symbol not found`, `dyld: cannot load` или `Abort trap: 6` во время установки, бинарный файл несовместим с вашей версией macOS или оборудованием.
 
-```text theme={null}
-dyld: cannot load 'claude-2.1.42-darwin-x64' (load command 0x80000034 is unknown)
-Abort trap: 6
-```
-
-Ошибка `Symbol not found`, которая ссылается на `libicucore`, также указывает, что ваша версия macOS старше, чем поддерживает бинарный файл:
+Ошибка `Symbol not found`, которая ссылается на `libicucore`, означает, что ваша версия macOS старше, чем поддерживает бинарный файл:
 
 ```text theme={null}
 dyld: Symbol not found: _ubrk_clone
   Referenced from: claude-darwin-x64 (which was built for Mac OS X 13.0)
   Expected in: /usr/lib/libicucore.A.dylib
+```
+
+Загрузчик может вместо этого отклонить команды загрузки бинарного файла, что также означает, что ваша версия macOS слишком старая:
+
+```text theme={null}
+dyld: cannot load 'claude-2.1.42-darwin-x64' (load command 0x80000034 is unknown)
+Abort trap: 6
 ```
 
 **Решения:**
@@ -737,9 +837,9 @@ claude() {
   npm install errors in WSL
 </h3>
 
-Эти проблемы применяются, если вы установили Claude Code с `npm install -g` внутри WSL. Если вы использовали [native installer](/docs/ru/setup), пропустите этот раздел.
+Эти проблемы применяются, если вы установили Claude Code с `npm install -g` внутри WSL. Если вы использовали [встроенный установщик](/docs/ru/setup), пропустите этот раздел.
 
-**Проблемы обнаружения ОС или платформы.** Если npm сообщает о несоответствии платформы во время установки, WSL вероятно выбирает Windows `npm`. Сначала запустите `npm config set os linux`, затем установите с `npm install -g @anthropic-ai/claude-code --force`. Не используйте `sudo`.
+**Проблемы обнаружения ОС или платформы.** Если npm сообщает о несоответствии платформы во время установки, WSL вероятно выбирает Windows `npm`. Запустите `npm config set os linux` сначала, затем установите с `npm install -g @anthropic-ai/claude-code --force`. Не используйте `sudo`.
 
 **`exec: node: not found` при запуске `claude`.** Ваша среда WSL вероятно использует установку Node.js для Windows. Подтвердите с `which npm` и `which node`: пути, начинающиеся с `/mnt/c/`, — это бинарные файлы Windows, в то время как пути Linux начинаются с `/usr/`. Чтобы исправить это, установите Node через менеджер пакетов вашего дистрибутива Linux или через [`nvm`](https://github.com/nvm-sh/nvm).
 
@@ -783,13 +883,74 @@ curl -fsSL https://claude.ai/install.sh | bash
   Native binary not found after npm install
 </h3>
 
-Пакет npm `@anthropic-ai/claude-code` получает встроенный бинарный файл через зависимость, специфичную для платформы, такую как `@anthropic-ai/claude-code-darwin-arm64`. Если запуск `claude` после установки выводит `Could not find native binary package "@anthropic-ai/claude-code-<platform>"`, проверьте следующие причины:
+Пакет npm `@anthropic-ai/claude-code` загружает встроенный бинарный файл как зависимость, специфичную для платформы, такую как `@anthropic-ai/claude-code-darwin-arm64`. npm затем запускает скрипт postinstall пакета, который копирует этот бинарный файл на место как команду `claude`; до его запуска `claude` — это скрипт-заполнитель. Если либо загрузка, либо шаг postinstall пропущены, заполнитель остаётся на месте, и запуск `claude` на macOS и Linux выводит:
 
-* **Опциональные зависимости отключены.** Удалите `--omit=optional` из вашей команды npm install, `--no-optional` из pnpm или `--ignore-optional` из yarn, и проверьте, что `.npmrc` не устанавливает `optional=false`. Затем переустановите. Встроенный бинарный файл доставляется только как опциональная зависимость, поэтому нет JavaScript fallback, если он пропущен.
+```text theme={null}
+Error: claude native binary not installed.
+
+Either postinstall did not run (--ignore-scripts, some pnpm configs)
+or the platform-native optional dependency was not downloaded
+(--omit=optional).
+
+Run the postinstall manually (adjust path for local vs global install):
+  node node_modules/@anthropic-ai/claude-code/install.cjs
+
+Or reinstall without --ignore-scripts / --omit=optional.
+```
+
+На Windows `bin/claude.exe` — это тот же скрипт-заполнитель оболочки, а не реальный исполняемый файл, поэтому PowerShell и CMD сообщают, что они не могут запустить файл вместо вывода этого сообщения.
+
+Проверьте следующие причины:
+
+* **Опциональные зависимости отключены.** Удалите `--omit=optional` из вашей команды npm install, `--no-optional` из pnpm или `--ignore-optional` из yarn, и проверьте, что `.npmrc` не устанавливает `optional=false`. Затем переустановите. Встроенный бинарный файл доставляется только как опциональная зависимость, поэтому нет JavaScript fallback, если он пропущен, и запуск `install.cjs` снова не может поместить бинарный файл, который никогда не был загружен.
+* **Скрипты установки отключены.** `--ignore-scripts` и некоторые конфигурации pnpm пропускают шаг postinstall, но всё ещё загружают пакет платформы. Запустите `node node_modules/@anthropic-ai/claude-code/install.cjs`, как предлагает сообщение, или переустановите без флага. Если postinstall вообще не может запуститься в вашей среде, `node node_modules/@anthropic-ai/claude-code/cli-wrapper.cjs` находит загруженный пакет и запускает его, за счёт дополнительного процесса Node при каждом запуске. Если обёртка вместо этого выводит `Could not find native binary package`, пакет платформы никогда не был загружен, поэтому сначала исправьте причину опциональных зависимостей выше.
 * **Неподдерживаемая платформа.** Предварительно собранные бинарные файлы опубликованы для `darwin-arm64`, `darwin-x64`, `linux-x64`, `linux-arm64`, `linux-x64-musl`, `linux-arm64-musl`, `win32-x64` и `win32-arm64`. Claude Code не поставляет бинарный файл для других платформ; см. [системные требования](/docs/ru/setup#system-requirements). На FreeBSD установщик сообщает платформу как неподдерживаемую. До v2.1.205 он рассматривал FreeBSD как Linux и загружал бинарный файл, который не мог работать.
 * **Корпоративное зеркало npm отсутствуют пакеты платформы.** Убедитесь, что ваш реестр зеркалирует все восемь пакетов `@anthropic-ai/claude-code-*` платформы в дополнение к мета-пакету.
 
-Установка с `--ignore-scripts` не вызывает эту ошибку. Шаг postinstall, который связывает бинарный файл на место, пропускается, поэтому Claude Code возвращается к обёртке, которая находит и порождает бинарный файл платформы при каждом запуске. Это работает, но запускается медленнее; переустановите со скриптами, включёнными для прямого выполнения.
+<h3 id="npm-enotempty-during-update-or-reinstall">
+  npm `ENOTEMPTY` error during update or reinstall
+</h3>
+
+Когда вы запускаете `npm install -g @anthropic-ai/claude-code` над существующей установкой, npm может не удаться при перемещении старого директория пакета в сторону:
+
+```text theme={null}
+npm error code ENOTEMPTY
+npm error syscall rename
+npm error path /home/you/.nvm/versions/node/v22.13.1/lib/node_modules/@anthropic-ai/claude-code
+npm error dest /home/you/.nvm/versions/node/v22.13.1/lib/node_modules/@anthropic-ai/.claude-code-tVWAnUUt
+npm error errno -39
+npm error ENOTEMPTY: directory not empty, rename '...'
+```
+
+Строка `npm error path` называет директорию, которую npm не смог переместить. Удалите эту директорию и любые оставшиеся директории `.claude-code-*` рядом с ней, которые более ранние прерванные запуски могут оставить позади. Команды ниже находят вашу глобальную директорию пакета с `npm root -g`; если директория, которую называет строка `npm error path`, не находится под директорией, которую выводит `npm root -g`, например потому что вы переключили версии Node с nvm, удалите директории, которые называет ошибка вместо этого:
+
+<Tabs>
+  <Tab title="macOS/Linux">
+    ```bash theme={null}
+    rm -rf "$(npm root -g)/@anthropic-ai/claude-code"
+    ```
+
+    Затем удалите любые оставшиеся временные директории. Если zsh выводит `no matches found`, их не было для удаления:
+
+    ```bash theme={null}
+    rm -rf "$(npm root -g)/@anthropic-ai/.claude-code-"*
+    ```
+  </Tab>
+
+  <Tab title="Windows PowerShell">
+    ```powershell theme={null}
+    Remove-Item -Recurse -Force "$(npm root -g)/@anthropic-ai/claude-code", "$(npm root -g)/@anthropic-ai/.claude-code-*"
+    ```
+  </Tab>
+</Tabs>
+
+Затем переустановите:
+
+```bash theme={null}
+npm install -g @anthropic-ai/claude-code
+```
+
+Подтвердите с `claude --version`, который выводит номер версии, такой как `2.1.211 (Claude Code)`.
 
 <h2 id="login-and-authentication">
   Вход и аутентификация
@@ -841,10 +1002,21 @@ curl -fsSL https://claude.ai/install.sh | bash
 
 Чтобы использовать вашу подписку вместо этого, отмените установку переменной окружения и удалите её из вашего профиля оболочки:
 
-```bash theme={null}
-unset ANTHROPIC_API_KEY
-claude
-```
+<Tabs>
+  <Tab title="macOS/Linux">
+    ```bash theme={null}
+    unset ANTHROPIC_API_KEY
+    claude
+    ```
+  </Tab>
+
+  <Tab title="Windows PowerShell">
+    ```powershell theme={null}
+    Remove-Item Env:ANTHROPIC_API_KEY
+    claude
+    ```
+  </Tab>
+</Tabs>
 
 Проверьте `~/.zshrc`, `~/.bashrc` или `~/.profile` на строки `export ANTHROPIC_API_KEY=...` и удалите их, чтобы сделать изменение постоянным. На Windows проверьте ваш профиль PowerShell в `$PROFILE` и ваши переменные окружения User на `ANTHROPIC_API_KEY`. Запустите `/status` внутри Claude Code, чтобы подтвердить, какой метод аутентификации активен.
 
@@ -879,7 +1051,33 @@ claude auth login
 
 Запустите `/login`, чтобы повторно аутентифицироваться. Если это происходит часто, проверьте, что ваши системные часы точны, так как валидация токена зависит от правильных временных меток.
 
-На macOS вход также может не удаться, когда Keychain заблокирован или его пароль не синхронизирован с паролем вашей учётной записи, что предотвращает Claude Code от сохранения учётных данных. Запустите `claude doctor`, чтобы проверить доступ Keychain. Чтобы разблокировать Keychain вручную, запустите `security unlock-keychain ~/Library/Keychains/login.keychain-db`. Если разблокировка не помогает, откройте Keychain Access, выберите keychain `login` и выберите Edit > Change Password for Keychain "login", чтобы пересинхронизировать его с паролем вашей учётной записи.
+Параллельные сессии на одной машине используют сохранённый вход и координируют его обновление, так что только один процесс обновляет токен одновременно. До версии 2.1.211 пробуждение машины из режима сна могло привести к тому, что две сессии обновляли один и тот же токен, что отзывало сохранённый вход и предлагало каждой открытой сессии войти снова одновременно.
+
+На macOS Claude Code сохраняет учётные данные в Keychain входа. Когда Keychain отклоняет запись, например когда он заблокирован в SSH сессии или его пароль не синхронизирован с паролем вашей учётной записи, Claude Code сохраняет ваш вход в открытый текстовый файл `~/.claude/.credentials.json` вместо этого. Вход в Console, который создаёт API ключ, не удаётся до тех пор, пока Keychain снова не станет доступным для записи.
+
+Чтобы сделать Keychain доступным для записи снова и переместить ваш вход обратно в зашифрованный Keychain:
+
+<Steps>
+  <Step title="Проверьте доступ Keychain">
+    Запустите `claude doctor`, чтобы проверить доступ Keychain. Когда Keychain отклоняет запись, отчёт содержит предупреждение, которое начинается с `macOS Keychain is not writable`, за которым следует предложенное исправление. Когда отчёт не содержит предупреждение Keychain, Keychain доступен для записи и вы можете перейти к последнему шагу.
+  </Step>
+
+  <Step title="Разблокируйте Keychain">
+    ```bash theme={null}
+    security unlock-keychain ~/Library/Keychains/login.keychain-db
+    ```
+
+    Введите пароль Keychain, когда команда его запросит, затем запустите `claude doctor` снова. Когда разблокировка сработала, отчёт больше не содержит предупреждение Keychain.
+  </Step>
+
+  <Step title="Пересинхронизируйте пароль Keychain, если разблокировка не помогает">
+    Откройте Keychain Access, выберите keychain `login` и выберите **Edit > Change Password for Keychain "login"**, чтобы пересинхронизировать его с паролем вашей учётной записи. Затем запустите `claude doctor` снова. Переходите к следующему шагу, когда отчёт больше не содержит предупреждение Keychain.
+  </Step>
+
+  <Step title="Выйдите и войдите снова">
+    Когда Keychain снова доступен для записи, Claude Code перемещает учётные данные обратно при следующей записи учётных данных. Чтобы сделать это сейчас, запустите `/logout` и затем `/login`. Выход удаляет все сохранённые учётные данные, включая содержимое открытого текстового файла, сохранённые входы MCP сервера и значения секретов плагина, поэтому ожидайте повторной авторизации MCP серверов и повторного ввода секретов плагина после этого. Вход снова сохраняет ваш вход в Keychain.
+  </Step>
+</Steps>
 
 <h3 id="bedrock-agent-platform-or-foundry-credentials-not-loading">
   Bedrock, Agent Platform, or Foundry credentials not loading
@@ -918,3 +1116,4 @@ az login
 1. Проверьте [GitHub repository](https://github.com/anthropics/claude-code/issues) на известные проблемы или откройте новую с вашей операционной системой, командой установки, которую вы запустили, и полным выводом ошибки
 2. Если `claude --version` работает, но что-то ещё не так, запустите `claude doctor` для автоматического диагностического отчёта
 3. Если вы можете запустить сессию, используйте `/feedback` внутри Claude Code, чтобы сообщить о проблеме
+4. Если проблема связана с вашей учётной записью, а не с установкой, например с циклом входа, неузнанной подпиской или отключённой организацией, свяжитесь с поддержкой Anthropic: войдите на [claude.ai](https://claude.ai) (пользователи Console: [platform.claude.com](https://platform.claude.com)), нажмите на ваши инициалы в нижнем левом углу и выберите **Get help**. Полный процесс см. в разделе [How to get support](https://support.claude.com/en/articles/9015913-how-to-get-support).

@@ -17,11 +17,11 @@ Claude Code CLI 和所有在本地執行的功能在每個提供者上的運作�
 您的驗證方式決定了 Claude Code 可以存取哪些功能。如需您的提供者上缺少的單一清單，請參閱[按提供者摘要](#summary-by-provider)標籤。若要在表格中找到您的欄位：
 
 * **Claude 訂閱**：您使用 claude.ai 帳戶登入 Pro、Max、Team 或 Enterprise 計畫
-* **Anthropic Console**：您使用 Anthropic API 金鑰進行驗證
+* **Anthropic Console**：您使用 Anthropic API 金鑰進行驗證，或[不使用 API 金鑰登入 Console 帳戶](/docs/zh-TW/authentication#sign-in-without-an-api-key)
 * **Amazon Bedrock**：您使用 Amazon Bedrock 模型目錄中的 Claude 模型並設定 `CLAUDE_CODE_USE_BEDROCK`。[Mantle 端點](/docs/zh-TW/amazon-bedrock#use-the-mantle-endpoint)（`CLAUDE_CODE_USE_MANTLE`）由此欄涵蓋
 * **AWS 上的 Claude Platform**：您透過 AWS Marketplace 購買了 Claude，但呼叫 Anthropic API，並設定 `CLAUDE_CODE_USE_ANTHROPIC_AWS`
 * **Google Cloud's Agent Platform**：由 Google 營運；您設定 `CLAUDE_CODE_USE_VERTEX`
-* **Microsoft Foundry**：由 Anthropic 在 Azure 上營運；您設定 `CLAUDE_CODE_USE_FOUNDRY`
+* **Microsoft Foundry**：由 Anthropic 營運；您設定 `CLAUDE_CODE_USE_FOUNDRY`
 
 <h3 id="features-available-on-every-provider">
   每個提供者上都可用的功能
@@ -32,15 +32,18 @@ Claude Code CLI 和所有在本地執行的功能在每個提供者上的運作�
 * [CLI](/docs/zh-TW/quickstart) 和 [Agent SDK](/docs/zh-TW/agent-sdk/overview)
 * [VS Code](/docs/zh-TW/vs-code) 和 [JetBrains](/docs/zh-TW/jetbrains) 擴充功能
 * [Subagents](/docs/zh-TW/sub-agents)、[hooks](/docs/zh-TW/hooks-guide)、[commands](/docs/zh-TW/commands) 和 [skills](/docs/zh-TW/skills)
-* [CLAUDE.md 記憶](/docs/zh-TW/memory)、[plugins](/docs/zh-TW/plugins) 和 [MCP servers](/docs/zh-TW/mcp)
+* [CLAUDE.md 記憶](/docs/zh-TW/memory)、[plugins](/docs/zh-TW/plugins/overview) 和 [MCP servers](/docs/zh-TW/mcp)
 * [Checkpoints](/docs/zh-TW/checkpointing)、[sandboxing](/docs/zh-TW/sandboxing) 和 [Workflows](/docs/zh-TW/workflows)
-* [OpenTelemetry 指標](/docs/zh-TW/monitoring-usage)和[受管設定檔](/docs/zh-TW/settings#settings-files)
+* [OpenTelemetry 指標](/docs/zh-TW/monitoring-usage)和[受管設定檔](/docs/zh-TW/managed-settings#delivery-mechanisms)
 
-這三個功能有提供者特定的差異：
+這些有提供者特定的差異：
 
-* **MCP servers**：[來自 claude.ai 的連接器](/docs/zh-TW/mcp#use-mcp-servers-from-claude-ai)僅在您的 claude.ai 訂閱是作用中驗證方法時才會載入，而[工具搜尋](/docs/zh-TW/mcp#configure-tool-search)在 Google Cloud's Agent Platform 上預設為關閉，當 `ANTHROPIC_BASE_URL` 指向非第一方主機時也是如此
+* **MCP servers**：[來自 claude.ai 的連接器](/docs/zh-TW/mcp#use-mcp-servers-from-claude-ai)僅在您的 claude.ai 訂閱是作用中驗證方法時才會載入。[工具搜尋](/docs/zh-TW/mcp#configure-tool-search)在 `ANTHROPIC_BASE_URL` 指向非第一方主機時預設為關閉，在 Google Cloud's Agent Platform 上早於 Claude 4.5 世代的模型或在 Microsoft Foundry [部署於 Azure 上](https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry#hosting-options)時不受支援
 * **Subagents**：內建的 [Explore subagent](/docs/zh-TW/sub-agents#built-in-subagents) 在 Claude API 上將其繼承的模型上限設為 Opus，在任何其他提供者（包括 AWS 上的 Claude Platform）上直接繼承主要對話的模型
-* **[Commands](/docs/zh-TW/commands#all-commands)**：`/design-sync` 和 `/radio` 在 Amazon Bedrock、Google Cloud's Agent Platform、Microsoft Foundry 和 AWS 上的 Claude Platform 上不可用，而 `/voice` 需要 claude.ai 帳戶
+* **[Commands](/docs/zh-TW/commands#all-commands)**：
+  * `/design-sync` 和 `/import` 及其 `claude import` 子命令形式在 Amazon Bedrock、Google Cloud's Agent Platform、Microsoft Foundry 和 AWS 上的 Claude Platform 上不可用，以及透過 [Claude apps gateway](/docs/zh-TW/claude-apps-gateway#availability-and-limitations)
+  * `/voice` 需要 claude.ai 帳戶
+  * `/list-agents` 及其別名 `/peers` 僅在[啟用跨工作階段訊息傳遞](/docs/zh-TW/cross-session-messaging#availability)的工作階段中可用
 
 <h3 id="features-that-require-a-claude-subscription">
   需要 Claude 訂閱的功能
@@ -51,7 +54,7 @@ Claude Code CLI 和所有在本地執行的功能在每個提供者上的運作�
 * [網頁上的 Claude Code](/docs/zh-TW/claude-code-on-the-web)、行動裝置上的 Claude Code 和 [Slack 中的 Claude Code](/docs/zh-TW/slack)
 * [Claude Code Desktop](/docs/zh-TW/desktop)
 * [Routines](/docs/zh-TW/routines)（`/schedule`）
-* [Ultraplan](/docs/zh-TW/ultraplan) 和 [Ultrareview](/docs/zh-TW/ultrareview)
+* [Ultrareview](/docs/zh-TW/ultrareview)
 * [Code Review](/docs/zh-TW/code-review)：Team 和 Enterprise 計畫
 * [Remote Control](/docs/zh-TW/remote-control)
 * [Chrome 擴充功能](/docs/zh-TW/chrome)
@@ -88,13 +91,13 @@ Desktop 是部分例外：[閘道路由可以在應用程式中或由管理員�
       <td>✗</td>
       <td>✓</td>
       <td>請參閱備註 <sup><a href="#fn1">1</a></sup></td>
-      <td>✓</td>
+      <td>✓ ([部署於 Anthropic 上](https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry#hosting-options))</td>
     </tr>
 
     <tr>
       <td>[Fast mode](/docs/zh-TW/fast-mode)</td>
-      <td>✓</td>
-      <td>✓</td>
+      <td>✓ ([擁有者啟用](/docs/zh-TW/fast-mode#enable-fast-mode-for-your-organization)於 Team 和 Enterprise)</td>
+      <td>✓ (已佈建的組織)</td>
       <td>✗</td>
       <td>✗</td>
       <td>✗</td>
@@ -122,6 +125,16 @@ Desktop 是部分例外：[閘道路由可以在應用程式中或由管理員�
     </tr>
 
     <tr>
+      <td>[Cross-session messaging](/docs/zh-TW/cross-session-messaging)</td>
+      <td>✓ <sup><a href="#fn5">5</a></sup></td>
+      <td>✓ (同一機器) <sup><a href="#fn5">5</a></sup></td>
+      <td>✓ (同一機器) <sup><a href="#fn5">5</a></sup></td>
+      <td>✓ (同一機器) <sup><a href="#fn5">5</a></sup></td>
+      <td>✓ (同一機器) <sup><a href="#fn5">5</a></sup></td>
+      <td>✓ (同一機器) <sup><a href="#fn5">5</a></sup></td>
+    </tr>
+
+    <tr>
       <td>[Channels](/docs/zh-TW/channels)</td>
       <td>✓</td>
       <td>✓</td>
@@ -132,17 +145,17 @@ Desktop 是部分例外：[閘道路由可以在應用程式中或由管理員�
     </tr>
 
     <tr>
-      <td>[`/loop` 排程任務](/docs/zh-TW/scheduled-tasks)</td>
+      <td>[GitHub Actions](/docs/zh-TW/github-actions)</td>
       <td>✓</td>
       <td>✓</td>
-      <td>請參閱備註 <sup><a href="#fn3">3</a></sup></td>
-      <td>請參閱備註 <sup><a href="#fn3">3</a></sup></td>
-      <td>請參閱備註 <sup><a href="#fn3">3</a></sup></td>
-      <td>請參閱備註 <sup><a href="#fn3">3</a></sup></td>
+      <td>✓</td>
+      <td>✗</td>
+      <td>✓</td>
+      <td>✓</td>
     </tr>
 
     <tr>
-      <td>[GitHub Actions](/docs/zh-TW/github-actions) 和 [GitLab CI/CD](/docs/zh-TW/gitlab-ci-cd)</td>
+      <td>[GitLab CI/CD](/docs/zh-TW/gitlab-ci-cd)</td>
       <td>✓</td>
       <td>✓</td>
       <td>✓</td>
@@ -176,7 +189,7 @@ Desktop 是部分例外：[閘道路由可以在應用程式中或由管理員�
     <tr>
       <td>[分析儀表板和 API](/docs/zh-TW/analytics)</td>
       <td>✓ (儀表板：Team 和 Enterprise；API：Enterprise)</td>
-      <td>✓ <sup><a href="#fn5">5</a></sup></td>
+      <td>✓ <sup><a href="#fn4">4</a></sup></td>
       <td>✗</td>
       <td>✗</td>
       <td>✗</td>
@@ -197,22 +210,24 @@ Desktop 是部分例外：[閘道路由可以在應用程式中或由管理員�
       <td>[Zero Data Retention](/docs/zh-TW/zero-data-retention)</td>
       <td>✓ (符合條件的 Enterprise 帳戶)</td>
       <td>✓ (符合條件的帳戶)</td>
-      <td>請參閱備註 <sup><a href="#fn4">4</a></sup></td>
+      <td>請參閱備註 <sup><a href="#fn3">3</a></sup></td>
       <td>✓ (符合條件的帳戶)</td>
-      <td>請參閱備註 <sup><a href="#fn4">4</a></sup></td>
-      <td>請參閱備註 <sup><a href="#fn4">4</a></sup></td>
+      <td>請參閱備註 <sup><a href="#fn3">3</a></sup></td>
+      <td>請參閱備註 <sup><a href="#fn3">3</a></sup></td>
     </tr>
   </tbody>
 </table>
 
 <span id="fn1" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>1</sup> 在 Google Cloud's Agent Platform 上，web search 適用於 Claude 4 模型及更新版本。<br />
-<span id="fn2" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>2</sup> 在這些提供者上，auto mode 僅支援 Claude Sonnet 5、Opus 4.7 和 Opus 4.8。請參閱 [Auto mode 配置](/docs/zh-TW/auto-mode-config)。在 v2.1.158 到 v2.1.206 中，這些提供者上的 auto mode 也需要設定 `CLAUDE_CODE_ENABLE_AUTO_MODE=1`；v2.1.207 移除了此要求。<br />
-<span id="fn3" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>3</sup> 明確的間隔（例如 `/loop every 2 hours`）在每個提供者上都有效。在 Amazon Bedrock、AWS 上的 Claude Platform、Google Cloud's Agent Platform 和 Microsoft Foundry 上，`/loop` 無法選擇自己的間隔或提供預設維護提示，因此沒有間隔的提示每 10 分鐘執行一次，沒有引數的 `/loop` 顯示使用訊息。請參閱[排程任務](/docs/zh-TW/scheduled-tasks)。<br />
-<span id="fn4" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>4</sup> 受您與雲端提供者的協議約束。<br />
-<span id="fn5" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>5</sup> 僅限儀表板和 API。[貢獻指標](/docs/zh-TW/analytics#enable-contribution-metrics)需要 claude.ai Team 或 Enterprise 組織。
+<span id="fn2" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>2</sup> 在這些提供者上，auto mode 僅支援 Claude Sonnet 5、Opus 4.7 或更新版本，以及 Fable 模型。請參閱 [Auto mode 配置](/docs/zh-TW/auto-mode-config)。這些提供者上的內建起始權限模式是 Manual。請參閱[工作階段開始時的模式](/docs/zh-TW/permission-modes#which-mode-a-session-starts-in)。在 v2.1.158 到 v2.1.206 中，這些提供者上的 auto mode 也需要設定 `CLAUDE_CODE_ENABLE_AUTO_MODE=1`；v2.1.207 移除了此要求。<br />
+<span id="fn3" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>3</sup> 受您與雲端提供者的協議約束。<br />
+<span id="fn4" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>4</sup> 僅限儀表板和 API。[貢獻指標](/docs/zh-TW/analytics#enable-contribution-metrics)需要 claude.ai Team 或 Enterprise 組織。<br />
+<span id="fn5" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>5</sup> 需要 macOS 和 Linux 上的 Claude Code v2.1.224 或更新版本，包括 WSL 2 內的 Linux。在原生 Windows 上，需要 Claude Code v2.1.234 或更新版本。使用 API 金鑰驗證時，訊息傳遞僅限同一機器。在 Amazon Bedrock、AWS 上的 Claude Platform、Google Cloud's Agent Platform 和 Microsoft Foundry 上，訊息傳遞僅限同一機器，需要 Claude Code v2.1.248 或更新版本。Claude 只能從連接到 [Remote Control](/docs/zh-TW/remote-control) 的工作階段找到您的 [Claude Code 網頁版](/docs/zh-TW/claude-code-on-the-web)工作階段和其他機器上的工作階段。若要連接，您需要 claude.ai 登入和其他 [Remote Control 要求](/docs/zh-TW/remote-control#requirements)。請參閱[在其他機器上訊息傳遞工作階段](/docs/zh-TW/cross-session-messaging#message-sessions-on-other-machines)。
 
 <Note>
-  如果您透過 [LLM 閘道](/docs/zh-TW/llm-gateway)進行驗證，功能可用性與閘道轉發到的基礎提供者相符。某些僅限 Anthropic 的功能（例如 [Advisor](/docs/zh-TW/advisor)）只有在閘道將請求完整轉發到 Anthropic API 時才能運作。
+  如果您透過 [LLM 閘道](/docs/zh-TW/llm-gateway)進行驗證，功能可用性與閘道轉發到的基礎提供者相符，除了 Claude Code 本身關閉的功能。每當 `ANTHROPIC_BASE_URL` 指向 `api.anthropic.com` 以外的主機時，Claude Code 會關閉功能，例如 [Remote Control](/docs/zh-TW/remote-control#requirements) 和[伺服器管理的設定](/docs/zh-TW/server-managed-settings#platform-availability)，無論閘道轉發什麼。某些僅限 Anthropic 的功能，例如 [Advisor](/docs/zh-TW/advisor)，只有在閘道將請求完整轉發到 Anthropic API 時才能運作。
+
+  如需 Claude Code 傳送的請求如何在 Amazon Bedrock 或 Agent Platform 格式閘道、`ANTHROPIC_BASE_URL` 閘道和 Claude apps gateway 登入之間有所不同，請參閱[按連線方法的用戶端行為](/docs/zh-TW/llm-gateway-protocol#how-the-connection-method-changes-client-behavior)。
 </Note>
 
 <h3 id="summary-by-provider">
@@ -223,61 +238,62 @@ Desktop 是部分例外：[閘道路由可以在應用程式中或由管理員�
 
 <Tabs>
   <Tab title="Amazon Bedrock">
-    **不可用：** 所有[需要 Claude 訂閱的功能](#features-that-require-a-claude-subscription)，加上 [web search](/docs/zh-TW/tools-reference#websearch-tool-behavior)、[fast mode](/docs/zh-TW/fast-mode)、[Advisor](/docs/zh-TW/advisor)、[Channels](/docs/zh-TW/channels)、[分析儀表板](/docs/zh-TW/analytics)、[伺服器管理的設定](/docs/zh-TW/server-managed-settings) 和 [`/design-sync` 和 `/radio` 命令](/docs/zh-TW/commands#all-commands)。
+    **不可用：** 所有[需要 Claude 訂閱的功能](#features-that-require-a-claude-subscription)，加上 [web search](/docs/zh-TW/tools-reference#websearch-tool-behavior)、[fast mode](/docs/zh-TW/fast-mode)、[Advisor](/docs/zh-TW/advisor)、[Channels](/docs/zh-TW/channels)、[分析儀表板](/docs/zh-TW/analytics)、[伺服器管理的設定](/docs/zh-TW/server-managed-settings) 和 [`/design-sync` 和 `/import` 命令](/docs/zh-TW/commands#all-commands)。
 
     **部分支援：**
 
-    * [Desktop](/docs/zh-TW/desktop)：僅透過[在 3P 上的 Claude Desktop](https://claude.com/docs/third-party/claude-desktop/overview)
-    * [Auto mode](/docs/zh-TW/auto-mode-config)：Sonnet 5、Opus 4.7 和 Opus 4.8 僅限
-    * [`/loop`](/docs/zh-TW/scheduled-tasks)：僅限明確間隔
+    * [Desktop](/docs/zh-TW/desktop)：僅透過 [Claude Desktop on 3P](https://claude.com/docs/third-party/claude-desktop/overview)
+    * [Auto mode](/docs/zh-TW/auto-mode-config)：Sonnet 5、Opus 4.7 或更新版本，以及 Fable 模型僅限
+    * [Cross-session messaging](/docs/zh-TW/cross-session-messaging)：僅限此機器上的您的工作階段 <sup><a href="#fn5">5</a></sup>
     * [Zero Data Retention](/docs/zh-TW/zero-data-retention)：受您的 AWS 協議約束
 
-    **替代方案：** 對於排程，使用具有明確間隔的 [`/loop`](/docs/zh-TW/scheduled-tasks) 而不是 `/schedule`。對於雲端工作階段，使用 [GitHub Actions](/docs/zh-TW/github-actions) 或 [GitLab CI/CD](/docs/zh-TW/gitlab-ci-cd)。對於網頁查詢，使用 [WebFetch 工具](/docs/zh-TW/tools-reference#webfetch-tool-behavior)搭配特定 URL。
+    **替代方案：** 對於排程，使用 [`/loop`](/docs/zh-TW/scheduled-tasks) 而不是 `/schedule`。對於雲端工作階段，使用 [GitHub Actions](/docs/zh-TW/github-actions) 或 [GitLab CI/CD](/docs/zh-TW/gitlab-ci-cd)。對於網頁查詢，使用 [WebFetch 工具](/docs/zh-TW/tools-reference#webfetch-tool-behavior)搭配特定 URL。
   </Tab>
 
   <Tab title="AWS 上的 Claude Platform">
-    **不可用：** 所有[需要 Claude 訂閱的功能](#features-that-require-a-claude-subscription)，加上 [fast mode](/docs/zh-TW/fast-mode)、[Advisor](/docs/zh-TW/advisor)、[Channels](/docs/zh-TW/channels)、[分析儀表板](/docs/zh-TW/analytics)、[伺服器管理的設定](/docs/zh-TW/server-managed-settings) 和 [`/design-sync` 和 `/radio` 命令](/docs/zh-TW/commands#all-commands)。
+    **不可用：** 所有[需要 Claude 訂閱的功能](#features-that-require-a-claude-subscription)，加上 [fast mode](/docs/zh-TW/fast-mode)、[Advisor](/docs/zh-TW/advisor)、[Channels](/docs/zh-TW/channels)、[GitHub Actions](/docs/zh-TW/github-actions)、[分析儀表板](/docs/zh-TW/analytics)、[伺服器管理的設定](/docs/zh-TW/server-managed-settings) 和 [`/design-sync` 和 `/import` 命令](/docs/zh-TW/commands#all-commands)。
 
     **在 Amazon Bedrock 不可用的地方可用：** [web search](/docs/zh-TW/tools-reference#websearch-tool-behavior)。
 
     **部分支援：**
 
-    * [`/loop`](/docs/zh-TW/scheduled-tasks)：僅限明確間隔
+    * [Cross-session messaging](/docs/zh-TW/cross-session-messaging)：僅限此機器上的您的工作階段 <sup><a href="#fn5">5</a></sup>
 
-    **替代方案：** 對於排程，使用具有明確間隔的 [`/loop`](/docs/zh-TW/scheduled-tasks) 而不是 `/schedule`。對於雲端工作階段，使用 [GitHub Actions](/docs/zh-TW/github-actions) 或 [GitLab CI/CD](/docs/zh-TW/gitlab-ci-cd)。
+    **替代方案：** 對於排程，使用 [`/loop`](/docs/zh-TW/scheduled-tasks) 而不是 `/schedule`。對於雲端工作階段，使用 [GitLab CI/CD](/docs/zh-TW/gitlab-ci-cd)。
   </Tab>
 
   <Tab title="Google Cloud's Agent Platform">
-    **不可用：** 所有[需要 Claude 訂閱的功能](#features-that-require-a-claude-subscription)，加上 [fast mode](/docs/zh-TW/fast-mode)、[Advisor](/docs/zh-TW/advisor)、[Channels](/docs/zh-TW/channels)、[分析儀表板](/docs/zh-TW/analytics)、[伺服器管理的設定](/docs/zh-TW/server-managed-settings) 和 [`/design-sync` 和 `/radio` 命令](/docs/zh-TW/commands#all-commands)。
+    **不可用：** 所有[需要 Claude 訂閱的功能](#features-that-require-a-claude-subscription)，加上 [fast mode](/docs/zh-TW/fast-mode)、[Advisor](/docs/zh-TW/advisor)、[Channels](/docs/zh-TW/channels)、[分析儀表板](/docs/zh-TW/analytics)、[伺服器管理的設定](/docs/zh-TW/server-managed-settings) 和 [`/design-sync` 和 `/import` 命令](/docs/zh-TW/commands#all-commands)。
 
     **部分支援：**
 
     * [Desktop](/docs/zh-TW/desktop)：透過[受管設定](https://claude.com/docs/third-party/claude-desktop/configuration)或 [Claude Desktop on 3P](https://claude.com/docs/third-party/claude-desktop/overview)
     * [Web search](/docs/zh-TW/tools-reference#websearch-tool-behavior)：Claude 4 模型及更新版本
-    * [Auto mode](/docs/zh-TW/auto-mode-config)：Sonnet 5、Opus 4.7 和 Opus 4.8 僅限
-    * [`/loop`](/docs/zh-TW/scheduled-tasks)：僅限明確間隔
+    * [Auto mode](/docs/zh-TW/auto-mode-config)：Sonnet 5、Opus 4.7 或更新版本，以及 Fable 模型僅限
+    * [Cross-session messaging](/docs/zh-TW/cross-session-messaging)：僅限此機器上的您的工作階段 <sup><a href="#fn5">5</a></sup>
     * [Zero Data Retention](/docs/zh-TW/zero-data-retention)：受您的 Google Cloud 協議約束
 
-    **替代方案：** 對於排程，使用具有明確間隔的 [`/loop`](/docs/zh-TW/scheduled-tasks) 而不是 `/schedule`。對於雲端工作階段，使用 [GitHub Actions](/docs/zh-TW/github-actions) 或 [GitLab CI/CD](/docs/zh-TW/gitlab-ci-cd)。
+    **替代方案：** 對於排程，使用 [`/loop`](/docs/zh-TW/scheduled-tasks) 而不是 `/schedule`。對於雲端工作階段，使用 [GitHub Actions](/docs/zh-TW/github-actions) 或 [GitLab CI/CD](/docs/zh-TW/gitlab-ci-cd)。
   </Tab>
 
   <Tab title="Microsoft Foundry">
-    **不可用：** 所有[需要 Claude 訂閱的功能](#features-that-require-a-claude-subscription)，加上 [fast mode](/docs/zh-TW/fast-mode)、[Advisor](/docs/zh-TW/advisor)、[Channels](/docs/zh-TW/channels)、[GitHub Actions](/docs/zh-TW/github-actions) 和 [GitLab CI/CD](/docs/zh-TW/gitlab-ci-cd)、[分析儀表板](/docs/zh-TW/analytics)、[伺服器管理的設定](/docs/zh-TW/server-managed-settings) 和 [`/design-sync` 和 `/radio` 命令](/docs/zh-TW/commands#all-commands)。
+    **不可用：** 所有[需要 Claude 訂閱的功能](#features-that-require-a-claude-subscription)，加上 [fast mode](/docs/zh-TW/fast-mode)、[Advisor](/docs/zh-TW/advisor)、[Channels](/docs/zh-TW/channels)、[GitLab CI/CD](/docs/zh-TW/gitlab-ci-cd)、[分析儀表板](/docs/zh-TW/analytics)、[伺服器管理的設定](/docs/zh-TW/server-managed-settings) 和 [`/design-sync` 和 `/import` 命令](/docs/zh-TW/commands#all-commands)。
 
     **部分支援：**
 
-    * [Desktop](/docs/zh-TW/desktop)：僅透過[在 3P 上的 Claude Desktop](https://claude.com/docs/third-party/claude-desktop/overview)
-    * [Auto mode](/docs/zh-TW/auto-mode-config)：Sonnet 5、Opus 4.7 和 Opus 4.8 僅限
-    * [`/loop`](/docs/zh-TW/scheduled-tasks)：僅限明確間隔
+    * [Desktop](/docs/zh-TW/desktop)：僅透過 [Claude Desktop on 3P](https://claude.com/docs/third-party/claude-desktop/overview)
+    * [Web search](/docs/zh-TW/tools-reference#websearch-tool-behavior)：[部署於 Anthropic 上](https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry#hosting-options)僅限
+    * [Auto mode](/docs/zh-TW/auto-mode-config)：Sonnet 5、Opus 4.7 或更新版本，以及 Fable 模型僅限
+    * [Cross-session messaging](/docs/zh-TW/cross-session-messaging)：僅限此機器上的您的工作階段 <sup><a href="#fn5">5</a></sup>
     * [Zero Data Retention](/docs/zh-TW/zero-data-retention)：受您的 Azure 協議約束
 
-    **替代方案：** 對於排程，使用具有明確間隔的 [`/loop`](/docs/zh-TW/scheduled-tasks) 而不是 `/schedule`。
+    **替代方案：** 對於排程，使用 [`/loop`](/docs/zh-TW/scheduled-tasks) 而不是 `/schedule`。對於雲端工作階段，使用 [GitHub Actions](/docs/zh-TW/github-actions)。
   </Tab>
 
   <Tab title="Anthropic Console">
     **不可用：** 所有[需要 Claude 訂閱的功能](#features-that-require-a-claude-subscription)。
 
-    [按提供者變化的 CLI 功能](#cli-capabilities-that-vary-by-provider)中的所有功能都可用，當 API 金鑰屬於 Team 或 Enterprise 組織時，[伺服器管理的設定](/docs/zh-TW/server-managed-settings)也可用。
+    [按提供者變化的 CLI 功能](#cli-capabilities-that-vary-by-provider)中的所有功能都可用，除了 [fast mode](/docs/zh-TW/fast-mode) 需要[已佈建的存取](/docs/zh-TW/fast-mode#enable-fast-mode-for-your-organization)。當您的 API 金鑰屬於 Team 或 Enterprise 組織時，[伺服器管理的設定](/docs/zh-TW/server-managed-settings)也可用。
   </Tab>
 </Tabs>
 
@@ -289,7 +305,7 @@ Desktop 是部分例外：[閘道路由可以在應用程式中或由管理員�
 
 | 功能                                                                          | Pro | Max | Team  | Enterprise                        |
 | :-------------------------------------------------------------------------- | :-- | :-- | :---- | :-------------------------------- |
-| [網頁上的 Claude Code](/docs/zh-TW/claude-code-on-the-web)                           | ✓   | ✓   | ✓     | ✓ <sup><a href="#fn6">6</a></sup> |
+| [Cloud sessions](/docs/zh-TW/claude-code-on-the-web)                             | ✓   | ✓   | ✓     | ✓ <sup><a href="#fn6">6</a></sup> |
 | [Routines](/docs/zh-TW/routines)                                                 | ✓   | ✓   | ✓     | ✓                                 |
 | [Remote Control](/docs/zh-TW/remote-control)                                     | ✓   | ✓   | 管理員啟用 | 管理員啟用                             |
 | [Channels](/docs/zh-TW/channels)                                                 | ✓   | ✓   | 管理員啟用 | 管理員啟用                             |
@@ -305,7 +321,7 @@ Desktop 是部分例外：[閘道路由可以在應用程式中或由管理員�
 | [Compliance API](https://platform.claude.com/docs/en/api/compliance)        | ✗   | ✗   | ✗     | ✓                                 |
 | [Zero Data Retention](/docs/zh-TW/zero-data-retention)                           | ✗   | ✗   | ✗     | ✓ <sup><a href="#fn7">7</a></sup> |
 
-<span id="fn6" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>6</sup> 在 Enterprise 上，需要進階座位或 Chat + Claude Code 座位。請參閱[網頁上的 Claude Code](/docs/zh-TW/claude-code-on-the-web)。<br />
+<span id="fn6" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>6</sup> 在 Enterprise 上，需要進階座位或 Chat + Claude Code 座位。請參閱[在雲端上使用 Claude Code](/docs/zh-TW/claude-code-on-the-web)。<br />
 <span id="fn7" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>7</sup> 不包含在標準 Enterprise 計畫中。需要 Anthropic 為符合條件的帳戶進行單獨啟用。請參閱 [Zero Data Retention](/docs/zh-TW/zero-data-retention)。
 
 如需定價和完整計畫比較，請參閱 [Team 計畫](https://support.claude.com/en/articles/9266767-what-is-the-team-plan)和 [Enterprise 計畫](https://support.claude.com/en/articles/9797531-what-is-the-enterprise-plan)。

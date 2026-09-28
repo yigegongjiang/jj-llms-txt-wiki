@@ -102,7 +102,7 @@ Gunakan ini sebagai pesan peluncuran organisasi luas standar Anda. Ini mencakup 
     📚 Quickstart · VS Code · Kursus gratis 1 jam
        https://code.claude.com/docs/en/quickstart
        https://code.claude.com/docs/en/vs-code
-       https://anthropic.skilljar.com/claude-code-in-action
+       https://academy.claude.com/courses/claude-code-in-action
 
     Pertanyaan → utas ini. [Pemilik] sedang mengerjakan.
     ```
@@ -210,8 +210,6 @@ Saya dapat berbagi playbook singkat jika Anda tertarik.
 
 Pesan Slack atau Teams siap tempel yang dirancang untuk mendorong aktivasi fitur setelah peluncuran. Masing-masing mengikuti pola yang sama: hook, hasil, prompt "coba sekarang", dan tautan docs. Teteskan satu atau dua per minggu di `#claude-code`, atau pilih segelintir yang cocok dengan celah tim Anda. Mereka berdiri sendiri tanpa urutan yang diperlukan.
 
-Salin badan pesan dari setiap blok langsung ke Slack atau Teams. Ganti `[placeholder dalam kurung]` sebelum mengirim.
-
 <h3 id="get-started">
   Memulai
 </h3>
@@ -228,22 +226,23 @@ Claude Code berjalan pada model yang sama dengan aplikasi Claude, dan Anda dapat
 di tengah sesi. *Sonnet* adalah default workhorse untuk pekerjaan fitur sehari-hari,
 bug, tes, dan review. Gunakan *Opus* untuk refactor besar, debugging rumit, atau apa pun
 yang berisiko tinggi. Turun ke *Haiku* untuk pertanyaan cepat, pemformatan, dan edit mekanis
-di mana kecepatan menang. *Fable 5* adalah model paling mampu untuk tugas-tugas tersulit dan
+di mana kecepatan menang. *Fable* adalah model paling mampu untuk tugas-tugas tersulit dan
 paling lama; itu bukan default, jadi pilih dengan `/model fable`, dan perhatikan bahwa konten
-cybersecurity dan biology kembali ke Opus secara otomatis.
+cybersecurity dan biology kembali ke Opus secara otomatis. Opus 5.5 dan Opus 5 menjalankan pemeriksaannya sendiri juga: konten yang ditandai beralih ke Opus sebelumnya, kecuali
+konten biology yang ditandai pada Opus 5 ditolak.
 
 *Coba sekarang:* ketik `/model` dan pilih Sonnet jika Anda belum melakukannya. Ini adalah
 default yang tepat untuk sebagian besar tugas.
 
-📖 Konfigurasi model → https://code.claude.com/docs/id/model-config
+📖 Model configuration → https://code.claude.com/docs/id/model-config
 ```
 
-| Model   | Terbaik untuk                                                                                                                                                                  |
-| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Fable 5 | Tugas-tugas tersulit dan paling lama. Opt-in saja: pilih dengan `/model fable`. Konten cybersecurity atau biology [kembali ke Opus](/docs/id/model-config#automatic-model-fallback) |
-| Opus    | Refactor skala besar, debugging kompleks, keputusan arsitektur, perubahan berisiko tinggi                                                                                      |
-| Sonnet  | Pekerjaan fitur sehari-hari, perbaikan bug, tes, dokumentasi, review kode. Default yang direkomendasikan.                                                                      |
-| Haiku   | Pertanyaan cepat, pemformatan, edit mekanis, iterasi cepat                                                                                                                     |
+| Model  | Terbaik untuk                                                                                                                                                                                                                                     |
+| ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Fable  | Tugas-tugas tersulit dan paling lama. Opt-in saja: pilih dengan `/model fable`. Konten cybersecurity atau biology memicu [fallback model otomatis ke Opus](/docs/id/model-config#automatic-model-fallback)                                             |
+| Opus   | Refactor skala besar, debugging kompleks, keputusan arsitektur, perubahan berisiko tinggi. Pada Opus 5.5 dan Opus 5, konten cybersecurity atau biology memicu [fallback model otomatis atau penolakan](/docs/id/model-config#automatic-model-fallback) |
+| Sonnet | Pekerjaan fitur sehari-hari, perbaikan bug, tes, dokumentasi, review kode. Default yang direkomendasikan.                                                                                                                                         |
+| Haiku  | Pertanyaan cepat, pemformatan, edit mekanis, iterasi cepat                                                                                                                                                                                        |
 
 **Kemenangan cepat untuk dicoba terlebih dahulu**
 
@@ -285,10 +284,10 @@ lembar cheat, bukan dokumentasi.
 *Coba sekarang:* buka repo utama Anda, jalankan `claude`, ketik `/init`. Tiga puluh
 detik, membayar setiap sesi setelahnya.
 
-📖 CLAUDE.md dan memori proyek → https://code.claude.com/docs/id/memory
+📖 CLAUDE.md and project memory → https://code.claude.com/docs/id/memory
 ```
 
-**Referensi @**
+**@-references**
 
 ```markdown theme={null}
 📎 *Tip: Berhenti menempel konten file ke dalam chat*
@@ -304,14 +303,14 @@ Bekerja untuk seluruh direktori juga.
 
 *Coba sekarang:* ketik `@` kemudian Tab. Autocomplete menunjukkan Anda setiap file dalam jangkauan.
 
-📖 Mereferensikan file → https://code.claude.com/docs/id/common-workflows
+📖 Referencing files → https://code.claude.com/docs/id/common-workflows
 ```
 
 <h3 id="control-and-safety">
   Kontrol dan keamanan
 </h3>
 
-**Mode izin**
+**Permission modes**
 
 ```markdown theme={null}
 🛡️ *Tip: Satu keystroke antara "lihat tetapi jangan sentuh" dan "lakukan saja"*
@@ -320,7 +319,7 @@ Kadang-kadang Anda ingin Claude meminta sebelum setiap edit. Kadang-kadang Anda 
 itu dikirim. Anda tidak harus memilih satu selamanya.
 
 *Shift+Tab* bersiklus melalui berapa banyak yang dapat dilakukan Claude tanpa bertanya: *Manual* (nilai
-pengaturan `default`) meminta sebelum setiap tindakan, *acceptEdits* membiarkan edit file dan perintah
+pengaturan `default`) meminta sebelum edit file dan sebagian besar perintah shell, *acceptEdits* membiarkan edit file dan perintah
 filesystem umum mengalir sementara masih memeriksa sebelum perintah shell lainnya, dan *plan*
 mengusulkan perubahan untuk persetujuan Anda sebelum apa pun disentuh. Mode plan adalah pembangun
 kepercayaan, jadi mulai dari sana untuk apa pun yang menyentuh beberapa file.
@@ -328,7 +327,7 @@ kepercayaan, jadi mulai dari sana untuk apa pun yang menyentuh beberapa file.
 *Coba sekarang:* pada refactor berikutnya, tekan Shift+Tab sampai Anda melihat "plan",
 kemudian jelaskan perubahan. Anda akan mendapatkan proposal lengkap sebelum file tunggal bergerak.
 
-📖 Mode izin → https://code.claude.com/docs/id/permissions
+📖 Permission modes → https://code.claude.com/docs/id/permissions
 ```
 
 **Checkpointing dan `/rewind`**
@@ -352,7 +351,7 @@ Pilih titik sebelum hal-hal menjadi miring.
   Hubungkan alat Anda
 </h3>
 
-**Konektor MCP**
+**MCP connectors**
 
 ```markdown theme={null}
 🔌 *Tip: Biarkan Claude membaca pelacak masalah Anda sehingga Anda tidak harus menempel tiket*
@@ -367,7 +366,7 @@ yang ditugaskan kepada saya?" dan "lanjutkan dan perbaiki" terjadi dalam percaka
 *Coba sekarang:* tanya Claude "atur konektor MCP untuk [GitHub/Jira/Linear]
 di repo ini". Itu akan menulis konfigurasi untuk Anda.
 
-📖 Konektor MCP → https://code.claude.com/docs/id/mcp
+📖 MCP connectors → https://code.claude.com/docs/id/mcp
 ```
 
 <h3 id="automate-your-workflows">
@@ -407,14 +406,14 @@ dan mendapatkan ping saat selesai.
 *Coba sekarang:* tanya Claude "tambahkan Hook Stop yang mengirim notifikasi desktop
 saat Anda selesai". Itu akan menulis skrip dan menghubungkannya.
 
-📖 Panduan hooks → https://code.claude.com/docs/id/hooks-guide
+📖 Hooks guide → https://code.claude.com/docs/id/hooks-guide
 ```
 
 <h3 id="day-to-day-development">
   Pengembangan sehari-hari
 </h3>
 
-**Tangkapan layar dan gambar**
+**Screenshots dan images**
 
 ```markdown theme={null}
 📸 *Tip: Berhenti menjelaskan dialog kesalahan. Tunjukkan saja.*
@@ -423,16 +422,15 @@ Mengetik "ada kotak merah yang mengatakan sesuatu tentang referensi null
 dan menunjuk ke baris 47-ish"? Tangkap layarnya.
 
 Seret tangkapan layar langsung ke terminal dan Claude melihatnya: dialog kesalahan, mockup UI,
-foto whiteboard, ekspor Figma. *Ctrl+V* menempel dari clipboard (gunakan Ctrl+V di macOS juga,
-bukan Cmd+V).
+foto whiteboard, ekspor Figma. *Ctrl+V* menempel dari clipboard, atau *Alt+V* di Windows dan WSL.
 
 *Coba sekarang:* lain kali sesuatu yang visual rusak, tangkap layarnya dan tempel langsung
 ke prompt. Kemudian cukup ketik "apa yang salah di sini?"
 
-📖 Bekerja dengan gambar → https://code.claude.com/docs/id/common-workflows
+📖 Working with images → https://code.claude.com/docs/id/common-workflows
 ```
 
-**Alur kerja Git**
+**Git workflows**
 
 ```markdown theme={null}
 🌿 *Tip: Serahkan seluruh upacara git*
@@ -448,7 +446,7 @@ Tempel URL PR dan minta Claude untuk menjelaskan diff kepada Anda.
 *Coba sekarang:* setelah perbaikan berikutnya, alih-alih beralih ke klien git Anda,
 cukup ketik "commit ini dengan pesan yang baik dan buka PR".
 
-📖 Membuat pull request → https://code.claude.com/docs/id/common-workflows
+📖 Creating pull requests → https://code.claude.com/docs/id/common-workflows
 ```
 
 <h3 id="share-and-scale">
@@ -463,7 +461,7 @@ cukup ketik "commit ini dengan pesan yang baik dan buka PR".
 Tentang untuk menghabiskan satu jam membangun perintah `/deploy`? Periksa apakah
 sudah ada.
 
-Skills dikemas dan dibagikan sebagai plugin. `/plugin` menelusuri apa yang
+Skills dikemas dan dibagikan sebagai plugins. `/plugin` menelusuri apa yang
 tersedia dan menginstal dalam satu langkah. Lima menit browsing dapat menghemat
 satu jam pembangunan.
 
@@ -477,7 +475,7 @@ hal yang tidak Anda tahu Anda inginkan.
   Keamanan dan admin
 </h3>
 
-**Arsitektur keamanan**
+**Security architecture**
 
 ```markdown theme={null}
 🔐 *Tip: Jawaban untuk "apakah ini aman?" untuk lain kali Anda ditanya*
@@ -498,7 +496,7 @@ Mereka menjawab sebagian besar pertanyaan review keamanan.
 📖 https://code.claude.com/docs/id/data-usage
 ```
 
-**Praktik terbaik**
+**Best practices**
 
 ```markdown theme={null}
 ✅ *Tip: 4 kebiasaan yang memisahkan "mencoba sekali" dari "gunakan setiap hari"*
@@ -506,16 +504,16 @@ Mereka menjawab sebagian besar pertanyaan review keamanan.
 Sebagian besar orang yang terpental dari Claude Code melewatkan salah satu dari ini.
 Sebagian besar orang yang bertahan melakukan keempat-empatnya dalam minggu pertama.
 
-  - Mulai dalam mode plan untuk apa pun yang menyentuh beberapa file
+  - Mulai dalam plan mode untuk apa pun yang menyentuh beberapa file
   - Jalankan /init lebih awal; konteks bertambah
-  - Tinjau diff sebelum commit; Claude dapat dengan percaya diri salah
+  - Tinjau diffs sebelum commit; Claude dapat dengan percaya diri salah
   - Verifikasi perubahan yang menyentuh jalur kritis; perlakukan seperti junior
     yang tajam, bukan oracle
 
 *Coba sekarang:* jika Anda hanya melakukan satu atau dua dari ini, pilih yang Anda
 lewatkan dan lakukan pada tugas berikutnya. Posting apa yang berubah di #claude-code.
 
-📖 Praktik terbaik → https://code.claude.com/docs/id/best-practices
+📖 Best practices → https://code.claude.com/docs/id/best-practices
 ```
 
 <h2 id="quick-reference">

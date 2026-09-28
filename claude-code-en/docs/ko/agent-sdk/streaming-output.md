@@ -6,7 +6,7 @@
 
 > 텍스트와 도구 호출이 스트리밍될 때 Agent SDK에서 실시간 응답 받기
 
-기본적으로 Agent SDK는 Claude가 각 응답 생성을 완료한 후 완전한 `AssistantMessage` 객체를 생성합니다. 텍스트와 도구 호출이 생성될 때 증분 업데이트를 받으려면 옵션에서 `include_partial_messages`(Python) 또는 `includePartialMessages`(TypeScript)를 `true`로 설정하여 부분 메시지 스트리밍을 활성화하십시오.
+기본적으로 Agent SDK는 Claude가 각 블록 생성을 완료한 후 텍스트 블록이나 도구 호출과 같은 비어있지 않은 각 콘텐츠 블록에 대해 완전한 `AssistantMessage`를 생성합니다. 텍스트와 도구 호출이 생성될 때 증분 업데이트를 받으려면 부분 메시지 스트리밍을 활성화하십시오.
 
 <Tip>
   이 페이지는 출력 스트리밍(실시간으로 토큰 수신)을 다룹니다. 입력 모드(메시지 전송 방법)는 [에이전트에 메시지 전송하기](/docs/ko/agent-sdk/streaming-vs-single-mode)를 참조하십시오. [CLI를 통해 Agent SDK를 사용하여 응답 스트리밍하기](/docs/ko/headless)도 가능합니다.
@@ -79,34 +79,14 @@
 
 부분 메시지가 활성화되면 객체로 래핑된 원본 Claude API 스트리밍 이벤트를 받습니다. 유형은 각 SDK에서 다른 이름을 가집니다:
 
-* **Python**: `StreamEvent` (`claude_agent_sdk.types`에서 가져오기)
-* **TypeScript**: `type: 'stream_event'`를 가진 `SDKPartialAssistantMessage`
+* **Python**: [`StreamEvent`](/docs/ko/agent-sdk/python#streamevent) (`claude_agent_sdk.types`에서 가져오기)
+* **TypeScript**: [`SDKPartialAssistantMessage`](/docs/ko/agent-sdk/typescript#sdkpartialassistantmessage) (`type: 'stream_event'` 포함)
 
-둘 다 누적된 텍스트가 아닌 원본 Claude API 이벤트를 포함합니다. 텍스트 델타를 직접 추출하고 누적해야 합니다. 각 유형의 구조는 다음과 같습니다:
-
-<CodeGroup>
-  ```python Python theme={null}
-  @dataclass
-  class StreamEvent:
-      uuid: str  # Unique identifier for this event
-      session_id: str  # Session identifier
-      event: dict[str, Any]  # The raw Claude API stream event
-      parent_tool_use_id: str | None  # Always None
-  ```
-
-  ```typescript TypeScript theme={null}
-  type SDKPartialAssistantMessage = {
-    type: "stream_event";
-    event: BetaRawMessageStreamEvent; // From Anthropic SDK
-    parent_tool_use_id: string | null;
-    uuid: UUID;
-    session_id: string;
-    ttft_ms?: number; // Time to first token in ms, present only on message_start events
-  };
-  ```
-</CodeGroup>
+둘 다 누적된 텍스트가 아닌 원본 Claude API 이벤트를 포함합니다. 텍스트 델타를 직접 추출하고 누적해야 합니다.
 
 `parent_tool_use_id` 필드는 Python에서는 항상 `None`이고 TypeScript에서는 `null`입니다. 스트림 이벤트는 주 세션에서만 발생합니다. 서브에이전트의 토큰 수준 델타는 전달되지 않습니다. 출력을 서브에이전트에 귀속시키려면 `parent_tool_use_id`를 포함하는 완전한 메시지를 사용하십시오. [서브에이전트 호출 감지](/docs/ko/agent-sdk/subagents#detect-subagent-invocation)를 참조하십시오.
+
+Claude Code는 턴의 첫 번째 비핑 스트림 이벤트에서 `user_message_uuid`를 설정하고, 턴이 응답하는 메시지가 변경될 때 다시 설정합니다. 이는 [`user_message_uuid`](/docs/ko/agent-sdk/typescript#user_message_uuid)의 조건에 따릅니다. Python `StreamEvent`는 이 필드를 노출하지 않습니다.
 
 `event` 필드는 [Claude API](https://platform.claude.com/docs/en/build-with-claude/streaming#event-types)의 원본 스트리밍 이벤트를 포함합니다. 일반적인 이벤트 유형은 다음과 같습니다:
 
@@ -123,75 +103,26 @@
   메시지 흐름
 </h2>
 
-부분 메시지가 활성화되면 다음 순서로 메시지를 받습니다:
+Claude Code는 각 비어있지 않은 콘텐츠 블록이 완료될 때마다 `AssistantMessage`를 내보내므로, 텍스트 블록과 도구 호출을 포함하는 응답은 두 개의 `AssistantMessage` 객체를 생성합니다. 각 메시지는 자신의 콘텐츠 블록만 포함하며, 둘 다 동일한 메시지 ID를 공유합니다. 이는 TypeScript에서 `message.message.id`로, Python에서 `message.message_id`로 읽습니다. 부분 메시지가 활성화된 경우, 각 `AssistantMessage`는 해당 블록의 `content_block_stop` 이벤트 이전에 도착하며, 다음 순서로 메시지를 수신합니다:
 
 ```text theme={null}
 StreamEvent (message_start)
 StreamEvent (content_block_start) - text block
 StreamEvent (content_block_delta) - text chunks...
+AssistantMessage - complete text block
 StreamEvent (content_block_stop)
 StreamEvent (content_block_start) - tool_use block
 StreamEvent (content_block_delta) - tool input chunks...
+AssistantMessage - complete tool_use block
 StreamEvent (content_block_stop)
 StreamEvent (message_delta)
 StreamEvent (message_stop)
-AssistantMessage - complete message with all content
 ... tool executes ...
 ... more streaming events for next turn ...
 ResultMessage - final result
 ```
 
-부분 메시지가 활성화되지 않은 경우(Python의 `include_partial_messages`, TypeScript의 `includePartialMessages`), `StreamEvent`를 제외한 모든 메시지 유형을 받습니다. 일반적인 유형에는 `SystemMessage`(세션 초기화), `AssistantMessage`(완전한 응답), `ResultMessage`(최종 결과) 및 대화 기록이 압축된 시점을 나타내는 컴팩트 경계 메시지(TypeScript의 `SDKCompactBoundaryMessage`; Python의 서브타입 `"compact_boundary"`를 가진 `SystemMessage`)가 포함됩니다.
-
-<h2 id="stream-text-responses">
-  텍스트 응답 스트리밍
-</h2>
-
-생성되는 텍스트를 표시하려면 `delta.type`이 `text_delta`인 `content_block_delta` 이벤트를 찾습니다. 이 이벤트에는 증분 텍스트 청크가 포함됩니다. 아래 예제는 도착하는 각 청크를 인쇄합니다:
-
-<CodeGroup>
-  ```python Python theme={null}
-  from claude_agent_sdk import query, ClaudeAgentOptions
-  from claude_agent_sdk.types import StreamEvent
-  import asyncio
-
-
-  async def stream_text():
-      options = ClaudeAgentOptions(include_partial_messages=True)
-
-      async for message in query(prompt="Explain how databases work", options=options):
-          if isinstance(message, StreamEvent):
-              event = message.event
-              if event.get("type") == "content_block_delta":
-                  delta = event.get("delta", {})
-                  if delta.get("type") == "text_delta":
-                      # Print each text chunk as it arrives
-                      print(delta.get("text", ""), end="", flush=True)
-
-      print()  # Final newline
-
-
-  asyncio.run(stream_text())
-  ```
-
-  ```typescript TypeScript theme={null}
-  import { query } from "@anthropic-ai/claude-agent-sdk";
-
-  for await (const message of query({
-    prompt: "Explain how databases work",
-    options: { includePartialMessages: true }
-  })) {
-    if (message.type === "stream_event") {
-      const event = message.event;
-      if (event.type === "content_block_delta" && event.delta.type === "text_delta") {
-        process.stdout.write(event.delta.text);
-      }
-    }
-  }
-
-  console.log(); // Final newline
-  ```
-</CodeGroup>
+부분 메시지가 활성화되지 않은 경우, `StreamEvent`를 제외한 모든 메시지 유형을 수신합니다. 일반적인 유형으로는 `SystemMessage` (세션 초기화), `AssistantMessage` (완전한 콘텐츠 블록), `ResultMessage` (최종 결과), 그리고 대화 기록이 압축되었을 때를 나타내는 컴팩트 경계 메시지 (TypeScript의 `SDKCompactBoundaryMessage`; Python의 `SystemMessage`와 서브타입 `"compact_boundary"`)가 있습니다.
 
 <h2 id="stream-tool-calls">
   도구 호출 스트리밍

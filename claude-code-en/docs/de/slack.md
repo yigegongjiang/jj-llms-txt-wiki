@@ -4,11 +4,14 @@
 
 # Claude Code in Slack
 
-> Delegieren Sie Codierungsaufgaben direkt aus Ihrem Slack-Arbeitsbereich
+> Delegieren Sie Codierungsaufgaben direkt aus Ihrem Slack-Arbeitsbereich. Anthropic stellt diese frühere Version für Team- und Enterprise-Arbeitsbereiche zugunsten von Claude Tag ein; sie bleibt der Einrichtungspfad für Pro- und Max-Pläne.
 
-<Note>
-  Claude Code in Slack wird durch [Claude Tag](https://claude.com/product/tag) für Team- und Enterprise-Arbeitsbereiche ersetzt. Claude Tag führt @Claude als die gemeinsame Identität Ihrer Organisation mit vom Administrator konfigurierten Zugriff unter derselben Slack-App aus, sodass es nichts zu reinstallieren gibt und bestehende Setups während des Übergangs weiterhin funktionieren. Um einen Arbeitsbereich zu wechseln, siehe [Migration von der früheren Claude in Slack](https://claude.com/docs/claude-tag/admins/migrate-from-earlier).
-</Note>
+<Warning>
+  Diese Seite dokumentiert die frühere Claude Code in Slack, die jede Sitzung unter dem Konto eines einzelnen Benutzers ausführt.
+
+  * **Team- und Enterprise-Pläne:** Anthropic stellt diese Version zugunsten von [Claude Tag](https://claude.com/product/tag) ein, das @Claude als die gemeinsame Identität Ihrer Organisation mit vom Administrator konfiguriertem Zugriff ausführt. Ihre bestehende Slack-App und @Claude-Handle bleiben erhalten, und Ihr Anthropic-Kontoteam kann Ihnen das Umstellungsdatum mitteilen. [Richten Sie Claude Tag ein](https://claude.com/docs/claude-tag/overview) für einen neuen Arbeitsbereich ein; um einen zu verschieben, der bereits diese Version verwendet, siehe [Migration von der früheren Claude in Slack](https://claude.com/docs/claude-tag/admins/migrate-from-earlier).
+  * **Pro- und Max-Pläne:** Claude Tag ist nicht auf Einzelplänen verfügbar, daher bleibt diese Seite der Einrichtungspfad.
+</Warning>
 
 Claude Code in Slack bringt die Leistung von Claude Code direkt in Ihren Slack-Arbeitsbereich. Wenn Sie `@Claude` mit einer Codierungsaufgabe erwähnen, erkennt Claude automatisch die Absicht und erstellt eine Claude Code-Sitzung im Web, sodass Sie Entwicklungsarbeiten delegieren können, ohne Ihre Team-Gespräche zu verlassen.
 
@@ -29,12 +32,12 @@ Diese Integration basiert auf der bestehenden Claude for Slack-App, fügt aber i
 
 Bevor Sie Claude Code in Slack verwenden, stellen Sie sicher, dass Sie über Folgendes verfügen:
 
-| Anforderung             | Details                                                                                                |
-| :---------------------- | :----------------------------------------------------------------------------------------------------- |
-| Claude Plan             | Pro, Max, Team oder Enterprise mit Claude Code-Zugriff (Premium-Plätze oder Chat + Claude Code-Plätze) |
-| Claude Code im Web      | Der Zugriff auf [Claude Code im Web](/docs/de/claude-code-on-the-web) muss aktiviert sein                   |
-| GitHub-Konto            | Mit Claude Code im Web verbunden mit mindestens einem authentifizierten Repository                     |
-| Slack-Authentifizierung | Ihr Slack-Konto ist über die Claude-App mit Ihrem Claude-Konto verknüpft                               |
+| Anforderung             | Details                                                                                                  |
+| :---------------------- | :------------------------------------------------------------------------------------------------------- |
+| Claude Plan             | Pro, Max, Team oder Enterprise mit Claude Code-Zugriff (Premium-Plätze oder Chat + Claude Code-Plätze)   |
+| Cloud-Sitzungen         | [Cloud-Sitzungen](/docs/de/claude-code-on-the-web) sind für Ihr Konto aktiviert                               |
+| GitHub-Konto            | Mit [claude.ai/code](https://claude.ai/code) verbunden mit mindestens einem authentifizierten Repository |
+| Slack-Authentifizierung | Ihr Slack-Konto ist über die Claude-App mit Ihrem Claude-Konto verknüpft                                 |
 
 <h2 id="setting-up-claude-code-in-slack">
   Einrichten von Claude Code in Slack
@@ -42,20 +45,20 @@ Bevor Sie Claude Code in Slack verwenden, stellen Sie sicher, dass Sie über Fol
 
 <Steps>
   <Step title="Installieren Sie die Claude-App in Slack">
-    Ein Workspace-Administrator muss die Claude-App aus dem Slack App Marketplace installieren. Besuchen Sie den [Slack App Marketplace](https://slack.com/marketplace/A08SF47R6P4) und klicken Sie auf 'Zu Slack hinzufügen", um den Installationsprozess zu starten.
+    Ein Workspace-Administrator muss die Claude-App aus dem Slack App Marketplace installieren. Besuchen Sie den [Slack App Marketplace](https://slack.com/marketplace/A08SF47R6P4) und klicken Sie auf „Zu Slack hinzufügen", um den Installationsprozess zu starten.
   </Step>
 
   <Step title="Verbinden Sie Ihr Claude-Konto">
     Nach der Installation der App authentifizieren Sie Ihr individuelles Claude-Konto:
 
-    1. Öffnen Sie die Claude-App in Slack, indem Sie auf 'Claude" in Ihrem Apps-Bereich klicken
-    2. Navigieren Sie zur Registerkarte „App Home"
+    1. Öffnen Sie die Claude-App in Slack, indem Sie auf „Claude" in Ihrem Apps-Bereich klicken
+    2. Öffnen Sie die Registerkarte „App Home"
     3. Klicken Sie auf „Verbinden", um Ihr Slack-Konto mit Ihrem Claude-Konto zu verknüpfen
     4. Schließen Sie den Authentifizierungsfluss in Ihrem Browser ab
   </Step>
 
-  <Step title="Konfigurieren Sie Claude Code im Web">
-    Stellen Sie sicher, dass Ihr Claude Code im Web ordnungsgemäß konfiguriert ist:
+  <Step title="Konfigurieren Sie Cloud-Sitzungen">
+    Stellen Sie sicher, dass Cloud-Sitzungen ordnungsgemäß für Ihr Konto konfiguriert sind:
 
     * Besuchen Sie [claude.ai/code](https://claude.ai/code) und melden Sie sich mit dem gleichen Konto an, das Sie mit Slack verbunden haben
     * Verbinden Sie Ihr GitHub-Konto, falls noch nicht geschehen
@@ -63,7 +66,7 @@ Bevor Sie Claude Code in Slack verwenden, stellen Sie sicher, dass Sie über Fol
   </Step>
 
   <Step title="Wählen Sie Ihren Routing-Modus">
-    Nach dem Verbinden Ihrer Konten konfigurieren Sie, wie Claude Ihre Nachrichten in Slack verarbeitet. Navigieren Sie zur Claude App Home in Slack, um die Einstellung **Routing Mode** zu finden.
+    Nach dem Verbinden Ihrer Konten konfigurieren Sie, wie Claude Ihre Nachrichten in Slack verarbeitet. Öffnen Sie die Claude App Home in Slack, um die Einstellung **Routing Mode** zu finden.
 
     | Modus           | Verhalten                                                                                                                                                                                                                                                                        |
     | :-------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -88,7 +91,7 @@ Bevor Sie Claude Code in Slack verwenden, stellen Sie sicher, dass Sie über Fol
   Automatische Erkennung
 </h3>
 
-Wenn Sie @Claude in einem Slack-Kanal oder Thread erwähnen, analysiert Claude automatisch Ihre Nachricht, um festzustellen, ob es sich um eine Codierungsaufgabe handelt. Wenn Claude Codierungsabsicht erkennt, leitet es Ihre Anfrage stattdessen zu Claude Code im Web weiter, anstatt als regulärer Chat-Assistent zu antworten.
+Im Code + Chat-Routing-Modus erkennt Claude automatisch, ob Ihre Nachricht eine Codierungsaufgabe ist, wenn Sie @Claude in einem Slack-Kanal oder Thread erwähnen. Codierungsaufgaben werden zu einer Claude Code Cloud-Sitzung weitergeleitet. Alles andere erhält eine reguläre Chat-Antwort. Im Code-only-Modus wird jede @Erwähnung zu Claude Code weitergeleitet.
 
 Sie können Claude auch explizit anweisen, eine Anfrage als Codierungsaufgabe zu behandeln, auch wenn es diese nicht automatisch erkennt.
 
@@ -119,17 +122,11 @@ Dieser Kontext hilft Claude, das Problem zu verstehen, das entsprechende Reposit
 3. **Sitzungserstellung**: Eine neue Claude Code-Sitzung wird auf claude.ai/code erstellt
 4. **Fortschritts-Updates**: Claude veröffentlicht Status-Updates in Ihrem Slack-Thread, während die Arbeit fortschreitet
 5. **Abschluss**: Nach Abschluss @erwähnt Claude Sie mit einer Zusammenfassung und Aktionsschaltflächen
-6. **Überprüfung**: Klicken Sie auf 'Sitzung anzeigen", um das vollständige Transkript zu sehen, oder auf „PR erstellen", um einen Pull Request zu öffnen
+6. **Überprüfung**: Klicken Sie auf „Sitzung anzeigen", um das vollständige Transkript zu sehen, oder auf „PR erstellen", um einen Pull Request zu öffnen
 
 <h2 id="user-interface-elements">
   Benutzeroberflächenelemente
 </h2>
-
-<h3 id="app-home">
-  App Home
-</h3>
-
-Die Registerkarte „App Home" zeigt Ihren Verbindungsstatus an und ermöglicht es Ihnen, Ihr Claude-Konto von Slack zu verbinden oder zu trennen.
 
 <h3 id="message-actions">
   Nachrichtenaktionen
@@ -177,14 +174,7 @@ Slack-Workspace-Administratoren kontrollieren, ob die Claude-App in ihrem Worksp
   Kanalbasierte Zugriffskontrolle
 </h3>
 
-Claude wird nach der Installation nicht automatisch zu Kanälen hinzugefügt. Benutzer müssen Claude explizit zu Kanälen einladen, in denen sie ihn verwenden möchten:
-
-* **Einladung erforderlich**: Geben Sie `/invite @Claude` in einem beliebigen Kanal ein, um Claude zu diesem Kanal hinzuzufügen
-* **Kanalmitgliedschaft kontrolliert den Zugriff**: Claude kann nur auf @mentions in Kanälen antworten, zu denen es hinzugefügt wurde
-* **Zugriffskontrolle durch Kanäle**: Administratoren können die Nutzung von Claude Code kontrollieren, indem sie verwalten, zu welchen Kanälen Claude eingeladen wird und wer Zugriff auf diese Kanäle hat
-* **Unterstützung für private Kanäle**: Claude funktioniert in öffentlichen und privaten Kanälen, was Teams Flexibilität bei der Kontrolle der Sichtbarkeit bietet
-
-Dieses kanalbasierte Modell ermöglicht es Teams, die Nutzung von Claude Code auf bestimmte Kanäle zu beschränken und bietet eine zusätzliche Ebene der Zugriffskontrolle über Workspace-Berechtigungen hinaus.
+Die Installation der App fügt Claude nicht automatisch zu Kanälen hinzu. Claude antwortet auf @mentions nur in Kanälen, zu denen es hinzugefügt wurde; laden Sie es mit `/invite @Claude` ein. Es funktioniert in öffentlichen und privaten Kanälen. Administratoren können die Nutzung von Claude Code kontrollieren, indem sie verwalten, zu welchen Kanälen Claude eingeladen wird und wer Zugriff auf diese Kanäle hat. Dies bietet eine zusätzliche Ebene der Zugriffskontrolle über Workspace-Berechtigungen hinaus.
 
 <h2 id="what’s-accessible-where">
   Was wo zugänglich ist
@@ -192,9 +182,9 @@ Dieses kanalbasierte Modell ermöglicht es Teams, die Nutzung von Claude Code au
 
 **In Slack**: Sie sehen Status-Updates, Abschluss-Zusammenfassungen und Aktionsschaltflächen. Das vollständige Transkript wird beibehalten und ist immer zugänglich.
 
-**Im Web**: Die vollständige Claude Code-Sitzung mit vollständigem Gesprächsverlauf, alle Code-Änderungen, Dateivorgänge und die Möglichkeit, die Sitzung fortzusetzen oder Pull Requests zu erstellen.
+**Bei claude.ai/code**: Die vollständige Claude Code-Sitzung mit vollständigem Gesprächsverlauf, alle Code-Änderungen und Dateivorgänge. Sitzungen bleiben in Ihrem Claude Code-Verlauf unter [claude.ai/code](https://claude.ai/code), wo Sie vergangene Sitzungen fortsetzen, auf sie verweisen oder Pull Requests erstellen können.
 
-Für Enterprise- und Team-Konten sind Sitzungen, die von Claude in Slack erstellt werden, automatisch für die Organisation sichtbar. Weitere Informationen finden Sie unter [Claude Code im Web-Freigabe](/docs/de/claude-code-on-the-web#share-sessions).
+Für Enterprise- und Team-Konten sind Sitzungen, die von Claude in Slack erstellt werden, automatisch für die Organisation sichtbar. Weitere Informationen finden Sie unter [Cloud-Sitzungsfreigabe](/docs/de/claude-code-on-the-web#share-sessions).
 
 <h2 id="best-practices">
   Best practices
@@ -206,14 +196,14 @@ Für Enterprise- und Team-Konten sind Sitzungen, die von Claude in Slack erstell
 
 * **Be specific**: Include file names, function names, or error messages when relevant.
 * **Provide context**: Mention the repository or project if it's not clear from the conversation.
-* **Define success**: Explain what "done" looks like—should Claude write tests? Update documentation? Create a PR?
+* **Define success**: Explain what "done" looks like. Should Claude write tests? Update documentation? Create a PR?
 * **Use threads**: Reply in threads when discussing bugs or features so Claude can gather the full context.
 
 <h3 id="when-to-use-slack-vs-web">
   When to use Slack vs. web
 </h3>
 
-**Use Slack when**: Context already exists in a Slack discussion, you want to kick off a task asynchronously, or you're collaborating with teammates who need visibility.
+**Use Slack when**: Context already exists in a Slack discussion, you want to start a task asynchronously, or you're collaborating with teammates who need visibility.
 
 **Use the web directly when**: You need to upload files, want real-time interaction during development, or are working on longer, more complex tasks.
 
@@ -225,21 +215,36 @@ Für Enterprise- und Team-Konten sind Sitzungen, die von Claude in Slack erstell
   „Claude Code ist für Ihr Konto nicht aktiviert"
 </h3>
 
-Dieser Fehler bedeutet, dass Ihr Claude-Konto noch keine Cloud-Umgebung hat, nicht dass ein Administrator etwas aktivieren muss. Melden Sie sich unter [claude.ai/code](https://claude.ai/code) einmal mit demselben Konto an, das Sie mit Slack verbunden haben. Der erste Besuch erstellt Ihre Standard-Cloud-Umgebung, und der Fehler wird bei Ihrer nächsten Erwähnung behoben. Jeder Benutzer muss dies einzeln durchführen.
+Dieser Fehler bedeutet, dass Ihr Claude-Konto noch keine Cloud-Umgebung hat. Melden Sie sich unter [claude.ai/code](https://claude.ai/code) einmal mit demselben Konto an, das Sie mit Slack verbunden haben, und schließen Sie das [Web-Onboarding](/docs/de/web-quickstart#connect-github) ab, das Ihre Standard-Cloud-Umgebung erstellt oder Sie auffordert, eine zu erstellen. Der Fehler wird bei Ihrer nächsten Erwähnung behoben. Jeder Benutzer muss dies einzeln durchführen.
 
 <h3 id="sessions-not-starting">
   Sitzungen starten nicht
 </h3>
 
 1. Überprüfen Sie, ob Ihr Claude-Konto in der Claude App Home verbunden ist
-2. Überprüfen Sie, ob Sie Claude Code im Web-Zugriff aktiviert haben
+2. Überprüfen Sie, ob Cloud-Sitzungen für Ihr Konto aktiviert sind
 3. Stellen Sie sicher, dass Sie mindestens ein GitHub-Repository mit Claude Code verbunden haben
+
+<h3 id="sessions-from-a-claude-tag-channel-fail-to-start">
+  Sitzungen aus einem Claude Tag-Kanal können nicht gestartet werden
+</h3>
+
+Dieser Eintrag gilt für Arbeitsbereiche, die [Claude Tag](https://claude.com/docs/claude-tag/overview) verwenden, wobei Claude in Kanälen als gemeinsame Identität Ihrer Organisation arbeitet, nicht als Konto eines Mitglieds. Wenn Sie die Cloud-Umgebung des Kanals unter [claude.ai/code](https://claude.ai/code) erstellt haben, gehört sie zu Ihrem persönlichen Konto, und Claude kann keine Kanalsitzungen in einer persönlichen Umgebung starten. Claude Code schlägt die Sitzung sofort fehl, und ein erneuter Versuch hilft nicht.
+
+Wenn Sie ein Besitzer sind und die Umgebung Ihre eigene ist, [teilen Sie sie mit der Organisation](/docs/de/cloud-environments#organization-shared-environments) über die Umgebungsauswahl. Andernfalls erstellt ein Besitzer sie als organisationsfreigegeben Umgebung auf der Seite **Cloud-Umgebungen** in den [Admin-Einstellungen](https://claude.ai/admin-settings) neu.
+
+Sie können sie auf zwei Arten anwenden:
+
+* Legen Sie sie als Organisationsstandardwert unter [claude.ai/admin-settings/claude-code](https://claude.ai/admin-settings/claude-code) fest.
+* [Legen Sie sie im Kanal](https://claude.com/docs/claude-tag/admins/troubleshooting#channel-sessions-use-the-wrong-environment-or-can%E2%80%99t-find-one) in den Claude Tag-Admin-Einstellungen fest.
+
+Wenn Sie kein Besitzer sind, senden Sie diesen Eintrag an einen.
 
 <h3 id="repository-not-showing">
   Repository wird nicht angezeigt
 </h3>
 
-1. Verbinden Sie das Repository in Claude Code im Web unter [claude.ai/code](https://claude.ai/code)
+1. Verbinden Sie das Repository unter [claude.ai/code](https://claude.ai/code)
 2. Überprüfen Sie Ihre GitHub-Berechtigungen für dieses Repository
 3. Versuchen Sie, Ihr GitHub-Konto zu trennen und erneut zu verbinden
 
@@ -258,29 +263,21 @@ Dieser Fehler bedeutet, dass Ihr Claude-Konto noch keine Cloud-Umgebung hat, nic
 2. Stellen Sie sicher, dass Sie in Ihrem Browser mit dem richtigen Claude-Konto angemeldet sind
 3. Überprüfen Sie, ob Ihr Claude-Plan Claude Code-Zugriff umfasst
 
-<h3 id="session-expiration">
-  Sitzungsablauf
-</h3>
-
-1. Sitzungen bleiben in Ihrem Claude Code-Verlauf im Web zugänglich
-2. Sie können vergangene Sitzungen von [claude.ai/code](https://claude.ai/code) aus fortsetzen oder referenzieren
-
 <h2 id="current-limitations">
   Aktuelle Einschränkungen
 </h2>
 
-* **Nur GitHub**: Unterstützt derzeit nur Repositories auf GitHub.
+* **Nur GitHub**: Repositories müssen auf GitHub sein.
 * **Ein PR gleichzeitig**: Jede Sitzung kann einen Pull Request erstellen.
-* **Ratenlimits gelten**: Sitzungen verwenden die Ratenlimits Ihres individuellen Claude-Plans.
-* **Web-Zugriff erforderlich**: Benutzer müssen Claude Code im Web-Zugriff haben; diejenigen ohne erhalten nur Standard-Claude-Chat-Antworten.
+* **Cloud-Sitzungszugriff erforderlich**: Benutzer benötigen Zugriff auf [Cloud-Sitzungen](/docs/de/claude-code-on-the-web); ohne diesen antwortet Claude mit Standard-Chat-Antworten.
 
 <h2 id="related-resources">
   Verwandte Ressourcen
 </h2>
 
 <CardGroup>
-  <Card title="Claude Code im Web" icon="globe" href="/docs/de/claude-code-on-the-web">
-    Erfahren Sie mehr über Claude Code im Web
+  <Card title="Claude Code in der Cloud" icon="cloud" href="/docs/de/claude-code-on-the-web">
+    Erfahren Sie mehr über Cloud-Sitzungen
   </Card>
 
   <Card title="Claude für Slack" icon="slack" href="https://claude.com/claude-and-slack">

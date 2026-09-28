@@ -8,21 +8,14 @@
 
 I system prompt definiscono il comportamento, le capacità e lo stile di risposta di Claude. Inizia dal preset `claude_code` per strumenti di codifica simili a CLI o IDE dove un utente osserva e guida il lavoro. Scrivi il tuo prompt per agenti con una superficie, identità o modello di autorizzazione diverso.
 
-Questa pagina copre:
-
-* [Come funzionano i system prompt](#how-system-prompts-work), con una tabella decisionale per scegliere tra il preset, il preset con `append`, e un prompt personalizzato
-* [Personalizza il comportamento dell'agente](#customize-agent-behavior) con file CLAUDE.md, stili di output, `append`, o una stringa personalizzata
-* [Confronta i quattro approcci](#compare-the-four-approaches) per persistenza, ambito, e cosa preservano
-* [Combina gli approcci](#combine-approaches) per stratificare i metodi di personalizzazione insieme
-
 <h2 id="how-system-prompts-work">
   Come funzionano i system prompt
 </h2>
 
 Un system prompt è l'insieme iniziale di istruzioni che modella il comportamento di Claude durante una conversazione. Agent SDK ha tre punti di partenza per esso:
 
-* **Default minimalista**: quando non impostate `systemPrompt` in TypeScript o `system_prompt` in Python, l'SDK utilizza un prompt minimalista che copre la chiamata degli strumenti ma omette le linee guida di codifica di Claude Code, lo stile di risposta e il contesto del progetto. Questo differisce da `claude -p`, che utilizza il prompt completo di Claude Code per impostazione predefinita. Se state migrando dalla CLI e desiderate un comportamento corrispondente, impostate il preset `claude_code`.
-* **Preset `claude_code`**: il system prompt completo che utilizza la CLI di Claude Code, con istruzioni di utilizzo degli strumenti, linee guida di stile e formattazione del codice, regole di tono e verbosità della risposta, istruzioni di sicurezza e protezione, e contesto sulla directory di lavoro e sull'ambiente. Impostate `systemPrompt: { type: "preset", preset: "claude_code" }` in TypeScript o `system_prompt={"type": "preset", "preset": "claude_code"}` in Python, facoltativamente con `append` per aggiungere le vostre istruzioni alla fine.
+* **Default minimalista**: quando non impostate `systemPrompt` in TypeScript o `system_prompt` in Python, l'SDK utilizza un prompt minimalista che copre la chiamata degli strumenti ma omette il resto del contenuto del preset `claude_code`, incluse le istruzioni di sicurezza e protezione e il contesto sulla directory di lavoro e sull'ambiente. Questo differisce da `claude -p`, che utilizza il system prompt di Claude Code per impostazione predefinita. Se state migrando dalla CLI e desiderate un comportamento corrispondente, impostate il preset `claude_code`.
+* **Preset `claude_code`**: il system prompt che utilizza la CLI di Claude Code, con istruzioni di utilizzo degli strumenti, istruzioni di sicurezza e protezione, e contesto sulla directory di lavoro e sull'ambiente. Impostate `systemPrompt: { type: "preset", preset: "claude_code" }` in TypeScript o `system_prompt={"type": "preset", "preset": "claude_code"}` in Python, facoltativamente con `append` per aggiungere le vostre istruzioni alla fine.
 * **Stringa personalizzata**: un prompt che scrivete voi stessi. L'SDK invia solo ciò che fornite.
 
 <h3 id="decide-on-a-starting-point">
@@ -33,7 +26,7 @@ Il fattore decisivo è quanto strettamente il vostro agente assomiglia a Claude 
 
 | State costruendo                                                                                                                   | Utilizzate                        | Cosa ottenete                                                                                                                                                         |
 | :--------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Uno strumento di codifica simile a CLI o IDE dove un umano osserva e guida, e i default di Claude Code sono quello che desiderate  | Preset `claude_code`              | Il prompt completo di Claude Code: guida degli strumenti, regole di sicurezza, risposte compatibili con il terminale, consapevolezza delle convenzioni del repository |
+| Uno strumento di codifica simile a CLI o IDE dove un umano osserva e guida, e i default di Claude Code sono quello che desiderate  | Preset `claude_code`              | Il prompt di Claude Code, inclusa la guida degli strumenti, le regole di sicurezza, e il contesto dell'ambiente                                                       |
 | Lo stesso tipo di strumento, più regole specifiche del prodotto come standard di codifica, formato di output o contesto di dominio | Preset `claude_code` con `append` | Tutto quanto sopra, con le vostre istruzioni aggiunte dopo il preset. Nulla viene rimosso, quindi questa è la personalizzazione a rischio più basso                   |
 | Un agente con una superficie diversa, un'identità diversa o un modello di permessi diverso, o un agente non di codifica            | Stringa di prompt personalizzata  | Solo quello che scrivete. Siete responsabili della sostituzione della guida degli strumenti e delle istruzioni di sicurezza di cui il vostro agente ha ancora bisogno |
 | Un ciclo di chiamata degli strumenti sottile senza persona dell'agente, dove fornite tutto il comportamento nel prompt dell'utente | Nessuna opzione `systemPrompt`    | Il default minimalista: supporto per la chiamata degli strumenti e nient'altro                                                                                        |
@@ -51,13 +44,13 @@ La [tabella di confronto](#compare-the-four-approaches) mostra cosa preserva ogn
   Personalizzare il comportamento dell'agente
 </h2>
 
-Gli stili di output, `append`, e una stringa di prompt personalizzata modificano direttamente il system prompt. CLAUDE.md segue un percorso diverso: l'SDK lo legge e inietta il suo contenuto nella conversazione come contesto del progetto, non nel system prompt, quindi modella il comportamento insieme a qualsiasi system prompt Lei scelga. [Skills](/docs/it/agent-sdk/skills), [hooks](/docs/it/agent-sdk/hooks), e [permissions](/docs/it/agent-sdk/permissions) modellano anche il comportamento al di fuori del system prompt e sono trattati in pagine separate.
+`append` e una stringa di prompt personalizzata modificano direttamente il system prompt, e uno stile di output cambia le istruzioni che Claude Code fornisce a Claude per ogni risposta. CLAUDE.md segue un percorso diverso: l'SDK lo legge e inietta il suo contenuto nella conversazione come contesto del progetto, quindi modella il comportamento insieme a qualsiasi system prompt Lei scelga. [Skills](/docs/it/agent-sdk/skills), [hooks](/docs/it/agent-sdk/hooks), e [permissions](/docs/it/agent-sdk/permissions) modellano anche il comportamento al di fuori del system prompt e sono trattati in pagine separate.
 
 <h3 id="claude-md-files-for-project-level-instructions">
   File CLAUDE.md per istruzioni a livello di progetto
 </h3>
 
-I file CLAUDE.md forniscono a Claude contesto e istruzioni persistenti a livello di progetto. L'SDK inietta il loro contenuto nella conversazione, non nel system prompt, quindi funzionano con qualsiasi configurazione di system prompt. Per sapere cosa mettere in CLAUDE.md, dove posizionarlo e come scrivere istruzioni efficaci, vedi [Come Claude ricorda il tuo progetto](/docs/it/memory). Questa sezione copre ciò che è specifico dell'SDK: come CLAUDE.md si carica.
+I file CLAUDE.md forniscono a Claude contesto e istruzioni persistenti a livello di progetto. L'SDK inietta il loro contenuto nella conversazione e lascia il system prompt intatto, quindi funzionano con qualsiasi configurazione di system prompt. Per sapere cosa mettere in CLAUDE.md, dove posizionarlo e come scrivere istruzioni efficaci, vedi [Quando aggiungere a CLAUDE.md](/docs/it/memory#when-to-add-to-claude-md) e il resto di [Come Claude ricorda il tuo progetto](/docs/it/memory). Questa sezione copre ciò che è specifico dell'SDK: come CLAUDE.md si carica.
 
 L'SDK legge CLAUDE.md quando la corrispondente fonte di impostazione è abilitata: `'project'` carica `CLAUDE.md` o `.claude/CLAUDE.md` dalla directory di lavoro, e `'user'` carica `~/.claude/CLAUDE.md`. Le opzioni predefinite di `query()` abilitano entrambe le fonti, quindi CLAUDE.md si carica automaticamente. Se impostate `settingSources` in TypeScript o `setting_sources` in Python esplicitamente, includete le fonti di cui avete bisogno. Il caricamento di CLAUDE.md è controllato dalle fonti di impostazione, non dal preset `claude_code`.
 
@@ -65,7 +58,7 @@ L'SDK legge CLAUDE.md quando la corrispondente fonte di impostazione è abilitat
   Caricare CLAUDE.md con l'SDK
 </h4>
 
-Per caricare CLAUDE.md, impostate `settingSources` per includere il livello in cui vive il vostro CLAUDE.md. L'esempio seguente carica un CLAUDE.md a livello di progetto insieme al preset `claude_code`, quindi Claude ha sia il prompt completo dell'agente di codifica che le convenzioni del vostro progetto:
+Per caricare CLAUDE.md, impostate `settingSources` per includere il livello in cui vive il vostro CLAUDE.md. L'esempio seguente carica un CLAUDE.md a livello di progetto insieme al preset `claude_code`, quindi Claude ha sia il prompt dell'agente di codifica che le convenzioni del vostro progetto:
 
 <CodeGroup>
   ```typescript TypeScript theme={null}
@@ -90,25 +83,34 @@ Per caricare CLAUDE.md, impostate `settingSources` per includere il livello in c
   ```
 
   ```python Python theme={null}
+  import asyncio
+
   from claude_agent_sdk import query, ClaudeAgentOptions
 
   messages = []
 
-  async for message in query(
-      prompt="Add a new React component for user profiles",
-      options=ClaudeAgentOptions(
-          system_prompt={
-              "type": "preset",
-              "preset": "claude_code",  # Use Claude Code's system prompt
-          },
-          setting_sources=["project"],  # Loads CLAUDE.md from project
-      ),
-  ):
-      messages.append(message)
+
+  async def main():
+      async for message in query(
+          prompt="Add a new React component for user profiles",
+          options=ClaudeAgentOptions(
+              system_prompt={
+                  "type": "preset",
+                  "preset": "claude_code",  # Use Claude Code's system prompt
+              },
+              setting_sources=["project"],  # Loads CLAUDE.md from project
+          ),
+      ):
+          messages.append(message)
+
+
+  asyncio.run(main())
 
   # Now Claude has access to your project guidelines from CLAUDE.md
   ```
 </CodeGroup>
+
+Quando eseguite uno dei due esempi, l'SDK trasmette i messaggi mentre Claude lavora: un messaggio di inizializzazione del sistema, messaggi dell'assistente, messaggi dell'utente che trasportano risultati degli strumenti, e un messaggio di risultato finale con l'esito della sessione.
 
 CLAUDE.md è persistente in tutte le sessioni di un progetto, condiviso con il vostro team tramite git, e scoperto automaticamente senza modifiche al codice. Non viene caricato se passate un array `settingSources` vuoto.
 
@@ -116,7 +118,7 @@ CLAUDE.md è persistente in tutte le sessioni di un progetto, condiviso con il v
   Stili di output per configurazioni persistenti
 </h3>
 
-Gli stili di output sono configurazioni salvate che modificano il system prompt di Claude. Vengono archiviati come file markdown e possono essere riutilizzati in sessioni e progetti diversi.
+Gli stili di output sono configurazioni salvate che modificano il ruolo, il tono e il formato di output di Claude. Vengono archiviati come file markdown e possono essere riutilizzati in sessioni e progetti diversi.
 
 <h4 id="create-an-output-style">
   Creare uno stile di output
@@ -124,7 +126,7 @@ Gli stili di output sono configurazioni salvate che modificano il system prompt 
 
 Uno stile di output è un file markdown con [frontmatter](/docs/it/output-styles#frontmatter) per i metadati, seguito dal contenuto del prompt. Salvatelo in `~/.claude/output-styles/` per uno stile a livello di utente disponibile in ogni progetto, o `.claude/output-styles/` nel vostro repository per uno stile a livello di progetto che potete committare e condividere con il vostro team.
 
-Per impostazione predefinita, uno stile di output personalizzato sostituisce le istruzioni di ingegneria del software del preset `claude_code` con le vostre. Per mantenerle e stratificare le vostre istruzioni sopra, impostate `keep-coding-instructions: true` nel frontmatter. Mantenetele quando il vostro agente sta ancora facendo lavoro di ingegneria del software. Omettete quando state sostituendo completamente il ruolo.
+Uno stile di output personalizzato lascia fuori le istruzioni di ingegneria del software del preset `claude_code` e usa le vostre. Per mantenerle e stratificare le vostre istruzioni sopra, impostate `keep-coding-instructions: true` nel frontmatter. Queste istruzioni sono solo nel system prompt completo di Claude Code, quindi l'impostazione non ha effetto in una sessione sul system prompt più breve, che attivate o disattivate con [`CLAUDE_CODE_SIMPLE_SYSTEM_PROMPT`](/docs/it/env-vars#variables). Mantenetele quando il vostro agente sta ancora facendo lavoro di ingegneria del software. Omettete quando state sostituendo completamente il ruolo.
 
 L'esempio seguente definisce una persona di revisione del codice che mantiene le istruzioni di codifica, poiché la revisione del codice beneficia ancora della guida sulla sicurezza e la qualità del codice di Claude Code. Salvatelo come `~/.claude/output-styles/code-reviewer.md` per renderlo disponibile in tutti i progetti:
 
@@ -150,7 +152,7 @@ For every code submission:
 
 Una volta creato, attivate gli stili di output tramite:
 
-* **CLI**: eseguite `/config` e selezionate uno stile di output
+* **CLI**: eseguite `/output-style <style>`, ad esempio `/output-style concise`, oppure eseguite `/config` e selezionate uno. Il comando `/output-style` richiede Claude Code v2.1.269 o successivo.
 * **Impostazioni**: impostate `outputStyle` in `.claude/settings.local.json`
 * **TypeScript SDK**: impostate `outputStyle` all'interno dell'oggetto `settings` inline passato a `query()`, oppure puntate `settings` a un file di impostazioni che lo imposta. `outputStyle` non è un campo `Options` di livello superiore:
 
@@ -158,7 +160,7 @@ Una volta creato, attivate gli stili di output tramite:
   const options = { settings: { outputStyle: "Explanatory" } };
   ```
 
-L'SDK Python non ha un'opzione per selezionare uno stile di output a livello di programmazione. Per distribuzioni solo codice dove non potete scrivere in `.claude/settings.local.json`, usate `append` o una stringa di prompt personalizzata invece.
+Nell'SDK Python, impostate `outputStyle` tramite l'opzione `settings`, che accetta una stringa JSON come `'{"outputStyle": "Explanatory"}'` o un percorso a un file di impostazioni che lo imposta.
 
 **Nota per gli utenti dell'SDK:** Gli stili di output vengono caricati quando includete `settingSources: ['user']` o `settingSources: ['project']` (TypeScript) / `setting_sources=["user"]` o `setting_sources=["project"]` (Python) nelle vostre opzioni.
 
@@ -192,23 +194,30 @@ Potete usare il preset Claude Code con una proprietà `append` per aggiungere le
   ```
 
   ```python Python theme={null}
+  import asyncio
+
   from claude_agent_sdk import query, ClaudeAgentOptions, AssistantMessage
 
   messages = []
 
-  async for message in query(
-      prompt="Help me write a Python function to calculate fibonacci numbers",
-      options=ClaudeAgentOptions(
-          system_prompt={
-              "type": "preset",
-              "preset": "claude_code",
-              "append": "Always include detailed docstrings and type hints in Python code.",
-          }
-      ),
-  ):
-      messages.append(message)
-      if isinstance(message, AssistantMessage):
-          print(message.content)
+
+  async def main():
+      async for message in query(
+          prompt="Help me write a Python function to calculate fibonacci numbers",
+          options=ClaudeAgentOptions(
+              system_prompt={
+                  "type": "preset",
+                  "preset": "claude_code",
+                  "append": "Always include detailed docstrings and type hints in Python code.",
+              }
+          ),
+      ):
+          messages.append(message)
+          if isinstance(message, AssistantMessage):
+              print(message.content)
+
+
+  asyncio.run(main())
   ```
 </CodeGroup>
 
@@ -221,7 +230,7 @@ Per impostazione predefinita, due sessioni che utilizzano lo stesso preset `clau
 Per rendere il system prompt identico tra le sessioni, impostate `excludeDynamicSections: true` in TypeScript o `"exclude_dynamic_sections": True` in Python. Il contesto per sessione si sposta nel primo messaggio dell'utente, lasciando solo il preset statico e il vostro testo `append` nel system prompt in modo che le configurazioni identiche condividano una voce della cache tra utenti e macchine.
 
 <Note>
-  `excludeDynamicSections` richiede `@anthropic-ai/claude-agent-sdk` v0.2.98 o successivo, o `claude-agent-sdk` v0.1.58 o successivo per Python. Si applica solo alla forma dell'oggetto preset e non ha effetto quando `systemPrompt` è una stringa.
+  `excludeDynamicSections` richiede `@anthropic-ai/claude-agent-sdk` v0.2.98 o successivo, o `claude-agent-sdk` v0.1.58 o successivo per Python. Impostatelo solo sulla forma dell'oggetto preset. L'SDK lo ignora quando passate un prompt personalizzato invece del preset; per mantenere le istruzioni di un prompt personalizzato memorizzate nella cache nell'SDK TypeScript, vedi [Memorizzare nella cache la parte statica di un prompt personalizzato](#cache-the-static-part-of-a-custom-prompt).
 </Note>
 
 L'esempio seguente abbina un blocco `append` condiviso con `excludeDynamicSections` in modo che una flotta di agenti in esecuzione da directory diverse possa riutilizzare lo stesso system prompt memorizzato nella cache:
@@ -246,20 +255,27 @@ L'esempio seguente abbina un blocco `append` condiviso con `excludeDynamicSectio
   ```
 
   ```python Python theme={null}
+  import asyncio
+
   from claude_agent_sdk import query, ClaudeAgentOptions
 
-  async for message in query(
-      prompt="Triage the open issues in this repo",
-      options=ClaudeAgentOptions(
-          system_prompt={
-              "type": "preset",
-              "preset": "claude_code",
-              "append": "You operate Acme's internal triage workflow. Label issues by component and severity.",
-              "exclude_dynamic_sections": True,
-          },
-      ),
-  ):
-      ...
+
+  async def main():
+      async for message in query(
+          prompt="Triage the open issues in this repo",
+          options=ClaudeAgentOptions(
+              system_prompt={
+                  "type": "preset",
+                  "preset": "claude_code",
+                  "append": "You operate Acme's internal triage workflow. Label issues by component and severity.",
+                  "exclude_dynamic_sections": True,
+              },
+          ),
+      ):
+          ...
+
+
+  asyncio.run(main())
   ```
 </CodeGroup>
 
@@ -301,6 +317,8 @@ Potete fornire una stringa personalizzata come `systemPrompt` per sostituire com
   ```
 
   ```python Python theme={null}
+  import asyncio
+
   from claude_agent_sdk import query, ClaudeAgentOptions, AssistantMessage
 
   custom_prompt = """You are a Python coding specialist.
@@ -313,15 +331,92 @@ Potete fornire una stringa personalizzata come `systemPrompt` per sostituire com
 
   messages = []
 
-  async for message in query(
-      prompt="Create a data processing pipeline",
-      options=ClaudeAgentOptions(system_prompt=custom_prompt),
-  ):
-      messages.append(message)
-      if isinstance(message, AssistantMessage):
-          print(message.content)
+
+  async def main():
+      async for message in query(
+          prompt="Create a data processing pipeline",
+          options=ClaudeAgentOptions(system_prompt=custom_prompt),
+      ):
+          messages.append(message)
+          if isinstance(message, AssistantMessage):
+              print(message.content)
+
+
+  asyncio.run(main())
   ```
 </CodeGroup>
+
+In Python, caricate un prompt personalizzato di grandi dimensioni da un file con `system_prompt={"type": "file", "path": "..."}` invece di passarlo come stringa. L'SDK Python passa un prompt stringa come un argomento della riga di comando al subprocess CLI, quindi un prompt che supera il limite di lunghezza dell'argomento del sistema operativo fallisce al spawn del processo prima che venga inviata qualsiasi richiesta API. Su Linux l'errore è `Argument list too long`. Vedi [`SystemPromptFile`](/docs/it/agent-sdk/python#systempromptfile) per le soglie della piattaforma e il comportamento di Windows.
+
+<h4 id="cache-the-static-part-of-a-custom-prompt">
+  Memorizzare nella cache la parte statica di un prompt personalizzato
+</h4>
+
+Nell'SDK TypeScript, potete passare un prompt personalizzato come un array di stringhe invece di una stringa, con il marcatore `SYSTEM_PROMPT_DYNAMIC_BOUNDARY` tra la parte statica e il resto. Usate questo quando il vostro prompt combina istruzioni che sono uguali su ogni richiesta con contesto che cambia per richiesta, come il cliente o il ticket che l'agente sta gestendo. Quando passate entrambe le parti come una stringa, un cambiamento alla parte per richiesta cambia l'intero system prompt, quindi le istruzioni statiche perdono la cache anche. La forma array non è disponibile nell'SDK Python; [`ClaudeAgentOptions`](/docs/it/agent-sdk/python#claudeagentoptions) elenca le forme che `system_prompt` accetta.
+
+<Note>
+  L'SDK divide il prompt solo quando chiama direttamente l'API Claude o viene eseguito su [Claude Platform on AWS](/docs/it/claude-platform-on-aws). In ogni altra configurazione, come Amazon Bedrock, Google Cloud's Agent Platform, Microsoft Foundry, o un [LLM gateway](/docs/it/llm-gateway-connect), e ogni volta che impostate [`CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1`](/docs/it/llm-gateway-protocol#disable-pre-release-capabilities), l'SDK invia l'intero prompt come un blocco, lo stesso che passare una stringa.
+</Note>
+
+Per dividere il prompt, importate `SYSTEM_PROMPT_DYNAMIC_BOUNDARY` da `@anthropic-ai/claude-agent-sdk` e passatelo come elemento array proprio tra le due parti. L'SDK invia le stringhe prima del marcatore come un blocco di testo e le stringhe dopo come un secondo blocco, ognuno con il suo punto di interruzione della cache. Nell'esempio seguente, un agente di supporto carica le sue istruzioni di triage da un file e riceve dettagli su un ticket su ogni richiesta, quindi le istruzioni rimangono memorizzate nella cache mentre i dettagli del ticket cambiano:
+
+```typescript TypeScript theme={null}
+import { readFile } from "node:fs/promises";
+import { query, SYSTEM_PROMPT_DYNAMIC_BOUNDARY } from "@anthropic-ai/claude-agent-sdk";
+
+// Identical on every request
+const instructions = await readFile("triage-instructions.md", "utf8");
+// Different on every request
+const ticketContext = "Customer plan: Enterprise. Other open tickets from this customer: 3.";
+
+for await (const message of query({
+  prompt: "Triage ticket 4821",
+  options: {
+    systemPrompt: [instructions, SYSTEM_PROMPT_DYNAMIC_BOUNDARY, ticketContext]
+  }
+})) {
+  // ...
+}
+```
+
+[Tracciare i token della cache](/docs/it/agent-sdk/cost-tracking#track-cache-tokens) descrive i campi `cache_creation_input_tokens` e `cache_read_input_tokens` su ogni messaggio di risultato.
+
+L'SDK assembla i blocchi dall'array come segue:
+
+* L'SDK unisce le stringhe su ogni lato del marcatore con una riga vuota tra di loro e rimuove il marcatore stesso, quindi il testo del marcatore non raggiunge Claude.
+* Se includete il marcatore più di una volta, il primo è la divisione e l'SDK rimuove gli altri.
+* Se lasciate fuori il marcatore, l'SDK unisce tutte le stringhe in un blocco, lo stesso che passare una stringa.
+
+Con i flag [`--system-prompt` o `--system-prompt-file`](/docs/it/cli-reference#system-prompt-flags) della CLI, il prompt è una stringa, quindi non c'è un array per portare il marcatore. Includete una riga contenente solo `__SYSTEM_PROMPT_DYNAMIC_BOUNDARY__` tra le parti statiche e per richiesta. Claude Code divide il prompt alla prima riga di questo tipo nei due blocchi e rimuove quella riga. Richiede Claude Code v2.1.275 o successivo.
+
+Nell'SDK, preferite la forma array, che porta il confine senza una riga marcatore.
+
+<h3 id="change-the-prompt-of-an-existing-session">
+  Cambiare il prompt di una sessione esistente
+</h3>
+
+Per impostazione predefinita, se passate un `append` o prompt personalizzato diverso quando tornate a una sessione con `resume` o `continue`, Claude non lo vede al turno successivo. Claude Code registra il system prompt alla prima richiesta di una sessione e riutilizza quel record fino a quando la sessione non viene compattata. Il nuovo testo ha effetto dopo quella compattazione, o in una nuova sessione.
+
+<h4 id="update-claude’s-instructions-mid-session">
+  Aggiornare le istruzioni di Claude a metà sessione
+</h4>
+
+Se le istruzioni che mettete nel system prompt devono cambiare mentre una sessione è in esecuzione, ad esempio perché il vostro utente ha cambiato l'agente in una modalità di sola lettura o ha modificato la sua configurazione nella vostra app, inviate le nuove istruzioni nella conversazione invece di cambiare `systemPrompt`:
+
+* **Nel vostro prossimo messaggio**: includete le nuove istruzioni nel prossimo messaggio dell'utente che inviate.
+* **Da un hook**: restituite [`additionalContext`](/docs/it/hooks#add-context-for-claude) da un callback di hook `UserPromptSubmit` o `PostToolUse` [hook callback](/docs/it/agent-sdk/hooks#outputs), scritto come un'affermazione fattuale come "L'area di lavoro è ora di sola lettura". L'SDK inserisce il testo nella conversazione nel punto in cui l'hook si è attivato, quindi il prompt registrato rimane invariato.
+
+<h4 id="turn-recording-off-while-you-iterate-on-wording">
+  Disattivare la registrazione mentre iterate sulla formulazione
+</h4>
+
+Mentre iterate sulla formulazione del prompt e volete che ogni modifica raggiunga una sessione che riprendete, impostate `snapshot` a false sulla forma dell'oggetto del system prompt. Claude Code quindi ricostruisce il prompt su ogni richiesta. Il campo è disponibile sulla forma preset e personalizzata di [`systemPrompt`](/docs/it/agent-sdk/typescript#options) in TypeScript e di [`system_prompt`](/docs/it/agent-sdk/python#systempromptpreset) in Python, e richiede `@anthropic-ai/claude-agent-sdk` v0.3.257 o successivo, o `claude-agent-sdk` v0.2.153 o successivo.
+
+Mantenete la registrazione attiva in produzione. Con la registrazione disattivata, un `append` o prompt personalizzato diverso su una sessione ripresa raggiunge Claude al turno successivo, e quella richiesta non può riutilizzare la [prompt cache](/docs/it/prompt-caching#how-the-cache-is-organized) della sessione. Dove l'API applica il [preserved thinking](https://platform.claude.com/docs/en/build-with-claude/preserved-thinking), Claude perde anche il suo thinking dai turni precedenti.
+
+Al di fuori delle [cloud sessions](/docs/it/cloud-environments), se avviate Claude Code in [bare mode](/docs/it/headless#start-faster-with-bare-mode) passando `--bare` tramite `extraArgs` o impostando `CLAUDE_CODE_SIMPLE=1`, la registrazione rimane disattivata a meno che non impostiate `snapshot: true`.
+
+La registrazione di un `append` o prompt personalizzato per impostazione predefinita richiede Claude Code v2.1.265 o successivo, che l'Agent SDK TypeScript raggruppa dalla v0.3.265 e l'Agent SDK Python dalla v0.2.153. Prima di Claude Code v2.1.268, le sessioni che non [recuperano i flag delle funzionalità](/docs/it/env-vars#features-that-need-feature-flag-fetching), incluse le sessioni su Amazon Bedrock, Google Cloud's Agent Platform, e Microsoft Foundry, ricostruivano il prompt su ogni richiesta e `snapshot` non aveva effetto.
 
 <h2 id="compare-the-four-approaches">
   Confronto dei quattro approcci
@@ -343,76 +438,17 @@ I quattro metodi di personalizzazione differiscono per dove risiedono, come veng
 
 "Con append" significa utilizzare `systemPrompt: { type: "preset", preset: "claude_code", append: "..." }` in TypeScript o `system_prompt={"type": "preset", "preset": "claude_code", "append": "..."}` in Python. CLAUDE.md non modifica il prompt di sistema stesso: l'SDK ne inietta il contenuto nella conversazione come contesto del progetto.
 
-<h2 id="use-cases-and-best-practices">
-  Casi d'uso e best practice
-</h2>
-
-<h3 id="when-to-use-claude-md">
-  Quando utilizzare CLAUDE.md
-</h3>
-
-Utilizzare CLAUDE.md per le istruzioni che dovrebbero applicarsi a ogni sessione in un progetto, indipendentemente dal prompt di sistema utilizzato dalla sessione: standard di codifica, comandi comuni, contesto dell'architettura e convenzioni del team. CLAUDE.md è sottoposto a commit nel vostro repository, quindi rimane sincronizzato con il codice che descrive. Consultare [When to add to CLAUDE.md](/docs/it/memory#when-to-add-to-claude-md) per una guida completa.
-
-I file CLAUDE.md vengono caricati quando la fonte di impostazione `project` è abilitata, il che avviene per le opzioni predefinite di `query()`. Se impostate esplicitamente `settingSources` in TypeScript o `setting_sources` in Python, includete `'project'` per continuare a caricare CLAUDE.md a livello di progetto.
-
-<h3 id="when-to-use-output-styles">
-  Quando utilizzare gli stili di output
-</h3>
-
-Gli stili di output sono per le persone che desiderate riutilizzare tra la CLI e l'SDK senza modificare il codice dell'applicazione. Poiché risiedono come file in `.claude/output-styles`, la stessa persona è disponibile da `/config` nella CLI e da qualsiasi sessione SDK che carica la fonte di impostazione corrispondente.
-
-**Ideale per:**
-
-* Modifiche di comportamento persistenti tra sessioni
-* Configurazioni condivise dal team
-* Assistenti specializzati come un revisore del codice, un data scientist o un assistente DevOps
-* Modifiche di prompt complesse che necessitano di versionamento
-
-**Esempi:**
-
-* Creazione di un assistente dedicato per l'ottimizzazione SQL
-* Creazione di un revisore del codice incentrato sulla sicurezza
-* Sviluppo di un assistente didattico con una pedagogia specifica
-
-<h3 id="when-to-use-systemprompt-with-append">
-  Quando utilizzare `systemPrompt` con append
-</h3>
-
-Utilizzare `append` quando il preset `claude_code` si adatta già al vostro prodotto e avete solo bisogno di aggiungere istruzioni extra. Mantenete la guida degli strumenti del preset, le regole di sicurezza e le convenzioni di codifica senza reimplementarle.
-
-**Ideale per:**
-
-* Aggiunta di standard di codifica o preferenze specifiche
-* Personalizzazione della formattazione dell'output
-* Aggiunta di conoscenze specifiche del dominio
-* Modifica della verbosità della risposta
-* Miglioramento del comportamento predefinito di Claude Code senza perdere le istruzioni degli strumenti
-
-<h3 id="when-to-use-custom-systemprompt">
-  Quando utilizzare `systemPrompt` personalizzato
-</h3>
-
-Utilizzare un prompt personalizzato quando la superficie, l'identità o il modello di autorizzazione dell'agente differisce da quello di Claude Code, come descritto in [Decide on a starting point](#decide-on-a-starting-point). Definite l'intero set di istruzioni, inclusa qualsiasi guida degli strumenti e regole di sicurezza di cui l'agente ha bisogno.
-
-**Ideale per:**
-
-* Controllo completo sul comportamento di Claude
-* Attività specializzate a sessione singola
-* Test di nuove strategie di prompt
-* Situazioni in cui gli strumenti predefiniti non sono necessari
-* Creazione di agenti specializzati con comportamento unico
-
 <h2 id="combine-approaches">
-  Combinazione di approcci
+  Combinare gli approcci
 </h2>
 
-Questi metodi si compongono insieme. Uno stile di output persistente o CLAUDE.md imposta il comportamento a lungo termine, e `append` sovrappone le istruzioni specifiche della sessione senza toccare la configurazione salvata.
+Gli approcci si compongono. Uno stile di output persistente o CLAUDE.md imposta il comportamento a lungo termine, e `append` sovrappone le istruzioni specifiche della sessione senza toccare la configurazione salvata.
 
 <h3 id="combine-an-output-style-with-session-specific-additions">
   Combinare uno stile di output con aggiunte specifiche della sessione
 </h3>
 
-L'esempio seguente presuppone che uno stile di output Code Reviewer sia già attivo. Il blocco `append` sovrappone le aree di focus specifiche della sessione sulla persona, in modo che una singola sessione di revisione possa dare priorità a OAuth e all'archiviazione dei token senza modificare lo stile di output salvato:
+L'esempio seguente presuppone che uno stile di output Code Reviewer sia già attivo. Il blocco `append` sovrappone le aree di focus specifiche della sessione sulla persona, in modo che una singola sessione di revisione possa dare priorità a OAuth e archiviazione dei token senza modificare lo stile di output salvato:
 
 <CodeGroup>
   ```typescript TypeScript theme={null}
@@ -442,28 +478,35 @@ L'esempio seguente presuppone che uno stile di output Code Reviewer sia già att
   ```
 
   ```python Python theme={null}
+  import asyncio
+
   from claude_agent_sdk import query, ClaudeAgentOptions
 
   # Assuming "Code Reviewer" output style is active (via /config or settings)
   # Add session-specific focus areas
   messages = []
 
-  async for message in query(
-      prompt="Review this authentication module",
-      options=ClaudeAgentOptions(
-          system_prompt={
-              "type": "preset",
-              "preset": "claude_code",
-              "append": """
-              For this review, prioritize:
-              - OAuth 2.0 compliance
-              - Token storage security
-              - Session management
-              """,
-          }
-      ),
-  ):
-      messages.append(message)
+
+  async def main():
+      async for message in query(
+          prompt="Review this authentication module",
+          options=ClaudeAgentOptions(
+              system_prompt={
+                  "type": "preset",
+                  "preset": "claude_code",
+                  "append": """
+                  For this review, prioritize:
+                  - OAuth 2.0 compliance
+                  - Token storage security
+                  - Session management
+                  """,
+              }
+          ),
+      ):
+          messages.append(message)
+
+
+  asyncio.run(main())
   ```
 </CodeGroup>
 

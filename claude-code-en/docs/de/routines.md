@@ -4,13 +4,13 @@
 
 # Automatisieren Sie Arbeitsabläufe mit Routinen
 
-> Setzen Sie Claude Code auf Autopilot. Definieren Sie Routinen, die nach einem Zeitplan ausgeführt werden, durch API-Aufrufe ausgelöst werden oder auf GitHub-Ereignisse von der von Anthropic verwalteten Cloud-Infrastruktur reagieren.
+> Setzen Sie Claude Code auf Autopilot. Definieren Sie Routinen, die nach einem Zeitplan ausgeführt werden, durch API-Aufrufe ausgelöst werden oder auf GitHub-Ereignisse von der Cloud-Infrastruktur reagieren.
 
 <Note>
   Routinen befinden sich in der Forschungsvorschau. Verhalten, Limits und die API-Oberfläche können sich ändern.
 </Note>
 
-Eine Routine ist eine gespeicherte Claude Code-Konfiguration: ein Prompt, ein oder mehrere Repositories und eine Reihe von [Konnektoren](/docs/de/mcp), die einmal verpackt und automatisch ausgeführt werden. Routinen werden auf der von Anthropic verwalteten Cloud-Infrastruktur ausgeführt, sodass sie weiterhin funktionieren, wenn Ihr Laptop geschlossen ist.
+Eine Routine ist eine gespeicherte Claude Code-Konfiguration: ein Prompt, ein oder mehrere Repositories und eine Reihe von [Konnektoren](/docs/de/mcp), die einmal verpackt und automatisch ausgeführt werden. Routinen werden auf der von Anthropic verwalteten Cloud-Infrastruktur ausgeführt, oder auf der [selbstgehosteten Umgebung](/docs/de/self-hosted-environments) Ihrer Organisation, wenn sie dorthin weitergeleitet werden, sodass sie weiterhin funktionieren, wenn Ihr Laptop geschlossen ist.
 
 Jede Routine kann einen oder mehrere Trigger haben:
 
@@ -20,9 +20,9 @@ Jede Routine kann einen oder mehrere Trigger haben:
 
 Eine einzelne Routine kann Trigger kombinieren. Beispielsweise kann eine PR-Review-Routine nachts ausgeführt werden, von einem Deploy-Skript ausgelöst werden und auch auf jeden neuen PR reagieren.
 
-Routinen sind auf Pro-, Max-, Team- und Enterprise-Plänen mit aktiviertem [Claude Code im Web](/docs/de/claude-code-on-the-web) verfügbar. Erstellen und verwalten Sie sie unter [claude.ai/code/routines](https://claude.ai/code/routines) oder über die CLI mit `/schedule`.
+Routinen sind auf Pro-, Max-, Team- und Enterprise-Plänen verfügbar. Erstellen und verwalten Sie sie unter [claude.ai/code/routines](https://claude.ai/code/routines) oder über die CLI mit `/schedule`.
 
-Team- und Enterprise-Administratoren können Routinen für alle Mitglieder mit dem Routinen-Toggle unter [claude.ai/admin-settings/claude-code](https://claude.ai/admin-settings/claude-code) deaktivieren. Wenn deaktiviert, werden vorhandene Routinen nicht mehr ausgeführt und Mitglieder können keine neuen erstellen.
+Team- und Enterprise-Inhaber können Routinen für alle Mitglieder mit dem Routinen-Toggle unter [claude.ai/admin-settings/claude-code](https://claude.ai/admin-settings/claude-code) deaktivieren. Wenn deaktiviert, werden vorhandene Routinen nicht mehr ausgeführt und Mitglieder können keine neuen erstellen.
 
 Diese Seite behandelt das Erstellen einer Routine, das Konfigurieren jedes Trigger-Typs, das Verwalten von Ausführungen und wie Nutzungslimits angewendet werden.
 
@@ -44,17 +44,26 @@ Jedes Beispiel kombiniert einen Trigger-Typ mit der Art von Arbeit, für die Rou
 
 **Library-Port.** Ein GitHub-Trigger wird auf `pull_request.closed` ausgeführt, gefiltert auf zusammengeführte PRs in einem SDK-Repository. Die Routine portiert die Änderung zu einem parallelen SDK in einer anderen Sprache und öffnet einen entsprechenden PR, um die beiden Bibliotheken synchron zu halten, ohne dass ein Mensch jede Änderung neu implementiert.
 
-Die folgenden Abschnitte führen Sie durch das Erstellen einer Routine und das Konfigurieren jedes dieser Trigger-Typen.
-
 <h2 id="create-a-routine">
   Erstellen Sie eine Routine
 </h2>
 
-Erstellen Sie eine Routine aus dem Web unter [claude.ai/code/routines](https://claude.ai/code/routines), aus der Desktop-App oder aus der CLI. Alle drei Oberflächen schreiben auf dasselbe Cloud-Konto, sodass eine Routine, die Sie in einer erstellen, sofort in den anderen angezeigt wird. Klicken Sie in der Desktop-App auf **Routinen** in der Seitenleiste und dann auf **Neue Routine**, und wählen Sie **Remote**; wenn Sie stattdessen **Lokal** wählen, wird eine [Desktop-geplante Aufgabe](/docs/de/desktop-scheduled-tasks) erstellt, die auf Ihrem Computer ausgeführt wird, anstatt in der Cloud.
+Erstellen Sie eine Routine aus dem Web unter [claude.ai/code/routines](https://claude.ai/code/routines), aus der Desktop-App oder aus der CLI. Alle drei Oberflächen schreiben auf dasselbe Cloud-Konto, sodass eine Routine, die Sie in einer erstellen, sofort in den anderen angezeigt wird. Klicken Sie in der Desktop-App auf der Registerkarte **Code** auf **Routinen** in der Seitenleiste oder im Menü **Mehr** der Seitenleiste und dann auf **Neue Routine**, und wählen Sie **Cloud**; wenn Sie stattdessen **Lokal** wählen, wird eine [Desktop-geplante Aufgabe](/docs/de/desktop-scheduled-tasks) erstellt, die auf Ihrem Computer ausgeführt wird, anstatt in der Cloud.
 
 Das Erstellungsformular richtet den Prompt der Routine, Repositories, Umgebung, Konnektoren und Trigger ein.
 
-Routinen werden autonom als vollständige Claude Code-Cloud-Sitzungen ausgeführt: Es gibt keinen Berechtigungsmodus-Picker und keine Genehmigungsaufforderungen während einer Ausführung. Die Sitzung kann Shell-Befehle ausführen, [Skills](/docs/de/skills) verwenden, die im geklonten Repository committed sind, und alle Konnektoren aufrufen, die Sie einbeziehen. Was eine Routine erreichen kann, wird durch die Repositories bestimmt, die Sie auswählen, und deren Branch-Push-Einstellung, den [Netzwerkzugriff und die Variablen der Umgebung](/docs/de/claude-code-on-the-web#the-cloud-environment) und die Konnektoren, die Sie einbeziehen. Beschränken Sie jeden dieser Punkte auf das, was die Routine tatsächlich benötigt.
+Routinen werden autonom als vollständige Claude Code-Cloud-Sitzungen ausgeführt: Es gibt keinen Berechtigungsmodus-Picker und die Sitzung führt Shell-Befehle aus, verwendet [Skills](/docs/de/skills), die im geklonten Repository committed sind, und ruft alle Konnektoren auf, die Sie einbeziehen, alles ohne Unterbrechung für Genehmigung außer einigen [Artefakt](/docs/de/artifacts)-Aktionen.
+
+Was eine Routine erreichen kann, wird durch die Repositories bestimmt, die Sie auswählen, den [Netzwerkzugriff und die Variablen der Umgebung](/docs/de/cloud-environments) und die Konnektoren, die Sie einbeziehen. Beschränken Sie jeden dieser Punkte auf das, was die Routine tatsächlich benötigt.
+
+Wenn der Zeitplan der Routine oder **Jetzt ausführen** eine Ausführung startet, republiziert Claude ein vorhandenes Artefakt ohne Nachfrage nur, wenn alle diese Bedingungen erfüllt sind:
+
+* Sie können das Artefakt bearbeiten und es gehört zu Ihrer eigenen Organisation
+* Das Artefakt wird nicht öffentlich geteilt und nicht mit bestimmten Personen oder Ihrer Organisation geteilt, wobei die neueste Version als die Version ausgewählt ist, die Betrachter sehen
+* Die Veröffentlichung enthält nur die Seite, ohne unterstützende Dateien oder etwas anderes hinzugefügt, und erzwingt keine neuere Version
+* Die Seite enthält keine Berechtigung, die über die Seite hinausgeht, wie z. B. [Konnektor-Aufrufe](/docs/de/artifacts#pull-live-data-with-mcp-connectors)
+
+In jedem anderen Fall, einschließlich der Veröffentlichung eines neuen Artefakts, fragt Claude zuerst. Wenn die Aufgabe einer Routine darin besteht, eine Seite aktuell zu halten, geben Sie ihr ein Artefakt, das Sie bereits veröffentlicht haben.
 
 Routinen gehören zu Ihrem individuellen claude.ai-Konto. Sie werden nicht mit Teamkollegen geteilt und zählen gegen die tägliche Ausführungszulage Ihres Kontos. Alles, was eine Routine durch Ihre verbundene GitHub-Identität oder Konnektoren tut, erscheint als Sie: Commits und Pull Requests tragen Ihren GitHub-Benutzer, und Slack-Nachrichten, Linear-Tickets oder andere Konnektor-Aktionen verwenden Ihre verknüpften Konten für diese Dienste.
 
@@ -70,6 +79,8 @@ Routinen gehören zu Ihrem individuellen claude.ai-Konto. Sie werden nicht mit T
   <Step title="Benennen Sie die Routine und schreiben Sie den Prompt">
     Geben Sie der Routine einen aussagekräftigen Namen und schreiben Sie den Prompt, den Claude jedes Mal ausführt. Der Prompt ist der wichtigste Teil: Die Routine wird autonom ausgeführt, daher muss der Prompt in sich geschlossen und explizit darüber sein, was zu tun ist und wie Erfolg aussieht.
 
+    Wenn ein Trigger ausgelöst wird, erhält die Sitzung den gespeicherten Prompt der Routine als zugewiesene Aufgabe und führt ihn aus, anstatt ihn als nicht vertrauenswürdigen Inhalt zu behandeln, der mitten in einem Gespräch angekommen ist. Der Trigger bestätigt nur, dass der Prompt vorher von einer autorisierten Sitzung auf Ihrem Konto gespeichert wurde, sodass der ausgelöste Prompt keine Live-Benutzereingabe ist und nicht als Genehmigung oder Zustimmung für Aktionen während der Ausführung fungieren kann. Inhalte, die die Sitzung während der Ausführung abruft, behalten ihre normale Behandlung. Vor v2.1.213 erhielt die Sitzung denselben Prompt als nicht vertrauenswürdige Hintergrundbenachrichtigung und konnte sich weigern, danach zu handeln.
+
     Die Prompt-Eingabe enthält einen Modell-Selector. Claude verwendet das ausgewählte Modell bei jeder Ausführung.
   </Step>
 
@@ -78,13 +89,13 @@ Routinen gehören zu Ihrem individuellen claude.ai-Konto. Sie werden nicht mit T
   </Step>
 
   <Step title="Wählen Sie eine Umgebung aus">
-    Wählen Sie eine [Cloud-Umgebung](/docs/de/claude-code-on-the-web#the-cloud-environment) für die Routine. Umgebungen steuern, worauf die Cloud-Sitzung Zugriff hat:
+    Wählen Sie eine [Cloud-Umgebung](/docs/de/cloud-environments) für die Routine. Umgebungen steuern, worauf die Cloud-Sitzung Zugriff hat:
 
     * **Netzwerkzugriff**: Legen Sie die Stufe des Internet-Zugriffs fest, der während jeder Ausführung verfügbar ist
-    * **Umgebungsvariablen**: Stellen Sie API-Schlüssel, Tokens oder andere Geheimnisse bereit, die Claude verwenden kann
-    * **Setup-Skript**: Installieren Sie Abhängigkeiten und Tools, die die Routine benötigt. Das Ergebnis wird [zwischengespeichert](/docs/de/claude-code-on-the-web#environment-caching), sodass das Skript nicht bei jeder Sitzung erneut ausgeführt wird
+    * **Umgebungsvariablen**: Stellen Sie Werte bereit, die Claude während jeder Ausführung verwenden kann. Sie sind [für jeden sichtbar, der die Umgebung nutzt](/docs/de/cloud-environments#what-carries-over-from-your-setup), daher speichern Sie auf Pro- und Max-Plänen Schlüssel für die APIs, die Claude während einer Ausführung aufruft, stattdessen als [API-Anmeldedaten](/docs/de/cloud-environments#add-api-credentials). Dieser Abschnitt listet auch die Anfragen auf, die niemals Anmeldedaten erhalten
+    * **Setup-Skript**: Installieren Sie Abhängigkeiten und Tools, die die Routine benötigt. Das Ergebnis wird [zwischengespeichert](/docs/de/cloud-environments#environment-caching), sodass das Skript nicht bei jeder Sitzung erneut ausgeführt wird
 
-    Eine **Standard**-Umgebung wird mit **Vertrauenswürdigem** Netzwerkzugriff bereitgestellt, der den [Standard-Satz](/docs/de/claude-code-on-the-web#default-allowed-domains) von Paket-Registries, Cloud-Provider-APIs, Container-Registries und häufigen Entwicklungsdomänen ermöglicht, aber alles andere blockiert. Wenn Ihre Routine Ihre eigenen Dienste oder eine Domain außerhalb dieser Liste erreichen muss, bearbeiten Sie den [Netzwerkzugriff](/docs/de/claude-code-on-the-web#network-access) der Umgebung vor der Ausführung. Um eine separate Umgebung zu verwenden, [erstellen Sie eine](/docs/de/claude-code-on-the-web#configure-your-environment) zuerst.
+    Eine **Standard**-Umgebung wird mit **Vertrauenswürdigem** Netzwerkzugriff bereitgestellt, der nur die [Standard-Zulassungsliste](/docs/de/cloud-environments#default-allowed-domains) von Paket-Registries, Cloud-Provider-APIs, Container-Registries und häufigen Entwicklungsdomänen ermöglicht. Konnektoren, die Sie zur Routine hinzufügen, erreichen ihre Dienste über Anthropic-Server, daher benötigen sie keine Änderungen an der Zulassungsliste. Wenn Ihre Routine Ihre eigenen Dienste direkt oder eine Domain außerhalb dieser Liste erreichen muss, bearbeiten Sie den [Netzwerkzugriff](/docs/de/cloud-environments#network-access) der Umgebung vor der Ausführung. Um eine separate Umgebung zu verwenden, [erstellen Sie eine](/docs/de/cloud-environments#configure-your-environment) zuerst.
   </Step>
 
   <Step title="Wählen Sie einen Trigger aus">
@@ -105,12 +116,8 @@ Routinen gehören zu Ihrem individuellen claude.ai-Konto. Sie werden nicht mit T
     </Tabs>
   </Step>
 
-  <Step title="Überprüfen Sie Konnektoren und Berechtigungen">
-    Die Registerkarten **Konnektoren** und **Berechtigungen** am unteren Ende des Formulars steuern, worauf die Routine zugreifen kann.
-
-    Unter Konnektoren sind alle Ihre verbundenen [MCP-Konnektoren](/docs/de/mcp) standardmäßig enthalten. Entfernen Sie alle, die die Routine nicht benötigt. Claude kann alle Tools aus einem eingebundenen Konnektor verwenden, einschließlich Schreibvorgänge, ohne während einer Ausführung um Genehmigung zu fragen.
-
-    Unter Berechtigungen aktivieren Sie **Uneingeschränkte Branch-Pushes zulassen** für alle Repositories, in denen Claude zu bestehenden Branches pushen können soll, anstatt nur zu `claude/`-prefixierten.
+  <Step title="Überprüfen Sie Konnektoren">
+    Unter **Konnektoren** am unteren Ende des Formulars sind alle Ihre verbundenen [MCP-Konnektoren](/docs/de/mcp) standardmäßig enthalten. Entfernen Sie alle, die die Routine nicht benötigt: Claude kann alle Tools aus einem eingebundenen Konnektor verwenden, einschließlich Schreibvorgänge, ohne während einer Ausführung um Genehmigung zu fragen.
   </Step>
 
   <Step title="Erstellen Sie die Routine">
@@ -124,13 +131,13 @@ Routinen gehören zu Ihrem individuellen claude.ai-Konto. Sie werden nicht mit T
   Erstellen aus der CLI
 </h3>
 
-Führen Sie `/schedule` in einer beliebigen Sitzung aus, um eine geplante Routine im Gespräch zu erstellen. Sie können auch eine Beschreibung direkt übergeben, für eine wiederkehrende Routine wie `/schedule daily PR review at 9am` oder eine einmalige wie `/schedule clean up feature flag in one week`. Claude führt Sie durch die gleichen Informationen, die das Web-Formular sammelt, und speichert dann die Routine in Ihrem Konto.
+Führen Sie `/schedule` in einer beliebigen Sitzung aus, um eine geplante Routine im Gespräch zu erstellen. Sie können auch eine Beschreibung direkt übergeben, für eine wiederkehrende Routine wie `/schedule daily PR review at 9am` oder eine einmalige wie `/schedule clean up feature flag in one week`. Claude führt Sie durch die gleichen Informationen, die das Web-Formular sammelt, und speichert dann die Routine in Ihrem Konto. Der Befehl ist auch unter dem Alias `/routines` verfügbar.
 
 Eine erfolgreiche Ausführung sieht wie ein Gespräch aus: Claude stellt Folgefragen zum Zeitplan, zu Repositories und zum Prompt, bevor die Routine gespeichert wird. Wenn Claude stattdessen antwortet, dass Sie sich authentifizieren müssen oder dass es keine Verbindung zu Ihrem Remote-claude.ai-Konto herstellen kann, wurde keine Routine erstellt; siehe [Fehlerbehebung](#troubleshooting).
 
-`/schedule` in der CLI erstellt nur geplante Routinen. Um einen API- oder GitHub-Trigger hinzuzufügen, bearbeiten Sie die Routine im Web unter [claude.ai/code/routines](https://claude.ai/code/routines).
+`/schedule` in der CLI erstellt geplante Routinen. Um einen API-Trigger hinzuzufügen, bearbeiten Sie die Routine im Web unter [claude.ai/code/routines](https://claude.ai/code/routines). Sie können einen [GitHub-Trigger](#add-a-github-trigger) aus dem Web oder aus der CLI hinzufügen. Der CLI-Pfad erfordert Claude Code v2.1.225 oder später.
 
-Die CLI unterstützt auch die Verwaltung vorhandener Routinen. Führen Sie `/schedule list` aus, um alle Routinen anzuzeigen, `/schedule update`, um eine zu ändern, oder `/schedule run`, um sie sofort auszulösen.
+Eine Routine ohne Zeitplan-Trigger, wie eine, die nur durch API-Aufrufe oder GitHub-Ereignisse gestartet wird, hat keine nächste Ausführungszeit, und die CLI zeigt keine an, wenn Claude sie speichert oder aktualisiert. Vor v2.1.211 meldete die CLI eine nächste Ausführungszeit im Jahr 1 für diese Routinen.
 
 <h2 id="configure-triggers">
   Trigger konfigurieren
@@ -152,11 +159,7 @@ Für ein benutzerdefiniertes Intervall wie alle zwei Stunden oder den ersten jed
   Einmalige Ausführung planen
 </h4>
 
-Ein einmaliger Schedule-Trigger führt die Routine zu einem bestimmten Zeitstempel aus. Verwenden Sie ihn, um sich später in der Woche selbst zu erinnern, um einen Cleanup-PR nach Abschluss eines Rollouts zu öffnen, oder um eine Folgeaufgabe zu starten, wenn eine vorgelagerte Änderung ankommt. Nach der Ausführung der Routine wird sie automatisch deaktiviert und die Web-UI markiert sie als **Ausgeführt**. Um sie erneut auszuführen, bearbeiten Sie die Routine und legen Sie einen neuen einmaligen Zeitpunkt fest.
-
-<Note>
-  Die einmalige Planung über die CLI wird schrittweise eingeführt und ist möglicherweise noch nicht auf Ihrem Konto verfügbar. Wenn `/schedule` nur wiederkehrende Zeitpläne anbietet, erstellen Sie die einmalige Ausführung stattdessen über das Web unter [claude.ai/code/routines](https://claude.ai/code/routines).
-</Note>
+Eine einmalige Planung führt die Routine zu einem bestimmten Zeitstempel aus. Verwenden Sie sie, um sich später in der Woche selbst zu erinnern, um einen Cleanup-PR nach Abschluss eines Rollouts zu öffnen, oder um eine Folgeaufgabe zu starten, wenn eine vorgelagerte Änderung ankommt. Nach der Ausführung der Routine wird sie automatisch deaktiviert und die Web-UI markiert sie als **Ausgeführt**. Um sie erneut auszuführen, bearbeiten Sie die Routine und legen Sie einen neuen einmaligen Zeitpunkt fest.
 
 Erstellen Sie eine einmalige Ausführung aus der CLI, indem Sie die Zeit in natürlicher Sprache beschreiben. Claude löst den Ausdruck gegen die aktuelle Zeit auf und bestätigt den absoluten Zeitstempel vor dem Speichern.
 
@@ -170,7 +173,7 @@ Erstellen Sie eine einmalige Ausführung aus der CLI, indem Sie die Zeit in nat�
 
 Die gleiche lokale-zu-UTC-Konvertierung wie bei wiederkehrenden Schedules gilt auch für einmalige Zeitstempel.
 
-Einmalige Ausführungen zählen nicht gegen das tägliche Routine-Ausführungs-Limit. Sie verbrauchen die reguläre Abonnement-Nutzung Ihres Plans wie jede andere Sitzung. Weitere Informationen finden Sie unter [Nutzung und Limits](#usage-and-limits).
+Einmalige Ausführungen zählen nicht gegen das tägliche Routine-Ausführungs-Limit. Siehe [Nutzung und Limits](#usage-and-limits) für Details.
 
 <h3 id="add-an-api-trigger">
   API-Trigger hinzufügen
@@ -182,7 +185,7 @@ API-Trigger werden einer vorhandenen Routine aus dem Web hinzugefügt. Die CLI k
 
 <Steps>
   <Step title="Öffnen Sie die Routine zur Bearbeitung">
-    Gehen Sie zu [claude.ai/code/routines](https://claude.ai/code/routines), klicken Sie auf die Routine, die Sie über API auslösen möchten, und klicken Sie dann auf das Stiftsymbol, um **Routine bearbeiten** zu öffnen.
+    Gehen Sie zu [claude.ai/code/routines](https://claude.ai/code/routines), klicken Sie auf die Routine, die Sie über API auslösen möchten, und öffnen Sie dann das Menü neben dem Namen der Routine und wählen Sie **Bearbeiten**.
   </Step>
 
   <Step title="Fügen Sie einen API-Trigger hinzu">
@@ -205,6 +208,10 @@ Jede Routine hat ihren eigenen Token, der nur zum Auslösen dieser Routine begre
 </h4>
 
 Senden Sie eine POST-Anfrage an den `/fire`-Endpunkt mit dem Bearer-Token im `Authorization`-Header. Der Request-Body akzeptiert ein optionales `text`-Feld für Ausführungs-spezifischen Kontext wie einen Alert-Body oder ein fehlgeschlagenes Log, das der Routine zusammen mit ihrem gespeicherten Prompt übergeben wird. Der Wert ist freier Text und wird nicht geparst: Wenn Sie JSON oder eine andere strukturierte Payload senden, erhält die Routine sie als wörtliche Zeichenkette.
+
+Der `text`-Wert erreicht die Routine nicht als bloße Nachricht. Er kommt in einem `<routine-fire-payload>`-Block an, der ihn als nicht vertrauenswürdige Daten kennzeichnet und Claude mitteilt, dass er Anweisungen darin nicht befolgen soll, es sei denn, der Prompt der Routine sagt es. Die gleiche Umhüllung gilt für Text, der mit **Jetzt ausführen** in der Web-UI bereitgestellt wird.
+
+Dies bedeutet, dass der gespeicherte Prompt einer Routine sich dafür entscheiden muss, auf Fire-Text zu reagieren: Schreiben Sie den Prompt so, dass er die Payload explizit referenziert, zum Beispiel „Untersuchen Sie den in dem routine-fire-payload-Block beschriebenen Alert", oder die Routine behandelt den Text als inerten Kontext. Jeder, der den Bearer-Token hält, kann `text` senden, daher macht der Wrapper Fire-Text von einem durchgesickerten Token als nicht vertrauenswürdige Daten gekennzeichnet ankommen, anstatt als direkte Anweisungen an Ihre Routine.
 
 Das Beispiel unten löst eine Routine aus einer Shell aus. Die angezeigte Routine-ID und der Token sind Platzhalter: Ersetzen Sie sie mit der URL und dem Token, die Sie beim [Hinzufügen des API-Triggers](#add-an-api-trigger) kopiert haben, oder die Anfrage schlägt mit einem `401`-Authentifizierungsfehler fehl:
 
@@ -237,7 +244,7 @@ Eine erfolgreiche Anfrage gibt einen JSON-Body mit der neuen Sitzungs-ID und URL
   API-Referenz
 </h4>
 
-Für die vollständige API-Referenz, einschließlich aller Error-Responses, Validierungsregeln und Feldlimits, siehe [Routine über API auslösen](https://platform.claude.com/docs/de/api/claude-code/routines-fire) in der Claude Platform-Dokumentation.
+Für die vollständige API-Referenz, einschließlich aller Error-Responses, Validierungsregeln und Feldlimits, siehe [Routine über API auslösen](https://platform.claude.com/docs/en/api/claude-code/routines-fire) in der Claude Platform-Dokumentation.
 
 Der `/fire`-Endpunkt ist nur für claude.ai-Benutzer verfügbar und ist nicht Teil der Claude Platform API-Oberfläche.
 
@@ -245,28 +252,27 @@ Der `/fire`-Endpunkt ist nur für claude.ai-Benutzer verfügbar und ist nicht Te
   GitHub-Trigger hinzufügen
 </h3>
 
-Ein GitHub-Trigger startet automatisch eine neue Sitzung, wenn ein passendes Ereignis in einem verbundenen Repository auftritt. Jedes passende Ereignis startet seine eigene Sitzung.
+Ein GitHub-Trigger startet automatisch eine neue Sitzung, wenn ein passendes Ereignis in einem verbundenen Repository auftritt. Claude Code verwendet Sitzungen nicht über Ereignisse hinweg wieder, daher produzieren zwei PR-Updates zwei unabhängige Sitzungen.
 
 <Note>
   Während der Forschungsvorschau unterliegen GitHub-Webhook-Ereignisse pro-Routine und pro-Konto stündlichen Limits. Ereignisse über dem Limit werden gelöscht, bis sich das Fenster zurückgesetzt hat. Sehen Sie Ihre aktuellen Limits unter [claude.ai/code/routines](https://claude.ai/code/routines).
 </Note>
 
-GitHub-Trigger werden nur über die Web-UI konfiguriert.
+Die Claude GitHub App muss auf dem Repository installiert sein, das Sie abonnieren möchten, unabhängig davon, von welcher Oberfläche aus Sie den Trigger konfigurieren.
+
+* Konfigurieren Sie GitHub-Trigger über die Web-UI, die Sie auffordert, die App zu installieren, wenn sie fehlt. Folgen Sie den folgenden Schritten, um eine über das Web zu konfigurieren.
+* Installieren Sie die App aus der CLI von der [GitHub App-Seite](https://github.com/apps/claude) aus, und bitten Sie dann Claude, einen GitHub-Trigger an eine vorhandene Routine anzuhängen, zum Beispiel `/schedule add a GitHub trigger to my nightly review for pull requests opened in acme/webapp`. Der CLI-Pfad erfordert Claude Code v2.1.225 oder später. Wenn Claude den Trigger hinzufügt, antwortet es mit einem Link zu der Routine, die der Trigger auslöst.
 
 <Steps>
   <Step title="Öffnen Sie die Routine zur Bearbeitung">
-    Gehen Sie zu [claude.ai/code/routines](https://claude.ai/code/routines), klicken Sie auf die Routine und klicken Sie dann auf das Stiftsymbol, um **Routine bearbeiten** zu öffnen.
+    Gehen Sie zu [claude.ai/code/routines](https://claude.ai/code/routines), klicken Sie auf die Routine, und öffnen Sie dann das Menü neben dem Namen der Routine und wählen Sie **Bearbeiten**.
   </Step>
 
   <Step title="Fügen Sie einen GitHub-Ereignis-Trigger hinzu">
-    Scrollen Sie zum Abschnitt **Trigger auswählen**, klicken Sie auf **Weiteren Trigger hinzufügen** und wählen Sie **GitHub-Ereignis**.
-  </Step>
-
-  <Step title="Installieren Sie die Claude GitHub App">
-    Die Claude GitHub App muss auf dem Repository installiert sein, das Sie abonnieren möchten. Das Trigger-Setup fordert Sie auf, es zu installieren, falls es nicht bereits installiert ist.
+    Scrollen Sie zum Abschnitt **Trigger auswählen**, klicken Sie auf **Weiteren Trigger hinzufügen**, und wählen Sie **GitHub-Ereignis**.
 
     <Note>
-      Das Ausführen von `/web-setup` in der CLI gewährt Repository-Zugriff zum Klonen, installiert aber nicht die Claude GitHub App und aktiviert nicht die Webhook-Bereitstellung. GitHub-Trigger erfordern die Installation der Claude GitHub App, die das Trigger-Setup Sie auffordert zu tun.
+      Das Ausführen von `/web-setup` in der CLI gewährt Repository-Zugriff zum Klonen, installiert aber nicht die Claude GitHub App und aktiviert nicht die Webhook-Bereitstellung.
     </Note>
   </Step>
 
@@ -313,12 +319,6 @@ Ein paar Beispiel-Filterkombinationen:
 * **Nur bereit zur Überprüfung**: Ist Entwurf ist `false`. Überspringt Entwürfe, sodass die Routine nur ausgeführt wird, wenn der PR zur Überprüfung bereit ist.
 * **Label-gesteuerter Backport**: Labels enthalten `needs-backport`. Löst eine Port-zu-anderem-Branch-Routine nur aus, wenn ein Maintainer den PR kennzeichnet.
 
-<h4 id="how-sessions-map-to-events">
-  Wie Sitzungen zu Ereignissen zugeordnet werden
-</h4>
-
-Jedes passende GitHub-Ereignis startet eine neue Sitzung. Sitzungswiederverwendung über Ereignisse hinweg ist nicht für GitHub-ausgelöste Routinen verfügbar, daher produzieren zwei PR-Updates zwei unabhängige Sitzungen.
-
 <h2 id="manage-routines">
   Routinen verwalten
 </h2>
@@ -341,20 +341,34 @@ Klicken Sie auf eine beliebige Ausführung, um sie als vollständige Sitzung zu 
 
 Von der Routine-Detailseite können Sie:
 
-* Auf **Jetzt ausführen** klicken, um eine Ausführung sofort zu starten, ohne auf die nächste geplante Zeit zu warten.
-* Den Toggle im Abschnitt **Wiederholt** verwenden, um den Schedule zu pausieren oder fortzusetzen. Pausierte Routinen behalten ihre Konfiguration, werden aber nicht ausgeführt, bis Sie sie erneut aktivieren.
-* Auf das Stiftsymbol klicken, um **Routine bearbeiten** zu öffnen und den Namen, Prompt, Repositories, Umgebung, Konnektoren oder einen der Trigger der Routine zu ändern. Der Abschnitt **Trigger auswählen** ist der Ort, an dem Sie Schedules, API-Tokens und GitHub-Ereignis-Trigger hinzufügen oder entfernen.
-* Auf das Löschsymbol klicken, um die Routine zu entfernen. Vergangene Sitzungen, die von der Routine erstellt wurden, bleiben in Ihrer Sitzungsliste.
+* Auf **Jetzt ausführen** klicken, um eine Ausführung sofort zu starten, ohne auf die nächste geplante Zeit zu warten. Sie können optional laufspezifischen Text bereitstellen, der die Routine auf die gleiche Weise erreicht wie das Feld `text` des API-Triggers.
+* Den Ein-/Aus-Schalter oben auf der Seite verwenden, um den Schedule zu pausieren oder fortzusetzen. Pausierte Routinen behalten ihre Konfiguration, werden aber nicht ausgeführt, bis Sie sie erneut aktivieren.
+* Das Menü neben dem Namen der Routine öffnen und **Bearbeiten** auswählen, um den Namen, Prompt, Repositories, Umgebung, Konnektoren oder einen der Trigger der Routine zu ändern. Der Abschnitt **Trigger auswählen** ist der Ort, an dem Sie Schedules, API-Tokens und GitHub-Ereignis-Trigger hinzufügen oder entfernen.
+* Das gleiche Menü öffnen und **Löschen** auswählen, um die Routine zu löschen.
+
+<h3 id="manage-routines-from-the-cli">
+  Routinen über die CLI verwalten
+</h3>
+
+Die CLI unterstützt die Verwaltung vorhandener Routinen. Führen Sie `/schedule list` aus, um alle Routinen anzuzeigen, `/schedule update`, um eine zu ändern, oder `/schedule run`, um sie sofort auszulösen.
+
+Sie können auch nach der Ausführungshistorie einer Routine fragen, zum Beispiel `/schedule why did my nightly review do nothing this morning?`. Claude listet die letzten Ausführungen der Routine mit ihrem Status und einem Link zum [Öffnen jeder Ausführung im Web](#view-and-interact-with-runs) auf und liest das Protokoll einer Ausführung, um zu erklären, was passiert ist, einschließlich Tool-Fehler, Berechtigungsverweigerungen und des Endergebnisses. Erfordert Claude Code v2.1.227 oder später.
 
 <h3 id="repositories-and-branch-permissions">
   Repositories und Branch-Berechtigungen
 </h3>
 
-Routinen benötigen GitHub-Zugriff zum Klonen von Repositories. Wenn Sie eine Routine aus der CLI mit `/schedule` erstellen, überprüft Claude, ob Ihr Konto GitHub verbunden hat, und fordert Sie auf, `/web-setup` auszuführen, falls nicht. Siehe [GitHub-Authentifizierungsoptionen](/docs/de/claude-code-on-the-web#github-authentication-options) für die zwei Möglichkeiten, Zugriff zu gewähren.
+Routinen benötigen GitHub-Zugriff zum Klonen von Repositories. Wenn Sie eine Routine aus der CLI mit `/schedule` erstellen, überprüft Claude, ob Ihr Konto GitHub-Zugriff für das Repository hat, von dem aus Sie es ausgeführt haben, und fügt bei Bedarf eine Setup-Notiz hinzu, die angibt, wie Zugriff gewährt wird. Siehe [GitHub-Authentifizierungsoptionen](/docs/de/claude-code-on-the-web#github-authentication-options) für die zwei Möglichkeiten, Zugriff zu gewähren.
+
+Wenn Ihre GitHub-Verbindung fehlt oder abgelaufen ist, wenn eine Ausführung fällig ist, überspringt die Routine Ausführungen für bis zu 72 Stunden. Verbinden Sie GitHub innerhalb dieses Zeitfensters erneut, und die Routine wird automatisch fortgesetzt. Nach 72 Stunden ohne Verbindung wird die Routine deaktiviert, und Sie aktivieren sie erneut, nachdem Sie GitHub erneut verbunden haben.
 
 Jedes Repository, das Sie hinzufügen, wird bei jeder Ausführung geklont. Claude startet vom Standard-Branch des Repositories, es sei denn, Ihr Prompt gibt etwas anderes an.
 
-Standardmäßig kann Claude nur zu Branches mit dem Präfix `claude/` pushen. Dies verhindert, dass Routinen versehentlich geschützte oder langlebige Branches ändern. Um diese Einschränkung für ein bestimmtes Repository zu entfernen, aktivieren Sie **Uneingeschränkte Branch-Pushes zulassen** für dieses Repository beim Erstellen oder Bearbeiten der Routine.
+Claude pusht seine Arbeit zu Branches mit dem Präfix `claude/`, die immer akzeptiert werden. Wenn Ihr Prompt Claude anweist, zu einem anderen Branch zu pushen, überprüft Claude Code den Push zuerst und lehnt ihn ab, wenn eine der folgenden Bedingungen erfüllt ist:
+
+* Der Branch ist auf GitHub geschützt
+* Jemand anderes hat einen offenen Pull Request von diesem Branch
+* Der Branch enthält Commits, die von jemandem anderem als Ihnen verfasst wurden
 
 <h3 id="connectors">
   Konnektoren
@@ -366,21 +380,21 @@ Konnektoren sind die [claude.ai-Integrationen](/docs/de/mcp#use-mcp-servers-from
 
 Wenn Sie eine Routine erstellen, sind alle Ihre derzeit verbundenen Konnektoren standardmäßig enthalten. Entfernen Sie alle, die nicht benötigt werden, um zu begrenzen, auf welche Tools Claude während der Ausführung Zugriff hat. Sie können auch Konnektoren direkt aus dem Routine-Formular hinzufügen.
 
-Um Konnektoren außerhalb des Routine-Formulars zu verwalten oder hinzuzufügen, besuchen Sie **Einstellungen > Konnektoren** auf claude.ai oder verwenden Sie `/schedule update` in der CLI.
+Um Konnektoren außerhalb des Routine-Formulars zu verwalten oder hinzuzufügen, besuchen Sie [claude.ai/customize/connectors](https://claude.ai/customize/connectors) oder verwenden Sie `/schedule update` in der CLI.
 
 <h3 id="environments-and-network-access">
   Umgebungen und Netzwerkzugriff
 </h3>
 
-Jede Routine wird in einer [Cloud-Umgebung](/docs/de/claude-code-on-the-web#the-cloud-environment) ausgeführt, die Netzwerkzugriff, Umgebungsvariablen und Setup-Skripte steuert. Die Routine erbt die Netzwerk-Richtlinie der Umgebung bei jeder Ausführung.
+Jede Routine verwendet eine [Cloud-Umgebung](/docs/de/cloud-environments), die Netzwerkzugriff, Umgebungsvariablen und Setup-Skripte steuert. Die Routine erbt die Netzwerk-Richtlinie der Umgebung bei jeder Ausführung.
 
-Die **Standard**-Umgebung verwendet **Vertrauenswürdigen** Netzwerkzugriff: Die [Standard-Zulassungsliste](/docs/de/claude-code-on-the-web#default-allowed-domains) von Paket-Registries, Cloud-Provider-APIs, Container-Registries und häufigen Entwicklungs-Domains ist erreichbar, aber beliebige Domains sind nicht. Ausgehende Anfragen an andere Hosts schlagen mit `403` und `x-deny-reason: host_not_allowed` fehl. MCP-Konnektoren-Datenverkehr wird über Anthropic-Server geleitet, daher funktionieren die Konnektoren, die Sie der Routine hinzufügen, ohne dass Sie ihre Hosts zu **Zulässige Domains** hinzufügen müssen. Entfernen Sie alle Konnektoren, die Sie nicht benötigen, unter [Konnektoren](#connectors).
+Die **Standard**-Umgebung verwendet **Vertrauenswürdigen** Netzwerkzugriff, der nur die [Standard-Zulassungsliste](/docs/de/cloud-environments#default-allowed-domains) durch das Netzwerk der Sitzung zulässt. Anfragen auf diesem Pfad an Hosts außerhalb der Zulassungsliste schlagen mit `403` und `x-deny-reason: host_not_allowed` fehl. MCP-Konnektoren-Datenverkehr wird über Anthropic-Server geleitet, daher funktionieren die Konnektoren, die Sie der Routine hinzufügen, ohne dass Sie ihre Hosts zu **Zulässige Domains** hinzufügen müssen. Entfernen Sie alle Konnektoren, die Sie nicht benötigen, unter [Konnektoren](#connectors).
 
-Um zusätzliche Domains zuzulassen:
+Um zusätzliche Domains auf einer Ihrer eigenen Umgebungen zuzulassen, führen Sie diese Schritte aus. Eine [organisationsweite gemeinsame Umgebung](/docs/de/cloud-environments#organization-shared-environments) wird hier schreibgeschützt angezeigt, daher ändert ein Eigentümer seinen Netzwerkzugriff stattdessen auf der Seite **Cloud-Umgebungen** in den [Admin-Einstellungen](https://claude.ai/admin-settings).
 
 <Steps>
   <Step title="Öffnen Sie die Routine zur Bearbeitung">
-    Klicken Sie auf der Detailseite der Routine auf das Stiftsymbol, um **Routine bearbeiten** zu öffnen.
+    Auf der Detailseite der Routine öffnen Sie das Menü neben dem Namen der Routine und wählen **Bearbeiten** aus.
   </Step>
 
   <Step title="Öffnen Sie die Umgebungsauswahl">
@@ -392,7 +406,7 @@ Um zusätzliche Domains zuzulassen:
   </Step>
 
   <Step title="Ändern Sie die Netzwerkzugriff-Ebene">
-    Ändern Sie im Dialog **Cloud-Umgebung aktualisieren** den **Netzwerkzugriff** zu **Benutzerdefiniert** und geben Sie Ihre Domains in **Zulässige Domains** ein. Aktivieren Sie **Auch Standard-Liste häufiger Paket-Manager einschließen**, um die [Standard-Zulassungsliste](/docs/de/claude-code-on-the-web#default-allowed-domains) neben Ihren benutzerdefinierten Domains zu behalten. Wählen Sie stattdessen **Vollständig** für uneingeschränkten Zugriff.
+    Ändern Sie im Dialog **Cloud-Umgebung aktualisieren** den **Netzwerkzugriff** zu **Benutzerdefiniert** und geben Sie Ihre Domains in **Zulässige Domains** ein. Aktivieren Sie **Auch Standard-Liste häufiger Paket-Manager einschließen**, um die [Standard-Zulassungsliste](/docs/de/cloud-environments#default-allowed-domains) neben Ihren benutzerdefinierten Domains zu behalten. Wählen Sie stattdessen **Vollständig** für uneingeschränkten Zugriff.
   </Step>
 
   <Step title="Speichern">
@@ -400,7 +414,7 @@ Um zusätzliche Domains zuzulassen:
   </Step>
 </Steps>
 
-Siehe [Netzwerkzugriff](/docs/de/claude-code-on-the-web#network-access) für Details zu Zugriffsstufen und der Standard-Zulassungsliste.
+Siehe [Netzwerkzugriff](/docs/de/cloud-environments#network-access) für Details zu Zugriffsstufen und der Standard-Zulassungsliste.
 
 <h2 id="usage-and-limits">
   Nutzung und Limits
@@ -408,37 +422,37 @@ Siehe [Netzwerkzugriff](/docs/de/claude-code-on-the-web#network-access) für Det
 
 Routinen verbrauchen Abonnement-Nutzung auf die gleiche Weise wie interaktive Sitzungen. Zusätzlich zu den Standard-Abonnement-Limits haben Routinen eine tägliche Obergrenze für die Anzahl der Ausführungen, die pro Konto starten können. Sehen Sie Ihren aktuellen Verbrauch und verbleibende tägliche Routine-Ausführungen unter [claude.ai/code/routines](https://claude.ai/code/routines) oder [claude.ai/settings/usage](https://claude.ai/settings/usage).
 
-Wenn eine Routine das tägliche Limit oder Ihr Abonnement-Nutzungslimit erreicht, können Organisationen mit aktivierter Nutzungsguthaben Routinen weiterhin auf gemessener Überschreitung ausführen. Ohne Nutzungsguthaben werden weitere Ausführungen abgelehnt, bis sich das Fenster zurückgesetzt hat. Aktivieren Sie Nutzungsguthaben unter **Einstellungen > Abrechnung** auf claude.ai.
+Wenn eine Routine das tägliche Limit oder Ihr Abonnement-Nutzungslimit erreicht, können Organisationen mit aktiviertem Nutzungsguthaben Routinen weiterhin auf gemessener Überschreitung ausführen. Ohne Nutzungsguthaben werden weitere Ausführungen abgelehnt, bis sich das Fenster zurückgesetzt hat. Aktivieren Sie Nutzungsguthaben unter [claude.ai/settings/usage](https://claude.ai/settings/usage). Bei Team- und Enterprise-Plänen aktiviert ein Administrator diese für die Organisation unter [claude.ai/admin-settings/usage](https://claude.ai/admin-settings/usage).
 
-Einmalige Ausführungen werden nicht auf das tägliche Routine-Ausführungslimit angerechnet. Sie verbrauchen Ihre reguläre Abonnement-Nutzung wie jede andere Sitzung, sind aber von der täglichen Routine-Ausführungszulage pro Konto ausgenommen.
+Einmalige Ausführungen werden nicht auf das tägliche Routine-Limit angerechnet. Sie verbrauchen Ihre reguläre Abonnement-Nutzung wie jede andere Sitzung.
+
+Während Ihr Abonnement pausiert ist, werden Ihre Routinen angehalten und führen nicht aus. Sobald Ihr Abonnement wieder aktiv ist, schalten Sie sie wieder ein.
 
 <h2 id="troubleshooting">
   Fehlerbehebung
 </h2>
 
-<h3 id="/schedule-returns-unknown-command">
+<h3 id="schedule-returns-unknown-command">
   `/schedule` zeigt "Unknown command" an
 </h3>
 
-Die CLI blendet `/schedule` aus, wenn eine ihrer Anforderungen nicht erfüllt ist: Das Befehlsmenü zeigt `No commands match "/schedule"` während der Eingabe an, und das Absenden gibt `Unknown command: /schedule` zurück. Die Ursache ist normalerweise eine der folgenden:
+Die CLI blendet `/schedule` aus, wenn eine ihrer Anforderungen nicht erfüllt ist: Das Befehlsmenü zeigt `No commands match "/schedule"` während der Eingabe an. Das Absenden gibt `Unknown command: /schedule` zurück, außer in den folgenden Fällen, die eine andere Antwort angeben.
 
-* Sie sind mit einem Console-API-Schlüssel oder einem Cloud-Anbieter wie Amazon Bedrock, Google Cloud's Agent Platform oder Microsoft Foundry authentifiziert. `/schedule` erfordert eine claude.ai-Abonnement-Anmeldung. Wenn `ANTHROPIC_API_KEY` oder `ANTHROPIC_AUTH_TOKEN` in Ihrer Shell oder `apiKeyHelper` in `settings.json` gesetzt ist, entfernen Sie es zuerst, da diese Vorrang vor einer claude.ai-Anmeldung haben
-* `DISABLE_TELEMETRY`, `DO_NOT_TRACK`, `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` oder `DISABLE_GROWTHBOOK` ist in Ihrer Shell-Umgebung oder im `env`-Block einer [`settings.json`-Datei](/docs/de/settings#available-settings) gesetzt. Diese deaktivieren das Abrufen von Feature-Flags, auf das `/schedule` angewiesen ist
-* Sie befinden sich in einer Claude Code-Sitzung im Web. Verwalten Sie Routinen stattdessen über die [Web-Benutzeroberfläche](https://claude.ai/code/routines)
+Die Ursache ist normalerweise eine der folgenden:
 
-Sie können Routinen jederzeit unter [claude.ai/code/routines](https://claude.ai/code/routines) erstellen und verwalten, unabhängig davon, wie die CLI konfiguriert ist.
+* Sie sind mit einem Console-API-Schlüssel, einem [Anthropic-Profil oder Verbundsanmeldedaten](/docs/de/authentication#anthropic-profiles-and-federation-credentials) oder einem Cloud-Anbieter wie Amazon Bedrock, Google Cloud's Agent Platform oder Microsoft Foundry authentifiziert. `/schedule` erfordert eine claude.ai-Abonnement-Anmeldung. Mit einem Console-API-Schlüssel oder einem Profil und aktiviertem Feature-Flag-Abrufen zeigt das Absenden von `/schedule` stattdessen `/schedule is available with Claude for Enterprise — ask your admin about migrating from API-key access` an. Mit einer Cloud-Anbieter-Anmeldung sehen Sie immer noch `Unknown command: /schedule`. Wenn `ANTHROPIC_API_KEY` oder `ANTHROPIC_AUTH_TOKEN` in Ihrer Shell oder `apiKeyHelper` in `settings.json` gesetzt ist, entfernen Sie es zuerst, da diese Vorrang vor einer claude.ai-Anmeldung haben. Ein Profil oder eine Verbundsanmeldedaten hat ebenfalls Vorrang, daher schalten Sie diese auch aus
+* Sie sind vollständig abgemeldet, ohne API-Schlüssel oder andere Anmeldedaten. Mit aktiviertem Feature-Flag-Abrufen zeigt das Absenden von `/schedule` `/schedule requires a claude.ai subscription. Run /login to sign in with your claude.ai account.` an Vor v2.1.268 zeigte eine abgemeldete Sitzung die gleiche Claude for Enterprise-Nachricht wie ein Console-API-Schlüssel
+* Sie befinden sich in einer Cloud-Sitzung, wo das Absenden von `/schedule` antwortet, dass der Befehl in dieser Umgebung nicht verfügbar ist. Verwalten Sie Routinen stattdessen über die [Web-Benutzeroberfläche](https://claude.ai/code/routines)
+* Die Richtlinie Ihrer Organisation deaktiviert [Cloud-Sitzungen](/docs/de/claude-code-on-the-web), auf denen Routinen ausgeführt werden. In diesem Fall antwortet das Absenden von `/schedule` mit [`Cloud sessions are disabled by your organization's policy`](/docs/de/errors#cloud-sessions-are-disabled-by-your-organizations-policy). Vor v2.1.268 gab es `Unknown command: /schedule` zurück
+* Ein Inhaber hat [Routinen deaktiviert](#routines-are-disabled-by-your-organizations-policy) für Ihre Team- oder Enterprise-Organisation. Vor v2.1.227 erschien der Befehl in diesem Fall immer noch, und claude.ai lehnte die Routine ab, wenn Claude versuchte, sie zu erstellen oder auszuführen
 
-<h3 id="/schedule-asks-you-to-authenticate">
-  `/schedule` fordert Sie auf, sich zu authentifizieren
-</h3>
+Sofern die Richtlinie Ihrer Organisation Routinen oder Cloud-Sitzungen nicht deaktiviert, können Sie Routinen jederzeit unter [claude.ai/code/routines](https://claude.ai/code/routines) erstellen und verwalten, unabhängig davon, wie die CLI konfiguriert ist.
 
-Wenn `/schedule` ausgeführt wird, aber Claude antwortet, dass Sie sich zuerst mit einem claude.ai-Konto authentifizieren müssen, hat die CLI keine gespeicherte claude.ai-Anmeldung. API-Konten werden für Routinen nicht unterstützt. Führen Sie `/login` aus, melden Sie sich mit Ihrem claude.ai-Konto an, und führen Sie dann `/schedule` erneut aus.
-
-<h3 id="routines-are-disabled-by-your-organization’s-policy">
+<h3 id="routines-are-disabled-by-your-organizations-policy">
   "Routinen sind durch die Richtlinie Ihrer Organisation deaktiviert"
 </h3>
 
-Ein Inhaber in Ihrer Team- oder Enterprise-Organisation hat wahrscheinlich den **Routinen**-Schalter unter [claude.ai/admin-settings/claude-code](https://claude.ai/admin-settings/claude-code) ausgeschaltet. Dies ist eine serverseitige Organisationseinstellung, daher kann sie nicht aus Ihrer lokalen Konfiguration überschrieben werden. Bitten Sie einen Inhaber, Routinen für Ihre Organisation zu aktivieren.
+Ein Inhaber in Ihrer Team- oder Enterprise-Organisation hat wahrscheinlich den **Routinen**-Schalter unter [claude.ai/admin-settings/claude-code](https://claude.ai/admin-settings/claude-code) ausgeschaltet. In Claude Code v2.1.227 oder später blendet derselbe Schalter auch `/schedule` in der CLI aus. Dies ist eine serverseitige Organisationseinstellung, daher kann sie nicht aus Ihrer lokalen Konfiguration überschrieben werden. Bitten Sie einen Inhaber, Routinen für Ihre Organisation zu aktivieren.
 
 <h2 id="related-resources">
   Verwandte Ressourcen
@@ -446,6 +460,7 @@ Ein Inhaber in Ihrer Team- oder Enterprise-Organisation hat wahrscheinlich den *
 
 * [`/loop` und In-Session-Planung](/docs/de/scheduled-tasks): Planen Sie lokale Aufgaben innerhalb einer offenen CLI-Sitzung
 * [Desktop-geplante Aufgaben](/docs/de/desktop-scheduled-tasks): Lokale geplante Aufgaben, die auf Ihrem Computer mit Zugriff auf lokale Dateien ausgeführt werden
-* [Cloud-Umgebung](/docs/de/claude-code-on-the-web#the-cloud-environment): Konfigurieren Sie die Laufzeitumgebung für Cloud-Sitzungen
+* [Cloud-Umgebungen](/docs/de/cloud-environments): Konfigurieren Sie Netzwerkzugriff, Umgebungsvariablen und Setup-Skripte für Cloud-Sitzungen
+* [Projekte](/docs/de/claude-projects): Laufende Arbeiten, die Claude über parallele Cloud-Sitzungen koordiniert; aus einem Projekt erstellte Routinen werden auf der Registerkarte **Routinen** angezeigt
 * [MCP-Konnektoren](/docs/de/mcp): Verbinden Sie externe Dienste wie Slack, Linear und Google Drive
 * [GitHub Actions](/docs/de/github-actions): Führen Sie Claude in Ihrer CI-Pipeline bei Repository-Ereignissen aus

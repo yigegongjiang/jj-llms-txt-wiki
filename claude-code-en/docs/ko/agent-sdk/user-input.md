@@ -12,7 +12,7 @@ Claude는 두 가지 상황에서 사용자 입력을 요청합니다. **도구 
 
 명확화 질문의 경우 Claude가 질문과 옵션을 생성합니다. 사용자의 역할은 이를 사용자에게 제시하고 선택 사항을 반환하는 것입니다. 이 흐름에 자신의 질문을 추가할 수 없습니다. 사용자에게 직접 물어봐야 할 사항이 있으면 애플리케이션 로직에서 별도로 수행하십시오.
 
-콜백은 무기한 대기 상태로 유지될 수 있습니다. 콜백이 반환될 때까지 실행이 일시 중지되며, SDK는 쿼리 자체가 취소될 때만 대기를 취소합니다. 사용자가 프로세스가 합리적으로 실행 상태를 유지할 수 있는 것보다 더 오래 응답하는 데 시간이 걸릴 수 있다면, [`defer` 훅 결정](/docs/ko/hooks#defer-a-tool-call-for-later)을 반환하십시오. 이를 통해 프로세스를 종료하고 나중에 지속된 세션에서 재개할 수 있습니다.
+콜백은 무기한 대기 상태로 유지될 수 있습니다. 콜백이 반환될 때까지 실행이 일시 중지됩니다. 사용자가 프로세스가 합리적으로 실행 상태를 유지할 수 있는 것보다 더 오래 응답하는 데 시간이 걸릴 수 있다면, [`PreToolUse` 훅](/docs/ko/agent-sdk/hooks)을 등록하여 [`defer` 결정](/docs/ko/hooks#defer-a-tool-call-for-later)을 반환하십시오. 이를 통해 프로세스를 종료하고 나중에 지속된 세션에서 재개할 수 있습니다.
 
 이 가이드는 각 유형의 요청을 감지하고 적절하게 응답하는 방법을 보여줍니다.
 
@@ -20,10 +20,13 @@ Claude는 두 가지 상황에서 사용자 입력을 요청합니다. **도구 
   Claude가 입력이 필요한 시점 감지
 </h2>
 
-쿼리 옵션에 `canUseTool` 콜백을 전달합니다. 콜백은 Claude가 사용자 입력이 필요할 때마다 실행되며, 도구 이름과 입력을 인수로 받습니다.
+쿼리 옵션에 `canUseTool` 콜백을 전달합니다. 콜백은 Claude가 사용자 입력이 필요할 때마다 실행되며, 도구 이름과 입력을 인수로 받습니다:
 
 <CodeGroup>
   ```python Python theme={null}
+  from claude_agent_sdk import ClaudeAgentOptions
+
+
   async def handle_tool_request(tool_name, input_data, context):
       # 사용자에게 프롬프트하고 허용 또는 거부 반환
       ...
@@ -42,15 +45,15 @@ Claude는 두 가지 상황에서 사용자 입력을 요청합니다. **도구 
   ```
 </CodeGroup>
 
-콜백은 두 가지 경우에 실행됩니다.
+콜백은 두 가지 경우에 실행됩니다:
 
 1. **도구가 승인 필요**: Claude가 [권한 규칙](/docs/ko/agent-sdk/permissions) 또는 권한 모드에 의해 자동 승인되지 않은 도구를 사용하려고 합니다. 도구에 대해 `tool_name`을 확인합니다(예: `"Bash"`, `"Write"`).
 2. **Claude가 질문함**: Claude가 `AskUserQuestion` 도구를 호출합니다. `tool_name == "AskUserQuestion"`을 확인하여 다르게 처리합니다. `tools` 배열을 지정하는 경우 이것이 작동하려면 `AskUserQuestion`을 포함하십시오. 자세한 내용은 [명확화 질문 처리](#handle-clarifying-questions)를 참조하십시오.
 
 <Warning>
-  **콜백은 자동 승인된 도구에 대해서는 실행되지 않습니다.** [권한 평가 흐름](/docs/ko/agent-sdk/permissions#how-permissions-are-evaluated)의 이전 단계에서 허용 규칙이나 `acceptEdits` 또는 `bypassPermissions`와 같은 모드가 `canUseTool`을 확인하기 전에 호출을 해결합니다. `allowed_tools`에 도구를 나열하면, 요청이 질문 규칙이나 `plan` 모드에 의해 프롬프트로 다시 라우팅되지 않는 한 해당 도구에 대한 `canUseTool` 확인이 실행되지 않습니다. 모든 도구 호출에 적용되어야 하는 로직의 경우 흐름의 나머지 부분 전에 실행되고 요청을 허용, 거부 또는 수정할 수 있는 [`PreToolUse` 훅](/docs/ko/agent-sdk/hooks)을 사용하십시오.
+  **콜백은 자동 승인된 도구에 대해서는 실행되지 않습니다.** [권한 평가 흐름](/docs/ko/agent-sdk/permissions#how-permissions-are-evaluated)의 이전 단계에서 허용 규칙이나 `acceptEdits` 또는 `bypassPermissions`와 같은 모드가 `canUseTool`을 확인하기 전에 호출을 해결합니다. `allowed_tools`에 도구를 나열하면, 요청이 질문 규칙이나 `plan` 모드에 의해 프롬프트로 다시 라우팅되는 경우에만 해당 도구에 대한 `canUseTool` 확인이 실행됩니다([평가 흐름](/docs/ko/agent-sdk/permissions#how-permissions-are-evaluated) 참조). 모든 도구 호출에 적용되어야 하는 로직의 경우 흐름의 나머지 부분 전에 실행되고 요청을 허용, 거부 또는 수정할 수 있는 [`PreToolUse` 훅](/docs/ko/agent-sdk/hooks)을 사용하십시오.
 
-  `AskUserQuestion`, MCP 도구가 [`requiresUserInteraction`](/docs/ko/mcp#require-approval-for-a-specific-tool)으로 표시되고, 커넥터 도구가 [조직에서 `ask`로 설정](/docs/ko/mcp#organization-controls-on-connector-tools)된 경우 허용 규칙이 일치하더라도 콜백에 도달합니다. `dontAsk` 모드에서는 콜백을 호출하지 않고 이러한 호출이 거부됩니다.
+  허용 규칙이 [모드가 자동 승인하지 않는 작업](/docs/ko/permission-modes#actions-no-mode-auto-approves)을 사전 승인하지 않습니다. 어떤 작업이 콜백에 도달하고 `dontAsk` 및 `auto` 모드에서 무엇이 발생하는지는 [권한이 평가되는 방식](/docs/ko/agent-sdk/permissions#how-permissions-are-evaluated)을 참조하십시오.
 </Warning>
 
 또한 [`PermissionRequest` 훅](/docs/ko/agent-sdk/hooks#available-hooks)을 사용하여 Claude가 승인을 기다리고 있을 때 외부 알림(Slack, 이메일, 푸시)을 보낼 수 있습니다.
@@ -59,7 +62,9 @@ Claude는 두 가지 상황에서 사용자 입력을 요청합니다. **도구 
   도구 승인 요청 처리
 </h2>
 
-쿼리 옵션에 `canUseTool` 콜백을 전달하면, Claude가 자동 승인되지 않은 도구를 사용하려고 할 때 실행됩니다. 콜백은 세 가지 인수를 받습니다.
+쿼리 옵션에 `canUseTool` 콜백을 전달하면, Claude가 권한 흐름의 이전 단계에서 승인되지 않은 도구를 사용하려고 할 때 실행됩니다. `dontAsk` 모드와 같은 일부 구성에서는 Claude Code가 이를 호출하지 않습니다. [권한이 평가되는 방식](/docs/ko/agent-sdk/permissions#how-permissions-are-evaluated)의 마지막 단계에서 이들을 나열하고 호출에 어떤 일이 발생하는지 설명합니다.
+
+콜백은 세 가지 인수를 받습니다.
 
 | 인수                                  | 설명                                                                                                                                                                                                                                                         |
 | ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -199,10 +204,6 @@ Claude는 두 가지 상황에서 사용자 입력을 요청합니다. **도구 
   ```
 </CodeGroup>
 
-<Note>
-  Python에서 `can_use_tool`은 [스트리밍 모드](/docs/ko/agent-sdk/streaming-vs-single-mode)가 필요합니다. `query(prompt=generator)` 또는 `ClaudeSDKClient.connect(prompt=async_iterable)`을 통해 유한한 메시지 스트림을 전달하면, 등록된 훅이나 프로세스 내 MCP 서버가 스트림을 열어 두지 않는 한 권한 콜백이 호출되기 전에 SDK가 입력 스트림을 닫습니다. 위의 예제는 `{"continue_": True}`를 반환하는 `PreToolUse` 훅으로 스트림을 열어 둡니다. 프롬프트 없이 연결하고 `ClaudeSDKClient.query()`를 통해 메시지를 보내면 스트림이 자동으로 열려 있으며 훅이 필요하지 않습니다.
-</Note>
-
 이 예제는 `y` 이외의 모든 입력이 거부로 처리되는 y/n 흐름을 사용합니다. 실제로는 사용자가 요청을 수정하거나, 피드백을 제공하거나, Claude를 완전히 리디렉션할 수 있는 더 풍부한 UI를 구축할 수 있습니다. 응답할 수 있는 모든 방법은 [도구 요청에 응답](#respond-to-tool-requests)을 참조하십시오.
 
 <h3 id="respond-to-tool-requests">
@@ -220,26 +221,6 @@ Claude는 두 가지 상황에서 사용자 입력을 요청합니다. **도구 
 
 거부할 때 이유를 설명하는 메시지를 제공합니다. Claude는 이 메시지를 보고 접근 방식을 조정할 수 있습니다.
 
-<CodeGroup>
-  ```python Python theme={null}
-  from claude_agent_sdk.types import PermissionResultAllow, PermissionResultDeny
-
-  # 도구가 실행되도록 허용
-  return PermissionResultAllow(updated_input=input_data)
-
-  # 도구 차단
-  return PermissionResultDeny(message="User rejected this action")
-  ```
-
-  ```typescript TypeScript theme={null}
-  // 도구가 실행되도록 허용
-  return { behavior: "allow", updatedInput: input };
-
-  // 도구 차단
-  return { behavior: "deny", message: "User rejected this action" };
-  ```
-</CodeGroup>
-
 허용하거나 거부하는 것 외에도 도구의 입력을 수정하거나 Claude가 접근 방식을 조정하는 데 도움이 되는 컨텍스트를 제공할 수 있습니다.
 
 * **승인**: 도구가 Claude가 요청한 대로 실행되도록 허용
@@ -248,6 +229,8 @@ Claude는 두 가지 상황에서 사용자 입력을 요청합니다. **도구 
 * **거부**: 도구를 차단하고 이유를 Claude에 알림
 * **대안 제안**: 차단하지만 사용자가 원하는 것으로 Claude를 안내
 * **완전히 리디렉션**: [스트리밍 입력](/docs/ko/agent-sdk/streaming-vs-single-mode)을 사용하여 Claude에 완전히 새로운 지시를 보냄
+
+다음 스니펫의 `ask_user` 및 `askUser` 헬퍼는 애플리케이션의 자체 프롬프트 UI를 나타냅니다.
 
 <Tabs>
   <Tab title="승인">
@@ -571,12 +554,12 @@ Claude가 여러 유효한 접근 방식이 있는 작업에 대해 더 많은 �
 
 입력에는 `questions` 배열의 Claude 생성 질문이 포함됩니다. 각 질문에는 다음 필드가 있습니다.
 
-| 필드            | 설명                                                                                                                  |
-| ------------- | ------------------------------------------------------------------------------------------------------------------- |
-| `question`    | 표시할 전체 질문 텍스트                                                                                                       |
-| `header`      | 질문의 짧은 레이블(최대 12자)                                                                                                  |
-| `options`     | 각각 `label` 및 `description`이 있는 2-4개 선택 사항의 배열입니다. TypeScript: 선택적으로 `preview`([아래](#option-previews-typescript) 참조) |
-| `multiSelect` | `true`인 경우 사용자가 여러 옵션을 선택할 수 있습니다.                                                                                  |
+| 필드            | 설명                                                                                                                             |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `question`    | 표시할 전체 질문 텍스트                                                                                                                  |
+| `header`      | 질문의 짧은 레이블(최대 12자)                                                                                                             |
+| `options`     | 각각 `label` 및 `description`이 있는 2-4개 선택 사항의 배열입니다. TypeScript: 선택적으로 `preview`. [옵션 미리보기](#option-previews-typescript)를 참조하십시오. |
+| `multiSelect` | `true`인 경우 사용자가 여러 옵션을 선택할 수 있습니다.                                                                                             |
 
 콜백이 받는 구조:
 
@@ -653,7 +636,7 @@ HTML 미리보기가 있는 옵션:
 
 다중 선택 질문의 경우 레이블 배열을 전달하거나 `", "`로 조인합니다. "Other" 옵션과 같은 질문별 자유 텍스트의 경우 사용자의 텍스트를 [자유 텍스트 입력 지원](#support-free-text-input)에 표시된 대로 `answers[question]`에 입력합니다. `response`는 사용자가 질문 카드를 닫고 특정 질문에 대한 답변이 아닌 일반적인 회신을 입력할 수 있는 UI가 있을 때만 설정합니다. `response`가 설정되면 Claude는 질문별 답변 목록 대신 "사용자가 응답했습니다: …"를 받습니다.
 
-```json theme={null}
+```jsonc theme={null}
 {
   "questions": [
     // ...

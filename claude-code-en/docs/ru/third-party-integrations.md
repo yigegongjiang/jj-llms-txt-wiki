@@ -86,11 +86,13 @@ export const ContactSalesCard = ({surface}) => {
 
 Для большинства организаций Claude for Teams или Claude for Enterprise обеспечивает лучший опыт. Члены команды получают доступ как к Claude Code, так и к Claude в веб-версии с одной подпиской, централизованным выставлением счетов и без необходимости настройки инфраструктуры.
 
-**Claude for Teams** — это самообслуживаемое решение, которое включает функции сотрудничества, инструменты администратора и управление выставлением счетов. Лучше всего подходит для небольших команд, которым нужно быстро начать работу.
+**Claude for Teams** — это самообслуживаемое решение, которое включает функции сотрудничества, инструменты администратора, SSO, управление выставлением счетов и [управляемые параметры сервера](/docs/ru/server-managed-settings) для конфигурации Claude Code на уровне организации. Лучше всего подходит для небольших команд, которым нужно быстро начать работу.
 
-**Claude for Enterprise** добавляет SSO и захват домена, разрешения на основе ролей, доступ к API соответствия требованиям и управляемые параметры политики для развертывания конфигураций Claude Code на уровне организации. Лучше всего подходит для крупных организаций с требованиями безопасности и соответствия требованиям.
+**Claude for Enterprise** добавляет захват домена, разрешения на основе ролей и доступ к API соответствия требованиям. Лучше всего подходит для крупных организаций с требованиями безопасности и соответствия требованиям.
 
 Узнайте больше о [планах Team](https://support.claude.com/en/articles/9266767-what-is-the-team-plan) и [планах Enterprise](https://support.claude.com/en/articles/9797531-what-is-the-enterprise-plan).
+
+Варианты развертывания, сравниваемые ниже, охватывают место, где выполняется вывод модели. Для запуска сеансов [Claude Code в веб-версии](/docs/ru/claude-code-on-the-web) на вычислительных ресурсах, которыми управляет ваша организация, см. [самостоятельно размещаемые окружения](/docs/ru/self-hosted-environments).
 
 Если ваша организация имеет специфические требования к инфраструктуре, сравните варианты ниже:
 
@@ -150,8 +152,8 @@ export const ContactSalesCard = ({surface}) => {
 
     <tr>
       <td>Аутентификация</td>
-      <td>Claude.ai SSO или электронная почта</td>
-      <td>API ключ</td>
+      <td>claude.ai SSO или электронная почта</td>
+      <td>API ключ или [вход в Console без него](/docs/ru/authentication#sign-in-without-an-api-key)</td>
       <td>API ключ или учетные данные AWS</td>
       <td>API ключ или учетные данные AWS</td>
       <td>Учетные данные GCP</td>
@@ -213,120 +215,9 @@ export const ContactSalesCard = ({surface}) => {
 * **Корпоративный прокси**: маршрутизирует трафик через прокси HTTP/HTTPS. Используйте это, если ваша организация требует, чтобы весь исходящий трафик проходил через прокси-сервер для мониторинга безопасности, соответствия требованиям или обеспечения политики сети. Настройте с помощью переменных окружения `HTTPS_PROXY` или `HTTP_PROXY`. Узнайте больше в разделе [Конфигурация корпоративной сети](/docs/ru/network-config).
 * **Шлюз LLM**: сервис, который находится между Claude Code и поставщиком облачных услуг для обработки аутентификации и маршрутизации. Используйте это, если вам нужно централизованное отслеживание использования между командами, пользовательское ограничение скорости или бюджеты, или централизованное управление аутентификацией. Настройте с помощью переменных окружения `ANTHROPIC_BASE_URL`, `ANTHROPIC_BEDROCK_BASE_URL`, `ANTHROPIC_AWS_BASE_URL`, `ANTHROPIC_VERTEX_BASE_URL` или `ANTHROPIC_FOUNDRY_BASE_URL`. Узнайте больше в разделе [Шлюзы LLM](/docs/ru/llm-gateway).
 
-Следующие примеры показывают переменные окружения для установки в вашей оболочке или профиле оболочки (`.bashrc`, `.zshrc`). См. раздел [Параметры](/docs/ru/settings) для других методов конфигурации.
+Для переменных окружения для каждого поставщика, которые маршрутизируют Amazon Bedrock, Microsoft Foundry или Google Cloud's Agent Platform через шлюз LLM, см. раздел [маршрутизация к поставщику облачных услуг через шлюз](/docs/ru/llm-gateway-connect#route-to-a-cloud-provider-through-a-gateway). Запустите `/status` в Claude Code для проверки того, какой поставщик, базовый URL и прокси использует сеанс.
 
-<h3 id="amazon-bedrock">
-  Amazon Bedrock
-</h3>
-
-<Tabs>
-  <Tab title="Корпоративный прокси">
-    Маршрутизируйте трафик Amazon Bedrock через ваш корпоративный прокси, установив следующие [переменные окружения](/docs/ru/env-vars):
-
-    ```bash theme={null}
-    # Включить Bedrock
-    export CLAUDE_CODE_USE_BEDROCK=1
-    export AWS_REGION=us-east-1
-
-    # Настроить корпоративный прокси
-    export HTTPS_PROXY='https://proxy.example.com:8080'
-    ```
-  </Tab>
-
-  <Tab title="Шлюз LLM">
-    Маршрутизируйте трафик Amazon Bedrock через ваш шлюз LLM, установив следующие [переменные окружения](/docs/ru/env-vars):
-
-    ```bash theme={null}
-    # Включить Bedrock
-    export CLAUDE_CODE_USE_BEDROCK=1
-
-    # Настроить шлюз LLM
-    export ANTHROPIC_BEDROCK_BASE_URL='https://your-llm-gateway.com/bedrock'
-    export CLAUDE_CODE_SKIP_BEDROCK_AUTH=1  # Если шлюз обрабатывает аутентификацию AWS
-    ```
-  </Tab>
-</Tabs>
-
-<h3 id="microsoft-foundry">
-  Microsoft Foundry
-</h3>
-
-<Tabs>
-  <Tab title="Корпоративный прокси">
-    Маршрутизируйте трафик Microsoft Foundry через ваш корпоративный прокси, установив следующие [переменные окружения](/docs/ru/env-vars):
-
-    ```bash theme={null}
-    # Включить Microsoft Foundry
-    export CLAUDE_CODE_USE_FOUNDRY=1
-    export ANTHROPIC_FOUNDRY_RESOURCE=your-resource
-    export ANTHROPIC_FOUNDRY_API_KEY=your-api-key  # Или опустите для аутентификации Entra ID
-
-    # Настроить корпоративный прокси
-    export HTTPS_PROXY='https://proxy.example.com:8080'
-    ```
-  </Tab>
-
-  <Tab title="Шлюз LLM">
-    Маршрутизируйте трафик Microsoft Foundry через ваш шлюз LLM, установив следующие [переменные окружения](/docs/ru/env-vars):
-
-    ```bash theme={null}
-    # Включить Microsoft Foundry
-    export CLAUDE_CODE_USE_FOUNDRY=1
-
-    # Настроить шлюз LLM
-    export ANTHROPIC_FOUNDRY_BASE_URL='https://your-llm-gateway.com'
-    export ANTHROPIC_FOUNDRY_API_KEY=your-gateway-key  # Отправляется как x-api-key
-    ```
-  </Tab>
-</Tabs>
-
-<h3 id="google-cloud’s-agent-platform">
-  Google Cloud's Agent Platform
-</h3>
-
-<Tabs>
-  <Tab title="Корпоративный прокси">
-    Маршрутизируйте трафик Google Cloud's Agent Platform через ваш корпоративный прокси, установив следующие [переменные окружения](/docs/ru/env-vars):
-
-    ```bash theme={null}
-    # Включить Agent Platform
-    export CLAUDE_CODE_USE_VERTEX=1
-    export CLOUD_ML_REGION=us-east5
-    export ANTHROPIC_VERTEX_PROJECT_ID=your-project-id
-
-    # Настроить корпоративный прокси
-    export HTTPS_PROXY='https://proxy.example.com:8080'
-    ```
-  </Tab>
-
-  <Tab title="Шлюз LLM">
-    Маршрутизируйте трафик Google Cloud's Agent Platform через ваш шлюз LLM, установив следующие [переменные окружения](/docs/ru/env-vars):
-
-    ```bash theme={null}
-    # Включить Agent Platform
-    export CLAUDE_CODE_USE_VERTEX=1
-
-    # Настроить шлюз LLM
-    export ANTHROPIC_VERTEX_BASE_URL='https://your-llm-gateway.com/vertex'
-    export CLAUDE_CODE_SKIP_VERTEX_AUTH=1  # Если шлюз обрабатывает аутентификацию GCP
-    export ANTHROPIC_VERTEX_PROJECT_ID=your-gcp-project-id
-    export CLOUD_ML_REGION=us-east5
-    ```
-  </Tab>
-</Tabs>
-
-<Tip>
-  Используйте `/status` в Claude Code для проверки того, что конфигурация прокси и шлюза применена правильно. Например, с конфигурацией шлюза Bedrock выше, вывод включает строки вроде:
-
-  ```
-  API provider: Amazon Bedrock
-  Bedrock base URL: https://your-llm-gateway.com/bedrock
-  AWS region: us-east-1
-  AWS auth skipped
-  ```
-
-  Если вы настроили корпоративный прокси, `/status` также показывает строку `Proxy` с URL вашего прокси.
-</Tip>
+Если ваша организация использует [ключи шифрования, управляемые клиентом](https://platform.claude.com/docs/en/manage-claude/cmek) (CMEK) и маршрутизирует Claude Code через шлюз LLM или пользовательский `ANTHROPIC_BASE_URL`, CMEK не применяется к операционной телеметрии Claude Code в этих сеансах. Чтобы отключить телеметрию для каждого разработчика, доставьте `DISABLE_TELEMETRY` через управляемые параметры, как показано в разделе [Отключение телеметрии для вашей организации](/docs/ru/managed-settings#turn-telemetry-off-for-your-organization).
 
 <h2 id="best-practices-for-organizations">
   Лучшие практики для организаций
@@ -336,12 +227,7 @@ export const ContactSalesCard = ({surface}) => {
   Инвестируйте в документацию и память
 </h3>
 
-Мы настоятельно рекомендуем инвестировать в документацию, чтобы Claude Code понимал вашу кодовую базу. Организации могут развертывать файлы CLAUDE.md на нескольких уровнях:
-
-* **На уровне организации**: развертывайте в системные каталоги, такие как `/Library/Application Support/ClaudeCode/CLAUDE.md` (macOS), `/etc/claude-code/CLAUDE.md` (Linux и WSL) или `C:\Program Files\ClaudeCode\CLAUDE.md` (Windows) для стандартов компании
-* **На уровне репозитория**: создавайте файлы `CLAUDE.md` в корнях репозиториев, содержащие архитектуру проекта, команды сборки и рекомендации по внесению вклада. Проверяйте их в систему контроля версий, чтобы все пользователи получали выгоду
-
-Узнайте больше в разделе [Память и файлы CLAUDE.md](/docs/ru/memory).
+Мы настоятельно рекомендуем инвестировать в документацию, чтобы Claude Code понимал вашу кодовую базу. Организации могут развертывать файлы CLAUDE.md на нескольких уровнях. См. [где могут находиться файлы CLAUDE.md](/docs/ru/memory#choose-where-to-put-claude-md-files) и [как развернуть организационный файл CLAUDE.md](/docs/ru/memory#deploy-organization-wide-claude-md).
 
 <h3 id="simplify-deployment">
   Упростите развертывание
@@ -372,8 +258,6 @@ export const ContactSalesCard = ({surface}) => {
 </h3>
 
 MCP — это отличный способ предоставить Claude Code больше информации, такую как подключение к системам управления билетами или журналам ошибок. Мы рекомендуем, чтобы одна центральная команда настроила MCP servers и проверила конфигурацию `.mcp.json` в кодовую базу, чтобы все пользователи получали выгоду. [Узнайте больше](/docs/ru/mcp).
-
-В Anthropic мы доверяем Claude Code для питания разработки во всех кодовых базах Anthropic. Мы надеемся, что вам понравится использовать Claude Code так же, как и нам.
 
 <h2 id="next-steps">
   Следующие шаги

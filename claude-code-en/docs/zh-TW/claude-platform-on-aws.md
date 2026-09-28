@@ -188,7 +188,9 @@ export const Experiment = ({flag, treatment, children}) => {
 
 <Experiment flag="docs-contact-sales-cta" treatment={<ContactSalesCard surface="claude_platform_on_aws" />} />
 
-AWS 上的 Claude Platform 是 Anthropic 營運的 Claude API，具有 AWS 驗證、IAM 存取控制和 AWS Marketplace 計費。請求直接到達 Anthropic 的 API，因此您可以獲得與 [Claude API](https://platform.claude.com/docs) 相同的模型和 API 功能，並遵循相同的發佈時程表。Claude Code 透過 Anthropic 的功能旗標服務啟用的用戶端功能，例如 [`/loop` 自我調整步調](/docs/zh-TW/scheduled-tasks#let-claude-choose-the-interval)，預設為關閉，且 [advisor 工具](/docs/zh-TW/advisor) 無法使用。請參閱 [功能可用性矩陣](/docs/zh-TW/feature-availability#summary-by-provider) 以取得完整清單。您使用 AWS 認證或工作區 API 金鑰進行驗證，並透過 AWS Marketplace 付款。
+AWS 上的 Claude Platform 是 Anthropic 營運的 Claude API，具有 AWS 驗證、IAM 存取控制和 AWS Marketplace 計費。請求直接到達 Anthropic 的 API，因此您可以獲得與 [Claude API](https://platform.claude.com/docs) 相同的模型和 API 功能，並遵循相同的發佈時程表。您使用 AWS 認證或工作區 API 金鑰進行驗證，並透過 AWS Marketplace 付款。
+
+Claude Code 透過 Anthropic 的功能旗標服務啟用的用戶端功能預設為關閉，且 [advisor 工具](/docs/zh-TW/advisor) 無法使用。請參閱 [功能可用性矩陣](/docs/zh-TW/feature-availability#summary-by-provider) 以取得完整清單。
 
 使用本指南將 Claude Code 指向您已透過 AWS 上的 Claude Platform 佈建的工作區。有關在此之前的 AWS 訂閱和工作區設定，請參閱 [AWS 上的 Claude Platform 文件](https://platform.claude.com/docs/en/build-with-claude/claude-platform-on-aws)。
 
@@ -230,7 +232,7 @@ export AWS_PROFILE=my-profile
 
 對於 CI 和自動化，給予執行器具有叫用 Anthropic 服務權限的 IAM 角色，並設定 `AWS_REGION`。認證鏈會自動選取該角色。
 
-如果您的 SSO 認證在工作階段中途過期，請設定 [`awsAuthRefresh`](/docs/zh-TW/amazon-bedrock#advanced-credential-configuration)，以便 Claude Code 重新執行您的登入命令並重試，而不是失敗。AWS 上的 Claude Platform 上的自動重新整理需要 Claude Code v2.1.198 或更新版本；較早的版本會停止並提示執行 `/login`，這無法重新整理 AWS 認證。將命令新增至您的 `settings.json`：
+如果您的 SSO 認證在工作階段中途過期，請設定 [`awsAuthRefresh`](/docs/zh-TW/amazon-bedrock#advanced-credential-configuration)，以便 Claude Code 重新執行您的登入命令並重試，而不是失敗。AWS 上的 Claude Platform 上的自動重新整理需要 Claude Code v2.1.198 或更新版本；較早的版本會停止並提示執行 `/login`，這無法重新整理 AWS 認證。將命令新增至您的[設定檔](/docs/zh-TW/settings)，例如 `~/.claude/settings.json`：
 
 ```json theme={null}
 {
@@ -238,7 +240,9 @@ export AWS_PROFILE=my-profile
 }
 ```
 
-設定 `awsAuthRefresh` 後，`/login` 會在 **使用第三方平台** 下顯示 **Claude Platform on AWS · 重新整理認證** 選項。選取它會執行已設定的命令，並重新讀取您的 AWS 認證，而無需重新啟動 Claude Code。
+Claude Code 也會在啟動時執行此命令，當它無法驗證您現有的 AWS 認證時，並在 `Authentication` 面板中顯示命令的輸出，直到登入完成。
+
+設定 `awsAuthRefresh` 後，執行 `/login`，選取**第三方平台**，然後在**使用第三方平台**下選取 **Claude Platform on AWS · 重新整理認證**。Claude Code 會執行已設定的命令，並重新讀取您的 AWS 認證，而無需重新啟動。
 
 **選項 B：工作區 API 金鑰**
 
@@ -253,7 +257,7 @@ export ANTHROPIC_AWS_API_KEY=sk-ant-xxxxx
 將工作區 API 金鑰視為任何其他生產認證。[使用者設定檔](/docs/zh-TW/settings) `env` 區塊是在不全域匯出的情況下將金鑰限定於您的機器的便利方式。
 
 <Note>
-  `/login` 和 `/logout` 命令不會變更 AWS 上的 Claude Platform 驗證。驗證透過您的 AWS 認證或工作區 API 金鑰執行，而不是透過 Claude.ai 訂閱。唯一的例外是當設定 `awsAuthRefresh` 時，`/login` 顯示的 **重新整理認證** 選項，它會如上所述重新讀取您的 AWS 認證。
+  `/login` 和 `/logout` 命令不會將您登入 Claude Platform on AWS 的 claude.ai 訂閱。驗證透過您的 AWS 認證或工作區 API 金鑰執行。
 </Note>
 
 <h3 id="2-configure-claude-code">
@@ -268,7 +272,9 @@ export ANTHROPIC_AWS_WORKSPACE_ID=wrkspc_01ABCDEFGHIJKLMN
 export AWS_REGION=us-east-1
 ```
 
-`ANTHROPIC_AWS_WORKSPACE_ID` 是必需的，並在每個請求上作為 `anthropic-workspace-id` 標頭傳送。基礎 URL 從 `AWS_REGION` 計算為 `https://aws-external-anthropic.{region}.api.aws`。若要直接覆寫 URL，請設定 `ANTHROPIC_AWS_BASE_URL`。
+`ANTHROPIC_AWS_WORKSPACE_ID` 是必需的。Claude Code 在每個請求上將其作為 `anthropic-workspace-id` 標頭傳送。將範例 `wrkspc_01ABCDEFGHIJKLMN` 值替換為您從 AWS 上的 Claude Platform 設定中的工作區 ID。
+
+Claude Code 從 AWS 區域計算基礎 URL 為 `https://aws-external-anthropic.{region}.api.aws`，它使用[與 Amazon Bedrock 相同的優先順序](/docs/zh-TW/amazon-bedrock#3-configure-claude-code)進行解析。若要直接覆寫 URL，請設定 `ANTHROPIC_AWS_BASE_URL`。
 
 即使您的環境中存在 AWS 認證，AWS 上的 Claude Platform 也是選擇加入的。Amazon Bedrock 和 Microsoft Foundry 在提供者路由中優先，因此如果設定了 `CLAUDE_CODE_USE_BEDROCK` 和 `CLAUDE_CODE_USE_FOUNDRY`，請取消設定它們。
 
@@ -278,7 +284,7 @@ export AWS_REGION=us-east-1
 
 AWS 上的 Claude Platform 使用與直接 Claude API 相同的模型 ID。
 
-預設別名 `fable`、`opus`、`sonnet` 和 `haiku` 解析為 Claude Code 針對 AWS 上的 Claude Platform 的內建預設值，這些值可能落後於最新版本。沒有 `ANTHROPIC_DEFAULT_OPUS_MODEL`，`opus` 別名解析為 Opus 4.8。在 v2.1.207 之前，它解析為 Opus 4.7。
+預設別名 `fable`、`opus`、`sonnet` 和 `haiku` 解析為 Claude Code 針對 AWS 上的 Claude Platform 的內建預設值，這些值可能落後於最新版本。沒有 `ANTHROPIC_DEFAULT_OPUS_MODEL`，`opus` 別名解析為 Opus 5.5。在 v2.1.280 之前，它解析為 v2.1.219 的 Opus 5，在 v2.1.207 之前解析為 Opus 4.8，在此之前解析為 Opus 4.7。
 
 如果您將 Claude Code 部署到團隊，請明確固定模型 ID，以便新版本不會一次移動所有人：
 
@@ -292,6 +298,20 @@ export ANTHROPIC_DEFAULT_HAIKU_MODEL=claude-haiku-4-5
 有關模型 ID 和別名的完整清單，請參閱[模型概述](https://platform.claude.com/docs/en/about-claude/models/overview)。有關其他模型相關變數，請參閱[模型設定](/docs/zh-TW/model-config)。
 
 [Prompt caching](/docs/zh-TW/prompt-caching) 會自動啟用。若要要求 1 小時快取 TTL 而不是 5 分鐘預設值，請設定 `ENABLE_PROMPT_CACHING_1H=1`。API 以更高的費率計費 1 小時快取寫入。有關費率，請參閱 [prompt caching 定價](https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing)。
+
+若要為您的主要對話和 Claude Code 在其外部進行的請求設定不同的 TTL，請[自行選擇 TTL](/docs/zh-TW/prompt-caching#choose-the-ttl-yourself)。
+
+<h3 id="4-launch-and-verify">
+  4. 啟動並驗證
+</h3>
+
+啟動 Claude Code 並確認路由：
+
+```bash theme={null}
+claude
+```
+
+當提供者處於活動狀態時，啟動橫幅會顯示 `Claude Platform on AWS`。執行 `/status` 以檢查詳細資訊：`API provider` 行讀取 `Claude Platform on AWS`，輸出包括您的 `Workspace ID`、`AWS region` 和 `Claude Platform on AWS base URL`（如果您設定了覆寫）。
 
 <h2 id="use-the-agent-sdk">
   使用 Agent SDK
@@ -352,7 +372,7 @@ Claude Code 解析的 IAM 主體可能缺少在您的工作區中叫用 Anthropi
   請求失敗，出現遺失工作區錯誤
 </h3>
 
-`ANTHROPIC_AWS_WORKSPACE_ID` 可能未設定或為空。每個 AWS 上的 Claude Platform 請求都必須包含工作區 ID。它不是由您的 AWS 認證隱含的。在 AWS Console 服務頁面上的 **Workspaces** 下找到 ID，並在啟動 Claude Code 之前匯出它。
+`ANTHROPIC_AWS_WORKSPACE_ID` 可能未設定或為空。每個 AWS 上的 Claude Platform 請求都必須包含工作區 ID。它不是由您的 AWS 認證隱含的。在您的 Claude Platform on AWS 設定中找到 ID，並在啟動 Claude Code 之前匯出它。
 
 <h3 id="requests-still-go-to-api-anthropic-com">
   請求仍然轉到 `api.anthropic.com`

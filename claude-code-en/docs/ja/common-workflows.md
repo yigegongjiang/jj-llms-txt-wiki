@@ -40,6 +40,8 @@
     ```bash theme={null}
     cd /path/to/project 
     ```
+
+    `/path/to/project` をプロジェクトへのパスに置き換えてください。
   </Step>
 
   <Step title="Claude Code を起動する">
@@ -49,21 +51,21 @@
   </Step>
 
   <Step title="高レベルの概要をリクエストする">
-    ```text theme={null}
+    ```text wrap theme={null}
     give me an overview of this codebase
     ```
   </Step>
 
   <Step title="特定のコンポーネントについてさらに詳しく調べる">
-    ```text theme={null}
+    ```text wrap theme={null}
     explain the main architecture patterns used here
     ```
 
-    ```text theme={null}
+    ```text wrap theme={null}
     what are the key data models?
     ```
 
-    ```text theme={null}
+    ```text wrap theme={null}
     how is authentication handled?
     ```
   </Step>
@@ -85,19 +87,19 @@
 
 <Steps>
   <Step title="Claude に関連ファイルを見つけるよう依頼する">
-    ```text theme={null}
+    ```text wrap theme={null}
     find the files that handle user authentication
     ```
   </Step>
 
   <Step title="コンポーネントがどのように相互作用するかについてのコンテキストを取得する">
-    ```text theme={null}
+    ```text wrap theme={null}
     how do these authentication files work together?
     ```
   </Step>
 
   <Step title="実行フローを理解する">
-    ```text theme={null}
+    ```text wrap theme={null}
     trace the login process from front-end to database
     ```
   </Step>
@@ -108,7 +110,7 @@
 
   * 探しているものについて具体的に説明する
   * プロジェクトのドメイン言語を使用する
-  * 言語の[コード インテリジェンス プラグイン](/docs/ja/discover-plugins#code-intelligence)をインストールして、Claude に正確な'定義に移動'と'参照を検索'のナビゲーションを提供する
+  * 言語の[コード インテリジェンス プラグイン](/docs/ja/plugins/code-intelligence)をインストールして、Claude に正確な「定義に移動」と「参照を検索」のナビゲーションを提供する
 </Tip>
 
 ***
@@ -121,19 +123,19 @@
 
 <Steps>
   <Step title="Claude とエラーを共有する">
-    ```text theme={null}
+    ```text wrap theme={null}
     I'm seeing an error when I run npm test
     ```
   </Step>
 
   <Step title="修正の推奨事項をリクエストする">
-    ```text theme={null}
+    ```text wrap theme={null}
     suggest a few ways to fix the @ts-ignore in user.ts
     ```
   </Step>
 
   <Step title="修正を適用する">
-    ```text theme={null}
+    ```text wrap theme={null}
     update user.ts to add the null check you suggested
     ```
   </Step>
@@ -155,27 +157,29 @@
 
 古いコードを最新のパターンとプラクティスを使用するように更新する必要があるとします。
 
+コードベース全体を新しい言語に移植する場合は、ブログの[Anthropic が Claude Code で大規模なコード移行を実行する方法](https://claude.com/blog/ai-code-migration)を参照してください。
+
 <Steps>
   <Step title="リファクタリング対象のレガシーコードを特定する">
-    ```text theme={null}
+    ```text wrap theme={null}
     find deprecated API usage in our codebase
     ```
   </Step>
 
   <Step title="リファクタリングの推奨事項を取得する">
-    ```text theme={null}
+    ```text wrap theme={null}
     suggest how to refactor utils.js to use modern JavaScript features
     ```
   </Step>
 
   <Step title="変更を安全に適用する">
-    ```text theme={null}
+    ```text wrap theme={null}
     refactor utils.js to use ES2024 features while maintaining the same behavior
     ```
   </Step>
 
   <Step title="リファクタリングを検証する">
-    ```text theme={null}
+    ```text wrap theme={null}
     run tests for the refactored code
     ```
   </Step>
@@ -199,25 +203,25 @@
 
 <Steps>
   <Step title="テストされていないコードを特定する">
-    ```text theme={null}
+    ```text wrap theme={null}
     find functions in NotificationsService.swift that are not covered by tests
     ```
   </Step>
 
   <Step title="テストスキャフォルディングを生成する">
-    ```text theme={null}
+    ```text wrap theme={null}
     add tests for the notification service
     ```
   </Step>
 
   <Step title="意味のあるテストケースを追加する">
-    ```text theme={null}
+    ```text wrap theme={null}
     add test cases for edge conditions in the notification service
     ```
   </Step>
 
   <Step title="テストを実行して検証する">
-    ```text theme={null}
+    ```text wrap theme={null}
     run the new tests and fix any failures
     ```
   </Step>
@@ -237,25 +241,25 @@ Claude に直接プルリクエストを作成するよう依頼するか（「c
 
 <Steps>
   <Step title="変更内容を要約する">
-    ```text theme={null}
+    ```text wrap theme={null}
     summarize the changes I've made to the authentication module
     ```
   </Step>
 
   <Step title="プルリクエストを生成する">
-    ```text theme={null}
+    ```text wrap theme={null}
     create a pr
     ```
   </Step>
 
   <Step title="レビューと改善">
-    ```text theme={null}
+    ```text wrap theme={null}
     enhance the PR description with more context about the security improvements
     ```
   </Step>
 </Steps>
 
-`gh pr create` を使用して PR を作成すると、セッションはその PR に自動的にリンクされます。後で `claude --from-pr 123` で再開するか（123 を PR 番号に置き換えます）、[`/resume` ピッカー](/docs/ja/sessions#use-the-session-picker)の検索に PR URL を貼り付けることで再開できます。
+後でセッションを見つけるには、`claude --from-pr 1234` を実行してください。1234 を PR 番号に置き換えてください。これにより、その PR にリンクされたセッションにフィルタリングされたセッションピッカーが開きます。または、[`/resume` ピッカー](/docs/ja/sessions#use-the-session-picker)の検索に PR URL を貼り付けてください。Claude が `gh pr create` または `glab mr create` でプルリクエストを作成するとき、および Claude が[既存の PR で作業する](/docs/ja/agent-view#pull-request-status)ときに、Claude Code はセッションを PR にリンクします。
 
 <Tip>
   Claude が生成した PR を送信する前にレビューし、Claude に潜在的なリスクや考慮事項を強調するよう依頼してください。
@@ -269,25 +273,25 @@ Claude に直接プルリクエストを作成するよう依頼するか（「c
 
 <Steps>
   <Step title="ドキュメント化されていないコードを特定する">
-    ```text theme={null}
+    ```text wrap theme={null}
     find functions without proper JSDoc comments in the auth module
     ```
   </Step>
 
   <Step title="ドキュメントを生成する">
-    ```text theme={null}
+    ```text wrap theme={null}
     add JSDoc comments to the undocumented functions in auth.js
     ```
   </Step>
 
   <Step title="レビューと改善">
-    ```text theme={null}
+    ```text wrap theme={null}
     improve the generated documentation with more context and examples
     ```
   </Step>
 
   <Step title="ドキュメントを検証する">
-    ```text theme={null}
+    ```text wrap theme={null}
     check if the documentation follows our project standards
     ```
   </Step>
@@ -324,40 +328,40 @@ Claude Code はどのディレクトリでも機能します。ノートボル�
     次のいずれかの方法を使用できます：
 
     1. Claude Code ウィンドウに画像をドラッグアンドドロップする
-    2. 画像をコピーして、CLI に Ctrl+V で貼り付ける。macOS では、iTerm2 でも Cmd+V が機能します。
+    2. 画像をコピーして、CLI に `Ctrl+V` で貼り付ける。または [`Alt+V` を Windows と WSL で](/docs/ja/interactive-mode#general-controls)使用する
     3. Claude に画像パスを提供する。例：「Analyze this image: /path/to/your/image.png」
   </Step>
 
   <Step title="Claude に画像を分析するよう依頼する">
-    ```text theme={null}
+    ```text wrap theme={null}
     What does this image show?
     ```
 
-    ```text theme={null}
+    ```text wrap theme={null}
     Describe the UI elements in this screenshot
     ```
 
-    ```text theme={null}
+    ```text wrap theme={null}
     Are there any problematic elements in this diagram?
     ```
   </Step>
 
   <Step title="コンテキストに画像を使用する">
-    ```text theme={null}
+    ```text wrap theme={null}
     Here's a screenshot of the error. What's causing it?
     ```
 
-    ```text theme={null}
+    ```text wrap theme={null}
     This is our current database schema. How should we modify it for the new feature?
     ```
   </Step>
 
   <Step title="ビジュアルコンテンツからコード提案を取得する">
-    ```text theme={null}
+    ```text wrap theme={null}
     Generate CSS to match this design mockup
     ```
 
-    ```text theme={null}
+    ```text wrap theme={null}
     What HTML structure would recreate this component?
     ```
   </Step>
@@ -383,7 +387,7 @@ Claude Code はどのディレクトリでも機能します。ノートボル�
 
 <Steps>
   <Step title="単一ファイルを参照する">
-    ```text theme={null}
+    ```text wrap theme={null}
     Explain the logic in @src/utils/auth.js
     ```
 
@@ -391,15 +395,13 @@ Claude Code はどのディレクトリでも機能します。ノートボル�
   </Step>
 
   <Step title="ディレクトリを参照する">
-    ```text theme={null}
+    ```text wrap theme={null}
     What's the structure of @src/components?
     ```
-
-    これにより、ファイル情報を含むディレクトリリストが提供されます。
   </Step>
 
   <Step title="MCP リソースを参照する">
-    ```text theme={null}
+    ```text wrap theme={null}
     Show me the data from @github:repos/owner/repo/issues
     ```
 
@@ -411,6 +413,7 @@ Claude Code はどのディレクトリでも機能します。ノートボル�
   ヒント：
 
   * ファイルパスは相対パスまたは絶対パスにできます
+  * @ を入力してパス提案メニューを開き、Enter または Tab キーを押してハイライトされたパスを受け入れ、もう一度 Enter キーを押してメッセージを送信します
   * @ ファイル参照は、ファイルのディレクトリと親ディレクトリに `CLAUDE.md` を追加してコンテキストに含めます
   * ディレクトリ参照はコンテンツではなくファイルリストを表示します
   * 単一のメッセージで複数のファイルを参照できます（例：「@file1.js and @file2.js」）
@@ -426,12 +429,12 @@ Claude に長時間実行されるタスクを自動的に定期的に処理さ�
 
 実行場所に基づいてスケジューリングオプションを選択します：
 
-| オプション                                            | 実行場所                   | 最適な用途                                                                                                                                        |
-| :----------------------------------------------- | :--------------------- | :------------------------------------------------------------------------------------------------------------------------------------------- |
-| [ルーチン](/docs/ja/routines)                             | Anthropic 管理インフラストラクチャ | コンピュータがオフの場合でも実行する必要があるタスク。[claude.ai/code/routines](https://claude.ai/code/routines)で設定します。API 呼び出しまたは GitHub イベントに加えてスケジュールでトリガーすることもできます。 |
-| [デスクトップスケジュール済みタスク](/docs/ja/desktop-scheduled-tasks) | デスクトップアプリ経由のマシン        | ローカルファイル、ツール、またはコミットされていない変更への直接アクセスが必要なタスク。                                                                                                 |
-| [GitHub Actions](/docs/ja/github-actions)             | CI パイプライン              | オープン PR などのリポジトリイベント、またはワークフロー設定と一緒に存在する必要がある cron スケジュールに関連するタスク。                                                                           |
-| [`/loop`](/docs/ja/scheduled-tasks)                   | 現在の CLI セッション          | セッションが開いている間のクイックポーリング。タスクは新しい会話を開始すると停止します。`--resume` と `--continue` は期限切れでないものを復元します。                                                      |
+| オプション                                            | 実行場所                     | 最適な用途                                                                                                                                         |
+| :----------------------------------------------- | :----------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------- |
+| [ルーチン](/docs/ja/routines)                             | クラウド、Anthropic 管理（デフォルト） | コンピュータがオフの場合でも実行する必要があるタスク。[claude.ai/code/routines](https://claude.ai/code/routines)で設定します。スケジュールに加えて API 呼び出しまたは GitHub イベントでトリガーすることもできます。 |
+| [デスクトップスケジュール済みタスク](/docs/ja/desktop-scheduled-tasks) | デスクトップアプリ経由のマシン          | ローカルファイル、ツール、またはコミットされていない変更への直接アクセスが必要なタスク。                                                                                                  |
+| [GitHub Actions](/docs/ja/github-actions)             | CI パイプライン                | オープン PR などのリポジトリイベント、またはワークフロー設定と一緒に存在する必要がある cron スケジュールに関連するタスク。                                                                            |
+| [`/loop`](/docs/ja/scheduled-tasks)                   | 現在の CLI セッション            | セッションが開いている間のクイックポーリング。`--resume` と `--continue` は期限切れでないものを復元します。                                                                            |
 
 <Tip>
   スケジュール済みタスク用のプロンプトを作成するときは、成功がどのように見えるか、および結果をどうするかについて明示的に説明してください。タスクは自律的に実行されるため、質問を明確にすることはできません。例えば：「`needs-review` ラベルが付いたオープン PR をレビューし、問題に関するインラインコメントを残し、`#eng-reviews` Slack チャネルに要約を投稿します。」
@@ -449,27 +452,27 @@ Claude は自分のドキュメントへの組み込みアクセスを持って�
   質問例
 </h4>
 
-```text theme={null}
+```text wrap theme={null}
 can Claude Code create pull requests?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 how does Claude Code handle permissions?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 what skills are available?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 how do I use MCP with Claude Code?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 how do I configure Claude Code for Amazon Bedrock?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 what are the limitations of Claude Code?
 ```
 
@@ -503,25 +506,25 @@ claude --continue
   worktree を使用して並列セッションを実行する
 </h2>
 
-1 つのターミナルで機能に取り組みながら、別のターミナルで Claude がバグを修正するようにします。編集が衝突しないようにしてください。各 worktree は独自のブランチ上の個別のチェックアウトです。
+1 つのターミナルで機能に取り組みながら、別のターミナルで Claude がバグを修正するようにします。編集が衝突しないようにしてください。各 [git worktree](https://git-scm.com/docs/git-worktree) は既存のコミットから作成された独自のブランチ上の個別のチェックアウトです。そのため、リポジトリには最初に少なくとも 1 つのコミットが必要です。
 
 ```bash theme={null}
 claude --worktree feature-auth
 ```
 
-別の名前で 2 番目のターミナルで同じコマンドを実行して、分離された並列セッションを開始します。[Worktrees](/docs/ja/worktrees)を参照して、クリーンアップ、`.worktreeinclude`、および非 git VCS サポートを確認してください。1 つの画面から並列セッションを監視するには、[バックグラウンドエージェント](/docs/ja/agent-view)を参照してください。
+別の名前で 2 番目のターミナルで同じコマンドを実行して、分離された並列セッションを開始します。コミットがないリポジトリでは、コマンドは `Failed to resolve base branch "HEAD": git rev-parse failed` というエラーで失敗します。クリーンアップ、`.worktreeinclude`、および非 git VCS サポートについては、[Worktrees](/docs/ja/worktrees) を参照してください。1 つの画面から並列セッションを監視するには、別のターミナルではなく、[バックグラウンドエージェント](/docs/ja/agent-view) を参照してください。
 
 <h2 id="plan-before-editing">
   編集前に計画する
 </h2>
 
-ディスクに変更を加える前に確認したい変更については、計画モードに切り替えてください。Claude はファイルを読み込んで計画を提案しますが、承認されるまで編集は行いません。
+ディスクに変更を加える前に確認したい変更については、計画モードに切り替えてください。Claude はファイルを読み込んで計画を提案しますが、承認されるまで編集は行いません。ステータスバーは計画モードがアクティブな間、`⏸ plan mode on` と表示されます。
 
 ```bash theme={null}
 claude --permission-mode plan
 ```
 
-セッション中に `Shift+Tab` を押して計画モードに切り替えることもできます。[計画モード](/docs/ja/permission-modes#analyze-before-you-edit-with-plan-mode)を参照して、承認フローとテキストエディタで計画を編集することを確認してください。
+セッション中に `Shift+Tab` を押してステータスバーが `⏸ plan mode on` と表示されるまで切り替えることもできます。承認フローとテキストエディタで計画を編集する方法については、[計画モード](/docs/ja/permission-modes#analyze-before-you-edit-with-plan-mode)を参照してください。
 
 <h2 id="delegate-research-to-subagents">
   研究を subagent に委譲する
@@ -529,7 +532,7 @@ claude --permission-mode plan
 
 大規模なコードベースの探索はコンテキストをファイル読み込みで満たします。探索を委譲して、結果のみが戻るようにしてください。
 
-```text theme={null}
+```text wrap theme={null}
 use a subagent to investigate how our auth system handles token refresh
 ```
 

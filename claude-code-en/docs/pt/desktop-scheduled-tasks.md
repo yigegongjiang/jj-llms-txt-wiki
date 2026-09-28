@@ -8,28 +8,28 @@
 
 As tarefas agendadas iniciam uma nova sessão automaticamente em um horário e frequência que você escolhe. Use-as para trabalho recorrente como análises de código diárias, verificações de atualizações de dependências ou briefings matinais que extraem informações do seu calendário e caixa de entrada.
 
-A página **Routines** do aplicativo Desktop permite criar tanto tarefas agendadas locais quanto [routines](/docs/pt/routines) remotas. Uma tarefa local é executada em sua máquina com acesso direto aos seus arquivos e ferramentas, mas só funciona enquanto o aplicativo está aberto e seu computador está acordado. Uma routine remota é executada na infraestrutura em nuvem gerenciada pela Anthropic, mesmo quando seu computador está desligado, e também pode ser acionada por chamadas de API ou eventos do GitHub. Esta página aborda tarefas agendadas locais; para routines remotas e suas opções de acionamento, consulte [Routines](/docs/pt/routines).
+A página **Routines** do aplicativo Desktop permite criar tanto tarefas agendadas locais quanto [routines](/docs/pt/routines) remotas. Uma tarefa local é executada em sua máquina com acesso direto aos seus arquivos e ferramentas, mas só funciona enquanto o aplicativo está aberto e seu computador está acordado. Uma routine remota é executada na nuvem mesmo quando seu computador está desligado, e também pode ser acionada por chamadas de API ou eventos do GitHub. Esta página aborda tarefas agendadas locais; para routines remotas e suas opções de acionamento, consulte [Routines](/docs/pt/routines).
 
 <h2 id="compare-scheduling-options">
   Comparar opções de agendamento
 </h2>
 
-Claude Code offers three ways to schedule recurring or one-off work:
+Claude Code oferece três maneiras de agendar trabalho recorrente ou único:
 
-|                            | [Cloud](/docs/en/routines)               | [Desktop](/docs/en/desktop-scheduled-tasks) | [`/loop`](/docs/en/scheduled-tasks)      |
-| :------------------------- | :---------------------------------- | :------------------------------------- | :---------------------------------- |
-| Runs on                    | Cloud, Anthropic-managed by default | Your machine                           | Your machine                        |
-| Requires machine on        | No                                  | Yes                                    | Yes                                 |
-| Requires open session      | No                                  | No                                     | Yes                                 |
-| Persistent across restarts | Yes                                 | Yes                                    | Restored on `--resume` if unexpired |
-| Access to local files      | No (fresh clone)                    | Yes                                    | Yes                                 |
-| MCP servers                | Connectors configured per task      | [Config files](/docs/en/mcp) and connectors | Inherits from session               |
-| Permission prompts         | No (runs autonomously)              | Configurable per task                  | Inherits from session               |
-| Customizable schedule      | Via `/schedule` in the CLI          | Yes                                    | Yes                                 |
-| Minimum interval           | 1 hour                              | 1 minute                               | 1 minute                            |
+|                                    | [Cloud](/docs/pt/routines)                       | [Desktop](/docs/pt/desktop-scheduled-tasks)           | [`/loop`](/docs/pt/scheduled-tasks)                                            |
+| :--------------------------------- | :------------------------------------------ | :----------------------------------------------- | :------------------------------------------------------------------------ |
+| Executa em                         | Cloud, gerenciado pela Anthropic por padrão | Sua máquina                                      | Sua máquina                                                               |
+| Requer máquina ligada              | Não                                         | Sim                                              | Sim                                                                       |
+| Requer sessão aberta               | Não                                         | Não                                              | Sim                                                                       |
+| Persistente entre reinicializações | Sim                                         | Sim                                              | Restaurado em `--resume`, com [exceções](/docs/pt/scheduled-tasks#limitations) |
+| Acesso a arquivos locais           | Não (clone fresco)                          | Sim                                              | Sim                                                                       |
+| Servidores MCP                     | Conectores configurados por tarefa          | [Arquivos de configuração](/docs/pt/mcp) e conectores | Herda da sessão                                                           |
+| Prompts de permissão               | Não (executa autonomamente)                 | Configurável por tarefa                          | Herda da sessão                                                           |
+| Agendamento personalizável         | Via `/schedule` na CLI                      | Sim                                              | Sim                                                                       |
+| Intervalo mínimo                   | 1 hora                                      | 1 minuto                                         | 1 minuto                                                                  |
 
 <Tip>
-  Use **cloud tasks** for work that should run reliably without your machine. Use **Desktop tasks** when you need access to local files and tools. Use **`/loop`** for quick polling during a session.
+  Use **tarefas em cloud** para trabalho que deve ser executado de forma confiável sem sua máquina. Use **tarefas Desktop** quando você precisa de acesso a arquivos e ferramentas locais. Use **`/loop`** para polling rápido durante uma sessão.
 </Tip>
 
 <Note>
@@ -40,7 +40,7 @@ Claude Code offers three ways to schedule recurring or one-off work:
   Criar uma tarefa agendada
 </h2>
 
-Clique em **Routines** na barra lateral e, em seguida, clique em **New routine** e escolha **Local**. Configure estes campos:
+No Claude Desktop anterior à versão 1.1.5368, tarefas agendadas locais não estão disponíveis. Na [**aba Code**](/docs/pt/desktop), clique em **Routines** na barra lateral ou no menu **More** da barra lateral, depois clique em **New routine** e escolha **Local**. Configure estes campos:
 
 | Campo        | Descrição                                                                                                                                                                                                                                                                                                     |
 | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -73,7 +73,7 @@ Para intervalos que o seletor não oferece, como a cada 15 minutos, no primeiro 
 
 As tarefas agendadas são executadas em sua máquina. O Desktop verifica o agendamento a cada minuto enquanto o aplicativo está aberto e inicia uma sessão nova quando uma tarefa está vencida, independentemente de qualquer sessão manual que você tenha aberta. Cada tarefa recebe um pequeno atraso de alguns minutos após o horário agendado para escalonar o tráfego de API. O atraso é determinístico: a mesma tarefa sempre inicia no mesmo deslocamento.
 
-Quando uma tarefa é acionada, você recebe uma notificação da área de trabalho e uma nova sessão aparece em uma seção **Scheduled** na barra lateral. Abra-a para ver o que Claude fez, revisar alterações ou responder a prompts de permissão. A sessão funciona como qualquer outra: Claude pode editar arquivos, executar comandos, criar commits e abrir pull requests.
+Quando uma tarefa é acionada, você recebe uma notificação da área de trabalho e uma nova sessão aparece em uma seção **Scheduled** na barra lateral. Abra-a para ver o que Claude fez, revisar alterações ou responder a prompts de permissão. Claude pode editar arquivos, executar comandos, criar commits e abrir pull requests, o mesmo que em uma sessão que você inicia por conta própria, mas não pode enviar ou receber [mensagens entre suas sessões desktop](/docs/pt/desktop#work-across-sessions) através da superfície de sessão do aplicativo desktop.
 
 As tarefas só são executadas enquanto o aplicativo desktop está em execução e seu computador está acordado. Se seu computador dormir durante um horário agendado, a execução é ignorada. Para evitar suspensão por inatividade, ative **Keep computer awake** em Settings em **Desktop app → General**. Fechar a tampa do laptop ainda o coloca em suspensão. Para tarefas que precisam ser executadas mesmo quando seu computador está desligado, ou que devem ser acionadas por uma chamada de API ou evento do GitHub, crie uma [routine](/docs/pt/routines) remota.
 
@@ -89,17 +89,17 @@ Tenha isso em mente ao escrever prompts. Uma tarefa agendada para 9h pode ser ex
   Permissões para tarefas agendadas
 </h2>
 
-Cada tarefa tem seu próprio modo de permissão, que você define ao criar ou editar a tarefa. As regras de permissão de `~/.claude/settings.json` também se aplicam a sessões de tarefas agendadas. Se uma tarefa é executada em modo Ask e precisa executar uma ferramenta para a qual não tem permissão, a execução fica travada até que você a aprove. A sessão permanece aberta na barra lateral para que você possa responder mais tarde.
+Cada tarefa tem seu próprio modo de permissão, que você define ao criar ou editar a tarefa. As regras de permissão de `~/.claude/settings.json` também se aplicam a sessões de tarefas agendadas. Se uma tarefa é executada em [Modo Manual](/docs/pt/desktop#choose-a-permission-mode) e precisa executar uma ferramenta para a qual não tem permissão, a execução fica travada até que você a aprove. A sessão permanece aberta na barra lateral para que você possa responder mais tarde.
 
 Para evitar travamentos, clique em **Run now** após criar uma tarefa, observe prompts de permissão e selecione "always allow" para cada um. Execuções futuras dessa tarefa aprovam automaticamente as mesmas ferramentas sem solicitar. Você pode revisar e revogar essas aprovações na página de detalhes da tarefa.
 
-As ferramentas do Connector [que sua organização definiu como `ask`](/docs/pt/mcp#organization-controls-on-connector-tools) e as ferramentas MCP marcadas como [`requiresUserInteraction`](/docs/pt/mcp#require-approval-for-a-specific-tool) solicitam confirmação a cada chamada e não oferecem uma opção de sempre permitir. Execuções que chamam essas ferramentas ficam travadas cada vez.
+As ferramentas MCP marcadas como [`requiresUserInteraction`](/docs/pt/mcp#require-approval-for-a-specific-tool) solicitam confirmação a cada chamada e não oferecem uma opção de sempre permitir. Execuções que chamam essas ferramentas ficam travadas cada vez.
 
 <h2 id="manage-scheduled-tasks">
   Gerenciar tarefas agendadas
 </h2>
 
-Clique em uma tarefa na lista **Routines** para abrir sua página de detalhes. A partir daqui você pode:
+Na aba **Code**, clique em uma tarefa na lista **Routines** para abrir sua página de detalhes. A partir daqui você pode:
 
 * **Run now**: inicie a tarefa imediatamente sem esperar pelo próximo horário agendado
 * **Status**: alterne entre Active e Paused para pausar ou retomar execuções agendadas sem deletar a tarefa

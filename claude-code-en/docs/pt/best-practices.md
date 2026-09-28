@@ -12,7 +12,7 @@ Isso muda a forma como você trabalha. Em vez de escrever código você mesmo e 
 
 Mas essa autonomia ainda vem com uma curva de aprendizado. Claude trabalha dentro de certas restrições que você precisa entender.
 
-Este guia cobre padrões que se mostraram eficazes nas equipes internas da Anthropic e para engenheiros usando Claude Code em vários codebases, linguagens e ambientes. Para saber como o loop agentic funciona nos bastidores, consulte [How Claude Code works](/docs/pt/how-claude-code-works).
+Este guia cobre padrões que se mostraram eficazes nas equipes internas da Anthropic e para engenheiros usando Claude Code em vários codebases, linguagens e ambientes. Para saber como o loop agentic funciona, consulte [How Claude Code works](/docs/pt/how-claude-code-works).
 
 ***
 
@@ -34,7 +34,7 @@ Isso importa porque o desempenho do LLM se degrada conforme o contexto se enche.
 
 Claude para quando o trabalho parece pronto. Sem uma verificação que ele possa executar, "parece pronto" é o único sinal disponível, e você se torna o loop de verificação: cada erro espera por você notar. Dê ao Claude algo que produz um resultado de sucesso ou falha, e o loop se fecha por conta própria. Claude faz o trabalho, executa a verificação, lê o resultado e itera até que a verificação passe.
 
-A verificação é qualquer coisa que retorna um sinal que Claude pode ler na conversa: um conjunto de testes, um código de saída de compilação, um linter, um script que compara a saída com um fixture, ou uma [captura de tela do navegador](/docs/pt/chrome) comparada com um design.
+A verificação é qualquer coisa que retorna um sinal que Claude pode ler na conversa: um conjunto de testes, um código de saída de compilação, um linter, um script que compara a saída com um fixture, ou uma [captura de tela do navegador](/docs/pt/chrome) comparada com um design. Execute [`/verify`](/docs/pt/skills#run-and-verify-your-app) você mesmo após a verificação do Claude passar para confirmar a alteração contra o aplicativo em execução.
 
 | Estratégia                                 | Antes                                                   | Depois                                                                                                                                                                                                                  |
 | ------------------------------------------ | ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -45,7 +45,7 @@ A verificação é qualquer coisa que retorna um sinal que Claude pode ler na co
 Depois que a verificação existe, decida o quão rigorosamente ela controla a parada:
 
 * **Em um único prompt**: peça ao Claude para executar a verificação e iterar na mesma mensagem, como na tabela acima.
-* **Em toda uma sessão**: defina a verificação como uma [condição `/goal`](/docs/pt/goal). Um avaliador separado a verifica novamente após cada turno e Claude continua trabalhando até que ela seja atendida.
+* **Em toda uma sessão**: defina a verificação como uma [condição `/goal`](/docs/pt/goal). Um avaliador separado a verifica novamente após cada turno e Claude continua trabalhando até que a meta seja resolvida. Se Claude ficar preso, Claude Code eventualmente para a execução com a meta ainda definida — veja [como a avaliação de /goal funciona](/docs/pt/goal#how-evaluation-works).
 * **Como um gate determinístico**: um [hook Stop](/docs/pt/hooks#stop) executa sua verificação como um script e bloqueia o turno de terminar até que passe. Claude Code substitui o hook e termina o turno após 8 bloqueios consecutivos.
 * **Por uma segunda opinião**: um [subagente de verificação](/docs/pt/sub-agents) ou um [fluxo de trabalho dinâmico](/docs/pt/workflows) que verifica suas próprias descobertas tem um modelo fresco tentando refutar o resultado, para que o agente que faz o trabalho não seja o que o avalia.
 
@@ -69,9 +69,9 @@ O fluxo de trabalho recomendado tem quatro fases:
 
 <Steps>
   <Step title="Explore">
-    Entre em plan mode. Claude lê arquivos e responde perguntas sem fazer alterações.
+    Entre em plan mode pressionando `Shift+Tab` até a barra de status mostrar `⏸ plan mode on`, ou inicie a sessão com `claude --permission-mode plan`. Claude lê arquivos e responde perguntas sem fazer alterações.
 
-    ```txt claude (plan mode) theme={null}
+    ```txt title="claude (plan mode)" wrap theme={null}
     read /src/auth and understand how we handle sessions and login.
     also look at how we manage environment variables for secrets.
     ```
@@ -80,7 +80,7 @@ O fluxo de trabalho recomendado tem quatro fases:
   <Step title="Plan">
     Peça ao Claude para criar um plano de implementação detalhado.
 
-    ```txt claude (plan mode) theme={null}
+    ```txt title="claude (plan mode)" wrap theme={null}
     I want to add Google OAuth. What files need to change?
     What's the session flow? Create a plan.
     ```
@@ -89,9 +89,9 @@ O fluxo de trabalho recomendado tem quatro fases:
   </Step>
 
   <Step title="Implement">
-    Saia de plan mode e deixe Claude codificar, verificando contra seu plano.
+    Saia de plan mode aprovando o plano ou pressionando `Shift+Tab`, depois deixe Claude codificar, verificando contra seu plano.
 
-    ```txt claude (default mode) theme={null}
+    ```txt title="claude" wrap theme={null}
     implement the OAuth flow from your plan. write tests for the
     callback handler, run the test suite and fix any failures.
     ```
@@ -100,7 +100,7 @@ O fluxo de trabalho recomendado tem quatro fases:
   <Step title="Commit">
     Peça ao Claude para fazer commit com uma mensagem descritiva e criar um PR.
 
-    ```txt claude (default mode) theme={null}
+    ```txt title="claude" wrap theme={null}
     commit with a descriptive message and open a PR
     ```
   </Step>
@@ -169,8 +169,6 @@ Alguns passos de configuração tornam Claude Code significativamente mais efica
 
 CLAUDE.md é um arquivo especial que Claude lê no início de cada conversa. Inclua comandos Bash, estilo de código e regras de fluxo de trabalho. Isso dá ao Claude contexto persistente que ele não pode inferir apenas do código.
 
-O comando `/init` analisa seu codebase para detectar sistemas de compilação, frameworks de teste e padrões de código, dando a você uma base sólida para refinar.
-
 Não há formato obrigatório para arquivos CLAUDE.md, mas mantenha-o curto e legível para humanos. Por exemplo:
 
 ```markdown CLAUDE.md theme={null}
@@ -183,7 +181,7 @@ Não há formato obrigatório para arquivos CLAUDE.md, mas mantenha-o curto e le
 - Prefer running single tests, and not the whole test suite, for performance
 ```
 
-CLAUDE.md é carregado a cada sessão, então inclua apenas coisas que se aplicam amplamente. Para conhecimento de domínio ou fluxos de trabalho que são apenas relevantes às vezes, use [skills](/docs/pt/skills) em vez disso. Claude os carrega sob demanda sem inchar cada conversa.
+Execute `/context` para confirmar que Claude carregou o arquivo. CLAUDE.md é carregado a cada sessão, então inclua apenas coisas que se aplicam amplamente. Para conhecimento de domínio ou fluxos de trabalho que são apenas relevantes às vezes, use [skills](/docs/pt/skills) em vez disso. Claude os carrega sob demanda sem inchar cada conversa.
 
 Mantenha-o conciso. Para cada linha, pergunte: *"Remover isso causaria Claude cometer erros?"* Se não, corte. Arquivos CLAUDE.md inchados causam Claude ignorar suas instruções reais!
 
@@ -197,39 +195,24 @@ Mantenha-o conciso. Para cada linha, pergunte: *"Remover isso causaria Claude co
 | Peculiaridades do ambiente de desenvolvedor (variáveis env obrigatórias) | Descrições arquivo por arquivo do codebase                  |
 | Armadilhas comuns ou comportamentos não óbvios                           | Práticas auto-evidentes como "escreva código limpo"         |
 
-Se Claude continua fazendo algo que você não quer apesar de ter uma regra contra isso, o arquivo provavelmente é muito longo e a regra está sendo perdida. Se Claude faz perguntas que são respondidas em CLAUDE.md, a redação pode ser ambígua. Trate CLAUDE.md como código: revise-o quando as coisas dão errado, poda-o regularmente e teste mudanças observando se o comportamento do Claude realmente muda.
+Se Claude continua fazendo algo que você não quer apesar de ter uma regra contra isso, o arquivo provavelmente é muito longo e a regra está sendo perdida. Se Claude faz perguntas que são respondidas em CLAUDE.md, a redação pode ser ambígua. Trate CLAUDE.md como código: revise-o quando as coisas dão errado, poda-o regularmente e teste mudanças observando se o comportamento do Claude realmente muda. Para um CLAUDE.md verificado, execute [`/doctor`](/docs/pt/commands#all-commands) e Claude propõe cortes para conteúdo que pode derivar do codebase.
 
-Você pode ajustar instruções adicionando ênfase (por exemplo, "IMPORTANTE" ou "VOCÊ DEVE") para melhorar a adesão. Verifique CLAUDE.md no git para que sua equipe possa contribuir. O arquivo aumenta em valor ao longo do tempo.
+Se Claude continua pulando uma instrução, adicione ênfase como "IMPORTANTE" apenas naquela linha. Se você enfatizar muitas linhas, nenhuma delas se destaca. Verifique CLAUDE.md no git para que sua equipe possa contribuir. O arquivo aumenta em valor ao longo do tempo.
 
-Arquivos CLAUDE.md podem importar arquivos adicionais usando a sintaxe `@path/to/import`:
-
-```markdown CLAUDE.md theme={null}
-See @README.md for project overview and @package.json for available npm commands.
-
-# Additional Instructions
-- Git workflow: @docs/git-instructions.md
-- Personal overrides: @~/.claude/my-project-instructions.md
-```
-
-Você pode colocar arquivos CLAUDE.md em vários locais:
-
-* **Pasta home (`~/.claude/CLAUDE.md`)**: aplica-se a todas as sessões Claude
-* **Raiz do projeto (`./CLAUDE.md`)**: verifique no git para compartilhar com sua equipe
-* **Raiz do projeto (`./CLAUDE.local.md`)**: notas pessoais específicas do projeto; adicione este arquivo ao seu `.gitignore` para que não seja compartilhado com sua equipe
-* **Diretórios pai**: útil para monorepos onde tanto `root/CLAUDE.md` quanto `root/foo/CLAUDE.md` são puxados automaticamente
-* **Diretórios filhos**: Claude puxa arquivos CLAUDE.md filhos sob demanda ao trabalhar com arquivos nesses diretórios
+Arquivos CLAUDE.md podem importar arquivos adicionais usando a sintaxe `@path/to/import`. Para regras de importação e onde arquivos CLAUDE.md podem viver, consulte [CLAUDE.md files](/docs/pt/memory#claude-md-files).
 
 <h3 id="configure-permissions">
   Configure permissões
 </h3>
 
 <Tip>
-  Use [auto mode](/docs/pt/permission-modes#eliminate-prompts-with-auto-mode) para deixar um classificador lidar com aprovações, `/permissions` para colocar na lista de permissões comandos específicos, ou `/sandbox` para isolamento em nível de SO. Cada um reduz interrupções enquanto mantém você no controle.
+  Para obter menos prompts sem abrir mão do controle, pré-aprove as ferramentas em que você confia com `/permissions` e deixe comandos em sandbox executarem sem perguntar com `/sandbox`. Mude para modo Manual quando quiser aprovar edições e comandos você mesmo.
 </Tip>
 
-Por padrão, Claude Code solicita permissão para ações que podem modificar seu sistema: gravações de arquivo, comandos Bash, ferramentas MCP, etc. Isso é seguro mas tedioso. Após a décima aprovação você realmente não está revisando mais, você está apenas clicando. Existem três maneiras de reduzir essas interrupções:
+Nos planos Pro, Max e Team, o modo auto é o [modo de permissão inicial integrado](/docs/pt/permission-modes#eliminate-prompts-with-auto-mode) para sessões interativas de terminal e VS Code: um modelo classificador separado revisa a maioria das ações em vez de você e bloqueia apenas o que parece arriscado, como escalação de escopo, infraestrutura desconhecida ou ações impulsionadas por conteúdo hostil.
 
-* **Auto mode**: um modelo classificador separado revisa comandos e bloqueia apenas o que parece arriscado: escalação de escopo, infraestrutura desconhecida ou ações impulsionadas por conteúdo hostil. Melhor quando você confia na direção geral de uma tarefa mas não quer clicar em cada passo
+No modo Manual, o modo de permissão inicial integrado em outros planos, Claude Code pergunta antes de ações que podem modificar seu sistema: gravações de arquivo, comandos Bash, ferramentas MCP. Isso é seguro mas tedioso. Após a décima aprovação você está clicando sem revisar. Duas ferramentas cortam essas interrupções no modo Manual e se aplicam também no modo auto:
+
 * **Listas de permissões**: permita ferramentas específicas que você sabe que são seguras, como `npm run lint` ou `git commit`
 * **Sandboxing**: ative isolamento em nível de SO que restringe acesso ao sistema de arquivos e rede, permitindo Claude trabalhar mais livremente dentro de limites definidos
 
@@ -252,7 +235,7 @@ Claude também é eficaz em aprender ferramentas CLI que não conhece. Tente pro
 </h3>
 
 <Tip>
-  Execute `claude mcp add` para conectar ferramentas externas como Notion, Figma ou seu banco de dados.
+  Execute `claude mcp add` com um nome de servidor e URL ou comando para conectar ferramentas externas como Notion, Figma ou seu banco de dados. Por exemplo: `claude mcp add --transport http notion https://mcp.notion.com/mcp`.
 </Tip>
 
 Com [MCP servers](/docs/pt/mcp), você pode pedir ao Claude para implementar recursos de rastreadores de issues, consultar bancos de dados, analisar dados de monitoramento, integrar designs do Figma e automatizar fluxos de trabalho.
@@ -351,7 +334,7 @@ Diga ao Claude para usar subagents explicitamente: *"Use a subagent to review th
   Execute `/plugin` para navegar no marketplace. Plugins adicionam skills, ferramentas e integrações sem configuração.
 </Tip>
 
-[Plugins](/docs/pt/plugins) agrupam skills, hooks, subagents e MCP servers em uma única unidade instalável da comunidade e Anthropic. Se você trabalha com uma linguagem tipada, instale um [code intelligence plugin](/docs/pt/discover-plugins#code-intelligence) para dar ao Claude navegação de símbolo precisa e detecção automática de erros após edições.
+[Plugins](/docs/pt/plugins/overview) agrupam skills, hooks, subagents e MCP servers em uma única unidade instalável da comunidade e Anthropic. Se você trabalha com uma linguagem tipada, instale um [code intelligence plugin](/docs/pt/plugins/code-intelligence) para dar ao Claude navegação de símbolo precisa e detecção automática de erros após edições.
 
 Para orientação sobre escolher entre skills, subagents, hooks e MCP, consulte [Extend Claude Code](/docs/pt/features-overview#match-features-to-your-goal).
 
@@ -361,7 +344,7 @@ Para orientação sobre escolher entre skills, subagents, hooks e MCP, consulte 
   Comunique-se efetivamente
 </h2>
 
-A forma como você se comunica com Claude Code impacta significativamente a qualidade dos resultados.
+Faça ao Claude as perguntas que faria a outro engenheiro, e para recursos maiores deixe Claude entrevistá-lo e escrever uma especificação antes de começar a implementar.
 
 <h3 id="ask-codebase-questions">
   Faça perguntas sobre o codebase
@@ -389,9 +372,9 @@ Usar Claude Code dessa forma é um fluxo de trabalho de integração eficaz, mel
   Para recursos maiores, deixe Claude entrevistá-lo primeiro. Comece com um prompt mínimo e peça ao Claude para entrevistá-lo usando a ferramenta `AskUserQuestion`.
 </Tip>
 
-Claude pergunta sobre coisas que você pode não ter considerado ainda, incluindo implementação técnica, UI/UX, casos extremos e tradeoffs.
+Claude pergunta sobre coisas que você pode não ter considerado ainda, incluindo implementação técnica, UI/UX, casos extremos e tradeoffs. Substitua `[brief description]` pela sua funcionalidade antes de enviar o prompt.
 
-```text theme={null}
+```text wrap theme={null}
 I want to build [brief description]. Interview me in detail using the AskUserQuestion tool.
 
 Ask about technical implementation, UI/UX, edge cases, concerns, and tradeoffs. Don't ask obvious questions, dig into the hard parts I might not have considered.
@@ -443,9 +426,9 @@ Durante sessões longas, a janela de contexto do Claude pode se encher com conve
 * Use `/clear` frequentemente entre tarefas para redefinir a janela de contexto inteiramente
 * Quando auto compaction dispara, Claude resume o que importa mais, incluindo padrões de código, estados de arquivo e decisões-chave
 * Para mais controle, execute `/compact <instructions>`, como `/compact Focus on the API changes`
-* Para compactar apenas parte da conversa, use `Esc + Esc` ou `/rewind`, selecione um checkpoint de mensagem e escolha **Summarize from here** ou **Summarize up to here**. O primeiro condensa mensagens daquele ponto em diante enquanto mantém contexto anterior intacto; o segundo condensa mensagens anteriores enquanto mantém as recentes em cheio. Veja [Restore vs. summarize](/docs/pt/checkpointing#restore-vs-summarize).
+* Para compactar apenas parte da conversa, use `Esc + Esc` ou `/rewind`, selecione um checkpoint de mensagem e escolha **Summarize from here** ou **Summarize up to here**. O primeiro condensa mensagens daquele ponto em diante enquanto mantém contexto anterior intacto; o segundo condensa mensagens anteriores enquanto mantém as recentes em cheio. Veja [o menu de rewind com opções de sumarização](/docs/pt/checkpointing#rewind-and-summarize).
 * Customize comportamento de compaction em CLAUDE.md com instruções como `"When compacting, always preserve the full list of modified files and any test commands"` para garantir que contexto crítico sobreviva à sumarização
-* Para perguntas rápidas que não precisam ficar em contexto, use [`/btw`](/docs/pt/interactive-mode#side-questions-with-%2Fbtw). A resposta aparece em uma sobreposição dispensável e nunca entra no histórico de conversa, então você pode verificar um detalhe sem crescer contexto.
+* Para perguntas que não precisam ficar em contexto, use [`/btw`](/docs/pt/interactive-mode#side-questions-with-%2Fbtw). A resposta nunca entra no histórico de conversa, então você pode verificar um detalhe sem crescer contexto.
 
 <h3 id="use-subagents-for-investigation">
   Use subagents para investigação
@@ -455,27 +438,21 @@ Durante sessões longas, a janela de contexto do Claude pode se encher com conve
   Delegue pesquisa com `"use subagents to investigate X"`. Eles exploram em um contexto separado, mantendo sua conversa principal limpa para implementação.
 </Tip>
 
-Como contexto é sua restrição fundamental, subagents são uma das ferramentas mais poderosas disponíveis. Quando Claude pesquisa um codebase ele lê muitos arquivos, todos os quais consomem seu contexto. Subagents executam em janelas de contexto separadas e relatam resumos:
+Como contexto é sua restrição fundamental, use subagents para manter pesquisa fora dele. Quando Claude pesquisa um codebase ele lê muitos arquivos, todos os quais consomem seu contexto. Subagents executam em janelas de contexto separadas e relatam resumos:
 
-```text theme={null}
+```text wrap theme={null}
 Use subagents to investigate how our authentication system handles token
 refresh, and whether we have any existing OAuth utilities I should reuse.
 ```
 
-O subagent explora o codebase, lê arquivos relevantes e relata descobertas, tudo sem poluir sua conversa principal.
-
-Você também pode usar subagents para verificação após Claude implementar algo:
-
-```text theme={null}
-use a subagent to review this code for edge cases
-```
+Você também pode usar subagents para verificação após Claude implementar algo. Veja [Adicione uma etapa de revisão adversarial](#add-an-adversarial-review-step).
 
 <h3 id="rewind-with-checkpoints">
   Rewind com checkpoints
 </h3>
 
 <Tip>
-  Cada prompt que você envia cria um checkpoint. Você pode restaurar conversa, código ou ambos para qualquer checkpoint anterior.
+  Cada prompt que você envia que inicia um turno cria um checkpoint. Você pode restaurar conversa, código ou ambos para qualquer checkpoint anterior.
 </Tip>
 
 Claude automaticamente faz snapshots de arquivos antes de cada mudança para que um checkpoint possa restaurá-los. Pressione Escape duas vezes ou execute `/rewind` para abrir o menu de rewind. Você pode restaurar apenas conversa, restaurar apenas código, restaurar ambos ou resumir a partir de uma mensagem selecionada. Veja [Checkpointing](/docs/pt/checkpointing) para detalhes.
@@ -494,7 +471,7 @@ Em vez de planejar cuidadosamente cada movimento, você pode dizer ao Claude par
   Nomeie sessões com `/rename` e trate-as como branches: cada fluxo de trabalho obtém seu próprio contexto persistente.
 </Tip>
 
-Claude Code salva conversas localmente, então quando uma tarefa abrange múltiplas sessões você não tem que re-explicar o contexto. Execute `claude --continue` para continuar a sessão mais recente, ou `claude --resume` para escolher de uma lista. Dê às sessões nomes descritivos como `oauth-migration` para que você possa encontrá-las depois. Veja [Manage sessions](/docs/pt/sessions) para o conjunto completo de controles de resume, branch e nomeação.
+Claude Code salva conversas localmente, então quando uma tarefa abrange múltiplas sessões você não tem que re-explicar o contexto. Execute [`claude --continue`](/docs/pt/sessions#resume-a-session) para continuar de onde parou, ou `claude --resume` para escolher de uma lista. Dê às sessões nomes descritivos como `oauth-migration` para que você possa encontrá-las depois. Veja [Gerencie sessões](/docs/pt/sessions) para o conjunto completo de controles de resume, branch e nomeação.
 
 ***
 
@@ -503,8 +480,6 @@ Claude Code salva conversas localmente, então quando uma tarefa abrange múltip
 </h2>
 
 Uma vez que você é eficaz com um Claude, multiplique sua saída com sessões paralelas, modo não-interativo e padrões de fan-out.
-
-Tudo até agora assume um humano, um Claude e uma conversa. Mas Claude Code dimensiona horizontalmente. As técnicas nesta seção mostram como você pode fazer mais.
 
 <h3 id="run-non-interactive-mode">
   Execute modo não-interativo
@@ -527,6 +502,8 @@ claude -p "List all API endpoints" --output-format json
 claude -p "Analyze this log file" --output-format stream-json --verbose
 ```
 
+O primeiro comando imprime texto simples. O formato `json` retorna um único objeto JSON com um campo `result`. O formato `stream-json` imprime um objeto JSON por linha, começando com um evento init.
+
 <h3 id="run-multiple-claude-sessions">
   Execute múltiplas sessões Claude
 </h3>
@@ -535,12 +512,14 @@ claude -p "Analyze this log file" --output-format stream-json --verbose
   Execute múltiplas sessões Claude em paralelo para acelerar desenvolvimento, executar experimentos isolados ou iniciar fluxos de trabalho complexos.
 </Tip>
 
-Escolha a abordagem paralela que se adequa a quanto de coordenação você quer fazer por conta própria:
+Escolha a abordagem paralela que se adequa a quanto de coordenação você quer fazer por conta própria, e adicione mensagens quando as sessões precisarem passar descobertas entre elas:
 
 * [Worktrees](/docs/pt/worktrees): execute sessões CLI separadas em checkouts git isolados para que edições não colidam
+* [Mensagens entre sessões](/docs/pt/cross-session-messaging): deixe as sessões que você executa passar descobertas uma para a outra
 * [Aplicativo desktop](/docs/pt/desktop#work-in-parallel-with-sessions): gerencie múltiplas sessões locais visualmente, cada uma em seu próprio worktree
-* [Claude Code na web](/docs/pt/claude-code-on-the-web): execute sessões na infraestrutura de nuvem gerenciada pela Anthropic em VMs isoladas
-* [Equipes de agentes](/docs/pt/agent-teams): coordenação automatizada de múltiplas sessões com tarefas compartilhadas, mensagens e um líder de equipe
+* [Claude Code na web](/docs/pt/claude-code-on-the-web): execute sessões na nuvem, em infraestrutura gerenciada pela Anthropic por padrão
+* [Visualização de agente](/docs/pt/agent-view): pesquisa em visualização prévia. Execute `claude agents` para despachar sessões que continuam executando em background e observe-as de uma tela
+* [Equipes de agentes](/docs/pt/agent-teams): experimental e desabilitado por padrão. Coordenação automatizada de múltiplas sessões com tarefas compartilhadas, mensagens e um líder de equipe
 
 Além de paralelizar trabalho, múltiplas sessões habilitam fluxos de trabalho focados em qualidade. Um contexto fresco melhora revisão de código já que Claude não será enviesado para código que acabou de escrever.
 
@@ -562,23 +541,23 @@ Você pode fazer algo similar com testes: ter um Claude escrever testes, depois 
   Faça loop através de tarefas chamando `claude -p` para cada uma. Use `--allowedTools` para escopear permissões para operações em lote.
 </Tip>
 
-Para grandes migrações ou análises, você pode distribuir trabalho entre muitas invocações Claude paralelas:
+Para grandes migrações ou análises, você pode distribuir trabalho entre muitas invocações Claude paralelas. Execute [`/batch <instruction>`](/docs/pt/commands#all-commands) para ter Claude dividir a mudança entre 5 a 30 subagentes. Cada subagente trabalha em seu próprio worktree. Para conduzir o fan-out a partir de seu próprio script em vez disso, faça loop sobre `claude -p`:
 
 <Steps>
   <Step title="Generate a task list">
-    Tenha Claude listar todos os arquivos que precisam ser migrados (por exemplo, `list all 2,000 Python files that need migrating`)
+    Tenha Claude escrever a lista de arquivos que precisam ser migrados para um arquivo, para que o loop na próxima etapa possa lê-la, com um prompt como `list all 2,000 Python files that need migrating and save the list to files.txt`
   </Step>
 
   <Step title="Write a script to loop through the list">
     ```bash theme={null}
     for file in $(cat files.txt); do
-      claude -p "Migrate $file from React to Vue. Return OK or FAIL." \
+      claude -p "Migrate $file from Python 2 to Python 3. Return OK or FAIL." \
         --allowedTools "Edit,Bash(git commit *)"
     done
     ```
   </Step>
 
-  <Step title="Test on a few files, then run at scale">
+  <Step title="Test on a few files, then run on all of them">
     Refine seu prompt baseado no que dá errado com os primeiros 2-3 arquivos, depois execute no conjunto completo. A flag `--allowedTools` restringe o que Claude pode fazer, o que importa quando você está executando sem supervisão.
   </Step>
 </Steps>
@@ -588,8 +567,6 @@ Você também pode integrar Claude em pipelines de dados/processamento existente
 ```bash theme={null}
 claude -p "<your prompt>" --output-format json | your_command
 ```
-
-Use `--verbose` para depuração durante desenvolvimento e desligue em produção.
 
 <h3 id="run-autonomously-with-auto-mode">
   Execute autonomamente com auto mode
@@ -601,7 +578,7 @@ Para execução ininterrupta com verificações de segurança em background, use
 claude --permission-mode auto -p "fix all lint errors"
 ```
 
-Para execuções não-interativas com a flag `-p`, auto mode aborta se o classificador repetidamente bloqueia ações, já que não há usuário para recorrer. Veja [when auto mode falls back](/docs/pt/permission-modes#when-auto-mode-falls-back) para limites.
+Quando o classificador repetidamente bloqueia ações em uma execução não-interativa com a flag `-p`, Claude Code não para a execução. Veja [when auto mode falls back](/docs/pt/permission-modes#when-auto-mode-falls-back) para o que acontece em vez disso e para os limites.
 
 <h3 id="add-an-adversarial-review-step">
   Adicione uma etapa de revisão adversarial
@@ -615,13 +592,13 @@ Quanto mais tempo Claude trabalha sem supervisão, mais uma verificação indepe
 
 Para uma verificação de correção, execute a skill [`/code-review`](/docs/pt/commands) incluída, que revisa o diff atual para bugs em um subagente fresco e retorna descobertas para a sessão. Para verificar o diff contra seu plano em vez disso, escreva o prompt de revisão você mesmo. Nomeie o trabalho a verificar, o plano a verificar contra e o que conta como uma descoberta:
 
-```text theme={null}
+```text wrap theme={null}
 Use a subagent to review the rate limiter diff against PLAN.md. Check that
 every requirement is implemented, the listed edge cases have tests, and
 nothing outside the task's scope changed. Report gaps, not style preferences.
 ```
 
-Como o revisor executa como um subagente, a sessão implementadora recebe as lacunas diretamente e pode corrigi-las e revisar novamente sem você copiar descobertas entre janelas. Para execuções autônomas mais longas, uma [equipe de agentes](/docs/pt/agent-teams) pode manter este loop funcionando entre muitas tarefas enquanto você verifica os achados registrados.
+Como o revisor executa como um subagente, a sessão implementadora recebe as lacunas diretamente e pode corrigi-las e revisar novamente sem você copiar descobertas entre janelas.
 
 <Callout>
   Um revisor solicitado a encontrar lacunas geralmente relatará algumas, mesmo quando o trabalho é sólido, porque é isso que foi pedido para fazer. Perseguir cada descoberta leva a over-engineering: camadas de abstração extras, código defensivo e testes para casos que não podem acontecer. Diga ao revisor para sinalizar apenas lacunas que afetam correção ou os requisitos declarados, e trate o resto como opcional.

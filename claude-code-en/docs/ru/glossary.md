@@ -6,17 +6,25 @@
 
 > Определения терминологии Claude Code. Узнайте, что означают agentic loop, compaction, CLAUDE.md, hooks, subagents, MCP и другие основные концепции.
 
-Этот глоссарий определяет терминологию Claude Code. Каждая запись ссылается на страницу, где концепция рассматривается подробно. Для концепций уровня модели, таких как tokens, temperature и RAG, см. [глоссарий платформы](https://platform.claude.com/docs/ru/about-claude/glossary).
+Этот глоссарий определяет терминологию Claude Code. Каждая запись ссылается на страницу, где концепция рассматривается подробно. Для концепций уровня модели, таких как tokens, temperature и RAG, см. [глоссарий платформы](https://platform.claude.com/docs/ru/about-claude/glossary). Для терминов Claude Desktop, таких как desktop extension, MCPB и DXT, см. [Центр справки Claude](https://support.claude.com/).
 
 <h2 id="a">
   A
 </h2>
 
+<h3 id="agents-md">
+  AGENTS.md
+</h3>
+
+Файл markdown с инструкциями проекта, которые вы пишете для AI-агентов кодирования. Если в вашем репозитории есть такой файл и нет [CLAUDE.md](#claude-md), Claude читает его как инструкции вашего проекта без необходимости добавления второго файла. Вы можете изменить параметр **Project instructions** в `/config`, чтобы Claude читал оба файла или только `CLAUDE.md`. Прямое чтение `AGENTS.md` требует Claude Code v2.1.277 или более поздней версии. В некоторых сеансах Claude [не может читать `AGENTS.md`](/docs/ru/memory#when-agents-md-support-is-unavailable), поэтому [импортируйте его из `CLAUDE.md`](/docs/ru/memory#share-one-file-with-other-coding-tools) вместо этого.
+
+Подробнее: [AGENTS.md](/docs/ru/memory#agents-md)
+
 <h3 id="agent-teams">
   Agent teams
 </h3>
 
-Несколько независимых сеансов Claude Code, координируемых лидером команды, с общим списком задач и обменом сообщениями между участниками. В отличие от [subagents](#subagent), которые работают в одном сеансе и отчитываются только перед родительским агентом, члены команды имеют собственное окно контекста, и вы можете взаимодействовать с любым из них напрямую. Agent teams являются экспериментальной функцией и должны быть включены путём установки `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`.
+Несколько независимых сеансов Claude Code, координируемых лидером команды, с общим списком задач и обменом сообщениями между участниками. В отличие от [subagents](#subagent), которые работают в одном сеансе и отчитываются только перед родительским агентом, члены команды имеют собственное окно контекста, и вы можете взаимодействовать с любым из них напрямую. Agent teams являются экспериментальной функцией и отключены по умолчанию; см. [Enable agent teams](/docs/ru/agent-teams#enable-agent-teams).
 
 Подробнее: [Run agent teams](/docs/ru/agent-teams)
 
@@ -64,7 +72,7 @@
   Auto mode
 </h3>
 
-[permission mode](#permission-mode), где отдельная модель классификатора проверяет действия в фоновом режиме, поэтому большинство выполняются без запросов на одобрение; явные правила запроса всё ещё выводят запросы. Классификатор блокирует расширение области, ненадёжную инфраструктуру и [prompt injection](#prompt-injection). Он никогда не видит результаты tool, поэтому внедрённые инструкции не могут повлиять на его решения.
+[permission mode](#permission-mode), где отдельная модель классификатора проверяет действия вместо вас, поэтому Claude Code выполняет большинство из них без запроса. Claude Code по-прежнему запрашивает вас перед действиями, которые совпадают с вашими явными правилами запроса. На планах Pro, Max и Team, auto mode является [встроенным начальным режимом разрешений](/docs/ru/permission-modes#which-mode-a-session-starts-in) для интерактивного терминала и сеансов VS Code. Классификатор блокирует расширение области, ненадёжную инфраструктуру и [prompt injection](#prompt-injection). Результаты tool удаляются из того, что он видит, поэтому враждебный контент в файле или веб-странице не может напрямую манипулировать им.
 
 Подробнее: [Eliminate prompts with auto mode](/docs/ru/permission-modes#eliminate-prompts-with-auto-mode)
 
@@ -76,7 +84,7 @@
   Bare mode
 </h3>
 
-Флаг запуска, `--bare`, который пропускает автоматическое обнаружение hooks, skills, plugins, MCP servers, auto memory и CLAUDE.md. Действуют только явно переданные флаги. Рекомендуется для CI и скриптовых вызовов, где вам нужно одинаковое поведение на разных машинах независимо от локальной конфигурации.
+С флагом `--bare` Claude Code запускается без загрузки hooks, skills, пользовательских команд, subagents, установленных plugins, MCP servers, auto memory или CLAUDE.md, за исключением skills в директории, которую вы передаёте с помощью `--add-dir`. Рекомендуется для CI и скриптовых вызовов, где вам нужен одинаковый результат на каждой машине.
 
 Подробнее: [Start faster with bare mode](/docs/ru/headless#start-faster-with-bare-mode)
 
@@ -104,7 +112,7 @@
   Checkpoint
 </h3>
 
-Точка восстановления, созданная при каждом отправляемом вами prompt. Claude Code создаёт снимки файлов перед каждым редактированием, чтобы checkpoint мог их восстановить. Нажмите `Esc` дважды или запустите `/rewind`, чтобы восстановить код, разговор или оба на более ранний момент, или чтобы резюмировать часть разговора из выбранного сообщения. Checkpoints сохраняются вместе с разговором, поэтому возобновленный сеанс всё ещё может использовать `/rewind` для их восстановления. Они отделены от git и не отслеживают изменения, сделанные через Bash tool.
+Точка восстановления, созданная при каждом отправляемом вами prompt, который начинает ход. Claude Code создаёт снимки файлов перед каждым редактированием, чтобы checkpoint мог их восстановить. Нажмите `Esc` дважды или запустите `/rewind`, чтобы восстановить код, разговор или оба на более ранний момент, или чтобы резюмировать часть разговора из выбранного сообщения. Checkpoints сохраняются вместе с разговором, поэтому возобновленный сеанс всё ещё может использовать `/rewind` для их восстановления. Они отделены от git и не отслеживают изменения, сделанные через Bash tool.
 
 Подробнее: [Checkpointing](/docs/ru/checkpointing)
 
@@ -122,15 +130,25 @@
 
 Файл markdown с постоянными инструкциями, которые вы пишете для Claude, загружаемый в начале каждого сеанса как пользовательское сообщение после системного prompt. Поместите сюда соглашения проекта, заметки об архитектуре и правила "всегда делай X". CLAUDE.md в корне проекта сохраняется при [compaction](#compaction) и перечитывается свежим с диска после этого.
 
-Вы можете разместить CLAUDE.md в области проекта в `./CLAUDE.md` или `./.claude/CLAUDE.md`, в области пользователя в `~/.claude/CLAUDE.md` или как [managed policy](#managed-settings) для вашей организации. Все обнаруженные файлы объединяются в контекст, а не переопределяют друг друга, упорядочены от самой широкой области к наиболее специфичной.
+Вы можете разместить CLAUDE.md в области проекта в `./CLAUDE.md` или `./.claude/CLAUDE.md`, в области пользователя в `~/.claude/CLAUDE.md` или как [managed policy](#managed-settings) для вашей организации. Все обнаруженные файлы объединяются в контекст, а не переопределяют друг друга, упорядочены от самой широкой области к наиболее специфичной. Claude Code также может загружать файлы [AGENTS.md](#agents-md) проекта, отдельно или вместе с CLAUDE.md.
 
 Подробнее: [CLAUDE.md files](/docs/ru/memory#claude-md-files)
+
+<h3 id="cloud-session">
+  Cloud session
+</h3>
+
+Сеанс Claude Code, который продолжает работать после закрытия вашего ноутбука, потому что он работает на облачной инфраструктуре вместо вашей машины: управляется Anthropic по умолчанию или [self-hosted environment](/docs/ru/self-hosted-environments), которую управляет ваша организация. Вы запускаете его с claude.ai/code, мобильного приложения Claude, приложения Desktop с выбранным **Cloud**, `claude --cloud` или [routine](/docs/ru/routines). Сеанс в вашем терминале, IDE или приложении Desktop с выбранным **Local** — это локальный сеанс; чтобы получить доступ к локальному сеансу с другого устройства, используйте [Remote Control](#remote-control).
+
+Подробнее: [Use Claude Code in the cloud](/docs/ru/claude-code-on-the-web)
 
 <h3 id="command">
   Command
 </h3>
 
 Переиспользуемая инструкция, которую вы вызываете, введя `/name` в prompt. Встроенные команды, такие как `/clear`, `/model` и `/compact`, управляют сеансом. Вы можете определить свои собственные команды как файлы в `.claude/commands/` или установить их из [plugin](#plugin). [Skills](#skill) — это рекомендуемый способ упаковки многошаговых команд.
+
+Два других использования этого слова не связаны: подкоманды CLI `claude`, такие как `claude mcp add`, перечисленные в [справочнике CLI](/docs/ru/cli-reference#cli-commands), и поле `command` записи stdio [MCP server](#mcp-server), которое указывает исполняемый файл, который Claude Code запускает для запуска сервера.
 
 Подробнее: [Commands](/docs/ru/commands) · [Skills](/docs/ru/skills)
 
@@ -141,6 +159,14 @@
 Автоматическое резюмирование вашего разговора, когда [context window](#context-window) приближается к своему пределу. Сначала очищаются старые выходы tool, затем разговор резюмируется. CLAUDE.md в корне проекта и auto memory сохраняются при compaction и перезагружаются с диска; инструкции, данные только в разговоре, могут быть потеряны. Запустите `/compact` для ручного запуска, опционально с фокусом, например `/compact focus on the API changes`.
 
 Подробнее: [What survives compaction](/docs/ru/context-window#what-survives-compaction) · [When context fills up](/docs/ru/how-claude-code-works#when-context-fills-up)
+
+<h3 id="connector">
+  Connector
+</h3>
+
+[MCP server](#mcp-server), добавленный в вашу учётную запись claude.ai, а не настроенный в Claude Code. Когда вы входите в Claude Code с этой учётной записью, ваши connectors появляются в `/mcp` рядом с серверами, которые вы добавили локально. Организации также могут предоставлять connectors и устанавливать элементы управления для каждого tool на них.
+
+Подробнее: [Use MCP servers from claude.ai](/docs/ru/mcp#use-mcp-servers-from-claude-ai)
 
 <h3 id="context-window">
   Context window
@@ -170,7 +196,7 @@
   Effort level
 </h3>
 
-Параметр, который управляет тем, сколько адаптивного бюджета thinking Claude использует на каждый ход. Более высокий effort означает больше thinking tokens и более глубокое рассуждение; более низкий effort быстрее и дешевле. Effort поддерживается на Fable 5, на Opus 4.6 и более поздних версиях, а также на Sonnet 4.6 и более поздних версиях.
+Параметр, который управляет адаптивным рассуждением, позволяя модели решать, нужно ли и сколько думать на каждом шаге. Более высокий effort означает больше thinking tokens и более глубокое рассуждение; более низкий effort быстрее и дешевле. Effort поддерживается на Fable моделях, на Opus 4.6 и более поздних версиях, а также на Sonnet 4.6 и более поздних версиях.
 
 Подробнее: [Adjust effort level](/docs/ru/model-config#adjust-effort-level)
 
@@ -181,6 +207,18 @@
 Видимое пошаговое рассуждение, которое модель выполняет перед ответом. Вы можете отрегулировать его с помощью [effort level](#effort-level), или ограничить thinking tokens с помощью `MAX_THINKING_TOKENS` на моделях с фиксированным бюджетом thinking. Thinking появляется серым курсивным текстом в терминале.
 
 Подробнее: [Use extended thinking](/docs/ru/model-config#extended-thinking)
+
+<h2 id="f">
+  F
+</h2>
+
+<h3 id="frontmatter">
+  Frontmatter
+</h3>
+
+Блок параметров YAML в самом начале файла Markdown, между открывающей строкой `---` и закрывающей строкой `---`. Skills, subagents, output styles и rules читают свою конфигурацию из frontmatter, например `description` skill или `tools` subagent, и рассматривают всё после закрывающей `---` как инструкции. Открывающая `---` должна быть первой строкой файла. Каждый тип файла принимает свой собственный набор полей.
+
+Узнайте больше: [Skill frontmatter](/docs/ru/skills#frontmatter-reference), [Subagent frontmatter](/docs/ru/sub-agents#supported-frontmatter-fields), [Output style frontmatter](/docs/ru/output-styles#frontmatter), [Rule frontmatter](/docs/ru/memory#rules-frontmatter-reference)
 
 <h2 id="h">
   H
@@ -210,13 +248,21 @@
 
 Параметры, применяемые организацией IT или DevOps, доставляемые с серверов Anthropic через консоль администратора или развёрнутые на устройствах по пути уровня ОС вне `~/.claude`. Пользователи и параметры проекта не могут переопределять управляемые параметры. Доставка, управляемая сервером, применяется на [подходящих конфигурациях](/docs/ru/server-managed-settings#platform-availability); см. [Соображения безопасности](/docs/ru/server-managed-settings#security-considerations). Используйте это для политик безопасности, требований соответствия или стандартизированного инструментария на всём парке.
 
-Подробнее: [Server-managed settings](/docs/ru/server-managed-settings) · [Settings files](/docs/ru/settings#settings-files)
+Подробнее: [Server-managed settings](/docs/ru/server-managed-settings) · [Settings files](/docs/ru/settings#where-settings-live)
 
 <h3 id="mcp-model-context-protocol">
   MCP (Model Context Protocol)
 </h3>
 
 Открытый стандарт для подключения инструментов ИИ к внешним источникам данных и сервисам. MCP servers дают Claude новые tools для Slack, Jira, баз данных, браузеров и сотен других интеграций. Вы подключаете servers через `/mcp` или добавляя их в `.mcp.json`. Для самого протокола см. [глоссарий платформы](https://platform.claude.com/docs/ru/about-claude/glossary#mcp-model-context-protocol).
+
+Подробнее: [Model Context Protocol](/docs/ru/mcp)
+
+<h3 id="mcp-server">
+  MCP server
+</h3>
+
+Программа, которая предоставляет Claude tools, prompts или ресурсы через [MCP](#mcp-model-context-protocol). Вы добавляете servers с помощью `claude mcp add`, в `.mcp.json`, через [plugin](#plugin) или как claude.ai [connector](#connector). Локальный stdio server запускается как процесс, который Claude Code запускает из полей `command` и `args` его конфигурации, которые не имеют ничего общего с [commands](#command), которые вы вводите в prompt.
 
 Подробнее: [Model Context Protocol](/docs/ru/mcp)
 
@@ -248,7 +294,7 @@
   Output style
 </h3>
 
-Конфигурация, которая изменяет системный prompt Claude для изменения поведения ответа, тона или формата. Output styles отключают части системного prompt, специфичные для разработки программного обеспечения, в отличие от [CLAUDE.md](#claude-md), который доставляется как пользовательское сообщение, следующее за системным prompt. Встроенные стили включают Default, Proactive, Explanatory и Learning.
+Конфигурация, которая изменяет инструкции, которые Claude Code дает Claude, для установки поведения ответа, тона или формата. В отличие от [CLAUDE.md](#claude-md), который добавляет контекст проекта наряду с инструкциями Claude Code по умолчанию, пользовательский стиль вывода может заменить инструкции инженерии программного обеспечения по умолчанию.
 
 Подробнее: [Output styles](/docs/ru/output-styles)
 
@@ -286,15 +332,15 @@
   Plugin
 </h3>
 
-Пакет skills, hooks, subagents и MCP servers, упакованный как единица установки. Plugin skills имеют пространство имён как `plugin-name:skill-name`, поэтому несколько plugins сосуществуют. Распределяйте plugins по командам через [marketplace](/docs/ru/plugin-marketplaces).
+Пакет skills, hooks, subagents и MCP servers, упакованный как единица установки. Plugin skills имеют пространство имён как `plugin-name:skill-name`, поэтому несколько plugins сосуществуют. Распределяйте plugins по командам через [marketplace](/docs/ru/plugins/overview).
 
-Подробнее: [Plugins](/docs/ru/plugins)
+Подробнее: [Plugins](/docs/ru/plugins/overview)
 
 <h3 id="project-trust">
   Project trust
 </h3>
 
-Диалог принятия каталога перед загрузкой Claude Code его конфигурации. Принятие сохраняется для каждого каталога проекта, за исключением вашего домашнего каталога, где доверие сохраняется только для текущего сеанса и приглашение появляется снова при каждом запуске. Trust gates автоматическую установку marketplace plugins и выполнение определённых проектом hooks. Доверие к каталогу означает, что его `.claude/settings.json`, `.mcp.json` и другие файлы конфигурации вступают в силу.
+Диалог принятия каталога перед загрузкой Claude Code его конфигурации. Принятие сохраняется для каждого каталога проекта, за исключением вашего домашнего каталога, где доверие сохраняется только для текущего сеанса и приглашение появляется снова при каждом запуске. До тех пор, пока вы не доверяете каталогу, Claude Code удерживает некоторое содержимое, которое его репозиторий предоставляет, такое как правила разрешений проекта и marketplaces из `.claude/settings.json`. [Что запускается перед тем, как вы доверяете папке](/docs/ru/permissions#what-runs-before-you-trust-a-folder) перечисляет каждый вид содержимого, включая то, что запускает сеанс `-p` без диалога.
 
 Подробнее: [Каталог `.claude`](/docs/ru/claude-directory)
 
@@ -302,7 +348,7 @@
   Prompt injection
 </h3>
 
-Враждебные инструкции, встроенные в файл, веб-страницу или результат tool, которые пытаются перенаправить Claude к действиям, которые вы никогда не просили. Защита Claude Code включает систему разрешений, обнаружение инъекций команд и проверку доверия. [Auto mode](#auto-mode) добавляет зонд на стороне сервера, который сканирует результаты tool на предмет подозрительного содержимого, и классификатор, который никогда не видит результаты tool, поэтому внедрённый текст не может повлиять на его решения об одобрении.
+Враждебные инструкции, встроенные в файл, веб-страницу или результат tool, которые пытаются перенаправить Claude к действиям, которые вы никогда не просили. Защита Claude Code включает систему разрешений, обнаружение инъекций команд и проверку доверия. [Auto mode](#auto-mode) добавляет зонд на стороне сервера, который сканирует результаты tool на предмет подозрительного содержимого, и классификатор, который проверяет действия с удалёнными результатами tool, поэтому внедрённый текст не может напрямую манипулировать им.
 
 Подробнее: [Защититесь от prompt injection](/docs/ru/security#protect-against-prompt-injection)
 
@@ -314,7 +360,7 @@
   Remote Control
 </h3>
 
-Способ продолжить локальный сеанс Claude Code с вашего телефона или браузера через claude.ai. Ваш код остаётся на вашей машине; только UI является удалённым. Отличается от Claude Code в веб-версии, который работает в облачной песочнице.
+Способ продолжить локальный сеанс Claude Code с вашего телефона или браузера через claude.ai. Ваш код и файлы остаются на вашей машине; интерфейс является удалённым. Отличается от [облачного сеанса](/docs/ru/claude-code-on-the-web), который работает в облачной песочнице.
 
 Подробнее: [Remote Control](/docs/ru/remote-control)
 
@@ -350,9 +396,9 @@
   Settings layers
 </h3>
 
-Иерархия, из которой Claude Code читает конфигурацию, в порядке приоритета от наивысшего к наинизшему: [managed policy](#managed-settings), аргументы командной строки, локальные settings в `.claude/settings.local.json`, settings проекта в `.claude/settings.json`, затем пользовательские settings в `~/.claude/settings.json`. Массивы объединяются по слоям; скаляры на более высоком слое переопределяют более низкие.
+Иерархия, из которой Claude Code читает конфигурацию, в порядке приоритета от наивысшего к наинизшему: [managed policy](#managed-settings), аргументы командной строки, локальные settings в `.claude/settings.local.json`, settings проекта в `.claude/settings.json`, затем пользовательские settings в `~/.claude/settings.json`. Массивы объединяются по слоям; скаляры на более высоком слое переопределяют более низкие. См. [Settings precedence](/docs/ru/settings#settings-precedence).
 
-Подробнее: [Settings files](/docs/ru/settings#settings-files)
+Подробнее: [Settings files](/docs/ru/settings#where-settings-live)
 
 <h3 id="skill">
   Skill
@@ -368,7 +414,7 @@ Skills — это рекомендуемый преемник пользоват
   Subagent
 </h3>
 
-Специализированный ИИ-ассистент, который работает в собственном окне контекста с пользовательским системным prompt, определённым доступом к tool и независимыми разрешениями. Он работает над делегированной задачей и возвращает резюме в основной разговор. Используйте subagents, чтобы держать большие исследования вне вашего основного контекста или запускать параллельные исследования. Отличается от [agent teams](#agent-teams), где каждый агент — это полный независимый сеанс, с которым вы можете разговаривать напрямую.
+Специализированный ИИ-ассистент, который работает в собственном окне контекста с пользовательским системным prompt, определённым доступом к tool и независимыми разрешениями. Он работает над делегированной задачей и возвращает резюме в основной разговор. Используйте subagents, чтобы держать большие исследования вне вашего основного контекста или запускать параллельные исследования. Subagent остаётся внутри сеанса, который его создал. Для передачи результатов между отдельными сеансами, которые вы запускаете сами, используйте [cross-session messaging](/docs/ru/cross-session-messaging).
 
 Встроенные subagents включают Explore, Plan и общего назначения.
 
@@ -378,7 +424,7 @@ Skills — это рекомендуемый преемник пользоват
   Surface
 </h3>
 
-Любое место, где вы получаете доступ к Claude Code: CLI, VS Code, JetBrains, Desktop или claude.ai. Все surfaces используют один и тот же engine, поэтому ваш CLAUDE.md, settings и skills работают одинаково на всех них. Slack и расширение Chrome — это интеграции, которые подключаются к surface, а не сами surfaces.
+Любое место, где вы получаете доступ к Claude Code: CLI, VS Code, JetBrains, Desktop или claude.ai. Все surfaces используют один и тот же engine. Сеансы на вашей машине читают ваш локальный CLAUDE.md, settings и skills; [cloud sessions](/docs/ru/cloud-environments#what-carries-over-from-your-setup) начинаются со свежего клона вашего репозитория и не читают `~/.claude/` на вашей машине. Slack и расширение Chrome — это интеграции, которые подключаются к surface, а не сами surfaces.
 
 Подробнее: [Platforms and integrations](/docs/ru/platforms)
 
@@ -390,9 +436,9 @@ Skills — это рекомендуемый преемник пользоват
   Teleport
 </h3>
 
-Команда, `/teleport`, которая вытягивает облачный сеанс Claude Code в ваш локальный терминал. Claude получает ветку, загружает историю разговора и возобновляет с последнего состояния веб-сеанса. Обратное направление — `--cloud`, которое отправляет локальную задачу для запуска в веб-версии.
+Команда, `/teleport`, которая вытягивает облачный сеанс Claude Code в ваш локальный терминал. Claude получает ветку, загружает историю разговора и возобновляет с последнего состояния облачного сеанса. Обратное направление — `--cloud`, которое отправляет локальную задачу для запуска в облаке.
 
-Подробнее: [From web to terminal](/docs/ru/claude-code-on-the-web#from-web-to-terminal)
+Подробнее: [From cloud to terminal](/docs/ru/claude-code-on-the-web#from-cloud-to-terminal)
 
 <h3 id="tool">
   Tool
@@ -442,8 +488,9 @@ Skills — это рекомендуемый преемник пользоват
 
 Эти термины появляются в старых документах, постах блога и содержимом сообщества. Используйте текущее имя при поиске на этом сайте.
 
-| Old term        | Now called                                    | Notes                                |
-| --------------- | --------------------------------------------- | ------------------------------------ |
-| Headless mode   | [Non-interactive mode](#non-interactive-mode) | Same `-p` flag, same behavior        |
-| Custom commands | [Skills](#skill)                              | `.claude/commands/` files still work |
-| Slash commands  | Commands                                      | "Slash" dropped from product copy    |
+| Old term                                                                | Now called                                    | Notes                                                                         |
+| ----------------------------------------------------------------------- | --------------------------------------------- | ----------------------------------------------------------------------------- |
+| Headless mode                                                           | [Non-interactive mode](#non-interactive-mode) | Same `-p` flag, same behavior                                                 |
+| Web session; "Claude Code on the web" as the name for any cloud session | [Cloud session](#cloud-session)               | "Claude Code on the web" now names only the browser surface at claude.ai/code |
+| Custom commands                                                         | [Skills](#skill)                              | `.claude/commands/` files still work                                          |
+| Slash commands                                                          | Commands                                      | "Slash" dropped from product copy                                             |

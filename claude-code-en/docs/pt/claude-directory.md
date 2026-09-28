@@ -34,7 +34,7 @@ export const ClaudeExplorer = () => {
         oneLiner: 'Project instructions Claude reads every session',
         when: 'Loaded into context at the start of every session',
         description: 'Project-specific instructions that shape how Claude works in this repository. Put your conventions, common commands, and architectural context here so Claude operates with the same assumptions your team does.',
-        tips: ['Target under 200 lines. Longer files still load in full but may reduce adherence', <>CLAUDE.md loads into every session. If something only matters for specific tasks, move it to a <A href="/docs/en/skills">skill</A> or a path-scoped <A href="/docs/en/memory#organize-rules-with-claude/rules/">rule</A> so it loads only when needed</>, 'List the commands you run most, like build, test, and format, so Claude knows them without you spelling them out each time', <>Run <C>/memory</C> to open and edit CLAUDE.md from within a session</>, <>Also works at <C>.claude/CLAUDE.md</C> if you prefer to keep the project root clean</>],
+        tips: ['Target under 200 lines. Longer files still load in full but may reduce adherence', <>CLAUDE.md loads into every session. If something only matters for specific tasks, move it to a <A href="/docs/en/skills">skill</A> or a path-scoped <A href="/docs/en/memory#organize-rules-with-claude/rules/">rule</A> so it loads only when needed</>, 'List the commands you run most, like build, test, and format, so Claude knows them without you spelling them out each time', <>Run <C>/memory</C> to open and edit CLAUDE.md from within a session</>, <>Also works at <C>.claude/CLAUDE.md</C> if you prefer to keep the project root clean</>, <>If your repo already has an <C>AGENTS.md</C> for other coding agents, Claude Code <A href="/docs/en/memory#agents-md">can read that</A> on its own or alongside CLAUDE.md</>],
         exampleIntro: 'This example is for a TypeScript and React project. It lists the build and test commands, the framework conventions Claude should follow, and project-specific rules like export style and file layout.',
         example: `# Project conventions
 
@@ -113,7 +113,7 @@ config/secrets.json`,
           oneLiner: 'Permissions, hooks, and configuration',
           when: <>Overrides global <C>~/.claude/settings.json</C>. Local settings, CLI flags, and managed settings override this</>,
           description: 'Settings that Claude Code applies directly. Permissions control which commands and tools Claude can use; hooks run your scripts at specific points in a session. Unlike CLAUDE.md, which Claude reads as guidance, these are enforced whether Claude follows them or not.',
-          contains: [<><A href="/docs/en/permissions">permissions</A>: allow, deny, or prompt before Claude uses specific tools or commands</>, <><A href="/docs/en/hooks">hooks</A>: run your own scripts on events like before a tool call or after a file edit</>, <><A href="/docs/en/statusline">statusLine</A>: customize the line shown at the bottom while Claude works</>, <><A href="/docs/en/settings-reference#available-settings">model</A>: pick a default model for this project</>, <><A href="/docs/en/settings-reference#environment-variables">env</A>: environment variables set in every session</>, <><A href="/docs/en/output-styles">outputStyle</A>: select a custom system-prompt style from output-styles/</>],
+          contains: [<><A href="/docs/en/permissions">permissions</A>: allow, deny, or prompt before Claude uses specific tools or commands</>, <><A href="/docs/en/hooks">hooks</A>: run your own scripts on events like before a tool call or after a file edit</>, <><A href="/docs/en/statusline">statusLine</A>: customize the line shown at the bottom while Claude works</>, <><A href="/docs/en/settings-reference#available-settings">model</A>: pick a default model for this project</>, <><A href="/docs/en/settings-reference#environment-variables">env</A>: environment variables set in every session</>, <><A href="/docs/en/output-styles">outputStyle</A>: select a custom output style from output-styles/</>],
           tips: [<>Bash permission patterns support wildcards: <C>Bash(npm test *)</C> matches any command starting with <C>npm test</C></>, <>Array settings like <C>permissions.allow</C> combine across all scopes; scalar settings like <C>model</C> use the most specific value</>],
           exampleIntro: <>This example allows <C>npm test</C> and <C>npm run</C> commands without prompting, blocks <C>rm -rf</C>, and runs Prettier on files after Claude edits or writes them.</>,
           example: `{
@@ -322,7 +322,7 @@ Investigate and fix the issue above.
           icon: 'folder',
           color: '#5AA7A7',
           oneLiner: 'Project-scoped output styles, if your team shares any',
-          when: 'Applied at session start when selected via the outputStyle setting',
+          when: 'Files read at startup; the style you select with outputStyle applies to every response',
           description: <>Output styles are usually personal, so most live in <C>~/.claude/output-styles/</C>. Put one here if your team shares a style, like a review mode everyone uses. See <A href="#ce-global-output-styles">the Global tab</A> for the full explanation and example.</>,
           docsLink: '/en/output-styles',
           children: []
@@ -638,10 +638,10 @@ type: reference
           type: 'folder',
           icon: 'folder',
           color: '#5AA7A7',
-          oneLiner: 'Custom system-prompt sections that adjust how Claude works',
-          when: 'Applied at session start when selected via the outputStyle setting',
-          description: [<>Each markdown file defines an output style: a section appended to the system prompt that, by default, also drops the built-in software-engineering task instructions. Use this to adapt Claude Code for uses beyond coding, or to add teaching or review modes.</>, <>Select a built-in or custom style with <C>/config</C> or the <C>outputStyle</C> key in settings. Styles here are available in every project; project-level styles with the same name take precedence.</>],
-          tips: ['Built-in styles Default, Proactive, Concise, Explanatory, and Learning are included with Claude Code; custom styles go here', <>Set <C>keep-coding-instructions: true</C> in frontmatter to keep the default task instructions alongside your additions</>, 'Changes take effect on the next session since the system prompt is fixed at startup for caching'],
+          oneLiner: 'Custom instruction sets that adjust how Claude works',
+          when: 'Files read at startup; the style you select with outputStyle applies to every response',
+          description: [<>Each markdown file defines an output style: a set of instructions for Claude that, by default, also replaces the built-in software-engineering task instructions. Use this to adapt Claude Code for uses beyond coding, or to add teaching or review modes.</>, <>Select a built-in or custom style with <C>/output-style</C>, <C>/config</C>, or the <C>outputStyle</C> key in settings. Styles here are available in every project; project-level styles with the same name take precedence.</>],
+          tips: ['Built-in styles Default, Proactive, Concise, Explanatory, and Learning are included with Claude Code; custom styles go here', <>Set <C>keep-coding-instructions: true</C> in frontmatter to keep the default task instructions alongside your additions</>, 'Switching styles mid-session applies from your next message; in the terminal, a style file you create or edit mid-session is picked up after a restart'],
           docsLink: '/en/output-styles',
           children: [{
             id: 'output-style-example',
@@ -652,7 +652,7 @@ type: reference
             badge: 'local',
             oneLiner: 'Example style that adds explanations and leaves small changes for you',
             when: <>Active when <C>outputStyle</C> in settings is set to <C>teaching</C></>,
-            description: <>This style appends instructions to the system prompt: Claude adds a "Why this approach" note after each task and leaves TODO(human) markers for changes under 10 lines instead of writing them itself. Select it by setting <C>outputStyle</C> to the filename without .md, or to the <C>name</C> field if you set one in frontmatter.</>,
+            description: <>With this style, Claude adds a "Why this approach" note after each task and leaves TODO(human) markers for changes under 10 lines instead of writing them itself. Select it by setting <C>outputStyle</C> to the filename without .md, or to the <C>name</C> field if you set one in frontmatter.</>,
             example: `---
 description: Explains reasoning and asks you to implement small pieces
 keep-coding-instructions: true
@@ -1434,7 +1434,7 @@ Claude Code lê instruções, configurações, skills, subagents e memória do s
 
 No Windows, `~/.claude` é resolvido para `%USERPROFILE%\.claude`. Se você definir [`CLAUDE_CONFIG_DIR`](/docs/pt/env-vars), cada caminho `~/.claude` nesta página fica sob esse diretório.
 
-A maioria dos usuários apenas edita `CLAUDE.md` e `settings.json`. O resto do diretório é opcional: adicione skills, rules ou subagents conforme necessário.
+A maioria dos usuários apenas edita `CLAUDE.md` e `settings.json`. Se seu repositório já tiver um `AGENTS.md` para outros agentes de codificação, Claude Code [pode ler isso](/docs/pt/memory#agents-md) por conta própria ou junto com `CLAUDE.md`. O resto do diretório é opcional: adicione skills, rules ou subagents conforme necessário.
 
 <h2 id="explore-the-directory">
   Explore o diretório
@@ -1450,11 +1450,12 @@ Clique em arquivos na árvore para ver o que cada um faz, quando carrega e um ex
 
 O explorador cobre arquivos que você cria e edita. Alguns arquivos relacionados vivem em outro lugar:
 
-| Arquivo                 | Localização                    | Propósito                                                                                                                                                                                                                                                                                 |
-| ----------------------- | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `managed-settings.json` | Nível do sistema, varia por SO | Configurações impostas pela empresa que você não pode substituir. Veja [configurações gerenciadas pelo servidor](/docs/pt/server-managed-settings).                                                                                                                                            |
-| `CLAUDE.local.md`       | Raiz do projeto                | Suas preferências privadas para este projeto, carregadas junto com CLAUDE.md. Crie manualmente e adicione a `.gitignore`.                                                                                                                                                                 |
-| Plugins instalados      | `~/.claude/plugins`            | Marketplaces clonados, versões de plugins instalados e dados por plugin, gerenciados por comandos `claude plugin`. Versões órfãs são deletadas 7 dias após uma atualização ou desinstalação de plugin. Veja [cache de plugins](/docs/pt/plugins-reference#plugin-caching-and-file-resolution). |
+| Arquivo                 | Localização                                        | Propósito                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| ----------------------- | -------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `managed-settings.json` | Nível do sistema, varia por SO                     | Configurações impostas pela empresa que você não pode substituir, exceto por [exceções limitadas](/docs/pt/settings#security-keys-where-the-stricter-value-applies). Veja [onde salvar o arquivo](/docs/pt/managed-settings#deploy-a-managed-settings-file) e [qual fonte gerenciada Claude Code usa](/docs/pt/managed-settings#precedence-within-the-managed-tier).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| `CLAUDE.local.md`       | Raiz do projeto                                    | Suas preferências privadas para este projeto, carregadas junto com CLAUDE.md. Crie manualmente e adicione a `.gitignore`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `AGENTS.md`             | Raiz do projeto, `.claude/`, ou qualquer diretório | Instruções do projeto que você escreve para agentes de codificação de IA. Claude Code pode [carregá-lo](/docs/pt/memory#agents-md) por conta própria ou junto com `CLAUDE.md`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| Plugins instalados      | `~/.claude/plugins`                                | Marketplaces clonados, versões de plugins instalados, o registro de instalação `installed_plugins.json` e dados por plugin, gerenciados por comandos `claude plugin`. Plugins [sincronizados da sua conta claude.ai](/docs/pt/plugins/loading#synced-plugins) são baixados em `~/.claude/plugins/synced/`. Para um plugin instalado de um marketplace com [fonte `command`](/docs/pt/plugins/marketplace-reference#command-plugin-source) em modo de link, Claude Code armazena links aqui em vez de uma cópia, e os arquivos do plugin permanecem no diretório que o comando imprime. Uma fonte `command` requer Claude Code v2.1.229 ou posterior. Um plugin listado por caminho relativo em um marketplace de diretório local também [carrega no local](/docs/pt/plugins/loading#find-plugins-on-disk) de seu diretório de origem em vez de uma cópia em cache. Veja [cache de plugins](/docs/pt/plugins/loading#find-plugins-on-disk) para saber como versões órfãs são limpas. |
 
 `~/.claude` também contém dados que Claude Code escreve conforme você trabalha: transcrições, histórico de prompts, snapshots de arquivos, caches e logs. Veja [dados da aplicação](#application-data) abaixo.
 
@@ -1464,18 +1465,18 @@ O explorador cobre arquivos que você cria e edita. Alguns arquivos relacionados
 
 Diferentes tipos de personalização vivem em arquivos diferentes. Use esta tabela para encontrar onde uma mudança pertence.
 
-| Você quer                                                       | Editar                                   | Escopo            | Referência                                              |
-| :-------------------------------------------------------------- | :--------------------------------------- | :---------------- | :------------------------------------------------------ |
-| Dar a Claude contexto e convenções do projeto                   | `CLAUDE.md`                              | projeto ou global | [Memory](/docs/pt/memory)                                    |
-| Permitir ou bloquear chamadas de ferramentas específicas        | `settings.json` `permissions` ou `hooks` | projeto ou global | [Permissions](/docs/pt/permissions), [Hooks](/docs/pt/hooks)      |
-| Executar um script antes ou depois de chamadas de ferramentas   | `settings.json` `hooks`                  | projeto ou global | [Hooks](/docs/pt/hooks)                                      |
-| Definir variáveis de ambiente para a sessão                     | `settings.json` `env`                    | projeto ou global | [Settings](/docs/pt/settings#available-settings)             |
-| Manter substituições pessoais fora do git                       | `settings.local.json`                    | apenas projeto    | [Escopos de configurações](/docs/pt/settings#settings-files) |
-| Adicionar um prompt ou capacidade que você invoca com `/name`   | `skills/<name>/SKILL.md`                 | projeto ou global | [Skills](/docs/pt/skills)                                    |
-| Definir um subagent especializado com suas próprias ferramentas | `agents/*.md`                            | projeto ou global | [Subagents](/docs/pt/sub-agents)                             |
-| Orquestrar muitos subagents a partir de um script               | `workflows/*.js`                         | projeto ou global | [Dynamic workflows](/docs/pt/workflows)                      |
-| Conectar ferramentas externas sobre MCP                         | `.mcp.json`                              | apenas projeto    | [MCP](/docs/pt/mcp)                                          |
-| Mudar como Claude formata respostas                             | `output-styles/*.md`                     | projeto ou global | [Output styles](/docs/pt/output-styles)                      |
+| Você quer                                                       | Editar                                   | Escopo            | Referência                                                   |
+| :-------------------------------------------------------------- | :--------------------------------------- | :---------------- | :----------------------------------------------------------- |
+| Dar a Claude contexto e convenções do projeto                   | `CLAUDE.md`                              | projeto ou global | [Memory](/docs/pt/memory)                                         |
+| Permitir ou bloquear chamadas de ferramentas específicas        | `settings.json` `permissions` ou `hooks` | projeto ou global | [Permissions](/docs/pt/permissions), [Hooks](/docs/pt/hooks)           |
+| Executar um script antes ou depois de chamadas de ferramentas   | `settings.json` `hooks`                  | projeto ou global | [Hooks](/docs/pt/hooks)                                           |
+| Definir variáveis de ambiente para a sessão                     | `settings.json` `env`                    | projeto ou global | [Settings](/docs/pt/settings-reference#all-settings)              |
+| Manter substituições pessoais fora do git                       | `settings.local.json`                    | apenas projeto    | [Escopos de configurações](/docs/pt/settings#where-settings-live) |
+| Adicionar um prompt ou capacidade que você invoca com `/name`   | `skills/<name>/SKILL.md`                 | projeto ou global | [Skills](/docs/pt/skills)                                         |
+| Definir um subagent especializado com suas próprias ferramentas | `agents/*.md`                            | projeto ou global | [Subagents](/docs/pt/sub-agents)                                  |
+| Orquestrar muitos subagents a partir de um script               | `workflows/*.js`                         | projeto ou global | [Dynamic workflows](/docs/pt/workflows)                           |
+| Conectar ferramentas externas sobre MCP                         | `.mcp.json`                              | apenas projeto    | [MCP](/docs/pt/mcp)                                               |
+| Mudar como Claude formata respostas                             | `output-styles/*.md`                     | projeto ou global | [Output styles](/docs/pt/output-styles)                           |
 
 <h2 id="file-reference">
   Referência de arquivos
@@ -1486,7 +1487,7 @@ Esta tabela lista cada arquivo que o explorador cobre. Arquivos de escopo de pro
 <Note>
   Várias coisas podem substituir o que você coloca nesses arquivos:
 
-  * [Configurações gerenciadas](/docs/pt/server-managed-settings) implantadas por sua organização têm precedência sobre tudo
+  * [Configurações gerenciadas](/docs/pt/server-managed-settings) implantadas por sua organização têm precedência sobre tudo, exceto pelas [exceções sob Precedência de configurações](/docs/pt/settings#exceptions-to-managed-settings-precedence)
   * Flags CLI como `--permission-mode` ou `--settings` substituem `settings.json` para essa sessão
   * Algumas variáveis de ambiente têm precedência sobre sua configuração equivalente, mas isso varia: verifique a [referência de variáveis de ambiente](/docs/pt/env-vars) para cada uma
 
@@ -1495,24 +1496,40 @@ Esta tabela lista cada arquivo que o explorador cobre. Arquivos de escopo de pro
 
 Clique em um nome de arquivo para abrir esse nó no explorador acima.
 
-| Arquivo                                             | Escopo           | Confirmar | O que faz                                                                                                              | Referência                                                        |
-| --------------------------------------------------- | ---------------- | --------- | ---------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
-| [`CLAUDE.md`](#ce-claude-md)                        | Projeto e global | ✓         | Instruções carregadas a cada sessão                                                                                    | [Memory](/docs/pt/memory)                                              |
-| [`rules/*.md`](#ce-rules)                           | Projeto e global | ✓         | Instruções com escopo de tópico, opcionalmente com gate de caminho                                                     | [Rules](/docs/pt/memory#organize-rules-with-claude/rules/)             |
-| [`settings.json`](#ce-settings-json)                | Projeto e global | ✓         | Permissões, hooks, variáveis de env, padrões de modelo                                                                 | [Settings](/docs/pt/settings)                                          |
-| [`settings.local.json`](#ce-settings-local-json)    | Apenas projeto   |           | Suas substituições pessoais, auto-gitignored                                                                           | [Escopos de configurações](/docs/pt/settings#settings-files)           |
-| [`.mcp.json`](#ce-mcp-json)                         | Apenas projeto   | ✓         | Servidores MCP compartilhados pela equipe                                                                              | [Escopos MCP](/docs/pt/mcp#mcp-installation-scopes)                    |
-| [`.worktreeinclude`](#ce-worktreeinclude)           | Apenas projeto   | ✓         | Arquivos gitignored para copiar em novos worktrees                                                                     | [Worktrees](/docs/pt/worktrees#copy-gitignored-files-into-worktrees)   |
-| [`skills/<name>/SKILL.md`](#ce-skills)              | Projeto e global | ✓         | Prompts reutilizáveis invocados com `/name` ou auto-invocados                                                          | [Skills](/docs/pt/skills)                                              |
-| [`commands/*.md`](#ce-commands)                     | Projeto e global | ✓         | Prompts de arquivo único; mesmo mecanismo que skills                                                                   | [Skills](/docs/pt/skills)                                              |
-| [`output-styles/*.md`](#ce-output-styles)           | Projeto e global | ✓         | Seções de prompt do sistema personalizadas                                                                             | [Output styles](/docs/pt/output-styles)                                |
-| [`agents/*.md`](#ce-agents)                         | Projeto e global | ✓         | Definições de subagents com seu próprio prompt e ferramentas                                                           | [Subagents](/docs/pt/sub-agents)                                       |
-| [`workflows/*.js`](#ce-workflows)                   | Projeto e global | ✓         | Scripts de workflow dinâmicos escritos por Claude e salvos de `/workflows`; cada arquivo se torna um comando `/<name>` | [Dynamic workflows](/docs/pt/workflows)                                |
-| [`agent-memory/<name>/`](#ce-agent-memory)          | Projeto e global | ✓         | Memória persistente para subagents                                                                                     | [Memória persistente](/docs/pt/sub-agents#enable-persistent-memory)    |
-| [`~/.claude.json`](#ce-claude-json)                 | Apenas global    |           | Estado da aplicação, OAuth, toggles de UI, servidores MCP pessoais                                                     | [Configuração global](/docs/pt/settings#global-config-settings)        |
-| [`projects/<project>/memory/`](#ce-global-projects) | Apenas global    |           | Auto memory: notas de Claude para si mesmo entre sessões                                                               | [Auto memory](/docs/pt/memory#auto-memory)                             |
-| [`keybindings.json`](#ce-keybindings)               | Apenas global    |           | Atalhos de teclado personalizados                                                                                      | [Keybindings](/docs/pt/keybindings)                                    |
-| [`themes/*.json`](#ce-themes)                       | Apenas global    |           | Temas de cores personalizados                                                                                          | [Temas personalizados](/docs/pt/terminal-config#create-a-custom-theme) |
+| Arquivo                                             | Escopo           | Confirmar | O que faz                                                                                                              | Referência                                                           |
+| --------------------------------------------------- | ---------------- | --------- | ---------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| [`CLAUDE.md`](#ce-claude-md)                        | Projeto e global | ✓         | Instruções carregadas a cada sessão                                                                                    | [Memory](/docs/pt/memory)                                                 |
+| [`rules/*.md`](#ce-rules)                           | Projeto e global | ✓         | Instruções com escopo de tópico, opcionalmente com gate de caminho                                                     | [Rules](/docs/pt/memory#organize-rules-with-claude/rules/)                |
+| [`settings.json`](#ce-settings-json)                | Projeto e global | ✓         | Permissões, hooks, variáveis de env, padrões de modelo                                                                 | [Settings](/docs/pt/settings)                                             |
+| [`settings.local.json`](#ce-settings-local-json)    | Apenas projeto   |           | Suas substituições pessoais, auto-gitignored quando Claude Code salva uma configuração nele                            | [Escopos de configurações](/docs/pt/settings#where-settings-live)         |
+| [`.mcp.json`](#ce-mcp-json)                         | Apenas projeto   | ✓         | Servidores MCP compartilhados pela equipe                                                                              | [Escopos MCP](/docs/pt/mcp#mcp-installation-scopes)                       |
+| [`.worktreeinclude`](#ce-worktreeinclude)           | Apenas projeto   | ✓         | Arquivos gitignored para copiar em novos worktrees                                                                     | [Worktrees](/docs/pt/worktrees#copy-gitignored-files-into-worktrees)      |
+| [`skills/<name>/SKILL.md`](#ce-skills)              | Projeto e global | ✓         | Prompts reutilizáveis invocados com `/name` ou auto-invocados                                                          | [Skills](/docs/pt/skills)                                                 |
+| [`commands/*.md`](#ce-commands)                     | Projeto e global | ✓         | Prompts de arquivo único; mesmo mecanismo que skills                                                                   | [Skills](/docs/pt/skills)                                                 |
+| [`output-styles/*.md`](#ce-output-styles)           | Projeto e global | ✓         | Seções de prompt do sistema personalizadas                                                                             | [Output styles](/docs/pt/output-styles)                                   |
+| [`agents/*.md`](#ce-agents)                         | Projeto e global | ✓         | Definições de subagents com seu próprio prompt e ferramentas                                                           | [Subagents](/docs/pt/sub-agents)                                          |
+| [`workflows/*.js`](#ce-workflows)                   | Projeto e global | ✓         | Scripts de workflow dinâmicos escritos por Claude e salvos de `/workflows`; cada arquivo se torna um comando `/<name>` | [Dynamic workflows](/docs/pt/workflows)                                   |
+| [`agent-memory/<name>/`](#ce-agent-memory)          | Projeto e global | ✓         | Memória persistente para subagents                                                                                     | [Memória persistente](/docs/pt/sub-agents#enable-persistent-memory)       |
+| [`~/.claude.json`](#ce-claude-json)                 | Apenas global    |           | Estado da aplicação, OAuth, toggles de UI, servidores MCP pessoais                                                     | [Configuração global](/docs/pt/settings-reference#global-config-settings) |
+| [`projects/<project>/memory/`](#ce-global-projects) | Apenas global    |           | Auto memory: notas de Claude para si mesmo entre sessões                                                               | [Auto memory](/docs/pt/memory#auto-memory)                                |
+| [`keybindings.json`](#ce-keybindings)               | Apenas global    |           | Atalhos de teclado personalizados                                                                                      | [Keybindings](/docs/pt/keybindings)                                       |
+| [`themes/*.json`](#ce-themes)                       | Apenas global    |           | Temas de cores personalizados                                                                                          | [Temas personalizados](/docs/pt/terminal-config#create-a-custom-theme)    |
+
+<h2 id="frontmatter-fields-by-file">
+  Campos de frontmatter por arquivo
+</h2>
+
+Skills, arquivos de comando, subagentes, estilos de saída e regras leem sua configuração do YAML [frontmatter](/docs/pt/glossary#frontmatter) no topo do arquivo, e cada um aceita seu próprio conjunto de campos. Esta tabela lista os nomes dos campos para cada arquivo e vincula à referência que os descreve.
+
+| Arquivo                  | Campos de frontmatter                                                                                                                                                                                                                                                         | Referência                                                              |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| `skills/<name>/SKILL.md` | `name`, `description`, `when_to_use`, `argument-hint`, `arguments`, `disable-model-invocation`, `user-invocable`, `allowed-tools`, `disallowed-tools`, `model`, `effort`, `context`, `agent`, `background`, `hooks`, `paths`, `shell`, `metadata`, `license`, `compatibility` | [Frontmatter de skill](/docs/pt/skills#frontmatter-reference)                |
+| `commands/*.md`          | Os campos de skill exceto `name` e `paths`                                                                                                                                                                                                                                    | [Frontmatter de skill](/docs/pt/skills#frontmatter-reference)                |
+| `agents/*.md`            | `name`, `description`, `tools`, `disallowedTools`, `model`, `permissionMode`, `maxTurns`, `skills`, `mcpServers`, `hooks`, `memory`, `background`, `effort`, `isolation`, `color`, `initialPrompt`, `omitClaudeMd`, `experimental`                                            | [Frontmatter de subagente](/docs/pt/sub-agents#supported-frontmatter-fields) |
+| `output-styles/*.md`     | `name`, `description`, `keep-coding-instructions`, `force-for-plugin`                                                                                                                                                                                                         | [Frontmatter de estilo de saída](/docs/pt/output-styles#frontmatter)         |
+| `rules/*.md`             | `paths`                                                                                                                                                                                                                                                                       | [Frontmatter de regra](/docs/pt/memory#rules-frontmatter-reference)          |
+
+Agentes fornecidos em um [plugin](/docs/pt/plugins/components#agents) honram um subconjunto dos campos de subagente.
 
 <h2 id="troubleshoot-configuration">
   Solucione problemas de configuração
@@ -1524,66 +1541,96 @@ Se uma configuração, hook ou arquivo não está tendo efeito, veja [Debug your
   Dados da aplicação
 </h2>
 
-Além da configuração que você cria, `~/.claude` contém dados que Claude Code escreve durante sessões. Esses arquivos são texto simples. Qualquer coisa que passa por uma ferramenta aterrissa em uma transcrição no disco: conteúdo de arquivos, saída de comando, texto colado.
+Além da configuração que você cria, `~/.claude` contém dados que Claude Code escreve durante as sessões. Esses arquivos são texto simples. Qualquer coisa que passa por uma ferramenta é escrita em uma transcrição no disco: conteúdo de arquivos, saída de comandos, texto colado.
 
 <h3 id="cleaned-up-automatically">
-  Limpos automaticamente
+  Limpeza automática
 </h3>
 
-Arquivos nos caminhos abaixo são deletados na inicialização uma vez que têm mais de [`cleanupPeriodDays`](/docs/pt/settings#available-settings). O padrão é 30 dias.
+Claude Code deleta os arquivos nos caminhos abaixo uma vez que tenham mais de [`cleanupPeriodDays`](/docs/pt/settings-reference#cleanupperioddays) de idade, desde que possa determinar com segurança o período de retenção. O padrão é 30 dias e o mínimo é 1; definir `0` falha com um erro de validação. O mesmo limite de idade se aplica à remoção automática de [worktrees órfãs](/docs/pt/worktrees#clean-up-subagent-and-background-session-worktrees).
 
-| Caminho sob `~/.claude/`                     | Conteúdo                                                                                                                                                                                                                                                                                        |
-| -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `projects/<project>/<session>.jsonl`         | Transcrição de conversa completa: cada mensagem, chamada de ferramenta e resultado de ferramenta                                                                                                                                                                                                |
-| `projects/<project>/<session>/subagents/`    | Transcrições de conversa de [subagent](/docs/pt/sub-agents), removidas com a transcrição de sessão pai quando envelhecem                                                                                                                                                                             |
-| `projects/<project>/<session>/tool-results/` | Grandes saídas de ferramentas derramadas em arquivos separados                                                                                                                                                                                                                                  |
-| `file-history/<session>/`                    | Snapshots pré-edição de arquivos que Claude alterou, usados para [restauração de checkpoint](/docs/pt/checkpointing). Mantém snapshots para os 100 checkpoints mais recentes; arquivos de snapshot que nenhum checkpoint retido referencia são deletados, exceto o primeiro snapshot de cada arquivo |
-| `plans/`                                     | Arquivos de plano escritos durante [plan mode](/docs/pt/permission-modes#analyze-before-you-edit-with-plan-mode)                                                                                                                                                                                     |
-| `debug/`                                     | Logs de debug por sessão, escritos apenas quando você inicia com `--debug` ou executa `/debug`                                                                                                                                                                                                  |
-| `paste-cache/`, `image-cache/`               | Conteúdo de pastes grandes e imagens anexadas                                                                                                                                                                                                                                                   |
-| `session-env/`                               | Metadados de ambiente por sessão                                                                                                                                                                                                                                                                |
-| `tasks/`                                     | Listas de tarefas por sessão escritas pelas ferramentas de tarefa                                                                                                                                                                                                                               |
-| `shell-snapshots/`                           | Aliases, funções e opções de shell capturadas na inicialização e aplicadas pela [ferramenta Bash](/docs/pt/tools-reference#bash-tool-behavior) a cada comando. Removido na saída limpa. A limpeza remove qualquer um deixado após um crash.                                                          |
-| `backups/`                                   | Cópias com timestamp de `~/.claude.json` tiradas antes de migrações de configuração                                                                                                                                                                                                             |
-| `feedback-bundles/`                          | Arquivos de transcrição reduzidos escritos por `/feedback` em provedores de terceiros ou quando nenhuma credencial Anthropic está configurada, para enviar à sua equipe de conta Anthropic                                                                                                      |
-| `todos/`, `statsig/`, `logs/`                | Diretórios legados de versões mais antigas. Não mais escritos. A limpeza remove seu conteúdo e depois o diretório vazio.                                                                                                                                                                        |
+| Caminho sob `~/.claude/`                                                                                                        | Conteúdo                                                                                                                                                                                                                                                                                                                                                       |
+| ------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `projects/<project>/<session>.jsonl`                                                                                            | Transcrição completa da conversa: cada mensagem, chamada de ferramenta e resultado de ferramenta                                                                                                                                                                                                                                                               |
+| `projects/<project>/<session>.orphaned-<timestamp>-<suffix>.jsonl`, `projects/<project>/<session>.jsonl.superseded-<timestamp>` | Uma transcrição anterior da sessão que Claude Code separou em vez de sobrescrever ou deletar. Não aparece no seletor de sessão                                                                                                                                                                                                                                 |
+| `projects/<project>/<session>/subagents/`                                                                                       | Transcrições de conversa de [Subagent](/docs/pt/sub-agents), removidas com a transcrição da sessão pai quando envelhece                                                                                                                                                                                                                                             |
+| `projects/<project>/<session>/tool-results/`                                                                                    | Grandes saídas de ferramentas derramadas em arquivos separados                                                                                                                                                                                                                                                                                                 |
+| `file-history/<session>/`                                                                                                       | Snapshots pré-edição de arquivos que Claude alterou, usados para [restauração de checkpoint](/docs/pt/checkpointing). Contém snapshots dos 100 checkpoints mais recentes; arquivos de snapshot que nenhum checkpoint retido referencia são deletados, exceto o primeiro snapshot de cada arquivo                                                                    |
+| `plans/`                                                                                                                        | Arquivos de plano escritos durante [plan mode](/docs/pt/permission-modes#analyze-before-you-edit-with-plan-mode)                                                                                                                                                                                                                                                    |
+| `debug/`                                                                                                                        | Logs de debug por sessão, escritos enquanto o debug logging está ativado, como quando você inicia com [`--debug`](/docs/pt/cli-reference#cli-flags) ou executa `/debug`                                                                                                                                                                                             |
+| `paste-cache/`                                                                                                                  | Conteúdo de grandes colagens                                                                                                                                                                                                                                                                                                                                   |
+| `image-cache/<session>/`                                                                                                        | Imagens anexadas salvas por Claude Code v2.1.274 e anteriores. Versões posteriores salvam imagens coladas e anexadas fora de `~/.claude`, em um diretório `images/` para cada sessão sob o diretório temporário que [`CLAUDE_CODE_TMPDIR`](/docs/pt/env-vars) controla. A varredura remove diretórios restantes de outras sessões aqui, independentemente da idade. |
+| `uploads/<session>/`                                                                                                            | Arquivos que você anexa da web ou do aplicativo móvel, e fotos que você anexa do aplicativo móvel, ao enviar mensagens para uma sessão de [Remote Control](/docs/pt/remote-control). Um anexo a uma [sessão em nuvem](/docs/pt/claude-code-on-the-web) é salvo no próprio ambiente em nuvem dessa sessão, não na sua máquina.                                            |
+| `session-env/`                                                                                                                  | Metadados de ambiente por sessão                                                                                                                                                                                                                                                                                                                               |
+| `tasks/`                                                                                                                        | Listas de tarefas escritas pelas ferramentas de tarefa, um diretório por lista                                                                                                                                                                                                                                                                                 |
+| `shell-snapshots/`                                                                                                              | Aliases, funções e opções de shell capturadas na inicialização e aplicadas pela [ferramenta Bash](/docs/pt/tools-reference#bash-tool-behavior) a cada comando. Removidas na saída limpa. A varredura limpa qualquer uma deixada após um crash.                                                                                                                      |
+| `backups/`                                                                                                                      | Versões anteriores de `~/.claude.json`, copiadas quando Claude Code reescreve o arquivo. Claude Code mantém as cinco mais novas, mais uma cópia de qualquer versão que não conseguiu analisar.                                                                                                                                                                 |
+| `feedback-bundles/`                                                                                                             | Arquivos de transcrição reduzidos escritos por `/feedback` em provedores de terceiros ou quando nenhuma credencial Anthropic está configurada, para enviar à sua equipe de conta Anthropic                                                                                                                                                                     |
+| `feedback/drafts/`                                                                                                              | [Feedback redigido por Claude](/docs/pt/tools-reference#sendfeedback-tool-behavior) enfileirado aguardando sua revisão em `/feedback`. Varrido após `cleanupPeriodDays` ou 30 dias, o que for menor. Quando a fila está no seu limite de 10 rascunhos, Claude Code deleta o rascunho mais antigo para liberar espaço.                                               |
+| `usage-data/`                                                                                                                   | `report.html` e cópias de relatório com timestamp escritas por [`/insights`](/docs/pt/costs#analyze-your-usage-patterns), mais dados de análise em cache por sessão usados para construí-los                                                                                                                                                                        |
+| `skills/.trash/`, `plugins/.trash/`                                                                                             | [Skills](/docs/pt/skills#how-synced-skills-behave) e [plugins](/docs/pt/plugins/loading#synced-plugins) que a sincronização de claude.ai removeu, como depois que você desativa um em claude.ai ou para de sincronizar. Os arquivos ficam aqui para que você possa recuperá-los até a varredura deletá-los                                                               |
+| `todos/`, `statsig/`, `logs/`                                                                                                   | Diretórios legados de versões mais antigas. Não são mais escritos. A varredura remove seu conteúdo e depois o diretório vazio.                                                                                                                                                                                                                                 |
+
+Arquivos de sessão em `sessions/`, memória automática, e transcrições de Claude Desktop e Cowork seguem cada uma sua própria regra de retenção:
+
+* **`sessions/`**: contém um pequeno arquivo por sessão em execução, usado para detectar sessões simultâneas e crashes. Não faz parte da varredura baseada em idade: Claude Code remove cada arquivo quando sua sessão sai e limpa resíduos de crash no próximo lançamento.
+* **Memória automática**: a varredura não deleta os arquivos de memória no diretório de [memória automática](/docs/pt/memory#auto-memory) de um projeto, `projects/<project>/memory/`. Claude Code remove esse diretório apenas se ele esteve vazio durante todo o período de retenção. Antes da v2.1.228, a varredura tratava pastas dentro do diretório de memória como dados de sessão e podia deletar arquivos antigos sob ele.
+* **Transcrições de Claude Desktop e Cowork**: Claude Code mantém a transcrição de uma sessão que você iniciou ou continuou mais recentemente em Claude Desktop ou Cowork em qualquer idade. Para dar a essas transcrições um limite de idade, defina [`desktopSessionCleanupPeriodDays`](/docs/pt/settings-reference#desktopsessioncleanupperioddays). Quando [configurações gerenciadas](/docs/pt/managed-settings) definem `cleanupPeriodDays`, Claude Code deleta essas transcrições após esse período em vez disso. Requer Claude Code v2.1.248 ou posterior; versões anteriores as deletam após `cleanupPeriodDays`.
+
+Claude Code pula a varredura baseada em idade nestes casos:
+
+* **Modo bare**: quando você executa `claude -p` com [`--bare`](/docs/pt/headless#start-faster-with-bare-mode), Claude Code não executa a varredura nessa sessão.
+* **Varredura pausada**: se Claude Code não conseguir determinar com segurança o período de retenção, ele pausa a varredura de limpeza de retenção; o [evento `retention_sweep`](/docs/pt/monitoring-usage#retention-sweep-event) lista cada configuração que a pausa. Quando a causa é um arquivo de configurações que não pode ser lido ou analisado, ou erros de configurações com `cleanupPeriodDays` ou `desktopSessionCleanupPeriodDays` explicitamente definidos, Claude Code também mostra um aviso em `/status` até você corrigir os erros de configurações. Quando [configurações gerenciadas](/docs/pt/server-managed-settings) fornecem `cleanupPeriodDays`, Claude Code executa a varredura no valor gerenciado em qualquer caso.
 
 <h3 id="kept-until-you-delete-them">
-  Mantidos até você deletá-los
+  Mantido até você deletar
 </h3>
 
-Os caminhos a seguir não são cobertos pela limpeza automática e persistem indefinidamente.
+A varredura de limpeza de retenção não remove os caminhos abaixo. Claude Code os mantém até você deletá-los, além dos dois caches que deleta quando você faz logout.
 
-| Caminho sob `~/.claude/` | Conteúdo                                                                                                                                                                                               |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `history.jsonl`          | Cada prompt que você digitou, com timestamp e caminho do projeto. Usado para recall de seta para cima.                                                                                                 |
-| `stats-cache.json`       | Contagens agregadas de token e custo mostradas por `/usage`                                                                                                                                            |
-| `remote-settings.json`   | Cópia em cache de [configurações gerenciadas pelo servidor](/docs/pt/server-managed-settings) para sua organização. Presente apenas quando sua organização as configurou. Atualizado em cada inicialização. |
+| Caminho sob `~/.claude/` | Conteúdo                                                                                                                                                                                                                                                                                                                                                                                               |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `history.jsonl`          | Cada prompt que você digitou, com timestamp e caminho do projeto. Usado para recall de seta para cima, busca de histórico `Ctrl+R` e conclusão de comando shell `!`.                                                                                                                                                                                                                                   |
+| `stats-cache.json`       | Contagens agregadas de token e custo mostradas por `/usage`                                                                                                                                                                                                                                                                                                                                            |
+| `remote-settings.json`   | Cópia em cache de [configurações gerenciadas pelo servidor](/docs/pt/server-managed-settings) para sua organização, ou `{}` quando sua organização não configurou nenhuma. Presente apenas quando a sessão as [busca](/docs/pt/server-managed-settings#platform-availability). Claude Code verifica atualizações na inicialização e a cada hora durante uma sessão. Claude Code a deleta quando você faz logout. |
+| `cache/changelog.md`     | Cópia em cache do changelog de Claude Code, mostrada por `/release-notes`. Atualizada em segundo plano.                                                                                                                                                                                                                                                                                                |
+| `policy-limits.json`     | Configurações de política de recursos em cache para sua organização. Presente apenas para alguns tipos de conta. Atualizada automaticamente. Um sidecar `policy-limits.json.stamp.json` registra qual conta ou chave de API o cache pertence. Claude Code deleta ambos os arquivos quando você faz logout.                                                                                             |
 
-Outros arquivos pequenos de cache e lock aparecem dependendo de quais recursos você usa e são seguros para deletar.
+<span id="state-files-to-keep" />
+
+Outros arquivos aparecem dependendo de quais recursos você usa. Caches e arquivos de lock são seguros para deletar. Mantenha esses arquivos de estado:
+
+* `.credentials.json`: suas [credenciais de login](/docs/pt/authentication#credential-management)
+* `agent-memory/`: [memória de subagent](/docs/pt/sub-agents#enable-persistent-memory)
+* `jobs/` e `daemon/`: estado de [sessão em segundo plano](/docs/pt/agent-view#where-state-is-stored)
 
 <h3 id="plaintext-storage">
   Armazenamento em texto simples
 </h3>
 
-Transcrições e histórico não são criptografados em repouso. Permissões de arquivo do SO são a única proteção. Se uma ferramenta lê um arquivo `.env` ou um comando imprime uma credencial, esse valor é escrito em `projects/<project>/<session>.jsonl`. Para reduzir exposição:
+Transcrições e histórico não são criptografados em repouso. As permissões de arquivo do SO são a única proteção. Se uma ferramenta ler um arquivo `.env` ou um comando imprimir uma credencial, esse valor é escrito em `projects/<project>/<session>.jsonl`. Para reduzir a exposição:
 
-* Diminua `cleanupPeriodDays` para encurtar quanto tempo as transcrições são mantidas
-* Defina a variável de ambiente [`CLAUDE_CODE_SKIP_PROMPT_HISTORY`](/docs/pt/env-vars) para pular a escrita de transcrições e histórico de prompts em qualquer modo. Em modo não-interativo, você pode passar `--no-session-persistence` junto com `-p`, ou definir `persistSession: false` no Agent SDK.
-* Use [regras de permissão](/docs/pt/permissions) para negar leituras de arquivos de credencial
+* Reduza `cleanupPeriodDays` para encurtar quanto tempo Claude Code mantém transcrições
+* Defina [`desktopSessionCleanupPeriodDays`](/docs/pt/settings-reference#desktopsessioncleanupperioddays) para dar também um limite de idade às transcrições de Claude Desktop e Cowork
+* Defina a variável de ambiente [`CLAUDE_CODE_SKIP_PROMPT_HISTORY`](/docs/pt/env-vars) para pular a escrita de transcrições e histórico de prompt em qualquer modo. Em modo não interativo, você pode passar `--no-session-persistence` junto com `-p`, ou definir `persistSession: false` no TypeScript Agent SDK; o Python SDK não tem opção equivalente.
+* Use [regras de permissão](/docs/pt/permissions) para negar leituras de arquivos de credenciais
 
 <h3 id="clear-local-data">
   Limpar dados locais
 </h3>
 
-Execute `claude project purge` para deletar o estado que Claude Code mantém para um projeto. O comando requer Claude Code v2.1.124 ou posterior. Ele deleta:
+Execute `claude project purge` para deletar o estado que Claude Code mantém para um projeto. Deleta:
 
 * Transcrições e memória automática sob `projects/`
-* Entradas por sessão de `tasks/`, `debug/` e `file-history/`
+* Entradas de `tasks/`, `debug/` e `file-history/` por sessão
 * Linhas de prompt correspondentes em `history.jsonl`
 * A entrada do projeto em `~/.claude.json`
 
-O comando imprime o plano de exclusão completo e pede confirmação antes de remover qualquer coisa.
+Imagens que você colou ou anexou nas sessões do projeto são armazenadas sob o diretório temporário de Claude Code em vez de `~/.claude`, então a limpeza não as remove. A [varredura de retenção](#cleaned-up-automatically) as deleta uma vez que tenham mais de `cleanupPeriodDays` de idade.
+
+O comando imprime o plano completo de exclusão e pede confirmação antes de remover qualquer coisa.
+
+Os exemplos abaixo usam `~/work/my-repo` como um espaço reservado. Substitua-o pelo caminho para seu projeto. Se nenhum estado corresponder ao caminho, o comando imprime um erro e sai com status 1.
 
 Visualize o plano sem deletar nada:
 
@@ -1591,11 +1638,30 @@ Visualize o plano sem deletar nada:
 claude project purge ~/work/my-repo --dry-run
 ```
 
+O plano lista cada item correspondente e por que está incluído:
+
+```text theme={null}
+Purge plan for /home/user/work/my-repo:
+
+  dir:    /home/user/.claude/projects/-home-user-work-my-repo
+           project transcripts (.jsonl) and memory/
+  config: projects["/home/user/work/my-repo"]
+           project entry in ~/.claude.json (trust, history, MCP servers)
+  filter: /home/user/.claude/history.jsonl
+           12 prompt(s) typed in this project
+
+shell-snapshots/ are not project-scoped and will not be touched
+backups/ may still contain this project entry in old .claude.json snapshots (/home/user/.claude/backups); at most 5 are kept and they rotate out automatically
+Dry run: 3 item(s) would be deleted.
+```
+
 Delete com um único prompt de confirmação:
 
 ```bash theme={null}
 claude project purge ~/work/my-repo
 ```
+
+O comando imprime o mesmo plano, depois pergunta `Delete 3 item(s) for /home/user/work/my-repo? This cannot be undone. [y/N]` e deleta apenas se você responder `y`.
 
 Omita o caminho para escolher um projeto de uma lista interativa.
 
@@ -1605,23 +1671,32 @@ Pule o prompt de confirmação para uso em scripts:
 claude project purge ~/work/my-repo --yes
 ```
 
-Passe `--all` em vez de um caminho para limpar o estado de todos os projetos de uma vez, o que deleta `history.jsonl` completamente em vez de filtrá-lo. Passe `-i` para percorrer o plano de exclusão um item por vez.
+Passe `--all` em vez de um caminho para limpar o estado de cada projeto de uma vez, o que deleta `history.jsonl` completamente em vez de filtrá-lo. Passe `-i` para percorrer o plano de exclusão um item por vez.
 
-O comando deixa `shell-snapshots/` e `backups/` sozinhos porque esses não têm escopo de projeto, e avisa sobre eles na saída do plano. Ele sai com status 1 se nenhum estado corresponder ao caminho fornecido.
+O comando deixa `shell-snapshots/` e `backups/` sozinhos porque não têm escopo de projeto, e avisa sobre eles na saída do plano.
 
-Você também pode deletar qualquer um dos caminhos de dados da aplicação acima manualmente. Novas sessões não são afetadas. A tabela abaixo mostra o que você perde para sessões passadas.
+Você também pode deletar qualquer um dos caminhos de dados da aplicação acima manualmente, além dos [arquivos de estado para manter](#state-files-to-keep). Novas sessões não são afetadas. A tabela abaixo mostra o que você perde para sessões passadas.
 
-| Deletar                                                                                                                                                                                      | Você perde                                                |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
-| `~/.claude/projects/`                                                                                                                                                                        | Resume, continue e rewind para sessões passadas           |
-| `~/.claude/history.jsonl`                                                                                                                                                                    | Recall de prompt de seta para cima                        |
-| `~/.claude/file-history/`                                                                                                                                                                    | Restauração de checkpoint para sessões passadas           |
-| `~/.claude/stats-cache.json`                                                                                                                                                                 | Totais históricos mostrados por `/usage`                  |
-| `~/.claude/remote-settings.json`                                                                                                                                                             | Nada. Re-buscado na próxima inicialização.                |
-| `~/.claude/debug/`, `~/.claude/plans/`, `~/.claude/paste-cache/`, `~/.claude/image-cache/`, `~/.claude/session-env/`, `~/.claude/tasks/`, `~/.claude/shell-snapshots/`, `~/.claude/backups/` | Nada voltado para o usuário                               |
-| `~/.claude/todos/`, `~/.claude/statsig/`, `~/.claude/logs/`                                                                                                                                  | Nada. Diretórios legados não escritos por versões atuais. |
+| Deletar                                                                                                              | Você perde                                                                                                                                                              |
+| -------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `~/.claude/projects/`                                                                                                | Retomar, continuar e retroceder para sessões passadas, e memória automática para cada projeto                                                                           |
+| `~/.claude/history.jsonl`                                                                                            | Recall de prompt com seta para cima, busca de histórico `Ctrl+R` e conclusão de comando shell `!`                                                                       |
+| `~/.claude/paste-cache/`                                                                                             | Texto colado em prompts recuperados; veja [colar conteúdo grande](/docs/pt/terminal-config#paste-large-content)                                                              |
+| `~/.claude/uploads/`                                                                                                 | Anexos que sessões passadas de [Remote Control](/docs/pt/remote-control) referem por caminho                                                                                 |
+| `~/.claude/file-history/`                                                                                            | Restauração de checkpoint para sessões passadas                                                                                                                         |
+| `~/.claude/stats-cache.json`                                                                                         | Totais históricos mostrados por `/usage`                                                                                                                                |
+| `~/.claude/usage-data/`                                                                                              | Relatórios passados de [`/insights`](/docs/pt/costs#analyze-your-usage-patterns) e os dados de análise em cache usados para construí-los                                     |
+| `~/.claude/feedback-bundles/`                                                                                        | Feedback e arquivos de relatório de bug que você ainda não enviou à sua equipe de conta Anthropic                                                                       |
+| `~/.claude/feedback/drafts/`                                                                                         | [Feedback redigido por Claude](/docs/pt/tools-reference#sendfeedback-tool-behavior) que você não enviou                                                                      |
+| `~/.claude/remote-settings.json`                                                                                     | Nada. Re-buscado no próximo lançamento.                                                                                                                                 |
+| `~/.claude/cache/changelog.md`                                                                                       | Nada. Atualizado em segundo plano.                                                                                                                                      |
+| `~/.claude/policy-limits.json`                                                                                       | Nada. Atualizado automaticamente.                                                                                                                                       |
+| `~/.claude/tasks/`                                                                                                   | Listas de tarefas que uma sessão retomada pegaria                                                                                                                       |
+| `~/.claude/skills/.trash/`, `~/.claude/plugins/.trash/`                                                              | A chance de recuperar [skills sincronizadas](/docs/pt/skills#how-synced-skills-behave) e [plugins sincronizados](/docs/pt/plugins/loading#synced-plugins) que Claude Code removeu |
+| `~/.claude/debug/`, `~/.claude/plans/`, `~/.claude/session-env/`, `~/.claude/shell-snapshots/`, `~/.claude/backups/` | Nada voltado para o usuário                                                                                                                                             |
+| `~/.claude/todos/`, `~/.claude/statsig/`, `~/.claude/logs/`, `~/.claude/image-cache/`                                | Nada. Diretórios legados não escritos pelas versões atuais.                                                                                                             |
 
-Não delete `~/.claude.json`, `~/.claude/settings.json` ou `~/.claude/plugins/`: esses contêm sua autenticação, preferências e plugins instalados.
+Não delete `~/.claude.json`, `~/.claude/settings.json` ou `~/.claude/plugins/`: esses mantêm sua autenticação, preferências e plugins instalados.
 
 <h2 id="related-resources">
   Recursos relacionados

@@ -4,7 +4,7 @@
 
 # Claude Code hinter einem Corporate Launcher ausführen
 
-> Leiten Sie die Prozesse, die Claude Code von seiner eigenen Binärdatei aus startet, einschließlich des Hintergrunddienstes und jeder Agent-View-Sitzung, durch einen erforderlichen Launcher mit CLAUDE_CODE_PROCESS_WRAPPER.
+> Leiten Sie die Prozesse, die Claude Code von seiner eigenen Binärdatei aus startet, einschließlich des Hintergrunddienstes und jeder Agent-View-Sitzung, durch einen erforderlichen Launcher mit CLAUDE_CODE_PROCESS_WRAPPER oder der processWrapper-Einstellung.
 
 Einige Organisationen erfordern, dass jeder Prozess auf einer Workstation durch einen obligatorischen Launcher gestartet wird. Der Launcher wendet die Sandbox, Netzwerkkontrollen oder Credential-Injection an, auf die die Sicherheitsposition des Unternehmens angewiesen ist, und eine Binärdatei, die ohne diese startet, ist ein Verstoß gegen die Richtlinie.
 
@@ -13,7 +13,9 @@ Einige Organisationen erfordern, dass jeder Prozess auf einer Workstation durch 
 Ein Launcher, der den `claude`-Befehl auf Ihrem `PATH` umhüllt, kann diese Prozesse nicht erreichen, da sie vom direkten Pfad der Binärdatei aus starten, ohne `claude` nachzuschlagen.
 
 <Note>
-  `CLAUDE_CODE_PROCESS_WRAPPER` erfordert Claude Code v2.1.208 oder später. Frühere Versionen ignorieren die Variable und starten jeden Prozess ohne Umhüllung.
+  `CLAUDE_CODE_PROCESS_WRAPPER` erfordert Claude Code v2.1.208 oder später. Frühere Versionen ignorieren die Variable und starten jeden Prozess ohne Umhüllung. Die entsprechende [`processWrapper`-Einstellung](/docs/de/settings-reference#processwrapper) erfordert v2.1.210 oder später. Frühere Versionen ignorieren sie als unbekannten Schlüssel, wenden keinen Launcher an und melden keinen Fehler.
+
+  Verwenden Sie nach der Bereitstellung einer der beiden Formen den [Verify-Schritt](#set-up-the-launcher), um zu bestätigen, dass die ausgeführte Version sie anwendet.
 </Note>
 
 <h2 id="what-the-launcher-covers">
@@ -26,24 +28,28 @@ Mit `CLAUDE_CODE_PROCESS_WRAPPER` gesetzt startet Claude Code jeden der folgende
 * Der Terminal-Host und die Claude-Code-Sitzung in jeder Agent-View-Zeile, einschließlich der Warm-Standby-Sitzungen, die der Dienst bereit hält.
 * Sitzungen, die der Dienst nach einem Update oder Absturz neu startet.
 * Der Neustart, den Claude Code durchführt, um die Installation eines Updates abzuschließen, einschließlich der Restart-for-Update-Aktion von Agent View.
+* Die Sitzungsprozesse, die [Remote Control](/docs/de/remote-control) startet. Erfordert Claude Code v2.1.210 oder später.
+* Die Split-Pane-Teammate-Sitzungen, die [Agent Teams](/docs/de/agent-teams) in tmux oder iTerm2 starten. Teammate-Panes sind interaktiv statt Hintergrund­prozesse, aber Claude Code startet sie aus seiner eigenen Binärdatei, daher deckt der Launcher sie ab. Erfordert Claude Code v2.1.210 oder später.
 
-Unter Windows wird die Variable ignoriert: Der Launcher-Vertrag hängt von `exec` ab, das Windows nicht unterstützt. Ein Windows-Computer mit der gesetzten Variable führt jeden Prozess ohne Umhüllung aus und funktioniert weiterhin, und das einzige Signal ist eine Warnung im [Debug-Protokoll](/docs/de/troubleshooting). Wenn Ihre Launcher-Richtlinie Windows abdeckt, erfüllt die Variable sie dort nicht: Zählen Sie Windows-Computer als nicht umhüllt, wenn Sie den Rollout planen.
+Unter Windows wird die Variable ignoriert: Der Launcher-Vertrag hängt von `exec` ab, das Windows nicht unterstützt. Ein Windows-Computer mit der gesetzten Variable führt jeden Prozess unwrapped aus und funktioniert weiterhin, und das einzige Signal ist eine Warnung im [Debug-Protokoll](/docs/de/troubleshooting). Wenn Ihre Launcher-Richtlinie Windows abdeckt, erfüllt die Variable sie dort nicht: Zählen Sie Windows-Computer als unwrapped, wenn Sie den Rollout planen.
 
 <h3 id="processes-that-start-outside-the-launcher">
   Prozesse, die außerhalb des Launchers starten
 </h3>
 
-Drei Prozesse starten niemals durch den Launcher:
+Die folgenden Prozesse starten nicht durch den Launcher:
 
-* Ein [installierter Hintergrund­dienst](/docs/de/agent-view#the-supervisor-process): `launchd` oder `systemd` startet diesen Prozess aus seiner Unit-Datei. `/status` und `claude daemon status` warnen, wenn dies zutrifft, und die Sitzungen, die der Dienst startet, starten immer noch durch den Launcher, sobald der Dienst mit der Variable in seinen Einstellungen neu startet.
-* Eine Sitzung, die Sie selbst in einem Terminal starten, die so ausgeführt wird, wie Sie sie aufgerufen haben. Um diese Sitzungen abzudecken, legen Sie ein Skript namens `claude` in ein Verzeichnis früher auf `PATH`, das Ihren Launcher mit der echten Binärdatei ausführt; ersetzen Sie nicht den verwalteten Symlink. Self-Spawns konsultieren nicht `PATH`, daher stapeln sich die beiden Launcher nie.
+* Ein [installierter Hintergrund­dienst](/docs/de/agent-view#the-supervisor-process), dessen Unit vor der Launcher-Konfiguration geschrieben wurde: `launchd` oder `systemd` startet diesen Prozess aus seiner Unit-Datei. `/status` und `claude daemon status` warnen, wenn der laufende Dienst und der konfigurierte Launcher nicht übereinstimmen, und die Sitzungen, die der Dienst startet, starten immer noch durch den Launcher, sobald der Dienst mit der Variable in seinen Einstellungen neu startet.
+* Eine Sitzung, die Sie selbst in einem Terminal starten, die so ausgeführt wird, wie Sie sie aufgerufen haben. Um diese Sitzungen abzudecken, legen Sie ein Skript namens `claude` in ein Verzeichnis früher auf `PATH`, das Ihren Launcher mit der echten Binärdatei ausführt; ersetzen Sie nicht den verwalteten Symlink. Der Hintergrund­dienst und seine Sitzungen starten ohne `PATH`-Lookup, daher stapeln sich die beiden Launcher dort nicht.
 * Der erste Prozess eines `claude-cli://` Deep Links, den der Protokoll-Handler des Betriebssystems direkt startet. Alles, das diese Sitzung danach im Hintergrund startet, läuft durch den Launcher. Um diesen Pfad vollständig zu schließen, [verhindern Sie die Handler-Registrierung](/docs/de/deep-links#registration-and-supported-platforms) mit der Einstellung `disableDeepLinkRegistration`.
+* Der Neustart, den `--worktree` kombiniert mit `--tmux` durchführt: Der Terminal-Multiplexer startet diesen Pane, nicht die Binärdatei von Claude Code.
+* Der Native-Messaging-Host, den [Claude in Chrome](/docs/de/chrome) registriert: Der Browser startet ihn, nicht die Binärdatei von Claude Code.
 
 <h3 id="helper-process-names-in-process-monitors">
   Namen von Hilfsprozessen in Prozessmonitoren
 </h3>
 
-Mit einem konfigurierten Launcher zeigen `ps` und Activity Monitor den versionierten Binärnamen für die Hintergrund-Hilfsprozesse anstelle von Claude Codes `claude bg-pty-host` und `claude bg-spare` Labels an, da der `exec` des Launchers die Argumentliste neu erstellt. Die Umbenennung ist ein Nebeneffekt, keine Verschleierung: Die Prozesse sind ansonsten unverändert, und Claude Code identifiziert seine eigenen Prozesse nach Binärpfad, niemals nach Anzeigename.
+Mit einem konfigurierten Launcher zeigen `ps` und Activity Monitor keine Claude-Code-Labels `claude bg-pty-host` und `claude bg-spare` mehr für die Hintergrund-Hilfsprozesse an, da der `exec` des Launchers die Argumentliste neu erstellt. Das Verlieren der Labels ist ein Nebeneffekt, keine Verschleierung: Die Prozesse sind ansonsten unverändert, und Claude Code identifiziert seine eigenen Prozesse nach Binärpfad, niemals nach Anzeigename.
 
 <h2 id="set-up-the-launcher">
   Richten Sie den Launcher ein
@@ -70,7 +76,7 @@ Mit einem konfigurierten Launcher zeigen `ps` und Activity Monitor den versionie
   <Step title="Setzen Sie CLAUDE_CODE_PROCESS_WRAPPER in den Einstellungen">
     Setzen Sie die Variable im `env`-Block einer Einstellungsdatei, damit der abgelöste Hintergrund­dienst sie erbt. Ein Shell-`export` reicht nicht aus: Der Hintergrund­dienst startet bei Bedarf, überlebt Ihre Shell und liest Shell-Profile nie erneut.
 
-    Für einen Computer fügen Sie es zu `~/.claude/settings.json` hinzu. Um es auf jedem Computer in Ihrer Organisation bereitzustellen, legen Sie denselben Block in [verwaltete Einstellungen](/docs/de/permissions#managed-settings):
+    Für einen Computer fügen Sie es zu `~/.claude/settings.json` hinzu. Um es auf jedem Computer in Ihrer Organisation bereitzustellen, legen Sie denselben Block in [verwaltete Einstellungen](/docs/de/managed-settings):
 
     ```json theme={null}
     {
@@ -82,7 +88,19 @@ Mit einem konfigurierten Launcher zeigen `ps` und Activity Monitor den versionie
 
     Wenn mehr als eine Quelle die Variable setzt, überschreibt der Wert der verwalteten Einstellungen sowohl `~/.claude/settings.json` als auch einen in der Shell exportierten Wert, sodass Benutzer Self-Spawns nicht auf einen anderen Launcher verweisen können.
 
-    Projekt- und lokale Einstellungen können diese Variable nicht setzen. Eine Datei, die in ein Repository committed wird, darf nicht in der Lage sein, eine Binärdatei vor jedem Claude-Code-Prozess auf dem Computer zu platzieren, daher wird `CLAUDE_CODE_PROCESS_WRAPPER` in `.claude/settings.json` oder `.claude/settings.local.json` ignoriert, mit einer Warnung im [Debug-Protokoll](/docs/de/troubleshooting).
+    Die [`processWrapper`-Einstellung](/docs/de/settings-reference#processwrapper) trägt denselben Wert wie ein benannter Einstellungsschlüssel auf oberster Ebene. Setzen Sie ihn, wenn Ihre Organisation Einstellungen als einzelne Schlüssel statt als `env`-Block bereitstellt. Die `processWrapper`-Einstellung erfordert Claude Code v2.1.210 oder später. Die folgende Einstellungsdatei setzt denselben Launcher über den Schlüssel:
+
+    ```json theme={null}
+    {
+      "processWrapper": "/opt/corp/launcher"
+    }
+    ```
+
+    `CLAUDE_CODE_PROCESS_WRAPPER` hat Vorrang, wenn beide gesetzt sind.
+
+    Da `processWrapper` eine benannte Einstellung ist, sieht eine Organisation, die sie über [remote verwaltete Einstellungen](/docs/de/managed-settings#delivery-mechanisms) bereitstellt, sie auf dem [Sicherheitsgenehmigungsdialog](/docs/de/server-managed-settings#security-approval-dialogs) neben den anderen Einstellungen aufgelistet, die von Administratoren bereitgestellte ausführbare Dateien ausführen.
+
+    Projekt- und lokale Einstellungen können den Launcher nicht konfigurieren. Eine Datei, die in ein Repository committed wird, darf nicht in der Lage sein, eine Binärdatei vor jedem Claude-Code-Prozess auf dem Computer zu platzieren, daher ignoriert Claude Code `CLAUDE_CODE_PROCESS_WRAPPER` in `.claude/settings.json` oder `.claude/settings.local.json` mit einer Warnung im [Debug-Protokoll](/docs/de/troubleshooting), und liest den `processWrapper`-Schlüssel nie aus diesen Dateien.
   </Step>
 
   <Step title="Starten Sie den Hintergrund­dienst und Ihre Sitzungen neu">
@@ -108,15 +126,14 @@ Wenn der Launcher nicht ausgeführt werden kann, weigert sich Claude Code, den P
   * Die Pro-Sitzungs-Authentifizierungstoken, die Modell- und Anbieterauswahl und `CLAUDE_CODE_PROCESS_WRAPPER` selbst reisen alle in der geerbten Umgebung, daher bricht ein Launcher, der sie aus einer Zulassungsliste neu erstellt, die Sitzungen, die er startet, und `/status` meldet eine Launcher-Nichtübereinstimmung.
   * Wenn der Launcher einen Namespace oder eine Sandbox betreten muss, die die Umgebung zurückgesetzt, exportieren Sie die geerbte Umgebung darin wörtlich erneut.
 * **Erreichen Sie `exec` innerhalb von etwa drei Sekunden jedes Mal, wenn der Launcher ausgeführt wird**. Ein kalter Hintergrund-Dispatch führt den Launcher zweimal hintereinander aus, bevor das erste Byte der Ausgabe, daher führen Sie langsame Arbeiten wie einen Single-Sign-On-Austausch träge oder aus einem Cache durch.
-  * Ein Launcher, der weit über das Budget hinausgeht, wird als stagnierter Start behandelt und neu gestartet.
 * **Tolerieren Sie, dass Sie von innen aufgerufen werden**. Claude Code wendet den Launcher auf jeden verschachtelten Self-Spawn an, daher muss ein Launcher, der eine exklusive Ressource erwirbt, erkennen, dass er sie bereits hält.
 * **Schreiben Sie nicht auf das Terminal, bevor Claude Code startet**. Alles, das vor dem `exec` gedruckt wird, wird als Absturzursache gemeldet, wenn die Sitzung vor der Initialisierung stirbt.
 
-<h3 id="format-of-the-claude_code_process_wrapper-value">
-  Format des `CLAUDE_CODE_PROCESS_WRAPPER`-Wertes
+<h3 id="format-of-the-launcher-value">
+  Format des Launcher-Wertes
 </h3>
 
-Für die meisten Launcher ist der Wert einfach der absolute Pfad des Skripts, z. B. `/opt/corp/launcher`.
+`CLAUDE_CODE_PROCESS_WRAPPER` und die `processWrapper`-Einstellung verwenden das gleiche Format. Für die meisten Launcher ist der Wert der absolute Pfad des Skripts, z. B. `/opt/corp/launcher`.
 
 Um Ihrem Launcher eigene Argumente zu übergeben, schreiben Sie sie nach dem Pfad. Claude Code analysiert den Wert als Argumentliste, nicht als Shell-Befehl:
 

@@ -19,26 +19,26 @@
   既存の設定を確認する
 </h2>
 
-管理者は、[管理設定](/docs/ja/settings#settings-files)、デバイス管理、または [`apiKeyHelper`](#rotate-credentials-with-apikeyhelper) を通じてゲートウェイアドレスと認証情報を配布できるため、Claude Code は起動時にそれらを取得し、設定する必要がありません。組織がすでにこれを行ったかどうかを確認するには：
+管理者は、ゲートウェイアドレスと認証情報を [管理設定](/docs/ja/managed-settings)、デバイス管理、または [`apiKeyHelper`](#rotate-credentials-with-apikeyhelper) を通じて配布できるため、Claude Code は起動時にこれらを自動的に取得します。組織がすでにこれを実施したかどうかを確認するには、以下の手順に従ってください。
 
 <Steps>
   <Step title="Claude Code を起動する">
-    `claude` を実行します。ログイン画面ではなくセッションが開く場合、ゲートウェイ認証情報は配布されていません。以下の[自分で設定](#configure-claude-code-yourself)を参照してください。
+    `claude` を実行してください。セッションではなくログイン画面が開く場合、ゲートウェイ認証情報は配布されていません。以下の [自分で設定](#configure-claude-code-yourself) を参照してください。
   </Step>
 
   <Step title="Status タブを確認する">
-    Claude Code がログイン画面を表示せずにセッションを開始した場合、`/status` を実行し、**Status** タブを開いて、2 つの行を確認します：
+    Claude Code がログイン画面を表示せずにセッションを開始した場合、`/status` を実行して **Status** タブを開き、次の 2 行を確認してください。
 
-    * `Anthropic base URL`：この行はゲートウェイアドレスが設定されている場合にのみ表示されます。ない場合、Claude Code はゲートウェイを指していません。以下の[自分で設定](#configure-claude-code-yourself)を参照してください。
-    * `Auth token` または `API key`：`ANTHROPIC_AUTH_TOKEN`、`ANTHROPIC_API_KEY`、または `apiKeyHelper` という名前の行は、ゲートウェイ認証情報がアクティブであることを確認します。代わりに claude.ai アカウントという名前の `Login method` 行は、認証情報が配布されていないことを意味します。[自分で設定](#set-the-credential-variable)してください。
+    * `Anthropic base URL`: このラインはゲートウェイアドレスが設定されている場合にのみ表示されます。表示されていない場合、Claude Code はゲートウェイを指していません。以下の [自分で設定](#configure-claude-code-yourself) を参照してください。
+    * `Auth token` または `API key`: `ANTHROPIC_AUTH_TOKEN`、`ANTHROPIC_API_KEY`、または `apiKeyHelper` という名前のラインがあれば、ゲートウェイ認証情報がアクティブであることが確認されます。代わりに claude.ai アカウントという名前の `Login method` ラインが表示される場合は、認証情報が配布されていません。[自分で設定](#set-the-credential-variable) してください。
   </Step>
 
   <Step title="テストメッセージを送信する">
-    `/status` メニューを閉じて、Claude Code で任意のプロンプトを送信します。Claude からの通常の応答でエラーがない場合、ゲートウェイ接続が機能していることを確認します。
+    `/status` メニューを閉じて、Claude Code で任意のプロンプトを送信してください。Claude からの通常の応答でエラーがない場合、ゲートウェイ接続が機能していることが確認されます。
   </Step>
 </Steps>
 
-`/status` メニューの両方の行が正しく見えるが、Claude へのメッセージが失敗する場合は、[トラブルシューティングテーブル](#troubleshoot-gateway-errors)を参照してください。
+`/status` メニューの両方のラインが正しく見えるが、Claude へのメッセージが失敗する場合は、[トラブルシューティングテーブル](#troubleshoot-gateway-errors) を参照してください。
 
 <h2 id="configure-claude-code-yourself">
   Claude Code を自分で設定する
@@ -52,7 +52,7 @@ Claude Code をゲートウェイ用に自分で設定するには、ゲート�
 
 以下のセクションは設定を順番にカバーしています：
 
-* [認証情報変数を設定する](#set-the-credential-variable)と[基本 URL を設定する](#set-the-base-url-and-credential)：すべてのゲートウェイ接続に必要な 2 つの変数
+* [認証情報変数を設定する](#set-the-credential-variable)と[基本 URL と認証情報を設定する](#set-the-base-url-and-credential)：すべてのゲートウェイ接続に必要な 2 つの変数
 * [接続を確認する](#verify-the-connection)：何かを永続化する前に機能することを確認します
 * [各サーフェスを設定する](#configure-each-surface)：Claude Code CLI 以外のサーフェス（VS Code など）を使用している場合、ゲートウェイ認証情報で設定する方法を参照してください
 * [追加設定](#additional-configuration)：基本 URL と認証情報を超えて一部のゲートウェイが必要とする変数（カスタムヘッダー、認証情報ヘルパー、モデル検出、プロバイダー形式の基本 URL、またはゲートウェイパス外のトラフィックをオフにするなど）。管理者が名前を付けた場合のみこれらを設定するか、ネットワークが出力を制限します
@@ -65,8 +65,8 @@ Claude Code をゲートウェイに認証するには、環境変数に認証�
 
 | 認証情報を設定する場所                                             | 使用する場合                                                  |
 | :------------------------------------------------------ | :------------------------------------------------------ |
-| `ANTHROPIC_AUTH_TOKEN`                                  | ゲートウェイチームが'bearer token'または'Authorization header'と言った場合 |
-| `ANTHROPIC_API_KEY`                                     | ゲートウェイチームが'API key'または'x-api-key'と言った場合                 |
+| `ANTHROPIC_AUTH_TOKEN`                                  | ゲートウェイチームが「bearer token」または「Authorization header」と言った場合 |
+| `ANTHROPIC_API_KEY`                                     | ゲートウェイチームが「API key」または「x-api-key」と言った場合                 |
 | [`apiKeyHelper`](#rotate-credentials-with-apikeyhelper) | 認証情報がローテーションするか、ボルトから来る場合                               |
 
 どの種類かを指定されなかった場合は、`ANTHROPIC_AUTH_TOKEN` を使用します。以下の[検証リクエスト](#verify-the-connection)は、切り替える必要があるかどうかを判断する方法を示しています。
@@ -101,16 +101,18 @@ Claude Code をゲートウェイに認証するには、環境変数に認証�
   </Tab>
 </Tabs>
 
-シェルエクスポートはそのターミナルセッションと、そこから開始されたプログラムにのみ適用されます。ドックまたはスタートメニューから起動されたエディターはそれらを見ません。新しいターミナル全体で永続化するには、同じ行をシェルプロファイル（`~/.zshrc`、`~/.bashrc`、PowerShell `$PROFILE` など）に追加するか、代わりに設定ファイルを使用してください。
+シェルエクスポートはそのターミナルセッションと、そこから開始されたプログラムにのみ適用されます。ドックまたはスタートメニューから起動されたエディターはそれらを見ません。新しいターミナル全体で値を永続化するには、同じ行をシェルプロファイル（`~/.zshrc`、`~/.bashrc`、PowerShell `$PROFILE` など）に追加してください。
+
+ゲートウェイをシェルのみでエクスポートする場合、[supervisor](/docs/ja/agent-view#how-background-sessions-are-hosted)によってホストされるバックグラウンドエージェントに確実に到達しません。[各バックグラウンドセッションがゲートウェイをどのようにソースするか](/docs/ja/agent-view#llm-gateway)を参照してください。バックグラウンドエージェントが常にルーティングする必要があるゲートウェイには、設定ファイルを使用してください。
 
 <h4 id="set-in-a-settings-file">
   設定ファイルで設定する
 </h4>
 
-Claude Code が実行されるすべての場所で設定を適用し、シェルに依存しないようにするには、[設定ファイル](/docs/ja/settings)の `env` ブロックで変数を設定します。設定ファイルはスコープが異なります：
+Claude Code が実行されるすべての場所で設定を適用し、[バックグラウンドエージェント](/docs/ja/agent-view#how-background-sessions-are-hosted)を含めるには、シェルに依存するのではなく、[設定ファイル](/docs/ja/settings)の `env` ブロックで変数を設定します。設定ファイルはスコープが異なります：
 
 * `~/.claude/settings.json` はすべてのプロジェクトに適用されます。Windows ではパスは `%USERPROFILE%\.claude\settings.json` です
-* `.claude/settings.local.json` は 1 つのプロジェクトに適用されます。Claude Code はファイルを作成するときに gitignore に追加します。自分で作成する場合は、認証情報を誤ってコミットしないように、最初に gitignore に手動で追加してください
+* `.claude/settings.local.json` は 1 つのプロジェクトに適用されます。Claude Code はそこに設定を保存するときに gitignore に追加します。自分で作成する場合または Claude に書かせる場合は、認証情報を誤ってコミットしないように、最初に gitignore に手動で追加してください
 
 <Warning>
   プロジェクトの `.claude/settings.json` に認証情報を入れないでください。このファイルはコミットされ、リポジトリをクローンするすべての人と共有されます。
@@ -284,15 +286,15 @@ steps:
   ```
 </CodeGroup>
 
-<h3 id="slack-web-and-remote-control">
-  Slack、ウェブ、Remote Control
+<h3 id="slack-cloud-sessions-and-remote-control">
+  Slack、クラウドセッション、Remote Control
 </h3>
 
-[Slack の Claude Code](/docs/ja/slack) と [ウェブの Claude Code](/docs/ja/claude-code-on-the-web) は、Anthropic がホストする製品で、常に Anthropic の API を使用します。ゲートウェイデプロイメントの一部ではありません。クラウドセッションの環境設定で設定されたゲートウェイ変数は適用されません。トラフィックがゲートウェイに留まる必要がある場合、これらのユーザーに対してこれらのサーフェスを有効にしないでください。
+[Slack の Claude Code](/docs/ja/slack) と [クラウドセッション](/docs/ja/claude-code-on-the-web)は常に Anthropic の API を使用します。ゲートウェイデプロイメントの一部ではありません。クラウドセッションの環境設定で設定されたゲートウェイ変数は適用されません。トラフィックがゲートウェイに留まる必要がある場合、これらのユーザーに対してこれらのサーフェスを有効にしないでください。
 
-[Remote Control](/docs/ja/remote-control) と[音声ディクテーション](/docs/ja/voice-dictation)は両方とも claude.ai ID に依存します。Remote Control はライブセッションをアカウントとペアリングし、音声ディクテーションは claude.ai トランスクリプションエンドポイントに到達します。`ANTHROPIC_API_KEY`、`ANTHROPIC_AUTH_TOKEN`、または `apiKeyHelper` がアクティブな間は利用できません。v2.1.196 以降では、`ANTHROPIC_BASE_URL` が Anthropic 以外のホストを指している場合、Remote Control も無効になるため、claude.ai でサインインするだけでは十分ではありません。
+[Remote Control](/docs/ja/remote-control) と[音声ディクテーション](/docs/ja/voice-dictation)は両方とも claude.ai ID に依存します。Remote Control はライブセッションをアカウントとペアリングし、音声ディクテーションは claude.ai トランスクリプションエンドポイントに到達します。`ANTHROPIC_API_KEY`、`ANTHROPIC_AUTH_TOKEN`、または `apiKeyHelper` がアクティブな間は利用できません。Remote Control は `ANTHROPIC_BASE_URL` が Anthropic 以外のホストを指している場合も無効になるため、claude.ai でサインインするだけでは十分ではありません。v2.1.196 より前では、Anthropic 以外のベース URL は Remote Control をブロックしませんでした。
 
-どちらかの機能を復元するには、claude.ai でログインし、チェックするゲートウェイ変数を設定解除してください。`claude doctor` の Remote Control セクションは設定解除する認証情報変数の名前を表示します。
+どちらかの機能を復元するには、claude.ai でログインし、その機能がチェックするゲートウェイ変数を設定解除してください。`claude doctor` の Remote Control セクションは、現在 Remote Control をブロックしているものを示します。
 
 * 音声ディクテーション：ゲートウェイ認証情報を設定解除する
 * Remote Control：ゲートウェイ認証情報と `ANTHROPIC_BASE_URL` を設定解除する
@@ -301,16 +303,16 @@ steps:
   追加設定
 </h2>
 
-これらの設定は基本 URL と認証情報を超えるケースをカバーしています。管理者の指示、ネットワークの出力ルール、または[トラブルシューティングテーブル](#troubleshoot-gateway-errors)が 1 つを呼び出す場合のみこれらを設定します。
+これらの設定は、ベース URL と認証情報を超えたケースに対応します。管理者の指示、ネットワークの出力ルール、または[トラブルシューティング表](#troubleshoot-gateway-errors)で必要とされる場合にのみ設定してください。
 
 <h3 id="send-additional-headers">
   追加ヘッダーを送信する
 </h3>
 
-一部のゲートウェイは、テナント識別子またはルーティングキーなど、認証情報に加えてカスタムヘッダーを使用してリクエストをルーティングまたはタグ付けします。1 つを送信するには、[`ANTHROPIC_CUSTOM_HEADERS`](/docs/ja/env-vars) を 1 行あたり 1 つの `Name: Value` ペアで設定します。以下の例は `X-Org-Route` という名前のルーティングヘッダーを追加します：
+一部のゲートウェイは、認証情報に加えて、テナント識別子やルーティングキーなどのカスタムヘッダーを使用してリクエストをルーティングまたはタグ付けします。これを送信するには、[`ANTHROPIC_CUSTOM_HEADERS`](/docs/ja/env-vars)を 1 行に 1 つの`Name: Value`ペアで設定します。以下の例は、`X-Org-Route`という名前のルーティングヘッダーを追加します。
 
 <Tabs>
-  <Tab title="Bash または Zsh">
+  <Tab title="Bash or Zsh">
     ```bash theme={null}
     export ANTHROPIC_CUSTOM_HEADERS="X-Org-Route: prod"
     ```
@@ -323,7 +325,7 @@ steps:
   </Tab>
 </Tabs>
 
-設定ファイルの `env` ブロックで `ANTHROPIC_CUSTOM_HEADERS` を設定することもできます。JSON 文字列は複数行にまたがることができないため、ペア間で `\n` を使用します：
+設定ファイルの`env`ブロックで`ANTHROPIC_CUSTOM_HEADERS`を設定することもできます。JSON 文字列は複数行にまたがることができないため、ペア間で`\n`を使用します。
 
 ```json theme={null}
 {
@@ -333,38 +335,42 @@ steps:
 }
 ```
 
+これらのようなルーティングおよびテナントヘッダー名は、[承認が必要なヘッダー](/docs/ja/server-managed-settings#environment-variables-and-the-approval-dialog)としてカウントされます。ヘッダーがプロジェクト設定ファイルから取得される場合、Claude Code は[`env`値を適用する場合のルール](/docs/ja/settings-reference#when-claude-code-applies-env-values)に従ってそれらを適用します。
+
 <h3 id="add-gateway-models-to-the-model-picker">
   ゲートウェイモデルをモデルピッカーに追加する
 </h3>
 
-モデル検出は起動時にゲートウェイにモデルリストをクエリし、それらの名前を組み込みエントリと一緒に `/model` ピッカーに追加します。
+モデルディスカバリーが有効な場合、Claude Code はスタートアップ時にゲートウェイにモデルリストをクエリし、それらの名前を組み込みエントリと共に`/model`ピッカーに追加します。あなたまたは管理者が[`modelPicker`](/docs/ja/settings-reference#modelpicker)ラインアップで`replaceBuiltInOptions`を設定した場合、Claude Code は検出された名前も非表示にします。セッションが既に使用しているモデルの行は保持されます。
 
-ゲートウェイが Claude Code の組み込みリストにないモデル名を提供し、ピッカーから選択したい場合は、それを有効にします。組み込みモデルが使用するものである場合、検出は不要です。管理者は管理設定を通じてすでに有効にしている可能性があります。
+ゲートウェイが Claude Code の組み込みリストにないモデル名を提供し、ピッカーから選択したい場合は、これを有効にします。組み込みモデルが使用するものである場合、ディスカバリーは不要です。管理者がマネージド設定を通じて既に有効にしている可能性もあります。
 
-有効にするには、シェルまたは `~/.claude/settings.json` の `env` ブロックで `CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY=1` を設定します。検出には Claude Code v2.1.129 以降が必要です。
+有効にするには、シェルまたは`~/.claude/settings.json`の`env`ブロックで`CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY=1`を設定します。
 
-検出されたモデルは `From gateway` というラベルの追加 `/model` エントリとして表示されます。検出が実行されたことを確認するには、`claude --debug` を起動して `[gatewayDiscovery]` 行を探します。成功はキャッシュされたモデル数をログに記録し、`404`、タイムアウト、またはリダイレクトもそこに記録されます。検出が実行される場合、フィルタリング内容、ゲートウェイが提供するレスポンス形式については、[モデル検出リファレンス](/docs/ja/llm-gateway-protocol#model-discovery)を参照してください。
+検出されたモデルは追加の`/model`エントリとして表示されます。各エントリは、ゲートウェイが提供するモデルの説明、またはゲートウェイが提供しない場合は`From gateway`を表示します。
+
+ディスカバリーが実行されたことを確認するには、`claude --debug`を開始し、`~/.claude/debug/<session-id>.txt`のデバッグログで`[gatewayDiscovery]`行を探します。ディスカバリーが初めて成功すると、Claude Code はキャッシュしたモデル数をログに記録し、ゲートウェイのリストが変更された場合にのみ再度ログに記録します。`404`、タイムアウト、またはリダイレクトもそこに表示されます。ディスカバリーが実行される場合、フィルタリング内容、およびゲートウェイが提供する応答形式については、[モデルディスカバリーリファレンス](/docs/ja/llm-gateway-protocol#model-discovery)を参照してください。
 
 <h3 id="rotate-credentials-with-apikeyhelper">
   apiKeyHelper で認証情報をローテーションする
 </h3>
 
-`apiKeyHelper` は、静的環境変数から読み取る代わりに、ゲートウェイ認証情報を取得するために Claude Code が実行するコマンドです。
+`apiKeyHelper`は、静的環境変数から読み取る代わりに、ゲートウェイ認証情報を取得するために Claude Code が実行するコマンドです。
 
-認証情報がスケジュールで期限切れになる場合、ボルトまたは SSO コマンドから来る場合、または管理者が 1 つを設定するよう指示した場合、ヘルパーを使用します。認証情報が 1 回設定する固定文字列である場合、[認証情報変数](#set-the-credential-variable)がすべて必要で、このセクションをスキップできます。
+認証情報がスケジュールに従って期限切れになる場合、コンテナまたは SSO コマンドから取得される場合、または管理者が設定を指示した場合は、ヘルパーを使用します。認証情報が一度設定する固定文字列である場合、[認証情報変数](#set-the-credential-variable)で十分であり、このセクションをスキップできます。
 
-ヘルパーは現在の認証情報を stdout に出力するシェルコマンドです。Claude Code はシステムシェルを通じて実行するため、Windows ではそれは実行可能ファイルまたは PowerShell 呼び出しです。スクリプトを書き、実行可能にして、[設定ファイル](/docs/ja/settings)の `apiKeyHelper` から参照します：
+ヘルパーは、現在の認証情報を stdout に出力する任意のシェルコマンドです。Claude Code はシステムシェルを通じて実行するため、Windows ではそれは実行可能ファイルまたは PowerShell 呼び出しです。コマンドが認証情報以外に何も出力しないようにします。Claude Code v2.1.227 以降では、キーと一緒に出力されるバナーまたはログ行により、[ヘルパーが失敗します](/docs/ja/errors#your-apikeyhelper-script-is-failing)。スクリプトを作成し、実行可能にして、[設定ファイル](/docs/ja/settings)の`apiKeyHelper`から参照します。
 
 <Tabs>
-  <Tab title="Bash または Zsh">
-    たとえば、ボルトから読み取るスクリプト：
+  <Tab title="Bash or Zsh">
+    例えば、コンテナから読み取るスクリプト：
 
     ```bash theme={null}
     #!/bin/bash
     vault kv get -field=api_key secret/llm-gateway/claude-code
     ```
 
-    `~/.claude/settings.json` でそのパスを参照します：
+    `~/.claude/settings.json`でそのパスを参照します：
 
     ```json theme={null}
     {
@@ -374,13 +380,13 @@ steps:
   </Tab>
 
   <Tab title="PowerShell">
-    たとえば、ボルトから読み取るスクリプト：
+    例えば、コンテナから読み取るスクリプト：
 
     ```powershell theme={null}
     vault kv get -field=api_key secret/llm-gateway/claude-code
     ```
 
-    `%USERPROFILE%\.claude\settings.json` で PowerShell 呼び出しを参照し、JSON 文字列のバックスラッシュをエスケープします：
+    `%USERPROFILE%\.claude\settings.json`で PowerShell 呼び出しを参照し、JSON 文字列内のバックスラッシュをエスケープします：
 
     ```json theme={null}
     {
@@ -390,20 +396,24 @@ steps:
   </Tab>
 </Tabs>
 
-Claude Code はデフォルトでヘルパーの出力を 5 分間キャッシュし、リクエストが HTTP 401 を返すときに再度実行します。キャッシュ有効期間を変更するには、`CLAUDE_CODE_API_KEY_HELPER_TTL_MS` をミリ秒で設定します。たとえば、15 分の場合は `CLAUDE_CODE_API_KEY_HELPER_TTL_MS=900000` です。
+Claude Code はデフォルトでヘルパーの出力を 5 分間キャッシュし、キャッシュの有効期限が経過した後にヘルパーを再実行します。有効期限を変更するには、ミリ秒単位で`CLAUDE_CODE_API_KEY_HELPER_TTL_MS`を設定します。例えば、15 分の場合は`CLAUDE_CODE_API_KEY_HELPER_TTL_MS=900000`です。
 
-ヘルパーの値は `Authorization` と `x-api-key` ヘッダーの両方で送信されるため、ゲートウェイがどちらのヘッダーを読むかに関わらず機能します。
+Claude Code がヘルパーを再実行する他のケースについては、[`apiKeyHelper`](/docs/ja/settings-reference#apikeyhelper)を参照してください。
+
+ヘルパーの値は`Authorization`と`x-api-key`の両方のヘッダーで送信されるため、ゲートウェイがどちらのヘッダーを読み取るかに関わらず機能します。
 
 <h3 id="turn-off-traffic-outside-the-gateway-path">
   ゲートウェイパス外のトラフィックをオフにする
 </h3>
 
-ゲートウェイはモデルリクエストを処理しますが、Claude Code はゲートウェイパス外の非必須バックグラウンドトラフィックも Anthropic および GitHub などのサードパーティサービスに送信します。バージョンチェック、テレメトリ、エラーレポート、リリースノート、および同様のリクエストです。ゲートウェイへの出力のみを許可するネットワークでは、これらのリクエストは失敗し、出力監視でブロックされた接続として表示される可能性があります。
+ゲートウェイはモデルリクエストを処理しますが、Claude Code はゲートウェイパス外の非必須バックグラウンドトラフィックも Anthropic および GitHub などのサードパーティサービスに送信します。バージョンチェック、テレメトリ、リリースノート、および同様のリクエストです。ゲートウェイへの出力のみを許可するネットワークでは、これらのリクエストが失敗し、出力監視に接続がブロックされたものとして表示される可能性があります。
 
-そのトラフィックをオフにするには、ゲートウェイ変数と同じシェルエクスポートまたは設定ファイルの `env` ブロックで `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1` を設定します：
+Claude Code は、リクエストが認証情報が属するホストに送信される場合にのみ、テレメトリまたは使用メトリクスリクエストに認証情報を添付します。`ANTHROPIC_BASE_URL`がゲートウェイを指している間、Claude Code はテレメトリイベントをゲートウェイ認証情報なしで Anthropic に送信します。[認証情報変数](#set-the-credential-variable)または`apiKeyHelper`も有効な場合、Claude Code はコンソール[分析ダッシュボード](/docs/ja/analytics#access-analytics-for-api-customers)に使用メトリクスを報告しません。v2.1.246 より前では、Claude Code はゲートウェイ認証情報をテレメトリおよび使用メトリクスリクエストに添付して Anthropic ホストに送信する可能性がありました。モデルリクエストは常にゲートウェイが期待する認証情報を使用してゲートウェイに送信されました。
+
+そのトラフィックをオフにするには、ゲートウェイ変数と同じシェルエクスポートまたは設定ファイルの`env`ブロックで`CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1`を設定します。
 
 <Tabs>
-  <Tab title="Bash または Zsh">
+  <Tab title="Bash or Zsh">
     ```bash theme={null}
     export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
     ```
@@ -416,30 +426,35 @@ Claude Code はデフォルトでヘルパーの出力を 5 分間キャッシ�
   </Tab>
 </Tabs>
 
-変数を設定すると、これらの効果と制限があります：
+変数を設定すると、以下の効果と制限があります。
 
-* 自動更新を無効にするため、パッケージマネージャーまたは管理配布などの別の更新パスを計画します。
-* [高速モード](/docs/ja/fast-mode)の可用性チェックを抑制します。前のチェックがすでにマシンで高速モードを有効にしていない限り、`/fast` は高速モードが利用できないことを報告します。
-* [ゲートウェイモデル検出](#add-gateway-models-to-the-model-picker)をオフにします。ただし、検出はゲートウェイ自体をクエリします。以前に検出されたモデルはローカルキャッシュから利用可能なままですが、リストは更新されません。
-* WebFetch ツールの[ドメイン安全チェック](/docs/ja/data-usage#webfetch-domain-safety-check)は影響を受けず、引き続き `api.anthropic.com` を呼び出します。ネットワークがそのホストをブロックする場合、[設定](/docs/ja/settings)で `skipWebFetchPreflight: true` を使用して個別にオフにします。
-* 各テレメトリストリームおよびそれを制御する変数については、[テレメトリサービス](/docs/ja/data-usage#telemetry-services)を参照してください。
+* 自動更新が無効になるため、パッケージマネージャーやマネージド配布などの別の更新パスを計画してください。
+* [高速モード](/docs/ja/fast-mode)の可用性チェックが抑制されます。前のチェックがマシンで高速モードを既に有効にしていない限り、`/fast`は高速モードが利用できないと報告します。
+* [ゲートウェイモデルディスカバリー](#add-gateway-models-to-the-model-picker)には影響しません。これはゲートウェイのみをクエリします。v2.1.257 より前では、変数はディスカバリーのリフレッシュも停止したため、ピッカーは以前キャッシュされたリストを保持していました。
+* WebFetch ツールの[ドメイン安全チェック](/docs/ja/data-usage#webfetch-domain-safety-check)は影響を受けず、引き続き`api.anthropic.com`を呼び出します。ネットワークがそのホストをブロックする場合は、[設定](/docs/ja/settings)で`skipWebFetchPreflight: true`を使用して個別にオフにします。
+* 各テレメトリストリームとそれを制御する変数については、[テレメトリサービス](/docs/ja/data-usage#telemetry-services)を参照してください。
 
 <h3 id="route-to-a-cloud-provider-through-a-gateway">
-  クラウドプロバイダーをゲートウェイ経由でルーティングする
+  ゲートウェイを通じてクラウドプロバイダーにルーティングする
 </h3>
 
-これらの設定は Claude Code を `ANTHROPIC_BASE_URL` の代わりにプロバイダー固有の基本 URL 変数を通じてゲートウェイに指定します。Amazon Bedrock と Google Cloud の Agent Platform ゲートウェイはそれらのプロバイダーのネイティブリクエスト形式を受け入れます。Microsoft Foundry と AWS 上の Claude Platform ゲートウェイは Anthropic Messages 形式を受け入れ、どの基本 URL 変数がそれらに到達するかでのみ異なります。
+これらの設定は、`ANTHROPIC_BASE_URL`の代わりにプロバイダー固有のベース URL 変数を通じてゲートウェイを指すように Claude Code を設定します。Amazon Bedrock および Google Cloud の Agent Platform ゲートウェイはそれらのプロバイダーのネイティブリクエスト形式を受け入れます。Microsoft Foundry および AWS 上の Claude Platform ゲートウェイは Anthropic Messages 形式を受け入れます。Amazon Bedrock および Google Cloud の Agent Platform ルートでは、Claude Code はベータヘッダーとリクエストフィールドをそのプロバイダーが受け入れるセットに制限します。各ルートでゲートウェイが受け取るものについては、[ゲートウェイ互換性ガイド](/docs/ja/llm-gateway-protocol)を参照してください。
 
-ゲートウェイチームが Amazon Bedrock、Google Cloud の Agent Platform、Microsoft Foundry、または AWS 上の Claude Platform という名前を付けた場合のみ 1 つを使用します。上記の[検証リクエスト](#verify-the-connection)が JSON を返した場合、このセクションをスキップできます。
+ゲートウェイチームが Amazon Bedrock、Google Cloud の Agent Platform、Microsoft Foundry、または AWS 上の Claude Platform を具体的に指定した場合にのみ、1 つを使用します。上記の[検証リクエスト](#verify-the-connection)が JSON を返した場合、このセクションをスキップできます。
 
-ゲートウェイチームが名前を付けたプロバイダーのブロックを設定します。skip-auth 変数は Claude Code にプロバイダー認証情報でリクエストに署名しないよう指示します。ゲートウェイがそれらを保持しているため。ゲートウェイが独自のトークンが必要な場合、Foundry を除いて、ブロックの後に `ANTHROPIC_AUTH_TOKEN` を追加します。Microsoft Foundry は示されているように `ANTHROPIC_FOUNDRY_API_KEY` を使用します。Bearer トークンを期待する Microsoft Foundry ゲートウェイは、代わりに [`ANTHROPIC_FOUNDRY_AUTH_TOKEN`](/docs/ja/env-vars) を使用できます。これは両方が設定されている場合、`ANTHROPIC_FOUNDRY_API_KEY` より優先されます。`ANTHROPIC_FOUNDRY_AUTH_TOKEN` には Claude Code v2.1.203 以降が必要です。
+ゲートウェイチームが指定したプロバイダーのブロックを設定します。Amazon Bedrock、Google Cloud の Agent Platform、および AWS 上の Claude Platform ブロック内のスキップ認証変数は、ゲートウェイがそれらを保持しているため、Claude Code にクラウドプロバイダーの認証情報でリクエストに署名しないよう指示します。ゲートウェイが独自のトークンも必要とする場合、それを配置する場所はプロバイダーによって異なります。
+
+* **Amazon Bedrock、Google Cloud の Agent Platform、または AWS 上の Claude Platform**：ブロックの後に`ANTHROPIC_AUTH_TOKEN`を追加します。Claude Code はそれを`Authorization: Bearer`ヘッダーとしてゲートウェイに送信します。異なるスキームまたはヘッダーの認証情報については、代わりに[`ANTHROPIC_CUSTOM_HEADERS`](#send-additional-headers)を使用します。スキップ認証変数を設定したままにしてください。これがないと、Claude Code は`ANTHROPIC_AUTH_TOKEN`、[`apiKeyHelper`](#rotate-credentials-with-apikeyhelper)、または`ANTHROPIC_CUSTOM_HEADERS`が追加する`Authorization`ヘッダーを削除します。
+* **Microsoft Foundry**：[そのブロック](#microsoft-foundry)に示すように`ANTHROPIC_FOUNDRY_API_KEY`を使用します。
 
 <h4 id="amazon-bedrock">
   Amazon Bedrock
 </h4>
 
+ゲートウェイが独自の認証情報を発行する場合、`AWS_BEARER_TOKEN_BEDROCK`を設定しないままにします。設定した場合、Claude Code は`CLAUDE_CODE_SKIP_BEDROCK_AUTH`が設定されていても、ゲートウェイトークンの代わりにその[Amazon Bedrock API キー](/docs/ja/amazon-bedrock#2-configure-aws-credentials)を`Authorization`ヘッダーとして送信します。
+
 <Tabs>
-  <Tab title="Bash または Zsh">
+  <Tab title="Bash or Zsh">
     ```bash theme={null}
     export ANTHROPIC_BEDROCK_BASE_URL=https://llm-gateway.example.com/bedrock
     export CLAUDE_CODE_SKIP_BEDROCK_AUTH=1
@@ -460,8 +475,10 @@ Claude Code はデフォルトでヘルパーの出力を 5 分間キャッシ�
   Google Cloud の Agent Platform
 </h4>
 
+プロジェクト ID とリージョンを独自の値に置き換えます。Claude Code はゲートウェイに送信する各リクエストのパスに両方を含めます。
+
 <Tabs>
-  <Tab title="Bash または Zsh">
+  <Tab title="Bash or Zsh">
     ```bash theme={null}
     export ANTHROPIC_VERTEX_BASE_URL=https://llm-gateway.example.com/vertex
     export ANTHROPIC_VERTEX_PROJECT_ID=your-gcp-project-id
@@ -482,16 +499,22 @@ Claude Code はデフォルトでヘルパーの出力を 5 分間キャッシ�
   </Tab>
 </Tabs>
 
+ブロックはルーティングと認証をカバーします。[Agent Platform セットアップ](/docs/ja/google-vertex-ai#4-configure-claude-code)からのリージョンオーバーライドとモデルピンはゲートウェイを通じても適用されます。
+
+* **モデルごとのリージョン**：ゲートウェイが一部のモデルを`CLOUD_ML_REGION`以外のリージョンから提供する場合、各モデルに対して一致する`VERTEX_REGION_CLAUDE_*`変数を設定します。例えば`VERTEX_REGION_CLAUDE_4_6_SONNET=europe-west1`です。[環境変数リファレンス](/docs/ja/env-vars)に正確な名前が記載されています。
+* **モデルバージョン**：[モデルバージョンをピン留めする](/docs/ja/google-vertex-ai#5-pin-model-versions)のように`ANTHROPIC_DEFAULT_OPUS_MODEL`、`ANTHROPIC_DEFAULT_SONNET_MODEL`、および`ANTHROPIC_DEFAULT_HAIKU_MODEL`をピン留めします。`ANTHROPIC_DEFAULT_HAIKU_MODEL`を設定すると、セッションタイトルなどのバックグラウンドタスクもそのモデルに移動し、そのセクションではそれ以外の場合にどのモデルが実行されるかを説明します。
+* **モデル機能**：Claude Code バージョンが認識しないモデル ID をピン留めする場合、努力レベルや拡張思考などの機能は無効のままになる可能性があります。[`ANTHROPIC_DEFAULT_OPUS_MODEL_SUPPORTED_CAPABILITIES`](/docs/ja/model-config#customize-pinned-model-display-and-capabilities)とその Sonnet および Haiku カウンターパートを使用して、モデルがサポートするものを宣言します。
+
 <h4 id="microsoft-foundry">
   Microsoft Foundry
 </h4>
 
-ゲートウェイの認証情報を `ANTHROPIC_FOUNDRY_API_KEY` に入れます。`x-api-key` ヘッダーとしてゲートウェイに送信されます。Bearer トークンを期待するゲートウェイは、代わりに [`ANTHROPIC_FOUNDRY_AUTH_TOKEN`](/docs/ja/env-vars) を使用できます。Claude Code はその値を `Authorization: Bearer` ヘッダーとして送信し、両方が設定されている場合、`ANTHROPIC_FOUNDRY_API_KEY` より優先されます。Claude Code v2.1.203 以降が必要です。
+ゲートウェイの認証情報を`ANTHROPIC_FOUNDRY_API_KEY`に入れます。これは`x-api-key`ヘッダーとしてゲートウェイに送信されます。ベアラートークンを期待するゲートウェイは、代わりに[`ANTHROPIC_FOUNDRY_AUTH_TOKEN`](/docs/ja/env-vars)を使用できます。Claude Code はその値を`Authorization: Bearer`ヘッダーとして送信し、両方が設定されている場合は`ANTHROPIC_FOUNDRY_API_KEY`よりも優先されます。Claude Code v2.1.203 以降が必要です。
 
-独自の `Authorization` ヘッダーを挿入するゲートウェイの場合、`CLAUDE_CODE_SKIP_FOUNDRY_AUTH=1` を設定し、両方の認証情報変数を設定しないままにします。Claude Code はその後、Azure 認証情報なしでリクエストを送信し、たとえば `ANTHROPIC_CUSTOM_HEADERS` を通じて提供する `Authorization` ヘッダーを保持します。v2.1.203 より前では、API キーなしの `CLAUDE_CODE_SKIP_FOUNDRY_AUTH` は Microsoft Foundry クライアントがリクエストを送信できないままにしました。
+独自の`Authorization`ヘッダーを挿入するゲートウェイの場合、`CLAUDE_CODE_SKIP_FOUNDRY_AUTH=1`を設定し、両方の認証情報変数を設定しないままにします。Claude Code はその後、Azure 認証情報なしでリクエストを送信し、例えば`ANTHROPIC_CUSTOM_HEADERS`を通じて提供する`Authorization`ヘッダーを保持します。v2.1.203 より前では、API キーなしで`CLAUDE_CODE_SKIP_FOUNDRY_AUTH`を使用すると、Microsoft Foundry クライアントはリクエストを送信できなくなりました。
 
 <Tabs>
-  <Tab title="Bash または Zsh">
+  <Tab title="Bash or Zsh">
     ```bash theme={null}
     export ANTHROPIC_FOUNDRY_BASE_URL=https://llm-gateway.example.com/foundry
     export ANTHROPIC_FOUNDRY_API_KEY=sk-gateway-key
@@ -512,10 +535,10 @@ Claude Code はデフォルトでヘルパーの出力を 5 分間キャッシ�
   AWS 上の Claude Platform
 </h4>
 
-ワークスペース ID については、[AWS 上の Claude Platform](/docs/ja/claude-platform-on-aws) を参照してください。
+ワークスペース ID については、[AWS 上の Claude Platform](/docs/ja/claude-platform-on-aws)を参照してください。
 
 <Tabs>
-  <Tab title="Bash または Zsh">
+  <Tab title="Bash or Zsh">
     ```bash theme={null}
     export ANTHROPIC_AWS_BASE_URL=https://llm-gateway.example.com/anthropic-aws
     export ANTHROPIC_AWS_WORKSPACE_ID=wrkspc_01ABCDEFGHIJKLMN
@@ -534,28 +557,46 @@ Claude Code はデフォルトでヘルパーの出力を 5 分間キャッシ�
   </Tab>
 </Tabs>
 
+<h4 id="confirm-the-provider-route">
+  プロバイダーのルートを確認する
+</h4>
+
+設定したブロックがあるシェルから`claude`を開始し、`/status`を実行します。Amazon Bedrock ブロックでは、**Status**タブに以下のような行が表示されます。
+
+```text theme={null}
+API provider: Amazon Bedrock
+Bedrock base URL: https://llm-gateway.example.com/bedrock
+AWS auth skipped
+```
+
+他のブロックは、例えば Google Cloud の Agent Platform の場合は`Vertex base URL`と`GCP auth skipped`など、プロバイダーの名前の下に同じ行を生成します。Microsoft Foundry ブロックは、`CLAUDE_CODE_SKIP_FOUNDRY_AUTH`を設定した場合にのみ認証スキップ行を表示します。企業プロキシを通じてルーティングする場合、`Proxy`行はプロキシ URL を表示します。ベース URL 行が見つからない場合、変数がセッションに到達しませんでした。
+
 <h2 id="troubleshoot-gateway-errors">
   ゲートウェイエラーのトラブルシューティング
 </h2>
 
-これらはゲートウェイを通じて Claude Code を実行する場合の最も一般的なエラーで、ゲートウェイ側の原因と修正方法です：
+ゲートウェイを通じて Claude Code を実行する場合の最も一般的なエラーで、ゲートウェイ側の原因と修正方法です：
 
-| エラー                                                                                                                                                           | 原因                                                                                                                                                                                 | 修正                                                                                                                                                                                                                                                               |
-| :------------------------------------------------------------------------------------------------------------------------------------------------------------ | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 2 つの認証情報ソースという名前の起動警告で、`auth may not work as expected` で終わります。古いバージョンは代わりに `Auth conflict: Both a token (SOURCE) and an API key (SOURCE) are set` を表示します。     | ゲートウェイ認証情報と保存されたログインの両方がアクティブです。変数はリクエストに使用されますが、古いログインは予期しない認証動作を引き起こす可能性があります                                                                                                    | 変数を設定解除して保存されたログインを使用するか、`/logout` を実行してゲートウェイ認証情報を使用します                                                                                                                                                                                                         |
-| 無効または認識されないトークンという名前の `401` エラー                                                                                                                               | 認証情報はゲートウェイが発行したものではないか、ゲートウェイが読むヘッダーにあります                                                                                                                                         | [認証情報テーブル](#set-the-credential-variable)で変数が認証情報の種類と一致することを確認し、ゲートウェイで失効した場合はキーを再生成します                                                                                                                                                                           |
-| `Your apiKeyHelper script is failing`                                                                                                                         | [`apiKeyHelper`](/docs/ja/settings#available-settings) 設定のコマンドがエラーで終了したか、タイムアウトしたか、何も出力しなかったため、リクエストはプレースホルダーキーを含みます                                                                    | コマンドを直接実行して失敗の理由を確認し、期限切れセッションを報告する場合は認証情報プロバイダーで再認証します。[エラーリファレンス](/docs/ja/errors#your-apikeyhelper-script-is-failing)を参照してください                                                                                                                                     |
-| `Unable to connect to API (ConnectionRefused)`、または npm インストールからの `(ECONNREFUSED)`。多くの場合、Claude Code が[バックオフで再試行](/docs/ja/errors#automatic-retries)している間の静かな一時停止の後 | 基本 URL で何も応答しません。アドレスが間違っているか、VPN またはファイアウォールがゲートウェイへのパスをブロックしています                                                                                                                 | 上記の [curl テスト](#verify-the-connection)を実行します。これは同じ原因で直ちに失敗し、URL とネットワークパスをゲートウェイチームで確認します                                                                                                                                                                        |
-| `API returned an empty or malformed response (HTTP 200)`                                                                                                      | ゲートウェイまたは中間プロキシが非 API レスポンス（多くの場合 HTML エラーまたはログインページ）を返しました                                                                                                                        | 上記の [curl リクエスト](#verify-the-connection)でテストします。非 JSON を返すゲートウェイルートを修正します                                                                                                                                                                                        |
-| `context_management`、`Extra inputs are not permitted`、または他の認識されないフィールドという名前の `400` エラー                                                                        | ゲートウェイは Anthropic 形式エンドポイントに Claude Code が送信するフィールドを拒否する上流にリクエストを転送します                                                                                                             | `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1` を設定します。これはほとんどのプレリリースフィールドを抑制します。[機能パススルー](/docs/ja/llm-gateway-protocol#feature-pass-through)を参照してください。一部のベータはこのフラグでゲートされていません。それらについては、一致する `CLAUDE_CODE_USE_*` プロバイダー変数を設定して、Claude Code がそのプロバイダーが受け入れるもののみを送信するようにします |
-| `thinking` または `adaptive` という名前の `400` エラー（`Input tag 'adaptive' found` など）                                                                                   | 上流モデルビルドは Claude Code が Claude 4.6 以降のモデルに要求する適応推論を受け入れません                                                                                                                         | ゲートウェイの上流をアップグレードします。Opus 4.6 と Sonnet 4.6 では、代わりに `CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING=1` が機能します。[モデル設定](/docs/ja/model-config)機能変数は、`CLAUDE_CODE_USE_BEDROCK` や `CLAUDE_CODE_USE_VERTEX` などのプロバイダー設定にのみ適用され、`ANTHROPIC_BASE_URL` ゲートウェイの背後には適用されません               |
-| ゲートウェイ独自の言葉でコンテキストまたはトークン制限を述べる `400` エラー（`ContextWindowExceededError` または `prompt token count of N exceeds the limit of M` など）                               | ゲートウェイはモデルのネイティブウィンドウより小さいコンテキストを強制し、上流エラーを書き直すため、Anthropic の `prompt is too long` 表現と一致する自動コンパクト再試行は発火しません                                                                        | `/compact` を実行してセッションを復旧します。防ぐには、`CLAUDE_CODE_AUTO_COMPACT_WINDOW` をゲートウェイの制限に設定します。値は少なくとも 100,000 トークン、最大でもモデルのコンテキストウィンドウにクランプされるため、100,000 未満のゲートウェイ制限は一致できず、`/compact` はそこでの復旧のままです。また、`CLAUDE_CODE_MAX_OUTPUT_TOKENS` をゲートウェイモデルの出力制限より下に設定します             |
-| `/model` ピッカーから欠落しているモデル                                                                                                                                      | ゲートウェイモデル名は Claude Code の組み込みリストにありません                                                                                                                                             | [ゲートウェイモデル検出](#add-gateway-models-to-the-model-picker)を有効にするか、[モデル設定](/docs/ja/model-config)変数で名前を追加します                                                                                                                                                               |
-| Claude Code は [curl テスト](#verify-the-connection)が成功しても、ログインするよう求めます                                                                                           | CLI には独自の認証情報がありません。到達可能な基本 URL は 1 つではなく、プロジェクトの `.claude/settings.json` または `.claude/settings.local.json` の `env` ブロックは最初の実行ウィザードと信頼プロンプトの後にのみ適用されます                             | `ANTHROPIC_AUTH_TOKEN` をどこかに設定します。Claude Code は最初の実行セットアップの前に読み取ります。シェルエクスポート、`~/.claude/settings.json` の `env` ブロック、または管理設定                                                                                                                                     |
-| `ANTHROPIC_API_KEY` が設定されていますが、プロンプトなしで無視されます                                                                                                                 | キーはインタラクティブセッションで 1 回の承認が必要で、以前に拒否されたキーは再度尋ねられずに無視されます                                                                                                                             | `/config` で `Use custom API key` オプションで有効にします                                                                                                                                                                                                                    |
-| `This machine's managed settings require a first-party login`                                                                                                 | 管理設定に `forceLoginMethod` または `forceLoginOrgUUID` が含まれています。Claude Code v2.1.146 以降では、`ANTHROPIC_API_KEY`、`ANTHROPIC_AUTH_TOKEN`、または `apiKeyHelper` と共存できません                         | 管理者は管理設定から `forceLoginMethod` と `forceLoginOrgUUID` を削除してゲートウェイ認証情報を使用するか、ゲートウェイ認証情報を削除してファーストパーティログインを使用する必要があります。2 つは組み合わせることはできません                                                                                                                            |
-| `403` と HTML 本体（`403 Forbidden` など）。ゲートウェイ独自のログに受信したリクエストがない場合                                                                                                | ゲートウェイの前の Web アプリケーションファイアウォールまたはリバースプロキシがゲートウェイに到達する前にリクエスト本体をブロックしました。Claude Code プロンプトには XML スタイルタグとソースコードが含まれており、クロスサイトスクリプティング本体ルールと一致するため、短い curl テストは成功しますが、実際のセッションは成功しません | ゲートウェイの `/v1/messages` パスをリクエスト本体検査から除外します。AWS WAF ではこれは `CrossSiteScripting_Body` マネージドルールです。nginx と ModSecurity では、同等の OWASP CRS 本体ルールです                                                                                                                       |
-| 証明書または TLS エラー（`SSL certificate verification failed` または `Self-signed certificate detected` など）。[curl テスト](#verify-the-connection)が成功する場合                     | Claude Code のランタイムは `curl` が使用するのと同じ認証局を信頼していません。一般的に企業 TLS 検査プロキシの背後                                                                                                              | `NODE_EXTRA_CA_CERTS` を CA バンドルパスに設定します。[CA 証明書ストア](/docs/ja/network-config#ca-certificate-store)を参照してください                                                                                                                                                            |
+| エラー                                                                                                                                                                                                                                                                                                                                                                          | 原因                                                                                                                                                                                                                                                        | 修正                                                                                                                                                                                                                                                               |
+| :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2 つの認証情報ソースという名前の起動警告で、`auth may not work as expected` で終わります。古いバージョンは代わりに `Auth conflict: Both a token (SOURCE) and an API key (SOURCE) are set` を表示します。                                                                                                                                                                                                                    | ゲートウェイ認証情報と保存されたログインの両方がアクティブです。変数はリクエストに使用されますが、古いログインは予期しない認証動作を引き起こす可能性があります                                                                                                                                                                           | 変数を設定解除して保存されたログインを使用するか、`/logout` を実行してゲートウェイ認証情報を使用します                                                                                                                                                                                                         |
+| 無効または認識されないトークンという名前の `401` エラー                                                                                                                                                                                                                                                                                                                                              | 認証情報はゲートウェイが発行したものではないか、ゲートウェイが読むヘッダーにあります                                                                                                                                                                                                                | [認証情報テーブル](#set-the-credential-variable)で変数が認証情報の種類と一致することを確認し、ゲートウェイで失効した場合はキーを再生成します                                                                                                                                                                           |
+| `Your apiKeyHelper script is failing`、または非対話型モードで stderr に `apiKeyHelper failed:`                                                                                                                                                                                                                                                                                            | [`apiKeyHelper`](/docs/ja/settings-reference#apikeyhelper) 設定のコマンドが使用可能なキーを生成しなかったため、リクエストはプレースホルダーキーを含みます                                                                                                                                                     | コマンドを直接実行して失敗の理由を確認し、期限切れセッションを報告する場合は認証情報プロバイダーで再認証します。[エラーリファレンス](/docs/ja/errors#your-apikeyhelper-script-is-failing)を参照してください                                                                                                                                     |
+| アドレスで何も応答しない場合は `Connection refused — a firewall or proxy may be blocking it (ConnectionRefused)`、またはホスト名が解決しない場合は `Can't reach the API server — check your internet or DNS (ENOTFOUND)`。多くの場合、Claude Code が[バックオフで再試行](/docs/ja/errors#automatic-retries)している間の静かな一時停止の後です。括弧内のコードは異なります。[Unable to connect to API](/docs/ja/errors#unable-to-connect-to-api) はコードのスペルと以前の表現をカバーしています | 基本 URL で何も応答しません。アドレスが間違っているか、VPN またはファイアウォールがゲートウェイへのパスをブロックしています                                                                                                                                                                                        | 上記の [curl テスト](#verify-the-connection)を実行します。これは同じ原因で直ちに失敗し、URL とネットワークパスをゲートウェイチームで確認します                                                                                                                                                                        |
+| `API returned an empty or malformed response (HTTP 200)`                                                                                                                                                                                                                                                                                                                     | ゲートウェイまたは中間プロキシが非 API レスポンス（多くの場合 HTML エラーまたはログインページ）を返しました                                                                                                                                                                                               | 上記の [curl リクエスト](#verify-the-connection)でテストします。Claude API レスポンス以外で応答するゲートウェイルートを修正します。[エラーリファレンス](/docs/ja/errors#api-returned-an-empty-or-malformed-response)はメッセージが報告する詳細を説明しています                                                                                  |
+| `context_management`、`Extra inputs are not permitted`、または他の認識されないフィールドという名前の `400` エラー                                                                                                                                                                                                                                                                                       | ゲートウェイは Anthropic 形式エンドポイントに Claude Code が送信するフィールドを拒否する上流にリクエストを転送します                                                                                                                                                                                    | `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1` を設定します。これはほとんどのプレリリースフィールドを抑制します。[機能パススルー](/docs/ja/llm-gateway-protocol#feature-pass-through)を参照してください。一部のベータはこのフラグでゲートされていません。それらについては、一致する `CLAUDE_CODE_USE_*` プロバイダー変数を設定して、Claude Code がそのプロバイダーが受け入れるもののみを送信するようにします |
+| `thinking` または `adaptive` という名前の `400` エラー（`Input tag 'adaptive' found` など）                                                                                                                                                                                                                                                                                                  | 上流モデルビルドは Claude Code が Claude 4.6 以降のモデルに要求する適応推論を受け入れません                                                                                                                                                                                                | ゲートウェイの上流をアップグレードします。Opus 4.6 と Sonnet 4.6 では、代わりに `CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING=1` が機能します。[モデル設定](/docs/ja/model-config)機能変数は、`CLAUDE_CODE_USE_BEDROCK` や `CLAUDE_CODE_USE_VERTEX` などのプロバイダー設定にのみ適用され、`ANTHROPIC_BASE_URL` ゲートウェイの背後には適用されません               |
+| ゲートウェイ独自の言葉でコンテキストまたはトークン制限を述べる `400` エラー（`ContextWindowExceededError` または `prompt token count of N exceeds the limit of M` など）                                                                                                                                                                                                                                              | ゲートウェイはモデルのネイティブウィンドウより小さいコンテキストを強制し、上流エラーを書き直すため、Claude Code は[長すぎるエラー](/docs/ja/errors#prompt-is-too-long)として認識せず、自動的にコンパクト化して再試行しません                                                                                                                        | `/compact` を実行してセッションを復旧します。防ぐには、`CLAUDE_CODE_AUTO_COMPACT_WINDOW` をゲートウェイの制限に設定します。Claude Code は値を少なくとも 100,000 トークン、最大でもモデルのコンテキストウィンドウにクランプするため、100,000 未満のゲートウェイ制限は一致できず、`/compact` はそこでの復旧のままです。また、`CLAUDE_CODE_MAX_OUTPUT_TOKENS` をゲートウェイモデルの出力制限より下に設定します |
+| Claude Code v2.1.265 から v2.1.267 で、ツールの入力スキーマまたはその `pattern` を拒否するゲートウェイ独自の言葉での `400` エラー                                                                                                                                                                                                                                                                                    | これらのバージョンでの段階的なロールアウトで、[Artifact ツール](/docs/ja/artifacts#availability)スキーマは `\p{...}` Unicode 文字クラスを持つ正規表現を含みます。Anthropic API はそれを受け入れますが、各ツールスキーマの `pattern` を独自の正規表現エンジンでチェックするゲートウェイまたは上流は、リクエスト全体を拒否します                                                    | v2.1.268 以降に更新します。これは正規表現を送信しません。影響を受けるバージョンでは、[アーティファクトをオフにします](/docs/ja/artifacts#disable-artifacts)。これはツールとそのスキーマをリクエストから削除します                                                                                                                                     |
+| `400` エラーがすべてのリクエストで、ゲートウェイ独自の言葉で認識されないツールタイプを拒否します。例えば `Input tag 'advisor_20260301'`。Claude Code v2.1.275                                                                                                                                                                                                                                                                  | そのバージョンでの段階的なロールアウトで、リクエストはアドバイザーがオフの場合でも[アドバイザーツール](/docs/ja/advisor)エントリを含みます。Anthropic API はそれを受け入れますが、ツールタイプを検証するゲートウェイまたは上流はリクエスト全体を拒否します。[リクエスト本体フィールドを変更せずに転送](/docs/ja/llm-gateway-protocol#forward-as-open-lists)するものはそれを影響を受けずに通します。エントリは会話コンテンツを含まない宣言です | v2.1.276 以降に更新します。これは `ANTHROPIC_BASE_URL` ゲートウェイの背後でエントリを送信しません。アドバイザーをオンにしない限り。v2.1.275 では、[`CLAUDE_CODE_DISABLE_ADVISOR_TOOL=1`](/docs/ja/env-vars)を設定します。これはリクエストからエントリを削除します                                                                                     |
+| `/model` ピッカーから欠落しているモデル                                                                                                                                                                                                                                                                                                                                                     | ゲートウェイモデル名は Claude Code の組み込みリストにありません。または Claude Code は組み込みオプションを置き換える [`modelPicker`](/docs/ja/settings-reference#modelpicker) ラインアップを表示しています                                                                                                                | [ゲートウェイモデル検出](#add-gateway-models-to-the-model-picker)を有効にするか、[モデル設定](/docs/ja/model-config)変数で名前を追加します。Claude Code が置き換える `modelPicker` ラインアップを表示している場合は、ゲートウェイモデルをそれに追加するか、管理設定がそれを提供する場合は管理者に追加を依頼します                                                              |
+| 推論リクエストが機能している間に `/fast` が `Fast mode unavailable due to network connectivity issues` を報告します                                                                                                                                                                                                                                                                                 | [高速モード](/docs/ja/fast-mode)の可用性チェックは `api.anthropic.com` に直接移動し、`ANTHROPIC_BASE_URL` に従いません。そのため、ブロックされた直接エグレスはチェックに失敗します。チェックが `ANTHROPIC_API_KEY` からゲートウェイ発行キーまたは `apiKeyHelper` を提示し、Anthropic がそれを拒否する場合、同じメッセージが開いたネットワークに表示されます                          | エグレスがブロックされている場合は `api.anthropic.com` をホワイトリストに登録するか、スキップ変数を設定します。拒否されたゲートウェイキーの場合のみ、スキップ変数が役立ちます。[プロキシと LLM ゲートウェイの背後で高速モードを使用する](/docs/ja/fast-mode#use-fast-mode-behind-proxies-and-llm-gateways)を参照してください                                                         |
+| `ANTHROPIC_AUTH_TOKEN` で認証されたセッションで `/fast` が `Fast mode has been disabled by your organization` を報告します。組織が高速モードを有効にしている場合でも                                                                                                                                                                                                                                                 | 可用性チェックには claude.ai ログインまたは Anthropic API キーが必要です。ベアラートークンのみの場合、Claude Code は高速モードをチェックを送信せずに無効として扱います                                                                                                                                                    | `CLAUDE_CODE_SKIP_FAST_MODE_ORG_CHECK=1` を設定します。[プロキシと LLM ゲートウェイの背後で高速モードを使用する](/docs/ja/fast-mode#use-fast-mode-behind-proxies-and-llm-gateways)を参照してください                                                                                                           |
+| [curl テスト](#verify-the-connection)が成功しても、Claude Code はログインするよう求めます                                                                                                                                                                                                                                                                                                           | CLI には独自の認証情報がありません。到達可能な基本 URL は 1 つではなく、対話型セッションではプロジェクトの `.claude/settings.json` または `.claude/settings.local.json` の `env` ブロックは最初の実行ウィザードと[信頼プロンプト](/docs/ja/permissions#what-runs-before-you-trust-a-folder)の後にのみ適用されます                                   | `ANTHROPIC_AUTH_TOKEN` を Claude Code が最初の実行セットアップの前に読み取る場所に設定します。シェルエクスポート、`~/.claude/settings.json` の `env` ブロック、または管理設定                                                                                                                                        |
+| `ANTHROPIC_API_KEY` が設定されていますが、プロンプトなしで無視されます                                                                                                                                                                                                                                                                                                                                | キーはインタラクティブセッションで 1 回の承認が必要で、以前に拒否されたキーは再度尋ねられずに無視されます                                                                                                                                                                                                    | `/config` で `Use custom API key` オプションで有効にします                                                                                                                                                                                                                    |
+| `This machine's managed settings require a first-party login`                                                                                                                                                                                                                                                                                                                | 管理設定に `forceLoginMethod` または `forceLoginOrgUUID` が含まれています。これは `ANTHROPIC_API_KEY`、`ANTHROPIC_AUTH_TOKEN`、または `apiKeyHelper` と共存できません                                                                                                                      | 管理者は管理設定から `forceLoginMethod` と `forceLoginOrgUUID` を削除してゲートウェイ認証情報を使用するか、ゲートウェイ認証情報を削除してファーストパーティログインを使用する必要があります。2 つは組み合わせることはできません                                                                                                                            |
+| `403` と HTML 本体（`403 Forbidden` など）。ゲートウェイ独自のログに受信したリクエストがない場合                                                                                                                                                                                                                                                                                                               | ゲートウェイの前の Web アプリケーションファイアウォールまたはリバースプロキシがゲートウェイに到達する前にリクエスト本体をブロックしました。Claude Code プロンプトには XML スタイルタグとソースコードが含まれており、クロスサイトスクリプティング本体ルールと一致するため、短い curl テストは成功しますが、実際のセッションは成功しません                                                                        | ゲートウェイの `/v1/messages` パスをリクエスト本体検査から除外します。AWS WAF ではこれは `CrossSiteScripting_Body` マネージドルールです。nginx と ModSecurity では、同等の OWASP CRS 本体ルールです                                                                                                                       |
+| 証明書または TLS エラー（`SSL certificate verification failed` または `Self-signed certificate detected` など）。[curl テスト](#verify-the-connection)が成功する場合                                                                                                                                                                                                                                    | Claude Code のランタイムは `curl` が使用するのと同じ認証局を信頼していません。一般的に企業 TLS 検査プロキシの背後                                                                                                                                                                                     | `NODE_EXTRA_CA_CERTS` を CA バンドルパスに設定します。[CA 証明書ストア](/docs/ja/network-config#ca-certificate-store)を参照してください                                                                                                                                                            |
 
 ゲートウェイ設定を削除した後、Claude Code が繰り返しログインするよう求める場合、原因は通常、ゲートウェイではなく認証情報ストレージです。[認証エラー](/docs/ja/errors#authentication-errors)を参照してください。
 
@@ -565,6 +606,6 @@ Claude Code はデフォルトでヘルパーの出力を 5 分間キャッシ�
 
 * [LLM ゲートウェイの概要](/docs/ja/llm-gateway)：ゲートウェイとは何か、および claude.ai サブスクリプションとどのように相互作用するか
 * [組織用の LLM ゲートウェイをロールアウトする](/docs/ja/llm-gateway-rollout)：ゲートウェイをデプロイして配布するための管理者向けチェックリスト
-* [ゲートウェイプロトコルリファレンス](/docs/ja/llm-gateway-protocol)：Claude Code がゲートウェイに送信するもの。ゲートウェイが転送する必要があるヘッダーとフィールドを含む
+* [ゲートウェイ互換性ガイド](/docs/ja/llm-gateway-protocol)：Claude Code がゲートウェイに送信するもの。ゲートウェイが転送する必要があるヘッダーとフィールドを含む
 * [設定](/docs/ja/settings)：設定ファイルが存在する場所と `env` ブロックがどのように読み取られるか
 * [認証](/docs/ja/authentication)：認証情報変数、`apiKeyHelper`、OAuth ログインがどのように相互作用するか

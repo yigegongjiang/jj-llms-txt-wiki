@@ -34,11 +34,9 @@ Anda dapat mengatur model advisor dengan tiga cara:
 * **Pengaturan `advisorModel`**: konfigurasi default persisten di [file pengaturan](/docs/id/settings) Anda
 * **Bendera `--advisor`**: atur advisor untuk sesi tunggal saat peluncuran
 
-Jika salah satu dari ini mengatur model advisor, advisor diaktifkan untuk sesi yang model utamanya [mendukungnya](#choose-an-advisor-model). Untuk berhenti menggunakannya, lihat [Matikan advisor](#turn-the-advisor-off).
+Masing-masing dari ini mengaktifkan advisor untuk sesi yang model utamanya [mendukungnya](#choose-an-advisor-model). Setelah sesi dimulai, Claude Code menampilkan notifikasi `Advisor Tool (experimental) is on and may use more tokens · /advisor`. Untuk berhenti menggunakan advisor, lihat [Matikan advisor](#turn-the-advisor-off).
 
-<Note>
-  Untuk menggunakan Fable 5 sebagai advisor, Anda memerlukan Claude Code v2.1.170 atau lebih baru dan [akses Fable 5](/docs/id/model-config#work-with-fable-5) untuk organisasi Anda.
-</Note>
+Pada beberapa paket, Fable sebagai advisor juga memerlukan [persetujuan satu kali Anda untuk menagih penggunaan Fable ke kredit penggunaan](/docs/id/model-config#fable-and-usage-credits). Untuk apa yang terjadi sebelum Anda memberikan persetujuan itu, lihat [Advisor Fable dan kredit penggunaan](#fable-advisor-and-usage-credits).
 
 <h3 id="use-the-/advisor-command">
   Gunakan perintah `/advisor`
@@ -50,7 +48,17 @@ Jalankan `/advisor` tanpa argumen untuk membuka pemilih yang mencantumkan model 
 /advisor opus
 ```
 
-Pilihan Anda disimpan ke `advisorModel` dalam pengaturan pengguna Anda dan bertahan di seluruh sesi. Jika [`availableModels`](/docs/id/model-config#restrict-model-selection) allowlist organisasi Anda mengecualikan model advisor yang disimpan, advisor tidak dipanggil sampai Anda memilih model yang diizinkan dengan `/advisor`. Jika model utama Anda saat ini tidak mendukung advisor, pilihan masih disimpan dan diaktifkan ketika Anda beralih ke [model utama yang kompatibel](#choose-an-advisor-model) dengan [`/model`](/docs/id/model-config#setting-your-model).
+Perintah mengonfirmasi dengan `Advisor set to` diikuti dengan nama model advisor. Pilihan Anda disimpan ke `advisorModel` dalam pengaturan pengguna Anda dan bertahan di seluruh sesi, kecuali dalam kasus yang [entri `advisorModel`](/docs/id/settings-reference#advisormodel) sebutkan sebagai berlaku hanya untuk sesi saat ini.
+
+Perintah ini juga berfungsi di mana tidak ada pemilih terminal: dalam [mode non-interaktif](/docs/id/headless) dengan `-p`, dalam Agent SDK, dalam aplikasi desktop, dan melalui [Remote Control](/docs/id/remote-control). Ini memerlukan Claude Code v2.1.260 atau lebih baru. Di permukaan tersebut:
+
+* Jalankan `/advisor` tanpa argumen untuk mencetak model advisor saat ini dan alias yang diterimanya.
+* Jalankan `/advisor` dengan model, seperti `/advisor opus`, untuk mengaturnya.
+* Jalankan `/advisor off` untuk mematikannya.
+
+Claude Code tidak memanggil advisor yang disimpan yang allowlist [`availableModels`](/docs/id/model-config#restrict-model-selection) organisasi Anda kecualikan. Untuk menggunakan advisor, pilih model yang diizinkan dengan `/advisor`. Claude Code masih menyimpan advisor yang model utama Anda saat ini tidak mendukung. Advisor itu diaktifkan setelah Anda beralih ke [model utama yang kompatibel](#choose-an-advisor-model) dengan [`/model`](/docs/id/model-config#setting-your-model). Jika API sudah menolak advisor yang disimpan dalam percakapan saat ini, itu tetap mati sampai `/clear` atau `/compact`, bahkan setelah Anda beralih model.
+
+Pada beberapa paket, Fable sebagai advisor juga memerlukan [persetujuan satu kali Anda untuk menagih penggunaan Fable ke kredit penggunaan](/docs/id/model-config#fable-and-usage-credits). Untuk apa yang dilakukan `/advisor fable` sebelum Anda memberikan persetujuan itu, lihat [Advisor Fable dan kredit penggunaan](#fable-advisor-and-usage-credits).
 
 <h3 id="set-advisormodel-in-settings">
   Atur `advisorModel` dalam pengaturan
@@ -74,7 +82,14 @@ Untuk mengatur advisor untuk sesi tunggal tanpa mengubah pengaturan yang disimpa
 claude --advisor opus
 ```
 
-Bendera ini mengambil alih pengaturan `advisorModel` untuk sesi itu. Bendera keluar dengan kesalahan jika model utama sesi tidak mendukung advisor, atau jika model advisor yang diminta dikecualikan oleh allowlist [`availableModels`](/docs/id/model-config#restrict-model-selection) organisasi Anda.
+Claude Code menggunakan bendera sebagai pengganti pengaturan `advisorModel` untuk sesi itu. Ini tidak mencantumkan `--advisor` dalam `claude --help`. Claude Code keluar dengan kesalahan saat peluncuran jika:
+
+* Model utama sesi tidak mendukung advisor
+* Model yang diminta, seperti Haiku, tidak dapat bertindak sebagai advisor
+* Allowlist [`availableModels`](/docs/id/model-config#restrict-model-selection) organisasi Anda mengecualikan model yang diminta
+* Anda meminta Fable dan akun Anda masih memerlukan [persetujuan kredit penggunaan](#fable-advisor-and-usage-credits)
+
+Jika Anda memulai [sesi latar belakang](/docs/id/agent-view) dengan `--advisor` dan salah satu dari ini berlaku, Claude Code memulai sesi tanpa advisor sebagai gantinya dari keluar.
 
 <h2 id="choose-an-advisor-model">
   Pilih model advisor
@@ -82,25 +97,38 @@ Bendera ini mengambil alih pengaturan `advisorModel` untuk sesi itu. Bendera kel
 
 Advisor harus setidaknya sama mampu dengan model utama. Advisor yang diterima untuk setiap model utama adalah:
 
-| Model utama              | Advisor yang diterima     | Catatan                                                                                                                                                              |
-| ------------------------ | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Haiku 4.5                | Fable, Opus, Sonnet       | Haiku dapat memanggil advisor tetapi tidak dapat bertindak sebagai advisor                                                                                           |
-| Sonnet 4.6               | Fable, Opus, Sonnet       |                                                                                                                                                                      |
-| Sonnet 5                 | Fable, Opus, Sonnet 5     | Advisor Sonnet 4.6 ditolak                                                                                                                                           |
-| Opus 4.6                 | Fable, Opus, Sonnet 5     | Sonnet 5 dan Opus 4.6 diperingkat sebagai sama mampu, jadi Opus 4.6 utama menerima advisor Sonnet 5                                                                  |
-| Opus 4.7 atau lebih baru | Fable, Opus 4.7, Opus 4.8 | Opus 4.7 dan Opus 4.8 diperingkat sebagai sama mampu, jadi keduanya menerima yang lain sebagai advisor. Opus 4.7 utama dengan advisor Opus 4.6 atau Sonnet 5 ditolak |
-| Fable 5 (v2.1.170+)      | Fable                     | Advisor Opus atau Sonnet ditolak                                                                                                                                     |
+| Model utama            | Advisor yang diterima                     | Catatan                                                                              |
+| ---------------------- | ----------------------------------------- | ------------------------------------------------------------------------------------ |
+| Haiku 4.5              | Fable, Opus, Sonnet                       | Haiku dapat memanggil advisor tetapi tidak dapat bertindak sebagai advisor           |
+| Sonnet 4.6             | Fable, Opus, Sonnet                       |                                                                                      |
+| Sonnet 5               | Fable, Opus 4.7 atau lebih baru, Sonnet 5 | Advisor Sonnet 4.6 ditolak, dan API menolak advisor Opus 4.6                         |
+| Opus 4.6               | Fable, Opus, Sonnet 5                     | Advisor Sonnet 4.6 ditolak                                                           |
+| Opus 4.7 atau Opus 4.8 | Fable, dan Opus 4.7 atau lebih baru       | Advisor Opus 4.6 atau Sonnet ditolak                                                 |
+| Opus 5.5 atau Opus 5   | Fable, dan Opus 5 atau lebih baru         | Advisor Opus 4.6 atau Sonnet ditolak, dan API menolak advisor Opus 4.7 atau Opus 4.8 |
+| Fable 5                | Fable 5.1 atau Fable 5                    | Advisor Opus atau Sonnet ditolak                                                     |
+| Fable 5.1              | Fable 5.1                                 | Advisor Opus atau Sonnet ditolak, dan API menolak advisor Fable 5                    |
 
-Fable 5 memerlukan Claude Code v2.1.170 atau lebih baru dan akses Fable 5, baik bertindak sebagai model utama atau advisor.
+Fable 5.1 memerlukan Claude Code v2.1.257 atau lebih baru. Kedua model Fable memerlukan [akses Fable](/docs/id/model-config#work-with-fable).
 
-Atur advisor sebagai `opus`, `sonnet`, atau `fable`. Alias ini diselesaikan ke versi terbaru dari setiap model. Anda juga dapat melewatkan ID model lengkap seperti `claude-opus-4-8`.
+Atur advisor sebagai `fable`, `opus`, atau `sonnet`. Alias ini diselesaikan ke versi default bawaan Claude Code untuk setiap keluarga model, yang berkembang dengan rilis Claude Code baru. Anda juga dapat melewatkan ID model lengkap seperti `claude-opus-5-5`.
 
 Subagent mewarisi advisor yang dikonfigurasi dan menerapkan pemeriksaan pasangan yang sama terhadap model mereka sendiri.
 
-Claude Code memvalidasi pasangan sebelum mengirim permintaan:
+Claude Code memvalidasi pasangan sebelum mengirim permintaan, dan API memvalidasinya lagi:
 
-* Jika advisor kurang mampu daripada model utama, advisor tidak dilampirkan ke permintaan model utama. Output perintah `/advisor` dan notifikasi menunjukkan hal ini. Subagent yang model mereka sendiri memenuhi pasangan mungkin masih menggunakan advisor.
+* Untuk advisor yang tabel cantumkan sebagai ditolak, Claude Code tidak melampirkannya ke permintaan model utama. Output perintah `/advisor` dan notifikasi menunjukkan hal ini. Subagent yang model mereka sendiri memenuhi pasangan mungkin masih menggunakan advisor.
+* Untuk advisor yang tabel cantumkan sebagai ditolak oleh API, Claude Code melampirkannya dan API menolaknya. Claude Code kemudian mengirim ulang permintaan tersebut tanpa advisor, dan sisa percakapan berjalan tanpa advisor, sehingga Anda tidak melihat kesalahan dan tidak mendapatkan panggilan advisor. Pilih advisor yang diterima dengan `/advisor`; perubahan berlaku setelah `/clear` atau `/compact` dan dalam sesi baru.
 * Jika model utama atau advisor adalah model yang Claude Code tidak kenali, advisor tidak dilampirkan.
+
+<h3 id="fable-advisor-and-usage-credits">
+  Advisor Fable dan kredit penggunaan
+</h3>
+
+Pada beberapa paket, penggunaan Fable ditagihkan ke kredit penggunaan, dan Fable sebagai advisor ditagihkan dengan cara yang sama. Jika akun Anda memerlukan [persetujuan satu kali untuk menagihkan penggunaan Fable ke kredit penggunaan](/docs/id/model-config#fable-and-usage-credits), Claude Code memintanya ketika Anda memilih model Fable dengan `/model` dan tidak menerapkan Fable sebagai advisor sampai Anda telah menerima persetujuan tersebut.
+
+Sebelum Anda menerimanya, Claude Code tidak menyimpan Fable sebagai advisor ketika Anda mengetik `/advisor fable` atau memilih Fable di pemilih `/advisor`. Ini mengarahkan Anda ke `/model fable` sebagai gantinya. Dengan `claude --advisor fable`, Claude Code keluar saat peluncuran dengan pesan yang mengarahkan ke `/model fable`. Dalam [sesi latar belakang](#use-the-advisor-flag), sesi dimulai tanpa advisor alih-alih keluar. Dengan Fable yang sudah disimpan sebagai `advisorModel` Anda, Claude Code mengirim permintaan tanpa advisor. Dalam sesi interaktif yang model utamanya mendukung advisor, sesi juga menampilkan notifikasi yang mengarahkan ke `/model fable`.
+
+Untuk menerima persetujuan, jalankan `/model fable` dan pilih untuk melanjutkan di Fable. Claude Code mencatat persetujuan dan [menyimpan Fable sebagai model pilihan Anda](/docs/id/model-config#default-model-setting). Kemudian pilih Fable sebagai advisor.
 
 <h3 id="common-model-pairings">
   Pasangan model umum
@@ -108,14 +136,14 @@ Claude Code memvalidasi pasangan sebelum mengirim permintaan:
 
 Pasangan apa pun yang diterima berfungsi. Kombinasi ini menyeimbangkan biaya terhadap kemampuan dengan cara yang berbeda:
 
-| Pasangan                      | Kapan menggunakan                                                                                                                                                                                             |
-| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Sonnet utama + advisor Opus   | Sonnet menangani pekerjaan rutin dan eskalasi perencanaan, kegagalan ambigu, dan pemeriksaan penyelesaian ke Opus                                                                                             |
-| Sonnet utama + advisor Fable  | Panduan Fable 5 pada titik keputusan tanpa menjalankan Fable 5 di seluruh. Memerlukan v2.1.170 atau lebih baru dan akses Fable 5                                                                              |
-| Haiku utama + advisor Opus    | Model utama dengan biaya terendah dengan perencanaan yang kuat. Harapkan biaya lebih tinggi daripada Haiku saja tetapi lebih rendah daripada beralih model utama ke Sonnet atau Opus                          |
-| Opus utama + advisor Opus     | Opus kedua meninjau yang pertama. Berguna untuk tugas berisiko tinggi di mana pemeriksaan independen lebih penting daripada biaya                                                                             |
-| Fable utama + advisor Fable   | Pasangan kemampuan tertinggi ketika Fable 5 tersedia (v2.1.170+). Fable adalah tingkat yang lebih tinggi daripada Opus dan Sonnet, jadi ini adalah satu-satunya advisor yang diterima untuk model utama Fable |
-| Sonnet utama + advisor Sonnet | Pendapat kedua dengan biaya lebih rendah untuk menangkap pengawasan rutin                                                                                                                                     |
+| Pasangan                      | Kapan menggunakan                                                                                                                                                                    |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Sonnet utama + advisor Opus   | Sonnet menangani pekerjaan rutin dan eskalasi perencanaan, kegagalan ambigu, dan pemeriksaan penyelesaian ke Opus                                                                    |
+| Sonnet utama + advisor Fable  | Panduan Fable pada titik keputusan tanpa menjalankan Fable di seluruh. Memerlukan akses Fable                                                                                        |
+| Haiku utama + advisor Opus    | Model utama dengan biaya terendah dengan perencanaan yang kuat. Harapkan biaya lebih tinggi daripada Haiku saja tetapi lebih rendah daripada beralih model utama ke Sonnet atau Opus |
+| Opus utama + advisor Opus     | Opus kedua meninjau yang pertama. Berguna untuk tugas berisiko tinggi di mana pemeriksaan independen lebih penting daripada biaya                                                    |
+| Fable utama + advisor Fable   | Pasangan kemampuan tertinggi ketika Fable tersedia. Claude Code tidak menerapkan advisor Opus atau Sonnet ke model utama Fable                                                       |
+| Sonnet utama + advisor Sonnet | Pendapat kedua dengan biaya lebih rendah untuk menangkap pengawasan rutin                                                                                                            |
 
 <h2 id="when-claude-consults-the-advisor">
   Kapan Claude berkonsultasi dengan advisor
@@ -129,7 +157,10 @@ Anda dapat meminta konsultasi dalam prompt Anda dengan cara yang sama seperti An
   Apa yang Anda lihat selama sesi
 </h2>
 
-Ketika Claude memanggil advisor, transkrip menampilkan baris `Advising` dengan nama model advisor saat panggilan sedang berlangsung. Ketika hasilnya kembali, baris mengkonfirmasi bahwa advisor telah meninjau percakapan. Tekan `Ctrl+O` untuk memperluas dan membaca panduan lengkap advisor.
+Ketika Claude memanggil advisor, transkrip menampilkan baris `Advising` dengan nama model advisor saat panggilan sedang berlangsung. Ketika hasilnya kembali, baris melaporkan apakah advisor memberikan panduan:
+
+* **Reviewed**: baris mengkonfirmasi bahwa advisor telah meninjau percakapan. Ketika advisor mengembalikan panduan yang dapat dibaca, tekan `Ctrl+O` untuk membacanya.
+* **Declined**: baris berbunyi `Advisor declined to advise on this request`. Jika advisor memberikan alasan, tekan `Ctrl+O` untuk membacanya.
 
 Claude umumnya mengikuti panduan advisor, tetapi beradaptasi ketika bukti miliknya bertentangan dengan klaim spesifik: jika langkah yang direkomendasikan gagal saat dicoba, atau isi file bertentangan dengan saran, Claude menampilkan konflik daripada mengikuti panduan secara tidak terbatas.
 
@@ -139,7 +170,12 @@ Advisor selalu menerima percakapan lengkap, dan Claude mengontrol waktu. Untuk k
   Biaya
 </h2>
 
-Setiap panggilan advisor mengirim percakapan ke model advisor, jadi mengonsumsi token pada tarif model advisor sebagai tambahan dari penggunaan model utama Anda. Dengan penagihan API, token advisor ditagih pada tarif input dan output model advisor. Pada paket berlangganan, penggunaan advisor dihitung terhadap batas penggunaan paket Anda.
+Ketika Claude memanggil advisor, model advisor membaca percakapan, jadi setiap panggilan mengonsumsi token pada tarif model advisor sebagai tambahan dari penggunaan model utama Anda. Bagaimana token advisor ditagih tergantung pada cara Anda membayar:
+
+* **Penagihan API**: Anda membayar tarif input dan output model advisor untuk token advisor
+* **Paket berlangganan**: penggunaan advisor dihitung terhadap batas penggunaan paket Anda, kecuali bahwa advisor Fable ditagih ke [kredit penggunaan](/docs/id/model-config#fable-and-usage-credits) pada paket di mana penggunaan Fable melakukannya
+
+Jika akun Anda memerlukan persetujuan kredit penggunaan, advisor Fable tidak ditagih apa pun sebelum Anda memberikannya, karena Claude Code [tidak menerapkan pilihan](#fable-advisor-and-usage-credits) sampai saat itu.
 
 Claude memanggil advisor pada titik keputusan daripada pada setiap giliran, jadi memasangkan model utama yang lebih cepat dengan advisor yang lebih kuat biasanya biaya lebih rendah daripada menjalankan model yang lebih kuat di seluruh. Penggunaan advisor dihitung terhadap total sesi yang ditampilkan oleh [`/usage`](/docs/id/costs#track-your-costs).
 
@@ -149,7 +185,7 @@ Untuk bagaimana token advisor dilaporkan dalam respons API, lihat [Usage and bil
   Dampak pada prompt caching
 </h2>
 
-Mengaktifkan atau menonaktifkan advisor di tengah sesi tidak membatalkan [prompt cache](/docs/id/prompt-caching) model utama Anda. Tidak seperti [mengubah model atau tingkat upaya](/docs/id/prompt-caching#actions-that-invalidate-the-cache), mengalihkan `/advisor` menjaga awalan yang di-cache tetap utuh, dan panduan yang dikembalikan advisor di-cache sebagai bagian dari transkrip pada giliran berikutnya.
+Mengaktifkan atau menonaktifkan advisor di tengah sesi tidak membatalkan [prompt cache](/docs/id/prompt-caching) model utama Anda. Tidak seperti [mengubah model](/docs/id/prompt-caching#switching-models), mengalihkan `/advisor` menjaga awalan yang di-cache tetap utuh, dan panduan yang dikembalikan advisor di-cache sebagai bagian dari transkrip pada giliran berikutnya.
 
 Pembacaan percakapan model advisor sendiri tidak di-cache. Setiap panggilan advisor memproses transkrip lengkap baru, tanpa penggunaan kembali di antara panggilan.
 
@@ -159,20 +195,21 @@ Pembacaan percakapan model advisor sendiri tidak di-cache. Setiap panggilan advi
 
 Alat advisor memerlukan semua hal berikut:
 
-* **Hanya API Anthropic**: advisor adalah alat yang dieksekusi server. Alat ini tidak tersedia di Amazon Bedrock, Claude Platform on AWS, Google Cloud's Agent Platform, atau Microsoft Foundry. Melalui [LLM gateway](/docs/id/llm-gateway) yang dikonfigurasi dengan `ANTHROPIC_BASE_URL`, ketersediaan tergantung pada apakah gateway meneruskan permintaan utuh ke API Anthropic.
-* **Model utama yang didukung**: Opus 4.6 atau lebih baru, Sonnet 4.6 atau lebih baru, atau Haiku 4.5. Fable 5 juga memenuhi syarat di Claude Code v2.1.170 atau lebih baru.
+* **Hanya API Anthropic**: advisor adalah alat yang dieksekusi server. Alat ini tidak tersedia di Amazon Bedrock, Claude Platform on AWS, Google Cloud's Agent Platform, atau Microsoft Foundry. Melalui [LLM gateway](/docs/id/llm-gateway) yang dikonfigurasi dengan `ANTHROPIC_BASE_URL`, ketersediaan tergantung pada apakah gateway meneruskan permintaan utuh ke API Anthropic. Jika gateway atau upstream-nya tidak mengenali alat advisor, lihat [Pengulangan otomatis dan penerusan kesalahan](/docs/id/llm-gateway-protocol#automatic-retry-and-error-forwarding) untuk mengetahui bagaimana Claude Code merespons.
+* **Model utama yang didukung**: Fable, Opus 4.6 atau lebih baru, Sonnet 4.6 atau lebih baru, atau Haiku 4.5. Lihat [Pilih model advisor](#choose-an-advisor-model) untuk mengetahui advisor mana yang diterima masing-masing.
+* **Pengambilan bendera fitur**: Claude Code mengaktifkan advisor melalui bendera fitur yang diambilnya dari Anthropic. Dalam sesi di mana variabel yang mematikan pengambilan bendera diatur, seperti `DISABLE_TELEMETRY`, advisor tetap mati. Lihat [Fitur yang memerlukan pengambilan bendera fitur](/docs/id/env-vars#features-that-need-feature-flag-fetching).
 
 <h2 id="turn-the-advisor-off">
   Matikan advisor
 </h2>
 
-Untuk berhenti menggunakan advisor dan menghapus `advisorModel` yang disimpan, jalankan `/advisor off` atau pilih **No advisor** di pemilih `/advisor`:
+Untuk berhenti menggunakan advisor, jalankan `/advisor off` atau pilih **No advisor** di pemilih `/advisor`:
 
 ```
 /advisor off
 ```
 
-Untuk menonaktifkan alat advisor sepenuhnya, atur `CLAUDE_CODE_DISABLE_ADVISOR_TOOL=1`. Perintah `/advisor` menjadi tidak tersedia dan `advisorModel` yang dikonfigurasi apa pun diabaikan. Bendera `--advisor` diterima tetapi tidak memiliki efek; skrip yang ada yang meneruskannya terus berfungsi tanpa kesalahan. Lihat [Environment variables](/docs/id/env-vars).
+Untuk menonaktifkan alat advisor sepenuhnya, atur `CLAUDE_CODE_DISABLE_ADVISOR_TOOL=1`. Perintah `/advisor` menjadi tidak tersedia dan `advisorModel` yang dikonfigurasi apa pun diabaikan. Bendera `--advisor` diterima tetapi tidak memiliki efek. Lihat [Environment variables](/docs/id/env-vars).
 
 <h2 id="compare-with-related-features">
   Bandingkan dengan fitur terkait
@@ -185,7 +222,7 @@ Advisor adalah salah satu dari beberapa cara untuk menggabungkan kekuatan model.
 | Alat advisor                                                     | Pada titik keputusan di tengah tugas                                                                                                                | Claude memanggilnya ketika memerlukan panduan       |
 | [`opusplan`](/docs/id/model-config#opusplan-model-setting)            | Selama mode rencana ketika [diizinkan oleh `availableModels`](/docs/id/model-config#restrict-model-selection), kemudian beralih ke Sonnet untuk eksekusi | Anda memasuki mode rencana                          |
 | [Subagents](/docs/id/sub-agents#choose-a-model) dengan `model` diatur | Untuk seluruh subtask yang didelegasikan                                                                                                            | Claude mendelegasikan, atau Anda memanggil subagent |
-| [`/model`](/docs/id/model-config#setting-your-model)                  | Untuk semua giliran berikutnya                                                                                                                      | Anda beralih model                                  |
+| [`/model`](/docs/id/model-config#setting-your-model)                  | Dari permintaan berikutnya dan seterusnya                                                                                                           | Anda beralih model                                  |
 
 <h2 id="see-also">
   Lihat juga

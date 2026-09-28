@@ -6,7 +6,71 @@
 
 > Claude Code の注目すべき機能を毎週紹介するダイジェスト。コードスニペット、デモ、およびそれらが重要である理由についての説明が含まれています。
 
-週間開発ダイジェストは、あなたの仕事のやり方を変える可能性が最も高い機能をハイライトします。各エントリには実行可能なコード、短いデモ、および完全なドキュメントへのリンクが含まれています。すべてのバグ修正と軽微な改善については、[changelog](/docs/ja/changelog) を参照してください。
+週間開発ダイジェストは、あなたの仕事のやり方を変える可能性が最も高い機能をハイライトします。各エントリには実行可能なコード、短いデモ、および完全なドキュメントへのリンクが含まれています。すべてのバグ修正と軽微な改善については、[changelog](/docs/en/changelog) を参照してください。
+
+<Update label="Week 37" description="September 7–11, 2026" tags={["v2.1.263–v2.1.269"]}>
+  **`claude plugin eval`**：プラグインをテストケースのスイートに対して実行し、結果をスコアリングし、プラグインなしのベースラインと比較します。`claude plugin eval init` はケースとグレーダーをあなたのために作成します。
+
+  今週のその他の機能：**Claude Code Desktop ペイン** をポップアウトして独自のウィンドウに表示し、後で戻してドックできます。**`maxEffortLevel`** 設定はすべてのプロバイダーのエフォートレベルを制限します。**WebFetch** が 5 分以内にダウンロードを完了しなかったページは、ハングする代わりに失敗します。
+
+  [Week 37 ダイジェストを読む →](/docs/ja/whats-new/2026-w37)
+</Update>
+
+<Update label="Week 36" description="August 31 – September 4, 2026" tags={["v2.1.251–v2.1.261"]}>
+  **Claude Fable 5.1**：1M トークンコンテキストウィンドウで Claude Code で利用可能です。
+
+  今週のその他の機能：Pro および Max プランでは、**Desktop アプリでのコンピュータ使用** は macOS でバックグラウンドで動作し、あなたは作業を続けます。フルスクリーンレンダリングでは、**`/diff`** は会話の横にライブパネルを開き、Claude が編集するにつれて更新されます。**`/skill-doctor`** は各スキルがコンテキストでどのくらいのコストがかかるか、およびどのくらいの頻度で使用されるかを表示します。
+
+  [Week 36 ダイジェストを読む →](/docs/ja/whats-new/2026-w36)
+</Update>
+
+<Update label="Week 35" description="August 24–28, 2026" tags={["v2.1.240–v2.1.250"]}>
+  **Desktop アプリでターミナルセッションを再開**：Claude Code Desktop プロンプトボックスで `/resume` を入力して、CLI から開始したセッションを選択し、完全な会話とコンテキストをそのまま再開します。
+
+  今週のその他の機能：**Claude が作成したフィードバック** は、セッションで何か問題が発生したときに Claude がフィードバックレポートを作成し、あなたが確認して `/feedback` から送信します。**`--restricted`** はコマンド実行ツールやあなたのユーザーおよびプロジェクト設定なしでセッションを開始し、共有マシン上の評価ハーネス向けです。**`modelPicker`** 設定は `/model` ピッカーがリストするモデルを制御します。
+
+  [Week 35 ダイジェストを読む →](/docs/ja/whats-new/2026-w35)
+</Update>
+
+<Update label="Week 34" description="August 17–21, 2026" tags={["v2.1.234–v2.1.239"]}>
+  **`/design`**：Claude Design のアートボードワークフローを CLI と Claude Code Desktop に導入するリサーチプレビュー。アーティファクト上に構築されているため、Claude はあなたの UI 用に編集可能なアートボードを作成し、選択したものを実装します。
+
+  今週のその他の機能：ビルトイン **Concise output style** により Claude は結果を最初に示し、前置きをスキップします。`claude remote-control` を実行しているマシンは、電話の Code タブから **device card** として表示されるため、そこからセッションを開始できます。**`ANTHROPIC_DEFAULT_MODEL`** は新しいセッションが開始するモデルを設定します。
+
+  [Week 34 ダイジェストを読む →](/docs/ja/whats-new/2026-w34)
+</Update>
+
+<Update label="Week 33" description="August 10–14, 2026" tags={["v2.1.225–v2.1.233"]}>
+  **Desktop でのセッション制限後の自動継続**：Claude Code Desktop でセッション制限に達した場合、制限カードで **Auto-continue when limits reset** をチェックすると、制限がリセットされたら、アプリは中断されたターンを再試行します。
+
+  今週のその他の機能：**fork mode** はインタラクティブセッションでデフォルトで有効になっているため、Claude は完全な会話を継承するサブエージェントに副タスクを渡すことができます。**GitLab** マージリクエスト URL は `--worktree` と `claude agents` ビューで動作し、マーケットプレイスは bare `gitlab.com` URL をクローンします。プロンプトで **`@`** を入力すると、別の Claude セッションを名前で言及できます。
+
+  [Week 33 ダイジェストを読む →](/docs/ja/whats-new/2026-w33)
+</Update>
+
+<Update label="Week 32" description="August 3–7, 2026" tags={["v2.1.220–v2.1.224"]}>
+  **クロスセッションメッセージング**：macOS と Linux では、Claude Code セッションが相互にメッセージを送信できるようになったため、Claude は 1 つのセッションから別のセッションに検出結果または決定を渡すことができ、再度説明する必要がありません。
+
+  今週のその他の機能：**self-hosted environments** は Claude Code クラウドセッションをあなたの組織が運用するインフラストラクチャで実行し、Team および Enterprise プランでパブリックベータ版です。**auto mode** は 8 月 14 日から Pro、Max、および Team プランの新しいセッションのデフォルト権限モードになります。**VS Code extension** は Focus view を取得します。
+
+  [Week 32 ダイジェストを読む →](/docs/ja/whats-new/2026-w32)
+</Update>
+
+<Update label="Week 30" description="July 20–24, 2026" tags={["v2.1.214–v2.1.219"]}>
+  **Claude Opus 5**：Claude Code の新しいデフォルト Opus モデル。1M トークンコンテキストウィンドウと fast mode で 1 MTok あたり $10/$50 です。
+
+  今週のその他の機能：**Claude Code Desktop** は iOS Simulator ペインをパブリックベータで開くため、Claude はあなたのアプリを実行してタップして操作でき、あなたはそれを見ることができます。**Claude Security plugin** はあなたのコードベースのマルチエージェント脆弱性スキャンを実行し、選択した検出結果をあなたが自分で適用するパッチに変換します。**`/code-review`** はバックグラウンドサブエージェントとして実行されます。
+
+  [Week 30 ダイジェストを読む →](/docs/ja/whats-new/2026-w30)
+</Update>
+
+<Update label="Week 29" description="July 13–17, 2026" tags={["v2.1.207–v2.1.212"]}>
+  **Artifacts は MCP コネクタを呼び出します**：公開されたアーティファクトは、ページを開くときに各ビューアー自身の MCP コネクタを通じてライブデータを取得し、アクションを実行できます。今週はパブリック共有リンク、Team および Enterprise のエディタロール、および Claude Tag セッションから作成されたアーティファクトも追加されます。
+
+  今週のその他の機能：**screen reader mode** は視覚的なターミナルインターフェイスを VoiceOver や NVDA などのスクリーンリーダー用のプレーンな線形テキストに置き換えます。**`/fork`** は会話を新しいバックグラウンドセッションにコピーしながら、あなたは作業を続けます。**auto mode** は Amazon Bedrock、Google Cloud の Agent Platform、および Microsoft Foundry でオプトイン変数が不要になりました。
+
+  [Week 29 ダイジェストを読む →](/docs/ja/whats-new/2026-w29)
+</Update>
 
 <Update label="Week 28" description="July 6–10, 2026" tags={["v2.1.202–v2.1.206"]}>
   **デスクトップ上のアプリ内ブラウザ**：Claude Code デスクトップはビルトインブラウザを取得し、Claude はドキュメント、デザイン、またはその他のサイトを表示して、ローカル開発サーバープレビューと同じ方法でページと対話できます。

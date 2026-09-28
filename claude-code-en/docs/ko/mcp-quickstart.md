@@ -48,7 +48,7 @@ Claude Code에서 MCP 서버를 연결하고 구성하는 모든 방법은 [MCP 
     * `claude-code-docs`: 사용자가 만드는 이름입니다. 동일한 서버를 `docs`라고 호출해도 동일하게 작동합니다. Claude Code는 선택한 이름을 사용하여 Claude의 출력에서 서버의 도구에 레이블을 지정하고 `claude mcp remove`와 같은 명령에서 서버를 참조합니다.
     * `https://code.claude.com/docs/mcp`: 서버가 호스팅되는 URL입니다.
 
-    명령은 `Added HTTP MCP server claude-code-docs with URL: https://code.claude.com/docs/mcp to local config`와 같은 확인을 출력합니다. `local config` 부분은 서버가 이 프로젝트에서 사용자에게 등록되었음을 의미합니다: 다른 프로젝트에서 Claude Code를 시작하면 이 서버는 활성화되지 않습니다. 모든 프로젝트에 대해 한 번 서버를 등록하려면 사용자 범위에서 추가하세요. [서버 범위 변경](#change-server-scope)에서 다룹니다.
+    명령은 `Added HTTP MCP server claude-code-docs with URL: https://code.claude.com/docs/mcp to local config`와 같은 확인을 출력합니다. 그 다음에 구성 파일을 작성한 것을 보여주는 `File modified:` 줄이 나옵니다. `local config` 부분은 서버가 이 프로젝트에서 사용자에게 등록되었음을 의미합니다: 다른 프로젝트에서 Claude Code를 시작하면 이 서버는 활성화되지 않습니다. 모든 프로젝트에 대해 한 번 서버를 등록하려면 사용자 범위에서 추가하세요. [서버 범위 변경](#change-server-scope)에서 다룹니다.
   </Step>
 
   <Step title="연결 상태 확인">
@@ -60,14 +60,17 @@ Claude Code에서 MCP 서버를 연결하고 구성하는 모든 방법은 [MCP 
 
     서버는 상태 표시기와 함께 나타납니다:
 
-    | 상태                                 | 의미                                                                                                                          |
-    | :--------------------------------- | :-------------------------------------------------------------------------------------------------------------------------- |
-    | `✓ Connected`                      | 사용할 준비가 되었습니다. `claude-code-docs`에서 이것을 봐야 합니다                                                                              |
-    | `! Connected · tools fetch failed` | 서버가 연결되었지만 도구를 나열할 수 없습니다. 오류 세부 정보는 `claude mcp get <name>`을 실행하세요                                                         |
-    | `! Needs authentication`           | 서버에 도달할 수 있지만 브라우저 로그인이 필요하거나 `--header`로 전달된 토큰이 필요합니다. [로그인이 필요한 서버 연결하기](#connect-a-server-that-requires-sign-in)를 참조하세요 |
-    | `✗ Failed to connect`              | 서버가 응답하지 않았습니다. [문제 해결](#troubleshooting)을 참조하세요                                                                            |
-    | `✗ Connection error`               | 연결 시도에서 오류가 발생했습니다. [문제 해결](#troubleshooting)을 참조하세요                                                                        |
-    | `⏸ Pending approval`               | 아직 승인하지 않은 프로젝트 범위 서버입니다. [.mcp.json 직접 편집하기](#edit-mcp-json-directly)를 참조하세요                                               |
+    | 상태                                                 | 의미                                                                                                                            |
+    | :------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------- |
+    | `✔ Connected`                                      | 사용할 준비가 되었습니다. `claude-code-docs`에서 이것을 봐야 합니다                                                                                |
+    | `! Connected · tools fetch failed`                 | 서버가 연결되었지만 도구를 나열할 수 없습니다. 오류 세부 정보는 `claude mcp get <name>`을 실행하세요                                                           |
+    | `! Needs authentication`                           | 서버에 도달할 수 있지만 브라우저 로그인이 필요하거나 `--header`로 전달된 토큰이 필요합니다. [로그인이 필요한 서버 연결하기](#connect-a-server-that-requires-sign-in)를 참조하세요   |
+    | `✘ Failed to connect`                              | 서버가 응답하지 않았습니다. [문제 해결](#troubleshooting)을 참조하세요                                                                              |
+    | `✘ Connection error`                               | 연결 시도에서 오류가 발생했습니다. [문제 해결](#troubleshooting)을 참조하세요                                                                          |
+    | ``⏸ Pending approval (run `claude` to approve)``   | 아직 승인하지 않은 프로젝트 범위 서버입니다. [.mcp.json 직접 편집하기](#edit-mcp-json-directly)를 참조하세요                                                 |
+    | `⊘ Disabled for this project (re-enable via /mcp)` | 프로젝트의 `disabledMcpServers` 목록에 의해 이 프로젝트에 대해 꺼진 서버입니다. [서버 제거 없이 비활성화하기](/docs/ko/mcp#disable-a-server-without-removing-it)를 참조하세요 |
+
+    Windows 10의 기본 콘솔과 같은 일부 레거시 Windows 콘솔은 이러한 Unicode 문자를 지원하지 않으며 `✔` 및 `✘` 대신 `√` 및 `×`를 표시합니다.
   </Step>
 
   <Step title="서버 사용">
@@ -77,7 +80,7 @@ Claude Code에서 MCP 서버를 연결하고 구성하는 모든 방법은 [MCP 
     claude
     ```
 
-    ```text theme={null}
+    ```text wrap theme={null}
     Use the claude-code-docs server to look up what MCP_TIMEOUT does
     ```
 
@@ -85,7 +88,7 @@ Claude Code에서 MCP 서버를 연결하고 구성하는 모든 방법은 [MCP 
       일반적으로 Claude가 자체적으로 관련 도구를 선택하므로 프롬프트에서 서버 이름을 지정할 필요가 없습니다. 여기서 이름을 지정하면 웹 가져오기와 같은 동일한 질문에 답할 수 있는 다른 도구가 아닌 새 서버를 통해 데모가 진행되도록 보장합니다.
     </Info>
 
-    Claude가 처음으로 서버를 호출할 때 새 도구를 사용할 수 있는 권한을 요청합니다. 계속하려면 승인하세요. Claude의 출력에서 도구 호출은 서버 이름으로 레이블이 지정되어 있으므로 답변이 Claude의 기본 제공 지식이 아닌 MCP 서버에서 나왔는지 확인할 수 있습니다.
+    Claude Code가 처음으로 Claude가 서버를 호출할 때 권한을 요청하면 승인하세요. Claude의 출력에서 도구 호출은 서버 이름으로 레이블이 지정되어 있으므로 답변이 Claude의 기본 제공 지식이 아닌 MCP 서버에서 나왔는지 확인할 수 있습니다.
   </Step>
 
   <Step title="서버 제거">
@@ -94,6 +97,8 @@ Claude Code에서 MCP 서버를 연결하고 구성하는 모든 방법은 [MCP 
     ```bash theme={null}
     claude mcp remove claude-code-docs
     ```
+
+    명령은 `Removed MCP server "claude-code-docs" from local config`로 확인하고 업데이트한 파일을 보여주는 `File modified:` 줄이 나옵니다.
 
     <Note>
       연결된 각 서버는 도구 이름과 서버 지침이 모든 세션에 로드되기 때문에 [Claude의 컨텍스트 윈도우](/docs/ko/how-claude-code-works#the-context-window)에서 일부 공간을 차지합니다. 더 이상 사용하지 않는 서버를 제거하면 해당 공간을 확보할 수 있습니다.
@@ -111,7 +116,7 @@ Claude Code에서 MCP 서버를 연결하고 구성하는 모든 방법은 [MCP 
   `claude mcp add`는 PowerShell 및 Command Prompt를 포함한 모든 셸에서 동일하게 작동합니다. `claude` 세션 내부에서 `/mcp` 명령을 사용하여 이미 추가한 서버를 확인하고 관리합니다.
 </Note>
 
-서버를 추가하는 다른 방법이 있으며, 각각은 이 페이지의 뒷부분에서 다룹니다:
+서버를 추가하는 다른 방법이 있으며, 각각은 자체 섹션이 있습니다:
 
 * [로컬 서버 추가](#add-a-local-server): URL에 연결하는 대신 머신에서 프로그램을 실행합니다.
 * [`.mcp.json` 직접 편집하기](#edit-mcp-json-directly): 명령을 사용하는 대신 JSON 항목을 직접 작성합니다.
@@ -193,6 +198,8 @@ claude mcp add --scope project --transport http claude-code-docs https://code.cl
     * `--` 구분 기호 뒤의 모든 것은 Claude Code가 서버를 시작하기 위해 실행하는 명령입니다.
     * `-y`는 `npx`에 프롬프트 없이 패키지를 설치하도록 지시합니다.
 
+    명령은 `Added stdio MCP server playwright with command: npx -y @playwright/mcp@latest to local config`와 같은 확인을 출력하고, 그 뒤에 작성한 구성 파일을 보여주는 `File modified:` 줄이 따릅니다.
+
     Playwright는 머신에 이미 설치된 Chrome을 구동합니다. 다른 브라우저를 사용하려면 `@playwright/mcp@latest` 뒤에 `--browser`를 추가하고 브라우저 이름을 입력합니다(예: `--browser firefox`).
   </Step>
 
@@ -203,13 +210,13 @@ claude mcp add --scope project --transport http claude-code-docs https://code.cl
     claude mcp list
     ```
 
-    첫 번째 확인은 `npx`가 패키지를 다운로드하는 동안 `✗ Failed to connect`를 표시할 수 있으므로 잠시 기다렸다가 다시 실행합니다.
+    첫 번째 확인은 `npx`가 패키지를 다운로드하는 동안 `✘ Failed to connect`를 표시할 수 있으므로 잠시 기다렸다가 다시 실행합니다. 다운로드가 완료되면 상태가 `✔ Connected`로 변경됩니다. 몇 번 재시도한 후에도 여전히 `✘ Failed to connect`를 표시하면 [문제 해결](#troubleshooting)을 참조하세요.
   </Step>
 
   <Step title="브라우저 사용">
     Claude에 브라우저가 필요한 작업을 제공합니다:
 
-    ```text theme={null}
+    ```text wrap theme={null}
     Use playwright to open https://example.com and tell me the page title
     ```
 
@@ -241,7 +248,7 @@ Sentry, Linear, Notion과 같은 호스팅된 서비스는 OAuth 뒤에서 MCP �
   <Step title="브라우저에서 인증">
     Claude Code 세션을 시작하고 MCP 패널을 엽니다:
 
-    ```text theme={null}
+    ```text wrap theme={null}
     /mcp
     ```
 
@@ -301,7 +308,7 @@ Claude Code가 처음으로 프로젝트 범위 서버를 보면 승인하도록
 * **Claude Code 데스크톱 앱**: [Connectors UI](/docs/ko/desktop#connect-external-tools)를 통해 서버를 추가합니다.
 * **Claude Desktop 채팅 앱**: Claude Code와 별개의 앱입니다. `claude_desktop_config.json`에서 CLI로 서버를 복사하려면 macOS 또는 WSL에서 `claude mcp add-from-claude-desktop`을 실행합니다.
 * **VS Code**: [MCP를 사용하여 외부 도구에 연결하기](/docs/ko/vs-code#connect-to-external-tools-with-mcp)를 참조하세요.
-* **웹의 Claude Code**: 저장소에서 `.mcp.json`을 읽습니다. [.mcp.json 직접 편집하기](#edit-mcp-json-directly)를 참조하세요.
+* **클라우드 세션**: 저장소에 `.mcp.json`을 커밋합니다. [.mcp.json 직접 편집하기](#edit-mcp-json-directly) 및 [설정에서 이월되는 항목](/docs/ko/cloud-environments#what-carries-over-from-your-setup)을 참조하세요.
 * **Claude.ai**: [claude.ai/customize/connectors](https://claude.ai/customize/connectors)에서 추가한 커넥터는 해당 계정으로 로그인할 때 CLI에 자동으로 로드됩니다. [Claude.ai에서 MCP 서버 사용하기](/docs/ko/mcp#use-mcp-servers-from-claude-ai)를 참조하세요.
 
 <h2 id="troubleshooting">
@@ -316,12 +323,20 @@ Claude Code가 처음으로 프로젝트 범위 서버를 보면 승인하도록
 
     * 다른 프로젝트에서 `claude mcp add`를 실행했습니다. 로컬 범위 서버는 추가한 프로젝트에 연결됩니다: 저장소 루트 또는 git 저장소에 없는 경우 정확한 디렉토리입니다. 현재 있는 프로젝트에서 서버를 다시 추가하거나 프로젝트에 연결되지 않도록 `--scope user`로 추가합니다.
     * 잘못된 경로에서 구성 파일을 편집했습니다. 올바른 파일은 `~/.claude.json` 및 `<project>/.mcp.json`입니다. Claude Code는 `~/.claude/.mcp.json`, `~/.claude/config/mcp.json`, `~/.claude/mcp.json` 또는 `%APPDATA%\Claude\mcp.json`과 같은 경로를 읽지 않습니다. 사용자 범위 서버의 경우 `claude mcp add --scope user`를 실행하여 `~/.claude.json`의 `mcpServers` 키에 쓰고, 프로젝트 범위 서버의 경우 프로젝트 루트의 `.mcp.json`을 편집합니다.
+    * `.mcp.json`에 잘못된 형식의 항목을 작성했습니다. Claude Code는 해당 항목을 건너뛰고 여전히 다른 항목을 로드합니다. 셸에서 `claude mcp list`를 실행하고 구문 분석 경고를 찾으면 문제가 있는 필드의 이름이 표시됩니다.
   </Accordion>
 
   <Accordion title="Status shows Failed to connect or Connection error">
-    두 상태 모두 서버가 시작되지 않았거나 URL이 응답하지 않았음을 의미합니다. [로그인이 필요한 서버 연결하기](#connect-a-server-that-requires-sign-in)에서 다룬 브라우저 로그인이 아닌 토큰을 예상하는 HTTP 서버에도 나타날 수 있습니다.
+    두 상태 모두 서버가 시작되지 않았거나 URL이 응답하지 않았음을 의미합니다. 또한 `headers.Authorization`에서 구성한 토큰을 거부하는 HTTP 서버에도 나타날 수 있습니다. 토큰을 구성하지 않은 서버는 대신 `! Needs authentication`을 표시하며, [로그인이 필요한 서버 연결하기](#connect-a-server-that-requires-sign-in)에서 다룹니다.
 
-    v2.1.191부터 `404 Not Found`를 반환하는 HTTP 서버는 `/mcp`에서 서버를 선택할 때 `MCP endpoint not found at <url>. Check the URL in your MCP config.`를 표시하며, Claude Code가 시도한 URL을 포함합니다. 이전 버전은 URL 없이 일반적인 `Error POSTing to endpoint` 메시지를 표시합니다. URL을 서버의 문서화된 MCP 엔드포인트 경로와 비교한 다음 `claude mcp remove <name>`을 실행하고 올바른 URL로 다시 추가합니다.
+    첫 번째 단계는 표시되는 상태에 따라 다릅니다:
+
+    * `Failed to connect`: 상태 자체의 실패 세부 정보로 시작합니다. `claude mcp list` 및 `claude mcp get <name>`은 HTTP 상태 또는 오류 코드와 서버가 반환한 오류 텍스트를 표시하며, 이는 종종 누락된 헤더 또는 거부된 토큰과 같은 문제를 직접 이름으로 지정합니다. v2.1.219 이전에는 `Failed to connect`가 기본 상태만 표시했으며, 원인을 찾기 위해 이 섹션의 나중에 있는 curl 및 명령 확인이 필요했습니다.
+    * `Connection error`: Claude Code는 모든 버전에서 이 상태에 세부 정보를 추가하지 않으므로 이 섹션의 나중에 있는 curl 및 명령 확인으로 바로 이동합니다.
+
+    세부 정보가 자격 증명 또는 URL을 가리키면 `claude mcp list` 출력의 경고도 확인합니다. Claude Code는 숨겨진 선행 또는 후행 공백이 있는 구성 값에 플래그를 지정하며, 이는 토큰을 붙여넣은 후 인증 실패의 일반적인 원인입니다.
+
+    HTTP 서버가 `404 Not Found`를 반환하면 Claude Code는 `/mcp`에서 서버를 선택할 때 `MCP endpoint not found at <origin>. Check the URL in your MCP config.`를 표시합니다. 메시지는 경로 없이 `https://mcp.example.com`과 같은 URL의 원본 이름을 지정하므로 `claude mcp get <name>`을 실행하여 구성한 전체 URL을 확인합니다. 해당 경로를 서버의 문서화된 MCP 엔드포인트 경로와 비교한 다음 `claude mcp remove <name>`을 실행하고 올바른 URL로 다시 추가합니다. v2.1.219 이전에는 메시지에 URL의 경로도 포함되었으며, v2.1.191 이전에는 `404`가 URL 없이 일반적인 `Error POSTing to endpoint` 메시지를 표시했습니다.
 
     HTTP 서버의 경우 URL이 머신에서 도달 가능한지 확인합니다:
 
@@ -382,7 +397,7 @@ Claude Code가 처음으로 프로젝트 범위 서버를 보면 승인하도록
   <Accordion title="Changes to .mcp.json don't take effect">
     Claude Code는 세션 시작 시 `.mcp.json`을 읽습니다. 파일을 편집한 후 세션을 종료하고 다시 시작합니다.
 
-    서버가 여전히 나타나지 않으면 `/mcp`를 실행하고 구문 분석 경고를 찾습니다. Claude Code는 잘못된 형식의 항목을 건너뛰고 거기에 문제가 있는 필드를 표시합니다.
+    서버가 여전히 나타나지 않으면 `claude mcp list`를 실행하고 구문 분석 경고를 찾습니다. Claude Code는 잘못된 형식의 항목을 건너뛰고 거기에 문제가 있는 필드를 표시합니다.
 
     이전에 프롬프트에서 서버를 거부한 경우 프로젝트 승인을 재설정합니다:
 

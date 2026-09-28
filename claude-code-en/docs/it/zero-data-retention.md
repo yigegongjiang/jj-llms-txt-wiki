@@ -31,11 +31,17 @@ ZDR copre l'inferenza di Claude Code su Claude for Enterprise.
   ZDR è abilitato su base per-organizzazione. Ogni nuova organizzazione richiede che ZDR sia abilitato separatamente dal team dell'account Anthropic. ZDR non si applica automaticamente alle nuove organizzazioni create nello stesso account. Contattare il team dell'account per abilitare ZDR per qualsiasi nuova organizzazione.
 </Warning>
 
+<h3 id="route-claude-code-traffic-to-your-zdr-organization">
+  Instradare il traffico di Claude Code verso la vostra organizzazione ZDR
+</h3>
+
+ZDR si applica alle richieste che si autenticano in un'organizzazione abilitata per ZDR. Se uno sviluppatore accede a Claude Code con un account personale o con una chiave API da un'organizzazione diversa, quelle sessioni non sono coperte. Per richiedere che gli accessi claude.ai degli sviluppatori appartengano alla vostra organizzazione ZDR, distribuire le impostazioni gestite `forceLoginMethod` e `forceLoginOrgUUID`; vedere [Limitare l'accesso alla vostra organizzazione](/docs/it/authentication#restrict-login-to-your-organization), che spiega anche come queste chiavi trattano gli accessi a Claude Console.
+
 <h3 id="what-zdr-covers">
   Cosa copre ZDR
 </h3>
 
-ZDR copre le chiamate di inferenza del modello effettuate tramite Claude Code su Claude for Enterprise. Quando si utilizza Claude Code nel terminale, i prompt inviati e le risposte generate da Claude non vengono conservate da Anthropic. Questo si applica a ogni modello disponibile per le organizzazioni ZDR. Alcuni modelli richiedono la conservazione dei dati e non sono disponibili in ZDR; vedere [Disponibilità dei modelli in ZDR](#model-availability-under-zdr).
+ZDR copre le chiamate di inferenza del modello effettuate tramite Claude Code su Claude for Enterprise. Quando si utilizza Claude Code nel terminale, i prompt inviati e le risposte generate da Claude non vengono conservate da Anthropic. Questo si applica a ogni modello disponibile per la vostra organizzazione ZDR. Alcuni modelli richiedono la conservazione dei dati per impostazione predefinita; vedere [Disponibilità dei modelli in ZDR](#model-availability-under-zdr).
 
 <h3 id="what-zdr-does-not-cover">
   Cosa non copre ZDR
@@ -57,13 +63,13 @@ ZDR non si estende ai seguenti elementi, anche per le organizzazioni con ZDR abi
 
 Quando ZDR è abilitato per un'organizzazione Claude Code su Claude for Enterprise, determinate funzionalità che richiedono l'archiviazione di prompt o completamenti vengono automaticamente disabilitate a livello di backend:
 
-| Funzionalità                                                  | Motivo                                                                                                             |
-| ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| [Claude Code on the Web](/docs/it/claude-code-on-the-web)          | Richiede l'archiviazione lato server della cronologia delle conversazioni.                                         |
-| [Cloud sessions](/docs/it/desktop#cloud-sessions) dall'app Desktop | Richiede dati di sessione persistenti che includono prompt e completamenti.                                        |
-| [Artifacts](/docs/it/artifacts)                                    | Richiede l'archiviazione del contenuto della pagina pubblicata sull'infrastruttura gestita da Anthropic.           |
-| Invio di feedback (`/feedback`)                               | L'invio di feedback invia i dati della conversazione ad Anthropic.                                                 |
-| [Remote Control](/docs/it/remote-control)                          | Archivia la trascrizione della sessione sui server Anthropic per sincronizzare la conversazione tra i dispositivi. |
+| Funzionalità                                                                                                        | Motivo                                                                                                                           |
+| ------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| [Cloud sessions](/docs/it/claude-code-on-the-web), incluse quelle avviate dall'[app Desktop](/docs/it/desktop#cloud-sessions) | Richiede l'archiviazione lato server dei dati di sessione, inclusa la cronologia delle conversazioni con prompt e completamenti. |
+| [Claude Tag](https://claude.com/docs/claude-tag)                                                                    | Conserva la memoria del canale e le trascrizioni della sessione.                                                                 |
+| [Artifacts](/docs/it/artifacts)                                                                                          | Richiede l'archiviazione del contenuto della pagina pubblicata sull'infrastruttura gestita da Anthropic.                         |
+| Invio di feedback (`/feedback`, `/bug`, `/share`)                                                                   | L'invio di feedback invia i dati della conversazione ad Anthropic.                                                               |
+| [Remote Control](/docs/it/remote-control)                                                                                | Archivia la trascrizione della sessione sui server Anthropic per sincronizzare la conversazione tra i dispositivi.               |
 
 Queste funzionalità sono bloccate nel backend indipendentemente dalla visualizzazione lato client. Se si vede una funzionalità disabilitata nel terminale Claude Code durante l'avvio, il tentativo di utilizzarla restituisce un errore che indica che le politiche dell'organizzazione non consentono tale azione.
 
@@ -73,9 +79,9 @@ Le funzionalità future potrebbero anche essere disabilitate se richiedono l'arc
   Disponibilità dei modelli in ZDR
 </h3>
 
-Claude Fable 5 non è disponibile per le organizzazioni con zero data retention abilitato. Questa classe di modello [richiede la conservazione dei dati](https://platform.claude.com/docs/en/manage-claude/api-and-data-retention#model-specific-data-retention-requirements), quindi le richieste provenienti da organizzazioni ZDR non possono essere servite da essa. Il modello è assente dal selettore `/model` per le organizzazioni ZDR oppure viene visualizzato come disabilitato con un avviso che indica che è necessario disabilitare ZDR, e il server rifiuta le richieste per esso indipendentemente dalla configurazione del client.
+Claude Fable 5.1 e Fable 5 sono [Covered Models](https://support.claude.com/en/articles/15425695-covered-models) che [richiedono la conservazione dei dati](https://platform.claude.com/docs/en/manage-claude/api-and-data-retention#model-specific-data-retention-requirements) per impostazione predefinita, e se un'organizzazione o uno spazio di lavoro ZDR può utilizzarli è governato dalle politiche Covered Models piuttosto che da Claude Code. Laddove l'organizzazione non possa utilizzarli, i modelli sono assenti dal selettore `/model` oppure vengono visualizzati come disabilitati, e il server rifiuta le richieste per essi indipendentemente dalla configurazione del client.
 
-Gli altri modelli rimangono disponibili in ZDR. Fable 5 non è il modello predefinito, e l'alias `best`, che si risolve in Fable 5 dove è disponibile, si risolve in Opus per le organizzazioni dove non lo è, incluse le organizzazioni ZDR.
+Gli altri modelli rimangono disponibili in ZDR. I modelli Fable non sono il modello predefinito, e l'alias `best`, che si risolve nel modello Fable più recente dove è disponibile, si risolve in Opus per le organizzazioni dove non lo è.
 
 <h2 id="data-retention-for-policy-violations">
   Data retention per violazioni delle politiche

@@ -36,7 +36,7 @@ Pertimbangkan aplikasi resep di mana agen mencari web dan membawa kembali resep.
   </Accordion>
 
   <Accordion title="Dengan output terstruktur">
-    ```json theme={null}
+    ```jsonc theme={null}
     {
       "name": "Kue Cokelat Chip",
       "prep_time_minutes": 15,
@@ -77,20 +77,26 @@ Contoh di bawah ini meminta agen untuk meneliti Anthropic dan mengembalikan nama
     required: ["company_name"]
   };
 
-  for await (const message of query({
-    prompt: "Teliti Anthropic dan berikan informasi perusahaan utama",
-    options: {
-      outputFormat: {
-        type: "json_schema",
-        schema: schema
+  try {
+    for await (const message of query({
+      prompt: "Teliti Anthropic dan berikan informasi perusahaan utama",
+      options: {
+        outputFormat: {
+          type: "json_schema",
+          schema: schema
+        }
+      }
+    })) {
+      // Pesan hasil berisi structured_output dengan data yang divalidasi
+      if (message.type === "result" && message.subtype === "success" && message.structured_output) {
+        console.log(message.structured_output);
+        // { company_name: "Anthropic", founded_year: 2021, headquarters: "San Francisco, CA" }
       }
     }
-  })) {
-    // Pesan hasil berisi structured_output dengan data yang divalidasi
-    if (message.type === "result" && message.subtype === "success" && message.structured_output) {
-      console.log(message.structured_output);
-      // { company_name: "Anthropic", founded_year: 2021, headquarters: "San Francisco, CA" }
-    }
+  } catch (error) {
+    // Satu query() yang ditembakkan melempar setelah menghasilkan hasil kesalahan, seperti
+    // error_max_structured_output_retries; lihat bagian Penanganan kesalahan.
+    console.error(`Sesi berakhir dengan kesalahan: ${error}`);
   }
   ```
 
@@ -98,7 +104,7 @@ Contoh di bawah ini meminta agen untuk meneliti Anthropic dan mengembalikan nama
   import asyncio
   from claude_agent_sdk import query, ClaudeAgentOptions, ResultMessage
 
-  // Tentukan bentuk data yang ingin Anda kembalikan
+  # Tentukan bentuk data yang ingin Anda kembalikan
   schema = {
       "type": "object",
       "properties": {
@@ -111,16 +117,21 @@ Contoh di bawah ini meminta agen untuk meneliti Anthropic dan mengembalikan nama
 
 
   async def main():
-      async for message in query(
-          prompt="Teliti Anthropic dan berikan informasi perusahaan utama",
-          options=ClaudeAgentOptions(
-              output_format={"type": "json_schema", "schema": schema}
-          ),
-      ):
-          // Pesan hasil berisi structured_output dengan data yang divalidasi
-          if isinstance(message, ResultMessage) and message.structured_output:
-              print(message.structured_output)
-              // {'company_name': 'Anthropic', 'founded_year': 2021, 'headquarters': 'San Francisco, CA'}
+      try:
+          async for message in query(
+              prompt="Teliti Anthropic dan berikan informasi perusahaan utama",
+              options=ClaudeAgentOptions(
+                  output_format={"type": "json_schema", "schema": schema}
+              ),
+          ):
+              # Pesan hasil berisi structured_output dengan data yang divalidasi
+              if isinstance(message, ResultMessage) and message.structured_output:
+                  print(message.structured_output)
+                  # {'company_name': 'Anthropic', 'founded_year': 2021, 'headquarters': 'San Francisco, CA'}
+      except Exception as error:
+          # Satu query() yang ditembakkan melempar setelah menghasilkan hasil kesalahan, seperti
+          # error_max_structured_output_retries; lihat bagian Penanganan kesalahan.
+          print(f"Sesi berakhir dengan kesalahan: {error}")
 
 
   asyncio.run(main())
@@ -135,12 +146,14 @@ Alih-alih menulis JSON Schema dengan tangan, Anda dapat menggunakan [Zod](https:
 
 Contoh di bawah ini menentukan skema untuk rencana implementasi fitur dengan ringkasan, daftar langkah (masing-masing dengan tingkat kompleksitas), dan risiko potensial. Agen merencanakan fitur dan mengembalikan objek `FeaturePlan` yang diketik. Anda kemudian dapat mengakses properti seperti `plan.summary` dan mengulangi `plan.steps` dengan keamanan tipe penuh.
 
+SDK memvalidasi skema dengan JSON Schema draft-07, jadi skema yang mendeklarasikan versi yang lebih baru ditolak. Zod menargetkan draft 2020-12 secara default, jadi teruskan `target: "draft-7"` saat mengonversi skema Anda.
+
 <CodeGroup>
   ```typescript TypeScript theme={null}
   import { z } from "zod";
   import { query } from "@anthropic-ai/claude-agent-sdk";
 
-  // Tentukan skema dengan Zod
+  // Define schema with Zod
   const FeaturePlan = z.object({
     feature_name: z.string(),
     summary: z.string(),
@@ -156,32 +169,38 @@ Contoh di bawah ini menentukan skema untuk rencana implementasi fitur dengan rin
 
   type FeaturePlan = z.infer<typeof FeaturePlan>;
 
-  // Konversi ke JSON Schema
-  const schema = z.toJSONSchema(FeaturePlan);
+  // Convert to JSON Schema using the draft-07 target the SDK expects
+  const schema = z.toJSONSchema(FeaturePlan, { target: "draft-7" });
 
-  // Gunakan dalam query
-  for await (const message of query({
-    prompt:
-      "Rencanakan cara menambahkan dukungan mode gelap ke aplikasi React. Pecahkan menjadi langkah-langkah implementasi.",
-    options: {
-      outputFormat: {
-        type: "json_schema",
-        schema: schema
+  // Use in query
+  try {
+    for await (const message of query({
+      prompt:
+        "Plan how to add dark mode support to a React app. Break it into implementation steps.",
+      options: {
+        outputFormat: {
+          type: "json_schema",
+          schema: schema
+        }
+      }
+    })) {
+      if (message.type === "result" && message.subtype === "success" && message.structured_output) {
+        // Validate and get fully typed result
+        const parsed = FeaturePlan.safeParse(message.structured_output);
+        if (parsed.success) {
+          const plan: FeaturePlan = parsed.data;
+          console.log(`Feature: ${plan.feature_name}`);
+          console.log(`Summary: ${plan.summary}`);
+          plan.steps.forEach((step) => {
+            console.log(`${step.step_number}. [${step.estimated_complexity}] ${step.description}`);
+          });
+        }
       }
     }
-  })) {
-    if (message.type === "result" && message.subtype === "success" && message.structured_output) {
-      // Validasi dan dapatkan hasil yang sepenuhnya diketik
-      const parsed = FeaturePlan.safeParse(message.structured_output);
-      if (parsed.success) {
-        const plan: FeaturePlan = parsed.data;
-        console.log(`Fitur: ${plan.feature_name}`);
-        console.log(`Ringkasan: ${plan.summary}`);
-        plan.steps.forEach((step) => {
-          console.log(`${step.step_number}. [${step.estimated_complexity}] ${step.description}`);
-        });
-      }
-    }
+  } catch (error) {
+    // A single-shot query() throws after yielding an error result, such as
+    // error_max_structured_output_retries; see the Error handling section.
+    console.error(`Session ended with an error: ${error}`);
   }
   ```
 
@@ -205,36 +224,34 @@ Contoh di bawah ini menentukan skema untuk rencana implementasi fitur dengan rin
 
 
   async def main():
-      async for message in query(
-          prompt="Rencanakan cara menambahkan dukungan mode gelap ke aplikasi React. Pecahkan menjadi langkah-langkah implementasi.",
-          options=ClaudeAgentOptions(
-              output_format={
-                  "type": "json_schema",
-                  "schema": FeaturePlan.model_json_schema(),
-              }
-          ),
-      ):
-          if isinstance(message, ResultMessage) and message.structured_output:
-              # Validasi dan dapatkan hasil yang sepenuhnya diketik
-              plan = FeaturePlan.model_validate(message.structured_output)
-              print(f"Fitur: {plan.feature_name}")
-              print(f"Ringkasan: {plan.summary}")
-              for step in plan.steps:
-                  print(
-                      f"{step.step_number}. [{step.estimated_complexity}] {step.description}"
-                  )
+      try:
+          async for message in query(
+              prompt="Plan how to add dark mode support to a React app. Break it into implementation steps.",
+              options=ClaudeAgentOptions(
+                  output_format={
+                      "type": "json_schema",
+                      "schema": FeaturePlan.model_json_schema(),
+                  }
+              ),
+          ):
+              if isinstance(message, ResultMessage) and message.structured_output:
+                  # Validate and get fully typed result
+                  plan = FeaturePlan.model_validate(message.structured_output)
+                  print(f"Feature: {plan.feature_name}")
+                  print(f"Summary: {plan.summary}")
+                  for step in plan.steps:
+                      print(
+                          f"{step.step_number}. [{step.estimated_complexity}] {step.description}"
+                      )
+      except Exception as error:
+          # A single-shot query() raises after yielding an error result, such as
+          # error_max_structured_output_retries; see the Error handling section.
+          print(f"Session ended with an error: {error}")
 
 
   asyncio.run(main())
   ```
 </CodeGroup>
-
-**Manfaat:**
-
-* Inferensi tipe penuh (TypeScript) dan petunjuk tipe (Python)
-* Validasi runtime dengan `safeParse()` atau `model_validate()`
-* Pesan kesalahan yang lebih baik
-* Skema yang dapat dikomposisi dan dapat digunakan kembali
 
 <h2 id="output-format-configuration">
   Konfigurasi format output
@@ -243,7 +260,7 @@ Contoh di bawah ini menentukan skema untuk rencana implementasi fitur dengan rin
 Opsi `outputFormat` (TypeScript) atau `output_format` (Python) menerima objek dengan:
 
 * `type`: Atur ke `"json_schema"` untuk output terstruktur
-* `schema`: Objek [JSON Schema](https://json-schema.org/understanding-json-schema/about) yang menentukan struktur output Anda. Anda dapat menghasilkan ini dari skema Zod dengan `z.toJSONSchema()` atau model Pydantic dengan `.model_json_schema()`
+* `schema`: Objek [JSON Schema](https://json-schema.org/understanding-json-schema/about) yang menentukan struktur output Anda. Anda dapat menghasilkan ini dari skema Zod dengan `z.toJSONSchema(schema, { target: "draft-7" })` atau model Pydantic dengan `.model_json_schema()`
 
 SDK mendukung fitur JSON Schema standar termasuk semua tipe dasar (object, array, string, number, boolean, null), `enum`, `const`, `required`, objek bersarang, dan definisi `$ref`. Untuk daftar lengkap fitur yang didukung dan batasan, lihat [Batasan JSON Schema](https://platform.claude.com/docs/id/build-with-claude/structured-outputs#json-schema-limitations).
 
@@ -287,25 +304,31 @@ Skema mencakup bidang opsional (`author` dan `date`) karena informasi git blame 
   };
 
   // Agen menggunakan Grep untuk menemukan TODO, Bash untuk mendapatkan informasi git blame
-  for await (const message of query({
-    prompt: "Temukan semua komentar TODO dalam basis kode ini dan identifikasi siapa yang menambahkannya",
-    options: {
-      outputFormat: {
-        type: "json_schema",
-        schema: todoSchema
+  try {
+    for await (const message of query({
+      prompt: "Temukan semua komentar TODO dalam basis kode ini dan identifikasi siapa yang menambahkannya",
+      options: {
+        outputFormat: {
+          type: "json_schema",
+          schema: todoSchema
+        }
+      }
+    })) {
+      if (message.type === "result" && message.subtype === "success" && message.structured_output) {
+        const data = message.structured_output as { total_count: number; todos: Array<{ file: string; line: number; text: string; author?: string; date?: string }> };
+        console.log(`Ditemukan ${data.total_count} TODO`);
+        data.todos.forEach((todo) => {
+          console.log(`${todo.file}:${todo.line} - ${todo.text}`);
+          if (todo.author) {
+            console.log(`  Ditambahkan oleh ${todo.author} pada ${todo.date}`);
+          }
+        });
       }
     }
-  })) {
-    if (message.type === "result" && message.subtype === "success" && message.structured_output) {
-      const data = message.structured_output as { total_count: number; todos: Array<{ file: string; line: number; text: string; author?: string; date?: string }> };
-      console.log(`Ditemukan ${data.total_count} TODO`);
-      data.todos.forEach((todo) => {
-        console.log(`${todo.file}:${todo.line} - ${todo.text}`);
-        if (todo.author) {
-          console.log(`  Ditambahkan oleh ${todo.author} pada ${todo.date}`);
-        }
-      });
-    }
+  } catch (error) {
+    // Kueri query() sekali jalan melempar setelah menghasilkan hasil kesalahan, seperti
+    // error_max_structured_output_retries; lihat bagian Penanganan kesalahan.
+    console.error(`Sesi berakhir dengan kesalahan: ${error}`);
   }
   ```
 
@@ -339,19 +362,24 @@ Skema mencakup bidang opsional (`author` dan `date`) karena informasi git blame 
 
   async def main():
       # Agen menggunakan Grep untuk menemukan TODO, Bash untuk mendapatkan informasi git blame
-      async for message in query(
-          prompt="Temukan semua komentar TODO dalam basis kode ini dan identifikasi siapa yang menambahkannya",
-          options=ClaudeAgentOptions(
-              output_format={"type": "json_schema", "schema": todo_schema}
-          ),
-      ):
-          if isinstance(message, ResultMessage) and message.structured_output:
-              data = message.structured_output
-              print(f"Ditemukan {data['total_count']} TODO")
-              for todo in data["todos"]:
-                  print(f"{todo['file']}:{todo['line']} - {todo['text']}")
-                  if "author" in todo:
-                      print(f"  Ditambahkan oleh {todo['author']} pada {todo['date']}")
+      try:
+          async for message in query(
+              prompt="Temukan semua komentar TODO dalam basis kode ini dan identifikasi siapa yang menambahkannya",
+              options=ClaudeAgentOptions(
+                  output_format={"type": "json_schema", "schema": todo_schema}
+              ),
+          ):
+              if isinstance(message, ResultMessage) and message.structured_output:
+                  data = message.structured_output
+                  print(f"Ditemukan {data['total_count']} TODO")
+                  for todo in data["todos"]:
+                      print(f"{todo['file']}:{todo['line']} - {todo['text']}")
+                      if "author" in todo:
+                          print(f"  Ditambahkan oleh {todo['author']} pada {todo['date']}")
+      except Exception as error:
+          # Kueri query() sekali jalan melempar setelah menghasilkan hasil kesalahan, seperti
+          # error_max_structured_output_retries; lihat bagian Penanganan kesalahan.
+          print(f"Sesi berakhir dengan kesalahan: {error}")
 
 
   asyncio.run(main())
@@ -362,7 +390,7 @@ Skema mencakup bidang opsional (`author` dan `date`) karena informasi git blame 
   Penanganan kesalahan
 </h2>
 
-Pembuatan output terstruktur dapat gagal ketika agen tidak dapat menghasilkan JSON yang valid sesuai dengan skema Anda. Ini biasanya terjadi ketika skema terlalu kompleks untuk tugas, tugas itu sendiri ambigu, atau agen mencapai batas percobaan ulangnya mencoba memperbaiki kesalahan validasi. Ini juga dapat terjadi tanpa ada kegagalan validasi: [fallback model](/docs/id/model-config#automatic-model-fallback) dapat menarik kembali output yang sudah selesai di tengah aliran, dan jika tidak ada percobaan ulang yang menggantinya, jalannya berakhir dengan kesalahan yang sama. Periksa bidang `errors` pada pesan hasil untuk membedakan dua penyebab sebelum men-debug skema Anda.
+Pembuatan output terstruktur dapat gagal ketika agen tidak dapat menghasilkan JSON yang valid sesuai dengan skema Anda. Ini biasanya terjadi ketika skema terlalu kompleks untuk tugas, tugas itu sendiri ambigu, atau agen mencapai batas percobaan ulangnya mencoba memperbaiki kesalahan validasi. Ini juga dapat terjadi tanpa ada kegagalan validasi: [fallback model](/docs/id/model-config#automatic-model-fallback) dapat menarik kembali output yang sudah selesai di tengah aliran, dan jika tidak ada percobaan ulang yang menggantinya, jalannya berakhir dengan kesalahan yang sama. Periksa daftar `errors` pada pesan hasil untuk membedakan dua penyebab sebelum men-debug skema Anda.
 
 Ketika kesalahan terjadi, pesan hasil memiliki `subtype` yang menunjukkan apa yang salah:
 
@@ -371,45 +399,88 @@ Ketika kesalahan terjadi, pesan hasil memiliki `subtype` yang menunjukkan apa ya
 | `success`                             | Output dihasilkan dan divalidasi dengan berhasil                                                                                                             |
 | `error_max_structured_output_retries` | Tidak ada output yang valid yang bertahan setelah beberapa percobaan (kegagalan validasi, atau penarikan fallback model tanpa percobaan ulang yang berhasil) |
 
-Contoh di bawah ini memeriksa bidang `subtype` untuk menentukan apakah output dihasilkan dengan berhasil atau jika Anda perlu menangani kegagalan:
+Hasil juga dapat berakhir dengan subtype `success` tetapi tanpa nilai `structured_output`, misalnya ketika jalannya selesai tanpa agen menghasilkan output terstruktur. Perlakukan kasus itu sebagai kegagalan juga. Entri troubleshooting [structured\_output is None but the result says success](/docs/id/agent-sdk/troubleshooting#structured_output-is-none-but-the-result-says-success) mencakup kasus ini. Contoh di bawah ini memperlakukan hasil sebagai berhasil hanya ketika `subtype` adalah `success` dan `structured_output` ada, dan menangani setiap hasil lainnya sebagai kegagalan:
 
 <CodeGroup>
   ```typescript TypeScript theme={null}
-  for await (const msg of query({
-    prompt: "Extract contact info from the document",
-    options: {
-      outputFormat: {
-        type: "json_schema",
-        schema: contactSchema
+  import { query } from "@anthropic-ai/claude-agent-sdk";
+
+  const contactSchema = {
+    type: "object",
+    properties: {
+      name: { type: "string" },
+      email: { type: "string" }
+    },
+    required: ["name"]
+  };
+
+  try {
+    for await (const msg of query({
+      prompt: "Extract contact info from the document",
+      options: {
+        outputFormat: {
+          type: "json_schema",
+          schema: contactSchema
+        }
+      }
+    })) {
+      if (msg.type === "result") {
+        if (msg.subtype === "success" && msg.structured_output) {
+          // Gunakan output yang divalidasi
+          console.log(msg.structured_output);
+        } else if (msg.subtype === "error_max_structured_output_retries") {
+          console.error("Tidak dapat menghasilkan output yang valid");
+        } else {
+          console.error("Jalannya berakhir tanpa output terstruktur");
+        }
       }
     }
-  })) {
-    if (msg.type === "result") {
-      if (msg.subtype === "success" && msg.structured_output) {
-        // Gunakan output yang divalidasi
-        console.log(msg.structured_output);
-      } else if (msg.subtype === "error_max_structured_output_retries") {
-        // Tangani kegagalan - coba ulang dengan prompt yang lebih sederhana, kembali ke yang tidak terstruktur, dll.
-        console.error("Tidak dapat menghasilkan output yang valid");
-      }
-    }
+  } catch (error) {
+    // Sebuah query() single-shot melempar setelah menghasilkan pesan hasil kesalahan. Jika
+    // kegagalannya adalah hasil kesalahan, cabang subtype kesalahan di atas telah
+    // sudah berjalan; kegagalan koneksi atau proses tidak menghasilkan pesan hasil.
+    console.log(`Sesi berakhir dengan kesalahan: ${error}`);
   }
   ```
 
   ```python Python theme={null}
-  async for message in query(
-      prompt="Extract contact info from the document",
-      options=ClaudeAgentOptions(
-          output_format={"type": "json_schema", "schema": contact_schema}
-      ),
-  ):
-      if isinstance(message, ResultMessage):
-          if message.subtype == "success" and message.structured_output:
-              # Gunakan output yang divalidasi
-              print(message.structured_output)
-          elif message.subtype == "error_max_structured_output_retries":
-              # Tangani kegagalan
-              print("Tidak dapat menghasilkan output yang valid")
+  import asyncio
+  from claude_agent_sdk import query, ClaudeAgentOptions, ResultMessage
+
+  contact_schema = {
+      "type": "object",
+      "properties": {
+          "name": {"type": "string"},
+          "email": {"type": "string"},
+      },
+      "required": ["name"],
+  }
+
+
+  async def main():
+      try:
+          async for message in query(
+              prompt="Extract contact info from the document",
+              options=ClaudeAgentOptions(
+                  output_format={"type": "json_schema", "schema": contact_schema}
+              ),
+          ):
+              if isinstance(message, ResultMessage):
+                  if message.subtype == "success" and message.structured_output:
+                      # Gunakan output yang divalidasi
+                      print(message.structured_output)
+                  elif message.subtype == "error_max_structured_output_retries":
+                      print("Tidak dapat menghasilkan output yang valid")
+                  else:
+                      print("Jalannya berakhir tanpa output terstruktur")
+      except Exception as error:
+          # Sebuah query() single-shot menaikkan setelah menghasilkan pesan hasil kesalahan. Jika
+          # kegagalannya adalah hasil kesalahan, cabang subtype kesalahan di atas telah
+          # sudah berjalan; kegagalan koneksi atau proses tidak menghasilkan pesan hasil.
+          print(f"Sesi berakhir dengan kesalahan: {error}")
+
+
+  asyncio.run(main())
   ```
 </CodeGroup>
 

@@ -2,31 +2,49 @@
 > Fetch the complete documentation index at: https://code.claude.com/docs/llms.txt
 > Use this file to discover all available pages before exploring further.
 
-# ウェブ上の Claude Code を使用する
+# クラウドで Claude Code を使用する
 
-> Anthropic のサンドボックスでクラウド環境、セットアップスクリプト、ネットワークアクセス、Docker を設定します。`--cloud` と `--teleport` を使用してウェブとターミナル間でセッションを移動します。
+> ブラウザ、携帯電話、デスクトップアプリ、またはターミナルからクラウドで Claude Code セッションを実行し、--cloud と --teleport で移動し、プルリクエストを自動修正します。
 
 <Note>
-  ウェブ上の Claude Code は Pro、Max、Team ユーザー、およびプレミアムシートまたは Chat + Claude Code シートを持つ Enterprise ユーザーを対象としたリサーチプレビュー段階です。
+  クラウドセッションは Pro、Max、Team プランで利用でき、Premium シートまたは Chat + Claude Code シートを持つ Enterprise ユーザーも対象です。
 </Note>
 
-ウェブ上の Claude Code は [claude.ai/code](https://claude.ai/code) の Anthropic 管理クラウドインフラストラクチャでタスクを実行します。セッションはブラウザを閉じても保持され、Claude モバイルアプリから監視できます。
+クラウドセッションは、マシン上ではなくクラウドインフラストラクチャで実行される Claude Code セッションです。デフォルトでは Anthropic が管理するインフラストラクチャで実行されるか、ルーティングされた場合は組織の[セルフホスト環境](/docs/ja/self-hosted-environments)で実行されます。セッションはラップトップを閉じた後も実行を続け、任意のデバイスから確認または操作できます。
+
+以下のいずれかのサーフェスからクラウドセッションを開始できます：
+
+* **ブラウザ**：[claude.ai/code](https://claude.ai/code)（ウェブ上の Claude Code とも呼ばれます）
+* **モバイル**：[Claude アプリ](/docs/ja/mobile)の**Code** タブ
+* **デスクトップアプリ**：[セッションを開始](/docs/ja/desktop#run-long-running-tasks-in-the-cloud)するときに**Local** の代わりに**Cloud** を選択
+* **ターミナル**：[`claude --cloud`](#from-terminal-to-cloud)
+* **ルーティン**：[スケジュール実行とトリガー実行](/docs/ja/routines)は各々クラウドセッションとして実行されます
+
+1 つの作業本体に対して Claude が多くのクラウドセッションを開始して追跡するには、[プロジェクト](/docs/ja/claude-projects)を使用します。ターミナル、IDE、または**Local** が選択されたデスクトップアプリのセッションは、代わりにマシン上で実行されます。これらのローカルセッションの 1 つを携帯電話またはブラウザから操作するには、[リモートコントロール](/docs/ja/remote-control)を使用します。
 
 <Tip>
-  ウェブ上の Claude Code は初めてですか？[はじめに](/docs/ja/web-quickstart)から始めて、GitHub アカウントを接続し、最初のタスクを送信してください。
+  クラウドセッションは初めてですか？[はじめに](/docs/ja/web-quickstart)から始めて、GitHub アカウントを接続し、最初のタスクを送信してください。
 </Tip>
 
 このページでは以下をカバーしています：
 
+* [クラウド環境](#cloud-environments)：セッションが実行される場所、およびそれを設定する場所
 * [GitHub 認証オプション](#github-authentication-options)：GitHub を接続する 2 つの方法
-* [クラウド環境](#the-cloud-environment)：どの設定が引き継がれるか、どのツールがインストールされているか、環境を設定する方法
-* [セットアップスクリプト](#setup-scripts)と依存関係管理
-* [ネットワークアクセス](#network-access)：レベル、プロキシ、デフォルト許可リスト
-* [`--cloud` と `--teleport` を使用してウェブとターミナル間でタスクを移動](#move-tasks-between-web-and-terminal)
-* [セッションの操作](#work-with-sessions)：確認、共有、アーカイブ、削除
+* [ターミナルとクラウド間でタスクを移動](#move-tasks-between-terminal-and-cloud)（`--cloud` と `--teleport` を使用）
+* [セッションの操作](#work-with-sessions)：権限モード、確認、共有、アーカイブ、削除
 * [プルリクエストの自動修正](#auto-fix-pull-requests)：CI 失敗とレビューコメントに自動的に応答
 * [セキュリティと分離](#security-and-isolation)：セッションの分離方法
 * [制限事項](#limitations)：レート制限とプラットフォーム制限
+
+<h2 id="cloud-environments">
+  クラウド環境
+</h2>
+
+すべてのクラウドセッションは[クラウド環境](/docs/ja/cloud-environments)で実行されます。これはネットワークアクセス、環境変数、セットアップスクリプトを制御する保存された設定です。環境がまだない場合、オンボーディングは[**Trusted** ネットワークアクセス](/docs/ja/cloud-environments#access-levels)を持つ**Default** 環境をセットアップします。これは、あなたのために作成するか、作成するよう依頼するかのいずれかです。[Default 環境](/docs/ja/cloud-environments#the-default-environment)を参照して、どちらがあなたのプランで発生するか、および複数の環境がある場合にセッションが環境を選択する方法を確認してください。
+
+同じ環境はクラウドセッションを開始する場所に関係なく適用されます：ウェブ、ターミナル、[Claude Tag](https://claude.com/docs/claude-tag/overview)、[ルーチン](/docs/ja/routines)、およびモバイルおよび Desktop アプリ。Claude Tag チャネルセッションは組織レベルの環境のみを使用します。[共有環境](/docs/ja/cloud-environments#organization-shared-environments)または[セルフホスト環境](/docs/ja/self-hosted-environments)のいずれかです。
+
+[クラウド環境を設定](/docs/ja/cloud-environments)して、環境が許可するものを変更し、変数を設定するか、セットアップスクリプトを追加してください。[インストール済みツール](/docs/ja/cloud-environments#installed-tools)を参照して、設定なしでセッションに含まれるものを確認してください。
 
 <h2 id="github-authentication-options">
   GitHub 認証オプション
@@ -34,629 +52,35 @@
 
 クラウドセッションはコードをクローンしてブランチをプッシュするために GitHub リポジトリへのアクセスが必要です。2 つの方法でアクセスを許可できます：
 
-| 方法               | 仕組み                                                               | 最適な用途                                                     |
-| :--------------- | :---------------------------------------------------------------- | :-------------------------------------------------------- |
-| **GitHub App**   | [ウェブオンボーディング](/docs/ja/web-quickstart)中に Claude GitHub App を認可します。     | ブラウザオンボーディング；[Auto-fix](#auto-fix-pull-requests) を希望するチーム |
-| **`/web-setup`** | ターミナルで `/web-setup` を実行して、ローカル `gh` CLI トークンを Claude アカウントに同期します。 | すでに `gh` を使用している個別開発者                                     |
+| 方法               | 接続方法                                                             | セッションが到達できるリポジトリ                                            | 最適な用途                                                     |
+| :--------------- | :--------------------------------------------------------------- | :---------------------------------------------------------- | :-------------------------------------------------------- |
+| **GitHub App**   | [ウェブオンボーディング](/docs/ja/web-quickstart)中に Claude GitHub App を認可します     | 任意のパブリックリポジトリ、および Claude GitHub App がインストールされているプライベートリポジトリ | ブラウザオンボーディング；[Auto-fix](#auto-fix-pull-requests) を希望するチーム |
+| **`/web-setup`** | ターミナルで `/web-setup` を実行して、ローカル `gh` CLI トークンを Claude アカウントに送信します | `gh` トークンがアクセスできる任意のリポジトリ（App がインストールされているかどうかに関わらず）        | すでに `gh` を使用している個別開発者                                     |
 
-<Note>
-  どちらの方法でも、クラウドセッションは Claude GitHub App がインストールされているリポジトリだけでなく、接続している GitHub アカウントが見ることができるすべてのリポジトリにアクセスできます。App インストールは [Auto-fix](#auto-fix-pull-requests) の PR webhook を有効にします；これはセッションレベルのアクセス制御ではありません。クラウドセッションからチームが到達できるリポジトリを制限するには、GitHub 自体でアクセスを制限してください。たとえば、接続している GitHub アカウントのチームまたはリポジトリメンバーシップを制限することで実現できます。
-</Note>
+Claude GitHub App をリポジトリにインストールすると、そのリポジトリのプルリクエストに対して [Auto-fix](#auto-fix-pull-requests) も有効になります。
 
-どちらの方法でも機能します。[`/schedule`](/docs/ja/routines) は両方の形式のアクセスをチェックし、どちらも設定されていない場合は `/web-setup` を実行するよう促します。[ターミナルから接続](/docs/ja/web-quickstart#connect-from-your-terminal)で `/web-setup` のウォークスルーを参照してください。
+[プロジェクト](/docs/ja/claude-projects)内のスレッドは、接続方法に関わらず、クローンする各リポジトリに App がインストールされている必要があります。[GitHub アクセスの設定](/docs/ja/claude-projects#set-up-github-access)を参照してください。
 
-GitHub App は [Auto-fix](#auto-fix-pull-requests) に必須です。これは App を使用して PR webhook を受け取ります。`/web-setup` で接続し、後で Auto-fix が必要な場合は、それらのリポジトリに App をインストールします。
+`/schedule` がルーチンを作成する前にリポジトリアクセスをチェックする方法については、[リポジトリとブランチの権限](/docs/ja/routines#repositories-and-branch-permissions)を参照してください。`/web-setup` のウォークスルー（`/web-setup` が保存する内容と削除方法を含む）については、[ターミナルから接続](/docs/ja/web-quickstart#connect-from-your-terminal)を参照してください。
 
-Team および Enterprise 管理者は [claude.ai/admin-settings/claude-code](https://claude.ai/admin-settings/claude-code) の Quick web setup トグルで `/web-setup` を無効にできます。
+Quick web setup は、メンバーが `/web-setup` で GitHub を接続できるようにする組織設定で、ブラウザオンボーディング中に Claude GitHub App インストールプロンプトをスキップし、環境フォームを表示する代わりに、ブラウザオンボーディングが [**Default** 環境](/docs/ja/cloud-environments#the-default-environment)を作成するようにします。Team および Enterprise プランではデフォルトでオフになっており、`/web-setup` を非表示にします。[Owner](/docs/ja/server-managed-settings#access-control) は [**Admin settings > Claude Code**](https://claude.ai/admin-settings/claude-code) の **Quick web setup** トグルでオンにします。
 
 <Note>
   [Zero Data Retention](/docs/ja/zero-data-retention) が有効な組織は `/web-setup` またはその他のクラウドセッション機能を使用できません。
 </Note>
 
-<h2 id="the-cloud-environment">
-  クラウド環境
-</h2>
-
-各セッションはリポジトリがクローンされた新しい Anthropic 管理 VM で実行されます。このセクションではセッション開始時に利用可能なものと、それをカスタマイズする方法をカバーしています。
-
-<h3 id="what’s-available-in-cloud-sessions">
-  クラウドセッションで利用可能なもの
-</h3>
-
-クラウドセッションはリポジトリの新しいクローンから開始されます。リポジトリにコミットされたものはすべて利用可能です。自分のマシンにのみインストールまたは設定したものは利用できません。組織のポリシーは [サーバー管理設定](/docs/ja/server-managed-settings)を通じて別途到着します。
-
-|                                                                    | クラウドセッションで利用可能 | 理由                                                                                                                                                                                                                         |
-| :----------------------------------------------------------------- | :------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| リポジトリの `CLAUDE.md`                                                 | はい             | クローンの一部                                                                                                                                                                                                                    |
-| リポジトリの `.claude/settings.json` フック                                 | はい             | クローンの一部                                                                                                                                                                                                                    |
-| リポジトリの `.mcp.json` MCP サーバー                                        | はい             | クローンの一部                                                                                                                                                                                                                    |
-| リポジトリの `.claude/rules/`                                            | はい             | クローンの一部                                                                                                                                                                                                                    |
-| リポジトリの `.claude/skills/`、`.claude/agents/`、`.claude/commands/`     | はい             | クローンの一部                                                                                                                                                                                                                    |
-| `.claude/settings.json` で宣言されたプラグイン                                | はい             | 宣言した[マーケットプレイス](/docs/ja/plugin-marketplaces)からセッション開始時にインストールされます。マーケットプレイスソースに到達するためにはネットワークアクセスが必要です                                                                                                                         |
-| 組織の[サーバー管理設定](/docs/ja/server-managed-settings)                         | はい             | セッション開始時に Anthropic のサーバーから取得されます。クラウドセッションで `availableModels` がどのように適用されるかについては [Surface coverage](/docs/ja/model-config#surface-coverage) を参照してください。MDM または管理設定ファイルを通じてデバイスにデプロイされた設定は、セッションが Anthropic 管理 VM で実行されるため適用されません |
-| ユーザー `~/.claude/CLAUDE.md`                                         | いいえ            | マシンに存在し、リポジトリには存在しません                                                                                                                                                                                                      |
-| ユーザー `~/.claude/skills/`、`~/.claude/agents/`、`~/.claude/commands/` | いいえ            | マシンに存在し、リポジトリには存在しません。代わりにリポジトリの `.claude/` ディレクトリにコミットしてください。claude.ai で有効にしたスキルはクラウドセッションに自動的にロードされます                                                                                                                    |
-| ユーザー設定でのみ有効なプラグイン                                                  | いいえ            | ユーザースコープの `enabledPlugins` は `~/.claude/settings.json` に存在します。代わりにリポジトリの `.claude/settings.json` で宣言してください                                                                                                                 |
-| `claude mcp add` で追加した MCP サーバー                                    | いいえ            | これらはローカルユーザー設定に書き込まれ、リポジトリには書き込まれません。代わりに [`.mcp.json`](/docs/ja/mcp#project-scope) でサーバーを宣言してください                                                                                                                              |
-| 静的 API トークンと認証情報                                                   | いいえ            | 専用シークレットストアはまだ存在しません。以下を参照してください                                                                                                                                                                                           |
-| AWS SSO のようなインタラクティブ認証                                             | いいえ            | サポートされていません。SSO はクラウドセッションで実行できないブラウザベースのログインが必要です                                                                                                                                                                         |
-
-クラウドセッションで設定を利用可能にするには、リポジトリにコミットしてください。組織のポリシーは [サーバー管理設定](/docs/ja/server-managed-settings)を通じて別途到着します。専用シークレットストアはまだ利用できません。環境変数とセットアップスクリプトの両方は環境設定に保存され、その環境を編集できる誰もが見ることができます。クラウドセッションでシークレットが必要な場合は、その可視性を念頭に置いて環境変数として追加してください。
-
-<h3 id="installed-tools">
-  インストール済みツール
-</h3>
-
-クラウドセッションには一般的な言語ランタイム、ビルドツール、データベースがプリインストールされています。以下の表はカテゴリ別に含まれるものをまとめています。
-
-| カテゴリ        | 含まれるもの                                                           |
-| :---------- | :--------------------------------------------------------------- |
-| **Python**  | pip、poetry、uv、black、mypy、pytest、ruff を備えた Python 3.x             |
-| **Node.js** | nvm 経由の 20、21、22、npm、yarn、pnpm、bun¹、eslint、prettier、chromedriver |
-| **Ruby**    | gem、bundler、rbenv を備えた 3.1、3.2、3.3                               |
-| **PHP**     | Composer を備えた 8.4                                                |
-| **Java**    | Maven と Gradle を備えた OpenJDK 21                                   |
-| **Go**      | モジュールサポート付きの最新安定版                                                |
-| **Rust**    | rustc と cargo                                                    |
-| **C/C++**   | GCC、Clang、cmake、ninja、conan                                      |
-| **Docker**  | docker、dockerd、docker compose                                    |
-| **データベース**  | PostgreSQL 16、Redis 7.0                                          |
-| **ユーティリティ** | git、jq、yq、ripgrep、tmux、vim、nano                                  |
-
-¹ Bun はインストールされていますが、パッケージ取得に関して既知の[プロキシ互換性の問題](#install-dependencies-with-a-sessionstart-hook)があります。
-
-正確なバージョンについては、Claude にクラウドセッションで `check-tools` を実行するよう依頼してください。このコマンドはクラウドセッションにのみ存在します。
-
-<h3 id="work-with-github-issues-and-pull-requests">
-  GitHub の問題とプルリクエストを操作する
-</h3>
-
-クラウドセッションには、Claude がセットアップなしで問題を読み取り、プルリクエストをリストし、diff を取得し、コメントを投稿できる組み込み GitHub ツールが含まれています。これらのツールは [GitHub プロキシ](#github-proxy)を通じて認証され、[GitHub 認証オプション](#github-authentication-options)で設定した方法を使用するため、トークンはコンテナに入りません。
-
-[環境設定](#configure-your-environment)で `GH_TOKEN` または `GITHUB_TOKEN` を自分で設定するか、両方を設定しないままにして [GitHub プロキシ](#github-proxy)に認証を任せることができます：
-
-* トークンを設定した場合、コンテナに変更されずに渡されるため、`gh` とスクリプトは直接それを使用します。
-* どちらも設定しない場合、コンテナは両方の変数をプレースホルダー文字列 `proxy-injected` に設定し、プロキシは送信 GitHub リクエストで実際の認証情報を置き換えます。`gh` は独自のトークンなしで機能しますが、`GITHUB_TOKEN` を直接読み取るスクリプトはプレースホルダーを取得し、使用可能なトークンは取得しません。
-
-セッションにどちらが適用されるかを確認するには、Claude に `echo $GH_TOKEN` を実行するよう依頼してください。
-
-`gh` CLI はプリインストールされていません。組み込みツールがカバーしていない `gh` コマンド（`gh release` や `gh workflow run` など）が必要な場合は、自分でインストールして認証してください：
-
-<Steps>
-  <Step title="セットアップスクリプトに gh をインストール">
-    [セットアップスクリプト](#setup-scripts)に `apt update && apt install -y gh` を追加します。
-  </Step>
-
-  <Step title="プロキシが認証を処理していない場合はトークンを提供">
-    `echo $GH_TOKEN` が `proxy-injected` を出力する場合、[GitHub プロキシ](#github-proxy)が `gh` を認証し、このステップは不要です。それ以外の場合は、GitHub 個人アクセストークンを持つ `GH_TOKEN` 環境変数を [環境設定](#configure-your-environment)に追加してください。`gh` は `GH_TOKEN` を自動的に読み取るため、`gh auth login` ステップは不要です。
-  </Step>
-</Steps>
-
-<h3 id="link-output-back-to-the-session">
-  セッションに出力をリンク
-</h3>
-
-各クラウドセッションは claude.ai 上にトランスクリプト URL を持ち、セッションは `CLAUDE_CODE_REMOTE_SESSION_ID` 環境変数から独自の ID を読み取ることができます。これを使用して、PR 本文、コミットメッセージ、Slack 投稿、または生成されたレポートに追跡可能なリンクを配置し、レビュアーがそれを生成した実行を開くことができます。
-
-v2.1.179 以降、Claude がウェブセッションで作成するコミットには `Claude-Session: <url>` git トレーラーが含まれ、PR 本文にはセッション URL が独立した行に含まれます。v2.1.182 以降、[`attribution.sessionUrl`](/docs/ja/settings#attribution-settings)を `false` に設定してトレーラーと PR 本文リンクを省略できます。
-
-コミットまたは PR 以外のもの（Claude が投稿する Slack メッセージやそれが書き込むレポートファイルなど）にセッションリンクを含めるには、Claude に次のコマンドを実行させ、その出力を使用してください。このコマンドは環境変数の値の `cse_` プレフィックスをトランスクリプト URL が期待する `session_` プレフィックスに変換します：
-
-```bash theme={null}
-echo "https://claude.ai/code/${CLAUDE_CODE_REMOTE_SESSION_ID/#cse_/session_}"
-```
-
-<h3 id="run-tests-start-services-and-add-packages">
-  テストを実行し、サービスを開始し、パッケージを追加
-</h3>
-
-Claude はタスクに取り組む際にテストを実行します。プロンプトで依頼してください。例えば「fix the failing tests in `tests/`」または「run pytest after each change」。pytest、jest、cargo test などのテストランナーはプリインストールされているため、すぐに機能します。
-
-PostgreSQL と Redis はプリインストールされていますがデフォルトでは実行されていません。セッション中に Claude に各を開始するよう依頼してください：
-
-```bash theme={null}
-service postgresql start
-```
-
-```bash theme={null}
-service redis-server start
-```
-
-Docker はコンテナ化されたサービスを実行するために利用可能です。Claude に `docker compose up` を実行してプロジェクトのサービスを開始するよう依頼してください。イメージをプルするためのネットワークアクセスは環境の[アクセスレベル](#access-levels)に従い、[信頼できるデフォルト](#default-allowed-domains)には Docker Hub およびその他の一般的なレジストリが含まれます。
-
-イメージが大きいか遅い場合は、[セットアップスクリプト](#setup-scripts)に `docker compose pull` または `docker compose build` を追加してください。プルされたイメージは[キャッシュされた環境](#environment-caching)に保存されるため、各新しいセッションはディスク上にそれらを持っています。キャッシュはファイルのみを保存し、実行中のプロセスは保存しないため、Claude は各セッションでコンテナを開始します。
-
-プリインストールされていないパッケージを追加するには、[セットアップスクリプト](#setup-scripts)を使用してください。スクリプトの出力は[キャッシュされ](#environment-caching)、そこにインストールしたパッケージはすべてのセッションの開始時に利用可能で、毎回再インストールする必要はありません。セッション中に Claude にパッケージをインストールするよう依頼することもできますが、それらのインストールは他のセッションに引き継がれません。
-
-<h3 id="resource-limits">
-  リソース制限
-</h3>
-
-クラウドセッションは時間とともに変わる可能性のある概算リソース上限で実行されます：
-
-* 4 vCPU
-* 16 GB RAM
-* 30 GB ディスク
-
-大規模なビルドジョブやメモリ集約的なテストなど、大幅により多くのメモリを必要とするタスクは失敗するか終了される可能性があります。これらの制限を超えるワークロードについては、[Remote Control](/docs/ja/remote-control)を使用して独自のハードウェアで Claude Code を実行してください。
-
-<h3 id="configure-your-environment">
-  環境を設定
-</h3>
-
-環境は[ネットワークアクセス](#network-access)、環境変数、セッション開始前に実行される[セットアップスクリプト](#setup-scripts)を制御します。設定なしで利用可能なものについては [Installed tools](#installed-tools) を参照してください。ウェブインターフェースまたはターミナルから環境を管理できます：
-
-| アクション                    | 方法                                                                                                                        |
-| :----------------------- | :------------------------------------------------------------------------------------------------------------------------ |
-| 環境を追加                    | 現在の環境を選択して環境セレクターを開き、**Add environment** を選択します。ダイアログには名前、ネットワークアクセスレベル、環境変数、セットアップスクリプトが含まれます。                           |
-| 環境を編集                    | クラウドアイコンを選択して現在の環境の名前を表示し、セレクターを開き、環境にマウスを合わせて、右側に表示される設定アイコンをクリックします。                                                    |
-| 環境をアーカイブ                 | 環境を編集用に開き、**Archive** を選択します。アーカイブされた環境はセレクターから非表示になりますが、既存のセッションは実行を続けます。                                                |
-| CLI クラウドセッションのデフォルト環境を設定 | ターミナルで `/remote-env` を実行します。単一の環境がある場合、このコマンドは現在の設定を表示します。`/remote-env` はデフォルトのみを選択します。ウェブインターフェースから環境を追加、編集、アーカイブしてください。 |
-
-環境変数は `.env` 形式を使用し、1 行に 1 つの `KEY=value` ペアです。値を引用符で囲まないでください。引用符は値の一部として保存されるためです。この例は 3 つの変数を定義しています：
-
-```text theme={null}
-NODE_ENV=development
-LOG_LEVEL=debug
-DATABASE_URL=postgres://localhost:5432/myapp
-```
-
-<h3 id="organization-shared-environments">
-  組織共有環境
-</h3>
-
-Team および Enterprise プランのオーナーと管理者は、組織のすべてのメンバーと共有されるクラウド環境を作成できます。共有環境は各メンバーの環境セレクターに個人環境と一緒に表示されるため、チームは各メンバーが再作成する代わりに 1 つの設定で標準化できます。
-
-[管理設定](https://claude.ai/admin-settings)の **Cloud environments** ページから共有環境を管理します。そこから以下を実行できます：
-
-* 共有環境を作成、編集、アーカイブします。各環境は個人環境と同じフィールドを持ちます：名前、[ネットワークアクセスレベル](#access-levels)、`.env` 形式の[環境変数](#configure-your-environment)、[セットアップスクリプト](#setup-scripts)。
-* 組織のデフォルト環境を設定します。
-
-共有環境の値はその環境のすべてのメンバーのセッションに到達します。個人環境と同様に、共有環境には専用シークレットストアがないため、シークレットを含めないでください。
-
-<h2 id="setup-scripts">
-  セットアップスクリプト
-</h2>
-
-セットアップスクリプトは新しいクラウドセッションが開始されるときに実行される Bash スクリプトで、Claude Code が起動する前に実行されます。セットアップスクリプトを使用して依存関係をインストールし、ツールを設定するか、セッションが必要とするプリインストールされていないものを取得します。
-
-スクリプトは Ubuntu 24.04 でルートとして実行されるため、`apt install` とほとんどの言語パッケージマネージャーが機能します。
-
-セットアップスクリプトを追加するには、環境設定ダイアログを開き、**Setup script** フィールドにスクリプトを入力します。
-
-この例はプリインストールされていない `gh` CLI をインストールします：
-
-```bash theme={null}
-#!/bin/bash
-apt update && apt install -y gh
-```
-
-スクリプトがゼロ以外で終了する場合、セッションは開始に失敗します。不安定なインストール失敗でセッションをブロックするのを避けるために、重要でないコマンドに `|| true` を追加します。
-
-スクリプトの総実行時間を約 5 分以下に保つため、[環境キャッシュ](#environment-caching)を構築できます。`&` と `wait` を使用して独立したインストールを並列で実行します。単一のダウンロードが 5 分の制限に収まらない場合は、バックグラウンドで起動する [SessionStart フック](#setup-scripts-vs-sessionstart-hooks)に移動します。
-
-<Note>
-  パッケージをインストールするセットアップスクリプトはレジストリに到達するためにネットワークアクセスが必要です。デフォルトの **Trusted** ネットワークアクセスは npm、PyPI、RubyGems、crates.io を含む[一般的なパッケージレジストリ](#default-allowed-domains)への接続を許可します。環境が **None** ネットワークアクセスを使用する場合、スクリプトはパッケージのインストールに失敗します。
-</Note>
-
-<h3 id="environment-caching">
-  環境キャッシング
-</h3>
-
-セットアップスクリプトは環境でセッションを開始するときに初めて実行されます。完了後、Anthropic はファイルシステムをスナップショットし、そのスナップショットを後のセッションの開始点として再利用します。新しいセッションはディスク上に依存関係、ツール、Docker イメージを既に持っており、セットアップスクリプトステップはスキップされます。これにより、スクリプトが大規模なツールチェーンをインストールするか、コンテナイメージをプルする場合でも、スタートアップは高速に保たれます。
-
-キャッシュはファイルをキャプチャし、実行中のプロセスはキャプチャしません。セットアップスクリプトがディスクに書き込むものはすべて引き継がれます。開始するサービスまたはコンテナは引き継がれないため、Claude に依頼するか、[SessionStart フック](#setup-scripts-vs-sessionstart-hooks)を使用してセッションごとにそれらを開始してください。
-
-環境のセットアップスクリプトまたは許可されたネットワークホストを変更するとき、およびキャッシュが約 7 日後に有効期限に達するときに、セットアップスクリプトが再度実行されてキャッシュが再構築されます。既存のセッションを再開することはセットアップスクリプトを再実行しません。
-
-キャッシングを有効にするか、スナップショットを自分で管理する必要はありません。
-
-<h3 id="setup-scripts-vs-sessionstart-hooks">
-  セットアップスクリプト対 SessionStart フック
-</h3>
-
-クラウドが必要とするがラップトップがすでに持っているもの（言語ランタイムや CLI ツールなど）をインストールするにはセットアップスクリプトを使用します。クラウドとローカルの両方で実行する必要があるプロジェクトセットアップ（`npm install` など）には [SessionStart フック](/docs/ja/hooks#sessionstart)を使用します。
-
-どちらもセッションの開始時に実行されますが、異なる場所に属しています：
-
-|      | セットアップスクリプト                                                      | SessionStart フック                  |
-| ---- | ---------------------------------------------------------------- | --------------------------------- |
-| 添付先  | クラウド環境                                                           | リポジトリ                             |
-| 設定場所 | クラウド環境 UI                                                        | リポジトリの `.claude/settings.json`    |
-| 実行   | Claude Code が起動する前、[キャッシュされた環境](#environment-caching)が利用できない場合のみ | Claude Code が起動した後、再開を含むすべてのセッション |
-| スコープ | クラウド環境のみ                                                         | ローカルとクラウド両方                       |
-
-SessionStart フックはローカルのユーザーレベル `~/.claude/settings.json` でも定義できますが、ユーザーレベルの設定はクラウドセッションに引き継がれません。クラウドでは、リポジトリとお客様の組織の[サーバー管理設定](/docs/ja/server-managed-settings)からフックが取得されます。
-
-<h3 id="install-dependencies-with-a-sessionstart-hook">
-  SessionStart フックで依存関係をインストール
-</h3>
-
-クラウドセッションのみで依存関係をインストールするには、リポジトリの `.claude/settings.json` に SessionStart フックを追加します：
-
-```json theme={null}
-{
-  "hooks": {
-    "SessionStart": [
-      {
-        "matcher": "startup|resume",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/scripts/install_pkgs.sh"
-          }
-        ]
-      }
-    ]
-  }
-}
-```
-
-`scripts/install_pkgs.sh` にスクリプトを作成し、`chmod +x` で実行可能にします。`CLAUDE_CODE_REMOTE` 環境変数はクラウドセッションで `true` に設定されるため、ローカル実行をスキップするために使用できます：
-
-```bash theme={null}
-#!/bin/bash
-
-if [ "$CLAUDE_CODE_REMOTE" != "true" ]; then
-  exit 0
-fi
-
-npm install
-pip install -r requirements.txt
-exit 0
-```
-
-SessionStart フックはクラウドセッションでいくつかの制限があります：
-
-* **クラウドのみのスコープなし**：フックはローカルとクラウドセッションの両方で実行されます。ローカル実行をスキップするには、上記のようにスクリプトで `CLAUDE_CODE_REMOTE` 環境変数をチェックします。
-* **ネットワークアクセスが必要**：インストールコマンドはパッケージレジストリに到達する必要があります。環境が **None** ネットワークアクセスを使用する場合、これらのフックは失敗します。**Trusted** の下の[デフォルト許可リスト](#default-allowed-domains)は npm、PyPI、RubyGems、crates.io をカバーしています。
-* **プロキシ互換性**：すべてのアウトバウンドトラフィックは[セキュリティプロキシ](#security-proxy)を通じて渡されます。一部のパッケージマネージャーはこのプロキシで正しく機能しません。Bun は既知の例です。
-* **スタートアップレイテンシーを追加**：フックはセッションが開始または再開されるたびに実行されます。依存関係が既に存在するかどうかを確認してから再インストールすることで、インストールスクリプトを高速に保ちます。
-
-後続の Bash コマンドの環境変数を永続化するには、`$CLAUDE_ENV_FILE` のファイルに書き込みます。詳細については [SessionStart フック](/docs/ja/hooks#sessionstart)を参照してください。
-
-カスタム Docker イメージで基本イメージを置き換えることはまだサポートされていません。[提供されたイメージ](#installed-tools)の上にセットアップスクリプトを使用して必要なものをインストールするか、`docker compose` を使用して Claude と一緒にイメージをコンテナとして実行してください。
-
-<h2 id="network-access">
-  ネットワークアクセス
-</h2>
-
-ネットワークアクセスはクラウド環境からのアウトバウンド接続を制御します。各環境は 1 つのアクセスレベルを指定し、カスタム許可ドメインで拡張できます。デフォルトは **Trusted** で、パッケージレジストリおよび他の[許可リストドメイン](#default-allowed-domains)を許可します。
-
-環境のネットワークアクセスを変更するには、[編集用に開き](#configure-your-environment)、ダイアログで **Network access** セレクターを使用します。個別の Environments ページはありません。クラウドアイコンはクラウドセッションを開始するか、[ルーチン](/docs/ja/routines#environments-and-network-access)を設定する場所に表示されます。
-
-<Note>
-  MCP コネクタトラフィックは Anthropic のサーバーを通じてルーティングされるため、セッションまたはルーチンで有効にするコネクタは **Allowed domains** に追加しなくても機能します。コネクタはセッションごとまたはルーチンごとに設定されます。Claude が到達できるツールを制限するために、不要なものを削除します。これは [Security and isolation](#security-and-isolation) の下で記載されている同じ Anthropic バウンドチャネルに依存しています。
-</Note>
-
-<h3 id="access-levels">
-  アクセスレベル
-</h3>
-
-環境を作成または編集するときにアクセスレベルを選択します：
-
-| レベル         | アウトバウンド接続                                                          |
-| :---------- | :----------------------------------------------------------------- |
-| **None**    | アウトバウンドネットワークアクセスなし                                                |
-| **Trusted** | [許可リストドメイン](#default-allowed-domains)のみ：パッケージレジストリ、GitHub、クラウド SDK |
-| **Full**    | 任意のドメイン                                                            |
-| **Custom**  | 独自の許可リスト、オプションでデフォルトを含む                                            |
-
-GitHub 操作は[別のプロキシ](#github-proxy)を使用し、この設定から独立しています。
-
-<h3 id="allow-specific-domains">
-  特定のドメインを許可
-</h3>
-
-Trusted リストにないドメインを許可するには、環境のネットワークアクセス設定で **Custom** を選択します。**Allowed domains** フィールドが表示されます。1 行に 1 つのドメインを入力します：
-
-```text theme={null}
-api.example.com
-*.internal.example.com
-registry.example.com
-```
-
-ワイルドカードサブドメインマッチングに `*.` を使用します。**Also include default list of common package managers** をチェックして [Trusted ドメイン](#default-allowed-domains)をカスタムエントリと一緒に保つか、リストしたものだけを許可するためにチェックを外します。
-
-許可ドメインは環境ごとに設定されます。Owner がすべてのユーザーの環境にプッシュできる組織レベルの許可リストはありません。[server-managed settings](/docs/ja/server-managed-settings)はクラウドセッションを制限できますが、許可ドメインを追加することはできません。
-
-<h3 id="github-proxy">
-  GitHub プロキシ
-</h3>
-
-セキュリティのため、すべての GitHub 操作は専用プロキシサービスを通じて行われ、実際の GitHub 認証情報をサンドボックスの外に保ちます。プロキシは 2 種類のトラフィックを認証します：
-
-* Git インタラクション：サンドボックス内の git クライアントはカスタムビルトのスコープ付き認証情報を使用し、プロキシはそれを検証して実際の GitHub 認証トークンに変換します
-* GitHub API リクエスト：プロキシは組み込み GitHub ツールからのリクエストおよび [Work with GitHub issues and pull requests](#work-with-github-issues-and-pull-requests) で説明されている `proxy-injected` プレースホルダーをセッションが設定する場合の `gh` からのリクエストで実際の認証情報を置き換えます
-
-プロキシはセキュリティのため git push 操作を現在のワーキングブランチに制限し、セキュリティ境界を維持しながらクローン、フェッチ、PR 操作を有効にします。
-
-プロキシは GitHub API およびリリースアセットリクエストを環境の[アクセスレベル](#access-levels)に関係なくセッションに接続されたリポジトリに制限します。接続されていないリポジトリからリリースアセットをダウンロードするセットアップスクリプトは 403 を返します。公開リポジトリからコミットされたファイルは `raw.githubusercontent.com` を通じてフェッチされ、[security proxy](#security-proxy)が代わりに処理します。そのドメインはデフォルト[Trusted リスト](#default-allowed-domains)にあるため、環境の[アクセスレベル](#access-levels)がそれを除外しない限りファイルは到達可能なままです。
-
-<h3 id="security-proxy">
-  セキュリティプロキシ
-</h3>
-
-環境はセキュリティと不正使用防止のため HTTP/HTTPS ネットワークプロキシの背後で実行されます。すべてのアウトバウンドインターネットトラフィックはこのプロキシを通じて渡され、以下を提供します：
-
-* 悪意のあるリクエストに対する保護
-* レート制限と不正使用防止
-* 強化されたセキュリティのためのコンテンツフィルタリング
-* リクエストされたホスト名の DNS レベル監査証跡
-
-<h3 id="default-allowed-domains">
-  デフォルト許可ドメイン
-</h3>
-
-**Trusted** ネットワークアクセスを使用する場合、以下のドメインはデフォルトで許可されます。`*` でマークされたドメインはワイルドカードサブドメインマッチングを示すため、`*.gcr.io` は `gcr.io` のすべてのサブドメインを許可します。
-
-<AccordionGroup>
-  <Accordion title="Anthropic サービス">
-    * api.anthropic.com
-    * statsig.anthropic.com
-    * docs.claude.com
-    * platform.claude.com
-    * code.claude.com
-    * claude.ai
-  </Accordion>
-
-  <Accordion title="バージョン管理">
-    * github.com
-    * [www.github.com](http://www.github.com)
-    * api.github.com
-    * npm.pkg.github.com
-    * raw\.githubusercontent.com
-    * pkg-npm.githubusercontent.com
-    * objects.githubusercontent.com
-    * release-assets.githubusercontent.com
-    * codeload.github.com
-    * avatars.githubusercontent.com
-    * camo.githubusercontent.com
-    * gist.github.com
-    * gitlab.com
-    * [www.gitlab.com](http://www.gitlab.com)
-    * registry.gitlab.com
-    * bitbucket.org
-    * [www.bitbucket.org](http://www.bitbucket.org)
-    * api.bitbucket.org
-  </Accordion>
-
-  <Accordion title="コンテナレジストリ">
-    * registry-1.docker.io
-    * auth.docker.io
-    * index.docker.io
-    * hub.docker.com
-    * [www.docker.com](http://www.docker.com)
-    * production.cloudflare.docker.com
-    * download.docker.com
-    * gcr.io
-    * \*.gcr.io
-    * ghcr.io
-    * mcr.microsoft.com
-    * \*.data.mcr.microsoft.com
-    * public.ecr.aws
-  </Accordion>
-
-  <Accordion title="クラウドプラットフォーム">
-    * cloud.google.com
-    * accounts.google.com
-    * gcloud.google.com
-    * \*.googleapis.com
-    * storage.googleapis.com
-    * compute.googleapis.com
-    * container.googleapis.com
-    * azure.com
-    * portal.azure.com
-    * microsoft.com
-    * [www.microsoft.com](http://www.microsoft.com)
-    * \*.microsoftonline.com
-    * packages.microsoft.com
-    * dotnet.microsoft.com
-    * dot.net
-    * visualstudio.com
-    * dev.azure.com
-    * \*.amazonaws.com
-    * \*.api.aws
-    * oracle.com
-    * [www.oracle.com](http://www.oracle.com)
-    * java.com
-    * [www.java.com](http://www.java.com)
-    * java.net
-    * [www.java.net](http://www.java.net)
-    * download.oracle.com
-    * yum.oracle.com
-  </Accordion>
-
-  <Accordion title="JavaScript と Node パッケージマネージャー">
-    * registry.npmjs.org
-    * [www.npmjs.com](http://www.npmjs.com)
-    * [www.npmjs.org](http://www.npmjs.org)
-    * npmjs.com
-    * npmjs.org
-    * yarnpkg.com
-    * registry.yarnpkg.com
-  </Accordion>
-
-  <Accordion title="Python パッケージマネージャー">
-    * pypi.org
-    * [www.pypi.org](http://www.pypi.org)
-    * files.pythonhosted.org
-    * pythonhosted.org
-    * test.pypi.org
-    * pypi.python.org
-    * pypa.io
-    * [www.pypa.io](http://www.pypa.io)
-  </Accordion>
-
-  <Accordion title="Ruby パッケージマネージャー">
-    * rubygems.org
-    * [www.rubygems.org](http://www.rubygems.org)
-    * api.rubygems.org
-    * index.rubygems.org
-    * ruby-lang.org
-    * [www.ruby-lang.org](http://www.ruby-lang.org)
-    * rubyforge.org
-    * [www.rubyforge.org](http://www.rubyforge.org)
-    * rubyonrails.org
-    * [www.rubyonrails.org](http://www.rubyonrails.org)
-    * rvm.io
-    * get.rvm.io
-  </Accordion>
-
-  <Accordion title="Rust パッケージマネージャー">
-    * crates.io
-    * [www.crates.io](http://www.crates.io)
-    * index.crates.io
-    * static.crates.io
-    * rustup.rs
-    * static.rust-lang.org
-    * [www.rust-lang.org](http://www.rust-lang.org)
-  </Accordion>
-
-  <Accordion title="Go パッケージマネージャー">
-    * proxy.golang.org
-    * sum.golang.org
-    * index.golang.org
-    * golang.org
-    * [www.golang.org](http://www.golang.org)
-    * goproxy.io
-    * pkg.go.dev
-  </Accordion>
-
-  <Accordion title="JVM パッケージマネージャー">
-    * maven.org
-    * repo.maven.org
-    * central.maven.org
-    * repo1.maven.org
-    * repo.maven.apache.org
-    * jcenter.bintray.com
-    * gradle.org
-    * [www.gradle.org](http://www.gradle.org)
-    * services.gradle.org
-    * plugins.gradle.org
-    * kotlinlang.org
-    * [www.kotlinlang.org](http://www.kotlinlang.org)
-    * spring.io
-    * repo.spring.io
-  </Accordion>
-
-  <Accordion title="その他のパッケージマネージャー">
-    * packagist.org（PHP Composer）
-    * [www.packagist.org](http://www.packagist.org)
-    * repo.packagist.org
-    * nuget.org（.NET NuGet）
-    * [www.nuget.org](http://www.nuget.org)
-    * api.nuget.org
-    * pub.dev（Dart/Flutter）
-    * api.pub.dev
-    * hex.pm（Elixir/Erlang）
-    * [www.hex.pm](http://www.hex.pm)
-    * cpan.org（Perl CPAN）
-    * [www.cpan.org](http://www.cpan.org)
-    * metacpan.org
-    * [www.metacpan.org](http://www.metacpan.org)
-    * api.metacpan.org
-    * cocoapods.org（iOS/macOS）
-    * [www.cocoapods.org](http://www.cocoapods.org)
-    * cdn.cocoapods.org
-    * haskell.org
-    * [www.haskell.org](http://www.haskell.org)
-    * hackage.haskell.org
-    * swift.org
-    * [www.swift.org](http://www.swift.org)
-  </Accordion>
-
-  <Accordion title="Linux ディストリビューション">
-    * archive.ubuntu.com
-    * security.ubuntu.com
-    * ubuntu.com
-    * [www.ubuntu.com](http://www.ubuntu.com)
-    * \*.ubuntu.com
-    * ppa.launchpad.net
-    * launchpad.net
-    * [www.launchpad.net](http://www.launchpad.net)
-    * \*.nixos.org
-  </Accordion>
-
-  <Accordion title="開発ツールとプラットフォーム">
-    * dl.k8s.io（Kubernetes）
-    * pkgs.k8s.io
-    * k8s.io
-    * [www.k8s.io](http://www.k8s.io)
-    * releases.hashicorp.com（HashiCorp）
-    * apt.releases.hashicorp.com
-    * rpm.releases.hashicorp.com
-    * archive.releases.hashicorp.com
-    * hashicorp.com
-    * [www.hashicorp.com](http://www.hashicorp.com)
-    * repo.anaconda.com（Anaconda/Conda）
-    * conda.anaconda.org
-    * anaconda.org
-    * [www.anaconda.com](http://www.anaconda.com)
-    * anaconda.com
-    * continuum.io
-    * apache.org（Apache）
-    * [www.apache.org](http://www.apache.org)
-    * archive.apache.org
-    * downloads.apache.org
-    * eclipse.org（Eclipse）
-    * [www.eclipse.org](http://www.eclipse.org)
-    * download.eclipse.org
-    * nodejs.org（Node.js）
-    * [www.nodejs.org](http://www.nodejs.org)
-    * developer.apple.com
-    * developer.android.com
-    * pkg.stainless.com
-    * binaries.prisma.sh
-  </Accordion>
-
-  <Accordion title="クラウドサービスと監視">
-    * statsig.com
-    * [www.statsig.com](http://www.statsig.com)
-    * api.statsig.com
-    * sentry.io
-    * \*.sentry.io
-    * downloads.sentry-cdn.com
-    * http-intake.logs.datadoghq.com
-    * browser-intake-us5-datadoghq.com
-    * \*.datadoghq.com
-    * \*.datadoghq.eu
-    * api.honeycomb.io
-  </Accordion>
-
-  <Accordion title="コンテンツ配信とミラー">
-    * sourceforge.net
-    * \*.sourceforge.net
-    * packagecloud.io
-    * \*.packagecloud.io
-    * fonts.googleapis.com
-    * fonts.gstatic.com
-  </Accordion>
-
-  <Accordion title="スキーマと設定">
-    * json-schema.org
-    * [www.json-schema.org](http://www.json-schema.org)
-    * json.schemastore.org
-    * [www.schemastore.org](http://www.schemastore.org)
-  </Accordion>
-
-  <Accordion title="Model Context Protocol">
-    * \*.modelcontextprotocol.io
-  </Accordion>
-</AccordionGroup>
-
-<h2 id="move-tasks-between-web-and-terminal">
-  ウェブとターミナル間でタスクを移動
+<h2 id="move-tasks-between-terminal-and-cloud">
+  ターミナルとクラウド間でタスクを移動
 </h2>
 
 これらのワークフローには [Claude Code CLI](/docs/ja/quickstart) が同じ claude.ai アカウントにサインインしている必要があります。ターミナルから新しいクラウドセッションを開始するか、クラウドセッションをターミナルにプルしてローカルで続行できます。クラウドセッションはラップトップを閉じても保持され、Claude モバイルアプリを含む任意の場所から監視できます。
 
 <Note>
-  CLI からのセッションハンドオフは一方向です：`--teleport` でクラウドセッションをターミナルにプルできますが、既存のターミナルセッションをウェブにプッシュすることはできません。`--cloud` フラグは現在のリポジトリの新しいクラウドセッションを作成します。[Desktop アプリ](/docs/ja/desktop#continue-in-another-surface)は別のサーフェスに送信できる Continue in メニューを提供します。
+  CLI からのセッションハンドオフは一方向です：`--teleport` でクラウドセッションをターミナルにプルできますが、既存のターミナルセッションをクラウドにプッシュすることはできません。`--cloud` フラグはタスク説明を使用して現在のリポジトリの新しいクラウドセッションを作成します；`-p` とセッション ID または claude.ai/code URL を使用すると、代わりに[その既存セッションにメッセージをキューイング](/docs/ja/claude-code-on-the-web#send-follow-ups-from-the-cli)します。[Desktop アプリ](/docs/ja/desktop#continue-in-another-surface)は別のサーフェスにローカルセッションを送信できる Continue in メニューを提供します。
 </Note>
 
-<h3 id="from-terminal-to-web">
-  ターミナルからウェブへ
+<h3 id="from-terminal-to-cloud">
+  ターミナルからクラウドへ
 </h3>
 
 `--cloud` フラグを使用してコマンドラインからクラウドセッションを開始します：
@@ -665,21 +89,25 @@ registry.example.com
 claude --cloud "Fix the authentication bug in src/auth/login.ts"
 ```
 
-これにより claude.ai 上に新しいクラウドセッションが作成されます。セッションは現在のディレクトリの GitHub リモートを現在のブランチでクローンするため、VM は GitHub からクローンするため、ローカルコミットがある場合は最初にプッシュしてください。`--cloud` は一度に 1 つのリポジトリで機能します。タスクはクラウドで実行され、ローカルで作業を続行できます。古い `--remote` スペルは `--cloud` の非推奨エイリアスとしてまだ機能します。
+これにより claude.ai 上に新しいクラウドセッションが作成されます。クラウド VM はローカルチェックアウトではなく、現在のブランチで現在のディレクトリの GitHub リモートをクローンするため、ローカルコミットがある場合は最初にプッシュしてください。[ローカルリポジトリを GitHub なしで送信](#send-local-repositories-without-github)を参照して、Claude Code がリモートをクローンする代わりにローカルリポジトリをアップロードする場合を確認してください。
 
-v2.1.195 以降、CLI はリポジトリのクローンや [セットアップスクリプト](#setup-scripts)の実行などのセットアップステップのライブチェックリストを表示し、クラウドコンテナが起動します。コンテナがプロビジョニング中に入力したメッセージはキューに入れられ、セッションの準備ができたら送信されます。
+`--cloud` は一度に 1 つのリポジトリで機能します。タスクはクラウドで実行され、ローカルで作業を続行できます。古い `--remote` スペルは `--cloud` の非推奨エイリアスとしてまだ機能します。
+
+クラウドコンテナが起動している間、CLI はリポジトリのクローンや[セットアップスクリプト](/docs/ja/cloud-environments#setup-scripts)の実行などのセットアップステップのライブチェックリストを表示します。プロビジョニング中に入力したメッセージはキューに入れられ、セッションの準備ができたら送信されます。
 
 <Note>
-  `--cloud` はクラウドセッションを作成します。`--remote-control` は無関係です：ウェブから監視するためにローカル CLI セッションを公開します。[Remote Control](/docs/ja/remote-control)を参照してください。
+  `--cloud` はクラウドセッションを作成します。`--remote-control` は無関係です：ローカル CLI セッションを claude.ai または Claude アプリから監視および操舵できます。[Remote Control](/docs/ja/remote-control)を参照してください。
 </Note>
 
-Claude Code CLI で `/tasks` を使用して進捗をチェックするか、claude.ai または Claude モバイルアプリでセッションを開いて直接対話します。そこから Claude を操舵し、フィードバックを提供するか、他のすべての会話と同じように質問に答えることができます。
+claude.ai または Claude モバイルアプリでセッションを開いて進捗をチェックするか、直接対話します。そこから Claude を操舵し、フィードバックを提供するか、他のすべての会話と同じように質問に答えることができます。
+
+Claude が質問をして、セッションがアイドル状態のままの場合、[環境の有効期限切れ](#environment-expired)まで戻ってきたときに答えることができ、セッションはあなたの答えから続行されます。
 
 <h4 id="tips-for-cloud-tasks">
   クラウドタスクのヒント
 </h4>
 
-**ローカルで計画し、リモートで実行する**：複雑なタスクの場合、Claude をプランモードで開始してアプローチについて協力し、その後ウェブに作業を送信します：
+**ローカルで計画し、クラウドで実行する**：複雑なタスクの場合、Claude をプランモードで開始してアプローチについて協力し、その後クラウドに作業を送信します：
 
 ```bash theme={null}
 claude --permission-mode plan
@@ -691,10 +119,6 @@ claude --permission-mode plan
 claude --cloud "Execute the migration plan in docs/migration-plan.md"
 ```
 
-このパターンにより、戦略を制御しながら Claude がクラウドで自律的に実行できます。
-
-**クラウドで ultraplan を使用してプランを作成**：ウェブセッション自体でプランを起案およびレビューするには、[ultraplan](/docs/ja/ultraplan)を使用します。Claude はウェブ上の Claude Code でプランを生成し、作業を続行し、ブラウザでセクションにコメントし、リモートで実行するか、プランをターミナルに送り返すことを選択します。
-
 **タスクを並列で実行**：各 `--cloud` コマンドは独立して実行される独自のクラウドセッションを作成します。複数のタスクを開始でき、すべて別々のセッションで同時に実行されます：
 
 ```bash theme={null}
@@ -703,15 +127,17 @@ claude --cloud "Update the API documentation"
 claude --cloud "Refactor the logger to use structured output"
 ```
 
-Claude Code CLI で `/tasks` を使用してすべてのセッションを監視します。セッションが完了したら、ウェブインターフェースから PR を作成するか、[セッションをテレポート](#from-web-to-terminal)してターミナルで作業を続行できます。
+セッションが完了したら、claude.ai/code から PR を作成するか、[セッションをテレポート](#from-cloud-to-terminal)してターミナルで作業を続行できます。
 
 <h4 id="send-local-repositories-without-github">
   GitHub なしでローカルリポジトリを送信
 </h4>
 
-GitHub に接続されていないリポジトリから `claude --cloud` を実行する場合、Claude Code はローカルリポジトリをバンドルしてクラウドセッションに直接アップロードします。バンドルにはすべてのブランチ全体のリポジトリ履歴と、追跡されたファイルへのコミットされていない変更が含まれます。
+git リモートがないリポジトリから `claude --cloud` を実行する場合、または Claude GitHub App がインストールされていない github.com リポジトリから実行する場合、Claude Code はローカルリポジトリをバンドルしてクラウドセッションに直接アップロードします。これは `/web-setup` で GitHub を接続した場合でも適用されます。バンドルにはすべてのブランチ全体のリポジトリ履歴と、追跡されたファイルへのコミットされていない変更が含まれます。
 
-GitHub アクセスが利用できない場合、このフォールバックは自動的にアクティブになります。GitHub が接続されている場合でも強制するには、`CCR_FORCE_BUNDLE=1` を設定します：
+macOS、Linux、WSL では、Claude Code は認証情報またはキーのような名前のファイルへのコミットされていない変更をアップロードから除外し、除外したファイルに名前を付けます。これは `.env` ファイル、Terraform `*.tfvars` ファイル、および `id_rsa` や `*.pem` などのキーファイルをカバーしています。セッションは各のコミットされたバージョンで開始するか、コミットされたものがない場合はファイルなしで開始されます。リンクされたワーキングツリー、サブモジュール、または同様のレイアウトでは、Claude Code はこれらの変更を残りと一緒にアップロードし、アップロードしたファイルに名前を付けます。
+
+Claude Code がリモートからクローンする場合でも強制するには、`CCR_FORCE_BUNDLE=1` を設定します：
 
 ```bash theme={null}
 CCR_FORCE_BUNDLE=1 claude --cloud "Run the test suite and fix any failures"
@@ -722,20 +148,66 @@ CCR_FORCE_BUNDLE=1 claude --cloud "Run the test suite and fix any failures"
 * ディレクトリは少なくとも 1 つのコミットを持つ git リポジトリである必要があります
 * バンドルされたリポジトリは 100 MB 未満である必要があります。より大きなリポジトリは現在のブランチのみをバンドルすることにフォールバックし、その後ワーキングツリーの単一の圧縮スナップショットにフォールバックし、スナップショットがまだ大きすぎる場合のみ失敗します
 * 追跡されていないファイルは含まれません。クラウドセッションが見るべきファイルで `git add` を実行します
-* バンドルから作成されたセッションは、[GitHub 認証](#github-authentication-options)も設定されていない限り、リモートにプッシュバックできません
+* バンドルから作成されたセッションは、[GitHub 接続](#github-authentication-options)がそのリポジトリへのプッシュアクセスを持つ場合にのみ、GitHub リモートにプッシュバックできます
 
-<h3 id="from-web-to-terminal">
-  ウェブからターミナルへ
+<h3 id="send-follow-ups-from-the-cli">
+  CLI からフォローアップを送信
+</h3>
+
+クラウドセッションが実行されている場合、どこで実行されていても、`claude auth login` でサインインしている任意のマシンの `claude` CLI からそれにフォローアップメッセージを送信します。CLI は Anthropic アカウント認証情報で認証し、ローカルセッション状態を送信しないため、コマンドはセッションを開始したマシンから実行する必要がなく、PowerShell を含むすべてのシェルで同じです。
+
+コマンドは 1 つのメッセージを投稿して終了します：
+
+```bash theme={null}
+claude -p "your message" --cloud <session-id>
+```
+
+CLI はメッセージをセッションにキューイングして、返信を待たずに終了します。長時間実行されるセッションを操舵し、現在のセッションがまだ終了している間に次のステップをキューイングするか、[CI スクリプト](/docs/ja/self-hosted-environments-testing#run-the-test-loop)からフォローアップを送信するために使用します。代わりに stdin でメッセージをパイプすることもできます：`echo "your message" | claude -p --cloud <session-id>`。
+
+`<session-id>` については、`session_...` または `cse_...` などの裸の ID、またはセッションの `claude.ai/code/<id>` URL をスキーム、クエリ文字列の有無で渡します。ID は claude.ai/code のセッションリストで見つけます。
+
+<Note>
+  `--cloud` には Anthropic アカウントが必要です。Claude Code が Amazon Bedrock、Google Cloud の Agent Platform、または別のサードパーティプロバイダー用に設定されている場合は利用できません。`ANTHROPIC_BASE_URL` を通じてのみ設定された[LLM ゲートウェイ](/docs/ja/llm-gateway)はこのチェックではサードパーティプロバイダーとしてカウントされませんが、`claude auth login` でサインインする必要があります。組織の `allow_remote_sessions` ポリシーも有効にする必要があります。Owner は claude.ai/admin-settings/claude-code の Claude Code 管理設定でオンにできます。
+</Note>
+
+<h4 id="output-and-errors">
+  出力とエラー
+</h4>
+
+成功時に、コマンドはセッション ID とセッションを表示するリンクを出力します：
+
+```
+Sent to cloud session.
+Session ID: session_01DiUkqY2kzbUbDmW1w96rfi
+View: https://claude.ai/code/session_01DiUkqY2kzbUbDmW1w96rfi?from=cli&m=0
+```
+
+マシン可読結果の場合は `--output-format json` を渡します：成功時は `{ok, session_id, url}`、送信が失敗した場合は `{ok: false, session_id, error}`（例えば、セッションが見つからないか、アーカイブされている場合）。設定エラー（サポートされていないプロバイダーや無効な組織ポリシーなど）は JSON なしで stderr に出力されます。`--output-format stream-json` は `--cloud <session-id>` ではサポートされていません。
+
+CLI はエラーの前に `Error: ` を付けます。失敗した配信は `failed to send message to cloud session <id>: <reason>` としてラップされます。
+
+| メッセージ                                                                                                                       | 意味                                                                                                                                                                                                                   |
+| --------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Cloud sessions aren't available with <provider>. They run on Anthropic's infrastructure and require an Anthropic account.` | Claude Code はサードパーティプロバイダー用に設定されています。メッセージは設定が使用するラベル（`Amazon Bedrock` や `Google Vertex AI` など）でプロバイダーに名前を付けます。そのプロバイダーの設定を削除します（例えば、`CLAUDE_CODE_USE_BEDROCK` を設定解除）、Anthropic アカウント（`claude auth login`）でサインインします。 |
+| `Cloud sessions are disabled by your organization's policy. Contact your organization admin to enable them.`                | `allow_remote_sessions` 組織ポリシーがオフです。                                                                                                                                                                                 |
+| `Couldn't verify your organization's policy for cloud sessions. Check your network connection and try again.`               | Claude Code は組織のポリシーをフェッチできなかったため、クラウドセッションが許可されていると仮定するのではなく、送信を拒否します。ネットワーク接続を確認して再試行してください。                                                                                                                       |
+| `Attaching to an existing cloud session is not enabled for your account.`                                                   | `-p` なしで `--cloud <session-id>` を実行しました。`claude -p "your message" --cloud <session-id>` でメッセージを送信します。                                                                                                                |
+| `Session not found: <id>`                                                                                                   | ID または URL はアクセスできるセッションと一致しません。セッションの claude.ai/code URL に対して確認してください。                                                                                                                                              |
+| `cloud session <id> is archived and cannot accept new messages`                                                             | セッションはアーカイブされています。代わりに新しいセッションを開始します。                                                                                                                                                                                |
+
+<h3 id="from-cloud-to-terminal">
+  クラウドからターミナルへ
 </h3>
 
 以下のいずれかを使用してクラウドセッションをターミナルにプルします：
 
 * **`--teleport` を使用**：コマンドラインから `claude --teleport` を実行してインタラクティブセッションピッカーを表示するか、`claude --teleport <session-id>` を実行して特定のセッションを直接再開します。コミットされていない変更がある場合は、最初にそれらをスタッシュするよう求められます。
-* **`/teleport` を使用**：既存の CLI セッション内で `/teleport`（または `/tp`）を実行して、Claude Code を再起動せずに同じセッションピッカーを開きます。
+* **`/teleport` を使用**：既存の CLI セッション内で `/teleport` または `/tp` を実行して、Claude Code を再起動せずに同じセッションピッカーを開きます。
 * **`/tasks` から**：`/tasks` を実行してバックグラウンドセッションを表示し、`t` を押してセッションにテレポートします。
-* **ウェブインターフェースから**：**Open in CLI** を選択してターミナルに貼り付けられるコマンドをコピーします。
+* **claude.ai/code から**：セッションメニューから **Open in > Terminal** を選択して、ターミナルに貼り付けられるコマンドをコピーします。
+* **クラウドセッション内から**：`/teleport` を入力すると、Claude Code はそのセッションの正確な `claude --teleport <session-id>` コマンドで返信し、リポジトリのチェックアウトから実行する準備ができています。セッションの環境で Claude Code v2.1.223 以降が必要です。
 
-セッションをテレポートすると、Claude は正しいリポジトリにいることを確認し、クラウドセッションからブランチをフェッチしてチェックアウトし、完全な会話履歴をターミナルに読み込みます。
+セッションをテレポートすると、Claude はあなたが正しいリポジトリにいることを確認し、クラウドセッションからブランチをフェッチしてチェックアウトし、完全な会話履歴をターミナルに読み込みます。ターミナルはセッションの独自のコピーを取得します：そこでの新しい作業はローカルのままで、claude.ai または Claude モバイルアプリのクラウドセッションに表示されません。テレポート後に電話から操舵を続けるには、ローカルセッションで [`/remote-control`](/docs/ja/remote-control) を開始します。
 
 `--teleport` は `--resume` とは異なります。`--resume` はこのマシンのローカル履歴から会話を再開し、クラウドセッションをリストしません。`--teleport` はクラウドセッションとそのブランチをプルします。
 
@@ -745,18 +217,18 @@ CCR_FORCE_BUNDLE=1 claude --cloud "Run the test suite and fix any failures"
 
 テレポートはセッションを再開する前にこれらの要件をチェックします。要件が満たされていない場合は、エラーが表示されるか、問題を解決するよう求められます。
 
-| 要件           | 詳細                                                                                                                                                                                                                                               |
-| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| クリーンな git 状態 | 作業ディレクトリにコミットされていない変更がないことが必要です。テレポートは必要に応じて変更をスタッシュするよう求めます。                                                                                                                                                                                    |
-| 正しいリポジトリ     | フォークではなく、同じリポジトリのチェックアウトから `--teleport` を実行する必要があります。v2.1.199 以降、Claude Code は `git@work:owner/repo.git` のような SSH ホストエイリアスや `insteadOf` で書き直された短い形式など、リモートをホスト名に解析できない場合でも、チェックアウトを受け入れます。最初に確認プロンプトを表示し、リモートの所有者とリポジトリ名がセッションのリポジトリと一致する場合のみです。 |
-| ブランチが利用可能    | クラウドセッションからのブランチがリモートにプッシュされている必要があります。テレポートは自動的にフェッチしてチェックアウトします。                                                                                                                                                                               |
-| 同じアカウント      | クラウドセッションで使用された同じ claude.ai アカウントに認証される必要があります。                                                                                                                                                                                                  |
+| 要件           | 詳細                                                                                                                                                                                                                                                                                                                     |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| クリーンな git 状態 | 作業ディレクトリにコミットされていない変更がないことが必要です。テレポートは必要に応じて変更をスタッシュするよう求めます。                                                                                                                                                                                                                                                          |
+| 正しいリポジトリ     | フォークではなく、同じリポジトリのチェックアウトから `--teleport` を実行する必要があります。別のリポジトリのチェックアウトから実行する場合、Claude Code はセッションのリポジトリとチェックアウトのリポジトリの両方を示すエラーを表示します。v2.1.219 より前では、エラーはチェックアウトのリポジトリを示していませんでした。Claude Code がリモートをホスト名に解析できない場合（`git@work:owner/repo.git` のような SSH ホストエイリアスなど）、確認を求め、リモートの所有者とリポジトリ名がセッションのリポジトリと一致する場合、チェックアウトを受け入れます。 |
+| ブランチが利用可能    | クラウドセッションからのブランチがリモートにプッシュされている必要があります。テレポートは自動的にフェッチしてチェックアウトします。                                                                                                                                                                                                                                                     |
+| 同じアカウント      | クラウドセッションで使用された同じ claude.ai アカウントに認証される必要があります。                                                                                                                                                                                                                                                                        |
 
 <h4 id="teleport-is-unavailable">
   `--teleport` が利用できない
 </h4>
 
-テレポートには claude.ai サブスクリプション認証が必要です。API キー、Amazon Bedrock、Google Cloud の Agent Platform、または Microsoft Foundry 経由で認証されている場合は、代わりに claude.ai アカウントでサインインするために `/login` を実行してください。claude.ai 経由で既にサインインしており、`--teleport` がまだ利用できない場合は、組織がクラウドセッションを無効にしている可能性があります。
+テレポートには claude.ai サブスクリプション認証が必要です。API キーで認証されている場合は、代わりに claude.ai アカウントでサインインするために `/login` を実行してください。エラーがプロバイダーに名前を付ける場合、クラウドセッションはサードパーティプロバイダーを通じて利用できません；[エラーテーブル](#output-and-errors)を参照してください。claude.ai 経由で既にサインインしており、`--teleport` がまだ利用できない場合は、組織がクラウドセッションを無効にしている可能性があります。
 
 <h2 id="work-with-sessions">
   セッションの操作
@@ -764,14 +236,23 @@ CCR_FORCE_BUNDLE=1 claude --cloud "Run the test suite and fix any failures"
 
 セッションは claude.ai/code のサイドバーに表示されます。そこから変更を確認し、チームメイトと共有し、完了した作業をアーカイブするか、セッションを永続的に削除できます。
 
+<h3 id="take-back-a-queued-message">
+  キューに入ったメッセージを取り戻す
+</h3>
+
+Claude が作業中にメッセージを送信すると、Claude がそれを読むまでメッセージはキューに入ります。キューに入ったメッセージを取り戻すには、その上の ✕ をクリックします。テキストはメッセージボックスに戻るため、編集するか別のものを送信できます。
+
+Claude がすでにメッセージを読んでいる場合、それは会話に留まります。
+
 <h3 id="manage-context">
   コンテキストを管理
 </h3>
 
 クラウドセッションは[組み込みコマンド](/docs/ja/commands)をサポートしており、テキスト出力を生成します。ターミナルインターフェイスでのみ実行されるコマンド（`/plugin` や `/resume` など）は利用できません。ターミナルでピッカーまたはパネルを開くコマンドはクラウドセッションで異なる動作をします：
 
-* **`/model`、`/effort`、`/fast`、`/color`、`/rename`**：ターミナルピッカーまたはスライダーを開く代わりに、引数として値を渡します。例えば `/model sonnet` のように使用します。引数形式はセッションの環境で Claude Code v2.1.205 以降が必要であり、各コマンドの[利用可能性に関する注記](/docs/ja/commands#all-commands)に従います。`/effort` はモデルの[起動デフォルト努力保持](/docs/ja/model-config#adjust-effort-level)が有効な場合は `Not applied` を報告し、`/fast` はファストモードを有効にして開始されたセッションでのみ機能します。
-* **`/config`**：ウェブ上では、値を設定する代わりに Claude Code セクションの設定を開き、`key=value` を含むコマンド後のテキストは無視されます。クラウドセッションの設定を変更するには、[環境変数](#configure-your-environment)を使用するか、[設定ファイル](/docs/ja/settings)をリポジトリにコミットします。
+* **`/model`、`/effort`、`/color`、`/rename`**：ターミナルピッカーまたはスライダーを開く代わりに、引数として値を渡します。例えば `/model sonnet` のように使用します。引数形式はセッションの環境で Claude Code v2.1.205 以降が必要であり、各コマンドの[利用可能性に関する注記](/docs/ja/commands#all-commands)に従います。
+* **`/fast`**：アカウントで[利用可能な場合](/docs/ja/fast-mode#requirements)、セッションの[ファストモード](/docs/ja/fast-mode#use-fast-mode-in-cloud-sessions)を切り替えます。セッションの環境で Claude Code v2.1.271 以降が必要です。
+* **`/config`**：ブラウザの claude.ai/code では、値を設定する代わりに Claude Code セクションの設定を開き、`key=value` を含むコマンド後のテキストは無視されます。クラウドセッションの設定を変更するには、[環境変数](/docs/ja/cloud-environments#set-environment-variables)を環境に設定するか、1 つのリポジトリを持つセッションでキーをそのリポジトリの `.claude/settings.json` にコミットします。[クラウドセッションの設定](/docs/ja/settings#settings-in-cloud-sessions)には各セッションが読み込むものが記載されています。
 
 コンテキスト管理の場合：
 
@@ -781,17 +262,31 @@ CCR_FORCE_BUNDLE=1 claude --cloud "Run the test suite and fix any failures"
 | `/context` | はい           | 現在コンテキストウィンドウにあるものを表示します                                                     |
 | `/clear`   | いいえ          | サイドバーから新しいセッションを開始します                                                        |
 
-自動圧縮はコンテキストウィンドウが容量に近づくと自動的に実行されます。より早くトリガーするには、[環境変数](#configure-your-environment)で [`CLAUDE_AUTOCOMPACT_PCT_OVERRIDE`](/docs/ja/env-vars)を設定します。例えば、`CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=70` はウィンドウがほぼいっぱいになるまで待つのではなく、70% 容量で圧縮します。圧縮計算の有効なウィンドウサイズを変更するには、[`CLAUDE_CODE_AUTO_COMPACT_WINDOW`](/docs/ja/env-vars)を使用します。
+自動圧縮はコンテキストウィンドウが容量に近づくと自動的に実行されます。クラウドセッションは [`CLAUDE_AUTOCOMPACT_PCT_OVERRIDE`](/docs/ja/env-vars) をセッション自身で設定するため、圧縮はウィンドウが満杯になるのではなく、[自動圧縮ウィンドウ](/docs/ja/model-config#set-the-auto-compact-window)の途中でトリガーされます。その値は[環境変数](/docs/ja/cloud-environments#set-environment-variables)に追加するものをオーバーライドするため、そこに変数を追加しても圧縮がトリガーされるタイミングは変わりません。
 
-[Subagents](/docs/ja/sub-agents)はローカルと同じように機能します。Claude は Task ツールでそれらをスポーンして、研究または並列作業を別のコンテキストウィンドウにオフロードし、メイン会話を軽くすることができます。リポジトリの `.claude/agents/` で定義された Subagents は自動的にピックアップされます。
+自動圧縮ウィンドウを変更するには、環境変数で [`CLAUDE_CODE_AUTO_COMPACT_WINDOW`](/docs/ja/env-vars) を設定するか、変数が設定されていないセッションで [`/autocompact`](/docs/ja/commands#all-commands) をトークン数で実行します。
 
-[Agent teams](/docs/ja/agent-teams)はデフォルトでオフですが、[環境変数](#configure-your-environment)に `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` を追加することで有効にできます。
+[Subagents](/docs/ja/sub-agents)はローカルと同じように機能します。Claude は Agent ツールでそれらをスポーンして、研究または並列作業を別のコンテキストウィンドウにオフロードし、メイン会話を軽くすることができます。リポジトリの `.claude/agents/` で定義された Subagents は自動的にピックアップされます。
+
+[Agent teams](/docs/ja/agent-teams)はデフォルトでオフですが、[環境変数](/docs/ja/cloud-environments#set-environment-variables)に `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` を追加することで有効にできます。
+
+<h3 id="permission-modes-in-cloud-sessions">
+  クラウドセッションの権限モード
+</h3>
+
+クラウドセッションの[権限モード](/docs/ja/permission-modes)は[モードドロップダウン](/docs/ja/permission-modes#switch-permission-modes)から選択します。タスクを作成するときとセッションが実行されている間の両方です。Anthropic ホスト型[環境が有効期限切れ](#environment-expired)になったセッションを再度開くか、セルフホスト型ランナーが[アイドル中にリリース](/docs/ja/self-hosted-environments-reference#runner-cli-flags)したセッションにメッセージを送信する場合、Claude Code はセッションが存在していた権限モードで再開されます。
 
 <h3 id="review-changes">
   変更を確認
 </h3>
 
-各セッションは追加および削除された行数を示す diff インジケーター（例：`+42 -18`）を表示します。それを選択して diff ビューを開き、特定の行にインラインコメントを残し、次のメッセージで Claude に送信します。PR 作成を含む完全なウォークスルーについては [Review and iterate](/docs/ja/web-quickstart#review-and-iterate)を参照してください。Claude が PR の CI 失敗とレビューコメントを自動的に監視するようにするには、[プルリクエストの自動修正](#auto-fix-pull-requests)を参照してください。
+各セッションは追加および削除された行数を示す diff インジケーター（例：`+42 -18`）を表示します。それを選択して diff ビューを開き、特定の行にインラインコメントを残し、次のメッセージで Claude に送信します。
+
+diff ビューは、デフォルトでセッションの変更をそのベースブランチと比較します。リポジトリ内の他の任意のブランチと比較するには、**Compare against** を選択してブランチを 1 つ選びます。
+
+Claude Code はこれらの diff を計算します。これには Claude が編集するときに表示される per-file diff が含まれます。これは raw git blob コンテンツから計算されるため、リポジトリで設定された diff ドライバーと `textconv` フィルターは適用されません。セッション自体のチェックアウトではないリポジトリ内のファイル（セッション中にワークスペース内にクローンされたファイルなど）の場合、per-file diff は git 比較ではなく Claude の編集そのものを表示します。
+
+完全なウォークスルー（PR 作成を含む）については [Review and iterate](/docs/ja/web-quickstart#review-and-iterate) を参照してください。Claude が PR の CI 失敗とレビューコメントを自動的に監視するようにするには、[プルリクエストの自動修正](#auto-fix-pull-requests)を参照してください。
 
 <h3 id="share-sessions">
   セッションを共有
@@ -815,7 +310,7 @@ Max および Pro アカウントの場合、2 つの可視性オプションは
 
 共有する前にセッションで機密コンテンツを確認してください。セッションにはプライベート GitHub リポジトリのコードと認証情報が含まれる可能性があります。リポジトリアクセス検証はデフォルトで有効になっていません。
 
-受信者がリポジトリアクセスを持つことを要求するか、共有セッションから名前を非表示にするには、Settings > Claude Code > Sharing settings に移動します。
+受信者がリポジトリアクセスを持つことを要求するか、共有セッションから名前を非表示にするには、[**Settings > Claude Code > Sharing settings**](https://claude.ai/settings/claude-code) に移動します。
 
 <h3 id="archive-sessions">
   セッションをアーカイブ
@@ -843,17 +338,17 @@ Max および Pro アカウントの場合、2 つの可視性オプションは
 Claude はプルリクエストを監視し、CI 失敗とレビューコメントに自動的に応答できます。Claude は PR の GitHub アクティビティをサブスクライブし、チェックが失敗するかレビュアーがコメントを残すと、Claude は調査し、明確な場合は修正をプッシュします。
 
 <Note>
-  Auto-fix には Claude GitHub App がリポジトリにインストールされている必要があります。まだインストールしていない場合は、[GitHub App ページ](https://github.com/apps/claude)からインストールするか、[セットアップ](/docs/ja/web-quickstart#connect-github-and-create-an-environment)中にプロンプトが表示されたときにインストールします。
+  Auto-fix には Claude GitHub App がリポジトリにインストールされている必要があります。まだインストールしていない場合は、[GitHub App ページ](https://github.com/apps/claude)からインストールしてください。
 </Note>
 
 PR がどこから来たか、どのデバイスを使用しているかに応じて、auto-fix をオンにするにはいくつかの方法があります：
 
-* **ウェブ上の Claude Code で作成された PR**：CI ステータスバーを開き、**Auto-fix** を選択します
-* **ターミナルから**：PR のブランチにいる間に [`/autofix-pr`](/docs/ja/commands)を実行します。Claude Code は `gh` で開いている PR を検出し、ウェブセッションをスポーンし、1 ステップで auto-fix をオンにします
+* **クラウドセッションで作成された PR**：claude.ai/code でセッションを開き、CI ステータスバーを開き、**Auto-fix** を選択します
+* **ターミナルから**：PR のブランチにいる間に [`/autofix-pr`](/docs/ja/commands) を実行します。Claude Code は `gh` で開いている PR を検出し、クラウドセッションをスポーンし、1 ステップで auto-fix をオンにします
 * **モバイルアプリから**：Claude に PR を auto-fix するよう指示します。例えば「watch this PR and fix any CI failures or review comments」
 * **既存の PR**：PR URL をセッションに貼り付けて、Claude に auto-fix するよう指示します
 
-Auto-fix は PR ごとのトグルです。監視を停止するには、ウェブセッションで CI ステータスバーを開き、**Auto-fix** トグルをクリアするか、Claude に PR の監視を停止するよう指示します。
+Auto-fix は PR ごとのトグルです。監視を停止するには、claude.ai/code のセッションで CI ステータスバーを開き、**Auto-fix** トグルをクリアするか、Claude に PR の監視を停止するよう指示します。
 
 <h3 id="how-claude-responds-to-pr-activity">
   Claude が PR アクティビティにどのように応答するか
@@ -879,10 +374,11 @@ Claude は PR を解決する際に GitHub のレビューコメントスレッ�
 
 各クラウドセッションはいくつかのレイヤーを通じてマシンおよび他のセッションから分離されます：
 
-* **分離された仮想マシン**：各セッションは分離された Anthropic 管理 VM で実行されます
-* **ネットワークアクセス制御**：ネットワークアクセスはデフォルトで制限され、無効にできます。ネットワークアクセスを無効にして実行する場合、Claude Code は Anthropic API と通信できます。これにより VM からデータが出ることを許可する可能性があります。
-* **認証情報保護**：git 認証情報や署名キーなどの機密認証情報はサンドボックス内の Claude Code と一緒にありません。認証はスコープ付き認証情報を使用するセキュアプロキシを通じて処理されます。
-* **セキュアな分析**：コードは PR を作成する前に分離された VM 内で分析および変更されます
+* **分離された仮想マシン**：各セッションは分離された Anthropic 管理 VM で実行されます。セッションが組織によってルーティングされる[セルフホスト環境](/docs/ja/self-hosted-environments)は、代わりに独自のインフラストラクチャで実行され、分離はデプロイメントの責任です
+* <span id="default-allowed-domains" />**ネットワークアクセス制御**：Anthropic ホスト型環境では、ネットワークアクセスはデフォルトで制限され、無効にできます。[ネットワークアクセス](/docs/ja/cloud-environments#network-access)でアクセスレベル、[デフォルト許可ドメイン](/docs/ja/cloud-environments#default-allowed-domains)、および許可リストを通過しないトラフィックを参照してください。セルフホスト型環境では、独自のネットワーク境界でセッション出力を制限します。ネットワークアクセスを無効にして実行する場合、Claude Code は Anthropic API と通信できます。これにより VM からデータが出ることを許可する可能性があります。
+* **認証情報保護**：Anthropic ホスト型環境では、git 認証情報と署名キーはサンドボックスの外に留まり、プロキシはスコープ付き認証情報で認証します。セルフホスト型環境では、デプロイメントが git 認証情報を提供します；[git を設定](/docs/ja/self-hosted-environments-deploy#configure-git)を参照してください
+* **API 認証情報**：Anthropic ホスト型環境の Pro および Max プランでは、[クラウド環境に追加](/docs/ja/cloud-environments#add-api-credentials)するキーはサンドボックスの外に留まり、セッションを離れた後、一致するリクエストに添付されます。セルフホスト型環境には API 認証情報がなく、Team および Enterprise プランはまだそれらを持っていません
+* **セキュアな分析**：コードは PR を作成する前に分離されたセッション環境内で分析および変更されます
 
 <h2 id="troubleshooting">
   トラブルシューティング
@@ -894,11 +390,19 @@ Claude は PR を解決する際に GitHub のレビューコメントスレッ�
   セッション作成に失敗
 </h3>
 
-新しいセッションが `Session creation failed` で開始に失敗するか、プロビジョニングで停止する場合、Claude Code はクラウド環境を割り当てることができませんでした。
+新しいセッションが `Session creation failed` で開始に失敗するか、プロビジョニングで停止する場合、Claude Code は VM をセッションに割り当てることができませんでした。
 
 * [status.claude.com](https://status.claude.com) でクラウドセッションインシデントを確認してください
 * 1 分後に再試行してください。容量はオンデマンドでプロビジョニングされます
-* リポジトリが到達可能であることを確認してください。接続している GitHub アカウントは、Claude GitHub App 認可またはオンデマンドで `/web-setup` 経由で同期された `gh` トークンのいずれかを通じて、GitHub 上のリポジトリへのアクセス権を持つ必要があります。リポジトリに App をインストールする必要はありません。[GitHub 認証オプション](#github-authentication-options)を参照してください。
+* [GitHub 接続後にリポジトリが表示されない](/docs/ja/web-quickstart#no-repositories-appear-after-connecting-github)に従って、GitHub 接続がリポジトリに到達できることを確認してください
+
+<h3 id="unable-to-get-organization-uuid">
+  組織 UUID を取得できない
+</h3>
+
+`claude --cloud` と `claude --teleport` には claude.ai アカウントでのサインインが必要です。API キーで認証されている場合、または保存されたアカウント詳細が古い場合、これらのコマンドは `Unable to get organization UUID` で失敗するか、API キー認証が十分でないというメッセージが表示されます。API キー認証または古いアカウント詳細を使用して、セッション ID なしで `claude --teleport` を実行すると、どちらかのメッセージの代わりにセッションピッカーで `Error loading Claude Code sessions` が表示され、同じ修正が適用されます。
+
+`/login` を実行して claude.ai アカウントでサインインし、コマンドを再試行してください。エラーがプロバイダーに名前を付ける場合は、[エラーテーブル](#output-and-errors)を参照してください：クラウドセッションはサードパーティプロバイダーを通じて利用できません。
 
 <h3 id="remote-control-session-expired-or-access-denied">
   Remote Control セッションの有効期限切れまたはアクセス拒否
@@ -914,30 +418,31 @@ Claude は PR を解決する際に GitHub のレビューコメントスレッ�
   環境の有効期限切れ
 </h3>
 
-クラウドセッションは非アクティブ期間後に停止し、基盤となる環境は回収されます。ローカルターミナルから、これは `Could not resume session ... its environment has expired. Creating a fresh session instead.` として表示されます。ウェブでは、セッションはセッションリストで期限切れとしてマークされます。
+クラウドセッションは非アクティブ期間後に停止し、セッションの VM は回収されます。セッションは [MCP コネクタ](/docs/ja/cloud-environments#network-access)ツール呼び出しを承認するか、MCP サーバーにサインインするのを待っている間、非アクティブとしてカウントされ、その待機中に有効期限が切れる可能性があります。
 
-[claude.ai/code](https://claude.ai/code) からセッションを再度開いて、会話履歴が復元された新しい環境をプロビジョニングしてください。
+[claude.ai/code](https://claude.ai/code) からセッションを再度開いて、会話履歴が復元された新しい VM をプロビジョニングしてください。VM が回収されたときにまだ実行されていたバックグラウンド作業（subagents やシェルコマンドなど）は復元されません。
 
 <h2 id="limitations">
   制限事項
 </h2>
 
-クラウドセッションをワークフローに依存させる前に、これらの制約を考慮してください：
+クラウドセッションをワークフローに組み込む前に、以下の制約を考慮してください。
 
-* **レート制限**：ウェブ上の Claude Code はアカウント内のすべての他の Claude および Claude Code 使用とレート制限を共有します。複数のタスクを並列で実行すると、レート制限をより多く消費します。クラウド VM に対する個別のコンピュート料金はありません。
-* **リポジトリ認証**：ウェブからローカルにセッションを移動できるのは、同じアカウントに認証されている場合のみです
-* **プラットフォーム制限**：リポジトリのクローンとプルリクエストの作成には GitHub が必要です。自己ホスト型の [GitHub Enterprise Server](/docs/ja/github-enterprise-server) インスタンスは Team および Enterprise プランでサポートされています。GitLab、Bitbucket、およびその他の非 GitHub リポジトリは[ローカルバンドル](#send-local-repositories-without-github)としてクラウドセッションに送信できますが、セッションはリモートに結果をプッシュバックできません
-* **組織 IP 許可リスト**：クラウドセッションは Anthropic 管理インフラストラクチャから Anthropic API を呼び出すため、ネットワークからではありません。組織が [IP 許可リスト](https://support.claude.com/en/articles/13200993-restrict-access-to-claude-with-ip-allowlisting)を有効にしている場合、すべてのクラウドセッションは認証エラーで失敗します。同じことが [Code Review](/docs/ja/code-review) および [Routines](/docs/ja/routines)に適用されます。[Anthropic サポート](https://support.claude.com/)に連絡して、Anthropic ホスト型サービスを組織の IP 許可リストから除外してください。
+* **レート制限**: クラウドセッションは、アカウント内のすべての Claude および Claude Code の使用状況とレート制限を共有します。複数のタスクを並行実行すると、レート制限がそれに応じてより多く消費されます。クラウド VM に対する個別の計算料金はありません。
+* **リポジトリ認証**: クラウドセッションをターミナルに取り込むことができるのは、同じアカウントで認証されている場合のみです。
+* **プラットフォーム制限**: リポジトリのクローンとプルリクエストの作成には GitHub が必要です。自己ホスト型の [GitHub Enterprise Server](/docs/ja/github-enterprise-server) インスタンスは Team および Enterprise プランでサポートされています。GitLab、Bitbucket、またはその他の非 GitHub リポジトリをクラウドセッションに [ローカルバンドル](#send-local-repositories-without-github) として送信できます。これは `CCR_FORCE_BUNDLE=1` を設定することで実現できますが、セッションはその結果をリモートにプッシュバックできません。
+* **組織 IP 許可リスト**: クラウドセッションは Anthropic 管理インフラストラクチャから Anthropic API を呼び出します。これはお客様のネットワークからではなく、[自己ホスト環境](/docs/ja/self-hosted-environments) のセッションはお客様自身のネットワークから呼び出します。組織で [IP 許可リスト](https://support.claude.com/en/articles/13200993-restrict-access-to-claude-with-ip-allowlisting) が有効になっている場合、Anthropic ホスト型のすべてのクラウドセッションは認証エラーで失敗します。同じことが [Code Review](/docs/ja/code-review) および Anthropic ホスト環境で実行される [routines](/docs/ja/routines) にも適用されます。自己ホスト環境にルーティングされたルーチンは、お客様自身のネットワークから API を呼び出します。Anthropic ホスト型サービスを組織の IP 許可リストから除外するには、[Anthropic サポート](https://support.claude.com/) にお問い合わせください。
 
 <h2 id="related-resources">
   関連リソース
 </h2>
 
-* [Ultraplan](/docs/ja/ultraplan)：クラウドセッションでプランを起案し、ブラウザで確認
+* [クラウド環境](/docs/ja/cloud-environments)：クラウドセッションのネットワークアクセス、環境変数、セットアップスクリプトを設定
+* [Projects](/docs/ja/claude-projects)：Claude がリポジトリ上で並列クラウドセッションを調整し、結果を報告する 1 つの会話
 * [Ultrareview](/docs/ja/ultrareview)：クラウドサンドボックスで深いマルチエージェントコードレビューを実行
 * [Routines](/docs/ja/routines)：スケジュール、API 呼び出し、または GitHub イベントに応答して作業を自動化
 * [フック設定](/docs/ja/hooks)：セッションライフサイクルイベントでスクリプトを実行
-* [設定リファレンス](/docs/ja/settings)：すべての設定オプション
+* [すべての設定](/docs/ja/settings-reference)：すべての設定オプション
 * [セキュリティ](/docs/ja/security)：分離保証とデータ処理
 * [データ使用](/docs/ja/data-usage)：Anthropic がクラウドセッションから保持するもの
-* [Claude Tag](https://claude.com/docs/claude-tag/overview)：Slack で実行される組織管理の @Claude で、同じクラウド環境で動作
+* [Claude Tag](https://claude.com/docs/claude-tag/overview)：Slack で実行される組織管理の @Claude で、同じクラウドインフラストラクチャで動作

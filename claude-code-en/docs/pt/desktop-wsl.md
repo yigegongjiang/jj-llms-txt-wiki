@@ -32,7 +32,7 @@ Use uma sessão WSL quando seu repositório reside dentro do sistema de arquivos
   </Step>
 
   <Step title="Confie na pasta">
-    A primeira sessão em uma pasta mostra o diálogo de confiança do espaço de trabalho. A confiança é concedida por distribuição e pasta; confiar em uma pasta em uma distribuição não se aplica a outra distribuição ou ao mesmo caminho no Windows.
+    A primeira sessão em uma pasta mostra o diálogo de confiança do espaço de trabalho. Você concede confiança por distribuição e pasta. Uma pasta em que você confia em uma distribuição não é confiável em outra distribuição ou no mesmo caminho no Windows.
   </Step>
 </Steps>
 

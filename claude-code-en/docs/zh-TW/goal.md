@@ -4,13 +4,9 @@
 
 # 讓 Claude 朝著目標持續工作
 
-> 使用 /goal 設定完成條件，Claude 會在多個回合中持續工作直到條件滿足。
+> 使用 /goal 設定完成條件，Claude 會持續工作直到條件滿足、模型判斷不可能達成，或需要修復的錯誤清除目標。
 
-<Note>
-  `/goal` 需要 Claude Code v2.1.139 或更新版本。
-</Note>
-
-`/goal` 命令設定完成條件，Claude 會朝著該目標持續工作，無需你在每一步進行提示。在每個回合後，一個小型快速模型會檢查條件是否滿足。如果未滿足，Claude 會開始另一個回合，而不是將控制權返回給你。一旦條件滿足，目標會自動清除。
+`/goal` 命令設定完成條件，Claude 會朝著該目標持續工作，無需你在每一步進行提示。在每個回合後，一個小型快速模型會檢查條件是否滿足。如果模型判斷條件尚未滿足，Claude 會開始另一個回合，而不是將控制權返回給你。一旦條件滿足、模型判斷條件不可能滿足，或回合因[需要修復的錯誤](#errors-you-have-to-fix-clear-the-goal)而失敗時，目標會自動清除。
 
 在具有可驗證終止狀態的實質性工作中使用目標：
 
@@ -25,11 +21,11 @@
 
 三種方法在提示之間保持目前工作階段執行。根據應該開始下一個回合的內容進行選擇：
 
-| 方法                                                                     | 下一個回合開始於 | 停止於                   |
-| :--------------------------------------------------------------------- | :------- | :-------------------- |
-| `/goal`                                                                | 上一個回合完成時 | 模型確認條件已滿足時            |
-| [`/loop`](/docs/zh-TW/scheduled-tasks#run-a-prompt-repeatedly-with-%2Floop) | 時間間隔經過時  | 你停止它，或 Claude 決定工作完成時 |
-| [Stop hook](/docs/zh-TW/hooks-guide#prompt-based-hooks)                     | 上一個回合完成時 | 你自己的指令碼或提示決定時         |
+| 方法                                                                     | 下一個回合開始於                                                                                                        | 停止於                                                                                                              |
+| :--------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------- |
+| `/goal`                                                                | 上一個回合完成時，或在互動式工作階段中，[閒置檢查](#background-work-defers-evaluation)或[自動重試](#other-errors-retry-or-pause-the-goal)到期時 | 模型確認條件已滿足或判斷其不可能時，或回合因[你必須修復的錯誤](#errors-you-have-to-fix-clear-the-goal)而失敗時，或你執行[`/goal clear`](#clear-a-goal)時 |
+| [`/loop`](/docs/zh-TW/scheduled-tasks#run-a-prompt-repeatedly-with-%2Floop) | 時間間隔經過時                                                                                                         | 你停止它，或 Claude 決定工作完成時                                                                                            |
+| [Stop hook](/docs/zh-TW/hooks-guide#prompt-based-hooks)                     | 上一個回合完成時                                                                                                        | 你自己的指令碼或提示決定時                                                                                                    |
 
 `/goal` 和 Stop hook 都在每個回合後觸發。`/goal` 是一個工作階段範圍的快捷方式：你輸入條件，它僅在目前工作階段中有效。Stop hook 存在於你的設定檔案中，適用於其範圍內的每個工作階段，可以執行指令碼進行確定性檢查或執行提示進行模型評估的檢查。
 
@@ -57,13 +53,9 @@
 
 設定目標會立即開始一個回合，條件本身作為指令。你無需發送單獨的提示。當目標活躍時，`◎ /goal active` 指示器顯示目標已執行多長時間。
 
-目標不會改變權限。在預設權限模式中，Claude 仍會在工具呼叫前詢問，這些工具呼叫是你的設定尚未允許的，例如上面的測試命令。要讓目標回合無人值守地執行，請將 `/goal` 與 [auto mode](/docs/zh-TW/auto-mode-config) 配對。
+目標不會改變你的權限模式。要讓目標回合無人值守地執行，請在 [auto mode](/docs/zh-TW/auto-mode-config) 中執行 `/goal`。在 [Manual mode](/docs/zh-TW/permission-modes) 中，Claude 仍會在工具呼叫前詢問，這些工具呼叫是你的設定尚未允許的，例如上面的測試命令。
 
-在每個回合後，評估器返回簡短的原因，說明條件是否滿足。最新的原因出現在狀態檢視和文字記錄中，因此你可以看到 Claude 接下來要朝著什麼工作。
-
-<Note>
-  目標會持續執行，直到條件滿足或你執行 `/goal clear`。執行不帶引數的 `/goal` 以查看迄今為止花費的回合和令牌。
-</Note>
+當目標活躍時，文字記錄會顯示評估器返回的每個判決，你可以按 Ctrl+O 查看其背後的原因。狀態檢視也會顯示最新的原因，因此你可以看到 Claude 接下來要朝著什麼工作。
 
 <h3 id="write-an-effective-condition">
   編寫有效條件
@@ -121,7 +113,9 @@ Claude 列印 `Goal cleared:` 後跟條件以確認，或如果沒有活躍的�
   使用活躍目標繼續
 </h3>
 
-當工作階段結束時仍然活躍的目標會在你使用 `--resume` 或 `--continue` 繼續該工作階段時恢復。條件會保留，但回合計數、計時器和令牌支出基線在繼續時都會重置。已達成或已清除的目標不會恢復。
+當你繼續一個工作階段時，Claude Code 會復原一個在工作階段結束時仍然活躍的目標。Claude Code 在每個繼續路由上復原它：`--continue`、`--resume` 搭配工作階段 ID、名稱或 [文字記錄檔案路徑](/docs/zh-TW/sessions#resume-a-session)，以及 [工作階段選擇器](/docs/zh-TW/sessions#use-the-session-picker)。在 v2.1.239 之前，Claude Code 在除了 `claude --resume` 選擇器之外的每個路由上復原目標。
+
+Claude Code 帶著條件，但重置回合計數、計時器和令牌支出基線。它不會復原已達成或已清除的目標。
 
 <h3 id="run-non-interactively">
   非互動式執行
@@ -133,15 +127,76 @@ Claude 列印 `Goal cleared:` 後跟條件以確認，或如果沒有活躍的�
 claude -p "/goal CHANGELOG.md has an entry for every PR merged this week"
 ```
 
-使用預設文字輸出時，在條件滿足前不會列印任何內容，因此執行許多回合的目標可能看起來卡住了。新增 `--output-format stream-json --verbose` 以在迴圈執行時發出每個訊息。
+使用預設文字輸出時，在執行結束前不會列印任何內容，因此執行許多回合的目標可能看起來卡住了。新增 `--output-format stream-json --verbose` 以在迴圈執行時發出每個訊息。
 
-使用 Ctrl+C 中斷程序以在條件滿足前停止非互動式目標。
+使用 Ctrl+C 中斷程序以在目標解決前停止非互動式目標。
 
 <h2 id="how-evaluation-works">
   評估如何運作
 </h2>
 
-`/goal` 是工作階段範圍[基於提示的 Stop hook](/docs/zh-TW/hooks#prompt-based-hooks)的包裝器。每次 Claude 完成回合時，條件和迄今為止的對話都會發送到你配置的[小型快速模型](/docs/zh-TW/model-config)，預設為 Haiku。模型返回是或否決定和簡短原因。「否」告訴 Claude 繼續工作，並將原因作為下一個回合的指導。「是」清除目標並在文字記錄中記錄已達成的條目。
+`/goal` 是工作階段範圍[基於提示的 Stop hook](/docs/zh-TW/hooks#prompt-based-hooks)的包裝器。每次 Claude 完成回合時，Claude Code 會將條件和迄今為止的對話發送到你配置的[小型快速模型](/docs/zh-TW/model-config)，預設為 Claude API 上的 Haiku；在第三方提供者上，請查看你的[提供者頁面](/docs/zh-TW/third-party-integrations)以了解該平台的預設值。模型返回三個判決之一，各附帶簡短原因：
+
+* **尚未達成**：Claude 繼續工作，並將原因作為下一個回合的指導。
+* **已達成**：Claude Code 清除目標並在文字記錄中記錄已達成的項目。
+* **不可能**：評估器判斷該條件永遠無法滿足。Claude Code 清除目標並在文字記錄中記錄失敗項目以及原因。你不需要自己清除它。
+
+如果 Claude 持續回答評估器而沒有取得進展（連續多個回合沒有工具使用），Claude Code 會停止迴圈、列印警告，並將控制權返回給你，目標仍然設定。評估在你的下一個提示後繼續。[hooks 指南](/docs/zh-TW/hooks-guide#stop-hook-hits-the-block-cap)解釋了底層機制。
+
+<h3 id="when-a-turn-fails">
+  當回合失敗時
+</h3>
+
+當回合失敗時，如果錯誤是你必須修復的錯誤，Claude Code 會清除目標。在任何其他錯誤之後，目標保持設定。
+
+<h4 id="errors-you-have-to-fix-clear-the-goal">
+  你必須修復的錯誤會清除目標
+</h4>
+
+如果回合因無法清除的錯誤而失敗，Claude Code 會清除目標並列印警告，說明原因。警告以 `Goal cleared after an unrecoverable error` 開始，以 `Run /goal again to continue` 結束。修復原因，然後使用 `/goal <condition>` [再次設定目標](#set-a-goal)。四種失敗會清除目標：
+
+* 驗證失敗，當 Claude Code 管理自己的認證時。當主機為你管理認證時，例如桌面應用程式、VS Code 擴充功能或[雲端工作階段](/docs/zh-TW/claude-code-on-the-web)，Claude Code 會保持目標活躍，因為主機會自動恢復存取權。
+* 信用額度已耗盡
+* [自動壓縮](/docs/zh-TW/model-config#set-the-auto-compact-window)無法清除的內容溢位
+* 不可用的模型
+
+<h4 id="other-errors-retry-or-pause-the-goal">
+  其他錯誤重試或暫停目標
+</h4>
+
+在任何其他失敗之後，目標保持設定。在 Claude Code v2.1.269 或更新版本的互動式工作階段中，Claude Code 也會列印一行命名原因，並自動重試或等待你：
+
+* **重試**：在傾向於自行清除的失敗之後，例如伺服器過載或連線中斷，以 `Goal still active` 開始的通知會顯示下一次嘗試前的等待時間。在三次自動重試後，目標會改為暫停。
+* **暫停**：在重試只會重複的失敗之後，例如 API 速率限制、claude.ai [使用限制](/docs/zh-TW/errors#youve-hit-your-session-limit)或結束回合的 hook，以 `Goal paused` 開始的通知會命名原因。如果工作階段[等待在使用限制重設時自動繼續](/docs/zh-TW/interactive-mode#wait-for-a-usage-limit-to-reset)，Claude 會在那時繼續朝著目標努力。
+
+隨時發送訊息以立即開始下一個回合。要關閉自動重試，請將 [`CLAUDE_CODE_GOAL_CHECKIN_MINUTES`](/docs/zh-TW/env-vars) 設定為 `0`，這也會關閉[簽到](#background-work-defers-evaluation)。
+
+<h3 id="background-work-defers-evaluation">
+  背景工作延遲評估
+</h3>
+
+如果子代理或背景 shell 命令在回合結束時仍在執行，Claude Code 會跳過該回合的評估。它在下一個沒有背景工作執行的回合結束時進行評估。當背景工作完成時，Claude Code 會將結果作為新回合傳遞給 Claude，因此你不需要提示。
+
+一旦背景工作讓目標等待 30 分鐘，就應該進行簽到。在簽到中，Claude Code 列出執行中的任務，並要求 Claude 讀取其輸出、如果任務正在進行則繼續等待，並修復或停止任何卡住的任務。在第一次簽到後，Claude Code 在每次後續簽到前等待時間加倍，最多為第一個間隔的四倍：使用預設值，第一次簽到後 1 小時，然後每 2 小時。Claude Code 以以下兩種方式之一傳遞應到期的簽到（包括第一次）：
+
+* **當回合結束時**：Claude Code 在下一個工作仍在執行的回合結束時傳遞簽到。在非互動式工作階段（例如使用 `-p` 啟動的工作階段）中，這是 Claude Code 傳遞簽到的唯一方式。
+* **當工作階段閒置時**：在互動式工作階段中，Claude Code 也會自動啟動回合以傳遞簽到，而不是等待你的下一個提示。如果背景工作已停止而未報告結果，Claude Code 會要求 Claude 繼續朝著目標努力。Claude Code 在你的提示之間每個目標最多啟動三次閒置簽到。在第三次閒置簽到中，Claude Code 會說閒置簽到已暫停，直到你發送另一個提示。在 v2.1.246 之前，閒置簽到是無上限的。閒置簽到需要 Claude Code v2.1.236 或更新版本。
+
+在 v2.1.239 之前，只有閒置簽到以這種方式退避；在回合結束時傳遞的簽到在第一個間隔重複。
+
+要更改第一個間隔，請設定 [`CLAUDE_CODE_GOAL_CHECKIN_MINUTES`](/docs/zh-TW/env-vars)。Claude Code 使用你的值代替 30 分鐘間隔，並相應地縮放後續間隔。將其設定為 `0` 以關閉簽到和[自動重試](#other-errors-retry-or-pause-the-goal)。
+
+簽到需要 Claude Code v2.1.234 或更新版本。
+
+<h3 id="evaluation-model-and-cost">
+  評估模型和成本
+</h3>
+
+要在不同的模型上進行評估，請設定 [`ANTHROPIC_DEFAULT_HAIKU_MODEL`](/docs/zh-TW/model-config#environment-variables)。
+
+<Warning>
+  Claude Code 在使用小型快速模型的任何地方都會讀取 `ANTHROPIC_DEFAULT_HAIKU_MODEL`，不僅僅是用於 `/goal` 評估。當你設定它時，Claude Code 也會將 [`haiku` 別名](/docs/zh-TW/model-config#model-aliases)解析為該模型，並在其上執行[背景功能](/docs/zh-TW/costs#background-token-usage)，例如對話摘要。
+</Warning>
 
 評估器在你的工作階段配置的任何提供者上執行。它不呼叫工具，因此只能判斷 Claude 已在對話中呈現的內容。
 
@@ -153,7 +208,7 @@ claude -p "/goal CHANGELOG.md has an entry for every PR merged this week"
   要求
 </h2>
 
-`/goal` 僅在你已接受信任對話框的工作區中執行，因為評估器是 hooks 系統的一部分。當在任何設定層級設定了 [`disableAllHooks`](/docs/zh-TW/hooks#disable-or-remove-hooks) 時，或當在受管設定中設定了 [`allowManagedHooksOnly`](/docs/zh-TW/settings#hook-configuration) 時，`/goal` 也不可用。在每種情況下，命令會告訴你原因，而不是默默地什麼都不做。
+Claude Code 在與 [工作區信任規則相同的 hooks 設定檔](/docs/zh-TW/permissions#what-runs-before-you-trust-a-folder) 下提供 `/goal`，因為評估器是 hooks 系統的一部分。當 [`disableAllHooks`](/docs/zh-TW/hooks#disable-or-remove-hooks) 在設定優先順序套用後為 `true` 時，或當在受管設定中設定了 [`allowManagedHooksOnly`](/docs/zh-TW/settings-reference#allowmanagedhooksonly) 時，`/goal` 也不可用。在每種情況下，命令會告訴你原因，而不是默默地什麼都不做。
 
 <h2 id="see-also">
   另請參閱

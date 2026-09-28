@@ -22,14 +22,14 @@ Questa guida copre come scegliere l'approccio giusto per la tua app, le interfac
 
 Quanto gestione della sessione hai bisogno dipende dalla forma della tua applicazione. La gestione della sessione entra in gioco quando invii più prompt che dovrebbero condividere il contesto. All'interno di una singola chiamata `query()`, l'agente già fa tutti i turni di cui ha bisogno, e i prompt di autorizzazione e `AskUserQuestion` sono [gestiti in-loop](/docs/it/agent-sdk/user-input) (non terminano la chiamata).
 
-| Cosa stai costruendo                                                            | Cosa usare                                                                                                                                                             |
-| :------------------------------------------------------------------------------ | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Attività una tantum: singolo prompt, nessun follow-up                           | Niente di extra. Una singola chiamata `query()` la gestisce.                                                                                                           |
-| Chat multi-turno in un processo                                                 | [`ClaudeSDKClient` (Python) o `continue: true` (TypeScript)](#automatic-session-management). L'SDK traccia la sessione per te senza gestione degli ID.                 |
-| Riprendere da dove hai lasciato dopo un riavvio del processo                    | `continue_conversation=True` (Python) / `continue: true` (TypeScript). Riprende la sessione più recente nella directory, nessun ID necessario.                         |
-| Riprendere una sessione passata specifica (non la più recente)                  | Acquisisci l'ID di sessione e passalo a `resume`.                                                                                                                      |
-| Provare un approccio alternativo senza perdere l'originale                      | Fai un fork della sessione.                                                                                                                                            |
-| Attività senza stato, non vuoi che nulla sia scritto su disco (solo TypeScript) | Imposta [`persistSession: false`](/docs/it/agent-sdk/typescript#options). La sessione esiste solo in memoria per la durata della chiamata. Python persiste sempre su disco. |
+| Cosa stai costruendo                                           | Cosa usare                                                                                                                                                                                                                                                                                          |
+| :------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Attività una tantum: singolo prompt, nessun follow-up          | Niente di extra. Una singola chiamata `query()` la gestisce.                                                                                                                                                                                                                                        |
+| Chat multi-turno in un processo                                | [`ClaudeSDKClient` (Python) o `continue: true` (TypeScript)](#automatic-session-management). L'SDK traccia la sessione per te senza gestione degli ID.                                                                                                                                              |
+| Riprendere da dove hai lasciato dopo un riavvio del processo   | `continue_conversation=True` (Python) / `continue: true` (TypeScript). Riprende la sessione più recente nella directory, nessun ID necessario.                                                                                                                                                      |
+| Riprendere una sessione passata specifica (non la più recente) | Acquisisci l'ID di sessione e passalo a `resume`.                                                                                                                                                                                                                                                   |
+| Provare un approccio alternativo senza perdere l'originale     | Fai un fork della sessione.                                                                                                                                                                                                                                                                         |
+| Attività senza stato, non vuoi che nulla sia scritto su disco  | Imposta [`persistSession: false`](/docs/it/agent-sdk/typescript#options) (solo TypeScript). La sessione esiste solo in memoria per la durata della chiamata. In Python, imposta [`CLAUDE_CODE_SKIP_PROMPT_HISTORY`](/docs/it/env-vars) nell'opzione `env` per sopprimere invece le scritture di trascrizione. |
 
 <h3 id="continue-resume-and-fork">
   Continue, resume e fork
@@ -104,6 +104,8 @@ async def main():
 asyncio.run(main())
 ```
 
+Ogni query stampa la risposta di testo dell'agente seguita da una riga di stato dal messaggio di risultato, come `[done: success, cost: $0.0042]`.
+
 Vedi il [riferimento Python SDK](/docs/it/agent-sdk/python#choosing-between-query-and-claudesdkclient) per i dettagli su quando usare `ClaudeSDKClient` rispetto alla funzione standalone `query()`.
 
 <h3 id="typescript-continue-true">
@@ -118,13 +120,19 @@ Questo esempio effettua due separate chiamate `query()`. La prima crea una sessi
 import { query } from "@anthropic-ai/claude-agent-sdk";
 
 // First query: creates a new session
-for await (const message of query({
-  prompt: "Analyze the auth module",
-  options: { allowedTools: ["Read", "Glob", "Grep"] }
-})) {
-  if (message.type === "result" && message.subtype === "success") {
-    console.log(message.result);
+try {
+  for await (const message of query({
+    prompt: "Analyze the auth module",
+    options: { allowedTools: ["Read", "Glob", "Grep"] }
+  })) {
+    if (message.type === "result" && message.subtype === "success") {
+      console.log(message.result);
+    }
   }
+} catch (error) {
+  // A single-shot query() throws after yielding an error result,
+  // so the follow-up query below still runs.
+  console.error(`Session ended with an error: ${error}`);
 }
 
 // Second query: continue: true resumes the most recent session
@@ -164,16 +172,22 @@ Resume e fork richiedono un ID di sessione. Leggilo dal campo `session_id` sul m
   async def main():
       session_id = None
 
-      async for message in query(
-          prompt="Analyze the auth module and suggest improvements",
-          options=ClaudeAgentOptions(
-              allowed_tools=["Read", "Glob", "Grep"],
-          ),
-      ):
-          if isinstance(message, ResultMessage):
-              session_id = message.session_id
-              if message.subtype == "success":
-                  print(message.result)
+      try:
+          async for message in query(
+              prompt="Analyze the auth module and suggest improvements",
+              options=ClaudeAgentOptions(
+                  allowed_tools=["Read", "Glob", "Grep"],
+              ),
+          ):
+              if isinstance(message, ResultMessage):
+                  session_id = message.session_id
+                  if message.subtype == "success":
+                      print(message.result)
+      except Exception as error:
+          # A single-shot query() raises after yielding an error result. If the
+          # failure was an error result, the loop above already captured session_id;
+          # connection or process failures yield no result message, so session_id stays None.
+          print(f"Session ended with an error: {error}")
 
       print(f"Session ID: {session_id}")
       return session_id
@@ -187,21 +201,30 @@ Resume e fork richiedono un ID di sessione. Leggilo dal campo `session_id` sul m
 
   let sessionId: string | undefined;
 
-  for await (const message of query({
-    prompt: "Analyze the auth module and suggest improvements",
-    options: { allowedTools: ["Read", "Glob", "Grep"] }
-  })) {
-    if (message.type === "result") {
-      sessionId = message.session_id;
-      if (message.subtype === "success") {
-        console.log(message.result);
+  try {
+    for await (const message of query({
+      prompt: "Analyze the auth module and suggest improvements",
+      options: { allowedTools: ["Read", "Glob", "Grep"] }
+    })) {
+      if (message.type === "result") {
+        sessionId = message.session_id;
+        if (message.subtype === "success") {
+          console.log(message.result);
+        }
       }
     }
+  } catch (error) {
+    // A single-shot query() throws after yielding an error result. If the
+    // failure was an error result, the loop above already captured sessionId;
+    // connection or process failures yield no result message, so sessionId stays undefined.
+    console.error(`Session ended with an error: ${error}`);
   }
 
   console.log(`Session ID: ${sessionId}`);
   ```
 </CodeGroup>
+
+Quando la query si completa, lo script stampa la risposta dell'agente seguita da una riga come `Session ID: 5b3f2c1a-8d4e-4f6b-9a7c-2e1d0f9b8a6c`. Nelle sezioni successive, passerai questo ID a `resume`.
 
 <h3 id="resume-by-id">
   Riprendi per ID
@@ -210,23 +233,33 @@ Resume e fork richiedono un ID di sessione. Leggilo dal campo `session_id` sul m
 Passa un ID di sessione a `resume` per tornare a quella sessione specifica. L'agente riprende con il contesto completo da dove la sessione si è fermata. Motivi comuni per riprendere:
 
 * **Seguire un'attività completata.** L'agente ha già analizzato qualcosa; ora vuoi che agisca su quell'analisi senza rileggere i file.
-* **Recuperare da un limite.** La prima esecuzione è terminata con `error_max_turns` o `error_max_budget_usd` (vedi [Gestisci il risultato](/docs/it/agent-sdk/agent-loop#handle-the-result)); riprendi con un limite più alto.
+* **Recuperare da un limite.** La prima esecuzione è terminata con `error_max_turns` o `error_max_budget_usd` (vedi [Gestisci il risultato](/docs/it/agent-sdk/agent-loop#handle-the-result)); riprendi con un limite più alto. In una singola chiamata `query()` l'SDK genera un'eccezione dopo aver restituito quel risultato di errore, quindi cattura l'errore prima di riprendere.
 * **Riavvia il tuo processo.** Hai acquisito l'ID prima dell'arresto e vuoi ripristinare la conversazione.
 
 Questo esempio riprende la sessione da [Acquisisci l'ID di sessione](#capture-the-session-id) con un prompt di follow-up. Poiché stai riprendendo, l'agente ha già l'analisi precedente nel contesto:
 
 <CodeGroup>
   ```python Python theme={null}
-  # Earlier session analyzed the code; now build on that analysis
-  async for message in query(
-      prompt="Now implement the refactoring you suggested",
-      options=ClaudeAgentOptions(
-          resume=session_id,
-          allowed_tools=["Read", "Edit", "Write", "Glob", "Grep"],
-      ),
-  ):
-      if isinstance(message, ResultMessage) and message.subtype == "success":
-          print(message.result)
+  import asyncio
+  from claude_agent_sdk import query, ClaudeAgentOptions, ResultMessage
+
+  session_id = "..."  # The ID you captured in the previous example
+
+
+  async def main():
+      # Earlier session analyzed the code; now build on that analysis
+      async for message in query(
+          prompt="Now implement the refactoring you suggested",
+          options=ClaudeAgentOptions(
+              resume=session_id,
+              allowed_tools=["Read", "Edit", "Write", "Glob", "Grep"],
+          ),
+      ):
+          if isinstance(message, ResultMessage) and message.subtype == "success":
+              print(message.result)
+
+
+  asyncio.run(main())
   ```
 
   ```typescript TypeScript theme={null}
@@ -252,7 +285,18 @@ Questo esempio riprende la sessione da [Acquisisci l'ID di sessione](#capture-th
 Dovresti vedere una risposta che si basa sull'analisi precedente invece di iniziare da zero. Questo conferma che l'agente ha ripreso la sessione con il suo contesto precedente intatto.
 
 <Tip>
-  Se una chiamata `resume` restituisce una sessione nuova invece della cronologia prevista, la causa più comune è un `cwd` non corrispondente. Le sessioni sono archiviate sotto `~/.claude/projects/<encoded-cwd>/*.jsonl`, o sotto `$CLAUDE_CONFIG_DIR/projects/<encoded-cwd>/*.jsonl` se imposti la variabile di ambiente `CLAUDE_CONFIG_DIR`, dove `<encoded-cwd>` è la directory di lavoro assoluta con ogni carattere non alfanumerico sostituito da `-` (quindi `/Users/me/proj` diventa `-Users-me-proj`). Se la tua chiamata resume viene eseguita da una directory diversa, l'SDK cerca nel posto sbagliato. Il file di sessione deve anche esistere sulla macchina corrente.
+  Claude Code archivia le sessioni sotto `~/.claude/projects/<encoded-cwd>/*.jsonl`. Se imposti la variabile di ambiente `CLAUDE_CONFIG_DIR`, cerca invece sotto `$CLAUDE_CONFIG_DIR/projects/`.
+
+  Per trovare la directory della tua sessione, sostituisci ogni carattere non alfanumerico nella directory di lavoro assoluta con `-`: `/Users/me/proj` diventa `-Users-me-proj`. Per una directory di lavoro il cui nome convertito supera 200 caratteri, Claude Code [tronca il nome e aggiunge un hash](/docs/it/sessions#where-transcripts-are-stored), quindi fai corrispondere i primi 200 caratteri del nome convertito quando elenchi `projects/`.
+
+  Se imposti [`CLAUDE_CODE_PROJECT_DIR_NAME`](/docs/it/sessions#name-the-project-directory-yourself) accanto a `CLAUDE_CONFIG_DIR`, cerca invece sotto quel nome in `projects/`. Richiede Agent SDK TypeScript v0.3.234 o successivo, oppure Agent SDK Python v0.2.140 o successivo.
+
+  Puoi riprendere da qualsiasi directory di lavoro:
+
+  * **Ricerca tra directory**: Claude Code cerca oltre la directory del progetto corrente per trovare l'ID; vedi [Riprendi una sessione](/docs/it/sessions#resume-a-session) per l'ordine di ricerca esatto e come vengono gestite le copie duplicate.
+  * **Solo sulla stessa macchina**: il file di sessione deve ancora esistere sulla macchina corrente.
+
+  Prima della v2.1.223, la ricerca era limitata alla directory del progetto corrente e ai suoi git worktrees; le versioni SDK che includono un CLI più vecchio si comportano ancora in questo modo.
 </Tip>
 
 Per riprendere sessioni tra macchine o in ambienti serverless, specchia i transcript in un archivio condiviso con un adattatore [`SessionStore`](/docs/it/agent-sdk/session-storage).
@@ -271,30 +315,50 @@ Questo esempio si basa su [Acquisisci l'ID di sessione](#capture-the-session-id)
 
 <CodeGroup>
   ```python Python theme={null}
-  # Fork: branch from session_id into a new session
-  forked_id = None
-  async for message in query(
-      prompt="Instead of JWT, outline how OAuth2 would work for the auth module",
-      options=ClaudeAgentOptions(
-          resume=session_id,
-          fork_session=True,
-          max_turns=5,
-      ),
-  ):
-      if isinstance(message, ResultMessage):
-          forked_id = message.session_id  # The fork's ID, distinct from session_id
-          if message.subtype == "success":
-              print(message.result)
+  import asyncio
+  from claude_agent_sdk import query, ClaudeAgentOptions, ResultMessage
 
-  print(f"Forked session: {forked_id}")
+  session_id = "..."  # The ID you captured in the previous example
 
-  # Original session is untouched; resuming it continues the JWT thread
-  async for message in query(
-      prompt="Continue with the JWT approach",
-      options=ClaudeAgentOptions(resume=session_id),
-  ):
-      if isinstance(message, ResultMessage) and message.subtype == "success":
-          print(message.result)
+
+  async def main():
+      # Fork: branch from session_id into a new session
+      forked_id = None
+      try:
+          async for message in query(
+              prompt="Instead of JWT, outline how OAuth2 would work for the auth module",
+              options=ClaudeAgentOptions(
+                  resume=session_id,
+                  fork_session=True,
+                  max_turns=5,
+              ),
+          ):
+              if isinstance(message, ResultMessage):
+                  forked_id = message.session_id  # The fork's ID, distinct from session_id
+                  if message.subtype == "success":
+                      print(message.result)
+      except Exception as error:
+          # A single-shot query() raises after yielding an error result. If the
+          # failure was an error result, forked_id was already captured by the
+          # loop above; connection or process failures yield no result message.
+          print(f"Session ended with an error: {error}")
+
+      print(f"Forked session: {forked_id}")
+
+      # Original session is untouched; resuming it continues the JWT thread
+      try:
+          async for message in query(
+              prompt="Continue with the JWT approach",
+              options=ClaudeAgentOptions(resume=session_id),
+          ):
+              if isinstance(message, ResultMessage) and message.subtype == "success":
+                  print(message.result)
+      except Exception as error:
+          # A single-shot query() raises after yielding an error result.
+          print(f"Session ended with an error: {error}")
+
+
+  asyncio.run(main())
   ```
 
   ```typescript TypeScript theme={null}
@@ -305,32 +369,44 @@ Questo esempio si basa su [Acquisisci l'ID di sessione](#capture-the-session-id)
   // Fork: branch from sessionId into a new session
   let forkedId: string | undefined;
 
-  for await (const message of query({
-    prompt: "Instead of JWT, outline how OAuth2 would work for the auth module",
-    options: {
-      resume: sessionId,
-      forkSession: true,
-      maxTurns: 5
+  try {
+    for await (const message of query({
+      prompt: "Instead of JWT, outline how OAuth2 would work for the auth module",
+      options: {
+        resume: sessionId,
+        forkSession: true,
+        maxTurns: 5
+      }
+    })) {
+      if (message.type === "system" && message.subtype === "init") {
+        forkedId = message.session_id; // The fork's ID, distinct from sessionId
+      }
+      if (message.type === "result" && message.subtype === "success") {
+        console.log(message.result);
+      }
     }
-  })) {
-    if (message.type === "system" && message.subtype === "init") {
-      forkedId = message.session_id; // The fork's ID, distinct from sessionId
-    }
-    if (message.type === "result" && message.subtype === "success") {
-      console.log(message.result);
-    }
+  } catch (error) {
+    // A single-shot query() throws after yielding an error result. If the
+    // failure was an error result, forkedId was already captured by the loop
+    // above; connection or process failures yield no result message.
+    console.error(`Session ended with an error: ${error}`);
   }
 
   console.log(`Forked session: ${forkedId}`);
 
   // Original session is untouched; resuming it continues the JWT thread
-  for await (const message of query({
-    prompt: "Continue with the JWT approach",
-    options: { resume: sessionId }
-  })) {
-    if (message.type === "result" && message.subtype === "success") {
-      console.log(message.result);
+  try {
+    for await (const message of query({
+      prompt: "Continue with the JWT approach",
+      options: { resume: sessionId }
+    })) {
+      if (message.type === "result" && message.subtype === "success") {
+        console.log(message.result);
+      }
     }
+  } catch (error) {
+    // A single-shot query() throws after yielding an error result.
+    console.error(`Session ended with an error: ${error}`);
   }
   ```
 </CodeGroup>
@@ -341,9 +417,14 @@ Dovresti vedere che `forkedId` differisce dall'ID di sessione originale. Riprend
   Riprendi tra host
 </h2>
 
-I file di sessione sono locali alla macchina che li ha creati. Per riprendere una sessione su un host diverso (worker CI, container effimeri, serverless), hai due opzioni:
+I file di sessione sono locali alla macchina che li ha creati. Per riprendere una sessione su un host diverso (worker CI, container effimeri, serverless), scegli l'approccio che si adatta meglio:
 
-* **Sposta il file di sessione.** Persisti `~/.claude/projects/<encoded-cwd>/<session-id>.jsonl` dalla prima esecuzione e ripristinalo nello stesso percorso sul nuovo host prima di chiamare `resume`. Il `cwd` deve corrispondere.
+* **Passa un session store.** Allega un adattatore [`sessionStore` / `session_store`](/docs/it/agent-sdk/session-storage) in modo che l'SDK rispecchi i transcript nel tuo backend e un altro host possa riprenderli. La chiave di ricerca dello store deriva dalla directory di lavoro, quindi riprendi da un `cwd` che corrisponda all'esecuzione originale.
+
+* **Sposta il file di sessione.** Persisti `~/.claude/projects/<encoded-cwd>/<session-id>.jsonl` dalla prima esecuzione e ripristinalo all'interno di qualsiasi directory sotto `~/.claude/projects/` sul nuovo host prima di chiamare `resume`.
+
+  Claude Code cerca oltre la directory del progetto corrente per trovare l'ID; vedi [Riprendi una sessione](/docs/it/sessions#resume-a-session) per l'ordine di ricerca esatto e come vengono gestite le copie duplicate. Prima della v2.1.223, la ricerca era limitata alla directory del progetto corrente e ai suoi git worktrees; le versioni dell'SDK che raggruppano un CLI più vecchio si comportano ancora in questo modo.
+
 * **Non fare affidamento sul ripristino della sessione.** Acquisisci i risultati di cui hai bisogno (output di analisi, decisioni, diff di file) come stato dell'applicazione e passali nel prompt di una sessione nuova. Questo è spesso più robusto che spedire file di transcript in giro.
 
 Entrambi gli SDK espongono funzioni per enumerare le sessioni su disco e leggere i loro messaggi: [`listSessions()`](/docs/it/agent-sdk/typescript#listsessions) e [`getSessionMessages()`](/docs/it/agent-sdk/typescript#getsessionmessages) in TypeScript, [`list_sessions()`](/docs/it/agent-sdk/python#list_sessions) e [`get_session_messages()`](/docs/it/agent-sdk/python#get_session_messages) in Python. Usali per costruire selettori di sessione personalizzati, logica di pulizia o visualizzatori di transcript.

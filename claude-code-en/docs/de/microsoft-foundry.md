@@ -105,9 +105,12 @@ Erstellen Sie zunächst eine Claude-Ressource in Azure:
 1. Navigieren Sie zum [Microsoft Foundry-Portal](https://ai.azure.com/)
 2. Erstellen Sie eine neue Ressource und notieren Sie sich Ihren Ressourcennamen
 3. Erstellen Sie Bereitstellungen für die Claude-Modelle und notieren Sie sich den Bereitstellungsnamen, den Sie jedem geben; Sie werden diese Namen in Schritt 4 als Modellvariablen festlegen:
+
    * Claude Opus
    * Claude Sonnet
    * Claude Haiku
+
+   Wenn Sie eine Bereitstellung konfigurieren, wählen Sie auch ihre [Hosting-Option](https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry#hosting-options), die bestimmt, ob der Rückschluss auf Azure oder auf Anthropic-Infrastruktur ausgeführt wird.
 
 <h3 id="2-configure-azure-credentials">
   2) Azure-Anmeldedaten konfigurieren
@@ -179,7 +182,7 @@ export ANTHROPIC_FOUNDRY_RESOURCE={resource}
 
 Legen Sie die Modellvariablen so fest, dass sie den Bereitstellungsnamen entsprechen, die Sie in Schritt 1 erstellt haben.
 
-Ohne `ANTHROPIC_DEFAULT_OPUS_MODEL` wird der `opus`-Alias auf Microsoft Foundry zu Opus 4.6 aufgelöst. Legen Sie ihn auf die Opus 4.8-ID fest, um das neueste Modell zu verwenden:
+Ohne `ANTHROPIC_DEFAULT_OPUS_MODEL` wird der `opus`-Alias auf Microsoft Foundry zu Opus 4.6 aufgelöst. Legen Sie ihn auf die ID eines neueren Opus-Modells fest, z. B. Opus 4.8:
 
 ```bash theme={null}
 export ANTHROPIC_DEFAULT_OPUS_MODEL='claude-opus-4-8'
@@ -196,6 +199,8 @@ Aktuelle und ältere Modell-IDs finden Sie unter [Modellübersicht](https://plat
 ```bash theme={null}
 export ENABLE_PROMPT_CACHING_1H=1
 ```
+
+Um unterschiedliche TTLs für Ihre Hauptkonversation und für die Anfragen festzulegen, die Claude Code außerhalb davon stellt, [wählen Sie die TTL selbst](/docs/de/prompt-caching#choose-the-ttl-yourself).
 
 <h3 id="5-run-claude-code">
   5. Claude Code ausführen

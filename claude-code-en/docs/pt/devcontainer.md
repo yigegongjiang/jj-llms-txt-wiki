@@ -59,6 +59,8 @@ Quando você abre o contêiner no VS Code ou Codespaces, o feature também adici
     ```
 
     Substitua a linha `image` pela imagem base do seu projeto ou remova-a se seu arquivo existente usar um Dockerfile.
+
+    O feature Claude Code instala Node.js por si só quando a imagem base não o fornece. Se essa instalação falhar e a compilação parar com `Failed to install Node.js and npm`, adicione `"ghcr.io/devcontainers/features/node:1": {}` ao bloco `features` acima do feature Claude Code e reconstrua.
   </Step>
 
   <Step title="Reconstruir o contêiner">
@@ -89,21 +91,26 @@ Veja [Escolha seu provedor de API](/docs/pt/admin-setup#choose-your-api-provider
   Persistir autenticação e configurações entre reconstruções
 </h2>
 
-Por padrão, o diretório home do contêiner é descartado na reconstrução, então os engenheiros devem entrar novamente a cada vez. Claude Code armazena seu token de autenticação, configurações do usuário e histórico de sessão em [`~/.claude`](/docs/pt/claude-directory). Monte um volume nomeado nesse caminho para manter esse estado entre reconstruções.
+Por padrão, o diretório home do contêiner é descartado na reconstrução, então os engenheiros devem entrar novamente a cada vez. Claude Code armazena seu token de autenticação, configurações do usuário e histórico de sessão no diretório [`~/.claude`](/docs/pt/claude-directory). Ele armazena sua conta OAuth, servidores MCP pessoais e confiança por projeto em [`~/.claude.json`](/docs/pt/settings-reference#global-config-settings), um arquivo separado fora desse diretório, portanto montar um volume apenas em `~/.claude` não o mantém conectado. Monte um volume nomeado em `~/.claude` e defina [`CLAUDE_CONFIG_DIR`](/docs/pt/env-vars) para o mesmo caminho para que Claude Code escreva `.claude.json` dentro do volume.
 
-O exemplo a seguir monta um volume no diretório home do usuário `node`:
+O exemplo a seguir monta o volume e define `CLAUDE_CONFIG_DIR` para um contêiner cujo `remoteUser` é `node`:
 
 ```json devcontainer.json theme={null}
 "mounts": [
   "source=claude-code-config,target=/home/node/.claude,type=volume"
-]
+],
+"containerEnv": {
+  "CLAUDE_CONFIG_DIR": "/home/node/.claude"
+}
 ```
 
-Substitua `/home/node` pelo diretório home do `remoteUser` do seu contêiner. Se você montar o volume em algum lugar diferente de `~/.claude`, defina [`CLAUDE_CONFIG_DIR`](/docs/pt/env-vars) para o caminho de montagem para que Claude Code leia e escreva lá.
+Substitua `/home/node` pelo diretório home do `remoteUser` do seu contêiner. Se você já definiu `containerEnv`, por exemplo em [Enforce organization policy](#enforce-organization-policy), adicione `CLAUDE_CONFIG_DIR` a esse objeto em vez de adicionar um segundo.
 
 Para isolar o estado por projeto em vez de compartilhar um volume em todos os repositórios, inclua a variável `${devcontainerId}` no nome da fonte. A [configuração de referência](https://github.com/anthropics/claude-code/blob/main/.devcontainer/devcontainer.json) usa `source=claude-code-config-${devcontainerId}` para esse propósito.
 
-No GitHub Codespaces, `~/.claude` persiste entre parar e iniciar um codespace, mas ainda é limpo quando você reconstrói o contêiner, então a montagem de volume acima se aplica lá também. Para levar autenticação entre codespaces, armazene `ANTHROPIC_API_KEY` ou um `CLAUDE_CODE_OAUTH_TOKEN` de [`claude setup-token`](/docs/pt/authentication#generate-a-long-lived-token) como um [segredo do Codespaces](https://docs.github.com/en/codespaces/managing-your-codespaces/managing-your-account-specific-secrets-for-github-codespaces); Codespaces disponibiliza segredos como variáveis de ambiente dentro do contêiner automaticamente.
+No GitHub Codespaces, `~/.claude` persiste quando você para e inicia um codespace, mas é limpo quando você reconstrói o contêiner, portanto a configuração acima se aplica lá também.
+
+Para levar autenticação entre codespaces, armazene `ANTHROPIC_API_KEY` ou um `CLAUDE_CODE_OAUTH_TOKEN` de [`claude setup-token`](/docs/pt/authentication#generate-a-long-lived-token) como um [segredo do Codespaces](https://docs.github.com/en/codespaces/managing-your-codespaces/managing-your-account-specific-secrets-for-github-codespaces). Codespaces expõe segredos como variáveis de ambiente dentro do contêiner automaticamente.
 
 <h2 id="enforce-organization-policy">
   Aplicar política organizacional
@@ -111,14 +118,14 @@ No GitHub Codespaces, `~/.claude` persiste entre parar e iniciar um codespace, m
 
 Um dev container é um lugar conveniente para aplicar política organizacional, porque a mesma imagem e configuração executam na máquina de cada engenheiro.
 
-Claude Code lê `/etc/claude-code/managed-settings.json` no Linux e a aplica com a precedência mais alta na [hierarquia de configurações](/docs/pt/settings#how-scopes-interact), então valores lá substituem qualquer coisa que um engenheiro defina em `~/.claude` ou no diretório `.claude/` do projeto. Copie o arquivo para o lugar certo a partir do seu Dockerfile:
+Claude Code lê `/etc/claude-code/managed-settings.json` no Linux e a aplica com a precedência mais alta na [hierarquia de configurações](/docs/pt/settings#settings-precedence), então valores lá substituem qualquer coisa que um engenheiro defina em `~/.claude` ou no diretório `.claude/` do projeto. Copie o arquivo para o lugar certo a partir do seu Dockerfile:
 
 ```dockerfile Dockerfile theme={null}
 RUN mkdir -p /etc/claude-code
 COPY managed-settings.json /etc/claude-code/managed-settings.json
 ```
 
-Como o Dockerfile fica no repositório, qualquer pessoa com acesso de escrita pode alterar ou remover essa etapa. Para política que engenheiros não possam contornar editando arquivos do repositório, entregue configurações gerenciadas através de [configurações gerenciadas pelo servidor](/docs/pt/server-managed-settings) ou seu MDM em vez disso. Veja [arquivos de configurações gerenciadas](/docs/pt/settings#settings-files) para as chaves disponíveis e os outros caminhos de entrega.
+Como o Dockerfile fica no repositório, qualquer pessoa com acesso de escrita pode alterar ou remover essa etapa. Para política que engenheiros não possam contornar editando arquivos do repositório, entregue configurações gerenciadas através de [configurações gerenciadas pelo servidor](/docs/pt/server-managed-settings) ou seu MDM em vez disso. Veja [arquivos de configurações gerenciadas](/docs/pt/managed-settings#delivery-mechanisms) para as chaves disponíveis e os outros caminhos de entrega.
 
 Para definir [variáveis de ambiente](/docs/pt/env-vars) que se apliquem a cada sessão do Claude Code no contêiner, adicione-as a `containerEnv` no seu `devcontainer.json`. O exemplo a seguir desativa telemetria e relatório de erros e impede que Claude Code se atualize automaticamente após a instalação:
 
@@ -129,7 +136,9 @@ Para definir [variáveis de ambiente](/docs/pt/env-vars) que se apliquem a cada 
 }
 ```
 
-O Dev Container Feature sempre instala a versão mais recente do Claude Code. Para fixar uma versão específica do Claude Code para compilações reproduzíveis, instale-o a partir do seu Dockerfile com `npm install -g @anthropic-ai/claude-code@X.Y.Z` em vez de usar o feature, e defina `DISABLE_AUTOUPDATER` como mostrado acima.
+`CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` também desativa a avaliação de sinalizador de recurso da qual [Remote Control](/docs/pt/remote-control#requirements) e os outros [recursos que precisam de busca de sinalizador de recurso](/docs/pt/env-vars#features-that-need-feature-flag-fetching) dependem, então sessões no contêiner não podem usá-los.
+
+O Dev Container Feature sempre instala a versão mais recente do Claude Code. Para fixar uma versão específica do Claude Code para compilações reproduzíveis, instale-o a partir do seu Dockerfile com `npm install -g @anthropic-ai/claude-code@X.Y.Z` em vez de usar o feature, e defina `DISABLE_AUTOUPDATER` como `1` em `containerEnv`.
 
 Para a lista completa de controles de política incluindo regras de permissão, restrições de ferramentas e listas de permissão de servidores MCP, veja [Configure Claude Code para sua organização](/docs/pt/admin-setup).
 
@@ -141,7 +150,7 @@ Para disponibilizar [servidores MCP](/docs/pt/mcp) dentro do contêiner, defina-
 
 Você pode limitar o tráfego de saída do contêiner apenas aos domínios que Claude Code precisa. Veja [Requisitos de acesso à rede](/docs/pt/network-config#network-access-requirements) para os domínios de inferência e autenticação, e [Serviços de telemetria](/docs/pt/data-usage#telemetry-services) para as conexões opcionais de telemetria e relatório de erros e como desabilitá-las.
 
-O contêiner de referência inclui um script [`init-firewall.sh`](https://github.com/anthropics/claude-code/blob/main/.devcontainer/init-firewall.sh) que bloqueia todo o tráfego de saída exceto os domínios que Claude Code e suas ferramentas de desenvolvimento precisam. Executar um firewall dentro de um contêiner requer permissões extras, então a referência adiciona as capacidades `NET_ADMIN` e `NET_RAW` através de `runArgs`. O script de firewall e essas capacidades não são necessários para o próprio Claude Code: você pode deixá-los de fora e confiar em seus próprios controles de rede em vez disso.
+O contêiner de referência inclui um script [`init-firewall.sh`](https://github.com/anthropics/claude-code/blob/main/.devcontainer/init-firewall.sh) que limita o tráfego de saída apenas aos destinos que o script permite. Executar um firewall dentro de um contêiner requer permissões extras, então a referência adiciona as capacidades `NET_ADMIN` e `NET_RAW` através de `runArgs`. O script de firewall e essas capacidades não são necessários para o próprio Claude Code: você pode deixá-los de fora e confiar em seus próprios controles de rede em vez disso.
 
 <h2 id="run-without-permission-prompts">
   Executar sem prompts de permissão
@@ -151,7 +160,7 @@ Como o contêiner executa Claude Code como um usuário não-root e confina a exe
 
 Pular prompts de permissão remove sua oportunidade de revisar chamadas de ferramentas antes de serem executadas. Claude ainda pode modificar qualquer arquivo no workspace bind-mounted, que aparece diretamente no seu host, e alcançar qualquer coisa que a política de rede do contêiner permite. Combine essa flag com as [restrições de saída de rede](#restrict-network-egress) acima para limitar o que uma sessão contornada pode alcançar.
 
-Se você quer menos prompts sem desabilitar verificações de segurança, considere [modo automático](/docs/pt/permission-modes#eliminate-prompts-with-auto-mode) em vez disso, que tem um classificador revisando ações antes de serem executadas. Para impedir que engenheiros usem `--dangerously-skip-permissions` completamente, defina `permissions.disableBypassPermissionsMode` para `"disable"` em [configurações gerenciadas](/docs/pt/settings#permission-settings).
+Se você quer menos prompts sem desabilitar verificações de segurança, considere [modo automático](/docs/pt/permission-modes#eliminate-prompts-with-auto-mode) em vez disso, que tem um classificador revisando ações antes de serem executadas. Para impedir que engenheiros usem `--dangerously-skip-permissions` completamente, defina `permissions.disableBypassPermissionsMode` para `"disable"` em [configurações gerenciadas](/docs/pt/settings-reference#permission-settings).
 
 <h2 id="try-the-reference-container">
   Experimente o contêiner de referência
@@ -185,7 +194,7 @@ A configuração de referência consiste em três arquivos. Nenhum deles é nece
 | ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
 | [`devcontainer.json`](https://github.com/anthropics/claude-code/blob/main/.devcontainer/devcontainer.json) | Montagens de volume, capacidades `runArgs`, extensões VS Code e `containerEnv` |
 | [`Dockerfile`](https://github.com/anthropics/claude-code/blob/main/.devcontainer/Dockerfile)               | Imagem base, ferramentas de desenvolvimento e a instalação do Claude Code      |
-| [`init-firewall.sh`](https://github.com/anthropics/claude-code/blob/main/.devcontainer/init-firewall.sh)   | Bloqueia todo o tráfego de rede de saída exceto os domínios permitidos         |
+| [`init-firewall.sh`](https://github.com/anthropics/claude-code/blob/main/.devcontainer/init-firewall.sh)   | Limita o tráfego de rede de saída para os destinos que o script permite        |
 
 <h2 id="next-steps">
   Próximos passos

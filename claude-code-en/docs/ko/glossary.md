@@ -6,17 +6,25 @@
 
 > Claude Code 용어 정의. 에이전트 루프, 컴팩션, CLAUDE.md, 훅, 서브에이전트, MCP 및 기타 핵심 개념의 의미를 알아봅니다.
 
-이 용어집은 Claude Code 용어를 정의합니다. 각 항목은 개념이 심층적으로 다루어지는 페이지로 연결됩니다. 토큰, 온도, RAG와 같은 모델 수준의 개념은 [플랫폼 용어집](https://platform.claude.com/docs/ko/about-claude/glossary)을 참조하십시오.
+이 용어집은 Claude Code 용어를 정의합니다. 각 항목은 개념이 심층적으로 다루어지는 페이지로 연결됩니다. 토큰, 온도, RAG와 같은 모델 수준의 개념은 [플랫폼 용어집](https://platform.claude.com/docs/ko/about-claude/glossary)을 참조하십시오. Claude Desktop 용어(예: 데스크톱 확장, MCPB, DXT)는 [Claude 도움말 센터](https://support.claude.com/)를 참조하십시오.
 
 <h2 id="a">
   A
 </h2>
 
+<h3 id="agents-md">
+  AGENTS.md
+</h3>
+
+AI 코딩 에이전트를 위해 작성하는 프로젝트 지침의 마크다운 파일입니다. 저장소에 이 파일이 있고 [CLAUDE.md](#claude-md)가 없으면, Claude는 두 번째 파일을 추가하지 않고도 이를 프로젝트 지침으로 읽습니다. `/config`의 **프로젝트 지침** 설정을 변경하여 Claude가 두 파일을 모두 읽거나 `CLAUDE.md`만 읽도록 할 수 있습니다. `AGENTS.md`를 직접 읽으려면 Claude Code v2.1.277 이상이 필요합니다. 일부 세션에서는 Claude가 [`AGENTS.md`를 읽을 수 없으므로](/docs/ko/memory#when-agents-md-support-is-unavailable), 대신 [`CLAUDE.md`에서 가져오세요](/docs/ko/memory#share-one-file-with-other-coding-tools).
+
+자세히 알아보기: [AGENTS.md](/docs/ko/memory#agents-md)
+
 <h3 id="agent-teams">
   Agent teams
 </h3>
 
-여러 개의 독립적인 Claude Code 세션이 팀 리더에 의해 조정되며, 공유 작업 목록과 피어 투 피어 메시징을 갖춘 구성입니다. 단일 세션 내에서 실행되고 부모에게만 보고하는 [서브에이전트](#subagent)와 달리, 팀원들은 각각 자신의 컨텍스트 윈도우를 가지며 어느 팀원과도 직접 상호작용할 수 있습니다. Agent teams는 실험적이며 `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`을 설정하여 활성화해야 합니다.
+여러 개의 독립적인 Claude Code 세션이 팀 리더에 의해 조정되며, 공유 작업 목록과 피어 투 피어 메시징을 갖춘 구성입니다. 단일 세션 내에서 실행되고 부모에게만 보고하는 [서브에이전트](#subagent)와 달리, 팀원들은 각각 자신의 컨텍스트 윈도우를 가지며 어느 팀원과도 직접 상호작용할 수 있습니다. Agent teams는 실험적이며 비활성화되어 있습니다. [에이전트 팀 활성화](/docs/ko/agent-teams#enable-agent-teams)를 참조하세요.
 
 자세히 알아보기: [에이전트 팀 실행](/docs/ko/agent-teams)
 
@@ -64,9 +72,9 @@ Claude가 사용자의 수정 및 선호도를 기반으로 자신을 위해 작
   Auto mode
 </h3>
 
-백그라운드에서 별도의 분류기 모델이 각 작업을 검토하는 [권한 모드](#permission-mode)이며, 대부분은 승인 프롬프트 없이 실행됩니다. 명시적 요청 규칙은 여전히 프롬프트를 표시합니다. 분류기는 범위 확대, 신뢰할 수 없는 인프라 및 [프롬프트 주입](#prompt-injection)을 차단합니다. 도구 결과를 보지 않으므로 주입된 지침이 결정에 영향을 미칠 수 없습니다.
+백그라운드에서 별도의 분류기 모델이 각 작업을 검토하는 [권한 모드](#permission-mode)이므로, Claude Code는 대부분의 작업을 사용자에게 묻지 않고 실행합니다. Claude Code는 여전히 명시적 요청 규칙과 일치하는 작업 전에 사용자에게 묻습니다. Pro, Max 및 Team 플랜에서 auto mode는 대화형 터미널 및 VS Code 세션의 [기본 시작 권한 모드](/docs/ko/permission-modes#which-mode-a-session-starts-in)입니다. 분류기는 범위 확대, 신뢰할 수 없는 인프라 및 [프롬프트 주입](#prompt-injection)을 차단합니다. 도구 결과는 분류기가 보는 것에서 제거되므로, 파일이나 웹 페이지의 악의적인 콘텐츠가 직접 조작할 수 없습니다.
 
-자세히 알아보기: [프롬프트 제거 및 auto mode](/docs/ko/permission-modes#eliminate-prompts-with-auto-mode)
+자세히 알아보기: [Auto mode로 프롬프트 제거](/docs/ko/permission-modes#eliminate-prompts-with-auto-mode)
 
 <h2 id="b">
   B
@@ -76,7 +84,7 @@ Claude가 사용자의 수정 및 선호도를 기반으로 자신을 위해 작
   Bare mode
 </h3>
 
-자동 발견을 건너뛰는 시작 플래그 `--bare`입니다. 훅, 스킬, 플러그인, MCP 서버, auto memory 및 CLAUDE.md의 자동 발견을 건너뜁니다. 명시적으로 전달하는 플래그만 적용됩니다. CI 및 스크립트된 호출에 권장되며, 로컬 구성에 관계없이 머신 간에 동일한 동작이 필요합니다.
+`--bare`를 사용하면 Claude Code는 `--add-dir`으로 전달하는 디렉터리의 스킬을 제외하고 훅, 스킬, 사용자 정의 명령, 서브에이전트, 설치된 플러그인, MCP 서버, auto memory 또는 CLAUDE.md를 로드하지 않고 시작합니다. CI 및 스크립트된 호출에 권장되며, 모든 머신에서 동일한 결과가 필요한 경우에 사용합니다.
 
 자세히 알아보기: [bare mode로 더 빠르게 시작](/docs/ko/headless#start-faster-with-bare-mode)
 
@@ -122,15 +130,25 @@ Claude Code가 프로젝트 범위 구성을 읽는 디렉토리입니다: 설�
 
 Claude를 위해 작성하는 지속적인 지침의 마크다운 파일이며, 시스템 프롬프트 이후 사용자 메시지로 모든 세션의 시작 시 로드됩니다. 프로젝트 규칙, 아키텍처 노트 및 "항상 X를 수행" 규칙을 여기에 넣습니다. 프로젝트 루트 CLAUDE.md는 [컴팩션](#compaction)을 견디고 이후 디스크에서 새로 다시 읽습니다.
 
-CLAUDE.md를 프로젝트 범위에서 `./CLAUDE.md` 또는 `./.claude/CLAUDE.md`에, 사용자 범위에서 `~/.claude/CLAUDE.md`에, 또는 조직의 [관리 정책](#managed-settings)으로 배치할 수 있습니다. 발견된 모든 파일은 서로를 재정의하지 않고 연결되며, 가장 광범위한 범위에서 가장 구체적인 범위로 정렬됩니다.
+CLAUDE.md를 프로젝트 범위에서 `./CLAUDE.md` 또는 `./.claude/CLAUDE.md`에, 사용자 범위에서 `~/.claude/CLAUDE.md`에, 또는 조직의 [관리 정책](#managed-settings)으로 배치할 수 있습니다. 발견된 모든 파일은 서로를 재정의하지 않고 연결되며, 가장 광범위한 범위에서 가장 구체적인 범위로 정렬됩니다. Claude Code는 또한 프로젝트의 [AGENTS.md](#agents-md) 파일을 자체적으로 또는 CLAUDE.md와 함께 로드할 수 있습니다.
 
 자세히 알아보기: [CLAUDE.md 파일](/docs/ko/memory#claude-md-files)
+
+<h3 id="cloud-session">
+  Cloud session
+</h3>
+
+claude.ai/code, Claude 모바일 앱, **Cloud**가 선택된 Desktop 앱, `claude --cloud` 또는 [루틴](/docs/ko/routines)에서 시작하는 Claude Code 세션입니다. 머신 대신 클라우드 인프라에서 실행되므로 노트북을 닫은 후에도 계속 실행됩니다: 기본적으로 Anthropic에서 관리하거나, 조직이 운영하는 [자체 호스팅 환경](/docs/ko/self-hosted-environments). 터미널, IDE 또는 **Local**이 선택된 Desktop 앱의 세션은 로컬 세션입니다. 다른 디바이스에서 로컬 세션에 접근하려면 [원격 제어](#remote-control)를 사용합니다.
+
+자세히 알아보기: [클라우드에서 Claude Code 사용](/docs/ko/claude-code-on-the-web)
 
 <h3 id="command">
   Command
 </h3>
 
 프롬프트에 `/name`을 입력하여 호출하는 재사용 가능한 지침입니다. `/clear`, `/model`, `/compact`와 같은 기본 제공 명령은 세션을 제어합니다. `.claude/commands/`의 파일로 자신의 명령을 정의하거나 [플러그인](#plugin)에서 설치할 수 있습니다. [스킬](#skill)은 다단계 명령을 패키징하는 권장 방법입니다.
+
+두 가지 다른 단어 사용은 관련이 없습니다: `claude` CLI 서브명령(예: `claude mcp add`)은 [CLI 참조](/docs/ko/cli-reference#cli-commands)에 나열되어 있으며, stdio [MCP 서버](#mcp-server) 항목의 `command` 필드는 Claude Code가 서버를 시작하기 위해 실행하는 실행 파일을 지정합니다.
 
 자세히 알아보기: [명령](/docs/ko/commands) · [스킬](/docs/ko/skills)
 
@@ -141,6 +159,14 @@ CLAUDE.md를 프로젝트 범위에서 `./CLAUDE.md` 또는 `./.claude/CLAUDE.md
 [컨텍스트 윈도우](#context-window)가 한계에 접근할 때 대화의 자동 요약입니다. 이전 도구 출력이 먼저 지워지고, 그 다음 대화가 요약됩니다. 프로젝트 루트 CLAUDE.md 및 auto memory는 컴팩션을 견디고 디스크에서 다시 로드됩니다. 대화에서만 제공된 지침은 손실될 수 있습니다. `/compact`를 수동으로 트리거하거나, `/compact focus on the API changes`와 같은 포커스를 선택적으로 사용합니다.
 
 자세히 알아보기: [컴팩션에서 생존하는 것](/docs/ko/context-window#what-survives-compaction) · [컨텍스트가 가득 찰 때](/docs/ko/how-claude-code-works#when-context-fills-up)
+
+<h3 id="connector">
+  Connector
+</h3>
+
+Claude Code가 아닌 claude.ai 계정에 추가된 [MCP 서버](#mcp-server)입니다. 해당 계정으로 Claude Code에 로그인하면, 커넥터가 로컬로 추가한 서버와 함께 `/mcp`에 나타납니다. 조직은 또한 커넥터를 프로비저닝하고 이들에 대한 도구별 제어를 설정할 수 있습니다.
+
+자세히 알아보기: [claude.ai에서 MCP 서버 사용](/docs/ko/mcp#use-mcp-servers-from-claude-ai)
 
 <h3 id="context-window">
   Context window
@@ -170,7 +196,7 @@ Claude 모바일 앱에서 코딩 작업을 보낼 때 Desktop 앱에서 Claude 
   Effort level
 </h3>
 
-각 턴에서 Claude가 적응형 추론 사고 예산을 얼마나 사용할지 제어하는 설정입니다. 더 높은 노력은 더 많은 사고 토큰과 더 깊은 추론을 의미합니다. 더 낮은 노력은 더 빠르고 저렴합니다. Effort는 Fable 5, Opus 4.6 이상 및 Sonnet 4.6 이상에서 지원됩니다.
+각 턴에서 모델이 적응형 추론을 사용할지 여부와 얼마나 사용할지를 제어하는 설정입니다. 더 높은 노력은 더 많은 사고 토큰과 더 깊은 추론을 의미합니다. 더 낮은 노력은 더 빠르고 저렴합니다. Effort는 Fable 모델, Opus 4.6 이상 및 Sonnet 4.6 이상에서 지원됩니다.
 
 자세히 알아보기: [노력 수준 조정](/docs/ko/model-config#adjust-effort-level)
 
@@ -181,6 +207,18 @@ Claude 모바일 앱에서 코딩 작업을 보낼 때 Desktop 앱에서 Claude 
 모델이 응답하기 전에 수행하는 가시적인 단계별 추론입니다. [노력 수준](#effort-level)으로 조정하거나 고정된 사고 예산이 있는 모델에서 `MAX_THINKING_TOKENS`로 사고 토큰을 제한할 수 있습니다. 사고는 터미널에서 회색 이탤릭 텍스트로 나타납니다.
 
 자세히 알아보기: [확장 사고 사용](/docs/ko/model-config#extended-thinking)
+
+<h2 id="f">
+  F
+</h2>
+
+<h3 id="frontmatter">
+  Frontmatter
+</h3>
+
+Markdown 파일의 맨 위에 있는 YAML 설정 블록으로, 여는 `---` 줄과 닫는 `---` 줄 사이에 위치합니다. 스킬, 서브에이전트, 출력 스타일 및 규칙은 각각 frontmatter에서 구성을 읽습니다. 예를 들어 스킬의 `description` 또는 서브에이전트의 `tools`와 같은 설정을 읽으며, 닫는 `---` 이후의 모든 내용을 지시사항으로 처리합니다. 여는 `---`은 파일의 첫 번째 줄이어야 합니다. 각 파일 유형은 자신의 필드 집합을 허용합니다.
+
+자세히 알아보기: [스킬 frontmatter](/docs/ko/skills#frontmatter-reference), [서브에이전트 frontmatter](/docs/ko/sub-agents#supported-frontmatter-fields), [출력 스타일 frontmatter](/docs/ko/output-styles#frontmatter), [규칙 frontmatter](/docs/ko/memory#rules-frontmatter-reference)
 
 <h2 id="h">
   H
@@ -210,7 +248,7 @@ Claude Code의 라이프사이클의 특정 지점에서 자동으로 실행되�
 
 IT 또는 DevOps에 의해 조직 전체에 적용되는 설정이며, Anthropic의 서버를 통해 관리 콘솔에서 전달되거나 `~/.claude` 외부의 OS 수준 경로에 배치됩니다. 사용자 및 프로젝트 설정은 관리 설정을 재정의할 수 없습니다. 서버 관리 전달은 [적격 구성](/docs/ko/server-managed-settings#platform-availability)에 적용됩니다. [보안 고려 사항](/docs/ko/server-managed-settings#security-considerations)을 참조하십시오. 보안 정책, 규정 준수 요구 사항 또는 플릿 전체의 표준화된 도구에 사용합니다.
 
-자세히 알아보기: [Server-managed settings](/docs/ko/server-managed-settings) · [Settings files](/docs/ko/settings#settings-files)
+자세히 알아보기: [Server-managed settings](/docs/ko/server-managed-settings) · [Settings files](/docs/ko/settings#where-settings-live)
 
 <h3 id="mcp-model-context-protocol">
   MCP (Model Context Protocol)
@@ -220,11 +258,19 @@ AI 도구를 외부 데이터 소스 및 서비스에 연결하기 위한 개방
 
 자세히 알아보기: [Model Context Protocol](/docs/ko/mcp)
 
+<h3 id="mcp-server">
+  MCP server
+</h3>
+
+Claude에 [MCP](#mcp-model-context-protocol)를 통해 도구, 프롬프트 또는 리소스를 제공하는 프로그램입니다. `claude mcp add`를 사용하여, `.mcp.json`에서, [플러그인](#plugin)을 통해, 또는 claude.ai [커넥터](#connector)로 서버를 추가합니다. 로컬 stdio 서버는 Claude Code가 구성의 `command` 및 `args` 필드에서 시작하는 프로세스로 실행되며, 이는 프롬프트에서 입력하는 [명령어](#command)와는 관계가 없습니다.
+
+자세히 알아보기: [Model Context Protocol](/docs/ko/mcp)
+
 <h3 id="mcp-tool-search">
   MCP Tool Search
 </h3>
 
-필요할 때까지 MCP 도구 스키마를 연기하는 컨텍스트 절약 메커니즘입니다. 시작 시 도구 이름만 로드됩니다. Claude는 특정 도구를 사용하기로 결정할 때 전체 스키마를 요청합니다. 이렇게 하면 유휴 MCP 서버가 많은 컨텍스트를 소비하지 않습니다.
+필요할 때까지 MCP 도구 스키마를 연기하는 컨텍스트 절약 메커니즘입니다. 시작 시 도구 이름과 서버 지침만 로드됩니다. Claude는 특정 도구를 사용하기로 결정할 때 전체 스키마를 요청합니다. 이렇게 하면 유휴 MCP 서버가 많은 컨텍스트를 소비하지 않습니다.
 
 자세히 알아보기: [MCP Tool Search로 확장](/docs/ko/mcp#scale-with-mcp-tool-search)
 
@@ -248,7 +294,7 @@ AI 도구를 외부 데이터 소스 및 서비스에 연결하기 위한 개방
   Output style
 </h3>
 
-Claude의 시스템 프롬프트를 수정하여 응답 동작, 톤 또는 형식을 변경하는 구성입니다. 출력 스타일은 사용자 메시지로 전달되는 [CLAUDE.md](#claude-md)와 달리 기본 시스템 프롬프트의 소프트웨어 엔지니어링 관련 부분을 끕니다. 기본 제공 스타일에는 Default, Proactive, Explanatory 및 Learning이 포함됩니다.
+Claude Code가 Claude에 제공하는 지시사항을 변경하여 응답 동작, 톤 또는 형식을 설정하는 구성입니다. 프로젝트 컨텍스트를 Claude Code의 기본 지시사항과 함께 추가하는 [CLAUDE.md](#claude-md)와 달리, 사용자 정의 출력 스타일은 기본 소프트웨어 엔지니어링 지시사항을 대체할 수 있습니다.
 
 자세히 알아보기: [출력 스타일](/docs/ko/output-styles)
 
@@ -286,15 +332,15 @@ Claude가 소스 파일을 편집하지 않고 변경 사항을 연구하고 제
   Plugin
 </h3>
 
-스킬, 훅, 서브에이전트 및 MCP 서버의 번들이며, 단일 설치 가능한 단위로 패키징됩니다. 플러그인 스킬은 `plugin-name:skill-name`으로 네임스페이스되므로 여러 플러그인이 공존합니다. [마켓플레이스](/docs/ko/plugin-marketplaces)를 통해 팀 전체에 플러그인을 배포합니다.
+스킬, 훅, 서브에이전트 및 MCP 서버의 번들이며, 단일 설치 가능한 단위로 패키징됩니다. 플러그인 스킬은 `plugin-name:skill-name`으로 네임스페이스되므로 여러 플러그인이 공존합니다. [마켓플레이스](/docs/ko/plugins/overview)를 통해 팀 전체에 플러그인을 배포합니다.
 
-자세히 알아보기: [플러그인](/docs/ko/plugins)
+자세히 알아보기: [플러그인](/docs/ko/plugins/overview)
 
 <h3 id="project-trust">
   Project trust
 </h3>
 
-Claude Code가 구성을 로드하기 전에 디렉토리를 수락하는 대화입니다. 수락은 프로젝트 디렉토리별로 저장되며, 홈 디렉토리는 제외되고, 여기서 신뢰는 현재 세션에만 유지되며 각 실행 시 프롬프트가 다시 나타납니다. 신뢰는 마켓플레이스 플러그인의 자동 설치 및 프로젝트 정의 훅의 실행을 게이팅합니다. 디렉토리를 신뢰하면 `.claude/settings.json`, `.mcp.json` 및 기타 구성 파일이 적용됩니다.
+Claude Code가 구성을 로드하기 전에 디렉토리를 수락하는 대화입니다. 수락은 프로젝트 디렉토리별로 저장되며, 홈 디렉토리는 제외되고, 여기서 신뢰는 현재 세션에만 유지되며 각 실행 시 프롬프트가 다시 나타납니다. 디렉토리를 신뢰할 때까지 Claude Code는 저장소가 제공하는 일부 콘텐츠를 보류합니다. 예를 들어 `.claude/settings.json`의 프로젝트 허용 규칙 및 마켓플레이스입니다. [폴더를 신뢰하기 전에 실행되는 것](/docs/ko/permissions#what-runs-before-you-trust-a-folder)에서는 `-p` 세션이 대화 없이 실행하는 것을 포함하여 각 종류의 콘텐츠를 나열합니다.
 
 자세히 알아보기: [`.claude` 디렉토리](/docs/ko/claude-directory)
 
@@ -302,7 +348,7 @@ Claude Code가 구성을 로드하기 전에 디렉토리를 수락하는 대화
   Prompt injection
 </h3>
 
-파일, 웹 페이지 또는 도구 결과에 포함된 적대적 지침이며, Claude를 요청하지 않은 작업으로 리디렉션하려고 시도합니다. Claude Code의 방어에는 권한 시스템, 명령 주입 탐지 및 신뢰 확인이 포함됩니다. [Auto mode](#auto-mode)는 도구 결과에서 의심스러운 내용을 스캔하는 서버 측 프로브와 도구 결과를 보지 않는 분류기를 추가하므로 주입된 텍스트가 승인 결정에 영향을 미칠 수 없습니다.
+파일, 웹 페이지 또는 도구 결과에 포함된 적대적 지침이며, Claude를 요청하지 않은 작업으로 리디렉션하려고 시도합니다. Claude Code의 방어에는 권한 시스템, 명령 주입 탐지 및 신뢰 확인이 포함됩니다. [Auto mode](#auto-mode)는 도구 결과에서 의심스러운 내용을 스캔하는 서버 측 프로브와 도구 결과를 제거한 상태에서 작업을 검토하는 분류기를 추가하므로 주입된 텍스트가 직접 이를 조작할 수 없습니다.
 
 자세히 알아보기: [프롬프트 주입으로부터 보호](/docs/ko/security#protect-against-prompt-injection)
 
@@ -314,7 +360,7 @@ Claude Code가 구성을 로드하기 전에 디렉토리를 수락하는 대화
   Remote Control
 </h3>
 
-claude.ai를 통해 휴대폰 또는 브라우저에서 로컬 Claude Code 세션을 계속하는 방법입니다. 코드 실행 및 파일은 머신에 남아 있습니다. 인터페이스만 원격입니다. 클라우드 샌드박스에서 실행되는 웹의 Claude Code와 다릅니다.
+claude.ai를 통해 휴대폰 또는 브라우저에서 로컬 Claude Code 세션을 계속하는 방법입니다. 코드 실행 및 파일은 머신에 남아 있습니다. 인터페이스만 원격입니다. 클라우드 샌드박스에서 실행되는 [웹의 Claude Code](/docs/ko/claude-code-on-the-web)와 다릅니다.
 
 자세히 알아보기: [Remote Control](/docs/ko/remote-control)
 
@@ -350,9 +396,9 @@ Bash 도구에 대한 OS 수준 파일 시스템 및 네트워크 격리입니�
   Settings layers
 </h3>
 
-Claude Code가 구성을 읽는 계층 구조이며, 우선 순위 순서는 높음에서 낮음입니다: [관리 정책](#managed-settings), 명령줄 인수, `.claude/settings.local.json`의 로컬 설정, `.claude/settings.json`의 프로젝트 설정, 그 다음 `~/.claude/settings.json`의 사용자 설정. 배열은 계층 전체에서 병합됩니다. 스칼라는 더 높은 계층에서 더 낮은 계층을 재정의합니다.
+Claude Code가 구성을 읽는 계층 구조이며, 우선 순위 순서는 높음에서 낮음입니다: [관리 정책](#managed-settings), 명령줄 인수, `.claude/settings.local.json`의 로컬 설정, `.claude/settings.json`의 프로젝트 설정, 그 다음 `~/.claude/settings.json`의 사용자 설정. 배열은 계층 전체에서 병합됩니다. 스칼라는 더 높은 계층에서 더 낮은 계층을 재정의합니다. [설정 우선 순위](/docs/ko/settings#settings-precedence)를 참조하십시오.
 
-자세히 알아보기: [설정 파일](/docs/ko/settings#settings-files)
+자세히 알아보기: [설정 파일](/docs/ko/settings#where-settings-live)
 
 <h3 id="skill">
   Skill
@@ -368,7 +414,7 @@ Claude Code가 구성을 읽는 계층 구조이며, 우선 순위 순서는 높
   Subagent
 </h3>
 
-자신의 컨텍스트 윈도우, 사용자 정의 시스템 프롬프트, 특정 도구 액세스 및 독립적인 권한으로 실행되는 특화된 AI 어시스턴트입니다. 위임된 작업을 수행하고 주 대화에 요약을 반환합니다. 서브에이전트를 사용하여 큰 탐색을 기본 컨텍스트 밖으로 유지하거나 병렬 연구를 실행합니다. 각 에이전트가 직접 대화할 수 있는 완전한 독립적인 세션인 [agent teams](#agent-teams)와 다릅니다.
+자신의 컨텍스트 윈도우, 사용자 정의 시스템 프롬프트, 특정 도구 액세스 및 독립적인 권한으로 실행되는 특화된 AI 어시스턴트입니다. 위임된 작업을 수행하고 주 대화에 요약을 반환합니다. 서브에이전트를 사용하여 큰 탐색을 기본 컨텍스트 밖으로 유지하거나 병렬 연구를 실행합니다. 서브에이전트는 이를 생성한 세션 내에 머물러 있습니다. 직접 실행하는 별도의 세션 간에 발견 사항을 전달하려면 [세션 간 메시징](/docs/ko/cross-session-messaging)을 사용하십시오.
 
 기본 제공 서브에이전트에는 Explore, Plan 및 범용이 포함됩니다.
 
@@ -378,7 +424,7 @@ Claude Code가 구성을 읽는 계층 구조이며, 우선 순위 순서는 높
   Surface
 </h3>
 
-Claude Code에 액세스하는 모든 장소입니다: CLI, VS Code, JetBrains, Desktop 또는 claude.ai. 모든 표면은 동일한 엔진을 공유하므로 CLAUDE.md, 설정 및 스킬이 모든 표면에서 동일하게 작동합니다. Slack 및 Chrome 확장 프로그램은 표면 자체가 아니라 표면에 연결하는 통합입니다.
+Claude Code에 액세스하는 모든 장소입니다: CLI, VS Code, JetBrains, Desktop 또는 claude.ai. 모든 표면은 동일한 엔진을 공유합니다. 컴퓨터의 세션은 로컬 CLAUDE.md, 설정 및 스킬을 읽습니다. [클라우드 세션](/docs/ko/cloud-environments#what-carries-over-from-your-setup)은 저장소의 새로운 클론에서 시작되며 컴퓨터의 `~/.claude/`를 읽지 않습니다. Slack 및 Chrome 확장 프로그램은 표면 자체가 아니라 표면에 연결하는 통합입니다.
 
 자세히 알아보기: [플랫폼 및 통합](/docs/ko/platforms)
 
@@ -390,9 +436,9 @@ Claude Code에 액세스하는 모든 장소입니다: CLI, VS Code, JetBrains, 
   Teleport
 </h3>
 
-클라우드 Claude Code 세션을 로컬 터미널로 가져오는 명령 `/teleport`입니다. Claude는 분기를 가져오고, 대화 기록을 로드하고, 웹 세션의 마지막 상태에서 재개합니다. 역방향은 `--cloud`이며, 로컬 작업을 웹에서 실행하도록 보냅니다.
+클라우드 Claude Code 세션을 로컬 터미널로 가져오는 명령 `/teleport`입니다. Claude는 분기를 가져오고, 대화 기록을 로드하고, 클라우드 세션의 마지막 상태에서 재개합니다. 역방향은 `--cloud`이며, 로컬 작업을 클라우드에서 실행하도록 보냅니다.
 
-자세히 알아보기: [웹에서 터미널로](/docs/ko/claude-code-on-the-web#from-web-to-terminal)
+자세히 알아보기: [클라우드에서 터미널로](/docs/ko/claude-code-on-the-web#from-cloud-to-terminal)
 
 <h3 id="tool">
   Tool
@@ -442,8 +488,9 @@ Claude가 수행할 수 있는 작업입니다: 파일 읽기, 코드 편집, �
 
 이 용어는 이전 문서, 블로그 게시물 및 커뮤니티 콘텐츠에 나타납니다. 이 사이트를 검색할 때 현재 이름을 사용합니다.
 
-| 이전 용어           | 현재 이름                                         | 참고                               |
-| --------------- | --------------------------------------------- | -------------------------------- |
-| Headless mode   | [Non-interactive mode](#non-interactive-mode) | 동일한 `-p` 플래그, 동일한 동작             |
-| Custom commands | [Skills](#skill)                              | `.claude/commands/` 파일은 계속 작동합니다 |
-| Slash commands  | Commands                                      | 제품 복사본에서 "Slash" 제거됨             |
+| 이전 용어                                                                   | 현재 이름                                         | 참고                                                          |
+| ----------------------------------------------------------------------- | --------------------------------------------- | ----------------------------------------------------------- |
+| Headless mode                                                           | [Non-interactive mode](#non-interactive-mode) | 동일한 `-p` 플래그, 동일한 동작                                        |
+| Web session; "Claude Code on the web" as the name for any cloud session | [Cloud session](#cloud-session)               | "Claude Code on the web"은 이제 claude.ai/code의 브라우저 표면만 지칭합니다 |
+| Custom commands                                                         | [Skills](#skill)                              | `.claude/commands/` 파일은 계속 작동합니다                            |
+| Slash commands                                                          | Commands                                      | 제품 복사본에서 "Slash" 제거됨                                        |

@@ -32,7 +32,7 @@ Gunakan sesi WSL ketika repositori Anda berada di dalam sistem file distribusi. 
   </Step>
 
   <Step title="Percayai folder">
-    Sesi pertama di folder menampilkan dialog kepercayaan ruang kerja. Kepercayaan diberikan per distribusi dan folder; mempercayai folder di satu distribusi tidak berlaku untuk distribusi lain atau ke jalur yang sama di Windows.
+    Sesi pertama di folder menampilkan dialog kepercayaan ruang kerja. Anda memberikan kepercayaan per distribusi dan folder. Folder yang Anda percayai di satu distribusi tidak dipercayai di distribusi lain atau di jalur yang sama di Windows.
   </Step>
 </Steps>
 

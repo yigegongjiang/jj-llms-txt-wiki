@@ -13,7 +13,7 @@
 * 사용한 토큰 수
 * 오류 발생 위치
 
-Agent SDK는 이 데이터를 OpenTelemetry 추적, 메트릭 및 로그 이벤트로 OpenTelemetry Protocol(OTLP)을 지원하는 모든 백엔드(예: Honeycomb, Datadog, Grafana, Langfuse 또는 자체 호스팅 수집기)로 내보낼 수 있습니다.
+Agent SDK는 이 데이터를 OpenTelemetry 추적, 메트릭 및 로그 이벤트로 OpenTelemetry Protocol(OTLP)을 지원하는 모든 백엔드로 내보낼 수 있습니다.
 
 이 가이드에서는 SDK가 텔레메트리를 내보내는 방식, 내보내기를 구성하는 방법, 데이터가 백엔드에 도달한 후 태그를 지정하고 필터링하는 방법을 설명합니다. 백엔드로 내보내는 대신 SDK 응답 스트림에서 직접 토큰 사용량 및 비용을 읽으려면 [비용 및 사용량 추적](/docs/ko/agent-sdk/cost-tracking)을 참조하세요.
 
@@ -107,8 +107,10 @@ CLI는 세 가지 독립적인 OpenTelemetry 신호를 내보냅니다. 각각 �
 
 자식 프로세스는 기본적으로 애플리케이션의 환경을 상속하므로 Dockerfile, Kubernetes 매니페스트 또는 셸 프로필에서 이러한 변수를 내보내고 `options.env`를 완전히 생략하여 동일한 결과를 얻을 수 있습니다.
 
+내보내기가 작동하는지 확인하려면 작업이 완료된 후 수집기의 로그에서 들어오는 스팬, 메트릭 및 로그 이벤트를 확인하세요. CLI는 기본적으로 내보내기 오류에 대해 자동으로 실패합니다. 엔드포인트에 도달할 수 없거나 데이터를 거부하면 에이전트는 여전히 정상적으로 실행되고 CLI는 애플리케이션에서 오류를 표시하지 않고 텔레메트리를 삭제합니다. 내보내기 오류를 표시하려면 내보내기 변수와 함께 [`CLAUDE_CODE_OTEL_DIAG_STDERR=1`](/docs/ko/env-vars)을 설정하고 SDK의 `stderr` 콜백(Python) 또는 `stderr` 옵션(TypeScript)을 통해 진단을 읽으세요. Claude Code v2.1.179 이상이 필요합니다.
+
 <Note>
-  `console` 내보내기 도구는 텔레메트리를 표준 출력에 기록하며, SDK는 이를 메시지 채널로 사용합니다. SDK를 통해 실행할 때 내보내기 도구 값으로 `console`을 설정하지 마세요. 로컬에서 텔레메트리를 검사하려면 `OTEL_EXPORTER_OTLP_ENDPOINT`를 로컬 수집기 또는 올인원 Jaeger 컨테이너로 지정하세요.
+  `console` 내보내기 도구는 텔레메트리를 표준 출력에 기록하며, SDK는 이를 메시지 채널로 사용합니다. SDK를 통해 실행할 때 내보내기 도구 값으로 `console`을 설정하지 마세요. 로컬에서 텔레메트리를 검사하려면 `OTEL_EXPORTER_OTLP_ENDPOINT`를 로컬 OpenTelemetry 수집기로 지정하세요.
 </Note>
 
 <h3 id="flush-telemetry-from-short-lived-calls">
@@ -148,11 +150,11 @@ CLI는 텔레메트리를 배치하고 간격에 따라 내보냅니다. 깨끗�
 * **`claude_code.interaction`:** 프롬프트 수신에서 응답 생성까지 에이전트 루프의 단일 턴을 래핑합니다.
 * **`claude_code.llm_request`:** Claude API에 대한 각 호출을 래핑하며, 모델 이름, 지연 시간 및 토큰 수를 속성으로 포함합니다.
 * **`claude_code.tool`:** 각 도구 호출을 래핑하며, 권한 대기(`claude_code.tool.blocked_on_user`)와 실행 자체(`claude_code.tool.execution`)에 대한 자식 스팬을 포함합니다.
-* **`claude_code.hook`:** 각 [훅](/docs/ko/agent-sdk/hooks) 실행을 래핑합니다. 위의 변수 외에 상세 베타 추적(`ENABLE_BETA_TRACING_DETAILED=1` 및 `BETA_TRACING_ENDPOINT`)이 필요합니다.
+* **`claude_code.hook`:** 각 [훅](/docs/ko/agent-sdk/hooks) 실행을 래핑합니다. 상세 베타 추적(`ENABLE_BETA_TRACING_DETAILED=1` 및 `BETA_TRACING_ENDPOINT`)이 필요하며, 이 쌍은 또한 [로그와 추적이 이동하는 위치를 변경합니다](/docs/ko/env-vars#variables).
 
-`llm_request`, `tool` 및 `hook` 스팬은 포함하는 `claude_code.interaction` 스팬의 자식입니다. 에이전트가 Task 도구를 통해 하위 에이전트를 생성할 때, 하위 에이전트의 `llm_request` 및 `tool` 스팬은 상위 에이전트의 `claude_code.tool` 스팬 아래에 중첩되므로 전체 위임 체인이 하나의 추적으로 나타납니다.
+`llm_request`, `tool` 및 `hook` 스팬은 포함하는 `claude_code.interaction` 스팬의 자식입니다. 에이전트가 Agent 도구를 통해 하위 에이전트를 생성할 때, 하위 에이전트의 `llm_request` 및 `tool` 스팬은 상위 에이전트의 `claude_code.tool` 스팬 아래에 중첩되므로 전체 위임 체인이 하나의 추적으로 나타납니다.
 
-스팬은 기본적으로 `session.id` 속성을 포함합니다. 동일한 [세션](/docs/ko/agent-sdk/sessions)에 대해 여러 `query()` 호출을 수행할 때 백엔드에서 `session.id`로 필터링하여 이를 하나의 타임라인으로 봅니다. `OTEL_METRICS_INCLUDE_SESSION_ID`가 거짓 값으로 설정되면 속성이 생략됩니다.
+스팬은 기본적으로 `session.id` 속성을 포함합니다. 동일한 [세션](/docs/ko/agent-sdk/sessions)에 대해 여러 `query()` 호출을 수행할 때 백엔드에서 `session.id`로 필터링하여 이를 하나의 타임라인으로 봅니다. Claude Code는 `OTEL_METRICS_INCLUDE_SESSION_ID`를 거짓 값으로 설정하면 속성을 생략합니다.
 
 <Note>
   추적은 베타 상태입니다. 스팬 이름과 속성은 릴리스 간에 변경될 수 있습니다. 모니터링 참조의 [추적(베타)](/docs/ko/monitoring-usage#traces-beta)을 참조하여 추적 내보내기 구성 변수를 확인하세요.
@@ -163,6 +165,8 @@ CLI는 텔레메트리를 배치하고 간격에 따라 내보냅니다. 깨끗�
 </h2>
 
 SDK는 W3C 추적 컨텍스트를 CLI 하위 프로세스로 자동으로 전파합니다. 애플리케이션에서 OpenTelemetry 스팬이 활성화된 상태에서 `query()`를 호출하면 SDK는 `TRACEPARENT` 및 `TRACESTATE`를 자식 프로세스 환경에 주입하고, CLI는 이를 읽어 `claude_code.interaction` 스팬이 사용자의 스팬의 자식이 되도록 합니다. 그러면 에이전트 실행이 연결되지 않은 루트가 아닌 애플리케이션의 추적 내에 나타납니다.
+
+실행 중에 내보낸 OTLP 이벤트 로그 레코드는 동일한 추적 컨텍스트를 전달합니다. `TRACEPARENT`가 설정되면 각 레코드의 `trace_id` 및 `span_id`가 애플리케이션의 추적과 일치하므로 백엔드의 스팬에 [이벤트](/docs/ko/monitoring-usage#events)를 연결할 수 있습니다. v2.1.212 이전에는 활성 스팬 외부에서 내보낸 이벤트 레코드가 `trace_id` 또는 `span_id`를 전달하지 않았습니다.
 
 추적 컨텍스트 전파가 활성화되면 CLI는 실행하는 모든 Bash 및 PowerShell 명령에 `TRACEPARENT`를 전달합니다. Bash 도구를 통해 시작된 명령이 자체 OpenTelemetry 스팬을 내보내면 해당 스팬은 명령을 래핑하는 `claude_code.tool.execution` 스팬 아래에 중첩됩니다.
 
@@ -180,7 +184,7 @@ SDK는 W3C 추적 컨텍스트를 CLI 하위 프로세스로 자동으로 전파
   ```python Python theme={null}
   options = ClaudeAgentOptions(
       env={
-          # ... exporter configuration ...
+          # ... exporter configuration from the Enable telemetry export example ...
           "OTEL_SERVICE_NAME": "support-triage-agent",
           "OTEL_RESOURCE_ATTRIBUTES": "service.version=1.4.0,deployment.environment=production",
       },
@@ -191,9 +195,9 @@ SDK는 W3C 추적 컨텍스트를 CLI 하위 프로세스로 자동으로 전파
   const options = {
     env: {
       ...process.env,
-      // ... exporter configuration ...
+      // ... exporter configuration from the Enable telemetry export example ...
       OTEL_SERVICE_NAME: "support-triage-agent",
-      OTEL_RESOURCE_ATTRIBUTES":
+      OTEL_RESOURCE_ATTRIBUTES:
         "service.version=1.4.0,deployment.environment=production",
     },
   };
@@ -214,7 +218,8 @@ CLI는 Anthropic을 호출하는 데 사용하는 자격 증명을 기반으로 
 
   options = ClaudeAgentOptions(
       env={
-          # ... 내보내기 도구 구성 ...
+          # ... exporter configuration from the Enable telemetry export example ...
+          # request is the incoming request object from your web framework.
           "OTEL_RESOURCE_ATTRIBUTES": f"enduser.id={quote(request.user_id)},tenant.id={quote(request.tenant_id)}",
       },
   )
@@ -224,7 +229,8 @@ CLI는 Anthropic을 호출하는 데 사용하는 자격 증명을 기반으로 
   const options = {
     env: {
       ...process.env,
-      // ... 내보내기 도구 구성 ...
+      // ... exporter configuration from the Enable telemetry export example ...
+      // request is the incoming request object from your web framework.
       OTEL_RESOURCE_ATTRIBUTES: `enduser.id=${encodeURIComponent(request.userId)},tenant.id=${encodeURIComponent(request.tenantId)}`,
     },
   };
@@ -239,12 +245,12 @@ CLI는 Anthropic을 호출하는 데 사용하는 자격 증명을 기반으로 
 
 텔레메트리는 기본적으로 구조적입니다. 지속 시간, 모델 이름 및 도구 이름은 모든 스팬에 기록됩니다. 토큰 수는 기본 API 요청이 사용 데이터를 반환할 때 기록되므로 실패하거나 중단된 요청에 대한 스팬은 이를 생략할 수 있습니다. 에이전트가 읽고 쓰는 콘텐츠는 기본적으로 기록되지 않습니다. 이러한 옵트인 변수는 내보낸 데이터에 콘텐츠를 추가합니다:
 
-| 변수                        | 추가 내용                                                                                                                                                                                                                                                                                            |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `OTEL_LOG_USER_PROMPTS=1` | `claude_code.user_prompt` 이벤트 및 `claude_code.interaction` 스팬의 프롬프트 텍스트                                                                                                                                                                                                                           |
-| `OTEL_LOG_TOOL_DETAILS=1` | `claude_code.tool_result` 이벤트의 도구 입력 인수(파일 경로, 셸 명령, 검색 패턴)                                                                                                                                                                                                                                      |
-| `OTEL_LOG_TOOL_CONTENT=1` | `claude_code.tool`의 스팬 이벤트로 전체 도구 입력 및 출력 본문, 60KB에서 잘림. [추적](#read-agent-traces)이 활성화되어야 함                                                                                                                                                                                                      |
-| `OTEL_LOG_RAW_API_BODIES` | `claude_code.api_request_body` 및 `claude_code.api_response_body` 로그 이벤트로 전체 Anthropic Messages API 요청 및 응답 JSON. 인라인 본문의 경우 `1`로 설정하여 60KB에서 잘리거나, 이벤트의 `body_ref` 경로가 있는 디스크의 잘리지 않은 본문의 경우 `file:<dir>`로 설정합니다. 본문에는 전체 대화 기록이 포함되며 확장 사고 콘텐츠가 수정됩니다. 이를 활성화하면 위의 세 변수가 드러낼 모든 것에 대한 동의를 의미합니다 |
+| 변수                        | 추가 내용                                                                                                                                                                                                                                                                                                                                                                                         |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `OTEL_LOG_USER_PROMPTS=1` | `claude_code.user_prompt` 이벤트 및 `claude_code.interaction` 스팬의 프롬프트 텍스트                                                                                                                                                                                                                                                                                                                        |
+| `OTEL_LOG_TOOL_DETAILS=1` | `claude_code.tool_result` 이벤트의 도구 입력 인수(파일 경로, 셸 명령, 검색 패턴)                                                                                                                                                                                                                                                                                                                                   |
+| `OTEL_LOG_TOOL_CONTENT=1` | `claude_code.tool`의 [`tool.output` 스팬 이벤트](/docs/ko/monitoring-usage#tool-output-span-event)로 파일 콘텐츠 및 Bash 출력, 기본적으로 60KB에서 잘림, `CLAUDE_CODE_OTEL_CONTENT_MAX_LENGTH`를 통해 구성 가능, Claude Code v2.1.214 이상 필요. [추적](#read-agent-traces)이 활성화되어야 함. 스팬 속성은 [자신의 게이트](/docs/ko/monitoring-usage#new-context-gates) 아래에서 도구 콘텐츠를 전달합니다                                                                      |
+| `OTEL_LOG_RAW_API_BODIES` | `claude_code.api_request_body` 및 `claude_code.api_response_body` 로그 이벤트로 전체 Anthropic Messages API 요청 및 응답 JSON. 인라인 본문의 경우 `1`로 설정하여 기본적으로 60KB에서 잘리거나, 이벤트의 `body_ref` 경로가 있는 디스크의 잘리지 않은 본문의 경우 `file:<dir>`로 설정합니다. `CLAUDE_CODE_OTEL_CONTENT_MAX_LENGTH`는 인라인 잘림 제한을 구성하며, Claude Code v2.1.214 이상 필요합니다. 본문에는 전체 대화 기록이 포함되며 확장 사고 콘텐츠가 수정됩니다. 이를 활성화하면 위의 세 변수가 드러낼 모든 것에 대한 동의를 의미합니다 |
 
 에이전트가 처리하는 데이터를 저장하도록 관찰성 파이프라인이 승인되지 않은 경우 이를 설정하지 마세요. 모니터링 참조의 [보안 및 개인정보](/docs/ko/monitoring-usage#security-and-privacy)에서 모든 속성 및 수정 동작의 전체 목록을 확인하세요.
 

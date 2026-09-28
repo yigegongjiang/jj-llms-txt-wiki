@@ -15,7 +15,7 @@ File checkpointing 追蹤在代理程式工作階段期間透過 Write、Edit �
 * **從錯誤中恢復**，當代理程式進行不正確的修改時
 
 <Warning>
-  只有透過 Write、Edit 和 NotebookEdit 工具所做的變更才會被追蹤。透過 Bash 命令所做的變更（例如 `echo > file.txt` 或 `sed -i`）不會被 checkpoint 系統捕捉。
+  只有透過 Write、Edit 和 NotebookEdit 工具所做的變更才會被追蹤。透過 Bash 命令所做的變更（例如 `echo > file.txt` 或 `sed -i`）不會被 checkpoint 系統捕捉，[subagent](/docs/zh-TW/agent-sdk/subagents) 所套用的編輯也不會被捕捉，除了在前景執行的[具有 `context: fork` 的 skill](/docs/zh-TW/skills#run-skills-in-a-subagent) 除外。
 </Warning>
 
 <h2 id="how-checkpointing-works">
@@ -24,25 +24,11 @@ File checkpointing 追蹤在代理程式工作階段期間透過 Write、Edit �
 
 當您啟用檔案 checkpointing 時，SDK 會在透過 Write、Edit 或 NotebookEdit 工具修改檔案之前建立檔案備份。回應串流中的使用者訊息包含一個 checkpoint UUID，您可以將其用作還原點。
 
-Checkpoint 適用於代理程式用來修改檔案的這些內建工具：
-
-| 工具           | 描述                               |
-| ------------ | -------------------------------- |
-| Write        | 建立新檔案或用新內容覆蓋現有檔案                 |
-| Edit         | 對現有檔案的特定部分進行有針對性的編輯              |
-| NotebookEdit | 修改 Jupyter 筆記本（`.ipynb` 檔案）中的儲存格 |
-
 <Note>
   檔案回溯將磁碟上的檔案還原到先前的狀態。它不會回溯對話本身。呼叫 `rewindFiles()`（TypeScript）或 `rewind_files()`（Python）後，對話歷史記錄和上下文保持不變。
 </Note>
 
-checkpoint 系統追蹤：
-
-* 在工作階段期間建立的檔案
-* 在工作階段期間修改的檔案
-* 修改檔案的原始內容
-
-當您回溯到 checkpoint 時，建立的檔案會被刪除，修改的檔案會還原到該時間點的內容。
+當您回溯到 checkpoint 時，Claude Code 會刪除它建立的檔案，並將它修改的檔案還原到該時間點的內容。Claude Code 會跳過追蹤路徑中的符號連結、硬連結或其他非一般檔案。它也會跳過追蹤檔案，其父目錄不再解析到其 checkpoint 時間位置，或其備份無法安全讀取的檔案。[`RewindFilesResult`](/docs/zh-TW/agent-sdk/typescript#rewindfilesresult) 會在其 `skippedLinks` 欄位中計算每個跳過的路徑。跳過功能需要 Claude Code v2.1.216 或更新版本；在 v2.1.216 之前，回溯會透過追蹤路徑中的連結進行寫入和刪除。
 
 <h2 id="implement-checkpointing">
   實現 checkpointing
@@ -122,13 +108,21 @@ checkpoint 系統追蹤：
     let sessionId: string | undefined;
 
     // Step 2: Capture checkpoint UUID from the first user message
-    for await (const message of response) {
-      if (message.type === "user" && message.uuid && !checkpointId) {
-        checkpointId = message.uuid;
+    try {
+      for await (const message of response) {
+        if (message.type === "user" && message.uuid && !checkpointId) {
+          checkpointId = message.uuid;
+        }
+        if ("session_id" in message && !sessionId) {
+          sessionId = message.session_id;
+        }
       }
-      if ("session_id" in message && !sessionId) {
-        sessionId = message.session_id;
-      }
+    } catch (error) {
+      // A single-shot query() throws after yielding an error result. If the
+      // failure was an error result, sessionId and checkpointId were already
+      // captured by the loop above; connection or process failures yield no
+      // result message.
+      console.error(`Session ended with an error: ${error}`);
     }
 
     // Step 3: Later, rewind by resuming the session with an empty prompt
@@ -185,7 +179,7 @@ checkpoint 系統追蹤：
   </Step>
 
   <Step title="捕捉 checkpoint UUID 和工作階段 ID">
-    設定 `replay-user-messages` 選項後（如上所示），回應串流中的每個使用者訊息都有一個 UUID，可作為 checkpoint。
+    設定 `replay-user-messages` 選項後，回應串流中的每個使用者訊息都有一個 UUID，可作為 checkpoint。
 
     對於大多數使用案例，捕捉第一個使用者訊息 UUID（`message.uuid`）；回溯到它會將所有檔案還原到其原始狀態。若要儲存多個 checkpoint 並回溯到中間狀態，請參閱[多個還原點](#multiple-restore-points)。
 
@@ -233,7 +227,8 @@ checkpoint 系統追蹤：
       ) as client:
           await client.query("")  # Empty prompt to open the connection
           async for message in client.receive_response():
-              await client.rewind_files(checkpoint_id)
+              if checkpoint_id:
+                  await client.rewind_files(checkpoint_id)
               break
       ```
 
@@ -244,7 +239,9 @@ checkpoint 系統追蹤：
       });
 
       for await (const msg of rewindQuery) {
-        await rewindQuery.rewindFiles(checkpointId);
+        if (checkpointId) {
+          await rewindQuery.rewindFiles(checkpointId);
+        }
         break;
       }
       ```
@@ -256,7 +253,7 @@ checkpoint 系統追蹤：
     CLAUDE_CODE_ENABLE_SDK_FILE_CHECKPOINTING=true claude -p --resume <session-id> --rewind-files <checkpoint-uuid>
     ```
 
-    `--rewind-files` 旗標不會出現在 `claude --help` 輸出中，但 CLI 會如上所示接受它。
+    `--rewind-files` 旗標不會出現在 `claude --help` 輸出中，但 CLI 會如上所示接受它。當回溯成功時，命令會列印 `Files rewound to state at message <checkpoint-uuid>` 並在不傳送提示的情況下結束。
   </Step>
 </Steps>
 
@@ -440,17 +437,25 @@ checkpoint 系統追蹤：
     const checkpoints: Checkpoint[] = [];
     let sessionId: string | undefined;
 
-    for await (const message of response) {
-      if (message.type === "user" && message.uuid) {
-        checkpoints.push({
-          id: message.uuid,
-          description: `After turn ${checkpoints.length + 1}`,
-          timestamp: new Date()
-        });
+    try {
+      for await (const message of response) {
+        if (message.type === "user" && message.uuid) {
+          checkpoints.push({
+            id: message.uuid,
+            description: `After turn ${checkpoints.length + 1}`,
+            timestamp: new Date()
+          });
+        }
+        if ("session_id" in message && !sessionId) {
+          sessionId = message.session_id;
+        }
       }
-      if ("session_id" in message && !sessionId) {
-        sessionId = message.session_id;
-      }
+    } catch (error) {
+      // A single-shot query() throws after yielding an error result. If the
+      // failure was an error result, sessionId and the checkpoints array were
+      // already populated by the loop above; connection or process failures
+      // yield no result message.
+      console.error(`Session ended with an error: ${error}`);
     }
 
     // Later: rewind to any checkpoint by resuming the session
@@ -624,15 +629,23 @@ checkpoint 系統追蹤：
           options: opts
         });
 
-        for await (const message of response) {
-          // Capture the first user message UUID - this is our restore point
-          if (message.type === "user" && message.uuid && !checkpointId) {
-            checkpointId = message.uuid;
+        try {
+          for await (const message of response) {
+            // Capture the first user message UUID - this is our restore point
+            if (message.type === "user" && message.uuid && !checkpointId) {
+              checkpointId = message.uuid;
+            }
+            // Capture the session ID so we can resume later
+            if ("session_id" in message) {
+              sessionId = message.session_id;
+            }
           }
-          // Capture the session ID so we can resume later
-          if ("session_id" in message) {
-            sessionId = message.session_id;
-          }
+        } catch (error) {
+          // A single-shot query() throws after yielding an error result. If the
+          // failure was an error result, checkpointId and sessionId were already
+          // captured by the loop above; connection or process failures yield no
+          // result message.
+          console.error(`Session ended with an error: ${error}`);
         }
 
         console.log("Done! Open utils.ts to see the added doc comments.\n");
@@ -671,13 +684,6 @@ checkpoint 系統追蹤：
       main();
       ```
     </CodeGroup>
-
-    此範例演示完整的 checkpointing 工作流程：
-
-    1. **啟用 checkpointing**：使用 `enable_file_checkpointing=True` 和 `permission_mode="acceptEdits"` 配置 SDK 以自動批准檔案編輯
-    2. **捕捉 checkpoint 資料**：當代理程式執行時，儲存第一個使用者訊息 UUID（您的還原點）和工作階段 ID
-    3. **提示回溯**：代理程式完成後，檢查您的公用程式檔案以查看文件註解，然後決定是否要撤銷變更
-    4. **恢復和回溯**：如果是，請使用空提示恢復工作階段，並呼叫 `rewind_files()` 以還原原始檔案
   </Step>
 
   <Step title="執行範例">
@@ -711,12 +717,13 @@ checkpoint 系統追蹤：
 
 檔案 checkpointing 有以下限制：
 
-| 限制                            | 描述                       |
-| ----------------------------- | ------------------------ |
-| 僅限 Write/Edit/NotebookEdit 工具 | 透過 Bash 命令所做的變更不會被追蹤     |
-| 相同工作階段                        | Checkpoint 與建立它們的工作階段相關聯 |
-| 僅限檔案內容                        | 建立、移動或刪除目錄不會透過回溯來撤銷      |
-| 本機檔案                          | 遠端或網路檔案不會被追蹤             |
+| 限制                            | 描述                                                                                              |
+| ----------------------------- | ----------------------------------------------------------------------------------------------- |
+| 僅限 Write/Edit/NotebookEdit 工具 | 透過 Bash 命令所做的變更不會被追蹤                                                                            |
+| 子代理編輯                         | [子代理](/docs/zh-TW/agent-sdk/subagents)所套用的編輯不會被追蹤或復原，除了在前景執行的具有 `context: fork` 的技能；使用 git 來復原未追蹤的編輯 |
+| 相同工作階段                        | Checkpoint 與建立它們的工作階段相關聯                                                                        |
+| 僅限檔案內容                        | 建立、移動或刪除目錄不會透過回溯來撤銷                                                                             |
+| 本機檔案                          | 遠端或網路檔案不會被追蹤                                                                                    |
 
 <h2 id="troubleshooting">
   疑難排解
@@ -743,8 +750,8 @@ checkpoint 系統追蹤：
 
 **解決方案**：將 `extra_args={"replay-user-messages": None}`（Python）或 `extraArgs: { 'replay-user-messages': null }`（TypeScript）新增到您的選項。
 
-<h3 id="no-file-checkpoint-found-for-message-error">
-  "No file checkpoint found for message" 錯誤
+<h3 id="no-file-checkpoint-found-for-this-message-error">
+  "No file checkpoint found for this message" 錯誤
 </h3>
 
 當指定的使用者訊息 UUID 的 checkpoint 資料不存在時，會發生此錯誤。
@@ -786,7 +793,8 @@ CLAUDE_CODE_ENABLE_SDK_FILE_CHECKPOINTING=true claude -p --resume <session-id> -
   ) as client:
       await client.query("")
       async for message in client.receive_response():
-          await client.rewind_files(checkpoint_id)
+          if checkpoint_id:
+              await client.rewind_files(checkpoint_id)
           break
   ```
 
@@ -797,9 +805,17 @@ CLAUDE_CODE_ENABLE_SDK_FILE_CHECKPOINTING=true claude -p --resume <session-id> -
     options: { ...opts, resume: sessionId }
   });
 
-  for await (const msg of rewindQuery) {
-    await rewindQuery.rewindFiles(checkpointId);
-    break;
+  try {
+    for await (const msg of rewindQuery) {
+      if (checkpointId) {
+        await rewindQuery.rewindFiles(checkpointId);
+      }
+      break;
+    }
+  } catch (error) {
+    // An error here means the rewind didn't complete, for example the checkpoint
+    // wasn't found or the session couldn't be resumed.
+    console.error(`Rewind session ended with an error: ${error}`);
   }
   ```
 </CodeGroup>

@@ -626,13 +626,14 @@ export const PromptLibrary = ({text = {}, labels = {}, tagLabels = {}, phaseLabe
       return base + (href.startsWith('/en/') ? '/' + locale + href.slice(3) : href);
     };
   }, []);
+  const SAFE_HREF = /^(\/(?![\/\\\s])|#|https?:\/\/)/;
   const linkify = s => {
     const out = [];
     let last = 0;
     const re = /\[([^\]]+)\]\(([^)]+)\)/g;
     for (let m; m = re.exec(s); ) {
       if (m.index > last) out.push(s.slice(last, m.index));
-      out.push(<a key={m.index} href={doc(m[2])}>{m[1]}</a>);
+      out.push(SAFE_HREF.test(m[2]) ? <a key={m.index} href={doc(m[2])}>{m[1]}</a> : m[1]);
       last = re.lastIndex;
     }
     if (last < s.length) out.push(s.slice(last));
@@ -776,7 +777,7 @@ export const PromptLibrary = ({text = {}, labels = {}, tagLabels = {}, phaseLabe
             </div>
             <div className="pl-label">{L.whyWorks}</div>
             <div className="pl-teaches">{linkify(p.teaches)}</div>
-            {p.nextHref && p.next && <div className="pl-next">
+            {p.nextHref && p.next && SAFE_HREF.test(p.nextHref) && <div className="pl-next">
                 <span className="pl-next-label">{L.makeItStick}</span>
                 <a href={doc(p.nextHref)}>{codeify(p.next)} →</a>
               </div>}
@@ -1202,7 +1203,7 @@ export const text = {
   },
   "migrate-a-pattern-across": {
     title: "Migrasikan pola di seluruh basis kode",
-    teaches: "Jelaskan pola lama dan yang baru. Meminta Claude untuk mengidentifikasi setiap tempat terlebih dahulu berarti situs panggilan tercantum dalam respons, sehingga Anda dapat memeriksa tidak ada yang terlewat."
+    teaches: "Jelaskan pola lama dan yang baru. Meminta Claude untuk mengidentifikasi setiap tempat terlebih dahulu berarti situs panggilan tercantum dalam respons, sehingga Anda dapat memeriksa tidak ada yang terlewat. Untuk migrasi di banyak file, jalankan [/batch](/docs/id/commands). Claude membagi pekerjaan menjadi unit untuk Anda setujui, lalu subagent latar belakang membuat perubahan dan membuka satu pull request per unit."
   },
   "optimize-against-a-measurable": {
     title: "Optimalkan terhadap target yang terukur",
@@ -1337,37 +1338,37 @@ Prompt di atas berbagi beberapa pola. Mengenalinya membantu Anda menyesuaikan pr
 
 **Jelaskan hasil, bukan langkah-langkahnya.** Katakan apa yang Anda inginkan dan biarkan Claude menemukan file. Prompt di bawah ini bekerja tanpa menyebutkan satu pun jalur file.
 
-```text theme={null}
+```text wrap theme={null}
 add rate limiting to the public API and make sure existing tests still pass
 ```
 
-**Berikan cara untuk memeriksa pekerjaan sendiri.** Minta untuk menjalankan, menguji, membandingkan, atau memverifikasi dalam prompt yang sama sehingga Claude mengulangi alih-alih berhenti setelah satu percobaan.
+**Berikan cara untuk memeriksa pekerjaan sendiri.** Minta untuk menjalankan, menguji, membandingkan, atau memverifikasi dalam prompt yang sama sehingga Claude mengulangi alih-alih berhenti setelah satu percobaan. Untuk memeriksa perubahan yang selesai terhadap aplikasi yang berjalan, jalankan [`/verify`](/docs/id/skills#run-and-verify-your-app).
 
-```text theme={null}
+```text wrap theme={null}
 write the migration, run it against the dev database, and confirm the schema matches
 ```
 
 **Tunjuk referensi.** Sebutkan file, tes, atau pola yang ada untuk dicocokkan sehingga kode baru konsisten dengan apa yang sudah Anda miliki.
 
-```text theme={null}
+```text wrap theme={null}
 add a settings page that follows the same layout as the profile page
 ```
 
 **Nyatakan target yang terukur.** Ketika tujuannya adalah kinerja atau cakupan, berikan metrik dan ambang batas sehingga penyelesaian tidak ambigu.
 
-```text theme={null}
+```text wrap theme={null}
 get the bundle size under 200KB and show me what you removed
 ```
 
 **Berikan artefak.** Tempel kesalahan, log, tangkapan layar, dan output rencana langsung dalam prompt, atau ketik `@` untuk mereferensikan file. Claude membaca sumber alih-alih deskripsi Anda tentangnya.
 
-```text theme={null}
+```text wrap theme={null}
 why is the build failing? @build.log
 ```
 
 **Katakan bagaimana Anda ingin jawabannya.** Sebutkan format, panjang, atau audiens sehingga penjelasan sesuai dengan cara Anda akan menggunakannya. Untuk membuat format menjadi default untuk setiap respons, atur [output style](/docs/id/output-styles).
 
-```text theme={null}
+```text wrap theme={null}
 explain how the payment retry logic works as an HTML page with a diagram, then open it in my browser
 ```
 
@@ -1384,7 +1385,7 @@ Prompt ini didasarkan pada pola dari sumber daya Anthropic yang dipublikasikan. 
 * [How Anthropic teams use Claude Code](https://claude.com/blog/how-anthropic-teams-use-claude-code): alur kerja nyata dari tim teknik, produk, desain, dan data, dengan pendalaman tentang [legal](https://claude.com/blog/how-anthropic-uses-claude-legal), [marketing](https://claude.com/blog/how-anthropic-uses-claude-marketing), dan [cybersecurity](https://claude.com/blog/how-anthropic-uses-claude-cybersecurity)
 * [Scaling agentic coding guide](https://resources.anthropic.com/hubfs/Scaling%20agentic%20coding%20across%20your%20organization.pdf): panduan adopsi perusahaan
 
-Untuk panduan video tentang pola ini, lihat kursus gratis [Claude Code in Action](https://anthropic.skilljar.com/claude-code-in-action) di Anthropic Academy.
+Untuk panduan video tentang pola ini, lihat kursus gratis [Claude Code in Action](https://academy.claude.com/courses/claude-code-in-action) di [Claude Academy](https://academy.claude.com/).
 
 <h2 id="related-resources">
   Sumber daya terkait

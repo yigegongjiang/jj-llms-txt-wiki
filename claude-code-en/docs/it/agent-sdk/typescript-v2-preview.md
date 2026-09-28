@@ -12,7 +12,7 @@
   Per eseguire la migrazione, utilizzare l'[API `query()`](/docs/it/agent-sdk/typescript) e le [opzioni sessione](/docs/it/agent-sdk/sessions) che accetta. Passare un `AsyncIterable<SDKUserMessage>` per conversazioni multi-turno, oppure `options.resume` per continuare una sessione salvata. Questa pagina viene mantenuta come riferimento se si mantiene il codice su Agent SDK 0.2.x o versioni precedenti.
 </Warning>
 
-V2 era un'API sessione sperimentale che eliminava la necessità di generatori asincroni e coordinamento yield. Invece di gestire lo stato del generatore tra i turni, ogni turno era un ciclo `send()`/`stream()` separato. La superficie API si riduceva a tre concetti:
+V2 era un'API sessione sperimentale che eliminava la necessità di generatori asincroni e coordinamento yield. Invece di gestire lo stato del generatore tra i turni, ogni turno era un ciclo `send()`/`stream()` separato. La superficie API si riduceva a creare una sessione, inviare un messaggio e trasmettere la risposta:
 
 * `createSession()` / `resumeSession()`: Avviare o continuare una conversazione
 * `session.send()`: Inviare un messaggio
@@ -29,7 +29,7 @@ npm install @anthropic-ai/claude-agent-sdk@0.2
 ```
 
 <Note>
-  L'SDK raggruppa un binario Claude Code nativo per la vostra piattaforma come dipendenza opzionale, quindi non è necessario installare Claude Code separatamente.
+  L'SDK raggruppa un binario Claude Code nativo per la vostra piattaforma come dipendenza opzionale, quindi la maggior parte delle installazioni non necessita di un'installazione separata di Claude Code. Consultare la [nota di installazione della guida rapida](/docs/it/agent-sdk/quickstart) per le installazioni che ne hanno bisogno.
 </Note>
 
 <h2 id="quick-start">
@@ -318,6 +318,8 @@ for await (const msg of resumedSession.stream()) {
 </h3>
 
 Le sessioni possono essere chiuse manualmente o automaticamente utilizzando [`await using`](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-2.html#using-declarations-and-explicit-resource-management), una funzionalità di TypeScript 5.2+ per la pulizia automatica delle risorse. Se state utilizzando una versione precedente di TypeScript o riscontrate problemi di compatibilità, utilizzate invece la pulizia manuale.
+
+Gli esempi seguenti mostrano solo il modello di pulizia e non inviano alcun messaggio, quindi l'esecuzione non produce alcun output.
 
 **Pulizia automatica (TypeScript 5.2+):**
 

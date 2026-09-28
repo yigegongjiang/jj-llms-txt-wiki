@@ -36,7 +36,7 @@
   </Accordion>
 
   <Accordion title="구조화된 출력 포함">
-    ```json theme={null}
+    ```jsonc theme={null}
     {
       "name": "초콜릿 칩 쿠키",
       "prep_time_minutes": 15,
@@ -77,20 +77,26 @@
     required: ["company_name"]
   };
 
-  for await (const message of query({
-    prompt: "Anthropic을 조사하고 주요 회사 정보를 제공하세요",
-    options: {
-      outputFormat: {
-        type: "json_schema",
-        schema: schema
+  try {
+    for await (const message of query({
+      prompt: "Anthropic을 조사하고 주요 회사 정보를 제공하세요",
+      options: {
+        outputFormat: {
+          type: "json_schema",
+          schema: schema
+        }
+      }
+    })) {
+      // 결과 메시지에는 검증된 데이터가 포함된 structured_output이 포함됩니다
+      if (message.type === "result" && message.subtype === "success" && message.structured_output) {
+        console.log(message.structured_output);
+        // { company_name: "Anthropic", founded_year: 2021, headquarters: "San Francisco, CA" }
       }
     }
-  })) {
-    // 결과 메시지에는 검증된 데이터가 포함된 structured_output이 포함됩니다
-    if (message.type === "result" && message.subtype === "success" && message.structured_output) {
-      console.log(message.structured_output);
-      // { company_name: "Anthropic", founded_year: 2021, headquarters: "San Francisco, CA" }
-    }
+  } catch (error) {
+    // 단일 쿼리 query()는 오류 결과(예: error_max_structured_output_retries)를 생성한 후 throw합니다.
+    // 오류 처리 섹션을 참조하세요.
+    console.error(`세션이 오류로 종료되었습니다: ${error}`);
   }
   ```
 
@@ -111,16 +117,21 @@
 
 
   async def main():
-      async for message in query(
-          prompt="Anthropic을 조사하고 주요 회사 정보를 제공하세요",
-          options=ClaudeAgentOptions(
-              output_format={"type": "json_schema", "schema": schema}
-          ),
-      ):
-          # 결과 메시지에는 검증된 데이터가 포함된 structured_output이 포함됩니다
-          if isinstance(message, ResultMessage) and message.structured_output:
-              print(message.structured_output)
-              # {'company_name': 'Anthropic', 'founded_year': 2021, 'headquarters': 'San Francisco, CA'}
+      try:
+          async for message in query(
+              prompt="Anthropic을 조사하고 주요 회사 정보를 제공하세요",
+              options=ClaudeAgentOptions(
+                  output_format={"type": "json_schema", "schema": schema}
+              ),
+          ):
+              # 결과 메시지에는 검증된 데이터가 포함된 structured_output이 포함됩니다
+              if isinstance(message, ResultMessage) and message.structured_output:
+                  print(message.structured_output)
+                  # {'company_name': 'Anthropic', 'founded_year': 2021, 'headquarters': 'San Francisco, CA'}
+      except Exception as error:
+          # 단일 쿼리 query()는 오류 결과(예: error_max_structured_output_retries)를 생성한 후 raise합니다.
+          # 오류 처리 섹션을 참조하세요.
+          print(f"세션이 오류로 종료되었습니다: {error}")
 
 
   asyncio.run(main())
@@ -134,6 +145,8 @@
 JSON Schema를 직접 작성하는 대신 [Zod](https://zod.dev/)(TypeScript) 또는 [Pydantic](https://docs.pydantic.dev/latest/)(Python)을 사용하여 스키마를 정의할 수 있습니다. 이러한 라이브러리는 JSON Schema를 생성하고 응답을 완전히 타입이 지정된 객체로 파싱하여 자동 완성 및 타입 검사를 통해 코드베이스 전체에서 사용할 수 있습니다.
 
 아래 예제는 요약, 단계 목록(각각 복잡도 수준 포함) 및 잠재적 위험이 있는 기능 구현 계획에 대한 스키마를 정의합니다. 에이전트는 기능을 계획하고 타입이 지정된 `FeaturePlan` 객체를 반환합니다. 그런 다음 `plan.summary`와 같은 속성에 액세스하고 완전한 타입 안전성으로 `plan.steps`를 반복할 수 있습니다.
+
+SDK는 JSON Schema draft-07로 스키마를 검증하므로 최신 버전을 선언하는 스키마는 거부됩니다. Zod는 기본적으로 draft 2020-12를 대상으로 하므로 스키마를 변환할 때 `target: "draft-7"`을 전달하세요.
 
 <CodeGroup>
   ```typescript TypeScript theme={null}
@@ -156,32 +169,38 @@ JSON Schema를 직접 작성하는 대신 [Zod](https://zod.dev/)(TypeScript) �
 
   type FeaturePlan = z.infer<typeof FeaturePlan>;
 
-  // JSON Schema로 변환
-  const schema = z.toJSONSchema(FeaturePlan);
+  // SDK가 예상하는 draft-07 대상을 사용하여 JSON Schema로 변환
+  const schema = z.toJSONSchema(FeaturePlan, { target: "draft-7" });
 
   // 쿼리에서 사용
-  for await (const message of query({
-    prompt:
-      "React 앱에 다크 모드 지원을 추가하는 방법을 계획하세요. 구현 단계로 나누세요.",
-    options: {
-      outputFormat: {
-        type: "json_schema",
-        schema: schema
+  try {
+    for await (const message of query({
+      prompt:
+        "React 앱에 다크 모드 지원을 추가하는 방법을 계획하세요. 구현 단계로 나누세요.",
+      options: {
+        outputFormat: {
+          type: "json_schema",
+          schema: schema
+        }
+      }
+    })) {
+      if (message.type === "result" && message.subtype === "success" && message.structured_output) {
+        // 검증하고 완전히 타입이 지정된 결과 얻기
+        const parsed = FeaturePlan.safeParse(message.structured_output);
+        if (parsed.success) {
+          const plan: FeaturePlan = parsed.data;
+          console.log(`기능: ${plan.feature_name}`);
+          console.log(`요약: ${plan.summary}`);
+          plan.steps.forEach((step) => {
+            console.log(`${step.step_number}. [${step.estimated_complexity}] ${step.description}`);
+          });
+        }
       }
     }
-  })) {
-    if (message.type === "result" && message.subtype === "success" && message.structured_output) {
-      // 검증하고 완전히 타입이 지정된 결과 얻기
-      const parsed = FeaturePlan.safeParse(message.structured_output);
-      if (parsed.success) {
-        const plan: FeaturePlan = parsed.data;
-        console.log(`기능: ${plan.feature_name}`);
-        console.log(`요약: ${plan.summary}`);
-        plan.steps.forEach((step) => {
-          console.log(`${step.step_number}. [${step.estimated_complexity}] ${step.description}`);
-        });
-      }
-    }
+  } catch (error) {
+    // 단일 쿼리()는 error_max_structured_output_retries와 같은 오류 결과를 생성한 후 throw합니다.
+    // 오류 처리 섹션을 참조하세요.
+    console.error(`세션이 오류로 종료되었습니다: ${error}`);
   }
   ```
 
@@ -205,36 +224,34 @@ JSON Schema를 직접 작성하는 대신 [Zod](https://zod.dev/)(TypeScript) �
 
 
   async def main():
-      async for message in query(
-          prompt="React 앱에 다크 모드 지원을 추가하는 방법을 계획하세요. 구현 단계로 나누세요.",
-          options=ClaudeAgentOptions(
-              output_format={
-                  "type": "json_schema",
-                  "schema": FeaturePlan.model_json_schema(),
-              }
-          ),
-      ):
-          if isinstance(message, ResultMessage) and message.structured_output:
-              # 검증하고 완전히 타입이 지정된 결과 얻기
-              plan = FeaturePlan.model_validate(message.structured_output)
-              print(f"기능: {plan.feature_name}")
-              print(f"요약: {plan.summary}")
-              for step in plan.steps:
-                  print(
-                      f"{step.step_number}. [{step.estimated_complexity}] {step.description}"
-                  )
+      try:
+          async for message in query(
+              prompt="React 앱에 다크 모드 지원을 추가하는 방법을 계획하세요. 구현 단계로 나누세요.",
+              options=ClaudeAgentOptions(
+                  output_format={
+                      "type": "json_schema",
+                      "schema": FeaturePlan.model_json_schema(),
+                  }
+              ),
+          ):
+              if isinstance(message, ResultMessage) and message.structured_output:
+                  # 검증하고 완전히 타입이 지정된 결과 얻기
+                  plan = FeaturePlan.model_validate(message.structured_output)
+                  print(f"기능: {plan.feature_name}")
+                  print(f"요약: {plan.summary}")
+                  for step in plan.steps:
+                      print(
+                          f"{step.step_number}. [{step.estimated_complexity}] {step.description}"
+                      )
+      except Exception as error:
+          # 단일 쿼리()는 error_max_structured_output_retries와 같은 오류 결과를 생성한 후 raise합니다.
+          # 오류 처리 섹션을 참조하세요.
+          print(f"세션이 오류로 종료되었습니다: {error}")
 
 
   asyncio.run(main())
   ```
 </CodeGroup>
-
-**이점:**
-
-* 완전한 타입 추론(TypeScript) 및 타입 힌트(Python)
-* `safeParse()` 또는 `model_validate()`를 사용한 런타임 검증
-* 더 나은 오류 메시지
-* 구성 가능하고 재사용 가능한 스키마
 
 <h2 id="output-format-configuration">
   출력 형식 구성
@@ -243,7 +260,7 @@ JSON Schema를 직접 작성하는 대신 [Zod](https://zod.dev/)(TypeScript) �
 `outputFormat`(TypeScript) 또는 `output_format`(Python) 옵션은 다음을 포함하는 객체를 허용합니다:
 
 * `type`: 구조화된 출력의 경우 `"json_schema"`로 설정
-* `schema`: 출력 구조를 정의하는 [JSON Schema](https://json-schema.org/understanding-json-schema/about) 객체입니다. Zod 스키마에서 `z.toJSONSchema()`를 사용하거나 Pydantic 모델에서 `.model_json_schema()`를 사용하여 생성할 수 있습니다.
+* `schema`: 출력 구조를 정의하는 [JSON Schema](https://json-schema.org/understanding-json-schema/about) 객체입니다. Zod 스키마에서 `z.toJSONSchema(schema, { target: "draft-7" })`를 사용하거나 Pydantic 모델에서 `.model_json_schema()`를 사용하여 생성할 수 있습니다.
 
 SDK는 모든 기본 타입(object, array, string, number, boolean, null), `enum`, `const`, `required`, 중첩 객체 및 `$ref` 정의를 포함한 표준 JSON Schema 기능을 지원합니다. 지원되는 기능 및 제한사항의 전체 목록은 [JSON Schema 제한사항](https://platform.claude.com/docs/ko/build-with-claude/structured-outputs#json-schema-limitations)을 참조하세요.
 
@@ -287,25 +304,30 @@ SDK는 모든 기본 타입(object, array, string, number, boolean, null), `enum
   };
 
   // 에이전트는 Grep을 사용하여 TODO를 찾고, Bash를 사용하여 git blame 정보를 얻습니다
-  for await (const message of query({
-    prompt: "이 코드베이스에서 모든 TODO 주석을 찾고 누가 추가했는지 식별하세요",
-    options: {
-      outputFormat: {
-        type: "json_schema",
-        schema: todoSchema
+  try {
+    for await (const message of query({
+      prompt: "이 코드베이스에서 모든 TODO 주석을 찾고 누가 추가했는지 식별하세요",
+      options: {
+        outputFormat: {
+          type: "json_schema",
+          schema: todoSchema
+        }
+      }
+    })) {
+      if (message.type === "result" && message.subtype === "success" && message.structured_output) {
+        const data = message.structured_output as { total_count: number; todos: Array<{ file: string; line: number; text: string; author?: string; date?: string }> };
+        console.log(`${data.total_count}개의 TODO를 찾았습니다`);
+        data.todos.forEach((todo) => {
+          console.log(`${todo.file}:${todo.line} - ${todo.text}`);
+          if (todo.author) {
+            console.log(`  ${todo.author}가 ${todo.date}에 추가함`);
+          }
+        });
       }
     }
-  })) {
-    if (message.type === "result" && message.subtype === "success" && message.structured_output) {
-      const data = message.structured_output as { total_count: number; todos: Array<{ file: string; line: number; text: string; author?: string; date?: string }> };
-      console.log(`${data.total_count}개의 TODO를 찾았습니다`);
-      data.todos.forEach((todo) => {
-        console.log(`${todo.file}:${todo.line} - ${todo.text}`);
-        if (todo.author) {
-          console.log(`  ${todo.author}가 ${todo.date}에 추가함`);
-        }
-      });
-    }
+  } catch (error) {
+    // 단일 쿼리 query()는 오류 결과(예: error_max_structured_output_retries)를 생성한 후 throw합니다. 오류 처리 섹션을 참조하세요.
+    console.error(`세션이 오류로 종료되었습니다: ${error}`);
   }
   ```
 
@@ -339,19 +361,23 @@ SDK는 모든 기본 타입(object, array, string, number, boolean, null), `enum
 
   async def main():
       # 에이전트는 Grep을 사용하여 TODO를 찾고, Bash를 사용하여 git blame 정보를 얻습니다
-      async for message in query(
-          prompt="이 코드베이스에서 모든 TODO 주석을 찾고 누가 추가했는지 식별하세요",
-          options=ClaudeAgentOptions(
-              output_format={"type": "json_schema", "schema": todo_schema}
-          ),
-      ):
-          if isinstance(message, ResultMessage) and message.structured_output:
-              data = message.structured_output
-              print(f"{data['total_count']}개의 TODO를 찾았습니다")
-              for todo in data["todos"]:
-                  print(f"{todo['file']}:{todo['line']} - {todo['text']}")
-                  if "author" in todo:
-                      print(f"  {todo['author']}가 {todo['date']}에 추가함")
+      try:
+          async for message in query(
+              prompt="이 코드베이스에서 모든 TODO 주석을 찾고 누가 추가했는지 식별하세요",
+              options=ClaudeAgentOptions(
+                  output_format={"type": "json_schema", "schema": todo_schema}
+              ),
+          ):
+              if isinstance(message, ResultMessage) and message.structured_output:
+                  data = message.structured_output
+                  print(f"{data['total_count']}개의 TODO를 찾았습니다")
+                  for todo in data["todos"]:
+                      print(f"{todo['file']}:{todo['line']} - {todo['text']}")
+                      if "author" in todo:
+                          print(f"  {todo['author']}가 {todo['date']}에 추가함")
+      except Exception as error:
+          # 단일 쿼리 query()는 오류 결과(예: error_max_structured_output_retries)를 생성한 후 raise합니다. 오류 처리 섹션을 참조하세요.
+          print(f"세션이 오류로 종료되었습니다: {error}")
 
 
   asyncio.run(main())
@@ -362,7 +388,7 @@ SDK는 모든 기본 타입(object, array, string, number, boolean, null), `enum
   오류 처리
 </h2>
 
-구조화된 출력 생성은 에이전트가 스키마와 일치하는 유효한 JSON을 생성할 수 없을 때 실패할 수 있습니다. 이는 일반적으로 스키마가 작업에 너무 복잡하거나, 작업 자체가 모호하거나, 에이전트가 검증 오류를 수정하려고 시도하는 동안 재시도 제한에 도달할 때 발생합니다. 또한 검증 실패 없이도 발생할 수 있습니다: [모델 폴백](/docs/ko/model-config#automatic-model-fallback)은 이미 완료된 출력을 스트림 중간에 취소할 수 있으며, 재시도가 이를 대체하지 않으면 실행이 동일한 오류로 종료됩니다. 디버깅하기 전에 결과 메시지의 `errors` 필드를 확인하여 두 가지 원인을 구분하십시오.
+구조화된 출력 생성은 에이전트가 스키마와 일치하는 유효한 JSON을 생성할 수 없을 때 실패할 수 있습니다. 이는 일반적으로 스키마가 작업에 너무 복잡하거나, 작업 자체가 모호하거나, 에이전트가 검증 오류를 수정하려고 시도하는 동안 재시도 제한에 도달할 때 발생합니다. 또한 검증 실패 없이도 발생할 수 있습니다: [모델 폴백](/docs/ko/model-config#automatic-model-fallback)은 이미 완료된 출력을 스트림 중간에 취소할 수 있으며, 재시도가 이를 대체하지 않으면 실행이 동일한 오류로 종료됩니다. 디버깅하기 전에 결과 메시지의 `errors` 목록을 확인하여 두 가지 원인을 구분하십시오.
 
 오류가 발생하면 결과 메시지에 무엇이 잘못되었는지 나타내는 `subtype`이 있습니다:
 
@@ -371,45 +397,88 @@ SDK는 모든 기본 타입(object, array, string, number, boolean, null), `enum
 | `success`                             | 출력이 성공적으로 생성되고 검증됨                                    |
 | `error_max_structured_output_retries` | 여러 시도 후 유효한 출력이 남지 않음(검증 실패 또는 성공적인 재시도가 없는 모델 폴백 취소) |
 
-아래 예제는 `subtype` 필드를 확인하여 출력이 성공적으로 생성되었는지 또는 실패를 처리해야 하는지 결정합니다:
+결과는 `subtype`이 `success`이지만 `structured_output` 값이 없는 경우로도 종료될 수 있습니다. 예를 들어 실행이 에이전트가 구조화된 출력을 생성하지 않고 완료될 때입니다. 이 경우도 실패로 처리하십시오. 문제 해결 항목 [structured\_output is None but the result says success](/docs/ko/agent-sdk/troubleshooting#structured_output-is-none-but-the-result-says-success)에서 이 경우를 다룹니다. 아래 예제는 `subtype`이 `success`이고 `structured_output`이 있을 때만 결과를 성공으로 처리하며, 다른 모든 결과는 실패로 처리합니다:
 
 <CodeGroup>
   ```typescript TypeScript theme={null}
-  for await (const msg of query({
-    prompt: "Extract contact info from the document",
-    options: {
-      outputFormat: {
-        type: "json_schema",
-        schema: contactSchema
+  import { query } from "@anthropic-ai/claude-agent-sdk";
+
+  const contactSchema = {
+    type: "object",
+    properties: {
+      name: { type: "string" },
+      email: { type: "string" }
+    },
+    required: ["name"]
+  };
+
+  try {
+    for await (const msg of query({
+      prompt: "Extract contact info from the document",
+      options: {
+        outputFormat: {
+          type: "json_schema",
+          schema: contactSchema
+        }
+      }
+    })) {
+      if (msg.type === "result") {
+        if (msg.subtype === "success" && msg.structured_output) {
+          // 검증된 출력 사용
+          console.log(msg.structured_output);
+        } else if (msg.subtype === "error_max_structured_output_retries") {
+          console.error("유효한 출력을 생성할 수 없습니다");
+        } else {
+          console.error("구조화된 출력 없이 실행이 종료되었습니다");
+        }
       }
     }
-  })) {
-    if (msg.type === "result") {
-      if (msg.subtype === "success" && msg.structured_output) {
-        // 검증된 출력 사용
-        console.log(msg.structured_output);
-      } else if (msg.subtype === "error_max_structured_output_retries") {
-        // 실패 처리 - 더 간단한 프롬프트로 재시도, 구조화되지 않은 것으로 폴백 등
-        console.error("유효한 출력을 생성할 수 없습니다");
-      }
-    }
+  } catch (error) {
+    // 단일 query()는 오류 결과를 생성한 후 throw합니다. 실패가
+    // 오류 결과였다면 위의 오류 subtype 분기가 이미 실행되었습니다.
+    // 연결 또는 프로세스 실패는 결과 메시지를 생성하지 않습니다.
+    console.log(`세션이 오류로 종료되었습니다: ${error}`);
   }
   ```
 
   ```python Python theme={null}
-  async for message in query(
-      prompt="Extract contact info from the document",
-      options=ClaudeAgentOptions(
-          output_format={"type": "json_schema", "schema": contact_schema}
-      ),
-  ):
-      if isinstance(message, ResultMessage):
-          if message.subtype == "success" and message.structured_output:
-              # 검증된 출력 사용
-              print(message.structured_output)
-          elif message.subtype == "error_max_structured_output_retries":
-              # 실패 처리
-              print("유효한 출력을 생성할 수 없습니다")
+  import asyncio
+  from claude_agent_sdk import query, ClaudeAgentOptions, ResultMessage
+
+  contact_schema = {
+      "type": "object",
+      "properties": {
+          "name": {"type": "string"},
+          "email": {"type": "string"},
+      },
+      "required": ["name"],
+  }
+
+
+  async def main():
+      try:
+          async for message in query(
+              prompt="Extract contact info from the document",
+              options=ClaudeAgentOptions(
+                  output_format={"type": "json_schema", "schema": contact_schema}
+              ),
+          ):
+              if isinstance(message, ResultMessage):
+                  if message.subtype == "success" and message.structured_output:
+                      # 검증된 출력 사용
+                      print(message.structured_output)
+                  elif message.subtype == "error_max_structured_output_retries":
+                      print("유효한 출력을 생성할 수 없습니다")
+                  else:
+                      print("구조화된 출력 없이 실행이 종료되었습니다")
+      except Exception as error:
+          # 단일 query()는 오류 결과를 생성한 후 raise합니다. 실패가
+          # 오류 결과였다면 위의 오류 subtype 분기가 이미 실행되었습니다.
+          # 연결 또는 프로세스 실패는 결과 메시지를 생성하지 않습니다.
+          print(f"세션이 오류로 종료되었습니다: {error}")
+
+
+  asyncio.run(main())
   ```
 </CodeGroup>
 

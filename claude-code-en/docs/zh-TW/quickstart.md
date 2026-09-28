@@ -17,7 +17,7 @@
 * 已開啟的終端或命令提示字元
   * 如果您從未使用過終端，請查看[終端指南](/docs/zh-TW/terminal-guide)
 * 一個可以使用的程式碼專案
-* 一個 [Claude 訂閱](https://claude.com/pricing?utm_source=claude_code\&utm_medium=docs\&utm_content=quickstart_prereq)（Pro、Max、Team 或 Enterprise）、[Claude Console](https://console.anthropic.com/) 帳戶，或透過[支援的雲端提供商](/docs/zh-TW/third-party-integrations)存取
+* 一個 [Claude 訂閱](https://claude.com/pricing?utm_source=claude_code\&utm_medium=docs\&utm_content=quickstart_prereq)（Pro、Max、Team 或 Enterprise）、[Claude Console](https://platform.claude.com/) 帳戶，或透過[支援的雲端提供商](/docs/zh-TW/third-party-integrations)存取
 
 <Note>
   本指南涵蓋終端 CLI。Claude Code 也可在[網頁](https://claude.ai/code)、[桌面應用程式](/docs/zh-TW/desktop)、[VS Code](/docs/zh-TW/vs-code) 和 [JetBrains IDE](/docs/zh-TW/jetbrains)、[Slack](/docs/zh-TW/slack) 中使用，以及透過 [GitHub Actions](/docs/zh-TW/github-actions) 和 [GitLab](/docs/zh-TW/gitlab-ci-cd) 進行 CI/CD。請參閱[所有介面](/docs/zh-TW/overview#use-claude-code-everywhere)。
@@ -27,36 +27,36 @@
   步驟 1：安裝 Claude Code
 </h2>
 
-To install Claude Code, use one of the following methods:
+若要安裝 Claude Code，請使用下列其中一種方法：
 
 <Tabs>
-  <Tab title="Native Install (Recommended)">
-    **macOS, Linux, WSL:**
+  <Tab title="原生安裝（建議）">
+    **macOS、Linux、WSL：**
 
     ```bash theme={null}
     curl -fsSL https://claude.ai/install.sh | bash
     ```
 
-    **Windows PowerShell:**
+    **Windows PowerShell：**
 
     ```powershell theme={null}
     irm https://claude.ai/install.ps1 | iex
     ```
 
-    **Windows CMD:**
+    **Windows CMD：**
 
     ```batch theme={null}
     curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del install.cmd
     ```
 
-    If you see `The token '&&' is not a valid statement separator`, you're in PowerShell, not CMD. If you see `'irm' is not recognized as an internal or external command`, you're in CMD, not PowerShell. Your prompt shows `PS C:\` when you're in PowerShell and `C:\` without the `PS` when you're in CMD.
+    如果您看到 `The token '&&' is not a valid statement separator`，表示您在 PowerShell 中，而非 CMD。如果您看到 `'irm' is not recognized as an internal or external command`，表示您在 CMD 中，而非 PowerShell。當您在 PowerShell 中時，提示符會顯示 `PS C:\`，而在 CMD 中時會顯示 `C:\`（不含 `PS`）。
 
-    If the install command fails with `syntax error near unexpected token '<'`, a `403`, or another curl error, see [Troubleshoot installation](/docs/en/troubleshoot-install#find-your-error) to match the error to a fix and for alternative install methods.
+    如果安裝命令失敗並出現 `syntax error near unexpected token '<'`、`403` 或其他 curl 錯誤，請參閱[疑難排解安裝](/docs/zh-TW/troubleshoot-install#find-your-error)以將錯誤與修正相對應，並查看替代安裝方法。
 
-    [Git for Windows](https://git-scm.com/downloads/win) is recommended on native Windows so Claude Code can use the Bash tool. If Git for Windows is not installed, Claude Code uses PowerShell as the shell tool instead. WSL setups do not need Git for Windows.
+    建議在原生 Windows 上安裝 [Git for Windows](https://git-scm.com/downloads/win)，以便 Claude Code 可以使用 Bash 工具。如果未安裝 Git for Windows，Claude Code 會改用 PowerShell 作為殼層工具。WSL 設定不需要 Git for Windows。
 
     <Info>
-      Native installations automatically update in the background to keep you on the latest version.
+      原生安裝會在背景自動更新，以保持您使用最新版本。
     </Info>
   </Tab>
 
@@ -65,10 +65,10 @@ To install Claude Code, use one of the following methods:
     brew install --cask claude-code
     ```
 
-    Homebrew offers two casks. `claude-code` tracks the stable release channel, which is typically about a week behind and skips releases with major regressions. `claude-code@latest` tracks the latest channel and receives new versions as soon as they ship.
+    Homebrew 提供兩個 casks。`claude-code` 追蹤穩定版本通道，通常比最新版本晚約一週，並跳過有重大迴歸的版本。`claude-code@latest` 追蹤最新通道，並在新版本發佈時立即接收。
 
     <Info>
-      Homebrew installations do not auto-update. Run `brew upgrade claude-code` or `brew upgrade claude-code@latest`, depending on which cask you installed, to get the latest features and security fixes.
+      Homebrew 安裝不會自動更新。執行 `brew upgrade claude-code` 或 `brew upgrade claude-code@latest`（取決於您安裝的 cask），以取得最新功能和安全修正。
     </Info>
   </Tab>
 
@@ -78,12 +78,20 @@ To install Claude Code, use one of the following methods:
     ```
 
     <Info>
-      WinGet installations do not auto-update. Run `winget upgrade Anthropic.ClaudeCode` periodically to get the latest features and security fixes.
+      WinGet 安裝不會自動更新。定期執行 `winget upgrade Anthropic.ClaudeCode` 以取得最新功能和安全修正。
     </Info>
   </Tab>
 </Tabs>
 
-You can also install with [apt, dnf, or apk](/docs/en/setup#install-with-linux-package-managers) on Debian, Fedora, RHEL, and Alpine.
+您也可以在 Debian、Fedora、RHEL 和 Alpine 上使用 [apt、dnf 或 apk](/docs/zh-TW/setup#install-with-linux-package-managers) 進行安裝。
+
+若要確認安裝成功，請執行：
+
+```bash theme={null}
+claude --version
+```
+
+此命令會列印版本號碼，後面跟著 `(Claude Code)`。
 
 <h2 id="step-2-log-in-to-your-account">
   步驟 2：登入您的帳戶
@@ -95,20 +103,20 @@ Claude Code 需要帳戶才能使用。使用 `claude` 命令啟動互動式工�
 claude
 ```
 
-對於 Claude 訂閱或 Console 帳戶，請按照提示在瀏覽器中完成驗證。若要稍後切換帳戶或重新驗證，請在執行中的工作階段內輸入 `/login`：
+對於 Claude 訂閱或 Console 帳戶，請按照提示在瀏覽器中完成驗證。如果您已設定 `ANTHROPIC_API_KEY` 環境變數，Claude Code 會略過登入提示，改為要求您核准該金鑰。若要稍後切換帳戶或重新驗證，請在執行中的工作階段內輸入 `/login`：
 
-```text theme={null}
+```text wrap theme={null}
 /login
 ```
 
 您可以使用以下任何帳戶類型登入：
 
 * [Claude Pro、Max、Team 或 Enterprise](https://claude.com/pricing?utm_source=claude_code\&utm_medium=docs\&utm_content=quickstart_login)（推薦）
-* [Claude Console](https://console.anthropic.com/)（具有預付額度的 API 存取）。首次登入時，Console 中會自動建立「Claude Code」工作區以進行集中成本追蹤。
+* [Claude Console](https://platform.claude.com/)（具有預付額度的 API 存取）。首次登入時，Console 中會自動建立「Claude Code」工作區以進行集中成本追蹤。
 * [Amazon Bedrock、Google Cloud 的 Agent Platform 或 Microsoft Foundry](/docs/zh-TW/third-party-integrations)（企業雲端提供商）
 * 自行託管的 [Claude 應用程式閘道](/docs/zh-TW/claude-apps-gateway)（如果您的組織執行一個的話）：您的管理員會預先設定閘道 URL，`/login` 會直接在 **Cloud gateway** 畫面上開啟，供您使用公司 SSO 登入
 
-登入後，您的認證將被儲存，您無需再次登入。
+登入後，您的認證將被儲存，您無需再次登入。深入瞭解 [認證管理](/docs/zh-TW/authentication#credential-management)。
 
 <h2 id="step-3-start-your-first-session">
   步驟 3：啟動您的第一個工作階段
@@ -121,11 +129,9 @@ cd /path/to/your/project
 claude
 ```
 
-您將看到 Claude Code 提示，其中顯示版本、目前的模型和工作目錄。輸入 `/help` 以查看可用命令，或輸入 `/resume` 以繼續之前的對話。
+將 `/path/to/your/project` 替換為您要處理的專案路徑。
 
-<Tip>
-  登入後（步驟 2），您的認證將儲存在您的系統上。在[認證管理](/docs/zh-TW/authentication#credential-management)中了解更多。
-</Tip>
+您將看到 Claude Code 提示，其中顯示版本、目前的模型和工作目錄。輸入 `/help` 以查看可用命令，或輸入 `/resume` 以繼續之前的對話。
 
 <h2 id="step-4-ask-your-first-question">
   步驟 4：提出您的第一個問題
@@ -133,35 +139,35 @@ claude
 
 讓我們從了解您的程式碼庫開始。嘗試以下命令之一：
 
-```text theme={null}
+```text wrap theme={null}
 what does this project do?
 ```
 
 Claude 將分析您的檔案並提供摘要。您也可以提出更具體的問題：
 
-```text theme={null}
+```text wrap theme={null}
 what technologies does this project use?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 where is the main entry point?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 explain the folder structure
 ```
 
 您也可以詢問 Claude 其自身的功能：
 
-```text theme={null}
+```text wrap theme={null}
 what can Claude Code do?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 how do I create custom skills in Claude Code?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 can Claude Code work with Docker?
 ```
 
@@ -175,19 +181,16 @@ can Claude Code work with Docker?
 
 現在讓我們讓 Claude Code 進行一些實際的編碼。嘗試一個簡單的任務：
 
-```text theme={null}
+```text wrap theme={null}
 add a hello world function to the main file
 ```
 
-Claude Code 將：
+Claude Code 找到適當的檔案並向您顯示變更。如果它在進行變更前詢問，請選擇 **是** 以批准。
 
-1. 找到適當的檔案
-2. 向您顯示建議的變更
-3. 要求您的批准
-4. 進行編輯
+Auto mode 是 [內建的起始權限模式](/docs/zh-TW/permission-modes#eliminate-prompts-with-auto-mode)，適用於 Pro、Max 和 Team 方案上的互動式終端工作階段：分類器會檢查動作而不是由您檢查，Claude 可以在不詢問的情況下編輯大多數檔案並執行大多數命令。在其他方案上，Manual mode 是內建的起始權限模式。對於您安裝後立即開始的工作階段，請參閱 [安裝或升級後的第一個工作階段](/docs/zh-TW/env-vars#first-session-after-an-install-or-upgrade)。
 
 <Note>
-  Claude Code 在修改檔案前始終要求許可。您可以批准個別變更或為工作階段啟用「全部接受」模式。
+  您的設定或您的組織可以設定不同的起始權限模式。[工作階段開始時的權限模式](/docs/zh-TW/permission-modes#which-mode-a-session-starts-in) 列出了相關內容。隨時按 `Shift+Tab` 以切換您所在工作階段的權限模式。
 </Note>
 
 <h2 id="step-6-use-git-with-claude-code">
@@ -196,25 +199,25 @@ Claude Code 將：
 
 Claude Code 使 Git 操作變得對話式：
 
-```text theme={null}
+```text wrap theme={null}
 what files have I changed?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 commit my changes with a descriptive message
 ```
 
 您也可以提示進行更複雜的 Git 操作：
 
-```text theme={null}
+```text wrap theme={null}
 create a new branch called feature/quickstart
 ```
 
-```text theme={null}
+```text wrap theme={null}
 show me the last 5 commits
 ```
 
-```text theme={null}
+```text wrap theme={null}
 help me resolve merge conflicts
 ```
 
@@ -226,13 +229,13 @@ Claude 擅長除錯和功能實現。
 
 用自然語言描述您想要的內容：
 
-```text theme={null}
+```text wrap theme={null}
 add input validation to the user registration form
 ```
 
 或修復現有問題：
 
-```text theme={null}
+```text wrap theme={null}
 there's a bug where users can submit empty forms - fix it
 ```
 
@@ -251,25 +254,25 @@ Claude Code 將：
 
 **重構程式碼**
 
-```text theme={null}
+```text wrap theme={null}
 refactor the authentication module to use async/await instead of callbacks
 ```
 
 **編寫測試**
 
-```text theme={null}
+```text wrap theme={null}
 write unit tests for the calculator functions
 ```
 
 **更新文件**
 
-```text theme={null}
+```text wrap theme={null}
 update the README with installation instructions
 ```
 
 **程式碼審查**
 
-```text theme={null}
+```text wrap theme={null}
 review my changes and suggest improvements
 ```
 
@@ -288,18 +291,18 @@ review my changes and suggest improvements
 | 命令                  | 功能            | 範例                                  |
 | ------------------- | ------------- | ----------------------------------- |
 | `claude`            | 啟動互動模式        | `claude`                            |
-| `claude "task"`     | 執行一次性任務       | `claude "fix the build error"`      |
+| `claude "task"`     | 使用初始提示啟動互動模式  | `claude "fix the build error"`      |
 | `claude -p "query"` | 執行一次性查詢，然後退出  | `claude -p "explain this function"` |
 | `claude -c`         | 在目前目錄中繼續最近的對話 | `claude -c`                         |
 | `claude -r`         | 恢復之前的對話       | `claude -r`                         |
 
 **工作階段命令**
 
-| 命令               | 功能             | 範例       |
-| ---------------- | -------------- | -------- |
-| `/clear`         | 清除對話歷史         | `/clear` |
-| `/help`          | 顯示可用命令         | `/help`  |
-| `/exit` 或 Ctrl+D | 退出 Claude Code | `/exit`  |
+| 命令                  | 功能             | 範例       |
+| ------------------- | -------------- | -------- |
+| `/clear`            | 清除對話歷史         | `/clear` |
+| `/help`             | 顯示可用命令         | `/help`  |
+| `/exit` 或 Ctrl+D 兩次 | 退出 Claude Code | `/exit`  |
 
 請參閱 [CLI 參考](/docs/zh-TW/cli-reference)以取得完整的 shell 命令清單，以及 [命令參考](/docs/zh-TW/commands)以取得完整的工作階段命令清單。
 
@@ -319,7 +322,7 @@ review my changes and suggest improvements
   <Accordion title="使用逐步說明">
     將複雜任務分解為步驟：
 
-    ```text theme={null}
+    ```text wrap theme={null}
     1. create a new database table for user profiles
     2. create an API endpoint to get and update user profiles
     3. build a webpage that allows users to see and edit their information
@@ -329,11 +332,11 @@ review my changes and suggest improvements
   <Accordion title="讓 Claude 先探索">
     在進行變更之前，讓 Claude 了解您的程式碼：
 
-    ```text theme={null}
+    ```text wrap theme={null}
     analyze the database schema
     ```
 
-    ```text theme={null}
+    ```text wrap theme={null}
     build a dashboard showing products that are most frequently returned by our UK customers
     ```
   </Accordion>
@@ -374,6 +377,7 @@ review my changes and suggest improvements
   獲取幫助
 </h2>
 
-* **在 Claude Code 中**：輸入 `/help` 或詢問「how do I...」
+* **在 Claude Code 中**：輸入 `/help` 或詢問「how do I」問題
 * **文件**：您在這裡！瀏覽其他指南
+* **課程**：參加 [Claude Code 101](https://academy.claude.com/courses/claude-code-101) 和其他免費自學課程，位於 [Claude Academy](https://academy.claude.com/)
 * **社群**：加入我們的 [Discord](https://www.anthropic.com/discord) 以獲取提示和支援

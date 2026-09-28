@@ -105,9 +105,12 @@ Pertama, buat sumber daya Claude di Azure:
 1. Navigasikan ke [portal Microsoft Foundry](https://ai.azure.com/)
 2. Buat sumber daya baru, catat nama sumber daya Anda
 3. Buat deployment untuk model Claude, catat nama deployment yang Anda berikan untuk masing-masing; Anda akan menetapkan nama-nama ini sebagai variabel model di langkah 4:
+
    * Claude Opus
    * Claude Sonnet
    * Claude Haiku
+
+   Ketika Anda mengonfigurasi deployment, Anda juga memilih [opsi hostingnya](https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry#hosting-options), yang menentukan apakah inferensi berjalan di Azure atau di infrastruktur Anthropic.
 
 <h3 id="2-configure-azure-credentials">
   2) Konfigurasi kredensial Azure
@@ -179,7 +182,7 @@ export ANTHROPIC_FOUNDRY_RESOURCE={resource}
 
 Atur variabel model agar sesuai dengan nama deployment yang Anda buat di langkah 1.
 
-Tanpa `ANTHROPIC_DEFAULT_OPUS_MODEL`, alias `opus` di Microsoft Foundry diselesaikan ke Opus 4.6. Aturnya ke ID Opus 4.8 untuk menggunakan model terbaru:
+Tanpa `ANTHROPIC_DEFAULT_OPUS_MODEL`, alias `opus` di Microsoft Foundry diselesaikan ke Opus 4.6. Aturnya ke ID model Opus yang lebih baru, seperti Opus 4.8:
 
 ```bash theme={null}
 export ANTHROPIC_DEFAULT_OPUS_MODEL='claude-opus-4-8'
@@ -196,6 +199,8 @@ Untuk ID model saat ini dan legacy, lihat [Models overview](https://platform.cla
 ```bash theme={null}
 export ENABLE_PROMPT_CACHING_1H=1
 ```
+
+Untuk menetapkan TTL berbeda untuk percakapan utama Anda dan untuk permintaan yang Claude Code buat di luar percakapan tersebut, [pilih TTL sendiri](/docs/id/prompt-caching#choose-the-ttl-yourself).
 
 <h3 id="5-run-claude-code">
   5. Jalankan Claude Code

@@ -17,7 +17,7 @@ Pastikan Anda memiliki:
 * Terminal atau command prompt yang terbuka
   * Jika Anda belum pernah menggunakan terminal sebelumnya, lihat [panduan terminal](/docs/id/terminal-guide)
 * Proyek kode untuk dikerjakan
-* [Langganan Claude](https://claude.com/pricing?utm_source=claude_code\&utm_medium=docs\&utm_content=quickstart_prereq) (Pro, Max, Team, atau Enterprise), akun [Claude Console](https://console.anthropic.com/), atau akses melalui [penyedia cloud yang didukung](/docs/id/third-party-integrations)
+* [Langganan Claude](https://claude.com/pricing?utm_source=claude_code\&utm_medium=docs\&utm_content=quickstart_prereq) (Pro, Max, Team, atau Enterprise), akun [Claude Console](https://platform.claude.com/), atau akses melalui [penyedia cloud yang didukung](/docs/id/third-party-integrations)
 
 <Note>
   Panduan ini mencakup CLI terminal. Claude Code juga tersedia di [web](https://claude.ai/code), sebagai [aplikasi desktop](/docs/id/desktop), di [VS Code](/docs/id/vs-code) dan [IDE JetBrains](/docs/id/jetbrains), di [Slack](/docs/id/slack), dan di CI/CD dengan [GitHub Actions](/docs/id/github-actions) dan [GitLab](/docs/id/gitlab-ci-cd). Lihat [semua antarmuka](/docs/id/overview#use-claude-code-everywhere).
@@ -27,10 +27,10 @@ Pastikan Anda memiliki:
   Langkah 1: Instal Claude Code
 </h2>
 
-To install Claude Code, use one of the following methods:
+Untuk menginstal Claude Code, gunakan salah satu metode berikut:
 
 <Tabs>
-  <Tab title="Native Install (Recommended)">
+  <Tab title="Native Install (Direkomendasikan)">
     **macOS, Linux, WSL:**
 
     ```bash theme={null}
@@ -49,14 +49,14 @@ To install Claude Code, use one of the following methods:
     curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del install.cmd
     ```
 
-    If you see `The token '&&' is not a valid statement separator`, you're in PowerShell, not CMD. If you see `'irm' is not recognized as an internal or external command`, you're in CMD, not PowerShell. Your prompt shows `PS C:\` when you're in PowerShell and `C:\` without the `PS` when you're in CMD.
+    Jika Anda melihat `The token '&&' is not a valid statement separator`, Anda berada di PowerShell, bukan CMD. Jika Anda melihat `'irm' is not recognized as an internal or external command`, Anda berada di CMD, bukan PowerShell. Prompt Anda menunjukkan `PS C:\` ketika Anda berada di PowerShell dan `C:\` tanpa `PS` ketika Anda berada di CMD.
 
-    If the install command fails with `syntax error near unexpected token '<'`, a `403`, or another curl error, see [Troubleshoot installation](/docs/en/troubleshoot-install#find-your-error) to match the error to a fix and for alternative install methods.
+    Jika perintah instalasi gagal dengan `syntax error near unexpected token '<'`, `403`, atau kesalahan curl lainnya, lihat [Troubleshoot installation](/docs/id/troubleshoot-install#find-your-error) untuk mencocokkan kesalahan dengan perbaikan dan untuk metode instalasi alternatif.
 
-    [Git for Windows](https://git-scm.com/downloads/win) is recommended on native Windows so Claude Code can use the Bash tool. If Git for Windows is not installed, Claude Code uses PowerShell as the shell tool instead. WSL setups do not need Git for Windows.
+    [Git for Windows](https://git-scm.com/downloads/win) direkomendasikan pada Windows native sehingga Claude Code dapat menggunakan alat Bash. Jika Git for Windows tidak diinstal, Claude Code menggunakan PowerShell sebagai alat shell sebagai gantinya. Pengaturan WSL tidak memerlukan Git for Windows.
 
     <Info>
-      Native installations automatically update in the background to keep you on the latest version.
+      Instalasi native secara otomatis diperbarui di latar belakang untuk membuat Anda tetap menggunakan versi terbaru.
     </Info>
   </Tab>
 
@@ -65,10 +65,10 @@ To install Claude Code, use one of the following methods:
     brew install --cask claude-code
     ```
 
-    Homebrew offers two casks. `claude-code` tracks the stable release channel, which is typically about a week behind and skips releases with major regressions. `claude-code@latest` tracks the latest channel and receives new versions as soon as they ship.
+    Homebrew menawarkan dua casks. `claude-code` melacak saluran rilis stabil, yang biasanya sekitar seminggu di belakang dan melewatkan rilis dengan regresi besar. `claude-code@latest` melacak saluran terbaru dan menerima versi baru segera setelah mereka dirilis.
 
     <Info>
-      Homebrew installations do not auto-update. Run `brew upgrade claude-code` or `brew upgrade claude-code@latest`, depending on which cask you installed, to get the latest features and security fixes.
+      Instalasi Homebrew tidak auto-update. Jalankan `brew upgrade claude-code` atau `brew upgrade claude-code@latest`, tergantung pada cask mana yang Anda instal, untuk mendapatkan fitur terbaru dan perbaikan keamanan.
     </Info>
   </Tab>
 
@@ -78,12 +78,20 @@ To install Claude Code, use one of the following methods:
     ```
 
     <Info>
-      WinGet installations do not auto-update. Run `winget upgrade Anthropic.ClaudeCode` periodically to get the latest features and security fixes.
+      Instalasi WinGet tidak auto-update. Jalankan `winget upgrade Anthropic.ClaudeCode` secara berkala untuk mendapatkan fitur terbaru dan perbaikan keamanan.
     </Info>
   </Tab>
 </Tabs>
 
-You can also install with [apt, dnf, or apk](/docs/en/setup#install-with-linux-package-managers) on Debian, Fedora, RHEL, and Alpine.
+Anda juga dapat menginstal dengan [apt, dnf, atau apk](/docs/id/setup#install-with-linux-package-managers) pada Debian, Fedora, RHEL, dan Alpine.
+
+Untuk mengonfirmasi bahwa instalasi berhasil, jalankan:
+
+```bash theme={null}
+claude --version
+```
+
+Perintah ini mencetak nomor versi diikuti oleh `(Claude Code)`.
 
 <h2 id="step-2-log-in-to-your-account">
   Langkah 2: Masuk ke akun Anda
@@ -95,20 +103,20 @@ Claude Code memerlukan akun untuk digunakan. Mulai sesi interaktif dengan perint
 claude
 ```
 
-Untuk akun langganan Claude atau Console, ikuti petunjuk untuk menyelesaikan autentikasi di browser Anda. Untuk beralih akun nanti atau melakukan autentikasi ulang, ketik `/login` di dalam sesi yang sedang berjalan:
+Untuk akun langganan Claude atau Console, ikuti petunjuk untuk menyelesaikan autentikasi di browser Anda. Jika Anda telah menetapkan variabel lingkungan `ANTHROPIC_API_KEY`, Claude Code melewati prompt login dan meminta Anda untuk menyetujui kunci sebagai gantinya. Untuk beralih akun nanti atau melakukan autentikasi ulang, ketik `/login` di dalam sesi yang sedang berjalan:
 
-```text theme={null}
+```text wrap theme={null}
 /login
 ```
 
 Anda dapat masuk menggunakan salah satu jenis akun ini:
 
 * [Claude Pro, Max, Team, atau Enterprise](https://claude.com/pricing?utm_source=claude_code\&utm_medium=docs\&utm_content=quickstart_login) (direkomendasikan)
-* [Claude Console](https://console.anthropic.com/) (akses API dengan kredit prabayar). Pada login pertama, ruang kerja "Claude Code" secara otomatis dibuat di Console untuk pelacakan biaya terpusat.
+* [Claude Console](https://platform.claude.com/) (akses API dengan kredit prabayar). Pada login pertama, ruang kerja "Claude Code" secara otomatis dibuat di Console untuk pelacakan biaya terpusat.
 * [Amazon Bedrock, Google Cloud's Agent Platform, atau Microsoft Foundry](/docs/id/third-party-integrations) (penyedia cloud enterprise)
 * Gateway [Claude apps](/docs/id/claude-apps-gateway) yang di-host sendiri, jika organisasi Anda menjalankannya: admin Anda telah mengkonfigurasi URL gateway sebelumnya, dan `/login` membuka langsung layar **Cloud gateway** untuk Anda masuk dengan SSO perusahaan
 
-Setelah masuk, kredensial Anda disimpan dan Anda tidak perlu masuk lagi.
+Setelah masuk, kredensial Anda disimpan dan Anda tidak perlu masuk lagi. Pelajari lebih lanjut di [Manajemen Kredensial](/docs/id/authentication#credential-management).
 
 <h2 id="step-3-start-your-first-session">
   Langkah 3: Mulai sesi pertama Anda
@@ -121,11 +129,9 @@ cd /path/to/your/project
 claude
 ```
 
-Anda akan melihat prompt Claude Code dengan versi, model saat ini, dan direktori kerja yang ditampilkan di atasnya. Ketik `/help` untuk perintah yang tersedia atau `/resume` untuk melanjutkan percakapan sebelumnya.
+Ganti `/path/to/your/project` dengan jalur ke proyek yang ingin Anda kerjakan.
 
-<Tip>
-  Setelah masuk (Langkah 2), kredensial Anda disimpan di sistem Anda. Pelajari lebih lanjut di [Manajemen Kredensial](/docs/id/authentication#credential-management).
-</Tip>
+Anda akan melihat prompt Claude Code dengan versi, model saat ini, dan direktori kerja yang ditampilkan di atasnya. Ketik `/help` untuk perintah yang tersedia atau `/resume` untuk melanjutkan percakapan sebelumnya.
 
 <h2 id="step-4-ask-your-first-question">
   Langkah 4: Ajukan pertanyaan pertama Anda
@@ -133,35 +139,35 @@ Anda akan melihat prompt Claude Code dengan versi, model saat ini, dan direktori
 
 Mari kita mulai dengan memahami basis kode Anda. Coba salah satu perintah ini:
 
-```text theme={null}
+```text wrap theme={null}
 apa yang dilakukan proyek ini?
 ```
 
 Claude akan menganalisis file Anda dan memberikan ringkasan. Anda juga dapat mengajukan pertanyaan yang lebih spesifik:
 
-```text theme={null}
+```text wrap theme={null}
 teknologi apa yang digunakan proyek ini?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 di mana titik masuk utama?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 jelaskan struktur folder
 ```
 
 Anda juga dapat menanyakan Claude tentang kemampuannya sendiri:
 
-```text theme={null}
+```text wrap theme={null}
 apa yang dapat dilakukan Claude Code?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 bagaimana cara membuat skills kustom di Claude Code?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 bisakah Claude Code bekerja dengan Docker?
 ```
 
@@ -175,19 +181,16 @@ bisakah Claude Code bekerja dengan Docker?
 
 Sekarang mari buat Claude Code melakukan beberapa pengkodean aktual. Coba tugas sederhana:
 
-```text theme={null}
+```text wrap theme={null}
 tambahkan fungsi hello world ke file utama
 ```
 
-Claude Code akan:
+Claude Code menemukan file yang sesuai dan menampilkan perubahan kepada Anda. Jika diminta sebelum membuat perubahan, pilih **Ya** untuk menyetujui.
 
-1. Menemukan file yang sesuai
-2. Menampilkan perubahan yang diusulkan
-3. Meminta persetujuan Anda
-4. Membuat edit
+Mode Auto adalah [mode izin awal bawaan](/docs/id/permission-modes#eliminate-prompts-with-auto-mode) untuk sesi terminal interaktif pada paket Pro, Max, dan Team: pengklasifikasi meninjau tindakan alih-alih Anda, dan Claude mengedit sebagian besar file dan menjalankan sebagian besar perintah tanpa bertanya. Pada paket lain, mode Manual adalah mode izin awal bawaan. Untuk sesi yang Anda mulai tepat setelah instalasi, lihat [Sesi pertama setelah instalasi atau upgrade](/docs/id/env-vars#first-session-after-an-install-or-upgrade).
 
 <Note>
-  Claude Code selalu meminta izin sebelum memodifikasi file. Anda dapat menyetujui perubahan individual atau mengaktifkan mode "Terima semua" untuk sesi.
+  Pengaturan Anda atau organisasi Anda dapat menetapkan mode izin awal yang berbeda. [Mode izin mana yang dimulai sesi](/docs/id/permission-modes#which-mode-a-session-starts-in) mencantumkan apa yang dilakukan. Tekan `Shift+Tab` kapan saja untuk beralih mode izin sesi yang Anda gunakan.
 </Note>
 
 <h2 id="step-6-use-git-with-claude-code">
@@ -196,25 +199,25 @@ Claude Code akan:
 
 Claude Code membuat operasi Git menjadi percakapan:
 
-```text theme={null}
+```text wrap theme={null}
 file apa yang telah saya ubah?
 ```
 
-```text theme={null}
+```text wrap theme={null}
 komit perubahan saya dengan pesan deskriptif
 ```
 
 Anda juga dapat meminta operasi Git yang lebih kompleks:
 
-```text theme={null}
+```text wrap theme={null}
 buat cabang baru bernama feature/quickstart
 ```
 
-```text theme={null}
+```text wrap theme={null}
 tunjukkan 5 komit terakhir saya
 ```
 
-```text theme={null}
+```text wrap theme={null}
 bantu saya menyelesaikan konflik penggabungan
 ```
 
@@ -226,13 +229,13 @@ Claude mahir dalam debugging dan implementasi fitur.
 
 Jelaskan apa yang Anda inginkan dalam bahasa alami:
 
-```text theme={null}
+```text wrap theme={null}
 tambahkan validasi input ke formulir pendaftaran pengguna
 ```
 
 Atau perbaiki masalah yang ada:
 
-```text theme={null}
+```text wrap theme={null}
 ada bug di mana pengguna dapat mengirimkan formulir kosong - perbaiki
 ```
 
@@ -251,25 +254,25 @@ Ada beberapa cara untuk bekerja dengan Claude:
 
 **Refaktor kode**
 
-```text theme={null}
+```text wrap theme={null}
 refaktor modul autentikasi untuk menggunakan async/await alih-alih callback
 ```
 
 **Tulis tes**
 
-```text theme={null}
+```text wrap theme={null}
 tulis unit test untuk fungsi kalkulator
 ```
 
 **Perbarui dokumentasi**
 
-```text theme={null}
+```text wrap theme={null}
 perbarui README dengan instruksi instalasi
 ```
 
 **Tinjauan kode**
 
-```text theme={null}
+```text wrap theme={null}
 tinjau perubahan saya dan sarankan perbaikan
 ```
 
@@ -288,18 +291,18 @@ Berikut adalah perintah paling penting untuk penggunaan sehari-hari. Perintah sh
 | Perintah            | Apa yang dilakukannya                              | Contoh                              |
 | ------------------- | -------------------------------------------------- | ----------------------------------- |
 | `claude`            | Mulai mode interaktif                              | `claude`                            |
-| `claude "task"`     | Jalankan tugas satu kali                           | `claude "perbaiki kesalahan build"` |
+| `claude "task"`     | Mulai mode interaktif dengan prompt awal           | `claude "perbaiki kesalahan build"` |
 | `claude -p "query"` | Jalankan kueri sekali, lalu keluar                 | `claude -p "jelaskan fungsi ini"`   |
 | `claude -c`         | Lanjutkan percakapan terbaru di direktori saat ini | `claude -c`                         |
 | `claude -r`         | Lanjutkan percakapan sebelumnya                    | `claude -r`                         |
 
 **Perintah sesi**
 
-| Perintah            | Apa yang dilakukannya            | Contoh   |
-| ------------------- | -------------------------------- | -------- |
-| `/clear`            | Hapus riwayat percakapan         | `/clear` |
-| `/help`             | Tampilkan perintah yang tersedia | `/help`  |
-| `/exit` atau Ctrl+D | Keluar dari Claude Code          | `/exit`  |
+| Perintah                     | Apa yang dilakukannya            | Contoh   |
+| ---------------------------- | -------------------------------- | -------- |
+| `/clear`                     | Hapus riwayat percakapan         | `/clear` |
+| `/help`                      | Tampilkan perintah yang tersedia | `/help`  |
+| `/exit` atau Ctrl+D dua kali | Keluar dari Claude Code          | `/exit`  |
 
 Lihat [referensi CLI](/docs/id/cli-reference) untuk daftar lengkap perintah shell dan [referensi perintah](/docs/id/commands) untuk daftar lengkap perintah sesi.
 
@@ -319,7 +322,7 @@ Untuk informasi lebih lanjut, lihat [praktik terbaik](/docs/id/best-practices) d
   <Accordion title="Gunakan instruksi langkah demi langkah">
     Pecah tugas kompleks menjadi langkah-langkah:
 
-    ```text theme={null}
+    ```text wrap theme={null}
     1. buat tabel database baru untuk profil pengguna
     2. buat endpoint API untuk mendapatkan dan memperbarui profil pengguna
     3. bangun halaman web yang memungkinkan pengguna melihat dan mengedit informasi mereka
@@ -329,17 +332,17 @@ Untuk informasi lebih lanjut, lihat [praktik terbaik](/docs/id/best-practices) d
   <Accordion title="Biarkan Claude menjelajahi terlebih dahulu">
     Sebelum membuat perubahan, biarkan Claude memahami kode Anda:
 
-    ```text theme={null}
+    ```text wrap theme={null}
     analisis skema database
     ```
 
-    ```text theme={null}
+    ```text wrap theme={null}
     bangun dasbor yang menampilkan produk yang paling sering dikembalikan oleh pelanggan Inggris kami
     ```
   </Accordion>
 
   <Accordion title="Hemat waktu dengan pintasan keyboard">
-    * Tekan `/` untuk melihat semua perintah dan skills
+    * Tekan `/` untuk melihat perintah dan skills yang tersedia untuk Anda
     * Gunakan Tab untuk penyelesaian perintah
     * Tekan ↑ untuk riwayat perintah
     * Tekan `Shift+Tab` untuk mengubah mode izin
@@ -376,4 +379,5 @@ Sekarang yang Anda telah mempelajari dasar-dasarnya, jelajahi fitur-fitur yang l
 
 * **Di Claude Code**: Ketik `/help` atau tanya "bagaimana cara saya..."
 * **Dokumentasi**: Anda di sini! Jelajahi panduan lainnya
+* **Kursus**: Ikuti [Claude Code 101](https://academy.claude.com/courses/claude-code-101) dan kursus gratis lainnya yang dapat Anda ikuti sendiri di [Claude Academy](https://academy.claude.com/)
 * **Komunitas**: Bergabunglah dengan [Discord](https://www.anthropic.com/discord) kami untuk tips dan dukungan

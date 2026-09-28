@@ -17,11 +17,11 @@ CLI Claude Code и всё, что работает локально, функц�
 Способ аутентификации определяет, какие функции может использовать Claude Code. Для единого списка того, что отсутствует у вашего поставщика, см. вкладки [сводки по поставщикам](#summary-by-provider). Чтобы найти свой столбец в таблицах:
 
 * **Подписка Claude**: вы входите с учётной записью claude.ai в плане Pro, Max, Team или Enterprise
-* **Anthropic Console**: вы аутентифицируетесь с помощью ключа API Anthropic
-* **Amazon Bedrock**: вы используете модели Claude из каталога моделей Bedrock и устанавливаете `CLAUDE_CODE_USE_BEDROCK`. [Конечная точка Mantle](/docs/ru/amazon-bedrock#use-the-mantle-endpoint) (`CLAUDE_CODE_USE_MANTLE`) охватывается этим столбцом
+* **Anthropic Console**: вы аутентифицируетесь с помощью ключа API Anthropic или [входите в учётную запись Console без ключа](/docs/ru/authentication#sign-in-without-an-api-key)
+* **Amazon Bedrock**: вы используете модели Claude из каталога моделей Amazon Bedrock и устанавливаете `CLAUDE_CODE_USE_BEDROCK`. [Конечная точка Mantle](/docs/ru/amazon-bedrock#use-the-mantle-endpoint) (`CLAUDE_CODE_USE_MANTLE`) охватывается этим столбцом
 * **Claude Platform на AWS**: вы приобрели Claude через AWS Marketplace, но вызываете API Anthropic и устанавливаете `CLAUDE_CODE_USE_ANTHROPIC_AWS`
 * **Google Cloud's Agent Platform**: управляется Google; вы устанавливаете `CLAUDE_CODE_USE_VERTEX`
-* **Microsoft Foundry**: управляется Anthropic на Azure; вы устанавливаете `CLAUDE_CODE_USE_FOUNDRY`
+* **Microsoft Foundry**: управляется Anthropic; вы устанавливаете `CLAUDE_CODE_USE_FOUNDRY`
 
 <h3 id="features-available-on-every-provider">
   Функции, доступные у каждого поставщика
@@ -32,15 +32,18 @@ CLI Claude Code и всё, что работает локально, функц�
 * [CLI](/docs/ru/quickstart) и [Agent SDK](/docs/ru/agent-sdk/overview)
 * Расширения [VS Code](/docs/ru/vs-code) и [JetBrains](/docs/ru/jetbrains)
 * [Subagents](/docs/ru/sub-agents), [hooks](/docs/ru/hooks-guide), [commands](/docs/ru/commands) и [skills](/docs/ru/skills)
-* [Память CLAUDE.md](/docs/ru/memory), [plugins](/docs/ru/plugins) и [MCP servers](/docs/ru/mcp)
+* [Память CLAUDE.md](/docs/ru/memory), [plugins](/docs/ru/plugins/overview) и [MCP servers](/docs/ru/mcp)
 * [Checkpoints](/docs/ru/checkpointing), [sandboxing](/docs/ru/sandboxing) и [Workflows](/docs/ru/workflows)
-* [Метрики OpenTelemetry](/docs/ru/monitoring-usage) и [управляемый файл параметров](/docs/ru/settings#settings-files)
+* [Метрики OpenTelemetry](/docs/ru/monitoring-usage) и [управляемый файл параметров](/docs/ru/managed-settings#delivery-mechanisms)
 
-Три из них имеют различия, зависящие от поставщика:
+Они имеют различия, зависящие от поставщика:
 
-* **MCP servers**: [коннекторы из claude.ai](/docs/ru/mcp#use-mcp-servers-from-claude-ai) загружаются только когда ваша подписка claude.ai является активным методом аутентификации, и [поиск инструментов](/docs/ru/mcp#configure-tool-search) отключён по умолчанию на Google Cloud's Agent Platform и когда `ANTHROPIC_BASE_URL` указывает на хост, не принадлежащий первой стороне
+* **MCP servers**: [коннекторы из claude.ai](/docs/ru/mcp#use-mcp-servers-from-claude-ai) загружаются только когда ваша подписка claude.ai является активным методом аутентификации. [Поиск инструментов](/docs/ru/mcp#configure-tool-search) отключён по умолчанию когда `ANTHROPIC_BASE_URL` указывает на хост, не принадлежащий первой стороне, и не поддерживается на моделях Google Cloud's Agent Platform более ранних, чем поколение Claude 4.5, или на развёртываниях Microsoft Foundry [размещённых на Azure](https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry#hosting-options)
 * **Subagents**: встроенный [Explore subagent](/docs/ru/sub-agents#built-in-subagents) ограничивает унаследованную модель до Opus на Claude API и наследует модель основного разговора напрямую у любого другого поставщика, включая Claude Platform на AWS
-* **[Commands](/docs/ru/commands#all-commands)**: `/design-sync` и `/radio` недоступны на Amazon Bedrock, Google Cloud's Agent Platform, Microsoft Foundry и Claude Platform на AWS, а `/voice` требует учётную запись claude.ai
+* **[Commands](/docs/ru/commands#all-commands)**:
+  * `/design-sync` и `/import` с его формой подкоманды `claude import` недоступны на Amazon Bedrock, Google Cloud's Agent Platform, Microsoft Foundry и Claude Platform на AWS, а также через [Claude apps gateway](/docs/ru/claude-apps-gateway#availability-and-limitations)
+  * `/voice` требует учётную запись claude.ai
+  * `/list-agents` и его псевдоним `/peers` доступны только в сеансах, где [включена кросс-сеансовая передача сообщений](/docs/ru/cross-session-messaging#availability)
 
 <h3 id="features-that-require-a-claude-subscription">
   Функции, требующие подписку Claude
@@ -51,7 +54,7 @@ CLI Claude Code и всё, что работает локально, функц�
 * [Claude Code в веб-версии](/docs/ru/claude-code-on-the-web), Claude Code на мобильном устройстве и [Claude Code в Slack](/docs/ru/slack)
 * [Claude Code Desktop](/docs/ru/desktop)
 * [Routines](/docs/ru/routines) (`/schedule`)
-* [Ultraplan](/docs/ru/ultraplan) и [Ultrareview](/docs/ru/ultrareview)
+* [Ultrareview](/docs/ru/ultrareview)
 * [Code Review](/docs/ru/code-review): планы Team и Enterprise
 * [Remote Control](/docs/ru/remote-control)
 * [Расширение Chrome](/docs/ru/chrome)
@@ -88,13 +91,13 @@ Desktop — частичное исключение: [маршрутизация
       <td>✗</td>
       <td>✓</td>
       <td>См. примечание <sup><a href="#fn1">1</a></sup></td>
-      <td>✓</td>
+      <td>✓ ([развёртывания размещённые на Anthropic](https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry#hosting-options))</td>
     </tr>
 
     <tr>
       <td>[Fast mode](/docs/ru/fast-mode)</td>
-      <td>✓</td>
-      <td>✓</td>
+      <td>✓ ([включено владельцем](/docs/ru/fast-mode#enable-fast-mode-for-your-organization) для Team и Enterprise)</td>
+      <td>✓ (организации с подготовленным доступом)</td>
       <td>✗</td>
       <td>✗</td>
       <td>✗</td>
@@ -122,6 +125,16 @@ Desktop — частичное исключение: [маршрутизация
     </tr>
 
     <tr>
+      <td>[Cross-session messaging](/docs/ru/cross-session-messaging)</td>
+      <td>✓ <sup><a href="#fn5">5</a></sup></td>
+      <td>✓ (одна машина) <sup><a href="#fn5">5</a></sup></td>
+      <td>✓ (одна машина) <sup><a href="#fn5">5</a></sup></td>
+      <td>✓ (одна машина) <sup><a href="#fn5">5</a></sup></td>
+      <td>✓ (одна машина) <sup><a href="#fn5">5</a></sup></td>
+      <td>✓ (одна машина) <sup><a href="#fn5">5</a></sup></td>
+    </tr>
+
+    <tr>
       <td>[Channels](/docs/ru/channels)</td>
       <td>✓</td>
       <td>✓</td>
@@ -132,17 +145,17 @@ Desktop — частичное исключение: [маршрутизация
     </tr>
 
     <tr>
-      <td>[`/loop` scheduled tasks](/docs/ru/scheduled-tasks)</td>
+      <td>[GitHub Actions](/docs/ru/github-actions)</td>
       <td>✓</td>
       <td>✓</td>
-      <td>См. примечание <sup><a href="#fn3">3</a></sup></td>
-      <td>См. примечание <sup><a href="#fn3">3</a></sup></td>
-      <td>См. примечание <sup><a href="#fn3">3</a></sup></td>
-      <td>См. примечание <sup><a href="#fn3">3</a></sup></td>
+      <td>✓</td>
+      <td>✗</td>
+      <td>✓</td>
+      <td>✓</td>
     </tr>
 
     <tr>
-      <td>[GitHub Actions](/docs/ru/github-actions) и [GitLab CI/CD](/docs/ru/gitlab-ci-cd)</td>
+      <td>[GitLab CI/CD](/docs/ru/gitlab-ci-cd)</td>
       <td>✓</td>
       <td>✓</td>
       <td>✓</td>
@@ -176,7 +189,7 @@ Desktop — частичное исключение: [маршрутизация
     <tr>
       <td>[Analytics dashboard и API](/docs/ru/analytics)</td>
       <td>✓ (панель управления: Team и Enterprise; API: Enterprise)</td>
-      <td>✓ <sup><a href="#fn5">5</a></sup></td>
+      <td>✓ <sup><a href="#fn4">4</a></sup></td>
       <td>✗</td>
       <td>✗</td>
       <td>✗</td>
@@ -197,22 +210,24 @@ Desktop — частичное исключение: [маршрутизация
       <td>[Zero Data Retention](/docs/ru/zero-data-retention)</td>
       <td>✓ (квалифицированные Enterprise аккаунты)</td>
       <td>✓ (квалифицированные аккаунты)</td>
-      <td>См. примечание <sup><a href="#fn4">4</a></sup></td>
+      <td>См. примечание <sup><a href="#fn3">3</a></sup></td>
       <td>✓ (квалифицированные аккаунты)</td>
-      <td>См. примечание <sup><a href="#fn4">4</a></sup></td>
-      <td>См. примечание <sup><a href="#fn4">4</a></sup></td>
+      <td>См. примечание <sup><a href="#fn3">3</a></sup></td>
+      <td>См. примечание <sup><a href="#fn3">3</a></sup></td>
     </tr>
   </tbody>
 </table>
 
 <span id="fn1" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>1</sup> На Google Cloud's Agent Platform веб-поиск доступен для моделей Claude 4 и более поздних версий.<br />
-<span id="fn2" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>2</sup> На этих поставщиках auto mode поддерживает только Claude Sonnet 5, Opus 4.7 и Opus 4.8. См. [Конфигурация Auto mode](/docs/ru/auto-mode-config). В v2.1.158 через v2.1.206 auto mode на этих поставщиках также требовал установки `CLAUDE_CODE_ENABLE_AUTO_MODE=1`; v2.1.207 удалил это требование.<br />
-<span id="fn3" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>3</sup> Явные интервалы, такие как `/loop every 2 hours`, работают у каждого поставщика. На Amazon Bedrock, Claude Platform на AWS, Google Cloud's Agent Platform и Microsoft Foundry `/loop` не может выбрать свой собственный интервал или предоставить подсказку обслуживания по умолчанию, поэтому подсказка без интервала выполняется каждые 10 минут, а `/loop` без аргументов показывает сообщение об использовании. См. [Scheduled tasks](/docs/ru/scheduled-tasks).<br />
-<span id="fn4" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>4</sup> В соответствии с вашим соглашением с поставщиком облачных услуг.<br />
-<span id="fn5" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>5</sup> Только панель управления и API. [Contribution metrics](/docs/ru/analytics#enable-contribution-metrics) требует организацию claude.ai Team или Enterprise.
+<span id="fn2" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>2</sup> На этих поставщиках auto mode поддерживает только Claude Sonnet 5, Opus 4.7 или более поздние версии и модели Fable. См. [Конфигурация Auto mode](/docs/ru/auto-mode-config). Встроенный режим разрешений по умолчанию на этих поставщиках — Manual. См. [в каком режиме начинается сеанс](/docs/ru/permission-modes#which-mode-a-session-starts-in). В v2.1.158 через v2.1.206 auto mode на этих поставщиках также требовал установки `CLAUDE_CODE_ENABLE_AUTO_MODE=1`; v2.1.207 удалил это требование.<br />
+<span id="fn3" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>3</sup> В соответствии с вашим соглашением с поставщиком облачных услуг.<br />
+<span id="fn4" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>4</sup> Только панель управления и API. [Contribution metrics](/docs/ru/analytics#enable-contribution-metrics) требует организацию claude.ai Team или Enterprise.<br />
+<span id="fn5" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>5</sup> Требует Claude Code v2.1.224 или более поздней версии на macOS и Linux, включая Linux внутри WSL 2. На нативной Windows требует Claude Code v2.1.234 или более поздней версии. При аутентификации с помощью ключа API передача сообщений доступна только на одной машине. На Amazon Bedrock, Claude Platform на AWS, Google Cloud's Agent Platform и Microsoft Foundry передача сообщений доступна только на одной машине и требует Claude Code v2.1.248 или более поздней версии. Claude может найти ваши сеансы [Claude Code в веб-версии](/docs/ru/claude-code-on-the-web) и ваши сеансы на других машинах только из сеанса, подключённого к [Remote Control](/docs/ru/remote-control). Для подключения вам нужна учётная запись claude.ai и другие [требования Remote Control](/docs/ru/remote-control#requirements). См. [Передача сообщений между сеансами на других машинах](/docs/ru/cross-session-messaging#message-sessions-on-other-machines).
 
 <Note>
-  Если вы аутентифицируетесь через [LLM gateway](/docs/ru/llm-gateway), доступность функций соответствует базовому поставщику, на который шлюз перенаправляет запросы. Некоторые функции, доступные только для Anthropic, такие как [Advisor](/docs/ru/advisor), работают только если шлюз перенаправляет запросы без изменений на API Anthropic.
+  Если вы аутентифицируетесь через [LLM gateway](/docs/ru/llm-gateway), доступность функций соответствует базовому поставщику, на который шлюз перенаправляет запросы, за исключением функций, которые сам Claude Code отключает. Когда `ANTHROPIC_BASE_URL` указывает на хост, отличный от `api.anthropic.com`, Claude Code отключает функции такие как [Remote Control](/docs/ru/remote-control#requirements) и [server-managed settings](/docs/ru/server-managed-settings#platform-availability), независимо от того, что перенаправляет шлюз. Некоторые функции, доступные только для Anthropic, такие как [Advisor](/docs/ru/advisor), работают только если шлюз перенаправляет запросы без изменений на API Anthropic.
+
+  Для информации о том, как запросы, которые отправляет Claude Code, различаются между шлюзом в формате Amazon Bedrock или Agent Platform, шлюзом `ANTHROPIC_BASE_URL` и входом в Claude apps gateway, см. [поведение клиента по методу подключения](/docs/ru/llm-gateway-protocol#how-the-connection-method-changes-client-behavior).
 </Note>
 
 <h3 id="summary-by-provider">
@@ -223,61 +238,62 @@ Desktop — частичное исключение: [маршрутизация
 
 <Tabs>
   <Tab title="Amazon Bedrock">
-    **Недоступно:** все [функции, требующие подписку Claude](#features-that-require-a-claude-subscription), плюс [веб-поиск](/docs/ru/tools-reference#websearch-tool-behavior), [fast mode](/docs/ru/fast-mode), [Advisor](/docs/ru/advisor), [Channels](/docs/ru/channels), [панель управления аналитики](/docs/ru/analytics), [server-managed settings](/docs/ru/server-managed-settings) и [команды `/design-sync` и `/radio`](/docs/ru/commands#all-commands).
+    **Недоступно:** все [функции, требующие подписку Claude](#features-that-require-a-claude-subscription), плюс [веб-поиск](/docs/ru/tools-reference#websearch-tool-behavior), [fast mode](/docs/ru/fast-mode), [Advisor](/docs/ru/advisor), [Channels](/docs/ru/channels), [панель управления аналитики](/docs/ru/analytics), [server-managed settings](/docs/ru/server-managed-settings) и [команды `/design-sync` и `/import`](/docs/ru/commands#all-commands).
 
     **Частичная поддержка:**
 
     * [Desktop](/docs/ru/desktop): только через [Claude Desktop на 3P](https://claude.com/docs/third-party/claude-desktop/overview)
-    * [Auto mode](/docs/ru/auto-mode-config): только Sonnet 5, Opus 4.7 и Opus 4.8
-    * [`/loop`](/docs/ru/scheduled-tasks): только явные интервалы
+    * [Auto mode](/docs/ru/auto-mode-config): только Sonnet 5, Opus 4.7 или более поздние версии и модели Fable
+    * [Cross-session messaging](/docs/ru/cross-session-messaging): между вашими сеансами на этой машине только <sup><a href="#fn5">5</a></sup>
     * [Zero Data Retention](/docs/ru/zero-data-retention): в соответствии с вашим соглашением AWS
 
-    **Альтернативы:** для планирования используйте [`/loop`](/docs/ru/scheduled-tasks) с явным интервалом вместо `/schedule`. Для облачных сеансов используйте [GitHub Actions](/docs/ru/github-actions) или [GitLab CI/CD](/docs/ru/gitlab-ci-cd). Для веб-поиска используйте инструмент [WebFetch](/docs/ru/tools-reference#webfetch-tool-behavior) с конкретным URL.
+    **Альтернативы:** для планирования используйте [`/loop`](/docs/ru/scheduled-tasks) вместо `/schedule`. Для облачных сеансов используйте [GitHub Actions](/docs/ru/github-actions) или [GitLab CI/CD](/docs/ru/gitlab-ci-cd). Для веб-поиска используйте инструмент [WebFetch](/docs/ru/tools-reference#webfetch-tool-behavior) с конкретным URL.
   </Tab>
 
   <Tab title="Claude Platform на AWS">
-    **Недоступно:** все [функции, требующие подписку Claude](#features-that-require-a-claude-subscription), плюс [fast mode](/docs/ru/fast-mode), [Advisor](/docs/ru/advisor), [Channels](/docs/ru/channels), [панель управления аналитики](/docs/ru/analytics), [server-managed settings](/docs/ru/server-managed-settings) и [команды `/design-sync` и `/radio`](/docs/ru/commands#all-commands).
+    **Недоступно:** все [функции, требующие подписку Claude](#features-that-require-a-claude-subscription), плюс [fast mode](/docs/ru/fast-mode), [Advisor](/docs/ru/advisor), [Channels](/docs/ru/channels), [GitHub Actions](/docs/ru/github-actions), [панель управления аналитики](/docs/ru/analytics), [server-managed settings](/docs/ru/server-managed-settings) и [команды `/design-sync` и `/import`](/docs/ru/commands#all-commands).
 
     **Доступно** там, где Amazon Bedrock недоступен: [веб-поиск](/docs/ru/tools-reference#websearch-tool-behavior).
 
     **Частичная поддержка:**
 
-    * [`/loop`](/docs/ru/scheduled-tasks): только явные интервалы
+    * [Cross-session messaging](/docs/ru/cross-session-messaging): между вашими сеансами на этой машине только <sup><a href="#fn5">5</a></sup>
 
-    **Альтернативы:** для планирования используйте [`/loop`](/docs/ru/scheduled-tasks) с явным интервалом вместо `/schedule`. Для облачных сеансов используйте [GitHub Actions](/docs/ru/github-actions) или [GitLab CI/CD](/docs/ru/gitlab-ci-cd).
+    **Альтернативы:** для планирования используйте [`/loop`](/docs/ru/scheduled-tasks) вместо `/schedule`. Для облачных сеансов используйте [GitLab CI/CD](/docs/ru/gitlab-ci-cd).
   </Tab>
 
   <Tab title="Google Cloud's Agent Platform">
-    **Недоступно:** все [функции, требующие подписку Claude](#features-that-require-a-claude-subscription), плюс [fast mode](/docs/ru/fast-mode), [Advisor](/docs/ru/advisor), [Channels](/docs/ru/channels), [панель управления аналитики](/docs/ru/analytics), [server-managed settings](/docs/ru/server-managed-settings) и [команды `/design-sync` и `/radio`](/docs/ru/commands#all-commands).
+    **Недоступно:** все [функции, требующие подписку Claude](#features-that-require-a-claude-subscription), плюс [fast mode](/docs/ru/fast-mode), [Advisor](/docs/ru/advisor), [Channels](/docs/ru/channels), [панель управления аналитики](/docs/ru/analytics), [server-managed settings](/docs/ru/server-managed-settings) и [команды `/design-sync` и `/import`](/docs/ru/commands#all-commands).
 
     **Частичная поддержка:**
 
     * [Desktop](/docs/ru/desktop): через [управляемые параметры](https://claude.com/docs/third-party/claude-desktop/configuration) или [Claude Desktop на 3P](https://claude.com/docs/third-party/claude-desktop/overview)
     * [Web search](/docs/ru/tools-reference#websearch-tool-behavior): модели Claude 4 и более поздние
-    * [Auto mode](/docs/ru/auto-mode-config): только Sonnet 5, Opus 4.7 и Opus 4.8
-    * [`/loop`](/docs/ru/scheduled-tasks): только явные интервалы
+    * [Auto mode](/docs/ru/auto-mode-config): только Sonnet 5, Opus 4.7 или более поздние версии и модели Fable
+    * [Cross-session messaging](/docs/ru/cross-session-messaging): между вашими сеансами на этой машине только <sup><a href="#fn5">5</a></sup>
     * [Zero Data Retention](/docs/ru/zero-data-retention): в соответствии с вашим соглашением Google Cloud
 
-    **Альтернативы:** для планирования используйте [`/loop`](/docs/ru/scheduled-tasks) с явным интервалом вместо `/schedule`. Для облачных сеансов используйте [GitHub Actions](/docs/ru/github-actions) или [GitLab CI/CD](/docs/ru/gitlab-ci-cd).
+    **Альтернативы:** для планирования используйте [`/loop`](/docs/ru/scheduled-tasks) вместо `/schedule`. Для облачных сеансов используйте [GitHub Actions](/docs/ru/github-actions) или [GitLab CI/CD](/docs/ru/gitlab-ci-cd).
   </Tab>
 
   <Tab title="Microsoft Foundry">
-    **Недоступно:** все [функции, требующие подписку Claude](#features-that-require-a-claude-subscription), плюс [fast mode](/docs/ru/fast-mode), [Advisor](/docs/ru/advisor), [Channels](/docs/ru/channels), [GitHub Actions](/docs/ru/github-actions) и [GitLab CI/CD](/docs/ru/gitlab-ci-cd), [панель управления аналитики](/docs/ru/analytics), [server-managed settings](/docs/ru/server-managed-settings) и [команды `/design-sync` и `/radio`](/docs/ru/commands#all-commands).
+    **Недоступно:** все [функции, требующие подписку Claude](#features-that-require-a-claude-subscription), плюс [fast mode](/docs/ru/fast-mode), [Advisor](/docs/ru/advisor), [Channels](/docs/ru/channels), [GitLab CI/CD](/docs/ru/gitlab-ci-cd), [панель управления аналитики](/docs/ru/analytics), [server-managed settings](/docs/ru/server-managed-settings) и [команды `/design-sync` и `/import`](/docs/ru/commands#all-commands).
 
     **Частичная поддержка:**
 
     * [Desktop](/docs/ru/desktop): только через [Claude Desktop на 3P](https://claude.com/docs/third-party/claude-desktop/overview)
-    * [Auto mode](/docs/ru/auto-mode-config): только Sonnet 5, Opus 4.7 и Opus 4.8
-    * [`/loop`](/docs/ru/scheduled-tasks): только явные интервалы
+    * [Web search](/docs/ru/tools-reference#websearch-tool-behavior): [развёртывания размещённые на Anthropic](https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry#hosting-options) только
+    * [Auto mode](/docs/ru/auto-mode-config): только Sonnet 5, Opus 4.7 или более поздние версии и модели Fable
+    * [Cross-session messaging](/docs/ru/cross-session-messaging): между вашими сеансами на этой машине только <sup><a href="#fn5">5</a></sup>
     * [Zero Data Retention](/docs/ru/zero-data-retention): в соответствии с вашим соглашением Azure
 
-    **Альтернативы:** для планирования используйте [`/loop`](/docs/ru/scheduled-tasks) с явным интервалом вместо `/schedule`.
+    **Альтернативы:** для планирования используйте [`/loop`](/docs/ru/scheduled-tasks) вместо `/schedule`. Для облачных сеансов используйте [GitHub Actions](/docs/ru/github-actions).
   </Tab>
 
   <Tab title="Anthropic Console">
     **Недоступно:** все [функции, требующие подписку Claude](#features-that-require-a-claude-subscription).
 
-    Всё в разделе [Возможности CLI, которые различаются по поставщикам](#cli-capabilities-that-vary-by-provider) доступно, как и [server-managed settings](/docs/ru/server-managed-settings) когда ключ API принадлежит организации Team или Enterprise.
+    Всё в разделе [Возможности CLI, которые различаются по поставщикам](#cli-capabilities-that-vary-by-provider) доступно, за исключением того, что [fast mode](/docs/ru/fast-mode) требует [подготовленный доступ](/docs/ru/fast-mode#enable-fast-mode-for-your-organization). [Server-managed settings](/docs/ru/server-managed-settings) также доступны когда ваш ключ API принадлежит организации Team или Enterprise.
   </Tab>
 </Tabs>
 
@@ -289,7 +305,7 @@ Desktop — частичное исключение: [маршрутизация
 
 | Функция                                                                     | Pro | Max | Team          | Enterprise                        |
 | :-------------------------------------------------------------------------- | :-- | :-- | :------------ | :-------------------------------- |
-| [Claude Code в веб-версии](/docs/ru/claude-code-on-the-web)                      | ✓   | ✓   | ✓             | ✓ <sup><a href="#fn6">6</a></sup> |
+| [Cloud sessions](/docs/ru/claude-code-on-the-web)                                | ✓   | ✓   | ✓             | ✓ <sup><a href="#fn6">6</a></sup> |
 | [Routines](/docs/ru/routines)                                                    | ✓   | ✓   | ✓             | ✓                                 |
 | [Remote Control](/docs/ru/remote-control)                                        | ✓   | ✓   | Admin-enabled | Admin-enabled                     |
 | [Channels](/docs/ru/channels)                                                    | ✓   | ✓   | Admin-enabled | Admin-enabled                     |
@@ -305,7 +321,7 @@ Desktop — частичное исключение: [маршрутизация
 | [Compliance API](https://platform.claude.com/docs/en/api/compliance)        | ✗   | ✗   | ✗             | ✓                                 |
 | [Zero Data Retention](/docs/ru/zero-data-retention)                              | ✗   | ✗   | ✗             | ✓ <sup><a href="#fn7">7</a></sup> |
 
-<span id="fn6" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>6</sup> На Enterprise требуется премиум-место или место Chat + Claude Code. См. [Claude Code в веб-версии](/docs/ru/claude-code-on-the-web).<br />
+<span id="fn6" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>6</sup> На Enterprise требуется премиум-место или место Chat + Claude Code. См. [Cloud sessions](/docs/ru/claude-code-on-the-web).<br />
 <span id="fn7" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>7</sup> Не включено в стандартный план Enterprise. Требует отдельного включения Anthropic для квалифицированных аккаунтов. См. [Zero Data Retention](/docs/ru/zero-data-retention).
 
 Для информации о ценах и полного сравнения планов см. [Team plans](https://support.claude.com/en/articles/9266767-what-is-the-team-plan) и [Enterprise plans](https://support.claude.com/en/articles/9797531-what-is-the-enterprise-plan).

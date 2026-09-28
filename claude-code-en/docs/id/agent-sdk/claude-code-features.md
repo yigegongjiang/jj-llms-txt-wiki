@@ -8,9 +8,7 @@
 
 Agent SDK dibangun di atas fondasi yang sama dengan Claude Code, yang berarti agen SDK Anda memiliki akses ke fitur berbasis filesystem yang sama: instruksi proyek (`CLAUDE.md` dan rules), skills, hooks, dan lainnya.
 
-Ketika Anda menghilangkan `settingSources`, `query()` membaca pengaturan filesystem yang sama dengan Claude Code CLI: pengaturan pengguna, proyek, dan lokal, file `CLAUDE.md`, dan skills, agen, dan perintah di `.claude/`. Untuk menjalankan tanpa ini, teruskan `settingSources: []`, yang membatasi agen hanya pada apa yang Anda konfigurasi secara terprogram. Pengaturan kebijakan terkelola dan konfigurasi global `~/.claude.json` dibaca terlepas dari opsi ini. Lihat [Apa yang tidak dikontrol settingSources](#what-settingsources-does-not-control).
-
-Untuk gambaran konseptual tentang apa yang dilakukan setiap fitur dan kapan menggunakannya, lihat [Perluas Claude Code](/docs/id/features-overview).
+Ketika Anda menghilangkan `settingSources`, `query()` membaca pengaturan filesystem yang sama dengan Claude Code CLI: pengaturan pengguna, proyek, dan lokal, file `CLAUDE.md`, dan skills, agen, dan perintah di `.claude/`. Untuk menjalankan tanpa ini, teruskan `settingSources: []`, yang membatasi agen hanya pada apa yang Anda konfigurasi secara terprogram. Pengaturan kebijakan terkelola dan konfigurasi global `~/.claude.json` dibaca terlepas dari opsi ini. Untuk informasi lebih lanjut, lihat [Apa yang tidak dikontrol settingSources](#what-settingsources-does-not-control).
 
 <h2 id="control-filesystem-settings-with-settingsources">
   Kontrol pengaturan filesystem dengan settingSources
@@ -23,23 +21,29 @@ Contoh ini memuat pengaturan tingkat pengguna dan tingkat proyek dengan menetapk
 <CodeGroup>
   ```python Python theme={null}
   from claude_agent_sdk import query, ClaudeAgentOptions, AssistantMessage, ResultMessage
+  import asyncio
 
-  async for message in query(
-      prompt="Help me refactor the auth module",
-      options=ClaudeAgentOptions(
-          # "user" loads from ~/.claude/, "project" loads from ./.claude/ in cwd.
-          # Together they give the agent access to CLAUDE.md, skills, hooks, and
-          # permissions from both locations.
-          setting_sources=["user", "project"],
-          allowed_tools=["Read", "Edit", "Bash"],
-      ),
-  ):
-      if isinstance(message, AssistantMessage):
-          for block in message.content:
-              if hasattr(block, "text"):
-                  print(block.text)
-      if isinstance(message, ResultMessage) and message.subtype == "success":
-          print(f"\nResult: {message.result}")
+
+  async def main():
+      async for message in query(
+          prompt="Help me refactor the auth module",
+          options=ClaudeAgentOptions(
+              # "user" loads from ~/.claude/, "project" loads from ./.claude/ in cwd.
+              # Together they give the agent access to CLAUDE.md, skills, hooks, and
+              # permissions from both locations.
+              setting_sources=["user", "project"],
+              allowed_tools=["Read", "Edit", "Bash"],
+          ),
+      ):
+          if isinstance(message, AssistantMessage):
+              for block in message.content:
+                  if hasattr(block, "text"):
+                      print(block.text)
+          if isinstance(message, ResultMessage) and message.subtype == "success":
+              print(f"\nResult: {message.result}")
+
+
+  asyncio.run(main())
   ```
 
   ```typescript TypeScript theme={null}
@@ -67,17 +71,19 @@ Contoh ini memuat pengaturan tingkat pengguna dan tingkat proyek dengan menetapk
   ```
 </CodeGroup>
 
+Ketika ini berjalan, respons asisten mencetak ke stdout, diikuti oleh baris hasil akhir setelah run selesai.
+
 Setiap sumber memuat pengaturan dari lokasi tertentu, di mana `<cwd>` adalah direktori kerja yang Anda teruskan melalui opsi `cwd`, atau direktori saat ini proses jika tidak diatur. Untuk definisi tipe lengkap, lihat [`SettingSource`](/docs/id/agent-sdk/typescript#settingsource) (TypeScript) atau [`SettingSource`](/docs/id/agent-sdk/python#settingsource) (Python).
 
-| Sumber      | Apa yang dimuat                                                                             | Lokasi                                                                                                                                                                                 |
-| :---------- | :------------------------------------------------------------------------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `"project"` | CLAUDE.md proyek, `.claude/rules/*.md`, skills proyek, hooks proyek, `settings.json` proyek | `<cwd>/.claude/` untuk `settings.json` dan hooks; `<cwd>` dan setiap direktori induk untuk CLAUDE.md dan rules; `<cwd>` dan setiap direktori induk hingga akar repositori untuk skills |
-| `"user"`    | CLAUDE.md pengguna, `~/.claude/rules/*.md`, skills pengguna, pengaturan pengguna            | `~/.claude/`                                                                                                                                                                           |
-| `"local"`   | CLAUDE.local.md, `.claude/settings.local.json`                                              | `<cwd>/.claude/` untuk `settings.local.json`; `<cwd>` dan setiap direktori induk untuk CLAUDE.local.md                                                                                 |
+| Sumber      | Apa yang dimuat                                                                                                     | Lokasi                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| :---------- | :------------------------------------------------------------------------------------------------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `"project"` | `settings.json` proyek dan hooks; CLAUDE.md proyek dan `.claude/rules/*.md`; skills proyek, commands, dan subagents | `<cwd>/.claude/` untuk `settings.json` dan hooks; `<cwd>` dan setiap direktori induk untuk CLAUDE.md dan rules; `<cwd>` dan setiap direktori induk hingga akar repositori untuk skills, commands, dan subagents, ditambah folder `.claude/skills/`, `.claude/commands/`, dan `.claude/agents/` dari setiap direktori yang Anda teruskan melalui opsi `additionalDirectories` atau `add_dirs`, yang SDK teruskan ke Claude Code sebagai [`--add-dir`](/docs/id/permissions#additional-directories-grant-file-access-not-configuration) |
+| `"user"`    | `settings.json` pengguna; CLAUDE.md pengguna dan `~/.claude/rules/*.md`; skills pengguna, commands, dan subagents   | `~/.claude/` untuk `settings.json`, CLAUDE.md, dan rules; `~/.claude/skills/`, `~/.claude/commands/`, dan `~/.claude/agents/` untuk skills, commands, dan subagents                                                                                                                                                                                                                                                                                                                                                              |
+| `"local"`   | CLAUDE.local.md, `.claude/settings.local.json`                                                                      | `<cwd>/.claude/` untuk `settings.local.json`; `<cwd>` dan setiap direktori induk untuk CLAUDE.local.md                                                                                                                                                                                                                                                                                                                                                                                                                           |
 
 Menghilangkan `settingSources` setara dengan `["user", "project", "local"]`.
 
-Opsi `cwd` menentukan di mana SDK mencari input tingkat proyek. CLAUDE.md dan rules dimuat dari `<cwd>` dan dari setiap direktori induk. Skills dimuat dari `<cwd>` dan dari setiap direktori induk hingga akar repositori. `settings.json` proyek dan hooks dimuat hanya dari `<cwd>/.claude/` tanpa fallback direktori induk.
+Opsi `cwd` menentukan di mana SDK mencari input tingkat proyek. `settings.json` proyek dan hooks dimuat hanya dari `<cwd>/.claude/` tanpa fallback direktori induk.
 
 <h3 id="what-settingsources-does-not-control">
   Apa yang tidak dikontrol settingSources
@@ -85,12 +91,13 @@ Opsi `cwd` menentukan di mana SDK mencari input tingkat proyek. CLAUDE.md dan ru
 
 `settingSources` mencakup pengaturan pengguna, proyek, dan lokal. Beberapa input dibaca terlepas dari nilainya:
 
-| Input                                                                 | Perilaku                                                                                                                                                                                                                                                                                                                                                                                                    | Untuk menonaktifkan                                                                                                                                                                                         |
-| :-------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Pengaturan kebijakan terkelola                                        | Kebijakan yang dikelola endpoint, baik plist MDM, kebijakan registri, atau file pengaturan terkelola, dimuat dari host. [Pengaturan yang dikelola server](/docs/id/server-managed-settings) diambil pada [konfigurasi yang memenuhi syarat](/docs/id/server-managed-settings#platform-availability) ketika sesi melakukan autentikasi dengan login OAuth organisasi atau kunci API yang dikonfigurasi secara langsung | Kebijakan endpoint: hapus file pengaturan terkelola, plist, atau kebijakan registri dari host. Pengaturan yang dikelola server: dikendalikan oleh admin organisasi Anda; tidak dapat dinonaktifkan dari SDK |
-| Konfigurasi global `~/.claude.json`                                   | Selalu dibaca                                                                                                                                                                                                                                                                                                                                                                                               | Pindahkan dengan `CLAUDE_CONFIG_DIR` di `env`                                                                                                                                                               |
-| Memori otomatis di `~/.claude/projects/<project>/memory/`             | Dimuat ke dalam system prompt pada awal sesi. Agen menulis memori baru di sana dengan tools `Write` dan `Edit` standar daripada tool memori khusus, jadi tools tersebut harus diaktifkan agar agen dapat menyimpan memori                                                                                                                                                                                   | Atur `autoMemoryEnabled: false` di pengaturan, atau `CLAUDE_CODE_DISABLE_AUTO_MEMORY=1` di `env`                                                                                                            |
-| [Konektor MCP dari claude.ai](/docs/id/mcp#use-mcp-servers-from-claude-ai) | Dimuat ketika metode autentikasi aktif adalah langganan claude.ai. Melewatkan `mcpServers: {}` tidak menekannya                                                                                                                                                                                                                                                                                             | Atur `strictMcpConfig: true`, [`disableClaudeAiConnectors: true`](/docs/id/mcp#disable-claude-ai-connectors) di pengaturan, atau `ENABLE_CLAUDEAI_MCP_SERVERS=false` di `env`                                    |
+| Input                                                                                                                       | Perilaku                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | Untuk menonaktifkan                                                                                                                                                                                                                                                     |
+| :-------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Pengaturan kebijakan terkelola                                                                                              | Kebijakan yang dikelola endpoint, baik plist MDM, kebijakan registri, atau file pengaturan terkelola, dimuat dari host. [Pengaturan yang dikelola server](/docs/id/server-managed-settings) diambil pada [konfigurasi yang memenuhi syarat](/docs/id/server-managed-settings#platform-availability) ketika sesi melakukan autentikasi dengan kredensial yang memenuhi syarat, seperti login OAuth organisasi, kunci API yang dikonfigurasi secara langsung, atau profil Anthropic [`user_oauth`](/docs/id/authentication#anthropic-profiles-and-federation-credentials) | Kebijakan endpoint: hapus file pengaturan terkelola, plist, atau kebijakan registri dari host. Pengaturan yang dikelola server: [Owner](/docs/id/server-managed-settings#access-control) di organisasi Claude Anda mengontrolnya; Anda tidak dapat menonaktifkannya dari SDK |
+| Konfigurasi global `~/.claude.json`                                                                                         | Selalu dibaca                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | Pindahkan dengan `CLAUDE_CONFIG_DIR` di `env`                                                                                                                                                                                                                           |
+| Memori otomatis di `~/.claude/projects/<project>/memory/`                                                                   | Dimuat ke dalam system prompt pada awal sesi. Agen menulis memori baru di sana dengan tools `Write` dan `Edit` standar daripada tool memori khusus, jadi tools tersebut harus diaktifkan agar agen dapat menyimpan memori                                                                                                                                                                                                                                                                                                                                | Atur `autoMemoryEnabled: false` di pengaturan, atau `CLAUDE_CODE_DISABLE_AUTO_MEMORY=1` di `env`                                                                                                                                                                        |
+| [Konektor MCP dari claude.ai](/docs/id/mcp#use-mcp-servers-from-claude-ai)                                                       | Dimuat ketika sesi melakukan autentikasi dengan login claude.ai Anda. Tidak dimuat ketika `CLAUDE_CODE_OAUTH_TOKEN` menyimpan token dari [`claude setup-token`](/docs/id/authentication#generate-a-long-lived-token), yang hanya dapat membuat permintaan model. Melewatkan `mcpServers: {}` tidak menekannya                                                                                                                                                                                                                                                 | Atur `strictMcpConfig: true`, [`disableClaudeAiConnectors: true`](/docs/id/mcp#disable-claude-ai-connectors) di pengaturan, atau `ENABLE_CLAUDEAI_MCP_SERVERS=false` di `env`                                                                                                |
+| [`sandbox.credentials`](/docs/id/sandboxing#protect-credentials) entri `deny` dan entri `mask` file di `~/.claude/settings.json` | Ketika [sandbox perintah](/docs/id/sandboxing) berjalan, Claude Code menerapkan entri `deny` dan menjaga entri `mask` `credentials.files` sebagai pembatasan bahkan ketika `settingSources` mengecualikan pengaturan pengguna. Claude Code menggunakan entri ini hanya untuk mempersempit apa yang dapat diakses perintah sandboxed                                                                                                                                                                                                                           | Hapus entri dari `~/.claude/settings.json`                                                                                                                                                                                                                              |
 
 <Warning>
   Jangan andalkan opsi `query()` default untuk isolasi multi-tenant. Karena input di atas dibaca terlepas dari `settingSources`, proses SDK dapat mengambil konfigurasi tingkat host dan memori per-direktori. Untuk deployment multi-tenant, jalankan setiap tenant di filesystem-nya sendiri dan atur `settingSources: []` ditambah `CLAUDE_CODE_DISABLE_AUTO_MEMORY=1` di `env`. [Pengaturan yang dikelola server](/docs/id/server-managed-settings) diambil ketika proses melakukan autentikasi dengan kredensial organisasi; isolasi filesystem tidak menghapusnya. Lihat [Secure deployment](/docs/id/agent-sdk/secure-deployment).
@@ -100,7 +107,7 @@ Opsi `cwd` menentukan di mana SDK mencari input tingkat proyek. CLAUDE.md dan ru
   Instruksi proyek (CLAUDE.md dan rules)
 </h2>
 
-File `CLAUDE.md` dan file `.claude/rules/*.md` memberikan agen Anda konteks persisten tentang proyek Anda: konvensi pengkodean, perintah build, keputusan arsitektur, dan instruksi. Ketika `settingSources` mencakup `"project"` (seperti dalam contoh di atas), SDK memuat file ini ke dalam konteks pada awal sesi. Agen kemudian mengikuti konvensi proyek Anda tanpa Anda mengulanginya di setiap prompt.
+File `CLAUDE.md` dan file `.claude/rules/*.md` memberikan agen Anda konteks persisten tentang proyek Anda: konvensi pengkodean, perintah build, keputusan arsitektur, dan instruksi. Ketika `settingSources` mencakup `"project"`, seperti dalam contoh [`settingSources`](#control-filesystem-settings-with-settingsources), SDK memuat file ini ke dalam konteks pada awal sesi. Agen kemudian mengikuti konvensi proyek Anda tanpa Anda mengulanginya di setiap prompt.
 
 <h3 id="claude-md-load-locations">
   Lokasi pemuatan CLAUDE.md
@@ -135,19 +142,25 @@ Skills ditemukan dari filesystem melalui `settingSources`. Ketika opsi `skills` 
 <CodeGroup>
   ```python Python theme={null}
   from claude_agent_sdk import query, ClaudeAgentOptions, ResultMessage
+  import asyncio
+
 
   # Skills in .claude/skills/ are discovered automatically
   # when settingSources includes "project"
-  async for message in query(
-      prompt="Review this PR using our code review checklist",
-      options=ClaudeAgentOptions(
-          setting_sources=["user", "project"],
-          skills="all",
-          allowed_tools=["Read", "Grep", "Glob"],
-      ),
-  ):
-      if isinstance(message, ResultMessage) and message.subtype == "success":
-          print(message.result)
+  async def main():
+      async for message in query(
+          prompt="Review this PR using our code review checklist",
+          options=ClaudeAgentOptions(
+              setting_sources=["user", "project"],
+              skills="all",
+              allowed_tools=["Read", "Grep", "Glob"],
+          ),
+      ):
+          if isinstance(message, ResultMessage) and message.subtype == "success":
+              print(message.result)
+
+
+  asyncio.run(main())
   ```
 
   ```typescript TypeScript theme={null}
@@ -174,8 +187,6 @@ Skills ditemukan dari filesystem melalui `settingSources`. Ketika opsi `skills` 
   Skills harus dibuat sebagai artifact filesystem (`.claude/skills/<name>/SKILL.md`). SDK tidak memiliki API terprogram untuk mendaftarkan skills. Lihat [Agent Skills di SDK](/docs/id/agent-sdk/skills) untuk detail lengkap.
 </Note>
 
-Untuk lebih lanjut tentang membuat dan menggunakan skills, lihat [Agent Skills di SDK](/docs/id/agent-sdk/skills).
-
 <h2 id="hooks">
   Hooks
 </h2>
@@ -185,19 +196,18 @@ SDK mendukung dua cara untuk mendefinisikan hooks, dan mereka berjalan beriringa
 * **Filesystem hooks:** perintah shell yang didefinisikan di `settings.json`, dimuat ketika `settingSources` mencakup sumber yang relevan. Ini adalah hooks yang sama yang akan Anda konfigurasi untuk [sesi Claude Code interaktif](/docs/id/hooks-guide).
 * **Programmatic hooks:** fungsi callback yang diteruskan langsung ke `query()`. Ini berjalan dalam proses aplikasi Anda dan dapat mengembalikan keputusan terstruktur. Lihat [Kontrol eksekusi dengan hooks](/docs/id/agent-sdk/hooks).
 
-Kedua tipe berjalan selama siklus hidup hook yang sama. Jika Anda sudah memiliki hooks di `.claude/settings.json` proyek Anda dan Anda menetapkan `settingSources: ["project"]`, hooks tersebut berjalan secara otomatis di SDK tanpa konfigurasi tambahan.
-
-Callback hook menerima input tool dan mengembalikan dict keputusan. Mengembalikan `{}` berarti izinkan tool untuk melanjutkan. Untuk memblokir eksekusi, kembalikan objek `hookSpecificOutput` dengan `permissionDecision: "deny"` dan `permissionDecisionReason`. Alasan dikirim ke Claude sebagai hasil tool. Bidang tingkat atas `decision` dan `reason` sudah usang untuk `PreToolUse`. Lihat [panduan hooks](/docs/id/agent-sdk/hooks) untuk tanda tangan callback lengkap dan tipe pengembalian.
+Callback hook menerima input tool dan mengembalikan dict keputusan. Mengembalikan `{}` berarti izinkan tool untuk melanjutkan. Untuk memblokir eksekusi, kembalikan objek `hookSpecificOutput` dengan `permissionDecision: "deny"` dan `permissionDecisionReason`. Alasan dikirim ke Claude sebagai hasil tool. Lihat [panduan hooks](/docs/id/agent-sdk/hooks) untuk tanda tangan callback lengkap dan tipe pengembalian.
 
 <CodeGroup>
   ```python Python theme={null}
   from claude_agent_sdk import query, ClaudeAgentOptions, HookMatcher, ResultMessage
+  import asyncio
 
 
   # PreToolUse hook callback. Positional args:
   #   input_data: HookInput dict with tool_name, tool_input, hook_event_name
   #   tool_use_id: str | None, the ID of the tool call being intercepted
-  #   context: HookContext, carries session metadata
+  #   context: HookContext, reserved for future abort-signal support
   async def audit_bash(input_data, tool_use_id, context):
       command = input_data.get("tool_input", {}).get("command", "")
       if "rm -rf" in command:
@@ -213,19 +223,23 @@ Callback hook menerima input tool dan mengembalikan dict keputusan. Mengembalika
 
   # Filesystem hooks from .claude/settings.json run automatically
   # when settingSources loads them. You can also add programmatic hooks:
-  async for message in query(
-      prompt="Refactor the auth module",
-      options=ClaudeAgentOptions(
-          setting_sources=["project"],  # Loads hooks from .claude/settings.json
-          hooks={
-              "PreToolUse": [
-                  HookMatcher(matcher="Bash", hooks=[audit_bash]),
-              ]
-          },
-      ),
-  ):
-      if isinstance(message, ResultMessage) and message.subtype == "success":
-          print(message.result)
+  async def main():
+      async for message in query(
+          prompt="Refactor the auth module",
+          options=ClaudeAgentOptions(
+              setting_sources=["project"],  # Loads hooks from .claude/settings.json
+              hooks={
+                  "PreToolUse": [
+                      HookMatcher(matcher="Bash", hooks=[audit_bash]),
+                  ]
+              },
+          ),
+      ):
+          if isinstance(message, ResultMessage) and message.subtype == "success":
+              print(message.result)
+
+
+  asyncio.run(main())
   ```
 
   ```typescript TypeScript theme={null}
@@ -274,7 +288,7 @@ Callback hook menerima input tool dan mengembalikan dict keputusan. Mengembalika
 | Tipe hook                                 | Terbaik untuk                                                                                                                                                                                                                                                                                                          |
 | :---------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Filesystem** (`settings.json`)          | Berbagi hooks antara sesi CLI dan SDK. Mendukung `"command"` (skrip shell), `"http"` (POST ke endpoint), `"mcp_tool"` (panggil tool server MCP yang terhubung), `"prompt"` (LLM mengevaluasi prompt), dan `"agent"` (menghasilkan agen verifier). Ini dijalankan di agen utama dan subagen apa pun yang dihasilkannya. |
-| **Programmatic** (callbacks di `query()`) | Logika khusus aplikasi, keputusan terstruktur, dan integrasi dalam proses. Ini juga dijalankan di dalam subagen. Callback menerima `agent_id` dan `agent_type` untuk membedakan.                                                                                                                                       |
+| **Programmatic** (callbacks di `query()`) | Logika khusus aplikasi, keputusan terstruktur, dan integrasi dalam proses. Ini juga dijalankan di dalam subagen. Input hook, argumen pertama callback, membawa bidang `agent_id` dan `agent_type` yang mengidentifikasi agen mana yang memicu hook.                                                                    |
 
 <Note>
   SDK TypeScript mendukung event hook tambahan di luar Python, termasuk `SessionStart`, `SessionEnd`, `TeammateIdle`, dan `TaskCompleted`. Lihat [panduan hooks](/docs/id/agent-sdk/hooks) untuk tabel kompatibilitas event lengkap.
@@ -288,7 +302,7 @@ Untuk detail lengkap tentang hooks terprogram, lihat [Kontrol eksekusi dengan ho
 
 Agent SDK memberi Anda akses ke beberapa cara untuk memperluas perilaku agen Anda. Jika Anda tidak yakin mana yang digunakan, tabel ini memetakan tujuan umum ke pendekatan yang tepat.
 
-| Anda ingin...                                                                                        | Gunakan                                       | Permukaan SDK                                                                                                                                                                              |
+| Apa yang ingin Anda lakukan                                                                          | Gunakan                                       | Permukaan SDK                                                                                                                                                                              |
 | :--------------------------------------------------------------------------------------------------- | :-------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Atur konvensi proyek yang selalu diikuti agen Anda                                                   | [CLAUDE.md](/docs/id/memory)                       | `settingSources: ["project"]` memuat secara otomatis                                                                                                                                       |
 | Berikan agen materi referensi yang dimuat ketika relevan                                             | [Skills](/docs/id/agent-sdk/skills)                | `settingSources` + `skills` option                                                                                                                                                         |
@@ -297,10 +311,6 @@ Agent SDK memberi Anda akses ke beberapa cara untuk memperluas perilaku agen And
 | Koordinasikan beberapa instans Claude Code dengan daftar tugas bersama dan pesan inter-agen langsung | [Agent teams](/docs/id/agent-teams)                | Tidak dikonfigurasi langsung melalui opsi SDK. Agent teams adalah fitur CLI di mana satu sesi bertindak sebagai pemimpin tim, mengoordinasikan pekerjaan di seluruh rekan kerja independen |
 | Jalankan logika deterministik pada tool calls (audit, block, transform)                              | [Hooks](/docs/id/agent-sdk/hooks)                  | Parameter `hooks` dengan callbacks, atau skrip shell dimuat melalui `settingSources`                                                                                                       |
 | Berikan Claude akses tool terstruktur ke layanan eksternal                                           | [MCP](/docs/id/agent-sdk/mcp)                      | Parameter `mcpServers`                                                                                                                                                                     |
-
-<Tip>
-  **Subagents versus agent teams:** Subagents bersifat ephemeral dan terisolasi: percakapan segar, satu tugas, ringkasan dikembalikan ke induk. Agent teams mengoordinasikan beberapa instans Claude Code independen yang berbagi daftar tugas dan saling mengirim pesan langsung. Agent teams adalah fitur CLI. Lihat [Apa yang diwarisi subagents](/docs/id/agent-sdk/subagents#what-subagents-inherit) dan [perbandingan agent teams](/docs/id/agent-teams#compare-with-subagents) untuk detail.
-</Tip>
 
 Setiap fitur yang Anda aktifkan menambah jendela konteks agen Anda. Untuk biaya per-fitur dan bagaimana fitur ini berlapis bersama, lihat [Perluas Claude Code](/docs/id/features-overview#understand-context-costs).
 

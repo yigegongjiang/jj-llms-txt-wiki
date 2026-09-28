@@ -19,11 +19,11 @@ Karena tautan mendalam adalah URL, Anda dapat menempatkannya di mana pun tautan 
 
 Halaman ini mencakup cara [membangun tautan](#build-a-link), [menyematkannya dalam runbook atau memicunya dari shell](#examples), dan [mengelola atau menonaktifkan pendaftaran handler](#registration-and-supported-platforms) di setiap platform.
 
-<h2 id="how-it-works">
-  Cara kerjanya
+<h2 id="how-deep-links-work">
+  Cara kerja deep link
 </h2>
 
-Awalan `claude-cli://` adalah skema URL khusus yang Claude Code daftarkan dengan sistem operasi Anda, mirip dengan cara tautan `mailto:` membuka klien email Anda. Tautan dapat berada di halaman web, di wiki, di pesan Slack, atau di aplikasi apa pun yang merender tautan. Ketika Anda mengkliknya:
+Awalan `claude-cli://` adalah skema URL khusus yang Claude Code daftarkan dengan sistem operasi Anda, mirip dengan cara tautan `mailto:` membuka klien email Anda. Ketika Anda mengklik deep link:
 
 1. Browser atau aplikasi menyerahkan URL ke sistem operasi Anda.
 2. Sistem operasi mengenali awalan `claude-cli://` dan memulai Claude Code di mesin Anda.
@@ -32,9 +32,7 @@ Awalan `claude-cli://` adalah skema URL khusus yang Claude Code daftarkan dengan
 
 Tautan itu sendiri dapat dihosting di mana saja, tetapi sesi selalu terbuka secara lokal di komputer tempat Anda mengklik. Lihat [Pendaftaran dan platform yang didukung](#registration-and-supported-platforms) untuk emulator terminal mana yang terbuka di setiap sistem operasi.
 
-<Note>
-  Platform yang menampilkan tautan harus memungkinkan skema URL khusus. Markdown yang dirender GitHub memungkinkan `http` dan `https` tetapi menghapus skema seperti `claude-cli://` di README, masalah, permintaan tarik, dan wiki. Hanya teks tautan yang ditampilkan, tanpa tautan di belakangnya dan URL tersembunyi. Lihat [Troubleshooting](#the-link-renders-as-plain-text-instead-of-being-clickable) untuk solusi.
-</Note>
+Platform yang menampilkan tautan harus memungkinkan skema URL khusus. Untuk apa yang dilakukan GitHub dengan tautan tersebut dan solusinya, lihat [Tautan ditampilkan sebagai teks biasa alih-alih dapat diklik](#the-link-renders-as-plain-text-instead-of-being-clickable).
 
 <h3 id="what-a-launched-session-shows">
   Apa yang ditampilkan sesi yang diluncurkan
@@ -54,12 +52,14 @@ Setiap tautan mendalam dimulai dengan `claude-cli://open`, yang merupakan satu-s
 claude-cli://open
 ```
 
+Untuk mencoba tautan tanpa menempatkannya di halaman, tempel ke bilah alamat browser Anda atau [buka dari shell](#open-a-link-from-the-shell).
+
 Tambahkan parameter untuk mengontrol di mana sesi dimulai dan apa yang dimuat kotak prompt:
 
 | Parameter | Deskripsi                                                                                                                                                                                                                                                  |
 | --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `q`       | Teks untuk diisi sebelumnya di kotak prompt. [URL-encode](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent) nilainya. Gunakan `%0A` untuk jeda baris dalam prompt multi-baris. Maksimal 5.000 karakter. |
-| `cwd`     | Jalur absolut untuk digunakan sebagai direktori kerja. Jalur jaringan dan UNC ditolak, dan begitu juga jalur yang berisi karakter kontrol tak terlihat atau bidireksional.                                                                                 |
+| `cwd`     | Jalur absolut untuk digunakan sebagai direktori kerja. Jalur jaringan dan UNC ditolak, dan begitu juga jalur yang berisi segmen `..` atau karakter kontrol tak terlihat atau bidireksional.                                                                |
 | `repo`    | Slug `owner/name` GitHub. Claude Code menyelesaikannya ke klon lokal yang telah dilihatnya sebelumnya dan dimulai di sana. Jika Anda tidak memiliki klon yang cocok, sesi terbuka di direktori home Anda.                                                  |
 
 `cwd` dan `repo` adalah [dua cara untuk mengatur direktori kerja](#choose-between-cwd-and-repo). Jika Anda melewatkan keduanya, `cwd` memiliki prioritas dan `repo` diabaikan, bahkan jika jalur `cwd` tidak ada.
@@ -77,7 +77,7 @@ Investigate the failed deploy of payments-api.
 Check recent commits to main and the last successful build.
 ```
 
-Anda dapat mengedit prompt sebelum menekan Enter untuk mengirimnya. Jika Anda tidak memiliki klon lokal repositori, sesi terbuka di direktori home Anda. Lihat [Pilih antara `cwd` dan `repo`](#choose-between-cwd-and-repo) untuk cara jalur lokal dipilih ketika Anda memiliki beberapa klon atau worktrees.
+Anda dapat mengedit prompt sebelum menekan Enter untuk mengirimnya. Lihat [Pilih antara `cwd` dan `repo`](#choose-between-cwd-and-repo) untuk cara jalur lokal dipilih ketika Anda memiliki beberapa klon atau worktrees.
 
 <h3 id="choose-between-cwd-and-repo">
   Pilih antara `cwd` dan `repo`
@@ -87,9 +87,7 @@ Gunakan `cwd` ketika semua orang yang mengklik tautan memiliki proyek di jalur a
 
 Gunakan `repo` ketika tautan dibagikan dan setiap orang mengklon ke lokasi yang berbeda. Claude Code menyelesaikan slug ke jalur lokal sebagai berikut:
 
-* Setiap kali Anda menjalankan `claude` di repositori Git, jalur sistem file direktori itu dicatat terhadap slug `owner/name` GitHub repositori.
-* Ketika tautan mendalam tiba, `repo` membuka jalur yang cocok apa pun yang Anda gunakan paling baru. Beberapa klon dan worktrees dilacak secara terpisah, jadi ia memilih yang Anda kerjakan terakhir.
-* Pencarian hanya menemukan jalur di mana Anda telah menjalankan Claude Code setidaknya sekali.
+* `repo` membuka klon atau worktree repositori yang ditautkan di mana Anda paling baru menjalankan `claude`. Setiap kali Anda menjalankan `claude` di repositori Git, Claude Code mencatat jalur direktori itu terhadap slug `owner/name` GitHub repositori. Claude Code melacak klon dan worktrees secara terpisah.
 * Tautan tidak mengubah cabang mana yang diperiksa. Sesi terbuka dalam keadaan apa pun direktori itu saat ini.
 
 Header sambutan menunjukkan jalur mana yang dipilihnya sehingga Anda dapat mengonfirmasi klon yang tepat telah dibuka.
@@ -124,7 +122,7 @@ Untuk menggunakan ini dalam runbook Anda sendiri, ganti `acme/web-gateway` denga
   Buka tautan dari shell
 </h3>
 
-Anda juga dapat membuka tautan mendalam dari skrip shell, alias, atau otomasi daripada dengan mengkliknya. Panggil perintah pembukaan URL sistem operasi Anda dengan tautan sebagai argumen.
+Anda juga dapat membuka tautan mendalam dari skrip shell, alias, atau otomasi daripada dengan mengkliknya. Panggil perintah pembukaan URL sistem operasi Anda dengan tautan sebagai argumen. Perintah-perintah ini bergantung pada handler yang Claude Code [daftarkan ketika Anda mengirim prompt pertama dari sesi interaktif](#registration-and-supported-platforms) di mesin.
 
 <Tabs>
   <Tab title="macOS">
@@ -133,6 +131,8 @@ Anda juga dapat membuka tautan mendalam dari skrip shell, alias, atau otomasi da
     ```bash theme={null}
     open "claude-cli://open?repo=acme/payments&q=review%20open%20PRs"
     ```
+
+    Jika berhasil, jendela terminal baru terbuka dengan Claude Code berjalan dan prompt sudah diisi sebelumnya.
   </Tab>
 
   <Tab title="Linux">
@@ -141,6 +141,8 @@ Anda juga dapat membuka tautan mendalam dari skrip shell, alias, atau otomasi da
     ```bash theme={null}
     xdg-open "claude-cli://open?repo=acme/payments&q=review%20open%20PRs"
     ```
+
+    Jika berhasil, jendela terminal baru terbuka dengan Claude Code berjalan dan prompt sudah diisi sebelumnya. Jika shell melaporkan bahwa `xdg-open` tidak ditemukan, lihat [Troubleshooting](#xdg-open-is-not-found-on-linux).
   </Tab>
 
   <Tab title="Windows">
@@ -155,6 +157,8 @@ Anda juga dapat membuka tautan mendalam dari skrip shell, alias, atau otomasi da
     ```cmd theme={null}
     start "" "claude-cli://open?repo=acme/payments&q=review%20open%20PRs"
     ```
+
+    Jika berhasil, jendela terminal baru terbuka dengan Claude Code berjalan dan prompt sudah diisi sebelumnya.
   </Tab>
 </Tabs>
 
@@ -162,7 +166,7 @@ Anda juga dapat membuka tautan mendalam dari skrip shell, alias, atau otomasi da
   Pendaftaran dan platform yang didukung
 </h2>
 
-Claude Code mendaftarkan handler `claude-cli://` dengan sistem operasi Anda pertama kali Anda memulai sesi interaktif di macOS, Linux, dan Windows. Anda tidak menjalankan perintah install terpisah. Pendaftaran menulis ke lokasi tingkat pengguna saja:
+Claude Code mendaftarkan handler `claude-cli://` dengan sistem operasi Anda pada macOS, Linux, dan Windows ketika Anda mengirim prompt pertama dari sesi interaktif. Memulai `claude` dan keluar tanpa mengirim prompt tidak mendaftarkan handler. Anda tidak menjalankan perintah install terpisah. Pendaftaran menulis ke lokasi tingkat pengguna saja:
 
 | Platform | Lokasi Handler                                                                                                     |
 | -------- | ------------------------------------------------------------------------------------------------------------------ |
@@ -172,7 +176,7 @@ Claude Code mendaftarkan handler `claude-cli://` dengan sistem operasi Anda pert
 
 Handler meluncurkan Claude Code di emulator terminal yang terdeteksi. Di macOS, Claude Code mengingat terminal dari sesi interaktif terbaru Anda dan menggunakannya kembali, mendukung iTerm2, Ghostty, kitty, Alacritty, WezTerm, dan Terminal.app. Di Linux, ia menghormati variabel lingkungan `$TERMINAL`, kemudian `x-terminal-emulator`, kemudian daftar emulator umum. Di Windows, ia lebih suka Windows Terminal, kemudian PowerShell, kemudian `cmd.exe`.
 
-Untuk mencegah pendaftaran sepenuhnya, atur [`disableDeepLinkRegistration`](/docs/id/settings) ke `"disable"` di `settings.json`. Untuk memberlakukan ini di seluruh organisasi sehingga pengguna tidak dapat mengaktifkannya kembali, atur di [managed settings](/docs/id/server-managed-settings) sebagai gantinya.
+Untuk mencegah pendaftaran sepenuhnya, atur [`disableDeepLinkRegistration`](/docs/id/settings-reference#disabledeeplinkregistration) ke `"disable"` di `settings.json`. Untuk memberlakukan ini di seluruh organisasi sehingga pengguna tidak dapat mengaktifkannya kembali, atur di [managed settings](/docs/id/server-managed-settings) sebagai gantinya.
 
 <h2 id="open-a-vs-code-tab-instead-of-a-terminal">
   Buka tab VS Code alih-alih terminal
@@ -188,7 +192,13 @@ Ekstensi VS Code mendaftarkan handler sendiri di `vscode://anthropic.claude-code
   Mengklik tautan tidak melakukan apa pun
 </h3>
 
-Handler mungkin belum terdaftar. Mulai sesi `claude` interaktif sekali di mesin itu, keluar, dan coba tautan lagi. Jika Anda berada di Linux tanpa lingkungan desktop, `xdg-open` mungkin tidak memiliki apa pun untuk dikirim.
+Handler mungkin belum terdaftar. Pendaftaran terjadi ketika Anda mengirim prompt pertama Anda dari sesi interaktif, bukan ketika sesi dimulai. Mulai sesi `claude` interaktif di mesin itu, kirim prompt apa pun, keluar, dan coba tautan lagi. Jika Anda berada di Linux tanpa lingkungan desktop, `xdg-open` mungkin tidak memiliki apa pun untuk dikirim.
+
+<h3 id="xdg-open-is-not-found-on-linux">
+  xdg-open tidak ditemukan di Linux
+</h3>
+
+Perintah `xdg-open` adalah bagian dari paket `xdg-utils`, yang sering ditinggalkan oleh citra server minimal, kontainer, dan distribusi WSL. Instal `xdg-utils` dengan manajer paket distribusi Anda, misalnya `sudo apt install xdg-utils`, kemudian jalankan perintah lagi. Jika perintah kemudian berjalan tetapi tidak ada yang terbuka, `xdg-open` mungkin tidak memiliki lingkungan desktop untuk dikirim; lihat [Mengklik tautan tidak melakukan apa pun](#clicking-the-link-does-nothing).
 
 <h3 id="the-link-renders-as-plain-text-instead-of-being-clickable">
   Tautan dirender sebagai teks biasa alih-alih dapat diklik
@@ -200,7 +210,7 @@ Beberapa renderer Markdown hanya memungkinkan tautan `http` dan `https` dan meng
   Sesi terbuka di direktori home saya alih-alih repo
 </h3>
 
-Parameter `repo` hanya menyelesaikan ke klon yang telah dilihat Claude Code. Jalankan `claude` di dalam klon sekali sehingga jalurnya dicatat, atau alihkan tautan untuk menggunakan `cwd` dengan jalur absolut.
+Parameter `repo` hanya menyelesaikan ke klon yang telah dilihat Claude Code. Jalankan `claude` di dalam klon sekali sehingga Claude Code mencatat jalurnya, atau alihkan tautan untuk menggunakan `cwd` dengan jalur absolut.
 
 <h3 id="the-link-opens-the-wrong-terminal">
   Tautan membuka terminal yang salah

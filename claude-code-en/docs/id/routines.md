@@ -4,13 +4,13 @@
 
 # Otomatisasi pekerjaan dengan rutinitas
 
-> Letakkan Claude Code pada autopilot. Tentukan rutinitas yang berjalan sesuai jadwal, dipicu oleh panggilan API, atau bereaksi terhadap peristiwa GitHub dari infrastruktur cloud yang dikelola Anthropic.
+> Letakkan Claude Code pada autopilot. Tentukan rutinitas yang berjalan sesuai jadwal, dipicu oleh panggilan API, atau bereaksi terhadap peristiwa GitHub dari infrastruktur cloud.
 
 <Note>
   Rutinitas berada dalam pratinjau penelitian. Perilaku, batas, dan permukaan API mungkin berubah.
 </Note>
 
-Rutinitas adalah konfigurasi Claude Code yang disimpan: prompt, satu atau lebih repositori, dan serangkaian [konektor](/docs/id/mcp), dikemas sekali dan dijalankan secara otomatis. Rutinitas dijalankan pada infrastruktur cloud yang dikelola Anthropic, sehingga terus bekerja ketika laptop Anda ditutup.
+Rutinitas adalah konfigurasi Claude Code yang disimpan: prompt, satu atau lebih repositori, dan serangkaian [konektor](/docs/id/mcp), dikemas sekali dan dijalankan secara otomatis. Rutinitas dijalankan pada infrastruktur cloud yang dikelola Anthropic, atau pada [lingkungan self-hosted](/docs/id/self-hosted-environments) organisasi Anda ketika dialihkan ke sana, sehingga terus bekerja ketika laptop Anda ditutup.
 
 Setiap rutinitas dapat memiliki satu atau lebih pemicu yang terpasang padanya:
 
@@ -20,9 +20,9 @@ Setiap rutinitas dapat memiliki satu atau lebih pemicu yang terpasang padanya:
 
 Satu rutinitas dapat menggabungkan pemicu. Misalnya, rutinitas tinjauan PR dapat berjalan malam hari, dipicu dari skrip penyebaran, dan juga bereaksi terhadap setiap PR baru.
 
-Rutinitas tersedia pada paket Pro, Max, Team, dan Enterprise dengan [Claude Code di web](/docs/id/claude-code-on-the-web) diaktifkan. Buat dan kelola di [claude.ai/code/routines](https://claude.ai/code/routines), atau dari CLI dengan `/schedule`.
+Rutinitas tersedia pada paket Pro, Max, Team, dan Enterprise. Buat dan kelola di [claude.ai/code/routines](https://claude.ai/code/routines), atau dari CLI dengan `/schedule`.
 
-Admin Team dan Enterprise dapat menonaktifkan rutinitas untuk semua anggota dengan toggle Routines di [claude.ai/admin-settings/claude-code](https://claude.ai/admin-settings/claude-code). Ketika dinonaktifkan, rutinitas yang ada berhenti berjalan dan anggota tidak dapat membuat yang baru.
+Pemilik Team dan Enterprise dapat menonaktifkan rutinitas untuk semua anggota dengan toggle Routines di [claude.ai/admin-settings/claude-code](https://claude.ai/admin-settings/claude-code). Ketika dinonaktifkan, rutinitas yang ada berhenti berjalan dan anggota tidak dapat membuat yang baru.
 
 Halaman ini mencakup pembuatan rutinitas, mengonfigurasi setiap jenis pemicu, mengelola jalankan, dan bagaimana batas penggunaan berlaku.
 
@@ -44,17 +44,26 @@ Setiap contoh memasangkan jenis pemicu dengan jenis pekerjaan yang cocok untuk r
 
 **Port perpustakaan.** Pemicu GitHub berjalan pada `pull_request.closed` disaring ke PR yang digabungkan di satu repositori SDK. Rutinitas memindahkan perubahan ke SDK paralel dalam bahasa lain dan membuka PR yang cocok, menjaga kedua perpustakaan tetap sinkron tanpa manusia mengimplementasikan ulang setiap perubahan.
 
-Bagian di bawah ini menjelaskan cara membuat rutinitas dan mengonfigurasi setiap jenis pemicu ini.
-
 <h2 id="create-a-routine">
   Buat rutinitas
 </h2>
 
-Buat rutinitas dari web di [claude.ai/code/routines](https://claude.ai/code/routines), dari aplikasi Desktop, atau dari CLI. Ketiga permukaan menulis ke akun cloud yang sama, sehingga rutinitas yang Anda buat di satu tempat muncul di tempat lain segera. Di aplikasi Desktop, klik **Routines** di bilah sisi, lalu **New routine**, dan pilih **Remote**; memilih **Local** malah membuat [tugas terjadwal Desktop](/docs/id/desktop-scheduled-tasks), yang berjalan di mesin Anda daripada di cloud.
+Buat rutinitas dari web di [claude.ai/code/routines](https://claude.ai/code/routines), dari aplikasi Desktop, atau dari CLI. Ketiga permukaan menulis ke akun cloud yang sama, sehingga rutinitas yang Anda buat di satu tempat muncul di tempat lain segera. Di aplikasi Desktop, klik **Routines** di bilah sisi atau di menu **More** bilah sisi, lalu **New routine**, dan pilih **Cloud**; memilih **Local** malah membuat [tugas terjadwal Desktop](/docs/id/desktop-scheduled-tasks), yang berjalan di mesin Anda daripada di cloud.
 
 Formulir pembuatan menyiapkan prompt rutinitas, repositori, lingkungan, konektor, dan pemicu.
 
-Rutinitas berjalan secara otonom sebagai sesi cloud Claude Code penuh: tidak ada pemilih mode izin dan tidak ada prompt persetujuan selama jalankan. Sesi dapat menjalankan perintah shell, menggunakan [skills](/docs/id/skills) yang berkomitmen pada repositori yang diklon, dan memanggil konektor apa pun yang Anda sertakan. Apa yang dapat dijangkau rutinitas ditentukan oleh repositori yang Anda pilih dan pengaturan push cabang mereka, [lingkungan](/docs/id/claude-code-on-the-web#the-cloud-environment) akses jaringan dan variabel, dan konektor yang Anda sertakan. Cakupan masing-masing ke apa yang benar-benar dibutuhkan rutinitas.
+Rutinitas berjalan secara otonom sebagai sesi cloud Claude Code penuh: tidak ada pemilih mode izin, dan sesi menjalankan perintah shell, menggunakan [skills](/docs/id/skills) yang berkomitmen pada repositori yang diklon, dan memanggil konektor apa pun yang Anda sertakan, semuanya tanpa berhenti untuk persetujuan selain beberapa tindakan [artifact](/docs/id/artifacts).
+
+Apa yang dapat dijangkau rutinitas ditentukan oleh repositori yang Anda pilih, [lingkungan](/docs/id/cloud-environments) akses jaringan dan variabel, dan konektor yang Anda sertakan. Cakupan masing-masing ke apa yang benar-benar dibutuhkan rutinitas.
+
+Ketika jadwal rutinitas atau **Run now** memulai jalankan, Claude menerbitkan kembali artifact yang ada tanpa bertanya hanya ketika semua hal ini berlaku:
+
+* Anda dapat mengedit artifact dan itu milik organisasi Anda sendiri
+* Artifact tidak dibagikan secara publik, dan tidak dibagikan dengan orang-orang tertentu atau organisasi Anda dengan versi terbaru dipilih sebagai versi yang dilihat penonton
+* Penerbitan hanya membawa halaman, tanpa file pendukung atau apa pun yang ditambahkan, dan tidak memaksa versi yang lebih baru
+* Halaman tidak memiliki hibah yang melampaui halaman, seperti [panggilan konektor](/docs/id/artifacts#pull-live-data-with-mcp-connectors)
+
+Dalam setiap kasus lain, termasuk menerbitkan artifact baru, Claude bertanya terlebih dahulu. Ketika pekerjaan rutinitas adalah menjaga halaman tetap terkini, berikan artifact yang sudah Anda terbitkan.
 
 Rutinitas milik akun claude.ai individual Anda. Mereka tidak dibagikan dengan rekan kerja, dan mereka dihitung terhadap tunjangan jalankan harian akun Anda. Apa pun yang dilakukan rutinitas melalui identitas GitHub yang terhubung atau konektor muncul sebagai Anda: komit dan permintaan tarik membawa pengguna GitHub Anda, dan pesan Slack, tiket Linear, atau tindakan konektor lainnya menggunakan akun tertaut Anda untuk layanan tersebut.
 
@@ -70,6 +79,8 @@ Rutinitas milik akun claude.ai individual Anda. Mereka tidak dibagikan dengan re
   <Step title="Beri nama rutinitas dan tulis prompt">
     Berikan rutinitas nama deskriptif dan tulis prompt yang Claude jalankan setiap kali. Prompt adalah bagian paling penting: rutinitas berjalan secara otonom, jadi prompt harus mandiri dan eksplisit tentang apa yang harus dilakukan dan seperti apa kesuksesan itu.
 
+    Ketika pemicu menyala, sesi menerima prompt rutinitas yang disimpan sebagai tugas yang ditugaskan dan melaksanakannya, daripada memperlakukannya sebagai konten yang tidak dipercaya yang tiba di tengah percakapan. Pemicu hanya membuktikan bahwa prompt disimpan sebelumnya oleh sesi yang berwenang di akun Anda, jadi prompt yang dipecat bukan masukan pengguna langsung dan tidak dapat bertindak sebagai persetujuan atau persetujuan untuk tindakan selama jalankan. Konten yang sesi ambil selama jalankan mempertahankan penanganannya yang normal. Sebelum v2.1.213, sesi menerima prompt yang sama dibingkai sebagai notifikasi latar belakang yang tidak dipercaya dan dapat menolak untuk bertindak atasnya.
+
     Input prompt mencakup pemilih model. Claude menggunakan model yang dipilih pada setiap jalankan.
   </Step>
 
@@ -78,13 +89,13 @@ Rutinitas milik akun claude.ai individual Anda. Mereka tidak dibagikan dengan re
   </Step>
 
   <Step title="Pilih lingkungan">
-    Pilih [lingkungan cloud](/docs/id/claude-code-on-the-web#the-cloud-environment) untuk rutinitas. Lingkungan mengontrol apa yang dapat diakses sesi cloud:
+    Pilih [lingkungan cloud](/docs/id/cloud-environments) untuk rutinitas. Lingkungan mengontrol apa yang dapat diakses sesi cloud:
 
     * **Network access**: atur tingkat akses internet yang tersedia selama setiap jalankan
-    * **Environment variables**: sediakan kunci API, token, atau rahasia lainnya yang dapat digunakan Claude
-    * **Setup script**: instal dependensi dan alat yang dibutuhkan rutinitas. Hasilnya [di-cache](/docs/id/claude-code-on-the-web#environment-caching), jadi skrip tidak berjalan ulang pada setiap sesi
+    * **Environment variables**: sediakan nilai yang dapat digunakan Claude selama setiap jalankan. Mereka [terlihat oleh siapa pun yang menggunakan lingkungan](/docs/id/cloud-environments#what-carries-over-from-your-setup), jadi pada paket Pro dan Max, simpan kunci untuk API yang Claude panggil selama jalankan sebagai [API credentials](/docs/id/cloud-environments#add-api-credentials) sebagai gantinya. Bagian itu juga mencantumkan permintaan yang tidak pernah mendapatkan kredensial
+    * **Setup script**: instal dependensi dan alat yang dibutuhkan rutinitas. Hasilnya [di-cache](/docs/id/cloud-environments#environment-caching), jadi skrip tidak berjalan ulang pada setiap sesi
 
-    Lingkungan **Default** disediakan dengan akses jaringan **Trusted**, yang memungkinkan [set default](/docs/id/claude-code-on-the-web#default-allowed-domains) registri paket, API penyedia cloud, registri kontainer, dan domain pengembangan umum, tetapi memblokir semuanya. Jika rutinitas Anda perlu menjangkau layanan Anda sendiri atau domain di luar daftar itu, edit [akses jaringan](/docs/id/claude-code-on-the-web#network-access) lingkungan sebelum menjalankan. Untuk menggunakan lingkungan terpisah, [buat satu](/docs/id/claude-code-on-the-web#configure-your-environment) terlebih dahulu.
+    Lingkungan **Default** disediakan dengan akses jaringan **Trusted**, yang memungkinkan hanya [daftar allowlist default](/docs/id/cloud-environments#default-allowed-domains) registri paket, API penyedia cloud, registri kontainer, dan domain pengembangan umum melalui jaringan sesi. Konektor yang Anda tambahkan ke rutinitas menjangkau layanan mereka melalui server Anthropic, jadi mereka tidak memerlukan perubahan allowlist. Jika rutinitas Anda perlu menjangkau layanan Anda sendiri secara langsung, atau domain di luar daftar itu, edit [akses jaringan](/docs/id/cloud-environments#network-access) lingkungan sebelum menjalankan. Untuk menggunakan lingkungan terpisah, [buat satu](/docs/id/cloud-environments#configure-your-environment) terlebih dahulu.
   </Step>
 
   <Step title="Pilih pemicu">
@@ -105,12 +116,8 @@ Rutinitas milik akun claude.ai individual Anda. Mereka tidak dibagikan dengan re
     </Tabs>
   </Step>
 
-  <Step title="Tinjau konektor dan izin">
-    Tab **Connectors** dan **Permissions** di bagian bawah formulir mengontrol apa yang dapat dijangkau rutinitas.
-
-    Di bawah Connectors, semua [konektor MCP](/docs/id/mcp) yang terhubung disertakan secara default. Hapus yang tidak dibutuhkan rutinitas. Claude dapat menggunakan setiap alat dari konektor yang disertakan, termasuk penulisan, tanpa meminta izin selama jalankan.
-
-    Di bawah Permissions, aktifkan **Allow unrestricted branch pushes** untuk repositori apa pun di mana Claude harus dapat push ke cabang yang ada daripada hanya yang dengan awalan `claude/`.
+  <Step title="Tinjau konektor">
+    Di bawah **Connectors** di bagian bawah formulir, semua [konektor MCP](/docs/id/mcp) yang terhubung disertakan secara default. Hapus yang tidak dibutuhkan rutinitas: Claude dapat menggunakan setiap alat dari konektor yang disertakan, termasuk penulisan, tanpa meminta izin selama jalankan.
   </Step>
 
   <Step title="Buat rutinitas">
@@ -124,13 +131,13 @@ Rutinitas milik akun claude.ai individual Anda. Mereka tidak dibagikan dengan re
   Buat dari CLI
 </h3>
 
-Jalankan `/schedule` dalam sesi apa pun untuk membuat rutinitas terjadwal secara percakapan. Anda juga dapat meneruskan deskripsi langsung, untuk rutinitas berulang seperti `/schedule daily PR review at 9am` atau satu kali seperti `/schedule clean up feature flag in one week`. Claude menjalani informasi yang sama yang dikumpulkan formulir web, lalu menyimpan rutinitas ke akun Anda.
+Jalankan `/schedule` dalam sesi apa pun untuk membuat rutinitas terjadwal secara percakapan. Anda juga dapat meneruskan deskripsi langsung, untuk rutinitas berulang seperti `/schedule daily PR review at 9am` atau satu kali seperti `/schedule clean up feature flag in one week`. Claude menjalani informasi yang sama yang dikumpulkan formulir web, lalu menyimpan rutinitas ke akun Anda. Perintah juga tersedia di bawah alias `/routines`.
 
 Awal yang berhasil terlihat seperti percakapan: Claude mengajukan pertanyaan lanjutan tentang jadwal, repositori, dan prompt sebelum menyimpan. Jika Claude malah menjawab bahwa Anda perlu mengautentikasi atau bahwa Claude tidak dapat terhubung ke akun claude.ai jarak jauh Anda, tidak ada rutinitas yang dibuat; lihat [Troubleshooting](#troubleshooting).
 
-`/schedule` di CLI hanya membuat rutinitas terjadwal. Untuk menambahkan pemicu API atau GitHub, edit rutinitas di web di [claude.ai/code/routines](https://claude.ai/code/routines).
+`/schedule` di CLI membuat rutinitas terjadwal. Untuk menambahkan pemicu API, edit rutinitas di web di [claude.ai/code/routines](https://claude.ai/code/routines). Anda dapat menambahkan [pemicu GitHub](#add-a-github-trigger) dari web atau dari CLI. Jalur CLI memerlukan Claude Code v2.1.225 atau lebih baru.
 
-CLI juga mendukung pengelolaan rutinitas yang ada. Jalankan `/schedule list` untuk melihat semua rutinitas, `/schedule update` untuk mengubah satu, atau `/schedule run` untuk memicunya segera.
+Rutinitas tanpa pemicu jadwal, seperti yang dimulai hanya oleh panggilan API atau peristiwa GitHub, tidak memiliki waktu jalankan berikutnya, dan CLI tidak menunjukkan apa pun ketika Claude menyimpan atau memperbarui. Sebelum v2.1.211, CLI melaporkan waktu jalankan berikutnya pada tahun 1 untuk rutinitas ini.
 
 <h2 id="configure-triggers">
   Konfigurasi pemicu
@@ -154,10 +161,6 @@ Untuk interval khusus seperti setiap dua jam atau tanggal pertama setiap bulan, 
 
 Jadwal sekali menjalankan rutinitas satu kali pada stempel waktu tertentu. Gunakan untuk mengingatkan diri sendiri nanti dalam minggu ini, untuk membuka PR pembersihan setelah rollout selesai, atau untuk memulai tugas tindak lanjut ketika perubahan upstream tiba. Setelah rutinitas dijalankan, rutinitas secara otomatis menonaktifkan dan UI web menandainya sebagai **Ran**. Untuk menjalankannya lagi, edit rutinitas dan atur waktu sekali baru.
 
-<Note>
-  Penjadwalan sekali dari CLI sedang diluncurkan secara bertahap dan mungkin belum tersedia di akun Anda. Jika `/schedule` hanya menawarkan jadwal berulang, buat jalankan sekali dari web di [claude.ai/code/routines](https://claude.ai/code/routines) sebagai gantinya.
-</Note>
-
 Buat jalankan sekali dari CLI dengan mendeskripsikan waktu dalam bahasa alami. Claude menyelesaikan frasa terhadap waktu saat ini dan mengonfirmasi stempel waktu absolut sebelum menyimpan.
 
 ```text theme={null}
@@ -170,7 +173,7 @@ Buat jalankan sekali dari CLI dengan mendeskripsikan waktu dalam bahasa alami. C
 
 Konversi lokal-ke-UTC yang sama seperti jadwal berulang berlaku untuk stempel waktu sekali.
 
-Jalankan sekali tidak dihitung terhadap batas jalankan rutinitas harian. Mereka mengonsumsi penggunaan langganan reguler paket Anda seperti sesi lainnya. Lihat [Usage and limits](#usage-and-limits) untuk detail.
+Jalankan sekali tidak dihitung terhadap batas jalankan rutinitas harian. Lihat [Usage and limits](#usage-and-limits) untuk detail.
 
 <h3 id="add-an-api-trigger">
   Tambahkan pemicu API
@@ -182,7 +185,7 @@ Pemicu API ditambahkan ke rutinitas yang ada dari web. CLI saat ini tidak dapat 
 
 <Steps>
   <Step title="Buka rutinitas untuk diedit">
-    Buka [claude.ai/code/routines](https://claude.ai/code/routines), klik rutinitas yang ingin Anda picu melalui API, lalu klik ikon pensil untuk membuka **Edit routine**.
+    Buka [claude.ai/code/routines](https://claude.ai/code/routines), klik rutinitas yang ingin Anda picu melalui API, lalu buka menu di sebelah nama rutinitas dan pilih **Edit**.
   </Step>
 
   <Step title="Tambahkan pemicu API">
@@ -205,6 +208,10 @@ Setiap rutinitas memiliki token sendiri, dibatasi untuk memicu rutinitas itu saj
 </h4>
 
 Kirim permintaan POST ke titik akhir `/fire` dengan token pembawa di header `Authorization`. Badan permintaan menerima bidang `text` opsional untuk konteks spesifik jalankan seperti badan peringatan atau log yang gagal, diteruskan ke rutinitas bersama prompt yang disimpannya. Nilainya adalah teks freeform dan tidak diuraikan: jika Anda mengirim JSON atau muatan terstruktur lainnya, rutinitas menerimanya sebagai string literal.
+
+Nilai `text` tidak mencapai rutinitas sebagai pesan telanjang. Nilai tersebut tiba dibungkus dalam blok `<routine-fire-payload>` yang memberi labelnya sebagai data yang tidak dipercaya dan memberitahu Claude untuk tidak mengikuti instruksi di dalamnya kecuali prompt rutinitas sendiri mengatakan demikian. Pembungkus yang sama berlaku untuk teks yang disediakan dengan **Run now** di UI web.
+
+Ini berarti prompt yang disimpan rutinitas harus memilih untuk bertindak pada teks api: tulis prompt untuk mereferensikan payload secara eksplisit, misalnya "Investigasi peringatan yang dijelaskan dalam blok routine-fire-payload", atau rutinitas memperlakukan teks sebagai konteks inert. Siapa pun yang memegang token pembawa dapat mengirim `text`, jadi pembungkus membuat teks api dari token yang bocor tiba berlabel sebagai data yang tidak dipercaya daripada sebagai instruksi langsung ke rutinitas Anda.
 
 Contoh di bawah memicu rutinitas dari shell. ID rutinitas dan token yang ditampilkan adalah placeholder: gantikan dengan URL dan token yang Anda salin saat [menambahkan pemicu API](#add-an-api-trigger), atau permintaan gagal dengan kesalahan autentikasi `401`:
 
@@ -237,7 +244,7 @@ Buka URL sesi di browser untuk menonton jalankan secara real-time, meninjau peru
   Referensi API
 </h4>
 
-Untuk referensi API lengkap, termasuk semua respons kesalahan, aturan validasi, dan batas bidang, lihat [Trigger a routine via API](https://platform.claude.com/docs/id/api/claude-code/routines-fire) dalam dokumentasi Platform Claude.
+Untuk referensi API lengkap, termasuk semua respons kesalahan, aturan validasi, dan batas bidang, lihat [Trigger a routine via API](https://platform.claude.com/docs/en/api/claude-code/routines-fire) dalam dokumentasi Platform Claude.
 
 Titik akhir `/fire` tersedia untuk pengguna claude.ai saja dan bukan bagian dari permukaan API Platform Claude.
 
@@ -245,28 +252,27 @@ Titik akhir `/fire` tersedia untuk pengguna claude.ai saja dan bukan bagian dari
   Tambahkan pemicu GitHub
 </h3>
 
-Pemicu GitHub memulai sesi baru secara otomatis ketika peristiwa yang cocok terjadi pada repositori yang terhubung. Setiap peristiwa yang cocok memulai sesinya sendiri.
+Pemicu GitHub memulai sesi baru secara otomatis ketika peristiwa yang cocok terjadi pada repositori yang terhubung. Claude Code tidak menggunakan kembali sesi di seluruh peristiwa, jadi dua pembaruan PR menghasilkan dua sesi independen.
 
 <Note>
   Selama pratinjau penelitian, peristiwa webhook GitHub tunduk pada batas per jam per-rutinitas dan per-akun. Peristiwa di luar batas dijatuhkan sampai jendela direset. Lihat batas saat ini Anda di [claude.ai/code/routines](https://claude.ai/code/routines).
 </Note>
 
-Pemicu GitHub dikonfigurasi dari UI web saja.
+Aplikasi GitHub Claude harus diinstal pada repositori yang ingin Anda berlangganan, permukaan apa pun yang Anda konfigurasi pemicu darinya.
+
+* Konfigurasi pemicu GitHub dari UI web, yang meminta Anda untuk menginstal aplikasi saat hilang. Ikuti langkah-langkah di bawah untuk mengonfigurasi satu di web.
+* Dari CLI, instal aplikasi dari [halaman Aplikasi GitHub](https://github.com/apps/claude) terlebih dahulu, lalu minta Claude untuk melampirkan pemicu GitHub ke rutinitas yang ada, misalnya `/schedule add a GitHub trigger to my nightly review for pull requests opened in acme/webapp`. Jalur CLI memerlukan Claude Code v2.1.225 atau lebih baru. Ketika Claude menambahkan pemicu, Claude membalas dengan tautan ke rutinitas yang dipicu pemicu.
 
 <Steps>
   <Step title="Buka rutinitas untuk diedit">
-    Buka [claude.ai/code/routines](https://claude.ai/code/routines), klik rutinitas, lalu klik ikon pensil untuk membuka **Edit routine**.
+    Buka [claude.ai/code/routines](https://claude.ai/code/routines), klik rutinitas, lalu buka menu di sebelah nama rutinitas dan pilih **Edit**.
   </Step>
 
   <Step title="Tambahkan pemicu peristiwa GitHub">
     Gulir ke bagian **Select a trigger**, klik **Add another trigger**, dan pilih **GitHub event**.
-  </Step>
-
-  <Step title="Instal Aplikasi GitHub Claude">
-    Aplikasi GitHub Claude harus diinstal pada repositori yang ingin Anda berlangganan. Penyiapan pemicu meminta Anda untuk menginstalnya jika belum.
 
     <Note>
-      Menjalankan `/web-setup` di CLI memberikan akses repositori untuk kloning, tetapi tidak menginstal Aplikasi GitHub Claude dan tidak mengaktifkan pengiriman webhook. Pemicu GitHub memerlukan penginstalan Aplikasi GitHub Claude, yang diminta penyiapan pemicu untuk dilakukan.
+      Menjalankan `/web-setup` di CLI memberikan akses repositori untuk kloning, tetapi tidak menginstal Aplikasi GitHub Claude dan tidak mengaktifkan pengiriman webhook.
     </Note>
   </Step>
 
@@ -290,7 +296,7 @@ Pemicu GitHub dapat berlangganan salah satu dari kategori peristiwa berikut. Dal
   Filter permintaan tarik
 </h4>
 
-Gunakan filter untuk mempersempit permintaan tarik mana yang memulai sesi baru. Semua kondisi filter harus cocok agar rutinitas dipicu. Bidang filter yang tersedia adalah:
+Gunakan filter untuk mempersempit permintaan tarik mana yang memulai sesi baru. Semua kondisi filter harus cocok untuk rutinitas dipicu. Bidang filter yang tersedia adalah:
 
 | Filter      | Cocok                           |
 | :---------- | :------------------------------ |
@@ -312,12 +318,6 @@ Beberapa contoh kombinasi filter:
 * **Auth module review**: base branch `main`, head branch berisi `auth-provider`. Mengirim PR apa pun yang menyentuh autentikasi ke peninjau yang fokus.
 * **Ready-for-review only**: is draft adalah `false`. Melewati draf sehingga rutinitas hanya berjalan ketika PR siap untuk ditinjau.
 * **Label-gated backport**: labels termasuk `needs-backport`. Memicu rutinitas port-ke-cabang-lain hanya ketika pengelola memberi tag PR.
-
-<h4 id="how-sessions-map-to-events">
-  Bagaimana sesi memetakan ke peristiwa
-</h4>
-
-Setiap peristiwa GitHub yang cocok memulai sesi baru. Penggunaan ulang sesi di seluruh peristiwa tidak tersedia untuk rutinitas yang dipicu GitHub, jadi dua pembaruan PR menghasilkan dua sesi independen.
 
 <h2 id="manage-routines">
   Kelola rutinitas
@@ -341,20 +341,34 @@ Klik jalankan apa pun untuk membukanya sebagai sesi penuh. Dari sana Anda dapat 
 
 Dari halaman detail rutinitas Anda dapat:
 
-* Klik **Run now** untuk memulai jalankan segera tanpa menunggu waktu terjadwal berikutnya.
-* Gunakan toggle di bagian **Repeats** untuk menjeda atau melanjutkan jadwal. Rutinitas yang dijeda menyimpan konfigurasi mereka tetapi tidak berjalan sampai Anda mengaktifkan kembali.
-* Klik ikon pensil untuk membuka **Edit routine** dan ubah nama, prompt, repositori, lingkungan, konektor, atau pemicu rutinitas apa pun. Bagian **Select a trigger** adalah tempat Anda menambah atau menghapus jadwal, token API, dan pemicu peristiwa GitHub.
-* Klik ikon hapus untuk menghapus rutinitas. Sesi masa lalu yang dibuat oleh rutinitas tetap dalam daftar sesi Anda.
+* Klik **Run now** untuk memulai jalankan segera tanpa menunggu waktu terjadwal berikutnya. Anda dapat secara opsional menyediakan teks khusus jalankan, yang mencapai rutinitas dengan cara yang sama seperti bidang `text` pemicu API.
+* Gunakan toggle di bagian atas halaman untuk menjeda atau melanjutkan jadwal. Rutinitas yang dijeda menyimpan konfigurasi mereka tetapi tidak berjalan sampai Anda mengaktifkan kembali.
+* Buka menu di sebelah nama rutinitas dan pilih **Edit** untuk mengubah nama, prompt, repositori, lingkungan, konektor, atau pemicu rutinitas apa pun. Bagian **Select a trigger** adalah tempat Anda menambah atau menghapus jadwal, token API, dan pemicu peristiwa GitHub.
+* Buka menu yang sama dan pilih **Delete** untuk menghapus rutinitas.
+
+<h3 id="manage-routines-from-the-cli">
+  Kelola rutinitas dari CLI
+</h3>
+
+CLI mendukung pengelolaan rutinitas yang ada. Jalankan `/schedule list` untuk melihat semua rutinitas, `/schedule update` untuk mengubah satu, atau `/schedule run` untuk memicunya segera.
+
+Anda juga dapat menanyakan tentang riwayat jalankan rutinitas, misalnya `/schedule why did my nightly review do nothing this morning?`. Claude mencantumkan jalankan terbaru rutinitas dengan status mereka dan tautan untuk [membuka setiap jalankan di web](#view-and-interact-with-runs), dan membaca log jalankan untuk menjelaskan apa yang terjadi, termasuk kesalahan alat, penolakan izin, dan hasil akhir. Memerlukan Claude Code v2.1.227 atau lebih baru.
 
 <h3 id="repositories-and-branch-permissions">
   Repositori dan izin cabang
 </h3>
 
-Rutinitas memerlukan akses GitHub untuk mengklon repositori. Ketika Anda membuat rutinitas dari CLI dengan `/schedule`, Claude memeriksa apakah akun Anda memiliki GitHub yang terhubung dan meminta Anda menjalankan `/web-setup` jika tidak. Lihat [GitHub authentication options](/docs/id/claude-code-on-the-web#github-authentication-options) untuk dua cara memberikan akses.
+Rutinitas memerlukan akses GitHub untuk mengklon repositori. Ketika Anda membuat rutinitas dari CLI dengan `/schedule`, Claude memeriksa apakah akun Anda memiliki akses GitHub untuk repositori tempat Anda menjalankannya dan, jika tidak, menambahkan catatan penyiapan yang menamai cara memberikan akses. Lihat [GitHub authentication options](/docs/id/claude-code-on-the-web#github-authentication-options) untuk dua cara memberikan akses.
+
+Jika koneksi GitHub Anda hilang atau kedaluwarsa ketika jalankan akan dilakukan, rutinitas melewati jalankan hingga Anda terhubung kembali, hingga 72 jam. Hubungkan kembali GitHub dalam jendela tersebut dan rutinitas akan dilanjutkan dengan sendirinya. Setelah 72 jam tanpa koneksi, rutinitas mati, dan Anda menghidupkannya kembali setelah terhubung kembali ke GitHub.
 
 Setiap repositori yang Anda tambahkan diklon pada setiap jalankan. Claude dimulai dari cabang default repositori kecuali prompt Anda menentukan sebaliknya.
 
-Secara default, Claude hanya dapat push ke cabang dengan awalan `claude/`. Ini mencegah rutinitas secara tidak sengaja memodifikasi cabang yang dilindungi atau jangka panjang. Untuk menghapus pembatasan ini untuk repositori spesifik, aktifkan **Allow unrestricted branch pushes** untuk repositori tersebut saat membuat atau mengedit rutinitas.
+Claude mendorong pekerjaannya ke cabang dengan awalan `claude/`, yang selalu diterima. Ketika prompt Anda mengarahkan Claude untuk mendorong ke cabang lain, Claude Code memeriksa dorongan terlebih dahulu dan menolaknya jika salah satu dari berikut ini benar:
+
+* Cabang dilindungi di GitHub
+* Seseorang lain memiliki permintaan tarik terbuka dari cabang tersebut
+* Cabang membawa komit yang ditulis oleh seseorang selain Anda
 
 <h3 id="connectors">
   Konektor
@@ -362,25 +376,25 @@ Secara default, Claude hanya dapat push ke cabang dengan awalan `claude/`. Ini m
 
 Rutinitas dapat menggunakan konektor MCP yang terhubung untuk membaca dari dan menulis ke layanan eksternal selama setiap jalankan. Misalnya, rutinitas yang melakukan triase permintaan dukungan mungkin membaca dari saluran Slack dan membuat masalah di Linear.
 
-Konektor adalah [integrasi claude.ai](/docs/id/mcp#use-mcp-servers-from-claude-ai) di akun Anda. Server MCP yang Anda tambahkan secara lokal di CLI dengan `claude mcp add` disimpan di mesin Anda daripada akun claude.ai Anda, jadi mereka tidak muncul dalam daftar konektor. Untuk menggunakan salah satu server tersebut dalam rutinitas, tambahkan sebagai konektor di [claude.ai/customize/connectors](https://claude.ai/customize/connectors), atau deklarasikan dalam [`.mcp.json`](/docs/id/mcp#project-scope) yang berkomitmen sehingga itu adalah bagian dari repositori yang diklon.
+Konektor adalah [integrasi claude.ai](/docs/id/mcp#use-mcp-servers-from-claude-ai) di akun Anda. Server MCP yang Anda tambahkan secara lokal di CLI dengan `claude mcp add` disimpan di mesin Anda daripada akun claude.ai Anda, jadi mereka tidak muncul dalam daftar konektor. Untuk menggunakan salah satu server tersebut dalam rutinitas, tambahkan sebagai konektor di [claude.ai/customize/connectors](https://claude.ai/customize/connectors). Untuk rutinitas dengan satu repositori, Anda dapat sebagai gantinya mendeklarasikannya dalam [`.mcp.json`](/docs/id/mcp#project-scope) yang berkomitmen sehingga itu adalah bagian dari repositori yang diklon.
 
 Ketika Anda membuat rutinitas, semua konektor yang saat ini terhubung disertakan secara default. Hapus yang tidak diperlukan untuk membatasi alat mana yang dapat diakses Claude selama jalankan. Anda juga dapat menambahkan konektor langsung dari formulir rutinitas.
 
-Untuk mengelola atau menambahkan konektor di luar formulir rutinitas, kunjungi **Settings > Connectors** di claude.ai atau gunakan `/schedule update` di CLI.
+Untuk mengelola atau menambahkan konektor di luar formulir rutinitas, kunjungi [claude.ai/customize/connectors](https://claude.ai/customize/connectors) atau gunakan `/schedule update` di CLI.
 
 <h3 id="environments-and-network-access">
   Lingkungan dan akses jaringan
 </h3>
 
-Setiap rutinitas berjalan dalam [lingkungan cloud](/docs/id/claude-code-on-the-web#the-cloud-environment) yang mengontrol akses jaringan, variabel lingkungan, dan skrip penyiapan. Rutinitas mewarisi kebijakan jaringan lingkungan pada setiap jalankan.
+Setiap rutinitas menggunakan [lingkungan cloud](/docs/id/cloud-environments) yang mengontrol akses jaringan, variabel lingkungan, dan skrip penyiapan. Rutinitas mewarisi kebijakan jaringan lingkungan pada setiap jalankan.
 
-Lingkungan **Default** menggunakan akses jaringan **Trusted**: [daftar allowlist default](/docs/id/claude-code-on-the-web#default-allowed-domains) dari registri paket, API penyedia cloud, registri kontainer, dan domain pengembangan umum dapat dijangkau, tetapi domain arbitrer tidak. Permintaan keluar ke host lain gagal dengan `403` dan `x-deny-reason: host_not_allowed`. Lalu lintas konektor MCP dirutekan melalui server Anthropic, jadi konektor yang Anda tambahkan ke rutinitas bekerja tanpa menambahkan host mereka ke **Allowed domains**. Hapus konektor apa pun yang tidak Anda butuhkan di bawah [Konektor](#connectors).
+Lingkungan **Default** menggunakan akses jaringan **Trusted**, yang hanya memungkinkan [daftar allowlist default](/docs/id/cloud-environments#default-allowed-domains) melalui jaringan sesi. Permintaan pada jalur tersebut ke host di luar allowlist gagal dengan `403` dan `x-deny-reason: host_not_allowed`. Lalu lintas konektor MCP dirutekan melalui server Anthropic daripada jalur tersebut, jadi konektor yang Anda tambahkan ke rutinitas bekerja tanpa menambahkan host mereka ke **Allowed domains**. Hapus konektor apa pun yang tidak Anda butuhkan di bawah [Konektor](#connectors).
 
-Untuk memungkinkan domain tambahan:
+Untuk memungkinkan domain tambahan pada salah satu lingkungan Anda sendiri, ikuti langkah-langkah ini. [Lingkungan bersama organisasi](/docs/id/cloud-environments#organization-shared-environments) membuka baca-saja di sini, jadi Pemilik mengubah akses jaringannya dari halaman **Cloud environments** di [pengaturan admin](https://claude.ai/admin-settings) sebagai gantinya.
 
 <Steps>
   <Step title="Buka rutinitas untuk diedit">
-    Pada halaman detail rutinitas, klik ikon pensil untuk membuka **Edit routine**.
+    Pada halaman detail rutinitas, buka menu di sebelah nama rutinitas dan pilih **Edit**.
   </Step>
 
   <Step title="Buka pemilih lingkungan">
@@ -392,7 +406,7 @@ Untuk memungkinkan domain tambahan:
   </Step>
 
   <Step title="Ubah tingkat akses jaringan">
-    Dalam dialog **Update cloud environment**, ubah **Network access** menjadi **Custom** dan masukkan domain Anda di **Allowed domains**. Periksa **Also include default list of common package managers** untuk menyimpan [daftar allowlist default](/docs/id/claude-code-on-the-web#default-allowed-domains) bersama domain kustom Anda. Pilih **Full** sebagai gantinya untuk akses tanpa batas.
+    Dalam dialog **Update cloud environment**, ubah **Network access** menjadi **Custom** dan masukkan domain Anda di **Allowed domains**. Periksa **Also include default list of common package managers** untuk menyimpan [daftar allowlist default](/docs/id/cloud-environments#default-allowed-domains) bersama domain kustom Anda. Pilih **Full** sebagai gantinya untuk akses tanpa batas.
   </Step>
 
   <Step title="Simpan">
@@ -400,7 +414,7 @@ Untuk memungkinkan domain tambahan:
   </Step>
 </Steps>
 
-Lihat [Network access](/docs/id/claude-code-on-the-web#network-access) untuk detail tentang tingkat akses dan daftar allowlist default.
+Lihat [Network access](/docs/id/cloud-environments#network-access) untuk detail tentang tingkat akses dan daftar allowlist default.
 
 <h2 id="usage-and-limits">
   Penggunaan dan batas
@@ -408,37 +422,37 @@ Lihat [Network access](/docs/id/claude-code-on-the-web#network-access) untuk det
 
 Rutinitas mengurangi penggunaan langganan dengan cara yang sama seperti sesi interaktif. Selain batas langganan standar, rutinitas memiliki batas harian tentang berapa banyak jalankan yang dapat dimulai per akun. Lihat konsumsi saat ini dan jalankan rutinitas harian yang tersisa di [claude.ai/code/routines](https://claude.ai/code/routines) atau [claude.ai/settings/usage](https://claude.ai/settings/usage).
 
-Ketika rutinitas mencapai batas harian atau batas penggunaan langganan Anda, organisasi dengan penggunaan ekstra yang diaktifkan dapat terus menjalankan rutinitas pada overage terukur. Tanpa penggunaan ekstra, jalankan tambahan ditolak sampai jendela direset. Aktifkan penggunaan ekstra dari **Settings > Billing** di claude.ai.
+Ketika rutinitas mencapai batas harian atau batas penggunaan langganan Anda, organisasi dengan kredit penggunaan yang diaktifkan dapat terus menjalankan rutinitas pada overage terukur. Tanpa kredit penggunaan, jalankan tambahan ditolak sampai jendela direset. Aktifkan kredit penggunaan di [claude.ai/settings/usage](https://claude.ai/settings/usage). Pada paket Team dan Enterprise, admin mengaktifkannya untuk organisasi di [claude.ai/admin-settings/usage](https://claude.ai/admin-settings/usage).
 
-Jalankan sekali saja tidak dihitung terhadap batas jalankan rutinitas harian. Mereka mengurangi penggunaan langganan reguler Anda seperti sesi lainnya, tetapi mereka dikecualikan dari tunjangan jalankan rutinitas harian per akun.
+Jalankan sekali saja tidak dihitung terhadap batas jalankan rutinitas harian. Mereka mengurangi penggunaan langganan reguler Anda seperti sesi lainnya.
+
+Sementara langganan Anda dijeda, rutinitas Anda ditahan dan tidak berjalan. Setelah langganan Anda aktif kembali, aktifkan kembali.
 
 <h2 id="troubleshooting">
   Pemecahan masalah
 </h2>
 
-<h3 id="/schedule-returns-unknown-command">
+<h3 id="schedule-returns-unknown-command">
   `/schedule` menampilkan "Unknown command"
 </h3>
 
-CLI menyembunyikan `/schedule` ketika salah satu persyaratannya tidak terpenuhi: menu perintah menampilkan `No commands match "/schedule"` saat Anda mengetik, dan mengirimkannya mengembalikan `Unknown command: /schedule`. Penyebabnya biasanya salah satu dari berikut ini:
+CLI menyembunyikan `/schedule` ketika salah satu persyaratannya tidak terpenuhi: menu perintah menampilkan `No commands match "/schedule"` saat Anda mengetik. Mengirimkannya mengembalikan `Unknown command: /schedule`, kecuali dalam kasus-kasus di bawah ini yang mencatat jawaban berbeda.
 
-* Anda diautentikasi dengan Console API key atau penyedia cloud seperti Amazon Bedrock, Google Cloud's Agent Platform, atau Microsoft Foundry. `/schedule` memerlukan login langganan claude.ai. Jika `ANTHROPIC_API_KEY` atau `ANTHROPIC_AUTH_TOKEN` diatur di shell Anda, atau `apiKeyHelper` diatur di `settings.json`, hapus terlebih dahulu, karena ini memiliki prioritas lebih tinggi daripada login claude.ai
-* `DISABLE_TELEMETRY`, `DO_NOT_TRACK`, `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`, atau `DISABLE_GROWTHBOOK` diatur di lingkungan shell Anda atau di blok `env` dari [file `settings.json`](/docs/id/settings#available-settings). Ini menonaktifkan pengambilan feature-flag, yang `/schedule` bergantung padanya
-* Anda berada di dalam sesi Claude Code di web. Kelola rutinitas dari [UI web](https://claude.ai/code/routines) sebagai gantinya
+Penyebabnya biasanya salah satu dari berikut ini:
 
-Anda selalu dapat membuat dan mengelola rutinitas di [claude.ai/code/routines](https://claude.ai/code/routines) terlepas dari bagaimana CLI dikonfigurasi.
+* Anda diautentikasi dengan Console API key, [profil Anthropic atau kredensial federasi](/docs/id/authentication#anthropic-profiles-and-federation-credentials), atau penyedia cloud seperti Amazon Bedrock, Google Cloud's Agent Platform, atau Microsoft Foundry. `/schedule` memerlukan login langganan claude.ai. Dengan Console API key atau profil, dan pengambilan feature-flag diaktifkan, mengirimkan `/schedule` menampilkan `/schedule is available with Claude for Enterprise — ask your admin about migrating from API-key access`. Dengan login penyedia cloud, Anda masih melihat `Unknown command: /schedule`. Jika `ANTHROPIC_API_KEY` atau `ANTHROPIC_AUTH_TOKEN` diatur di shell Anda, atau `apiKeyHelper` diatur di `settings.json`, hapus terlebih dahulu, karena ini memiliki prioritas lebih tinggi daripada login claude.ai. Profil atau kredensial federasi juga memiliki prioritas, jadi matikan itu juga
+* Anda sepenuhnya keluar, tanpa API key atau kredensial lainnya. Dengan pengambilan feature-flag diaktifkan, mengirimkan `/schedule` menampilkan `/schedule requires a claude.ai subscription. Run /login to sign in with your claude.ai account.` Sebelum v2.1.268, sesi yang keluar menampilkan pesan Claude for Enterprise yang sama seperti Console API key
+* Anda berada di dalam sesi cloud, di mana mengirimkan `/schedule` menjawab bahwa perintah tidak tersedia di lingkungan tersebut. Kelola rutinitas dari [UI web](https://claude.ai/code/routines) sebagai gantinya
+* Kebijakan organisasi Anda menonaktifkan [sesi cloud](/docs/id/claude-code-on-the-web), yang rutinitas jalankan. Dalam kasus ini, mengirimkan `/schedule` menjawab [`Cloud sessions are disabled by your organization's policy`](/docs/id/errors#cloud-sessions-are-disabled-by-your-organizations-policy) sebagai gantinya. Sebelum v2.1.268, ini mengembalikan `Unknown command: /schedule`
+* Pemilik [mematikan rutinitas](#routines-are-disabled-by-your-organizations-policy) untuk organisasi Team atau Enterprise Anda. Sebelum v2.1.227, perintah masih muncul dalam kasus ini, dan claude.ai menolak rutinitas ketika Claude mencoba membuat atau menjalankannya
 
-<h3 id="/schedule-asks-you-to-authenticate">
-  `/schedule` meminta Anda untuk diautentikasi
-</h3>
+Kecuali kebijakan organisasi Anda menonaktifkan rutinitas atau sesi cloud, Anda dapat membuat dan mengelola rutinitas di [claude.ai/code/routines](https://claude.ai/code/routines) terlepas dari bagaimana CLI dikonfigurasi.
 
-Jika `/schedule` berjalan tetapi Claude merespons bahwa Anda perlu diautentikasi dengan akun claude.ai terlebih dahulu, CLI tidak memiliki login claude.ai yang tersimpan. Akun API tidak didukung untuk rutinitas. Jalankan `/login`, masuk dengan akun claude.ai Anda, kemudian jalankan `/schedule` lagi.
-
-<h3 id="routines-are-disabled-by-your-organization’s-policy">
+<h3 id="routines-are-disabled-by-your-organizations-policy">
   "Rutinitas dinonaktifkan oleh kebijakan organisasi Anda"
 </h3>
 
-Pemilik di organisasi Team atau Enterprise Anda mungkin telah mematikan toggle **Routines** di [claude.ai/admin-settings/claude-code](https://claude.ai/admin-settings/claude-code). Ini adalah pengaturan organisasi sisi server, jadi tidak dapat ditimpa dari konfigurasi lokal Anda. Hubungi Pemilik untuk meminta agar rutinitas diaktifkan untuk organisasi Anda.
+Pemilik di organisasi Team atau Enterprise Anda mungkin telah mematikan toggle **Routines** di [claude.ai/admin-settings/claude-code](https://claude.ai/admin-settings/claude-code). Pada Claude Code v2.1.227 atau lebih baru, toggle yang sama juga menyembunyikan `/schedule` di CLI. Ini adalah pengaturan organisasi sisi server, jadi tidak dapat ditimpa dari konfigurasi lokal Anda. Hubungi Pemilik untuk mengaktifkan rutinitas untuk organisasi Anda.
 
 <h2 id="related-resources">
   Sumber daya terkait
@@ -446,6 +460,7 @@ Pemilik di organisasi Team atau Enterprise Anda mungkin telah mematikan toggle *
 
 * [`/loop` and in-session scheduling](/docs/id/scheduled-tasks): jadwalkan tugas lokal dalam sesi CLI terbuka
 * [Desktop scheduled tasks](/docs/id/desktop-scheduled-tasks): tugas terjadwal lokal yang berjalan di mesin Anda dengan akses ke file lokal
-* [Cloud environment](/docs/id/claude-code-on-the-web#the-cloud-environment): konfigurasi lingkungan runtime untuk sesi cloud
+* [Cloud environments](/docs/id/cloud-environments): konfigurasi akses jaringan, variabel lingkungan, dan skrip penyiapan untuk sesi cloud
+* [Projects](/docs/id/claude-projects): pekerjaan berkelanjutan yang Claude koordinasikan di seluruh sesi cloud paralel; rutinitas yang dibuat dari proyek muncul di tab **Routines**
 * [MCP connectors](/docs/id/mcp): hubungkan layanan eksternal seperti Slack, Linear, dan Google Drive
 * [GitHub Actions](/docs/id/github-actions): jalankan Claude dalam saluran pipa CI pada peristiwa repositori

@@ -17,11 +17,11 @@ Dalam tabel di bawah, ✓ berarti tersedia, ✗ berarti tidak tersedia, dan "Lih
 Cara Anda melakukan autentikasi menentukan fitur mana yang dapat dijangkau Claude Code. Untuk daftar tunggal apa yang hilang di penyedia Anda, lihat tab [ringkasan per penyedia](#summary-by-provider). Untuk menemukan kolom Anda di tabel:
 
 * **Langganan Claude**: Anda masuk dengan akun claude.ai di paket Pro, Max, Team, atau Enterprise
-* **Anthropic Console**: Anda melakukan autentikasi dengan kunci API Anthropic
-* **Amazon Bedrock**: Anda menggunakan model Claude dari katalog model Bedrock dan menetapkan `CLAUDE_CODE_USE_BEDROCK`. [Endpoint Mantle](/docs/id/amazon-bedrock#use-the-mantle-endpoint) (`CLAUDE_CODE_USE_MANTLE`) tercakup oleh kolom ini
+* **Anthropic Console**: Anda melakukan autentikasi dengan kunci API Anthropic atau dengan [masuk ke akun Console tanpa kunci](/docs/id/authentication#sign-in-without-an-api-key)
+* **Amazon Bedrock**: Anda menggunakan model Claude dari katalog model Amazon Bedrock dan menetapkan `CLAUDE_CODE_USE_BEDROCK`. [Endpoint Mantle](/docs/id/amazon-bedrock#use-the-mantle-endpoint) (`CLAUDE_CODE_USE_MANTLE`) tercakup oleh kolom ini
 * **Claude Platform di AWS**: Anda membeli Claude melalui AWS Marketplace tetapi memanggil API Anthropic, dan menetapkan `CLAUDE_CODE_USE_ANTHROPIC_AWS`
 * **Platform Agent Google Cloud**: Dioperasikan Google; Anda menetapkan `CLAUDE_CODE_USE_VERTEX`
-* **Microsoft Foundry**: Dioperasikan Anthropic di Azure; Anda menetapkan `CLAUDE_CODE_USE_FOUNDRY`
+* **Microsoft Foundry**: Dioperasikan Anthropic; Anda menetapkan `CLAUDE_CODE_USE_FOUNDRY`
 
 <h3 id="features-available-on-every-provider">
   Fitur yang tersedia di setiap penyedia
@@ -32,15 +32,18 @@ Ini bekerja di setiap penyedia:
 * [CLI](/docs/id/quickstart) dan [Agent SDK](/docs/id/agent-sdk/overview)
 * Ekstensi [VS Code](/docs/id/vs-code) dan [JetBrains](/docs/id/jetbrains)
 * [Subagents](/docs/id/sub-agents), [hooks](/docs/id/hooks-guide), [commands](/docs/id/commands), dan [skills](/docs/id/skills)
-* Memori [CLAUDE.md](/docs/id/memory), [plugins](/docs/id/plugins), dan [server MCP](/docs/id/mcp)
+* Memori [CLAUDE.md](/docs/id/memory), [plugins](/docs/id/plugins/overview), dan [server MCP](/docs/id/mcp)
 * [Checkpoints](/docs/id/checkpointing), [sandboxing](/docs/id/sandboxing), dan [Workflows](/docs/id/workflows)
-* Metrik [OpenTelemetry](/docs/id/monitoring-usage) dan [file pengaturan terkelola](/docs/id/settings#settings-files)
+* Metrik [OpenTelemetry](/docs/id/monitoring-usage) dan [file pengaturan terkelola](/docs/id/managed-settings#delivery-mechanisms)
 
-Tiga di antaranya memiliki perbedaan khusus penyedia:
+Ini memiliki perbedaan khusus penyedia:
 
-* **Server MCP**: [konektor dari claude.ai](/docs/id/mcp#use-mcp-servers-from-claude-ai) dimuat hanya ketika langganan claude.ai Anda adalah metode autentikasi aktif, dan [pencarian alat](/docs/id/mcp#configure-tool-search) dimatikan secara default di Platform Agent Google Cloud dan ketika `ANTHROPIC_BASE_URL` menunjuk ke host non-pihak pertama
+* **Server MCP**: [konektor dari claude.ai](/docs/id/mcp#use-mcp-servers-from-claude-ai) dimuat hanya ketika langganan claude.ai Anda adalah metode autentikasi aktif. [Pencarian alat](/docs/id/mcp#configure-tool-search) dimatikan secara default ketika `ANTHROPIC_BASE_URL` menunjuk ke host non-pihak pertama, dan tidak didukung pada model Platform Agent Google Cloud yang lebih awal dari generasi Claude 4.5 atau pada [deployment Microsoft Foundry yang dihosting di Azure](https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry#hosting-options)
 * **Subagents**: [subagent Explore](/docs/id/sub-agents#built-in-subagents) bawaan membatasi model yang diwariskan pada Opus di Claude API, dan mewarisi model percakapan utama secara langsung di penyedia lain mana pun, termasuk Claude Platform di AWS
-* **[Commands](/docs/id/commands#all-commands)**: `/design-sync` dan `/radio` tidak tersedia di Amazon Bedrock, Platform Agent Google Cloud, Microsoft Foundry, dan Claude Platform di AWS, dan `/voice` memerlukan akun claude.ai
+* **[Commands](/docs/id/commands#all-commands)**:
+  * `/design-sync` dan `/import` dengan bentuk subperintah `claude import` tidak tersedia di Amazon Bedrock, Platform Agent Google Cloud, Microsoft Foundry, dan Claude Platform di AWS, dan melalui [gateway aplikasi Claude](/docs/id/claude-apps-gateway#availability-and-limitations)
+  * `/voice` memerlukan akun claude.ai
+  * `/list-agents` dan aliasnya `/peers` hanya tersedia dalam sesi di mana [pesan lintas sesi diaktifkan](/docs/id/cross-session-messaging#availability)
 
 <h3 id="features-that-require-a-claude-subscription">
   Fitur yang memerlukan langganan Claude
@@ -51,7 +54,7 @@ Ini memerlukan masuk dengan akun claude.ai dan tidak dapat dijangkau dengan kunc
 * [Claude Code di web](/docs/id/claude-code-on-the-web), Claude Code di mobile, dan [Claude Code di Slack](/docs/id/slack)
 * [Claude Code Desktop](/docs/id/desktop)
 * [Routines](/docs/id/routines) (`/schedule`)
-* [Ultraplan](/docs/id/ultraplan) dan [Ultrareview](/docs/id/ultrareview)
+* [Ultrareview](/docs/id/ultrareview)
 * [Code Review](/docs/id/code-review): paket Team dan Enterprise
 * [Remote Control](/docs/id/remote-control)
 * [Ekstensi Chrome](/docs/id/chrome)
@@ -88,13 +91,13 @@ Fitur ini bekerja di CLI lokal tetapi bergantung pada kemampuan sisi server yang
       <td>✗</td>
       <td>✓</td>
       <td>Lihat catatan <sup><a href="#fn1">1</a></sup></td>
-      <td>✓</td>
+      <td>✓ ([deployment yang dihosting di Anthropic](https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry#hosting-options))</td>
     </tr>
 
     <tr>
       <td>[Fast mode](/docs/id/fast-mode)</td>
-      <td>✓</td>
-      <td>✓</td>
+      <td>✓ ([Diaktifkan Pemilik](/docs/id/fast-mode#enable-fast-mode-for-your-organization) di Team dan Enterprise)</td>
+      <td>✓ (organisasi yang disediakan)</td>
       <td>✗</td>
       <td>✗</td>
       <td>✗</td>
@@ -122,6 +125,16 @@ Fitur ini bekerja di CLI lokal tetapi bergantung pada kemampuan sisi server yang
     </tr>
 
     <tr>
+      <td>[Pesan lintas sesi](/docs/id/cross-session-messaging)</td>
+      <td>✓ <sup><a href="#fn5">5</a></sup></td>
+      <td>✓ (mesin yang sama) <sup><a href="#fn5">5</a></sup></td>
+      <td>✓ (mesin yang sama) <sup><a href="#fn5">5</a></sup></td>
+      <td>✓ (mesin yang sama) <sup><a href="#fn5">5</a></sup></td>
+      <td>✓ (mesin yang sama) <sup><a href="#fn5">5</a></sup></td>
+      <td>✓ (mesin yang sama) <sup><a href="#fn5">5</a></sup></td>
+    </tr>
+
+    <tr>
       <td>[Channels](/docs/id/channels)</td>
       <td>✓</td>
       <td>✓</td>
@@ -132,17 +145,17 @@ Fitur ini bekerja di CLI lokal tetapi bergantung pada kemampuan sisi server yang
     </tr>
 
     <tr>
-      <td>[`/loop` scheduled tasks](/docs/id/scheduled-tasks)</td>
+      <td>[GitHub Actions](/docs/id/github-actions)</td>
       <td>✓</td>
       <td>✓</td>
-      <td>Lihat catatan <sup><a href="#fn3">3</a></sup></td>
-      <td>Lihat catatan <sup><a href="#fn3">3</a></sup></td>
-      <td>Lihat catatan <sup><a href="#fn3">3</a></sup></td>
-      <td>Lihat catatan <sup><a href="#fn3">3</a></sup></td>
+      <td>✓</td>
+      <td>✗</td>
+      <td>✓</td>
+      <td>✓</td>
     </tr>
 
     <tr>
-      <td>[GitHub Actions](/docs/id/github-actions) dan [GitLab CI/CD](/docs/id/gitlab-ci-cd)</td>
+      <td>[GitLab CI/CD](/docs/id/gitlab-ci-cd)</td>
       <td>✓</td>
       <td>✓</td>
       <td>✓</td>
@@ -176,7 +189,7 @@ Kontrol tingkat organisasi dan visibilitas penggunaan.
     <tr>
       <td>[Dashboard analitik dan API](/docs/id/analytics)</td>
       <td>✓ (dashboard: Team dan Enterprise; API: Enterprise)</td>
-      <td>✓ <sup><a href="#fn5">5</a></sup></td>
+      <td>✓ <sup><a href="#fn4">4</a></sup></td>
       <td>✗</td>
       <td>✗</td>
       <td>✗</td>
@@ -197,22 +210,24 @@ Kontrol tingkat organisasi dan visibilitas penggunaan.
       <td>[Zero Data Retention](/docs/id/zero-data-retention)</td>
       <td>✓ (akun Enterprise yang memenuhi syarat)</td>
       <td>✓ (akun yang memenuhi syarat)</td>
-      <td>Lihat catatan <sup><a href="#fn4">4</a></sup></td>
+      <td>Lihat catatan <sup><a href="#fn3">3</a></sup></td>
       <td>✓ (akun yang memenuhi syarat)</td>
-      <td>Lihat catatan <sup><a href="#fn4">4</a></sup></td>
-      <td>Lihat catatan <sup><a href="#fn4">4</a></sup></td>
+      <td>Lihat catatan <sup><a href="#fn3">3</a></sup></td>
+      <td>Lihat catatan <sup><a href="#fn3">3</a></sup></td>
     </tr>
   </tbody>
 </table>
 
 <span id="fn1" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>1</sup> Di Platform Agent Google Cloud, web search tersedia untuk model Claude 4 dan yang lebih baru.<br />
-<span id="fn2" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>2</sup> Di penyedia ini, auto mode mendukung hanya Claude Sonnet 5, Opus 4.7, dan Opus 4.8. Lihat [Konfigurasi Auto mode](/docs/id/auto-mode-config). Di v2.1.158 hingga v2.1.206, auto mode di penyedia ini juga memerlukan pengaturan `CLAUDE_CODE_ENABLE_AUTO_MODE=1`; v2.1.207 menghapus persyaratan.<br />
-<span id="fn3" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>3</sup> Interval eksplisit seperti `/loop every 2 hours` bekerja di setiap penyedia. Di Amazon Bedrock, Claude Platform di AWS, Platform Agent Google Cloud, dan Microsoft Foundry, `/loop` tidak dapat memilih interval sendiri atau menyediakan prompt pemeliharaan default, jadi prompt tanpa interval berjalan setiap 10 menit, dan `/loop` tanpa argumen menampilkan pesan penggunaan. Lihat [Scheduled tasks](/docs/id/scheduled-tasks).<br />
-<span id="fn4" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>4</sup> Tunduk pada perjanjian Anda dengan penyedia cloud.<br />
-<span id="fn5" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>5</sup> Dashboard dan API saja. [Metrik kontribusi](/docs/id/analytics#enable-contribution-metrics) memerlukan organisasi Team atau Enterprise claude.ai.
+<span id="fn2" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>2</sup> Di penyedia ini, auto mode mendukung hanya Claude Sonnet 5, Opus 4.7 atau yang lebih baru, dan model Fable. Lihat [Konfigurasi Auto mode](/docs/id/auto-mode-config). Mode izin awal bawaan di penyedia ini adalah Manual. Lihat [mode mana yang dimulai sesi](/docs/id/permission-modes#which-mode-a-session-starts-in). Di v2.1.158 hingga v2.1.206, auto mode di penyedia ini juga memerlukan pengaturan `CLAUDE_CODE_ENABLE_AUTO_MODE=1`; v2.1.207 menghapus persyaratan.<br />
+<span id="fn3" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>3</sup> Tunduk pada perjanjian Anda dengan penyedia cloud.<br />
+<span id="fn4" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>4</sup> Dashboard dan API saja. [Metrik kontribusi](/docs/id/analytics#enable-contribution-metrics) memerlukan organisasi Team atau Enterprise claude.ai.<br />
+<span id="fn5" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>5</sup> Memerlukan Claude Code v2.1.224 atau yang lebih baru di macOS dan Linux, termasuk Linux di dalam WSL 2. Di Windows asli, memerlukan Claude Code v2.1.234 atau yang lebih baru. Dengan autentikasi kunci API, pesan hanya mesin yang sama. Di Amazon Bedrock, Claude Platform di AWS, Platform Agent Google Cloud, dan Microsoft Foundry, pesan hanya mesin yang sama dan memerlukan Claude Code v2.1.248 atau yang lebih baru. Claude dapat menemukan sesi [Claude Code di web](/docs/id/claude-code-on-the-web) Anda dan sesi Anda di mesin lain hanya dari sesi yang terhubung ke [Remote Control](/docs/id/remote-control). Untuk terhubung, Anda memerlukan masuk claude.ai dan [persyaratan Remote Control lainnya](/docs/id/remote-control#requirements). Lihat [Pesan sesi di mesin lain](/docs/id/cross-session-messaging#message-sessions-on-other-machines).
 
 <Note>
-  Jika Anda melakukan autentikasi melalui [gateway LLM](/docs/id/llm-gateway), ketersediaan fitur cocok dengan penyedia yang mendasarinya yang gateway teruskan. Beberapa fitur khusus Anthropic seperti [Advisor](/docs/id/advisor) hanya bekerja jika gateway meneruskan permintaan utuh ke API Anthropic.
+  Jika Anda melakukan autentikasi melalui [gateway LLM](/docs/id/llm-gateway), ketersediaan fitur cocok dengan penyedia yang mendasarinya yang gateway teruskan, kecuali untuk fitur yang Claude Code sendiri matikan. Kapan pun `ANTHROPIC_BASE_URL` menunjuk ke host selain `api.anthropic.com`, Claude Code mematikan fitur seperti [Remote Control](/docs/id/remote-control#requirements) dan [pengaturan terkelola server](/docs/id/server-managed-settings#platform-availability), apa pun yang gateway teruskan. Beberapa fitur khusus Anthropic seperti [Advisor](/docs/id/advisor) hanya bekerja jika gateway meneruskan permintaan utuh ke API Anthropic.
+
+  Untuk cara permintaan yang Claude Code kirim berbeda antara gateway format Amazon Bedrock atau Agent Platform, gateway `ANTHROPIC_BASE_URL`, dan masuk gateway aplikasi Claude, lihat [perilaku klien menurut metode koneksi](/docs/id/llm-gateway-protocol#how-the-connection-method-changes-client-behavior).
 </Note>
 
 <h3 id="summary-by-provider">
@@ -223,61 +238,62 @@ Setiap tab mencantumkan apa yang tidak tersedia atau didukung sebagian di penyed
 
 <Tabs>
   <Tab title="Amazon Bedrock">
-    **Tidak tersedia:** semua [fitur yang memerlukan langganan Claude](#features-that-require-a-claude-subscription), ditambah [web search](/docs/id/tools-reference#websearch-tool-behavior), [fast mode](/docs/id/fast-mode), [Advisor](/docs/id/advisor), [Channels](/docs/id/channels), [dashboard analitik](/docs/id/analytics), [pengaturan terkelola server](/docs/id/server-managed-settings), dan [perintah `/design-sync` dan `/radio`](/docs/id/commands#all-commands).
+    **Tidak tersedia:** semua [fitur yang memerlukan langganan Claude](#features-that-require-a-claude-subscription), ditambah [web search](/docs/id/tools-reference#websearch-tool-behavior), [fast mode](/docs/id/fast-mode), [Advisor](/docs/id/advisor), [Channels](/docs/id/channels), [dashboard analitik](/docs/id/analytics), [pengaturan terkelola server](/docs/id/server-managed-settings), dan [perintah `/design-sync` dan `/import`](/docs/id/commands#all-commands).
 
     **Dukungan parsial:**
 
     * [Desktop](/docs/id/desktop): hanya melalui [Claude Desktop pada 3P](https://claude.com/docs/third-party/claude-desktop/overview)
-    * [Auto mode](/docs/id/auto-mode-config): Sonnet 5, Opus 4.7, dan Opus 4.8 saja
-    * [`/loop`](/docs/id/scheduled-tasks): interval eksplisit saja
+    * [Auto mode](/docs/id/auto-mode-config): Sonnet 5, Opus 4.7 atau yang lebih baru, dan model Fable saja
+    * [Pesan lintas sesi](/docs/id/cross-session-messaging): antara sesi Anda di mesin ini saja <sup><a href="#fn5">5</a></sup>
     * [Zero Data Retention](/docs/id/zero-data-retention): tunduk pada perjanjian AWS Anda
 
-    **Alternatif:** untuk penjadwalan, gunakan [`/loop`](/docs/id/scheduled-tasks) dengan interval eksplisit alih-alih `/schedule`. Untuk sesi cloud, gunakan [GitHub Actions](/docs/id/github-actions) atau [GitLab CI/CD](/docs/id/gitlab-ci-cd). Untuk pencarian web, gunakan [alat WebFetch](/docs/id/tools-reference#webfetch-tool-behavior) dengan URL spesifik.
+    **Alternatif:** untuk penjadwalan, gunakan [`/loop`](/docs/id/scheduled-tasks) alih-alih `/schedule`. Untuk sesi cloud, gunakan [GitHub Actions](/docs/id/github-actions) atau [GitLab CI/CD](/docs/id/gitlab-ci-cd). Untuk pencarian web, gunakan [alat WebFetch](/docs/id/tools-reference#webfetch-tool-behavior) dengan URL spesifik.
   </Tab>
 
   <Tab title="Claude Platform di AWS">
-    **Tidak tersedia:** semua [fitur yang memerlukan langganan Claude](#features-that-require-a-claude-subscription), ditambah [fast mode](/docs/id/fast-mode), [Advisor](/docs/id/advisor), [Channels](/docs/id/channels), [dashboard analitik](/docs/id/analytics), [pengaturan terkelola server](/docs/id/server-managed-settings), dan [perintah `/design-sync` dan `/radio`](/docs/id/commands#all-commands).
+    **Tidak tersedia:** semua [fitur yang memerlukan langganan Claude](#features-that-require-a-claude-subscription), ditambah [fast mode](/docs/id/fast-mode), [Advisor](/docs/id/advisor), [Channels](/docs/id/channels), [GitHub Actions](/docs/id/github-actions), [dashboard analitik](/docs/id/analytics), [pengaturan terkelola server](/docs/id/server-managed-settings), dan [perintah `/design-sync` dan `/import`](/docs/id/commands#all-commands).
 
     **Tersedia di mana Amazon Bedrock tidak:** [web search](/docs/id/tools-reference#websearch-tool-behavior).
 
     **Dukungan parsial:**
 
-    * [`/loop`](/docs/id/scheduled-tasks): interval eksplisit saja
+    * [Pesan lintas sesi](/docs/id/cross-session-messaging): antara sesi Anda di mesin ini saja <sup><a href="#fn5">5</a></sup>
 
-    **Alternatif:** untuk penjadwalan, gunakan [`/loop`](/docs/id/scheduled-tasks) dengan interval eksplisit alih-alih `/schedule`. Untuk sesi cloud, gunakan [GitHub Actions](/docs/id/github-actions) atau [GitLab CI/CD](/docs/id/gitlab-ci-cd).
+    **Alternatif:** untuk penjadwalan, gunakan [`/loop`](/docs/id/scheduled-tasks) alih-alih `/schedule`. Untuk sesi cloud, gunakan [GitLab CI/CD](/docs/id/gitlab-ci-cd).
   </Tab>
 
   <Tab title="Platform Agent Google Cloud">
-    **Tidak tersedia:** semua [fitur yang memerlukan langganan Claude](#features-that-require-a-claude-subscription), ditambah [fast mode](/docs/id/fast-mode), [Advisor](/docs/id/advisor), [Channels](/docs/id/channels), [dashboard analitik](/docs/id/analytics), [pengaturan terkelola server](/docs/id/server-managed-settings), dan [perintah `/design-sync` dan `/radio`](/docs/id/commands#all-commands).
+    **Tidak tersedia:** semua [fitur yang memerlukan langganan Claude](#features-that-require-a-claude-subscription), ditambah [fast mode](/docs/id/fast-mode), [Advisor](/docs/id/advisor), [Channels](/docs/id/channels), [dashboard analitik](/docs/id/analytics), [pengaturan terkelola server](/docs/id/server-managed-settings), dan [perintah `/design-sync` dan `/import`](/docs/id/commands#all-commands).
 
     **Dukungan parsial:**
 
     * [Desktop](/docs/id/desktop): melalui [pengaturan terkelola](https://claude.com/docs/third-party/claude-desktop/configuration) atau [Claude Desktop pada 3P](https://claude.com/docs/third-party/claude-desktop/overview)
     * [Web search](/docs/id/tools-reference#websearch-tool-behavior): model Claude 4 dan yang lebih baru
-    * [Auto mode](/docs/id/auto-mode-config): Sonnet 5, Opus 4.7, dan Opus 4.8 saja
-    * [`/loop`](/docs/id/scheduled-tasks): interval eksplisit saja
+    * [Auto mode](/docs/id/auto-mode-config): Sonnet 5, Opus 4.7 atau yang lebih baru, dan model Fable saja
+    * [Pesan lintas sesi](/docs/id/cross-session-messaging): antara sesi Anda di mesin ini saja <sup><a href="#fn5">5</a></sup>
     * [Zero Data Retention](/docs/id/zero-data-retention): tunduk pada perjanjian Google Cloud Anda
 
-    **Alternatif:** untuk penjadwalan, gunakan [`/loop`](/docs/id/scheduled-tasks) dengan interval eksplisit alih-alih `/schedule`. Untuk sesi cloud, gunakan [GitHub Actions](/docs/id/github-actions) atau [GitLab CI/CD](/docs/id/gitlab-ci-cd).
+    **Alternatif:** untuk penjadwalan, gunakan [`/loop`](/docs/id/scheduled-tasks) alih-alih `/schedule`. Untuk sesi cloud, gunakan [GitHub Actions](/docs/id/github-actions) atau [GitLab CI/CD](/docs/id/gitlab-ci-cd).
   </Tab>
 
   <Tab title="Microsoft Foundry">
-    **Tidak tersedia:** semua [fitur yang memerlukan langganan Claude](#features-that-require-a-claude-subscription), ditambah [fast mode](/docs/id/fast-mode), [Advisor](/docs/id/advisor), [Channels](/docs/id/channels), [GitHub Actions](/docs/id/github-actions) dan [GitLab CI/CD](/docs/id/gitlab-ci-cd), [dashboard analitik](/docs/id/analytics), [pengaturan terkelola server](/docs/id/server-managed-settings), dan [perintah `/design-sync` dan `/radio`](/docs/id/commands#all-commands).
+    **Tidak tersedia:** semua [fitur yang memerlukan langganan Claude](#features-that-require-a-claude-subscription), ditambah [fast mode](/docs/id/fast-mode), [Advisor](/docs/id/advisor), [Channels](/docs/id/channels), [GitLab CI/CD](/docs/id/gitlab-ci-cd), [dashboard analitik](/docs/id/analytics), [pengaturan terkelola server](/docs/id/server-managed-settings), dan [perintah `/design-sync` dan `/import`](/docs/id/commands#all-commands).
 
     **Dukungan parsial:**
 
     * [Desktop](/docs/id/desktop): hanya melalui [Claude Desktop pada 3P](https://claude.com/docs/third-party/claude-desktop/overview)
-    * [Auto mode](/docs/id/auto-mode-config): Sonnet 5, Opus 4.7, dan Opus 4.8 saja
-    * [`/loop`](/docs/id/scheduled-tasks): interval eksplisit saja
+    * [Web search](/docs/id/tools-reference#websearch-tool-behavior): [deployment yang dihosting di Anthropic](https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry#hosting-options) saja
+    * [Auto mode](/docs/id/auto-mode-config): Sonnet 5, Opus 4.7 atau yang lebih baru, dan model Fable saja
+    * [Pesan lintas sesi](/docs/id/cross-session-messaging): antara sesi Anda di mesin ini saja <sup><a href="#fn5">5</a></sup>
     * [Zero Data Retention](/docs/id/zero-data-retention): tunduk pada perjanjian Azure Anda
 
-    **Alternatif:** untuk penjadwalan, gunakan [`/loop`](/docs/id/scheduled-tasks) dengan interval eksplisit alih-alih `/schedule`.
+    **Alternatif:** untuk penjadwalan, gunakan [`/loop`](/docs/id/scheduled-tasks) alih-alih `/schedule`. Untuk sesi cloud, gunakan [GitHub Actions](/docs/id/github-actions).
   </Tab>
 
   <Tab title="Anthropic Console">
     **Tidak tersedia:** semua [fitur yang memerlukan langganan Claude](#features-that-require-a-claude-subscription).
 
-    Semua yang ada di [kemampuan CLI yang bervariasi per penyedia](#cli-capabilities-that-vary-by-provider) tersedia, seperti [pengaturan terkelola server](/docs/id/server-managed-settings) ketika kunci API milik organisasi Team atau Enterprise.
+    Semua yang ada di [kemampuan CLI yang bervariasi per penyedia](#cli-capabilities-that-vary-by-provider) tersedia, kecuali [fast mode](/docs/id/fast-mode) memerlukan [akses yang disediakan](/docs/id/fast-mode#enable-fast-mode-for-your-organization). [Pengaturan terkelola server](/docs/id/server-managed-settings) juga tersedia ketika kunci API Anda milik organisasi Team atau Enterprise.
   </Tab>
 </Tabs>
 
@@ -289,7 +305,7 @@ Jika Anda melakukan autentikasi melalui Amazon Bedrock, Google Cloud's Agent Pla
 
 | Fitur                                                                       | Pro | Max | Team          | Enterprise                        |
 | :-------------------------------------------------------------------------- | :-- | :-- | :------------ | :-------------------------------- |
-| [Claude Code di web](/docs/id/claude-code-on-the-web)                            | ✓   | ✓   | ✓             | ✓ <sup><a href="#fn6">6</a></sup> |
+| [Cloud sessions](/docs/id/claude-code-on-the-web)                                | ✓   | ✓   | ✓             | ✓ <sup><a href="#fn6">6</a></sup> |
 | [Routines](/docs/id/routines)                                                    | ✓   | ✓   | ✓             | ✓                                 |
 | [Remote Control](/docs/id/remote-control)                                        | ✓   | ✓   | Admin-enabled | Admin-enabled                     |
 | [Channels](/docs/id/channels)                                                    | ✓   | ✓   | Admin-enabled | Admin-enabled                     |
@@ -305,7 +321,7 @@ Jika Anda melakukan autentikasi melalui Amazon Bedrock, Google Cloud's Agent Pla
 | [Compliance API](https://platform.claude.com/docs/en/api/compliance)        | ✗   | ✗   | ✗             | ✓                                 |
 | [Zero Data Retention](/docs/id/zero-data-retention)                              | ✗   | ✗   | ✗             | ✓ <sup><a href="#fn7">7</a></sup> |
 
-<span id="fn6" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>6</sup> Di Enterprise, memerlukan kursi premium atau kursi Chat + Claude Code. Lihat [Claude Code di web](/docs/id/claude-code-on-the-web).<br />
+<span id="fn6" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>6</sup> Di Enterprise, memerlukan kursi premium atau kursi Chat + Claude Code. Lihat [Use Claude Code in the cloud](/docs/id/claude-code-on-the-web).<br />
 <span id="fn7" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>7</sup> Tidak termasuk dalam paket Enterprise standar. Memerlukan aktivasi terpisah oleh Anthropic untuk akun yang memenuhi syarat. Lihat [Zero Data Retention](/docs/id/zero-data-retention).
 
 Untuk harga dan perbandingan paket lengkap, lihat [Paket Team](https://support.claude.com/en/articles/9266767-what-is-the-team-plan) dan [Paket Enterprise](https://support.claude.com/en/articles/9797531-what-is-the-enterprise-plan).

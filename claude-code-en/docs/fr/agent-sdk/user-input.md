@@ -12,7 +12,7 @@ Claude demande une entrée utilisateur dans deux situations : lorsqu'il a besoin
 
 Pour les questions de clarification, Claude génère les questions et les options. Votre rôle est de les présenter aux utilisateurs et de retourner leurs sélections. Vous ne pouvez pas ajouter vos propres questions à ce flux ; si vous avez besoin de poser une question aux utilisateurs vous-même, faites-le séparément dans votre logique d'application.
 
-Le callback peut rester en attente indéfiniment. L'exécution reste en pause jusqu'à ce que votre callback retourne, et le SDK n'annule l'attente que lorsque la requête elle-même est annulée. Si un utilisateur pourrait prendre plus de temps pour répondre que votre processus ne peut raisonnablement rester en cours d'exécution, retournez la décision du [hook `defer`](/docs/fr/hooks#defer-a-tool-call-for-later), qui permet au processus de quitter et de reprendre plus tard à partir de la session persistante.
+Le callback peut rester en attente indéfiniment. L'exécution reste en pause jusqu'à ce que votre callback retourne. Si un utilisateur pourrait prendre plus de temps pour répondre que votre processus ne peut raisonnablement rester en cours d'exécution, enregistrez un [hook `PreToolUse`](/docs/fr/agent-sdk/hooks) qui retourne la décision [`defer`](/docs/fr/hooks#defer-a-tool-call-for-later) au lieu d'attendre dans le callback, afin que le processus puisse quitter et reprendre plus tard à partir de la session persistante.
 
 Ce guide vous montre comment détecter chaque type de demande et répondre de manière appropriée.
 
@@ -24,6 +24,9 @@ Passez un callback `canUseTool` dans vos options de requête. Le callback se dé
 
 <CodeGroup>
   ```python Python theme={null}
+  from claude_agent_sdk import ClaudeAgentOptions
+
+
   async def handle_tool_request(tool_name, input_data, context):
       # Inviter l'utilisateur et retourner allow ou deny
       ...
@@ -48,9 +51,9 @@ Le callback se déclenche dans deux cas :
 2. **Claude pose une question** : Claude appelle l'outil `AskUserQuestion`. Vérifiez si `tool_name == "AskUserQuestion"` pour le gérer différemment. Si vous spécifiez un tableau `tools`, incluez `AskUserQuestion` pour que cela fonctionne. Voir [Gérer les questions de clarification](#handle-clarifying-questions) pour plus de détails.
 
 <Warning>
-  **Le callback ne se déclenche jamais pour les outils auto-approuvés.** Toute approbation antérieure dans le [flux d'évaluation des permissions](/docs/fr/agent-sdk/permissions#how-permissions-are-evaluated), une règle d'autorisation ou un mode comme `acceptEdits` ou `bypassPermissions`, résout l'appel avant que `canUseTool` soit consulté. Si vous listez un outil seul dans `allowed_tools`, une vérification `canUseTool` pour cet outil ne s'exécute jamais sauf si une règle d'ask ou le mode `plan` redirige l'appel vers une invite. Pour une logique qui doit s'appliquer à chaque appel d'outil, utilisez un [hook `PreToolUse`](/docs/fr/agent-sdk/hooks), qui s'exécute avant le reste du flux et peut autoriser, refuser ou modifier les demandes.
+  **Le callback ne se déclenche jamais pour les outils auto-approuvés.** Toute approbation antérieure dans le [flux d'évaluation des permissions](/docs/fr/agent-sdk/permissions#how-permissions-are-evaluated), une règle d'autorisation ou un mode comme `acceptEdits` ou `bypassPermissions`, résout l'appel avant que `canUseTool` soit consulté. Si vous listez un outil seul dans `allowed_tools`, une vérification `canUseTool` pour cet outil s'exécute uniquement quand le [flux d'évaluation](/docs/fr/agent-sdk/permissions#how-permissions-are-evaluated) redirige l'appel vers une invite, comme une règle d'ask ou le mode `plan`. Pour une logique qui doit s'appliquer à chaque appel d'outil, utilisez un [hook `PreToolUse`](/docs/fr/agent-sdk/hooks), qui s'exécute avant le reste du flux et peut autoriser, refuser ou modifier les demandes.
 
-  `AskUserQuestion`, les outils MCP marqués [`requiresUserInteraction`](/docs/fr/mcp#require-approval-for-a-specific-tool), et les outils connecteur [que votre organisation a définis sur `ask`](/docs/fr/mcp#organization-controls-on-connector-tools) atteignent le callback même quand une règle d'autorisation correspond. En mode `dontAsk`, ces appels sont refusés à la place, sans invoquer le callback.
+  Une règle d'autorisation n'approuve pas au préalable les [actions qu'aucun mode n'approuve automatiquement](/docs/fr/permission-modes#actions-no-mode-auto-approves) ; voir [Comment les permissions sont évaluées](/docs/fr/agent-sdk/permissions#how-permissions-are-evaluated) pour savoir lesquelles d'entre elles atteignent le callback et ce qui se passe en mode `dontAsk` et `auto`.
 </Warning>
 
 Vous pouvez également utiliser le [hook `PermissionRequest`](/docs/fr/agent-sdk/hooks#available-hooks) pour envoyer des notifications externes (Slack, email, push) quand Claude attend une approbation.
@@ -59,7 +62,9 @@ Vous pouvez également utiliser le [hook `PermissionRequest`](/docs/fr/agent-sdk
   Gérer les demandes d'approbation d'outil
 </h2>
 
-Une fois que vous avez passé un callback `canUseTool` dans vos options de requête, il se déclenche lorsque Claude veut utiliser un outil qu'aucun élément antérieur du flux de permission n'a approuvé. Votre callback reçoit trois arguments :
+Une fois que vous avez passé un callback `canUseTool` dans vos options de requête, il se déclenche lorsque Claude veut utiliser un outil qu'aucun élément antérieur du flux de permission n'a approuvé. Dans certaines configurations, comme le mode `dontAsk`, Claude Code ne l'appelle pas ; la dernière étape de [Comment les permissions sont évaluées](/docs/fr/agent-sdk/permissions#how-permissions-are-evaluated) les énumère et indique ce qui se passe à l'appel à la place.
+
+Votre callback reçoit trois arguments :
 
 | Argument                            | Description                                                                                                                                                                                                                                                                                                                                                            |
 | ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -199,10 +204,6 @@ L'exemple suivant demande à Claude de créer et de supprimer un fichier de test
   ```
 </CodeGroup>
 
-<Note>
-  En Python, `can_use_tool` nécessite le [mode streaming](/docs/fr/agent-sdk/streaming-vs-single-mode). Lorsque vous passez un flux de messages fini via `query(prompt=generator)` ou `ClaudeSDKClient.connect(prompt=async_iterable)`, le SDK ferme le flux d'entrée après le dernier message, avant que le callback de permission puisse être invoqué, sauf si un hook enregistré ou un serveur MCP en cours de processus le maintient ouvert. L'exemple ci-dessus le maintient ouvert avec un hook `PreToolUse` qui retourne `{"continue_": True}`. La connexion sans prompt et l'envoi de messages via `ClaudeSDKClient.query()` maintiennent le flux ouvert d'eux-mêmes et ne nécessitent aucun hook.
-</Note>
-
 Cet exemple utilise un flux y/n où toute entrée autre que `y` est traitée comme un refus. En pratique, vous pourriez construire une interface utilisateur plus riche qui permet aux utilisateurs de modifier la demande, de fournir des commentaires, ou de rediriger Claude entièrement. Voir [Répondre aux demandes d'outil](#respond-to-tool-requests) pour tous les moyens de répondre.
 
 <h3 id="respond-to-tool-requests">
@@ -220,26 +221,6 @@ Lors de l'autorisation, l'outil s'exécute avec l'entrée que Claude a demandée
 
 Lors du refus, fournissez un message expliquant pourquoi. Claude voit ce message et peut ajuster son approche.
 
-<CodeGroup>
-  ```python Python theme={null}
-  from claude_agent_sdk.types import PermissionResultAllow, PermissionResultDeny
-
-  # Autoriser l'outil à s'exécuter
-  return PermissionResultAllow(updated_input=input_data)
-
-  # Bloquer l'outil
-  return PermissionResultDeny(message="User rejected this action")
-  ```
-
-  ```typescript TypeScript theme={null}
-  // Autoriser l'outil à s'exécuter
-  return { behavior: "allow", updatedInput: input };
-
-  // Bloquer l'outil
-  return { behavior: "deny", message: "User rejected this action" };
-  ```
-</CodeGroup>
-
 Au-delà de l'autorisation ou du refus, vous pouvez modifier l'entrée de l'outil ou fournir un contexte qui aide Claude à ajuster son approche :
 
 * **Approuver** : laisser l'outil s'exécuter comme Claude l'a demandé
@@ -248,6 +229,8 @@ Au-delà de l'autorisation ou du refus, vous pouvez modifier l'entrée de l'outi
 * **Rejeter** : bloquer l'outil et dire à Claude pourquoi
 * **Suggérer une alternative** : bloquer mais guider Claude vers ce que l'utilisateur veut à la place
 * **Rediriger entièrement** : utiliser [streaming input](/docs/fr/agent-sdk/streaming-vs-single-mode) pour envoyer à Claude une instruction complètement nouvelle
+
+Les helpers `ask_user` et `askUser` dans les extraits suivants représentent votre propre interface utilisateur d'invite d'application.
 
 <Tabs>
   <Tab title="Approuver">
@@ -571,12 +554,12 @@ Les étapes suivantes montrent comment gérer les questions de clarification :
 
 L'entrée contient les questions générées par Claude dans un tableau `questions`. Chaque question a ces champs :
 
-| Champ         | Description                                                                                                                                         |
-| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `question`    | Le texte complet de la question à afficher                                                                                                          |
-| `header`      | Étiquette courte pour la question (max 12 caractères)                                                                                               |
-| `options`     | Tableau de 2-4 choix, chacun avec `label` et `description`. TypeScript : optionnellement `preview` (voir [ci-dessous](#option-previews-typescript)) |
-| `multiSelect` | Si `true`, les utilisateurs peuvent sélectionner plusieurs options                                                                                  |
+| Champ         | Description                                                                                                                                                |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `question`    | Le texte complet de la question à afficher                                                                                                                 |
+| `header`      | Étiquette courte pour la question (max 12 caractères)                                                                                                      |
+| `options`     | Tableau de 2-4 choix, chacun avec `label` et `description`. TypeScript : optionnellement `preview`. Voir [Aperçus d'options](#option-previews-typescript). |
+| `multiSelect` | Si `true`, les utilisateurs peuvent sélectionner plusieurs options                                                                                         |
 
 La structure que votre callback reçoit :
 
@@ -653,7 +636,7 @@ Retournez un objet `answers` mappant le champ `question` de chaque question au `
 
 Pour les questions multi-sélection, passez un tableau de labels ou joignez-les avec `", "`. Pour l'entrée de texte libre par question, comme une option « Autre », mettez le texte de l'utilisateur dans `answers[question]` comme indiqué dans [Supporter l'entrée de texte libre](#support-free-text-input). Définissez `response` uniquement lorsque votre interface utilisateur permet à l'utilisateur de rejeter la carte de question et de taper une réponse générale qui n'est pas une réponse à une question spécifique. Lorsque `response` est défini, Claude reçoit « L'utilisateur a répondu : … » au lieu de la liste de réponses par question.
 
-```json theme={null}
+```jsonc theme={null}
 {
   "questions": [
     // ...

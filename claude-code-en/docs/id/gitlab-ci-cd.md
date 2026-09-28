@@ -48,12 +48,12 @@ Pilih titik akhir regional untuk mengurangi latensi dan memenuhi persyaratan ked
   Apa yang dapat dilakukan Claude?
 </h2>
 
-Claude Code memungkinkan alur kerja CI/CD yang kuat yang mengubah cara Anda bekerja dengan kode:
+Dalam pipeline GitLab, Claude Code dapat:
 
-* Buat dan perbarui MR dari deskripsi masalah atau komentar
-* Analisis regresi kinerja dan usulkan optimisasi
-* Implementasikan fitur langsung di cabang, kemudian buka MR
-* Perbaiki bug dan regresi yang diidentifikasi oleh tes atau komentar
+* Membuat dan memperbarui MR dari deskripsi atau komentar masalah
+* Menganalisis regresi kinerja dan mengusulkan optimisasi
+* Menerapkan fitur langsung di cabang, kemudian membuka MR
+* Memperbaiki bug dan regresi yang diidentifikasi oleh tes atau komentar
 * Merespons komentar lanjutan untuk mengulangi perubahan yang diminta
 
 <h2 id="setup">
@@ -64,7 +64,7 @@ Claude Code memungkinkan alur kerja CI/CD yang kuat yang mengubah cara Anda beke
   Pengaturan cepat
 </h3>
 
-Cara tercepat untuk memulai adalah menambahkan pekerjaan minimal ke `.gitlab-ci.yml` Anda dan menetapkan kunci API Anda sebagai variabel yang disembunyikan.
+Cara tercepat untuk memulai adalah dengan menambahkan pekerjaan minimal ke `.gitlab-ci.yml` Anda dan menetapkan kunci API Anda sebagai variabel yang disembunyikan.
 
 1. **Tambahkan variabel CI/CD yang disembunyikan**
    * Buka **Settings** → **CI/CD** → **Variables**
@@ -79,7 +79,7 @@ stages:
 claude:
   stage: ai
   image: node:24-alpine3.21
-  # Sesuaikan aturan agar sesuai dengan cara Anda ingin memicu pekerjaan:
+  # Sesuaikan aturan untuk menyesuaikan cara Anda ingin memicu pekerjaan:
   # - menjalankan secara manual
   # - peristiwa permintaan penggabungan
   # - pemicu web/API ketika komentar berisi '@claude'
@@ -92,6 +92,8 @@ claude:
     - apk update
     - apk add --no-cache git curl bash
     - curl -fsSL https://claude.ai/install.sh | bash
+    # Penginstal menempatkan claude di ~/.local/bin, yang tidak ada di PATH dalam gambar ini
+    - export PATH="$HOME/.local/bin:$PATH"
   script:
     # Opsional: mulai server GitLab MCP jika pengaturan Anda menyediakannya
     - /bin/gitlab-mcp-server || true
@@ -108,7 +110,7 @@ claude:
 Setelah menambahkan pekerjaan dan variabel `ANTHROPIC_API_KEY` Anda, uji dengan menjalankan pekerjaan secara manual dari **CI/CD** → **Pipelines**, atau picu dari MR untuk membiarkan Claude mengusulkan pembaruan di cabang dan membuka MR jika diperlukan.
 
 <Note>
-  Untuk menjalankan di Amazon Bedrock atau Google Cloud's Agent Platform alih-alih Claude API, lihat bagian [Menggunakan dengan Amazon Bedrock dan Google Cloud](#using-with-amazon-bedrock-and-google-cloud) di bawah untuk pengaturan autentikasi dan lingkungan.
+  Untuk menjalankan di Amazon Bedrock atau Platform Agent Google Cloud alih-alih Claude API, lihat bagian [Using with Amazon Bedrock and Google Cloud](#using-with-amazon-bedrock-and-google-cloud) di bawah untuk pengaturan autentikasi dan lingkungan.
 </Note>
 
 <h3 id="manual-setup-recommended-for-production">
@@ -120,17 +122,17 @@ Jika Anda lebih suka pengaturan yang lebih terkontrol atau memerlukan penyedia p
 1. **Konfigurasi akses penyedia**:
    * **Claude API**: Buat dan simpan `ANTHROPIC_API_KEY` sebagai variabel CI/CD yang disembunyikan
    * **Amazon Bedrock**: **Konfigurasi GitLab** → **AWS OIDC** dan buat peran IAM untuk Amazon Bedrock
-   * **Google Cloud's Agent Platform**: **Konfigurasi Workload Identity Federation untuk GitLab** → **GCP**
+   * **Platform Agent Google Cloud**: **Konfigurasi Workload Identity Federation untuk GitLab** → **GCP**
 
 2. **Tambahkan kredensial proyek untuk operasi GitLab API**:
    * Gunakan `CI_JOB_TOKEN` secara default, atau buat Project Access Token dengan cakupan `api`
    * Simpan sebagai `GITLAB_ACCESS_TOKEN` (disembunyikan) jika menggunakan PAT
 
-3. **Tambahkan pekerjaan Claude ke `.gitlab-ci.yml`** (lihat contoh di bawah)
+3. **Tambahkan pekerjaan Claude ke `.gitlab-ci.yml`**: gunakan pekerjaan [Quick setup](#quick-setup) untuk Claude API, atau pekerjaan penyedia dari [Configuration examples](#configuration-examples)
 
 4. **(Opsional) Aktifkan pemicu berbasis penyebutan**:
-   * Tambahkan webhook proyek untuk "Comments (notes)" ke pendengar peristiwa Anda (jika Anda menggunakannya)
-   * Buat pendengar memanggil API pemicu pipeline dengan variabel seperti `AI_FLOW_INPUT` dan `AI_FLOW_CONTEXT` ketika komentar berisi `@claude`
+   * Tambahkan webhook proyek untuk "Comments (notes)" ke pendengar acara Anda (jika Anda menggunakannya)
+   * Biarkan pendengar memanggil API pemicu pipeline dengan variabel seperti `AI_FLOW_INPUT` dan `AI_FLOW_CONTEXT` ketika komentar berisi `@claude`
 
 <h2 id="example-use-cases">
   Contoh kasus penggunaan
@@ -142,7 +144,7 @@ Jika Anda lebih suka pengaturan yang lebih terkontrol atau memerlukan penyedia p
 
 Dalam komentar masalah:
 
-```text theme={null}
+```text wrap theme={null}
 @claude implement this feature based on the issue description
 ```
 
@@ -154,7 +156,7 @@ Claude menganalisis masalah dan basis kode, menulis perubahan di cabang, dan mem
 
 Dalam diskusi MR:
 
-```text theme={null}
+```text wrap theme={null}
 @claude suggest a concrete approach to cache the results of this API call
 ```
 
@@ -166,7 +168,7 @@ Claude mengusulkan perubahan, menambahkan kode dengan caching yang sesuai, dan m
 
 Dalam komentar masalah atau MR:
 
-```text theme={null}
+```text wrap theme={null}
 @claude fix the TypeError in the user dashboard component
 ```
 
@@ -176,7 +178,7 @@ Claude menemukan bug, mengimplementasikan perbaikan, dan memperbarui cabang atau
   Menggunakan dengan Amazon Bedrock dan Google Cloud
 </h2>
 
-Untuk lingkungan perusahaan, Anda dapat menjalankan Claude Code sepenuhnya di infrastruktur cloud Anda dengan pengalaman pengembang yang sama.
+Untuk lingkungan perusahaan, Anda dapat menjalankan Claude Code sepenuhnya pada infrastruktur cloud Anda dengan pengalaman pengembang yang sama.
 
 <Tabs>
   <Tab title="Amazon Bedrock">
@@ -191,31 +193,18 @@ Untuk lingkungan perusahaan, Anda dapat menjalankan Claude Code sepenuhnya di in
        * `AWS_ROLE_TO_ASSUME` (ARN peran)
        * `AWS_REGION` (wilayah Amazon Bedrock)
 
-    ### Instruksi pengaturan
+    ### Instruksi penyiapan
 
-    Konfigurasi AWS untuk memungkinkan pekerjaan GitLab CI mengasumsikan peran IAM melalui OIDC (tanpa kunci statis).
+    Konfigurasikan AWS untuk memungkinkan pekerjaan CI GitLab mengasumsikan peran IAM melalui OIDC (tanpa kunci statis).
 
-    **Pengaturan yang diperlukan:**
+    **Penyiapan yang diperlukan:**
 
     1. Aktifkan Amazon Bedrock dan minta akses ke model Claude target Anda
     2. Buat penyedia OIDC IAM untuk GitLab jika belum ada
     3. Buat peran IAM yang dipercaya oleh penyedia OIDC GitLab, dibatasi pada proyek dan ref yang dilindungi Anda
-    4. Lampirkan izin hak istimewa minimal untuk API invoke Amazon Bedrock
+    4. Lampirkan izin least-privilege untuk API invoke Amazon Bedrock
 
-    **Nilai yang diperlukan untuk disimpan dalam variabel CI/CD:**
-
-    * `AWS_ROLE_TO_ASSUME`
-    * `AWS_REGION`
-
-    Tambahkan variabel di Settings → CI/CD → Variables:
-
-    ```yaml theme={null}
-    # Untuk Amazon Bedrock:
-    - AWS_ROLE_TO_ASSUME
-    - AWS_REGION
-    ```
-
-    Gunakan contoh pekerjaan Amazon Bedrock di atas untuk menukar token pekerjaan GitLab dengan kredensial AWS sementara saat runtime.
+    Gunakan [contoh pekerjaan Amazon Bedrock](#configuration-examples) untuk menukar token OIDC pekerjaan dengan kredensial AWS sementara saat runtime.
   </Tab>
 
   <Tab title="Google Cloud's Agent Platform">
@@ -224,39 +213,26 @@ Untuk lingkungan perusahaan, Anda dapat menjalankan Claude Code sepenuhnya di in
     Sebelum menyiapkan Claude Code dengan Google Cloud's Agent Platform, Anda memerlukan:
 
     1. Proyek Google Cloud dengan:
-       * Google Cloud's Agent Platform API diaktifkan
+       * API Google Cloud's Agent Platform diaktifkan
        * Workload Identity Federation dikonfigurasi untuk mempercayai GitLab OIDC
     2. Akun layanan khusus dengan hanya peran Google Cloud's Agent Platform yang diperlukan
-    3. Variabel CI/CD GitLab untuk WIF:
-       * `GCP_WORKLOAD_IDENTITY_PROVIDER` (nama sumber daya lengkap)
+    3. Variabel CI/CD GitLab:
+       * `GCP_WORKLOAD_IDENTITY_PROVIDER` (nama sumber daya penyedia tanpa awalan `//iam.googleapis.com/`, seperti `projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider`)
        * `GCP_SERVICE_ACCOUNT` (email akun layanan)
+       * `GCP_PROJECT_ID` (ID proyek Google Cloud)
 
-    ### Instruksi pengaturan
+    ### Instruksi penyiapan
 
-    Konfigurasi Google Cloud untuk memungkinkan pekerjaan GitLab CI menyamar sebagai akun layanan melalui Workload Identity Federation.
+    Konfigurasikan Google Cloud untuk memungkinkan pekerjaan CI GitLab menyamar sebagai akun layanan melalui Workload Identity Federation.
 
-    **Pengaturan yang diperlukan:**
+    **Penyiapan yang diperlukan:**
 
     1. Aktifkan IAM Credentials API, STS API, dan Google Cloud's Agent Platform API
     2. Buat Workload Identity Pool dan penyedia untuk GitLab OIDC
     3. Buat akun layanan khusus dengan peran Google Cloud's Agent Platform
-    4. Berikan izin principal WIF untuk menyamar sebagai akun layanan
+    4. Berikan izin prinsip WIF untuk menyamar sebagai akun layanan
 
-    **Nilai yang diperlukan untuk disimpan dalam variabel CI/CD:**
-
-    * `GCP_WORKLOAD_IDENTITY_PROVIDER`
-    * `GCP_SERVICE_ACCOUNT`
-
-    Tambahkan variabel di Settings → CI/CD → Variables:
-
-    ```yaml theme={null}
-    # Untuk Google Cloud's Agent Platform:
-    - GCP_WORKLOAD_IDENTITY_PROVIDER
-    - GCP_SERVICE_ACCOUNT
-    - CLOUD_ML_REGION (misalnya, us-east5)
-    ```
-
-    Gunakan contoh pekerjaan Google Cloud's Agent Platform di atas untuk autentikasi tanpa menyimpan kunci.
+    Gunakan [contoh pekerjaan Agent Platform](#configuration-examples) untuk autentikasi tanpa menyimpan kunci.
   </Tab>
 </Tabs>
 
@@ -266,37 +242,6 @@ Untuk lingkungan perusahaan, Anda dapat menjalankan Claude Code sepenuhnya di in
 
 Di bawah ini adalah cuplikan siap pakai yang dapat Anda sesuaikan dengan pipeline Anda.
 
-<h3 id="basic-gitlab-ci-yml-claude-api">
-  .gitlab-ci.yml dasar (Claude API)
-</h3>
-
-```yaml theme={null}
-stages:
-  - ai
-
-claude:
-  stage: ai
-  image: node:24-alpine3.21
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "web"'
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-  variables:
-    GIT_STRATEGY: fetch
-  before_script:
-    - apk update
-    - apk add --no-cache git curl bash
-    - curl -fsSL https://claude.ai/install.sh | bash
-  script:
-    - /bin/gitlab-mcp-server || true
-    - >
-      claude
-      -p "${AI_FLOW_INPUT:-'Summarize recent changes and suggest improvements'}"
-      --permission-mode acceptEdits
-      --allowedTools "Bash Read Edit Write mcp__gitlab"
-      --debug
-  # Claude Code akan menggunakan ANTHROPIC_API_KEY dari variabel CI/CD
-```
-
 <h3 id="amazon-bedrock-job-example-oidc">
   Contoh pekerjaan Amazon Bedrock (OIDC)
 </h3>
@@ -304,27 +249,36 @@ claude:
 **Prasyarat:**
 
 * Amazon Bedrock diaktifkan dengan akses ke model Claude pilihan Anda
-* GitLab OIDC dikonfigurasi di AWS dengan peran yang mempercayai proyek dan ref GitLab Anda
-* Peran IAM dengan izin Amazon Bedrock (hak istimewa minimal direkomendasikan)
+* GitLab OIDC dikonfigurasi di AWS dengan peran yang mempercayai proyek dan refs GitLab Anda
+* Peran IAM dengan izin Amazon Bedrock (least privilege direkomendasikan)
 
 **Variabel CI/CD yang diperlukan:**
 
-* `AWS_ROLE_TO_ASSUME`: ARN peran IAM untuk akses Amazon Bedrock
+* `AWS_ROLE_TO_ASSUME`: ARN dari peran IAM untuk akses Amazon Bedrock
 * `AWS_REGION`: Wilayah Amazon Bedrock (misalnya, `us-west-2`)
 
+GitLab membuat token OIDC pekerjaan dari blok `id_tokens:` dan mengeksposnya sebagai `GITLAB_OIDC_TOKEN`. Atur `aud` ke nilai audiens yang Anda konfigurasi pada penyedia identitas OIDC IAM di AWS, misalnya URL instans GitLab Anda.
+
 ```yaml theme={null}
+stages:
+  - ai
+
 claude-bedrock:
   stage: ai
   image: node:24-alpine3.21
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web"'
+  id_tokens:
+    GITLAB_OIDC_TOKEN:
+      aud: https://gitlab.example.com
   before_script:
-    - apk add --no-cache bash curl jq git python3 py3-pip
-    - pip install --no-cache-dir awscli
+    - apk add --no-cache bash curl jq git aws-cli
     - curl -fsSL https://claude.ai/install.sh | bash
-    # Tukar token OIDC GitLab dengan kredensial AWS
-    - export AWS_WEB_IDENTITY_TOKEN_FILE="${CI_JOB_JWT_FILE:-/tmp/oidc_token}"
-    - if [ -n "${CI_JOB_JWT_V2}" ]; then printf "%s" "$CI_JOB_JWT_V2" > "$AWS_WEB_IDENTITY_TOKEN_FILE"; fi
+    # The installer places claude in ~/.local/bin, which isn't on PATH in this image
+    - export PATH="$HOME/.local/bin:$PATH"
+    # Exchange the job's OIDC token for AWS credentials
+    - export AWS_WEB_IDENTITY_TOKEN_FILE="/tmp/oidc_token"
+    - printf "%s" "$GITLAB_OIDC_TOKEN" > "$AWS_WEB_IDENTITY_TOKEN_FILE"
     - >
       aws sts assume-role-with-web-identity
       --role-arn "$AWS_ROLE_TO_ASSUME"
@@ -344,6 +298,7 @@ claude-bedrock:
       --debug
   variables:
     AWS_REGION: "us-west-2"
+    CLAUDE_CODE_USE_BEDROCK: "1"
 ```
 
 <Note>
@@ -356,38 +311,57 @@ claude-bedrock:
 
 **Prasyarat:**
 
-* Google Cloud's Agent Platform API diaktifkan di proyek GCP Anda
+* API Agent Platform Google Cloud diaktifkan di proyek GCP Anda
 * Workload Identity Federation dikonfigurasi untuk mempercayai GitLab OIDC
-* Akun layanan dengan izin Google Cloud's Agent Platform
+* Akun layanan dengan izin Agent Platform Google Cloud
 
 **Variabel CI/CD yang diperlukan:**
 
-* `GCP_WORKLOAD_IDENTITY_PROVIDER`: Nama sumber daya penyedia lengkap
-* `GCP_SERVICE_ACCOUNT`: Email akun layanan
-* `CLOUD_ML_REGION`: Wilayah Google Cloud's Agent Platform (misalnya, `us-east5`)
+* `GCP_WORKLOAD_IDENTITY_PROVIDER`: nama sumber daya penyedia tanpa awalan `//iam.googleapis.com/`, seperti `projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider`
+* `GCP_SERVICE_ACCOUNT`: email akun layanan
+* `GCP_PROJECT_ID`: ID proyek Google Cloud
+* `CLOUD_ML_REGION`: Wilayah Agent Platform Google Cloud (misalnya, `us-east5`)
+
+GitLab membuat token OIDC pekerjaan dari blok `id_tokens:` dan mengeksposnya sebagai `GITLAB_OIDC_TOKEN`. Atur `aud` ke nilai audiens yang Anda konfigurasi pada penyedia Workload Identity Pool, misalnya URL instans GitLab Anda. Pekerjaan menulis token ke file, dan entri `credential_source` konfigurasi kredensial memberi tahu perpustakaan auth Google untuk membacanya dari sana. Mengatur `GOOGLE_APPLICATION_CREDENTIALS` ke file konfigurasi kredensial membuatnya tersedia untuk Claude Code melalui [Application Default Credentials](/docs/id/google-vertex-ai#3-configure-gcp-credentials).
 
 ```yaml theme={null}
+stages:
+  - ai
+
 claude-vertex:
   stage: ai
   image: gcr.io/google.com/cloudsdktool/google-cloud-cli:slim
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web"'
+  id_tokens:
+    GITLAB_OIDC_TOKEN:
+      aud: https://gitlab.example.com
   before_script:
     - apt-get update && apt-get install -y git && apt-get clean
     - curl -fsSL https://claude.ai/install.sh | bash
-    # Autentikasi ke Google Cloud melalui WIF (tanpa kunci yang diunduh)
-    - >
-      gcloud auth login --cred-file=<(cat <<EOF
+    # The installer places claude in ~/.local/bin, which isn't on PATH in this image
+    - export PATH="$HOME/.local/bin:$PATH"
+    # Write the job's OIDC token where credential_source expects it
+    - printf "%s" "$GITLAB_OIDC_TOKEN" > /tmp/oidc_token
+    # Write the WIF credential configuration to a file (no downloaded keys)
+    - |
+      cat > /tmp/cred.json <<EOF
       {
         "type": "external_account",
-        "audience": "${GCP_WORKLOAD_IDENTITY_PROVIDER}",
+        "audience": "//iam.googleapis.com/${GCP_WORKLOAD_IDENTITY_PROVIDER}",
         "subject_token_type": "urn:ietf:params:oauth:token-type:jwt",
-        "service_account_impersonation_url": "https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/${GCP_SERVICE_ACCOUNT}:generateAccessToken",
-        "token_url": "https://sts.googleapis.com/v1/token"
+        "token_url": "https://sts.googleapis.com/v1/token",
+        "credential_source": {
+          "file": "/tmp/oidc_token"
+        },
+        "service_account_impersonation_url": "https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/${GCP_SERVICE_ACCOUNT}:generateAccessToken"
       }
       EOF
-      )
-    - gcloud config set project "$(gcloud projects list --format='value(projectId)' --filter="name:${CI_PROJECT_NAMESPACE}" | head -n1)" || true
+    # Expose the credentials to Claude Code via Application Default Credentials
+    - export GOOGLE_APPLICATION_CREDENTIALS=/tmp/cred.json
+    # Authenticate the gcloud CLI with the same credential configuration
+    - gcloud auth login --cred-file=/tmp/cred.json
+    - gcloud config set project "$GCP_PROJECT_ID"
   script:
     - /bin/gitlab-mcp-server || true
     - >
@@ -399,10 +373,12 @@ claude-vertex:
       --debug
   variables:
     CLOUD_ML_REGION: "us-east5"
+    CLAUDE_CODE_USE_VERTEX: "1"
+    ANTHROPIC_VERTEX_PROJECT_ID: "$GCP_PROJECT_ID"
 ```
 
 <Note>
-  Dengan Workload Identity Federation, Anda tidak perlu menyimpan kunci akun layanan. Gunakan kondisi kepercayaan khusus repositori dan akun layanan dengan hak istimewa minimal.
+  Dengan Workload Identity Federation, Anda tidak perlu menyimpan kunci akun layanan. Gunakan kondisi kepercayaan khusus repositori dan akun layanan dengan least-privilege.
 </Note>
 
 <h2 id="best-practices">
@@ -413,7 +389,7 @@ claude-vertex:
   Konfigurasi CLAUDE.md
 </h3>
 
-Buat file `CLAUDE.md` di akar repositori untuk menentukan standar pengkodean, kriteria ulasan, dan aturan khusus proyek. Claude membaca file ini selama berjalan dan mengikuti konvensi Anda saat mengusulkan perubahan.
+Buat file `CLAUDE.md` di akar repositori untuk mendefinisikan standar pengkodean, kriteria tinjauan, dan aturan khusus proyek. Claude membaca file ini selama menjalankan dan mengikuti konvensi Anda saat mengusulkan perubahan.
 
 <h3 id="security-considerations">
   Pertimbangan keamanan
@@ -422,7 +398,7 @@ Buat file `CLAUDE.md` di akar repositori untuk menentukan standar pengkodean, kr
 **Jangan pernah melakukan commit kunci API atau kredensial cloud ke repositori Anda**. Selalu gunakan variabel GitLab CI/CD:
 
 * Tambahkan `ANTHROPIC_API_KEY` sebagai variabel yang disembunyikan (dan lindungi jika diperlukan)
-* Gunakan OIDC khusus penyedia jika memungkinkan (tanpa kunci jangka panjang)
+* Gunakan OIDC khusus penyedia jika memungkinkan (tanpa kunci yang tahan lama)
 * Batasi izin pekerjaan dan egress jaringan
 * Tinjau MR Claude seperti kontributor lainnya
 
@@ -432,7 +408,6 @@ Buat file `CLAUDE.md` di akar repositori untuk menentukan standar pengkodean, kr
 
 * Jaga `CLAUDE.md` tetap fokus dan ringkas
 * Berikan deskripsi masalah/MR yang jelas untuk mengurangi iterasi
-* Konfigurasi timeout pekerjaan yang masuk akal untuk menghindari lari liar
 * Cache npm dan instalasi paket di runner jika memungkinkan
 
 <h3 id="ci-costs">
@@ -448,48 +423,38 @@ Saat menggunakan Claude Code dengan GitLab CI/CD, waspadai biaya terkait:
 * **Biaya API**:
   * Setiap interaksi Claude mengonsumsi token berdasarkan ukuran prompt dan respons
   * Penggunaan token bervariasi menurut kompleksitas tugas dan ukuran basis kode
-  * Lihat [harga Anthropic](https://platform.claude.com/docs/id/about-claude/pricing) untuk detail
+  * Lihat [harga Anthropic](https://platform.claude.com/docs/en/about-claude/pricing) untuk detail
 
-* **Tips optimisasi biaya**:
+* **Tips optimasi biaya**:
   * Gunakan perintah `@claude` spesifik untuk mengurangi putaran yang tidak perlu
-  * Tetapkan nilai `max_turns` dan timeout pekerjaan yang sesuai
-  * Batasi keselarasan untuk mengontrol lari paralel
-
-<h2 id="security-and-governance">
-  Keamanan dan tata kelola
-</h2>
-
-* Setiap pekerjaan berjalan dalam kontainer terisolasi dengan akses jaringan terbatas
-* Perubahan Claude mengalir melalui MR sehingga pengulas melihat setiap diff
-* Perlindungan cabang dan aturan persetujuan berlaku untuk kode yang dihasilkan AI
-* Claude Code menggunakan izin berskop ruang kerja untuk membatasi penulisan
-* Biaya tetap di bawah kontrol Anda karena Anda membawa kredensial penyedia Anda sendiri
+  * Tetapkan nilai `--max-turns` dan `timeout` pekerjaan yang sesuai
+  * Batasi konkurensi untuk mengontrol jalankan paralel
 
 <h2 id="troubleshooting">
-  Pemecahan masalah
+  Troubleshooting
 </h2>
 
 <h3 id="claude-not-responding-to-claude-commands">
   Claude tidak merespons perintah @claude
 </h3>
 
-* Verifikasi pipeline Anda dipicu (secara manual, peristiwa MR, atau melalui pendengar peristiwa catatan/webhook)
-* Pastikan variabel CI/CD (`ANTHROPIC_API_KEY` atau pengaturan penyedia cloud) ada dan tidak disembunyikan
-* Periksa bahwa komentar berisi `@claude` (bukan `/claude`) dan pemicu penyebutan Anda dikonfigurasi
+* Verifikasi pipeline Anda dipicu (secara manual, acara MR, atau melalui pendengar acara catatan/webhook)
+* Pastikan `ANTHROPIC_API_KEY` atau variabel penyedia cloud Anda ada
+* Periksa bahwa komentar berisi `@claude` (bukan `/claude`) dan bahwa pemicu penyebutan Anda dikonfigurasi
 
 <h3 id="job-can’t-write-comments-or-open-mrs">
-  Pekerjaan tidak dapat menulis komentar atau membuka MR
+  Job tidak dapat menulis komentar atau membuka MR
 </h3>
 
 * Pastikan `CI_JOB_TOKEN` memiliki izin yang cukup untuk proyek, atau gunakan Project Access Token dengan cakupan `api`
-* Periksa alat `mcp__gitlab` diaktifkan dalam `--allowedTools`
-* Konfirmasi pekerjaan berjalan dalam konteks MR atau memiliki konteks yang cukup melalui variabel `AI_FLOW_*`
+* Periksa bahwa alat `mcp__gitlab` diaktifkan dalam `--allowedTools`
+* Konfirmasi job berjalan dalam konteks MR atau memiliki konteks yang cukup melalui variabel `AI_FLOW_*`
 
 <h3 id="authentication-errors">
   Kesalahan autentikasi
 </h3>
 
-* **Untuk Claude API**: Konfirmasi `ANTHROPIC_API_KEY` valid dan tidak kedaluwarsa
+* **Untuk Claude API**: Konfirmasi `ANTHROPIC_API_KEY` valid dan tidak kadaluarsa
 * **Untuk Amazon Bedrock atau Platform Agent Google Cloud**: Verifikasi konfigurasi OIDC/WIF, impersonasi peran, dan nama rahasia; konfirmasi ketersediaan wilayah dan model
 
 <h2 id="advanced-configuration">
@@ -500,16 +465,16 @@ Saat menggunakan Claude Code dengan GitLab CI/CD, waspadai biaya terkait:
   Parameter dan variabel umum
 </h3>
 
-Claude Code mendukung input yang umum digunakan ini:
+Kontrol Claude Code berjalan di pekerjaan Anda dengan bendera CLI, kata kunci GitLab, dan variabel ini:
 
-* `prompt` / `prompt_file`: Berikan instruksi inline (`-p`) atau melalui file
-* `max_turns`: Batasi jumlah iterasi bolak-balik
-* `timeout_minutes`: Batasi waktu eksekusi total
-* `ANTHROPIC_API_KEY`: Diperlukan untuk Claude API (tidak digunakan untuk Amazon Bedrock atau Platform Agen Google Cloud)
-* Lingkungan khusus penyedia: `AWS_REGION`, variabel proyek/wilayah untuk Platform Agen Google Cloud
+* `-p`: berikan instruksi secara inline, misalnya `claude -p "Review this MR"`
+* `--max-turns`: batasi jumlah iterasi bolak-balik
+* `timeout`: batasi total waktu eksekusi pekerjaan dengan kata kunci `timeout` tingkat pekerjaan GitLab, misalnya `timeout: 30m`
+* `ANTHROPIC_API_KEY`: diperlukan untuk Claude API (tidak digunakan untuk Amazon Bedrock atau Agent Platform Google Cloud)
+* Lingkungan khusus penyedia: `AWS_REGION`, variabel proyek/region untuk Agent Platform Google Cloud
 
 <Note>
-  Bendera dan parameter yang tepat dapat bervariasi menurut versi `@anthropic-ai/claude-code`. Jalankan `claude --help` dalam pekerjaan Anda untuk melihat opsi yang didukung.
+  Bendera dan parameter yang tepat mungkin berbeda menurut versi `@anthropic-ai/claude-code`. Jalankan `claude --help` di pekerjaan Anda untuk melihat opsi yang didukung.
 </Note>
 
 <h3 id="customizing-claude’s-behavior">
@@ -519,4 +484,4 @@ Claude Code mendukung input yang umum digunakan ini:
 Anda dapat memandu Claude dengan dua cara utama:
 
 1. **CLAUDE.md**: Tentukan standar pengkodean, persyaratan keamanan, dan konvensi proyek. Claude membaca ini selama berjalan dan mengikuti aturan Anda.
-2. **Prompt khusus**: Teruskan instruksi khusus tugas melalui `prompt`/`prompt_file` dalam pekerjaan. Gunakan prompt berbeda untuk pekerjaan berbeda (misalnya, ulasan, implementasi, refaktor).
+2. **Prompt kustom**: Berikan instruksi khusus tugas melalui `-p` di pekerjaan. Gunakan prompt berbeda untuk pekerjaan berbeda (misalnya, review, implementasi, refactor).

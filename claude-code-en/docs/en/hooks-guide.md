@@ -10,7 +10,7 @@ Hooks are user-defined shell commands. Claude Code runs them at specific points 
 
 For decisions that require judgment rather than deterministic rules, you can also use [prompt-based hooks](#prompt-based-hooks) or [agent-based hooks](#agent-based-hooks) that use a Claude model to evaluate conditions.
 
-For other ways to extend Claude Code, see [skills](/docs/en/skills) for giving Claude additional instructions and executable commands, [subagents](/docs/en/sub-agents) for running tasks in isolated contexts, and [plugins](/docs/en/plugins) for packaging extensions to share across projects.
+For other ways to extend Claude Code, see [skills](/docs/en/skills) for giving Claude additional instructions and executable commands, [subagents](/docs/en/sub-agents) for running tasks in isolated contexts, and [plugins](/docs/en/plugins/overview) for packaging extensions to share across projects.
 
 <Tip>
   This guide covers common use cases and how to get started. For full event schemas, JSON input/output formats, and advanced features like async hooks and MCP tool hooks, see the [Hooks reference](/docs/en/hooks).
@@ -452,7 +452,9 @@ When the hook approves, Claude Code exits plan mode and restores whatever permis
 To set a specific permission mode instead, your hook's output can include an `updatedPermissions` array with a `setMode` entry. The `mode` value is any permission mode like `default`, `acceptEdits`, or `bypassPermissions`, and `destination: "session"` applies it for the current session only.
 
 <Note>
-  `bypassPermissions` only applies if the session was launched with bypass mode already available: `--dangerously-skip-permissions`, `--permission-mode bypassPermissions`, `--allow-dangerously-skip-permissions`, or `permissions.defaultMode: "bypassPermissions"` in settings, and not disabled by [`permissions.disableBypassPermissionsMode`](/docs/en/permissions#managed-settings) or by starting the session in [restricted mode](/docs/en/cli-reference#cli-flags). It is never persisted as `defaultMode`.
+  `bypassPermissions` only applies if you started the session with bypass mode already available: `--dangerously-skip-permissions`, `--permission-mode bypassPermissions`, `--allow-dangerously-skip-permissions`, or `permissions.defaultMode: "bypassPermissions"` in [user, `--settings`, or managed settings](/docs/en/settings-reference#permissions-defaultmode). It doesn't apply if bypass mode is disabled by [`permissions.disableBypassPermissionsMode`](/docs/en/permissions#managed-settings), or if you started the session in [restricted mode](/docs/en/cli-reference#cli-flags).
+
+  Claude Code never saves it as `defaultMode`.
 </Note>
 
 To switch the session to `acceptEdits`, your hook writes this JSON to stdout:
@@ -516,7 +518,7 @@ Claude Code fires hook events at specific points in its lifecycle. When an event
 Each hook has a `type` that determines how it runs. Most hooks use `"type": "command"`, which runs a shell command. Four other types are available:
 
 * `"type": "http"`: POST event data to a URL. See [HTTP hooks](#http-hooks).
-* `"type": "mcp_tool"`: call a tool on an already-connected MCP server. See [MCP tool hooks](/docs/en/hooks#mcp-tool-hook-fields).
+* `"type": "mcp_tool"`: call a tool on a configured MCP server. See [MCP tool hooks](/docs/en/hooks#mcp-tool-hook-fields).
 * `"type": "prompt"`: single-turn LLM evaluation. See [Prompt-based hooks](#prompt-based-hooks).
 * `"type": "agent"`: multi-turn verification with tool access. Agent hooks are experimental and may change. See [Agent-based hooks](#agent-based-hooks).
 
@@ -676,7 +678,7 @@ Without a matcher, a hook fires on every occurrence of its event. Matchers let y
 }
 ```
 
-The `"Edit|Write"` matcher fires only when Claude uses the `Edit` or `Write` tool, not when it uses `Bash`, `Read`, or any other tool. On Claude Code v2.1.191 or later, a comma separates alternatives the same way, so `"Edit, Write"` is equivalent. See [Matcher patterns](/docs/en/hooks#matcher-patterns) for how plain names and regular expressions are evaluated.
+The `"Edit|Write"` matcher fires only when Claude uses the `Edit` or `Write` tool, not when it uses `Bash`, `Read`, or any other tool. A comma separates alternatives the same way, so `"Edit, Write"` is equivalent. See [Matcher patterns](/docs/en/hooks#matcher-patterns) for how plain names and regular expressions are evaluated.
 
 <Note>
   Claude can also create or modify files by running shell commands. If your hook must see every file change, such as for compliance scanning or audit logging, add a [`Stop`](/docs/en/hooks#stop) hook that scans the working tree once per turn. For per-call coverage instead, also match `Bash|PowerShell` and have your script list modified and untracked files with `git status --porcelain`. The [PowerShell hook input section](/docs/en/hooks#powershell) explains why matching `Bash` alone is not enough. To run a hook when a specific file changes on disk, whatever wrote it, use a [FileChanged](/docs/en/hooks#filechanged) hook.
@@ -697,7 +699,7 @@ Each event type matches on a specific field:
 | `SubagentStop`                                                                                                                                                  | agent type                                                                                                         | same values as `SubagentStart`                                                                                                                                                                                                                                                 |
 | `ConfigChange`                                                                                                                                                  | configuration source                                                                                               | `user_settings`, `project_settings`, `local_settings`, `policy_settings`, `skills`                                                                                                                                                                                             |
 | `DirectoryAdded`                                                                                                                                                | how the directory was added                                                                                        | `slash_command`, `register_repo_root`                                                                                                                                                                                                                                          |
-| `StopFailure`                                                                                                                                                   | error type                                                                                                         | `rate_limit`, `overloaded`, `authentication_failed`, `oauth_org_not_allowed`, `billing_error`, `invalid_request`, `model_not_found`, `server_error`, `max_output_tokens`, `unknown`                                                                                            |
+| `StopFailure`                                                                                                                                                   | error type                                                                                                         | `rate_limit`, `overloaded`, `authentication_failed`, `oauth_org_not_allowed`, `account_on_hold`, `billing_error`, `invalid_request`, `model_not_found`, `server_error`, `max_output_tokens`, `cloud_credential_error`, `unknown`                                               |
 | `InstructionsLoaded`                                                                                                                                            | load reason                                                                                                        | `session_start`, `nested_traversal`, `path_glob_match`, `include`, `compact`                                                                                                                                                                                                   |
 | `Elicitation`                                                                                                                                                   | MCP server name                                                                                                    | your configured MCP server names                                                                                                                                                                                                                                               |
 | `ElicitationResult`                                                                                                                                             | MCP server name                                                                                                    | same values as `Elicitation`                                                                                                                                                                                                                                                   |
@@ -822,15 +824,15 @@ The `if` field accepts the same patterns as permission rules: `"Bash(git *)"`, `
 
 Where you add a hook determines its scope:
 
-| Location                                 | Scope                                                                                                                     | Shareable                                             |
-| :--------------------------------------- | :------------------------------------------------------------------------------------------------------------------------ | :---------------------------------------------------- |
-| `~/.claude/settings.json`                | All your projects                                                                                                         | No, local to your machine                             |
-| `.claude/settings.json`                  | Single project                                                                                                            | Yes, can be committed to the repo                     |
-| `.claude/settings.local.json`            | Single project                                                                                                            | No, gitignored when Claude Code saves a setting to it |
-| Managed policy settings                  | Organization-wide                                                                                                         | Yes, admin-controlled                                 |
-| [Plugin](/docs/en/plugins) `hooks/hooks.json` | When plugin is enabled                                                                                                    | Yes, bundled with the plugin                          |
-| [Skill](/docs/en/skills) frontmatter          | The rest of the session once the skill is invoked. See [Hooks in skills and agents](/docs/en/hooks#hooks-in-skills-and-agents) | Yes, defined in the skill file                        |
-| [Subagent](/docs/en/sub-agents) frontmatter   | While that subagent is running                                                                                            | Yes, defined in the subagent file                     |
+| Location                                          | Scope                                                                                                                     | Shareable                                             |
+| :------------------------------------------------ | :------------------------------------------------------------------------------------------------------------------------ | :---------------------------------------------------- |
+| `~/.claude/settings.json`                         | All your projects                                                                                                         | No, local to your machine                             |
+| `.claude/settings.json`                           | Single project                                                                                                            | Yes, can be committed to the repo                     |
+| `.claude/settings.local.json`                     | Single project                                                                                                            | No, gitignored when Claude Code saves a setting to it |
+| Managed policy settings                           | Organization-wide                                                                                                         | Yes, admin-controlled                                 |
+| [Plugin](/docs/en/plugins/overview) `hooks/hooks.json` | When plugin is enabled                                                                                                    | Yes, bundled with the plugin                          |
+| [Skill](/docs/en/skills) frontmatter                   | The rest of the session once the skill is invoked. See [Hooks in skills and agents](/docs/en/hooks#hooks-in-skills-and-agents) | Yes, defined in the skill file                        |
+| [Subagent](/docs/en/sub-agents) frontmatter            | While that subagent is running                                                                                            | Yes, defined in the subagent file                     |
 
 Run [`/hooks`](/docs/en/hooks#the-%2Fhooks-menu) in Claude Code to browse all configured hooks grouped by event.
 
@@ -947,7 +949,7 @@ For full configuration options and response handling, see [HTTP hooks](/docs/en/
 
 Keep these constraints in mind when designing hooks:
 
-* Command hooks communicate through stdout, stderr, and exit codes only. They can't trigger `/` commands or tool calls. Text returned via `additionalContext` is injected as a system reminder that Claude reads as plain text. HTTP hooks communicate through the response body instead.
+* Command hooks communicate through stdout, stderr, and exit codes only. They can't trigger `/` commands or tool calls. Text returned via `additionalContext` is injected as a [system reminder](/docs/en/glossary#system-reminder) that Claude reads as plain text. HTTP hooks communicate through the response body instead.
 * Hook timeouts vary by type. Override per hook with the `timeout` field in seconds.
   * `command`, `http`, `mcp_tool`: 10 minutes. Claude Code lowers this default to 30 seconds for `UserPromptSubmit`, `PreModelSwitch`, and `PostModelSwitch` hooks, and to 10 seconds for `MessageDisplay`.
   * `prompt`: 30 seconds.
@@ -1017,7 +1019,10 @@ If your hook legitimately needs more than eight iterations to converge, raise th
 
 ### Hook JSON has no effect
 
-Your hook prints valid JSON, but the decision doesn't take effect and no error appears in the transcript.
+Your hook prints valid JSON, but the decision doesn't take effect and no error appears in the transcript. Check which cause applies:
+
+* **Extra output before the JSON**: something else writes to stdout first, usually an unconditional `echo` in your shell profile, so the output no longer starts with `{` and Claude Code doesn't parse it as JSON. The cause and fix follow this list.
+* **A field at the wrong level**: compare each field's placement against the [JSON output](/docs/en/hooks#json-output) format. For example, `permissionDecision` belongs inside `hookSpecificOutput`, not at the top level.
 
 When Claude Code runs a shell-form command hook, one without `args`, it spawns `sh -c` on macOS and Linux, Git Bash on Windows, or PowerShell when Git Bash isn't installed by default. This shell is non-interactive, but Git Bash and some configurations, such as `BASH_ENV` pointing at `~/.bashrc`, still source your profile. If that profile contains unconditional `echo` statements, the output gets prepended to your hook's JSON:
 
@@ -1036,6 +1041,8 @@ fi
 ```
 
 The `$-` variable contains shell flags, and `i` means interactive. Hooks run in non-interactive shells, so the echo is skipped.
+
+When your hook returns `permissionDecision` or `additionalContext` at the top level instead of inside `hookSpecificOutput`, the JSON still parses, and Claude Code ignores the misplaced fields without reporting an error. To see which fields it ignored, start Claude Code with `claude --debug` and search the [debug log](/docs/en/hooks#debug-hooks) for `Hook JSON output had unrecognized keys`.
 
 ### Debug techniques
 

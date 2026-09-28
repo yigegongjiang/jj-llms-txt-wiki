@@ -6,11 +6,9 @@
 
 > Panduan untuk mengamankan penyebaran Claude Code dan Agent SDK dengan isolasi, manajemen kredensial, dan kontrol jaringan
 
-Claude Code dan Agent SDK adalah alat yang ampuh yang dapat menjalankan kode, mengakses file, dan berinteraksi dengan layanan eksternal atas nama Anda. Seperti alat apa pun dengan kemampuan ini, penyebaran yang cermat memastikan Anda mendapatkan manfaat sambil mempertahankan kontrol yang sesuai.
+Claude Code dan Agent SDK dapat menjalankan kode, mengakses file, dan berinteraksi dengan layanan eksternal atas nama Anda.
 
 Tidak seperti perangkat lunak tradisional yang mengikuti jalur kode yang telah ditentukan sebelumnya, alat ini menghasilkan tindakan mereka secara dinamis berdasarkan konteks dan tujuan. Fleksibilitas inilah yang membuat mereka berguna, tetapi ini juga berarti perilaku mereka dapat dipengaruhi oleh konten yang mereka proses: file, halaman web, atau input pengguna. Ini kadang-kadang disebut prompt injection. Misalnya, jika README repositori berisi instruksi yang tidak biasa, Claude Code mungkin menggabungkan instruksi tersebut ke dalam tindakannya dengan cara yang tidak diantisipasi oleh operator. Panduan ini mencakup cara praktis untuk mengurangi risiko ini.
-
-Berita baiknya adalah mengamankan penyebaran agen tidak memerlukan infrastruktur yang eksotis. Prinsip yang sama yang berlaku untuk menjalankan kode semi-terpercaya apa pun berlaku di sini: isolasi, privilege minimal, dan pertahanan berlapis. Claude Code mencakup beberapa fitur keamanan yang membantu dengan kekhawatiran umum, dan panduan ini memandu Anda melalui ini bersama dengan opsi pengerasan tambahan bagi mereka yang membutuhkannya.
 
 Tidak setiap penyebaran memerlukan keamanan maksimal. Pengembang yang menjalankan Claude Code di laptop mereka memiliki persyaratan yang berbeda dari perusahaan yang memproses data pelanggan di lingkungan multi-tenant. Panduan ini menyajikan opsi mulai dari fitur keamanan bawaan Claude Code hingga arsitektur produksi yang dikeraskan, sehingga Anda dapat memilih apa yang sesuai dengan situasi Anda.
 
@@ -29,7 +27,7 @@ Pertahanan berlapis masih merupakan praktik yang baik. Misalnya, jika agen mempr
 Claude Code mencakup beberapa fitur keamanan yang mengatasi kekhawatiran umum. Lihat [dokumentasi keamanan](/docs/id/security) untuk detail lengkap.
 
 * **Sistem izin**: Setiap alat dan perintah bash dapat dikonfigurasi untuk mengizinkan, memblokir, atau meminta persetujuan pengguna. Gunakan pola glob untuk membuat aturan seperti "izinkan semua perintah npm" atau "blokir perintah apa pun dengan sudo". Organisasi dapat menetapkan kebijakan yang berlaku di semua pengguna. Lihat [permissions](/docs/id/permissions).
-* **Parsing perintah untuk izin**: Sebelum menjalankan perintah bash, Claude Code menguraikannya menjadi AST dan mencocokkan hasilnya dengan aturan izin Anda. Perintah yang tidak dapat diuraikan dengan bersih, atau yang tidak cocok dengan aturan izin, memerlukan persetujuan eksplisit. Serangkaian kecil konstruksi seperti `eval` selalu memerlukan persetujuan terlepas dari aturan izin. Ini adalah gerbang izin, bukan sandbox; ini tidak menyimpulkan apakah perintah berbahaya dari jalur target atau efeknya.
+* **Parsing perintah untuk izin**: Sebelum menjalankan perintah bash, Claude Code menguraikannya menjadi AST dan mencocokkan hasilnya dengan aturan izin Anda. Perintah yang tidak dapat diuraikan dengan bersih, atau yang tidak cocok dengan aturan izin, memerlukan persetujuan eksplisit. Serangkaian kecil konstruksi seperti `eval` selalu memerlukan persetujuan terlepas dari aturan izin. Ini adalah gerbang izin, bukan sandbox; terlepas dari pemeriksaan keamanan bawaan seperti [pemeriksaan jalur kritis](/docs/id/permission-modes#critical-paths) pada `rm` dan `rmdir` dan daftar [jalur terlindungi](/docs/id/permission-modes#protected-paths), ini tidak menyimpulkan apakah perintah berbahaya dari jalur target atau efeknya.
 * **Ringkasan pencarian web**: Hasil pencarian diringkas daripada melewatkan konten mentah langsung ke dalam konteks, mengurangi risiko prompt injection dari konten web berbahaya.
 * **Mode sandbox**: Perintah Bash dapat berjalan di lingkungan sandbox yang membatasi akses filesystem dan jaringan. Lihat [dokumentasi sandboxing](/docs/id/sandboxing) untuk detail.
 
@@ -96,7 +94,7 @@ Teknologi isolasi yang berbeda menawarkan trade-off yang berbeda antara kekuatan
 
 Untuk isolasi ringan tanpa kontainer, [sandbox-runtime](https://github.com/anthropic-experimental/sandbox-runtime) memberlakukan pembatasan filesystem dan jaringan di tingkat OS.
 
-Keuntungan utama adalah kesederhanaan: tidak ada konfigurasi Docker, citra kontainer, atau setup jaringan yang diperlukan. Proxy dan pembatasan filesystem sudah tertanam. Anda menyediakan file pengaturan yang menentukan domain dan jalur yang diizinkan.
+Keuntungan utama adalah kesederhanaan: tidak ada konfigurasi Docker, citra kontainer, atau setup jaringan yang diperlukan. Proxy dan pembatasan filesystem sudah tertanam.
 
 **Cara kerjanya:**
 
@@ -185,8 +183,7 @@ Jika agen menjalankan kode berbahaya (mungkin karena prompt injection), kode itu
 
 Untuk menggunakan gVisor dengan Docker, instal runtime `runsc` dan konfigurasikan daemon:
 
-```json theme={null}
-// /etc/docker/daemon.json
+```json /etc/docker/daemon.json theme={null}
 {
   "runtimes": {
     "runsc": {

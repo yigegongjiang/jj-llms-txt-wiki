@@ -55,23 +55,51 @@ Invia uno dei seguenti:
   Come funziona l'applicazione
 </h2>
 
-Su ogni richiesta `/v1/messages`, il gateway risolve i limiti dello sviluppatore e la spesa da inizio periodo in una query Postgres. Se superano uno qualsiasi dei limiti, la richiesta restituisce `429` con `error.type: billing_error` e l'header `x-should-retry: false`. Il messaggio è `spend limit reached`, seguito dal tuo [`admin.blocked_message`](/docs/it/claude-apps-gateway-config#admin) se impostato.
+Su ogni richiesta `/v1/messages`, il gateway risolve i limiti dello sviluppatore e la spesa da inizio periodo in una query Postgres. Se superano uno qualsiasi dei limiti, la richiesta restituisce `429` con `error.type: billing_error` e l'header `x-should-retry: false`.
 
-`/v1/messages/count_tokens` è esente. Il conteggio dei token è gratuito, quindi viene eseguito indipendentemente dallo stato del limite.
+Il messaggio nomina il periodo e l'ora di reset, come `spend limit reached (daily; resets 2026-08-08 00:00 UTC)`, seguito dal tuo [`admin.blocked_message`](/docs/it/claude-apps-gateway-config#admin) se impostato. Quando uno sviluppatore supera diversi limiti contemporaneamente, il messaggio nomina il limite che si ripristina per ultimo. La risposta contiene anche un header `retry-after` con i secondi rimanenti fino a quel reset. Prima della versione v2.1.225 sul server gateway, il messaggio era `spend limit reached` senza periodo, ora di reset o header `retry-after`.
 
-Dopo ogni risposta, un misuratore di utilizzo legge i conteggi dei token dalla risposta mentre viene trasmessa al client, li prezza al prezzo di listino USD e incrementa i contatori Postgres per tutti e tre i bucket di periodo. Il misuratore è un singolo lettore sul flusso, quindi i byte del client rimangono intatti e un errore di misurazione non interrompe la risposta.
+Su v2.1.227 o successivo, il riferimento del protocollo in `<public_url>/protocol` elenca anche gli header di risposta esatti per il limite di utilizzo e il corpo `429`.
 
-I limiti di spesa stimano la spesa dai conteggi dei token al prezzo di listino USD; sono un circuito di protezione, non una fattura. Per la fatturazione autorevole, riconcilia con il rapporto di utilizzo del tuo provider, come l'Admin API di Utilizzo e Costi di Anthropic, i log di invocazione su Bedrock, o Cloud Monitoring su Google Cloud.
+I limiti si ripristinano sui confini del calendario UTC: giornalmente alle 00:00 UTC, settimanalmente il lunedì e mensilmente il primo. Il gateway non blocca mai `/v1/messages/count_tokens`, perché il conteggio dei token è gratuito.
 
-I prezzi utilizzano la stessa tabella che Claude Code CLI utilizza per il proprio display dei costi, con la stessa canonicalizzazione dell'ID modello tra Anthropic, Bedrock (`us.anthropic.…-v1:0`), Agent Platform (`claude-…@date`), e forme di Foundry ID. Un ID modello che la tabella non riesce a posizionare, come un nome di distribuzione Foundry o un ARN del profilo di inferenza, viene prezzato al livello predefinito del modello sconosciuto di \$5/\$25 per milione di token di input/output piuttosto che zero, quindi un ID non riconosciuto non può aggirare un limite andando non misurato. Il gateway avvisa all'avvio e una volta per ID al runtime quando un modello viene prezzato attraverso il fallback.
+<h3 id="how-requests-are-priced">
+  Come vengono prezzate le richieste
+</h3>
 
-Gli abort dei client vengono fatturati anche. L'upstream segnala i token di output solo nel frame terminale del flusso, quindi un flusso interrotto non li contiene. Il misuratore mantiene una stima conservativa del pavimento dal contenuto trasmesso, circa quattro caratteri per token, e la fattura quando e solo quando il frame di utilizzo terminale è mancante. Un flusso completo fattura sempre il conteggio segnalato dall'upstream. Senza questo, uno sviluppatore limitato potrebbe trasmettere l'output e interrompere ogni richiesta immediatamente prima della fine, spendendo senza mai essere conteggiato.
+Dopo ogni risposta, un misuratore di utilizzo legge i conteggi dei token e aggiunge il costo ai contatori giornalieri, settimanali e mensili. Non tocca mai i byte inviati al client, quindi un errore di misurazione non può interrompere una risposta. Gli importi sono stime in USD, un circuito di protezione piuttosto che una fattura; per la fatturazione, riconcilia con il rapporto di utilizzo del tuo provider.
+
+Il misuratore sceglie i tassi di ogni richiesta in questo ordine:
+
+1. Una riga [`pricing.overrides`](/docs/it/claude-apps-gateway-config#pricing) corrispondente per l'upstream che ha servito la richiesta. Richiede v2.1.227 o successivo.
+2. Prezzo di listino per l'ID del modello upstream, la stringa che il gateway invia al provider, quando la tabella dei costi di Claude Code la riconosce. La tabella accetta forme di Anthropic, Amazon Bedrock, Google Cloud's Agent Platform e Microsoft Foundry ID.
+3. Prezzo di listino per il [`models[].id`](/docs/it/claude-apps-gateway-config#models) che hai mappato a quell'ID upstream, per stringhe upstream che non contengono un nome di modello, come un ARN del profilo di inferenza di Amazon Bedrock o un nome di distribuzione di Microsoft Foundry. Richiede v2.1.218 o successivo.
+4. Il livello di modello sconosciuto di \$5/\$25 per milione di token di input/output, quindi un ID che il misuratore non riesce a posizionare non è mai gratuito. Il gateway avvisa all'avvio e una volta per ID al runtime quando utilizza questo livello.
+
+Qualunque sia il tasso applicabile, il misuratore moltiplica quindi l'importo per [`pricing.multiplier`](/docs/it/claude-apps-gateway-config#pricing), predefinito `1`.
+
+Gli abort dei client vengono fatturati anche. Quando un flusso termina senza il frame di utilizzo finale dell'upstream, il misuratore fattura una stima minima di circa quattro caratteri per token di output per il testo già inviato al client, quindi interrompere le richieste in anticipo non consente di aggirare un limite.
 
 <h3 id="postgres-availability">
   Disponibilità di Postgres
 </h3>
 
-La pre-verifica interroga Postgres con un timeout di due secondi. Se l'archivio è irraggiungibile o scade, l'applicazione fallisce aperta per impostazione predefinita: la richiesta procede e il gateway registra un avviso. Imposta [`enforcement.fail_closed_on_error: true`](/docs/it/claude-apps-gateway-config#enforcement) per fallire chiuso invece, che restituisce lo stesso `429 billing_error` con il messaggio `spend limit unavailable`. Fail-open impedisce a un'interruzione dell'archivio di diventare un'interruzione dell'inferenza; fail-closed garantisce nessuna spesa non misurata.
+La pre-verifica interroga Postgres con un timeout di due secondi. Se l'archivio è irraggiungibile o scade, l'applicazione fallisce aperta per impostazione predefinita: la richiesta procede, il gateway registra un avviso e la risposta non contiene header `anthropic-ratelimit-unified-*`. Imposta [`enforcement.fail_closed_on_error: true`](/docs/it/claude-apps-gateway-config#enforcement) per fallire chiuso invece, che restituisce lo stesso `429 billing_error` ma con il messaggio `spend limit unavailable` e nessun periodo, ora di reset o header `retry-after`. Fail-open impedisce a un'interruzione dell'archivio di diventare un'interruzione dell'inferenza; fail-closed garantisce nessuna spesa non misurata.
+
+<h3 id="usage-warnings-in-claude-code">
+  Avvisi di utilizzo in Claude Code
+</h3>
+
+Claude Code avverte uno sviluppatore mentre si avvicina al suo limite: una volta che l'utilizzo supera il 75%, e di nuovo oltre il 95% del suo limite più consumato. Quando il gateway blocca una richiesta, Claude Code mostra il messaggio `429` del gateway così com'è, incluso il tuo `admin.blocked_message`.
+
+L'avviso funziona dagli header di risposta:
+
+* Con v2.1.225 o successivo sul server gateway, ogni risposta `/v1/messages` riuscita per uno sviluppatore che ha un limite contiene il suo utilizzo del limite e l'ora di reset negli header `anthropic-ratelimit-unified-*`.
+* Con v2.1.225 o successivo anche sulla macchina dello sviluppatore, Claude Code legge gli header e mostra l'avviso.
+
+Gli header descrivono sempre il limite dello sviluppatore: il gateway elimina gli header di limite di velocità del provider upstream, che descrivono la tua quota condivisa, e non li inoltra mai.
+
+Con v2.1.251 o successivo sulla macchina dello sviluppatore, Claude Code legge anche gli stessi header per mostrare una barra **Spend limit** in `/usage`, con la percentuale del loro limite utilizzato e quando si ripristina, e per aggiungere un oggetto `rate_limits.spend_limit` alla [linea di stato](/docs/it/statusline#rate-limit-usage) di input. Claude Code mostra entrambi come percentuale piuttosto che come importo in dollari e non ha bisogno di nulla più recente di v2.1.225 sul server gateway.
 
 <h2 id="admin-api-reference">
   Riferimento Admin API
@@ -79,14 +107,14 @@ La pre-verifica interroga Postgres con un timeout di due secondi. Se l'archivio 
 
 Gli endpoint di seguito vengono serviti sotto `/v1/organizations/spend_limits`.
 
-| Metodo e percorso                              | Descrizione                                                                   |
-| ---------------------------------------------- | ----------------------------------------------------------------------------- |
-| `GET /v1/organizations/spend_limits`           | Elenca i limiti configurati. Query: `?limit=&after_id=&before_id=`.           |
-| `POST /v1/organizations/spend_limits`          | Crea o sostituisce un limite per `{scope, period}`.                           |
-| `GET /v1/organizations/spend_limits/{id}`      | Recupera un limite per il suo ID con prefisso `spl_`.                         |
-| `DELETE /v1/organizations/spend_limits/{id}`   | Elimina un limite. Restituisce `{type: "spend_limit_deleted", id}`.           |
-| `GET /v1/organizations/spend_limits/effective` | Limite risolto e spesa da inizio periodo per principale per periodo.          |
-| `GET /v1/organizations/spend_limits/audit`     | Traccia di mutazione amministrativa, più recente per primo. Query: `?limit=`. |
+| Metodo e percorso                              | Descrizione                                                                                                                                                            |
+| ---------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `GET /v1/organizations/spend_limits`           | Elenca i limiti configurati, facoltativamente filtrati a un `scope_type` di `organization`, `rbac_group`, o `user`. Query: `?limit=&after_id=&before_id=&scope_type=`. |
+| `POST /v1/organizations/spend_limits`          | Crea o sostituisce un limite per `{scope, period}`.                                                                                                                    |
+| `GET /v1/organizations/spend_limits/{id}`      | Recupera un limite per il suo ID con prefisso `spl_`.                                                                                                                  |
+| `DELETE /v1/organizations/spend_limits/{id}`   | Elimina un limite. Restituisce `{type: "spend_limit_deleted", id}`.                                                                                                    |
+| `GET /v1/organizations/spend_limits/effective` | Limite risolto e spesa da inizio periodo per principale per periodo.                                                                                                   |
+| `GET /v1/organizations/spend_limits/audit`     | Traccia di mutazione amministrativa, più recente per primo. Query: `?limit=&after_id=`.                                                                                |
 
 Le convenzioni rispecchiano l'Admin API di Anthropic:
 
@@ -94,7 +122,7 @@ Le convenzioni rispecchiano l'Admin API di Anthropic:
 * ID con prefisso `spl_`
 * Importi come stringhe di numero intero di centesimi USD; `POST` rifiuta qualsiasi altra `currency` con `400`
 * L'envelope di errore `{type: "error", error: {type, message}, request_id}`
-* Un header di risposta `request-id` su ogni risposta amministrativa, successo o errore, che corrisponde al `request_id` del corpo
+* Un header di risposta `request-id` su ogni risposta amministrativa, successo o errore; i corpi di errore lo portano anche come `request_id`
 
 Ogni mutazione scrive una riga prima/dopo a `admin_audit` nella stessa transazione, attribuita a `admin-key:<id>` o `oidc:<sub>`.
 
@@ -119,7 +147,7 @@ I limiti di origine del gruppo si risolvono rispetto a quei gruppi ultimi visti 
 | `period[]`         | Ripetibile. Filtra a righe `daily`, `weekly`, o `monthly`.                                                                               |
 | `sort`             | `spend_desc` elenca i maggiori spenditori per primi. Richiede esattamente uno `period[]`.                                                |
 | `q`                | Filtro di sottostringa senza distinzione tra maiuscole e minuscole sull'OIDC `sub`, email ultimi visti e nome visualizzato ultimi visti. |
-| `limit` / `page`   | Dimensione della pagina (1–1000, predefinito 20) e il cursore opaco dalla risposta precedente `next_page`.                               |
+| `limit` / `page`   | Dimensione della pagina, 1–1000 con un predefinito di 20, e il cursore opaco dalla risposta precedente `next_page`.                      |
 
 <Warning>
   `q=` e `user_ids[]=` vanno nelle stringhe di query GET, quindi qualsiasi proxy di fronting o load balancer li cattura nei suoi log di accesso. Se la tua politica di log PII è ristretta, pulisci questi parametri lì.
@@ -129,13 +157,13 @@ I limiti di origine del gruppo si risolvono rispetto a quei gruppi ultimi visti 
   `/audit`
 </h3>
 
-Restituisce la traccia di mutazione del limite di spesa: chi ha modificato quale limite, snapshot prima/dopo e il motivo facoltativo, più recente per primo. `has_more` è esatto. Questo endpoint segue le convenzioni dell'Admin API locale piuttosto che una forma di dati di prima parte.
+Restituisce la traccia di mutazione del limite di spesa: chi ha modificato quale limite, con snapshot prima/dopo, più recente per primo. `has_more` è esatto. Questo endpoint segue le convenzioni dell'Admin API locale piuttosto che una forma di dati di prima parte.
 
 <h3 id="pagination">
   Paginazione
 </h3>
 
-L'elenco grezzo pagina per `after_id` e `before_id`, che sono ID `spl_…` mutuamente esclusivi; i risultati sono ordinati per creazione e `has_more` riflette la direzione di attraversamento. `/effective` pagina per il token opaco `next_page` passato indietro come `?page=`, con principali ordinati in modo ascendente in modo che le pagine rimangono stabili mentre la spesa viene registrata. `limit` è 1–1000, predefinito 20, su entrambi.
+L'elenco grezzo pagina per `after_id` e `before_id`, che sono ID `spl_…` mutuamente esclusivi; i risultati sono ordinati per creazione e `has_more` riflette la direzione di attraversamento. `/effective` pagina per il token opaco `next_page` passato indietro come `?page=`, con principali ordinati in modo ascendente in modo che le pagine rimangono stabili mentre la spesa viene registrata. `limit` è 1–1000, predefinito 20, su entrambi. `/audit` pagina per `after_id`, l'ID numerico `id` dell'ultimo evento sulla pagina precedente, e il suo `limit` predefinito è 100.
 
 <h2 id="data-lifecycle">
   Ciclo di vita dei dati
@@ -149,8 +177,6 @@ Il gateway contiene quattro tabelle relative alla spesa; una pulizia oraria appl
 | `spend_limits`     | I limiti configurati                                                                 | Fino all'eliminazione tramite l'API                                                                          |
 | `admin_audit`      | La traccia di mutazione                                                              | [`admin.audit_retention_days`](/docs/it/claude-apps-gateway-config#admin), predefinito 365                        |
 | `principal_emails` | Email ultimi visti di ogni principale, nome visualizzato e gruppi IdP. Contiene PII. | [`admin.identity_retention_days`](/docs/it/claude-apps-gateway-config#admin) dall'ultima attività, predefinito 90 |
-
-`identity_retention_days` è deliberatamente più breve di `spend_retention_months`: un'identità deprovisioning smette di aggiornarsi e invecchia, mentre i suoi contatori di spesa anonimi rimangono per il rapporto anno su anno.
 
 Quando uno sviluppatore se ne va, elimina qualsiasi limite per utente tramite `DELETE /v1/organizations/spend_limits/{id}`; la loro spesa e le righe di identità invecchiano sulle finestre di conservazione di cui sopra. Per cancellare una persona immediatamente, per offboarding o una richiesta di accesso ai dati del soggetto (DSAR), esegui `DELETE FROM principal_emails WHERE principal = '<sub>'` direttamente contro il database del gateway. Questo rimuove l'unica tabella che contiene la loro email, nome e gruppi. Le righe `spend` e `admin_audit` fanno riferimento solo all'OIDC `sub` pseudonimo e invecchiano sulle loro finestre.
 

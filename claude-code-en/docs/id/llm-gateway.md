@@ -11,7 +11,7 @@ Bagian ini mencakup penggunaan produk gateway yang sudah dijalankan organisasi A
 <Note>
   * Jika Anda adalah pengembang yang terhubung ke gateway yang ada: [hubungkan Claude Code ke gateway Anda](/docs/id/llm-gateway-connect)
   * Jika Anda adalah admin yang meluncurkan gateway untuk organisasi Anda: [terapkan dan distribusikan gateway](/docs/id/llm-gateway-rollout)
-  * Jika Anda mengonfigurasi produk gateway: [referensi protokol gateway](/docs/id/llm-gateway-protocol)
+  * Jika Anda mengonfigurasi produk gateway: [panduan kompatibilitas gateway](/docs/id/llm-gateway-protocol)
 </Note>
 
 Setiap gateway yang mengekspos [format API yang didukung](/docs/id/llm-gateway-protocol#api-formats) berfungsi. Anthropic tidak mendukung, memelihara, atau mengaudit produk gateway pihak ketiga, dan tidak mendukung perutean Claude Code ke model non-Claude melalui gateway apa pun. Terapkan gateway mengikuti dokumentasinya sendiri, kemudian selesaikan sisi Claude Code dengan [langkah-langkah peluncuran di bawah](#roll-out-a-gateway).
@@ -28,9 +28,9 @@ Gateway memberikan organisasi Anda satu tempat untuk mengelola:
 * **Pencatatan audit**: catat setiap permintaan model untuk kepatuhan
 * **Peralihan penyedia**: ubah penyedia dalam konfigurasi gateway, tanpa menyentuh mesin pengembang
 
-Semua ini kecuali peralihan penyedia berlaku apakah upstream adalah API Anthropic atau [penyedia cloud](/docs/id/third-party-integrations). Peralihan penyedia tanpa mengonfigurasi ulang mesin pengembang juga bergantung pada gateway yang mengekspos satu [endpoint format Anthropic](/docs/id/llm-gateway-protocol#api-formats) terlepas dari upstream; gateway yang mengekspos format penyedia sendiri mengikat konfigurasi klien ke penyedia itu.
+Semua ini kecuali peralihan penyedia berlaku apakah upstream adalah API Anthropic atau [penyedia cloud](/docs/id/third-party-integrations). Peralihan penyedia tanpa mengonfigurasi ulang mesin pengembang juga bergantung pada gateway yang mengekspos satu [endpoint format Anthropic](/docs/id/llm-gateway-protocol#api-formats) terlepas dari upstream. Gateway yang mengekspos format penyedia sendiri mengikat konfigurasi klien ke penyedia itu dan mengubah [apa yang Claude Code kirimkan dan default mana yang diterapkannya](/docs/id/llm-gateway-protocol#how-the-connection-method-changes-client-behavior).
 
-Pertukaran adalah bahwa gateway menjadi infrastruktur yang dioperasikan organisasi Anda. Claude Code menambahkan kemampuan dengan setiap rilis, dan gateway yang tidak meneruskannya merusak fitur yang sesuai, jadi produk gateway perlu tetap diperbarui seiring Claude Code berkembang. [Referensi protokol gateway](/docs/id/llm-gateway-protocol) mencakup apa yang harus diteruskan.
+Pertukaran adalah bahwa gateway menjadi infrastruktur yang dioperasikan organisasi Anda. Claude Code menambahkan kemampuan dengan setiap rilis, dan gateway yang tidak meneruskannya merusak fitur yang sesuai, jadi produk gateway perlu tetap diperbarui seiring Claude Code berkembang. [Panduan kompatibilitas gateway](/docs/id/llm-gateway-protocol) mencakup apa yang harus diteruskan.
 
 <h2 id="roll-out-a-gateway">
   Luncurkan gateway
@@ -40,7 +40,7 @@ Ketika Anda siap meluncurkan gateway LLM ke organisasi Anda, urutannya sama terl
 
 1. Terapkan gateway dan berikan kredensial penyedia Anda, sehingga dapat mengautentikasi permintaan yang diteruskannya.
 2. Keluarkan setiap pengembang kredensial gateway, sehingga penggunaan dikaitkan dengan pengembang dan offboarding mencabut satu kredensial.
-3. Distribusikan konfigurasi melalui [file pengaturan terkelola](/docs/id/settings#settings-files) dan alat rahasia Anda, sehingga setiap mesin menerima URL dasar dan kredensial. Ketika keduanya didistribusikan, pengembang tidak mengonfigurasi apa pun. Jika Anda tidak memiliki distribusi pengaturan, pengembang mengikuti [halaman koneksi](/docs/id/llm-gateway-connect) untuk menetapkan variabel sendiri.
+3. Distribusikan konfigurasi melalui [file pengaturan terkelola](/docs/id/managed-settings#delivery-mechanisms) dan alat rahasia Anda, sehingga setiap mesin menerima URL dasar dan kredensial. Ketika keduanya didistribusikan, pengembang tidak mengonfigurasi apa pun. Jika Anda tidak memiliki distribusi pengaturan, pengembang mengikuti [halaman koneksi](/docs/id/llm-gateway-connect) untuk menetapkan variabel sendiri.
 4. Minta setiap pengembang [memeriksa konfigurasi di Claude Code](/docs/id/llm-gateway-connect#check-for-an-existing-configuration), sehingga masalah distribusi muncul sebelum mereka bergantung pada gateway.
 
 [Luncurkan gateway LLM untuk organisasi Anda](/docs/id/llm-gateway-rollout) menjelaskan setiap langkah dan menunjukkan file konfigurasi untuk didistribusikan di setiap langkah. Gateway adalah satu bagian dari pengaturan organisasi; untuk penegakan kebijakan, visibilitas penggunaan, dan keputusan penanganan data, lihat [Siapkan Claude Code untuk organisasi Anda](/docs/id/admin-setup).
@@ -61,4 +61,4 @@ Sementara [variabel kredensial gateway](/docs/id/llm-gateway-connect#set-the-cre
 * [Gateway aplikasi Claude](/docs/id/claude-apps-gateway): gateway yang dihosting sendiri oleh Anthropic dengan masuk SSO dan telemetri OTLP
 * [Hubungkan Claude Code ke gateway LLM](/docs/id/llm-gateway-connect): atur URL dasar dan kredensial di mesin Anda sendiri, dengan konfigurasi per-permukaan dan tabel pemecahan masalah
 * [Luncurkan gateway LLM untuk organisasi Anda](/docs/id/llm-gateway-rollout): daftar periksa admin untuk menerapkan gateway, mengeluarkan kredensial pengembang, dan mendistribusikan pengaturan terkelola
-* [Referensi protokol gateway](/docs/id/llm-gateway-protocol): apa yang Claude Code kirimkan ke gateway, untuk operator yang mengonfigurasi satu, mencakup endpoint, header untuk diteruskan, dan pass-through fitur
+* [Panduan kompatibilitas gateway](/docs/id/llm-gateway-protocol): apa yang Claude Code kirimkan ke gateway, untuk operator yang mengonfigurasi satu, mencakup endpoint, header untuk diteruskan, dan pass-through fitur

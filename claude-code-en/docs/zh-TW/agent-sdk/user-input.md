@@ -12,7 +12,7 @@ Claude 在兩種情況下請求使用者輸入：當它需要**使用工具的�
 
 對於澄清問題，Claude 會生成問題和選項。您的角色是將它們呈現給使用者並返回他們的選擇。您無法將自己的問題添加到此流程中；如果您需要自己詢問使用者某些事項，請在應用程式邏輯中單獨進行。
 
-回呼可以無限期地保持待處理狀態。執行保持暫停狀態，直到您的回呼返回，SDK 只在查詢本身被取消時才取消等待。如果使用者可能需要比您的流程合理保持運行的時間更長的時間來回應，請返回 [`defer` hook 決定](/docs/zh-TW/hooks#defer-a-tool-call-for-later)，它允許流程退出並稍後從持久化會話恢復。
+回呼可以無限期地保持待處理狀態。執行保持暫停狀態，直到您的回呼返回。如果使用者可能需要比您的流程合理保持運行的時間更長的時間來回應，請註冊一個 [`PreToolUse` hook](/docs/zh-TW/agent-sdk/hooks)，它返回 [`defer` 決定](/docs/zh-TW/hooks#defer-a-tool-call-for-later)而不是在回呼中等待，以便流程可以退出並稍後從持久化會話恢復。
 
 本指南向您展示如何檢測每種類型的請求並做出適當的回應。
 
@@ -24,6 +24,9 @@ Claude 在兩種情況下請求使用者輸入：當它需要**使用工具的�
 
 <CodeGroup>
   ```python Python theme={null}
+  from claude_agent_sdk import ClaudeAgentOptions
+
+
   async def handle_tool_request(tool_name, input_data, context):
       # 提示使用者並返回允許或拒絕
       ...
@@ -48,9 +51,9 @@ Claude 在兩種情況下請求使用者輸入：當它需要**使用工具的�
 2. **Claude 提出問題**：Claude 呼叫 `AskUserQuestion` 工具。檢查 `tool_name == "AskUserQuestion"` 以不同方式處理它。如果您指定 `tools` 陣列，請包含 `AskUserQuestion` 以使其正常工作。有關詳細資訊，請參閱[處理澄清問題](#handle-clarifying-questions)。
 
 <Warning>
-  **回呼永遠不會針對自動批准的工具觸發。** [權限評估流程](/docs/zh-TW/agent-sdk/permissions#how-permissions-are-evaluated)中任何較早的批准、允許規則或 `acceptEdits` 或 `bypassPermissions` 等模式，都會在諮詢 `canUseTool` 之前解決呼叫。如果您在 `allowed_tools` 中列出工具，除非詢問規則或 `plan` 模式將呼叫路由回提示，否則該工具的 `canUseTool` 檢查永遠不會執行。對於必須應用於每個工具呼叫的邏輯，請使用 [`PreToolUse` hook](/docs/zh-TW/agent-sdk/hooks)，它在流程的其餘部分之前執行，可以允許、拒絕或修改請求。
+  **回呼永遠不會針對自動批准的工具觸發。** [權限評估流程](/docs/zh-TW/agent-sdk/permissions#how-permissions-are-evaluated)中任何較早的批准、允許規則或 `acceptEdits` 或 `bypassPermissions` 等模式，都會在諮詢 `canUseTool` 之前解決呼叫。如果您在 `allowed_tools` 中列出工具，`canUseTool` 檢查該工具只會在[評估流程](/docs/zh-TW/agent-sdk/permissions#how-permissions-are-evaluated)將呼叫路由回提示時執行，例如詢問規則或 `plan` 模式。對於必須應用於每個工具呼叫的邏輯，請使用 [`PreToolUse` hook](/docs/zh-TW/agent-sdk/hooks)，它在流程的其餘部分之前執行，可以允許、拒絕或修改請求。
 
-  `AskUserQuestion`、標記為 [`requiresUserInteraction`](/docs/zh-TW/mcp#require-approval-for-a-specific-tool) 的 MCP 工具，以及連接器工具[您的組織設定為 `ask`](/docs/zh-TW/mcp#organization-controls-on-connector-tools)即使在允許規則相符時也會到達回呼。在 `dontAsk` 模式中，這些呼叫會被拒絕，而不會叫用回呼。
+  允許規則不會預先批准[任何模式都不會自動批准的動作](/docs/zh-TW/permission-modes#actions-no-mode-auto-approves)；請參閱[權限如何評估](/docs/zh-TW/agent-sdk/permissions#how-permissions-are-evaluated)以了解其中哪些到達回呼，以及在 `dontAsk` 和 `auto` 模式中會發生什麼。
 </Warning>
 
 您也可以使用 [`PermissionRequest` hook](/docs/zh-TW/agent-sdk/hooks#available-hooks) 在 Claude 等待批准時發送外部通知（Slack、電子郵件、推送）。
@@ -59,7 +62,9 @@ Claude 在兩種情況下請求使用者輸入：當它需要**使用工具的�
   處理工具批准請求
 </h2>
 
-一旦您在查詢選項中傳遞了 `canUseTool` 回呼，當 Claude 想要使用未自動批准的工具時，它就會觸發。您的回呼接收三個參數：
+一旦您在查詢選項中傳遞了 `canUseTool` 回呼，當 Claude 想要使用未經權限流程中較早步驟批准的工具時，它就會觸發。在某些設定中，例如 `dontAsk` 模式，Claude Code 不會呼叫它；[權限如何被評估](/docs/zh-TW/agent-sdk/permissions#how-permissions-are-evaluated)的最後一步列出了它們並說明了呼叫會發生什麼。
+
+您的回呼接收三個參數：
 
 | 參數                                  | 描述                                                                                                                                                                                                                      |
 | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -199,10 +204,6 @@ Claude 在兩種情況下請求使用者輸入：當它需要**使用工具的�
   ```
 </CodeGroup>
 
-<Note>
-  在 Python 中，`can_use_tool` 需要[串流模式](/docs/zh-TW/agent-sdk/streaming-vs-single-mode)。當您透過 `query(prompt=generator)` 或 `ClaudeSDKClient.connect(prompt=async_iterable)` 傳遞有限的訊息流時，SDK 會在最後一條訊息之後關閉輸入流，在權限回呼可以被調用之前，除非已註冊的 hook 或進程內 MCP 伺服器保持它開放。上面的範例使用返回 `{"continue_": True}` 的 `PreToolUse` hook 保持它開放。使用沒有提示的連接並透過 `ClaudeSDKClient.query()` 發送訊息會自動保持流開放，不需要 hook。
-</Note>
-
 此範例使用 y/n 流程，其中除 `y` 以外的任何輸入都被視為拒絕。在實踐中，您可能會構建一個更豐富的 UI，讓使用者修改請求、提供回饋或完全重定向 Claude。有關所有回應方式，請參閱[回應工具請求](#respond-to-tool-requests)。
 
 <h3 id="respond-to-tool-requests">
@@ -220,26 +221,6 @@ Claude 在兩種情況下請求使用者輸入：當它需要**使用工具的�
 
 拒絕時，提供說明原因的訊息。Claude 會看到此訊息並可能調整其方法。
 
-<CodeGroup>
-  ```python Python theme={null}
-  from claude_agent_sdk.types import PermissionResultAllow, PermissionResultDeny
-
-  # 允許工具執行
-  return PermissionResultAllow(updated_input=input_data)
-
-  # 阻止工具
-  return PermissionResultDeny(message="User rejected this action")
-  ```
-
-  ```typescript TypeScript theme={null}
-  // 允許工具執行
-  return { behavior: "allow", updatedInput: input };
-
-  // 阻止工具
-  return { behavior: "deny", message: "User rejected this action" };
-  ```
-</CodeGroup>
-
 除了允許或拒絕之外，您還可以修改工具的輸入或提供幫助 Claude 調整其方法的上下文：
 
 * **批准**：讓工具按 Claude 要求執行
@@ -248,6 +229,8 @@ Claude 在兩種情況下請求使用者輸入：當它需要**使用工具的�
 * **拒絕**：阻止工具並告訴 Claude 原因
 * **建議替代方案**：阻止但引導 Claude 朝著使用者想要的方向發展
 * **完全重定向**：使用[串流輸入](/docs/zh-TW/agent-sdk/streaming-vs-single-mode)向 Claude 發送全新指令
+
+以下片段中的 `ask_user` 和 `askUser` 幫助程式代表您應用程式自己的提示 UI。
 
 <Tabs>
   <Tab title="批准">
@@ -571,12 +554,12 @@ Claude 在兩種情況下請求使用者輸入：當它需要**使用工具的�
 
 輸入在 `questions` 陣列中包含 Claude 生成的問題。每個問題都有這些欄位：
 
-| 欄位            | 描述                                                                                                    |
-| ------------- | ----------------------------------------------------------------------------------------------------- |
-| `question`    | 要顯示的完整問題文字                                                                                            |
-| `header`      | 問題的簡短標籤（最多 12 個字元）                                                                                    |
-| `options`     | 2-4 個選擇的陣列，每個都有 `label` 和 `description`。TypeScript：可選 `preview`（請參閱[下方](#option-previews-typescript)） |
-| `multiSelect` | 如果為 `true`，使用者可以選擇多個選項                                                                                |
+| 欄位            | 描述                                                                                                      |
+| ------------- | ------------------------------------------------------------------------------------------------------- |
+| `question`    | 要顯示的完整問題文字                                                                                              |
+| `header`      | 問題的簡短標籤（最多 12 個字元）                                                                                      |
+| `options`     | 2-4 個選擇的陣列，每個都有 `label` 和 `description`。TypeScript：可選 `preview`。請參閱[選項預覽](#option-previews-typescript)。 |
+| `multiSelect` | 如果為 `true`，使用者可以選擇多個選項                                                                                  |
 
 您的回呼接收的結構：
 
@@ -653,7 +636,7 @@ for await (const message of query({
 
 對於多選問題，傳遞標籤陣列或使用 `", "` 連接它們。對於每個問題的自由文字，例如「其他」選項，將使用者的文字放在 `answers[question]` 中，如[支援自由文字輸入](#support-free-text-input)中所示。僅當您的 UI 讓使用者關閉問題卡並輸入不是任何特定問題答案的一般回覆時，才設定 `response`。當設定 `response` 時，Claude 會收到「使用者回應：…」而不是每個問題的答案清單。
 
-```json theme={null}
+```jsonc theme={null}
 {
   "questions": [
     // ...

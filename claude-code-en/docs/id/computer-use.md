@@ -36,7 +36,7 @@ Claude memiliki beberapa cara untuk berinteraksi dengan aplikasi atau layanan. C
 * Jika tugasnya adalah pekerjaan browser dan Anda memiliki [Claude di Chrome](/docs/id/chrome) yang diatur, Claude menggunakannya.
 * Jika tidak ada yang berlaku, Claude menggunakan computer use.
 
-Kontrol layar dicadangkan untuk hal-hal yang tidak dapat dijangkau oleh yang lain: aplikasi native, simulator, dan alat tanpa API.
+Kontrol layar dicadangkan untuk hal-hal yang tidak dapat dijangkau oleh yang lain: aplikasi native, simulator seperti iOS Simulator, dan alat tanpa API.
 
 <h2 id="enable-computer-use">
   Aktifkan computer use
@@ -98,6 +98,8 @@ Aplikasi dengan jangkauan luas menampilkan peringatan tambahan dalam prompt sehi
 
 Aplikasi ini tidak diblokir. Peringatan memungkinkan Anda memutuskan apakah tugas tersebut memerlukan tingkat akses itu.
 
+Setujui Finder untuk membiarkan Claude mengklik desktop, Dock, atau jendela Finder.
+
 Tingkat kontrol Claude juga bervariasi menurut kategori aplikasi: browser dan platform perdagangan adalah view-only, terminal dan IDE adalah click-only, dan semuanya mendapatkan kontrol penuh. Lihat [app permissions di Desktop](/docs/id/desktop#app-permissions) untuk rincian tier lengkap.
 
 <h2 id="how-claude-works-on-your-screen">
@@ -110,7 +112,7 @@ Memahami alurnya membantu Anda mengantisipasi apa yang akan Claude lakukan dan c
   Satu sesi pada satu waktu
 </h3>
 
-Computer use menahan kunci machine-wide dari tindakan computer use pertama hingga sesi yang mengambilnya keluar. Mulai dari v2.1.195, menyelesaikan tugas tidak melepaskan kunci; hanya keluar dari sesi yang melakukannya. Jika sesi Claude Code lain sudah menggunakan komputer Anda, upaya baru gagal dengan pesan yang memberi tahu Anda sesi mana yang menahan kunci. Keluar dari sesi itu terlebih dahulu.
+Hanya satu sesi pada satu waktu yang dapat menggunakan komputer Anda. Sesi mengambil kunci pada tindakan computer use pertamanya dan melepaskannya ketika sesi keluar, bukan ketika tugas selesai. Sesi kedua yang melakukan computer use gagal dengan kesalahan yang menyebutkan sesi yang menahan kunci. Keluar dari sesi itu terlebih dahulu.
 
 <h3 id="apps-are-hidden-while-claude-works">
   Aplikasi disembunyikan saat Claude bekerja
@@ -132,7 +134,7 @@ Tidak ada pengaturan untuk mengubah ukuran target. Jika teks atau kontrol on-scr
   Hentikan kapan saja
 </h3>
 
-Ketika Claude memperoleh kunci, notifikasi macOS muncul: "Claude is using your computer · press Esc to stop." Tekan `Esc` di mana saja untuk membatalkan tindakan saat ini segera, atau tekan `Ctrl+C` di terminal. Bagaimanapun, Claude berhenti, menampilkan kembali aplikasi Anda, dan mengembalikan kontrol kepada Anda. Sesi mempertahankan [kunci computer use](#one-session-at-a-time) hingga keluar.
+Pertama kali Claude menggunakan komputer Anda di setiap giliran, notifikasi macOS muncul: "Claude is using your computer · press Esc to stop." Tekan `Esc` di mana saja untuk membatalkan tindakan saat ini segera, atau tekan `Ctrl+C` di terminal. Bagaimanapun, Claude berhenti, menampilkan kembali aplikasi Anda, dan mengembalikan kontrol kepada Anda. Sesi mempertahankan [kunci computer use](#one-session-at-a-time) hingga keluar.
 
 Notifikasi kedua muncul ketika Claude selesai.
 
@@ -197,7 +199,7 @@ Open the iOS Simulator, launch the app, tap through the onboarding
 screens, and tell me if any screen takes more than a second to load.
 ```
 
-Claude mengontrol simulator dengan cara yang sama seperti Anda dengan mouse.
+Claude mengontrol simulator dengan cara yang sama seperti Anda dengan mouse. Alur ini berlaku untuk CLI; di aplikasi Desktop, permintaan yang sama membuka [pane iOS Simulator](/docs/id/desktop-ios-simulator) sebagai gantinya dari kontrol layar.
 
 <h2 id="differences-from-the-desktop-app">
   Perbedaan dari aplikasi Desktop

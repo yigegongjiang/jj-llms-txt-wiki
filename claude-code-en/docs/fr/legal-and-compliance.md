@@ -25,6 +25,19 @@ Votre utilisation de Claude Code est soumise à :
 
 Que vous utilisiez l'API Claude directement (1P) ou y accédiez via Amazon Bedrock ou Google Cloud's Agent Platform (3P), votre accord commercial existant s'appliquera à l'utilisation de Claude Code, sauf si nous avons convenu autrement.
 
+<h3 id="can-customers-offer-claude-code-in-their-products">
+  Les clients peuvent-ils proposer Claude Code dans leurs produits ?
+</h3>
+
+Sauf si nous avons convenu autrement, la préinstallation ou l'exécution de Claude Code dans vos produits ou services (par exemple, dans des sandboxes hébergés ou d'autres infrastructures d'agent) nécessite d'accepter nos [Conditions commerciales](https://www.anthropic.com/legal/commercial-terms) et de respecter les conditions ci-dessous :
+
+* **Le binaire Claude Code ne doit pas être modifié.** Claude Code doit être installé et exécuté tel que publié par Anthropic, et les clients ne peuvent pas supprimer, désactiver ou restreindre aucune méthode d'authentification intégrée (y compris les méthodes qui permettent de se connecter avec un compte Claude ou la clé API propre de l'utilisateur).
+* **Les clients ne peuvent pas payer, revendre ou intermédiaire l'utilisation de Claude au nom de leurs utilisateurs finaux.** Chaque utilisateur final doit s'authentifier avec sa propre clé API Anthropic, ses identifiants de plan d'abonnement Claude ou ses identifiants de fournisseur d'inférence tiers (Amazon Bedrock, Google Cloud's Agent Platform, Microsoft Foundry). Cet usage est facturé directement à l'utilisateur final selon son propre accord avec Anthropic ou, pour les fournisseurs d'inférence tiers, avec le fournisseur applicable.
+
+**Utilisation du nom et du logo Claude Code.** Vous pouvez dire avec précision, en texte brut, que votre produit a Claude Code préinstallé ou qu'il exécute Claude Code. Mais vous ne pouvez pas utiliser les noms ou logos Claude Code ou Anthropic comme partie de votre propre nom de produit, de fonctionnalité ou d'entreprise, dans votre propre logo, ou d'une manière qui suggère qu'Anthropic a construit, approuvé ou est partenaire de votre produit. Tout autre usage des noms ou logos d'Anthropic est régi par nos [Directives relatives aux marques](https://www.anthropic.com/legal/trademark-guidelines) et nécessite notre permission écrite.
+
+Claude Code reste régi par les conditions standard d'Anthropic (voir les sections Licence et Accords commerciaux ci-dessus) indépendamment de la plateforme par laquelle il est accédé.
+
 <h2 id="compliance">
   Conformité
 </h2>
@@ -33,7 +46,7 @@ Que vous utilisiez l'API Claude directement (1P) ou y accédiez via Amazon Bedro
   Conformité aux normes de santé (BAA)
 </h3>
 
-Si un client a un accord d'associé commercial (BAA) avec nous et souhaite utiliser Claude Code, le BAA s'étendra automatiquement pour couvrir Claude Code si le client a exécuté un BAA et a activé la [rétention zéro des données (ZDR)](/docs/fr/zero-data-retention). Le BAA s'appliquera au trafic API de ce client transitant par Claude Code. ZDR est activé par organisation, donc chaque organisation doit avoir ZDR activé séparément pour être couverte par le BAA.
+Si un client a exécuté un accord d'associé commercial (BAA) avec Anthropic et a activé la [rétention zéro des données (ZDR)](/docs/fr/zero-data-retention) pour l'organisation concernée, ce BAA s'étend au trafic API du client via Claude Code.
 
 <h2 id="usage-policy">
   Politique d'utilisation
@@ -52,7 +65,9 @@ L'utilisation de Claude Code est soumise à la [politique d'utilisation d'Anthro
 Claude Code s'authentifie auprès des serveurs d'Anthropic en utilisant des jetons OAuth ou des clés API. Ces méthodes d'authentification servent des objectifs différents :
 
 * **L'authentification OAuth** est destinée exclusivement aux acheteurs des plans d'abonnement Claude Free, Pro, Max, Team et Enterprise et est conçue pour soutenir l'utilisation ordinaire de Claude Code et d'autres applications natives d'Anthropic. Pour les étapes de connexion, consultez [Connexion à votre compte Claude](https://support.claude.com/en/articles/13189465-logging-in-to-your-claude-account) ; pour savoir comment Claude Code effectue l'authentification OAuth, consultez [Authentification](/docs/fr/authentication).
-* **Les développeurs** créant des produits ou services qui interagissent avec les capacités de Claude, y compris ceux utilisant le [SDK Agent](/docs/fr/agent-sdk/overview), doivent utiliser l'authentification par clé API via la [Console Claude](https://platform.claude.com/) ou un fournisseur cloud pris en charge. Anthropic n'autorise pas les développeurs tiers à proposer la connexion Claude.ai ou à acheminer les demandes via les identifiants des plans Free, Pro ou Max au nom de leurs utilisateurs.
+* **Les développeurs** créant des produits ou services qui interagissent avec les capacités de Claude, y compris ceux utilisant le [SDK Agent](/docs/fr/agent-sdk/overview), doivent utiliser l'authentification par clé API via la [Console Claude](https://platform.claude.com/) ou un fournisseur cloud pris en charge. Anthropic n'autorise pas les développeurs tiers à proposer la connexion Claude.ai dans leurs propres applications, ou à acheminer les demandes via les identifiants des plans Free, Pro ou Max au nom de leurs utilisateurs. De plus, les développeurs ne peuvent pas collecter, stocker ou intermédiaire les identifiants Claude.ai ou les jetons de session — la connexion à un compte Claude doit s'effectuer via le flux propre d'Anthropic.
+
+Cela ne restreint pas la façon dont les clients provisionnent et gèrent leurs propres clés API ou les identifiants des fournisseurs d'inférence tiers — par exemple, configurer une clé API dans un environnement de développement, un gestionnaire de secrets, ou une image machine pour utilisation par les utilisateurs autorisés du client — à condition que l'utilisation résultante soit facturée au propriétaire de la clé selon son accord avec Anthropic (ou le fournisseur applicable) et ne soit pas revendue ou intermédiée comme décrit ci-dessus. Cela n'empêche pas non plus un utilisateur final de se connecter au binaire Claude Code non modifié avec son propre abonnement Claude, y compris lorsqu'une plateforme héberge Claude Code comme décrit sous *Les clients peuvent-ils proposer Claude Code dans leurs produits ?* ci-dessus.
 
 Anthropic se réserve le droit de prendre des mesures pour appliquer ces restrictions et peut le faire sans préavis.
 

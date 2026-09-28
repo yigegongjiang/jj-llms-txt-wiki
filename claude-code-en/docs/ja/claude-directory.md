@@ -34,7 +34,7 @@ export const ClaudeExplorer = () => {
         oneLiner: 'Project instructions Claude reads every session',
         when: 'Loaded into context at the start of every session',
         description: 'Project-specific instructions that shape how Claude works in this repository. Put your conventions, common commands, and architectural context here so Claude operates with the same assumptions your team does.',
-        tips: ['Target under 200 lines. Longer files still load in full but may reduce adherence', <>CLAUDE.md loads into every session. If something only matters for specific tasks, move it to a <A href="/docs/en/skills">skill</A> or a path-scoped <A href="/docs/en/memory#organize-rules-with-claude/rules/">rule</A> so it loads only when needed</>, 'List the commands you run most, like build, test, and format, so Claude knows them without you spelling them out each time', <>Run <C>/memory</C> to open and edit CLAUDE.md from within a session</>, <>Also works at <C>.claude/CLAUDE.md</C> if you prefer to keep the project root clean</>],
+        tips: ['Target under 200 lines. Longer files still load in full but may reduce adherence', <>CLAUDE.md loads into every session. If something only matters for specific tasks, move it to a <A href="/docs/en/skills">skill</A> or a path-scoped <A href="/docs/en/memory#organize-rules-with-claude/rules/">rule</A> so it loads only when needed</>, 'List the commands you run most, like build, test, and format, so Claude knows them without you spelling them out each time', <>Run <C>/memory</C> to open and edit CLAUDE.md from within a session</>, <>Also works at <C>.claude/CLAUDE.md</C> if you prefer to keep the project root clean</>, <>If your repo already has an <C>AGENTS.md</C> for other coding agents, Claude Code <A href="/docs/en/memory#agents-md">can read that</A> on its own or alongside CLAUDE.md</>],
         exampleIntro: 'This example is for a TypeScript and React project. It lists the build and test commands, the framework conventions Claude should follow, and project-specific rules like export style and file layout.',
         example: `# Project conventions
 
@@ -113,7 +113,7 @@ config/secrets.json`,
           oneLiner: 'Permissions, hooks, and configuration',
           when: <>Overrides global <C>~/.claude/settings.json</C>. Local settings, CLI flags, and managed settings override this</>,
           description: 'Settings that Claude Code applies directly. Permissions control which commands and tools Claude can use; hooks run your scripts at specific points in a session. Unlike CLAUDE.md, which Claude reads as guidance, these are enforced whether Claude follows them or not.',
-          contains: [<><A href="/docs/en/permissions">permissions</A>: allow, deny, or prompt before Claude uses specific tools or commands</>, <><A href="/docs/en/hooks">hooks</A>: run your own scripts on events like before a tool call or after a file edit</>, <><A href="/docs/en/statusline">statusLine</A>: customize the line shown at the bottom while Claude works</>, <><A href="/docs/en/settings-reference#available-settings">model</A>: pick a default model for this project</>, <><A href="/docs/en/settings-reference#environment-variables">env</A>: environment variables set in every session</>, <><A href="/docs/en/output-styles">outputStyle</A>: select a custom system-prompt style from output-styles/</>],
+          contains: [<><A href="/docs/en/permissions">permissions</A>: allow, deny, or prompt before Claude uses specific tools or commands</>, <><A href="/docs/en/hooks">hooks</A>: run your own scripts on events like before a tool call or after a file edit</>, <><A href="/docs/en/statusline">statusLine</A>: customize the line shown at the bottom while Claude works</>, <><A href="/docs/en/settings-reference#available-settings">model</A>: pick a default model for this project</>, <><A href="/docs/en/settings-reference#environment-variables">env</A>: environment variables set in every session</>, <><A href="/docs/en/output-styles">outputStyle</A>: select a custom output style from output-styles/</>],
           tips: [<>Bash permission patterns support wildcards: <C>Bash(npm test *)</C> matches any command starting with <C>npm test</C></>, <>Array settings like <C>permissions.allow</C> combine across all scopes; scalar settings like <C>model</C> use the most specific value</>],
           exampleIntro: <>This example allows <C>npm test</C> and <C>npm run</C> commands without prompting, blocks <C>rm -rf</C>, and runs Prettier on files after Claude edits or writes them.</>,
           example: `{
@@ -322,7 +322,7 @@ Investigate and fix the issue above.
           icon: 'folder',
           color: '#5AA7A7',
           oneLiner: 'Project-scoped output styles, if your team shares any',
-          when: 'Applied at session start when selected via the outputStyle setting',
+          when: 'Files read at startup; the style you select with outputStyle applies to every response',
           description: <>Output styles are usually personal, so most live in <C>~/.claude/output-styles/</C>. Put one here if your team shares a style, like a review mode everyone uses. See <A href="#ce-global-output-styles">the Global tab</A> for the full explanation and example.</>,
           docsLink: '/en/output-styles',
           children: []
@@ -638,10 +638,10 @@ type: reference
           type: 'folder',
           icon: 'folder',
           color: '#5AA7A7',
-          oneLiner: 'Custom system-prompt sections that adjust how Claude works',
-          when: 'Applied at session start when selected via the outputStyle setting',
-          description: [<>Each markdown file defines an output style: a section appended to the system prompt that, by default, also drops the built-in software-engineering task instructions. Use this to adapt Claude Code for uses beyond coding, or to add teaching or review modes.</>, <>Select a built-in or custom style with <C>/config</C> or the <C>outputStyle</C> key in settings. Styles here are available in every project; project-level styles with the same name take precedence.</>],
-          tips: ['Built-in styles Default, Proactive, Concise, Explanatory, and Learning are included with Claude Code; custom styles go here', <>Set <C>keep-coding-instructions: true</C> in frontmatter to keep the default task instructions alongside your additions</>, 'Changes take effect on the next session since the system prompt is fixed at startup for caching'],
+          oneLiner: 'Custom instruction sets that adjust how Claude works',
+          when: 'Files read at startup; the style you select with outputStyle applies to every response',
+          description: [<>Each markdown file defines an output style: a set of instructions for Claude that, by default, also replaces the built-in software-engineering task instructions. Use this to adapt Claude Code for uses beyond coding, or to add teaching or review modes.</>, <>Select a built-in or custom style with <C>/output-style</C>, <C>/config</C>, or the <C>outputStyle</C> key in settings. Styles here are available in every project; project-level styles with the same name take precedence.</>],
+          tips: ['Built-in styles Default, Proactive, Concise, Explanatory, and Learning are included with Claude Code; custom styles go here', <>Set <C>keep-coding-instructions: true</C> in frontmatter to keep the default task instructions alongside your additions</>, 'Switching styles mid-session applies from your next message; in the terminal, a style file you create or edit mid-session is picked up after a restart'],
           docsLink: '/en/output-styles',
           children: [{
             id: 'output-style-example',
@@ -652,7 +652,7 @@ type: reference
             badge: 'local',
             oneLiner: 'Example style that adds explanations and leaves small changes for you',
             when: <>Active when <C>outputStyle</C> in settings is set to <C>teaching</C></>,
-            description: <>This style appends instructions to the system prompt: Claude adds a "Why this approach" note after each task and leaves TODO(human) markers for changes under 10 lines instead of writing them itself. Select it by setting <C>outputStyle</C> to the filename without .md, or to the <C>name</C> field if you set one in frontmatter.</>,
+            description: <>With this style, Claude adds a "Why this approach" note after each task and leaves TODO(human) markers for changes under 10 lines instead of writing them itself. Select it by setting <C>outputStyle</C> to the filename without .md, or to the <C>name</C> field if you set one in frontmatter.</>,
             example: `---
 description: Explains reasoning and asks you to implement small pieces
 keep-coding-instructions: true
@@ -1434,7 +1434,7 @@ Claude Code は、プロジェクトディレクトリとホームディレク�
 
 Windows では、`~/.claude` は `%USERPROFILE%\.claude` に解決されます。[`CLAUDE_CONFIG_DIR`](/docs/ja/env-vars) を設定した場合、このページのすべての `~/.claude` パスはそのディレクトリの下に存在します。
 
-ほとんどのユーザーは `CLAUDE.md` と `settings.json` のみを編集します。ディレクトリの残りはオプションです。必要に応じて skills、rules、または subagents を追加してください。
+ほとんどのユーザーは `CLAUDE.md` と `settings.json` のみを編集します。リポジトリに他のコーディングエージェント用の `AGENTS.md` が既にある場合、Claude Code は [それを独立して、または `CLAUDE.md` と一緒に読み込むことができます](/docs/ja/memory#agents-md)。ディレクトリの残りはオプションです。必要に応じて skills、rules、または subagents を追加してください。
 
 <h2 id="explore-the-directory">
   ディレクトリを探索する
@@ -1445,18 +1445,19 @@ Windows では、`~/.claude` は `%USERPROFILE%\.claude` に解決されます�
 <ClaudeExplorer />
 
 <h2 id="what’s-not-shown">
-  表示されていないもの
+  表示されないもの
 </h2>
 
-エクスプローラーは、作成および編集するファイルをカバーしています。関連するいくつかのファイルは他の場所に存在します。
+エクスプローラーは、あなたが作成および編集するファイルをカバーしています。いくつかの関連ファイルは他の場所にあります。
 
-| ファイル                    | 場所                  | 目的                                                                                                                                                                                                         |
-| ----------------------- | ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `managed-settings.json` | システムレベル、OS によって異なる  | オーバーライドできないエンタープライズが強制する設定。[サーバー管理設定](/docs/ja/server-managed-settings)を参照してください。                                                                                                                               |
-| `CLAUDE.local.md`       | プロジェクトルート           | このプロジェクトの個人的な設定。CLAUDE.md と一緒に読み込まれます。手動で作成し、`.gitignore` に追加してください。                                                                                                                                       |
-| インストール済みプラグイン           | `~/.claude/plugins` | クローンされたマーケットプレイス、インストール済みプラグインバージョン、およびプラグインごとのデータ。`claude plugin` コマンドで管理されます。孤立したバージョンはプラグインの更新またはアンインストール後 7 日で削除されます。[プラグインキャッシング](/docs/ja/plugins-reference#plugin-caching-and-file-resolution)を参照してください。 |
+| ファイル                    | 場所                                | 目的                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| ----------------------- | --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `managed-settings.json` | システムレベル、OS によって異なる                | エンタープライズが強制する設定で、[限定的な例外](/docs/ja/settings#security-keys-where-the-stricter-value-applies)を除いてオーバーライドできません。[ファイルの保存場所](/docs/ja/managed-settings#deploy-a-managed-settings-file)と [Claude Code が使用する管理ソース](/docs/ja/managed-settings#precedence-within-the-managed-tier)を参照してください。                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `CLAUDE.local.md`       | プロジェクトルート                         | このプロジェクトの個人的な設定で、CLAUDE.md と一緒に読み込まれます。手動で作成し、`.gitignore` に追加してください。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| `AGENTS.md`             | プロジェクトルート、`.claude/`、または任意のディレクトリ | AI コーディングエージェント向けに作成するプロジェクト指示。Claude Code は[それを読み込む](/docs/ja/memory#agents-md)ことができます。これは独立して、または `CLAUDE.md` と一緒に読み込まれます。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| インストール済みプラグイン           | `~/.claude/plugins`               | クローンされたマーケットプレイス、インストール済みプラグインバージョン、`installed_plugins.json` インストール記録、およびプラグインごとのデータで、`claude plugin` コマンドで管理されます。プラグイン[あなたの claude.ai アカウントから同期](/docs/ja/plugins/loading#synced-plugins)は `~/.claude/plugins/synced/` にダウンロードされます。リンクモードでマーケットプレイス [`command` ソース](/docs/ja/plugins/marketplace-reference#command-plugin-source)からインストールされたプラグインの場合、Claude Code はコピーの代わりにここにリンクを保存し、プラグインのファイルはコマンドが出力するディレクトリに留まります。`command` ソースには Claude Code v2.1.229 以降が必要です。ローカルディレクトリマーケットプレイスで相対パスでリストされているプラグインも、キャッシュコピーではなく、ソースディレクトリから[その場で読み込まれます](/docs/ja/plugins/loading#find-plugins-on-disk)。[プラグインキャッシング](/docs/ja/plugins/loading#find-plugins-on-disk)を参照して、孤立したバージョンがどのようにクリーンアップされるかを確認してください。 |
 
-`~/.claude` は、作業中に Claude Code が書き込むデータも保持します。トランスクリプト、プロンプト履歴、ファイルスナップショット、キャッシュ、ログです。以下の[アプリケーションデータ](#application-data)を参照してください。
+`~/.claude` はまた、Claude Code があなたが作業する際に書き込むデータも保持しています。トランスクリプト、プロンプト履歴、ファイルスナップショット、キャッシュ、およびログです。下記の[アプリケーションデータ](#application-data)を参照してください。
 
 <h2 id="choose-the-right-file">
   適切なファイルを選択する
@@ -1469,8 +1470,8 @@ Windows では、`~/.claude` は `%USERPROFILE%\.claude` に解決されます�
 | Claude にプロジェクトコンテキストと規約を提供する      | `CLAUDE.md`                               | プロジェクトまたはグローバル | [メモリ](/docs/ja/memory)                             |
 | 特定のツール呼び出しを許可またはブロックする            | `settings.json` `permissions` または `hooks` | プロジェクトまたはグローバル | [パーミッション](/docs/ja/permissions)、[Hooks](/docs/ja/hooks) |
 | ツール呼び出しの前後にスクリプトを実行する             | `settings.json` `hooks`                   | プロジェクトまたはグローバル | [Hooks](/docs/ja/hooks)                            |
-| セッションの環境変数を設定する                   | `settings.json` `env`                     | プロジェクトまたはグローバル | [設定](/docs/ja/settings#available-settings)         |
-| 個人的なオーバーライドを git から除外する           | `settings.local.json`                     | プロジェクトのみ       | [設定スコープ](/docs/ja/settings#settings-files)         |
+| セッションの環境変数を設定する                   | `settings.json` `env`                     | プロジェクトまたはグローバル | [設定](/docs/ja/settings-reference#all-settings)     |
+| 個人的なオーバーライドを git から除外する           | `settings.local.json`                     | プロジェクトのみ       | [設定スコープ](/docs/ja/settings#where-settings-live)    |
 | `/name` で呼び出すプロンプトまたは機能を追加する      | `skills/<name>/SKILL.md`                  | プロジェクトまたはグローバル | [Skills](/docs/ja/skills)                          |
 | 独自のツールを持つ特化した subagent を定義する      | `agents/*.md`                             | プロジェクトまたはグローバル | [Subagents](/docs/ja/sub-agents)                   |
 | スクリプトから多くの subagent をオーケストレーションする | `workflows/*.js`                          | プロジェクトまたはグローバル | [動的ワークフロー](/docs/ja/workflows)                     |
@@ -1486,7 +1487,7 @@ Windows では、`~/.claude` は `%USERPROFILE%\.claude` に解決されます�
 <Note>
   これらのファイルに入れたものをオーバーライドできるいくつかのことがあります。
 
-  * 組織によってデプロイされた[管理設定](/docs/ja/server-managed-settings)はすべてに優先します
+  * 組織によってデプロイされた[管理設定](/docs/ja/server-managed-settings)はすべてに優先します。ただし[設定の優先順位の例外](/docs/ja/settings#exceptions-to-managed-settings-precedence)の下の例外を除きます
   * `--permission-mode` や `--settings` などの CLI フラグはそのセッションの `settings.json` をオーバーライドします
   * 一部の環境変数は同等の設定に優先しますが、これは異なります。各設定について[環境変数リファレンス](/docs/ja/env-vars)を確認してください
 
@@ -1499,20 +1500,36 @@ Windows では、`~/.claude` は `%USERPROFILE%\.claude` に解決されます�
 | --------------------------------------------------- | -------------- | ---- | ------------------------------------------------------------------------- | --------------------------------------------------------------- |
 | [`CLAUDE.md`](#ce-claude-md)                        | プロジェクトおよびグローバル | ✓    | 毎セッション読み込まれる指示                                                            | [メモリ](/docs/ja/memory)                                               |
 | [`rules/*.md`](#ce-rules)                           | プロジェクトおよびグローバル | ✓    | トピックスコープの指示、オプションでパスゲート                                                   | [ルール](/docs/ja/memory#organize-rules-with-claude/rules/)             |
-| [`settings.json`](#ce-settings-json)                | プロジェクトおよびグローバル | ✓    | パーミッション、hooks、環境変数、モデルデフォルト                                               | [設定](/docs/ja/settings)                                              |
-| [`settings.local.json`](#ce-settings-local-json)    | プロジェクトのみ       |      | 個人的なオーバーライド、自動 gitignore                                                  | [設定スコープ](/docs/ja/settings#settings-files)                           |
+| [`settings.json`](#ce-settings-json)                | プロジェクトおよびグローバル | ✓    | 権限、hooks、環境変数、モデルデフォルト                                                    | [設定](/docs/ja/settings)                                              |
+| [`settings.local.json`](#ce-settings-local-json)    | プロジェクトのみ       |      | 個人的なオーバーライド、Claude Code が設定を保存するときに gitignore                             | [設定スコープ](/docs/ja/settings#where-settings-live)                      |
 | [`.mcp.json`](#ce-mcp-json)                         | プロジェクトのみ       | ✓    | チーム共有 MCP サーバー                                                            | [MCP スコープ](/docs/ja/mcp#mcp-installation-scopes)                     |
 | [`.worktreeinclude`](#ce-worktreeinclude)           | プロジェクトのみ       | ✓    | 新しい worktrees にコピーする gitignore ファイル                                       | [Worktrees](/docs/ja/worktrees#copy-gitignored-files-into-worktrees) |
 | [`skills/<name>/SKILL.md`](#ce-skills)              | プロジェクトおよびグローバル | ✓    | `/name` で呼び出される、または自動呼び出される再利用可能なプロンプト                                    | [Skills](/docs/ja/skills)                                            |
 | [`commands/*.md`](#ce-commands)                     | プロジェクトおよびグローバル | ✓    | シングルファイルプロンプト。skills と同じメカニズム                                             | [Skills](/docs/ja/skills)                                            |
-| [`output-styles/*.md`](#ce-output-styles)           | プロジェクトおよびグローバル | ✓    | カスタムシステムプロンプトセクション                                                        | [出力スタイル](/docs/ja/output-styles)                                     |
+| [`output-styles/*.md`](#ce-output-styles)           | プロジェクトおよびグローバル | ✓    | Claude の動作方法を調整するカスタム指示セット                                                | [出力スタイル](/docs/ja/output-styles)                                     |
 | [`agents/*.md`](#ce-agents)                         | プロジェクトおよびグローバル | ✓    | 独自のプロンプトとツールを持つ subagent 定義                                               | [Subagents](/docs/ja/sub-agents)                                     |
 | [`workflows/*.js`](#ce-workflows)                   | プロジェクトおよびグローバル | ✓    | Claude によって書かれた動的ワークフロースクリプト、`/workflows` から保存。各ファイルは `/<name>` コマンドになります | [動的ワークフロー](/docs/ja/workflows)                                       |
 | [`agent-memory/<name>/`](#ce-agent-memory)          | プロジェクトおよびグローバル | ✓    | subagents の永続メモリ                                                          | [永続メモリ](/docs/ja/sub-agents#enable-persistent-memory)                |
-| [`~/.claude.json`](#ce-claude-json)                 | グローバルのみ        |      | アプリ状態、OAuth、UI トグル、個人 MCP サーバー                                            | [グローバル設定](/docs/ja/settings#global-config-settings)                  |
+| [`~/.claude.json`](#ce-claude-json)                 | グローバルのみ        |      | アプリ状態、OAuth、UI トグル、個人 MCP サーバー                                            | [グローバル設定](/docs/ja/settings-reference#global-config-settings)        |
 | [`projects/<project>/memory/`](#ce-global-projects) | グローバルのみ        |      | Auto memory：Claude のセッション間のメモ                                             | [Auto memory](/docs/ja/memory#auto-memory)                           |
 | [`keybindings.json`](#ce-keybindings)               | グローバルのみ        |      | カスタムキーボードショートカット                                                          | [キーバインディング](/docs/ja/keybindings)                                    |
 | [`themes/*.json`](#ce-themes)                       | グローバルのみ        |      | カスタムカラーテーマ                                                                | [カスタムテーマ](/docs/ja/terminal-config#create-a-custom-theme)            |
+
+<h2 id="frontmatter-fields-by-file">
+  ファイル別フロントマターフィールド
+</h2>
+
+スキル、コマンドファイル、サブエージェント、出力スタイル、およびルールは、ファイルの上部にある YAML [フロントマター](/docs/ja/glossary#frontmatter)から設定を読み込み、それぞれが独自のフィールドセットを受け入れます。このテーブルは、各ファイルのフィールド名をリストアップし、それらを説明するリファレンスへのリンクを提供します。
+
+| ファイル                     | フロントマターフィールド                                                                                                                                                                                                                                                                  | リファレンス                                                         |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| `skills/<name>/SKILL.md` | `name`, `description`, `when_to_use`, `argument-hint`, `arguments`, `disable-model-invocation`, `user-invocable`, `allowed-tools`, `disallowed-tools`, `model`, `effort`, `context`, `agent`, `background`, `hooks`, `paths`, `shell`, `metadata`, `license`, `compatibility` | [スキルフロントマター](/docs/ja/skills#frontmatter-reference)                 |
+| `commands/*.md`          | `name` と `paths` を除くスキルフィールド                                                                                                                                                                                                                                                  | [スキルフロントマター](/docs/ja/skills#frontmatter-reference)                 |
+| `agents/*.md`            | `name`, `description`, `tools`, `disallowedTools`, `model`, `permissionMode`, `maxTurns`, `skills`, `mcpServers`, `hooks`, `memory`, `background`, `effort`, `isolation`, `color`, `initialPrompt`, `omitClaudeMd`, `experimental`                                            | [サブエージェントフロントマター](/docs/ja/sub-agents#supported-frontmatter-fields) |
+| `output-styles/*.md`     | `name`, `description`, `keep-coding-instructions`, `force-for-plugin`                                                                                                                                                                                                         | [出力スタイルフロントマター](/docs/ja/output-styles#frontmatter)                 |
+| `rules/*.md`             | `paths`                                                                                                                                                                                                                                                                       | [ルールフロントマター](/docs/ja/memory#rules-frontmatter-reference)           |
+
+[プラグイン](/docs/ja/plugins/components#agents)に含まれるエージェントは、サブエージェントフィールドのサブセットに対応しています。
 
 <h2 id="troubleshoot-configuration">
   設定をトラブルシューティングする
@@ -1524,71 +1541,118 @@ Windows では、`~/.claude` は `%USERPROFILE%\.claude` に解決されます�
   アプリケーションデータ
 </h2>
 
-作成する設定を超えて、`~/.claude` はセッション中に Claude Code が書き込むデータを保持します。これらのファイルはプレーンテキストです。ツールを通過するすべてのものはディスク上のトランスクリプトに記録されます。ファイルコンテンツ、コマンド出力、貼り付けられたテキスト。
+作成したコンフィグ以外に、`~/.claude` には Claude Code がセッション中に書き込むデータが保存されます。これらのファイルはプレーンテキストです。ツールを通過するすべてのものは、ディスク上のトランスクリプトに書き込まれます。ファイルの内容、コマンド出力、貼り付けたテキストなどです。
 
 <h3 id="cleaned-up-automatically">
-  自動的にクリーンアップされる
+  自動的にクリーンアップされるもの
 </h3>
 
-以下のパス内のファイルは、[`cleanupPeriodDays`](/docs/ja/settings#available-settings) より古い場合、起動時に削除されます。デフォルトは 30 日です。
+Claude Code は、[`cleanupPeriodDays`](/docs/ja/settings-reference#cleanupperioddays) より古いファイルを以下のパスから削除します。ただし、保持期間を安全に判定できる場合に限ります。デフォルトは 30 日で、最小値は 1 です。`0` に設定するとバリデーションエラーが発生します。同じ経過日数の閾値が、[孤立した worktrees](/docs/ja/worktrees#clean-up-subagent-and-background-session-worktrees) の自動削除にも適用されます。
 
-| `~/.claude/` の下のパス                           | コンテンツ                                                                                                                                                                      |
-| -------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `projects/<project>/<session>.jsonl`         | 完全な会話トランスクリプト：すべてのメッセージ、ツール呼び出し、ツール結果                                                                                                                                      |
-| `projects/<project>/<session>/subagents/`    | [Subagent](/docs/ja/sub-agents) 会話トランスクリプト。親セッショントランスクリプトが古くなると一緒に削除されます                                                                                                        |
-| `projects/<project>/<session>/tool-results/` | 大きなツール出力を別ファイルにこぼしたもの                                                                                                                                                      |
-| `file-history/<session>/`                    | Claude が変更したファイルの編集前スナップショット。[チェックポイント復元](/docs/ja/checkpointing)に使用されます。最新 100 個のチェックポイントのスナップショットを保持します。保持されているチェックポイントが参照していないスナップショットファイルは削除されます。ただし、各ファイルの最初のスナップショットは除きます |
-| `plans/`                                     | [プランモード](/docs/ja/permission-modes#analyze-before-you-edit-with-plan-mode)中に書き込まれたプランファイル                                                                                       |
-| `debug/`                                     | セッションごとのデバッグログ。`--debug` で開始するか `/debug` を実行した場合のみ書き込まれます                                                                                                                  |
-| `paste-cache/`、`image-cache/`                | 大きな貼り付けと添付画像のコンテンツ                                                                                                                                                         |
-| `session-env/`                               | セッションごとの環境メタデータ                                                                                                                                                            |
-| `tasks/`                                     | タスクツールによって書き込まれたセッションごとのタスクリスト                                                                                                                                             |
-| `shell-snapshots/`                           | 起動時にキャプチャされたエイリアス、関数、シェルオプション。[Bash ツール](/docs/ja/tools-reference#bash-tool-behavior)によって各コマンドに適用されます。正常な終了時に削除されます。スイープはクラッシュ後に残されたものをクリアします。                                  |
-| `backups/`                                   | 設定マイグレーション前に取得された `~/.claude.json` のタイムスタンプ付きコピー                                                                                                                           |
-| `feedback-bundles/`                          | `/feedback` によってサードパーティプロバイダーに書き込まれた編集済みトランスクリプトアーカイブ。Anthropic 認証情報が設定されていない場合、Anthropic アカウントチームに送信するため                                                                  |
-| `todos/`、`statsig/`、`logs/`                  | 古いバージョンのレガシーディレクトリ。現在は書き込まれません。スイープはコンテンツを削除してから空のディレクトリを削除します。                                                                                                            |
+| `~/.claude/` 下のパス                                                                                                              | 内容                                                                                                                                                                                                                          |
+| ------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `projects/<project>/<session>.jsonl`                                                                                           | 完全な会話トランスクリプト：すべてのメッセージ、ツール呼び出し、ツール結果                                                                                                                                                                                       |
+| `projects/<project>/<session>.orphaned-<timestamp>-<suffix>.jsonl`、`projects/<project>/<session>.jsonl.superseded-<timestamp>` | Claude Code が上書きまたは削除する代わりに脇に置いたセッションの前のトランスクリプト。セッションピッカーには表示されません                                                                                                                                                         |
+| `projects/<project>/<session>/subagents/`                                                                                      | [Subagent](/docs/ja/sub-agents) の会話トランスクリプト。親セッションのトランスクリプトが経過時間で削除されるときに削除されます                                                                                                                                                  |
+| `projects/<project>/<session>/tool-results/`                                                                                   | 別ファイルにこぼれた大きなツール出力                                                                                                                                                                                                          |
+| `file-history/<session>/`                                                                                                      | Claude Code が変更したファイルの編集前スナップショット。[チェックポイント復元](/docs/ja/checkpointing) に使用されます。最新 100 個のチェックポイントのスナップショットを保持します。保持されているチェックポイントが参照していないスナップショットファイルは削除されます。ただし、各ファイルの最初のスナップショットは除きます                                            |
+| `plans/`                                                                                                                       | [プランモード](/docs/ja/permission-modes#analyze-before-you-edit-with-plan-mode) 中に書き込まれたプランファイル                                                                                                                                       |
+| `debug/`                                                                                                                       | セッションごとのデバッグログ。デバッグログが有効な場合に書き込まれます。例えば、[`--debug`](/docs/ja/cli-reference#cli-flags) で起動するか `/debug` を実行する場合です                                                                                                                  |
+| `paste-cache/`                                                                                                                 | 大きな貼り付けの内容                                                                                                                                                                                                                  |
+| `image-cache/<session>/`                                                                                                       | Claude Code v2.1.274 以前によって保存された添付画像。以降のバージョンは、貼り付けられた画像と添付された画像を `~/.claude` の外に保存します。[`CLAUDE_CODE_TMPDIR`](/docs/ja/env-vars) が制御する temp ディレクトリの下の各セッションの `images/` ディレクトリに保存されます。スイープは他のセッションの残されたディレクトリをここから削除します。経過時間に関係なく |
+| `uploads/<session>/`                                                                                                           | Web またはモバイルアプリから添付したファイル、およびモバイルアプリから添付した写真。[Remote Control](/docs/ja/remote-control) セッションにメッセージを送信する場合です。[クラウドセッション](/docs/ja/claude-code-on-the-web) への添付は、代わりにそのセッション自体のクラウド環境に保存され、マシン上には保存されません                                 |
+| `session-env/`                                                                                                                 | セッションごとの環境メタデータ                                                                                                                                                                                                             |
+| `tasks/`                                                                                                                       | タスクツールによって書き込まれたタスクリスト。リストごとに 1 つのディレクトリ                                                                                                                                                                                    |
+| `shell-snapshots/`                                                                                                             | 起動時にキャプチャされたエイリアス、関数、シェルオプション。[Bash ツール](/docs/ja/tools-reference#bash-tool-behavior) によって各コマンドに適用されます。クリーンな終了時に削除されます。スイープはクラッシュ後に残されたものをクリアします                                                                                 |
+| `backups/`                                                                                                                     | `~/.claude.json` の以前のバージョン。Claude Code がファイルを書き直すときにコピーされます。Claude Code は最新の 5 つと、解析できなかったバージョンのコピーを保持します                                                                                                                   |
+| `feedback-bundles/`                                                                                                            | `/feedback` によってサードパーティプロバイダーに書き込まれた、または Anthropic 認証情報が設定されていない場合に書き込まれた、編集済みトランスクリプトアーカイブ。Anthropic アカウントチームに送信するためのものです                                                                                                  |
+| `feedback/drafts/`                                                                                                             | キューに入った [Claude が作成したフィードバック](/docs/ja/tools-reference#sendfeedback-tool-behavior)。`/feedback` でのレビューを待機中です。`cleanupPeriodDays` または 30 日のいずれか短い方の後にスイープされます。キューが 10 ドラフトの上限に達すると、Claude Code は最も古いドラフトを削除して場所を作ります               |
+| `usage-data/`                                                                                                                  | [`/insights`](/docs/ja/costs#analyze-your-usage-patterns) によって書き込まれた `report.html` とタイムスタンプ付きレポートコピー。それらを構築するために使用されるキャッシュされたセッションごとの分析データ                                                                                       |
+| `skills/.trash/`、`plugins/.trash/`                                                                                             | claude.ai から同期された [Skills](/docs/ja/skills#how-synced-skills-behave) と [plugins](/docs/ja/plugins/loading#synced-plugins)。Claude Code が削除したもの。削除する代わりにここに移動されるため、ファイルを復元できます                                                          |
+| `todos/`、`statsig/`、`logs/`                                                                                                    | 古いバージョンのレガシーディレクトリ。現在は書き込まれていません。スイープはその内容を削除してから空のディレクトリを削除します                                                                                                                                                             |
+
+`sessions/` のセッションファイル、自動メモリ、Claude Desktop および Cowork トランスクリプトは、それぞれ独自の保持ルールに従います：
+
+* **`sessions/`**：実行中の各セッションに 1 つの小さなファイルを保持します。同時セッションとクラッシュを検出するために使用されます。経過時間ベースのスイープの対象ではありません。Claude Code はセッションが終了するときに各ファイルを削除し、次の起動時にクラッシュの残骸をクリアします。
+* **自動メモリ**：スイープはプロジェクトの [自動メモリ](/docs/ja/memory#auto-memory) ディレクトリ `projects/<project>/memory/` 内のメモリファイルを削除しません。Claude Code はそのディレクトリを削除するのは、保持期間全体が空だった場合のみです。v2.1.228 より前では、スイープはメモリディレクトリ内のフォルダをセッションデータとして扱い、その下の古いファイルを削除できました。
+* **Claude Desktop および Cowork トランスクリプト**：Claude Code は Claude Desktop または Cowork で開始または最後に続行したセッションのトランスクリプトを任意の経過時間で保持します。これらのトランスクリプトに経過時間の制限を設定するには、[`desktopSessionCleanupPeriodDays`](/docs/ja/settings-reference#desktopsessioncleanupperioddays) を設定します。[管理設定](/docs/ja/managed-settings) が `cleanupPeriodDays` を設定する場合、Claude Code はその期間後にこれらのトランスクリプトを削除します。Claude Code v2.1.248 以降が必要です。以前のバージョンは `cleanupPeriodDays` の後に削除します。
+
+Claude Code は以下の場合、経過時間ベースのスイープをスキップします：
+
+* **ベアモード**：[`--bare`](/docs/ja/headless#start-faster-with-bare-mode) で `claude -p` を実行する場合、Claude Code はそのセッションでスイープを実行しません。
+* **一時停止されたスイープ**：Claude Code が保持期間を安全に判定できない場合、保持クリーンアップスイープを一時停止します。[`retention_sweep` イベント](/docs/ja/monitoring-usage#retention-sweep-event) は、それを一時停止する各設定をリストします。原因が読み込みまたは解析できない設定ファイル、または `cleanupPeriodDays` または `desktopSessionCleanupPeriodDays` が明示的に設定された設定エラーの場合、Claude Code は設定エラーを修正するまで `/status` に警告も表示します。[管理設定](/docs/ja/server-managed-settings) が `cleanupPeriodDays` を提供する場合、Claude Code はどちらの場合でも管理値でスイープを実行します。
 
 <h3 id="kept-until-you-delete-them">
-  削除するまで保持される
+  削除するまで保持されるもの
 </h3>
 
-以下のパスは自動クリーンアップの対象ではなく、無期限に保持されます。
+保持クリーンアップスイープは以下のパスを削除しません。Claude Code はそれらを削除するまで保持します。ただし、ログアウト時に削除する 2 つのキャッシュは除きます。
 
-| `~/.claude/` の下のパス     | コンテンツ                                                                                  |
-| ---------------------- | -------------------------------------------------------------------------------------- |
-| `history.jsonl`        | 入力したすべてのプロンプト（タイムスタンプとプロジェクトパス付き）。上矢印リコール用に使用                                          |
-| `stats-cache.json`     | `/usage` で表示される集計トークンおよびコスト数                                                           |
-| `remote-settings.json` | 組織の[サーバー管理設定](/docs/ja/server-managed-settings)のキャッシュコピー。組織が設定を構成している場合のみ存在します。各起動時に更新されます。 |
+| `~/.claude/` 下のパス      | 内容                                                                                                                                                                                                                     |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `history.jsonl`        | 入力したすべてのプロンプト。タイムスタンプとプロジェクトパス付き。上矢印リコール、`Ctrl+R` 履歴検索、`!` シェルコマンド補完に使用されます                                                                                                                                            |
+| `stats-cache.json`     | `/usage` で表示される集計トークンおよびコスト数                                                                                                                                                                                           |
+| `remote-settings.json` | [サーバー管理設定](/docs/ja/server-managed-settings) のキャッシュコピー。組織用。または、組織が何も設定していない場合は `{}`。セッションが [それらを取得](/docs/ja/server-managed-settings#platform-availability) する場合にのみ存在します。Claude Code は起動時と、セッション中は 1 時間ごとに更新を確認します。ログアウト時に削除されます |
+| `cache/changelog.md`   | Claude Code チェンジログのキャッシュコピー。`/release-notes` で表示されます。バックグラウンドで更新されます                                                                                                                                                   |
+| `policy-limits.json`   | 組織の機能ポリシー設定のキャッシュ。一部のアカウントタイプにのみ存在します。自動的に更新されます。`policy-limits.json.stamp.json` サイドカーは、キャッシュがどのアカウントまたは API キーに属しているかを記録します。Claude Code はログアウト時に両方のファイルを削除します                                                         |
 
-その他の小さなキャッシュおよびロックファイルは、使用する機能に応じて表示され、削除しても安全です。
+<span id="state-files-to-keep" />
+
+使用する機能に応じて、他のファイルが表示されます。キャッシュとロックファイルは削除しても安全です。これらの状態ファイルを保持してください：
+
+* `.credentials.json`：[ログイン認証情報](/docs/ja/authentication#credential-management)
+* `agent-memory/`：[subagent メモリ](/docs/ja/sub-agents#enable-persistent-memory)
+* `jobs/` および `daemon/`：[バックグラウンドセッション](/docs/ja/agent-view#where-state-is-stored) 状態
 
 <h3 id="plaintext-storage">
   プレーンテキストストレージ
 </h3>
 
-トランスクリプトと履歴は保存時に暗号化されません。OS ファイルパーミッションのみが保護です。ツールが `.env` ファイルを読み込むか、コマンドが認証情報を出力する場合、その値は `projects/<project>/<session>.jsonl` に書き込まれます。露出を減らすには：
+トランスクリプトと履歴は保存時に暗号化されません。OS ファイル権限のみが保護です。ツールが `.env` ファイルを読み込むか、コマンドが認証情報を出力する場合、その値は `projects/<project>/<session>.jsonl` に書き込まれます。露出を減らすには：
 
-* `cleanupPeriodDays` を低くしてトランスクリプトの保持期間を短縮します
-* [`CLAUDE_CODE_SKIP_PROMPT_HISTORY`](/docs/ja/env-vars) 環境変数を設定して、任意のモードでトランスクリプトとプロンプト履歴の書き込みをスキップします。非対話型モードでは、代わりに `-p` と一緒に `--no-session-persistence` を渡すか、Agent SDK で `persistSession: false` を設定できます。
-* [パーミッションルール](/docs/ja/permissions)を使用して認証情報ファイルの読み込みを拒否します
+* `cleanupPeriodDays` を低くして、Claude Code がトランスクリプトを保持する期間を短縮します
+* [`desktopSessionCleanupPeriodDays`](/docs/ja/settings-reference#desktopsessioncleanupperioddays) を設定して、Claude Desktop および Cowork トランスクリプトにも経過時間の制限を設定します
+* [`CLAUDE_CODE_SKIP_PROMPT_HISTORY`](/docs/ja/env-vars) 環境変数を設定して、任意のモードでトランスクリプトとプロンプト履歴の書き込みをスキップします。非対話モードでは、代わりに `-p` と一緒に `--no-session-persistence` を渡すか、TypeScript Agent SDK で `persistSession: false` を設定できます。Python SDK には同等のオプションはありません。
+* [権限ルール](/docs/ja/permissions) を使用して、認証情報ファイルの読み込みを拒否します
 
 <h3 id="clear-local-data">
-  ローカルデータをクリアする
+  ローカルデータをクリア
 </h3>
 
-`claude project purge` を実行して、1 つのプロジェクトに対して Claude Code が保持する状態を削除します。このコマンドには Claude Code v2.1.124 以降が必要です。以下を削除します：
+`claude project purge` を実行して、Claude Code が 1 つのプロジェクトに対して保持する状態を削除します。以下を削除します：
 
-* `projects/` の下のトランスクリプトと自動メモリ
+* `projects/` 下のトランスクリプトと自動メモリ
 * セッションごとの `tasks/`、`debug/`、`file-history/` エントリ
 * `history.jsonl` の一致するプロンプト行
 * `~/.claude.json` のプロジェクトエントリ
 
-このコマンドは完全な削除計画を出力し、何かを削除する前に確認を求めます。
+プロジェクトのセッションで貼り付けたまたは添付した画像は、`~/.claude` ではなく Claude Code の temp ディレクトリに保存されるため、パージはそれらを削除しません。[保持クリーンアップスイープ](#cleaned-up-automatically) は、`cleanupPeriodDays` より古くなると削除します。
 
-削除せずに計画をプレビューします：
+コマンドは完全な削除計画を出力し、何かを削除する前に確認を求めます。
+
+以下の例は、プレースホルダーとして `~/work/my-repo` を使用しています。プロジェクトへのパスに置き換えてください。パスに一致する状態がない場合、コマンドはエラーを出力して終了ステータス 1 で終了します。
+
+何も削除せずに計画をプレビューします：
 
 ```bash theme={null}
 claude project purge ~/work/my-repo --dry-run
+```
+
+計画は各一致項目とそれが含まれる理由をリストします：
+
+```text theme={null}
+Purge plan for /home/user/work/my-repo:
+
+  dir:    /home/user/.claude/projects/-home-user-work-my-repo
+           project transcripts (.jsonl) and memory/
+  config: projects["/home/user/work/my-repo"]
+           project entry in ~/.claude.json (trust, history, MCP servers)
+  filter: /home/user/.claude/history.jsonl
+           12 prompt(s) typed in this project
+
+shell-snapshots/ are not project-scoped and will not be touched
+backups/ may still contain this project entry in old .claude.json snapshots (/home/user/.claude/backups); at most 5 are kept and they rotate out automatically
+Dry run: 3 item(s) would be deleted.
 ```
 
 単一の確認プロンプトで削除します：
@@ -1597,7 +1661,9 @@ claude project purge ~/work/my-repo --dry-run
 claude project purge ~/work/my-repo
 ```
 
-パスを省略して、対話型リストからプロジェクトを選択します。
+コマンドは同じ計画を出力してから、`Delete 3 item(s) for /home/user/work/my-repo? This cannot be undone. [y/N]` と尋ね、`y` と答えた場合のみ削除します。
+
+パスを省略して、対話的なリストからプロジェクトを選択します。
 
 スクリプトで使用するために確認プロンプトをスキップします：
 
@@ -1605,23 +1671,32 @@ claude project purge ~/work/my-repo
 claude project purge ~/work/my-repo --yes
 ```
 
-パスの代わりに `--all` を渡して、すべてのプロジェクトの状態を一度にパージします。これは `history.jsonl` をフィルタリングするのではなく完全に削除します。`-i` を渡して削除計画を一度に 1 つずつステップスルーします。
+パスの代わりに `--all` を渡して、すべてのプロジェクトの状態を一度にパージします。これは `history.jsonl` をフィルタリングするのではなく完全に削除します。`-i` を渡して、削除計画を 1 つずつステップスルーします。
 
-このコマンドは `shell-snapshots/` と `backups/` をそのままにしておきます。これらはプロジェクトスコープではないため、計画出力で警告します。指定されたパスに一致する状態がない場合、ステータス 1 で終了します。
+コマンドは `shell-snapshots/` と `backups/` をそのままにしておきます。これらはプロジェクトスコープではないため、計画出力で警告します。
 
-上記のアプリケーションデータパスのいずれかを手動で削除することもできます。新しいセッションは影響を受けません。以下のテーブルは、過去のセッションで失うものを示しています。
+[保持する状態ファイル](#state-files-to-keep) を除いて、上記のアプリケーションデータパスのいずれかを手動で削除することもできます。新しいセッションは影響を受けません。以下の表は、過去のセッションで失うものを示しています。
 
-| 削除                                                                                                                                                                                    | 失うもの                            |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------- |
-| `~/.claude/projects/`                                                                                                                                                                 | 過去のセッションの再開、続行、巻き戻し             |
-| `~/.claude/history.jsonl`                                                                                                                                                             | 上矢印プロンプトリコール                    |
-| `~/.claude/file-history/`                                                                                                                                                             | 過去のセッションのチェックポイント復元             |
-| `~/.claude/stats-cache.json`                                                                                                                                                          | `/usage` で表示される履歴合計             |
-| `~/.claude/remote-settings.json`                                                                                                                                                      | なし。次の起動時に再取得されます。               |
-| `~/.claude/debug/`、`~/.claude/plans/`、`~/.claude/paste-cache/`、`~/.claude/image-cache/`、`~/.claude/session-env/`、`~/.claude/tasks/`、`~/.claude/shell-snapshots/`、`~/.claude/backups/` | ユーザー向けのもの                       |
-| `~/.claude/todos/`、`~/.claude/statsig/`、`~/.claude/logs/`                                                                                                                             | なし。現在のバージョンでは書き込まれないレガシーディレクトリ。 |
+| 削除                                                                                                               | 失うもの                                                                                                                         |
+| ---------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `~/.claude/projects/`                                                                                            | 過去のセッションの再開、続行、巻き戻し、およびすべてのプロジェクトの自動メモリ                                                                                      |
+| `~/.claude/history.jsonl`                                                                                        | 上矢印プロンプトリコール、`Ctrl+R` 履歴検索、`!` シェルコマンド補完                                                                                     |
+| `~/.claude/paste-cache/`                                                                                         | リコールされたプロンプトの貼り付けたテキスト。[大きなコンテンツを貼り付ける](/docs/ja/terminal-config#paste-large-content) を参照してください                                   |
+| `~/.claude/uploads/`                                                                                             | 過去の [Remote Control](/docs/ja/remote-control) セッションがパスで参照する添付ファイル                                                                 |
+| `~/.claude/file-history/`                                                                                        | 過去のセッションのチェックポイント復元                                                                                                          |
+| `~/.claude/stats-cache.json`                                                                                     | `/usage` で表示される履歴合計                                                                                                          |
+| `~/.claude/usage-data/`                                                                                          | 過去の [`/insights`](/docs/ja/costs#analyze-your-usage-patterns) レポートと、それらを構築するために使用されたキャッシュされた分析データ                                 |
+| `~/.claude/feedback-bundles/`                                                                                    | Anthropic アカウントチームにまだ送信していないフィードバックとバグレポートアーカイブ                                                                              |
+| `~/.claude/feedback/drafts/`                                                                                     | 送信していない [Claude が作成したフィードバック](/docs/ja/tools-reference#sendfeedback-tool-behavior)                                                |
+| `~/.claude/remote-settings.json`                                                                                 | なし。次の起動時に再取得されます                                                                                                             |
+| `~/.claude/cache/changelog.md`                                                                                   | なし。バックグラウンドで更新されます                                                                                                           |
+| `~/.claude/policy-limits.json`                                                                                   | なし。自動的に更新されます                                                                                                                |
+| `~/.claude/tasks/`                                                                                               | 再開されたセッションが取得するタスクリスト                                                                                                        |
+| `~/.claude/skills/.trash/`、`~/.claude/plugins/.trash/`                                                           | Claude Code が削除した [同期されたスキル](/docs/ja/skills#how-synced-skills-behave) と [同期されたプラグイン](/docs/ja/plugins/loading#synced-plugins) を復元する機会 |
+| `~/.claude/debug/`、`~/.claude/plans/`、`~/.claude/session-env/`、`~/.claude/shell-snapshots/`、`~/.claude/backups/` | ユーザー向けのなし                                                                                                                    |
+| `~/.claude/todos/`、`~/.claude/statsig/`、`~/.claude/logs/`、`~/.claude/image-cache/`                               | なし。現在のバージョンで書き込まれていないレガシーディレクトリ                                                                                              |
 
-`~/.claude.json`、`~/.claude/settings.json`、または `~/.claude/plugins/` は削除しないでください。これらは認証、設定、インストール済みプラグインを保持しています。
+`~/.claude.json`、`~/.claude/settings.json`、`~/.claude/plugins/` は削除しないでください。これらは認証、設定、インストール済みプラグインを保持しています。
 
 <h2 id="related-resources">
   関連リソース

@@ -8,7 +8,7 @@
 
 Cette page s'adresse aux ingénieurs individuels qui utilisent déjà Claude Code et qui souhaitent aider leur équipe à l'adopter. Elle couvre quoi partager, comment répondre aux questions que vous recevrez, un guide de trente jours et des réponses aux préoccupations courantes.
 
-L'adoption d'un outil de développement se fait rarement à cause d'une annonce de déploiement. Elle se produit parce que quelqu'un dans l'équipe commence à utiliser l'outil correctement, en parle ouvertement et facilite l'adoption pour les autres. Le travail que vous faites en tant que champion a un effet disproportionné : chaque exemple que vous partagez raccourcit la courbe d'apprentissage pour les ingénieurs qui vous suivent, et chaque question que vous répondez publiquement transforme l'expérience d'une personne en quelque chose que toute l'équipe peut exploiter. Vous agissez comme un multiplicateur pour votre équipe, pas comme un support technique, et ce guide est structuré pour maintenir le rôle durable selon ces termes.
+L'adoption d'un outil de développement se fait rarement à cause d'une annonce de déploiement. Elle se produit parce que quelqu'un dans l'équipe commence à utiliser l'outil correctement, en parle ouvertement et facilite l'adoption pour les autres. Le travail que vous faites en tant que champion a un effet disproportionné : chaque exemple que vous partagez raccourcit la courbe d'apprentissage pour les ingénieurs qui vous suivent, et chaque question que vous répondez publiquement transforme l'expérience d'une personne en quelque chose que toute l'équipe peut exploiter.
 
 <h2 id="the-champion-role">
   Le rôle de champion
@@ -21,8 +21,6 @@ Le rôle consiste en trois comportements qui se renforcent mutuellement.
 | Partagez ce que vous découvrez           | Publiez les prompts, les captures d'écran et les petites victoires de votre propre travail dans les endroits que votre équipe lit déjà, comme un canal d'ingénierie, un fil de standup ou une description de pull request. | Les exemples tirés de votre propre codebase sont plus convaincants que n'importe quelle documentation externe, car les collègues peuvent voir exactement comment l'outil s'applique aux problèmes qu'ils partagent avec vous. |
 | Soyez la personne que les gens demandent | Quand un collègue vous demande comment vous avez réalisé quelque chose, répondez avec le prompt réel que vous avez utilisé pour qu'il puisse l'appliquer directement à sa propre tâche.                                    | Un exemple concret et exécutable supprime l'écart entre la curiosité et une première utilisation réussie, ce qui est l'endroit où la plupart des efforts d'adoption s'arrêtent.                                               |
 | Agrandissez le cercle                    | Établissez un petit nombre d'habitudes légères et récurrentes, comme un canal dédié ou un fil hebdomadaire, afin que l'élan continue même quand votre attention est ailleurs.                                              | L'adoption qui dépend d'une seule personne est fragile. L'adoption qui est portée par des habitudes partagées continue à se composer d'elle-même.                                                                             |
-
-La plupart de cela s'inscrit naturellement dans le travail que vous faites déjà. La différence est une petite quantité d'intention supplémentaire sur l'endroit où vos découvertes sont publiées et comment vos réponses se propagent.
 
 <h3 id="what-this-should-cost-you">
   Ce que cela devrait vous coûter
@@ -139,7 +137,7 @@ Une réponse comme « Essayez le mode plan, appuyez sur `Maj+Tab` jusqu'à ce qu
   Agrandissez le cercle
 </h2>
 
-L'objectif n'est pas de construire un programme ou de posséder un déploiement. C'est d'établir un petit nombre d'habitudes légères qui permettent à l'élan de continuer après que vous ayez arrêté de le conduire activement. Quand les questions dans le canal sont répondues par des personnes autres que vous, le rôle a fait son travail.
+L'objectif est d'établir un petit nombre d'habitudes légères qui permettent à l'élan de continuer après que vous ayez arrêté de le conduire activement. Vous n'avez pas besoin de construire un programme ou de posséder un déploiement. Quand les questions dans le canal sont répondues par des personnes autres que vous, le rôle a fait son travail.
 
 <h3 id="patterns-that-tend-to-work">
   Modèles qui tendent à fonctionner

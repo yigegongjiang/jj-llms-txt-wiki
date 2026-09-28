@@ -8,7 +8,7 @@
 
 Esta página es para ingenieros individuales que ya están usando Claude Code y quieren ayudar a su equipo a adoptarlo. Cubre qué compartir, cómo responder las preguntas que recibirá, un manual de treinta días y respuestas a preocupaciones comunes.
 
-La adopción de una herramienta para desarrolladores rara vez ocurre debido a un anuncio de lanzamiento. Ocurre porque alguien en el equipo comienza a usar la herramienta bien, habla sobre ella abiertamente y facilita que otros la sigan. El trabajo que realiza como campeón tiene un efecto desproporcionado: cada ejemplo que comparte acorta la curva de aprendizaje para los ingenieros que vienen después de usted, y cada pregunta que responde en público convierte la experiencia de una persona en algo en lo que todo el equipo puede construir. Está actuando como un multiplicador para su equipo, no como un servicio de ayuda, y esta guía está estructurada para mantener el rol sostenible en esos términos.
+La adopción de una herramienta para desarrolladores rara vez ocurre debido a un anuncio de lanzamiento. Ocurre porque alguien en el equipo comienza a usar la herramienta bien, habla sobre ella abiertamente y facilita que otros la sigan. El trabajo que realiza como campeón tiene un efecto desproporcionado: cada ejemplo que comparte acorta la curva de aprendizaje para los ingenieros que vienen después de usted, y cada pregunta que responde en público convierte la experiencia de una persona en algo en lo que todo el equipo puede construir.
 
 <h2 id="the-champion-role">
   El rol de campeón
@@ -22,20 +22,18 @@ El rol consiste en tres comportamientos que se refuerzan mutuamente.
 | Sea la persona a quien la gente pregunta | Cuando un colega pregunta cómo logró algo, responda con el prompt real que utilizó para que puedan aplicarlo directamente a su propia tarea.                                                                              | Un ejemplo concreto y ejecutable elimina la brecha entre la curiosidad y un primer uso exitoso, que es donde se estancan la mayoría de los esfuerzos de adopción.                                                         |
 | Amplíe el círculo                        | Establezca un pequeño número de hábitos recurrentes y ligeros, como un canal dedicado o un hilo semanal, para que el impulso continúe incluso cuando su atención esté en otro lugar.                                      | La adopción que depende de una sola persona es frágil. La adopción que es llevada por hábitos compartidos continúa componiéndose por sí sola.                                                                             |
 
-La mayoría de esto se ajusta naturalmente dentro del trabajo que ya está realizando. La diferencia es una pequeña cantidad de intención adicional sobre dónde se publican sus descubrimientos y cómo viajan sus respuestas.
-
 <h3 id="what-this-should-cost-you">
   Cuánto debería costarle esto
 </h3>
 
 Establezca expectativas con usted mismo y con su líder. Las actividades a continuación están diseñadas para caber dentro de una semana laboral normal, y el rol debe seguir siendo un multiplicador de su trabajo existente en lugar de una responsabilidad de soporte adicional.
 
-| Actividad                                  | Tiempo por semana          | Orientación                                                                                                                              |
-| ------------------------------------------ | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| Publicar victorias y prompts               | Aproximadamente 15 minutos | Capture estos en el momento con una captura de pantalla y una o dos oraciones; evite convertirlos en escritos formales.                  |
-| Responder preguntas en un canal compartido | Aproximadamente 20 minutos | Responda públicamente una vez, luego vincule a esa respuesta cuando la pregunta se repita.                                               |
-| Alojar un hilo semanal de demostración     | Aproximadamente 5 minutos  | Usted publica el prompt de apertura; el equipo proporciona el contenido.                                                                 |
-| Emparejamiento opcional o tutoriales       | 0 a 30 minutos             | Reserve esto para colegas que estén genuinamente bloqueados, y ofrezca el enlace [Quickstart](/docs/es/quickstart) antes de programar tiempo. |
+| Actividad                                  | Tiempo por semana          | Orientación                                                                                                                 |
+| ------------------------------------------ | -------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| Publicar victorias y prompts               | Aproximadamente 15 minutos | Capture estos en el momento con una captura de pantalla y una o dos oraciones; evite convertirlos en escritos formales.     |
+| Responder preguntas en un canal compartido | Aproximadamente 20 minutos | Responda públicamente una vez, luego vincule a esa respuesta cuando la pregunta se repita.                                  |
+| Alojar un hilo semanal de demostración     | Aproximadamente 5 minutos  | Usted publica el prompt de apertura; el equipo proporciona el contenido.                                                    |
+| Emparejamiento opcional o tutoriales       | 0 a 30 minutos             | Reserve esto para colegas que estén bloqueados, y ofrezca el enlace [Quickstart](/docs/es/quickstart) antes de programar tiempo. |
 
 <h2 id="share-what-you-discover">
   Comparta lo que descubre
@@ -139,7 +137,7 @@ Una respuesta como "Intenta plan mode, presiona `Shift+Tab` hasta que lo veas" e
   Amplíe el círculo
 </h2>
 
-El objetivo no es construir un programa o poseer un lanzamiento. Es establecer un pequeño número de hábitos ligeros que permitan que el impulso continúe después de que haya dejado de impulsarlo activamente. Cuando las preguntas en el canal están siendo respondidas por personas que no sean usted, el rol ha cumplido su función.
+El objetivo es establecer un pequeño número de hábitos ligeros que permitan que el impulso continúe después de que haya dejado de impulsarlo activamente. No necesita construir un programa ni poseer un lanzamiento. Cuando las preguntas en el canal están siendo respondidas por personas que no sean usted, el rol ha cumplido su función.
 
 <h3 id="patterns-that-tend-to-work">
   Patrones que tienden a funcionar

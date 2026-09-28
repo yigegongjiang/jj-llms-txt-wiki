@@ -36,7 +36,7 @@ Claude ha diversi modi per interagire con un'app o un servizio. Computer use è 
 * Se l'attività è lavoro nel browser e hai [Claude in Chrome](/docs/it/chrome) configurato, Claude lo usa.
 * Se nessuno di questi si applica, Claude usa computer use.
 
-Il controllo dello schermo è riservato a cose che nient'altro può raggiungere: app native, simulatori e strumenti senza API.
+Il controllo dello schermo è riservato a cose che nient'altro può raggiungere: app native, simulatori come iOS Simulator e strumenti senza API.
 
 <h2 id="enable-computer-use">
   Abilita computer use
@@ -98,6 +98,8 @@ Le app con ampia portata mostrano un avviso aggiuntivo nel prompt in modo che tu
 
 Queste app non sono bloccate. L'avviso ti consente di decidere se l'attività giustifica quel livello di accesso.
 
+Approva Finder per consentire a Claude di fare clic sul desktop, sul Dock o su una finestra Finder.
+
 Il livello di controllo di Claude varia anche per categoria di app: i browser e le piattaforme di trading sono di sola visualizzazione, i terminali e gli IDE sono di sola clic e tutto il resto ottiene il controllo completo. Vedi [app permissions in Desktop](/docs/it/desktop#app-permissions) per la suddivisione completa dei livelli.
 
 <h2 id="how-claude-works-on-your-screen">
@@ -110,7 +112,7 @@ Comprendere il flusso ti aiuta ad anticipare cosa farà Claude e come intervenir
   Una sessione alla volta
 </h3>
 
-Computer use mantiene un blocco a livello di macchina dalla prima azione di computer use fino a quando la sessione che lo ha acquisito esce. A partire da v2.1.195, completare l'attività non rilascia il blocco; solo l'uscita dalla sessione lo fa. Se un'altra sessione di Claude Code sta già usando il tuo computer, i nuovi tentativi falliscono con un messaggio che ti dice quale sessione tiene il blocco. Esci da quella sessione per primo.
+Solo una sessione alla volta può utilizzare il tuo computer. Una sessione acquisisce un blocco a livello di macchina alla sua prima azione di computer use e lo rilascia quando la sessione esce, non quando l'attività finisce. Il computer use di una seconda sessione fallisce con un errore che nomina la sessione che detiene il blocco. Esci da quella sessione per primo.
 
 <h3 id="apps-are-hidden-while-claude-works">
   Le app sono nascoste mentre Claude lavora
@@ -132,7 +134,7 @@ Non c'è alcuna impostazione per modificare la dimensione target. Se il testo o 
   Ferma in qualsiasi momento
 </h3>
 
-Quando Claude acquisisce il blocco, appare una notifica di macOS: "Claude is using your computer · press Esc to stop." Premi `Esc` ovunque per interrompere immediatamente l'azione corrente, oppure premi `Ctrl+C` nel terminale. In entrambi i casi, Claude si ferma, mostra di nuovo le tue app e ti restituisce il controllo. La sessione mantiene il [blocco di computer use](#one-session-at-a-time) fino a quando non esce.
+La prima volta che Claude utilizza il tuo computer in ogni turno, appare una notifica di macOS: "Claude is using your computer · press Esc to stop." Premi `Esc` ovunque per interrompere immediatamente l'azione corrente, oppure premi `Ctrl+C` nel terminale. In entrambi i casi, Claude si ferma, mostra di nuovo le tue app e ti restituisce il controllo. La sessione mantiene il [blocco di computer use](#one-session-at-a-time) fino a quando non esce.
 
 Una seconda notifica appare quando Claude ha finito.
 
@@ -197,7 +199,7 @@ Open the iOS Simulator, launch the app, tap through the onboarding
 screens, and tell me if any screen takes more than a second to load.
 ```
 
-Claude controlla il simulatore nello stesso modo in cui lo faresti tu con un mouse.
+Claude controlla il simulatore nello stesso modo in cui lo faresti tu con un mouse. Questo flusso si applica alla CLI; nell'app Desktop, la stessa richiesta apre il [riquadro iOS Simulator](/docs/it/desktop-ios-simulator) invece del controllo dello schermo.
 
 <h2 id="differences-from-the-desktop-app">
   Differenze dall'app Desktop

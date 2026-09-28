@@ -59,6 +59,8 @@ Claude Code устанавливается в любой контейнер ра
     ```
 
     Замените строку `image` на базовый образ вашего проекта или удалите ее, если ваш существующий файл использует Dockerfile.
+
+    Функция Claude Code устанавливает Node.js сама, когда базовый образ его не предоставляет. Если эта установка не удается и сборка останавливается с `Failed to install Node.js and npm`, добавьте `"ghcr.io/devcontainers/features/node:1": {}` в блок `features` выше функции Claude Code и перестройте.
   </Step>
 
   <Step title="Перестроение контейнера">
@@ -89,21 +91,26 @@ Claude Code устанавливается в любой контейнер ра
   Сохранение аутентификации и параметров при перестроении
 </h2>
 
-По умолчанию домашний каталог контейнера отбрасывается при перестроении, поэтому инженеры должны снова входить каждый раз. Claude Code хранит свой токен аутентификации, параметры пользователя и историю сеанса в [`~/.claude`](/docs/ru/claude-directory). Смонтируйте именованный том в этом пути, чтобы сохранить это состояние при перестроении.
+По умолчанию домашний каталог контейнера отбрасывается при перестроении, поэтому инженеры должны снова входить каждый раз. Claude Code хранит свой токен аутентификации, параметры пользователя и историю сеанса в каталоге [`~/.claude`](/docs/ru/claude-directory). Он хранит вашу учетную запись OAuth, личные MCP серверы и доверие для каждого проекта в [`~/.claude.json`](/docs/ru/settings-reference#global-config-settings), отдельном файле вне этого каталога, поэтому монтирование тома только в `~/.claude` не сохранит вас в системе. Смонтируйте именованный том в `~/.claude` и установите [`CLAUDE_CONFIG_DIR`](/docs/ru/env-vars) на тот же путь, чтобы Claude Code писал `.claude.json` внутри тома.
 
-Следующий пример монтирует том в домашний каталог пользователя `node`:
+Следующий пример монтирует том и устанавливает `CLAUDE_CONFIG_DIR` для контейнера, чей `remoteUser` — это `node`:
 
 ```json devcontainer.json theme={null}
 "mounts": [
   "source=claude-code-config,target=/home/node/.claude,type=volume"
-]
+],
+"containerEnv": {
+  "CLAUDE_CONFIG_DIR": "/home/node/.claude"
+}
 ```
 
-Замените `/home/node` на домашний каталог `remoteUser` вашего контейнера. Если вы монтируете том в другое место, чем `~/.claude`, установите [`CLAUDE_CONFIG_DIR`](/docs/ru/env-vars) на путь монтирования, чтобы Claude Code читал и писал там.
+Замените `/home/node` на домашний каталог `remoteUser` вашего контейнера. Если вы уже установили `containerEnv`, например в [Enforce organization policy](#enforce-organization-policy), добавьте `CLAUDE_CONFIG_DIR` в этот объект вместо добавления второго.
 
 Чтобы изолировать состояние для каждого проекта, а не делиться одним томом во всех репозиториях, включите переменную `${devcontainerId}` в имя источника. [Справочная конфигурация](https://github.com/anthropics/claude-code/blob/main/.devcontainer/devcontainer.json) использует `source=claude-code-config-${devcontainerId}` для этой цели.
 
-В GitHub Codespaces `~/.claude` сохраняется при остановке и запуске codespace, но все еще очищается при перестроении контейнера, поэтому монтирование тома выше применяется и там. Чтобы перенести аутентификацию между codespaces, сохраните `ANTHROPIC_API_KEY` или `CLAUDE_CODE_OAUTH_TOKEN` из [`claude setup-token`](/docs/ru/authentication#generate-a-long-lived-token) как [секрет Codespaces](https://docs.github.com/en/codespaces/managing-your-codespaces/managing-your-account-specific-secrets-for-github-codespaces); Codespaces автоматически делает секреты доступными как переменные окружения внутри контейнера.
+В GitHub Codespaces `~/.claude` сохраняется при остановке и запуске codespace, но очищается при перестроении контейнера, поэтому конфигурация выше применяется и там.
+
+Чтобы перенести аутентификацию между codespaces, сохраните `ANTHROPIC_API_KEY` или `CLAUDE_CODE_OAUTH_TOKEN` из [`claude setup-token`](/docs/ru/authentication#generate-a-long-lived-token) как [секрет Codespaces](https://docs.github.com/en/codespaces/managing-your-codespaces/managing-your-account-specific-secrets-for-github-codespaces). Codespaces автоматически делает секреты доступными как переменные окружения внутри контейнера.
 
 <h2 id="enforce-organization-policy">
   Применение политики организации
@@ -111,14 +118,14 @@ Claude Code устанавливается в любой контейнер ра
 
 Контейнер разработки — это удобное место для применения политики организации, потому что один и тот же образ и конфигурация работают на машине каждого инженера.
 
-Claude Code читает `/etc/claude-code/managed-settings.json` на Linux и применяет его с наивысшим приоритетом в [иерархии параметров](/docs/ru/settings#how-scopes-interact), поэтому значения там переопределяют все, что инженер устанавливает в `~/.claude` или в каталоге `.claude/` проекта. Скопируйте файл на место из вашего Dockerfile:
+Claude Code читает `/etc/claude-code/managed-settings.json` на Linux и применяет его с наивысшим приоритетом в [иерархии параметров](/docs/ru/settings#settings-precedence), поэтому значения там переопределяют все, что инженер устанавливает в `~/.claude` или в каталоге `.claude/` проекта. Скопируйте файл на место из вашего Dockerfile:
 
 ```dockerfile Dockerfile theme={null}
 RUN mkdir -p /etc/claude-code
 COPY managed-settings.json /etc/claude-code/managed-settings.json
 ```
 
-Поскольку Dockerfile находится в репозитории, любой, у кого есть доступ на запись, может изменить или удалить этот шаг. Для политики, которую инженеры не могут обойти, редактируя файлы репозитория, доставляйте управляемые параметры через [параметры, управляемые сервером](/docs/ru/server-managed-settings) или ваш MDM вместо этого. См. [файлы управляемых параметров](/docs/ru/settings#settings-files) для доступных ключей и других путей доставки.
+Поскольку Dockerfile находится в репозитории, любой, у кого есть доступ на запись, может изменить или удалить этот шаг. Для политики, которую инженеры не могут обойти, редактируя файлы репозитория, доставляйте управляемые параметры через [параметры, управляемые сервером](/docs/ru/server-managed-settings) или ваш MDM вместо этого. См. [файлы управляемых параметров](/docs/ru/managed-settings#delivery-mechanisms) для доступных ключей и других путей доставки.
 
 Чтобы установить [переменные окружения](/docs/ru/env-vars), которые применяются к каждому сеансу Claude Code в контейнере, добавьте их в `containerEnv` в вашем `devcontainer.json`. Следующий пример отказывается от телеметрии и отчетов об ошибках и предотвращает автоматическое обновление Claude Code после установки:
 
@@ -129,7 +136,9 @@ COPY managed-settings.json /etc/claude-code/managed-settings.json
 }
 ```
 
-Функция Dev Container Feature всегда устанавливает последний выпуск Claude Code. Чтобы закрепить определенную версию Claude Code для воспроизводимых сборок, установите ее из вашего Dockerfile с помощью `npm install -g @anthropic-ai/claude-code@X.Y.Z` вместо использования функции и установите `DISABLE_AUTOUPDATER`, как показано выше.
+`CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` также отключает оценку флагов функций, от которых зависят [Remote Control](/docs/ru/remote-control#requirements) и другие [функции, требующие получения флагов функций](/docs/ru/env-vars#features-that-need-feature-flag-fetching), поэтому сеансы в контейнере не могут их использовать.
+
+Функция Dev Container Feature всегда устанавливает последний выпуск Claude Code. Чтобы закрепить определенную версию Claude Code для воспроизводимых сборок, установите ее из вашего Dockerfile с помощью `npm install -g @anthropic-ai/claude-code@X.Y.Z` вместо использования функции и установите `DISABLE_AUTOUPDATER` в `1` в `containerEnv`.
 
 Для полного списка элементов управления политикой, включая правила разрешений, ограничения инструментов и списки разрешений серверов MCP, см. [Настройка Claude Code для вашей организации](/docs/ru/admin-setup).
 
@@ -141,7 +150,7 @@ COPY managed-settings.json /etc/claude-code/managed-settings.json
 
 Вы можете ограничить исходящий трафик контейнера только доменами, которые нужны Claude Code. См. [Требования к сетевому доступу](/docs/ru/network-config#network-access-requirements) для доменов вывода и аутентификации и [Услуги телеметрии](/docs/ru/data-usage#telemetry-services) для дополнительных соединений телеметрии и отчетов об ошибках и способов их отключения.
 
-Контейнер-образец включает скрипт [`init-firewall.sh`](https://github.com/anthropics/claude-code/blob/main/.devcontainer/init-firewall.sh), который блокирует весь исходящий трафик, кроме доменов, которые нужны Claude Code и вашим инструментам разработки. Запуск брандмауэра внутри контейнера требует дополнительных разрешений, поэтому образец добавляет возможности `NET_ADMIN` и `NET_RAW` через `runArgs`. Скрипт брандмауэра и эти возможности не требуются для самого Claude Code: вы можете оставить их и вместо этого полагаться на ваши собственные элементы управления сетью.
+Контейнер-образец включает скрипт [`init-firewall.sh`](https://github.com/anthropics/claude-code/blob/main/.devcontainer/init-firewall.sh), который ограничивает исходящий трафик только пунктам назначения, которые разрешает скрипт. Запуск брандмауэра внутри контейнера требует дополнительных разрешений, поэтому образец добавляет возможности `NET_ADMIN` и `NET_RAW` через `runArgs`. Скрипт брандмауэра и эти возможности не требуются для самого Claude Code: вы можете их не включать и вместо этого полагаться на ваши собственные элементы управления сетью.
 
 <h2 id="run-without-permission-prompts">
   Запуск без запросов разрешений
@@ -151,7 +160,7 @@ COPY managed-settings.json /etc/claude-code/managed-settings.json
 
 Пропуск запросов разрешений удаляет вашу возможность просмотреть вызовы инструментов перед их запуском. Claude все еще может изменять любой файл в привязанном рабочем пространстве, который отображается непосредственно на вашем хосте, и достичь всего, что позволяет политика сети контейнера. Объедините этот флаг с [ограничениями исходящего сетевого трафика](#restrict-network-egress) выше, чтобы ограничить то, что может достичь обойденный сеанс.
 
-Если вы хотите меньше подсказок без отключения проверок безопасности, рассмотрите вместо этого [автоматический режим](/docs/ru/permission-modes#eliminate-prompts-with-auto-mode), который имеет классификатор для проверки действий перед их запуском. Чтобы предотвратить использование инженерами `--dangerously-skip-permissions` вообще, установите `permissions.disableBypassPermissionsMode` на `"disable"` в [управляемых параметрах](/docs/ru/settings#permission-settings).
+Если вы хотите меньше подсказок без отключения проверок безопасности, рассмотрите вместо этого [автоматический режим](/docs/ru/permission-modes#eliminate-prompts-with-auto-mode), который имеет классификатор для проверки действий перед их запуском. Чтобы предотвратить использование инженерами `--dangerously-skip-permissions` вообще, установите `permissions.disableBypassPermissionsMode` на `"disable"` в [управляемых параметрах](/docs/ru/settings-reference#permission-settings).
 
 <h2 id="try-the-reference-container">
   Попробуйте контейнер-образец
@@ -185,7 +194,7 @@ COPY managed-settings.json /etc/claude-code/managed-settings.json
 | ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
 | [`devcontainer.json`](https://github.com/anthropics/claude-code/blob/main/.devcontainer/devcontainer.json) | Монтирование томов, возможности `runArgs`, расширения VS Code и `containerEnv` |
 | [`Dockerfile`](https://github.com/anthropics/claude-code/blob/main/.devcontainer/Dockerfile)               | Базовый образ, инструменты разработки и установка Claude Code                  |
-| [`init-firewall.sh`](https://github.com/anthropics/claude-code/blob/main/.devcontainer/init-firewall.sh)   | Блокирует весь исходящий сетевой трафик, кроме разрешенных доменов             |
+| [`init-firewall.sh`](https://github.com/anthropics/claude-code/blob/main/.devcontainer/init-firewall.sh)   | Ограничивает исходящий сетевой трафик только разрешенными назначениями         |
 
 <h2 id="next-steps">
   Следующие шаги
@@ -194,7 +203,7 @@ COPY managed-settings.json /etc/claude-code/managed-settings.json
 После того как Claude Code работает в вашем контейнере разработки, страницы ниже охватывают остальную часть развертывания организации: выбор пути аутентификации, доставка управляемой политики вне репозитория, мониторинг использования и понимание того, что Claude Code хранит и отправляет.
 
 * [Настройка Claude Code для вашей организации](/docs/ru/admin-setup): выбор поставщика аутентификации, решение о том, как политика достигает устройств, и планирование развертывания
-* [Параметры, управляемые сервером](/docs/ru/server-managed-settings): доставка управляемой политики из консоли администратора Claude.ai, чтобы инженеры не могли обойти ее, редактируя файлы репозитория
+* [Параметры, управляемые сервером](/docs/ru/server-managed-settings): доставка управляемой политики из консоли администратора claude.ai, чтобы инженеры не могли обойти ее, редактируя файлы репозитория
 * [Мониторинг использования и аудит деятельности](/docs/ru/monitoring-usage): экспорт метрик OpenTelemetry и просмотр того, что запускает ваша команда
 * [Требования к сетевому доступу](/docs/ru/network-config#network-access-requirements): полный список доменов для прокси и брандмауэров
 * [Услуги телеметрии и отказ](/docs/ru/data-usage#telemetry-services): что Claude Code отправляет по умолчанию и переменные окружения, которые это отключают

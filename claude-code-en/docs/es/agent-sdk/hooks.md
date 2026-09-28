@@ -14,8 +14,6 @@ Los hooks son funciones de devolución de llamada que ejecutan su código en res
 * **Requerir aprobación humana** para acciones sensibles como escrituras en bases de datos o llamadas a API
 * **Rastrear el ciclo de vida de la sesión** para gestionar estado, limpiar recursos o enviar notificaciones
 
-Esta guía cubre cómo funcionan los hooks, cómo configurarlos, y proporciona ejemplos para patrones comunes como bloquear herramientas, modificar entradas y reenviar notificaciones.
-
 <h2 id="how-hooks-work">
   Cómo funcionan los hooks
 </h2>
@@ -86,7 +84,7 @@ El siguiente ejemplo reúne estos pasos. Registra un hook `PreToolUse` (paso 1) 
       )
 
       async with ClaudeSDKClient(options=options) as client:
-          await client.query("Update the database configuration")
+          await client.query("Create a .env file with the standard local development database configuration")
           async for message in client.receive_response():
               # Filter for assistant and result messages
               if isinstance(message, (AssistantMessage, ResultMessage)):
@@ -125,7 +123,7 @@ El siguiente ejemplo reúne estos pasos. Registra un hook `PreToolUse` (paso 1) 
   };
 
   for await (const message of query({
-    prompt: "Update the database configuration",
+    prompt: "Create a .env file with the standard local development database configuration",
     options: {
       hooks: {
         // Register the hook for PreToolUse events
@@ -142,41 +140,55 @@ El siguiente ejemplo reúne estos pasos. Registra un hook `PreToolUse` (paso 1) 
   ```
 </CodeGroup>
 
+Cuando ejecuta cualquiera de los scripts, Claude intenta crear el archivo `.env`, el hook niega la llamada de herramienta, y la respuesta final de Claude explica que no puede crear archivos `.env`.
+
 <h2 id="available-hooks">
   Hooks disponibles
 </h2>
 
 El SDK proporciona hooks para diferentes etapas de la ejecución del agente. Algunos hooks están disponibles en ambos SDK, mientras que otros son solo para TypeScript.
 
-| Evento de Hook                                         | SDK de Python | SDK de TypeScript | Qué lo dispara                                                                                                     | Caso de uso de ejemplo                                                                   |
-| ------------------------------------------------------ | ------------- | ----------------- | ------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------- |
-| `PreToolUse`                                           | Sí            | Sí                | Solicitud de llamada de herramienta (puede bloquear o modificar)                                                   | Bloquear comandos de shell peligrosos                                                    |
-| `PostToolUse`                                          | Sí            | Sí                | Resultado de ejecución de herramienta                                                                              | Registrar todos los cambios de archivo en pista de auditoría                             |
-| `PostToolUseFailure`                                   | Sí            | Sí                | Fallo de ejecución de herramienta                                                                                  | Manejar o registrar errores de herramienta                                               |
-| `PostToolBatch`                                        | No            | Sí                | Un lote completo de llamadas de herramienta se resuelve, una vez por lote antes de la siguiente llamada del modelo | Inyectar convenciones una vez para todo el lote                                          |
-| `UserPromptSubmit`                                     | Sí            | Sí                | Envío de solicitud del usuario                                                                                     | Inyectar contexto adicional en solicitudes                                               |
-| [`UserPromptExpansion`](/docs/es/hooks#userpromptexpansion) | No            | Sí                | Un comando escrito por el usuario se expande en una solicitud antes de llegar a Claude                             | Bloquear un comando de invocación directa o agregar contexto cuando se escribe una skill |
-| `MessageDisplay`                                       | No            | Sí                | Un mensaje del asistente con texto se completa, una vez por mensaje con el texto completo del mensaje              | Redactar o reformatear el texto mostrado sin cambiar la transcripción                    |
-| `Stop`                                                 | Sí            | Sí                | Detención de ejecución del agente                                                                                  | Guardar estado de sesión antes de salir                                                  |
-| `SubagentStart`                                        | Sí            | Sí                | Inicialización de subagente                                                                                        | Rastrear generación de tareas paralelas                                                  |
-| `SubagentStop`                                         | Sí            | Sí                | Finalización de subagente                                                                                          | Agregar resultados de tareas paralelas                                                   |
-| `PreCompact`                                           | Sí            | Sí                | Solicitud de compactación de conversación                                                                          | Archivar transcripción completa antes de resumir                                         |
-| `PermissionRequest`                                    | Sí            | Sí                | Se mostraría diálogo de permiso                                                                                    | Manejo de permisos personalizado                                                         |
-| `SessionStart`                                         | No            | Sí                | Inicialización de sesión                                                                                           | Inicializar registro y telemetría                                                        |
-| `SessionEnd`                                           | No            | Sí                | Terminación de sesión                                                                                              | Limpiar recursos temporales                                                              |
-| `Notification`                                         | Sí            | Sí                | Mensajes de estado del agente                                                                                      | Enviar actualizaciones de estado del agente a Slack o PagerDuty                          |
-| `Setup`                                                | No            | Sí                | Configuración/mantenimiento de sesión                                                                              | Ejecutar tareas de inicialización                                                        |
-| `TeammateIdle`                                         | No            | Sí                | El compañero se vuelve inactivo                                                                                    | Reasignar trabajo o notificar                                                            |
-| `TaskCompleted`                                        | No            | Sí                | Tarea de fondo se completa                                                                                         | Agregar resultados de tareas paralelas                                                   |
-| `ConfigChange`                                         | No            | Sí                | Archivo de configuración cambia                                                                                    | Recargar configuración dinámicamente                                                     |
-| `WorktreeCreate`                                       | No            | Sí                | Git worktree creado                                                                                                | Rastrear espacios de trabajo aislados                                                    |
-| `WorktreeRemove`                                       | No            | Sí                | Git worktree eliminado                                                                                             | Limpiar recursos de espacio de trabajo                                                   |
+| Evento de Hook                                         | SDK de Python | SDK de TypeScript | Qué lo dispara                                                                                                                                                         | Caso de uso de ejemplo                                                                                                                                                                 |
+| ------------------------------------------------------ | ------------- | ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `PreToolUse`                                           | Sí            | Sí                | Solicitud de llamada de herramienta (puede bloquear o modificar)                                                                                                       | Bloquear comandos de shell peligrosos                                                                                                                                                  |
+| `PostToolUse`                                          | Sí            | Sí                | Resultado de ejecución de herramienta                                                                                                                                  | Registrar todos los cambios de archivo en pista de auditoría                                                                                                                           |
+| `PostToolUseFailure`                                   | Sí            | Sí                | Fallo de ejecución de herramienta                                                                                                                                      | Manejar o registrar errores de herramienta                                                                                                                                             |
+| `PostToolBatch`                                        | No            | Sí                | Un lote completo de llamadas de herramienta se resuelve, una vez por lote antes de la siguiente llamada del modelo                                                     | Inyectar convenciones una vez para todo el lote                                                                                                                                        |
+| `UserPromptSubmit`                                     | Sí            | Sí                | Envío de solicitud del usuario                                                                                                                                         | Inyectar contexto adicional en solicitudes                                                                                                                                             |
+| [`UserPromptExpansion`](/docs/es/hooks#userpromptexpansion) | No            | Sí                | Un comando escrito por el usuario, o un prompt de MCP, se expande en una solicitud antes de llegar a Claude. No se dispara cuando Claude invoca una skill por sí mismo | Bloquear un comando de invocación directa o agregar contexto cuando se escribe una skill                                                                                               |
+| `MessageDisplay`                                       | No            | Sí                | Un mensaje del asistente con texto se completa, una vez por mensaje con el texto completo del mensaje                                                                  | Redactar o reformatear el texto mostrado sin cambiar la transcripción                                                                                                                  |
+| `Stop`                                                 | Sí            | Sí                | Detención de ejecución del agente                                                                                                                                      | Guardar estado de sesión antes de salir                                                                                                                                                |
+| `StopFailure`                                          | No            | Sí                | El turno termina con un error de API en lugar de una detención normal                                                                                                  | Registrar fallos o enviar alertas                                                                                                                                                      |
+| `SubagentStart`                                        | Sí            | Sí                | Inicialización de subagente                                                                                                                                            | Rastrear generación de tareas paralelas                                                                                                                                                |
+| `SubagentStop`                                         | Sí            | Sí                | Finalización de subagente                                                                                                                                              | Agregar resultados de tareas paralelas                                                                                                                                                 |
+| `PreCompact`                                           | Sí            | Sí                | Solicitud de compactación de conversación                                                                                                                              | Archivar transcripción completa antes de resumir                                                                                                                                       |
+| `PostCompact`                                          | No            | Sí                | Compactación de conversación se completa                                                                                                                               | Registrar el resumen generado                                                                                                                                                          |
+| [`PreModelSwitch`](/docs/es/hooks#premodelswitch)           | No            | Sí                | Un cambio de modelo solicitado, antes de que suceda (puede bloquear)                                                                                                   | Bloquear el cambio a un modelo específico                                                                                                                                              |
+| [`PostModelSwitch`](/docs/es/hooks#postmodelswitch)         | No            | Sí                | El modelo de la sesión cambia, incluyendo una alternancia automática                                                                                                   | Dar a Claude orientación específica del modelo para el nuevo modelo                                                                                                                    |
+| `PermissionRequest`                                    | Sí            | Sí                | Una llamada de herramienta necesita una decisión de permiso                                                                                                            | Manejo de permisos personalizado                                                                                                                                                       |
+| `PermissionDenied`                                     | No            | Sí                | El modo automático deniega una llamada de herramienta, incluyendo denegaciones sin un veredicto del clasificador                                                       | Registrar denegaciones, o decirle al modelo que puede reintentar; Claude Code ignora `retry: true` para denegaciones sin veredicto. Ver [PermissionDenied](/docs/es/hooks#permissiondenied) |
+| `SessionStart`                                         | No            | Sí                | Inicialización de sesión                                                                                                                                               | Inicializar registro y telemetría                                                                                                                                                      |
+| `SessionEnd`                                           | No            | Sí                | Terminación de sesión                                                                                                                                                  | Limpiar recursos temporales                                                                                                                                                            |
+| `Notification`                                         | Sí            | Sí                | Mensajes de estado del agente                                                                                                                                          | Enviar actualizaciones de estado del agente a Slack o PagerDuty                                                                                                                        |
+| `Setup`                                                | No            | Sí                | Configuración/mantenimiento de sesión                                                                                                                                  | Ejecutar tareas de inicialización                                                                                                                                                      |
+| `TeammateIdle`                                         | No            | Sí                | El compañero se vuelve inactivo                                                                                                                                        | Reasignar trabajo o notificar                                                                                                                                                          |
+| `TaskCreated`                                          | No            | Sí                | Se crea una tarea a través de la herramienta `TaskCreate`                                                                                                              | Aplicar convenciones de nomenclatura de tareas                                                                                                                                         |
+| [`TaskCompleted`](/docs/es/hooks#taskcompleted)             | No            | Sí                | Una tarea se marca como completada                                                                                                                                     | Requerir pruebas exitosas antes de que se cierre una tarea                                                                                                                             |
+| `Elicitation`                                          | No            | Sí                | Un servidor MCP solicita entrada del usuario a mitad de la tarea                                                                                                       | Responder a solicitudes de entrada de MCP mediante programación                                                                                                                        |
+| `ElicitationResult`                                    | No            | Sí                | Un usuario responde a una elicitación de MCP                                                                                                                           | Modificar o bloquear la respuesta antes de que regrese al servidor                                                                                                                     |
+| `ConfigChange`                                         | No            | Sí                | Archivo de configuración cambia                                                                                                                                        | Recargar configuración dinámicamente                                                                                                                                                   |
+| `InstructionsLoaded`                                   | No            | Sí                | Se carga un archivo `CLAUDE.md` o de reglas en el contexto                                                                                                             | Auditar qué archivos de instrucciones se cargan                                                                                                                                        |
+| `WorktreeCreate`                                       | No            | Sí                | Git worktree creado                                                                                                                                                    | Rastrear espacios de trabajo aislados                                                                                                                                                  |
+| `WorktreeRemove`                                       | No            | Sí                | Git worktree eliminado                                                                                                                                                 | Limpiar recursos de espacio de trabajo                                                                                                                                                 |
+| `CwdChanged`                                           | No            | Sí                | El directorio de trabajo cambia durante una sesión                                                                                                                     | Recargar variables de entorno por directorio                                                                                                                                           |
+| `FileChanged`                                          | No            | Sí                | Un archivo vigilado se modifica, crea o elimina                                                                                                                        | Recargar configuración cuando cambian archivos del proyecto                                                                                                                            |
+| `DirectoryAdded`                                       | No            | Sí                | Se agrega un directorio de trabajo durante una sesión                                                                                                                  | Instalar dependencias para un repositorio agregado a mitad de sesión                                                                                                                   |
 
 <h2 id="configure-hooks">
   Configurar hooks
 </h2>
 
-Para configurar un hook, páselo en el campo `hooks` de sus opciones de agente (`ClaudeAgentOptions` en Python, el objeto `options` en TypeScript):
+Para configurar un hook, páselo en el campo `hooks` de sus opciones de agente (`ClaudeAgentOptions` en Python, el objeto `options` en TypeScript). Este fragmento asume que ya ha definido una devolución de llamada de hook, como `protect_env_files` en Python o `protectEnvFiles` en TypeScript del ejemplo anterior:
 
 <CodeGroup>
   ```python Python theme={null}
@@ -213,31 +225,17 @@ La opción `hooks` es un diccionario en Python u objeto en TypeScript, donde:
   Matchers
 </h3>
 
-Use matchers para filtrar cuándo se disparan sus devoluciones de llamada. El campo `matcher` coincide con un valor diferente dependiendo del tipo de evento de hook. Por ejemplo, los hooks basados en herramientas coinciden con el nombre de la herramienta, mientras que los hooks `Notification` coinciden con el tipo de notificación. Vea la [referencia de hooks de Claude Code](/docs/es/hooks#matcher-patterns) para la lista completa de valores de matcher para cada tipo de evento.
+Use matchers para filtrar cuándo se disparan sus devoluciones de llamada. El campo `matcher` coincide con un valor diferente dependiendo del tipo de evento de hook. Por ejemplo, los hooks basados en herramientas coinciden con el nombre de la herramienta, mientras que los hooks `Notification` coinciden con el tipo de notificación.
 
-Los matchers del SDK siguen las mismas reglas que [matchers en archivos de configuración](/docs/es/hooks#matcher-patterns). Un matcher que contiene solo letras, dígitos, `_`, `-`, espacios, `,` y `|` se compara como una cadena exacta, con alternativas separadas por `|` o `,` y espacios en blanco opcionales alrededor, por lo que `Write|Edit` y `Write, Edit` coinciden exactamente con esas dos herramientas y `code-reviewer` coincide solo con ese tipo de agente. Un matcher de `*`, una cadena vacía, u omitir el matcher completamente coincide con cada ocurrencia del evento.
+Los matchers del SDK siguen las mismas reglas que [matchers en archivos de configuración](/docs/es/hooks#matcher-patterns). Esa sección documenta las rutas de evaluación de cadena exacta y expresión regular, sus requisitos de versión, y los valores de matcher para cada tipo de evento.
 
-Un matcher que contiene cualquier otro carácter se evalúa como una expresión regular sin ancla, por lo que `^mcp__` coincide con cada herramienta MCP y `Edit.*` coincide tanto con `Edit` como con `NotebookEdit`. Envuelva una expresión regular en `^` y `$` cuando necesite una coincidencia de cadena completa.
+| Opción    | Tipo             | Predeterminado | Descripción                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| --------- | ---------------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `matcher` | `string`         | `undefined`    | Patrón coincidido contra el campo de filtro del evento, siguiendo las [reglas para matchers en archivos de configuración](/docs/es/hooks#matcher-patterns). Para hooks de herramientas, este es el nombre de la herramienta. Las herramientas integradas incluyen `Bash`, `Read`, `Write`, `Edit`, `Glob`, `Grep`, `WebFetch`, `Agent` y otros (vea [Tipos de entrada de herramienta](/docs/es/agent-sdk/typescript#tool-input-types) para la lista completa). Las herramientas MCP usan el patrón `mcp__<server>__<action>`, donde `<server>` es la clave que usa en la configuración `mcpServers`. |
+| `hooks`   | `HookCallback[]` | -              | Requerido. Matriz de funciones de devolución de llamada a ejecutar cuando el patrón coincide                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| `timeout` | `number`         | `undefined`    | Tiempo de espera en segundos. Cuando se omite, Claude Code aplica el [tiempo de espera predeterminado del evento](#hook-timeout). Sus devoluciones de llamada del SDK siguen los valores predeterminados del hook `command`                                                                                                                                                                                                                                                                                                                                                                |
 
-Un matcher como `mcp__memory` o `mcp__brave-search` contiene solo caracteres de coincidencia exacta, por lo que se compara como una cadena exacta y no coincide con ninguna herramienta; use `mcp__memory__.*` para coincidir con cada herramienta de ese servidor.
-
-Los guiones en el conjunto de coincidencia exacta requieren un tiempo de ejecución de Claude Code v2.1.195 o posterior. En versiones anteriores, un nombre con guiones como `code-reviewer` se evalúa como una expresión regular sin ancla y debe anclarse como `^code-reviewer$` para coincidir exactamente.
-
-| Opción    | Tipo             | Predeterminado | Descripción                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| --------- | ---------------- | -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `matcher` | `string`         | `undefined`    | Patrón coincidido contra el campo de filtro del evento, siguiendo las reglas de comparación anteriores. Para hooks de herramientas, este es el nombre de la herramienta. Las herramientas integradas incluyen `Bash`, `Read`, `Write`, `Edit`, `Glob`, `Grep`, `WebFetch`, `Agent` y otros (vea [Tipos de entrada de herramienta](/docs/es/agent-sdk/typescript#tool-input-types) para la lista completa). Las herramientas MCP usan el patrón `mcp__<server>__<action>`. |
-| `hooks`   | `HookCallback[]` | -              | Requerido. Matriz de funciones de devolución de llamada a ejecutar cuando el patrón coincide                                                                                                                                                                                                                                                                                                                                                                         |
-| `timeout` | `number`         | `60`           | Tiempo de espera en segundos                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-
-Use el patrón `matcher` para dirigirse a herramientas específicas siempre que sea posible. Un matcher con `'Bash'` solo se ejecuta para comandos Bash, mientras que omitir el patrón ejecuta sus devoluciones de llamada para cada ocurrencia del evento.
-
-Para hooks basados en herramientas, los matchers solo filtran por nombre de herramienta, no por rutas de archivo u otros argumentos. Para filtrar por ruta de archivo, verifique `tool_input.file_path` dentro de su devolución de llamada.
-
-<Tip>
-  **Descubriendo nombres de herramientas:** Vea [Tipos de entrada de herramienta](/docs/es/agent-sdk/typescript#tool-input-types) para la lista completa de nombres de herramientas integradas, o agregue un hook sin un matcher para registrar todas las llamadas de herramienta que su sesión realiza.
-
-  **Nomenclatura de herramientas MCP:** Las herramientas MCP siempre comienzan con `mcp__` seguido del nombre del servidor y la acción: `mcp__<server>__<action>`. Por ejemplo, si configura un servidor llamado `playwright`, sus herramientas se nombrarán `mcp__playwright__browser_screenshot`, `mcp__playwright__browser_click` y así sucesivamente. El nombre del servidor proviene de la clave que usa en la configuración `mcpServers`.
-</Tip>
+Use el patrón `matcher` para dirigirse a herramientas específicas siempre que sea posible. Un matcher con `'Bash'` solo se ejecuta para comandos Bash, mientras que omitir el patrón ejecuta sus devoluciones de llamada para cada ocurrencia del evento. Omítalo a propósito para registrar cada llamada de herramienta que su sesión realiza.
 
 <h3 id="callback-functions">
   Funciones de devolución de llamada
@@ -261,8 +259,11 @@ Cada devolución de llamada de hook recibe tres argumentos:
 
 Su devolución de llamada devuelve un objeto con dos categorías de campos:
 
-* **Campos de nivel superior** funcionan igual en cada evento: `systemMessage` muestra un mensaje al usuario, y `continue` (`continue_` en Python) determina si el agente sigue ejecutándose después de este hook.
-* **`hookSpecificOutput`** controla la operación actual. Los campos dentro dependen del tipo de evento de hook. Para hooks `PreToolUse`, aquí es donde establece `permissionDecision` (`"allow"`, `"deny"`, `"ask"` o `"defer"`), `permissionDecisionReason` e `updatedInput`. Devolver `"defer"` finaliza la consulta para que pueda [reanudarla más tarde](/docs/es/hooks#defer-a-tool-call-for-later). Para hooks `PostToolUse`, puede establecer `additionalContext` para agregar información al resultado de la herramienta. Para reemplazar la salida de la herramienta antes de que Claude la vea, establezca `updatedToolOutput`, que funciona para cualquier herramienta en ambos SDK. El campo anterior `updatedMCPToolOutput` reemplaza solo la salida de herramientas MCP y está deprecado.
+* **Campos de nivel superior** se aceptan en cada evento: `systemMessage` muestra un mensaje al usuario, y `continue` (`continue_` en Python) determina si el agente sigue ejecutándose después de este hook. Algunos eventos los descartan o los entregan en otro lugar. Cada [sección del evento](/docs/es/hooks#hook-events) en la página de hooks dice dónde llegan.
+* **`hookSpecificOutput`** controla la operación actual. Los campos que establece dentro dependen del tipo de evento de hook:
+  * Para hooks `PreToolUse`, aquí es donde establece `permissionDecision` (`"allow"`, `"deny"`, `"ask"` o `"defer"`), `permissionDecisionReason` e `updatedInput`. Si devuelve `"defer"`, la consulta termina para que pueda [reanudarla más tarde](/docs/es/hooks#defer-a-tool-call-for-later).
+  * Para hooks `PostToolUse`, puede establecer `additionalContext` para agregar información al resultado de la herramienta. Para reemplazar la salida de la herramienta antes de que Claude la vea, establezca `updatedToolOutput`, que funciona para cualquier herramienta en ambos SDK. El campo anterior `updatedMCPToolOutput` reemplaza solo la salida de herramientas MCP y está deprecado.
+  * En el SDK de TypeScript, una devolución de llamada `PostToolUse` también puede devolver `classifierContext`, una nota breve sobre el resultado de la llamada de herramienta para el clasificador de permisos del [modo automático](/docs/es/permission-modes#eliminate-prompts-with-auto-mode). Debido a que su devolución de llamada se ejecuta en el proceso propio de su aplicación, el clasificador puede pesar una declaración de usuario que retransmita en la nota como intención del usuario. El campo requiere TypeScript Agent SDK v0.3.236 o posterior. [Anotar un resultado para el clasificador del modo automático](/docs/es/hooks#annotate-a-result-for-the-auto-mode-classifier) cubre el límite de longitud, la regla de solo sincrónico, y qué no poner en la nota.
 
 Devuelva `{}` para permitir la operación sin cambios. Los hooks de devolución de llamada del SDK usan el mismo formato de salida JSON que [hooks de comandos de shell de Claude Code](/docs/es/hooks#json-output), que documenta cada campo y opción específica del evento. Para las definiciones de tipo del SDK, vea las referencias del SDK de [TypeScript](/docs/es/agent-sdk/typescript#synchookjsonoutput) y [Python](/docs/es/agent-sdk/python#synchookjsonoutput).
 
@@ -274,7 +275,7 @@ Devuelva `{}` para permitir la operación sin cambios. Los hooks de devolución 
   Salida asincrónica
 </h4>
 
-De forma predeterminada, el agente espera a que su hook devuelva antes de continuar. Si su hook realiza un efecto secundario, como registro o envío de webhook, y no necesita influir en el comportamiento del agente, puede devolver una salida asincrónica en su lugar. Esto le dice al agente que continúe inmediatamente sin esperar a que el hook termine:
+De forma predeterminada, el agente espera a que su hook devuelva antes de continuar. Si su hook realiza un efecto secundario, como registro o envío de webhook, y no necesita influir en el comportamiento del agente, puede devolver una salida asincrónica en su lugar. Esto le dice al agente que continúe inmediatamente sin esperar a que el hook termine. En este fragmento, `send_to_logging_service` en Python y `sendToLoggingService` en TypeScript representan cualquier función de registro que defina:
 
 <CodeGroup>
   ```python Python theme={null}
@@ -305,6 +306,8 @@ De forma predeterminada, el agente espera a que su hook devuelva antes de contin
 <h2 id="examples">
   Ejemplos
 </h2>
+
+Varios ejemplos en esta sección muestran solo la función de devolución de llamada. Para ejecutar uno, registre la devolución de llamada bajo el evento coincidente en el campo `hooks` de sus opciones, como se muestra en [Configurar hooks](#configure-hooks).
 
 <h3 id="modify-tool-input">
   Modificar entrada de herramienta
@@ -358,8 +361,10 @@ Este ejemplo intercepta llamadas de herramienta Write y reescribe el argumento `
 </CodeGroup>
 
 <Note>
-  Cuando use `updatedInput`, también debe incluir `permissionDecision: 'allow'` para aprobar automáticamente la entrada modificada o `permissionDecision: 'ask'` para mostrársela al usuario. Con `'defer'`, `updatedInput` se ignora. Siempre devuelva un nuevo objeto en lugar de mutar el `tool_input` original.
+  Empareje `updatedInput` con `permissionDecision: 'allow'` para aprobar automáticamente la entrada modificada, o `permissionDecision: 'ask'` para mostrársela al usuario. Si omite `permissionDecision`, la entrada modificada aún se aplica y fluye a través de la evaluación de permiso normal. Con `'defer'`, `updatedInput` se ignora. Siempre devuelva un nuevo objeto en lugar de mutar el `tool_input` original.
 </Note>
+
+Para confirmar la redirección, establezca el prefijo en una ruta en la que pueda escribir, como `./sandbox` o `/tmp/sandbox` (macOS no permite crear un directorio `/sandbox` a nivel raíz), luego pida al agente que escriba un archivo: el resultado de la herramienta Write en el flujo de mensajes nombra la ruta con su prefijo de sandbox en lugar del que Claude solicitó.
 
 <h3 id="add-context-and-block-a-tool">
   Agregar contexto y bloquear una herramienta
@@ -461,7 +466,7 @@ De forma predeterminada, el agente puede solicitar permiso antes de usar ciertas
   Registrar múltiples hooks
 </h3>
 
-Cuando se dispara un evento, todos los hooks coincidentes se ejecutan en paralelo. Para decisiones de permiso, el resultado más restrictivo gana: un único `deny` bloquea la llamada de herramienta independientemente de lo que devuelvan los otros hooks. Debido a que el orden de finalización es no determinista, escriba cada hook para actuar de forma independiente en lugar de depender de que otro hook se haya ejecutado primero.
+Cuando se dispara un evento, todos los hooks coincidentes se ejecutan en paralelo. Para decisiones de permiso, el resultado más restrictivo se aplica: un único `deny` bloquea la llamada de herramienta independientemente de lo que devuelvan los otros hooks. Debido a que el orden de finalización es no determinista, escriba cada hook para actuar de forma independiente en lugar de depender de que otro hook se haya ejecutado primero.
 
 El ejemplo a continuación registra tres verificaciones independientes para cada llamada de herramienta:
 
@@ -497,7 +502,7 @@ El ejemplo a continuación registra tres verificaciones independientes para cada
 
 Use matchers de múltiples herramientas para compartir una devolución de llamada entre herramientas relacionadas. Este ejemplo registra tres matchers con diferentes alcances:
 
-* Una lista exacta separada por tuberías (`Write|Edit|Delete`) dispara `file_security_hook` solo para herramientas de modificación de archivos.
+* Una lista exacta separada por tuberías (`Write|Edit|NotebookEdit`) dispara `file_security_hook` solo para herramientas de modificación de archivos.
 * Una expresión regular (`^mcp__`) dispara `mcp_audit_hook` para cualquier herramienta MCP cuyo nombre comience con `mcp__`.
 * Un matcher omitido dispara `global_logger` para cada llamada de herramienta independientemente del nombre.
 
@@ -507,7 +512,7 @@ Use matchers de múltiples herramientas para compartir una devolución de llamad
       hooks={
           "PreToolUse": [
               # Match file modification tools
-              HookMatcher(matcher="Write|Edit|Delete", hooks=[file_security_hook]),
+              HookMatcher(matcher="Write|Edit|NotebookEdit", hooks=[file_security_hook]),
               # Match all MCP tools
               HookMatcher(matcher="^mcp__", hooks=[mcp_audit_hook]),
               # Match everything (no matcher)
@@ -522,7 +527,7 @@ Use matchers de múltiples herramientas para compartir una devolución de llamad
     hooks: {
       PreToolUse: [
         // Match file modification tools
-        { matcher: "Write|Edit|Delete", hooks: [fileSecurityHook] },
+        { matcher: "Write|Edit|NotebookEdit", hooks: [fileSecurityHook] },
 
         // Match all MCP tools
         { matcher: "^mcp__", hooks: [mcpAuditHook] },
@@ -584,9 +589,9 @@ Use hooks `SubagentStop` para monitorear cuándo los subagentes terminan su trab
   Realizar solicitudes HTTP desde hooks
 </h3>
 
-Los hooks pueden realizar operaciones asincrónicas como solicitudes HTTP. Capture errores dentro de su hook en lugar de dejarlos propagarse, ya que una excepción no manejada puede interrumpir el agente.
+Los hooks pueden realizar operaciones asincrónicas como solicitudes HTTP. Capture errores dentro de su hook en lugar de dejarlos propagarse.
 
-Este ejemplo envía un webhook después de que cada herramienta se completa, registrando qué herramienta se ejecutó y cuándo. El hook captura errores para que un webhook fallido no interrumpa el agente:
+Este ejemplo envía un webhook después de que cada herramienta se completa, registrando qué herramienta se ejecutó y cuándo. El hook captura errores de un webhook fallido:
 
 <CodeGroup>
   ```python Python theme={null}
@@ -622,7 +627,7 @@ Este ejemplo envía un webhook después de que cada herramienta se completa, reg
           # Run the blocking HTTP call in a thread to avoid blocking the event loop
           await asyncio.to_thread(_send_webhook, input_data["tool_name"])
       except Exception as e:
-          # Log the error but don't raise. A failed webhook shouldn't stop the agent
+          # Log the error but don't raise
           print(f"Webhook request failed: {e}")
 
       return {}
@@ -651,7 +656,7 @@ Este ejemplo envía un webhook después de que cada herramienta se completa, reg
       if (error instanceof Error && error.name === "AbortError") {
         console.log("Webhook request cancelled");
       }
-      // Don't re-throw. A failed webhook shouldn't stop the agent
+      // Don't re-throw
     }
 
     return {};
@@ -671,20 +676,22 @@ Este ejemplo envía un webhook después de que cada herramienta se completa, reg
   ```
 </CodeGroup>
 
+Para confirmar que el hook se dispara, apunte la URL del webhook a un punto final que pueda observar y envíe un mensaje que use una herramienta: el hook envía un POST con el nombre de la herramienta y la marca de tiempo después de que cada herramienta se completa.
+
 <h3 id="forward-notifications-to-slack">
   Reenviar notificaciones a Slack
 </h3>
 
-Use hooks `Notification` para recibir notificaciones del sistema del agente y reenviarlas a servicios externos. Las notificaciones se disparan para tipos de evento tales como:
+Use hooks `Notification` para recibir notificaciones del sistema del agente y reenviarlas a servicios externos. En sesiones del SDK, Claude Code ejecuta este hook para los siguientes tipos de notificación:
 
-* `permission_prompt` cuando Claude necesita permiso
-* `idle_prompt` cuando Claude está esperando entrada
-* `auth_success` cuando la autenticación se completa
-* `elicitation_dialog`, `elicitation_complete`, y `elicitation_response` para flujos de elicitación de solicitud del usuario
+* [`permission_prompt`](/docs/es/hooks#notification) una vez que una solicitud de permiso ha esperado aproximadamente seis segundos en su devolución de llamada [`canUseTool`](/docs/es/agent-sdk/user-input). Requiere TypeScript Agent SDK v0.3.233 o posterior, o Python Agent SDK v0.2.139 o posterior
+* `elicitation_complete` y `elicitation_response` para flujos de elicitación de solicitud del usuario
+
+Claude Code emite los otros tipos, como `idle_prompt`, `auth_success` y `elicitation_dialog`, desde la interfaz de usuario interactiva que las sesiones del SDK no ejecutan.
 
 Cada notificación incluye un campo `message` con una descripción legible por humanos y opcionalmente un `title`.
 
-Este ejemplo reenvía cada notificación a un canal de Slack. Requiere una [URL de webhook entrante de Slack](https://api.slack.com/messaging/webhooks), que crea agregando una aplicación a su espacio de trabajo de Slack y habilitando webhooks entrantes:
+Este ejemplo reenvía cada notificación a un canal de Slack. Requiere una [URL de webhook entrante de Slack](https://docs.slack.dev/messaging/sending-messages-using-incoming-webhooks/), que crea agregando una aplicación a su espacio de trabajo de Slack y habilitando webhooks entrantes:
 
 <CodeGroup>
   ```python Python theme={null}
@@ -780,6 +787,8 @@ Este ejemplo reenvía cada notificación a un canal de Slack. Requiere una [URL 
   ```
 </CodeGroup>
 
+Cuando se dispara un evento `Notification`, el hook publica el `message` de la notificación, con el prefijo `Agent status:`, al canal que apunta su webhook.
+
 <h2 id="fix-common-issues">
   Solucionar problemas comunes
 </h2>
@@ -815,10 +824,23 @@ const myHook: HookCallback = async (input, toolUseID, { signal }) => {
   Tiempo de espera del hook
 </h3>
 
-* Aumente el valor `timeout` en la configuración `HookMatcher`
-* Use el `AbortSignal` del tercer argumento de devolución de llamada para manejar la cancelación correctamente en TypeScript
+Claude Code ejecuta cada devolución de llamada con un tiempo de espera, que usted establece en segundos con el campo `timeout` en su `HookMatcher`. Cuando no establece uno, Claude Code utiliza el valor predeterminado del evento: 600 segundos para la mayoría de eventos, 30 segundos para `UserPromptSubmit`, `PreModelSwitch` y `PostModelSwitch`, y 10 segundos para `MessageDisplay`. Claude Code ejecuta devoluciones de llamada `SessionEnd` durante el apagado bajo el [presupuesto de tiempo de espera SessionEnd](/docs/es/hooks#sessionend-input) más corto, 1,5 segundos de forma predeterminada.
 
-Una devolución de llamada `UserPromptSubmit` o [`UserPromptExpansion`](/docs/es/hooks#userpromptexpansion) que excede su tiempo de espera bloquea ese mensaje con un mensaje de tiempo de espera y la sesión continúa. Interrumpir la consulta mientras una devolución de llamada está pendiente cancela la llamada de herramienta pendiente. Antes de v2.1.208, un tiempo de espera de devolución de llamada en esos eventos terminaba la consulta con `error_during_execution`, e interrumpir durante una devolución de llamada `PreToolUse` pendiente podría permitir que la llamada de herramienta procediera.
+Cuando una devolución de llamada excede su tiempo de espera, Claude Code la cancela y descarta su salida, y la sesión continúa en lugar de colgarse. Lo que sucede a continuación depende del evento:
+
+* `PreToolUse`: Claude Code no ejecuta la llamada de herramienta, Claude recibe un resultado de herramienta indicando que el hook no respondió antes de su tiempo de espera, y el turno continúa. Si otro hook `PreToolUse` devolvió una denegación explícita, Claude recibe esa denegación en lugar del error de tiempo de espera. Antes de v2.1.210, Claude Code reportaba el tiempo de espera a Claude como un rechazo del usuario, lo que hacía que las sesiones desatendidas se detuvieran y esperaran entrada.
+* `PostToolUse` y `PostToolUseFailure`: Claude Code mantiene el resultado de la herramienta y el turno continúa.
+* `UserPromptSubmit` y [`UserPromptExpansion`](/docs/es/hooks#userpromptexpansion): Claude Code bloquea el mensaje con un mensaje que nombra el hook y el tiempo de espera, y la sesión continúa. Debido a que una devolución de llamada en estos eventos puede actuar como una puerta de política, Claude Code nunca permite que un mensaje con tiempo de espera agotado pase sin ser revisado. Antes de v2.1.208, Claude Code terminaba la consulta con `error_during_execution` cuando una devolución de llamada en estos eventos agotaba el tiempo de espera.
+* `Stop` y `SubagentStop`: la devolución de llamada con tiempo de espera agotado cuenta como no devolver ninguna decisión. El agente o subagente se detiene como si esa devolución de llamada lo hubiera permitido, y una decisión de sus otros hooks en el evento aún se aplica. Antes de Claude Code v2.1.273, una devolución de llamada `Stop` o `SubagentStop` con tiempo de espera agotado contaba como una ejecución de hook fallida, y Claude Code descartaba las decisiones de sus otros hooks en el evento.
+* `SessionStart`: la devolución de llamada con tiempo de espera agotado cuenta como no devolver ninguna salida, y la sesión continúa con la salida de sus otros hooks `SessionStart`.
+* `PreModelSwitch`: Claude Code bloquea el cambio de modelo. Un hook que no responde no ha aprobado el cambio.
+* Otros eventos, como `Notification`, `PreCompact` y `PostModelSwitch`: Claude Code registra el fallo y continúa.
+
+La primera vez que una devolución de llamada `Stop` o `SessionStart` agota el tiempo de espera en la sesión principal, Claude Code también agrega un [`SDKInformationalMessage`](/docs/es/agent-sdk/typescript#sdkinformationalmessage) al flujo de mensajes diciendo que la aplicación que impulsa la sesión no respondió. Los tiempos de espera posteriores no repiten ese mensaje mientras su aplicación permanece sin responder.
+
+Si interrumpe la consulta mientras una devolución de llamada está pendiente, Claude Code cancela la llamada de herramienta pendiente. Antes de v2.1.208, la llamada de herramienta podría proceder si interrumpía durante una devolución de llamada `PreToolUse` pendiente.
+
+Si su devolución de llamada necesita más tiempo, establezca un `timeout` más alto en su `HookMatcher`. En TypeScript, use el `AbortSignal` del tercer argumento de devolución de llamada para manejar la cancelación correctamente cuando se agote el tiempo de espera.
 
 <h3 id="tool-blocked-unexpectedly">
   Herramienta bloqueada inesperadamente
@@ -844,7 +866,7 @@ Una devolución de llamada `UserPromptSubmit` o [`UserPromptExpansion`](/docs/es
   };
   ```
 
-* Devuelva `permissionDecision: 'allow'` para aprobar automáticamente la entrada modificada, u `'ask'` para mostrarla al usuario para su aprobación
+* No empareje `updatedInput` con `permissionDecision: 'defer'`, que descarta la entrada modificada. Omitir `permissionDecision` está bien: la entrada modificada aún se aplica a través de la evaluación de permiso normal. También puede devolver `'allow'` para aprobar automáticamente la entrada modificada u `'ask'` para mostrarla al usuario para su aprobación
 
 * Incluya `hookEventName` en `hookSpecificOutput` para identificar para qué tipo de hook es la salida
 
@@ -874,7 +896,7 @@ Para ejecutar lógica de inicialización como una devolución de llamada del SDK
   Solicitudes de permiso de subagente multiplicándose
 </h3>
 
-Al generar múltiples subagentes, cada uno puede solicitar permisos por separado. Los subagentes no heredan automáticamente los permisos del agente padre. Para evitar solicitudes repetidas, use hooks `PreToolUse` para aprobar automáticamente herramientas específicas, o configure reglas de permiso que se apliquen a sesiones de subagente.
+Al generar múltiples subagentes, cada uno puede solicitar permisos por separado para sus propias llamadas de herramienta. Para evitar solicitudes repetidas, use hooks `PreToolUse` para aprobar automáticamente herramientas específicas, o configure reglas de permiso, que los subagentes [heredan de la conversación padre](/docs/es/sub-agents#permission-modes).
 
 <h3 id="recursive-hook-loops-with-subagents">
   Bucles recursivos de hook con subagentes
@@ -882,7 +904,6 @@ Al generar múltiples subagentes, cada uno puede solicitar permisos por separado
 
 Un hook `UserPromptSubmit` que genera subagentes puede crear bucles infinitos si esos subagentes disparan el mismo hook. Para prevenir esto:
 
-* Verifique un indicador de subagente en la entrada del hook antes de generar
 * Use una variable compartida o estado de sesión para rastrear si ya está dentro de un subagente
 * Alcance los hooks para ejecutarse solo para la sesión del agente de nivel superior
 
@@ -890,7 +911,9 @@ Un hook `UserPromptSubmit` que genera subagentes puede crear bucles infinitos si
   systemMessage no aparece en la salida
 </h3>
 
-El campo `systemMessage` muestra un mensaje al usuario, no al modelo. Por defecto, el SDK expone la salida de hooks en el flujo de mensajes solo para hooks `SessionStart` y `Setup`, por lo que un mensaje de cualquier otro evento de hook no aparece a menos que establezca `includeHookEvents` (`include_hook_events` en Python). Para pasar contexto al modelo en su lugar, devuelva [`additionalContext`](/docs/es/hooks#add-context-for-claude).
+El campo `systemMessage` muestra un mensaje al usuario, no al modelo. En Claude Code v2.1.227 o posterior, el `systemMessage` de un hook puede aparecer en el flujo de mensajes como un [`SDKInformationalMessage`](/docs/es/agent-sdk/typescript#sdkinformationalmessage). Si lo hace depende del evento. Cada [sección del evento](/docs/es/hooks#hook-events) en la página de hooks dice cómo aparece la salida. Para pasar contexto al modelo en su lugar, devuelva [`additionalContext`](/docs/es/hooks#add-context-for-claude).
+
+Antes de v2.1.227, el SDK exponía la salida de hooks en el flujo de mensajes solo para hooks `SessionStart` y `Setup`. Para cualquier otro evento, la salida aparecía solo en los eventos del ciclo de vida que [`includeHookEvents`](/docs/es/agent-sdk/typescript#options) (`include_hook_events` en Python) agrega. La entrada de esa opción cubre qué eventos del ciclo de vida produce cada evento de hook.
 
 Si necesita exponer decisiones de hook a su aplicación de manera confiable, regístrelas por separado o use un canal de salida dedicado.
 

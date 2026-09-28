@@ -8,28 +8,28 @@
 
 Geplante Aufgaben starten automatisch eine neue Sitzung zu einem von Ihnen gewählten Zeitpunkt und in einer von Ihnen gewählten Häufigkeit. Verwenden Sie sie für wiederkehrende Arbeiten wie tägliche Code-Reviews, Überprüfungen von Abhängigkeitsaktualisierungen oder morgendliche Briefings, die Informationen aus Ihrem Kalender und Ihrer Inbox abrufen.
 
-Die Seite **Routinen** der Desktop-App ermöglicht es Ihnen, sowohl lokale geplante Aufgaben als auch Remote-[Routinen](/docs/de/routines) zu erstellen. Eine lokale Aufgabe wird auf Ihrem Computer mit direktem Zugriff auf Ihre Dateien und Tools ausgeführt, wird aber nur ausgelöst, wenn die App offen ist und Ihr Computer aktiv ist. Eine Remote-Routine wird auf der von Anthropic verwalteten Cloud-Infrastruktur ausgeführt, auch wenn Ihr Computer ausgeschaltet ist, und kann auch durch API-Aufrufe oder GitHub-Ereignisse ausgelöst werden. Diese Seite behandelt lokale geplante Aufgaben. Informationen zu Remote-Routinen und deren Trigger-Optionen finden Sie unter [Routinen](/docs/de/routines).
+Die Seite **Routinen** der Desktop-App ermöglicht es Ihnen, sowohl lokale geplante Aufgaben als auch Remote-[Routinen](/docs/de/routines) zu erstellen. Eine lokale Aufgabe wird auf Ihrem Computer mit direktem Zugriff auf Ihre Dateien und Tools ausgeführt, wird aber nur ausgelöst, wenn die App offen ist und Ihr Computer aktiv ist. Eine Remote-Routine wird in der Cloud ausgeführt, auch wenn Ihr Computer ausgeschaltet ist, und kann auch durch API-Aufrufe oder GitHub-Ereignisse ausgelöst werden. Diese Seite behandelt lokale geplante Aufgaben. Informationen zu Remote-Routinen und deren Trigger-Optionen finden Sie unter [Routinen](/docs/de/routines).
 
 <h2 id="compare-scheduling-options">
   Planungsoptionen vergleichen
 </h2>
 
-Claude Code offers three ways to schedule recurring or one-off work:
+Claude Code bietet drei Möglichkeiten, um wiederkehrende oder einmalige Aufgaben zu planen:
 
-|                            | [Cloud](/docs/en/routines)               | [Desktop](/docs/en/desktop-scheduled-tasks) | [`/loop`](/docs/en/scheduled-tasks)      |
-| :------------------------- | :---------------------------------- | :------------------------------------- | :---------------------------------- |
-| Runs on                    | Cloud, Anthropic-managed by default | Your machine                           | Your machine                        |
-| Requires machine on        | No                                  | Yes                                    | Yes                                 |
-| Requires open session      | No                                  | No                                     | Yes                                 |
-| Persistent across restarts | Yes                                 | Yes                                    | Restored on `--resume` if unexpired |
-| Access to local files      | No (fresh clone)                    | Yes                                    | Yes                                 |
-| MCP servers                | Connectors configured per task      | [Config files](/docs/en/mcp) and connectors | Inherits from session               |
-| Permission prompts         | No (runs autonomously)              | Configurable per task                  | Inherits from session               |
-| Customizable schedule      | Via `/schedule` in the CLI          | Yes                                    | Yes                                 |
-| Minimum interval           | 1 hour                              | 1 minute                               | 1 minute                            |
+|                                  | [Cloud](/docs/de/routines)                        | [Desktop](/docs/de/desktop-scheduled-tasks)           | [`/loop`](/docs/de/scheduled-tasks)                                                     |
+| :------------------------------- | :------------------------------------------- | :----------------------------------------------- | :--------------------------------------------------------------------------------- |
+| Läuft auf                        | Cloud, standardmäßig von Anthropic verwaltet | Ihr Computer                                     | Ihr Computer                                                                       |
+| Erfordert Computer eingeschaltet | Nein                                         | Ja                                               | Ja                                                                                 |
+| Erfordert offene Sitzung         | Nein                                         | Nein                                             | Ja                                                                                 |
+| Persistent über Neustarts        | Ja                                           | Ja                                               | Wiederhergestellt bei `--resume`, mit [Ausnahmen](/docs/de/scheduled-tasks#limitations) |
+| Zugriff auf lokale Dateien       | Nein (frischer Klon)                         | Ja                                               | Ja                                                                                 |
+| MCP-Server                       | Konnektoren pro Aufgabe konfiguriert         | [Konfigurationsdateien](/docs/de/mcp) und Konnektoren | Erbt von Sitzung                                                                   |
+| Berechtigungsaufforderungen      | Nein (läuft autonom)                         | Pro Aufgabe konfigurierbar                       | Erbt von Sitzung                                                                   |
+| Anpassbarer Zeitplan             | Via `/schedule` in der CLI                   | Ja                                               | Ja                                                                                 |
+| Minimales Intervall              | 1 Stunde                                     | 1 Minute                                         | 1 Minute                                                                           |
 
 <Tip>
-  Use **cloud tasks** for work that should run reliably without your machine. Use **Desktop tasks** when you need access to local files and tools. Use **`/loop`** for quick polling during a session.
+  Verwenden Sie **Cloud-Aufgaben** für Arbeiten, die zuverlässig ohne Ihren Computer ausgeführt werden sollen. Verwenden Sie **Desktop-Aufgaben**, wenn Sie Zugriff auf lokale Dateien und Tools benötigen. Verwenden Sie **`/loop`** für schnelle Abfragen während einer Sitzung.
 </Tip>
 
 <Note>
@@ -40,7 +40,7 @@ Claude Code offers three ways to schedule recurring or one-off work:
   Erstellen Sie eine geplante Aufgabe
 </h2>
 
-Klicken Sie auf **Routinen** in der Seitenleiste und dann auf **Neue Routine** und wählen Sie **Lokal**. Konfigurieren Sie diese Felder:
+Auf Claude Desktop vor 1.1.5368 sind lokale geplante Aufgaben nicht verfügbar. Klicken Sie auf der [**Code**-Registerkarte](/docs/de/desktop) auf **Routinen** in der Seitenleiste oder im Menü **Mehr** der Seitenleiste, klicken Sie dann auf **Neue Routine** und wählen Sie **Lokal**. Konfigurieren Sie diese Felder:
 
 | Feld         | Beschreibung                                                                                                                                                                                                                                                                                                                         |
 | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -73,7 +73,7 @@ Für Intervalle, die die Auswahl nicht bietet, z. B. alle 15 Minuten, am ersten 
 
 Geplante Aufgaben werden auf Ihrem Computer ausgeführt. Desktop überprüft den Zeitplan jede Minute, während die App offen ist, und startet eine neue Sitzung, wenn eine Aufgabe fällig ist, unabhängig von manuellen Sitzungen, die Sie offen haben. Jede Aufgabe erhält eine kleine Verzögerung von einigen Minuten nach der geplanten Zeit, um den API-Verkehr zu staffeln. Die Verzögerung ist deterministisch: die gleiche Aufgabe startet immer mit dem gleichen Offset.
 
-Wenn eine Aufgabe ausgelöst wird, erhalten Sie eine Desktop-Benachrichtigung und eine neue Sitzung wird unter einem Abschnitt **Geplant** in der Seitenleiste angezeigt. Öffnen Sie sie, um zu sehen, was Claude getan hat, Änderungen zu überprüfen oder auf Berechtigungsaufforderungen zu reagieren. Die Sitzung funktioniert wie jede andere: Claude kann Dateien bearbeiten, Befehle ausführen, Commits erstellen und Pull Requests öffnen.
+Wenn eine Aufgabe ausgelöst wird, erhalten Sie eine Desktop-Benachrichtigung und eine neue Sitzung wird unter einem Abschnitt **Geplant** in der Seitenleiste angezeigt. Öffnen Sie sie, um zu sehen, was Claude getan hat, Änderungen zu überprüfen oder auf Berechtigungsaufforderungen zu reagieren. Claude kann Dateien bearbeiten, Befehle ausführen, Commits erstellen und Pull Requests öffnen, genau wie in einer Sitzung, die Sie selbst starten, kann aber keine [Nachrichten zwischen Ihren Desktop-Sitzungen](/docs/de/desktop#work-across-sessions) über die Sitzungsoberfläche der Desktop-App senden oder empfangen.
 
 Aufgaben werden nur ausgeführt, während die Desktop-App ausgeführt wird und Ihr Computer aktiv ist. Wenn Ihr Computer durch eine geplante Zeit schläft, wird die Ausführung übersprungen. Um Ruhezustand zu verhindern, aktivieren Sie **Computer aktiv halten** in den Einstellungen unter **Desktop-App → Allgemein**. Das Schließen des Laptop-Deckels versetzt ihn dennoch in den Ruhezustand. Für Aufgaben, die auch ausgeführt werden müssen, wenn Ihr Computer ausgeschaltet ist, oder die durch einen API-Aufruf oder ein GitHub-Ereignis ausgelöst werden sollen, erstellen Sie stattdessen eine Remote-[Routine](/docs/de/routines).
 
@@ -89,17 +89,17 @@ Beachten Sie dies beim Schreiben von Eingabeaufforderungen. Eine Aufgabe, die f�
   Berechtigungen für geplante Aufgaben
 </h2>
 
-Jede Aufgabe hat ihren eigenen Berechtigungsmodus, den Sie beim Erstellen oder Bearbeiten der Aufgabe festlegen. Zulassungsregeln aus `~/.claude/settings.json` gelten auch für geplante Aufgabensitzungen. Wenn eine Aufgabe im Ask-Modus ausgeführt wird und ein Tool ausführen muss, für das sie keine Berechtigung hat, bleibt die Ausführung stehen, bis Sie sie genehmigen. Die Sitzung bleibt in der Seitenleiste offen, damit Sie später antworten können.
+Jede Aufgabe hat ihren eigenen Berechtigungsmodus, den Sie beim Erstellen oder Bearbeiten der Aufgabe festlegen. Zulassungsregeln aus `~/.claude/settings.json` gelten auch für geplante Aufgabensitzungen. Wenn eine Aufgabe im [Manuellen Modus](/docs/de/desktop#choose-a-permission-mode) ausgeführt wird und ein Tool ausführen muss, für das sie keine Berechtigung hat, bleibt die Ausführung stehen, bis Sie sie genehmigen. Die Sitzung bleibt in der Seitenleiste offen, damit Sie später antworten können.
 
 Um Stalls zu vermeiden, klicken Sie nach dem Erstellen einer Aufgabe auf **Jetzt ausführen**, achten Sie auf Berechtigungsaufforderungen und wählen Sie für jede „immer zulassen". Zukünftige Ausführungen dieser Aufgabe genehmigen automatisch die gleichen Tools ohne Aufforderung. Sie können diese Genehmigungen auf der Detailseite der Aufgabe überprüfen und widerrufen.
 
-Connector-Tools [die Ihre Organisation auf `ask` eingestellt hat](/docs/de/mcp#organization-controls-on-connector-tools) und MCP-Tools, die mit [`requiresUserInteraction`](/docs/de/mcp#require-approval-for-a-specific-tool) gekennzeichnet sind, werden bei jedem Aufruf angefordert und bieten keine Option „immer zulassen". Ausführungen, die diese Tools aufrufen, bleiben jedes Mal stehen.
+MCP-Tools, die mit [`requiresUserInteraction`](/docs/de/mcp#require-approval-for-a-specific-tool) gekennzeichnet sind, werden bei jedem Aufruf angefordert und bieten keine Option „immer zulassen". Ausführungen, die diese Tools aufrufen, bleiben jedes Mal stehen.
 
 <h2 id="manage-scheduled-tasks">
   Verwalten Sie geplante Aufgaben
 </h2>
 
-Klicken Sie auf eine Aufgabe in der Liste **Routinen**, um ihre Detailseite zu öffnen. Von hier aus können Sie:
+Klicken Sie auf der Registerkarte **Code** auf eine Aufgabe in der Liste **Routinen**, um ihre Detailseite zu öffnen. Von hier aus können Sie:
 
 * **Jetzt ausführen**: Starten Sie die Aufgabe sofort, ohne auf die nächste geplante Zeit zu warten
 * **Status**: Umschalten zwischen Aktiv und Pausiert, um geplante Ausführungen zu pausieren oder fortzusetzen, ohne die Aufgabe zu löschen
@@ -118,7 +118,7 @@ Um die Eingabeaufforderung einer Aufgabe auf der Festplatte zu bearbeiten, öffn
   Verwandte Ressourcen
 </h2>
 
-* [Routinen](/docs/de/routines): Führen Sie Aufgaben auf der von Anthropic verwalteten Infrastruktur nach einem Zeitplan, über einen API-Aufruf oder als Reaktion auf GitHub-Ereignisse aus, auch wenn Ihr Computer ausgeschaltet ist
+* [Routinen](/docs/de/routines): Führen Sie Aufgaben in der Cloud nach einem Zeitplan, über einen API-Aufruf oder als Reaktion auf GitHub-Ereignisse aus, auch wenn Ihr Computer ausgeschaltet ist
 * [Eingabeaufforderungen nach einem Zeitplan ausführen](/docs/de/scheduled-tasks): Sitzungsbezogene Planung mit `/loop` in der CLI
 * [Claude Code GitHub Actions](/docs/de/github-actions): Führen Sie Claude nach einem Zeitplan in CI statt auf Ihrem Computer aus
 * [Verwenden Sie Claude Code Desktop](/docs/de/desktop): Das vollständige Desktop-App-Handbuch

@@ -14,8 +14,6 @@ Hooks 是回調函數，在代理事件發生時執行您的程式碼，例如�
 * **要求人工批准**敏感操作，例如資料庫寫入或 API 呼叫
 * **追蹤會話生命週期**以管理狀態、清理資源或傳送通知
 
-本指南涵蓋 hooks 的工作原理、如何配置它們，並提供常見模式的範例，例如阻止工具、修改輸入和轉發通知。
-
 <h2 id="how-hooks-work">
   Hooks 如何工作
 </h2>
@@ -86,7 +84,7 @@ Hooks 是回調函數，在代理事件發生時執行您的程式碼，例如�
       )
 
       async with ClaudeSDKClient(options=options) as client:
-          await client.query("Update the database configuration")
+          await client.query("建立一個 .env 檔案，包含標準本地開發資料庫設定")
           async for message in client.receive_response():
               # 篩選助手和結果訊息
               if isinstance(message, (AssistantMessage, ResultMessage)):
@@ -125,7 +123,7 @@ Hooks 是回調函數，在代理事件發生時執行您的程式碼，例如�
   };
 
   for await (const message of query({
-    prompt: "Update the database configuration",
+    prompt: "建立一個 .env 檔案，包含標準本地開發資料庫設定",
     options: {
       hooks: {
         // 為 PreToolUse 事件註冊 hook
@@ -142,41 +140,55 @@ Hooks 是回調函數，在代理事件發生時執行您的程式碼，例如�
   ```
 </CodeGroup>
 
+當您執行任一指令碼時，Claude 嘗試建立 `.env` 檔案，hook 拒絕工具呼叫，Claude 的最終回應說明它無法建立 `.env` 檔案。
+
 <h2 id="available-hooks">
   可用的 hooks
 </h2>
 
 SDK 為代理執行的不同階段提供 hooks。某些 hooks 在兩個 SDK 中都可用，而其他則僅限 TypeScript。
 
-| Hook 事件                                                   | Python SDK | TypeScript SDK | 觸發條件                       | 使用案例範例                       |
-| --------------------------------------------------------- | ---------- | -------------- | -------------------------- | ---------------------------- |
-| `PreToolUse`                                              | 是          | 是              | 工具呼叫請求（可以阻止或修改）            | 阻止危險的 shell 命令               |
-| `PostToolUse`                                             | 是          | 是              | 工具執行結果                     | 將所有檔案變更記錄到審計追蹤               |
-| `PostToolUseFailure`                                      | 是          | 是              | 工具執行失敗                     | 處理或記錄工具錯誤                    |
-| `PostToolBatch`                                           | 否          | 是              | 一整批工具呼叫解決，每批一次，在下一個模型呼叫之前  | 為整個批次注入約定                    |
-| `UserPromptSubmit`                                        | 是          | 是              | 使用者提示提交                    | 將額外上下文注入提示                   |
-| [`UserPromptExpansion`](/docs/zh-TW/hooks#userpromptexpansion) | 否          | 是              | 使用者輸入的命令在到達 Claude 之前擴展為提示 | 阻止命令直接呼叫或在輸入技能時新增上下文         |
-| `MessageDisplay`                                          | 否          | 是              | 助手訊息包含文字完成，每則訊息一次，包含完整訊息文字 | 編輯或重新格式化顯示的文字，不改變記錄          |
-| `Stop`                                                    | 是          | 是              | 代理執行停止                     | 在退出前保存會話狀態                   |
-| `SubagentStart`                                           | 是          | 是              | 子代理初始化                     | 追蹤平行任務生成                     |
-| `SubagentStop`                                            | 是          | 是              | 子代理完成                      | 聚合來自平行任務的結果                  |
-| `PreCompact`                                              | 是          | 是              | 對話壓縮請求                     | 在摘要前存檔完整記錄                   |
-| `PermissionRequest`                                       | 是          | 是              | 權限對話將顯示                    | 自訂權限處理                       |
-| `SessionStart`                                            | 否          | 是              | 會話初始化                      | 初始化記錄和遙測                     |
-| `SessionEnd`                                              | 否          | 是              | 會話終止                       | 清理臨時資源                       |
-| `Notification`                                            | 是          | 是              | 代理狀態訊息                     | 將代理狀態更新傳送到 Slack 或 PagerDuty |
-| `Setup`                                                   | 否          | 是              | 會話設定/維護                    | 執行初始化任務                      |
-| `TeammateIdle`                                            | 否          | 是              | 隊友變為空閒                     | 重新分配工作或通知                    |
-| `TaskCompleted`                                           | 否          | 是              | 背景任務完成                     | 聚合來自平行任務的結果                  |
-| `ConfigChange`                                            | 否          | 是              | 配置檔案變更                     | 動態重新載入設定                     |
-| `WorktreeCreate`                                          | 否          | 是              | Git worktree 已建立           | 追蹤隔離的工作區                     |
-| `WorktreeRemove`                                          | 否          | 是              | Git worktree 已移除           | 清理工作區資源                      |
+| Hook 事件                                                   | Python SDK | TypeScript SDK | 觸發條件                                                    | 使用案例範例                                                                                                     |
+| --------------------------------------------------------- | ---------- | -------------- | ------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `PreToolUse`                                              | 是          | 是              | 工具呼叫請求（可以阻止或修改）                                         | 阻止危險的 shell 命令                                                                                             |
+| `PostToolUse`                                             | 是          | 是              | 工具執行結果                                                  | 將所有檔案變更記錄到審計追蹤                                                                                             |
+| `PostToolUseFailure`                                      | 是          | 是              | 工具執行失敗                                                  | 處理或記錄工具錯誤                                                                                                  |
+| `PostToolBatch`                                           | 否          | 是              | 一整批工具呼叫解決，每批一次，在下一個模型呼叫之前                               | 為整個批次注入約定                                                                                                  |
+| `UserPromptSubmit`                                        | 是          | 是              | 使用者提示提交                                                 | 將額外上下文注入提示                                                                                                 |
+| [`UserPromptExpansion`](/docs/zh-TW/hooks#userpromptexpansion) | 否          | 是              | 使用者輸入的命令或 MCP 提示在到達 Claude 之前擴展為提示。當 Claude 自己呼叫技能時不會觸發 | 阻止命令直接呼叫或在輸入技能時新增上下文                                                                                       |
+| `MessageDisplay`                                          | 否          | 是              | 助手訊息包含文字完成，每則訊息一次，包含完整訊息文字                              | 編輯或重新格式化顯示的文字，不改變記錄                                                                                        |
+| `Stop`                                                    | 是          | 是              | 代理執行停止                                                  | 在退出前保存會話狀態                                                                                                 |
+| `StopFailure`                                             | 否          | 是              | 回合以 API 錯誤結束，而不是正常停止                                    | 記錄失敗或傳送警示                                                                                                  |
+| `SubagentStart`                                           | 是          | 是              | 子代理初始化                                                  | 追蹤平行任務生成                                                                                                   |
+| `SubagentStop`                                            | 是          | 是              | 子代理完成                                                   | 聚合來自平行任務的結果                                                                                                |
+| `PreCompact`                                              | 是          | 是              | 對話壓縮請求                                                  | 在摘要前存檔完整記錄                                                                                                 |
+| `PostCompact`                                             | 否          | 是              | 對話壓縮完成                                                  | 記錄生成的摘要                                                                                                    |
+| [`PreModelSwitch`](/docs/zh-TW/hooks#premodelswitch)           | 否          | 是              | 請求的模型切換，在發生之前（可以阻止）                                     | 阻止切換到特定模型                                                                                                  |
+| [`PostModelSwitch`](/docs/zh-TW/hooks#postmodelswitch)         | 否          | 是              | 會話的模型變更，包括自動回退                                          | 為新模型提供 Claude 模型特定的指導                                                                                      |
+| `PermissionRequest`                                       | 是          | 是              | 工具呼叫需要權限決定                                              | 自訂權限處理                                                                                                     |
+| `PermissionDenied`                                        | 否          | 是              | 自動模式拒絕工具呼叫，包括沒有分類器判決的拒絕                                 | 記錄拒絕，或告訴模型它可能重試；Claude Code 對沒有判決的拒絕忽略 `retry: true`。請參閱 [PermissionDenied](/docs/zh-TW/hooks#permissiondenied) |
+| `SessionStart`                                            | 否          | 是              | 會話初始化                                                   | 初始化記錄和遙測                                                                                                   |
+| `SessionEnd`                                              | 否          | 是              | 會話終止                                                    | 清理臨時資源                                                                                                     |
+| `Notification`                                            | 是          | 是              | 代理狀態訊息                                                  | 將代理狀態更新傳送到 Slack 或 PagerDuty                                                                               |
+| `Setup`                                                   | 否          | 是              | 會話設定/維護                                                 | 執行初始化任務                                                                                                    |
+| `TeammateIdle`                                            | 否          | 是              | 隊友變為空閒                                                  | 重新分配工作或通知                                                                                                  |
+| `TaskCreated`                                             | 否          | 是              | 透過 `TaskCreate` 工具建立任務                                  | 強制執行任務命名約定                                                                                                 |
+| [`TaskCompleted`](/docs/zh-TW/hooks#taskcompleted)             | 否          | 是              | 任務標記為已完成                                                | 在任務關閉前要求通過測試                                                                                               |
+| `Elicitation`                                             | 否          | 是              | MCP 伺服器在任務中途請求使用者輸入                                     | 以程式設計方式回應 MCP 輸入請求                                                                                         |
+| `ElicitationResult`                                       | 否          | 是              | 使用者回應 MCP 引出                                            | 在回應返回伺服器之前修改或阻止回應                                                                                          |
+| `ConfigChange`                                            | 否          | 是              | 設定檔案變更                                                  | 動態重新載入設定                                                                                                   |
+| `InstructionsLoaded`                                      | 否          | 是              | `CLAUDE.md` 或規則檔案載入到上下文中                                | 審計哪些指令檔案載入                                                                                                 |
+| `WorktreeCreate`                                          | 否          | 是              | Git worktree 已建立                                        | 追蹤隔離的工作區                                                                                                   |
+| `WorktreeRemove`                                          | 否          | 是              | Git worktree 已移除                                        | 清理工作區資源                                                                                                    |
+| `CwdChanged`                                              | 否          | 是              | 會話期間工作目錄變更                                              | 按目錄重新載入環境變數                                                                                                |
+| `FileChanged`                                             | 否          | 是              | 監視的檔案被修改、建立或刪除                                          | 當專案檔案變更時重新載入設定                                                                                             |
+| `DirectoryAdded`                                          | 否          | 是              | 會話期間新增工作目錄                                              | 為中途新增的儲存庫安裝相依性                                                                                             |
 
 <h2 id="configure-hooks">
   配置 hooks
 </h2>
 
-要配置 hook，請在代理選項的 `hooks` 欄位中傳遞它（Python 中的 `ClaudeAgentOptions`，TypeScript 中的 `options` 物件）：
+要配置 hook，請在代理選項的 `hooks` 欄位中傳遞它（Python 中的 `ClaudeAgentOptions`，TypeScript 中的 `options` 物件）。此程式碼片段假設您已經定義了 hook 回調，例如上面範例中 Python 的 `protect_env_files` 或 TypeScript 的 `protectEnvFiles`：
 
 <CodeGroup>
   ```python Python theme={null}
@@ -213,31 +225,17 @@ SDK 為代理執行的不同階段提供 hooks。某些 hooks 在兩個 SDK 中�
   匹配器
 </h3>
 
-使用匹配器篩選您的回調何時觸發。`matcher` 欄位根據 hook 事件類型匹配不同的值。例如，工具型 hooks 匹配工具名稱，而 `Notification` hooks 匹配通知類型。請參閱 [Claude Code hooks 參考](/docs/zh-TW/hooks#matcher-patterns)以取得每個事件類型的完整匹配器值列表。
+使用匹配器篩選您的回調何時觸發。`matcher` 欄位根據 hook 事件類型匹配不同的值。例如，工具型 hooks 匹配工具名稱，而 `Notification` hooks 匹配通知類型。
 
-SDK 匹配器遵循與[設定檔案中的匹配器](/docs/zh-TW/hooks#matcher-patterns)相同的規則。只包含字母、數字、`_`、`-`、空格、`,` 和 `|` 的匹配器會被比較為精確字串，其中替代項由 `|` 或 `,` 分隔，並可選擇周圍空格，因此 `Write|Edit` 和 `Write, Edit` 各自精確匹配這兩個工具，而 `code-reviewer` 只匹配該代理類型。匹配器 `*`、空字串或完全省略匹配器會匹配事件的每次出現。
+SDK 匹配器遵循與[設定檔案中的匹配器](/docs/zh-TW/hooks#matcher-patterns)相同的規則。該部分記錄了精確字串和正規表達式評估路徑、其版本要求，以及每個事件類型的匹配器值。
 
-包含任何其他字元的匹配器會被評估為未錨定的正規表達式，因此 `^mcp__` 匹配每個 MCP 工具，而 `Edit.*` 同時匹配 `Edit` 和 `NotebookEdit`。當您需要全字符串匹配時，請用 `^` 和 `$` 包裝正規表達式。
+| 選項        | 類型               | 預設值         | 描述                                                                                                                                                                                                                                                                                                    |
+| --------- | ---------------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `matcher` | `string`         | `undefined` | 針對事件的篩選欄位匹配的模式，遵循[設定檔案中匹配器的規則](/docs/zh-TW/hooks#matcher-patterns)。對於工具 hooks，這是工具名稱。內建工具包括 `Bash`、`Read`、`Write`、`Edit`、`Glob`、`Grep`、`WebFetch`、`Agent` 等（請參閱[工具輸入類型](/docs/zh-TW/agent-sdk/typescript#tool-input-types)以取得完整列表）。MCP 工具使用模式 `mcp__<server>__<action>`，其中 `<server>` 是您在 `mcpServers` 配置中使用的鍵。 |
+| `hooks`   | `HookCallback[]` | -           | 必需。當模式匹配時執行的回調函數陣列                                                                                                                                                                                                                                                                                    |
+| `timeout` | `number`         | `undefined` | 超時時間（秒）。省略時，Claude Code 會應用[事件的預設超時](#hook-timeout)。您的 SDK 回調遵循 `command` hook 預設值                                                                                                                                                                                                                    |
 
-像 `mcp__memory` 或 `mcp__brave-search` 這樣的匹配器只包含精確匹配字元，因此會被比較為精確字串且不匹配任何工具；使用 `mcp__memory__.*` 來匹配來自該伺服器的每個工具。
-
-精確匹配集中的連字號需要 Claude Code 執行時版本 v2.1.195 或更新版本。在較早版本中，像 `code-reviewer` 這樣的連字號名稱會被評估為未錨定的正規表達式，必須錨定為 `^code-reviewer$` 才能精確匹配。
-
-| 選項        | 類型               | 預設值         | 描述                                                                                                                                                                                                                       |
-| --------- | ---------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `matcher` | `string`         | `undefined` | 針對事件的篩選欄位匹配的模式，遵循上述比較規則。對於工具 hooks，這是工具名稱。內建工具包括 `Bash`、`Read`、`Write`、`Edit`、`Glob`、`Grep`、`WebFetch`、`Agent` 等（請參閱[工具輸入類型](/docs/zh-TW/agent-sdk/typescript#tool-input-types)以取得完整列表）。MCP 工具使用模式 `mcp__<server>__<action>`。 |
-| `hooks`   | `HookCallback[]` | -           | 必需。當模式匹配時執行的回調函數陣列                                                                                                                                                                                                       |
-| `timeout` | `number`         | `60`        | 超時時間（秒）                                                                                                                                                                                                                  |
-
-盡可能使用 `matcher` 模式來針對特定工具。帶有 `'Bash'` 的匹配器只針對 Bash 命令執行，而省略模式會針對事件的每次出現執行您的回調。
-
-對於工具型 hooks，匹配器只按工具名稱篩選，不按檔案路徑或其他參數篩選。要按檔案路徑篩選，請在回調內檢查 `tool_input.file_path`。
-
-<Tip>
-  **發現工具名稱：** 請參閱[工具輸入類型](/docs/zh-TW/agent-sdk/typescript#tool-input-types)以取得內建工具名稱的完整列表，或新增沒有匹配器的 hook 以記錄您的會話進行的所有工具呼叫。
-
-  **MCP 工具命名：** MCP 工具始終以 `mcp__` 開頭，後跟伺服器名稱和操作：`mcp__<server>__<action>`。例如，如果您配置名為 `playwright` 的伺服器，其工具將被命名為 `mcp__playwright__browser_screenshot`、`mcp__playwright__browser_click` 等。伺服器名稱來自您在 `mcpServers` 配置中使用的鍵。
-</Tip>
+盡可能使用 `matcher` 模式來針對特定工具。帶有 `'Bash'` 的匹配器只針對 Bash 命令執行，而省略模式會針對事件的每次出現執行您的回調。故意省略它以記錄您的會話進行的每個工具呼叫。
 
 <h3 id="callback-functions">
   回調函數
@@ -261,8 +259,11 @@ SDK 匹配器遵循與[設定檔案中的匹配器](/docs/zh-TW/hooks#matcher-pa
 
 您的回調返回一個具有兩類欄位的物件：
 
-* **頂級欄位**在每個事件上的工作方式相同：`systemMessage` 向使用者顯示訊息，`continue`（Python 中的 `continue_`）決定此 hook 後代理是否繼續執行。
-* **`hookSpecificOutput`** 控制目前操作。內部的欄位取決於 hook 事件類型。對於 `PreToolUse` hooks，這是您設定 `permissionDecision`（`"allow"`、`"deny"`、`"ask"` 或 `"defer"`）、`permissionDecisionReason` 和 `updatedInput` 的地方。返回 `"defer"` 會結束查詢，以便您可以[稍後繼續](/docs/zh-TW/hooks#defer-a-tool-call-for-later)。對於 `PostToolUse` hooks，您可以設定 `additionalContext` 以將資訊附加到工具結果。要在 Claude 看到之前替換工具的輸出，請設定 `updatedToolOutput`，這適用於兩個 SDK 中的任何工具。較舊的 `updatedMCPToolOutput` 欄位僅替換 MCP 工具輸出，已被棄用。
+* **頂級欄位**在每個事件上被接受：`systemMessage` 向使用者顯示訊息，`continue`（Python 中的 `continue_`）決定此 hook 後代理是否繼續執行。某些事件會捨棄它們或將它們傳遞到其他地方。每個[事件的部分](/docs/zh-TW/hooks#hook-events)在 hooks 頁面上說明它們的位置。
+* **`hookSpecificOutput`** 控制目前操作。內部的欄位取決於 hook 事件類型：
+  * 對於 `PreToolUse` hooks，這是您設定 `permissionDecision`（`"allow"`、`"deny"`、`"ask"` 或 `"defer"`）、`permissionDecisionReason` 和 `updatedInput` 的地方。如果您返回 `"defer"`，查詢會結束，以便您可以[稍後繼續](/docs/zh-TW/hooks#defer-a-tool-call-for-later)。
+  * 對於 `PostToolUse` hooks，您可以設定 `additionalContext` 以將資訊附加到工具結果。要在 Claude 看到之前替換工具的輸出，請設定 `updatedToolOutput`，這適用於兩個 SDK 中的任何工具。較舊的 `updatedMCPToolOutput` 欄位僅替換 MCP 工具輸出，已被棄用。
+  * 在 TypeScript SDK 中，`PostToolUse` 回調也可以返回 `classifierContext`，這是關於工具呼叫結果的簡短說明，用於[自動模式](/docs/zh-TW/permission-modes#eliminate-prompts-with-auto-mode)權限分類器。因為您的回調在您應用程式自己的程序中執行，分類器可能會將您在說明中轉達的使用者陳述視為使用者意圖。該欄位需要 TypeScript Agent SDK v0.3.236 或更新版本。[為自動模式分類器註解結果](/docs/zh-TW/hooks#annotate-a-result-for-the-auto-mode-classifier)涵蓋長度上限、僅同步規則，以及不要在說明中放入的內容。
 
 返回 `{}` 以允許操作而不進行變更。SDK 回調 hooks 使用與 [Claude Code shell 命令 hooks](/docs/zh-TW/hooks#json-output) 相同的 JSON 輸出格式，其記錄每個欄位和事件特定選項。對於 SDK 類型定義，請參閱 [TypeScript](/docs/zh-TW/agent-sdk/typescript#synchookjsonoutput) 和 [Python](/docs/zh-TW/agent-sdk/python#synchookjsonoutput) SDK 參考。
 
@@ -274,7 +275,7 @@ SDK 匹配器遵循與[設定檔案中的匹配器](/docs/zh-TW/hooks#matcher-pa
   非同步輸出
 </h4>
 
-預設情況下，代理在您的 hook 返回前等待。如果您的 hook 執行副作用（例如記錄或傳送 webhook），並且不需要影響代理的行為，您可以改為返回非同步輸出。這告訴代理立即繼續，無需等待 hook 完成：
+預設情況下，代理在您的 hook 返回前等待。如果您的 hook 執行副作用，例如記錄或傳送 webhook，並且不需要影響代理的行為，您可以改為返回非同步輸出。這告訴代理立即繼續，無需等待 hook 完成。在此程式碼片段中，Python 中的 `send_to_logging_service` 和 TypeScript 中的 `sendToLoggingService` 代表您定義的任何記錄函數：
 
 <CodeGroup>
   ```python Python theme={null}
@@ -305,6 +306,8 @@ SDK 匹配器遵循與[設定檔案中的匹配器](/docs/zh-TW/hooks#matcher-pa
 <h2 id="examples">
   範例
 </h2>
+
+本節中的幾個範例僅顯示回調函數。若要執行其中一個，請在您的選項的 `hooks` 欄位中的匹配事件下註冊回調，如 [設定 hooks](#configure-hooks) 中所示。
 
 <h3 id="modify-tool-input">
   修改工具輸入
@@ -358,8 +361,10 @@ SDK 匹配器遵循與[設定檔案中的匹配器](/docs/zh-TW/hooks#matcher-pa
 </CodeGroup>
 
 <Note>
-  使用 `updatedInput` 時，您還必須包括 `permissionDecision: 'allow'` 以自動批准修改的輸入，或 `permissionDecision: 'ask'` 以將其顯示給使用者。使用 `'defer'` 時，`updatedInput` 會被忽略。始終返回新物件，而不是改變原始 `tool_input`。
+  將 `updatedInput` 與 `permissionDecision: 'allow'` 配對以自動批准修改的輸入，或使用 `permissionDecision: 'ask'` 以將其顯示給使用者。如果您省略 `permissionDecision`，修改的輸入仍然適用並流經正常的權限評估。使用 `'defer'` 時，`updatedInput` 會被忽略。始終返回新物件，而不是改變原始 `tool_input`。
 </Note>
+
+若要確認重定向，請將前綴設定為您可以寫入的路徑，例如 `./sandbox` 或 `/tmp/sandbox`（macOS 不允許建立根層級的 `/sandbox` 目錄），然後要求代理寫入檔案：Write 工具在訊息流中的結果會顯示帶有您的沙箱前綴的路徑，而不是 Claude 要求的路徑。
 
 <h3 id="add-context-and-block-a-tool">
   新增上下文並阻止工具
@@ -497,7 +502,7 @@ SDK 匹配器遵循與[設定檔案中的匹配器](/docs/zh-TW/hooks#matcher-pa
 
 使用多工具匹配器在相關工具間共享一個回調。此範例註冊三個具有不同範圍的匹配器：
 
-* 管道分隔的精確列表（`Write|Edit|Delete`）僅針對檔案修改工具觸發 `file_security_hook`。
+* 管道分隔的精確列表（`Write|Edit|NotebookEdit`）僅針對檔案修改工具觸發 `file_security_hook`。
 * 正規表達式（`^mcp__`）針對任何名稱以 `mcp__` 開頭的 MCP 工具觸發 `mcp_audit_hook`。
 * 省略的匹配器針對每個工具呼叫（無論名稱如何）觸發 `global_logger`。
 
@@ -507,7 +512,7 @@ SDK 匹配器遵循與[設定檔案中的匹配器](/docs/zh-TW/hooks#matcher-pa
       hooks={
           "PreToolUse": [
               # 匹配檔案修改工具
-              HookMatcher(matcher="Write|Edit|Delete", hooks=[file_security_hook]),
+              HookMatcher(matcher="Write|Edit|NotebookEdit", hooks=[file_security_hook]),
               # 匹配所有 MCP 工具
               HookMatcher(matcher="^mcp__", hooks=[mcp_audit_hook]),
               # 匹配所有內容（無匹配器）
@@ -522,7 +527,7 @@ SDK 匹配器遵循與[設定檔案中的匹配器](/docs/zh-TW/hooks#matcher-pa
     hooks: {
       PreToolUse: [
         // 匹配檔案修改工具
-        { matcher: "Write|Edit|Delete", hooks: [fileSecurityHook] },
+        { matcher: "Write|Edit|NotebookEdit", hooks: [fileSecurityHook] },
 
         // 匹配所有 MCP 工具
         { matcher: "^mcp__", hooks: [mcpAuditHook] },
@@ -584,9 +589,9 @@ SDK 匹配器遵循與[設定檔案中的匹配器](/docs/zh-TW/hooks#matcher-pa
   從 hooks 發出 HTTP 請求
 </h3>
 
-Hooks 可以執行非同步操作，例如 HTTP 請求。在您的 hook 內捕捉錯誤，而不是讓它們傳播，因為未處理的異常可能會中斷代理。
+Hooks 可以執行非同步操作，例如 HTTP 請求。在您的 hook 內捕捉錯誤，而不是讓它們傳播。
 
-此範例在每個工具完成後傳送 webhook，記錄哪個工具執行以及何時執行。hook 捕捉錯誤，以便失敗的 webhook 不會中斷代理：
+此範例在每個工具完成後傳送 webhook，記錄哪個工具執行以及何時執行。hook 捕捉來自失敗 webhook 的錯誤：
 
 <CodeGroup>
   ```python Python theme={null}
@@ -622,7 +627,7 @@ Hooks 可以執行非同步操作，例如 HTTP 請求。在您的 hook 內捕�
           # 在執行緒中執行阻止 HTTP 呼叫以避免阻止事件迴圈
           await asyncio.to_thread(_send_webhook, input_data["tool_name"])
       except Exception as e:
-          # 記錄錯誤但不引發。失敗的 webhook 不應停止代理
+          # 記錄錯誤但不引發
           print(f"Webhook request failed: {e}")
 
       return {}
@@ -651,7 +656,7 @@ Hooks 可以執行非同步操作，例如 HTTP 請求。在您的 hook 內捕�
       if (error instanceof Error && error.name === "AbortError") {
         console.log("Webhook request cancelled");
       }
-      // 不重新拋出。失敗的 webhook 不應停止代理
+      // 不重新拋出
     }
 
     return {};
@@ -671,20 +676,22 @@ Hooks 可以執行非同步操作，例如 HTTP 請求。在您的 hook 內捕�
   ```
 </CodeGroup>
 
+若要確認 hook 觸發，請將 webhook URL 指向您可以監視的端點並傳送使用工具的提示：hook 會在每個工具完成後傳送帶有工具名稱和時間戳記的 POST。
+
 <h3 id="forward-notifications-to-slack">
   將通知轉發到 Slack
 </h3>
 
-使用 `Notification` hooks 接收來自代理的系統通知並將其轉發到外部服務。通知針對特定事件類型觸發，例如：
+使用 `Notification` hooks 接收來自代理的系統通知並將其轉發到外部服務。在 SDK 工作階段中，Claude Code 為以下通知類型執行此 hook：
 
-* `permission_prompt` 當 Claude 需要權限時
-* `idle_prompt` 當 Claude 等待輸入時
-* `auth_success` 當認證完成時
-* `elicitation_dialog`、`elicitation_complete` 和 `elicitation_response` 用於使用者提示引導流程
+* [`permission_prompt`](/docs/zh-TW/hooks#notification) 一旦權限請求在您的 [`canUseTool` 回調](/docs/zh-TW/agent-sdk/user-input) 上等待約六秒。需要 TypeScript Agent SDK v0.3.233 或更新版本，或 Python Agent SDK v0.2.139 或更新版本
+* `elicitation_complete` 和 `elicitation_response` 用於使用者提示引導流程
+
+Claude Code 從 SDK 工作階段不執行的互動式 UI 發出其他類型，例如 `idle_prompt`、`auth_success` 和 `elicitation_dialog`。
 
 每個通知都包括帶有人類可讀描述的 `message` 欄位，以及可選的 `title`。
 
-此範例將每個通知轉發到 Slack 頻道。它需要 [Slack 傳入 webhook URL](https://api.slack.com/messaging/webhooks)，您可以通過將應用程式新增到 Slack 工作區並啟用傳入 webhooks 來建立：
+此範例將每個通知轉發到 Slack 頻道。它需要 [Slack 傳入 webhook URL](https://docs.slack.dev/messaging/sending-messages-using-incoming-webhooks/)，您可以通過將應用程式新增到 Slack 工作區並啟用傳入 webhooks 來建立：
 
 <CodeGroup>
   ```python Python theme={null}
@@ -780,6 +787,8 @@ Hooks 可以執行非同步操作，例如 HTTP 請求。在您的 hook 內捕�
   ```
 </CodeGroup>
 
+當 `Notification` 事件觸發時，hook 會將通知的 `message`（前綴為 `Agent status:`）發佈到您的 webhook 目標的頻道。
+
 <h2 id="fix-common-issues">
   修復常見問題
 </h2>
@@ -815,10 +824,23 @@ const myHook: HookCallback = async (input, toolUseID, { signal }) => {
   Hook 超時
 </h3>
 
-* 增加 `HookMatcher` 配置中的 `timeout` 值
-* 在 TypeScript 中使用第三個回調參數中的 `AbortSignal` 以優雅地處理取消
+Claude Code 以超時時間執行每個回調，您可以在其 `HookMatcher` 上使用 `timeout` 欄位以秒為單位設定。當您未設定時，Claude Code 使用事件的預設值：大多數事件為 600 秒，`UserPromptSubmit`、`PreModelSwitch` 和 `PostModelSwitch` 為 30 秒，`MessageDisplay` 為 10 秒。Claude Code 在關閉期間執行 `SessionEnd` 回調，使用較短的 [SessionEnd 超時預算](/docs/zh-TW/hooks#sessionend-input)，預設為 1.5 秒。
 
-超過其超時時間的 `UserPromptSubmit` 或 [`UserPromptExpansion`](/docs/zh-TW/hooks#userpromptexpansion) 回調會以超時訊息阻止該提示，會話繼續進行。在回調待處理時中斷查詢會取消待處理的工具呼叫。在 v2.1.208 之前，這些事件上的回調超時會以 `error_during_execution` 結束查詢，在待處理的 `PreToolUse` 回調期間中斷可能會讓工具呼叫繼續進行。
+當回調超過其超時時間時，Claude Code 取消它並捨棄其輸出，會話繼續而不是掛起。接下來發生的情況取決於事件：
+
+* `PreToolUse`：Claude Code 不執行工具呼叫，Claude 收到工具結果，說明 hook 未在超時前回應，轉換繼續。如果另一個 `PreToolUse` hook 返回明確拒絕，Claude 改為收到該拒絕而不是超時錯誤。在 v2.1.210 之前，Claude Code 將超時報告給 Claude 作為使用者拒絕，這使無人值守會話停止並等待輸入。
+* `PostToolUse` 和 `PostToolUseFailure`：Claude Code 保留工具結果，轉換繼續。
+* `UserPromptSubmit` 和 [`UserPromptExpansion`](/docs/zh-TW/hooks#userpromptexpansion)：Claude Code 以命名 hook 和超時的訊息阻止提示，會話繼續。因為這些事件上的回調可以充當政策閘門，Claude Code 永遠不會讓超時的提示通過未篩選。在 v2.1.208 之前，當這些事件上的回調超時時，Claude Code 以 `error_during_execution` 結束查詢。
+* `Stop` 和 `SubagentStop`：超時的回調計為不返回任何決定。代理或子代理停止，如同該回調已允許它，而您其他 hooks 在事件上的決定仍然適用。在 Claude Code v2.1.273 之前，超時的 `Stop` 或 `SubagentStop` 回調計為失敗的 hook 執行，Claude Code 捨棄您其他 hooks 在事件上的決定。
+* `SessionStart`：超時的回調計為不返回任何輸出，會話繼續，使用您其他 `SessionStart` hooks 的輸出。
+* `PreModelSwitch`：Claude Code 阻止模型切換。未回答的 hook 尚未批准切換。
+* 其他事件，如 `Notification`、`PreCompact` 和 `PostModelSwitch`：Claude Code 記錄失敗並繼續。
+
+主會話中 `Stop` 或 `SessionStart` 回調首次超時時，Claude Code 也會新增 [`SDKInformationalMessage`](/docs/zh-TW/agent-sdk/typescript#sdkinformationalmessage) 到訊息流，說明驅動會話的應用程式未回應。稍後的超時在您的應用程式保持無回應時不會重複該訊息。
+
+如果您在回調待處理時中斷查詢，Claude Code 取消待處理的工具呼叫。在 v2.1.208 之前，如果您在待處理的 `PreToolUse` 回調期間中斷，工具呼叫仍可能繼續進行。
+
+如果您的回調需要更多時間，請在其 `HookMatcher` 上設定更高的 `timeout`。在 TypeScript 中，使用第三個回調參數中的 `AbortSignal` 以在超時觸發時優雅地處理取消。
 
 <h3 id="tool-blocked-unexpectedly">
   工具意外被阻止
@@ -844,7 +866,7 @@ const myHook: HookCallback = async (input, toolUseID, { signal }) => {
   };
   ```
 
-* 返回 `permissionDecision: 'allow'` 以自動批准修改的輸入，或 `'ask'` 以向使用者顯示以供批准
+* 不要將 `updatedInput` 與 `permissionDecision: 'defer'` 配對，這會捨棄修改的輸入。省略 `permissionDecision` 是可以的：修改的輸入仍通過正常權限評估應用。您也可以返回 `'allow'` 以自動批准修改的輸入或 `'ask'` 以向使用者顯示以供批准
 
 * 在 `hookSpecificOutput` 中包括 `hookEventName` 以識別輸出適用於哪個 hook 類型
 
@@ -874,7 +896,7 @@ const myHook: HookCallback = async (input, toolUseID, { signal }) => {
   子代理權限提示倍增
 </h3>
 
-生成多個子代理時，每個子代理可能會分別請求權限。子代理不會自動繼承父代理權限。要避免重複提示，請使用 `PreToolUse` hooks 自動批准特定工具，或配置適用於子代理會話的權限規則。
+生成多個子代理時，每個子代理可能會分別請求其自身工具呼叫的權限。要避免重複提示，請使用 `PreToolUse` hooks 自動批准特定工具，或配置權限規則，子代理[從父對話繼承](/docs/zh-TW/sub-agents#permission-modes)。
 
 <h3 id="recursive-hook-loops-with-subagents">
   子代理的遞迴 hook 迴圈
@@ -882,7 +904,6 @@ const myHook: HookCallback = async (input, toolUseID, { signal }) => {
 
 生成子代理的 `UserPromptSubmit` hook 如果這些子代理觸發相同的 hook，可能會建立無限迴圈。要防止這種情況：
 
-* 在生成子代理前檢查 hook 輸入中的子代理指示器
 * 使用共享變數或會話狀態來追蹤您是否已在子代理內
 * 將 hooks 範圍限制為僅針對頂級代理會話執行
 
@@ -890,7 +911,9 @@ const myHook: HookCallback = async (input, toolUseID, { signal }) => {
   systemMessage 未出現在輸出中
 </h3>
 
-`systemMessage` 欄位向使用者顯示訊息，而不是模型。預設情況下，SDK 只會在訊息流中呈現 `SessionStart` 和 `Setup` hooks 的 hook 輸出，因此除非您設定 `includeHookEvents`（Python 中的 `include_hook_events`），否則來自任何其他 hook 事件的訊息不會出現。要改為將上下文傳遞給模型，請返回 [`additionalContext`](/docs/zh-TW/hooks#add-context-for-claude)。
+`systemMessage` 欄位向使用者顯示訊息，而不是模型。在 Claude Code v2.1.227 或更新版本上，hook 的 `systemMessage` 可以在訊息流中呈現為 [`SDKInformationalMessage`](/docs/zh-TW/agent-sdk/typescript#sdkinformationalmessage)。它是否呈現取決於事件。每個[事件的部分](/docs/zh-TW/hooks#hook-events)在 hooks 頁面上說明輸出如何呈現。要改為將上下文傳遞給模型，請返回 [`additionalContext`](/docs/zh-TW/hooks#add-context-for-claude)。
+
+在 v2.1.227 之前，SDK 僅針對 `SessionStart` 和 `Setup` hooks 在訊息流中呈現 hook 輸出。對於任何其他事件，輸出僅出現在 [`includeHookEvents`](/docs/zh-TW/agent-sdk/typescript#options)（Python 中的 `include_hook_events`）新增的生命週期事件中。該選項的條目涵蓋每個 hook 事件產生的生命週期事件。
 
 如果您需要可靠地將 hook 決定呈現給您的應用程式，請分別記錄它們或使用專用輸出頻道。
 

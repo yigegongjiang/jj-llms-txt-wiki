@@ -17,11 +17,11 @@ Claude Code CLI와 로컬에서 실행되는 모든 것은 모든 제공자에�
 인증 방식에 따라 Claude Code가 도달할 수 있는 기능이 결정됩니다. 제공자에서 누락된 기능의 단일 목록은 [제공자별 요약](#summary-by-provider) 탭을 참조하십시오. 표에서 열을 찾으려면:
 
 * **Claude 구독**: claude.ai 계정으로 Pro, Max, Team 또는 Enterprise 플랜에 로그인합니다.
-* **Anthropic Console**: Anthropic API 키로 인증합니다.
+* **Anthropic Console**: Anthropic API 키로 인증하거나 [API 키 없이 Console 계정에 로그인](/docs/ko/authentication#sign-in-without-an-api-key)합니다.
 * **Amazon Bedrock**: Amazon Bedrock 모델 카탈로그에서 Claude 모델을 사용하고 `CLAUDE_CODE_USE_BEDROCK`을 설정합니다. [Mantle 엔드포인트](/docs/ko/amazon-bedrock#use-the-mantle-endpoint) (`CLAUDE_CODE_USE_MANTLE`)는 이 열에 포함됩니다.
 * **AWS의 Claude Platform**: AWS Marketplace를 통해 Claude를 구입했지만 Anthropic API를 호출하고 `CLAUDE_CODE_USE_ANTHROPIC_AWS`를 설정합니다.
 * **Google Cloud의 Agent Platform**: Google 운영; `CLAUDE_CODE_USE_VERTEX`를 설정합니다.
-* **Microsoft Foundry**: Azure의 Anthropic 운영; `CLAUDE_CODE_USE_FOUNDRY`를 설정합니다.
+* **Microsoft Foundry**: Anthropic 운영; `CLAUDE_CODE_USE_FOUNDRY`를 설정합니다.
 
 <h3 id="features-available-on-every-provider">
   모든 제공자에서 사용 가능한 기능
@@ -32,15 +32,18 @@ Claude Code CLI와 로컬에서 실행되는 모든 것은 모든 제공자에�
 * [CLI](/docs/ko/quickstart) 및 [Agent SDK](/docs/ko/agent-sdk/overview)
 * [VS Code](/docs/ko/vs-code) 및 [JetBrains](/docs/ko/jetbrains) 확장
 * [Subagents](/docs/ko/sub-agents), [hooks](/docs/ko/hooks-guide), [commands](/docs/ko/commands), [skills](/docs/ko/skills)
-* [CLAUDE.md memory](/docs/ko/memory), [plugins](/docs/ko/plugins), [MCP servers](/docs/ko/mcp)
+* [CLAUDE.md memory](/docs/ko/memory), [plugins](/docs/ko/plugins/overview), [MCP servers](/docs/ko/mcp)
 * [Checkpoints](/docs/ko/checkpointing), [sandboxing](/docs/ko/sandboxing), [Workflows](/docs/ko/workflows)
-* [OpenTelemetry metrics](/docs/ko/monitoring-usage) 및 [관리되는 설정 파일](/docs/ko/settings#settings-files)
+* [OpenTelemetry metrics](/docs/ko/monitoring-usage) 및 [관리되는 설정 파일](/docs/ko/managed-settings#delivery-mechanisms)
 
-이 중 세 가지는 제공자별 차이가 있습니다:
+이 중 일부는 제공자별 차이가 있습니다:
 
-* **MCP servers**: [claude.ai의 커넥터](/docs/ko/mcp#use-mcp-servers-from-claude-ai)는 claude.ai 구독이 활성 인증 방법일 때만 로드되며, [도구 검색](/docs/ko/mcp#configure-tool-search)은 Google Cloud의 Agent Platform에서 기본적으로 꺼져 있고 `ANTHROPIC_BASE_URL`이 비자사 호스트를 가리킬 때도 꺼져 있습니다.
+* **MCP servers**: [claude.ai의 커넥터](/docs/ko/mcp#use-mcp-servers-from-claude-ai)는 claude.ai 구독이 활성 인증 방법일 때만 로드됩니다. [도구 검색](/docs/ko/mcp#configure-tool-search)은 `ANTHROPIC_BASE_URL`이 비자사 호스트를 가리킬 때 기본적으로 꺼져 있으며, Google Cloud의 Agent Platform의 Claude 4.5 세대보다 이전 모델이나 Microsoft Foundry [Azure에서 호스팅되는 배포](https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry#hosting-options)에서는 지원되지 않습니다.
 * **Subagents**: 기본 제공 [Explore subagent](/docs/ko/sub-agents#built-in-subagents)는 Claude API에서 상속된 모델을 Opus로 제한하며, AWS의 Claude Platform을 포함한 다른 모든 제공자에서는 주 대화의 모델을 직접 상속합니다.
-* **[Commands](/docs/ko/commands#all-commands)**: `/design-sync` 및 `/radio`는 Amazon Bedrock, Google Cloud의 Agent Platform, Microsoft Foundry, AWS의 Claude Platform에서 사용할 수 없으며, `/voice`는 claude.ai 계정이 필요합니다.
+* **[Commands](/docs/ko/commands#all-commands)**:
+  * `/design-sync` 및 `/import`와 그 `claude import` 서브명령 형식은 Amazon Bedrock, Google Cloud의 Agent Platform, Microsoft Foundry, AWS의 Claude Platform에서 사용할 수 없으며, [Claude apps gateway](/docs/ko/claude-apps-gateway#availability-and-limitations)를 통해서도 사용할 수 없습니다.
+  * `/voice`는 claude.ai 계정이 필요합니다.
+  * `/list-agents` 및 그 별칭 `/peers`는 [교차 세션 메시징이 활성화된](/docs/ko/cross-session-messaging#availability) 세션에서만 사용 가능합니다.
 
 <h3 id="features-that-require-a-claude-subscription">
   Claude 구독이 필요한 기능
@@ -51,7 +54,7 @@ Claude Code CLI와 로컬에서 실행되는 모든 것은 모든 제공자에�
 * [웹의 Claude Code](/docs/ko/claude-code-on-the-web), 모바일의 Claude Code, [Slack의 Claude Code](/docs/ko/slack)
 * [Claude Code Desktop](/docs/ko/desktop)
 * [Routines](/docs/ko/routines) (`/schedule`)
-* [Ultraplan](/docs/ko/ultraplan) 및 [Ultrareview](/docs/ko/ultrareview)
+* [Ultrareview](/docs/ko/ultrareview)
 * [Code Review](/docs/ko/code-review): Team 및 Enterprise 플랜
 * [Remote Control](/docs/ko/remote-control)
 * [Chrome 확장](/docs/ko/chrome)
@@ -88,13 +91,13 @@ Desktop은 부분적인 예외입니다: [게이트웨이 라우팅은 앱에서
       <td>✗</td>
       <td>✓</td>
       <td>참고 사항 <sup><a href="#fn1">1</a></sup></td>
-      <td>✓</td>
+      <td>✓ ([Anthropic에서 호스팅되는 배포](https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry#hosting-options))</td>
     </tr>
 
     <tr>
       <td>[빠른 모드](/docs/ko/fast-mode)</td>
-      <td>✓</td>
-      <td>✓</td>
+      <td>✓ ([조직에 대해 소유자가 활성화](/docs/ko/fast-mode#enable-fast-mode-for-your-organization) Team 및 Enterprise)</td>
+      <td>✓ (프로비저닝된 조직)</td>
       <td>✗</td>
       <td>✗</td>
       <td>✗</td>
@@ -122,6 +125,16 @@ Desktop은 부분적인 예외입니다: [게이트웨이 라우팅은 앱에서
     </tr>
 
     <tr>
+      <td>[교차 세션 메시징](/docs/ko/cross-session-messaging)</td>
+      <td>✓ <sup><a href="#fn5">5</a></sup></td>
+      <td>✓ (같은 머신) <sup><a href="#fn5">5</a></sup></td>
+      <td>✓ (같은 머신) <sup><a href="#fn5">5</a></sup></td>
+      <td>✓ (같은 머신) <sup><a href="#fn5">5</a></sup></td>
+      <td>✓ (같은 머신) <sup><a href="#fn5">5</a></sup></td>
+      <td>✓ (같은 머신) <sup><a href="#fn5">5</a></sup></td>
+    </tr>
+
+    <tr>
       <td>[Channels](/docs/ko/channels)</td>
       <td>✓</td>
       <td>✓</td>
@@ -132,17 +145,17 @@ Desktop은 부분적인 예외입니다: [게이트웨이 라우팅은 앱에서
     </tr>
 
     <tr>
-      <td>[`/loop` 예약된 작업](/docs/ko/scheduled-tasks)</td>
+      <td>[GitHub Actions](/docs/ko/github-actions)</td>
       <td>✓</td>
       <td>✓</td>
-      <td>참고 사항 <sup><a href="#fn3">3</a></sup></td>
-      <td>참고 사항 <sup><a href="#fn3">3</a></sup></td>
-      <td>참고 사항 <sup><a href="#fn3">3</a></sup></td>
-      <td>참고 사항 <sup><a href="#fn3">3</a></sup></td>
+      <td>✓</td>
+      <td>✗</td>
+      <td>✓</td>
+      <td>✓</td>
     </tr>
 
     <tr>
-      <td>[GitHub Actions](/docs/ko/github-actions) 및 [GitLab CI/CD](/docs/ko/gitlab-ci-cd)</td>
+      <td>[GitLab CI/CD](/docs/ko/gitlab-ci-cd)</td>
       <td>✓</td>
       <td>✓</td>
       <td>✓</td>
@@ -176,7 +189,7 @@ Desktop은 부분적인 예외입니다: [게이트웨이 라우팅은 앱에서
     <tr>
       <td>[분석 대시보드 및 API](/docs/ko/analytics)</td>
       <td>✓ (대시보드: Team 및 Enterprise; API: Enterprise)</td>
-      <td>✓ <sup><a href="#fn5">5</a></sup></td>
+      <td>✓ <sup><a href="#fn4">4</a></sup></td>
       <td>✗</td>
       <td>✗</td>
       <td>✗</td>
@@ -197,22 +210,24 @@ Desktop은 부분적인 예외입니다: [게이트웨이 라우팅은 앱에서
       <td>[Zero Data Retention](/docs/ko/zero-data-retention)</td>
       <td>✓ (적격 Enterprise 계정)</td>
       <td>✓ (적격 계정)</td>
-      <td>참고 사항 <sup><a href="#fn4">4</a></sup></td>
+      <td>참고 사항 <sup><a href="#fn3">3</a></sup></td>
       <td>✓ (적격 계정)</td>
-      <td>참고 사항 <sup><a href="#fn4">4</a></sup></td>
-      <td>참고 사항 <sup><a href="#fn4">4</a></sup></td>
+      <td>참고 사항 <sup><a href="#fn3">3</a></sup></td>
+      <td>참고 사항 <sup><a href="#fn3">3</a></sup></td>
     </tr>
   </tbody>
 </table>
 
 <span id="fn1" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>1</sup> Google Cloud의 Agent Platform에서는 Claude 4 모델 이상에서 웹 검색을 사용할 수 있습니다.<br />
-<span id="fn2" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>2</sup> 이러한 제공자에서 자동 모드는 Claude Sonnet 5, Opus 4.7, Opus 4.8만 지원합니다. [자동 모드 구성](/docs/ko/auto-mode-config)을 참조하십시오. v2.1.158부터 v2.1.206까지 이러한 제공자의 자동 모드는 `CLAUDE_CODE_ENABLE_AUTO_MODE=1` 설정도 필요했습니다. v2.1.207은 이 요구 사항을 제거했습니다.<br />
-<span id="fn3" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>3</sup> `/loop every 2 hours`와 같은 명시적 간격은 모든 제공자에서 작동합니다. Amazon Bedrock, AWS의 Claude Platform, Google Cloud의 Agent Platform, Microsoft Foundry에서는 `/loop`가 자신의 간격을 선택하거나 기본 유지 관리 프롬프트를 제공할 수 없으므로 간격이 없는 프롬프트는 10분마다 실행되고 인수가 없는 `/loop`는 사용 메시지를 표시합니다. [예약된 작업](/docs/ko/scheduled-tasks)을 참조하십시오.<br />
-<span id="fn4" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>4</sup> 클라우드 제공자와의 계약에 따릅니다.<br />
-<span id="fn5" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>5</sup> 대시보드 및 API만 해당합니다. [기여도 메트릭](/docs/ko/analytics#enable-contribution-metrics)은 claude.ai Team 또는 Enterprise 조직이 필요합니다.
+<span id="fn2" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>2</sup> 이러한 제공자에서 자동 모드는 Claude Sonnet 5, Opus 4.7 이상, Fable 모델만 지원합니다. [자동 모드 구성](/docs/ko/auto-mode-config)을 참조하십시오. 이러한 제공자의 기본 시작 권한 모드는 Manual입니다. [세션이 시작되는 모드](/docs/ko/permission-modes#which-mode-a-session-starts-in)를 참조하십시오. v2.1.158부터 v2.1.206까지 이러한 제공자의 자동 모드는 `CLAUDE_CODE_ENABLE_AUTO_MODE=1` 설정도 필요했습니다. v2.1.207은 이 요구 사항을 제거했습니다.<br />
+<span id="fn3" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>3</sup> 클라우드 제공자와의 계약에 따릅니다.<br />
+<span id="fn4" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>4</sup> 대시보드 및 API만 해당합니다. [기여도 메트릭](/docs/ko/analytics#enable-contribution-metrics)은 claude.ai Team 또는 Enterprise 조직이 필요합니다.<br />
+<span id="fn5" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>5</sup> macOS 및 Linux에서 Claude Code v2.1.224 이상 필요합니다. WSL 2 내부의 Linux 포함. 네이티브 Windows에서는 Claude Code v2.1.234 이상 필요합니다. API 키 인증을 사용하면 메시징은 같은 머신만 가능합니다. Amazon Bedrock, AWS의 Claude Platform, Google Cloud의 Agent Platform, Microsoft Foundry에서는 메시징이 같은 머신만 가능하며 Claude Code v2.1.248 이상 필요합니다. Claude는 [Remote Control](/docs/ko/remote-control)에 연결된 세션에서만 [웹의 Claude Code](/docs/ko/claude-code-on-the-web) 세션과 다른 머신의 세션을 찾을 수 있습니다. 연결하려면 claude.ai 로그인과 다른 [Remote Control 요구 사항](/docs/ko/remote-control#requirements)이 필요합니다. [다른 머신의 세션 메시징](/docs/ko/cross-session-messaging#message-sessions-on-other-machines)을 참조하십시오.
 
 <Note>
-  [LLM 게이트웨이](/docs/ko/llm-gateway)를 통해 인증하는 경우 기능 가용성은 게이트웨이가 전달하는 기본 제공자와 일치합니다. [Advisor](/docs/ko/advisor)와 같은 일부 Anthropic 전용 기능은 게이트웨이가 요청을 Anthropic API로 그대로 전달하는 경우에만 작동합니다.
+  [LLM 게이트웨이](/docs/ko/llm-gateway)를 통해 인증하는 경우 기능 가용성은 게이트웨이가 전달하는 기본 제공자와 일치합니다. 단, Claude Code 자체가 끄는 기능은 제외됩니다. `ANTHROPIC_BASE_URL`이 `api.anthropic.com` 이외의 호스트를 가리킬 때마다 Claude Code는 게이트웨이가 전달하는 것과 관계없이 [Remote Control](/docs/ko/remote-control#requirements) 및 [서버 관리 설정](/docs/ko/server-managed-settings#platform-availability)과 같은 기능을 끕니다. [Advisor](/docs/ko/advisor)와 같은 일부 Anthropic 전용 기능은 게이트웨이가 요청을 Anthropic API로 그대로 전달하는 경우에만 작동합니다.
+
+  \[Claude Code가 보내는 요청이 Amazon Bedrock 또는 Agent Platform 형식 게이트웨이, `ANTHROPIC_BASE_URL` 게이트웨이, Claude apps gateway 로그인 간에 어떻게 다른지에 대해서는 [연결 방법별 클라이언트 동작](/docs/ko/llm-gateway-protocol#how-the-connection-method-changes-client-behavior)을 참조하십시오.
 </Note>
 
 <h3 id="summary-by-provider">
@@ -223,61 +238,62 @@ Desktop은 부분적인 예외입니다: [게이트웨이 라우팅은 앱에서
 
 <Tabs>
   <Tab title="Amazon Bedrock">
-    **사용 불가능:** 모든 [Claude 구독이 필요한 기능](#features-that-require-a-claude-subscription), 그리고 [웹 검색](/docs/ko/tools-reference#websearch-tool-behavior), [빠른 모드](/docs/ko/fast-mode), [Advisor](/docs/ko/advisor), [Channels](/docs/ko/channels), [분석 대시보드](/docs/ko/analytics), [서버 관리 설정](/docs/ko/server-managed-settings), [`/design-sync` 및 `/radio` 명령](/docs/ko/commands#all-commands).
+    **사용 불가능:** 모든 [Claude 구독이 필요한 기능](#features-that-require-a-claude-subscription), 그리고 [웹 검색](/docs/ko/tools-reference#websearch-tool-behavior), [빠른 모드](/docs/ko/fast-mode), [Advisor](/docs/ko/advisor), [Channels](/docs/ko/channels), [분석 대시보드](/docs/ko/analytics), [서버 관리 설정](/docs/ko/server-managed-settings), [`/design-sync` 및 `/import` 명령](/docs/ko/commands#all-commands).
 
     **부분 지원:**
 
     * [Desktop](/docs/ko/desktop): [Claude Desktop on 3P](https://claude.com/docs/third-party/claude-desktop/overview)를 통해서만
-    * [자동 모드](/docs/ko/auto-mode-config): Sonnet 5, Opus 4.7, Opus 4.8만
-    * [`/loop`](/docs/ko/scheduled-tasks): 명시적 간격만
+    * [자동 모드](/docs/ko/auto-mode-config): Sonnet 5, Opus 4.7 이상, Fable 모델만
+    * [교차 세션 메시징](/docs/ko/cross-session-messaging): 이 머신의 세션 간만 <sup><a href="#fn5">5</a></sup>
     * [Zero Data Retention](/docs/ko/zero-data-retention): AWS 계약에 따름
 
-    **대안:** 스케줄링의 경우 `/schedule` 대신 명시적 간격으로 [`/loop`](/docs/ko/scheduled-tasks)를 사용하십시오. 클라우드 세션의 경우 [GitHub Actions](/docs/ko/github-actions) 또는 [GitLab CI/CD](/docs/ko/gitlab-ci-cd)를 사용하십시오. 웹 조회의 경우 특정 URL로 [WebFetch 도구](/docs/ko/tools-reference#webfetch-tool-behavior)를 사용하십시오.
+    **대안:** 스케줄링의 경우 `/schedule` 대신 [`/loop`](/docs/ko/scheduled-tasks)를 사용하십시오. 클라우드 세션의 경우 [GitHub Actions](/docs/ko/github-actions) 또는 [GitLab CI/CD](/docs/ko/gitlab-ci-cd)를 사용하십시오. 웹 조회의 경우 특정 URL로 [WebFetch 도구](/docs/ko/tools-reference#webfetch-tool-behavior)를 사용하십시오.
   </Tab>
 
   <Tab title="AWS의 Claude Platform">
-    **사용 불가능:** 모든 [Claude 구독이 필요한 기능](#features-that-require-a-claude-subscription), 그리고 [빠른 모드](/docs/ko/fast-mode), [Advisor](/docs/ko/advisor), [Channels](/docs/ko/channels), [분석 대시보드](/docs/ko/analytics), [서버 관리 설정](/docs/ko/server-managed-settings), [`/design-sync` 및 `/radio` 명령](/docs/ko/commands#all-commands).
+    **사용 불가능:** 모든 [Claude 구독이 필요한 기능](#features-that-require-a-claude-subscription), 그리고 [빠른 모드](/docs/ko/fast-mode), [Advisor](/docs/ko/advisor), [Channels](/docs/ko/channels), [GitHub Actions](/docs/ko/github-actions), [분석 대시보드](/docs/ko/analytics), [서버 관리 설정](/docs/ko/server-managed-settings), [`/design-sync` 및 `/import` 명령](/docs/ko/commands#all-commands).
 
     **Amazon Bedrock에서 사용 불가능한 경우 사용 가능:** [웹 검색](/docs/ko/tools-reference#websearch-tool-behavior).
 
     **부분 지원:**
 
-    * [`/loop`](/docs/ko/scheduled-tasks): 명시적 간격만
+    * [교차 세션 메시징](/docs/ko/cross-session-messaging): 이 머신의 세션 간만 <sup><a href="#fn5">5</a></sup>
 
-    **대안:** 스케줄링의 경우 [`/loop`](/docs/ko/scheduled-tasks)를 명시적 간격으로 사용하십시오 (`/schedule` 대신). 클라우드 세션의 경우 [GitHub Actions](/docs/ko/github-actions) 또는 [GitLab CI/CD](/docs/ko/gitlab-ci-cd)를 사용하십시오.
+    **대안:** 스케줄링의 경우 `/schedule` 대신 [`/loop`](/docs/ko/scheduled-tasks)를 사용하십시오. 클라우드 세션의 경우 [GitLab CI/CD](/docs/ko/gitlab-ci-cd)를 사용하십시오.
   </Tab>
 
   <Tab title="Google Cloud의 Agent Platform">
-    **사용 불가능:** 모든 [Claude 구독이 필요한 기능](#features-that-require-a-claude-subscription), 그리고 [빠른 모드](/docs/ko/fast-mode), [Advisor](/docs/ko/advisor), [Channels](/docs/ko/channels), [분석 대시보드](/docs/ko/analytics), [서버 관리 설정](/docs/ko/server-managed-settings), [`/design-sync` 및 `/radio` 명령](/docs/ko/commands#all-commands).
+    **사용 불가능:** 모든 [Claude 구독이 필요한 기능](#features-that-require-a-claude-subscription), 그리고 [빠른 모드](/docs/ko/fast-mode), [Advisor](/docs/ko/advisor), [Channels](/docs/ko/channels), [분석 대시보드](/docs/ko/analytics), [서버 관리 설정](/docs/ko/server-managed-settings), [`/design-sync` 및 `/import` 명령](/docs/ko/commands#all-commands).
 
     **부분 지원:**
 
     * [Desktop](/docs/ko/desktop): [관리되는 설정](https://claude.com/docs/third-party/claude-desktop/configuration) 또는 [Claude Desktop on 3P](https://claude.com/docs/third-party/claude-desktop/overview)를 통해
     * [웹 검색](/docs/ko/tools-reference#websearch-tool-behavior): Claude 4 모델 이상
-    * [자동 모드](/docs/ko/auto-mode-config): Sonnet 5, Opus 4.7, Opus 4.8만
-    * [`/loop`](/docs/ko/scheduled-tasks): 명시적 간격만
+    * [자동 모드](/docs/ko/auto-mode-config): Sonnet 5, Opus 4.7 이상, Fable 모델만
+    * [교차 세션 메시징](/docs/ko/cross-session-messaging): 이 머신의 세션 간만 <sup><a href="#fn5">5</a></sup>
     * [Zero Data Retention](/docs/ko/zero-data-retention): Google Cloud 계약에 따름
 
-    **대안:** 스케줄링의 경우 `/schedule` 대신 명시적 간격으로 [`/loop`](/docs/ko/scheduled-tasks)를 사용하십시오. 클라우드 세션의 경우 [GitHub Actions](/docs/ko/github-actions) 또는 [GitLab CI/CD](/docs/ko/gitlab-ci-cd)를 사용하십시오.
+    **대안:** 스케줄링의 경우 `/schedule` 대신 [`/loop`](/docs/ko/scheduled-tasks)를 사용하십시오. 클라우드 세션의 경우 [GitHub Actions](/docs/ko/github-actions) 또는 [GitLab CI/CD](/docs/ko/gitlab-ci-cd)를 사용하십시오.
   </Tab>
 
   <Tab title="Microsoft Foundry">
-    **사용 불가능:** 모든 [Claude 구독이 필요한 기능](#features-that-require-a-claude-subscription), 그리고 [빠른 모드](/docs/ko/fast-mode), [Advisor](/docs/ko/advisor), [Channels](/docs/ko/channels), [GitHub Actions](/docs/ko/github-actions) 및 [GitLab CI/CD](/docs/ko/gitlab-ci-cd), [분석 대시보드](/docs/ko/analytics), [서버 관리 설정](/docs/ko/server-managed-settings), [`/design-sync` 및 `/radio` 명령](/docs/ko/commands#all-commands).
+    **사용 불가능:** 모든 [Claude 구독이 필요한 기능](#features-that-require-a-claude-subscription), 그리고 [빠른 모드](/docs/ko/fast-mode), [Advisor](/docs/ko/advisor), [Channels](/docs/ko/channels), [GitLab CI/CD](/docs/ko/gitlab-ci-cd), [분석 대시보드](/docs/ko/analytics), [서버 관리 설정](/docs/ko/server-managed-settings), [`/design-sync` 및 `/import` 명령](/docs/ko/commands#all-commands).
 
     **부분 지원:**
 
     * [Desktop](/docs/ko/desktop): [Claude Desktop on 3P](https://claude.com/docs/third-party/claude-desktop/overview)를 통해서만
-    * [자동 모드](/docs/ko/auto-mode-config): Sonnet 5, Opus 4.7, Opus 4.8만
-    * [`/loop`](/docs/ko/scheduled-tasks): 명시적 간격만
+    * [웹 검색](/docs/ko/tools-reference#websearch-tool-behavior): [Anthropic에서 호스팅되는 배포](https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry#hosting-options)만
+    * [자동 모드](/docs/ko/auto-mode-config): Sonnet 5, Opus 4.7 이상, Fable 모델만
+    * [교차 세션 메시징](/docs/ko/cross-session-messaging): 이 머신의 세션 간만 <sup><a href="#fn5">5</a></sup>
     * [Zero Data Retention](/docs/ko/zero-data-retention): Azure 계약에 따름
 
-    **대안:** 스케줄링의 경우 명시적 간격으로 [`/loop`](/docs/ko/scheduled-tasks)를 사용하십시오.
+    **대안:** 스케줄링의 경우 `/schedule` 대신 [`/loop`](/docs/ko/scheduled-tasks)를 사용하십시오. 클라우드 세션의 경우 [GitHub Actions](/docs/ko/github-actions)를 사용하십시오.
   </Tab>
 
   <Tab title="Anthropic Console">
     **사용 불가능:** 모든 [Claude 구독이 필요한 기능](#features-that-require-a-claude-subscription).
 
-    [제공자별로 다양한 CLI 기능](#cli-capabilities-that-vary-by-provider)의 모든 기능을 사용할 수 있으며, API 키가 Team 또는 Enterprise 조직에 속하는 경우 [서버 관리 설정](/docs/ko/server-managed-settings)도 사용할 수 있습니다.
+    [제공자별로 다양한 CLI 기능](#cli-capabilities-that-vary-by-provider)의 모든 기능을 사용할 수 있습니다. 단, [빠른 모드](/docs/ko/fast-mode)는 [프로비저닝된 액세스](/docs/ko/fast-mode#enable-fast-mode-for-your-organization)가 필요합니다. API 키가 Team 또는 Enterprise 조직에 속하는 경우 [서버 관리 설정](/docs/ko/server-managed-settings)도 사용할 수 있습니다.
   </Tab>
 </Tabs>
 
@@ -289,7 +305,7 @@ Amazon Bedrock, Google Cloud의 Agent Platform, Microsoft Foundry 또는 Anthrop
 
 | 기능                                                                          | Pro | Max | Team    | Enterprise                        |
 | :-------------------------------------------------------------------------- | :-- | :-- | :------ | :-------------------------------- |
-| [웹의 Claude Code](/docs/ko/claude-code-on-the-web)                                | ✓   | ✓   | ✓       | ✓ <sup><a href="#fn6">6</a></sup> |
+| [Cloud sessions](/docs/ko/claude-code-on-the-web)                                | ✓   | ✓   | ✓       | ✓ <sup><a href="#fn6">6</a></sup> |
 | [Routines](/docs/ko/routines)                                                    | ✓   | ✓   | ✓       | ✓                                 |
 | [Remote Control](/docs/ko/remote-control)                                        | ✓   | ✓   | 관리자 활성화 | 관리자 활성화                           |
 | [Channels](/docs/ko/channels)                                                    | ✓   | ✓   | 관리자 활성화 | 관리자 활성화                           |
@@ -305,7 +321,7 @@ Amazon Bedrock, Google Cloud의 Agent Platform, Microsoft Foundry 또는 Anthrop
 | [Compliance API](https://platform.claude.com/docs/en/api/compliance)        | ✗   | ✗   | ✗       | ✓                                 |
 | [Zero Data Retention](/docs/ko/zero-data-retention)                              | ✗   | ✗   | ✗       | ✓ <sup><a href="#fn7">7</a></sup> |
 
-<span id="fn6" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>6</sup> Enterprise에서는 프리미엄 시트 또는 Chat + Claude Code 시트가 필요합니다. [웹의 Claude Code](/docs/ko/claude-code-on-the-web)를 참조하십시오.<br />
+<span id="fn6" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>6</sup> Enterprise에서는 프리미엄 시트 또는 Chat + Claude Code 시트가 필요합니다. [Cloud sessions](/docs/ko/claude-code-on-the-web)를 참조하십시오.<br />
 <span id="fn7" style={{display: 'block', position: 'relative', top: '-120px'}} /><sup>7</sup> 표준 Enterprise 플랜에 포함되지 않습니다. 적격 계정의 경우 Anthropic에서 별도로 활성화해야 합니다. [Zero Data Retention](/docs/ko/zero-data-retention)을 참조하십시오.
 
 가격 책정 및 전체 플랜 비교는 [Team 플랜](https://support.claude.com/en/articles/9266767-what-is-the-team-plan) 및 [Enterprise 플랜](https://support.claude.com/en/articles/9797531-what-is-the-enterprise-plan)을 참조하십시오.

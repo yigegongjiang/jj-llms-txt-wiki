@@ -20,9 +20,13 @@ Keamanan kode Anda adalah prioritas utama. Claude Code dibangun dengan keamanan 
   Arsitektur berbasis izin
 </h3>
 
-Claude Code menggunakan izin baca-saja yang ketat secara default. Ketika tindakan tambahan diperlukan (mengedit file, menjalankan tes, mengeksekusi perintah), Claude Code meminta izin eksplisit. Pengguna mengontrol apakah akan menyetujui tindakan sekali atau mengizinkannya secara otomatis.
+Dalam mode Manual, Claude Code dimulai dengan izin baca-saja. Ketika Claude Code perlu mengedit file, menjalankan tes, atau mengeksekusi perintah, Claude Code meminta Anda terlebih dahulu, dan Anda memilih apakah akan menyetujui tindakan sekali atau mengizinkannya dari saat itu.
 
-Claude Code memerlukan persetujuan sebelum menjalankan perintah Bash yang dapat memodifikasi sistem Anda. Serangkaian perintah baca-saja bawaan seperti `ls`, `cat`, dan `git status` berjalan tanpa prompt. Pendekatan ini memungkinkan pengguna dan organisasi untuk mengonfigurasi izin secara langsung.
+Dalam mode Manual, Claude Code juga meminta sebelum menjalankan perintah Bash yang dapat memodifikasi sistem Anda. Claude Code menjalankan serangkaian [perintah baca-saja](/docs/id/permissions#read-only-commands) bawaan seperti `ls`, `cat`, dan `git status` tanpa meminta. Anda dan organisasi Anda mengonfigurasi izin ini secara langsung.
+
+Dalam [mode auto](/docs/id/permission-modes#eliminate-prompts-with-auto-mode), model pengklasifikasi terpisah meninjau tindakan alih-alih Anda dan memblokir tindakan yang dianggapnya tidak aman. [Bagaimana pengklasifikasi mengevaluasi tindakan](/docs/id/permission-modes#how-the-classifier-evaluates-actions) mencantumkan tindakan mana yang Claude Code setujui sepenuhnya, tindakan mana yang dikirimnya ke pengklasifikasi, dan tindakan mana yang masih diminta Claude Code kepada Anda. Aturan permintaan dan penolakan eksplisit Anda masih berlaku, dan organisasi Anda dapat [mematikan mode auto](/docs/id/permission-modes#eliminate-prompts-with-auto-mode).
+
+Mode izin mana yang dimulai sesi tergantung pada paket Anda, permukaan tempat Anda memulainya, dan pengaturan Anda serta organisasi Anda; lihat [Permission modes](/docs/id/permission-modes#which-mode-a-session-starts-in).
 
 Untuk konfigurasi izin terperinci, lihat [Permissions](/docs/id/permissions).
 
@@ -32,8 +36,8 @@ Untuk konfigurasi izin terperinci, lihat [Permissions](/docs/id/permissions).
 
 Untuk mengurangi risiko dalam sistem agentic:
 
-* **Alat bash bersandbox**: [Sandbox](/docs/id/sandboxing) perintah bash dengan isolasi filesystem dan jaringan, mengurangi permintaan izin sambil mempertahankan keamanan. Aktifkan dengan `/sandbox` untuk menentukan batas tempat Claude Code dapat bekerja secara otonom
-* **Pembatasan direktori kerja**: Claude Code hanya dapat menulis ke folder tempat dimulai dan subfolder-nya, dan tidak dapat memodifikasi file di direktori induk tanpa izin eksplisit. Membaca jalur di luar batas ini dengan alat Read, Grep, dan Glob dimungkinkan setelah prompt persetujuan. Perluas batas dengan [direktori tambahan](/docs/id/permissions#working-directories) untuk melewati prompt, atau batasi akses baca yang lebih luas tersedia untuk perintah Bash baca-saja dengan [aturan sandbox `denyRead`](/docs/id/sandboxing#filesystem-isolation), yang hanya berlaku ketika sandboxing diaktifkan
+* **Alat bash bersandbox**: [Sandbox](/docs/id/sandboxing) perintah bash dengan isolasi filesystem dan jaringan, mengurangi permintaan izin sambil mempertahankan keamanan. Konfigurasi dengan `/sandbox` untuk menentukan batas tempat Claude Code dapat bekerja secara otonom
+* **Pembatasan direktori kerja**: Dalam mode Manual, Claude Code hanya dapat menulis ke folder tempat dimulai dan subfolder-nya, dan tidak dapat memodifikasi file di direktori induk tanpa izin eksplisit. Dalam mode Manual, Claude Code juga meminta Anda sebelum membaca jalur di luar batas ini dengan alat Read, Grep, dan Glob. Perluas batas dengan [direktori tambahan](/docs/id/permissions#working-directories) untuk melewati permintaan, atau batasi akses baca yang lebih luas tersedia untuk perintah Bash baca-saja dengan [aturan sandbox `denyRead`](/docs/id/sandboxing#filesystem-isolation), yang hanya berlaku ketika sandboxing diaktifkan
 * **Mitigasi kelelahan permintaan**: Dukungan untuk allowlisting perintah aman yang sering digunakan per-pengguna, per-codebase, atau per-organisasi
 * **Mode Accept Edits**: Persetujuan otomatis untuk edit file dan serangkaian perintah Bash filesystem tetap seperti `mkdir`, `touch`, `rm`, `mv`, `cp`, dan `sed` untuk jalur di direktori kerja. Perintah Bash lainnya dan jalur di luar cakupan masih meminta persetujuan
 
@@ -53,10 +57,10 @@ Prompt injection adalah teknik di mana penyerang mencoba mengganti atau memanipu
   Perlindungan inti
 </h3>
 
-* **Sistem izin**: Operasi sensitif memerlukan persetujuan eksplisit
+* **Sistem izin**: Dalam Manual mode, operasi sensitif memerlukan persetujuan eksplisit
 * **Analisis yang menyadari konteks**: Mendeteksi instruksi yang berpotensi berbahaya dengan menganalisis permintaan lengkap
 * **Sanitasi input**: Mencegah command injection dengan memproses input pengguna
-* **Persetujuan perintah jaringan**: Perintah yang mengambil konten dari web seperti `curl` dan `wget` tidak disetujui secara otomatis secara default. Mereka meminta seperti perintah Bash non-read-only lainnya, sehingga Anda masih dapat menyetujui sekali atau menambahkan aturan izin eksplisit seperti `Bash(curl *)`. Untuk memblokir sepenuhnya, tambahkan ke [`permissions.deny`](/docs/id/permissions#tool-specific-permission-rules)
+* **Persetujuan perintah jaringan**: Perintah yang mengambil konten dari web seperti `curl` dan `wget` tidak disetujui secara otomatis secara default. Dalam Manual mode mereka meminta seperti perintah Bash non-read-only lainnya, sehingga Anda masih dapat menyetujui sekali atau menambahkan aturan izin eksplisit seperti `Bash(curl *)`. Untuk menghentikan Claude dari menjalankannya, tambahkan ke [`permissions.deny`](/docs/id/permissions#tool-specific-permission-rules). Aturan deny cocok dengan perintah [seperti yang ditulis](/docs/id/permissions#bash-rule-limits); untuk penegakan jaringan yang tidak bergantung pada teks perintah, lihat [isolasi jaringan sandbox](/docs/id/sandboxing#network-isolation)
 
 <h3 id="privacy-safeguards">
   Perlindungan privasi
@@ -74,13 +78,13 @@ Untuk detail lengkap, silakan tinjau [Commercial Terms of Service](https://www.a
   Perlindungan tambahan
 </h3>
 
-* **Persetujuan permintaan jaringan**: Alat yang membuat permintaan jaringan memerlukan persetujuan pengguna secara default
+* **Persetujuan permintaan jaringan**: Dalam Manual mode, sebagian besar alat yang membuat permintaan jaringan memerlukan persetujuan pengguna secara default
 * **Jendela konteks terisolasi**: Web fetch menggunakan jendela konteks terpisah untuk menghindari injeksi prompt yang berpotensi berbahaya
 * **Verifikasi kepercayaan**: Jalankan codebase pertama kali dan server MCP baru memerlukan verifikasi kepercayaan
   * Catatan: Verifikasi kepercayaan dinonaktifkan saat menjalankan secara non-interaktif dengan flag `-p`
   * Catatan: Ketika Anda memulai Claude Code langsung di direktori home Anda, penerimaan kepercayaan disimpan untuk sesi saat ini saja dan tidak ditulis ke disk, jadi prompt muncul kembali pada setiap peluncuran. Tidak ada pengaturan untuk mempertahankannya. Mulai Claude Code dari subdirektori proyek sebagai gantinya, di mana penerimaan kepercayaan disimpan per direktori
-* **Deteksi command injection**: Perintah bash yang mencurigakan memerlukan persetujuan manual bahkan jika sebelumnya allowlisted
-* **Pencocokan fail-closed**: Perintah yang tidak cocok secara default memerlukan persetujuan manual
+* **Deteksi command injection**: Dalam Manual mode, perintah bash yang mencurigakan memerlukan persetujuan manual bahkan jika sebelumnya allowlisted
+* **Pencocokan fail-closed**: Dalam Manual mode, perintah yang tidak cocok memerlukan persetujuan secara default
 * **Deskripsi bahasa alami**: Perintah bash kompleks menyertakan penjelasan untuk pemahaman pengguna
 * **Penyimpanan kredensial aman**: Kunci API dan token disimpan di macOS Keychain jika tersedia, dan dilindungi oleh izin file di Windows dan Linux. Lihat [Credential Management](/docs/id/authentication#credential-management)
 
@@ -120,16 +124,16 @@ Lihat [VS Code security and privacy](/docs/id/vs-code#security-and-privacy) untu
   Keamanan eksekusi cloud
 </h2>
 
-Saat menggunakan [Claude Code di web](/docs/id/claude-code-on-the-web), kontrol keamanan tambahan tersedia:
+Saat menggunakan [sesi cloud](/docs/id/claude-code-on-the-web), kontrol keamanan tambahan tersedia. Sesi yang organisasi Anda arahkan ke [lingkungan yang di-host sendiri](/docs/id/self-hosted-environments) berjalan di infrastruktur Anda sendiri, di mana isolasi, egress jaringan, dan kredensial git adalah tanggung jawab deployment Anda. Di lingkungan yang di-host Anthropic:
 
 * **Mesin virtual terisolasi**: Setiap sesi cloud berjalan di VM yang terisolasi dan dikelola Anthropic
 * **Kontrol akses jaringan**: Akses jaringan dibatasi secara default dan dapat dikonfigurasi untuk dinonaktifkan atau hanya mengizinkan domain tertentu
 * **Perlindungan kredensial**: Autentikasi ditangani melalui proxy aman yang menggunakan kredensial bersisir di dalam sandbox, yang kemudian diterjemahkan ke token autentikasi GitHub aktual Anda
 * **Pembatasan cabang**: Operasi git push dibatasi pada cabang kerja saat ini
-* **Pencatatan audit**: Semua operasi di lingkungan cloud dicatat untuk kepatuhan dan tujuan audit
-* **Pembersihan otomatis**: Lingkungan cloud secara otomatis dihentikan setelah penyelesaian sesi
+* **Pencatatan audit**: Semua operasi di sesi cloud dicatat untuk kepatuhan dan tujuan audit
+* **Pembersihan otomatis**: VM sesi diklaim kembali setelah periode tidak aktif
 
-Untuk detail lebih lanjut tentang eksekusi cloud, lihat [Claude Code di web](/docs/id/claude-code-on-the-web).
+Untuk detail lebih lanjut tentang eksekusi cloud, lihat [Gunakan Claude Code di cloud](/docs/id/claude-code-on-the-web); untuk mengonfigurasi akses jaringan untuk sesi cloud, lihat [Konfigurasi lingkungan cloud](/docs/id/cloud-environments#network-access).
 
 Sesi [Remote Control](/docs/id/remote-control) bekerja berbeda: antarmuka web terhubung ke proses Claude Code yang berjalan di mesin lokal Anda. Semua eksekusi kode dan akses file tetap lokal, dan lalu lintas sesi berjalan melalui Anthropic API melalui TLS; saat terhubung, transkrip sesi disimpan di server Anthropic untuk menyinkronkan percakapan di seluruh perangkat, seperti yang dijelaskan dalam [Connection and security](/docs/id/remote-control#connection-and-security). Tidak ada VM cloud atau sandboxing yang terlibat. Koneksi menggunakan beberapa kredensial berumur pendek dengan cakupan sempit, masing-masing dibatasi untuk tujuan tertentu dan kedaluwarsa secara independen, untuk membatasi radius ledakan dari kredensial tunggal yang dikompromikan.
 
@@ -150,7 +154,7 @@ Sesi [Remote Control](/docs/id/remote-control) bekerja berbeda: antarmuka web te
   Keamanan tim
 </h3>
 
-* Gunakan [managed settings](/docs/id/settings#settings-files) untuk menegakkan standar organisasi
+* Gunakan [managed settings](/docs/id/settings#where-settings-live) untuk menegakkan standar organisasi
 * Bagikan konfigurasi izin yang disetujui melalui kontrol versi
 * Latih anggota tim tentang praktik terbaik keamanan
 * Pantau penggunaan Claude Code melalui [OpenTelemetry metrics](/docs/id/monitoring-usage)
@@ -172,9 +176,11 @@ Jika Anda menemukan kerentanan keamanan di Claude Code:
 </h2>
 
 * [Security guidance plugin](/docs/id/security-guidance): biarkan Claude meninjau dan memperbaiki kerentanan dalam perubahan kode miliknya sendiri selama sesi
+* [`/security-review`](/docs/id/commands#all-commands): jalankan pemeriksaan keamanan sesuai permintaan atas perubahan pada cabang Anda saat ini
 * [Sandbox environments](/docs/id/sandbox-environments): bandingkan pendekatan isolasi dan pilih satu untuk model ancaman Anda
 * [Sandboxing](/docs/id/sandboxing): isolasi filesystem dan jaringan untuk perintah Bash
 * [Permissions](/docs/id/permissions): konfigurasi izin dan kontrol akses
 * [Monitoring usage](/docs/id/monitoring-usage): lacak dan audit aktivitas Claude Code
 * [Development containers](/docs/id/devcontainer): lingkungan yang aman dan terisolasi
 * [Anthropic Trust Center](https://trust.anthropic.com): sertifikasi keamanan dan kepatuhan
+* [CISO's guide to agentic AI](https://claude.com/blog/ciso-guide-to-agentic-ai): kerangka kerja pemimpin keamanan untuk menilai penyebaran AI agentic

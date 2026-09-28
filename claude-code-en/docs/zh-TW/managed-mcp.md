@@ -4,56 +4,65 @@
 
 # 控制組織的 MCP 伺服器存取
 
-> 使用受管配置檔案、允許清單和拒絕清單限制使用者可以新增或連接的 MCP 伺服器。
+> 使用受管設定檔、受管設定、允許清單和拒絕清單，限制使用者可以新增或連線的 MCP 伺服器，或為每位使用者提供伺服器。
 
-根據預設，任何執行 Claude Code 的人都可以連接他們選擇的任何 [MCP 伺服器](/docs/zh-TW/mcp)。Anthropic 在將連接器新增到 [Anthropic Directory](https://claude.ai/directory) 之前會根據其 [列表標準](https://claude.com/docs/connectors/building/review-criteria) 審查連接器，但不會對任何 MCP 伺服器進行安全審計或管理。作為管理員，您可以限制在組織中執行的伺服器，從部署固定的已批准集合到完全停用 MCP。
+根據預設，任何執行 Claude Code 的人都可以連線他們選擇的任何 [MCP 伺服器](/docs/zh-TW/mcp)。Anthropic 在將連接器新增至 [Anthropic 目錄](https://claude.ai/directory)之前，會根據其[列表標準](https://claude.com/docs/connectors/building/review-criteria)審查連接器，但不會對任何 MCP 伺服器進行安全稽核或管理。作為管理員，您可以限制在組織中執行的伺服器，從部署固定的已核准集合到完全停用 MCP，並且您可以為每位使用者提供伺服器。
+
+這些限制涵蓋 Claude Code 自行載入的伺服器，包括它從 claude.ai 擷取的連接器。桌面應用程式傳遞給其本機和 SSH 工作階段的連接器會以程序內方式到達，並由您的 claude.ai 組織設定進行管理；[連接器如何到達 Claude Code](/docs/zh-TW/mcp#how-connectors-reach-claude-code) 顯示哪些控制項適用於每種工作階段（包括雲端工作階段）中的連接器。
 
 本頁涵蓋如何：
 
-* [選擇符合您需要的控制級別的模式](#choose-a-pattern)
-* [使用 `managed-mcp.json` 部署固定伺服器集合](#exclusive-control-with-managed-mcp-json)，包括如何 [完全停用 MCP](#disable-mcp-entirely)
+* [選擇符合您需要的控制程度的模式](#choose-a-pattern)
+* [使用 `managed-mcp.json` 部署固定伺服器集合](#exclusive-control-with-managed-mcp-json)，包括如何[完全停用 MCP](#disable-mcp-entirely)
+* [透過受管設定提供伺服器](#provide-servers-through-managed-settings)，同時使用者保留自己的伺服器
 * [使用允許清單和拒絕清單控制伺服器](#policy-based-control-with-allowlists-and-denylists)
-* [告訴使用者當限制阻止伺服器時會發生什麼](#how-restrictions-appear-to-users)
-* [監控您的組織實際使用的伺服器](#monitor-mcp-usage)
+* [告知使用者限制阻止伺服器時的預期情況](#how-restrictions-appear-to-users)
+* [監控組織實際使用的伺服器](#monitor-mcp-usage)
 
 <Note>
-  [安全](/docs/zh-TW/security) 頁面涵蓋 MCP 威脅模型以及如何在批准伺服器之前評估它。[決定要強制執行的內容](/docs/zh-TW/admin-setup#decide-what-to-enforce) 涵蓋 MCP 限制以及其他管理控制。
+  [安全性](/docs/zh-TW/security)頁面涵蓋 MCP 威脅模型以及如何在核准伺服器前進行評估。[決定要強制執行的項目](/docs/zh-TW/admin-setup#decide-what-to-enforce)涵蓋 MCP 限制以及其他管理控制項。
 </Note>
 
 <h2 id="choose-a-pattern">
-  選擇模式
+  選擇一個模式
 </h2>
 
-Claude Code 支援一系列限制級別。每個模式使用以下機制中的一個或兩個：`managed-mcp.json` 用於部署固定集合，`allowedMcpServers`/`deniedMcpServers` 用於篩選使用者配置的內容。
+Claude Code 支援一系列限制級別。每個模式使用以下一個或多個機制：`managed-mcp.json` 用於部署固定集合、`managedMcpServers` 受管設定用於提供伺服器以及使用者新增的伺服器，以及 `allowedMcpServers`/`deniedMcpServers` 用於篩選使用者設定的內容。
 
-| 模式           | 功能                                    | 配置                                                                                            |
-| :----------- | :------------------------------------ | :-------------------------------------------------------------------------------------------- |
-| **停用 MCP**   | 任何地方都不載入伺服器                           | `managed-mcp.json` 包含空伺服器對應                                                                   |
-| **固定部署**     | 每個使用者獲得相同的伺服器，無法新增其他伺服器               | `managed-mcp.json` 包含您想要的伺服器                                                                  |
-| **已批准目錄**    | 發佈已批准伺服器的清單；使用者新增他們想要的伺服器，其他所有伺服器都被阻止 | `allowedMcpServers` + `allowManagedMcpServersOnly: true`                                      |
-| **僅外掛程式伺服器** | 伺服器只能來自外掛程式；使用者無法新增自己的伺服器             | [`strictPluginOnlyCustomization`](/docs/zh-TW/settings#strictpluginonlycustomization) 包含清單中的 `mcp` |
-| **軟允許清單**    | 強制執行允許清單，使用者可以在自己的設定中擴展               | `allowedMcpServers` 不含 `allowManagedMcpServersOnly`                                           |
-| **僅拒絕清單**    | 阻止已知的不良伺服器，允許其他所有伺服器                  | `deniedMcpServers`                                                                            |
-| **無限制**      | 使用者新增任何內容                             | 不部署任何受管 MCP 配置                                                                                |
+| 模式            | 功能                                                                                                                                                            | 設定                                                                                                      |
+| :------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------ | :------------------------------------------------------------------------------------------------------ |
+| **停用 MCP**    | 沒有伺服器載入，除了 [啟動工作階段的應用程式註冊的同處理程序伺服器](#exclusive-control-with-managed-mcp-json) 和任何您 [透過 `managedMcpServers` 提供的伺服器](#provide-servers-through-managed-settings) | `managed-mcp.json` 搭配空白伺服器對應                                                                            |
+| **固定部署**      | 每個使用者都取得相同的伺服器，無法新增其他伺服器                                                                                                                                      | `managed-mcp.json` 搭配您想要的伺服器                                                                            |
+| **提供的伺服器**    | 每個使用者都取得您列出的遠端伺服器，並保留他們自己的伺服器                                                                                                                                 | 受管設定中的 `managedMcpServers`                                                                              |
+| **已核准的目錄**    | 發佈已核准伺服器的清單；使用者新增他們想要的伺服器，其他任何伺服器都會被封鎖                                                                                                                        | `allowedMcpServers` + `allowManagedMcpServersOnly: true`                                                |
+| **僅限外掛程式伺服器** | 使用者無法透過 `~/.claude.json` 或 `.mcp.json` 新增伺服器；外掛程式伺服器仍會載入                                                                                                      | [`strictPluginOnlyCustomization`](/docs/zh-TW/settings-reference#strictpluginonlycustomization) 搭配清單中的 `mcp` |
+| **軟性允許清單**    | 強制執行允許清單，使用者可以在他們自己的設定中擴展                                                                                                                                     | `allowedMcpServers` 不搭配 `allowManagedMcpServersOnly`                                                    |
+| **僅限拒絕清單**    | 封鎖已知的不良伺服器，允許其他所有伺服器                                                                                                                                          | `deniedMcpServers`                                                                                      |
+| **無限制**       | 使用者新增任何伺服器                                                                                                                                                    | 不部署任何受管 MCP 設定                                                                                          |
 
 <Note>
-  Claude Code 沒有內建的 MCP 伺服器登錄表，使用者可以從中瀏覽和安裝。對於已批准目錄模式，在使用者會找到的地方（例如內部 wiki）共享已批准清單及其 `claude mcp add` 命令，或通過 [受管外掛程式市場](/docs/zh-TW/plugin-marketplaces#managed-marketplace-restrictions) 將伺服器作為外掛程式分發，以便使用者可以從 `/plugin` 瀏覽和安裝它們。
+  Claude Code 沒有內建的 MCP 伺服器登錄，使用者可以從中瀏覽和安裝。對於已核准的目錄模式，請在使用者會找到的地方（例如內部 wiki）分享已核准的清單及其 `claude mcp add` 命令，或透過 [受管外掛程式市集](/docs/zh-TW/plugins/org#restrict-what-users-can-install) 將伺服器分發為外掛程式，以便使用者可以從 `/plugin` 瀏覽和安裝它們。
 </Note>
 
 <h2 id="exclusive-control-with-managed-mcp-json">
   使用 managed-mcp.json 進行獨佔控制
 </h2>
 
-如果您部署 `managed-mcp.json` 檔案，Claude Code 只會載入該檔案定義的伺服器。使用者無法新增、修改或使用任何其他 MCP 伺服器，包括外掛程式提供的伺服器。該檔案也會抑制 claude.ai 連接器，除非您 [允許它們與受管集合並存](#allow-claude-ai-connectors-alongside-the-managed-set)。
+當您部署 `managed-mcp.json` 檔案時，Claude Code 只會載入以下伺服器：
 
-另外兩個設定可以進一步篩選受管集合：
+* 該檔案定義的伺服器
+* 您[透過 `managedMcpServers` 提供的伺服器](#provide-servers-through-managed-settings)
+* 啟動工作階段的應用程式註冊的同處理程序伺服器，例如 VS Code 擴充功能自己的伺服器或[桌面應用程式提供的連接器](/docs/zh-TW/mcp#how-connectors-reach-claude-code)
 
-* `allowedMcpServers` 和 `deniedMcpServers` 也適用於受管伺服器，因此不符合它們的受管伺服器將不會載入。
-* 使用者自己的 `deniedMcpServers` 從他們的設定中合併，因此使用者可以為自己阻止受管伺服器。
+使用者無法新增、修改或使用任何其他 MCP 伺服器，包括外掛程式提供的伺服器和透過 [`--mcp-config` CLI 旗標](/docs/zh-TW/cli-reference#cli-flags)傳遞的伺服器。該檔案也會抑制 Claude Code 自行擷取的 claude.ai 連接器，除非您[允許它們與受管集合並存](#allow-claude-ai-connectors-alongside-the-managed-set)。
 
-有關檢查的完整順序，請參閱 [伺服器如何被評估](#how-a-server-is-evaluated)。
+<h3 id="deploy-managed-mcp-json">
+  部署 managed-mcp.json
+</h3>
 
-`managed-mcp.json` 是一個獨立檔案，因此無法通過 [伺服器受管設定](/docs/zh-TW/server-managed-settings) 傳遞。任何可以寫入具有管理員權限的系統路徑的程序都可以部署它。在大規模部署中，通常通過裝置管理工具進行，例如 macOS 上的 Jamf 或配置檔案、Windows 上的群組原則或 Intune，或 Linux 上您選擇的艦隊管理。Claude Code 在以下路徑之一查找該檔案：
+`managed-mcp.json` 是一個獨立檔案，因此無法透過[伺服器管理的設定](/docs/zh-TW/server-managed-settings)傳遞。若要透過受管設定傳遞伺服器而不進行獨佔控制，請改用 [`managedMcpServers`](#provide-servers-through-managed-settings)。
+
+任何可以寫入具有管理員權限的系統路徑的程序都可以部署該檔案。在整個機隊中，這通常是透過裝置管理工具進行，例如 macOS 上的 Jamf 或設定檔、Windows 上的群組原則或 Intune，或您在 Linux 上選擇的機隊管理工具。Claude Code 會在以下其中一個路徑中尋找該檔案：
 
 | 平台          | 路徑                                                         |
 | :---------- | :--------------------------------------------------------- |
@@ -87,29 +96,55 @@ Claude Code 支援一系列限制級別。每個模式使用以下機制中的�
 ```
 
 <h3 id="authenticate-with-per-user-credentials">
-  使用每個使用者的認證進行身份驗證
+  使用個別使用者認證進行驗證
 </h3>
 
-機器上的任何使用者都可以讀取此檔案，因此不要在 `env` 區塊中儲存 API 金鑰或其他認證。改用以下其中一種方式傳遞每個使用者的認證：
+機器上的任何使用者都可以讀取此檔案，因此請勿在 `env` 區塊中儲存 API 金鑰或其他認證。改用以下其中一種方式傳遞個別使用者認證：
 
-* [`${VAR}` 擴展](/docs/zh-TW/mcp#environment-variable-expansion-in-mcp-json) 從每個使用者的環境中讀取機密。
-* [OAuth 或每個使用者的標頭](/docs/zh-TW/mcp#authenticate-with-remote-mcp-servers) 以便每個使用者以自己的身份進行身份驗證。
-* [`headersHelper`](/docs/zh-TW/mcp#use-dynamic-headers-for-custom-authentication) 在連接時生成認證。
+* [從每個使用者的環境讀取機密的 `${VAR}` 擴展](/docs/zh-TW/mcp#environment-variable-expansion-in-mcp-json)。
+* [OAuth 或個別使用者標頭](/docs/zh-TW/mcp#authenticate-with-remote-mcp-servers)，以便每個使用者以自己的身份進行驗證。
+* [`headersHelper`](/docs/zh-TW/mcp#use-dynamic-headers-for-custom-authentication) 在連線時產生認證。
+
+<h3 id="servers-passed-with-mcp-config-or-strict-mcp-config">
+  透過 `--mcp-config` 或 `--strict-mcp-config` 傳遞的伺服器
+</h3>
+
+當工作階段在部署 `managed-mcp.json` 時透過 `--mcp-config` 接收伺服器時，使用者看到的內容在工作站和雲端工作階段之間有所不同：
+
+* 在工作站上，Claude Code 在啟動時以 `You cannot dynamically configure MCP servers when an enterprise MCP config is present` 結束。
+* 在部署該檔案的主機上的[雲端工作階段](/docs/zh-TW/claude-code-on-the-web)中，例如[自託管執行器](/docs/zh-TW/self-hosted-environments-configuration#mcp-servers)，Claude Code 僅使用受管伺服器啟動，並跳過 claude.ai 連接器和雲端主機透過 `--mcp-config` 傳遞的其他伺服器。工作階段中沒有任何內容告訴使用者哪些伺服器被遺漏。Claude Code 在其 stderr 上的警告中命名它們，自託管執行器會在 `debug` 日誌級別記錄。
+
+`--strict-mcp-config` 旗標要求取代受管集合。如果使用者在部署此類檔案時傳遞它，Claude Code 在工作站和雲端工作階段上都會在啟動時結束。
+
+<h3 id="how-allowlists-and-denylists-apply-to-the-managed-set">
+  允許清單和拒絕清單如何應用於受管集合
+</h3>
+
+拒絕清單可以進一步篩選 `managed-mcp.json` 中的伺服器：
+
+* `deniedMcpServers` 也適用於受管伺服器，因此與項目相符的受管伺服器將不會載入。
+* 使用者自己的 `deniedMcpServers` 會從其設定中合併，因此使用者可以為自己封鎖受管伺服器。
+
+`allowedMcpServers` 不適用於 `managed-mcp.json` 中的伺服器，但有一個例外：Claude Code 仍會檢查其定義使用 [`${VAR}` 擴展](/docs/zh-TW/mcp#environment-variable-expansion-in-mcp-json)的伺服器是否符合允許清單，因為該伺服器的有效設定來自每個使用者的環境，而不是僅來自檔案。在 v2.1.259 之前，每當設定允許清單時，每個受管伺服器都必須通過允許清單。請參閱[伺服器如何被評估](#how-a-server-is-evaluated)以了解哪些欄位觸發 `${VAR}` 檢查和完整的檢查順序。
+
+如果您使用 `allowedMcpServers` 防止您自己的某些 `managed-mcp.json` 伺服器載入，除非它們使用 `${VAR}` 擴展，否則這些伺服器將在每個使用者首次啟動 v2.1.259 或更新版本時開始載入，沒有提示或通知：只有 `deniedMcpServers` 仍會從這些伺服器中減去。在使用者升級之前，為它們新增拒絕清單項目，或為每個群組部署單獨的 `managed-mcp.json`。
 
 <h3 id="validate-the-configuration">
-  驗證配置
+  驗證設定
 </h3>
 
-要確認檔案有效，請在受管機器上執行兩項檢查：
+若要確認檔案生效，請在受管機器上執行兩項檢查：
 
-1. `claude mcp list` 只顯示 `managed-mcp.json` 中的伺服器。如果使用者自己的伺服器仍然出現，則檔案未被讀取；檢查路徑和權限。
-2. `claude mcp add --transport http test https://example.com/mcp` 失敗，並顯示 `Cannot add MCP server: enterprise MCP configuration is active and has exclusive control over MCP servers`。URL 不需要是真實伺服器，因為原則檢查在聯繫任何內容之前拒絕該命令。
+1. `claude mcp list` 只顯示 `managed-mcp.json` 中的伺服器，加上您透過 `managedMcpServers` 提供的任何伺服器。兩個其他結果表示出現問題：
+   * 如果使用者自己的伺服器仍然出現，Claude Code 未讀取該檔案，因此請檢查其路徑和其父目錄的權限。
+   * 如果檔案的伺服器未出現，且 `MCP config diagnostics` 部分將企業設定標記為無法解析失敗，Claude Code 無法讀取或解析該檔案。修正該部分命名的錯誤，然後讓使用者重新啟動 Claude Code。
+2. `claude mcp add --transport http test https://example.com/mcp` 失敗，並顯示 `Cannot add MCP server: enterprise MCP configuration is active and has exclusive control over MCP servers`。URL 不需要是真實伺服器，因為原則檢查會在聯絡任何內容之前拒絕該命令。
 
 <h3 id="disable-mcp-entirely">
   完全停用 MCP
 </h3>
 
-部署包含空伺服器對應的 `managed-mcp.json` 以阻止每個 MCP 伺服器：
+部署包含空伺服器對應的 `managed-mcp.json` 以封鎖除[啟動工作階段的應用程式註冊的同處理程序伺服器](#exclusive-control-with-managed-mcp-json)之外的每個 MCP 伺服器：
 
 ```json theme={null}
 {
@@ -117,98 +152,224 @@ Claude Code 支援一系列限制級別。每個模式使用以下機制中的�
 }
 ```
 
-使用者在 `/mcp` 中看不到任何 MCP 伺服器，`claude mcp add` 失敗，並顯示上述企業原則錯誤。使用者之前配置的伺服器在下次啟動會話時停止載入，沒有警告說明原則是原因。
+`claude mcp add` 失敗，並顯示上述企業原則錯誤。使用者之前設定的伺服器在下次啟動工作階段時停止載入，沒有警告說明原則是原因。您透過 `managedMcpServers` 提供的伺服器仍在空對應下載入，因此也請保持該金鑰未設定以完全停用 MCP。
 
 <h3 id="allow-claude-ai-connectors-alongside-the-managed-set">
   允許 claude.ai 連接器與受管集合並存
 </h3>
 
-部署 `managed-mcp.json` 預設會抑制 [claude.ai 連接器](/docs/zh-TW/mcp#use-mcp-servers-from-claude-ai)，包括管理員在 claude.ai 管理控制台中為組織配置的連接器。要將這些連接器與 `managed-mcp.json` 中的伺服器一起載入，請在 [受管設定來源](/docs/zh-TW/admin-setup#decide-how-settings-reach-devices) 中設定 `"allowAllClaudeAiMcps": true`。需要 Claude Code v2.1.149 或更新版本。
+根據預設，部署 `managed-mcp.json` 會抑制 Claude Code 自行擷取的 [claude.ai 連接器](/docs/zh-TW/mcp#use-mcp-servers-from-claude-ai)，包括管理員在 claude.ai 管理主控台中為組織設定的連接器。若要將這些連接器與 `managed-mcp.json` 中的伺服器一起載入，請在[受管設定來源](/docs/zh-TW/admin-setup#decide-how-settings-reach-devices)中設定 `"allowAllClaudeAiMcps": true`。
 
-啟用此設定後，Claude Code 會載入與未部署 `managed-mcp.json` 時相同的 claude.ai 連接器。[允許清單和拒絕清單](#policy-based-control-with-allowlists-and-denylists) 仍然適用於這些連接器，因此您可以使用 `deniedMcpServers` 阻止特定連接器。此設定僅影響 claude.ai 連接器；外掛程式提供的伺服器保持被抑制。
+啟用該設定後，Claude Code 會載入如果未部署 `managed-mcp.json` 時會載入的相同 claude.ai 連接器。[允許清單和拒絕清單](#policy-based-control-with-allowlists-and-denylists)仍適用於這些連接器，因此您可以使用 `deniedMcpServers` 封鎖特定連接器。該設定僅影響 Claude Code 自行擷取的 claude.ai 連接器；外掛程式提供的伺服器保持被抑制。
 
-Claude Code 只從管理員控制的原則層級讀取此設定：伺服器受管設定、MDM 部署的 plist 或 HKLM 登錄機碼，或系統 `managed-settings.json` 檔案。將其放在使用者或專案設定中無效，因此使用者無法重新啟用獨佔控制所抑制的連接器。
+雲端工作階段和桌面應用程式的本機和 SSH 工作階段以另一種方式接收連接器，如[連接器如何到達 Claude Code](/docs/zh-TW/mcp#how-connectors-reach-claude-code) 中所述。執行雲端工作階段的主機上的 `managed-mcp.json`（例如[自託管執行器主機](/docs/zh-TW/self-hosted-environments-configuration#mcp-servers)）會抑制該工作階段的連接器，無論您是否設定 `allowAllClaudeAiMcps`。沒有 `managed-mcp.json` 到達桌面應用程式傳遞給其本機和 SSH 工作階段的連接器。
 
-<h2 id="policy-based-control-with-allowlists-and-denylists">
-  使用允許清單和拒絕清單進行基於原則的控制
+Claude Code 只從管理員控制的原則層級讀取 `allowAllClaudeAiMcps`：伺服器管理的設定、MDM 部署的 plist 或 HKLM 登錄機碼，或系統 `managed-settings.json` 檔案。將其放在使用者或專案設定中無效，因此使用者無法重新啟用獨佔控制抑制的連接器。
+
+<h2 id="provide-servers-through-managed-settings">
+  透過受管設定提供伺服器
 </h2>
 
-允許清單和拒絕清單篩選允許載入的已配置伺服器。它們不是登錄表：伺服器仍然必須由使用者、外掛程式或 `managed-mcp.json` 新增，然後允許清單或拒絕清單才會應用於它。要將伺服器部署給使用者，請使用 [`managed-mcp.json`](#exclusive-control-with-managed-mcp-json)。兩個清單也會篩選使用 [`--mcp-config` CLI 旗標](/docs/zh-TW/cli-reference#cli-flags) 傳遞的伺服器；`--strict-mcp-config` 限制載入的配置檔案，不會繞過任一清單。
+若要在不獨佔控制 MCP 的情況下為每位使用者提供一組遠端 MCP 伺服器，請在[受管設定來源](/docs/zh-TW/admin-setup#decide-how-settings-reach-devices)中的 `managedMcpServers` 下列出它們：伺服器受管設定、[Claude 應用程式閘道](/docs/zh-TW/claude-apps-gateway-config#what-goes-in-cli)原則、MDM 設定檔或登錄原則，或 `managed-settings.json`。使用者保留他們自己新增的伺服器，並額外接收您的伺服器。需要 Claude Code v2.1.259 或更新版本。較早的用戶端會忽略此金鑰。
 
-要使允許清單具有權威性，請在 [受管設定來源](/docs/zh-TW/admin-setup#decide-how-settings-reach-devices)（例如伺服器受管設定或已部署的 `managed-settings.json` 檔案）中一起設定 `allowedMcpServers` 和 `allowManagedMcpServersOnly: true`。[將允許清單限制為僅受管設定](#restrict-the-allowlist-to-managed-settings-only) 顯示配置。沒有 `allowManagedMcpServersOnly`，來自每個設定來源的允許清單會合併，包括使用者自己的 `~/.claude/settings.json`，因此使用者可以擴展您的允許清單允許的內容。拒絕清單無論如何都會從每個來源合併。
+該值是一個以伺服器名稱為鍵的物件。每個項目的形狀與專案 [`.mcp.json`](/docs/zh-TW/mcp#project-scope) 檔案中的 HTTP 或 SSE 伺服器相同，包括[使用遠端 MCP 伺服器進行驗證](/docs/zh-TW/mcp#authenticate-with-remote-mcp-servers)中描述的選用 `headers` 和 `oauth` 成員。此範例提供一個搜尋伺服器，每位使用者可使用 OAuth 登入，以及一個記錄伺服器，會傳送您的組織簽發的標頭：
+
+```json theme={null}
+{
+  "managedMcpServers": {
+    "search": {
+      "type": "http",
+      "url": "https://search.example.com/mcp"
+    },
+    "records": {
+      "type": "http",
+      "url": "https://records.example.com/mcp",
+      "headers": {
+        "X-Records-Key": "key-issued-for-all-claude-code-users"
+      }
+    }
+  }
+}
+```
+
+任何能夠讀取機器上受管設定的人（包括使用者）都可以讀取您在此設定的標頭值。使用為整個受眾簽發的認證，或省略 `headers` 並讓每位使用者使用 OAuth 登入。
+
+<h3 id="what-an-entry-can-contain">
+  項目可以包含的內容
+</h3>
+
+Claude Code 只在通過以下每項檢查時才會載入項目。它會捨棄未通過檢查的項目，記錄您可以使用 `/status` 讀取的通知，並仍然載入其他項目：
+
+* `type` 是 `http` 或 `sse`。如同在 `.mcp.json` 中，`streamable-http` 被接受為 `http` 的別名。
+* `url` 是 `https://` URL。Claude Code 拒絕純 `http://` URL，包括指向 `localhost` 的 URL。
+* 該項目沒有 `command`、`args`、`env` 或 `headersHelper` 成員，因此受管設定文件永遠不會命名要在使用者機器上執行的程式。
+* 沒有值包含 `${VAR}` 參考。Claude Code 不會在這些項目中展開環境變數，因此請寫入字面值。
+* 伺服器名稱只包含字母、數字、連字號和底線，且沒有金鑰或值包含控制或隱形格式字元。
+
+Claude Desktop 有一個同名的受管設定，其值是不同項目形狀的陣列，因此不要將一個複製到另一個。Claude Code 不接受陣列形式，而是記錄通知而不是載入它。
+
+Claude 應用程式閘道在啟動時執行相同的檢查；請參閱[原則中的 MCP 伺服器](/docs/zh-TW/claude-apps-gateway-config#mcp-servers-in-a-policy)。
+
+<h3 id="how-provided-servers-load">
+  提供的伺服器如何載入
+</h3>
+
+這些規則決定當提供的伺服器與另一個伺服器定義或此頁面上的另一個設定重疊時會載入什麼：
+
+* 提供的伺服器優先於本機、專案或使用者範圍中同名的伺服器，以及優先於指向相同 URL 的外掛程式伺服器或 claude.ai 連接器。
+* 如果您也部署 `managed-mcp.json`，Claude Code 會一起載入其伺服器和提供的伺服器，當兩者都定義名稱時，檔案的項目優先。
+* 當 [`strictPluginOnlyCustomization`](/docs/zh-TW/settings-reference#strictpluginonlycustomization) 鎖定 `mcp` 表面時，提供的伺服器會繼續載入。
+* `deniedMcpServers` 適用於提供的伺服器，包括來自使用者自己設定的項目，因此使用者可以為自己封鎖一個。提供的伺服器不需要 `allowedMcpServers` 項目。
+
+當您也沒有部署 `managed-mcp.json` 時，每次執行的旗標保留其含義：
+
+* 使用者使用 `--mcp-config` 以相同名稱傳遞的伺服器會取代該次執行的提供伺服器，並根據 `allowedMcpServers` 進行檢查。
+* `--strict-mcp-config` 將提供的伺服器與所有其他已設定的伺服器一起排除。
+
+部署 `managed-mcp.json` 後，兩個旗標的行為如[使用 managed-mcp.json 的獨佔控制](#exclusive-control-with-managed-mcp-json)所述。
+
+<h3 id="what-users-can-see-and-change">
+  使用者可以看到和更改的內容
+</h3>
+
+使用者無法編輯或移除提供的伺服器：
+
+* `claude mcp remove` 報告伺服器由組織提供。
+* 當您也沒有部署 `managed-mcp.json` 時，使用者在相同名稱下新增的項目會被儲存但在您的項目存在時不會被使用。
+* 使用者仍然可以在 [`/mcp`](/docs/zh-TW/mcp#disable-a-server-without-removing-it) 中為自己關閉提供的伺服器，該頁面在**受管 MCPs** 下列出提供的伺服器。
+
+`claude mcp get` 和 `/mcp` 將提供的伺服器的 URL 顯示為其主機名稱，例如 `https://mcp.example.com/…`，而 `claude mcp get` 顯示其標頭名稱而不顯示其值。
+
+<h3 id="where-managedmcpservers-applies">
+  `managedMcpServers` 適用的位置
+</h3>
+
+Claude Code 從它在[Claude Code 如何組合受管來源](/docs/zh-TW/managed-settings#how-claude-code-combines-managed-sources)下選擇的受管來源讀取 `managedMcpServers`。當該來源將 [`managedSourcesBehavior`](/docs/zh-TW/settings-reference#managedsourcesbehavior) 設定為 `"merge"` 時，Claude Code 改為提供來自每個管理員來源的伺服器，當兩個來源定義相同名稱時，較高排名來源的項目整體適用。它永遠不會從使用者可寫的 HKCU 登錄、從[嵌入主機供應的父設定](/docs/zh-TW/managed-settings#parent-settings-from-embedding-hosts)或從使用者、專案或本機設定檔案讀取金鑰，它會在那裡以警告方式捨棄金鑰。
+
+Claude Code 不會在第三方部署中的 Claude Desktop 應用程式的 Code 標籤中或在應用程式的 Cowork 工作階段中讀取金鑰，因為 Claude Desktop 自己供應並鎖定這些工作階段的 MCP 伺服器。當您的受管設定在那裡帶有金鑰時，`/status` 和 `claude doctor` 會說明這一點。
+
+<h3 id="when-provided-servers-connect">
+  提供的伺服器何時連接
+</h3>
+
+當 `managedMcpServers` 透過伺服器受管設定到達時，其時序遵循[擷取和快取行為](/docs/zh-TW/server-managed-settings#fetch-and-caching-behavior)：
+
+* 在具有快取設定的機器上，Claude Code 會保留此金鑰的快取副本，直到伺服器確認工作階段的設定，並在確認前等待該確認才載入 MCP 伺服器。如果確認失敗，工作階段會在沒有提供的伺服器的情況下繼續，`/status` 會說它們被保留。
+* 在機器的首次啟動時，還沒有快取任何內容，在設定到達前啟動的互動式工作階段會在設定到達時立即連接提供的伺服器，而已經啟動的 `claude -p` 執行可以在沒有它們的情況下完成。
+
+使用[閘道登入](/docs/zh-TW/claude-apps-gateway-config#precedence-with-other-managed-sources)，Claude Code 在工作階段啟動前載入原則，因此兩種情況都不會延遲或跳過提供的伺服器。
+
+已在執行的互動式工作階段會套用您對金鑰的編輯：
+
+* **新增伺服器**：Claude Code 在更新的設定到達時連接它，無需重新啟動。
+* **變更伺服器的項目**：這些工作階段使用新定義重新連接到它。
+* **移除伺服器**：執行中的互動式工作階段在讀取變更的設定後會將其中斷連接。非互動式 (`-p`) 執行會保留它直到結束。
+
+<h2 id="policy-based-control-with-allowlists-and-denylists">
+  使用允許清單和拒絕清單進行基於政策的控制
+</h2>
+
+允許清單和拒絕清單會篩選允許載入哪些已設定的伺服器。它們不是登錄表：伺服器仍然必須由使用者、外掛程式或您的組織新增，才能讓任一清單對其適用。
+
+您的組織透過 `managedMcpServers` 提供的伺服器會在沒有允許清單項目的情況下載入，而[伺服器如何被評估](#how-a-server-is-evaluated)涵蓋 `managed-mcp.json` 伺服器。拒絕清單適用於每個伺服器，無論其來自何處，除了進程內 `type: "sdk"` 項目外。
+
+若要將伺服器部署給使用者，請使用 [`managed-mcp.json`](#exclusive-control-with-managed-mcp-json) 或 [`managedMcpServers`](#provide-servers-through-managed-settings)。兩個清單也會篩選使用 [`--mcp-config` CLI 旗標](/docs/zh-TW/cli-reference#cli-flags)傳遞的伺服器，除了進程內 `type: "sdk"` 項目外；`--strict-mcp-config` 限制哪些設定檔會載入，不會繞過任一清單。
+
+若要使允許清單具有權威性，請在[受管設定來源](/docs/zh-TW/admin-setup#decide-how-settings-reach-devices)（例如伺服器受管設定或已部署的 `managed-settings.json` 檔案）中同時設定 `allowedMcpServers` 和 `allowManagedMcpServersOnly: true`。
+
+鎖定適用於每個由管理員控制的受管來源，因此已部署檔案中的鎖定仍然適用於同時使用不提及 MCP 的伺服器受管設定時。當鎖定開啟時，受管允許清單來自設定允許清單的最高排名管理員來源。跨來源讀取鎖定和允許清單需要 Claude Code v2.1.273 或更新版本。
+
+[將允許清單限制為僅受管設定](#restrict-the-allowlist-to-managed-settings-only)顯示設定。
+
+沒有 `allowManagedMcpServersOnly`，來自每個設定範圍的允許清單會合併，包括使用者自己的 `~/.claude/settings.json`，因此使用者可以擴大您的允許清單允許的內容。拒絕清單無論如何都會從每個範圍合併。
 
 <Note>
-  `allowManagedMcpServersOnly` 與 `allowManagedPermissionRulesOnly` 分開，後者鎖定 [權限規則](/docs/zh-TW/permissions#managed-settings) 只。設定該標誌不會強制執行 MCP 允許清單。
+  `allowManagedMcpServersOnly` 與 `allowManagedPermissionRulesOnly` 分開，後者鎖定[權限規則](/docs/zh-TW/permissions#managed-settings)。設定該旗標不會強制執行 MCP 允許清單。
 </Note>
 
 <h3 id="match-servers-by-url-command-or-name">
-  按 URL、命令或名稱匹配伺服器
+  按 URL、命令或名稱比對伺服器
 </h3>
 
-`allowedMcpServers` 和 `deniedMcpServers` 是條目清單。每個條目是一個物件，具有單一鍵，用於按 URL、命令或名稱識別伺服器：
+`allowedMcpServers` 和 `deniedMcpServers` 是項目清單。每個項目是一個物件，具有單一鍵，可按其 URL、命令或名稱識別伺服器：
 
-| 鍵               | 匹配                       | 用於             |
+| 鍵               | 比對                       | 用於             |
 | :-------------- | :----------------------- | :------------- |
-| `serverUrl`     | 遠端伺服器 URL，精確或帶有 `*` 萬用字元 | HTTP 和 SSE 伺服器 |
+| `serverUrl`     | 遠端伺服器 URL，精確或使用 `*` 萬用字元 | HTTP 和 SSE 伺服器 |
 | `serverCommand` | 啟動 stdio 伺服器的確切命令和引數     | Stdio 伺服器      |
-| `serverName`    | 使用者指派的標籤。僅精確匹配；萬用字元不展開   | 任一類型，但請參閱下面的警告 |
+| `serverName`    | 使用者指派的標籤。僅精確比對；萬用字元不會展開  | 任一類型，但請參閱下面的警告 |
 
-不設定 `allowedMcpServers` 與將其設定為空陣列不同：
+將 `allowedMcpServers` 保留未設定與將其設定為空陣列不同：
 
-| 設定                  | 未設定（預設）  | 空陣列 `[]` | 已填入       |
-| :------------------ | :------- | :------- | :-------- |
-| `allowedMcpServers` | 允許所有伺服器  | 不允許任何伺服器 | 僅允許匹配的伺服器 |
-| `deniedMcpServers`  | 不阻止任何伺服器 | 不阻止任何伺服器 | 阻止匹配的伺服器  |
+| 設定                  | 未設定（預設）  | 空陣列 `[]`                                        | 已填入                                              |
+| :------------------ | :------- | :---------------------------------------------- | :----------------------------------------------- |
+| `allowedMcpServers` | 允許所有伺服器  | 不允許任何伺服器，除了[組織自己的](#how-a-server-is-evaluated)外 | 僅允許比對的伺服器，除了[組織自己的](#how-a-server-is-evaluated)外 |
+| `deniedMcpServers`  | 沒有伺服器被阻止 | 沒有伺服器被阻止                                        | 比對的伺服器被阻止                                        |
 
-請參閱 [受管設定中的無效條目](/docs/zh-TW/settings#invalid-entries-in-managed-settings) 以了解當條目無法通過結構描述驗證時會發生什麼。
+請參閱[受管設定中的無效項目](/docs/zh-TW/managed-settings#invalid-entries-in-managed-settings)，了解項目未通過結構描述驗證時會發生什麼。
 
 <Warning>
-  `serverName` 條目（在任一清單中）不是安全控制。名稱是使用者在執行 `claude mcp add` 或編輯配置檔案時指派的標籤，而不是基礎伺服器，因此使用者可以呼叫任何伺服器 `github`。對於 claude.ai 連接器，名稱是 claude.ai 傳回的顯示名稱，可能會變更。要強制執行實際執行的伺服器，請新增 `serverCommand` 或 `serverUrl` 條目。
+  任一清單中的 `serverName` 項目不是安全控制。名稱是使用者在執行 `claude mcp add` 或編輯設定檔時指派的標籤，而不是基礎伺服器，因此使用者可以呼叫任何伺服器 `github`。對於 claude.ai 連接器，名稱是 claude.ai 傳回的顯示名稱，可能會變更。若要強制執行實際執行的伺服器，請新增 `serverCommand` 或 `serverUrl` 項目。
 </Warning>
 
 `serverName` 驗證在兩個清單之間有所不同：
 
-* 在 `deniedMcpServers` 中，`serverName` 接受任何非空字串，因此您可以按顯示名稱阻止 [claude.ai 連接器](/docs/zh-TW/mcp#use-mcp-servers-from-claude-ai)。例如，`{ "serverName": "claude.ai Slack" }` 阻止 Slack 連接器。當您需要拒絕對重新命名具有魯棒性時，或當連接器名稱衝突並獲得 ` (N)` 尾碼時，優先使用 `serverUrl` 條目。
-* 在 `allowedMcpServers` 中，`serverName` 限制為字母、數字、連字號和底線。使用 `serverUrl` 來允許列出 claude.ai 連接器。
+* 在 `deniedMcpServers` 中，`serverName` 接受任何非空字串，不含前導或尾隨空白，因此您可以按其顯示名稱阻止 [claude.ai 連接器](/docs/zh-TW/mcp#use-mcp-servers-from-claude-ai)。例如，`{ "serverName": "claude.ai Slack" }` 會阻止 Slack 連接器。當您需要拒絕對重新命名具有魯棒性時，或當連接器名稱衝突並獲得 ` (N)` 尾碼時，偏好使用 `serverUrl` 項目。
+* 在 `allowedMcpServers` 中，`serverName` 限制為字母、數字、連字號和底線。使用 `serverUrl` 來允許列出 Claude Code 自行擷取的 claude.ai 連接器；對於雲端主機提供給自託管工作階段的連接器，請改用[連接器流量離開您的網路](/docs/zh-TW/self-hosted-environments-deploy#connector-traffic-leaves-your-network)下列出的項目。
 
-要關閉所有 claude.ai 連接器，請參閱 [`disableClaudeAiConnectors`](/docs/zh-TW/mcp#disable-claude-ai-connectors)。
+若要關閉 Claude Code 自行擷取的所有 claude.ai 連接器，請參閱 [`disableClaudeAiConnectors`](/docs/zh-TW/mcp#disable-claude-ai-connectors)。
 
 <h3 id="how-a-server-is-evaluated">
   伺服器如何被評估
 </h3>
 
-在載入伺服器之前，包括來自 `managed-mcp.json` 的伺服器，Claude Code 按順序執行三項檢查：
+在載入伺服器之前（包括來自 `managed-mcp.json` 的伺服器），Claude Code 會按順序執行以下三項檢查。當使用者重新連接伺服器或在 `/mcp` 中開啟已停用的伺服器時，它會再次執行它們。進程內 `type: "sdk"` 伺服器（[啟動工作階段的應用程式註冊](/docs/zh-TW/mcp#how-connectors-reach-claude-code)）會跳過全部三項。
 
-1. **合併清單。** 來自每個設定來源的允許清單和拒絕清單條目合併為一個允許清單和一個拒絕清單。當 `allowManagedMcpServersOnly` 為 `true` 時，僅保留受管允許清單；拒絕清單始終從每個來源合併。
-2. **檢查拒絕清單。** 與任何拒絕清單條目匹配的伺服器（按 URL、命令或名稱）被阻止。沒有任何內容會覆蓋拒絕清單匹配。
-3. **檢查允許清單。** 如果 `allowedMcpServers` 未在任何地方設定，通過拒絕清單的每個伺服器都會載入。如果已設定，伺服器必須匹配的內容取決於其類型，如下表所示。
+1. **合併清單。** 來自每個設定範圍的允許清單和拒絕清單項目合併為一個允許清單和一個拒絕清單。當 `allowManagedMcpServersOnly` 為 `true` 時，僅保留受管允許清單；拒絕清單始終從每個範圍合併。當存在多個受管來源時，[從每個管理員來源讀取的鍵](/docs/zh-TW/managed-settings#keys-read-from-every-admin-source)說明其中哪些提供受管範圍的清單。
+2. **檢查拒絕清單。** 與任何拒絕清單項目比對的伺服器（按 URL、命令或名稱）會被阻止。沒有任何東西會覆蓋拒絕清單比對。
+3. **檢查允許清單。** 如果 `allowedMcpServers` 未在任何地方設定，每個通過拒絕清單的伺服器都會載入。如果已設定，伺服器必須比對的內容取決於其類型，如下表所示。
 
-| 伺服器類型          | 在匹配時允許                                                               |
-| :------------- | :------------------------------------------------------------------- |
-| 遠端（HTTP 或 SSE） | 一個 `serverUrl` 條目。`serverName` 匹配僅在允許清單不包含 `serverUrl` 條目時計數         |
-| Stdio          | 一個 `serverCommand` 條目。`serverName` 匹配僅在允許清單不包含 `serverCommand` 條目時計數 |
+   組織自己的伺服器會跳過此檢查：每個 `managedMcpServers` 項目，以及任何 `managed-mcp.json` 項目，其值不使用 `${VAR}` 展開。內建伺服器也會跳過它，例如 Chrome 中的 Claude、Claude Code 在執行中的 VS Code 或 JetBrains IDE 中連接的 `ide` 伺服器，以及 CLI 本身設定的伺服器。
 
-這些檢查中適用三個匹配規則：
+   在其命令、引數、`env`、URL 或標頭中使用 `${VAR}` 展開的 `managed-mcp.json` 伺服器仍會被檢查，就像使用者、外掛程式、`--mcp-config` 或 claude.ai 新增的每個伺服器一樣。
 
-* **命令精確匹配。** 每個引數，按順序。`["npx", "-y", "server"]` 不匹配 `["npx", "server"]` 或 `["npx", "-y", "server", "--flag"]`。
-* **`serverCommand` 和 `serverUrl` 值在匹配前展開。** 原則條目和伺服器的配置值都會經過與 `.mcp.json` 相同的 [`${VAR}` 和 `${VAR:-default}` 展開](/docs/zh-TW/mcp#environment-variable-expansion-in-mcp-json)，因此寫成 `["${HOME}/bin/server"]` 的條目會匹配使用相同參考或展開路徑的伺服器配置。在 Windows 上，參考在那裡設定的環境變數，例如 `${USERPROFILE}` 而不是 `${HOME}`。`serverName` 值按字面匹配，永遠不展開。
-* **URL 支援 `*` 萬用字元** 在模式中的任何地方，包括方案。主機名匹配不區分大小寫，忽略尾部 FQDN 點，因此 `https://Mcp.Example.com/*` 匹配 `https://mcp.example.com/api`。路徑保持區分大小寫。
+| 伺服器類型          | 比對時允許                                                                 |
+| :------------- | :-------------------------------------------------------------------- |
+| 遠端（HTTP 或 SSE） | 一個 `serverUrl` 項目。當允許清單不包含 `serverUrl` 項目時，`serverName` 比對才計數         |
+| Stdio          | 一個 `serverCommand` 項目。當允許清單不包含 `serverCommand` 項目時，`serverName` 比對才計數 |
+
+這些檢查內部適用三個比對規則：
+
+* **命令精確比對。** 每個引數，按順序。`["npx", "-y", "server"]` 不比對 `["npx", "server"]` 或 `["npx", "-y", "server", "--flag"]`。
+* **`serverCommand` 和 `serverUrl` 值在比對前展開。** 政策項目和伺服器的已設定值都會經過 [`${VAR}` 和 `${VAR:-default}` 展開](/docs/zh-TW/mcp#environment-variable-expansion-in-mcp-json)，因此寫成 `["${HOME}/bin/server"]` 的項目會比對使用相同參考或展開路徑的伺服器設定。在 Windows 上，參考在該處設定的環境變數，例如 `${USERPROFILE}` 而不是 `${HOME}`。`serverName` 值按字面比對，永遠不會展開。兩側讀取不同的環境；[政策項目如何展開](#how-policy-entries-expand)涵蓋哪個以及允許清單和拒絕清單項目如何不同。
+* **URL 支援 `*` 萬用字元**在模式中的任何地方，包括配置。主機名稱比對不區分大小寫，並忽略尾隨 FQDN 點，因此 `https://Mcp.Example.com/*` 比對 `https://mcp.example.com/api`。路徑保持區分大小寫。
 
 | 模式                          | 允許                         |
 | :-------------------------- | :------------------------- |
 | `https://mcp.example.com/*` | 特定網域上的所有路徑                 |
-| `https://mcp.example.com`   | 也允許該網域上的所有路徑。沒有路徑的模式匹配任何路徑 |
+| `https://mcp.example.com`   | 也允許該網域上的所有路徑。沒有路徑的模式比對任何路徑 |
 | `https://*.example.com/*`   | `example.com` 的任何子網域       |
 | `http://localhost:*/*`      | localhost 上的任何連接埠          |
-| `*://mcp.example.com/*`     | 任何方案到特定網域                  |
+| `*://mcp.example.com/*`     | 任何配置到特定網域                  |
 
-因為 `${VAR}` 展開讀取 Claude Code 自己的程序環境，參考變數的 `serverCommand` 或 `serverUrl` 原則條目會展開為使用者設定的任何值。對於您依賴強制執行的條目，使用字面 URL 和命令。
+<h4 id="how-policy-entries-expand">
+  政策項目如何展開
+</h4>
+
+伺服器的已設定值從即時程序環境展開，就像 `.mcp.json` 的其餘部分一樣。政策項目改為從固定環境展開，因此由專案或使用者設定檔設定的變數無法變更允許清單項目的含義。因為政策項目仍然取決於啟動殼層對其參考的任何變數的值，請對您依賴以進行強制執行的項目使用字面 URL 和命令。
+
+| 項目清單                | 展開自                                                               | 會變更 URL 項目的配置、主機或路徑範圍的展開 |
+| ------------------- | ----------------------------------------------------------------- | ------------------------ |
+| `allowedMcpServers` | Claude Code 啟動時的環境，加上來自受管設定的 `env` 值                              | Claude Code 忽略項目         |
+| `deniedMcpServers`  | 相同，以及沒有啟動值且沒有 `:-default` 的變數從存放庫外的設定檔（例如使用者或受管設定）填入，這只會擴大項目比對的內容 | 項目仍然比對                   |
+
+需要 Claude Code v2.1.219 或更新版本。
 
 <h3 id="example-configuration">
-  範例配置
+  範例設定
 </h3>
 
-以下配置設定了硬允許清單和拒絕清單。突出顯示的行改變了清單其餘部分的評估方式，區塊後的標註解釋了每一行：
+以下設定設定了具有拒絕清單的硬允許清單。反白顯示的行會變更如何評估清單的其餘部分，區塊後的標註說明每一行：
 
 ```json {3,5,11} theme={null}
 {
@@ -228,15 +389,15 @@ Claude Code 只從管理員控制的原則層級讀取此設定：伺服器受�
 }
 ```
 
-* **第 3 行**：第一個 `serverUrl` 條目。一旦存在，每個遠端伺服器必須匹配 URL 模式，因此使用者無法通過給它一個允許的名稱來獲得未列出的遠端伺服器。
-* **第 5 行**：第一個 `serverCommand` 條目。對 stdio 伺服器有相同的效果，因此每個本地伺服器必須精確匹配列出的命令。
-* **第 11 行**：拒絕清單中的 `serverName` 條目。拒絕清單條目始終適用，因此任何名為 `dangerous-server` 的伺服器都被阻止，無論其 URL 或命令如何。
+* **第 3 行**：第一個 `serverUrl` 項目。一旦存在，每個遠端伺服器都必須比對 URL 模式，因此使用者無法透過給予它允許的名稱來取得未列出的遠端伺服器。
+* **第 5 行**：第一個 `serverCommand` 項目。對 stdio 伺服器的效果相同，因此每個本機伺服器都必須精確比對列出的命令。
+* **第 11 行**：拒絕清單中的 `serverName` 項目。拒絕清單項目始終適用，因此任何名為 `dangerous-server` 的伺服器都會被阻止，無論其 URL 或命令如何。
 
-此允許清單中的 `serverName` 條目永遠不會匹配任何內容，因為兩種傳輸類型都已有更嚴格的條目。
+此允許清單中的 `serverName` 項目永遠不會比對任何內容，因為兩種傳輸類型都已有更嚴格的項目。
 
-下面的手風琴演示了伺服器如何針對其他允許清單和拒絕清單組合進行評估。
+下面的摺疊式選單會逐步說明如何針對其他允許清單和拒絕清單組合評估伺服器。
 
-<Accordion title="僅 URL 允許清單">
+<Accordion title="僅限 URL 的允許清單">
   ```json theme={null}
   {
     "allowedMcpServers": [
@@ -248,13 +409,13 @@ Claude Code 只從管理員控制的原則層級讀取此設定：伺服器受�
 
   | 伺服器                                                | 結果              |
   | :------------------------------------------------- | :-------------- |
-  | `https://mcp.example.com/api` 上的 HTTP 伺服器          | 允許：匹配 URL 模式    |
-  | `https://api.internal.example.com/mcp` 上的 HTTP 伺服器 | 允許：匹配萬用字元子網域    |
-  | `https://external.example.com/mcp` 上的 HTTP 伺服器     | 阻止：不匹配任何 URL 模式 |
-  | 具有任何命令的 Stdio 伺服器                                  | 阻止：沒有名稱或命令條目可匹配 |
+  | `https://mcp.example.com/api` 上的 HTTP 伺服器          | 允許：比對 URL 模式    |
+  | `https://api.internal.example.com/mcp` 上的 HTTP 伺服器 | 允許：比對萬用字元子網域    |
+  | `https://external.example.com/mcp` 上的 HTTP 伺服器     | 阻止：不比對任何 URL 模式 |
+  | 具有任何命令的 Stdio 伺服器                                  | 阻止：沒有名稱或命令項目可比對 |
 </Accordion>
 
-<Accordion title="僅命令允許清單">
+<Accordion title="僅限命令的允許清單">
   ```json theme={null}
   {
     "allowedMcpServers": [
@@ -265,9 +426,9 @@ Claude Code 只從管理員控制的原則層級讀取此設定：伺服器受�
 
   | 伺服器                                                | 結果           |
   | :------------------------------------------------- | :----------- |
-  | 具有 `["npx", "-y", "approved-package"]` 的 Stdio 伺服器 | 允許：匹配命令      |
-  | 具有 `["node", "server.js"]` 的 Stdio 伺服器             | 阻止：不匹配命令     |
-  | 名為 `my-api` 的 HTTP 伺服器                             | 阻止：沒有名稱條目可匹配 |
+  | 具有 `["npx", "-y", "approved-package"]` 的 Stdio 伺服器 | 允許：比對命令      |
+  | 具有 `["node", "server.js"]` 的 Stdio 伺服器             | 阻止：不比對命令     |
+  | 名為 `my-api` 的 HTTP 伺服器                             | 阻止：沒有名稱項目可比對 |
 </Accordion>
 
 <Accordion title="混合名稱和命令允許清單">
@@ -282,14 +443,14 @@ Claude Code 只從管理員控制的原則層級讀取此設定：伺服器受�
 
   | 伺服器                                                                 | 結果                         |
   | :------------------------------------------------------------------ | :------------------------- |
-  | 名為 `local-tool` 且具有 `["npx", "-y", "approved-package"]` 的 Stdio 伺服器 | 允許：匹配命令                    |
-  | 名為 `local-tool` 且具有 `["node", "server.js"]` 的 Stdio 伺服器             | 阻止：命令條目存在但不匹配              |
-  | 名為 `github` 且具有 `["node", "server.js"]` 的 Stdio 伺服器                 | 阻止：stdio 伺服器在命令條目存在時必須匹配命令 |
-  | 名為 `github` 的 HTTP 伺服器                                              | 允許：匹配名稱                    |
-  | 名為 `other-api` 的 HTTP 伺服器                                           | 阻止：名稱不匹配                   |
+  | 名為 `local-tool` 且具有 `["npx", "-y", "approved-package"]` 的 Stdio 伺服器 | 允許：比對命令                    |
+  | 名為 `local-tool` 且具有 `["node", "server.js"]` 的 Stdio 伺服器             | 阻止：命令項目存在但不比對              |
+  | 名為 `github` 且具有 `["node", "server.js"]` 的 Stdio 伺服器                 | 阻止：stdio 伺服器在命令項目存在時必須比對命令 |
+  | 名為 `github` 的 HTTP 伺服器                                              | 允許：比對名稱                    |
+  | 名為 `other-api` 的 HTTP 伺服器                                           | 阻止：名稱不比對                   |
 </Accordion>
 
-<Accordion title="僅名稱允許清單">
+<Accordion title="僅限名稱的允許清單">
   ```json theme={null}
   {
     "allowedMcpServers": [
@@ -303,8 +464,8 @@ Claude Code 只從管理員控制的原則層級讀取此設定：伺服器受�
   | :------------------------------------ | :-------- |
   | 名為 `github` 且具有任何命令的 Stdio 伺服器        | 允許：沒有命令限制 |
   | 名為 `internal-tool` 且具有任何命令的 Stdio 伺服器 | 允許：沒有命令限制 |
-  | 名為 `github` 的 HTTP 伺服器                | 允許：匹配名稱   |
-  | 任何名為 `other` 的伺服器                     | 阻止：名稱不匹配  |
+  | 名為 `github` 的 HTTP 伺服器                | 允許：比對名稱   |
+  | 任何名為 `other` 的伺服器                     | 阻止：名稱不比對  |
 </Accordion>
 
 <Accordion title="具有拒絕清單覆蓋的允許清單">
@@ -319,18 +480,18 @@ Claude Code 只從管理員控制的原則層級讀取此設定：伺服器受�
   }
   ```
 
-  | 伺服器                                           | 結果                       |
-  | :-------------------------------------------- | :----------------------- |
-  | `https://mcp.example.com/api` 上的 HTTP 伺服器     | 允許：匹配允許清單 URL 模式，無拒絕清單匹配 |
-  | `https://staging.example.com/api` 上的 HTTP 伺服器 | 阻止：匹配兩者，但拒絕清單優先          |
-  | `https://other.com/mcp` 上的 HTTP 伺服器           | 阻止：不匹配允許清單               |
+  | 伺服器                                           | 結果                        |
+  | :-------------------------------------------- | :------------------------ |
+  | `https://mcp.example.com/api` 上的 HTTP 伺服器     | 允許：比對允許清單 URL 模式，沒有拒絕清單比對 |
+  | `https://staging.example.com/api` 上的 HTTP 伺服器 | 阻止：兩者都比對，但拒絕清單優先          |
+  | `https://other.com/mcp` 上的 HTTP 伺服器           | 阻止：不比對允許清單                |
 </Accordion>
 
 <h3 id="restrict-the-allowlist-to-managed-settings-only">
   將允許清單限制為僅受管設定
 </h3>
 
-要使受管允許清單成為唯一適用的清單，請在受管設定檔案中設定 `allowManagedMcpServersOnly`：
+若要使受管允許清單成為唯一適用的清單，請在受管設定檔中設定 `allowManagedMcpServersOnly`：
 
 ```json theme={null}
 {
@@ -342,22 +503,24 @@ Claude Code 只從管理員控制的原則層級讀取此設定：伺服器受�
 }
 ```
 
-當 `allowManagedMcpServersOnly` 為 `true` 時，來自使用者、專案和本地設定的允許清單被忽略。拒絕清單仍然從所有來源合併，因此使用者始終可以為自己阻止伺服器。
+當 `allowManagedMcpServersOnly` 為 `true` 時，來自使用者、專案和本機設定的允許清單會被忽略。拒絕清單仍然從每個設定範圍合併，因此使用者可以始終為自己阻止伺服器。
 
 <h2 id="how-restrictions-appear-to-users">
-  限制如何向使用者顯示
+  限制如何呈現給使用者
 </h2>
 
-當限制阻止伺服器時，使用者要麼看到來自 `claude mcp add` 的錯誤，要麼伺服器無聲地停止載入。使用此表格識別這些報告，並在推出變更之前告訴使用者會發生什麼：
+如需了解當部署 `managed-mcp.json` 且工作階段也具有 `--mcp-config` 伺服器時，使用者在啟動時看到的內容，請參閱 [使用 managed-mcp.json 的獨佔控制](#exclusive-control-with-managed-mcp-json)。使用此表格來識別其他報告，並在推出變更前告知使用者預期情況：
 
-| 限制                                           | 使用者看到的內容                                                                                                   |
-| :------------------------------------------- | :--------------------------------------------------------------------------------------------------------- |
-| `managed-mcp.json` 存在且使用者執行 `claude mcp add` | `Cannot add MCP server: enterprise MCP configuration is active and has exclusive control over MCP servers` |
-| 伺服器在拒絕清單上且使用者執行 `claude mcp add`             | `Cannot add MCP server "<name>": server is explicitly blocked by enterprise policy`                        |
-| 伺服器不在允許清單上且使用者執行 `claude mcp add`            | `Cannot add MCP server "<name>": not allowed by enterprise policy`                                         |
-| 之前配置的伺服器現在被原則阻止                              | 伺服器無聲地從 `/mcp` 和 `claude mcp list` 消失，沒有警告                                                                 |
+| 限制                                                     | 使用者看到的內容                                                                                                                        |
+| :----------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------ |
+| `managed-mcp.json` 存在且使用者執行 `claude mcp add`           | `Cannot add MCP server: enterprise MCP configuration is active and has exclusive control over MCP servers`                      |
+| 伺服器在拒絕清單上且使用者執行 `claude mcp add`                       | `Cannot add MCP server "<name>": server is explicitly blocked by enterprise policy`                                             |
+| 伺服器不在允許清單上且使用者執行 `claude mcp add`                      | `Cannot add MCP server "<name>": not allowed by enterprise policy`                                                              |
+| 使用者在來自 `managedMcpServers` 的伺服器上執行 `claude mcp remove` | `MCP server "<name>" is provided by your organization (managed settings) and cannot be removed locally.`                        |
+| 先前設定的伺服器現在被原則封鎖                                        | 伺服器從 `/mcp` 和 `claude mcp list` 消失                                                                                              |
+| 伺服器在工作階段執行時被封鎖，且使用者選擇 **重新連線** 或在 `/mcp` 中將其重新開啟       | [`MCP server <name> is blocked by enterprise managed policy`](/docs/zh-TW/errors#mcp-server-is-blocked-by-enterprise-managed-policy) |
 
-在最後一種情況下，使用者沒有收到原則是其伺服器消失原因的信號，因此在推出新限制時告訴受影響的使用者哪些伺服器被阻止。
+當伺服器無聲地消失時，使用者無法收到原則是原因的訊號，因此在推出新限制時，請告知受影響的使用者哪些伺服器被封鎖。
 
 <h2 id="monitor-mcp-usage">
   監控 MCP 使用
@@ -371,13 +534,14 @@ Claude Code 只從管理員控制的原則層級讀取此設定：伺服器受�
 
 本頁涵蓋的每個檔案和設定、它控制的內容以及如何傳遞它：
 
-| 表面                           | 控制的內容                                           | 位置                                                                                                   | 傳遞方式                                                                                                             |
-| :--------------------------- | :---------------------------------------------- | :--------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------- |
-| `managed-mcp.json`           | 固定伺服器集合、獨佔控制                                    | 系統路徑：`/Library/Application Support/ClaudeCode/`、`/etc/claude-code/` 或 `C:\Program Files\ClaudeCode\` | MDM、GPO、艦隊管理或任何具有管理員權限的程序。無法通過伺服器受管設定設定                                                                          |
-| `allowedMcpServers`          | 允許的伺服器允許清單                                      | 任何 [設定檔案](/docs/zh-TW/settings#settings-files)；來自每個來源的條目合併，除非設定了 `allowManagedMcpServersOnly`             | 為了強制執行，[受管設定來源](/docs/zh-TW/admin-setup#decide-how-settings-reach-devices)：伺服器受管設定、`managed-settings.json`、MDM 設定檔或登錄 |
-| `deniedMcpServers`           | 被阻止的伺服器拒絕清單                                     | 任何設定檔案；來自每個來源的條目合併                                                                                   | 與 `allowedMcpServers` 相同                                                                                         |
-| `allowManagedMcpServersOnly` | 將允許清單鎖定為僅受管來源                                   | 僅受管設定來源；該設定在其他地方無效                                                                                   | 與 `allowedMcpServers` 相同                                                                                         |
-| `allowAllClaudeAiMcps`       | 在 `managed-mcp.json` 旁邊載入 claude.ai 連接器，而不是抑制它們 | 僅受管設定來源；該設定在其他地方無效                                                                                   | 與 `allowedMcpServers` 相同                                                                                         |
+| 表面                           | 控制的內容                                                                                                                                                              | 位置                                                                                                         | 傳遞方式                                                                                                                 |
+| :--------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------- |
+| `managed-mcp.json`           | 固定伺服器集合、獨佔控制                                                                                                                                                       | 系統路徑：`/Library/Application Support/ClaudeCode/`、`/etc/claude-code/` 或 `C:\Program Files\ClaudeCode\`       | MDM、GPO、艦隊管理或任何具有管理員權限的程序。無法通過伺服器受管設定設定                                                                              |
+| `managedMcpServers`          | 提供給每個使用者的遠端伺服器，與他們自己的伺服器一起                                                                                                                                         | 僅受管設定來源；該設定在其他地方無效                                                                                         | [受管設定來源](/docs/zh-TW/admin-setup#decide-how-settings-reach-devices)：伺服器受管設定、閘道原則、`managed-settings.json`、MDM 設定檔或 HKLM 登錄 |
+| `allowedMcpServers`          | 允許的伺服器允許清單                                                                                                                                                         | 任何 [設定範圍](/docs/zh-TW/settings#where-settings-live)；[伺服器如何被評估](#how-a-server-is-evaluated) 說明來自多個範圍和受管來源的清單如何組合 | 為了強制執行，[受管設定來源](/docs/zh-TW/admin-setup#decide-how-settings-reach-devices)：伺服器受管設定、`managed-settings.json`、MDM 設定檔或登錄     |
+| `deniedMcpServers`           | 被阻止的伺服器拒絕清單                                                                                                                                                        | 任何設定範圍；[伺服器如何被評估](#how-a-server-is-evaluated) 說明來自多個範圍和受管來源的清單如何組合                                         | 與 `allowedMcpServers` 相同                                                                                             |
+| `allowManagedMcpServersOnly` | 將允許清單鎖定為僅受管來源                                                                                                                                                      | 僅受管設定來源；[從每個管理來源讀取的金鑰](/docs/zh-TW/managed-settings#keys-read-from-every-admin-source) 說明哪些受管來源可以開啟它。該設定在其他範圍無效 | 與 `allowedMcpServers` 相同                                                                                             |
+| `allowAllClaudeAiMcps`       | 在 `managed-mcp.json` 旁邊載入 Claude Code 自行擷取的 claude.ai 連接器。[在執行雲端工作階段的主機上的 `managed-mcp.json` 仍會抑制該工作階段的連接器](#allow-claude-ai-connectors-alongside-the-managed-set) | 僅受管設定來源；該設定在其他地方無效                                                                                         | 與 `allowedMcpServers` 相同                                                                                             |
 
 <h2 id="related-resources">
   相關資源
@@ -386,6 +550,6 @@ Claude Code 只從管理員控制的原則層級讀取此設定：伺服器受�
 * [決定要強制執行的內容](/docs/zh-TW/admin-setup#decide-what-to-enforce)：MCP 限制以及權限規則、沙箱和其他管理控制
 * [通過 MCP 將 Claude Code 連接到工具](/docs/zh-TW/mcp)：完整的 MCP 參考，包括傳輸、範圍和身份驗證
 * [設定](/docs/zh-TW/settings)：設定層次結構以及受管設定如何優先
-* [伺服器受管設定](/docs/zh-TW/server-managed-settings)：從 Claude.ai 管理控制台傳遞 `allowedMcpServers` 和 `deniedMcpServers`
+* [伺服器受管設定](/docs/zh-TW/server-managed-settings)：從 claude.ai 管理控制台傳遞 `allowedMcpServers` 和 `deniedMcpServers`
 * [安全](/docs/zh-TW/security)：這些控制防禦的威脅模型
 * [Claude Enterprise Administrator Guide](https://claude.com/resources/tutorials/claude-enterprise-administrator-guide)：SSO、SCIM、座位管理和推出劇本

@@ -36,7 +36,7 @@ Claude 有多種方式與應用程式或服務互動。Computer use 是最廣泛
 * 如果任務是瀏覽器工作且您已設定 [Claude in Chrome](/docs/zh-TW/chrome)，Claude 會使用它。
 * 如果以上都不適用，Claude 會使用 computer use。
 
-螢幕控制保留用於其他工具無法到達的事物：原生應用程式、模擬器和沒有 API 的工具。
+螢幕控制保留用於其他工具無法到達的事物：原生應用程式、模擬器（例如 iOS Simulator）和沒有 API 的工具。
 
 <h2 id="enable-computer-use">
   啟用 computer use
@@ -98,6 +98,8 @@ Computer use 可作為稱為 `computer-use` 的內建 MCP server 使用。預設
 
 這些應用程式不會被封鎖。警告讓您決定任務是否值得該級別的存取。
 
+核准 Finder 以讓 Claude 點擊桌面、Dock 或 Finder 視窗。
+
 Claude 的控制級別也因應用程式類別而異：瀏覽器和交易平台是僅檢視，終端機和 IDE 是僅點擊，其他所有內容都獲得完全控制。請參閱 [Desktop 中的應用程式權限](/docs/zh-TW/desktop#app-permissions)以取得完整的層級細目。
 
 <h2 id="how-claude-works-on-your-screen">
@@ -110,7 +112,7 @@ Claude 的控制級別也因應用程式類別而異：瀏覽器和交易平台�
   一次一個工作階段
 </h3>
 
-Computer use 從第一個 computer use 操作開始持有機器範圍的鎖定，直到執行該操作的工作階段退出。自 v2.1.195 起，完成任務不會釋放鎖定；只有退出工作階段才會。如果另一個 Claude Code 工作階段已在使用您的電腦，新的嘗試會失敗，並顯示一條訊息，告訴您哪個工作階段持有鎖定。先退出該工作階段。
+一次只有一個工作階段可以使用您的電腦。工作階段在其第一個電腦使用操作時持有鎖定，並在工作階段退出時釋放它，而不是在任務完成時。第二個工作階段的電腦使用會失敗，並出現一個錯誤，指出持有鎖定的工作階段。先退出該工作階段。
 
 <h3 id="apps-are-hidden-while-claude-works">
   Claude 工作時應用程式被隱藏
@@ -132,7 +134,7 @@ Claude Code 在將每個螢幕截圖傳送到模型之前會自動縮小它。�
   隨時停止
 </h3>
 
-當 Claude 獲得鎖定時，會出現 macOS 通知：「Claude 正在使用您的電腦 · 按 Esc 停止」。在任何地方按 `Esc` 立即中止目前操作，或在終端機中按 `Ctrl+C`。無論哪種方式，Claude 都會停止、取消隱藏您的應用程式，並將控制權返回給您。工作階段會保持 [computer use 鎖定](#one-session-at-a-time)，直到它退出。
+Claude 在每個輪次中首次使用您的電腦時，會出現 macOS 通知：「Claude 正在使用您的電腦 · 按 Esc 停止」。在任何地方按 `Esc` 立即中止目前操作，或在終端機中按 `Ctrl+C`。無論哪種方式，Claude 都會停止、取消隱藏您的應用程式，並將控制權返回給您。工作階段會保持 [computer use 鎖定](#one-session-at-a-time)，直到它退出。
 
 Claude 完成時會出現第二個通知。
 
@@ -196,7 +198,7 @@ Claude 調整視窗大小、擷取損壞的狀態，並讀取相關的樣式表�
 並告訴我是否有任何螢幕花費超過一秒鐘的時間來載入。
 ```
 
-Claude 以您使用滑鼠的方式控制模擬器。
+Claude 以您使用滑鼠的方式控制模擬器。此流程適用於 CLI；在 Desktop 應用程式中，相同的請求會開啟 [iOS Simulator 窗格](/docs/zh-TW/desktop-ios-simulator)，而不是螢幕控制。
 
 <h2 id="differences-from-the-desktop-app">
   與 Desktop 應用程式的差異

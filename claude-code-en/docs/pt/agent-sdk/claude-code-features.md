@@ -8,9 +8,7 @@
 
 O Agent SDK é construído na mesma base que Claude Code, o que significa que seus agentes SDK têm acesso aos mesmos recursos baseados em sistema de arquivos: instruções de projeto (`CLAUDE.md` e regras), skills, hooks e muito mais.
 
-Quando você omite `settingSources`, `query()` lê as mesmas configurações do sistema de arquivos que a CLI Claude Code: configurações de usuário, projeto e local, arquivos `CLAUDE.md` e skills, agentes e comandos em `.claude/`. Para executar sem estes, passe `settingSources: []`, o que limita o agente ao que você configura programaticamente. As configurações de política gerenciada e a configuração global `~/.claude.json` são lidas independentemente desta opção. Veja [O que settingSources não controla](#what-settingsources-does-not-control).
-
-Para uma visão geral conceitual do que cada recurso faz e quando usá-lo, veja [Extend Claude Code](/docs/pt/features-overview).
+Quando você omite `settingSources`, `query()` lê as mesmas configurações do sistema de arquivos que a CLI Claude Code: configurações de usuário, projeto e local, arquivos `CLAUDE.md` e skills, agentes e comandos em `.claude/`. Para executar sem estes, passe `settingSources: []`, o que limita o agente ao que você configura programaticamente. As configurações de política gerenciada e a configuração global `~/.claude.json` são lidas independentemente desta opção. Para mais informações, consulte [O que settingSources não controla](#what-settingsources-does-not-control).
 
 <h2 id="control-filesystem-settings-with-settingsources">
   Controlar configurações do sistema de arquivos com settingSources
@@ -23,23 +21,29 @@ Este exemplo carrega configurações de nível de usuário e nível de projeto d
 <CodeGroup>
   ```python Python theme={null}
   from claude_agent_sdk import query, ClaudeAgentOptions, AssistantMessage, ResultMessage
+  import asyncio
 
-  async for message in query(
-      prompt="Help me refactor the auth module",
-      options=ClaudeAgentOptions(
-          # "user" loads from ~/.claude/, "project" loads from ./.claude/ in cwd.
-          # Together they give the agent access to CLAUDE.md, skills, hooks, and
-          # permissions from both locations.
-          setting_sources=["user", "project"],
-          allowed_tools=["Read", "Edit", "Bash"],
-      ),
-  ):
-      if isinstance(message, AssistantMessage):
-          for block in message.content:
-              if hasattr(block, "text"):
-                  print(block.text)
-      if isinstance(message, ResultMessage) and message.subtype == "success":
-          print(f"\nResult: {message.result}")
+
+  async def main():
+      async for message in query(
+          prompt="Help me refactor the auth module",
+          options=ClaudeAgentOptions(
+              # "user" loads from ~/.claude/, "project" loads from ./.claude/ in cwd.
+              # Together they give the agent access to CLAUDE.md, skills, hooks, and
+              # permissions from both locations.
+              setting_sources=["user", "project"],
+              allowed_tools=["Read", "Edit", "Bash"],
+          ),
+      ):
+          if isinstance(message, AssistantMessage):
+              for block in message.content:
+                  if hasattr(block, "text"):
+                      print(block.text)
+          if isinstance(message, ResultMessage) and message.subtype == "success":
+              print(f"\nResult: {message.result}")
+
+
+  asyncio.run(main())
   ```
 
   ```typescript TypeScript theme={null}
@@ -67,17 +71,19 @@ Este exemplo carrega configurações de nível de usuário e nível de projeto d
   ```
 </CodeGroup>
 
+Quando isso é executado, a resposta do assistente é impressa em stdout, seguida por uma linha de resultado final quando a execução é concluída.
+
 Cada fonte carrega configurações de um local específico, onde `<cwd>` é o diretório de trabalho que você passa via opção `cwd`, ou o diretório atual do processo se não definido. Para a definição de tipo completa, veja [`SettingSource`](/docs/pt/agent-sdk/typescript#settingsource) (TypeScript) ou [`SettingSource`](/docs/pt/agent-sdk/python#settingsource) (Python).
 
-| Fonte       | O que carrega                                                                                               | Local                                                                                                                                                                  |
-| :---------- | :---------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `"project"` | CLAUDE.md do projeto, `.claude/rules/*.md`, skills do projeto, hooks do projeto, `settings.json` do projeto | `<cwd>/.claude/` para `settings.json` e hooks; `<cwd>` e cada diretório pai para CLAUDE.md e rules; `<cwd>` e cada diretório pai até a raiz do repositório para skills |
-| `"user"`    | CLAUDE.md do usuário, `~/.claude/rules/*.md`, skills do usuário, configurações do usuário                   | `~/.claude/`                                                                                                                                                           |
-| `"local"`   | CLAUDE.local.md, `.claude/settings.local.json`                                                              | `<cwd>/.claude/` para `settings.local.json`; `<cwd>` e cada diretório pai para CLAUDE.local.md                                                                         |
+| Fonte       | O que carrega                                                                                                             | Local                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| :---------- | :------------------------------------------------------------------------------------------------------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `"project"` | `settings.json` do projeto e hooks; CLAUDE.md do projeto e `.claude/rules/*.md`; skills, comandos e subagentes do projeto | `<cwd>/.claude/` para `settings.json` e hooks; `<cwd>` e cada diretório pai para CLAUDE.md e rules; `<cwd>` e cada diretório pai até a raiz do repositório para skills, comandos e subagentes, além das pastas `.claude/skills/`, `.claude/commands/` e `.claude/agents/` de cada diretório que você passa através da opção `additionalDirectories` ou `add_dirs`, que o SDK passa para Claude Code como [`--add-dir`](/docs/pt/permissions#additional-directories-grant-file-access-not-configuration) |
+| `"user"`    | `settings.json` do usuário; CLAUDE.md do usuário e `~/.claude/rules/*.md`; skills, comandos e subagentes do usuário       | `~/.claude/` para `settings.json`, CLAUDE.md e rules; `~/.claude/skills/`, `~/.claude/commands/` e `~/.claude/agents/` para skills, comandos e subagentes                                                                                                                                                                                                                                                                                                                                          |
+| `"local"`   | CLAUDE.local.md, `.claude/settings.local.json`                                                                            | `<cwd>/.claude/` para `settings.local.json`; `<cwd>` e cada diretório pai para CLAUDE.local.md                                                                                                                                                                                                                                                                                                                                                                                                     |
 
 Omitir `settingSources` é equivalente a `["user", "project", "local"]`.
 
-A opção `cwd` determina onde o SDK procura por entradas de nível de projeto. CLAUDE.md e rules carregam de `<cwd>` e de cada diretório pai. Skills carregam de `<cwd>` e de cada diretório pai até a raiz do repositório. `settings.json` do projeto e hooks carregam apenas de `<cwd>/.claude/` sem fallback de diretório pai.
+A opção `cwd` determina onde o SDK procura por entradas de nível de projeto. `settings.json` do projeto e hooks carregam apenas de `<cwd>/.claude/` sem fallback de diretório pai.
 
 <h3 id="what-settingsources-does-not-control">
   O que settingSources não controla
@@ -85,12 +91,13 @@ A opção `cwd` determina onde o SDK procura por entradas de nível de projeto. 
 
 `settingSources` cobre configurações de usuário, projeto e local. Algumas entradas são lidas independentemente de seu valor:
 
-| Entrada                                                               | Comportamento                                                                                                                                                                                                                                                                                                                                                                                                       | Para desabilitar                                                                                                                                                                                                                           |
-| :-------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Configurações de política gerenciada                                  | Política gerenciada pelo endpoint, seja plist MDM, política de registro ou arquivos de configurações gerenciadas, carrega do host; [configurações gerenciadas pelo servidor](/docs/pt/server-managed-settings) são buscadas em uma [configuração elegível](/docs/pt/server-managed-settings#platform-availability) quando a sessão se autentica com um login OAuth de organização ou uma chave de API configurada diretamente | Política de endpoint: remova o arquivo de configurações gerenciadas, plist ou política de registro do host. Configurações gerenciadas pelo servidor: controladas pelo administrador da sua organização; não podem ser desabilitadas do SDK |
-| Configuração global `~/.claude.json`                                  | Sempre lida                                                                                                                                                                                                                                                                                                                                                                                                         | Relocalize com `CLAUDE_CONFIG_DIR` em `env`                                                                                                                                                                                                |
-| Memória automática em `~/.claude/projects/<project>/memory/`          | Carregada no prompt do sistema no início da sessão. O agente escreve novas memórias lá com as ferramentas padrão `Write` e `Edit` em vez de uma ferramenta de memória dedicada, portanto essas ferramentas devem estar habilitadas para o agente salvar memórias                                                                                                                                                    | Defina `autoMemoryEnabled: false` nas configurações, ou `CLAUDE_CODE_DISABLE_AUTO_MEMORY=1` em `env`                                                                                                                                       |
-| [Conectores MCP do claude.ai](/docs/pt/mcp#use-mcp-servers-from-claude-ai) | Carregados quando o método de autenticação ativo é uma assinatura do claude.ai. Passar `mcpServers: {}` não os suprime                                                                                                                                                                                                                                                                                              | Defina `strictMcpConfig: true`, [`disableClaudeAiConnectors: true`](/docs/pt/mcp#disable-claude-ai-connectors) nas configurações, ou `ENABLE_CLAUDEAI_MCP_SERVERS=false` em `env`                                                               |
+| Entrada                                                                                                                                  | Comportamento                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Para desabilitar                                                                                                                                                                                                                                                                           |
+| :--------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Configurações de política gerenciada                                                                                                     | Política gerenciada pelo endpoint, como um plist MDM, política de registro ou arquivo de configurações gerenciadas, carrega do host. [Configurações gerenciadas pelo servidor](/docs/pt/server-managed-settings) são buscadas em uma [configuração elegível](/docs/pt/server-managed-settings#platform-availability) quando a sessão se autentica com uma credencial qualificada, como um login OAuth de organização, uma chave de API configurada diretamente ou um perfil [`user_oauth`](/docs/pt/authentication#anthropic-profiles-and-federation-credentials) do Anthropic | Política de endpoint: remova o arquivo de configurações gerenciadas, plist ou política de registro do host. Configurações gerenciadas pelo servidor: um [Proprietário](/docs/pt/server-managed-settings#access-control) em sua organização Claude controla; você não pode desabilitá-las do SDK |
+| Configuração global `~/.claude.json`                                                                                                     | Sempre lida                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | Relocalize com `CLAUDE_CONFIG_DIR` em `env`                                                                                                                                                                                                                                                |
+| Memória automática em `~/.claude/projects/<project>/memory/`                                                                             | Carregada no prompt do sistema no início da sessão. O agente escreve novas memórias lá com as ferramentas padrão `Write` e `Edit` em vez de uma ferramenta de memória dedicada, portanto essas ferramentas devem estar habilitadas para o agente salvar memórias                                                                                                                                                                                                                                                                                                | Defina `autoMemoryEnabled: false` nas configurações, ou `CLAUDE_CODE_DISABLE_AUTO_MEMORY=1` em `env`                                                                                                                                                                                       |
+| [Conectores MCP do claude.ai](/docs/pt/mcp#use-mcp-servers-from-claude-ai)                                                                    | Carregados quando a sessão se autentica com seu login claude.ai. Não carregados quando `CLAUDE_CODE_OAUTH_TOKEN` contém um token de [`claude setup-token`](/docs/pt/authentication#generate-a-long-lived-token), que pode apenas fazer solicitações de modelo. Passar `mcpServers: {}` não suprime os conectores                                                                                                                                                                                                                                                     | Defina `strictMcpConfig: true`, [`disableClaudeAiConnectors: true`](/docs/pt/mcp#disable-claude-ai-connectors) nas configurações, ou `ENABLE_CLAUDEAI_MCP_SERVERS=false` em `env`                                                                                                               |
+| Entradas `deny` de [`sandbox.credentials`](/docs/pt/sandboxing#protect-credentials) e entradas `mask` de arquivo em `~/.claude/settings.json` | Quando o [sandbox de comando](/docs/pt/sandboxing) é executado, Claude Code aplica as entradas `deny` e mantém as entradas `mask` de `credentials.files` como restrições mesmo quando `settingSources` exclui configurações de usuário. Claude Code usa essas entradas apenas para restringir o que comandos em sandbox podem acessar                                                                                                                                                                                                                                | Remova as entradas de `~/.claude/settings.json`                                                                                                                                                                                                                                            |
 
 <Warning>
   Não confie nas opções padrão de `query()` para isolamento multi-tenant. Porque as entradas acima são lidas independentemente de `settingSources`, um processo SDK pode pegar configuração de nível de host e memória por diretório. Para implantações multi-tenant, execute cada tenant em seu próprio sistema de arquivos e defina `settingSources: []` mais `CLAUDE_CODE_DISABLE_AUTO_MEMORY=1` em `env`. [Configurações gerenciadas pelo servidor](/docs/pt/server-managed-settings) são buscadas quando o processo se autentica com uma credencial de organização; isolamento do sistema de arquivos não as remove. Veja [Implantação segura](/docs/pt/agent-sdk/secure-deployment).
@@ -100,7 +107,7 @@ A opção `cwd` determina onde o SDK procura por entradas de nível de projeto. 
   Instruções do projeto (CLAUDE.md e regras)
 </h2>
 
-Arquivos `CLAUDE.md` e arquivos `.claude/rules/*.md` dão ao seu agente contexto persistente sobre seu projeto: convenções de codificação, comandos de compilação, decisões de arquitetura e instruções. Quando `settingSources` inclui `"project"` (como no exemplo acima), o SDK carrega esses arquivos em contexto no início da sessão. O agente então segue suas convenções de projeto sem você repeti-las em cada prompt.
+Arquivos `CLAUDE.md` e arquivos `.claude/rules/*.md` dão ao seu agente contexto persistente sobre seu projeto: convenções de codificação, comandos de compilação, decisões de arquitetura e instruções. Quando `settingSources` inclui `"project"`, como no [exemplo de `settingSources`](#control-filesystem-settings-with-settingsources), o SDK carrega esses arquivos em contexto no início da sessão. O agente então segue suas convenções de projeto sem você repeti-las em cada prompt.
 
 <h3 id="claude-md-load-locations">
   CLAUDE.md load locations
@@ -135,19 +142,25 @@ Skills são descobertos do sistema de arquivos através de `settingSources`. Qua
 <CodeGroup>
   ```python Python theme={null}
   from claude_agent_sdk import query, ClaudeAgentOptions, ResultMessage
+  import asyncio
+
 
   # Skills in .claude/skills/ are discovered automatically
   # when settingSources includes "project"
-  async for message in query(
-      prompt="Review this PR using our code review checklist",
-      options=ClaudeAgentOptions(
-          setting_sources=["user", "project"],
-          skills="all",
-          allowed_tools=["Read", "Grep", "Glob"],
-      ),
-  ):
-      if isinstance(message, ResultMessage) and message.subtype == "success":
-          print(message.result)
+  async def main():
+      async for message in query(
+          prompt="Review this PR using our code review checklist",
+          options=ClaudeAgentOptions(
+              setting_sources=["user", "project"],
+              skills="all",
+              allowed_tools=["Read", "Grep", "Glob"],
+          ),
+      ):
+          if isinstance(message, ResultMessage) and message.subtype == "success":
+              print(message.result)
+
+
+  asyncio.run(main())
   ```
 
   ```typescript TypeScript theme={null}
@@ -174,8 +187,6 @@ Skills são descobertos do sistema de arquivos através de `settingSources`. Qua
   Skills devem ser criados como artefatos do sistema de arquivos (`.claude/skills/<name>/SKILL.md`). O SDK não tem uma API programática para registrar skills. Veja [Agent Skills in the SDK](/docs/pt/agent-sdk/skills) para detalhes completos.
 </Note>
 
-Para mais sobre criar e usar skills, veja [Agent Skills in the SDK](/docs/pt/agent-sdk/skills).
-
 <h2 id="hooks">
   Hooks
 </h2>
@@ -185,19 +196,18 @@ O SDK suporta duas maneiras de definir hooks, e eles executam lado a lado:
 * **Filesystem hooks:** comandos shell definidos em `settings.json`, carregados quando `settingSources` inclui a fonte relevante. Estes são os mesmos hooks que você configuraria para [sessões interativas de Claude Code](/docs/pt/hooks-guide).
 * **Programmatic hooks:** funções de callback passadas diretamente para `query()`. Estes executam em seu processo de aplicação e podem retornar decisões estruturadas. Veja [Control execution with hooks](/docs/pt/agent-sdk/hooks).
 
-Ambos os tipos executam durante o mesmo ciclo de vida de hook. Se você já tem hooks no `settings.json` do seu projeto e você define `settingSources: ["project"]`, esses hooks executam automaticamente no SDK sem configuração extra.
-
-Callbacks de hook recebem a entrada da ferramenta e retornam um dict de decisão. Retornar `{}` significa permitir que a ferramenta prossiga. Para bloquear a execução, retorne um objeto `hookSpecificOutput` com `permissionDecision: "deny"` e um `permissionDecisionReason`. A razão é enviada para Claude como o resultado da ferramenta. Os campos `decision` e `reason` de nível superior estão descontinuados para `PreToolUse`. Veja o [hooks guide](/docs/pt/agent-sdk/hooks) para a assinatura de callback completa e tipos de retorno.
+Callbacks de hook recebem a entrada da ferramenta e retornam um dict de decisão. Retornar `{}` significa permitir que a ferramenta prossiga. Para bloquear a execução, retorne um objeto `hookSpecificOutput` com `permissionDecision: "deny"` e um `permissionDecisionReason`. A razão é enviada para Claude como o resultado da ferramenta. Veja o [hooks guide](/docs/pt/agent-sdk/hooks) para a assinatura de callback completa e tipos de retorno.
 
 <CodeGroup>
   ```python Python theme={null}
   from claude_agent_sdk import query, ClaudeAgentOptions, HookMatcher, ResultMessage
+  import asyncio
 
 
   # PreToolUse hook callback. Positional args:
   #   input_data: HookInput dict with tool_name, tool_input, hook_event_name
   #   tool_use_id: str | None, the ID of the tool call being intercepted
-  #   context: HookContext, carries session metadata
+  #   context: HookContext, reserved for future abort-signal support
   async def audit_bash(input_data, tool_use_id, context):
       command = input_data.get("tool_input", {}).get("command", "")
       if "rm -rf" in command:
@@ -213,19 +223,23 @@ Callbacks de hook recebem a entrada da ferramenta e retornam um dict de decisão
 
   # Filesystem hooks from .claude/settings.json run automatically
   # when settingSources loads them. You can also add programmatic hooks:
-  async for message in query(
-      prompt="Refactor the auth module",
-      options=ClaudeAgentOptions(
-          setting_sources=["project"],  # Loads hooks from .claude/settings.json
-          hooks={
-              "PreToolUse": [
-                  HookMatcher(matcher="Bash", hooks=[audit_bash]),
-              ]
-          },
-      ),
-  ):
-      if isinstance(message, ResultMessage) and message.subtype == "success":
-          print(message.result)
+  async def main():
+      async for message in query(
+          prompt="Refactor the auth module",
+          options=ClaudeAgentOptions(
+              setting_sources=["project"],  # Loads hooks from .claude/settings.json
+              hooks={
+                  "PreToolUse": [
+                      HookMatcher(matcher="Bash", hooks=[audit_bash]),
+                  ]
+              },
+          ),
+      ):
+          if isinstance(message, ResultMessage) and message.subtype == "success":
+              print(message.result)
+
+
+  asyncio.run(main())
   ```
 
   ```typescript TypeScript theme={null}
@@ -274,7 +288,7 @@ Callbacks de hook recebem a entrada da ferramenta e retornam um dict de decisão
 | Tipo de hook                              | Melhor para                                                                                                                                                                                                                                                                                                                                   |
 | :---------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Filesystem** (`settings.json`)          | Compartilhar hooks entre sessões CLI e SDK. Suporta `"command"` (scripts shell), `"http"` (POST para um endpoint), `"mcp_tool"` (chamar a ferramenta de um servidor MCP conectado), `"prompt"` (LLM avalia um prompt), e `"agent"` (spawns um agente verificador). Estes disparam no agente principal e em qualquer subagente que ele spawna. |
-| **Programmatic** (callbacks em `query()`) | Lógica específica da aplicação, decisões estruturadas e integração em processo. Estes também disparam dentro de subagentes. O callback recebe `agent_id` e `agent_type` para distinguir.                                                                                                                                                      |
+| **Programmatic** (callbacks em `query()`) | Lógica específica da aplicação, decisões estruturadas e integração em processo. Estes também disparam dentro de subagentes. A entrada do hook, o primeiro argumento do callback, carrega campos `agent_id` e `agent_type` que identificam qual agente disparou o hook.                                                                        |
 
 <Note>
   O SDK TypeScript suporta eventos de hook adicionais além de Python, incluindo `SessionStart`, `SessionEnd`, `TeammateIdle`, e `TaskCompleted`. Veja o [hooks guide](/docs/pt/agent-sdk/hooks) para a tabela de compatibilidade de eventos completa.
@@ -297,10 +311,6 @@ O Agent SDK oferece acesso a várias maneiras de estender o comportamento do seu
 | Coordenar múltiplas instâncias de Claude Code com listas de tarefas compartilhadas e mensagens diretas entre agentes | [Agent teams](/docs/pt/agent-teams)                | Não configurado diretamente via opções SDK. Agent teams são um recurso CLI onde uma sessão atua como o líder da equipe, coordenando trabalho entre colegas independentes |
 | Executar lógica determinística em chamadas de ferramenta (audit, block, transform)                                   | [Hooks](/docs/pt/agent-sdk/hooks)                  | parâmetro `hooks` com callbacks, ou scripts shell carregados via `settingSources`                                                                                        |
 | Dar a Claude acesso estruturado a ferramenta para um serviço externo                                                 | [MCP](/docs/pt/agent-sdk/mcp)                      | parâmetro `mcpServers`                                                                                                                                                   |
-
-<Tip>
-  **Subagents versus agent teams:** Subagents são efêmeros e isolados: conversa fresca, uma tarefa, resumo retornado ao pai. Agent teams coordenam múltiplas instâncias independentes de Claude Code que compartilham uma lista de tarefas e se mensageiam diretamente. Agent teams são um recurso CLI. Veja [What subagents inherit](/docs/pt/agent-sdk/subagents#what-subagents-inherit) e a [agent teams comparison](/docs/pt/agent-teams#compare-with-subagents) para detalhes.
-</Tip>
 
 Cada recurso que você habilita adiciona à janela de contexto do seu agente. Para custos por recurso e como esses recursos se sobrepõem, veja [Extend Claude Code](/docs/pt/features-overview#understand-context-costs).
 

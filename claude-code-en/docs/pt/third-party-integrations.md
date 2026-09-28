@@ -86,11 +86,13 @@ As organizações podem implantar Claude Code através da Anthropic diretamente 
 
 Para a maioria das organizações, Claude for Teams ou Claude for Enterprise oferece a melhor experiência. Os membros da equipe obtêm acesso tanto a Claude Code quanto a Claude na web com uma única assinatura, faturamento centralizado e nenhuma configuração de infraestrutura necessária.
 
-**Claude for Teams** é de autoatendimento e inclui recursos de colaboração, ferramentas de administração e gerenciamento de faturamento. Melhor para equipes menores que precisam começar rapidamente.
+**Claude for Teams** é de autoatendimento e inclui recursos de colaboração, ferramentas de administração, SSO, gerenciamento de faturamento e [configurações gerenciadas pelo servidor](/docs/pt/server-managed-settings) para configuração de Claude Code em toda a organização. Melhor para equipes menores que precisam começar rapidamente.
 
-**Claude for Enterprise** adiciona SSO e captura de domínio, permissões baseadas em funções, acesso à API de conformidade e configurações de política gerenciada para implantar configurações de Claude Code em toda a organização. Melhor para organizações maiores com requisitos de segurança e conformidade.
+**Claude for Enterprise** adiciona captura de domínio, permissões baseadas em funções e acesso à API de conformidade. Melhor para organizações maiores com requisitos de segurança e conformidade.
 
 Saiba mais sobre [planos de equipe](https://support.claude.com/en/articles/9266767-what-is-the-team-plan) e [planos empresariais](https://support.claude.com/en/articles/9797531-what-is-the-enterprise-plan).
+
+As opções de implantação comparadas abaixo cobrem onde a inferência do modelo é executada. Para executar [sessões na nuvem](/docs/pt/claude-code-on-the-web) de Claude Code em computação que sua organização opera, consulte [ambientes auto-hospedados](/docs/pt/self-hosted-environments).
 
 Se sua organização tem requisitos de infraestrutura específicos, compare as opções abaixo:
 
@@ -150,8 +152,8 @@ Se sua organização tem requisitos de infraestrutura específicos, compare as o
 
     <tr>
       <td>Autenticação</td>
-      <td>Claude.ai SSO ou email</td>
-      <td>Chave de API</td>
+      <td>claude.ai SSO ou email</td>
+      <td>Chave de API ou [entrada no Console sem uma](/docs/pt/authentication#sign-in-without-an-api-key)</td>
       <td>Chave de API ou credenciais da AWS</td>
       <td>Chave de API ou credenciais da AWS</td>
       <td>Credenciais do GCP</td>
@@ -213,120 +215,9 @@ A maioria das organizações pode usar um provedor de nuvem diretamente sem conf
 * **Proxy corporativo**: Roteia o tráfego através de um proxy HTTP/HTTPS. Use isto se sua organização exigir que todo o tráfego de saída passe por um servidor proxy para monitoramento de segurança, conformidade ou aplicação de política de rede. Configure com as variáveis de ambiente `HTTPS_PROXY` ou `HTTP_PROXY`. Saiba mais em [Configuração de rede empresarial](/docs/pt/network-config).
 * **Gateway LLM**: Um serviço que fica entre Claude Code e o provedor de nuvem para lidar com autenticação e roteamento. Use isto se você precisar de rastreamento de uso centralizado entre equipes, limitação de taxa personalizada ou orçamentos, ou gerenciamento de autenticação centralizado. Configure com as variáveis de ambiente `ANTHROPIC_BASE_URL`, `ANTHROPIC_BEDROCK_BASE_URL`, `ANTHROPIC_AWS_BASE_URL`, `ANTHROPIC_VERTEX_BASE_URL`, ou `ANTHROPIC_FOUNDRY_BASE_URL`. Saiba mais em [Gateways LLM](/docs/pt/llm-gateway).
 
-Os exemplos a seguir mostram as variáveis de ambiente a definir no seu shell ou perfil de shell (`.bashrc`, `.zshrc`). Veja [Configurações](/docs/pt/settings) para outros métodos de configuração.
+Para as variáveis de ambiente por provedor que roteiam Amazon Bedrock, Microsoft Foundry ou Google Cloud's Agent Platform através de um gateway LLM, consulte [rotear para um provedor de nuvem através de um gateway](/docs/pt/llm-gateway-connect#route-to-a-cloud-provider-through-a-gateway). Execute `/status` em Claude Code para verificar qual provedor, URL base e proxy uma sessão está usando.
 
-<h3 id="amazon-bedrock">
-  Amazon Bedrock
-</h3>
-
-<Tabs>
-  <Tab title="Proxy corporativo">
-    Rotear o tráfego do Amazon Bedrock através do seu proxy corporativo definindo as seguintes [variáveis de ambiente](/docs/pt/env-vars):
-
-    ```bash theme={null}
-    # Ativar Bedrock
-    export CLAUDE_CODE_USE_BEDROCK=1
-    export AWS_REGION=us-east-1
-
-    # Configurar proxy corporativo
-    export HTTPS_PROXY='https://proxy.example.com:8080'
-    ```
-  </Tab>
-
-  <Tab title="Gateway LLM">
-    Rotear o tráfego do Amazon Bedrock através do seu gateway LLM definindo as seguintes [variáveis de ambiente](/docs/pt/env-vars):
-
-    ```bash theme={null}
-    # Ativar Bedrock
-    export CLAUDE_CODE_USE_BEDROCK=1
-
-    # Configurar gateway LLM
-    export ANTHROPIC_BEDROCK_BASE_URL='https://your-llm-gateway.com/bedrock'
-    export CLAUDE_CODE_SKIP_BEDROCK_AUTH=1  # Se o gateway lidar com autenticação da AWS
-    ```
-  </Tab>
-</Tabs>
-
-<h3 id="microsoft-foundry">
-  Microsoft Foundry
-</h3>
-
-<Tabs>
-  <Tab title="Proxy corporativo">
-    Rotear o tráfego do Microsoft Foundry através do seu proxy corporativo definindo as seguintes [variáveis de ambiente](/docs/pt/env-vars):
-
-    ```bash theme={null}
-    # Ativar Microsoft Foundry
-    export CLAUDE_CODE_USE_FOUNDRY=1
-    export ANTHROPIC_FOUNDRY_RESOURCE=your-resource
-    export ANTHROPIC_FOUNDRY_API_KEY=your-api-key  # Ou omitir para autenticação Entra ID
-
-    # Configurar proxy corporativo
-    export HTTPS_PROXY='https://proxy.example.com:8080'
-    ```
-  </Tab>
-
-  <Tab title="Gateway LLM">
-    Rotear o tráfego do Microsoft Foundry através do seu gateway LLM definindo as seguintes [variáveis de ambiente](/docs/pt/env-vars):
-
-    ```bash theme={null}
-    # Ativar Microsoft Foundry
-    export CLAUDE_CODE_USE_FOUNDRY=1
-
-    # Configurar gateway LLM
-    export ANTHROPIC_FOUNDRY_BASE_URL='https://your-llm-gateway.com'
-    export ANTHROPIC_FOUNDRY_API_KEY=your-gateway-key  # Enviado como x-api-key
-    ```
-  </Tab>
-</Tabs>
-
-<h3 id="google-cloud’s-agent-platform">
-  Google Cloud's Agent Platform
-</h3>
-
-<Tabs>
-  <Tab title="Proxy corporativo">
-    Rotear o tráfego do Google Cloud's Agent Platform através do seu proxy corporativo definindo as seguintes [variáveis de ambiente](/docs/pt/env-vars):
-
-    ```bash theme={null}
-    # Ativar Agent Platform
-    export CLAUDE_CODE_USE_VERTEX=1
-    export CLOUD_ML_REGION=us-east5
-    export ANTHROPIC_VERTEX_PROJECT_ID=your-project-id
-
-    # Configurar proxy corporativo
-    export HTTPS_PROXY='https://proxy.example.com:8080'
-    ```
-  </Tab>
-
-  <Tab title="Gateway LLM">
-    Rotear o tráfego do Google Cloud's Agent Platform através do seu gateway LLM definindo as seguintes [variáveis de ambiente](/docs/pt/env-vars):
-
-    ```bash theme={null}
-    # Ativar Agent Platform
-    export CLAUDE_CODE_USE_VERTEX=1
-
-    # Configurar gateway LLM
-    export ANTHROPIC_VERTEX_BASE_URL='https://your-llm-gateway.com/vertex'
-    export CLAUDE_CODE_SKIP_VERTEX_AUTH=1  # Se o gateway lidar com autenticação do GCP
-    export ANTHROPIC_VERTEX_PROJECT_ID=your-gcp-project-id
-    export CLOUD_ML_REGION=us-east5
-    ```
-  </Tab>
-</Tabs>
-
-<Tip>
-  Use `/status` em Claude Code para verificar se a configuração do seu proxy e gateway foi aplicada corretamente. Por exemplo, com a configuração do gateway Bedrock acima, a saída inclui linhas como:
-
-  ```
-  API provider: Amazon Bedrock
-  Bedrock base URL: https://your-llm-gateway.com/bedrock
-  AWS region: us-east-1
-  AWS auth skipped
-  ```
-
-  Se você configurou um proxy corporativo, `/status` também mostra uma linha `Proxy` com a URL do seu proxy.
-</Tip>
+Se sua organização usa [chaves de criptografia gerenciadas pelo cliente](https://platform.claude.com/docs/en/manage-claude/cmek) (CMEK) e roteia Claude Code através de um gateway LLM ou uma `ANTHROPIC_BASE_URL` personalizada, CMEK não se aplica à telemetria operacional de Claude Code nessas sessões. Para desativar a telemetria para cada desenvolvedor, entregue `DISABLE_TELEMETRY` através de configurações gerenciadas conforme mostrado em [Desativar telemetria para sua organização](/docs/pt/managed-settings#turn-telemetry-off-for-your-organization).
 
 <h2 id="best-practices-for-organizations">
   Melhores práticas para organizações
@@ -336,12 +227,7 @@ Os exemplos a seguir mostram as variáveis de ambiente a definir no seu shell ou
   Investir em documentação e memória
 </h3>
 
-Recomendamos fortemente investir em documentação para que Claude Code compreenda sua base de código. As organizações podem implantar arquivos CLAUDE.md em múltiplos níveis:
-
-* **Em toda a organização**: Implante em diretórios do sistema como `/Library/Application Support/ClaudeCode/CLAUDE.md` (macOS), `/etc/claude-code/CLAUDE.md` (Linux e WSL), ou `C:\Program Files\ClaudeCode\CLAUDE.md` (Windows) para padrões em toda a empresa
-* **Nível de repositório**: Crie arquivos `CLAUDE.md` nas raízes dos repositórios contendo arquitetura do projeto, comandos de compilação e diretrizes de contribuição. Verifique-os no controle de origem para que todos os usuários se beneficiem
-
-Saiba mais em [Memória e arquivos CLAUDE.md](/docs/pt/memory).
+Recomendamos fortemente investir em documentação para que Claude Code compreenda sua base de código. As organizações podem implantar arquivos CLAUDE.md em múltiplos níveis. Veja [onde os arquivos CLAUDE.md podem estar](/docs/pt/memory#choose-where-to-put-claude-md-files) e [como implantar um CLAUDE.md em toda a organização](/docs/pt/memory#deploy-organization-wide-claude-md).
 
 <h3 id="simplify-deployment">
   Simplificar a implantação
@@ -368,12 +254,10 @@ Se você implantar através de [Amazon Bedrock](/docs/pt/amazon-bedrock), [Googl
 As equipes de segurança podem configurar permissões gerenciadas para o que Claude Code é e não é permitido fazer, o que não pode ser substituído pela configuração local. [Saiba mais](/docs/pt/security).
 
 <h3 id="leverage-mcp-for-integrations">
-  Aproveitar MCP para integrações
+  Usar MCP para integrações
 </h3>
 
 MCP é uma ótima maneira de dar a Claude Code mais informações, como conectar a sistemas de gerenciamento de tickets ou logs de erro. Recomendamos que uma equipe central configure servidores MCP e verifique uma configuração `.mcp.json` na base de código para que todos os usuários se beneficiem. [Saiba mais](/docs/pt/mcp).
-
-Na Anthropic, confiamos em Claude Code para potencializar o desenvolvimento em todas as bases de código da Anthropic. Esperamos que você aproveite usar Claude Code tanto quanto nós.
 
 <h2 id="next-steps">
   Próximas etapas

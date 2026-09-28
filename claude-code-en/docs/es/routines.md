@@ -4,13 +4,13 @@
 
 # Automatizar el trabajo con rutinas
 
-> Ponga Claude Code en piloto automático. Defina rutinas que se ejecuten en un horario, se activen en llamadas API o reaccionen a eventos de GitHub desde la infraestructura en la nube administrada por Anthropic.
+> Ponga Claude Code en piloto automático. Defina rutinas que se ejecuten en un horario, se activen en llamadas API o reaccionen a eventos de GitHub desde la infraestructura en la nube.
 
 <Note>
   Las rutinas están en vista previa de investigación. El comportamiento, los límites y la superficie de la API pueden cambiar.
 </Note>
 
-Una rutina es una configuración guardada de Claude Code: un prompt, uno o más repositorios y un conjunto de [conectores](/docs/es/mcp), empaquetados una vez y ejecutados automáticamente. Las rutinas se ejecutan en la infraestructura en la nube administrada por Anthropic, por lo que siguen funcionando cuando su portátil está cerrado.
+Una rutina es una configuración guardada de Claude Code: un prompt, uno o más repositorios y un conjunto de [conectores](/docs/es/mcp), empaquetados una vez y ejecutados automáticamente. Las rutinas se ejecutan en la infraestructura en la nube administrada por Anthropic, o en el [entorno autohospedado](/docs/es/self-hosted-environments) de su organización cuando se enrutan allí, por lo que siguen funcionando cuando su portátil está cerrado.
 
 Cada rutina puede tener uno o más disparadores adjuntos:
 
@@ -20,9 +20,9 @@ Cada rutina puede tener uno o más disparadores adjuntos:
 
 Una única rutina puede combinar disparadores. Por ejemplo, una rutina de revisión de PR puede ejecutarse cada noche, activarse desde un script de implementación y también reaccionar a cada nuevo PR.
 
-Las rutinas están disponibles en planes Pro, Max, Team y Enterprise con [Claude Code en la web](/docs/es/claude-code-on-the-web) habilitado. Créelas y adminístrelas en [claude.ai/code/routines](https://claude.ai/code/routines), o desde la CLI con `/schedule`.
+Las rutinas están disponibles en planes Pro, Max, Team y Enterprise. Créelas y adminístrelas en [claude.ai/code/routines](https://claude.ai/code/routines), o desde la CLI con `/schedule`.
 
-Los administradores de Team y Enterprise pueden desactivar las rutinas para todos los miembros con el botón de alternancia Routines en [claude.ai/admin-settings/claude-code](https://claude.ai/admin-settings/claude-code). Cuando se desactivan, las rutinas existentes dejan de ejecutarse y los miembros no pueden crear nuevas.
+Los propietarios de Team y Enterprise pueden desactivar las rutinas para todos los miembros con el botón de alternancia Routines en [claude.ai/admin-settings/claude-code](https://claude.ai/admin-settings/claude-code). Cuando se desactivan, las rutinas existentes dejan de ejecutarse y los miembros no pueden crear nuevas.
 
 Esta página cubre la creación de una rutina, la configuración de cada tipo de disparador, la administración de ejecuciones y cómo se aplican los límites de uso.
 
@@ -44,17 +44,26 @@ Cada ejemplo empareja un tipo de disparador con el tipo de trabajo para el que l
 
 **Puerto de biblioteca.** Un disparador de GitHub se ejecuta en `pull_request.closed` filtrado a PR fusionados en un repositorio de SDK. La rutina porta el cambio a un SDK paralelo en otro idioma y abre un PR coincidente, manteniendo las dos bibliotecas sincronizadas sin que un humano reimplemente cada cambio.
 
-Las secciones a continuación le guían a través de la creación de una rutina y la configuración de cada uno de estos tipos de disparadores.
-
 <h2 id="create-a-routine">
   Crear una rutina
 </h2>
 
-Cree una rutina desde la web en [claude.ai/code/routines](https://claude.ai/code/routines), desde la aplicación de escritorio o desde la CLI. Las tres superficies escriben en la misma cuenta en la nube, por lo que una rutina que cree en una aparece en las otras inmediatamente. En la aplicación de escritorio, haga clic en **Routines** en la barra lateral, luego en **New routine**, y elija **Remote**; elegir **Local** en su lugar crea una [tarea programada de escritorio](/docs/es/desktop-scheduled-tasks), que se ejecuta en su máquina en lugar de en la nube.
+Cree una rutina desde la web en [claude.ai/code/routines](https://claude.ai/code/routines), desde la aplicación de escritorio o desde la CLI. Las tres superficies escriben en la misma cuenta en la nube, por lo que una rutina que cree en una aparece en las otras inmediatamente. En la aplicación de escritorio, en la pestaña **Code**, haga clic en **Routines** en la barra lateral o en el menú **More** de la barra lateral, luego en **New routine**, y elija **Cloud**; elegir **Local** en su lugar crea una [tarea programada de escritorio](/docs/es/desktop-scheduled-tasks), que se ejecuta en su máquina en lugar de en la nube.
 
 El formulario de creación configura el prompt de la rutina, repositorios, entorno, conectores y disparadores.
 
-Las rutinas se ejecutan de forma autónoma como sesiones completas de Claude Code en la nube: no hay selector de modo de permiso y no hay mensajes de aprobación durante una ejecución. La sesión puede ejecutar comandos de shell, usar [skills](/docs/es/skills) comprometidas con el repositorio clonado y llamar a cualquier conector que incluya. Lo que una rutina puede alcanzar está determinado por los repositorios que seleccione y su configuración de rama-push, el [acceso a la red del entorno](/docs/es/claude-code-on-the-web#the-cloud-environment) y variables, y los conectores que incluya. Delimite cada uno de esos a lo que la rutina realmente necesita.
+Las rutinas se ejecutan de forma autónoma como sesiones completas de Claude Code en la nube: no hay selector de modo de permiso, y la sesión ejecuta comandos de shell, usa [skills](/docs/es/skills) comprometidas con el repositorio clonado y llama a cualquier conector que incluya, todo sin detenerse para obtener aprobación aparte de algunas acciones de [artefactos](/docs/es/artifacts).
+
+Lo que una rutina puede alcanzar está determinado por los repositorios que seleccione, el [acceso a la red del entorno](/docs/es/cloud-environments) y variables, y los conectores que incluya. Delimite cada uno de esos a lo que la rutina realmente necesita.
+
+Cuando el cronograma de la rutina o **Run now** inicia una ejecución, Claude republica un artefacto existente sin preguntar solo cuando se cumplen todas estas condiciones:
+
+* Puede editar el artefacto y pertenece a su propia organización
+* El artefacto no se comparte públicamente, y no se comparte con personas específicas u su organización con la última versión elegida como la versión que ven los espectadores
+* La publicación lleva solo la página, sin archivos de apoyo ni nada más agregado, y no fuerza una versión más nueva
+* La página no contiene una concesión que vaya más allá de la página, como [llamadas de conectores](/docs/es/artifacts#pull-live-data-with-mcp-connectors)
+
+En todos los demás casos, incluida la publicación de un nuevo artefacto, Claude pregunta primero. Cuando el trabajo de una rutina es mantener una página actual, déle un artefacto que ya haya publicado.
 
 Las rutinas pertenecen a su cuenta individual de claude.ai. No se comparten con compañeros de equipo y cuentan contra la asignación diaria de ejecuciones de su cuenta. Cualquier cosa que una rutina haga a través de su identidad de GitHub conectada o conectores aparece como usted: los commits y las solicitudes de extracción llevan su usuario de GitHub, y los mensajes de Slack, tickets de Linear u otras acciones de conectores utilizan sus cuentas vinculadas para esos servicios.
 
@@ -70,6 +79,8 @@ Las rutinas pertenecen a su cuenta individual de claude.ai. No se comparten con 
   <Step title="Nombrar la rutina y escribir el prompt">
     Dé a la rutina un nombre descriptivo y escriba el prompt que Claude ejecuta cada vez. El prompt es la parte más importante: la rutina se ejecuta de forma autónoma, por lo que el prompt debe ser autónomo y explícito sobre qué hacer y qué significa el éxito.
 
+    Cuando se activa un disparador, la sesión recibe el prompt guardado de la rutina como su tarea asignada y lo ejecuta, en lugar de tratarlo como contenido no confiable que llegó a mitad de la conversación. El disparador solo atestigua que el prompt fue almacenado con anticipación por una sesión autorizada en su cuenta, por lo que el prompt activado no es entrada de usuario en vivo y no puede actuar como aprobación o consentimiento para acciones durante la ejecución. El contenido que la sesión obtiene durante la ejecución mantiene su manejo normal. Antes de v2.1.213, la sesión recibía el mismo prompt enmarcado como una notificación de fondo no confiable y podía negarse a actuar sobre él.
+
     La entrada del prompt incluye un selector de modelo. Claude utiliza el modelo seleccionado en cada ejecución.
   </Step>
 
@@ -78,13 +89,13 @@ Las rutinas pertenecen a su cuenta individual de claude.ai. No se comparten con 
   </Step>
 
   <Step title="Seleccionar un entorno">
-    Elija un [entorno en la nube](/docs/es/claude-code-on-the-web#the-cloud-environment) para la rutina. Los entornos controlan a qué tiene acceso la sesión en la nube:
+    Elija un [entorno en la nube](/docs/es/cloud-environments) para la rutina. Los entornos controlan a qué tiene acceso la sesión en la nube:
 
     * **Network access**: establezca el nivel de acceso a Internet disponible durante cada ejecución
-    * **Environment variables**: proporcione claves de API, tokens u otros secretos que Claude pueda usar
-    * **Setup script**: instale dependencias y herramientas que la rutina necesita. El resultado se [almacena en caché](/docs/es/claude-code-on-the-web#environment-caching), por lo que el script no se vuelve a ejecutar en cada sesión
+    * **Environment variables**: proporcione valores que Claude pueda usar durante cada ejecución. Son [visibles para cualquiera que use el entorno](/docs/es/cloud-environments#what-carries-over-from-your-setup), por lo que en planes Pro y Max, almacene claves para las API que Claude llama durante una ejecución como [credenciales de API](/docs/es/cloud-environments#add-api-credentials) en su lugar. Esa sección también enumera las solicitudes que nunca obtienen una credencial
+    * **Setup script**: instale dependencias y herramientas que la rutina necesita. El resultado se [almacena en caché](/docs/es/cloud-environments#environment-caching), por lo que el script no se vuelve a ejecutar en cada sesión
 
-    Se proporciona un entorno **Default** con acceso a la red **Trusted**, que permite el [conjunto predeterminado](/docs/es/claude-code-on-the-web#default-allowed-domains) de registros de paquetes, API de proveedores de nube, registros de contenedores y dominios de desarrollo comunes, pero bloquea todo lo demás. Si su rutina necesita alcanzar sus propios servicios o un dominio fuera de esa lista, edite el [acceso a la red](/docs/es/claude-code-on-the-web#network-access) del entorno antes de ejecutar. Para usar un entorno separado, [cree uno](/docs/es/claude-code-on-the-web#configure-your-environment) primero.
+    Se proporciona un entorno **Default** con acceso a la red **Trusted**, que permite solo el [conjunto predeterminado](/docs/es/cloud-environments#default-allowed-domains) de registros de paquetes, API de proveedores de nube, registros de contenedores y dominios de desarrollo comunes a través de la red de la sesión. Los conectores que agregue a la rutina alcanzan sus servicios a través de los servidores de Anthropic, por lo que no necesitan cambios en la lista de permitidos. Si su rutina necesita alcanzar sus propios servicios directamente o un dominio fuera de esa lista, edite el [acceso a la red](/docs/es/cloud-environments#network-access) del entorno antes de ejecutar. Para usar un entorno separado, [cree uno](/docs/es/cloud-environments#configure-your-environment) primero.
   </Step>
 
   <Step title="Seleccionar un disparador">
@@ -105,12 +116,8 @@ Las rutinas pertenecen a su cuenta individual de claude.ai. No se comparten con 
     </Tabs>
   </Step>
 
-  <Step title="Revisar conectores y permisos">
-    Las pestañas **Connectors** y **Permissions** en la parte inferior del formulario controlan a qué puede acceder la rutina.
-
-    En Connectors, todos sus [conectores MCP](/docs/es/mcp) conectados se incluyen de forma predeterminada. Elimine cualquiera que la rutina no necesite. Claude puede usar todas las herramientas de un conector incluido, incluidas las escrituras, sin pedir permiso durante una ejecución.
-
-    En Permissions, habilite **Allow unrestricted branch pushes** para cualquier repositorio donde Claude deba poder hacer push a ramas existentes en lugar de solo a las prefijadas con `claude/`.
+  <Step title="Revisar conectores">
+    En **Connectors** en la parte inferior del formulario, todos sus [conectores MCP](/docs/es/mcp) conectados se incluyen de forma predeterminada. Elimine cualquiera que la rutina no necesite: Claude puede usar todas las herramientas de un conector incluido, incluidas las escrituras, sin pedir permiso durante una ejecución.
   </Step>
 
   <Step title="Crear la rutina">
@@ -124,13 +131,13 @@ Las rutinas pertenecen a su cuenta individual de claude.ai. No se comparten con 
   Crear desde la CLI
 </h3>
 
-Ejecute `/schedule` en cualquier sesión para crear una rutina programada conversacionalmente. También puede pasar una descripción directamente, para una rutina recurrente como `/schedule daily PR review at 9am` o una única como `/schedule clean up feature flag in one week`. Claude recorre la misma información que recopila el formulario web, luego guarda la rutina en su cuenta.
+Ejecute `/schedule` en cualquier sesión para crear una rutina programada conversacionalmente. También puede pasar una descripción directamente, para una rutina recurrente como `/schedule daily PR review at 9am` o una única como `/schedule clean up feature flag in one week`. Claude recorre la misma información que recopila el formulario web, luego guarda la rutina en su cuenta. El comando también está disponible bajo el alias `/routines`.
 
 Una ejecución exitosa se parece a una conversación: Claude hace preguntas de seguimiento sobre el cronograma, repositorios y prompt antes de guardar. Si Claude en su lugar responde que necesita autenticarse o que no puede conectarse a su cuenta remota de claude.ai, no se creó ninguna rutina; consulte [Troubleshooting](#troubleshooting).
 
-`/schedule` en la CLI crea solo rutinas programadas. Para agregar un disparador de API o GitHub, edite la rutina en la web en [claude.ai/code/routines](https://claude.ai/code/routines).
+`/schedule` en la CLI crea rutinas programadas. Para agregar un disparador de API, edite la rutina en la web en [claude.ai/code/routines](https://claude.ai/code/routines). Puede agregar un [disparador de GitHub](#add-a-github-trigger) desde la web o desde la CLI. La ruta de CLI requiere Claude Code v2.1.225 o posterior.
 
-La CLI también admite la administración de rutinas existentes. Ejecute `/schedule list` para ver todas las rutinas, `/schedule update` para cambiar una, o `/schedule run` para activarla inmediatamente.
+Una rutina sin disparador de cronograma, como una iniciada solo por llamadas de API o eventos de GitHub, no tiene tiempo de próxima ejecución, y la CLI no muestra ninguno cuando Claude la guarda o actualiza. Antes de v2.1.211, la CLI reportaba un tiempo de próxima ejecución en el año 1 para estas rutinas.
 
 <h2 id="configure-triggers">
   Configurar disparadores
@@ -154,10 +161,6 @@ Para un intervalo personalizado como cada dos horas o el primero de cada mes, el
 
 Una programación única dispara la rutina una sola vez en una marca de tiempo específica. Úsela para recordarse más adelante en la semana, para abrir un PR de limpieza después de que finalice un despliegue, o para iniciar una tarea de seguimiento cuando llega un cambio ascendente. Después de que se dispara la rutina, se desactiva automáticamente y la interfaz de usuario web la marca como **Ran**. Para ejecutarla nuevamente, edite la rutina y establezca una nueva hora única.
 
-<Note>
-  La programación única desde la CLI se está implementando gradualmente y es posible que aún no esté disponible en su cuenta. Si `/schedule` solo ofrece programaciones recurrentes, cree la ejecución única desde la web en [claude.ai/code/routines](https://claude.ai/code/routines) en su lugar.
-</Note>
-
 Cree una ejecución única desde la CLI describiendo la hora en lenguaje natural. Claude resuelve la frase contra la hora actual y confirma la marca de tiempo absoluta antes de guardar.
 
 ```text theme={null}
@@ -170,7 +173,7 @@ Cree una ejecución única desde la CLI describiendo la hora en lenguaje natural
 
 La misma conversión de zona local a UTC que las programaciones recurrentes se aplica a las marcas de tiempo únicas.
 
-Las ejecuciones únicas no cuentan contra el límite diario de ejecuciones de rutina. Consumen el uso de suscripción regular de su plan como cualquier otra sesión. Consulte [Uso y límites](#usage-and-limits) para obtener detalles.
+Las ejecuciones únicas no cuentan contra el límite diario de ejecuciones de rutina. Consulte [Uso y límites](#usage-and-limits) para obtener detalles.
 
 <h3 id="add-an-api-trigger">
   Agregar un disparador de API
@@ -182,7 +185,7 @@ Los disparadores de API se agregan a una rutina existente desde la web. La CLI a
 
 <Steps>
   <Step title="Abrir la rutina para editar">
-    Vaya a [claude.ai/code/routines](https://claude.ai/code/routines), haga clic en la rutina que desea activar a través de API, luego haga clic en el icono de lápiz para abrir **Edit routine**.
+    Vaya a [claude.ai/code/routines](https://claude.ai/code/routines), haga clic en la rutina que desea activar a través de API, luego abra el menú junto al nombre de la rutina y seleccione **Edit**.
   </Step>
 
   <Step title="Agregar un disparador de API">
@@ -205,6 +208,10 @@ Cada rutina tiene su propio token, limitado a activar solo esa rutina. Para rota
 </h4>
 
 Envíe una solicitud POST al punto final `/fire` con el token de portador en el encabezado `Authorization`. El cuerpo de la solicitud acepta un campo `text` opcional para contexto específico de la ejecución, como un cuerpo de alerta o un registro fallido, pasado a la rutina junto con su prompt guardado. El valor es texto de forma libre y no se analiza: si envía JSON u otra carga útil estructurada, la rutina la recibe como una cadena literal.
+
+El valor `text` no llega a la rutina como un mensaje desnudo. Llega envuelto en un bloque `<routine-fire-payload>` que lo etiqueta como datos no confiables y le dice a Claude que no siga instrucciones dentro de él a menos que el prompt de la rutina lo diga. El mismo envolvimiento se aplica al texto suministrado con **Run now** en la interfaz de usuario web.
+
+Esto significa que el prompt guardado de una rutina debe optar por actuar sobre el texto de fuego: escriba el prompt para hacer referencia explícita a la carga útil, por ejemplo "Investigue la alerta descrita en el bloque routine-fire-payload", o la rutina trata el texto como contexto inerte. Cualquiera que tenga el token de portador puede enviar `text`, por lo que el envolvimiento hace que el texto de fuego de un token filtrado llegue etiquetado como datos no confiables en lugar de como instrucciones directas a su rutina.
 
 El ejemplo a continuación activa una rutina desde un shell. El ID de rutina y el token mostrados son marcadores de posición: reemplácelos con la URL y el token que copió al [agregar el disparador de API](#add-an-api-trigger), o la solicitud falla con un error de autenticación `401`:
 
@@ -237,7 +244,7 @@ Abra la URL de sesión en un navegador para ver la ejecución en tiempo real, re
   Referencia de API
 </h4>
 
-Para la referencia completa de la API, incluidas todas las respuestas de error, reglas de validación y límites de campo, consulte [Activar una rutina a través de API](https://platform.claude.com/docs/es/api/claude-code/routines-fire) en la documentación de la plataforma Claude.
+Para la referencia completa de la API, incluidas todas las respuestas de error, reglas de validación y límites de campo, consulte [Activar una rutina a través de API](https://platform.claude.com/docs/en/api/claude-code/routines-fire) en la documentación de la plataforma Claude.
 
 El punto final `/fire` está disponible solo para usuarios de claude.ai y no es parte de la superficie de la API de Claude Platform.
 
@@ -245,28 +252,27 @@ El punto final `/fire` está disponible solo para usuarios de claude.ai y no es 
   Agregar un disparador de GitHub
 </h3>
 
-Un disparador de GitHub inicia una nueva sesión automáticamente cuando ocurre un evento coincidente en un repositorio conectado. Cada evento coincidente inicia su propia sesión.
+Un disparador de GitHub inicia una nueva sesión automáticamente cuando ocurre un evento coincidente en un repositorio conectado. Claude Code no reutiliza sesiones entre eventos, por lo que dos actualizaciones de PR producen dos sesiones independientes.
 
 <Note>
   Durante la vista previa de investigación, los eventos de webhook de GitHub están sujetos a límites por hora por rutina y por cuenta. Los eventos más allá del límite se descartan hasta que se reinicia la ventana. Vea sus límites actuales en [claude.ai/code/routines](https://claude.ai/code/routines).
 </Note>
 
-Los disparadores de GitHub se configuran solo desde la interfaz de usuario web.
+La aplicación Claude GitHub debe estar instalada en el repositorio al que desea suscribirse, sea cual sea la superficie desde la que configure el disparador.
+
+* Configure disparadores de GitHub desde la interfaz de usuario web, que le solicita que instale la aplicación cuando falta. Siga los pasos a continuación para configurar uno en la web.
+* Desde la CLI, instale la aplicación desde la [página de la aplicación GitHub](https://github.com/apps/claude) primero, luego pida a Claude que adjunte un disparador de GitHub a una rutina existente, por ejemplo `/schedule add a GitHub trigger to my nightly review for pull requests opened in acme/webapp`. La ruta de CLI requiere Claude Code v2.1.225 o posterior. Cuando Claude agrega el disparador, responde con un enlace a la rutina que dispara el disparador.
 
 <Steps>
   <Step title="Abrir la rutina para editar">
-    Vaya a [claude.ai/code/routines](https://claude.ai/code/routines), haga clic en la rutina, luego haga clic en el icono de lápiz para abrir **Edit routine**.
+    Vaya a [claude.ai/code/routines](https://claude.ai/code/routines), haga clic en la rutina, luego abra el menú junto al nombre de la rutina y seleccione **Edit**.
   </Step>
 
   <Step title="Agregar un disparador de evento de GitHub">
     Desplácese hasta la sección **Select a trigger**, haga clic en **Add another trigger** y elija **GitHub event**.
-  </Step>
-
-  <Step title="Instalar la aplicación Claude GitHub">
-    La aplicación Claude GitHub debe estar instalada en el repositorio al que desea suscribirse. La configuración del disparador le solicita que la instale si aún no está instalada.
 
     <Note>
-      Ejecutar `/web-setup` en la CLI otorga acceso al repositorio para clonar, pero no instala la aplicación Claude GitHub y no habilita la entrega de webhook. Los disparadores de GitHub requieren instalar la aplicación Claude GitHub, que la configuración del disparador le solicita que haga.
+      Ejecutar `/web-setup` en la CLI otorga acceso al repositorio para clonar, pero no instala la aplicación Claude GitHub y no habilita la entrega de webhook.
     </Note>
   </Step>
 
@@ -313,12 +319,6 @@ Algunos ejemplos de combinaciones de filtros:
 * **Solo listo para revisión**: es borrador es `false`. Omite borradores para que la rutina solo se ejecute cuando el PR esté listo para revisión.
 * **Retroportación controlada por etiqueta**: las etiquetas incluyen `needs-backport`. Activa una rutina de puerto a otra rama solo cuando un mantenedor etiqueta el PR.
 
-<h4 id="how-sessions-map-to-events">
-  Cómo se asignan las sesiones a los eventos
-</h4>
-
-Cada evento de GitHub coincidente inicia una nueva sesión. La reutilización de sesiones entre eventos no está disponible para rutinas activadas por GitHub, por lo que dos actualizaciones de PR producen dos sesiones independientes.
-
 <h2 id="manage-routines">
   Administrar rutinas
 </h2>
@@ -341,20 +341,34 @@ Haga clic en cualquier ejecución para abrirla como una sesión completa. Desde 
 
 Desde la página de detalles de la rutina puede:
 
-* Haga clic en **Run now** para iniciar una ejecución inmediatamente sin esperar la próxima hora programada.
-* Use el botón de alternancia en la sección **Repeats** para pausar o reanudar el horario. Las rutinas pausadas mantienen su configuración pero no se ejecutan hasta que las vuelva a habilitar.
-* Haga clic en el icono de lápiz para abrir **Edit routine** y cambiar el nombre, prompt, repositorios, entorno, conectores o cualquiera de los disparadores de la rutina. La sección **Select a trigger** es donde agrega o elimina horarios, tokens de API y disparadores de eventos de GitHub.
-* Haga clic en el icono de eliminar para eliminar la rutina. Las sesiones anteriores creadas por la rutina permanecen en su lista de sesiones.
+* Haga clic en **Run now** para iniciar una ejecución inmediatamente sin esperar la próxima hora programada. Opcionalmente puede proporcionar texto específico de la ejecución, que llega a la rutina de la misma manera que el campo `text` del disparador de API.
+* Use el botón de alternancia en la parte superior de la página para pausar o reanudar el horario. Las rutinas pausadas mantienen su configuración pero no se ejecutan hasta que las vuelva a habilitar.
+* Abra el menú junto al nombre de la rutina y seleccione **Edit** para cambiar el nombre, prompt, repositorios, entorno, conectores o cualquiera de los disparadores de la rutina. La sección **Select a trigger** es donde agrega o elimina horarios, tokens de API y disparadores de eventos de GitHub.
+* Abra el mismo menú y seleccione **Delete** para eliminar la rutina.
+
+<h3 id="manage-routines-from-the-cli">
+  Administrar rutinas desde la CLI
+</h3>
+
+La CLI admite la administración de rutinas existentes. Ejecute `/schedule list` para ver todas las rutinas, `/schedule update` para cambiar una, o `/schedule run` para activarla inmediatamente.
+
+También puede preguntar sobre el historial de ejecuciones de una rutina, por ejemplo `/schedule why did my nightly review do nothing this morning?`. Claude enumera las ejecuciones recientes de la rutina con su estado y un enlace para [abrir cada ejecución en la web](#view-and-interact-with-runs), y lee el registro de una ejecución para explicar qué sucedió, incluidos errores de herramientas, denegaciones de permisos y el resultado final. Requiere Claude Code v2.1.227 o posterior.
 
 <h3 id="repositories-and-branch-permissions">
   Repositorios y permisos de rama
 </h3>
 
-Las rutinas necesitan acceso a GitHub para clonar repositorios. Cuando crea una rutina desde la CLI con `/schedule`, Claude verifica si su cuenta tiene GitHub conectado y le solicita que ejecute `/web-setup` si no es así. Consulte [Opciones de autenticación de GitHub](/docs/es/claude-code-on-the-web#github-authentication-options) para las dos formas de otorgar acceso.
+Las rutinas necesitan acceso a GitHub para clonar repositorios. Cuando crea una rutina desde la CLI con `/schedule`, Claude verifica si su cuenta tiene acceso a GitHub para el repositorio desde el que la ejecutó y, si no es así, agrega una nota de configuración indicando cómo otorgarlo. Consulte [Opciones de autenticación de GitHub](/docs/es/claude-code-on-the-web#github-authentication-options) para las dos formas de otorgar acceso.
+
+Si su conexión a GitHub falta o ha expirado cuando una ejecución está programada, la rutina omite ejecuciones hasta que se reconecte, hasta 72 horas. Reconecte GitHub dentro de esa ventana y la rutina se reanuda automáticamente. Después de 72 horas sin una conexión, la rutina se desactiva y usted la vuelve a activar después de reconectar GitHub.
 
 Cada repositorio que agregue se clona en cada ejecución. Claude comienza desde la rama predeterminada del repositorio a menos que su prompt especifique lo contrario.
 
-De forma predeterminada, Claude solo puede insertar en ramas con prefijo `claude/`. Esto evita que las rutinas modifiquen accidentalmente ramas protegidas o de larga duración. Para eliminar esta restricción para un repositorio específico, habilite **Allow unrestricted branch pushes** para ese repositorio al crear o editar la rutina.
+Claude inserta su trabajo en ramas con prefijo `claude/`, que siempre se aceptan. Cuando su prompt dirige a Claude a insertar en otra rama, Claude Code verifica la inserción primero y la rechaza si alguno de los siguientes es verdadero:
+
+* La rama está protegida en GitHub
+* Alguien más tiene una solicitud de extracción abierta desde esa rama
+* La rama contiene confirmaciones creadas por alguien que no es usted
 
 <h3 id="connectors">
   Conectores
@@ -362,25 +376,25 @@ De forma predeterminada, Claude solo puede insertar en ramas con prefijo `claude
 
 Las rutinas pueden usar sus conectores MCP conectados para leer y escribir en servicios externos durante cada ejecución. Por ejemplo, una rutina que clasifica solicitudes de soporte podría leer de un canal de Slack y crear problemas en Linear.
 
-Los conectores son las [integraciones de claude.ai](/docs/es/mcp#use-mcp-servers-from-claude-ai) en su cuenta. Los servidores MCP que agregó localmente en la CLI con `claude mcp add` se almacenan en su máquina en lugar de su cuenta de claude.ai, por lo que no aparecen en la lista de conectores. Para usar uno de esos servidores en una rutina, agréguelo como conector en [claude.ai/customize/connectors](https://claude.ai/customize/connectors), o declárelo en un [`.mcp.json`](/docs/es/mcp#project-scope) confirmado para que sea parte del repositorio clonado.
+Los conectores son las [integraciones de claude.ai](/docs/es/mcp#use-mcp-servers-from-claude-ai) en su cuenta. Los servidores MCP que agregó localmente en la CLI con `claude mcp add` se almacenan en su máquina en lugar de su cuenta de claude.ai, por lo que no aparecen en la lista de conectores. Para usar uno de esos servidores en una rutina, agréguelo como conector en [claude.ai/customize/connectors](https://claude.ai/customize/connectors). Para una rutina con un repositorio, puede declararlo en un [`.mcp.json`](/docs/es/mcp#project-scope) confirmado para que sea parte del repositorio clonado.
 
 Cuando crea una rutina, todos sus conectores actualmente conectados se incluyen de forma predeterminada. Elimine cualquiera que no sea necesario para limitar a qué herramientas tiene acceso Claude durante la ejecución. También puede agregar conectores directamente desde el formulario de rutina.
 
-Para administrar o agregar conectores fuera del formulario de rutina, visite **Settings > Connectors** en claude.ai o use `/schedule update` en la CLI.
+Para administrar o agregar conectores fuera del formulario de rutina, visite [claude.ai/customize/connectors](https://claude.ai/customize/connectors) o use `/schedule update` en la CLI.
 
 <h3 id="environments-and-network-access">
   Entornos y acceso a la red
 </h3>
 
-Cada rutina se ejecuta en un [entorno en la nube](/docs/es/claude-code-on-the-web#the-cloud-environment) que controla el acceso a la red, variables de entorno y scripts de configuración. La rutina hereda la política de red del entorno en cada ejecución.
+Cada rutina usa un [entorno en la nube](/docs/es/cloud-environments) que controla el acceso a la red, variables de entorno y scripts de configuración. La rutina hereda la política de red del entorno en cada ejecución.
 
-El entorno **Default** utiliza acceso a la red **Trusted**: la [lista de permitidos predeterminada](/docs/es/claude-code-on-the-web#default-allowed-domains) de registros de paquetes, API de proveedores de nube, registros de contenedores y dominios de desarrollo comunes es accesible, pero los dominios arbitrarios no. Las solicitudes salientes a otros hosts fallan con `403` y `x-deny-reason: host_not_allowed`. El tráfico del conector MCP se enruta a través de los servidores de Anthropic, por lo que los conectores que agregue a la rutina funcionan sin agregar sus hosts a **Allowed domains**. Elimine cualquier conector que no necesite en [Conectores](#connectors).
+El entorno **Default** utiliza acceso a la red **Trusted**, que permite solo la [lista de permitidos predeterminada](/docs/es/cloud-environments#default-allowed-domains) a través de la red de la sesión. Las solicitudes en esa ruta a hosts fuera de la lista de permitidos fallan con `403` y `x-deny-reason: host_not_allowed`. El tráfico del conector MCP se enruta a través de los servidores de Anthropic en lugar de esa ruta, por lo que los conectores que agregue a la rutina funcionan sin agregar sus hosts a **Allowed domains**. Elimine cualquier conector que no necesite en [Conectores](#connectors).
 
-Para permitir dominios adicionales:
+Para permitir dominios adicionales en uno de sus propios entornos, siga estos pasos. Un [entorno compartido por la organización](/docs/es/cloud-environments#organization-shared-environments) se abre como solo lectura aquí, por lo que un Propietario cambia su acceso a la red desde la página **Cloud environments** en [configuración de administración](https://claude.ai/admin-settings) en su lugar.
 
 <Steps>
   <Step title="Abra la rutina para editar">
-    En la página de detalles de la rutina, haga clic en el icono de lápiz para abrir **Edit routine**.
+    En la página de detalles de la rutina, abra el menú junto al nombre de la rutina y seleccione **Edit**.
   </Step>
 
   <Step title="Abra el selector de entorno">
@@ -392,7 +406,7 @@ Para permitir dominios adicionales:
   </Step>
 
   <Step title="Cambie el nivel de acceso a la red">
-    En el diálogo **Update cloud environment**, cambie **Network access** a **Custom** e ingrese sus dominios en **Allowed domains**. Marque **Also include default list of common package managers** para mantener la [lista de permitidos predeterminada](/docs/es/claude-code-on-the-web#default-allowed-domains) junto con sus dominios personalizados. Seleccione **Full** en su lugar para acceso sin restricciones.
+    En el diálogo **Update cloud environment**, cambie **Network access** a **Custom** e ingrese sus dominios en **Allowed domains**. Marque **Also include default list of common package managers** para mantener la [lista de permitidos predeterminada](/docs/es/cloud-environments#default-allowed-domains) junto con sus dominios personalizados. Seleccione **Full** en su lugar para acceso sin restricciones.
   </Step>
 
   <Step title="Guardar">
@@ -400,7 +414,7 @@ Para permitir dominios adicionales:
   </Step>
 </Steps>
 
-Consulte [Network access](/docs/es/claude-code-on-the-web#network-access) para obtener detalles sobre los niveles de acceso y la lista de permitidos predeterminada.
+Consulte [Network access](/docs/es/cloud-environments#network-access) para obtener detalles sobre los niveles de acceso y la lista de permitidos predeterminada.
 
 <h2 id="usage-and-limits">
   Uso y límites
@@ -408,37 +422,37 @@ Consulte [Network access](/docs/es/claude-code-on-the-web#network-access) para o
 
 Las rutinas reducen el uso de suscripción de la misma manera que lo hacen las sesiones interactivas. Además de los límites de suscripción estándar, las rutinas tienen un límite diario de cuántas ejecuciones pueden comenzar por cuenta. Vea su consumo actual y ejecuciones diarias de rutina restantes en [claude.ai/code/routines](https://claude.ai/code/routines) o [claude.ai/settings/usage](https://claude.ai/settings/usage).
 
-Cuando una rutina alcanza el límite diario o el límite de uso de su suscripción, las organizaciones con créditos de uso habilitados pueden continuar ejecutando rutinas en exceso medido. Sin créditos de uso, las ejecuciones adicionales se rechazan hasta que se reinicia la ventana. Habilite los créditos de uso desde **Settings > Billing** en claude.ai.
+Cuando una rutina alcanza el límite diario o el límite de uso de su suscripción, las organizaciones con créditos de uso habilitados pueden continuar ejecutando rutinas en exceso medido. Sin créditos de uso, las ejecuciones adicionales se rechazan hasta que se reinicia la ventana. Habilite los créditos de uso en [claude.ai/settings/usage](https://claude.ai/settings/usage). En los planes Team y Enterprise, un administrador los habilita para la organización en [claude.ai/admin-settings/usage](https://claude.ai/admin-settings/usage).
 
-Las ejecuciones únicas no cuentan contra el límite diario de ejecuciones de rutina. Reducen su uso de suscripción regular como cualquier otra sesión, pero están exentas de la asignación diaria de ejecuciones de rutina por cuenta.
+Las ejecuciones únicas no cuentan contra el límite diario de rutina. Reducen su uso de suscripción regular como cualquier otra sesión.
+
+Mientras su suscripción está pausada, sus rutinas se ponen en espera y no se ejecutan. Una vez que su suscripción esté activa nuevamente, actívelas de nuevo.
 
 <h2 id="troubleshooting">
   Solución de problemas
 </h2>
 
-<h3 id="/schedule-returns-unknown-command">
-  `/schedule` muestra "Unknown command"
+<h3 id="schedule-returns-unknown-command">
+  `/schedule` devuelve "Unknown command"
 </h3>
 
-La CLI oculta `/schedule` cuando uno de sus requisitos no se cumple: el menú de comandos muestra `No commands match "/schedule"` mientras escribe, y enviarlo devuelve `Unknown command: /schedule`. La causa suele ser una de las siguientes:
+La CLI oculta `/schedule` cuando uno de sus requisitos no se cumple: el menú de comandos muestra `No commands match "/schedule"` mientras escribe. Enviarlo devuelve `Unknown command: /schedule`, excepto en los casos siguientes que indican una respuesta diferente.
 
-* Está autenticado con una clave de API de Console o un proveedor de nube como Amazon Bedrock, Google Cloud's Agent Platform o Microsoft Foundry. `/schedule` requiere un inicio de sesión de suscripción de claude.ai. Si `ANTHROPIC_API_KEY` o `ANTHROPIC_AUTH_TOKEN` está configurado en su shell, o `apiKeyHelper` está configurado en `settings.json`, elimínelo primero, ya que estos tienen prioridad sobre un inicio de sesión de claude.ai
-* `DISABLE_TELEMETRY`, `DO_NOT_TRACK`, `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` o `DISABLE_GROWTHBOOK` está configurado en su entorno de shell o en el bloque `env` de un [archivo `settings.json`](/docs/es/settings#available-settings). Estos desactivan la obtención de indicadores de características, de la que depende `/schedule`
-* Se encuentra dentro de una sesión de Claude Code en la web. Administre rutinas desde la [interfaz web](https://claude.ai/code/routines) en su lugar
+La causa suele ser una de las siguientes:
 
-Siempre puede crear y administrar rutinas en [claude.ai/code/routines](https://claude.ai/code/routines) independientemente de cómo esté configurada la CLI.
+* Está autenticado con una clave de API de Console, un [perfil de Anthropic o credencial de federación](/docs/es/authentication#anthropic-profiles-and-federation-credentials), o un proveedor de nube como Amazon Bedrock, Google Cloud's Agent Platform o Microsoft Foundry. `/schedule` requiere un inicio de sesión de suscripción de claude.ai. Con una clave de API de Console o un perfil, y con la obtención de indicadores de características habilitada, enviar `/schedule` muestra en su lugar `/schedule is available with Claude for Enterprise — ask your admin about migrating from API-key access`. Con un inicio de sesión de proveedor de nube, aún ve `Unknown command: /schedule`. Si `ANTHROPIC_API_KEY` o `ANTHROPIC_AUTH_TOKEN` está configurado en su shell, o `apiKeyHelper` está configurado en `settings.json`, elimínelo primero, ya que estos tienen prioridad sobre un inicio de sesión de claude.ai. Un perfil o credencial de federación también tiene prioridad, así que desactívelo también
+* Está completamente desconectado, sin clave de API ni otra credencial. Con la obtención de indicadores de características habilitada, enviar `/schedule` muestra `/schedule requires a claude.ai subscription. Run /login to sign in with your claude.ai account.` Antes de v2.1.268, una sesión desconectada mostraba el mismo mensaje de Claude for Enterprise que una clave de API de Console
+* Se encuentra dentro de una sesión de nube, donde enviar `/schedule` responde que el comando no está disponible en ese entorno. Administre rutinas desde la [interfaz web](https://claude.ai/code/routines) en su lugar
+* La política de su organización desactiva [Claude Code en la web](/docs/es/claude-code-on-the-web), en la que se ejecutan las rutinas. En este caso, enviar `/schedule` responde [`Cloud sessions are disabled by your organization's policy`](/docs/es/errors#cloud-sessions-are-disabled-by-your-organizations-policy) en su lugar. Antes de v2.1.268, devolvía `Unknown command: /schedule`
+* Un propietario [desactivó las rutinas](#routines-are-disabled-by-your-organizations-policy) para su organización de Team o Enterprise. Antes de v2.1.227, el comando aún aparecía en este caso, y claude.ai rechazaba la rutina cuando Claude intentaba crearla o ejecutarla
 
-<h3 id="/schedule-asks-you-to-authenticate">
-  `/schedule` le pide que se autentique
-</h3>
+A menos que la política de su organización desactive las rutinas o Claude Code en la web, puede crear y administrar rutinas en [claude.ai/code/routines](https://claude.ai/code/routines) independientemente de cómo esté configurada la CLI.
 
-Si `/schedule` se ejecuta pero Claude responde que primero debe autenticarse con una cuenta de claude.ai, la CLI no tiene ningún inicio de sesión de claude.ai almacenado. Las cuentas de API no son compatibles con rutinas. Ejecute `/login`, inicie sesión con su cuenta de claude.ai y luego ejecute `/schedule` nuevamente.
-
-<h3 id="routines-are-disabled-by-your-organization’s-policy">
+<h3 id="routines-are-disabled-by-your-organizations-policy">
   "Routines are disabled by your organization's policy"
 </h3>
 
-Un propietario en su organización de Team o Enterprise probablemente ha desactivado el botón de alternancia **Routines** en [claude.ai/admin-settings/claude-code](https://claude.ai/admin-settings/claude-code). Esta es una configuración de organización del lado del servidor, por lo que no se puede anular desde su configuración local. Pida a un propietario que habilite las rutinas para su organización.
+Un propietario en su organización de Team o Enterprise probablemente ha desactivado el botón de alternancia **Routines** en [claude.ai/admin-settings/claude-code](https://claude.ai/admin-settings/claude-code). En Claude Code v2.1.227 o posterior, el mismo botón de alternancia también oculta `/schedule` en la CLI. Esta es una configuración de organización del lado del servidor, por lo que no se puede anular desde su configuración local. Pida a un propietario que habilite las rutinas para su organización.
 
 <h2 id="related-resources">
   Recursos relacionados
@@ -446,6 +460,7 @@ Un propietario en su organización de Team o Enterprise probablemente ha desacti
 
 * [`/loop` e programación en sesión](/docs/es/scheduled-tasks): programe tareas locales dentro de una sesión de CLI abierta
 * [Tareas programadas de escritorio](/docs/es/desktop-scheduled-tasks): tareas programadas locales que se ejecutan en su máquina con acceso a archivos locales
-* [Entorno en la nube](/docs/es/claude-code-on-the-web#the-cloud-environment): configure el entorno de tiempo de ejecución para sesiones en la nube
+* [Entornos en la nube](/docs/es/cloud-environments): configure el acceso a la red, las variables de entorno y los scripts de configuración para sesiones en la nube
+* [Proyectos](/docs/es/claude-projects): trabajo en curso que Claude coordina en sesiones en la nube paralelas; las rutinas creadas a partir de un proyecto aparecen en su pestaña **Routines**
 * [Conectores MCP](/docs/es/mcp): conecte servicios externos como Slack, Linear y Google Drive
 * [GitHub Actions](/docs/es/github-actions): ejecute Claude en su canalización de CI en eventos del repositorio

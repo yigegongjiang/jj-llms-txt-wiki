@@ -8,10 +8,6 @@
 
 Fale seus prompts em vez de digitá-los no Claude Code CLI. Sua fala é transcrita em tempo real na entrada do prompt, para que você possa misturar voz e digitação na mesma mensagem. Ative o ditado com `/voice`, depois mantenha uma tecla pressionada enquanto fala ou toque uma vez para começar e novamente para enviar.
 
-<Note>
-  Modo de toque requer Claude Code v2.1.116 ou posterior. Verifique sua versão com `claude --version`.
-</Note>
-
 O ditado também funciona na [visualização do agente](/docs/pt/agent-view#peek-and-reply). Mantenha ou toque sua tecla push-to-talk enquanto a entrada de despacho ou uma resposta do painel de visualização estiver em foco para ditar para uma sessão em segundo plano.
 
 <h2 id="requirements">
@@ -21,8 +17,7 @@ O ditado também funciona na [visualização do agente](/docs/pt/agent-view#peek
 O ditado por voz transmite seu áudio gravado para os servidores da Anthropic para transcrição. O áudio não é processado localmente. Ele precisa de todos os seguintes:
 
 * **Uma conta Claude.ai**: o serviço de fala para texto está disponível apenas quando você se autentica com uma, e não está disponível quando Claude Code está configurado para usar uma chave API da Anthropic diretamente, Amazon Bedrock, Google Cloud's Agent Platform ou Microsoft Foundry.
-* **Uma organização sem conformidade HIPAA ativada**: `/voice` mostra `Voice mode is disabled by your organization's policy` quando essa restrição se aplica.
-* **Um microfone local**: o ditado por voz não funciona em ambientes remotos como [Claude Code na web](/docs/pt/claude-code-on-the-web) ou sessões SSH.
+* **Um microfone local**: o ditado por voz não funciona em [sessões na nuvem](/docs/pt/claude-code-on-the-web) ou sessões SSH.
 * **WSLg, se você executar Claude Code no WSL**: WSLg está incluído no WSL2 quando instalado na Microsoft Store no Windows 10 ou 11. Se WSLg não estiver disponível, por exemplo no WSL1, execute Claude Code no Windows nativo.
 
 A transcrição não consome mensagens Claude ou tokens e não conta para os limites mostrados em `/usage`. Consulte [data usage](/docs/pt/data-usage) para saber como a Anthropic lida com seus dados.
@@ -62,7 +57,7 @@ O ditado por voz persiste entre sessões. Defina-o diretamente em seu [arquivo d
 }
 ```
 
-Enquanto o ditado por voz está ativado, o rodapé de entrada mostra uma dica `hold space to speak` quando o prompt está vazio. A dica reflete sua vinculação `voice:pushToTalk` atual e é atualizada se você [reassociar a tecla de ditado](#rebind-the-dictation-key). O texto da dica é o mesmo em ambos os modos e não aparece se você tiver um [status line personalizado](/docs/pt/statusline) configurado.
+Nas três primeiras sessões com ditado por voz ativado, o rodapé de entrada mostra uma dica `hold space to speak` quando o prompt está vazio. A dica reflete sua vinculação `voice:pushToTalk` atual e é atualizada se você [reassociar a tecla de ditado](#rebind-the-dictation-key). O texto da dica é o mesmo em ambos os modos e não aparece se você tiver um [status line personalizado](/docs/pt/statusline) configurado.
 
 A transcrição é ajustada para vocabulário de codificação em ambos os modos. Termos de desenvolvimento comuns como `regex`, `OAuth`, `JSON` e `localhost` são reconhecidos corretamente, e o nome do seu projeto atual e o nome da ramificação git são adicionados automaticamente como dicas de reconhecimento.
 
@@ -72,9 +67,11 @@ A transcrição é ajustada para vocabulário de codificação em ambos os modos
 
 O modo de manutenção é push-to-talk: a gravação é executada enquanto você mantém a tecla pressionada e para quando você a solta. Este é o modo padrão.
 
-Mantenha `Space` pressionado para começar a gravar. Claude Code detecta uma tecla mantida observando eventos rápidos de repetição de tecla do seu terminal, portanto há um breve aquecimento antes da gravação começar. O rodapé mostra `keep holding…` durante o aquecimento e depois muda para uma forma de onda ao vivo quando a gravação está ativa.
+Mantenha `Space` pressionado para começar a gravar. Claude Code detecta uma tecla mantida observando eventos rápidos de repetição de tecla do seu terminal, portanto há um breve aquecimento antes da gravação começar. O rodapé mostra `keep holding…` durante o aquecimento, depois `listening…` quando a gravação está ativa. Enquanto grava, o cursor do prompt se torna uma barra que sobe e desce com o nível do seu microfone, a menos que você tenha [`prefersReducedMotion`](/docs/pt/settings-reference#prefersreducedmotion) ativado.
 
 Os primeiros caracteres de repetição de tecla digitam na entrada durante o aquecimento e são removidos automaticamente quando a gravação é ativada. Um único toque em `Space` ainda digita um espaço, pois a detecção de manutenção só é acionada na repetição rápida.
+
+Manter ou tocar `Space` inicia a ditação apenas onde o pressionamento de tecla digitaria no prompt. No [visualizador de transcrição](/docs/pt/interactive-mode#transcript-viewer), `Space` percorre a conversa, e no [modo vim](/docs/pt/interactive-mode#vim-editor-mode) fora de INSERT é um comando. Uma [combinação de modificador revinculada](#rebind-the-dictation-key) como `meta+k` nunca digita texto, portanto também inicia a ditação a partir desses locais.
 
 <Tip>
   Para pular o aquecimento, mude para [modo de toque](#tap-to-record-and-send) com `/voice tap`, ou [revinculação a uma combinação de modificador](#rebind-the-dictation-key) como `meta+k`. Combinações de modificadores começam a gravar no primeiro pressionamento de tecla.
@@ -84,11 +81,11 @@ Sua fala aparece no prompt conforme você fala, atenuada até que a transcriçã
 
 ```
 > refactor the auth middleware to ▮
-  # hold Space, speak "use the new token validation helper"
+  # hold space, speak "use the new token validation helper"
 > refactor the auth middleware to use the new token validation helper▮
 ```
 
-Por padrão, soltar a tecla insere a transcrição e aguarda você pressionar `Enter`. Defina `"autoSubmit": true` no objeto de configurações `voice` para enviar o prompt automaticamente quando você soltar a tecla, desde que a transcrição tenha pelo menos três palavras.
+Por padrão, quando você solta a tecla, Claude Code insere a transcrição e aguarda você pressionar `Enter`. Defina `"autoSubmit": true` no objeto de configurações `voice` para enviar o prompt automaticamente quando você soltar a tecla, desde que a transcrição tenha pelo menos três palavras.
 
 <h2 id="tap-to-record-and-send">
   Tap to record and send
@@ -96,19 +93,29 @@ Por padrão, soltar a tecla insere a transcrição e aguarda você pressionar `E
 
 O modo de toque alterna a gravação com um único pressionamento de tecla: toque uma vez para começar, fale e depois toque novamente para enviar o prompt. Não há aquecimento e você não precisa manter a tecla pressionada.
 
-Ative o modo de toque com `/voice tap`. Com a entrada do prompt vazia, toque em `Space` para começar a gravar. O rodapé mostra uma forma de onda ao vivo durante a gravação. Toque em `Space` novamente para parar.
+Ative o modo de toque com `/voice tap`. Com a entrada do prompt vazia, toque em `Space` para começar a gravar. O rodapé mostra `● REC · tap to send` durante a gravação. Toque em `Space` novamente para parar.
 
 Claude Code insere a transcrição e envia o prompt automaticamente quando a transcrição tem pelo menos três palavras. Transcrições mais curtas são inseridas mas não enviadas, portanto um toque acidental não envia uma palavra isolada.
 
-O limite de três palavras conta palavras para idiomas escritos sem espaços. A partir da v2.1.195, transcrições em japonês, chinês e tailandês contam palavras individuais, portanto elas são enviadas automaticamente no modo de toque e no modo de espera com `autoSubmit`. Versões anteriores contavam uma transcrição sem espaços como uma palavra e nunca a enviavam automaticamente.
+O limite de três palavras conta palavras para idiomas escritos sem espaços. Transcrições em japonês, chinês e tailandês contam palavras individuais, portanto elas são enviadas automaticamente no modo de toque e no modo de espera com `autoSubmit`.
 
 O primeiro toque só começa a gravar quando a entrada do prompt está vazia, para que você ainda possa digitar espaços normalmente enquanto compõe uma mensagem. O segundo toque para a gravação independentemente do conteúdo da entrada. A gravação também para automaticamente após 15 segundos de silêncio ou dois minutos no total.
+
+<h2 id="cancel-a-recording">
+  Cancelar uma gravação
+</h2>
+
+Pressione `Esc` ou `Ctrl+C` para cancelar uma ditação em vez de finalizá-la. Claude Code interrompe o microfone, descarta a transcrição e restaura o prompt para o que ele continha antes da gravação começar.
+
+Ambas as teclas também cancelam enquanto a transcrição de uma gravação finalizada ainda está sendo processada. Um prompt que você editou ou enviou durante o processamento permanece como você o deixou.
+
+Nenhuma das duas teclas faz mais nada no pressionamento que cancela: `Esc` não interrompe a resposta do Claude, e `Ctrl+C` não limpa o prompt ou conta como o primeiro dos [dois pressionamentos que saem do Claude Code](/docs/pt/interactive-mode#general-controls).
 
 <h2 id="change-the-dictation-language">
   Alterar o idioma do ditado
 </h2>
 
-O ditado por voz usa a mesma [configuração `language`](/docs/pt/settings) que controla o idioma de resposta do Claude. Se essa configuração estiver vazia, o ditado usa o padrão em inglês. Na extensão VS Code, se `language` estiver vazio, o ditado usa a configuração `accessibility.voice.speechLanguage` do VS Code antes de usar o padrão em inglês.
+O ditado por voz usa a mesma [configuração `language`](/docs/pt/settings-reference#language) que controla o idioma de resposta do Claude. Se essa configuração estiver vazia, o ditado usa o padrão em inglês. Na extensão VS Code, se `language` estiver vazio, o ditado usa a configuração `accessibility.voice.speechLanguage` do VS Code antes de usar o padrão em inglês.
 
 <Accordion title="Idiomas de ditado suportados">
   | Idioma      | Código |
@@ -178,16 +185,17 @@ Algumas teclas não são entregues a aplicativos de terminal e não podem ser vi
 Problemas comuns quando o ditado por voz não é ativado ou não grava:
 
 * **`Voice mode requires a Claude.ai account`**: você está autenticado com uma chave API ou um provedor de terceiros. Execute `/login` para entrar com uma conta Claude.ai.
-* **`Voice mode is disabled by your organization's policy`**: a configuração de conformidade da sua organização desativa o ditado por voz, conforme descrito em [Requirements](#requirements). Entre em contato com o administrador da sua organização para confirmar se o ditado por voz está disponível para sua organização.
+* **`Voice mode is disabled by your organization's policy`**: uma política de administrador da sua organização desativa o ditado por voz. Entre em contato com o administrador da sua organização para confirmar se o ditado por voz está disponível para sua organização.
 * **`Microphone access is denied`**: conceda permissão de microfone ao seu terminal nas configurações do sistema. No macOS, vá para Configurações do Sistema → Privacidade e Segurança → Microfone e ative seu aplicativo de terminal, depois execute `/voice` novamente. No Windows, vá para Configurações → Privacidade e segurança → Microfone e ative o acesso ao microfone para aplicativos de desktop, depois execute `/voice` novamente. Se seu terminal não estiver listado nas configurações de Microfone do macOS, consulte [Terminal not listed in macOS Microphone settings](#terminal-not-listed-in-macos-microphone-settings).
-* **`No audio recording tool found` no Linux**: o módulo de áudio nativo não conseguiu carregar e nenhum fallback está instalado. Instale SoX com o comando mostrado na mensagem de erro, por exemplo `sudo apt-get install sox`.
+* **`Voice mode requires SoX for audio recording` no Linux**: o módulo de áudio nativo não conseguiu carregar e nenhum fallback está instalado. Instale SoX com o comando mostrado na mensagem de erro, por exemplo `sudo apt-get install sox`.
 * **`Voice mode requires a microphone, but SoX could not open an audio capture device`**: SoX está instalado, mas o host não possui um dispositivo de captura de áudio, por exemplo um servidor sem cabeça ou um contêiner. Execute Claude Code em uma máquina com um microfone. A partir da v2.1.195, Claude Code no Linux relata esta mensagem nessa situação; versões anteriores pediam que você instalasse SoX mesmo quando já estava instalado.
 * **`Voice mode could not find a working audio recorder in WSL`**: WSLg roteia áudio através do PulseAudio em vez de um dispositivo ALSA, portanto SoX precisa que seu backend PulseAudio esteja instalado explicitamente. Execute `sudo apt install sox libsox-fmt-pulse`. Instalar apenas `sox` puxa o backend ALSA, que não consegue gravar no WSL porque não há nenhum dispositivo `/dev/snd`.
-* **`Voice input is failing repeatedly and has been paused`**: o ditado por voz atingiu várias falhas de captura seguidas e parou de tentar novas sessões até que uma tenha sucesso. Uma falha conta se o microfone falhar ao iniciar ou o gravador iniciar e depois parar sem produzir nenhum áudio. Isso geralmente significa que o microfone ou a pilha de áudio neste host não consegue capturar áudio, por exemplo um servidor sem cabeça, um shell remoto sem passagem de áudio, ou uma permissão de microfone negada. Confirme um dispositivo de entrada funcionando, corrija a causa subjacente das entradas acima, depois dispare a voz novamente. Antes da v2.1.202, apenas falhas de inicialização contavam para a pausa.
+* **`Voice input is failing repeatedly and has been paused`**: o ditado por voz atingiu três falhas de captura em 10 segundos. Claude Code pausa o ditado até que 10 segundos tenham passado desde a primeira dessas falhas. Uma falha conta se o microfone falhar ao iniciar ou o gravador iniciar e depois parar sem produzir nenhum áudio. Isso geralmente significa que o microfone ou a pilha de áudio neste host não consegue capturar áudio, por exemplo um servidor sem cabeça, um shell remoto sem passagem de áudio, ou uma permissão de microfone negada. Confirme um dispositivo de entrada funcionando, corrija a causa subjacente das entradas acima, depois dispare a voz novamente. Antes da v2.1.202, apenas falhas de inicialização contavam para a pausa.
 * **Nada acontece ao manter `Space` pressionado no modo de manutenção**: observe a entrada do prompt enquanto você mantém. Se espaços continuarem se acumulando, o ditado por voz provavelmente está desativado; execute `/voice hold` para ativá-lo. Se apenas um ou dois espaços aparecerem e depois nada, o ditado por voz está ativado mas a detecção de manutenção não está sendo acionada. A detecção de manutenção requer que seu terminal envie eventos de repetição de tecla, portanto não pode detectar uma tecla mantida se a repetição de tecla estiver desativada no nível do SO. Mude para o modo de toque com `/voice tap` para evitar o requisito de repetição de tecla.
 * **Tocar `Space` digita um espaço em vez de gravar no modo de toque**: o primeiro toque só começa a gravar quando a entrada do prompt está vazia. Limpe a entrada primeiro, ou verifique se você está no modo de toque executando `/voice tap`.
 * **`No audio detected from microphone`**: a gravação começou mas capturou silêncio. Confirme que o dispositivo de entrada correto está definido como padrão do sistema e que seu nível de entrada não está mudo ou próximo a zero. No Windows, abra Configurações → Sistema → Som → Entrada e selecione seu microfone. No macOS, abra Configurações do Sistema → Som → Entrada.
 * **`Voice connection failed`**: sua gravação nunca chegou ao serviço de transcrição porque a conexão falhou. Verifique sua rede e tente novamente. Uma gravação que captura nenhum áudio relata `No audio detected from microphone` em vez desta mensagem. Antes da v2.1.200, um microfone silencioso poderia relatar uma falha de conexão, o que sugeria um problema de rede quando o problema real era o dispositivo de entrada.
+* **`Voice stream error: WebSocket upgrade rejected with HTTP <status>`**: um servidor recusou sua conexão com o status HTTP mostrado, portanto isso não é uma interrupção de rede. Um status na faixa 400 geralmente significa uma entrada desatualizada, ou um serviço de proxy ou proteção contra bots respondendo no lugar do serviço de transcrição. Execute `/login` para atualizar sua entrada, e verifique se há uma VPN ou proxy no seu caminho de rede se o status persistir. Se você ainda estiver gravando quando a rejeição chegar, Claude Code tenta novamente um status fora da faixa 400 uma vez antes de mostrar esta mensagem; ele não tenta novamente um status na faixa 400. Na v2.1.229 até v2.1.231, compilações nativas não mostravam esta mensagem: Claude Code continuava gravando, o rodapé do modo de manutenção ainda mostrava `listening…`, e relatava `Voice connection failed` depois que você parou de gravar.
 * **`No speech detected`**: o áudio chegou ao serviço de transcrição mas nenhuma palavra foi reconhecida. Fale mais perto do microfone, reduza o ruído de fundo e confirme que seu [idioma de ditado](#change-the-dictation-language) corresponde ao idioma que você está falando.
 * **A transcrição está distorcida ou no idioma errado**: o ditado usa o padrão em inglês. Se você estiver ditando em outro idioma, defina-o em `/config` primeiro. Consulte [Change the dictation language](#change-the-dictation-language).
 
@@ -220,6 +228,6 @@ Se seu aplicativo de terminal não aparecer em Configurações do Sistema → Pr
 </h2>
 
 * [Personalize atalhos de teclado](/docs/pt/keybindings): revinculação `voice:pushToTalk` e outras ações de teclado CLI
-* [Configure configurações](/docs/pt/settings): referência completa para `voice`, `language` e outras chaves de configurações
+* [Todas as configurações](/docs/pt/settings-reference#voice): as chaves de configurações `voice`, `language` e outras
 * [Modo interativo](/docs/pt/interactive-mode): atalhos de teclado, modos de entrada e controles de sessão
 * [Comandos](/docs/pt/commands): referência para `/voice`, `/config` e todos os outros comandos

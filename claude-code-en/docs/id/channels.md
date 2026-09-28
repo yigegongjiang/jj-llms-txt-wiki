@@ -42,9 +42,12 @@ Setiap saluran yang didukung adalah plugin yang memerlukan [Bun](https://bun.sh)
         /plugin install telegram@claude-plugins-official
         ```
 
-        Jika Claude Code melaporkan bahwa plugin tidak ditemukan di pasar mana pun, pasar Anda hilang atau ketinggalan zaman. Jalankan `/plugin marketplace update claude-plugins-official` untuk menyegarkannya, atau `/plugin marketplace add anthropics/claude-plugins-official` jika Anda belum menambahkannya sebelumnya. Kemudian coba instal lagi.
+        Jika instalasi gagal, cocokkan pesan yang dilaporkan Claude Code:
 
-        Setelah menginstal, jalankan `/reload-plugins` untuk mengaktifkan perintah konfigurasi plugin.
+        * `Marketplace "claude-plugins-official" not found`: tambahkan pasar dengan `/plugin marketplace add anthropics/claude-plugins-official`, kemudian coba instal lagi.
+        * Plugin [tidak ditemukan di pasar](/docs/id/plugins/install#install-a-plugin): periksa nama plugin.
+
+        Ketika instalasi meminta cakupan instalasi, pilih opsi cakupan pengguna sehingga plugin tersedia di semua proyek Anda. Periksa ringkasan instalasi: jika melaporkan `Run /reload-plugins to activate.`, lihat [Terapkan perubahan plugin tanpa memulai ulang](/docs/id/plugins/cli-reference#reload-plugins) untuk membuat perintah konfigurasi plugin tersedia.
       </Step>
 
       <Step title="Konfigurasikan token Anda">
@@ -117,9 +120,12 @@ Setiap saluran yang didukung adalah plugin yang memerlukan [Bun](https://bun.sh)
         /plugin install discord@claude-plugins-official
         ```
 
-        Jika Claude Code melaporkan bahwa plugin tidak ditemukan di pasar mana pun, pasar Anda hilang atau ketinggalan zaman. Jalankan `/plugin marketplace update claude-plugins-official` untuk menyegarkannya, atau `/plugin marketplace add anthropics/claude-plugins-official` jika Anda belum menambahkannya sebelumnya. Kemudian coba instal lagi.
+        Jika instalasi gagal, cocokkan pesan yang dilaporkan Claude Code:
 
-        Setelah menginstal, jalankan `/reload-plugins` untuk mengaktifkan perintah konfigurasi plugin.
+        * `Marketplace "claude-plugins-official" not found`: tambahkan pasar dengan `/plugin marketplace add anthropics/claude-plugins-official`, kemudian coba instal lagi.
+        * Plugin [tidak ditemukan di pasar](/docs/id/plugins/install#install-a-plugin): periksa nama plugin.
+
+        Ketika instalasi meminta cakupan instalasi, pilih opsi cakupan pengguna sehingga plugin tersedia di semua proyek Anda. Periksa ringkasan instalasi: jika melaporkan `Run /reload-plugins to activate.`, lihat [Terapkan perubahan plugin tanpa memulai ulang](/docs/id/plugins/cli-reference#reload-plugins) untuk membuat perintah konfigurasi plugin tersedia.
       </Step>
 
       <Step title="Konfigurasikan token Anda">
@@ -179,7 +185,12 @@ Setiap saluran yang didukung adalah plugin yang memerlukan [Bun](https://bun.sh)
         /plugin install imessage@claude-plugins-official
         ```
 
-        Jika Claude Code melaporkan bahwa plugin tidak ditemukan di pasar mana pun, pasar Anda hilang atau ketinggalan zaman. Jalankan `/plugin marketplace update claude-plugins-official` untuk menyegarkannya, atau `/plugin marketplace add anthropics/claude-plugins-official` jika Anda belum menambahkannya sebelumnya. Kemudian coba instal lagi.
+        Jika instalasi gagal, cocokkan pesan yang dilaporkan Claude Code:
+
+        * `Marketplace "claude-plugins-official" not found`: tambahkan pasar dengan `/plugin marketplace add anthropics/claude-plugins-official`, kemudian coba instal lagi.
+        * Plugin [tidak ditemukan di pasar](/docs/id/plugins/install#install-a-plugin): periksa nama plugin.
+
+        Ketika instalasi meminta cakupan instalasi, pilih opsi cakupan pengguna sehingga plugin tersedia di semua proyek Anda. Jika ringkasan instalasi melaporkan `Run /reload-plugins to activate.`, Anda tidak perlu bertindak di sini, karena memulai ulang di langkah berikutnya mengambil plugin.
       </Step>
 
       <Step title="Mulai ulang dengan channels diaktifkan">
@@ -209,8 +220,6 @@ Setiap saluran yang didukung adalah plugin yang memerlukan [Bun](https://bun.sh)
   </Tab>
 </Tabs>
 
-Anda juga dapat [membangun saluran Anda sendiri](/docs/id/channels-reference) untuk sistem yang belum memiliki plugin.
-
 <h2 id="quickstart">
   Quickstart
 </h2>
@@ -233,7 +242,14 @@ Untuk mencoba demo fakechat, Anda memerlukan:
     /plugin install fakechat@claude-plugins-official
     ```
 
-    Jika Claude Code melaporkan bahwa plugin tidak ditemukan di pasar mana pun, pasar Anda hilang atau ketinggalan zaman. Jalankan `/plugin marketplace update claude-plugins-official` untuk menyegarkannya, atau `/plugin marketplace add anthropics/claude-plugins-official` jika Anda belum menambahkannya sebelumnya. Kemudian coba instal lagi.
+    Jika instalasi gagal, cocokkan pesan yang dilaporkan Claude Code:
+
+    * `Marketplace "claude-plugins-official" not found`: tambahkan marketplace dengan `/plugin marketplace add anthropics/claude-plugins-official`, kemudian coba instal lagi.
+    * Plugin [tidak ditemukan di marketplace](/docs/id/plugins/install#install-a-plugin): periksa nama plugin.
+
+    Ketika instalasi meminta scope instalasi, pilih opsi user scope sehingga plugin tersedia di semua proyek Anda.
+
+    Jika ringkasan instalasi melaporkan `Run /reload-plugins to activate.`, Anda tidak perlu bertindak di sini, karena restart di langkah berikutnya mengambil plugin.
   </Step>
 
   <Step title="Mulai ulang dengan channel diaktifkan">
@@ -243,7 +259,7 @@ Untuk mencoba demo fakechat, Anda memerlukan:
     claude --channels plugin:fakechat@claude-plugins-official
     ```
 
-    Server fakechat dimulai secara otomatis.
+    Server fakechat dimulai secara otomatis. Layar startup menampilkan pemberitahuan channels yang menyatakan bahwa pesan dari `plugin:fakechat@claude-plugins-official` disuntikkan langsung dalam sesi ini. Jika plugin tidak diinstal atau tidak ada di daftar persetujuan, baris peringatan yang menyebutkan masalah muncul di bawah pemberitahuan itu.
 
     <Tip>
       Anda dapat melewatkan beberapa plugin ke `--channels`, dipisahkan dengan spasi.
@@ -254,14 +270,14 @@ Untuk mencoba demo fakechat, Anda memerlukan:
     Buka UI fakechat di [http://localhost:8787](http://localhost:8787) dan ketik pesan:
 
     ```text theme={null}
-    hey, what's in my working directory?
+    what's in my working directory?
     ```
 
-    Pesan tiba di sesi Claude Code Anda sebagai acara `<channel source="fakechat">`. Claude membacanya, melakukan pekerjaan, dan memanggil tool `reply` fakechat. Jawabannya muncul di UI obrolan.
+    Pesan tiba di sesi Claude Code Anda. Terminal menampilkannya sebagai baris channel masuk seperti `← fakechat · web: what's in my working directory?`, sementara model menerimanya sebagai acara `<channel source="plugin:fakechat:fakechat">`, menggunakan nama server yang dibatasi plugin. Claude membacanya, melakukan pekerjaan, dan memanggil tool `reply` fakechat. Jika Claude Code meminta izin untuk balasan pertama, setujui itu. Jawabannya muncul di UI obrolan.
   </Step>
 </Steps>
 
-Jika Claude mengalami prompt izin saat Anda jauh dari terminal, sesi dijeda sampai Anda merespons. Server channel yang mendeklarasikan [kemampuan relai izin](/docs/id/channels-reference#relay-permission-prompts) dapat meneruskan prompt ini kepada Anda sehingga Anda dapat menyetujui atau menolak dari jarak jauh. Untuk penggunaan tanpa pengawasan, [`--dangerously-skip-permissions`](/docs/id/permission-modes#skip-all-checks-with-bypasspermissions-mode) melewati sebagian besar prompt, tetapi hanya gunakan di lingkungan yang Anda percayai. Aturan permintaan eksplisit, tool connector [organisasi Anda atur ke `ask`](/docs/id/mcp#organization-controls-on-connector-tools), dan tool MCP yang ditandai [`requiresUserInteraction`](/docs/id/mcp#require-approval-for-a-specific-tool) masih menampilkan prompt.
+Jika Claude mengalami prompt izin saat Anda jauh dari terminal, sesi dijeda sampai Anda merespons. Server channel yang mendeklarasikan [kemampuan relai izin](/docs/id/channels-reference#relay-permission-prompts) dapat meneruskan prompt ini kepada Anda sehingga Anda dapat menyetujui atau menolak dari jarak jauh. Untuk penggunaan tanpa pengawasan, [`--dangerously-skip-permissions`](/docs/id/permission-modes#skip-all-checks-with-bypasspermissions-mode) melewati sebagian besar prompt, tetapi hanya gunakan di lingkungan yang Anda percayai. Bahkan kemudian, [actions no mode auto-approves](/docs/id/permission-modes#actions-no-mode-auto-approves) masih berlaku.
 
 Ketika Anda menjalankan channels dalam mode non-interaktif dengan `-p`, tool yang memerlukan input terminal, seperti pertanyaan pilihan ganda dan persetujuan plan mode, dinonaktifkan sehingga sesi tidak pernah macet menunggu input.
 
@@ -292,15 +308,15 @@ Daftar penyetujuan juga membatasi [relai izin](/docs/id/channels-reference#relay
 
 Admin mengontrol ketersediaan melalui dua [pengaturan terkelola](/docs/id/settings) yang tidak dapat ditimpa pengguna. Default tergantung pada cara Anda diautentikasi:
 
-* **claude.ai Tim dan Enterprise**: channels diblokir sampai Owner mengaktifkannya.
+* **claude.ai Tim dan Enterprise**: channels diblokir sampai Owner [mengaktifkannya](#enable-channels-for-your-organization).
 * **Anthropic Console dengan autentikasi kunci API**: channels diizinkan secara default. Anda hanya memerlukan pengaturan ini jika organisasi Anda menerapkan pengaturan terkelola.
 
 Dalam semua kasus, tidak ada channel yang berjalan sampai pengguna memilihnya untuk sesi dengan `--channels`.
 
-| Pengaturan              | Tujuan                                                                                                                                                                                                                                                                                | Ketika tidak dikonfigurasi                                                                                                                                                                    |
-| :---------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `channelsEnabled`       | Master switch. Harus `true` agar channel apa pun dapat mengirimkan pesan. Atur melalui toggle [konsol Admin claude.ai](https://claude.ai/admin-settings/claude-code) atau langsung dalam pengaturan terkelola. Memblokir semua channels termasuk bendera pengembangan saat dimatikan. | claude.ai Tim dan Enterprise: channels diblokir. Console: channels diizinkan kecuali organisasi Anda menerapkan pengaturan terkelola, dalam hal ini channels diblokir sampai kunci ini diatur |
-| `allowedChannelPlugins` | Plugin mana yang dapat mendaftar setelah channels diaktifkan. Menggantikan daftar yang dipertahankan Anthropic saat diatur. Hanya berlaku saat `channelsEnabled` adalah `true`.                                                                                                       | Daftar default Anthropic berlaku                                                                                                                                                              |
+| Pengaturan              | Tujuan                                                                                                                                                                                                                                    | Ketika tidak dikonfigurasi                                                                                                                                                                    |
+| :---------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `channelsEnabled`       | Master switch. Harus `true` agar channel apa pun dapat mengirimkan pesan. Memblokir semua channels termasuk bendera pengembangan saat dimatikan. Lihat [Aktifkan channels untuk organisasi Anda](#enable-channels-for-your-organization). | claude.ai Tim dan Enterprise: channels diblokir. Console: channels diizinkan kecuali organisasi Anda menerapkan pengaturan terkelola, dalam hal ini channels diblokir sampai kunci ini diatur |
+| `allowedChannelPlugins` | Plugin mana yang dapat mendaftar setelah channels diaktifkan. Menggantikan daftar yang dipertahankan Anthropic saat diatur.                                                                                                               | Daftar default Anthropic berlaku                                                                                                                                                              |
 
 Pengguna Pro dan Max tanpa organisasi melewati pemeriksaan ini sepenuhnya: channels tersedia dan pengguna memilih per sesi dengan `--channels`.
 
@@ -329,15 +345,17 @@ Secara default, plugin apa pun di daftar penyetujuan yang dipertahankan Anthropi
 }
 ```
 
-Ketika `allowedChannelPlugins` diatur, itu menggantikan daftar penyetujuan Anthropic sepenuhnya: hanya plugin yang terdaftar yang dapat mendaftar. Biarkan tidak diatur untuk kembali ke daftar penyetujuan Anthropic default. Array kosong memblokir semua plugin channel dari daftar penyetujuan, tetapi `--dangerously-load-development-channels` masih dapat melewatinya untuk pengujian lokal. Untuk memblokir channels sepenuhnya termasuk bendera pengembangan, biarkan `channelsEnabled` tidak diatur sebagai gantinya.
+Jika Anda mengatur array kosong, Anda memblokir semua plugin channel dari daftar penyetujuan, tetapi `--dangerously-load-development-channels` masih dapat melewatinya untuk pengujian lokal. Untuk memblokir channels sepenuhnya termasuk bendera pengembangan, biarkan `channelsEnabled` tidak diatur sebagai gantinya.
 
-Pengaturan ini memerlukan `channelsEnabled: true`. Jika pengguna melewatkan plugin ke `--channels` yang tidak ada di daftar Anda, Claude Code dimulai secara normal tetapi channel tidak mendaftar, dan pemberitahuan startup menjelaskan bahwa plugin tidak ada di daftar yang disetujui organisasi.
+Pengaturan ini memerlukan `channelsEnabled: true`. Jika pengguna melewatkan plugin ke `--channels` yang tidak ada di daftar Anda, Claude Code dimulai secara normal tetapi channel tidak mendaftar, dan pemberitahuan startup menjelaskan bahwa plugin tidak ada di daftar yang disetujui organisasi. Jika Anda mengatur `MCP_PROTOCOL_NEGOTIATION` ke `auto` pada runtime klien MCP v2, channel juga dapat gagal mendaftar karena Claude Code [tidak mendaftarkan server channel yang menegosiasikan revisi protokol 2026-07-28](/docs/id/mcp#push-messages-with-channels).
 
 <h2 id="research-preview">
   Research preview
 </h2>
 
 Channels adalah fitur research preview. Ketersediaan sedang diluncurkan secara bertahap, dan sintaks bendera `--channels` serta kontrak protokol dapat berubah berdasarkan umpan balik.
+
+Baik `--channels` maupun `--dangerously-load-development-channels` tidak muncul di `claude --help` saat fitur masih dalam pratinjau. Bendera tersebut berfungsi meskipun tidak terdaftar.
 
 Selama pratinjau, `--channels` hanya menerima plugin dari daftar penyetujuan yang dipertahankan Anthropic, atau dari daftar penyetujuan organisasi Anda jika admin telah mengatur [`allowedChannelPlugins`](#restrict-which-channel-plugins-can-run). Plugin channel di [claude-plugins-official](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins) adalah set yang disetujui secara default. Jika Anda melewatkan sesuatu yang tidak ada di daftar penyetujuan yang efektif, Claude Code dimulai secara normal tetapi channel tidak mendaftar, dan pemberitahuan startup memberi tahu Anda mengapa.
 
@@ -351,12 +369,12 @@ Laporkan masalah atau umpan balik di [repositori GitHub Claude Code](https://git
 
 Beberapa fitur Claude Code terhubung ke sistem di luar terminal, masing-masing cocok untuk jenis pekerjaan yang berbeda:
 
-| Fitur                                                | Apa yang dilakukannya                                                     | Bagus untuk                                                         |
-| ---------------------------------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------- |
-| [Claude Code on the web](/docs/id/claude-code-on-the-web) | Menjalankan tugas dalam sandbox cloud baru, diklon dari GitHub            | Mendelegasikan pekerjaan async yang mandiri yang Anda periksa nanti |
-| [Claude in Slack](/docs/id/slack)                         | Menjalankan sesi web dari penyebutan `@Claude` di channel atau thread     | Memulai tugas langsung dari konteks percakapan tim                  |
-| Standard [MCP server](/docs/id/mcp)                       | Claude menanyainya selama tugas; tidak ada yang didorong ke sesi          | Memberi Claude akses on-demand untuk membaca atau menanyakan sistem |
-| [Remote Control](/docs/id/remote-control)                 | Anda mengemudi sesi lokal Anda dari claude.ai atau aplikasi Claude mobile | Mengarahkan sesi yang sedang berlangsung saat jauh dari meja Anda   |
+| Fitur                                        | Apa yang dilakukannya                                                     | Bagus untuk                                                         |
+| -------------------------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| [Cloud sessions](/docs/id/claude-code-on-the-web) | Menjalankan tugas dalam sandbox cloud baru, diklon dari GitHub            | Mendelegasikan pekerjaan async yang mandiri yang Anda periksa nanti |
+| [Claude in Slack](/docs/id/slack)                 | Menjalankan sesi cloud dari penyebutan `@Claude` di channel atau thread   | Memulai tugas langsung dari konteks percakapan tim                  |
+| Standard [MCP server](/docs/id/mcp)               | Claude menanyainya selama tugas; tidak ada yang didorong ke sesi          | Memberi Claude akses on-demand untuk membaca atau menanyakan sistem |
+| [Remote Control](/docs/id/remote-control)         | Anda mengemudi sesi lokal Anda dari claude.ai atau aplikasi Claude mobile | Mengarahkan sesi yang sedang berlangsung saat jauh dari meja Anda   |
 
 Channels mengisi celah dalam daftar itu dengan mendorong acara dari sumber non-Claude ke dalam sesi lokal Anda yang sudah berjalan.
 

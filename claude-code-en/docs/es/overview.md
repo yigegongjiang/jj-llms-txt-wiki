@@ -12,16 +12,16 @@ Claude Code es un asistente de codificación impulsado por IA que te ayuda a con
   Comenzar
 </h2>
 
-Claude Code se ejecuta en varias superficies: la terminal, extensiones de IDE, una aplicación de escritorio y la web. Elige una de las pestañas a continuación para comenzar. La mayoría de las superficies requieren una [suscripción a Claude](https://claude.com/pricing?utm_source=claude_code\&utm_medium=docs\&utm_content=overview_pricing) o una cuenta de [Anthropic Console](https://console.anthropic.com/). La CLI de Terminal y VS Code también admiten [proveedores de terceros](/docs/es/third-party-integrations).
+Claude Code se ejecuta en varias superficies: la terminal, extensiones de IDE, una aplicación de escritorio y la web. Elige una de las pestañas a continuación para comenzar. La mayoría de las superficies requieren una [suscripción a Claude](https://claude.com/pricing?utm_source=claude_code\&utm_medium=docs\&utm_content=overview_pricing) o una cuenta de [Anthropic Console](https://platform.claude.com/). La CLI de Terminal, VS Code y JetBrains también admiten [proveedores de terceros](/docs/es/third-party-integrations).
 
 <Tabs>
   <Tab title="Terminal">
     La CLI completa para trabajar con Claude Code directamente en tu terminal. Edita archivos, ejecuta comandos y gestiona tu proyecto completo desde la línea de comandos.
 
-    To install Claude Code, use one of the following methods:
+    Para instalar Claude Code, utilice uno de los siguientes métodos:
 
     <Tabs>
-      <Tab title="Native Install (Recommended)">
+      <Tab title="Instalación nativa (recomendado)">
         **macOS, Linux, WSL:**
 
         ```bash theme={null}
@@ -40,14 +40,14 @@ Claude Code se ejecuta en varias superficies: la terminal, extensiones de IDE, u
         curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del install.cmd
         ```
 
-        If you see `The token '&&' is not a valid statement separator`, you're in PowerShell, not CMD. If you see `'irm' is not recognized as an internal or external command`, you're in CMD, not PowerShell. Your prompt shows `PS C:\` when you're in PowerShell and `C:\` without the `PS` when you're in CMD.
+        Si ve `The token '&&' is not a valid statement separator`, está en PowerShell, no en CMD. Si ve `'irm' is not recognized as an internal or external command`, está en CMD, no en PowerShell. Su símbolo del sistema muestra `PS C:\` cuando está en PowerShell y `C:\` sin el `PS` cuando está en CMD.
 
-        If the install command fails with `syntax error near unexpected token '<'`, a `403`, or another curl error, see [Troubleshoot installation](/docs/en/troubleshoot-install#find-your-error) to match the error to a fix and for alternative install methods.
+        Si el comando de instalación falla con `syntax error near unexpected token '<'`, un `403`, u otro error de curl, consulte [Solucionar problemas de instalación](/docs/es/troubleshoot-install#find-your-error) para hacer coincidir el error con una solución y para conocer métodos de instalación alternativos.
 
-        [Git for Windows](https://git-scm.com/downloads/win) is recommended on native Windows so Claude Code can use the Bash tool. If Git for Windows is not installed, Claude Code uses PowerShell as the shell tool instead. WSL setups do not need Git for Windows.
+        Se recomienda [Git for Windows](https://git-scm.com/downloads/win) en Windows nativo para que Claude Code pueda utilizar la herramienta Bash. Si Git for Windows no está instalado, Claude Code utiliza PowerShell como herramienta de shell en su lugar. Las configuraciones de WSL no necesitan Git for Windows.
 
         <Info>
-          Native installations automatically update in the background to keep you on the latest version.
+          Las instalaciones nativas se actualizan automáticamente en segundo plano para mantenerlo en la versión más reciente.
         </Info>
       </Tab>
 
@@ -56,10 +56,10 @@ Claude Code se ejecuta en varias superficies: la terminal, extensiones de IDE, u
         brew install --cask claude-code
         ```
 
-        Homebrew offers two casks. `claude-code` tracks the stable release channel, which is typically about a week behind and skips releases with major regressions. `claude-code@latest` tracks the latest channel and receives new versions as soon as they ship.
+        Homebrew ofrece dos casks. `claude-code` rastrea el canal de versión estable, que típicamente está aproximadamente una semana atrás y omite versiones con regresiones importantes. `claude-code@latest` rastrea el canal más reciente y recibe nuevas versiones tan pronto como se lanzan.
 
         <Info>
-          Homebrew installations do not auto-update. Run `brew upgrade claude-code` or `brew upgrade claude-code@latest`, depending on which cask you installed, to get the latest features and security fixes.
+          Las instalaciones de Homebrew no se actualizan automáticamente. Ejecute `brew upgrade claude-code` o `brew upgrade claude-code@latest`, dependiendo de cuál cask haya instalado, para obtener las características más recientes y correcciones de seguridad.
         </Info>
       </Tab>
 
@@ -69,21 +69,21 @@ Claude Code se ejecuta en varias superficies: la terminal, extensiones de IDE, u
         ```
 
         <Info>
-          WinGet installations do not auto-update. Run `winget upgrade Anthropic.ClaudeCode` periodically to get the latest features and security fixes.
+          Las instalaciones de WinGet no se actualizan automáticamente. Ejecute `winget upgrade Anthropic.ClaudeCode` periódicamente para obtener las características más recientes y correcciones de seguridad.
         </Info>
       </Tab>
     </Tabs>
 
-    You can also install with [apt, dnf, or apk](/docs/en/setup#install-with-linux-package-managers) on Debian, Fedora, RHEL, and Alpine.
+    También puede instalar con [apt, dnf, o apk](/docs/es/setup#install-with-linux-package-managers) en Debian, Fedora, RHEL y Alpine.
 
-    Luego inicia Claude Code en cualquier proyecto:
+    Luego inicia Claude Code en cualquier proyecto. Reemplaza `your-project` con la ruta a un directorio de proyecto en tu máquina:
 
     ```bash theme={null}
     cd your-project
     claude
     ```
 
-    Se te pedirá que inicies sesión en el primer uso. ¡Eso es todo! [Continúa con la Guía de inicio rápido →](/docs/es/quickstart)
+    Se te pedirá que inicies sesión en el primer uso. Si has establecido la variable de entorno `ANTHROPIC_API_KEY`, Claude Code omite la solicitud de inicio de sesión y te pide que apruebes la clave en su lugar. ¡Eso es todo! [Continúa con la Guía de inicio rápido →](/docs/es/quickstart)
 
     <Tip>
       Consulta [configuración avanzada](/docs/es/setup) para opciones de instalación, actualizaciones manuales o instrucciones de desinstalación. Visita [solución de problemas de instalación](/docs/es/troubleshoot-install) si encuentras problemas.
@@ -109,18 +109,19 @@ Claude Code se ejecuta en varias superficies: la terminal, extensiones de IDE, u
     * [macOS](https://claude.ai/api/desktop/darwin/universal/dmg/latest/redirect?utm_source=claude_code\&utm_medium=docs) (Intel y Apple Silicon)
     * [Windows](https://claude.ai/api/desktop/win32/x64/setup/latest/redirect?utm_source=claude_code\&utm_medium=docs) (x64)
     * [Windows ARM64](https://claude.ai/api/desktop/win32/arm64/setup/latest/redirect?utm_source=claude_code\&utm_medium=docs)
+    * En Ubuntu o Debian, donde la aplicación está en beta, instálala con apt siguiendo las [instrucciones de instalación de Linux](/docs/es/desktop-linux)
 
-    Después de instalar, lanza Claude, inicia sesión y haz clic en la pestaña **Code** para comenzar a codificar. Se requiere una [suscripción de pago](https://claude.com/pricing?utm_source=claude_code\&utm_medium=docs\&utm_content=overview_desktop_pricing).
+    Después de instalar, lanza Claude, inicia sesión y haz clic en la pestaña **Code** para comenzar a codificar. La aplicación incluye Claude Code, por lo que no necesitas instalar la CLI por separado. Se requiere una [suscripción de pago](https://claude.com/pricing?utm_source=claude_code\&utm_medium=docs\&utm_content=overview_desktop_pricing).
 
     [Obtén más información sobre la aplicación de escritorio →](/docs/es/desktop-quickstart)
   </Tab>
 
   <Tab title="Web">
-    Ejecuta Claude Code en tu navegador sin configuración local. Inicia tareas de larga duración y vuelve cuando estén listas, trabaja en repositorios que no tienes localmente o ejecuta múltiples tareas en paralelo. Disponible en navegadores de escritorio y la aplicación Claude iOS.
+    Ejecuta Claude Code en tu navegador sin configuración local. Inicia tareas de larga duración y vuelve cuando estén listas, trabaja en repositorios que no tienes localmente o ejecuta múltiples tareas en paralelo. Para un cuerpo de trabajo más largo, crea un [proyecto](/docs/es/claude-projects) y deja que Claude coordine las sesiones paralelas por ti. Disponible en navegadores de escritorio y [la aplicación Claude para iOS y Android](/docs/es/mobile).
 
     Comienza a codificar en [claude.ai/code](https://claude.ai/code).
 
-    [Comenzar en la web →](/docs/es/web-quickstart)
+    [Comenzar →](/docs/es/web-quickstart)
   </Tab>
 
   <Tab title="JetBrains">
@@ -168,14 +169,14 @@ Aquí hay algunas de las formas en que puedes usar Claude Code:
   </Accordion>
 
   <Accordion title="Personaliza con instrucciones, skills y hooks" icon="sliders">
-    [`CLAUDE.md`](/docs/es/memory) es un archivo markdown que añades a la raíz de tu proyecto que Claude Code lee al inicio de cada sesión. Úsalo para establecer estándares de codificación, decisiones de arquitectura, librerías preferidas y listas de verificación de revisión. Claude también construye [memoria automática](/docs/es/memory#auto-memory) mientras trabaja, guardando aprendizajes como comandos de compilación e insights de depuración en sesiones sin que escribas nada.
+    [`CLAUDE.md`](/docs/es/memory) es un archivo markdown que añades a la raíz de tu proyecto que Claude Code lee al inicio de cada sesión. Úsalo para establecer estándares de codificación, decisiones de arquitectura, librerías preferidas y listas de verificación de revisión. Si tu repositorio ya tiene un `AGENTS.md` para otros agentes de codificación, Claude Code [puede leerlo](/docs/es/memory#agents-md) por su cuenta o junto con `CLAUDE.md`. Claude también construye [memoria automática](/docs/es/memory#auto-memory) mientras trabaja, guardando aprendizajes en sesiones sin que escribas nada.
 
     Crea [skills](/docs/es/skills) para empaquetar flujos de trabajo repetibles que tu equipo pueda compartir, como `/review-pr` o `/deploy-staging`.
 
     [Hooks](/docs/es/hooks) te permiten ejecutar comandos de shell antes o después de acciones de Claude Code, como formateo automático después de cada edición de archivo o ejecución de lint antes de un commit.
   </Accordion>
 
-  <Accordion title="Ejecuta equipos de agentes y construye agentes personalizados" icon="users">
+  <Accordion title="Ejecuta agentes en paralelo y construye agentes personalizados" icon="users">
     Genera [múltiples agentes de Claude Code](/docs/es/sub-agents) que trabajen en diferentes partes de una tarea simultáneamente. Un agente líder coordina el trabajo, asigna subtareas y fusiona resultados.
 
     Para ejecutar varias sesiones completas en paralelo y observarlas desde una pantalla, usa [agentes en segundo plano](/docs/es/agent-view). Para flujos de trabajo completamente personalizados, el [Agent SDK](/docs/es/agent-sdk/overview) te permite construir tus propios agentes impulsados por las herramientas y capacidades de Claude Code, con control total sobre orquestación, acceso a herramientas y permisos.
@@ -201,18 +202,18 @@ Aquí hay algunas de las formas en que puedes usar Claude Code:
   <Accordion title="Programa tareas recurrentes" icon="clock">
     Ejecuta Claude en un horario para automatizar el trabajo que se repite: revisiones de PR matutinas, análisis de fallos de CI durante la noche, auditorías de dependencias semanales o sincronización de documentos después de que se fusionen los PR.
 
-    * [Routines](/docs/es/routines) se ejecutan en infraestructura administrada por Anthropic, por lo que siguen ejecutándose incluso cuando tu computadora está apagada. También pueden activarse en llamadas de API o eventos de GitHub. Créalas desde la web, la aplicación de escritorio o ejecutando `/schedule` en la CLI.
+    * [Routines](/docs/es/routines) se ejecutan en la nube, por lo que siguen ejecutándose incluso cuando tu computadora está apagada. También pueden activarse en llamadas de API o eventos de GitHub. Créalas desde la web, la aplicación de escritorio o ejecutando `/schedule` en la CLI.
     * [Tareas programadas de escritorio](/docs/es/desktop-scheduled-tasks) se ejecutan en tu máquina, con acceso directo a tus archivos y herramientas locales
     * [`/loop`](/docs/es/scheduled-tasks) repite un prompt dentro de una sesión de CLI para sondeo rápido
   </Accordion>
 
   <Accordion title="Trabaja desde cualquier lugar" icon="globe">
-    Las sesiones no están vinculadas a una única superficie. Mueve el trabajo entre entornos a medida que cambia tu contexto:
+    Las sesiones no están vinculadas a una única superficie. Mueve el trabajo entre ellas a medida que cambia tu contexto:
 
     * Aléjate de tu escritorio y sigue trabajando desde tu teléfono o cualquier navegador con [Remote Control](/docs/es/remote-control)
     * Envía un mensaje a [Dispatch](/docs/es/desktop#sessions-from-dispatch) con una tarea desde tu teléfono y abre la sesión de escritorio que crea
-    * Inicia una tarea de larga duración en la [web](/docs/es/claude-code-on-the-web) o [aplicación iOS](https://apps.apple.com/app/claude-by-anthropic/id6473753684), luego extráela a tu terminal con `claude --teleport`. Teleport requiere una suscripción a claude.ai.
-    * Transfiere una sesión de terminal a la [aplicación de escritorio](/docs/es/desktop) con `/desktop` para revisión visual de diff
+    * Inicia una tarea de larga duración en la [web](/docs/es/claude-code-on-the-web) o la [aplicación móvil de Claude](/docs/es/mobile), luego extráela a tu terminal con `claude --teleport`. Teleport requiere una suscripción a claude.ai.
+    * Ejecuta `/desktop` para continuar tu sesión de terminal actual en la [aplicación de escritorio](/docs/es/desktop), donde puedes revisar diffs visualmente. La transferencia `/desktop` requiere una suscripción a claude.ai. Disponible en macOS y Windows x64.
     * Enruta tareas desde el chat del equipo: menciona `@Claude` en [Slack](/docs/es/slack) con un informe de error y obtén una solicitud de extracción de vuelta
   </Accordion>
 </AccordionGroup>
@@ -225,17 +226,17 @@ Cada [superficie](/docs/es/glossary#surface) se conecta al mismo motor subyacent
 
 Más allá de los entornos [Terminal](/docs/es/quickstart), [VS Code](/docs/es/vs-code), [JetBrains](/docs/es/jetbrains), [Desktop](/docs/es/desktop) y [Web](/docs/es/claude-code-on-the-web) anteriores, Claude Code se integra con flujos de trabajo de CI/CD, chat y navegador:
 
-| Quiero...                                                                            | Mejor opción                                                                                                             |
-| ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
-| Continuar una sesión local desde mi teléfono u otro dispositivo                      | [Remote Control](/docs/es/remote-control)                                                                                     |
-| Enviar eventos desde Telegram, Discord, iMessage o mis propios webhooks a una sesión | [Channels](/docs/es/channels)                                                                                                 |
-| Iniciar una tarea localmente, continuar en móvil                                     | [Web](/docs/es/claude-code-on-the-web) o [aplicación Claude iOS](https://apps.apple.com/app/claude-by-anthropic/id6473753684) |
-| Ejecutar Claude en un horario recurrente                                             | [Routines](/docs/es/routines) o [Tareas programadas de escritorio](/docs/es/desktop-scheduled-tasks)                               |
-| Automatizar revisiones de PR y clasificación de problemas                            | [GitHub Actions](/docs/es/github-actions) o [GitLab CI/CD](/docs/es/gitlab-ci-cd)                                                  |
-| Obtener revisión de código automática en cada PR                                     | [GitHub Code Review](/docs/es/code-review)                                                                                    |
-| Enrutar informes de errores de Slack a solicitudes de extracción                     | [Slack](/docs/es/slack)                                                                                                       |
-| Depurar aplicaciones web en vivo                                                     | [Chrome](/docs/es/chrome)                                                                                                     |
-| Construir agentes personalizados para tus propios flujos de trabajo                  | [Agent SDK](/docs/es/agent-sdk/overview)                                                                                      |
+| Quiero...                                                                            | Mejor opción                                                                                                          |
+| ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------- |
+| Continuar una sesión local desde mi teléfono u otro dispositivo                      | [Remote Control](/docs/es/remote-control)                                                                                  |
+| Enviar eventos desde Telegram, Discord, iMessage o mis propios webhooks a una sesión | [Channels](/docs/es/channels)                                                                                              |
+| Iniciar una tarea localmente, continuar en móvil                                     | [`claude --cloud`](/docs/es/claude-code-on-the-web#from-terminal-to-cloud), luego la [aplicación móvil Claude](/docs/es/mobile) |
+| Ejecutar Claude en un horario recurrente                                             | [Routines](/docs/es/routines) o [Tareas programadas de escritorio](/docs/es/desktop-scheduled-tasks)                            |
+| Automatizar revisiones de PR y clasificación de problemas                            | [GitHub Actions](/docs/es/github-actions) o [GitLab CI/CD](/docs/es/gitlab-ci-cd)                                               |
+| Obtener revisión de código automática en cada PR                                     | [GitHub Code Review](/docs/es/code-review)                                                                                 |
+| Enrutar informes de errores de Slack a solicitudes de extracción                     | [Slack](/docs/es/slack)                                                                                                    |
+| Depurar aplicaciones web en vivo                                                     | [Chrome](/docs/es/chrome)                                                                                                  |
+| Construir agentes personalizados para tus propios flujos de trabajo                  | [Agent SDK](/docs/es/agent-sdk/overview)                                                                                   |
 
 <h2 id="next-steps">
   Próximos pasos
@@ -246,6 +247,7 @@ Una vez que hayas instalado Claude Code, estas guías te ayudan a profundizar.
 * [Guía de inicio rápido](/docs/es/quickstart): recorre tu primera tarea real, desde explorar una base de código hasta confirmar una corrección
 * [Almacena instrucciones y memorias](/docs/es/memory): proporciona a Claude instrucciones persistentes con archivos CLAUDE.md y memoria automática
 * [Flujos de trabajo comunes](/docs/es/common-workflows) y [mejores prácticas](/docs/es/best-practices): patrones para obtener lo máximo de Claude Code
+* [Claude Academy](https://academy.claude.com/): cursos gratuitos a tu propio ritmo, incluyendo [Claude Code 101](https://academy.claude.com/courses/claude-code-101) y [Claude Code en Acción](https://academy.claude.com/courses/claude-code-in-action)
 * [Un arnés para cada tarea](https://claude.com/blog/a-harness-for-every-task-dynamic-workflows-in-claude-code): cómo el equipo de Claude Code utiliza [flujos de trabajo dinámicos](/docs/es/workflows) para orquestar subagentes a escala
 * [Configuración](/docs/es/settings): personaliza Claude Code para tu flujo de trabajo
 * [Solución de problemas](/docs/es/troubleshooting): soluciones para problemas comunes

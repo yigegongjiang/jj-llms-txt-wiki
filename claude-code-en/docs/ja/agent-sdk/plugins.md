@@ -6,30 +6,22 @@
 
 > Agent SDK を通じてカスタムプラグインを読み込み、スキル、エージェント、フック、MCP サーバーで Claude Code を拡張します
 
-プラグインを使用すると、Claude Code をカスタム機能で拡張でき、プロジェクト全体で共有できます。Agent SDK を通じて、ローカルディレクトリからプログラムでプラグインを読み込み、スキル、エージェント、フック、MCP サーバーをエージェントセッションに追加できます。
+プラグインを使用すると、Claude Code をカスタム機能で拡張でき、プロジェクト全体で共有できます。Agent SDK を通じて、ローカルディレクトリからプログラムでプラグインを読み込み、エージェントセッションに機能を追加できます。プラグインには以下を含めることができます：
 
-<h2 id="what-are-plugins">
-  プラグインとは何ですか？
-</h2>
-
-プラグインは Claude Code 拡張機能のパッケージであり、以下を含めることができます：
-
-* **Skills**: Claude が自律的に使用するモデル呼び出し機能（`/skill-name` で呼び出すこともできます）
+* **Skills**: Claude が関連する場合に自律的に呼び出す機能。`/plugin-name:skill-name` でプラグインスキルを直接呼び出すこともできます。
 * **Agents**: 特定のタスク用の専門的なサブエージェント
 * **Hooks**: ツール使用およびその他のイベントに応答するイベントハンドラー
 * **MCP servers**: Model Context Protocol 経由の外部ツール統合
 
-<Note>
-  `commands/` ディレクトリはレガシー形式です。新しいプラグインには `skills/` を使用してください。Claude Code は後方互換性のために両方の形式をサポートし続けています。
-</Note>
-
-プラグイン構造とプラグインの作成方法に関する完全な情報については、[Plugins](/docs/ja/plugins) を参照してください。
+プラグイン構造とプラグインの作成方法に関する完全な情報については、[Plugins](/docs/ja/plugins/overview) を参照してください。
 
 <h2 id="loading-plugins">
   プラグインの読み込み
 </h2>
 
-オプション設定でローカルファイルシステムパスを指定してプラグインを読み込みます。`type` フィールドは `"local"` である必要があります。これは SDK が受け入れる唯一の値です。[マーケットプレイス](/docs/ja/plugin-marketplaces)またはリモートリポジトリを通じて配布されているプラグインを使用するには、まずダウンロードしてローカルディレクトリパスを指定してください。SDK は複数の場所から複数のプラグインを読み込むことをサポートしています。
+オプション設定でローカルファイルシステムパスを指定してプラグインを読み込みます。`type` フィールドは `"local"` である必要があります。これは SDK が受け入れる唯一の値です。SDK は複数の場所から複数のプラグインを読み込むことをサポートしています。
+
+[マーケットプレイス](/docs/ja/plugins/overview)またはリモートリポジトリを通じて配布されているプラグインを使用するには、まずダウンロードしてローカルディレクトリパスを指定してください。プラグインが必要とするディレクトリレイアウトについては、以下の[プラグイン構造リファレンス](#plugin-structure-reference)を参照してください。
 
 <CodeGroup>
   ```typescript TypeScript theme={null}
@@ -77,11 +69,11 @@
 
 プラグインパスは以下のいずれかです：
 
-* **相対パス**: 現在の作業ディレクトリを基準に解決されます（例：`"./plugins/my-plugin"`）
+* **相対パス**: `cwd` オプションを基準に解決されます（例：`"./plugins/my-plugin"`）
 * **絶対パス**: 完全なファイルシステムパス（例：`"/home/user/plugins/my-plugin"`）
 
 <Note>
-  パスはプラグインのルートディレクトリ（`skills/`、`agents/`、`hooks/`、`commands/`（レガシー）、または `.claude-plugin/` の親ディレクトリ）を指す必要があります。サブディレクトリではありません。
+  パスはプラグインのルートディレクトリ（`skills/`、`agents/`、`hooks/`、`commands/`、または `.claude-plugin/` の親ディレクトリ）を指す必要があります。
 </Note>
 
 <h2 id="verifying-plugin-installation">
@@ -101,17 +93,17 @@
     }
   })) {
     if (message.type === "system" && message.subtype === "init") {
-      // 読み込まれたプラグインを確認
+      // Check loaded plugins
       console.log("Plugins:", message.plugins);
-      // 例：[{ name: "my-plugin", path: "./my-plugin" }]
+      // Example: [{ name: "my-plugin", path: "/absolute/path/to/my-plugin" }]
 
-      // プラグインスキルはプラグイン名をプレフィックスとして表示されます
+      // Plugin skills appear with the plugin name as a prefix
       console.log("Skills:", message.skills);
-      // 例：["my-plugin:greet"]
+      // Example: ["my-plugin:greet"]
 
-      // プラグインコマンドは同じプレフィックスを使用し、スキルもここに表示されます
+      // Plugin commands use the same prefix, and skills appear here too
       console.log("Commands:", message.slash_commands);
-      // 例：["compact", "context", "my-plugin:custom-command", "my-plugin:greet"]
+      // Example: ["compact", "context", "my-plugin:custom-command", "my-plugin:greet"]
     }
   }
   ```
@@ -129,24 +121,24 @@
           ),
       ):
           if isinstance(message, SystemMessage) and message.subtype == "init":
-              # 読み込まれたプラグインを確認
+              # Check loaded plugins
               print("Plugins:", message.data.get("plugins"))
-              # 例：[{"name": "my-plugin", "path": "./my-plugin"}]
+              # Example: [{"name": "my-plugin", "path": "/absolute/path/to/my-plugin"}]
 
-              # プラグインスキルはプラグイン名をプレフィックスとして表示されます
+              # Plugin skills appear with the plugin name as a prefix
               print("Skills:", message.data.get("skills"))
-              # 例：["my-plugin:greet"]
+              # Example: ["my-plugin:greet"]
 
-              # プラグインコマンドは同じプレフィックスを使用し、スキルもここに表示されます
+              # Plugin commands use the same prefix, and skills appear here too
               print("Commands:", message.data.get("slash_commands"))
-              # 例：["compact", "context", "my-plugin:custom-command", "my-plugin:greet"]
+              # Example: ["compact", "context", "my-plugin:custom-command", "my-plugin:greet"]
 
 
   asyncio.run(main())
   ```
 </CodeGroup>
 
-<h2 id="using-plugin-skills">
+<h2 id="use-plugin-skills">
   プラグインスキルの使用
 </h2>
 
@@ -178,9 +170,9 @@
   async def main():
       # Load a plugin with a custom /greet skill
       async for message in query(
-          prompt="/demo-plugin:greet",  # Use plugin skill with namespace
+          prompt="/my-plugin:greet",  # Use plugin skill with namespace
           options=ClaudeAgentOptions(
-              plugins=[{"type": "local", "path": "./plugins/demo-plugin"}]
+              plugins=[{"type": "local", "path": "./my-plugin"}]
           ),
       ):
           # Claude executes the custom greeting skill from the plugin
@@ -207,10 +199,10 @@
 <CodeGroup>
   ```typescript TypeScript theme={null}
   import { query } from "@anthropic-ai/claude-agent-sdk";
-  import * as path from "path";
+  import { fileURLToPath } from "node:url";
 
   async function runWithPlugin() {
-    const pluginPath = path.join(__dirname, "plugins", "my-plugin");
+    const pluginPath = fileURLToPath(new URL("./plugins/my-plugin", import.meta.url));
 
     console.log("Loading plugin from:", pluginPath);
 
@@ -240,8 +232,9 @@
   #!/usr/bin/env python3
   """Example demonstrating how to use plugins with the Agent SDK."""
 
+  import asyncio
   from pathlib import Path
-  import anyio
+
   from claude_agent_sdk import (
       AssistantMessage,
       ClaudeAgentOptions,
@@ -253,7 +246,7 @@
 
   async def run_with_plugin():
       """Example using a custom plugin."""
-      plugin_path = Path(__file__).parent / "plugins" / "demo-plugin"
+      plugin_path = Path(__file__).parent / "plugins" / "my-plugin"
 
       print(f"Loading plugin from: {plugin_path}")
 
@@ -277,7 +270,7 @@
 
 
   if __name__ == "__main__":
-      anyio.run(run_with_plugin)
+      asyncio.run(run_with_plugin())
   ```
 </CodeGroup>
 
@@ -290,60 +283,45 @@
 ```text theme={null}
 my-plugin/
 ├── .claude-plugin/
-│   └── plugin.json          # プラグインマニフェスト（オプション、これなしでもコンポーネントは自動検出されます）
-├── skills/                   # Agent Skills（自律的に呼び出されるか /skill-name 経由で呼び出されます）
+│   └── plugin.json          # Plugin manifest (optional, components auto-discovered without it)
+├── skills/                   # Agent Skills (invoked autonomously or via /plugin-name:skill-name)
 │   └── my-skill/
 │       └── SKILL.md
-├── commands/                 # レガシー：代わりに skills/ を使用してください
+├── commands/                 # Skills as flat .md files
 │   └── custom-cmd.md
-├── agents/                   # カスタムエージェント
+├── agents/                   # Custom agents
 │   └── specialist.md
-├── hooks/                    # イベントハンドラー
+├── hooks/                    # Event handlers
 │   └── hooks.json
-└── .mcp.json                # MCP サーバー定義
+└── .mcp.json                # MCP server definitions
 ```
 
-プラグイン作成の詳細については、以下を参照してください：
+<Note>
+  `commands/` ディレクトリはスキルをフラットな Markdown ファイルとして保持しています。新しいプラグインには `skills/` を使用してください。Claude Code は両方の場所をサポートしています。
+</Note>
 
-* [Plugins](/docs/ja/plugins) - プラグイン開発の完全ガイド
-* [Plugins reference](/docs/ja/plugins-reference) - 技術仕様とスキーマ
-
-<h2 id="common-use-cases">
-  一般的なユースケース
-</h2>
-
-<h3 id="development-and-testing">
-  開発とテスト
-</h3>
-
-グローバルにインストールせずに開発中にプラグインを読み込みます：
-
-```typescript theme={null}
-plugins: [{ type: "local", path: "./dev-plugins/my-plugin" }];
-```
-
-<h3 id="project-specific-extensions">
-  プロジェクト固有の拡張機能
-</h3>
-
-チーム全体の一貫性のためにプラグインをプロジェクトリポジトリに含めます：
-
-```typescript theme={null}
-plugins: [{ type: "local", path: "./project-plugins/team-workflows" }];
-```
-
-<h3 id="multiple-plugin-sources">
+<h2 id="multiple-plugin-sources">
   複数のプラグインソース
-</h3>
+</h2>
 
 異なる場所からプラグインを組み合わせます：
 
 ```typescript theme={null}
+import * as os from "node:os";
+import * as path from "node:path";
+
 plugins: [
   { type: "local", path: "./local-plugin" },
-  { type: "local", path: "~/.claude/custom-plugins/shared-plugin" }
+  {
+    type: "local",
+    path: path.join(os.homedir(), ".claude", "custom-plugins", "shared-plugin")
+  }
 ];
 ```
+
+<Note>
+  SDK はチルダパス（`~/plugins` など）を展開しません。プラグインパスが存在しない場合、SDK はそのプラグインをスキップしてセッションは続行されるため、初期化メッセージの `plugins` リストを確認して各プラグインが読み込まれたことを確認してください。
+</Note>
 
 <h2 id="troubleshooting">
   トラブルシューティング
@@ -355,9 +333,10 @@ plugins: [
 
 プラグインが初期化メッセージに表示されない場合：
 
-1. **パスを確認する**: パスがプラグインルートディレクトリ（`skills/`、`agents/`、`hooks/`、`commands/`（レガシー）、または `.claude-plugin/` の親）を指していることを確認してください
+1. **パスを確認する**: パスがプラグインルートディレクトリ（`skills/`、`agents/`、`hooks/`、`commands/`、または `.claude-plugin/` の親）を指していることを確認してください
 2. **plugin.json を検証する**: プラグインにマニフェストが含まれている場合、有効な JSON 構文を持っていることを確認してください
 3. **ファイルパーミッションを確認する**: プラグインディレクトリが読み取り可能であることを確認してください
+4. **ディレクトリが存在することを確認する**: SDK は存在しないパスをスキップし、プラグインは初期化メッセージの `plugins` リストに表示されません
 
 <h3 id="skills-not-appearing">
   スキルが表示されない
@@ -369,22 +348,12 @@ plugins: [
 2. **初期化メッセージを確認する**: スキルが正しい名前空間で `skills` リストに表示されることを確認してください
 3. **スキルファイルを検証する**: 各スキルが `skills/` の下の独自のサブディレクトリに `SKILL.md` ファイルを持っていることを確認してください（例：`skills/my-skill/SKILL.md`）
 
-<h3 id="path-resolution-issues">
-  パス解決の問題
-</h3>
-
-相対パスが機能しない場合：
-
-1. **作業ディレクトリを確認する**: 相対パスは現在の作業ディレクトリから解決されます
-2. **絶対パスを使用する**: 信頼性のために、絶対パスの使用を検討してください
-3. **パスを正規化する**: パスユーティリティを使用してパスを正しく構築してください
-
 <h2 id="see-also">
   関連項目
 </h2>
 
-* [Plugins](/docs/ja/plugins) - プラグイン開発の完全ガイド
-* [Plugins reference](/docs/ja/plugins-reference) - 技術仕様
-* [Commands](/docs/ja/agent-sdk/slash-commands) - SDK でのコマンドの使用
+* [Plugins](/docs/ja/plugins/overview) - プラグイン開発の完全ガイド
+* [Plugins reference](/docs/ja/plugins/manifest-reference) - 技術仕様
+* [Commands](/docs/ja/agent-sdk/skills#dispatch-commands-by-name) - SDK でのコマンドのディスパッチ
 * [Subagents](/docs/ja/agent-sdk/subagents) - 専門的なエージェントの操作
 * [Skills](/docs/ja/agent-sdk/skills) - Agent Skills の使用

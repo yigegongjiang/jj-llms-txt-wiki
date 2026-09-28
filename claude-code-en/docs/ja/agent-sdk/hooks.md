@@ -14,8 +14,6 @@
 * **人間の承認を要求**する：データベース書き込みや API 呼び出しなどの機密アクションに対して
 * **セッションライフサイクルを追跡**する：状態を管理したり、リソースをクリーンアップしたり、通知を送信したりします
 
-このガイドでは、フックの仕組み、フックの設定方法、およびツールのブロック、入力の変更、通知の転送などの一般的なパターンの例を説明します。
-
 <h2 id="how-hooks-work">
   フックの仕組み
 </h2>
@@ -86,7 +84,7 @@
       )
 
       async with ClaudeSDKClient(options=options) as client:
-          await client.query("Update the database configuration")
+          await client.query("Create a .env file with the standard local development database configuration")
           async for message in client.receive_response():
               # アシスタントとリザルトメッセージをフィルタリングする
               if isinstance(message, (AssistantMessage, ResultMessage)):
@@ -125,7 +123,7 @@
   };
 
   for await (const message of query({
-    prompt: "Update the database configuration",
+    prompt: "Create a .env file with the standard local development database configuration",
     options: {
       hooks: {
         // PreToolUse イベントのフックを登録する
@@ -142,41 +140,55 @@
   ```
 </CodeGroup>
 
+どちらのスクリプトを実行しても、Claude は `.env` ファイルを作成しようとし、フックはツール呼び出しを拒否し、Claude の最終的な応答は `.env` ファイルを作成できないことを説明します。
+
 <h2 id="available-hooks">
   利用可能なフック
 </h2>
 
 SDK はエージェント実行のさまざまなステージのフックを提供します。一部のフックは両方の SDK で利用可能ですが、その他は TypeScript のみです。
 
-| フックイベント                                                | Python SDK | TypeScript SDK | トリガーされる条件                                           | 使用例                                         |
-| ------------------------------------------------------ | ---------- | -------------- | --------------------------------------------------- | ------------------------------------------- |
-| `PreToolUse`                                           | はい         | はい             | ツール呼び出しリクエスト（ブロックまたは変更可能）                           | 危険なシェルコマンドをブロックする                           |
-| `PostToolUse`                                          | はい         | はい             | ツール実行結果                                             | すべてのファイル変更を監査証跡にログする                        |
-| `PostToolUseFailure`                                   | はい         | はい             | ツール実行失敗                                             | ツールエラーを処理またはログする                            |
-| `PostToolBatch`                                        | いいえ        | はい             | ツール呼び出しの完全なバッチが解決される。次のモデル呼び出しの前に 1 回               | バッチ全体に対して規約を 1 回注入する                        |
-| `UserPromptSubmit`                                     | はい         | はい             | ユーザープロンプト送信                                         | プロンプトに追加のコンテキストを注入する                        |
-| [`UserPromptExpansion`](/docs/ja/hooks#userpromptexpansion) | いいえ        | はい             | ユーザーが入力したコマンドが Claude に到達する前にプロンプトに展開される            | コマンドの直接呼び出しをブロックするか、スキルが入力されたときにコンテキストを追加する |
-| `MessageDisplay`                                       | いいえ        | はい             | テキスト付きのアシスタントメッセージが完了する。メッセージごとに 1 回、完全なメッセージテキスト付き | 表示されたテキストを編集または再フォーマットする（トランスクリプトは変更しない）    |
-| `Stop`                                                 | はい         | はい             | エージェント実行停止                                          | 終了前にセッション状態を保存する                            |
-| `SubagentStart`                                        | はい         | はい             | サブエージェント初期化                                         | 並列タスク生成を追跡する                                |
-| `SubagentStop`                                         | はい         | はい             | サブエージェント完了                                          | 並列タスクから結果を集約する                              |
-| `PreCompact`                                           | はい         | はい             | 会話圧縮リクエスト                                           | 要約する前に完全なトランスクリプトをアーカイブする                   |
-| `PermissionRequest`                                    | はい         | はい             | パーミッションダイアログが表示される                                  | カスタムパーミッション処理                               |
-| `SessionStart`                                         | いいえ        | はい             | セッション初期化                                            | ログとテレメトリを初期化する                              |
-| `SessionEnd`                                           | いいえ        | はい             | セッション終了                                             | 一時的なリソースをクリーンアップする                          |
-| `Notification`                                         | はい         | はい             | エージェントステータスメッセージ                                    | エージェントステータス更新を Slack または PagerDuty に送信する    |
-| `Setup`                                                | いいえ        | はい             | セッション設定/メンテナンス                                      | 初期化タスクを実行する                                 |
-| `TeammateIdle`                                         | いいえ        | はい             | チームメイトがアイドル状態になる                                    | 作業を再割り当てするか通知する                             |
-| `TaskCompleted`                                        | いいえ        | はい             | バックグラウンドタスク完了                                       | 並列タスクから結果を集約する                              |
-| `ConfigChange`                                         | いいえ        | はい             | 設定ファイル変更                                            | 設定を動的に再ロードする                                |
-| `WorktreeCreate`                                       | いいえ        | はい             | Git ワークツリー作成                                        | 分離されたワークスペースを追跡する                           |
-| `WorktreeRemove`                                       | いいえ        | はい             | Git ワークツリー削除                                        | ワークスペースリソースをクリーンアップする                       |
+| フックイベント                                                | Python SDK | TypeScript SDK | トリガーされる条件                                                                         | 使用例                                                                                                                       |
+| ------------------------------------------------------ | ---------- | -------------- | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `PreToolUse`                                           | はい         | はい             | ツール呼び出しリクエスト（ブロックまたは変更可能）                                                         | 危険なシェルコマンドをブロックする                                                                                                         |
+| `PostToolUse`                                          | はい         | はい             | ツール実行結果                                                                           | すべてのファイル変更を監査証跡にログする                                                                                                      |
+| `PostToolUseFailure`                                   | はい         | はい             | ツール実行失敗                                                                           | ツールエラーを処理またはログする                                                                                                          |
+| `PostToolBatch`                                        | いいえ        | はい             | ツール呼び出しの完全なバッチが解決される。次のモデル呼び出しの前に 1 回                                             | バッチ全体に対して規約を 1 回注入する                                                                                                      |
+| `UserPromptSubmit`                                     | はい         | はい             | ユーザープロンプト送信                                                                       | プロンプトに追加のコンテキストを注入する                                                                                                      |
+| [`UserPromptExpansion`](/docs/ja/hooks#userpromptexpansion) | いいえ        | はい             | ユーザーが入力したコマンド、または MCP プロンプトが Claude に到達する前にプロンプトに展開される。Claude がスキル自体を呼び出すときは発火しない | コマンドの直接呼び出しをブロックするか、スキルが入力されたときにコンテキストを追加する                                                                               |
+| `MessageDisplay`                                       | いいえ        | はい             | テキスト付きのアシスタントメッセージが完了する。メッセージごとに 1 回、完全なメッセージテキスト付き                               | 表示されたテキストを編集または再フォーマットする（トランスクリプトは変更しない）                                                                                  |
+| `Stop`                                                 | はい         | はい             | エージェント実行停止                                                                        | 終了前にセッション状態を保存する                                                                                                          |
+| `StopFailure`                                          | いいえ        | はい             | ターンが通常の停止ではなく API エラーで終了する                                                        | 失敗をログするか、アラートを送信する                                                                                                        |
+| `SubagentStart`                                        | はい         | はい             | サブエージェント初期化                                                                       | 並列タスク生成を追跡する                                                                                                              |
+| `SubagentStop`                                         | はい         | はい             | サブエージェント完了                                                                        | 並列タスクから結果を集約する                                                                                                            |
+| `PreCompact`                                           | はい         | はい             | 会話圧縮リクエスト                                                                         | 要約する前に完全なトランスクリプトをアーカイブする                                                                                                 |
+| `PostCompact`                                          | いいえ        | はい             | 会話圧縮が完了する                                                                         | 生成されたサマリーをログする                                                                                                            |
+| [`PreModelSwitch`](/docs/ja/hooks#premodelswitch)           | いいえ        | はい             | リクエストされたモデルスイッチ。実行前（ブロック可能）                                                       | 特定のモデルへの切り替えをブロックする                                                                                                       |
+| [`PostModelSwitch`](/docs/ja/hooks#postmodelswitch)         | いいえ        | はい             | セッションのモデルが変更される。自動フォールバックを含む                                                      | 新しいモデルに対して Claude モデル固有のガイダンスを提供する                                                                                        |
+| `PermissionRequest`                                    | はい         | はい             | ツール呼び出しが権限決定を必要とする                                                                | カスタム権限処理                                                                                                                  |
+| `PermissionDenied`                                     | いいえ        | はい             | オートモードがツール呼び出しを拒否する。分類器の判定がない拒否を含む                                                | 拒否をログするか、モデルに再試行できることを伝える。Claude Code は判定なしの拒否に対して `retry: true` を無視する。[PermissionDenied](/docs/ja/hooks#permissiondenied) を参照 |
+| `SessionStart`                                         | いいえ        | はい             | セッション初期化                                                                          | ログとテレメトリを初期化する                                                                                                            |
+| `SessionEnd`                                           | いいえ        | はい             | セッション終了                                                                           | 一時的なリソースをクリーンアップする                                                                                                        |
+| `Notification`                                         | はい         | はい             | エージェントステータスメッセージ                                                                  | エージェントステータス更新を Slack または PagerDuty に送信する                                                                                  |
+| `Setup`                                                | いいえ        | はい             | セッション設定/メンテナンス                                                                    | 初期化タスクを実行する                                                                                                               |
+| `TeammateIdle`                                         | いいえ        | はい             | チームメイトがアイドル状態になる                                                                  | 作業を再割り当てするか通知する                                                                                                           |
+| `TaskCreated`                                          | いいえ        | はい             | `TaskCreate` ツール経由でタスクが作成される                                                      | タスク命名規約を強制する                                                                                                              |
+| [`TaskCompleted`](/docs/ja/hooks#taskcompleted)             | いいえ        | はい             | タスクが完了としてマークされる                                                                   | タスクが閉じる前にテストに合格することを要求する                                                                                                  |
+| `Elicitation`                                          | いいえ        | はい             | MCP サーバーがタスク中にユーザー入力をリクエストする                                                      | MCP 入力リクエストにプログラムで応答する                                                                                                    |
+| `ElicitationResult`                                    | いいえ        | はい             | ユーザーが MCP エリシテーションに応答する                                                           | サーバーに返される前に応答を変更またはブロックする                                                                                                 |
+| `ConfigChange`                                         | いいえ        | はい             | 設定ファイル変更                                                                          | 設定を動的に再ロードする                                                                                                              |
+| `InstructionsLoaded`                                   | いいえ        | はい             | `CLAUDE.md` またはルールファイルがコンテキストにロードされる                                              | どの命令ファイルがロードされるかを監査する                                                                                                     |
+| `WorktreeCreate`                                       | いいえ        | はい             | Git ワークツリー作成                                                                      | 分離されたワークスペースを追跡する                                                                                                         |
+| `WorktreeRemove`                                       | いいえ        | はい             | Git ワークツリー削除                                                                      | ワークスペースリソースをクリーンアップする                                                                                                     |
+| `CwdChanged`                                           | いいえ        | はい             | セッション中に作業ディレクトリが変更される                                                             | ディレクトリごとに環境変数を再ロードする                                                                                                      |
+| `FileChanged`                                          | いいえ        | はい             | 監視対象ファイルが変更、作成、または削除される                                                           | プロジェクトファイルが変更されたときに設定を再ロードする                                                                                              |
+| `DirectoryAdded`                                       | いいえ        | はい             | セッション中に作業ディレクトリが追加される                                                             | セッション中に追加されたリポジトリの依存関係をインストールする                                                                                           |
 
 <h2 id="configure-hooks">
   フックを設定する
 </h2>
 
-フックを設定するには、エージェントオプション（Python では `ClaudeAgentOptions`、TypeScript では `options` オブジェクト）の `hooks` フィールドに渡します。
+フックを設定するには、エージェントオプション（Python では `ClaudeAgentOptions`、TypeScript では `options` オブジェクト）の `hooks` フィールドに渡します。このスニペットは、上記の例から `protect_env_files`（Python）または `protectEnvFiles`（TypeScript）のようなフックコールバックを既に定義していることを前提としています。
 
 <CodeGroup>
   ```python Python theme={null}
@@ -213,31 +225,17 @@ SDK はエージェント実行のさまざまなステージのフックを提�
   マッチャー
 </h3>
 
-マッチャーを使用して、コールバックがいつ発火するかをフィルタリングします。`matcher` フィールドは、フックイベントタイプに応じて異なる値に対してマッチングされます。たとえば、ツールベースのフックはツール名に対してマッチングされ、`Notification` フックは通知タイプに対してマッチングされます。各イベントタイプのマッチャー値の完全なリストについては、[Claude Code フックリファレンス](/docs/ja/hooks#matcher-patterns)を参照してください。
+マッチャーを使用して、コールバックがいつ発火するかをフィルタリングします。`matcher` フィールドは、フックイベントタイプに応じて異なる値に対してマッチングされます。たとえば、ツールベースのフックはツール名に対してマッチングされ、`Notification` フックは通知タイプに対してマッチングされます。
 
-SDK マッチャーは[設定ファイルのマッチャー](/docs/ja/hooks#matcher-patterns)と同じルールに従います。文字、数字、`_`、`-`、スペース、`,`、および `|` のみを含むマッチャーは正確な文字列として比較され、`|` または `,` で区切られた代替案とオプションの周囲の空白があるため、`Write|Edit` と `Write, Edit` はそれぞれこれら 2 つのツールと正確にマッチし、`code-reviewer` はそのエージェント型のみにマッチします。`*` のマッチャー、空の文字列、またはマッチャーを完全に省略すると、イベントのすべての発生にマッチします。
+SDK マッチャーは[設定ファイルのマッチャー](/docs/ja/hooks#matcher-patterns)と同じルールに従います。そのセクションでは、正確な文字列と正規表現の評価パス、バージョン要件、および各イベントタイプのマッチャー値を文書化しています。
 
-他の文字を含むマッチャーはアンカーなしの正規表現として評価されるため、`^mcp__` はすべての MCP ツールにマッチし、`Edit.*` は `Edit` と `NotebookEdit` の両方にマッチします。全文字列マッチが必要な場合は、正規表現を `^` と `$` でラップします。
+| オプション     | 型                | デフォルト       | 説明                                                                                                                                                                                                                                                                                                                                                  |
+| --------- | ---------------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `matcher` | `string`         | `undefined` | イベントのフィルタフィールドに対してマッチングされるパターン。[設定ファイルのマッチャーのルール](/docs/ja/hooks#matcher-patterns)に従います。ツールフックの場合、これはツール名です。組み込みツールには `Bash`、`Read`、`Write`、`Edit`、`Glob`、`Grep`、`WebFetch`、`Agent` などが含まれます（完全なリストについては[ツール入力型](/docs/ja/agent-sdk/typescript#tool-input-types)を参照）。MCP ツールはパターン `mcp__<server>__<action>` を使用します。ここで `<server>` は `mcpServers` 設定で使用するキーです。 |
+| `hooks`   | `HookCallback[]` | -           | 必須。パターンがマッチしたときに実行するコールバック関数の配列                                                                                                                                                                                                                                                                                                                     |
+| `timeout` | `number`         | `undefined` | タイムアウト（秒単位）。省略した場合、Claude Code は[イベントのデフォルトタイムアウト](#hook-timeout)を適用します。SDK コールバックは `command` フックのデフォルトに従います                                                                                                                                                                                                                                        |
 
-`mcp__memory` または `mcp__brave-search` のようなマッチャーは正確マッチ文字のみを含むため、正確な文字列として比較され、ツールにマッチしません。そのサーバーからすべてのツールにマッチするには、`mcp__memory__.*` を使用します。
-
-ハイフンを正確マッチセットに含めるには、Claude Code ランタイム v2.1.195 以降が必要です。以前のバージョンでは、`code-reviewer` のようなハイフン付き名前はアンカーなしの正規表現として評価され、正確にマッチするには `^code-reviewer$` としてアンカーする必要があります。
-
-| オプション     | 型                | デフォルト       | 説明                                                                                                                                                                                                                                                                  |
-| --------- | ---------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `matcher` | `string`         | `undefined` | イベントのフィルタフィールドに対してマッチングされるパターン。上記の比較ルールに従います。ツールフックの場合、これはツール名です。組み込みツールには `Bash`、`Read`、`Write`、`Edit`、`Glob`、`Grep`、`WebFetch`、`Agent` などが含まれます（完全なリストについては[ツール入力型](/docs/ja/agent-sdk/typescript#tool-input-types)を参照）。MCP ツールはパターン `mcp__<server>__<action>` を使用します。 |
-| `hooks`   | `HookCallback[]` | -           | 必須。パターンがマッチしたときに実行するコールバック関数の配列                                                                                                                                                                                                                                     |
-| `timeout` | `number`         | `60`        | タイムアウト（秒単位）                                                                                                                                                                                                                                                         |
-
-可能な限り `matcher` パターンを使用して特定のツールをターゲットにします。`'Bash'` のマッチャーは Bash コマンドに対してのみ実行されますが、パターンを省略するとコールバックはそのイベントのすべての発生に対して実行されます。
-
-ツールベースのフックの場合、マッチャーはツール名でのみフィルタリングされ、ファイルパスやその他の引数ではフィルタリングされません。ファイルパスでフィルタリングするには、コールバック内で `tool_input.file_path` をチェックします。
-
-<Tip>
-  **ツール名の発見：** 組み込みツール名の完全なリストについては[ツール入力型](/docs/ja/agent-sdk/typescript#tool-input-types)を参照するか、マッチャーなしでフックを追加して、セッションが行うすべてのツール呼び出しをログします。
-
-  **MCP ツール命名：** MCP ツールは常に `mcp__` で始まり、その後にサーバー名とアクション `mcp__<server>__<action>` が続きます。たとえば、`playwright` という名前のサーバーを設定した場合、そのツールは `mcp__playwright__browser_screenshot`、`mcp__playwright__browser_click` などという名前になります。サーバー名は `mcpServers` 設定で使用するキーから取得されます。
-</Tip>
+可能な限り `matcher` パターンを使用して特定のツールをターゲットにします。`'Bash'` のマッチャーは Bash コマンドに対してのみ実行されますが、パターンを省略するとコールバックはそのイベントのすべての発生に対して実行されます。セッションが行うすべてのツール呼び出しをログするために、意図的にパターンを省略します。
 
 <h3 id="callback-functions">
   コールバック関数
@@ -261,8 +259,11 @@ SDK マッチャーは[設定ファイルのマッチャー](/docs/ja/hooks#matc
 
 コールバックは 2 つのカテゴリのフィールドを持つオブジェクトを返します。
 
-* **トップレベルフィールド**はすべてのイベントで同じように機能します。`systemMessage` はユーザーにメッセージを表示し、`continue`（Python では `continue_`）はこのフック後にエージェントが実行を続けるかどうかを決定します。
-* **`hookSpecificOutput`** は現在の操作を制御します。内部のフィールドはフックイベントタイプに依存します。`PreToolUse` フックの場合、ここで `permissionDecision`（`"allow"`、`"deny"`、`"ask"`、または `"defer"`）、`permissionDecisionReason`、および `updatedInput` を設定します。`"defer"` を返すとクエリが終了し、[後で再開](/docs/ja/hooks#defer-a-tool-call-for-later)できます。`PostToolUse` フックの場合、`additionalContext` を設定してツール結果に情報を追加できます。Claude がそれを見る前にツールの出力を置き換えるには、`updatedToolOutput` を設定します。これは両方の SDK のすべてのツールで機能します。古い `updatedMCPToolOutput` フィールドは MCP ツール出力のみを置き換え、非推奨です。
+* **トップレベルフィールド**はすべてのイベントで受け入れられます。`systemMessage` はユーザーにメッセージを表示し、`continue`（Python では `continue_`）はこのフック後にエージェントが実行を続けるかどうかを決定します。一部のイベントはこれらを破棄するか、別の場所に配信します。各[イベントのセクション](/docs/ja/hooks#hook-events)はフックページでそれらがどこに着地するかを説明しています。
+* **`hookSpecificOutput`** は現在の操作を制御します。内部に設定するフィールドはフックイベントタイプに依存します。
+  * `PreToolUse` フックの場合、ここで `permissionDecision`（`"allow"`、`"deny"`、`"ask"`、または `"defer"`）、`permissionDecisionReason`、および `updatedInput` を設定します。`"defer"` を返すとクエリが終了し、[後で再開](/docs/ja/hooks#defer-a-tool-call-for-later)できます。
+  * `PostToolUse` フックの場合、`additionalContext` を設定してツール結果に情報を追加できます。Claude がそれを見る前にツールの出力を置き換えるには、`updatedToolOutput` を設定します。これは両方の SDK のすべてのツールで機能します。古い `updatedMCPToolOutput` フィールドは MCP ツール出力のみを置き換え、非推奨です。
+  * TypeScript SDK では、`PostToolUse` コールバックは `classifierContext` を返すこともできます。これはツール呼び出しの結果に関する短いメモで、[自動モード](/docs/ja/permission-modes#eliminate-prompts-with-auto-mode)権限分類器用です。コールバックはアプリケーション独自のプロセスで実行されるため、分類器はメモで中継するユーザーステートメントをユーザーの意図として重視する可能性があります。このフィールドは TypeScript Agent SDK v0.3.236 以降が必要です。[自動モード分類器の結果に注釈を付ける](/docs/ja/hooks#annotate-a-result-for-the-auto-mode-classifier)は長さの上限、同期のみのルール、およびメモに何を入れないかをカバーしています。
 
 変更なしで操作を許可するには `{}` を返します。SDK コールバックフックは、[Claude Code シェルコマンドフック](/docs/ja/hooks#json-output)と同じ JSON 出力形式を使用します。これはすべてのフィールドとイベント固有のオプションを文書化しています。SDK 型定義については、[TypeScript](/docs/ja/agent-sdk/typescript#synchookjsonoutput) および [Python](/docs/ja/agent-sdk/python#synchookjsonoutput) SDK リファレンスを参照してください。
 
@@ -274,7 +275,7 @@ SDK マッチャーは[設定ファイルのマッチャー](/docs/ja/hooks#matc
   非同期出力
 </h4>
 
-デフォルトでは、エージェントはコールバックが返されるのを待ってから続行します。フックが副作用（ログ、ウェブフック送信）を実行し、エージェントの動作に影響を与える必要がない場合、代わりに非同期出力を返すことができます。これはエージェントに、フックが完了するのを待たずに即座に続行するよう指示します。
+デフォルトでは、エージェントはフックが返されるのを待ってから続行します。フックがログやウェブフック送信などの副作用を実行し、エージェントの動作に影響を与える必要がない場合、代わりに非同期出力を返すことができます。これはエージェントに、フックが完了するのを待たずに即座に続行するよう指示します。このスニペットでは、Python の `send_to_logging_service` と TypeScript の `sendToLoggingService` は、定義する任意のログ関数の代わりです。
 
 <CodeGroup>
   ```python Python theme={null}
@@ -306,11 +307,13 @@ SDK マッチャーは[設定ファイルのマッチャー](/docs/ja/hooks#matc
   例
 </h2>
 
+このセクションの例の多くはコールバック関数のみを示しています。実行するには、[フックの設定](#configure-hooks)に示されているように、コールバックをオプションの `hooks` フィールドの対応するイベントに登録してください。
+
 <h3 id="modify-tool-input">
   ツール入力を変更する
 </h3>
 
-この例は Write ツール呼び出しをインターセプトし、`file_path` 引数を書き直して `/sandbox` を先頭に追加し、すべてのファイル書き込みをサンドボックスディレクトリにリダイレクトします。コールバックは変更されたパスで `updatedInput` を返し、`permissionDecision: 'allow'` を返して書き直された操作を自動承認します。
+この例は Write ツール呼び出しをインターセプトし、`file_path` 引数を書き直して `/sandbox` を先頭に追加し、すべてのファイル書き込みをサンドボックス化されたディレクトリにリダイレクトします。コールバックは変更されたパスを含む `updatedInput` と `permissionDecision: 'allow'` を返して、書き直された操作を自動承認します。
 
 <CodeGroup>
   ```python Python theme={null}
@@ -358,14 +361,16 @@ SDK マッチャーは[設定ファイルのマッチャー](/docs/ja/hooks#matc
 </CodeGroup>
 
 <Note>
-  `updatedInput` を使用する場合、`permissionDecision: 'allow'` を含めて変更された入力を自動承認するか、`permissionDecision: 'ask'` を含めてユーザーに表示する必要があります。`'defer'` の場合、`updatedInput` は無視されます。常に元の `tool_input` を変更するのではなく、新しいオブジェクトを返します。
+  `updatedInput` を `permissionDecision: 'allow'` と組み合わせて変更された入力を自動承認するか、`permissionDecision: 'ask'` を使用してユーザーに表示します。`permissionDecision` を省略した場合、変更された入力は依然として適用され、通常の権限評価を通じて流れます。`'defer'` を使用する場合、`updatedInput` は無視されます。元の `tool_input` を変更するのではなく、常に新しいオブジェクトを返してください。
 </Note>
+
+リダイレクトを確認するには、プレフィックスを書き込み可能なパス（`./sandbox` または `/tmp/sandbox` など）に設定します（macOS はルートレベルの `/sandbox` ディレクトリの作成を許可していません）。その後、エージェントにファイルを書き込むよう指示します。メッセージストリーム内の Write ツールの結果は、Claude が要求したパスではなく、サンドボックスプレフィックス付きのパスを示します。
 
 <h3 id="add-context-and-block-a-tool">
   コンテキストを追加してツールをブロックする
 </h3>
 
-この例は `/etc` ディレクトリへの書き込みをブロックし、モデルとユーザーの両方に理由を説明します。
+この例は `/etc` ディレクトリへの書き込みをブロックし、その理由をモデルとユーザーの両方に説明します。
 
 * `permissionDecision: 'deny'` はツール呼び出しを停止します。
 * `permissionDecisionReason` はモデルに理由を伝えるため、再試行を避けます。
@@ -378,9 +383,9 @@ SDK マッチャーは[設定ファイルのマッチャー](/docs/ja/hooks#matc
 
       if file_path.startswith("/etc"):
           return {
-              # トップレベルフィールド：ユーザーに表示されるメッセージ
+              # Top-level field: message shown to the user
               "systemMessage": "Remember: system directories like /etc are protected.",
-              # hookSpecificOutput：操作をブロックする
+              # hookSpecificOutput: block the operation
               "hookSpecificOutput": {
                   "hookEventName": input_data["hook_event_name"],
                   "permissionDecision": "deny",
@@ -398,9 +403,9 @@ SDK マッチャーは[設定ファイルのマッチャー](/docs/ja/hooks#matc
 
     if (filePath?.startsWith("/etc")) {
       return {
-        // トップレベルフィールド：ユーザーに表示されるメッセージ
+        // Top-level field: message shown to the user
         systemMessage: "Remember: system directories like /etc are protected.",
-        // hookSpecificOutput：操作をブロックする
+        // hookSpecificOutput: block the operation
         hookSpecificOutput: {
           hookEventName: preInput.hook_event_name,
           permissionDecision: "deny",
@@ -417,7 +422,7 @@ SDK マッチャーは[設定ファイルのマッチャー](/docs/ja/hooks#matc
   特定のツールを自動承認する
 </h3>
 
-デフォルトでは、エージェントは特定のツールを使用する前にパーミッションを求めるプロンプトを表示する場合があります。この例は、`permissionDecision: 'allow'` を返すことで読み取り専用ファイルシステムツール（Read、Glob、Grep）を自動承認し、ユーザー確認なしで実行できるようにしながら、他のすべてのツールは通常のパーミッションチェックの対象のままにします。
+デフォルトでは、エージェントは特定のツールを使用する前に権限を求めるプロンプトを表示する場合があります。この例は `permissionDecision: 'allow'` を返すことで読み取り専用ファイルシステムツール（Read、Glob、Grep）を自動承認し、ユーザーの確認なしで実行できるようにしながら、他のすべてのツールは通常の権限チェックの対象のままにします。
 
 <CodeGroup>
   ```python Python theme={null}
@@ -461,7 +466,7 @@ SDK マッチャーは[設定ファイルのマッチャー](/docs/ja/hooks#matc
   複数のフックを登録する
 </h3>
 
-イベントが発火すると、すべてのマッチするフックが並列で実行されます。パーミッション決定の場合、最も制限的な結果が優先されます。単一の `deny` は、他のフックが何を返すかに関係なく、ツール呼び出しをブロックします。完了順序は非決定的であるため、別のフックが最初に実行されたことに依存するのではなく、各フックが独立して動作するように記述します。
+イベントが発火すると、すべての一致するフックが並列で実行されます。権限決定については、最も制限的な結果が適用されます。単一の `deny` は他のフックが何を返すかに関わらずツール呼び出しをブロックします。完了順序は非決定的であるため、別のフックが最初に実行されたことに依存するのではなく、各フックが独立して動作するように記述してください。
 
 以下の例は、すべてのツール呼び出しに対して 3 つの独立したチェックを登録します。
 
@@ -495,22 +500,22 @@ SDK マッチャーは[設定ファイルのマッチャー](/docs/ja/hooks#matc
   マルチツールマッチャーでフィルタリングする
 </h3>
 
-マルチツールマッチャーを使用して、関連するツール間で 1 つのコールバックを共有します。この例は、異なるスコープを持つ 3 つのマッチャーを登録します。
+マルチツールマッチャーを使用して、関連するツール間で 1 つのコールバックを共有します。この例は異なるスコープを持つ 3 つのマッチャーを登録します。
 
-* パイプで区切られた正確なリスト（`Write|Edit|Delete`）は、ファイル変更ツールに対してのみ `file_security_hook` をトリガーします。
-* 正規表現（`^mcp__`）は、名前が `mcp__` で始まる任意の MCP ツールに対して `mcp_audit_hook` をトリガーします。
-* 省略されたマッチャーは、名前に関係なくすべてのツール呼び出しに対して `global_logger` をトリガーします。
+* パイプで区切られた正確なリスト（`Write|Edit|NotebookEdit`）は、ファイル変更ツールに対してのみ `file_security_hook` をトリガーします。
+* 正規表現（`^mcp__`）は、`mcp__` で始まる名前を持つ MCP ツールに対して `mcp_audit_hook` をトリガーします。
+* 省略されたマッチャーは、名前に関わらずすべてのツール呼び出しに対して `global_logger` をトリガーします。
 
 <CodeGroup>
   ```python Python theme={null}
   options = ClaudeAgentOptions(
       hooks={
           "PreToolUse": [
-              # ファイル変更ツールをマッチングする
-              HookMatcher(matcher="Write|Edit|Delete", hooks=[file_security_hook]),
-              # すべての MCP ツールをマッチングする
+              # Match file modification tools
+              HookMatcher(matcher="Write|Edit|NotebookEdit", hooks=[file_security_hook]),
+              # Match all MCP tools
               HookMatcher(matcher="^mcp__", hooks=[mcp_audit_hook]),
-              # すべてをマッチングする（マッチャーなし）
+              # Match everything (no matcher)
               HookMatcher(hooks=[global_logger]),
           ]
       }
@@ -521,13 +526,13 @@ SDK マッチャーは[設定ファイルのマッチャー](/docs/ja/hooks#matc
   const options = {
     hooks: {
       PreToolUse: [
-        // ファイル変更ツールをマッチングする
-        { matcher: "Write|Edit|Delete", hooks: [fileSecurityHook] },
+        // Match file modification tools
+        { matcher: "Write|Edit|NotebookEdit", hooks: [fileSecurityHook] },
 
-        // すべての MCP ツールをマッチングする
+        // Match all MCP tools
         { matcher: "^mcp__", hooks: [mcpAuditHook] },
 
-        // すべてをマッチングする（マッチャーなし）
+        // Match everything (no matcher)
         { hooks: [globalLogger] }
       ]
     }
@@ -539,12 +544,12 @@ SDK マッチャーは[設定ファイルのマッチャー](/docs/ja/hooks#matc
   サブエージェントアクティビティを追跡する
 </h3>
 
-`SubagentStop` フックを使用して、サブエージェントが作業を完了するときを監視します。[TypeScript](/docs/ja/agent-sdk/typescript#hookinput) および [Python](/docs/ja/agent-sdk/python#hookinput) SDK リファレンスで完全な入力型を参照してください。この例は、サブエージェントが完了するたびに概要をログします。
+`SubagentStop` フックを使用して、サブエージェントが作業を完了したときを監視します。[TypeScript](/docs/ja/agent-sdk/typescript#hookinput) および [Python](/docs/ja/agent-sdk/python#hookinput) SDK リファレンスで完全な入力タイプを参照してください。この例は、サブエージェントが完了するたびに概要をログに記録します。
 
 <CodeGroup>
   ```python Python theme={null}
   async def subagent_tracker(input_data, tool_use_id, context):
-      # サブエージェントが完了したときにサブエージェント詳細をログする
+      # Log subagent details when it finishes
       print(f"[SUBAGENT] Completed: {input_data['agent_id']}")
       print(f"  Transcript: {input_data['agent_transcript_path']}")
       print(f"  Tool use ID: {tool_use_id}")
@@ -561,10 +566,10 @@ SDK マッチャーは[設定ファイルのマッチャー](/docs/ja/hooks#matc
   import { HookCallback, SubagentStopHookInput } from "@anthropic-ai/claude-agent-sdk";
 
   const subagentTracker: HookCallback = async (input, toolUseID, { signal }) => {
-    // SubagentStopHookInput にキャストしてサブエージェント固有のフィールドにアクセスする
+    // Cast to SubagentStopHookInput to access subagent-specific fields
     const subInput = input as SubagentStopHookInput;
 
-    // サブエージェントが完了したときにサブエージェント詳細をログする
+    // Log subagent details when it finishes
     console.log(`[SUBAGENT] Completed: ${subInput.agent_id}`);
     console.log(`  Transcript: ${subInput.agent_transcript_path}`);
     console.log(`  Tool use ID: ${toolUseID}`);
@@ -581,12 +586,12 @@ SDK マッチャーは[設定ファイルのマッチャー](/docs/ja/hooks#matc
 </CodeGroup>
 
 <h3 id="make-http-requests-from-hooks">
-  フックから HTTP リクエストを行う
+  フックから HTTP リクエストを実行する
 </h3>
 
-フックは HTTP リクエストなどの非同期操作を実行できます。フック内でエラーをキャッチして、処理されない例外がエージェントを中断しないようにします。
+フックは HTTP リクエストなどの非同期操作を実行できます。フックの内部でエラーをキャッチし、伝播させないようにしてください。
 
-この例は、各ツールが完了した後にウェブフックを送信し、どのツールが実行されたかと実行時刻をログします。フックはエラーをキャッチして、失敗したウェブフックがエージェントを中断しないようにします。
+この例は各ツール完了後にウェブフックを送信し、どのツールが実行されたかと実行時刻をログに記録します。フックは失敗したウェブフックからのエラーをキャッチします。
 
 <CodeGroup>
   ```python Python theme={null}
@@ -597,7 +602,7 @@ SDK マッチャーは[設定ファイルのマッチャー](/docs/ja/hooks#matc
 
 
   def _send_webhook(tool_name):
-      """外部ウェブフックにツール使用データを POST する同期ヘルパー。"""
+      """Synchronous helper that POSTs tool usage data to an external webhook."""
       data = json.dumps(
           {
               "tool": tool_name,
@@ -614,15 +619,15 @@ SDK マッチャーは[設定ファイルのマッチャー](/docs/ja/hooks#matc
 
 
   async def webhook_notifier(input_data, tool_use_id, context):
-      # ツールが完了した後（PostToolUse）に発火し、前ではない
+      # Only fire after a tool completes (PostToolUse), not before
       if input_data["hook_event_name"] != "PostToolUse":
           return {}
 
       try:
-          # イベントループをブロックしないようにスレッドでブロッキング HTTP 呼び出しを実行する
+          # Run the blocking HTTP call in a thread to avoid blocking the event loop
           await asyncio.to_thread(_send_webhook, input_data["tool_name"])
       except Exception as e:
-          # エラーをログするが、発生させない。失敗したウェブフックはエージェントを停止すべきではない
+          # Log the error but don't raise
           print(f"Webhook request failed: {e}")
 
       return {}
@@ -632,7 +637,7 @@ SDK マッチャーは[設定ファイルのマッチャー](/docs/ja/hooks#matc
   import { query, HookCallback, PostToolUseHookInput } from "@anthropic-ai/claude-agent-sdk";
 
   const webhookNotifier: HookCallback = async (input, toolUseID, { signal }) => {
-    // ツールが完了した後（PostToolUse）に発火し、前ではない
+    // Only fire after a tool completes (PostToolUse), not before
     if (input.hook_event_name !== "PostToolUse") return {};
 
     try {
@@ -643,21 +648,21 @@ SDK マッチャーは[設定ファイルのマッチャー](/docs/ja/hooks#matc
           tool: (input as PostToolUseHookInput).tool_name,
           timestamp: new Date().toISOString()
         }),
-        // フックがタイムアウトした場合、リクエストがキャンセルされるように signal を渡す
+        // Pass signal so the request cancels if the hook times out
         signal
       });
     } catch (error) {
-      // キャンセルを他のエラーから分けて処理する
+      // Handle cancellation separately from other errors
       if (error instanceof Error && error.name === "AbortError") {
         console.log("Webhook request cancelled");
       }
-      // 再スローしない。失敗したウェブフックはエージェントを停止すべきではない
+      // Don't re-throw
     }
 
     return {};
   };
 
-  // PostToolUse フックとして登録する
+  // Register as a PostToolUse hook
   for await (const message of query({
     prompt: "Refactor the auth module",
     options: {
@@ -671,20 +676,22 @@ SDK マッチャーは[設定ファイルのマッチャー](/docs/ja/hooks#matc
   ```
 </CodeGroup>
 
+フックが発火することを確認するには、ウェブフック URL をウォッチできるエンドポイントに指定し、ツールを使用するプロンプトを送信します。フックは各ツール完了後にツール名とタイムスタンプを含む POST を送信します。
+
 <h3 id="forward-notifications-to-slack">
-  通知を Slack に転送する
+  Slack に通知を転送する
 </h3>
 
-`Notification` フックを使用して、エージェントからのシステム通知を受け取り、外部サービスに転送します。通知は以下のようなイベントタイプに対して発火します。
+`Notification` フックを使用して、エージェントからのシステム通知を受け取り、外部サービスに転送します。SDK セッションでは、Claude Code は以下の通知タイプに対してこのフックを実行します。
 
-* `permission_prompt`（Claude がパーミッションを必要とする）
-* `idle_prompt`（Claude が入力を待機している）
-* `auth_success`（認証が完了した）
-* `elicitation_dialog`、`elicitation_complete`、および `elicitation_response`（ユーザープロンプト引き出しフロー用）
+* [`permission_prompt`](/docs/ja/hooks#notification) は、権限リクエストが [`canUseTool` コールバック](/docs/ja/agent-sdk/user-input)で約 6 秒待機した後に 1 回発火します。TypeScript Agent SDK v0.3.233 以降または Python Agent SDK v0.2.139 以降が必要です。
+* ユーザープロンプト引き出しフロー用の `elicitation_complete` および `elicitation_response`
+
+Claude Code は、SDK セッションが実行しないインタラクティブ UI から `idle_prompt`、`auth_success`、`elicitation_dialog` などの他のタイプを発行します。
 
 各通知には、人間が読める説明を含む `message` フィールドと、オプションで `title` が含まれます。
 
-この例は、すべての通知を Slack チャネルに転送します。[Slack 受信ウェブフック URL](https://api.slack.com/messaging/webhooks) が必要です。これは、Slack ワークスペースにアプリを追加し、受信ウェブフックを有効にすることで作成します。
+この例は、すべての通知を Slack チャネルに転送します。[Slack 受信ウェブフック URL](https://docs.slack.dev/messaging/sending-messages-using-incoming-webhooks/) が必要です。これは、Slack ワークスペースにアプリを追加し、受信ウェブフックを有効にすることで作成します。
 
 <CodeGroup>
   ```python Python theme={null}
@@ -696,7 +703,7 @@ SDK マッチャーは[設定ファイルのマッチャー](/docs/ja/hooks#matc
 
 
   def _send_slack_notification(message):
-      """受信ウェブフック経由で Slack にメッセージを送信する同期ヘルパー。"""
+      """Synchronous helper that sends a message to Slack via incoming webhook."""
       data = json.dumps({"text": f"Agent status: {message}"}).encode()
       req = urllib.request.Request(
           "https://hooks.slack.com/services/YOUR/WEBHOOK/URL",
@@ -709,19 +716,19 @@ SDK マッチャーは[設定ファイルのマッチャー](/docs/ja/hooks#matc
 
   async def notification_handler(input_data, tool_use_id, context):
       try:
-          # イベントループをブロックしないようにスレッドでブロッキング HTTP 呼び出しを実行する
+          # Run the blocking HTTP call in a thread to avoid blocking the event loop
           await asyncio.to_thread(_send_slack_notification, input_data.get("message", ""))
       except Exception as e:
           print(f"Failed to send notification: {e}")
 
-      # 空のオブジェクトを返す。通知フックはエージェント動作を変更しない
+      # Return empty object. Notification hooks don't modify agent behavior
       return {}
 
 
   async def main():
       options = ClaudeAgentOptions(
           hooks={
-              # 通知イベントのフックを登録する（マッチャーは不要）
+              # Register the hook for Notification events (no matcher needed)
               "Notification": [HookMatcher(hooks=[notification_handler])],
           },
       )
@@ -738,20 +745,20 @@ SDK マッチャーは[設定ファイルのマッチャー](/docs/ja/hooks#matc
   ```typescript TypeScript theme={null}
   import { query, HookCallback, NotificationHookInput } from "@anthropic-ai/claude-agent-sdk";
 
-  // 通知を Slack に送信するフックコールバックを定義する
+  // Define a hook callback that sends notifications to Slack
   const notificationHandler: HookCallback = async (input, toolUseID, { signal }) => {
-    // NotificationHookInput にキャストして message フィールドにアクセスする
+    // Cast to NotificationHookInput to access the message field
     const notification = input as NotificationHookInput;
 
     try {
-      // 通知メッセージを Slack 受信ウェブフックに POST する
+      // POST the notification message to a Slack incoming webhook
       await fetch("https://hooks.slack.com/services/YOUR/WEBHOOK/URL", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           text: `Agent status: ${notification.message}`
         }),
-        // フックがタイムアウトした場合、リクエストがキャンセルされるように signal を渡す
+        // Pass signal so the request cancels if the hook times out
         signal
       });
     } catch (error) {
@@ -762,11 +769,11 @@ SDK マッチャーは[設定ファイルのマッチャー](/docs/ja/hooks#matc
       }
     }
 
-    // 空のオブジェクトを返す。通知フックはエージェント動作を変更しない
+    // Return empty object. Notification hooks don't modify agent behavior
     return {};
   };
 
-  // 通知イベントのフックを登録する（マッチャーは不要）
+  // Register the hook for Notification events (no matcher needed)
   for await (const message of query({
     prompt: "Analyze this codebase",
     options: {
@@ -780,6 +787,8 @@ SDK マッチャーは[設定ファイルのマッチャー](/docs/ja/hooks#matc
   ```
 </CodeGroup>
 
+`Notification` イベントが発火すると、フックは通知の `message` を `Agent status:` というプレフィックス付きでウェブフックが対象とするチャネルに投稿します。
+
 <h2 id="fix-common-issues">
   一般的な問題を修正する
 </h2>
@@ -788,25 +797,25 @@ SDK マッチャーは[設定ファイルのマッチャー](/docs/ja/hooks#matc
   フックが発火しない
 </h3>
 
-* フックイベント名が正しく、大文字と小文字が区別されていることを確認します（`preToolUse` ではなく `PreToolUse`）
-* マッチャーパターンがツール名と正確にマッチしていることを確認します
-* フックが `options.hooks` の正しいイベントタイプの下にあることを確認します
-* `Notification` や `SubagentStop` などの非ツールフックでマッチャーをサポートする場合、マッチャーは異なるフィールドに対してマッチングされ、`Stop` はマッチャーを完全に無視します（[マッチャーパターン](/docs/ja/hooks#matcher-patterns)を参照）
-* エージェントが [`max_turns`](/docs/ja/agent-sdk/python#claudeagentoptions) 制限に達するとセッションが終了する前にフックが実行される可能性があるため、フックが発火しない場合があります
+* フックイベント名が正しく、大文字と小文字が区別されていることを確認してください（`preToolUse` ではなく `PreToolUse`）
+* マッチャーパターンがツール名と正確に一致していることを確認してください
+* フックが `options.hooks` の正しいイベントタイプの下にあることを確認してください
+* マッチャーをサポートする非ツールフック（`Notification` や `SubagentStop` など）の場合、マッチャーは異なるフィールドに対してマッチし、`Stop` はマッチャーを完全に無視します（[マッチャーパターン](/docs/ja/hooks#matcher-patterns)を参照）
+* エージェントが [`max_turns`](/docs/ja/agent-sdk/python#claudeagentoptions) 制限に達した場合、セッションが終了してからフックが実行される前にセッションが終了するため、フックが発火しない可能性があります
 
 <h3 id="matcher-not-filtering-as-expected">
-  マッチャーが期待どおりにフィルタリングしない
+  マッチャーが期待通りにフィルタリングしない
 </h3>
 
-マッチャーはツール名のみをマッチングし、ファイルパスやその他の引数はマッチングしません。ファイルパスでフィルタリングするには、フック内で `tool_input.file_path` をチェックします：
+マッチャーはツール名のみをマッチし、ファイルパスや他の引数はマッチしません。ファイルパスでフィルタリングするには、フック内で `tool_input.file_path` を確認してください：
 
 ```typescript theme={null}
 const myHook: HookCallback = async (input, toolUseID, { signal }) => {
   const preInput = input as PreToolUseHookInput;
   const toolInput = preInput.tool_input as Record<string, unknown>;
   const filePath = toolInput?.file_path as string;
-  if (!filePath?.endsWith(".md")) return {}; // マークダウンファイル以外をスキップ
-  // マークダウンファイルを処理...
+  if (!filePath?.endsWith(".md")) return {}; // Skip non-markdown files
+  // Process markdown files...
   return {};
 };
 ```
@@ -815,24 +824,37 @@ const myHook: HookCallback = async (input, toolUseID, { signal }) => {
   フックタイムアウト
 </h3>
 
-* `HookMatcher` 設定で `timeout` 値を増やします
-* TypeScript で 3 番目のコールバック引数から `AbortSignal` を使用して、キャンセルを適切に処理します
+Claude Code は各コールバックをタイムアウト付きで実行します。タイムアウトは `HookMatcher` の `timeout` フィールドで秒単位で設定します。設定しない場合、Claude Code はイベントのデフォルトを使用します：ほとんどのイベントで 600 秒、`UserPromptSubmit`、`PreModelSwitch`、`PostModelSwitch` で 30 秒、`MessageDisplay` で 10 秒です。Claude Code は `SessionEnd` コールバックをシャットダウン中に実行します。これは短い [SessionEnd タイムアウト予算](/docs/ja/hooks#sessionend-input)（デフォルトで 1.5 秒）の下で実行されます。
 
-`UserPromptSubmit` または [`UserPromptExpansion`](/docs/ja/hooks#userpromptexpansion) コールバックがタイムアウトを超過した場合、そのプロンプトはタイムアウトメッセージでブロックされ、セッションは続行されます。クエリを中断すると、保留中のツール呼び出しがキャンセルされます。v2.1.208 より前では、これらのイベントのコールバックタイムアウトはクエリを `error_during_execution` で終了し、保留中の `PreToolUse` コールバック中の中断はツール呼び出しを続行させる可能性がありました。
+コールバックがタイムアウトを超過した場合、Claude Code はそれをキャンセルし、その出力を破棄し、セッションはハングするのではなく続行します。次に何が起こるかはイベントによって異なります：
+
+* `PreToolUse`：Claude Code はツール呼び出しを実行せず、Claude はフックがタイムアウト前に応答しなかったことを示すツール結果を受け取り、ターンが続行されます。別の `PreToolUse` フックが明示的な拒否を返した場合、Claude はタイムアウトエラーの代わりにその拒否を受け取ります。v2.1.210 より前では、Claude Code はタイムアウトを Claude にユーザー拒否として報告していたため、無人セッションは停止して入力を待つようになっていました。
+* `PostToolUse` および `PostToolUseFailure`：Claude Code はツール結果を保持し、ターンが続行されます。
+* `UserPromptSubmit` および [`UserPromptExpansion`](/docs/ja/hooks#userpromptexpansion)：Claude Code はフックとタイムアウトを名前で示すメッセージでプロンプトをブロックし、セッションが続行されます。これらのイベントのコールバックはポリシーゲートとして機能できるため、Claude Code はタイムアウトしたプロンプトをスクリーニングなしで通すことはありません。v2.1.208 より前では、これらのイベントのコールバックがタイムアウトした場合、Claude Code はクエリを `error_during_execution` で終了していました。
+* `Stop` および `SubagentStop`：タイムアウトしたコールバックは決定を返さないとカウントされます。エージェントまたはサブエージェントは、そのコールバックがそれを許可したかのように停止し、イベントの他のフックからの決定が適用されます。Claude Code v2.1.273 より前では、タイムアウトした `Stop` または `SubagentStop` コールバックは失敗したフック実行としてカウントされ、Claude Code はイベントの他のフックの決定を破棄していました。
+* `SessionStart`：タイムアウトしたコールバックは出力を返さないとカウントされ、セッションは他の `SessionStart` フックの出力で続行されます。
+* `PreModelSwitch`：Claude Code はモデルスイッチをブロックします。応答しないフックはスイッチを承認していません。
+* `Notification`、`PreCompact`、`PostModelSwitch` などの他のイベント：Claude Code は失敗をログに記録して続行します。
+
+メインセッションで `Stop` または `SessionStart` コールバックが初めてタイムアウトした場合、Claude Code はメッセージストリームに [`SDKInformationalMessage`](/docs/ja/agent-sdk/typescript#sdkinformationalmessage) も追加します。これはセッションを駆動するアプリが応答しなかったことを示します。その後のタイムアウトはアプリが応答しない間、そのメッセージを繰り返しません。
+
+コールバックが保留中の間にクエリを中断した場合、Claude Code は保留中のツール呼び出しをキャンセルします。v2.1.208 より前では、`PreToolUse` コールバックが保留中の間に中断した場合、ツール呼び出しは引き続き進行する可能性がありました。
+
+コールバックがより多くの時間を必要とする場合は、その `HookMatcher` で高い `timeout` を設定してください。TypeScript では、タイムアウトが発火したときにキャンセルを適切に処理するために、3 番目のコールバック引数から `AbortSignal` を使用してください。
 
 <h3 id="tool-blocked-unexpectedly">
   ツールが予期せずブロックされた
 </h3>
 
-* すべての `PreToolUse` フックで `permissionDecision: 'deny'` を返していないかチェックします
-* フックにログを追加して、返している `permissionDecisionReason` を確認します
-* マッチャーパターンが広すぎないことを確認します（空のマッチャーはすべてのツールにマッチングします）
+* すべての `PreToolUse` フックで `permissionDecision: 'deny'` の戻り値を確認してください
+* フックにログを追加して、返している `permissionDecisionReason` を確認してください
+* マッチャーパターンが広すぎないことを確認してください：空のマッチャーはすべてのツールにマッチします
 
 <h3 id="modified-input-not-applied">
   変更された入力が適用されない
 </h3>
 
-* `updatedInput` が `hookSpecificOutput` の内部にあり、トップレベルにないことを確認します：
+* `updatedInput` がトップレベルではなく `hookSpecificOutput` の内側にあることを確認してください：
 
   ```typescript theme={null}
   return {
@@ -844,55 +866,56 @@ const myHook: HookCallback = async (input, toolUseID, { signal }) => {
   };
   ```
 
-* 変更された入力を自動承認するには `permissionDecision: 'allow'` を返すか、ユーザーに承認を求めるには `'ask'` を返します
+* `updatedInput` を `permissionDecision: 'defer'` と組み合わせないでください。これは変更された入力を削除します。`permissionDecision` を省略することは問題ありません：変更された入力は通常の権限評価を通じて引き続き適用されます。また、`'allow'` を返して変更された入力を自動承認するか、`'ask'` を返してユーザーに承認を求めることもできます
 
-* `hookSpecificOutput` に `hookEventName` を含めて、出力がどのフック型用かを識別します
+* `hookSpecificOutput` に `hookEventName` を含めて、出力がどのフックタイプ用であるかを識別してください
 
 <h3 id="session-hooks-not-available-in-python">
   Python でセッションフックが利用できない
 </h3>
 
-`SessionStart` と `SessionEnd` は TypeScript で SDK コールバックフックとして登録できますが、Python SDK では利用できません（`HookEvent` は除外されています）。Python では、設定ファイルで定義された[シェルコマンドフック](/docs/ja/hooks#hook-events)としてのみ利用可能です（たとえば、`.claude/settings.json`）。SDK アプリケーションからシェルコマンドフックをロードするには、[`setting_sources`](/docs/ja/agent-sdk/python#settingsource) または [`settingSources`](/docs/ja/agent-sdk/typescript#settingsource) で適切な設定ソースを含めます：
+`SessionStart` と `SessionEnd` は TypeScript で SDK コールバックフックとして登録できますが、その `HookEvent` タイプがそれらを省略しているため、Python SDK では利用できません。Python では、`.claude/settings.json` などの設定ファイルで定義された [シェルコマンドフック](/docs/ja/hooks#hook-events)としてのみ利用できます。SDK アプリケーションからシェルコマンドフックをロードするには、[`setting_sources`](/docs/ja/agent-sdk/python#settingsource) または [`settingSources`](/docs/ja/agent-sdk/typescript#settingsource) で適切な設定ソースを含めてください：
 
 <CodeGroup>
   ```python Python theme={null}
   options = ClaudeAgentOptions(
-      setting_sources=["project"],  # フックを含む .claude/settings.json をロード
+      setting_sources=["project"],  # Loads .claude/settings.json including hooks
   )
   ```
 
   ```typescript TypeScript theme={null}
   const options = {
-    settingSources: ["project"] // フックを含む .claude/settings.json をロード
+    settingSources: ["project"] // Loads .claude/settings.json including hooks
   };
   ```
 </CodeGroup>
 
-Python SDK コールバックとして初期化ロジックを実行するには、`client.receive_response()` からの最初のメッセージをトリガーとして使用します。
+Python SDK コールバックとして初期化ロジックを実行するには、`client.receive_response()` からの最初のメッセージをトリガーとして使用してください。
 
 <h3 id="subagent-permission-prompts-multiplying">
-  サブエージェントパーミッションプロンプトが増加する
+  サブエージェント権限プロンプトが増加する
 </h3>
 
-複数のサブエージェントを生成する場合、各サブエージェントは個別にパーミッションをリクエストする可能性があります。サブエージェントは親エージェントのパーミッションを自動的に継承しません。繰り返されるプロンプトを避けるには、`PreToolUse` フックを使用して特定のツールを自動承認するか、サブエージェントセッションに適用されるパーミッションルールを設定します。
+複数のサブエージェントをスポーンする場合、各サブエージェントは独自のツール呼び出しに対して権限を個別にリクエストする可能性があります。繰り返されるプロンプトを避けるには、`PreToolUse` フックを使用して特定のツールを自動承認するか、権限ルールを設定してください。サブエージェントは [親会話から権限ルールを継承](/docs/ja/sub-agents#permission-modes)します。
 
 <h3 id="recursive-hook-loops-with-subagents">
   サブエージェントを使用した再帰的フックループ
 </h3>
 
-サブエージェントを生成する `UserPromptSubmit` フックは、それらのサブエージェントが同じフックをトリガーする場合、無限ループを作成できます。これを防ぐには：
+サブエージェントをスポーンする `UserPromptSubmit` フックは、それらのサブエージェントが同じフックをトリガーする場合、無限ループを作成できます。これを防ぐには：
 
-* サブエージェント指標をチェックしてからサブエージェントを生成する前にフック入力をチェックします
-* 共有変数またはセッション状態を使用して、既にサブエージェント内にいるかどうかを追跡します
-* フックをトップレベルエージェントセッションのみに実行するようにスコープします
+* 共有変数またはセッション状態を使用して、既にサブエージェント内にいるかどうかを追跡してください
+* フックをトップレベルエージェントセッションのみで実行するようにスコープしてください
 
 <h3 id="systemmessage-not-appearing-in-output">
   systemMessage が出力に表示されない
 </h3>
 
-`systemMessage` フィールドはユーザーにメッセージを表示します。デフォルトでは SDK はメッセージストリームにフック出力を表示しないため、`includeHookEvents`（Python では `include_hook_events`）を設定しない限り、メッセージが表示されない場合があります。代わりにモデルにコンテキストを渡すには、[`additionalContext`](/docs/ja/hooks#add-context-for-claude)を返します。
+`systemMessage` フィールドはモデルではなく、ユーザーにメッセージを表示します。Claude Code v2.1.227 以降では、フックの `systemMessage` はメッセージストリームに [`SDKInformationalMessage`](/docs/ja/agent-sdk/typescript#sdkinformationalmessage) として表示される可能性があります。表示されるかどうかはイベントによって異なります。フックページの各 [イベントのセクション](/docs/ja/hooks#hook-events)は、出力がどのように表示されるかを説明しています。代わりにモデルにコンテキストを渡すには、[`additionalContext`](/docs/ja/hooks#add-context-for-claude) を返してください。
 
-フック決定をアプリケーションに確実に表示する必要がある場合は、別途ログするか、専用の出力チャネルを使用します。
+v2.1.227 より前では、SDK はメッセージストリームのフック出力を `SessionStart` および `Setup` フックのみで表示していました。他のイベントの場合、出力は [`includeHookEvents`](/docs/ja/agent-sdk/typescript#options)（Python では `include_hook_events`）が追加するライフサイクルイベントにのみ表示されていました。そのオプションのエントリは、各フックイベントが生成するライフサイクルイベントをカバーしています。
+
+フック決定をアプリケーションに確実に表示する必要がある場合は、それらを個別にログに記録するか、専用の出力チャネルを使用してください。
 
 <h2 id="related-resources">
   関連リソース

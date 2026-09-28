@@ -8,10 +8,6 @@
 
 Ucapkan prompt Anda alih-alih mengetiknya di Claude Code CLI. Ucapan Anda ditranskripsikan secara langsung ke dalam input prompt, sehingga Anda dapat mencampur suara dan pengetikan dalam pesan yang sama. Aktifkan dikte dengan `/voice`, kemudian tahan kunci sambil Anda berbicara atau ketuk sekali untuk memulai dan lagi untuk mengirim.
 
-<Note>
-  Mode ketuk memerlukan Claude Code v2.1.116 atau lebih baru. Periksa versi Anda dengan `claude --version`.
-</Note>
-
 Dikte juga berfungsi di [tampilan agen](/docs/id/agent-view#peek-and-reply). Tahan atau ketuk kunci push-to-talk Anda saat input pengiriman atau balasan panel intip difokuskan untuk mendikte ke sesi latar belakang.
 
 <h2 id="requirements">
@@ -21,8 +17,7 @@ Dikte juga berfungsi di [tampilan agen](/docs/id/agent-view#peek-and-reply). Tah
 Dikte suara mengalirkan audio yang direkam ke server Anthropic untuk transkripsi. Audio tidak diproses secara lokal. Layanan ini memerlukan semua hal berikut:
 
 * **Akun Claude.ai**: layanan ucapan-ke-teks hanya tersedia saat Anda melakukan autentikasi dengan akun Claude.ai, dan tidak tersedia saat Claude Code dikonfigurasi untuk menggunakan kunci API Anthropic secara langsung, Amazon Bedrock, Google Cloud's Agent Platform, atau Microsoft Foundry.
-* **Organisasi tanpa kepatuhan HIPAA yang diaktifkan**: `/voice` menampilkan `Voice mode is disabled by your organization's policy` saat pembatasan ini berlaku.
-* **Mikrofon lokal**: dikte suara tidak berfungsi di lingkungan jarak jauh seperti [Claude Code di web](/docs/id/claude-code-on-the-web) atau sesi SSH.
+* **Mikrofon lokal**: dikte suara tidak berfungsi di [sesi cloud](/docs/id/claude-code-on-the-web) atau sesi SSH.
 * **WSLg, jika Anda menjalankan Claude Code di WSL**: WSLg disertakan dengan WSL2 saat diinstal dari Microsoft Store di Windows 10 atau 11. Jika WSLg tidak tersedia, misalnya di WSL1, jalankan Claude Code di Windows asli sebagai gantinya.
 
 Transkripsi tidak menggunakan pesan Claude atau token dan tidak dihitung terhadap batas yang ditampilkan di `/usage`. Lihat [penggunaan data](/docs/id/data-usage) untuk mengetahui bagaimana Anthropic menangani data Anda.
@@ -62,7 +57,7 @@ Dikte suara bertahan di seluruh sesi. Atur langsung di [file pengaturan pengguna
 }
 ```
 
-Saat dikte suara diaktifkan, footer input menampilkan petunjuk `hold space to speak` saat prompt kosong. Petunjuk mencerminkan pengikatan `voice:pushToTalk` saat ini Anda dan diperbarui jika Anda [mengikat ulang kunci dikte](#rebind-the-dictation-key). Teks petunjuk sama di kedua mode, dan tidak muncul jika Anda memiliki [baris status kustom](/docs/id/statusline) yang dikonfigurasi.
+Untuk tiga sesi pertama dengan dikte suara diaktifkan, footer input menampilkan petunjuk `hold space to speak` saat prompt kosong. Petunjuk mencerminkan pengikatan `voice:pushToTalk` saat ini Anda dan diperbarui jika Anda [mengikat ulang kunci dikte](#rebind-the-dictation-key). Teks petunjuk sama di kedua mode, dan tidak muncul jika Anda memiliki [baris status kustom](/docs/id/statusline) yang dikonfigurasi.
 
 Transkripsi disesuaikan untuk kosakata pengkodean di kedua mode. Istilah pengembangan umum seperti `regex`, `OAuth`, `JSON`, dan `localhost` dikenali dengan benar, dan nama proyek saat ini dan nama cabang git Anda ditambahkan sebagai petunjuk pengenalan secara otomatis.
 
@@ -72,9 +67,11 @@ Transkripsi disesuaikan untuk kosakata pengkodean di kedua mode. Istilah pengemb
 
 Mode tahan adalah push-to-talk: perekaman berjalan saat Anda menahan kunci dan berhenti saat Anda melepasnya. Ini adalah mode default.
 
-Tahan `Space` untuk mulai merekam. Claude Code mendeteksi kunci yang ditahan dengan memantau peristiwa pengulangan kunci cepat dari terminal Anda, jadi ada pemanasan singkat sebelum perekaman dimulai. Footer menampilkan `keep holding…` selama pemanasan, kemudian beralih ke bentuk gelombang langsung setelah perekaman aktif.
+Tahan `Space` untuk mulai merekam. Claude Code mendeteksi kunci yang ditahan dengan memantau peristiwa pengulangan kunci cepat dari terminal Anda, jadi ada pemanasan singkat sebelum perekaman dimulai. Footer menampilkan `keep holding…` selama pemanasan, kemudian `listening…` setelah perekaman aktif. Saat merekam, kursor prompt menjadi batang yang naik dan turun sesuai dengan level mikrofon Anda, kecuali jika Anda memiliki [`prefersReducedMotion`](/docs/id/settings-reference#prefersreducedmotion) yang diaktifkan.
 
 Beberapa karakter pengulangan kunci pertama mengetik ke dalam input selama pemanasan dan dihapus secara otomatis saat perekaman diaktifkan. Ketukan `Space` tunggal masih mengetik spasi, karena deteksi tahan hanya dipicu pada pengulangan cepat.
+
+Menahan atau mengetuk `Space` memulai dikte hanya di tempat penekanan tombol akan mengetik ke dalam prompt. Di [penampil transkrip](/docs/id/interactive-mode#transcript-viewer), `Space` menavigasi percakapan, dan dalam [mode vim](/docs/id/interactive-mode#vim-editor-mode) di luar INSERT itu adalah perintah. Kombinasi pengubah yang [diikat ulang](#rebind-the-dictation-key) seperti `meta+k` tidak pernah mengetik teks, jadi itu juga memulai dikte dari tempat-tempat tersebut.
 
 <Tip>
   Untuk melewati pemanasan, beralih ke [mode ketuk](#tap-to-record-and-send) dengan `/voice tap`, atau [ikat ulang ke kombinasi pengubah](#rebind-the-dictation-key) seperti `meta+k`. Kombinasi pengubah mulai merekam pada penekanan tombol pertama.
@@ -84,11 +81,11 @@ Ucapan Anda muncul dalam prompt saat Anda berbicara, redup sampai transkrip dise
 
 ```
 > refactor the auth middleware to ▮
-  # hold Space, speak "use the new token validation helper"
+  # hold space, speak "use the new token validation helper"
 > refactor the auth middleware to use the new token validation helper▮
 ```
 
-Secara default, melepaskan kunci menyisipkan transkrip dan menunggu Anda menekan `Enter`. Atur `"autoSubmit": true` dalam objek pengaturan `voice` untuk mengirim prompt secara otomatis saat Anda melepaskan kunci, asalkan transkrip setidaknya tiga kata panjang.
+Secara default, saat Anda melepaskan kunci, Claude Code menyisipkan transkrip dan menunggu Anda menekan `Enter`. Atur `"autoSubmit": true` dalam objek pengaturan `voice` untuk mengirim prompt secara otomatis saat Anda melepaskan kunci, asalkan transkrip setidaknya tiga kata panjang.
 
 <h2 id="tap-to-record-and-send">
   Ketuk untuk merekam dan mengirim
@@ -96,19 +93,29 @@ Secara default, melepaskan kunci menyisipkan transkrip dan menunggu Anda menekan
 
 Mode ketuk mengalihkan perekaman dengan penekanan tombol tunggal: ketuk sekali untuk memulai, berbicara, kemudian ketuk lagi untuk mengirim prompt. Tidak ada pemanasan, dan Anda tidak perlu menahan kunci.
 
-Aktifkan mode ketuk dengan `/voice tap`. Dengan input prompt kosong, ketuk `Space` untuk mulai merekam. Footer menampilkan bentuk gelombang langsung saat merekam. Ketuk `Space` lagi untuk berhenti.
+Aktifkan mode ketuk dengan `/voice tap`. Dengan input prompt kosong, ketuk `Space` untuk mulai merekam. Footer menampilkan `● REC · tap to send` saat merekam. Ketuk `Space` lagi untuk berhenti.
 
 Claude Code menyisipkan transkrip dan mengirimkan prompt secara otomatis saat transkrip setidaknya tiga kata panjang. Transkrip yang lebih pendek dimasukkan tetapi tidak dikirim, sehingga ketukan yang tidak disengaja tidak mengirim kata yang tersesat.
 
-Ambang batas tiga kata menghitung kata untuk bahasa yang ditulis tanpa spasi. Mulai dari v2.1.195, transkrip Jepang, Cina, dan Thailand menghitung kata individual, sehingga mereka auto-submit dalam mode ketuk dan dalam mode tahan dengan `autoSubmit`. Versi sebelumnya menghitung transkrip tanpa spasi sebagai satu kata dan tidak pernah mengirimnya secara otomatis.
+Ambang batas tiga kata menghitung kata untuk bahasa yang ditulis tanpa spasi. Jepang, Cina, dan Thailand menghitung kata individual, sehingga mereka auto-submit dalam mode ketuk dan dalam mode tahan dengan `autoSubmit`.
 
 Ketukan pertama hanya mulai merekam saat input prompt kosong, sehingga Anda masih dapat mengetik spasi secara normal saat menyusun pesan. Ketukan kedua menghentikan perekaman terlepas dari isi input. Perekaman juga berhenti secara otomatis setelah 15 detik keheningan atau dua menit total.
+
+<h2 id="cancel-a-recording">
+  Batalkan perekaman
+</h2>
+
+Tekan `Esc` atau `Ctrl+C` untuk membatalkan diksi alih-alih menyelesaikannya. Claude Code menghentikan mikrofon, membuang transkrip, dan mengembalikan prompt ke keadaan sebelum perekaman dimulai.
+
+Kedua tombol juga membatalkan saat transkrip perekaman yang selesai masih diproses. Prompt yang Anda edit atau kirimkan selama pemrosesan tetap seperti yang Anda tinggalkan.
+
+Tidak ada tombol yang melakukan apa pun di tekan lain yang membatalkan: `Esc` tidak mengganggu respons Claude, dan `Ctrl+C` tidak menghapus prompt atau dihitung sebagai yang pertama dari [dua penekanan yang keluar dari Claude Code](/docs/id/interactive-mode#general-controls).
 
 <h2 id="change-the-dictation-language">
   Ubah bahasa dikte
 </h2>
 
-Dikte suara menggunakan pengaturan [`language`](/docs/id/settings) yang sama yang mengontrol bahasa respons Claude. Jika pengaturan itu kosong, dikte default ke Bahasa Inggris. Di ekstensi VS Code, jika `language` kosong, dikte menggunakan pengaturan `accessibility.voice.speechLanguage` VS Code sebelum default ke Bahasa Inggris.
+Dikte suara menggunakan pengaturan [`language`](/docs/id/settings-reference#language) yang sama yang mengontrol bahasa respons Claude. Jika pengaturan itu kosong, dikte default ke Bahasa Inggris. Di ekstensi VS Code, jika `language` kosong, dikte menggunakan pengaturan `accessibility.voice.speechLanguage` VS Code sebelum default ke Bahasa Inggris.
 
 <Accordion title="Bahasa dikte yang didukung">
   | Bahasa    | Kode |
@@ -172,45 +179,46 @@ Dalam mode tahan, hindari mengikat kunci huruf telanjang seperti `v` karena dete
 Beberapa kunci tidak dikirimkan ke aplikasi terminal dan tidak dapat diikat sama sekali. Misalnya, `Caps Lock` menampilkan kesalahan jika Anda mencoba mengikatnya. Lihat [sesuaikan pintasan keyboard](/docs/id/keybindings) untuk sintaks keybinding lengkap dan daftar pintasan yang dicadangkan.
 
 <h2 id="troubleshooting">
-  Pemecahan Masalah
+  Troubleshooting
 </h2>
 
-Masalah umum saat dikte suara tidak diaktifkan atau merekam:
+Masalah umum ketika voice dictation tidak aktif atau merekam:
 
-* **`Voice mode requires a Claude.ai account`**: Anda diautentikasi dengan kunci API atau penyedia pihak ketiga. Jalankan `/login` untuk masuk dengan akun Claude.ai.
-* **`Voice mode is disabled by your organization's policy`**: konfigurasi kepatuhan organisasi Anda menonaktifkan dikte suara, seperti yang dijelaskan dalam [Persyaratan](#requirements). Hubungi administrator organisasi Anda untuk mengonfirmasi apakah dikte suara tersedia untuk organisasi Anda.
-* **`Microphone access is denied`**: berikan izin mikrofon ke terminal Anda di pengaturan sistem. Di macOS, buka System Settings → Privacy & Security → Microphone dan aktifkan aplikasi terminal Anda, kemudian jalankan `/voice` lagi. Di Windows, buka Settings → Privacy & security → Microphone dan aktifkan akses mikrofon untuk aplikasi desktop, kemudian jalankan `/voice` lagi. Jika terminal Anda tidak terdaftar dalam pengaturan macOS, lihat [Terminal tidak terdaftar dalam pengaturan Mikrofon macOS](#terminal-not-listed-in-macos-microphone-settings).
-* **`No audio recording tool found` di Linux**: modul audio asli tidak dapat dimuat dan tidak ada fallback yang diinstal. Instal SoX dengan perintah yang ditampilkan dalam pesan kesalahan, misalnya `sudo apt-get install sox`.
-* **`Voice mode requires a microphone, but SoX could not open an audio capture device`**: SoX diinstal, tetapi host tidak memiliki perangkat penangkap audio, misalnya server headless atau kontainer. Jalankan Claude Code pada mesin dengan mikrofon. Mulai dari v2.1.195, Claude Code di Linux melaporkan pesan ini dalam situasi itu; versi sebelumnya meminta Anda untuk menginstal SoX bahkan ketika sudah diinstal.
-* **`Voice mode could not find a working audio recorder in WSL`**: WSLg merutekan audio melalui PulseAudio daripada perangkat ALSA, jadi SoX memerlukan backend PulseAudio-nya diinstal secara eksplisit. Jalankan `sudo apt install sox libsox-fmt-pulse`. Menginstal `sox` saja menarik backend ALSA, yang tidak dapat merekam di WSL karena tidak ada perangkat `/dev/snd`.
-* **`Voice input is failing repeatedly and has been paused`**: dikte suara mengalami beberapa kegagalan penangkapan berturut-turut dan berhenti mencoba sesi baru sampai satu berhasil. Kegagalan dihitung apakah mikrofon gagal dimulai atau perekam dimulai dan kemudian berhenti tanpa menghasilkan audio apa pun. Ini biasanya berarti mikrofon atau tumpukan audio di host ini tidak dapat menangkap audio, misalnya server headless, shell jarak jauh tanpa passthrough audio, atau izin mikrofon yang ditolak. Konfirmasi perangkat input yang berfungsi, perbaiki penyebab mendasar dari entri di atas, kemudian picu suara lagi. Sebelum v2.1.202, hanya kegagalan awal yang diperhitungkan menuju jeda.
-* **Tidak ada yang terjadi saat menahan `Space` dalam mode tahan**: perhatikan input prompt saat Anda menahan. Jika spasi terus menumpuk, dikte suara kemungkinan mati; jalankan `/voice hold` untuk mengaktifkannya. Jika hanya satu atau dua spasi muncul dan kemudian tidak ada, dikte suara aktif tetapi deteksi tahan tidak dipicu. Deteksi tahan memerlukan terminal Anda untuk mengirim peristiwa pengulangan kunci, sehingga tidak dapat mendeteksi kunci yang ditahan jika pengulangan kunci dinonaktifkan di tingkat OS. Beralih ke mode ketuk dengan `/voice tap` untuk menghindari persyaratan pengulangan kunci.
-* **Mengetuk `Space` mengetik spasi alih-alih merekam dalam mode ketuk**: ketukan pertama hanya mulai merekam saat input prompt kosong. Hapus input terlebih dahulu, atau periksa bahwa Anda dalam mode ketuk dengan menjalankan `/voice tap`.
-* **`No audio detected from microphone`**: perekaman dimulai tetapi menangkap keheningan. Konfirmasi perangkat input yang benar diatur sebagai default sistem dan tingkat inputnya tidak dibisukan atau mendekati nol. Di Windows, buka Settings → System → Sound → Input dan pilih mikrofon Anda. Di macOS, buka System Settings → Sound → Input.
-* **`Voice connection failed`**: perekaman Anda tidak pernah mencapai layanan transkripsi karena koneksi gagal. Periksa jaringan Anda dan coba lagi. Perekaman yang menangkap audio tidak melaporkan `No audio detected from microphone` alih-alih pesan ini. Sebelum v2.1.200, mikrofon senyap dapat melaporkan kegagalan koneksi, yang menyarankan masalah jaringan ketika masalah sebenarnya adalah perangkat input.
-* **`No speech detected`**: audio mencapai layanan transkripsi tetapi tidak ada kata yang dikenali. Berbicara lebih dekat ke mikrofon, kurangi kebisingan latar belakang, dan konfirmasi [bahasa dikte](#change-the-dictation-language) Anda cocok dengan bahasa yang Anda gunakan.
-* **Transkripsi berantakan atau dalam bahasa yang salah**: dikte default ke Bahasa Inggris. Jika Anda mendikte dalam bahasa lain, atur di `/config` terlebih dahulu. Lihat [Ubah bahasa dikte](#change-the-dictation-language).
+* **`Voice mode requires a Claude.ai account`**: Anda diautentikasi dengan API key atau penyedia pihak ketiga. Jalankan `/login` untuk masuk dengan akun claude.ai.
+* **`Voice mode is disabled by your organization's policy`**: kebijakan administrator untuk organisasi Anda mematikan voice dictation. Hubungi administrator organisasi Anda untuk mengonfirmasi apakah voice dictation tersedia untuk organisasi Anda.
+* **`Microphone access is denied`**: berikan izin mikrofon ke terminal Anda di pengaturan sistem. Di macOS, buka System Settings → Privacy & Security → Microphone dan aktifkan aplikasi terminal Anda, kemudian jalankan `/voice` lagi. Di Windows, buka Settings → Privacy & security → Microphone dan aktifkan akses mikrofon untuk aplikasi desktop, kemudian jalankan `/voice` lagi. Jika terminal Anda tidak terdaftar dalam pengaturan macOS, lihat [Terminal not listed in macOS Microphone settings](#terminal-not-listed-in-macos-microphone-settings).
+* **`Voice mode requires SoX for audio recording` on Linux**: modul audio native tidak dapat dimuat dan tidak ada fallback yang terinstal. Instal SoX dengan perintah yang ditampilkan dalam pesan kesalahan, misalnya `sudo apt-get install sox`.
+* **`Voice mode requires a microphone, but SoX could not open an audio capture device`**: SoX terinstal, tetapi host tidak memiliki perangkat penangkap audio, misalnya server headless atau container. Jalankan Claude Code di mesin yang memiliki mikrofon. Mulai dari v2.1.195, Claude Code di Linux melaporkan pesan ini dalam situasi tersebut; versi sebelumnya meminta Anda untuk menginstal SoX bahkan ketika sudah terinstal.
+* **`Voice mode could not find a working audio recorder in WSL`**: WSLg merutekan audio melalui PulseAudio daripada perangkat ALSA, jadi SoX memerlukan backend PulseAudio-nya terinstal secara eksplisit. Jalankan `sudo apt install sox libsox-fmt-pulse`. Menginstal `sox` saja menarik backend ALSA, yang tidak dapat merekam di WSL karena tidak ada perangkat `/dev/snd`.
+* **`Voice input is failing repeatedly and has been paused`**: voice dictation mengalami tiga kegagalan penangkapan dalam 10 detik. Claude Code menjeda dictation hingga 10 detik telah berlalu sejak yang pertama dari kegagalan tersebut. Kegagalan dihitung apakah mikrofon gagal dimulai atau perekam dimulai dan kemudian berhenti tanpa menghasilkan audio apa pun. Ini biasanya berarti mikrofon atau audio stack di host ini tidak dapat menangkap audio, misalnya server headless, shell jarak jauh tanpa passthrough audio, atau izin mikrofon ditolak. Konfirmasi perangkat input yang berfungsi, perbaiki penyebab mendasar dari entri di atas, kemudian picu voice lagi. Sebelum v2.1.202, hanya kegagalan start-up yang diperhitungkan menuju jeda.
+* **Nothing happens when holding `Space` in hold mode**: perhatikan input prompt saat Anda menahan. Jika spasi terus bertambah, voice dictation kemungkinan besar mati; jalankan `/voice hold` untuk mengaktifkannya. Jika hanya satu atau dua spasi muncul dan kemudian tidak ada, voice dictation aktif tetapi deteksi hold tidak terpicu. Deteksi hold memerlukan terminal Anda untuk mengirim key-repeat events, jadi tidak dapat mendeteksi kunci yang ditahan jika key-repeat dinonaktifkan di tingkat OS. Beralih ke tap mode dengan `/voice tap` untuk menghindari persyaratan key-repeat.
+* **Tapping `Space` types a space instead of recording in tap mode**: ketukan pertama hanya memulai perekaman ketika input prompt kosong. Hapus input terlebih dahulu, atau periksa bahwa Anda dalam tap mode dengan menjalankan `/voice tap`.
+* **`No audio detected from microphone`**: perekaman dimulai tetapi menangkap kesunyian. Konfirmasi perangkat input yang benar diatur sebagai default sistem dan tingkat inputnya tidak dibisukan atau mendekati nol. Di Windows, buka Settings → System → Sound → Input dan pilih mikrofon Anda. Di macOS, buka System Settings → Sound → Input.
+* **`Voice connection failed`**: perekaman Anda tidak pernah mencapai layanan transkripsi karena koneksi gagal. Periksa jaringan Anda dan coba lagi. Perekaman yang tidak menangkap audio melaporkan `No audio detected from microphone` alih-alih pesan ini. Sebelum v2.1.200, mikrofon senyap dapat melaporkan kegagalan koneksi, yang menyarankan masalah jaringan ketika masalah sebenarnya adalah perangkat input.
+* **`Voice stream error: WebSocket upgrade rejected with HTTP <status>`**: server menolak koneksi Anda dengan status HTTP yang ditampilkan, jadi ini bukan pemadaman jaringan. Status dalam rentang 400 biasanya berarti sign-in basi, atau layanan proxy atau bot-protection menjawab sebagai pengganti layanan transkripsi. Jalankan `/login` untuk menyegarkan sign-in Anda, dan periksa VPN atau proxy di jalur jaringan Anda jika status berlanjut. Jika Anda masih merekam ketika penolakan tiba, Claude Code mencoba ulang status di luar rentang 400 sekali sebelum menampilkan pesan ini; tidak mencoba ulang status dalam rentang 400. Dalam v2.1.229 hingga v2.1.231, build native tidak menampilkan pesan ini: Claude Code terus merekam, footer hold-mode masih menampilkan `listening…`, dan melaporkan `Voice connection failed` setelah Anda berhenti merekam.
+* **`No speech detected`**: audio mencapai layanan transkripsi tetapi tidak ada kata yang dikenali. Berbicara lebih dekat ke mikrofon, kurangi kebisingan latar belakang, dan konfirmasi [dictation language](#change-the-dictation-language) Anda cocok dengan bahasa yang Anda gunakan.
+* **Transcription is garbled or in the wrong language**: dictation default ke English. Jika Anda mendiktekan dalam bahasa lain, atur terlebih dahulu di `/config`. Lihat [Change the dictation language](#change-the-dictation-language).
 
 <h3 id="terminal-not-listed-in-macos-microphone-settings">
-  Terminal tidak terdaftar dalam pengaturan Mikrofon macOS
+  Terminal not listed in macOS Microphone settings
 </h3>
 
-Jika aplikasi terminal Anda tidak muncul di bawah System Settings → Privacy & Security → Microphone, tidak ada toggle yang dapat Anda aktifkan. Atur ulang status izin untuk terminal Anda sehingga `/voice` berikutnya menjalankan prompt izin macOS yang segar.
+Jika aplikasi terminal Anda tidak muncul di bawah System Settings → Privacy & Security → Microphone, tidak ada toggle yang dapat Anda aktifkan. Atur ulang status izin untuk terminal Anda sehingga `/voice` run berikutnya memicu prompt izin macOS yang segar.
 
 <Steps>
-  <Step title="Atur ulang izin mikrofon untuk terminal Anda">
-    Jalankan `tccutil reset Microphone <bundle-id>`, mengganti `<bundle-id>` dengan pengenal terminal Anda: `com.apple.Terminal` untuk Terminal bawaan, atau `com.googlecode.iterm2` untuk iTerm2. Untuk terminal lain, cari pengenal dengan `osascript -e 'id of app "AppName"'`.
+  <Step title="Reset the microphone permission for your terminal">
+    Jalankan `tccutil reset Microphone <bundle-id>`, mengganti `<bundle-id>` dengan identifier terminal Anda: `com.apple.Terminal` untuk Terminal bawaan, atau `com.googlecode.iterm2` untuk iTerm2. Untuk terminal lain, cari identifier dengan `osascript -e 'id of app "AppName"'`.
 
     <Warning>
-      Anda dapat menjalankan `tccutil reset Microphone` tanpa ID bundle, tetapi ini mencabut akses mikrofon dari setiap aplikasi di Mac Anda, termasuk aplikasi seperti Zoom atau Slack. Setiap aplikasi perlu meminta akses lagi pada penggunaan berikutnya, jadi jangan jalankan selama panggilan aktif.
+      Anda dapat menjalankan `tccutil reset Microphone` tanpa bundle ID, tetapi ini mencabut akses mikrofon dari setiap aplikasi di Mac Anda, termasuk aplikasi seperti Zoom atau Slack. Setiap aplikasi akan perlu meminta akses lagi pada penggunaan berikutnya, jadi jangan jalankan selama panggilan aktif.
     </Warning>
   </Step>
 
-  <Step title="Keluar dan luncurkan ulang terminal Anda">
-    macOS tidak akan meminta ulang proses yang sudah berjalan. Keluar dari aplikasi terminal dengan Cmd+Q, bukan hanya tutup jendelanya, kemudian buka lagi.
+  <Step title="Quit and relaunch your terminal">
+    macOS tidak akan meminta ulang proses yang sudah berjalan. Keluar dari aplikasi terminal dengan Cmd+Q, bukan hanya menutup jendelanya, kemudian buka lagi.
   </Step>
 
-  <Step title="Picu prompt segar">
+  <Step title="Trigger a fresh prompt">
     Mulai Claude Code dan jalankan `/voice`. macOS meminta akses mikrofon; izinkan.
   </Step>
 </Steps>
@@ -220,6 +228,6 @@ Jika aplikasi terminal Anda tidak muncul di bawah System Settings → Privacy & 
 </h2>
 
 * [Sesuaikan pintasan keyboard](/docs/id/keybindings): ikat ulang `voice:pushToTalk` dan tindakan keyboard CLI lainnya
-* [Konfigurasi pengaturan](/docs/id/settings): referensi lengkap untuk kunci pengaturan `voice`, `language`, dan lainnya
+* [Semua pengaturan](/docs/id/settings-reference#voice): kunci pengaturan `voice`, `language`, dan lainnya
 * [Mode interaktif](/docs/id/interactive-mode): pintasan keyboard, mode input, dan kontrol sesi
 * [Perintah](/docs/id/commands): referensi untuk `/voice`, `/config`, dan semua perintah lainnya

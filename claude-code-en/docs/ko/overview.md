@@ -12,16 +12,16 @@ Claude Code는 기능을 구축하고, 버그를 수정하고, 개발 작업을 
   시작하기
 </h2>
 
-Claude Code는 터미널, IDE 확장 프로그램, 데스크톱 앱 및 웹을 포함한 여러 환경에서 실행됩니다. 아래 탭에서 하나를 선택하여 시작하세요. 대부분의 환경에는 [Claude 구독](https://claude.com/pricing?utm_source=claude_code\&utm_medium=docs\&utm_content=overview_pricing) 또는 [Anthropic Console](https://console.anthropic.com/) 계정이 필요합니다. Terminal CLI 및 VS Code는 [타사 제공자](/docs/ko/third-party-integrations)도 지원합니다.
+Claude Code는 터미널, IDE 확장 프로그램, 데스크톱 앱 및 웹을 포함한 여러 환경에서 실행됩니다. 아래 탭에서 하나를 선택하여 시작하세요. 대부분의 환경에는 [Claude 구독](https://claude.com/pricing?utm_source=claude_code\&utm_medium=docs\&utm_content=overview_pricing) 또는 [Anthropic Console](https://platform.claude.com/) 계정이 필요합니다. Terminal CLI, VS Code 및 JetBrains는 [타사 제공자](/docs/ko/third-party-integrations)도 지원합니다.
 
 <Tabs>
   <Tab title="Terminal">
     터미널에서 Claude Code로 직접 작업하기 위한 모든 기능을 갖춘 CLI입니다. 파일을 편집하고, 명령을 실행하고, 명령줄에서 전체 프로젝트를 관리할 수 있습니다.
 
-    To install Claude Code, use one of the following methods:
+    Claude Code를 설치하려면 다음 방법 중 하나를 사용하십시오:
 
     <Tabs>
-      <Tab title="Native Install (Recommended)">
+      <Tab title="기본 설치 (권장)">
         **macOS, Linux, WSL:**
 
         ```bash theme={null}
@@ -40,14 +40,14 @@ Claude Code는 터미널, IDE 확장 프로그램, 데스크톱 앱 및 웹을 �
         curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del install.cmd
         ```
 
-        If you see `The token '&&' is not a valid statement separator`, you're in PowerShell, not CMD. If you see `'irm' is not recognized as an internal or external command`, you're in CMD, not PowerShell. Your prompt shows `PS C:\` when you're in PowerShell and `C:\` without the `PS` when you're in CMD.
+        `The token '&&' is not a valid statement separator` 오류가 표시되면 CMD가 아닌 PowerShell에 있는 것입니다. `'irm' is not recognized as an internal or external command` 오류가 표시되면 PowerShell이 아닌 CMD에 있는 것입니다. PowerShell에 있을 때는 프롬프트에 `PS C:\`가 표시되고, CMD에 있을 때는 `PS` 없이 `C:\`만 표시됩니다.
 
-        If the install command fails with `syntax error near unexpected token '<'`, a `403`, or another curl error, see [Troubleshoot installation](/docs/en/troubleshoot-install#find-your-error) to match the error to a fix and for alternative install methods.
+        설치 명령이 `syntax error near unexpected token '<'`, `403` 또는 다른 curl 오류로 실패하면 [설치 문제 해결](/docs/ko/troubleshoot-install#find-your-error)을 참조하여 오류를 수정 방법과 일치시키고 대체 설치 방법을 확인하십시오.
 
-        [Git for Windows](https://git-scm.com/downloads/win) is recommended on native Windows so Claude Code can use the Bash tool. If Git for Windows is not installed, Claude Code uses PowerShell as the shell tool instead. WSL setups do not need Git for Windows.
+        [Git for Windows](https://git-scm.com/downloads/win)는 Claude Code가 Bash 도구를 사용할 수 있도록 기본 Windows에서 권장됩니다. Git for Windows가 설치되지 않은 경우 Claude Code는 대신 PowerShell을 셸 도구로 사용합니다. WSL 설정에는 Git for Windows가 필요하지 않습니다.
 
         <Info>
-          Native installations automatically update in the background to keep you on the latest version.
+          기본 설치는 최신 버전으로 유지하기 위해 백그라운드에서 자동으로 업데이트됩니다.
         </Info>
       </Tab>
 
@@ -56,10 +56,10 @@ Claude Code는 터미널, IDE 확장 프로그램, 데스크톱 앱 및 웹을 �
         brew install --cask claude-code
         ```
 
-        Homebrew offers two casks. `claude-code` tracks the stable release channel, which is typically about a week behind and skips releases with major regressions. `claude-code@latest` tracks the latest channel and receives new versions as soon as they ship.
+        Homebrew는 두 가지 cask를 제공합니다. `claude-code`는 안정적인 릴리스 채널을 추적하며, 일반적으로 약 1주일 뒤에 있고 주요 회귀가 있는 릴리스를 건너뜁니다. `claude-code@latest`는 최신 채널을 추적하고 새 버전이 출시되는 즉시 받습니다.
 
         <Info>
-          Homebrew installations do not auto-update. Run `brew upgrade claude-code` or `brew upgrade claude-code@latest`, depending on which cask you installed, to get the latest features and security fixes.
+          Homebrew 설치는 자동으로 업데이트되지 않습니다. 설치한 cask에 따라 `brew upgrade claude-code` 또는 `brew upgrade claude-code@latest`를 실행하여 최신 기능 및 보안 수정 사항을 받으십시오.
         </Info>
       </Tab>
 
@@ -69,21 +69,21 @@ Claude Code는 터미널, IDE 확장 프로그램, 데스크톱 앱 및 웹을 �
         ```
 
         <Info>
-          WinGet installations do not auto-update. Run `winget upgrade Anthropic.ClaudeCode` periodically to get the latest features and security fixes.
+          WinGet 설치는 자동으로 업데이트되지 않습니다. 최신 기능 및 보안 수정 사항을 받으려면 주기적으로 `winget upgrade Anthropic.ClaudeCode`를 실행하십시오.
         </Info>
       </Tab>
     </Tabs>
 
-    You can also install with [apt, dnf, or apk](/docs/en/setup#install-with-linux-package-managers) on Debian, Fedora, RHEL, and Alpine.
+    또한 Debian, Fedora, RHEL 및 Alpine에서 [apt, dnf 또는 apk](/docs/ko/setup#install-with-linux-package-managers)로 설치할 수 있습니다.
 
-    그런 다음 모든 프로젝트에서 Claude Code를 시작합니다:
+    그런 다음 모든 프로젝트에서 Claude Code를 시작합니다. `your-project`를 머신의 프로젝트 디렉터리 경로로 바꾸세요:
 
     ```bash theme={null}
     cd your-project
     claude
     ```
 
-    처음 사용할 때 로그인하라는 메시지가 표시됩니다. 이제 끝입니다! [빠른 시작으로 계속하기 →](/docs/ko/quickstart)
+    처음 사용할 때 로그인하라는 메시지가 표시됩니다. `ANTHROPIC_API_KEY` 환경 변수를 설정한 경우 Claude Code는 로그인 프롬프트를 건너뛰고 대신 키를 승인하도록 요청합니다. 이제 끝입니다! [빠른 시작으로 계속하기 →](/docs/ko/quickstart)
 
     <Tip>
       [고급 설정](/docs/ko/setup)에서 설치 옵션, 수동 업데이트 또는 제거 지침을 참조하세요. 문제가 발생하면 [설치 문제 해결](/docs/ko/troubleshoot-install)을 방문하세요.
@@ -109,18 +109,19 @@ Claude Code는 터미널, IDE 확장 프로그램, 데스크톱 앱 및 웹을 �
     * [macOS](https://claude.ai/api/desktop/darwin/universal/dmg/latest/redirect?utm_source=claude_code\&utm_medium=docs) (Intel 및 Apple Silicon)
     * [Windows](https://claude.ai/api/desktop/win32/x64/setup/latest/redirect?utm_source=claude_code\&utm_medium=docs) (x64)
     * [Windows ARM64](https://claude.ai/api/desktop/win32/arm64/setup/latest/redirect?utm_source=claude_code\&utm_medium=docs)
+    * Ubuntu 또는 Debian에서 앱이 베타 버전이므로 [Linux 설치 지침](/docs/ko/desktop-linux)을 따라 apt로 설치합니다.
 
-    설치 후 Claude를 실행하고, 로그인한 다음 **Code** 탭을 클릭하여 코딩을 시작합니다. [유료 구독](https://claude.com/pricing?utm_source=claude_code\&utm_medium=docs\&utm_content=overview_desktop_pricing)이 필요합니다.
+    설치 후 Claude를 실행하고, 로그인한 다음 **Code** 탭을 클릭하여 코딩을 시작합니다. 앱에는 Claude Code가 포함되어 있으므로 CLI를 별도로 설치할 필요가 없습니다. [유료 구독](https://claude.com/pricing?utm_source=claude_code\&utm_medium=docs\&utm_content=overview_desktop_pricing)이 필요합니다.
 
     [데스크톱 앱에 대해 자세히 알아보기 →](/docs/ko/desktop-quickstart)
   </Tab>
 
   <Tab title="Web">
-    로컬 설정 없이 브라우저에서 Claude Code를 실행합니다. 오래 실행되는 작업을 시작하고 완료되면 다시 확인하거나, 로컬에 없는 리포지토리에서 작업하거나, 여러 작업을 병렬로 실행할 수 있습니다. 데스크톱 브라우저 및 Claude iOS 앱에서 사용할 수 있습니다.
+    로컬 설정 없이 브라우저에서 Claude Code를 실행합니다. 오래 실행되는 작업을 시작하고 완료되면 다시 확인하거나, 로컬에 없는 리포지토리에서 작업하거나, 여러 작업을 병렬로 실행할 수 있습니다. 더 오래 진행되는 작업의 경우 [프로젝트](/docs/ko/claude-projects)를 생성하고 Claude가 병렬 세션을 조정하도록 하세요. 데스크톱 브라우저 및 [iOS 및 Android용 Claude 앱](/docs/ko/mobile)에서 사용할 수 있습니다.
 
     [claude.ai/code](https://claude.ai/code)에서 코딩을 시작합니다.
 
-    [웹에서 시작하기 →](/docs/ko/web-quickstart)
+    [시작하기 →](/docs/ko/web-quickstart)
   </Tab>
 
   <Tab title="JetBrains">
@@ -168,14 +169,14 @@ Claude Code를 사용할 수 있는 몇 가지 방법은 다음과 같습니다:
   </Accordion>
 
   <Accordion title="지침, skills 및 hooks로 사용자 정의" icon="sliders">
-    [`CLAUDE.md`](/docs/ko/memory)는 프로젝트 루트에 추가하는 마크다운 파일로 Claude Code가 모든 세션의 시작 부분에서 읽습니다. 이를 사용하여 코딩 표준, 아키텍처 결정, 선호하는 라이브러리 및 검토 체크리스트를 설정합니다. Claude는 또한 작업할 때 [자동 메모리](/docs/ko/memory#auto-memory)를 구축하여 빌드 명령 및 디버깅 인사이트와 같은 학습 내용을 저장하므로 아무것도 작성할 필요가 없습니다.
+    [`CLAUDE.md`](/docs/ko/memory)는 프로젝트 루트에 추가하는 마크다운 파일로 Claude Code가 모든 세션의 시작 부분에서 읽습니다. 이를 사용하여 코딩 표준, 아키텍처 결정, 선호하는 라이브러리 및 검토 체크리스트를 설정합니다. 리포지토리에 이미 다른 코딩 에이전트용 `AGENTS.md`가 있는 경우 Claude Code는 [자체적으로 읽을 수 있습니다](/docs/ko/memory#agents-md) 또는 `CLAUDE.md`와 함께 읽을 수 있습니다. Claude는 또한 작업할 때 [자동 메모리](/docs/ko/memory#auto-memory)를 구축하여 세션 전체에서 학습 내용을 저장하므로 아무것도 작성할 필요가 없습니다.
 
     [skills](/docs/ko/skills)를 생성하여 팀이 공유할 수 있는 반복 가능한 워크플로우를 패키징합니다(예: `/review-pr` 또는 `/deploy-staging`).
 
     [Hooks](/docs/ko/hooks)를 사용하면 Claude Code 작업 전후에 셸 명령을 실행할 수 있습니다(예: 모든 파일 편집 후 자동 포맷팅 또는 커밋 전 lint 실행).
   </Accordion>
 
-  <Accordion title="에이전트 팀 실행 및 커스텀 에이전트 구축" icon="users">
+  <Accordion title="에이전트를 병렬로 실행하고 커스텀 에이전트 구축" icon="users">
     작업의 다른 부분에서 동시에 작동하는 [여러 Claude Code 에이전트](/docs/ko/sub-agents)를 생성합니다. 리드 에이전트가 작업을 조정하고, 하위 작업을 할당하고, 결과를 병합합니다.
 
     여러 전체 세션을 병렬로 실행하고 한 화면에서 감시하려면 [백그라운드 에이전트](/docs/ko/agent-view)를 사용합니다. 완전히 커스텀 워크플로우의 경우 [Agent SDK](/docs/ko/agent-sdk/overview)를 사용하면 Claude Code의 도구 및 기능으로 구동되는 자신의 에이전트를 구축할 수 있으며, 오케스트레이션, 도구 액세스 및 권한에 대한 완전한 제어가 가능합니다.
@@ -201,7 +202,7 @@ Claude Code를 사용할 수 있는 몇 가지 방법은 다음과 같습니다:
   <Accordion title="반복되는 작업 예약" icon="clock">
     Claude를 일정에 따라 실행하여 반복되는 작업을 자동화합니다: 아침 PR 검토, 야간 CI 실패 분석, 주간 종속성 감사 또는 PR 병합 후 문서 동기화.
 
-    * [Routines](/docs/ko/routines)는 Anthropic 관리 인프라에서 실행되므로 컴퓨터가 꺼져 있어도 계속 실행됩니다. API 호출 또는 GitHub 이벤트에서도 트리거될 수 있습니다. 웹, 데스크톱 앱에서 생성하거나 CLI에서 `/schedule`을 실행하여 생성합니다.
+    * [Routines](/docs/ko/routines)는 클라우드에서 실행되므로 컴퓨터가 꺼져 있어도 계속 실행됩니다. API 호출 또는 GitHub 이벤트에서도 트리거될 수 있습니다. 웹, 데스크톱 앱에서 생성하거나 CLI에서 `/schedule`을 실행하여 생성합니다.
     * [데스크톱 예약된 작업](/docs/ko/desktop-scheduled-tasks)은 머신에서 실행되며 로컬 파일 및 도구에 직접 액세스할 수 있습니다
     * [`/loop`](/docs/ko/scheduled-tasks)는 빠른 폴링을 위해 CLI 세션 내에서 프롬프트를 반복합니다
   </Accordion>
@@ -211,8 +212,8 @@ Claude Code를 사용할 수 있는 몇 가지 방법은 다음과 같습니다:
 
     * 책상에서 떠나 [원격 제어](/docs/ko/remote-control)를 사용하여 휴대폰이나 모든 브라우저에서 계속 작업합니다
     * [Dispatch](/docs/ko/desktop#sessions-from-dispatch)에 휴대폰에서 작업을 메시지로 보내고 생성되는 데스크톱 세션을 엽니다
-    * [웹](/docs/ko/claude-code-on-the-web) 또는 [iOS 앱](https://apps.apple.com/app/claude-by-anthropic/id6473753684)에서 오래 실행되는 작업을 시작한 다음 `claude --teleport`를 사용하여 터미널로 가져옵니다. Teleport는 claude.ai 구독이 필요합니다.
-    * 터미널 세션을 [데스크톱 앱](/docs/ko/desktop)으로 `/desktop`을 사용하여 시각적 diff 검토를 위해 전달합니다
+    * [웹](/docs/ko/claude-code-on-the-web) 또는 [Claude 모바일 앱](/docs/ko/mobile)에서 오래 실행되는 작업을 시작한 다음 `claude --teleport`를 사용하여 터미널로 가져옵니다. Teleport는 claude.ai 구독이 필요합니다.
+    * `/desktop`을 사용하여 현재 터미널 세션을 [데스크톱 앱](/docs/ko/desktop)에서 계속하여 시각적으로 diff를 검토할 수 있습니다. `/desktop` 핸드오프는 claude.ai 구독이 필요합니다. macOS 및 x64 Windows에서 사용 가능합니다.
     * 팀 채팅에서 작업을 라우팅합니다: [Slack](/docs/ko/slack)에서 `@Claude`를 언급하고 버그 보고서를 포함하면 풀 요청을 다시 받습니다
   </Accordion>
 </AccordionGroup>
@@ -225,17 +226,17 @@ Claude Code를 사용할 수 있는 몇 가지 방법은 다음과 같습니다:
 
 위의 [Terminal](/docs/ko/quickstart), [VS Code](/docs/ko/vs-code), [JetBrains](/docs/ko/jetbrains), [Desktop](/docs/ko/desktop) 및 [Web](/docs/ko/claude-code-on-the-web) 환경 외에도 Claude Code는 CI/CD, 채팅 및 브라우저 워크플로우와 통합됩니다:
 
-| 원하는 것                                               | 최적의 옵션                                                                                                         |
-| --------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| 휴대폰이나 다른 기기에서 로컬 세션 계속하기                            | [원격 제어](/docs/ko/remote-control)                                                                                    |
-| Telegram, Discord, iMessage 또는 자신의 웹훅에서 세션으로 이벤트 푸시 | [Channels](/docs/ko/channels)                                                                                       |
-| 로컬에서 작업 시작, 모바일에서 계속                                | [웹](/docs/ko/claude-code-on-the-web) 또는 [Claude iOS 앱](https://apps.apple.com/app/claude-by-anthropic/id6473753684) |
-| Claude를 반복 일정에 따라 실행                                | [Routines](/docs/ko/routines) 또는 [데스크톱 예약된 작업](/docs/ko/desktop-scheduled-tasks)                                         |
-| PR 검토 및 이슈 분류 자동화                                   | [GitHub Actions](/docs/ko/github-actions) 또는 [GitLab CI/CD](/docs/ko/gitlab-ci-cd)                                       |
-| 모든 PR에서 자동 코드 검토 받기                                 | [GitHub Code Review](/docs/ko/code-review)                                                                          |
-| Slack의 버그 보고서를 풀 요청으로 라우팅                           | [Slack](/docs/ko/slack)                                                                                             |
-| 라이브 웹 애플리케이션 디버깅                                    | [Chrome](/docs/ko/chrome)                                                                                           |
-| 자신의 워크플로우를 위한 커스텀 에이전트 구축                           | [Agent SDK](/docs/ko/agent-sdk/overview)                                                                            |
+| 원하는 것                                               | 최적의 옵션                                                                                                 |
+| --------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| 휴대폰이나 다른 기기에서 로컬 세션 계속하기                            | [원격 제어](/docs/ko/remote-control)                                                                            |
+| Telegram, Discord, iMessage 또는 자신의 웹훅에서 세션으로 이벤트 푸시 | [Channels](/docs/ko/channels)                                                                               |
+| 로컬에서 작업 시작, 모바일에서 계속                                | [`claude --cloud`](/docs/ko/claude-code-on-the-web#from-terminal-to-cloud), 그 다음 [Claude 모바일 앱](/docs/ko/mobile) |
+| Claude를 반복 일정에 따라 실행                                | [Routines](/docs/ko/routines) 또는 [데스크톱 예약된 작업](/docs/ko/desktop-scheduled-tasks)                                 |
+| PR 검토 및 이슈 분류 자동화                                   | [GitHub Actions](/docs/ko/github-actions) 또는 [GitLab CI/CD](/docs/ko/gitlab-ci-cd)                               |
+| 모든 PR에서 자동 코드 검토 받기                                 | [GitHub Code Review](/docs/ko/code-review)                                                                  |
+| Slack의 버그 보고서를 풀 요청으로 라우팅                           | [Slack](/docs/ko/slack)                                                                                     |
+| 라이브 웹 애플리케이션 디버깅                                    | [Chrome](/docs/ko/chrome)                                                                                   |
+| 자신의 워크플로우를 위한 커스텀 에이전트 구축                           | [Agent SDK](/docs/ko/agent-sdk/overview)                                                                    |
 
 <h2 id="next-steps">
   다음 단계
@@ -246,6 +247,7 @@ Claude Code를 설치한 후 이 가이드를 통해 더 깊이 있게 알아볼
 * [빠른 시작](/docs/ko/quickstart): 코드베이스 탐색에서 수정 커밋까지 첫 번째 실제 작업을 진행합니다
 * [지침 및 메모리 저장](/docs/ko/memory): CLAUDE.md 파일 및 자동 메모리를 사용하여 Claude에 지속적인 지침을 제공합니다
 * [일반적인 워크플로우](/docs/ko/common-workflows) 및 [모범 사례](/docs/ko/best-practices): Claude Code에서 최대한 활용하기 위한 패턴
+* [Claude Academy](https://academy.claude.com/): 무료 자기 주도 학습 과정으로 [Claude Code 101](https://academy.claude.com/courses/claude-code-101) 및 [Claude Code in Action](https://academy.claude.com/courses/claude-code-in-action)을 포함합니다
 * [모든 작업을 위한 하네스](https://claude.com/blog/a-harness-for-every-task-dynamic-workflows-in-claude-code): Claude Code 팀이 [동적 워크플로우](/docs/ko/workflows)를 사용하여 대규모로 서브에이전트를 조율하는 방법
 * [설정](/docs/ko/settings): Claude Code를 워크플로우에 맞게 사용자 정의합니다
 * [문제 해결](/docs/ko/troubleshooting): 일반적인 문제에 대한 솔루션

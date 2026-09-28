@@ -104,7 +104,7 @@ Si vous disposez d'identifiants Google Cloud et souhaitez commencer à utiliser 
   </Step>
 
   <Step title="Démarrer Claude Code et choisir Agent Platform de Google Cloud">
-    Exécutez `claude`. À l'invite de connexion, sélectionnez **plateforme tierce**, puis **Google Vertex AI**, l'étiquette que l'invite de connexion utilise toujours pour Agent Platform de Google Cloud.
+    Exécutez `claude`. À l'invite de connexion, sélectionnez **plateforme tierce**, puis **Google Vertex AI**, l'étiquette que l'invite de connexion utilise toujours pour Agent Platform de Google Cloud. Si vous êtes déjà connecté, exécutez `/login` pour ouvrir le même menu.
   </Step>
 
   <Step title="Suivre les invites de l'assistant">
@@ -134,7 +134,7 @@ Pour configurer Google Cloud's Agent Platform via des variables d'environnement 
   1. Activer l'API Agent Platform
 </h3>
 
-Activez l'API Agent Platform de Google Cloud dans votre projet GCP :
+Activez l'API Agent Platform de Google Cloud dans votre projet GCP. Remplacez `YOUR-PROJECT-ID` par votre ID de projet GCP ici et à l'étape de configuration ci-dessous :
 
 ```bash theme={null}
 # Définissez votre ID de projet
@@ -151,7 +151,7 @@ gcloud services enable aiplatform.googleapis.com
 Demandez l'accès aux modèles Claude dans Google Cloud's Agent Platform :
 
 1. Accédez au [Google Cloud's Agent Platform Model Garden](https://console.cloud.google.com/vertex-ai/model-garden)
-2. Recherchez les modèles ' Claude '
+2. Recherchez les modèles « Claude »
 3. Demandez l'accès aux modèles Claude souhaités (par exemple, Claude Sonnet 4.6)
 4. Attendez l'approbation (peut prendre 24 à 48 heures)
 
@@ -163,17 +163,17 @@ Claude Code utilise l'authentification Google Cloud standard.
 
 Pour plus d'informations, consultez la [documentation d'authentification Google Cloud](https://cloud.google.com/docs/authentication).
 
-Claude Code v2.1.121 ou version ultérieure prend en charge la [Fédération d'identité de charge de travail basée sur certificat X.509](https://cloud.google.com/iam/docs/workload-identity-federation-with-x509-certificates) via la même chaîne Application Default Credentials. Définissez `GOOGLE_APPLICATION_CREDENTIALS` sur le chemin de votre fichier de configuration des identifiants.
+Claude Code prend en charge la [Fédération d'identité de charge de travail basée sur certificat X.509](https://cloud.google.com/iam/docs/workload-identity-federation-with-x509-certificates) via la même chaîne Application Default Credentials. Définissez `GOOGLE_APPLICATION_CREDENTIALS` sur le chemin de votre fichier de configuration des identifiants.
 
 <Note>
-  Claude Code utilise `ANTHROPIC_VERTEX_PROJECT_ID` comme ID de projet pour les demandes Google Cloud's Agent Platform. Les variables d'environnement `GCLOUD_PROJECT` et `GOOGLE_CLOUD_PROJECT` et le fichier d'identifiants référencé par `GOOGLE_APPLICATION_CREDENTIALS` ont la priorité sur celui-ci. Si aucun de ces éléments n'est défini, l'ID de projet est résolu à partir de votre configuration `gcloud` ou du compte de service attaché.
+  Claude Code adresse les demandes Google Cloud's Agent Platform au projet dans `ANTHROPIC_VERTEX_PROJECT_ID`, même lorsque `GCLOUD_PROJECT`, `GOOGLE_CLOUD_PROJECT`, ou le fichier d'identifiants référencé par `GOOGLE_APPLICATION_CREDENTIALS` porte un projet différent.
 </Note>
 
 <h4 id="advanced-credential-configuration">
   Configuration avancée des identifiants
 </h4>
 
-Claude Code prend en charge l'actualisation automatique des identifiants GCP via le paramètre `gcpAuthRefresh`. Lorsque Claude Code détecte que vos identifiants GCP ont expiré ou ne peuvent pas être chargés, il exécute la commande configurée pour obtenir de nouveaux identifiants avant de réessayer la demande.
+Claude Code prend en charge l'actualisation automatique des identifiants GCP via le paramètre `gcpAuthRefresh`. Ajoutez-le à votre fichier de [paramètres](/docs/fr/settings) Claude Code, par exemple `~/.claude/settings.json`. Lorsque Claude Code détecte que vos identifiants GCP ont expiré ou ne peuvent pas être chargés, il exécute la commande configurée pour obtenir de nouveaux identifiants avant de réessayer la demande.
 
 ```json theme={null}
 {
@@ -184,7 +184,11 @@ Claude Code prend en charge l'actualisation automatique des identifiants GCP via
 }
 ```
 
-La sortie de la commande s'affiche à l'utilisateur, mais l'entrée interactive n'est pas prise en charge. Cela fonctionne bien pour les flux d'authentification basés sur navigateur où l'interface de ligne de commande affiche une URL et vous complétez l'authentification dans le navigateur. La commande d'actualisation expire après trois minutes si l'authentification ne se termine pas. Si vous définissez `gcpAuthRefresh` dans les paramètres du projet tels que `.claude/settings.json`, la commande s'exécute uniquement après que vous ayez accepté l'invite de confiance de l'espace de travail.
+Avant d'exécuter la commande, Claude Code demande un jeton d'accès avec vos identifiants actuels pour confirmer qu'ils sont réellement expirés, et ignore la commande lorsqu'ils fonctionnent toujours.
+
+Si la vérification ne se termine pas dans les cinq secondes, Claude Code ignore également la commande et l'exécute uniquement après l'échec d'une demande avec une erreur d'identifiants. Avant v2.1.261, une vérification qui a expiré était comptée comme un identifiant expiré, donc la commande pouvait ouvrir votre navigateur au démarrage même si vos identifiants étaient toujours valides.
+
+Claude Code vous affiche la sortie de la commande, mais ne peut pas envoyer d'entrée interactive à la commande. Cela fonctionne bien pour les flux d'authentification basés sur navigateur où l'interface de ligne de commande affiche une URL et vous complétez l'authentification dans le navigateur. La commande d'actualisation expire après trois minutes si l'authentification ne se termine pas. Si vous définissez `gcpAuthRefresh` dans les paramètres du projet tels que `.claude/settings.json`, Claude Code l'exécute selon la même [règle de confiance de l'espace de travail que les hooks dans les fichiers de paramètres](/docs/fr/permissions#what-runs-before-you-trust-a-folder), qui inclut les sessions `-p` dans les dossiers que vous n'avez jamais approuvés.
 
 <h3 id="4-configure-claude-code">
   4. Configurer Claude Code
@@ -201,12 +205,6 @@ export ANTHROPIC_VERTEX_PROJECT_ID=YOUR-PROJECT-ID
 # Optionnel : Remplacez l'URL du point de terminaison Agent Platform pour les points de terminaison personnalisés ou les passerelles
 # export ANTHROPIC_VERTEX_BASE_URL=https://aiplatform.googleapis.com
 
-# Optionnel : Désactivez la mise en cache des invites si nécessaire
-export DISABLE_PROMPT_CACHING=1
-
-# Optionnel : Demandez une TTL de cache d'invites d'1 heure au lieu de la valeur par défaut de 5 minutes
-export ENABLE_PROMPT_CACHING_1H=1
-
 # Quand CLOUD_ML_REGION=global, remplacez la région pour les modèles qui ne prennent pas en charge les points de terminaison globaux
 export VERTEX_REGION_CLAUDE_HAIKU_4_5=us-east5
 export VERTEX_REGION_CLAUDE_4_6_SONNET=europe-west1
@@ -214,9 +212,21 @@ export VERTEX_REGION_CLAUDE_4_6_SONNET=europe-west1
 
 La plupart des versions de modèle ont une variable `VERTEX_REGION_CLAUDE_*` correspondante. Consultez la [référence des variables d'environnement](/docs/fr/env-vars) pour la liste complète. Vérifiez [Google Cloud's Agent Platform Model Garden](https://console.cloud.google.com/vertex-ai/model-garden) pour déterminer quels modèles prennent en charge les points de terminaison globaux par rapport aux points de terminaison régionaux uniquement.
 
-[La mise en cache des invites](/docs/fr/prompt-caching) est activée automatiquement. Pour la désactiver, définissez `DISABLE_PROMPT_CACHING=1`. Pour demander une TTL de cache d'1 heure au lieu de la valeur par défaut de 5 minutes, définissez `ENABLE_PROMPT_CACHING_1H=1` ; les écritures de cache avec une TTL d'1 heure sont facturées à un taux plus élevé. Pour des limites de débit accrues, contactez le support Google Cloud. Lors de l'utilisation de Google Cloud's Agent Platform, la commande `/logout` est indisponible car l'authentification est gérée via les identifiants Google Cloud.
+Si une valeur de région ne ressemble pas à un nom de région ou d'emplacement, Claude Code la traite comme non définie. Par exemple, Claude Code traite une valeur contenant une barre oblique, un point ou un espace comme non définie. Claude Code revient à une source différente pour chaque variable :
 
-Claude Code désactive la [recherche d'outils MCP](/docs/fr/mcp#scale-with-mcp-tool-search) par défaut sur Google Cloud's Agent Platform, de sorte que les définitions d'outils MCP se chargent à l'avance. Google Cloud's Agent Platform prend en charge la recherche d'outils pour Claude Sonnet 4.5 et versions ultérieures et Claude Opus 4.5 et versions ultérieures. Définissez `ENABLE_TOOL_SEARCH=true` pour l'activer sur ces modèles. Les modèles antérieurs sur Google Cloud's Agent Platform n'acceptent pas l'en-tête bêta requis, et les demandes échouent si vous activez la recherche d'outils avec eux.
+* `VERTEX_REGION_CLAUDE_*` : Claude Code revient à `CLOUD_ML_REGION`.
+* `CLOUD_ML_REGION` : Claude Code revient à `us-east5`.
+
+[La mise en cache des invites](/docs/fr/prompt-caching) est activée automatiquement. Pour la désactiver, définissez `DISABLE_PROMPT_CACHING=1`. Pour demander une TTL de cache d'1 heure au lieu de la valeur par défaut de 5 minutes, définissez `ENABLE_PROMPT_CACHING_1H=1` ; les écritures de cache avec une TTL d'1 heure sont facturées à un taux plus élevé. Pour définir différentes TTL pour votre conversation principale et pour les demandes que Claude Code effectue en dehors de celle-ci, [choisissez vous-même la TTL](/docs/fr/prompt-caching#choose-the-ttl-yourself).
+
+Pour augmenter vos limites de débit, contactez le support Google Cloud. Lors de l'utilisation de Google Cloud's Agent Platform, la commande `/logout` est indisponible car l'authentification est gérée via les identifiants Google Cloud.
+
+Claude Code décide entre la [recherche d'outils MCP](/docs/fr/mcp#scale-with-mcp-tool-search) et le chargement à l'avance par génération de modèle :
+
+* **Claude Opus 4.5, Sonnet 4.5, Haiku 4.5 et versions ultérieures** : Claude Code active la recherche d'outils par défaut.
+* **Modèles antérieurs, y compris tous les modèles Claude 3.x** : Claude Code charge les définitions d'outils MCP à l'avance, car leurs piles de service Agent Platform rejettent l'en-tête bêta requis. Définir `ENABLE_TOOL_SEARCH=true` ne remplace pas cela.
+
+Définissez `ENABLE_TOOL_SEARCH=false` pour désactiver la recherche d'outils sur tous les modèles. Avant v2.1.221, Claude Code désactivait la recherche d'outils pour tous les modèles sur Google Cloud's Agent Platform sauf si vous définissiez `ENABLE_TOOL_SEARCH=true`.
 
 <h3 id="5-pin-model-versions">
   5. Épingler les versions de modèle
@@ -228,7 +238,7 @@ Claude Code désactive la [recherche d'outils MCP](/docs/fr/mcp#scale-with-mcp-t
 
 Définissez ces variables d'environnement sur des ID de modèle Google Cloud's Agent Platform spécifiques.
 
-Sans `ANTHROPIC_DEFAULT_OPUS_MODEL`, l'alias `opus` sur Google Cloud's Agent Platform se résout à Opus 4.8, et sans `ANTHROPIC_DEFAULT_SONNET_MODEL`, l'alias `sonnet` se résout à Sonnet 4.5. Cet exemple épingle chaque alias à une version spécifique :
+Sans `ANTHROPIC_DEFAULT_OPUS_MODEL`, l'alias `opus` sur Google Cloud's Agent Platform se résout à Opus 5.5, et sans `ANTHROPIC_DEFAULT_SONNET_MODEL`, l'alias `sonnet` se résout à Sonnet 4.5. Cet exemple épingle chaque alias à une version spécifique :
 
 ```bash theme={null}
 export ANTHROPIC_DEFAULT_OPUS_MODEL='claude-opus-4-8'
@@ -242,19 +252,19 @@ Claude Code utilise ces modèles par défaut lorsqu'aucune variable d'épinglage
 
 | Type de modèle      | Valeur par défaut            |
 | :------------------ | :--------------------------- |
-| Modèle principal    | `claude-opus-4-8`            |
+| Modèle principal    | `claude-opus-5-5`            |
 | Modèle petit/rapide | `claude-sonnet-4-5@20250929` |
 
 Les tâches en arrière-plan telles que la génération de titre de session utilisent le modèle petit/rapide, normalement un modèle de classe Haiku. Sur Google Cloud's Agent Platform, Claude Code utilise le modèle Sonnet par défaut pour les tâches en arrière-plan car Haiku peut ne pas être activé dans tous les projets ou régions. Deux sélections changent le modèle qui les exécute :
 
-* Lorsque vous sélectionnez un modèle principal avec `--model`, `ANTHROPIC_MODEL`, ou le paramètre `model`, les tâches en arrière-plan utilisent ce modèle. Définir `ANTHROPIC_DEFAULT_OPUS_MODEL` sans `ANTHROPIC_DEFAULT_SONNET_MODEL` compte également comme une sélection, car le modèle Sonnet intégré peut ne pas être activé dans un projet qui oriente son propre Opus.
+* Lorsque vous sélectionnez un modèle principal avec `--model`, `ANTHROPIC_MODEL`, ou le paramètre `model`, les tâches en arrière-plan utilisent ce modèle. Lorsque Claude Code démarre la session sur le modèle que vous définissez avec [`ANTHROPIC_DEFAULT_MODEL`](/docs/fr/model-config#set-a-default-model-for-new-sessions), les tâches en arrière-plan utilisent ce modèle aussi. Définir `ANTHROPIC_DEFAULT_OPUS_MODEL` sans `ANTHROPIC_DEFAULT_SONNET_MODEL` compte également comme une sélection, car le modèle Sonnet intégré peut ne pas être activé dans un projet qui oriente son propre Opus.
 * Pour utiliser Haiku pour les tâches en arrière-plan, définissez `ANTHROPIC_DEFAULT_HAIKU_MODEL` sur un ID de modèle disponible dans votre projet.
 
 <Warning>
   Les modèles Opus ont un prix par jeton plus élevé que les modèles Sonnet, donc un déploiement qui n'épingle pas un modèle principal est facturé au taux Opus une fois qu'il se met à jour vers v2.1.207 ou ultérieur. Pour conserver Sonnet 4.5 comme modèle principal, définissez `ANTHROPIC_MODEL` sur son ID de modèle complet. Un déploiement qui oriente la valeur par défaut avec `ANTHROPIC_DEFAULT_SONNET_MODEL` et ne définit pas `ANTHROPIC_DEFAULT_OPUS_MODEL` conserve son modèle Sonnet orienté comme valeur par défaut.
 </Warning>
 
-Avant v2.1.207, le modèle principal sur Google Cloud's Agent Platform était par défaut Sonnet 4.5, l'alias `opus` se résolvait à Opus 4.6, et les tâches en arrière-plan utilisaient toujours le modèle principal.
+Avant v2.1.280, le modèle principal sur Google Cloud's Agent Platform était par défaut Opus 5 et l'alias `opus` se résolvait à Opus 5 à partir de v2.1.219. Sur v2.1.207 à v2.1.218, le modèle principal sur Google Cloud's Agent Platform était par défaut Opus 4.8 et l'alias `opus` se résolvait à Opus 4.8. Avant v2.1.207, le modèle principal était par défaut Sonnet 4.5, l'alias `opus` se résolvait à Opus 4.6, et les tâches en arrière-plan utilisaient toujours le modèle principal.
 
 Pour personnaliser davantage les modèles :
 
@@ -262,6 +272,12 @@ Pour personnaliser davantage les modèles :
 export ANTHROPIC_MODEL='claude-opus-4-8'
 export ANTHROPIC_DEFAULT_HAIKU_MODEL='claude-haiku-4-5@20251001'
 ```
+
+<h3 id="6-verify-your-configuration">
+  6. Vérifier votre configuration
+</h3>
+
+Démarrez Claude Code et exécutez `/status` pour confirmer la configuration. La ligne `API provider` affiche `Google Vertex AI`, et les lignes `GCP project`, `Default region` et `Model` affichent votre ID de projet, votre région et votre modèle résolu. Si la ligne du fournisseur est manquante, les variables d'environnement n'atteignent pas le processus. Confirmez qu'elles sont exportées dans le shell où vous avez lancé `claude`, ou définissez-les dans le bloc `env` de votre [fichier de paramètres](/docs/fr/settings).
 
 <h2 id="startup-model-checks">
   Vérifications du modèle au démarrage
@@ -273,13 +289,15 @@ Si vous avez épinglé une version de modèle plus ancienne que la valeur par d�
 
 Si vous n'avez pas épinglé un modèle et que la valeur par défaut actuelle n'est pas disponible dans votre projet, Claude Code revient à la version précédente pour la session actuelle et affiche un avis. Il essaie d'abord les versions antérieures du modèle par défaut et, lorsque la valeur par défaut est un modèle Opus et qu'aucune version Opus n'est disponible, revient au modèle Sonnet par défaut. Le retour n'est pas persistant. Activez le modèle plus récent dans [Model Garden](https://console.cloud.google.com/vertex-ai/model-garden) ou [épinglez une version](#5-pin-model-versions) pour rendre le choix permanent.
 
+Lorsque vous démarrez la session sur une version spécifique de Sonnet ou Opus, par exemple avec `--model`, `ANTHROPIC_MODEL`, ou le [paramètre `model`](/docs/fr/settings-reference#model), cette version agit comme la valeur par défaut épinglée de la session pour l'alias `sonnet` ou `opus` correspondant. Claude Code ignore la vérification de disponibilité pour la valeur par défaut intégrée que votre modèle remplace et démarre sur le modèle que vous avez configuré, sans avis de retour.
+
+Les alias de modèle tels que `opus` n'agissent pas comme des épingles, et il en va de même pour un ID de modèle que Claude Code ne reconnaît pas.
+
 <h2 id="iam-configuration">
   Configuration IAM
 </h2>
 
-Attribuez les autorisations IAM requises :
-
-Le rôle `roles/aiplatform.user` inclut les autorisations requises :
+Attribuez le rôle `roles/aiplatform.user`, qui inclut les autorisations requises :
 
 * `aiplatform.endpoints.predict` - Requis pour l'invocation de modèle et le comptage des jetons
 

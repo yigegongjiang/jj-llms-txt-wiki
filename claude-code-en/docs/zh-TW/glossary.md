@@ -6,17 +6,25 @@
 
 > Claude Code 術語定義。了解 agentic loop、compaction、CLAUDE.md、hooks、subagents、MCP 和其他核心概念的含義。
 
-本詞彙表定義 Claude Code 術語。每個條目都連結到深入涵蓋該概念的頁面。對於 tokens、temperature 和 RAG 等模型級概念，請參閱[平台詞彙表](https://platform.claude.com/docs/zh-TW/about-claude/glossary)。
+本詞彙表定義 Claude Code 術語。每個條目都連結到深入涵蓋該概念的頁面。對於 tokens、temperature 和 RAG 等模型級概念，請參閱[平台詞彙表](https://platform.claude.com/docs/zh-TW/about-claude/glossary)。對於 Claude Desktop 術語（例如 desktop extension、MCPB 和 DXT），請參閱 [Claude 說明中心](https://support.claude.com/)。
 
 <h2 id="a">
   A
 </h2>
 
+<h3 id="agents-md">
+  AGENTS.md
+</h3>
+
+您為 AI 編碼代理編寫的專案指示的 markdown 檔案。如果您的儲存庫有一個且沒有 [CLAUDE.md](#claude-md)，Claude 會將其讀取為您的專案指示，無需您新增第二個檔案。您可以在 `/config` 中變更**專案指示**設定，讓 Claude 同時讀取兩個檔案或僅讀取 `CLAUDE.md`。直接讀取 `AGENTS.md` 需要 Claude Code v2.1.277 或更新版本。在某些會話中 Claude [無法讀取 `AGENTS.md`](/docs/zh-TW/memory#when-agents-md-support-is-unavailable)，因此請改為 [從 `CLAUDE.md` 匯入它](/docs/zh-TW/memory#share-one-file-with-other-coding-tools)。
+
+了解更多：[AGENTS.md](/docs/zh-TW/memory#agents-md)
+
 <h3 id="agent-teams">
   Agent teams
 </h3>
 
-由團隊主導協調的多個獨立 Claude Code 會話，具有共享的任務列表和點對點訊息傳遞。與在單個會話內運行且僅向父級報告的 [subagents](#subagent) 不同，隊友各自擁有自己的上下文視窗，您可以直接與任何隊友互動。Agent teams 是實驗性的，必須通過設定 `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` 來啟用。
+由團隊主導協調的多個獨立 Claude Code 會話，具有共享的任務列表和點對點訊息傳遞。與在單個會話內運行且僅向父級報告的 [subagents](#subagent) 不同，隊友各自擁有自己的上下文視窗，您可以直接與任何隊友互動。Agent teams 是實驗性的，預設為停用；請參閱 [Enable agent teams](/docs/zh-TW/agent-teams#enable-agent-teams)。
 
 了解更多：[Run agent teams](/docs/zh-TW/agent-teams)
 
@@ -64,7 +72,7 @@ Claude 根據您的更正和偏好為自己編寫的筆記，按 git 儲存庫�
   Auto mode
 </h3>
 
-一種 [permission mode](#permission-mode)，其中單獨的分類器模型在後台審查動作，因此大多數動作無需批准提示即可執行；明確的 ask 規則仍會提示。分類器會阻止範圍升級、不受信任的基礎設施和 [prompt injection](#prompt-injection)。它永遠看不到工具結果，因此注入的指令無法影響其決定。
+一種 [permission mode](#permission-mode)，其中單獨的分類器模型審查動作而不是您，因此 Claude Code 可以在不詢問您的情況下執行大多數動作。Claude Code 仍會在您的明確 ask 規則相符的動作之前詢問您。在 Pro、Max 和 Team 方案上，auto mode 是互動式終端和 VS Code 會話的 [built-in starting permission mode](/docs/zh-TW/permission-modes#which-mode-a-session-starts-in)。分類器會阻止範圍升級、不受信任的基礎設施和 [prompt injection](#prompt-injection)。工具結果會從它看到的內容中移除，因此檔案或網頁中的惡意內容無法直接操縱它。
 
 了解更多：[Eliminate prompts with auto mode](/docs/zh-TW/permission-modes#eliminate-prompts-with-auto-mode)
 
@@ -76,7 +84,7 @@ Claude 根據您的更正和偏好為自己編寫的筆記，按 git 儲存庫�
   Bare mode
 </h3>
 
-一個啟動標誌 `--bare`，它跳過 hooks、skills、plugins、MCP servers、auto memory 和 CLAUDE.md 的自動發現。只有您明確傳遞的標誌才會生效。建議用於 CI 和指令碼呼叫，其中您需要在不同機器上的相同行為，無論本地配置如何。
+使用 `--bare`，Claude Code 啟動時不會載入 hooks、skills、自訂命令、subagents、installed plugins、MCP servers、auto memory 或 CLAUDE.md，除了您使用 `--add-dir` 傳遞的目錄中的 skills。建議用於 CI 和指令碼呼叫，其中您需要在每台機器上獲得相同的結果。
 
 了解更多：[使用 bare mode 更快啟動](/docs/zh-TW/headless#start-faster-with-bare-mode)
 
@@ -96,59 +104,77 @@ Claude Code 附帶的基於提示的劇本，例如 `/batch`、`/code-review`、
   Channel
 </h3>
 
-一個 [MCP server](#mcp-model-context-protocol)，它將事件推送到您正在運行的會話中，以便 Claude 可以對您離開終端時發生的事情做出反應。Channels 可以是雙向的：Claude 讀取入站事件並通過同一 channel 回覆。Telegram、Discord 和 iMessage 包含在研究預覽中。
+一個[MCP 伺服器](#mcp-model-context-protocol)，可將事件推送到您執行中的工作階段，讓 Claude 能夠對您離開終端時發生的事情做出反應。Channel 可以是雙向的：Claude 讀取入站事件並透過同一 Channel 回覆。Telegram、Discord 和 iMessage 已包含在研究預覽中。
 
-了解更多：[Channels](/docs/zh-TW/channels)
+深入瞭解：[Channels](/docs/zh-TW/channels)
 
 <h3 id="checkpoint">
   Checkpoint
 </h3>
 
-在每個您發送的提示處建立的還原點。Claude Code 在每次編輯之前對檔案進行快照，以便 checkpoint 可以還原它們。按 `Esc` 兩次或執行 `/rewind` 以將程式碼、對話或兩者還原到較早的時間點，或從選定的訊息摘要對話的一部分。Checkpoints 是會話本地的，與 git 分開，不追蹤通過 Bash 工具進行的更改。
+在您傳送開始一個回合的每個提示時建立的還原點。Claude Code 在每次編輯前都會快照檔案，以便 checkpoint 可以還原它們。按 `Esc` 兩次或執行 `/rewind` 以將程式碼、對話或兩者還原到較早的時間點，或從選定的訊息摘要對話的一部分。Checkpoint 會與對話一起儲存，因此已恢復的工作階段仍然可以 `/rewind` 回到它們。它們與 git 分開，不追蹤透過 Bash 工具所做的變更。
 
-了解更多：[Checkpointing](/docs/zh-TW/checkpointing)
+深入瞭解：[Checkpointing](/docs/zh-TW/checkpointing)
 
 <h3 id="claude-directory">
-  `.claude` directory
+  `.claude` 目錄
 </h3>
 
-Claude Code 讀取專案範圍配置的目錄：設定、hooks、skills、subagents、rules 和 auto memory。專案在其根目錄有 `.claude/`；您的使用者級預設值在 `~/.claude/`。
+Claude Code 讀取專案範圍設定的目錄：設定、hooks、skills、subagents、rules 和自動記憶。專案在其根目錄有 `.claude/`；您的使用者層級預設值在 `~/.claude/`。
 
-了解更多：[The `.claude` directory](/docs/zh-TW/claude-directory)
+深入瞭解：[The `.claude` directory](/docs/zh-TW/claude-directory)
 
 <h3 id="claude-md">
   CLAUDE.md
 </h3>
 
-您為 Claude 編寫的持久指令的 markdown 檔案，在每個會話開始時作為系統提示後的使用者訊息載入。將專案約定、架構筆記和「始終執行 X」規則放在這裡。專案根目錄 CLAUDE.md 在 [compaction](#compaction) 期間倖存，之後會從磁碟重新讀取。
+您為 Claude 撰寫的持久指示的 markdown 檔案，在每個工作階段開始時作為系統提示之後的使用者訊息載入。將專案慣例、架構筆記和「始終執行 X」規則放在此處。專案根目錄 CLAUDE.md 在[壓縮](#compaction)後保留，並在之後從磁碟重新讀取。
 
-您可以在專案範圍內的 `./CLAUDE.md` 或 `./.claude/CLAUDE.md`、使用者範圍內的 `~/.claude/CLAUDE.md` 或作為組織的 [managed policy](#managed-settings) 放置 CLAUDE.md。所有發現的檔案都會連接到上下文中，而不是相互覆蓋，順序從最廣泛的範圍到最具體的範圍。
+您可以在專案範圍的 `./CLAUDE.md` 或 `./.claude/CLAUDE.md`、使用者範圍的 `~/.claude/CLAUDE.md` 或作為組織的[受管原則](#managed-settings)放置 CLAUDE.md。所有發現的檔案都會連接到內容中，而不是相互覆蓋，順序從最廣泛的範圍到最具體的範圍。Claude Code 也可以載入專案的 [AGENTS.md](#agents-md) 檔案，單獨或與 CLAUDE.md 一起。
 
-了解更多：[CLAUDE.md files](/docs/zh-TW/memory#claude-md-files)
+深入瞭解：[CLAUDE.md files](/docs/zh-TW/memory#claude-md-files)
+
+<h3 id="cloud-session">
+  Cloud session
+</h3>
+
+一個 Claude Code 工作階段，在您關閉筆記型電腦後仍繼續執行，因為它在雲端基礎設施上執行而不是在您的機器上：預設由 Anthropic 管理，或由您的組織運作的[自託管環境](/docs/zh-TW/self-hosted-environments)。您可以從 claude.ai/code、Claude 行動應用程式、選擇了**雲端**的 Desktop 應用程式、`claude --cloud` 或[例行工作](/docs/zh-TW/routines)啟動一個。在您的終端、IDE 或選擇了**本機**的 Desktop 應用程式中的工作階段是本機工作階段；若要從另一個裝置連接到本機工作階段，請使用[遠端控制](#remote-control)。
+
+深入瞭解：[Use Claude Code in the cloud](/docs/zh-TW/claude-code-on-the-web)
 
 <h3 id="command">
   Command
 </h3>
 
-一個可重複使用的指令，您可以通過在提示中輸入 `/name` 來調用。內建命令（如 `/clear`、`/model` 和 `/compact`）控制會話。您可以在 `.claude/commands/` 中將自己的命令定義為檔案，或從 [plugin](#plugin) 安裝它們。[Skills](#skill) 是打包多步驟命令的推薦方式。
+您透過在提示中輸入 `/name` 來叫用的可重複使用指示。內建命令（例如 `/clear`、`/model` 和 `/compact`）控制工作階段。您可以在 `.claude/commands/` 中將自己的命令定義為檔案，或從[外掛程式](#plugin)安裝它們。[Skills](#skill) 是封裝多步驟命令的建議方式。
 
-了解更多：[Commands](/docs/zh-TW/commands) · [Skills](/docs/zh-TW/skills)
+該詞的另外兩個用途不相關：`claude` CLI 子命令（例如 `claude mcp add`），列在 [CLI 參考](/docs/zh-TW/cli-reference#cli-commands) 中，以及 stdio [MCP 伺服器](#mcp-server)項目的 `command` 欄位，它指定 Claude Code 啟動伺服器時啟動的可執行檔。
+
+深入瞭解：[Commands](/docs/zh-TW/commands) · [Skills](/docs/zh-TW/skills)
 
 <h3 id="compaction">
   Compaction
 </h3>
 
-當 [context window](#context-window) 接近其限制時，自動摘要您的對話。首先清除較舊的工具輸出，然後摘要對話。專案根目錄 CLAUDE.md 和 auto memory 在 compaction 期間倖存並從磁碟重新載入；僅在對話中給出的指令可能會丟失。執行 `/compact` 手動觸發，可選擇使用焦點，如 `/compact focus on the API changes`。
+當[內容視窗](#context-window)接近其限制時，自動摘要您的對話。較舊的工具輸出會先清除，然後對話會被摘要。專案根目錄 CLAUDE.md 和自動記憶在壓縮後保留並從磁碟重新載入；僅在對話中給出的指示可能會遺失。執行 `/compact` 以手動觸發，可選擇使用焦點，例如 `/compact focus on the API changes`。
 
-了解更多：[What survives compaction](/docs/zh-TW/context-window#what-survives-compaction) · [When context fills up](/docs/zh-TW/how-claude-code-works#when-context-fills-up)
+深入瞭解：[What survives compaction](/docs/zh-TW/context-window#what-survives-compaction) · [When context fills up](/docs/zh-TW/how-claude-code-works#when-context-fills-up)
+
+<h3 id="connector">
+  Connector
+</h3>
+
+添加到您的 claude.ai 帳戶而不是在 Claude Code 中設定的 [MCP 伺服器](#mcp-server)。當您使用該帳戶登入 Claude Code 時，您的連接器會在 `/mcp` 中與您在本地添加的伺服器一起出現。組織也可以佈建連接器並對其設定每個工具的控制。
+
+深入瞭解：[Use MCP servers from claude.ai](/docs/zh-TW/mcp#use-mcp-servers-from-claude-ai)
 
 <h3 id="context-window">
   Context window
 </h3>
 
-會話的工作記憶，保存對話歷史、檔案內容、命令輸出、CLAUDE.md、auto memory、載入的 skills 和系統指令。當您工作時，上下文會填滿直到 [compaction](#compaction) 摘要它。執行 `/context` 查看什麼在使用空間。對於基礎模型概念，請參閱[平台詞彙表](https://platform.claude.com/docs/zh-TW/about-claude/glossary#context-window)。
+工作階段的工作記憶，保存對話歷史、檔案內容、命令輸出、CLAUDE.md、自動記憶、已載入的 skills 和系統指示。當您工作時，內容會填滿，直到[壓縮](#compaction)摘要它。執行 `/context` 以查看佔用空間的內容。如需基礎模型概念，請參閱[平台詞彙表](https://platform.claude.com/docs/en/about-claude/glossary#context-window)。
 
-了解更多：[Explore the context window](/docs/zh-TW/context-window)
+深入瞭解：[Explore the context window](/docs/zh-TW/context-window)
 
 <h2 id="d">
   D
@@ -170,7 +196,7 @@ Claude Code 讀取專案範圍配置的目錄：設定、hooks、skills、subage
   Effort level
 </h3>
 
-一個設定，控制 Claude 在每個回合上使用多少自適應推理思考預算。更高的努力意味著更多的思考 tokens 和更深入的推理；更低的努力更快且更便宜。Effort 在 Fable 5、Opus 4.6 及更新版本和 Sonnet 4.6 及更新版本上受支援。
+一個設定，控制自適應推理，讓模型決定是否以及在每個步驟上進行多少思考。更高的努力意味著更多的思考 tokens 和更深入的推理；更低的努力更快且更便宜。Effort 在 Fable 模型、Opus 4.6 及更新版本和 Sonnet 4.6 及更新版本上受支援。
 
 了解更多：[Adjust effort level](/docs/zh-TW/model-config#adjust-effort-level)
 
@@ -181,6 +207,18 @@ Claude Code 讀取專案範圍配置的目錄：設定、hooks、skills、subage
 模型在回應前執行的可見逐步推理。您可以使用 [effort level](#effort-level) 調整它，或在具有固定思考預算的模型上使用 `MAX_THINKING_TOKENS` 限制思考 tokens。思考在終端中以灰色斜體文字顯示。
 
 了解更多：[Use extended thinking](/docs/zh-TW/model-config#extended-thinking)
+
+<h2 id="f">
+  F
+</h2>
+
+<h3 id="frontmatter">
+  Frontmatter
+</h3>
+
+位於 Markdown 檔案最頂端的 YAML 設定區塊，介於開頭的 `---` 行和結尾的 `---` 行之間。Skills、subagents、output styles 和 rules 各自從 frontmatter 讀取其設定，例如 skill 的 `description` 或 subagent 的 `tools`，並將結尾 `---` 之後的所有內容視為指示。開頭的 `---` 必須是檔案的第一行。每種檔案類型都接受其自己的一組欄位。
+
+深入瞭解：[Skill frontmatter](/docs/zh-TW/skills#frontmatter-reference)、[Subagent frontmatter](/docs/zh-TW/sub-agents#supported-frontmatter-fields)、[Output style frontmatter](/docs/zh-TW/output-styles#frontmatter)、[Rule frontmatter](/docs/zh-TW/memory#rules-frontmatter-reference)
 
 <h2 id="h">
   H
@@ -210,7 +248,7 @@ Hook 配置有三個級別：
 
 由 IT 或 DevOps 在組織範圍內強制執行的設定，透過管理員主控台從 Anthropic 的伺服器傳遞，或部署到 `~/.claude` 外的 OS 級路徑上的裝置。使用者和專案設定無法覆蓋受管設定。伺服器管理的傳遞適用於[符合條件的配置](/docs/zh-TW/server-managed-settings#platform-availability)；請參閱[安全考量](/docs/zh-TW/server-managed-settings#security-considerations)。使用此功能可實現安全策略、合規要求或整個機隊的標準化工具。
 
-了解更多：[Server-managed settings](/docs/zh-TW/server-managed-settings) · [Settings files](/docs/zh-TW/settings#settings-files)
+了解更多：[Server-managed settings](/docs/zh-TW/server-managed-settings) · [Settings files](/docs/zh-TW/settings#where-settings-live)
 
 <h3 id="mcp-model-context-protocol">
   MCP (Model Context Protocol)
@@ -220,11 +258,19 @@ Hook 配置有三個級別：
 
 了解更多：[Model Context Protocol](/docs/zh-TW/mcp)
 
+<h3 id="mcp-server">
+  MCP server
+</h3>
+
+一個程式，透過 [MCP](#mcp-model-context-protocol) 為 Claude 提供工具、提示或資源。您可以使用 `claude mcp add` 添加 servers、在 `.mcp.json` 中添加、透過[外掛程式](#plugin)或作為 claude.ai [連接器](#connector)。本地 stdio server 作為一個程序運行，Claude Code 從其設定的 `command` 和 `args` 欄位啟動，這與您在提示符處輸入的[命令](#command)無關。
+
+了解更多：[Model Context Protocol](/docs/zh-TW/mcp)
+
 <h3 id="mcp-tool-search">
   MCP Tool Search
 </h3>
 
-一個上下文節省機制，它延遲 MCP 工具架構直到需要時。只有工具名稱在啟動時載入；Claude 在決定使用特定工具時按需獲取完整架構。這可以防止閒置的 MCP servers 消耗太多上下文。
+一個上下文節省機制，它延遲 MCP 工具架構直到需要時。只有工具名稱和伺服器指示在啟動時載入；Claude 在決定使用特定工具時按需擷取完整架構。這可以防止閒置的 MCP servers 消耗太多上下文。
 
 了解更多：[Scale with MCP Tool Search](/docs/zh-TW/mcp#scale-with-mcp-tool-search)
 
@@ -248,7 +294,7 @@ Hook 配置有三個級別：
   Output style
 </h3>
 
-一個配置，修改 Claude 的系統提示以改變回應行為、語氣或格式。Output styles 關閉預設系統提示的軟體工程特定部分，與 [CLAUDE.md](#claude-md) 不同，後者作為系統提示後的使用者訊息傳遞。內建樣式包括 Default、Proactive、Explanatory 和 Learning。
+一個設定，改變 Claude Code 提供給 Claude 的指示，以設定回應行為、語氣或格式。與 [CLAUDE.md](#claude-md) 不同，後者在 Claude Code 的預設指示旁邊新增專案內容，自訂輸出樣式可以取代預設軟體工程指示。
 
 了解更多：[Output styles](/docs/zh-TW/output-styles)
 
@@ -286,15 +332,15 @@ Hook 配置有三個級別：
   Plugin
 </h3>
 
-一個 skills、hooks、subagents 和 MCP servers 的捆綁包，打包為單個可安裝單元。Plugin skills 命名為 `plugin-name:skill-name`，以便多個 plugins 共存。通過 [marketplace](/docs/zh-TW/plugin-marketplaces) 在團隊間分發 plugins。
+一個 skills、hooks、subagents 和 MCP servers 的捆綁包，打包為單個可安裝單元。Plugin skills 命名為 `plugin-name:skill-name`，以便多個 plugins 共存。通過 [marketplace](/docs/zh-TW/plugins/overview) 在團隊間分發 plugins。
 
-了解更多：[Plugins](/docs/zh-TW/plugins)
+了解更多：[Plugins](/docs/zh-TW/plugins/overview)
 
 <h3 id="project-trust">
   Project trust
 </h3>
 
-一個對話框，在 Claude Code 載入其配置之前接受目錄。接受情況按專案目錄保存，除了您的主目錄，其中信任僅在目前工作階段內保持，並在每次啟動時重新出現提示。信任控制 marketplace plugins 的自動安裝和專案定義的 hooks 的執行。信任目錄意味著其 `.claude/settings.json`、`.mcp.json` 和其他配置檔案生效。
+一個對話框，在 Claude Code 載入其設定之前接受目錄。接受情況按專案目錄保存，除了您的主目錄，其中信任僅在目前工作階段內保持，並在每次啟動時重新出現提示。在您信任目錄之前，Claude Code 會暫不載入其儲存庫提供的某些內容，例如來自 `.claude/settings.json` 的專案允許規則和 marketplaces。[信任資料夾前執行的內容](/docs/zh-TW/permissions#what-runs-before-you-trust-a-folder)列出每種內容，包括 `-p` 工作階段在沒有對話框的情況下執行的內容。
 
 了解更多：[The `.claude` directory](/docs/zh-TW/claude-directory)
 
@@ -302,7 +348,7 @@ Hook 配置有三個級別：
   Prompt injection
 </h3>
 
-嵌入在檔案、網頁或工具結果中的敵對指令，試圖將 Claude 重定向到您從未要求的動作。Claude Code 的防禦包括權限系統、命令黑名單和信任驗證。[Auto mode](#auto-mode) 添加了一個伺服器端探針，掃描工具結果中的可疑內容，以及一個永遠看不到工具結果的分類器，因此注入的文字無法影響其批准決定。
+嵌入在檔案、網頁或工具結果中的敵對指令，試圖將 Claude 重定向到您從未要求的動作。Claude Code 的防禦包括權限系統、命令黑名單和信任驗證。[Auto mode](#auto-mode) 添加了一個伺服器端探針，掃描工具結果中的可疑內容，以及一個分類器，在去除工具結果後檢查動作，因此注入的文字無法直接操縱它。
 
 了解更多：[防止 prompt injection](/docs/zh-TW/security#protect-against-prompt-injection)
 
@@ -314,7 +360,7 @@ Hook 配置有三個級別：
   Remote Control
 </h3>
 
-一種通過 claude.ai 從您的電話或瀏覽器繼續本地 Claude Code 會話的方式。您的程式碼執行和檔案保留在您的機器上；介面是遠端的。與在 web 上運行的 Claude Code 不同，後者在雲沙箱中運行。
+一種通過 claude.ai 從您的電話或瀏覽器繼續本地 Claude Code 會話的方式。您的程式碼執行和檔案保留在您的機器上；介面是遠端的。與[雲端會話](/docs/zh-TW/claude-code-on-the-web)不同，後者在雲沙箱中運行。
 
 了解更多：[Remote Control](/docs/zh-TW/remote-control)
 
@@ -350,9 +396,9 @@ Bash 工具的 OS 級檔案系統和網路隔離。命令在您預先定義的�
   Settings layers
 </h3>
 
-Claude Code 讀取配置的層級結構，按優先順序從最高到最低：[managed policy](#managed-settings)、命令行引數、`.claude/settings.local.json` 的本地設定、`.claude/settings.json` 的專案設定，然後是 `~/.claude/settings.json` 的使用者設定。陣列跨層級合併；較高層級的標量覆蓋較低層級的。
+Claude Code 讀取設定的層級結構，按優先順序從最高到最低：[managed policy](#managed-settings)、命令列引數、`.claude/settings.local.json` 的本地設定、`.claude/settings.json` 的專案設定，然後是 `~/.claude/settings.json` 的使用者設定。陣列跨層級合併；較高層級的標量覆蓋較低層級的。請參閱 [Settings precedence](/docs/zh-TW/settings#settings-precedence)。
 
-了解更多：[Settings files](/docs/zh-TW/settings#settings-files)
+了解更多：[Settings files](/docs/zh-TW/settings#where-settings-live)
 
 <h3 id="skill">
   Skill
@@ -368,7 +414,7 @@ Skills 是自訂命令的推薦後繼者。`.claude/commands/deploy.md` 的檔�
   Subagent
 </h3>
 
-一個專門的 AI 助手，在自己的上下文視窗中運行，具有自訂系統提示、特定工具存取和獨立權限。它處理委派的任務並向主對話返回摘要。使用 subagents 將大型探索保留在主上下文之外或執行並行研究。與 [agent teams](#agent-teams) 不同，其中每個代理都是您可以直接交談的完整獨立會話。
+一個專門的 AI 助手，在自己的上下文視窗中運行，具有自訂系統提示、特定工具存取和獨立權限。它處理委派的任務並向主對話返回摘要。使用 subagents 將大型探索保留在主上下文之外或執行並行研究。Subagent 保持在產生它的會話內。若要在您自己執行的不同會話之間傳遞發現，請使用 [cross-session messaging](/docs/zh-TW/cross-session-messaging)。
 
 內建 subagents 包括 Explore、Plan 和通用目的。
 
@@ -378,7 +424,7 @@ Skills 是自訂命令的推薦後繼者。`.claude/commands/deploy.md` 的檔�
   Surface
 </h3>
 
-您存取 Claude Code 的任何地方：CLI、VS Code、JetBrains、Desktop 或 claude.ai。所有 surfaces 共享相同的引擎，因此您的 CLAUDE.md、設定和 skills 在它們之間以相同方式工作。Slack 和 Chrome 擴展是連接到 surface 的整合，而不是 surfaces 本身。
+您存取 Claude Code 的任何地方：CLI、VS Code、JetBrains、Desktop 或 claude.ai。所有 surfaces 共享相同的引擎。您機器上的會話讀取您的本地 CLAUDE.md、設定和 skills；[cloud sessions](/docs/zh-TW/cloud-environments#what-carries-over-from-your-setup) 從您儲存庫的全新複製開始，不讀取您機器上的 `~/.claude/`。Slack 和 Chrome 擴展是連接到 surface 的整合，而不是 surfaces 本身。
 
 了解更多：[Platforms and integrations](/docs/zh-TW/platforms)
 
@@ -390,9 +436,9 @@ Skills 是自訂命令的推薦後繼者。`.claude/commands/deploy.md` 的檔�
   Teleport
 </h3>
 
-一個命令 `/teleport`，它將雲 Claude Code 會話拉入您的本地終端。Claude 獲取分支、載入對話歷史並從 web 會話的最後狀態恢復。反向方向是 `--cloud`，它將本地任務發送到 web 上執行。
+一個命令 `/teleport`，它將雲 Claude Code 會話拉入您的本地終端。Claude 獲取分支、載入對話歷史並從雲會話的最後狀態恢復。反向方向是 `--cloud`，它將本地任務發送到雲上執行。
 
-了解更多：[From web to terminal](/docs/zh-TW/claude-code-on-the-web#from-web-to-terminal)
+了解更多：[從雲到終端](/docs/zh-TW/claude-code-on-the-web#from-cloud-to-terminal)
 
 <h3 id="tool">
   Tool
@@ -442,8 +488,9 @@ Claude 在一個 [session](#session) 內的一個完整回應。一個 turn 開�
 
 這些術語出現在較舊的文件、部落格文章和社群內容中。搜索本網站時使用當前名稱。
 
-| 舊術語             | 現在稱為                                          | 備註                         |
-| --------------- | --------------------------------------------- | -------------------------- |
-| Headless mode   | [Non-interactive mode](#non-interactive-mode) | 相同的 `-p` 標誌，相同的行為          |
-| Custom commands | [Skills](#skill)                              | `.claude/commands/` 檔案仍然有效 |
-| Slash commands  | Commands                                      | 從產品副本中刪除了「Slash」           |
+| 舊術語                                               | 現在稱為                                          | 備註                                                  |
+| ------------------------------------------------- | --------------------------------------------- | --------------------------------------------------- |
+| Headless mode                                     | [Non-interactive mode](#non-interactive-mode) | 相同的 `-p` 標誌，相同的行為                                   |
+| Web session；「Claude Code on the web」作為任何雲端工作階段的名稱 | [Cloud session](#cloud-session)               | 「Claude Code on the web」現在僅命名 claude.ai/code 的瀏覽器介面 |
+| Custom commands                                   | [Skills](#skill)                              | `.claude/commands/` 檔案仍然有效                          |
+| Slash commands                                    | Commands                                      | 從產品副本中刪除了「Slash」                                    |

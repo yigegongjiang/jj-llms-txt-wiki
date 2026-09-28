@@ -139,12 +139,6 @@ Cliquez sur **Exporter tous les utilisateurs** pour télécharger les données d
 
 Lorsque les métriques de contribution sont activées, Claude Code analyse les demandes de fusion fusionnées pour déterminer quel code a été écrit avec l'assistance de Claude Code. Ceci est fait en mettant en correspondance l'activité de session Claude Code par rapport au code dans chaque PR.
 
-<h4 id="tagging-criteria">
-  Critères de balisage
-</h4>
-
-Les PRs sont balisées comme « avec Claude Code » si elles contiennent au moins une ligne de code écrite lors d'une session Claude Code. Le système utilise une correspondance conservatrice : seul le code où il y a une grande confiance dans l'implication de Claude Code est compté comme assisté.
-
 <h4 id="attribution-process">
   Processus d'attribution
 </h4>

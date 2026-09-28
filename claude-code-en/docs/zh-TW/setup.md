@@ -41,36 +41,36 @@ Claude Code 在以下平台和配置上運行：
   初次使用終端機？請參閱[終端機指南](/docs/zh-TW/terminal-guide)以取得逐步說明。
 </Tip>
 
-To install Claude Code, use one of the following methods:
+若要安裝 Claude Code，請使用下列其中一種方法：
 
 <Tabs>
-  <Tab title="Native Install (Recommended)">
-    **macOS, Linux, WSL:**
+  <Tab title="原生安裝（建議）">
+    **macOS、Linux、WSL：**
 
     ```bash theme={null}
     curl -fsSL https://claude.ai/install.sh | bash
     ```
 
-    **Windows PowerShell:**
+    **Windows PowerShell：**
 
     ```powershell theme={null}
     irm https://claude.ai/install.ps1 | iex
     ```
 
-    **Windows CMD:**
+    **Windows CMD：**
 
     ```batch theme={null}
     curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del install.cmd
     ```
 
-    If you see `The token '&&' is not a valid statement separator`, you're in PowerShell, not CMD. If you see `'irm' is not recognized as an internal or external command`, you're in CMD, not PowerShell. Your prompt shows `PS C:\` when you're in PowerShell and `C:\` without the `PS` when you're in CMD.
+    如果您看到 `The token '&&' is not a valid statement separator`，表示您在 PowerShell 中，而非 CMD。如果您看到 `'irm' is not recognized as an internal or external command`，表示您在 CMD 中，而非 PowerShell。當您在 PowerShell 中時，提示符會顯示 `PS C:\`，而在 CMD 中時會顯示 `C:\`（不含 `PS`）。
 
-    If the install command fails with `syntax error near unexpected token '<'`, a `403`, or another curl error, see [Troubleshoot installation](/docs/en/troubleshoot-install#find-your-error) to match the error to a fix and for alternative install methods.
+    如果安裝命令失敗並出現 `syntax error near unexpected token '<'`、`403` 或其他 curl 錯誤，請參閱[疑難排解安裝](/docs/zh-TW/troubleshoot-install#find-your-error)以將錯誤與修正相對應，並查看替代安裝方法。
 
-    [Git for Windows](https://git-scm.com/downloads/win) is recommended on native Windows so Claude Code can use the Bash tool. If Git for Windows is not installed, Claude Code uses PowerShell as the shell tool instead. WSL setups do not need Git for Windows.
+    建議在原生 Windows 上安裝 [Git for Windows](https://git-scm.com/downloads/win)，以便 Claude Code 可以使用 Bash 工具。如果未安裝 Git for Windows，Claude Code 會改用 PowerShell 作為殼層工具。WSL 設定不需要 Git for Windows。
 
     <Info>
-      Native installations automatically update in the background to keep you on the latest version.
+      原生安裝會在背景自動更新，以保持您使用最新版本。
     </Info>
   </Tab>
 
@@ -79,10 +79,10 @@ To install Claude Code, use one of the following methods:
     brew install --cask claude-code
     ```
 
-    Homebrew offers two casks. `claude-code` tracks the stable release channel, which is typically about a week behind and skips releases with major regressions. `claude-code@latest` tracks the latest channel and receives new versions as soon as they ship.
+    Homebrew 提供兩個 casks。`claude-code` 追蹤穩定版本通道，通常比最新版本晚約一週，並跳過有重大迴歸的版本。`claude-code@latest` 追蹤最新通道，並在新版本發佈時立即接收。
 
     <Info>
-      Homebrew installations do not auto-update. Run `brew upgrade claude-code` or `brew upgrade claude-code@latest`, depending on which cask you installed, to get the latest features and security fixes.
+      Homebrew 安裝不會自動更新。執行 `brew upgrade claude-code` 或 `brew upgrade claude-code@latest`（取決於您安裝的 cask），以取得最新功能和安全修正。
     </Info>
   </Tab>
 
@@ -92,18 +92,20 @@ To install Claude Code, use one of the following methods:
     ```
 
     <Info>
-      WinGet installations do not auto-update. Run `winget upgrade Anthropic.ClaudeCode` periodically to get the latest features and security fixes.
+      WinGet 安裝不會自動更新。定期執行 `winget upgrade Anthropic.ClaudeCode` 以取得最新功能和安全修正。
     </Info>
   </Tab>
 </Tabs>
 
-You can also install with [apt, dnf, or apk](/docs/en/setup#install-with-linux-package-managers) on Debian, Fedora, RHEL, and Alpine.
+您也可以在 Debian、Fedora、RHEL 和 Alpine 上使用 [apt、dnf 或 apk](/docs/zh-TW/setup#install-with-linux-package-managers) 進行安裝。
 
 安裝完成後，在您要使用的專案中開啟終端機並啟動 Claude Code：
 
 ```bash theme={null}
 claude
 ```
+
+Claude Code 會在您的終端機中開啟互動式工作階段。
 
 如果您在安裝期間遇到任何問題，請參閱[疑難排解安裝和登入](/docs/zh-TW/troubleshoot-install)。
 
@@ -138,7 +140,7 @@ claude
   }
   ```
 
-安裝 Git for Windows 時，PowerShell 工具正在逐步推出作為 Bash 的額外選項。設定 `CLAUDE_CODE_USE_POWERSHELL_TOOL=1` 以選擇加入或 `0` 以選擇退出。請參閱 [PowerShell tool](/docs/zh-TW/tools-reference#powershell-tool) 以了解設定和限制。
+安裝 Git for Windows 時，PowerShell 工具可在 claude.ai 和 Console 帳戶上預設啟用，並在 Amazon Bedrock、Google Cloud 的 Agent Platform 和 Microsoft Foundry 工作階段中使用 `CLAUDE_CODE_USE_POWERSHELL_TOOL=1` 啟用。將其設定為 `0` 以關閉工具。請參閱 [PowerShell 工具](/docs/zh-TW/tools-reference#powershell-tool)以了解設定和限制。
 
 **選項 2：WSL**
 
@@ -148,15 +150,23 @@ claude
   Alpine Linux 和 musl 型發行版
 </h3>
 
-Alpine 和其他 musl/uClibc 型發行版上的原生安裝程式需要 `libgcc`、`libstdc++` 和 `ripgrep`。使用您的發行版套件管理員安裝這些，然後設定 `USE_BUILTIN_RIPGREP=0`。
+在 Alpine 和其他 musl/uClibc 型發行版上安裝 Claude Code 需要 `bash` 和 `curl` 用於安裝命令，以及 `libgcc`、`libstdc++` 和 `ripgrep` 用於執行時。Alpine 預設不包含 `bash` 或 `curl`，因此在您安裝它們之前，文件中的安裝命令會失敗並出現 `not found` 錯誤。使用您的發行版套件管理員安裝這些套件，然後設定 `USE_BUILTIN_RIPGREP=0`。
 
 此範例在 Alpine 上安裝所需的套件：
 
 ```bash theme={null}
-apk add libgcc libstdc++ ripgrep
+apk add bash curl libgcc libstdc++ ripgrep
 ```
 
-然後在您的 [`settings.json`](/docs/zh-TW/settings#available-settings) 檔案中將 `USE_BUILTIN_RIPGREP` 設定為 `0`：
+在 Alpine 上，`ripgrep` 位於社群儲存庫中。如果 `apk` 報告套件遺失，請將社群儲存庫新增至 `/etc/apk/repositories`，使用您的 Alpine 版本：
+
+```bash theme={null}
+echo "https://dl-cdn.alpinelinux.org/alpine/v3.22/community" >> /etc/apk/repositories
+```
+
+執行 `apk update` 以重新整理套件索引，然後重試 `apk add` 命令。
+
+然後在您的 [`settings.json`](/docs/zh-TW/settings-reference#all-settings) 檔案中將 `USE_BUILTIN_RIPGREP` 設定為 `0`：
 
 ```json theme={null}
 {
@@ -176,6 +186,8 @@ apk add libgcc libstdc++ ripgrep
 claude --version
 ```
 
+正常的安裝會列印版本號，例如 `2.1.211 (Claude Code)`。
+
 如果此命令失敗並出現 `command not found` 或其他錯誤，請參閱[疑難排解安裝和登入](/docs/zh-TW/troubleshoot-install)。
 
 如需更詳細的安裝和配置檢查，請執行 [`claude doctor`](/docs/zh-TW/troubleshooting#get-more-help)：
@@ -184,13 +196,15 @@ claude --version
 claude doctor
 ```
 
+`claude doctor` 會列印唯讀的安裝和設定診斷資訊，而不啟動工作階段，包括安裝健康狀況、設定檔驗證錯誤，以及任何帶有建議修正的警告。
+
 <h2 id="authenticate">
   驗證身份
 </h2>
 
-Claude Code 需要 Pro、Max、Team、Enterprise 或 Console 帳戶。免費的 Claude.ai 方案不包括 Claude Code 存取權。您也可以透過第三方 API 提供者（如 [Amazon Bedrock](/docs/zh-TW/amazon-bedrock)、[Google Cloud's Agent Platform](/docs/zh-TW/google-vertex-ai) 或 [Microsoft Foundry](/docs/zh-TW/microsoft-foundry)）使用 Claude Code。
+Claude Code 需要 Pro、Max、Team、Enterprise 或 Console 帳戶。免費的 claude.ai 方案不包括 Claude Code 存取權。您也可以透過第三方 API 提供者（如 [Amazon Bedrock](/docs/zh-TW/amazon-bedrock)、[Google Cloud's Agent Platform](/docs/zh-TW/google-vertex-ai) 或 [Microsoft Foundry](/docs/zh-TW/microsoft-foundry)）使用 Claude Code。
 
-安裝後，執行 `claude` 並按照瀏覽器提示登入。請參閱[驗證](/docs/zh-TW/authentication)以了解所有帳戶類型和團隊設定選項。
+安裝後，執行 `claude` 並按照瀏覽器提示登入。如果設定了 `ANTHROPIC_API_KEY` 環境變數，Claude Code 會提示您一次以核准該金鑰，而不是開啟瀏覽器。請參閱[驗證](/docs/zh-TW/authentication)以了解所有帳戶類型和團隊設定選項。
 
 <h2 id="update-claude-code">
   更新 Claude Code
@@ -243,7 +257,7 @@ Claude Code 在啟動時和執行期間定期檢查更新。更新會在背景�
 }
 ```
 
-對於企業部署，您可以使用[受管設定](/docs/zh-TW/permissions#managed-settings)在整個組織中強制執行一致的發行版本通道。
+對於企業部署，您可以使用[受管設定](/docs/zh-TW/managed-settings)在整個組織中強制執行一致的發行版本通道。
 
 Homebrew 安裝根據 cask 名稱而不是此設定選擇通道：`claude-code` 追蹤穩定版本，`claude-code@latest` 追蹤最新版本。
 
@@ -264,15 +278,15 @@ Homebrew 安裝根據 cask 名稱而不是此設定選擇通道：`claude-code` 
 }
 ```
 
-在[受管設定](/docs/zh-TW/permissions#managed-settings)中，這會強制執行使用者和專案設定無法覆蓋的組織範圍最低版本。
+在[受管設定](/docs/zh-TW/managed-settings)中，這會強制執行使用者和專案設定無法覆蓋的組織範圍最低版本。
 
-`minimumVersion` 固定只會限制更新。若要讓 Claude Code 拒絕在版本範圍外啟動，請改為使用受管設定 `requiredMinimumVersion` 和 `requiredMaximumVersion`。更新也會遵守 `requiredMaximumVersion` 上限。請參閱[可用設定](/docs/zh-TW/settings#available-settings)。
+`minimumVersion` 固定只會限制更新。若要讓 Claude Code 拒絕在版本範圍外啟動，請改為使用受管設定 `requiredMinimumVersion` 和 `requiredMaximumVersion`。更新也會遵守 `requiredMaximumVersion` 上限。請參閱[`requiredMinimumVersion`](/docs/zh-TW/settings-reference#requiredminimumversion)和[`requiredMaximumVersion`](/docs/zh-TW/settings-reference#requiredmaximumversion)。
 
 <h3 id="disable-auto-updates">
   停用自動更新
 </h3>
 
-在您的 [`settings.json`](/docs/zh-TW/settings#available-settings) 檔案的 `env` 鍵中將 `DISABLE_AUTOUPDATER` 設定為 `"1"`：
+在您的 [`settings.json`](/docs/zh-TW/settings-reference#all-settings) 檔案的 `env` 鍵中將 `DISABLE_AUTOUPDATER` 設定為 `"1"`：
 
 ```json theme={null}
 {
@@ -281,6 +295,8 @@ Homebrew 安裝根據 cask 名稱而不是此設定選擇通道：`claude-code` 
   }
 }
 ```
+
+在原生或 npm 安裝上，透過執行 `claude doctor` 並檢查 `Auto-updates` 行是否顯示 `disabled (set by env: DISABLE_AUTOUPDATER)` 而不是 `enabled` 來確認變更已生效。
 
 `DISABLE_AUTOUPDATER` 只會停止背景檢查；`claude update` 和 `claude install` 仍然有效。若要阻止所有更新路徑（包括手動更新），請改為設定 [`DISABLE_UPDATES`](/docs/zh-TW/env-vars)。當您透過自己的通道發佈 Claude Code 並需要使用者保持在您提供的版本上時，請使用此選項。
 
@@ -293,6 +309,8 @@ Homebrew 安裝根據 cask 名稱而不是此設定選擇通道：`claude-code` 
 ```bash theme={null}
 claude update
 ```
+
+當更新安裝時，命令會報告 `Successfully updated from <old version> to version <new version>`。如果您已經在最新版本上，它會報告 `Claude Code is up to date (<version>)`。由 Homebrew、WinGet 或 apk 管理的安裝會改為報告 `Claude is up to date!`。
 
 <h2 id="advanced-installation-options">
   進階安裝選項
@@ -372,6 +390,8 @@ claude update
   </Tab>
 </Tabs>
 
+若要確認已安裝的版本，請執行 `claude --version`：該命令會列印您傳遞的確切版本，例如 `2.1.89 (Claude Code)`。
+
 <h3 id="install-with-linux-package-managers">
   使用 Linux 套件管理員安裝
 </h3>
@@ -382,18 +402,31 @@ Claude Code 發佈已簽署的 apt、dnf 和 apk 儲存庫。每個儲存庫提�
 
 <Tabs>
   <Tab title="apt">
-    適用於 Debian 和 Ubuntu。下列安裝命令使用 `curl` 下載簽署金鑰，新鮮的 Debian 和 Ubuntu 安裝可能不包含此命令。如果下載失敗並出現 `sudo: curl: command not found`，請先安裝 curl：
+    適用於 Debian 和 Ubuntu。下列安裝命令使用 `curl` 下載簽署金鑰，並使用 `gpg` 驗證它，新鮮的 Debian 和 Ubuntu 安裝可能不包含這兩個命令。如果任一命令報告 `command not found`，請先安裝兩者：
 
     ```bash theme={null}
-    sudo apt install curl
+    sudo apt install curl gnupg
     ```
 
-    下列命令配置 `stable` 通道：
+    下載簽署金鑰：
 
     ```bash theme={null}
     sudo install -d -m 0755 /etc/apt/keyrings
     sudo curl -fsSL https://downloads.claude.ai/keys/claude-code.asc \
       -o /etc/apt/keyrings/claude-code.asc
+    ```
+
+    如果此下載失敗，稍後 `apt update` 會失敗並出現 `NO_PUBKEY BAA929FF1A7ECACE`。在繼續之前，確認金鑰已下載並屬於 Anthropic：
+
+    ```bash theme={null}
+    gpg --show-keys /etc/apt/keyrings/claude-code.asc
+    ```
+
+    gpg 列印的指紋應該是 `31DDDE24DDFAB679F42D7BD2BAA929FF1A7ECACE`。如果 gpg 報告無法開啟檔案或不包含有效的 OpenPGP 資料，則下載失敗或傳回了錯誤的內容：確認您的網路可以到達 `downloads.claude.ai`，然後重新執行下載命令。
+
+    在 `stable` 通道上註冊儲存庫並安裝：
+
+    ```bash theme={null}
     echo "deb [signed-by=/etc/apt/keyrings/claude-code.asc] https://downloads.claude.ai/claude-code/apt/stable stable main" \
       | sudo tee /etc/apt/sources.list.d/claude-code.list
     sudo apt update
@@ -406,8 +439,6 @@ Claude Code 發佈已簽署的 apt、dnf 和 apk 儲存庫。每個儲存庫提�
     echo "deb [signed-by=/etc/apt/keyrings/claude-code.asc] https://downloads.claude.ai/claude-code/apt/latest latest main" \
       | sudo tee /etc/apt/sources.list.d/claude-code.list
     ```
-
-    在信任之前驗證 GPG 金鑰指紋：`gpg --show-keys /etc/apt/keyrings/claude-code.asc` 應該報告 `31DD DE24 DDFA B679 F42D 7BD2 BAA9 29FF 1A7E CACE`。
 
     若要稍後升級，請執行 `sudo apt update && sudo apt upgrade claude-code`。
   </Tab>

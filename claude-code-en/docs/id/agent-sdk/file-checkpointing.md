@@ -15,7 +15,7 @@ Dengan checkpointing, Anda dapat:
 * **Pulih dari kesalahan** ketika agen membuat modifikasi yang salah
 
 <Warning>
-  Hanya perubahan yang dilakukan melalui alat Write, Edit, dan NotebookEdit yang dilacak. Perubahan yang dilakukan melalui perintah Bash (seperti `echo > file.txt` atau `sed -i`) tidak ditangkap oleh sistem checkpoint.
+  Hanya perubahan yang dilakukan melalui alat Write, Edit, dan NotebookEdit yang dilacak. Perubahan yang dilakukan melalui perintah Bash (seperti `echo > file.txt` atau `sed -i`) tidak ditangkap oleh sistem checkpoint, dan juga tidak ada edit yang diterapkan [subagen](/docs/id/agent-sdk/subagents), kecuali [skill dengan `context: fork`](/docs/id/skills#run-skills-in-a-subagent) yang berjalan di foreground.
 </Warning>
 
 <h2 id="how-checkpointing-works">
@@ -24,25 +24,11 @@ Dengan checkpointing, Anda dapat:
 
 Ketika Anda mengaktifkan file checkpointing, SDK membuat cadangan file sebelum memodifikasinya melalui alat Write, Edit, atau NotebookEdit. Pesan pengguna dalam aliran respons menyertakan UUID checkpoint yang dapat Anda gunakan sebagai titik pemulihan.
 
-Checkpoint bekerja dengan alat bawaan ini yang digunakan agen untuk memodifikasi file:
-
-| Alat         | Deskripsi                                                          |
-| ------------ | ------------------------------------------------------------------ |
-| Write        | Membuat file baru atau menimpa file yang ada dengan konten baru    |
-| Edit         | Membuat pengeditan bertarget ke bagian tertentu dari file yang ada |
-| NotebookEdit | Memodifikasi sel dalam notebook Jupyter (file `.ipynb`)            |
-
 <Note>
   Pemulihan file mengembalikan file di disk ke status sebelumnya. Ini tidak mengembalikan percakapan itu sendiri. Riwayat percakapan dan konteks tetap utuh setelah memanggil `rewindFiles()` (TypeScript) atau `rewind_files()` (Python).
 </Note>
 
-Sistem checkpoint melacak:
-
-* File yang dibuat selama sesi
-* File yang dimodifikasi selama sesi
-* Konten asli file yang dimodifikasi
-
-Ketika Anda mengembalikan ke checkpoint, file yang dibuat dihapus dan file yang dimodifikasi dipulihkan ke konten mereka pada titik itu.
+Ketika Anda mengembalikan ke checkpoint, Claude Code menghapus file yang dibuat dan memulihkan file yang dimodifikasi ke konten mereka pada titik itu. Claude Code melewati jalur terlacak yang merupakan symlink, hard link, atau file non-reguler lainnya. Ini juga melewati file terlacak yang direktori induknya tidak lagi menyelesaikan ke lokasi waktu checkpoint-nya, atau yang cadangannya tidak dapat dibaca dengan aman. [`RewindFilesResult`](/docs/id/agent-sdk/typescript#rewindfilesresult) menghitung setiap jalur yang dilewati dalam bidang `skippedLinks`-nya. Melewati memerlukan Claude Code v2.1.216 atau lebih baru; sebelum v2.1.216, rewind menulis dan menghapus melalui tautan di jalur terlacak.
 
 <h2 id="implement-checkpointing">
   Implementasikan checkpointing
@@ -122,13 +108,21 @@ Contoh berikut menunjukkan alur lengkap: aktifkan checkpointing, tangkap UUID ch
     let sessionId: string | undefined;
 
     // Step 2: Capture checkpoint UUID from the first user message
-    for await (const message of response) {
-      if (message.type === "user" && message.uuid && !checkpointId) {
-        checkpointId = message.uuid;
+    try {
+      for await (const message of response) {
+        if (message.type === "user" && message.uuid && !checkpointId) {
+          checkpointId = message.uuid;
+        }
+        if ("session_id" in message && !sessionId) {
+          sessionId = message.session_id;
+        }
       }
-      if ("session_id" in message && !sessionId) {
-        sessionId = message.session_id;
-      }
+    } catch (error) {
+      // A single-shot query() throws after yielding an error result. If the
+      // failure was an error result, sessionId and checkpointId were already
+      // captured by the loop above; connection or process failures yield no
+      // result message.
+      console.error(`Session ended with an error: ${error}`);
     }
 
     // Step 3: Later, rewind by resuming the session with an empty prompt
@@ -185,7 +179,7 @@ Contoh berikut menunjukkan alur lengkap: aktifkan checkpointing, tangkap UUID ch
   </Step>
 
   <Step title="Tangkap UUID checkpoint dan ID sesi">
-    Dengan opsi `replay-user-messages` yang diatur (ditunjukkan di atas), setiap pesan pengguna dalam aliran respons memiliki UUID yang berfungsi sebagai checkpoint.
+    Dengan opsi `replay-user-messages` yang diatur, setiap pesan pengguna dalam aliran respons memiliki UUID yang berfungsi sebagai checkpoint.
 
     Untuk sebagian besar kasus penggunaan, tangkap UUID pesan pengguna pertama (`message.uuid`); mengembalikan ke sana memulihkan semua file ke status asli mereka. Untuk menyimpan beberapa checkpoint dan mengembalikan ke status perantara, lihat [Beberapa titik pemulihan](#multiple-restore-points).
 
@@ -233,7 +227,8 @@ Contoh berikut menunjukkan alur lengkap: aktifkan checkpointing, tangkap UUID ch
       ) as client:
           await client.query("")  # Empty prompt to open the connection
           async for message in client.receive_response():
-              await client.rewind_files(checkpoint_id)
+              if checkpoint_id:
+                  await client.rewind_files(checkpoint_id)
               break
       ```
 
@@ -244,7 +239,9 @@ Contoh berikut menunjukkan alur lengkap: aktifkan checkpointing, tangkap UUID ch
       });
 
       for await (const msg of rewindQuery) {
-        await rewindQuery.rewindFiles(checkpointId);
+        if (checkpointId) {
+          await rewindQuery.rewindFiles(checkpointId);
+        }
         break;
       }
       ```
@@ -256,7 +253,7 @@ Contoh berikut menunjukkan alur lengkap: aktifkan checkpointing, tangkap UUID ch
     CLAUDE_CODE_ENABLE_SDK_FILE_CHECKPOINTING=true claude -p --resume <session-id> --rewind-files <checkpoint-uuid>
     ```
 
-    Flag `--rewind-files` tidak muncul dalam output `claude --help`, tetapi CLI menerimanya seperti yang ditunjukkan.
+    Flag `--rewind-files` tidak muncul dalam output `claude --help`, tetapi CLI menerimanya seperti yang ditunjukkan. Ketika rewind berhasil, perintah mencetak `Files rewound to state at message <checkpoint-uuid>` dan keluar tanpa mengirim prompt.
   </Step>
 </Steps>
 
@@ -440,17 +437,25 @@ Pola ini menyimpan semua UUID checkpoint dalam array dengan metadata. Setelah se
     const checkpoints: Checkpoint[] = [];
     let sessionId: string | undefined;
 
-    for await (const message of response) {
-      if (message.type === "user" && message.uuid) {
-        checkpoints.push({
-          id: message.uuid,
-          description: `After turn ${checkpoints.length + 1}`,
-          timestamp: new Date()
-        });
+    try {
+      for await (const message of response) {
+        if (message.type === "user" && message.uuid) {
+          checkpoints.push({
+            id: message.uuid,
+            description: `After turn ${checkpoints.length + 1}`,
+            timestamp: new Date()
+          });
+        }
+        if ("session_id" in message && !sessionId) {
+          sessionId = message.session_id;
+        }
       }
-      if ("session_id" in message && !sessionId) {
-        sessionId = message.session_id;
-      }
+    } catch (error) {
+      // A single-shot query() throws after yielding an error result. If the
+      // failure was an error result, sessionId and the checkpoints array were
+      // already populated by the loop above; connection or process failures
+      // yield no result message.
+      console.error(`Session ended with an error: ${error}`);
     }
 
     // Later: rewind to any checkpoint by resuming the session
@@ -624,15 +629,23 @@ Sebelum Anda mulai, pastikan Anda telah [menginstal Claude Agent SDK](/docs/id/a
           options: opts
         });
 
-        for await (const message of response) {
-          // Capture the first user message UUID - this is our restore point
-          if (message.type === "user" && message.uuid && !checkpointId) {
-            checkpointId = message.uuid;
+        try {
+          for await (const message of response) {
+            // Capture the first user message UUID - this is our restore point
+            if (message.type === "user" && message.uuid && !checkpointId) {
+              checkpointId = message.uuid;
+            }
+            // Capture the session ID so we can resume later
+            if ("session_id" in message) {
+              sessionId = message.session_id;
+            }
           }
-          // Capture the session ID so we can resume later
-          if ("session_id" in message) {
-            sessionId = message.session_id;
-          }
+        } catch (error) {
+          // A single-shot query() throws after yielding an error result. If the
+          // failure was an error result, checkpointId and sessionId were already
+          // captured by the loop above; connection or process failures yield no
+          // result message.
+          console.error(`Session ended with an error: ${error}`);
         }
 
         console.log("Done! Open utils.ts to see the added doc comments.\n");
@@ -671,13 +684,6 @@ Sebelum Anda mulai, pastikan Anda telah [menginstal Claude Agent SDK](/docs/id/a
       main();
       ```
     </CodeGroup>
-
-    Contoh ini mendemonstrasikan alur kerja checkpointing lengkap:
-
-    1. **Aktifkan checkpointing**: konfigurasi SDK dengan `enable_file_checkpointing=True` dan `permission_mode="acceptEdits"` untuk menyetujui pengeditan file secara otomatis
-    2. **Tangkap data checkpoint**: saat agen berjalan, simpan UUID pesan pengguna pertama (titik pemulihan Anda) dan ID sesi
-    3. **Minta pemulihan**: setelah agen selesai, periksa file utilitas Anda untuk melihat komentar doc, kemudian putuskan apakah Anda ingin membatalkan perubahan
-    4. **Lanjutkan dan kembalikan**: jika ya, lanjutkan sesi dengan prompt kosong dan panggil `rewind_files()` untuk memulihkan file asli
   </Step>
 
   <Step title="Jalankan contoh">
@@ -711,12 +717,13 @@ Sebelum Anda mulai, pastikan Anda telah [menginstal Claude Agent SDK](/docs/id/a
 
 File checkpointing memiliki keterbatasan berikut:
 
-| Keterbatasan                       | Deskripsi                                                                      |
-| ---------------------------------- | ------------------------------------------------------------------------------ |
-| Hanya alat Write/Edit/NotebookEdit | Perubahan yang dilakukan melalui perintah Bash tidak dilacak                   |
-| Sesi yang sama                     | Checkpoint terikat pada sesi yang membuatnya                                   |
-| Konten file saja                   | Membuat, memindahkan, atau menghapus direktori tidak dibatalkan oleh pemulihan |
-| File lokal                         | File jarak jauh atau jaringan tidak dilacak                                    |
+| Keterbatasan                       | Deskripsi                                                                                                                                                                                                                   |
+| ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Hanya alat Write/Edit/NotebookEdit | Perubahan yang dilakukan melalui perintah Bash tidak dilacak                                                                                                                                                                |
+| Suntingan subagent                 | Suntingan yang diterapkan [subagent](/docs/id/agent-sdk/subagents) tidak dilacak atau dipulihkan, kecuali skill dengan `context: fork` yang berjalan di foreground; gunakan git untuk mengembalikan suntingan yang tidak dilacak |
+| Sesi yang sama                     | Checkpoint terikat pada sesi yang membuatnya                                                                                                                                                                                |
+| Konten file saja                   | Membuat, memindahkan, atau menghapus direktori tidak dibatalkan oleh pemulihan                                                                                                                                              |
+| File lokal                         | File jarak jauh atau jaringan tidak dilacak                                                                                                                                                                                 |
 
 <h2 id="troubleshooting">
   Troubleshooting
@@ -743,8 +750,8 @@ Jika `message.uuid` adalah `undefined` atau hilang, Anda tidak menerima UUID che
 
 **Solusi**: Tambahkan `extra_args={"replay-user-messages": None}` (Python) atau `extraArgs: { 'replay-user-messages': null }` (TypeScript) ke opsi Anda.
 
-<h3 id="no-file-checkpoint-found-for-message-error">
-  Kesalahan "No file checkpoint found for message"
+<h3 id="no-file-checkpoint-found-for-this-message-error">
+  Kesalahan "No file checkpoint found for this message"
 </h3>
 
 Kesalahan ini terjadi ketika data checkpoint tidak ada untuk UUID pesan pengguna yang ditentukan.
@@ -786,7 +793,8 @@ Kesalahan ini terjadi ketika Anda memanggil `rewindFiles()` atau `rewind_files()
   ) as client:
       await client.query("")
       async for message in client.receive_response():
-          await client.rewind_files(checkpoint_id)
+          if checkpoint_id:
+              await client.rewind_files(checkpoint_id)
           break
   ```
 
@@ -797,9 +805,17 @@ Kesalahan ini terjadi ketika Anda memanggil `rewindFiles()` atau `rewind_files()
     options: { ...opts, resume: sessionId }
   });
 
-  for await (const msg of rewindQuery) {
-    await rewindQuery.rewindFiles(checkpointId);
-    break;
+  try {
+    for await (const msg of rewindQuery) {
+      if (checkpointId) {
+        await rewindQuery.rewindFiles(checkpointId);
+      }
+      break;
+    }
+  } catch (error) {
+    // An error here means the rewind didn't complete, for example the checkpoint
+    // wasn't found or the session couldn't be resumed.
+    console.error(`Rewind session ended with an error: ${error}`);
   }
   ```
 </CodeGroup>

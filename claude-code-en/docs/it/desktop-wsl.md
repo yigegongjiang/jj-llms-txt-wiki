@@ -32,7 +32,7 @@ Utilizza una sessione WSL quando il tuo repository si trova all'interno del file
   </Step>
 
   <Step title="Fidati della cartella">
-    La prima sessione in una cartella mostra la finestra di dialogo di fiducia dell'area di lavoro. La fiducia viene concessa per distribuzione e cartella; fidarsi di una cartella in una distribuzione non si applica a un'altra distribuzione o allo stesso percorso su Windows.
+    La prima sessione in una cartella mostra la finestra di dialogo di fiducia dell'area di lavoro. La fiducia viene concessa per distribuzione e cartella. Una cartella di cui ti fidi in una distribuzione non è attendibile in un'altra distribuzione o nello stesso percorso su Windows.
   </Step>
 </Steps>
 

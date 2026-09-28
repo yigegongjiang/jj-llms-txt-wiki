@@ -139,12 +139,6 @@ Team と Enterprise ダッシュボードには以下が含まれます。
 
 貢献メトリクスが有効になっている場合、Claude Code はマージされたプルリクエストを分析して、Claude Code 支援で記述されたコードを判定します。これは、Claude Code セッションアクティビティを各 PR のコードと照合することで行われます。
 
-<h4 id="tagging-criteria">
-  タグ付け基準
-</h4>
-
-PR は、Claude Code セッション中に記述された少なくとも 1 行のコードを含む場合、「with Claude Code」としてタグ付けされます。システムは保守的なマッチングを使用します。Claude Code の関与に高い信頼度がある場合のみ、支援されたコードとしてカウントされます。
-
 <h4 id="attribution-process">
   属性プロセス
 </h4>

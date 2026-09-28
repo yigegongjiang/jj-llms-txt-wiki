@@ -6,7 +6,7 @@
 
 > Recevez les réponses en temps réel du SDK Agent à mesure que le texte et les appels d'outils sont diffusés
 
-Par défaut, le SDK Agent produit des objets `AssistantMessage` complets après que Claude ait terminé de générer chaque réponse. Pour recevoir des mises à jour incrémentielles à mesure que le texte et les appels d'outils sont générés, activez la diffusion de messages partiels en définissant `include_partial_messages` (Python) ou `includePartialMessages` (TypeScript) sur `true` dans vos options.
+Par défaut, le SDK Agent produit un objet `AssistantMessage` complet pour chaque bloc de contenu non vide, tel qu'un bloc de texte ou un appel d'outil, après que Claude ait terminé de générer ce bloc. Pour recevoir des mises à jour incrémentielles à mesure que le texte et les appels d'outils sont générés, activez la diffusion de messages partiels.
 
 <Tip>
   Cette page couvre la diffusion de sortie (réception des jetons en temps réel). Pour les modes d'entrée (comment vous envoyez les messages), consultez [Envoyer des messages aux agents](/docs/fr/agent-sdk/streaming-vs-single-mode). Vous pouvez également [diffuser les réponses en utilisant le SDK Agent via la CLI](/docs/fr/headless).
@@ -79,34 +79,14 @@ L'exemple ci-dessous active la diffusion et affiche les fragments de texte à me
 
 Lorsque les messages partiels sont activés, vous recevez les événements de diffusion bruts de l'API Claude enveloppés dans un objet. Le type a des noms différents dans chaque SDK :
 
-* **Python** : `StreamEvent` (importer depuis `claude_agent_sdk.types`)
-* **TypeScript** : `SDKPartialAssistantMessage` avec `type: 'stream_event'`
+* **Python** : [`StreamEvent`](/docs/fr/agent-sdk/python#streamevent) (importer depuis `claude_agent_sdk.types`)
+* **TypeScript** : [`SDKPartialAssistantMessage`](/docs/fr/agent-sdk/typescript#sdkpartialassistantmessage) avec `type: 'stream_event'`
 
-Les deux contiennent les événements bruts de l'API Claude, pas le texte accumulé. Vous devez extraire et accumuler les deltas de texte vous-même. Voici la structure de chaque type :
-
-<CodeGroup>
-  ```python Python theme={null}
-  @dataclass
-  class StreamEvent:
-      uuid: str  # Unique identifier for this event
-      session_id: str  # Session identifier
-      event: dict[str, Any]  # The raw Claude API stream event
-      parent_tool_use_id: str | None  # Always None
-  ```
-
-  ```typescript TypeScript theme={null}
-  type SDKPartialAssistantMessage = {
-    type: "stream_event";
-    event: BetaRawMessageStreamEvent; // From Anthropic SDK
-    parent_tool_use_id: string | null;
-    uuid: UUID;
-    session_id: string;
-    ttft_ms?: number; // Time to first token in ms, present only on message_start events
-  };
-  ```
-</CodeGroup>
+Les deux contiennent les événements bruts de l'API Claude, pas le texte accumulé. Vous devez extraire et accumuler les deltas de texte vous-même.
 
 Le champ `parent_tool_use_id` est toujours `None` en Python et `null` en TypeScript. Les événements de diffusion sont émis pour la session principale uniquement ; les deltas au niveau des tokens des sous-agents ne sont pas transmis. Pour attribuer la sortie à un sous-agent, utilisez les messages complets, qui portent `parent_tool_use_id`. Voir [Détecter l'invocation de sous-agent](/docs/fr/agent-sdk/subagents#detect-subagent-invocation).
+
+Claude Code définit `user_message_uuid` sur le premier événement de diffusion non-ping du tour, et à nouveau lorsque le message auquel le tour répond change, selon les conditions dans [`user_message_uuid`](/docs/fr/agent-sdk/typescript#user_message_uuid). Le `StreamEvent` Python n'expose pas ce champ.
 
 Le champ `event` contient l'événement de diffusion brut de l'[API Claude](https://platform.claude.com/docs/en/build-with-claude/streaming#event-types). Les types d'événements courants incluent :
 
@@ -120,78 +100,29 @@ Le champ `event` contient l'événement de diffusion brut de l'[API Claude](http
 | `message_stop`        | Fin du message                                                    |
 
 <h2 id="message-flow">
-  Flux de messages
+  Flux des messages
 </h2>
 
-Avec les messages partiels activés, vous recevez les messages dans cet ordre :
+Claude Code émet un `AssistantMessage` à chaque fois qu'un bloc de contenu non vide se termine, donc une réponse avec un bloc de texte et un appel d'outil produit deux objets `AssistantMessage`. Chacun ne porte que son propre bloc de contenu, et les deux partagent le même ID de message, que vous lisez comme `message.message.id` en TypeScript et `message.message_id` en Python. Avec les messages partiels activés, chaque `AssistantMessage` arrive avant l'événement `content_block_stop` de ce bloc, et vous recevez les messages dans cet ordre :
 
 ```text theme={null}
 StreamEvent (message_start)
 StreamEvent (content_block_start) - text block
 StreamEvent (content_block_delta) - text chunks...
+AssistantMessage - complete text block
 StreamEvent (content_block_stop)
 StreamEvent (content_block_start) - tool_use block
 StreamEvent (content_block_delta) - tool input chunks...
+AssistantMessage - complete tool_use block
 StreamEvent (content_block_stop)
 StreamEvent (message_delta)
 StreamEvent (message_stop)
-AssistantMessage - complete message with all content
 ... tool executes ...
 ... more streaming events for next turn ...
 ResultMessage - final result
 ```
 
-Sans les messages partiels activés (`include_partial_messages` en Python, `includePartialMessages` en TypeScript), vous recevez tous les types de messages sauf `StreamEvent`. Les types courants incluent `SystemMessage` (initialisation de session), `AssistantMessage` (réponses complètes), `ResultMessage` (résultat final), et un message de limite compact indiquant quand l'historique de conversation a été compacté (`SDKCompactBoundaryMessage` en TypeScript ; `SystemMessage` avec le sous-type `"compact_boundary"` en Python).
-
-<h2 id="stream-text-responses">
-  Diffuser les réponses texte
-</h2>
-
-Pour afficher le texte à mesure qu'il est généré, recherchez les événements `content_block_delta` où `delta.type` est `text_delta`. Ceux-ci contiennent les fragments de texte incrémentiels. L'exemple ci-dessous affiche chaque fragment à mesure qu'il arrive :
-
-<CodeGroup>
-  ```python Python theme={null}
-  from claude_agent_sdk import query, ClaudeAgentOptions
-  from claude_agent_sdk.types import StreamEvent
-  import asyncio
-
-
-  async def stream_text():
-      options = ClaudeAgentOptions(include_partial_messages=True)
-
-      async for message in query(prompt="Explain how databases work", options=options):
-          if isinstance(message, StreamEvent):
-              event = message.event
-              if event.get("type") == "content_block_delta":
-                  delta = event.get("delta", {})
-                  if delta.get("type") == "text_delta":
-                      # Print each text chunk as it arrives
-                      print(delta.get("text", ""), end="", flush=True)
-
-      print()  # Final newline
-
-
-  asyncio.run(stream_text())
-  ```
-
-  ```typescript TypeScript theme={null}
-  import { query } from "@anthropic-ai/claude-agent-sdk";
-
-  for await (const message of query({
-    prompt: "Explain how databases work",
-    options: { includePartialMessages: true }
-  })) {
-    if (message.type === "stream_event") {
-      const event = message.event;
-      if (event.type === "content_block_delta" && event.delta.type === "text_delta") {
-        process.stdout.write(event.delta.text);
-      }
-    }
-  }
-
-  console.log(); // Final newline
-  ```
-</CodeGroup>
+Sans les messages partiels activés, vous recevez tous les types de messages sauf `StreamEvent`. Les types courants incluent `SystemMessage` (initialisation de session), `AssistantMessage` (blocs de contenu complets), `ResultMessage` (résultat final), et un message de limite compact indiquant quand l'historique de conversation a été compacté (`SDKCompactBoundaryMessage` en TypeScript ; `SystemMessage` avec le sous-type `"compact_boundary"` en Python).
 
 <h2 id="stream-tool-calls">
   Diffuser les appels d'outils
